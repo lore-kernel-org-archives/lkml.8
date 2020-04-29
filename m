@@ -2,116 +2,169 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D713C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FBEC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D50D2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588180237;
-	bh=2xgcMioH3CWsTJf+X/wvX2WrB+R7RzkvMl/X2y3wgaA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=hFSUYig4HUG95FjxgLCLZrsIV2PGM5d4mkWZeD5djA5pU1p6hSlg4sVMeDAsKqti+
-	 ZDYEwnJGPSUlUqKx5d9E4Pc+xZGdLXPS6uIUWOiZEWaSgnmbPYouYq6KQSgIwpJKA9
-	 WYH07m3uVb0KssnZzpqeVp9Trhvf23rGeLRGGqsY=
+	by mail.kernel.org (Postfix) with ESMTP id A38212083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:11:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NYRoQ28W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgD2RKg (ORCPT
+        id S1726935AbgD2RLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgD2RKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:10:35 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Apr 2020 13:11:30 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62098 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726481AbgD2RLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:11:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588180289; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=2H/grRhp1qnjOIul3MbQSy7YNYNUS9RRvwG048+TsJY=;
+ b=NYRoQ28WkuAgoJUk1QNYQB1wZjaiNsLpS6VOVx1cqTLbMU7gBYaI5iScEA4NpBQUvvwqYOKK
+ 0xpZ8gOpmjmYEtthFq0zBVGNEZvdzTJl+vNfNkg6p+bnsI2awTWPKoB2FNU3Yy0IDjkipp3S
+ oDNOgHmhLuDI9K/4H1Y1zveofFA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea9b52c.7fea8db43ae8-smtp-out-n01;
+ Wed, 29 Apr 2020 17:11:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3EC70C432C2; Wed, 29 Apr 2020 17:11:07 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 825DE2083B;
-        Wed, 29 Apr 2020 17:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588180234;
-        bh=2xgcMioH3CWsTJf+X/wvX2WrB+R7RzkvMl/X2y3wgaA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i3/Vf9ubdb8TMxpehNHGGBNTu5jT80uie8MpBKJJKGqwjGAJpOpRtM9HlGRX9MgKJ
-         +yChP6v6VYC73cG+BVGxSHvKVtE2WKj+CUZW9uFv9HVf4bfs9/+cEdFkyPMHFwek76
-         WwgRcx8JRM3FGXCoAreRGtA3anRIhgQZXjgnneCs=
-Date:   Wed, 29 Apr 2020 12:10:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Austin.Bolen@dell.com
-Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
-        Mario.Limonciello@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        jonathan.derrick@intel.com, mr.nuke.me@gmail.com, rjw@rjwysocki.net
-Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Message-ID: <20200429171032.GA30596@google.com>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 834D7C433D2;
+        Wed, 29 Apr 2020 17:11:06 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3535fbc69604425b1e8f008348950ab@AUSX13MPC107.AMER.DELL.COM>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Apr 2020 22:41:06 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+ <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
+ <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
+ <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
+ <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+Message-ID: <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:24:41PM +0000, Austin.Bolen@dell.com wrote:
-> On 4/28/2020 3:37 PM, Bjorn Helgaas wrote:
-> > [EXTERNAL EMAIL] 
-> >
-> > [+to Mario, Austin, Rafael; Dell folks, I suspect this commit will
-> > break Dell servers but I'd like your opinion]
-> >
-> > <snip>
-> Thanks Bjorn, for the heads up. I checked with our server BIOS team and
-> they say that only checking _OSC for AER should work on our servers.  We
-> always configure_OSC and the HEST FIRMWARE_FIRST flag to retain firmware
-> control of AER so either could be checked.
+Hi Mike,
+
+On 2020-04-29 22:28, Mike Leach wrote:
+> Hi,
 > 
-> > I *really* want the patch because the current mix of using both _OSC
-> > and FIRMWARE_FIRST to determine AER capability ownership is a mess and
-> > getting worse, but I'm more and more doubtful.
-> >
-> > My contention is that if firmware doesn't want the OS to use the AER
-> > capability it should simply decline to grant control via _OSC.
->
-> I agree per spec that _OSC should be used and this was confirmed by the
-> ACPI working group. Alex had submitted a patch for us [2] to switch to
-> using _OSC to determine AER ownership following the decision in the ACPI
-> working group.
 
-Perfect, thank you!  I had forgotten that Alex posted that.  We should
-add credit to him and a link to that discussion.  Thanks again!
+[...]
 
-> [2] https://lkml.org/lkml/2018/11/16/202
+>> >> > You need to find what is resetting the IDFILTERs to 0 for replicator1.
+>> >> >
+>> >>
+>> >> That is right.
+>> >>
+>> >
+>> > By default all replicators have the IDFILTER registers set to 0 out of
+>> > hardware reset. This ensures that programmable replicators behave in
+>> > the same way as non-programmable replicators out of reset.
+>> >
+>> > The  dynamic_replicator_reset() is of course a driver state reset -
+>> > which filters out all trace on the output ports. The trace is then
+>> > enabled when we set the trace path from source to sink.
+>> >
+>> 
+>> Thanks for these explanations.
+>> 
+>> > It seems to me that you have 2 problems that need solving here:
+>> >
+>> > 1) Why does the reset_replicator() called from probe() _not_ work
+>> > correctly on replicator 1? It seems to work later if you introduce a
+>> > reset after more of the system has powered and booted. This is
+>> > startiing to look a little like a PM / clocking issue.
+>> 
+>> reset_replicator() does work in probe correctly for both replicators,
+>> below logs is collected before and after reset in probe. It is later
+>> that it's set back to 0x0 and hence the suggestion to look at firmware
+>> using this replicator1.
+>> 
+> OK - sorry I read your statement saying that replicator1 was 0 after
+> the reset in probe(), rather than look at the logs.
 > 
-> > But things like 0584396157ad ("PCI: PCIe AER: honor ACPI HEST FIRMWARE
-> > FIRST mode") [1] suggest that some machines grant AER control to the
-> > OS via _OSC, but still expect the OS to leave AER alone for certain
-> > devices.
->
-> AFAIK, no Dell server, including the 11G servers mentioned in that
-> patch, have granted control of AER via _OSC and set HEST FIRMWARE_FIRST
-> for some devices. I don't think this model is even support by the
-> ACPI/PCIe standards.  Yes, you can set the bits that way, but there is
-> no text I've found that says how the OS/firmware should behave in that
-> scenario. In order to be interoperable, I think someone would need to
-> standardized how the OS/firmware would could co-ordinate in such a model.
+> From the logs it is working at the time probe() occurs, but by the
+> time we come to enable the replicator later, something has reset these
+> registers / hardware outside the control of the replicator driver.
+> 
 
-I agree and I want to get Linux out of the current muddle where we
-try to make sense out of it.
+Yes, I will try to get some more information from the firmware side if 
+there is anything messing up.
 
-> > I think the FIRMWARE_FIRST language in the ACPI spec is really too
-> > vague to tell the OS not to use the AER Capability, but it seems like
-> > that's what commits like [1] rely on.
-> >
-> > The current _OSC definition (PCI Firmware r3.2) applies only to
-> > PNP0A03/PNP0A08 devices, but it's conceivable that it could be
-> > extended to other devices if we need per-device AER Capability
-> > ownership.
-> >
-> > [1] https://git.kernel.org/linus/0584396157ad
-<snip>
+> 
+>> [    8.477669] func replicator_probe before reset replicator 
+>> replicator1
+>> REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
+>> [    8.489470] func replicator_probe after reset replicator 
+>> replicator1
+>> REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
+>> 
+>> >
+>> > This failure is causing the state when we are trying to set an output
+>> > port that both branches of this replicator are enabled for output.
+>> > In effect for this replicator, setting the output port has no effect
+>> > as it is already enabled.
+>> >
+>> > 2) Why does having both ports of this repilicator enabled cause a hard
+>> > lockup? This is a separate hardware  / system issue.
+>> >
+>> > The worst that should happen if both branches of a replicator are
+>> > enabled is that you get undesirable back pressure. (e.g. there is a
+>> > system we have seen - I think it is Juno - where there is a static
+>> > replicator feeding the TPIU and ETR - we need to disable the TPIU to
+>> > prevent undesired back pressure).
+>> >
+>> 
+>> Ok so hardlockup is not expected because of this backpressure.
+>> 
+> 
+> Hardlockup is not expected, but this is not related to any possible
+> backpressure.
+> 
+> Ordinarily having both legs of a replicator enabled should not cause
+> system failure.
+> 
+
+Ok got it, thanks.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
