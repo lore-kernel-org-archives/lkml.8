@@ -7,148 +7,145 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685E9C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5435C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 448BB20731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8089E2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588131994;
-	bh=h/u/YlUAxGEus4hmjk/y5gvFjCWAKgJ3dJOX5qW3YPU=;
+	s=default; t=1588131996;
+	bh=t5gr+NO6w6OxyLnxWIRjbd8KZPnJg5NDZvD9pZx0ZtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZP9R1KxXWcUL0WLhTtTaHpJRN/BaD/nyMU07bBrZWmk91REMTWjf/KpDul0ocn8dc
-	 /k56jR9JNtOQtsRmThexX3ld64oWzoGDM3XllEz6WsuwiWZg4dzRfQfX4EgvIscXJB
-	 4RGOAl4GVJc09LRGWxL7b9nZ8Qfx9+X1YJegtLX0=
+	b=ihXfeaoDj3sIShKF7XsnuPebV0lH86uIKk/CdY/dIRszIsl2x2FgS9kXIqG/BOtA+
+	 guH2SwrtXKMZH2ijKU+t+xemDisuXpJrm91RnpRwFAkfT45YtDwsiyY0me4/CPVmRX
+	 JkVlTv1vqa3xUxnRCG+2IOpR2BqCGkZeBypiJ2xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgD2Dqc (ORCPT
+        id S1726783AbgD2Dqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:46:32 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:30777 "EHLO
+        Tue, 28 Apr 2020 23:46:35 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:30765 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgD2Dq3 (ORCPT
+        with ESMTP id S1726599AbgD2Dq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 23:46:29 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 03T3jXlf020748;
-        Wed, 29 Apr 2020 12:45:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03T3jXlf020748
+        by conuserg-12.nifty.com with ESMTP id 03T3jXlc020748;
+        Wed, 29 Apr 2020 12:45:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03T3jXlc020748
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588131937;
-        bh=r0ApJvTUQqdiwCwVmjqPXR9YcqLdN3Uq3b73eGZxmw4=;
+        s=dec2015msa; t=1588131935;
+        bh=a/8yLvdu6xS3Gj2bx6HeWvVtgMKV8ZR+HSeVW/CO80E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEqe3QK+R6INyBwdvUQsDfE97eXkBSzP572rVxsAkwTchj/QZAkBUC8ZPM4AFhDxa
-         jmiNA7urCiRW+4L8+HzBOj4C502HprAKDvl2w7H8IX5gcouWiSyPVttXL9xgUpTh4t
-         IwFNzW2D0vBc31jNeQBqEgU/d4fxDdhPvH6SjzXi7Nry+ninTc6b3eqVM/Tk39swgM
-         Lz+c3RfavIVCfn5jEOtm2iTfuqe4ICU9raqGD1RoFLkrNur3qL1pSyoz6x7nt8/5BT
-         oCnQMpWUYgcdNvhe3r2BWOdIw85+dE2tECFcuLFoV8Unq7/HHbDVbCRS1aX1P61fRk
-         OIHsVEEqjJ2pg==
+        b=BHXkufn8HbfXGioq28uVr88OWCXL5Rx7FVk0ASGpkAQE0zd9aZwVSjkgojnGDG5cp
+         nPZhkMa9l9cy+RfgkE+Bx6MXNiSMCg5K9b77C7LgZyNNYV9ksEowrBzAJ25oCWRVMu
+         e8QuXw573q+aw6j15TCxTkGULcogeT5smoP35iqyBsRN3ZvUSTuYQTe8HE+2mv2kZZ
+         jTD4IqsTa0Xjkj6DuLjOGyUrmV0u2xQRfhEN2Y3rKOe7svt/GA9EinxUdns8fodC2f
+         zFycDImm+xZyKhDwa8qNjYyRRN8WRJW3vhK5gESXaK8azIfLO2+uY7JgYb/lZCQn9E
+         Z2xUkuYoEEmuQ==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf <bpf@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH v2 04/15] samples: seccomp: build sample programs for target architecture
-Date:   Wed, 29 Apr 2020 12:45:16 +0900
-Message-Id: <20200429034527.590520-5-masahiroy@kernel.org>
+Subject: [PATCH v2 01/15] bpfilter: match bit size of bpfilter_umh to that of the kernel
+Date:   Wed, 29 Apr 2020 12:45:13 +0900
+Message-Id: <20200429034527.590520-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200429034527.590520-1-masahiroy@kernel.org>
 References: <20200429034527.590520-1-masahiroy@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These userspace programs include UAPI headers exported to usr/include/.
-'make headers' always works for the target architecture (i.e. the same
-architecture as the kernel), so the sample programs should be built for
-the target as well. Kbuild now supports 'userprogs' for that.
+bpfilter_umh is built for the default machine bit of the compiler,
+which may not match to the bit size of the kernel.
 
-I also guarded the CONFIG option by 'depends on CC_CAN_LINK' because
-$(CC) may not provide libc.
+This happens in the scenario below:
 
-The 'ifndef CROSS_COMPILE' is no longer needed.
+You can use biarch GCC that defaults to 64-bit for building the 32-bit
+kernel. In this case, Kbuild passes -m32 to teach the compiler to
+produce 32-bit kernel space objects. However, it is missing when
+building bpfilter_umh. It is built as a 64-bit ELF, and then embedded
+into the 32-bit kernel.
 
-BTW, the -m31 for s390 is left-over code. Commit 5a79859ae0f3 ("s390:
-remove 31 bit support") killed it.
+The 32-bit kernel and 64-bit umh is a bad combination.
+
+In theory, we can have 32-bit umh running on 64-bit kernel, but we do
+not have a good reason to support such a usecase.
+
+The best is to match the bit size between them.
+
+Pass -m32 or -m64 to the umh build command if it is found in
+$(KBUILD_CFLAGS). Evaluate CC_CAN_LINK against the kernel bit-size.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
 ---
 
-Changes in v2: None
+Changes in v2:
+  - New patch
 
- samples/Kconfig          |  2 +-
- samples/seccomp/Makefile | 42 +++-------------------------------------
- 2 files changed, 4 insertions(+), 40 deletions(-)
+ init/Kconfig          | 4 +++-
+ net/bpfilter/Makefile | 5 +++--
+ usr/include/Makefile  | 4 ++++
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 9d236c346de5..8949e9646125 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -126,7 +126,7 @@ config SAMPLE_PIDFD
+diff --git a/init/Kconfig b/init/Kconfig
+index a494212a3a79..57562a8e2761 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -45,7 +45,9 @@ config CLANG_VERSION
+ 	default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
  
- config SAMPLE_SECCOMP
- 	bool "Build seccomp sample code"
--	depends on SECCOMP_FILTER && HEADERS_INSTALL
-+	depends on SECCOMP_FILTER && CC_CAN_LINK && HEADERS_INSTALL
- 	help
- 	  Build samples of seccomp filters using various methods of
- 	  BPF filter construction.
-diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
-index 89279e8b87df..75916c23e416 100644
---- a/samples/seccomp/Makefile
-+++ b/samples/seccomp/Makefile
-@@ -1,44 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
--ifndef CROSS_COMPILE
--hostprogs := bpf-fancy dropper bpf-direct user-trap
-+userprogs := bpf-fancy dropper bpf-direct user-trap
+ config CC_CAN_LINK
+-	def_bool $(success,$(srctree)/scripts/cc-can-link.sh $(CC))
++	bool
++	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(m64-flag)) if 64BIT
++	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(m32-flag))
  
--HOSTCFLAGS_bpf-fancy.o += -I$(objtree)/usr/include
--HOSTCFLAGS_bpf-fancy.o += -idirafter $(objtree)/include
--HOSTCFLAGS_bpf-helper.o += -I$(objtree)/usr/include
--HOSTCFLAGS_bpf-helper.o += -idirafter $(objtree)/include
- bpf-fancy-objs := bpf-fancy.o bpf-helper.o
+ config CC_HAS_ASM_GOTO
+ 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+diff --git a/net/bpfilter/Makefile b/net/bpfilter/Makefile
+index 36580301da70..f6209e4827b9 100644
+--- a/net/bpfilter/Makefile
++++ b/net/bpfilter/Makefile
+@@ -5,14 +5,15 @@
  
--HOSTCFLAGS_dropper.o += -I$(objtree)/usr/include
--HOSTCFLAGS_dropper.o += -idirafter $(objtree)/include
--dropper-objs := dropper.o
-+userccflags += -I usr/include
+ hostprogs := bpfilter_umh
+ bpfilter_umh-objs := main.o
+-KBUILD_HOSTCFLAGS += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
++KBUILD_HOSTCFLAGS += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi \
++			$(filter -m32 -m64, $(KBUILD_CFLAGS))
+ HOSTCC := $(CC)
  
--HOSTCFLAGS_bpf-direct.o += -I$(objtree)/usr/include
--HOSTCFLAGS_bpf-direct.o += -idirafter $(objtree)/include
--bpf-direct-objs := bpf-direct.o
--
--HOSTCFLAGS_user-trap.o += -I$(objtree)/usr/include
--HOSTCFLAGS_user-trap.o += -idirafter $(objtree)/include
--user-trap-objs := user-trap.o
--
--# Try to match the kernel target.
--ifndef CONFIG_64BIT
--
--# s390 has -m31 flag to build 31 bit binaries
--ifndef CONFIG_S390
--MFLAG = -m32
--else
--MFLAG = -m31
--endif
--
--HOSTCFLAGS_bpf-direct.o += $(MFLAG)
--HOSTCFLAGS_dropper.o += $(MFLAG)
--HOSTCFLAGS_bpf-helper.o += $(MFLAG)
--HOSTCFLAGS_bpf-fancy.o += $(MFLAG)
--HOSTCFLAGS_user-trap.o += $(MFLAG)
--HOSTLDLIBS_bpf-direct += $(MFLAG)
--HOSTLDLIBS_bpf-fancy += $(MFLAG)
--HOSTLDLIBS_dropper += $(MFLAG)
--HOSTLDLIBS_user-trap += $(MFLAG)
--endif
--always-y := $(hostprogs)
--endif
-+always-y := $(userprogs)
+ ifeq ($(CONFIG_BPFILTER_UMH), y)
+ # builtin bpfilter_umh should be compiled with -static
+ # since rootfs isn't mounted at the time of __init
+ # function is called and do_execv won't find elf interpreter
+-KBUILD_HOSTLDFLAGS += -static
++KBUILD_HOSTLDFLAGS += -static $(filter -m32 -m64, $(KBUILD_CFLAGS))
+ endif
+ 
+ $(obj)/bpfilter_umh_blob.o: $(obj)/bpfilter_umh
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 5a7ee3e5ed86..55362f3ab393 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -8,6 +8,10 @@
+ # We cannot go as far as adding -Wpedantic since it emits too many warnings.
+ UAPI_CFLAGS := -std=c90 -Wall -Werror=implicit-function-declaration
+ 
++# In theory, we do not care -m32 or -m64 for header compile tests.
++# It is here just because CONFIG_CC_CAN_LINK is tested with -m32 or -m64.
++UAPI_CFLAGS += $(filter -m32 -m64, $(KBUILD_CFLAGS))
++
+ override c_flags = $(UAPI_CFLAGS) -Wp,-MMD,$(depfile) -I$(objtree)/usr/include
+ 
+ # The following are excluded for now because they fail to build.
 -- 
 2.25.1
 
