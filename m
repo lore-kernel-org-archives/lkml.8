@@ -2,135 +2,69 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C34C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A4DC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC0802073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D639020575
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgD2HCl (ORCPT
+        id S1726545AbgD2HDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:02:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35632 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgD2HCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:02:40 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r17so735235lff.2;
-        Wed, 29 Apr 2020 00:02:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r85BWktV4eKffhP5bEUSsTAbCcixIe97gDFSAa6NS3Q=;
-        b=d8MO2agmSpgE0t4Hwc90drXsc3Pv1WIi8szDM6PgnW9tGkvHMCKa2FXPicLcaz5cRk
-         VoC5Ku1ChYdJxOEk1Ry1m8wojb6TR1gra6U3vGnuoBFj80dYS6ced27SOsft25wOiGwX
-         0gCtCruF4C8PokGM1nVQHp79akAtxAloqfIRAAbECwpCH1EqYp1mRP6t3CblnvJYJwuJ
-         6A9cK15ooQvgWyXEJa/DHmAThnspbBwbK7LGrW/tfPqPZA/9OwiLneDYhtnm6JEMit/M
-         OLn/uxKAq7kOt9aAyJrVUNC2VrSO2rJoyvWJXxjDGZ1uomaQSHWPrfHovWDyjrt/iyRR
-         7zwA==
-X-Gm-Message-State: AGi0Pubrxt37PQaeOvRhUYeEYRnkGk+OBjy/Gjvxe1EdpYQhGdqWK4Ot
-        frKKgVFQCFHpgngvySXEooXRkB+D
-X-Google-Smtp-Source: APiQypIFi9ou7QBNuT6F+ieYM01MLBxKnRbK+Vb4zU2l2zTUMF/LaQAO7c13hHD9GVjqgs8VW8hnsg==
-X-Received: by 2002:ac2:47f0:: with SMTP id b16mr21856798lfp.81.1588143758172;
-        Wed, 29 Apr 2020 00:02:38 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id h24sm1618370lji.99.2020.04.29.00.02.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:02:37 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 10:01:49 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     sre@kernel.org, robh+dt@kernel.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v10 07/11] power: supply: add battery parameters
-Message-ID: <9b59e3674ad89fddf83aa6396c8699e71836be0c.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 29 Apr 2020 03:03:42 -0400
+Received: from namei.org ([65.99.196.166]:52998 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbgD2HDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:03:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 03T73OrI019827;
+        Wed, 29 Apr 2020 07:03:24 GMT
+Date:   Wed, 29 Apr 2020 17:03:24 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] Documentation: LSM: Correct the basic LSM description
+In-Reply-To: <20200428124436.1c7463ee@lwn.net>
+Message-ID: <alpine.LRH.2.21.2004291700110.19446@namei.org>
+References: <4c053d72-2d58-612f-6d6b-f04226d0181e.ref@schaufler-ca.com> <4c053d72-2d58-612f-6d6b-f04226d0181e@schaufler-ca.com> <20200428124436.1c7463ee@lwn.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add parsing of new device-tree battery bindings.
+On Tue, 28 Apr 2020, Jonathan Corbet wrote:
 
-     - trickle-charge-current-microamp
-     - precharge-upper-limit-microvolt
-     - re-charge-voltage-microvolt
-     - over-voltage-threshold-microvolt
+> On Tue, 21 Apr 2020 14:48:34 -0700
+> Casey Schaufler <casey@schaufler-ca.com> wrote:
+> 
+> > This is a first pass at updating the basic documentation on
+> > Linux Security Modules (LSM), which is frighteningly out of date.
+> > Remove untrue statements about the LSM framework. Replace them
+> > with true statements where it is convenient to do so. This is
+> > the beginnig of a larger effort to bring the LSM documentation
+> > up to date.
+> > 
+> > Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> > ---
+> >  Documentation/security/lsm.rst | 202 ++++++++++++++---------------------------
+> >  1 file changed, 66 insertions(+), 136 deletions(-)
+> 
+> James, are you planning to pick this up, or should I grab it?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
-
-No changes since v9
-
- drivers/power/supply/power_supply_core.c | 8 ++++++++
- include/linux/power_supply.h             | 4 ++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 1a9a9fae73d3..02b37fe6061c 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -620,10 +620,18 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 			     &info->voltage_min_design_uv);
- 	of_property_read_u32(battery_np, "voltage-max-design-microvolt",
- 			     &info->voltage_max_design_uv);
-+	of_property_read_u32(battery_np, "trickle-charge-current-microamp",
-+			     &info->tricklecharge_current_ua);
- 	of_property_read_u32(battery_np, "precharge-current-microamp",
- 			     &info->precharge_current_ua);
-+	of_property_read_u32(battery_np, "precharge-upper-limit-microvolt",
-+			     &info->precharge_voltage_max_uv);
- 	of_property_read_u32(battery_np, "charge-term-current-microamp",
- 			     &info->charge_term_current_ua);
-+	of_property_read_u32(battery_np, "re-charge-voltage-microvolt",
-+			     &info->charge_restart_voltage_uv);
-+	of_property_read_u32(battery_np, "over-voltage-threshold-microvolt",
-+			     &info->overvoltage_limit_uv);
- 	of_property_read_u32(battery_np, "constant-charge-current-max-microamp",
- 			     &info->constant_charge_current_max_ua);
- 	of_property_read_u32(battery_np, "constant-charge-voltage-max-microvolt",
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..d01322d1ab52 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -346,8 +346,12 @@ struct power_supply_battery_info {
- 	int charge_full_design_uah;	    /* microAmp-hours */
- 	int voltage_min_design_uv;	    /* microVolts */
- 	int voltage_max_design_uv;	    /* microVolts */
-+	int tricklecharge_current_ua;	    /* microAmps */
- 	int precharge_current_ua;	    /* microAmps */
-+	int precharge_voltage_max_uv;	    /* microVolts */
- 	int charge_term_current_ua;	    /* microAmps */
-+	int charge_restart_voltage_uv;	    /* microVolts */
-+	int overvoltage_limit_uv;	    /* microVolts */
- 	int constant_charge_current_max_ua; /* microAmps */
- 	int constant_charge_voltage_max_uv; /* microVolts */
- 	int factory_internal_resistance_uohm;   /* microOhms */
--- 
-2.21.0
+You can grab it, but I don't think this patch ended up on the lsm list for 
+review (I only caught it in the moderation queue for lss-pc).
 
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+James Morris
+<jmorris@namei.org>
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
