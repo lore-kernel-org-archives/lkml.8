@@ -2,71 +2,116 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AEEC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5582DC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECCB420731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB3720731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBr/3T3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgD2DJc (ORCPT
+        id S1726683AbgD2DL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:09:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3378 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726559AbgD2DJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:09:32 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EC86577A9F912E32341D;
-        Wed, 29 Apr 2020 11:09:29 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 29 Apr 2020 11:09:23 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <aviad.krawczyk@huawei.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] hinic: Use ARRAY_SIZE for nic_vf_cmd_msg_handler
-Date:   Wed, 29 Apr 2020 11:15:36 +0800
-Message-ID: <1588130136-49236-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Tue, 28 Apr 2020 23:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726560AbgD2DLZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 23:11:25 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2682CC03C1AC;
+        Tue, 28 Apr 2020 20:11:24 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id t3so671392qkg.1;
+        Tue, 28 Apr 2020 20:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WHs8ke0Gw6reMmvCug3kjBIZJVJKpowZ4GplwPiaIKE=;
+        b=HBr/3T3/qr8Lb5BjyMhrk+TlrezveYN/pw/zLUP/qU40wc0j+wwcDjuYK/djjlrVAM
+         Cr+xsMNhaYTg16d3jxjMkJFABchp3GLoW+wam4I4azuIpfrLPzEbiWo8rTlKnHK4b4fH
+         4O2XoKcgG2cNBZAzvafit2QUrwRY7w4RamZOW6UYMMWAO/pmS2II7gP0N2qVVhAfXb+u
+         PFS9YXUzpcMPm8fHegf/hQ2Rd82XCi5ywPaQEAW0hTUqnS8Q9wjEzODiDGqW1wZ1Akgg
+         APFwqigzOW4QSGXceNyVxRNFlUVzth4BvZ8HfGDU5b4YpT0FIisu5d2LD9kqO8BarFUj
+         9nbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WHs8ke0Gw6reMmvCug3kjBIZJVJKpowZ4GplwPiaIKE=;
+        b=MHcj++KBtpWKSdyxpJcsApbQDvQNqHIsUY11zvKaNclckCwOhsb3u5ytPAJdf7ab8s
+         y4xw6l6mpVw/LTy504CB0jbv3azFnmhj2vy0qi3WBlBAsHBMzuHKBI6tHwwIIR7Spf/o
+         jo0D8BEeXx3hvN6x3SN4ip2VK1KDwK9WDd/5GxI20PyDn8yBAEUBcQ7N08af7LQvRdCF
+         RPb5ML0H5zuQafqtsrZsW+MMWeJDdgcfzvQoXnrR7Bv50+Mz5wjSCBETa47+FodlSoA6
+         Z8yi6h4X6y7sDcohui+1dT7YHfR+Yy1jCc1NZq2Te+kSw2ifez8I361/WEUk9MFdevMR
+         UuyA==
+X-Gm-Message-State: AGi0PuYzsjIe8uL+wmdy3K4Js1VqOSEEvG7eBgG6+zNZWefZvjRuAy6y
+        i9YnkBjPI+3oNvk70Up24ip43ZmU5HOiVP5ZuEY=
+X-Google-Smtp-Source: APiQypI4xhhlfLjlXDG+gMyTnHgQTNH5cxHxffOo30wBCDqwcLfDGiEI3OXGGGAp31UHp7eQPpOYxnbS37451I2jAoQ=
+X-Received: by 2002:ae9:ed89:: with SMTP id c131mr28608732qkg.447.1588129883206;
+ Tue, 28 Apr 2020 20:11:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+References: <20200428213035.3108649-1-arnd@arndb.de>
+In-Reply-To: <20200428213035.3108649-1-arnd@arndb.de>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Wed, 29 Apr 2020 08:41:12 +0530
+Message-ID: <CALUj-gse+6=pTooNAo4=QjM+YXTmTd_O826v7pW6WbbXFDuXLg@mail.gmail.com>
+Subject: Re: [PATCH] HID: mcp2221: add gpiolib dependency
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Bastien Nocera <bnocera@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix coccinelle warning, use ARRAY_SIZE
+Thanks Arnd, How about one liner:
+depends on USB_HID && I2C && GPIOLIB
 
-drivers/net/ethernet/huawei/hinic/hinic_sriov.c:713:43-44: WARNING: Use ARRAY_SIZE
+Reviewed-by: Rishi Gupta <gupt21@gmail.com>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- drivers/net/ethernet/huawei/hinic/hinic_sriov.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-index b24788e..ac12725 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-@@ -710,8 +710,7 @@ int nic_pf_mbox_handler(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
- 	if (!hwdev)
- 		return -EFAULT;
- 
--	cmd_number = sizeof(nic_vf_cmd_msg_handler) /
--			    sizeof(struct vf_cmd_msg_handle);
-+	cmd_number = ARRAY_SIZE(nic_vf_cmd_msg_handler);
- 	pfhwdev = container_of(dev, struct hinic_pfhwdev, hwdev);
- 	nic_io = &dev->func_to_io;
- 	for (i = 0; i < cmd_number; i++) {
--- 
-2.6.2
-
+On Wed, Apr 29, 2020 at 3:00 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Without gpiolib, this driver fails to link:
+>
+> arm-linux-gnueabi-ld: drivers/hid/hid-mcp2221.o: in function `mcp2221_probe':
+> hid-mcp2221.c:(.text+0x1b0): undefined reference to `devm_gpiochip_add_data'
+> arm-linux-gnueabi-ld: drivers/hid/hid-mcp2221.o: in function `mcp_gpio_get':
+> hid-mcp2221.c:(.text+0x30c): undefined reference to `gpiochip_get_data'
+>
+> Fixes: 328de1c519c5 ("HID: mcp2221: add GPIO functionality support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/hid/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index 008bf44bc2c3..d54e7ae80de5 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -1155,6 +1155,7 @@ config HID_ALPS
+>  config HID_MCP2221
+>         tristate "Microchip MCP2221 HID USB-to-I2C/SMbus host support"
+>         depends on USB_HID && I2C
+> +       depends on GPIOLIB
+>         ---help---
+>         Provides I2C and SMBUS host adapter functionality over USB-HID
+>         through MCP2221 device.
+> --
+> 2.26.0
+>
