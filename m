@@ -2,79 +2,193 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BCC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FD6C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9159E2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:04:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CXmhYwSf"
+	by mail.kernel.org (Postfix) with ESMTP id 0724220B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgD2MEZ (ORCPT
+        id S1726937AbgD2MFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbgD2MEZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:04:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1111FC03C1AD;
-        Wed, 29 Apr 2020 05:04:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=O385uY4zHGIJRbWSoL99UmJmEY6lnZgJqFnu8+7Cu40=; b=CXmhYwSfXlX1ebl+S79JE2NY6q
-        XnbTqO+F0IktLJMaZ8QCyjvIaMilP1HM0OlazqM9rA2EOGDQVi6NHpZ9pqFV5Fe6AR+VZEClZ6dZj
-        l4Z1seG7fVFOxDf3beKsjJYigCFR3RFYpqlfcuHEKYMp4PT3GN5gz24f14GG8Xqq6ImWpsAfPE6jb
-        hP1Li8bNfuQx7/eCptaxMWX3vgnAvo9HzXfUUvQQIwp23DCBWlqYhRnVos739pnxtIoPeZUMnDQIC
-        Wb31Bv4cGYfn+WdRK28KbdMYbowLQRS6urnSfU35qXmQcXe+q+w30oN4p8SSj0uysStV5c7WTt9/p
-        Jwp7qi5g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTlRf-0000p0-1K; Wed, 29 Apr 2020 12:04:07 +0000
-Date:   Wed, 29 Apr 2020 05:04:06 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
-Message-ID: <20200429120406.GA913@infradead.org>
-References: <20200429074627.5955-1-mcgrof@kernel.org>
- <20200429074627.5955-5-mcgrof@kernel.org>
- <20200429112637.GD21892@infradead.org>
- <20200429114542.GJ11244@42.do-not-panic.com>
- <20200429115051.GA27378@infradead.org>
- <20200429120230.GK11244@42.do-not-panic.com>
+        Wed, 29 Apr 2020 08:05:09 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55822 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726524AbgD2MFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:05:09 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2F6BC89CE57ACD6552F0;
+        Wed, 29 Apr 2020 20:05:06 +0800 (CST)
+Received: from [10.166.212.221] (10.166.212.221) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 29 Apr
+ 2020 20:04:55 +0800
+Subject: Re: [PATCH 1/1] interconnect: qcom: Move the static keyword to the
+ front of declaration
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+References: <20200429101904.5771-1-georgi.djakov@linaro.org>
+ <20200429101904.5771-2-georgi.djakov@linaro.org>
+From:   "chentao (AS)" <chentao107@huawei.com>
+Message-ID: <f3b632b7-3a96-5f61-170f-5bff62582e38@huawei.com>
+Date:   Wed, 29 Apr 2020 20:04:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429120230.GK11244@42.do-not-panic.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200429101904.5771-2-georgi.djakov@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.166.212.221]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 12:02:30PM +0000, Luis Chamberlain wrote:
-> > Err, that function is static and has two callers.
-> 
-> Yes but that is to make it easier to look for who is creating the
-> debugfs_dir for either the request_queue or partition. I'll export
-> blk_debugfs_root and we'll open code all this.
+Thank you for your review and modification!
 
-No, please not.  exported variables are usually a bad idea.  Just
-skip the somewhat pointless trivial static function.
+On 2020/4/29 18:19, Georgi Djakov wrote:
+> From: ChenTao <chentao107@huawei.com>
+>
+> Fix the following warning:
+>
+> Move the static keyword to the front of declaration of sdm845_icc_osm_l3
+> sdm845_aggre1_noc sc7180_icc_osm_l3 sdm845_aggre2_noc sdm845_config_noc
+> sdm845_dc_noc sdm845_gladiator_noc sdm845_mem_noc sdm845_mmss_noc and
+> sdm845_system_noc, resolve the following compiler warning that can be
+> when building with warnings enabled (W=1):
+>
+> drivers/interconnect/qcom/osm-l3.c:81:1: warning:
+>   const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
+> drivers/interconnect/qcom/osm-l3.c:94:1: warning:
+>   const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
+> drivers/interconnect/qcom/sdm845.c:195:1: warning:
+>   const static struct qcom_icc_desc sdm845_aggre1_noc = {
+> drivers/interconnect/qcom/sdm845.c:223:1: warning:
+>   const static struct qcom_icc_desc sdm845_aggre2_noc = {
+> drivers/interconnect/qcom/sdm845.c:284:1: warning:
+>   const static struct qcom_icc_desc sdm845_config_noc = {
+> drivers/interconnect/qcom/sdm845.c:300:1: warning:
+>   const static struct qcom_icc_desc sdm845_dc_noc = {
+> drivers/interconnect/qcom/sdm845.c:318:1: warning:
+>   const static struct qcom_icc_desc sdm845_gladiator_noc = {
+> drivers/interconnect/qcom/sdm845.c:353:1: warning:
+>   const static struct qcom_icc_desc sdm845_mem_noc = {
+> drivers/interconnect/qcom/sdm845.c:387:1: warning:
+>   const static struct qcom_icc_desc sdm845_mmss_noc = {
+> drivers/interconnect/qcom/sdm845.c:433:1: warning:
+>   const static struct qcom_icc_desc sdm845_system_noc = {
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: ChenTao <chentao107@huawei.com>
+> Link: https://lore.kernel.org/r/20200423132142.45174-1-chentao107@huawei.com
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>   drivers/interconnect/qcom/osm-l3.c |  4 ++--
+>   drivers/interconnect/qcom/sdm845.c | 16 ++++++++--------
+>   2 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+> index a03c6d6833df..96fb9ff5ff2e 100644
+> --- a/drivers/interconnect/qcom/osm-l3.c
+> +++ b/drivers/interconnect/qcom/osm-l3.c
+> @@ -78,7 +78,7 @@ static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
+>   	[SLAVE_OSM_L3] = &sdm845_osm_l3,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
+> +static const struct qcom_icc_desc sdm845_icc_osm_l3 = {
+>   	.nodes = sdm845_osm_l3_nodes,
+>   	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
+>   };
+> @@ -91,7 +91,7 @@ static struct qcom_icc_node *sc7180_osm_l3_nodes[] = {
+>   	[SLAVE_OSM_L3] = &sc7180_osm_l3,
+>   };
+>   
+> -const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
+> +static const struct qcom_icc_desc sc7180_icc_osm_l3 = {
+>   	.nodes = sc7180_osm_l3_nodes,
+>   	.num_nodes = ARRAY_SIZE(sc7180_osm_l3_nodes),
+>   };
+> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+> index b013b80caa45..f6c7b969520d 100644
+> --- a/drivers/interconnect/qcom/sdm845.c
+> +++ b/drivers/interconnect/qcom/sdm845.c
+> @@ -192,7 +192,7 @@ static struct qcom_icc_node *aggre1_noc_nodes[] = {
+>   	[SLAVE_ANOC_PCIE_A1NOC_SNOC] = &qns_pcie_a1noc_snoc,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_aggre1_noc = {
+> +static const struct qcom_icc_desc sdm845_aggre1_noc = {
+>   	.nodes = aggre1_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(aggre1_noc_nodes),
+>   	.bcms = aggre1_noc_bcms,
+> @@ -220,7 +220,7 @@ static struct qcom_icc_node *aggre2_noc_nodes[] = {
+>   	[SLAVE_SERVICE_A2NOC] = &srvc_aggre2_noc,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_aggre2_noc = {
+> +static const struct qcom_icc_desc sdm845_aggre2_noc = {
+>   	.nodes = aggre2_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(aggre2_noc_nodes),
+>   	.bcms = aggre2_noc_bcms,
+> @@ -281,7 +281,7 @@ static struct qcom_icc_node *config_noc_nodes[] = {
+>   	[SLAVE_SERVICE_CNOC] = &srvc_cnoc,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_config_noc = {
+> +static const struct qcom_icc_desc sdm845_config_noc = {
+>   	.nodes = config_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(config_noc_nodes),
+>   	.bcms = config_noc_bcms,
+> @@ -297,7 +297,7 @@ static struct qcom_icc_node *dc_noc_nodes[] = {
+>   	[SLAVE_MEM_NOC_CFG] = &qhs_memnoc,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_dc_noc = {
+> +static const struct qcom_icc_desc sdm845_dc_noc = {
+>   	.nodes = dc_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(dc_noc_nodes),
+>   	.bcms = dc_noc_bcms,
+> @@ -315,7 +315,7 @@ static struct qcom_icc_node *gladiator_noc_nodes[] = {
+>   	[SLAVE_SERVICE_GNOC] = &srvc_gnoc,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_gladiator_noc = {
+> +static const struct qcom_icc_desc sdm845_gladiator_noc = {
+>   	.nodes = gladiator_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(gladiator_noc_nodes),
+>   	.bcms = gladiator_noc_bcms,
+> @@ -350,7 +350,7 @@ static struct qcom_icc_node *mem_noc_nodes[] = {
+>   	[SLAVE_EBI1] = &ebi,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_mem_noc = {
+> +static const struct qcom_icc_desc sdm845_mem_noc = {
+>   	.nodes = mem_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(mem_noc_nodes),
+>   	.bcms = mem_noc_bcms,
+> @@ -384,7 +384,7 @@ static struct qcom_icc_node *mmss_noc_nodes[] = {
+>   	[SLAVE_CAMNOC_UNCOMP] = &qns_camnoc_uncomp,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_mmss_noc = {
+> +static const struct qcom_icc_desc sdm845_mmss_noc = {
+>   	.nodes = mmss_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(mmss_noc_nodes),
+>   	.bcms = mmss_noc_bcms,
+> @@ -430,7 +430,7 @@ static struct qcom_icc_node *system_noc_nodes[] = {
+>   	[SLAVE_TCU] = &xs_sys_tcu_cfg,
+>   };
+>   
+> -const static struct qcom_icc_desc sdm845_system_noc = {
+> +static const struct qcom_icc_desc sdm845_system_noc = {
+>   	.nodes = system_noc_nodes,
+>   	.num_nodes = ARRAY_SIZE(system_noc_nodes),
+>   	.bcms = system_noc_bcms,
+> .
