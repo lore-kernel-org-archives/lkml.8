@@ -2,144 +2,155 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5FAC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B6EC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A8B2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="auNc/mW/";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y8v1zbBf"
+	by mail.kernel.org (Postfix) with ESMTP id 3EFE52076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgD2GUD (ORCPT
+        id S1726495AbgD2GYQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 02:20:03 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:60848 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726181AbgD2GUC (ORCPT
+        Wed, 29 Apr 2020 02:24:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35074 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgD2GYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 02:20:02 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 718A64066E;
-        Wed, 29 Apr 2020 06:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1588141202; bh=rTGzQD0DtCdGWQshK24nEVitEQdDkJ+cP3mFGR9gIoM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=auNc/mW/J2OEM2QJgLa+xfjSlZBSMmSUq3IbNvRsQ403ve2rU30H889WuYGukA2RU
-         7Z9AP4Nlj/FZNWod6dzhNs+Z+zEwkZPfDO28IoG73/CVYDXTeb6KwzaeFU/FtTlZBg
-         cSPXKqjCzbiRUj0r0uYvyJLandvEFmLqBwpHH1yVV+PZQ6whTEfANTzzcypHTPycYs
-         /v8BPlN2CXw2nSDLf5bxzVg8Mr2/QB7XJr8Rn+2hYXTMi0rTLDzYZGneM7eOaOpv4h
-         mwOqGD7lAj/2Mhkw7yQD7bdHsqAah9Rfsj/5T7oSTUkbDcJSBtN3nztTNyUH4ylJiZ
-         uC+M3l95Z+svg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id F2E51A00E3;
-        Wed, 29 Apr 2020 06:19:57 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 Apr 2020 23:19:57 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Tue, 28 Apr 2020 23:19:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A727wPG0DAJG7GUkP9nNThte6RxyAL2JKEidmawaTIzLXL42vIeqh7kXXKblKjASavKICn1xs3oc4xBPzSrQKcsrUlz4EF5WIhJAZ/6H+H5BwA0uEBrtgilteLTTdLREVrYwEBE0/5nKTnf3vAyYrpLTxRa33PxK15UHYyFQK13JlUSqRGGmAS5SvAfxfkunJWOSS3Vsa0B+o93Awu5SuLH09LfbvmQdVaF8oUEpEwzsWOzgoRyn+1pf8XkAvJR1bFB3vkw5fTrbV9ZF85cs7zrBYBTZoHfvD64dV0+p3zmtj/6edFI4AaTo4Ipz8BRp6jr37Vk2J5npnavDtDwOXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rTGzQD0DtCdGWQshK24nEVitEQdDkJ+cP3mFGR9gIoM=;
- b=lYyLL8FXe4NSra0jecwDdKPjNvpymrFrhcOlAg2HmfLjNe867+o5iNBvfwP7y/gxpdZ0eNoDx2/Tm6gAkBdFiJQ0WJOg2jelS7c4/RYJwBbcApgLfNBvxiVIxnx5ZeT4BpWx79h2SP7eesbcZuSz+S5OM5Pp6GxJNCNOHaWYzAOVnUbh65Rj6D1EO3e32XsSuiitOxSgOt4HBXexXdys68zfOhBYaJSMRz3FfLS6zXh9SsOH4vMVVq2PAI4c5rdK9Z3kKB60JpxE0A6Hq333+UDleFtycnVqRkRX1zjfllRdwygKxdzXdEk4eLmlVNg3Ltm2cGsu58wTYQViE3bzew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rTGzQD0DtCdGWQshK24nEVitEQdDkJ+cP3mFGR9gIoM=;
- b=Y8v1zbBfgOJUVieTb4yfFpw3Njm+jd2A3Wk3YtkNqHVigeSstIXQe2adBof2V+zYsbtTtWFwdrUaLyatHsC8SRmhhR8JBQPI3sFMV2sUa9hDQd/71FD61gyoLTlszq0AtNB0MV+jqarK6QiQ6aQSB9DQQg/MRomSFflIU4xW/fg=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (2603:10b6:408:6e::17)
- by BN8PR12MB3107.namprd12.prod.outlook.com (2603:10b6:408:46::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Wed, 29 Apr
- 2020 06:19:55 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::651e:afe5:d0fb:def4]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::651e:afe5:d0fb:def4%3]) with mapi id 15.20.2937.023; Wed, 29 Apr 2020
- 06:19:55 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-Subject: RE: [PATCH] ARC: guard dsp early init against non ARCv2
-Thread-Topic: [PATCH] ARC: guard dsp early init against non ARCv2
-Thread-Index: AQHWHY4gqPzpvJC7j0qx04E/xf4m+KiPoJXQ
-Date:   Wed, 29 Apr 2020 06:19:55 +0000
-Message-ID: <BN8PR12MB3266393BD37EAABBF45D8AEFD3AD0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <20200428185024.5168-1-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20200428185024.5168-1-Eugeniy.Paltsev@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: synopsys.com; dkim=none (message not signed)
- header.d=none;synopsys.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [198.182.37.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d55e411d-d32e-4b2c-d445-08d7ec0555c3
-x-ms-traffictypediagnostic: BN8PR12MB3107:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB31074C809AFE048F8B966FF2D3AD0@BN8PR12MB3107.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 03883BD916
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3266.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39830400003)(366004)(376002)(346002)(136003)(66476007)(66556008)(110136005)(107886003)(9686003)(478600001)(26005)(54906003)(6636002)(186003)(66946007)(316002)(55016002)(64756008)(2906002)(66446008)(76116006)(33656002)(8936002)(7696005)(4744005)(52536014)(8676002)(86362001)(5660300002)(6506007)(71200400001)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sLZC8kjyXlHPjatdvPgXaxMUUkHW90+oA+77hfeFI3QcUxlzYzpOO98BagZvvXhGLyZgJ2UYbI7KxLK3Q4loOhsN3UqRzDCix0yaH/cTtXzCLueRmpyAqcxQlJCEjw4vhB9P3nhgbWlwKdyAkFmoRB8phCipALSyRpv/dKI1w9FqK9BuEoccPdA2DHq/q/q21mLbJMGn+P7Crq+9RKabODrJFB4Jx5SG80GotiTPmU12o+Oa7T1UeBdi4+kqwF6ePA/NE4Dvx68j0mezcAo1zbUPHhlTUNFs2vpYNtoyZvS1Px55nFHdYBR97uzs6A4kA8aCqc0pHoRFZHPmzR4XvOfee9lsEdyJ/IHaYRI+CeQuLwKcAEVifNiWe205PbzZslbzUQlXWbLzSCaIlYV7+zS4TF001fSog3ilRox5UU1WByAHPJ2YQ7rnNZQnIwXO
-x-ms-exchange-antispam-messagedata: gMdJn8q9MSC4uF2eEW63lhAqVAMe9T7f+1CBNK48anIt1dzIphe6ry13NIU54+rpExcG7HcuVK2unQozwkLW22sBA98k64PmaS+bEcc8j8vHUJkcn/L9o/QEsspkw+6nPGW6Hb6wV+xpcMyUCXD2+D103iK36mfCMxlJJ9fEMTtVSWnkUtQQWjmxhdnGwtzfv37jKdbhSizaLtgJwyeY0rnW1eaLQTc1Y6OPLVZwWqbYw4F7W53L3gjM5uEImvm+gvg1VE7rB242jIApZ7Xwbd9csIGhlRzwmU4TZYIOQLh2qltiyCWubM3Iqp8Z2SE24AS3hCVZq+sXsIWqb1r2iAMcnPfjHZnxI7G2uF/q4l25H4G+8EtoSrGYaGqW2mjD2Vv90qAUgXXF32BglYavuoTDsGIznIpovIn10oGs3SZBGLy8htgC2Sm22saYKBFcnJQrm+3K8NgXSv1D7XYP7JTtc+YpEovE/oI6ircFnpWXRrgVdjeeYVJOD34o10yS1NQCalhZka6xs1hzHEp5I44mhnsls1AnImKalHHt7OjTa1rreiB4AiteBzWw41EwVJBqjJh3rjU5zR1SgwV36uOLF1hLnooIsuTroFe8cIaXwdDm1xP3wBLlQxWNINhV3uZXjnF6e4JJ77RJ1X1/eij9UChWBDH45gznffQSbgJboTcbdYEFHIzym9xjcsP1wZchowUCzi232EM1HEuIpP01XtuBY08O4Lsfz7Huhr/5igfw9xk//81qfouSmonfr1CkUueE+EhGYspueVyFG9IjmzZYM+E5FTx4T4lsLSQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 Apr 2020 02:24:16 -0400
+Received: by mail-lj1-f196.google.com with SMTP id g4so1373547ljl.2;
+        Tue, 28 Apr 2020 23:24:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UMvE1bKhgPMPyH5g6riW7cDoy79w0qtcoyNsyUsk4iA=;
+        b=S9uxe+k/16qFQu6hjteo0ACs8fO4KSYU/oHGAoDYcxZv5L52GmXUJWwABHcMZQ3GwZ
+         rHCNVXB7OFY0GlMUPsV5cNTltEedRzihQKxacYXVZ116D1pkhsRCZr9BFWmoTqQpQslg
+         EFydtaOFaxy3g9f0yWiCA+xVglb55HEu0gVo0D7hatSGfcYZFAPmsEllv1/wz9KiE5xu
+         UktyVQVJEdlziB2L+93+5MvyxDrJNdrlyLsweH4WCXxI1Zjth/9wyC7wue3G/niqMbzy
+         oGeqQAZFtS+dDv+S40561wofb6H6SuRQrFM5zxCySdqSsZ4XkhzFeSOa4zugE6T8l4wh
+         lHBA==
+X-Gm-Message-State: AGi0Pub01OKg2xloT7E+gE6f6tH0gysnhpeA9GeVr+sFpmtbgdGKDM2N
+        +YEKu0WhtkN88NEWb9cgfybz5n1BQJEw6A==
+X-Google-Smtp-Source: APiQypIJG7mO46ZOSdxWjrbaacCFmFFl74JNW0V4rpwawaB80OvBciJ2Cr1OKKQyQUHiEtBNYc/Zjg==
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr18344260ljg.99.1588141452868;
+        Tue, 28 Apr 2020 23:24:12 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id u6sm1432926ljd.68.2020.04.28.23.24.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id t11so657206lfe.4;
+        Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
+X-Received: by 2002:ac2:5238:: with SMTP id i24mr5157585lfl.7.1588141451325;
+ Tue, 28 Apr 2020 23:24:11 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d55e411d-d32e-4b2c-d445-08d7ec0555c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2020 06:19:55.2894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q7Yv/+HxMtH5hQubzkON69KHKnUe3HLWEH2PD3ex6lIHkbrBLxznTI6cuk/X1hcTqEATOgJbcXvPbmaJJc0vgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3107
-X-OriginatorOrg: synopsys.com
+References: <20200426120442.11560-1-peron.clem@gmail.com> <20200426120442.11560-5-peron.clem@gmail.com>
+ <20200428080020.35qcuylwq2ylmubu@gilmour.lan> <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
+ <20200428160417.6q5oab2guaumhhwi@gilmour.lan> <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
+ <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
+In-Reply-To: <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 29 Apr 2020 14:24:00 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
+Message-ID: <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
+ dts: allwinner: a64: Add HDMI audio]
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Date: Apr/28/2020, 19:50:24 (UTC+00:00)
+On Wed, Apr 29, 2020 at 1:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-04-28 5:49 pm, Clément Péron wrote:
+> > Hi Mark, Rob,
+> >
+> > On Tue, 28 Apr 2020 at 18:04, Maxime Ripard <maxime@cerno.tech> wrote:
+> >>
+> >> On Tue, Apr 28, 2020 at 10:54:00AM +0200, Clément Péron wrote:
+> >>> Hi Maxime,
+> >>>
+> >>> On Tue, 28 Apr 2020 at 10:00, Maxime Ripard <maxime@cerno.tech> wrote:
+> >>>>
+> >>>> On Sun, Apr 26, 2020 at 02:04:39PM +0200, Clément Péron wrote:
+> >>>>> From: Marcus Cooper <codekipper@gmail.com>
+> >>>>>
+> >>>>> Add a simple-soundcard to link audio between HDMI and I2S.
+> >>>>>
+> >>>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> >>>>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> >>>>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> >>>>> ---
+> >>>>>   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
+> >>>>>   1 file changed, 21 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >>>>> index e56e1e3d4b73..08ab6b5e72a5 100644
+> >>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >>>>> @@ -102,6 +102,25 @@
+> >>>>>                status = "disabled";
+> >>>>>        };
+> >>>>>
+> >>>>> +     hdmi_sound: hdmi-sound {
+> >>>>> +             compatible = "simple-audio-card";
+> >>>>> +             simple-audio-card,format = "i2s";
+> >>>>> +             simple-audio-card,name = "allwinner,hdmi";
+> >>>>
+> >>>> I'm not sure what the usual card name should be like though. I would assume that
+> >>>> this should be something specific enough so that you're able to differentiate
+> >>>> between boards / SoC so that the userspace can choose a different configuration
+> >>>> based on it?
+> >>>
+> >>> I really don't know what we should use here,
+> >>> I just have a look at other SoC:
+> >>> rk3328: "HDMI"
+> >>> rk3399: "hdmi-sound"
+> >>> r8a774c0-cat874: "CAT874 HDMI sound"
+> >>>
+> >>> But maybe it's time to introduce proper name:
+> >>> What about :
+> >>> pat
+> >>> sun50i-h6-hdmi
+> >>
+> >> It's pretty much what we've been using for the other sound cards we have, so it
+> >> makes sense to me.
+> >
+> > I have a question regarding the simple-audio-card,name.
+> > In this patch, I would like to introduce a simple-audio-card for the
+> > Allwinner A64 HDMI.
+> >
+> > What should be the preferred name for this sound card?
+> > "sun50i-a64-hdmi" ? "allwinner, sun50i-a64-hdmi" ?
+>
+> I can at least speak for RK3328, and the reasoning there was that as the
+> user looking at what `aplay -l` says, I don't give a hoot about what the
+> SoC may be called, I see two cards and I want to know, with the least
+> amount of uncertainty, which one will make the sound come out of the
+> port that's labelled "HDMI" on the box ;)
 
-> As of today we guard early DSP init code with
-> ARC_AUX_DSP_BUILD (0x7A) BCR check to verify that we have
-> CPU with DSP configured. However that's not enough as in
-> ARCv1 CPU the same BCR (0x7A) is used for checking MUL/MAC
-> instructions presence.
->=20
-> So, let's guard DSP early init against non ARCv2.
->=20
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+I agree. The user really doesn't care what SoC the system uses. The only
+real requirement is to be able to tell which output the card is related
+to, i.e. is it onboard or an external DAC, is it analog or HDMI, etc..
 
-Reported-by: Angelo Ribeiro=20
-<angelor@synopsys.com>
-
----
-Thanks,
-Jose Miguel Abreu
+ChenYu
