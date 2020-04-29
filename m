@@ -2,100 +2,169 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389E4C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9442BC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCA4206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A9721973
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iCU++Bv+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HvZKeFCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgD2Ke5 (ORCPT
+        id S1726676AbgD2KhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:34:57 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40801 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726355AbgD2Ke4 (ORCPT
+        Wed, 29 Apr 2020 06:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2KhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:34:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588156496; h=In-Reply-To: Content-Type: MIME-Version:
- References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=XB7BUC3ojRcHv6kGtFh287OR6Fh4f+iq/qyjT7C3JuI=; b=iCU++Bv+Fm9kHF8lUvT8DTEFvoU0HruoM+3/+9e1we4Bjb9Cw6nXeNuNdyq5zsbRqwrEyWbU
- b8xrHW5GY0ZKyyjD/LMk/y2j0s+wVN/Jyi3XuxYKIKaT14tyydmXF8q/OMZ8yWI3jB25UAna
- I6GpDJKVtQ3MILqLI9h/zjz/gF4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9584a.7f04b35b6298-smtp-out-n04;
- Wed, 29 Apr 2020 10:34:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 77595C4478C; Wed, 29 Apr 2020 10:34:48 +0000 (UTC)
-Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: svaddagi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8502CC433D2;
-        Wed, 29 Apr 2020 10:34:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8502CC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
-Date:   Wed, 29 Apr 2020 16:04:40 +0530
-From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>, tsoni@codeaurora.org,
-        virtio-dev@lists.oasis-open.org, konrad.wilk@oracle.com,
-        jan.kiszka@siemens.com, jasowang@redhat.com,
-        christoffer.dall@arm.com,
-        virtualization@lists.linux-foundation.org, alex.bennee@linaro.org,
-        iommu@lists.linux-foundation.org, stefano.stabellini@xilinx.com,
-        will@kernel.org, linux-kernel@vger.kernel.org,
-        pratikp@codeaurora.org
-Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
-Message-ID: <20200429103438.GF5097@quicinc.com>
-Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
-References: <20200428174952.GA5097@quicinc.com>
- <20200428163448-mutt-send-email-mst@kernel.org>
- <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
- <20200429004531-mutt-send-email-mst@kernel.org>
- <b676430c-65b3-096e-ca48-ceebf10f4b28@linux.intel.com>
- <20200429023842-mutt-send-email-mst@kernel.org>
- <20200429094410.GD5097@quicinc.com>
- <20200429055125-mutt-send-email-mst@kernel.org>
- <20200429100953.GE5097@quicinc.com>
- <20200429061621-mutt-send-email-mst@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200429061621-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 29 Apr 2020 06:37:00 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF5AC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:36:58 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so1872318wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=RpkQwwv6S0Hyop47yUIyj7qzO0Gz5frqaukBd604NtU=;
+        b=HvZKeFCiIZIbg9p8zSxsOH+vfjJYTpNd7ikWWMoiC9fUQnU3lJZrK/HjgHkrXfAGl8
+         kKjxcmVZBsVlU9se+EDFZaNgIL7tInM2qcvknFXbRx7PPNAUCapOFMGy3+CCu06kFtIN
+         bALyb19P6Vhsoz8PmCDVrRfIGNpHwM9Vcz5MJ/MHdsbbC+LmcnjePrPc2Ci4eXgj78oe
+         OhDu1GZqAGs5VcSSGdbqLKXa6OhDMEJtaPSqpr2VZhyxZQxoU+YFOv9smMLSWLelb/QT
+         qO357mN+Z85gSAOFj8Lm1ULKeIRKatqPYmrikW1XJuLP2oaUvg0wPaCUcmjtt3Bek+xU
+         GIqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RpkQwwv6S0Hyop47yUIyj7qzO0Gz5frqaukBd604NtU=;
+        b=bhVy8p+xKcQUW8u8X9YF+NPTIjpOlgEIMcExzh7TnhY/+tE9e3Qf6u12JKELej9LMq
+         yQholBkpAsZnErce+nFLtfybqvR3a3BIorSoR90mlu40QuqHD3onkQm7OVoXuzQd7PkQ
+         RUmZwu7Cc3v+bQEhMmkIjajugqTUT0eoq1ErX0YtiLTbPfZ7y4fveb0EbUusLDEeF4Qc
+         eJcsB+DMSkfsdOfpF3bW3erKeDh5LcxWlN5Z0aGLJwMlKv8LEnGUqj1t2VhiUoPkDwKh
+         L76EsP2bcgQu9RVYCd2gl4f4a5leKrqPxomro5LYy9jyv+OlodnZyUonf2qTHzMP6EyE
+         l2Zg==
+X-Gm-Message-State: AGi0PuZL1/w1KaZ/ypcrAmD/wr6glN/eefTCKguYZLxiJAPGFHHD111y
+        Tser9vAUdEs49d9CukROElcDjg==
+X-Google-Smtp-Source: APiQypIQcyBJmQi7ofyqwA5mlDq2HNSja9bfSA5sY2q8vZceL0ijeX6bNqvvblyjWbpnSczn8Rg39w==
+X-Received: by 2002:a5d:4f0d:: with SMTP id c13mr37135690wru.49.1588156617262;
+        Wed, 29 Apr 2020 03:36:57 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:d494:5741:b700:698f])
+        by smtp.gmail.com with ESMTPSA id f23sm6899576wml.4.2020.04.29.03.36.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 03:36:56 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     lukasz.luba@arm.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 1/4] powercap/drivers/idle_inject: Specify idle state max latency
+Date:   Wed, 29 Apr 2020 12:36:39 +0200
+Message-Id: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michael S. Tsirkin <mst@redhat.com> [2020-04-29 06:20:48]:
+Currently the idle injection framework uses the play_idle() function
+which puts the current CPU in an idle state. The idle state is the
+deepest one, as specified by the latency constraint when calling the
+subsequent play_idle_precise() function with the INT_MAX.
 
-> On Wed, Apr 29, 2020 at 03:39:53PM +0530, Srivatsa Vaddagiri wrote:
-> > That would still not work I think where swiotlb is used for pass-thr devices
-> > (when private memory is fine) as well as virtio devices (when shared memory is
-> > required).
-> 
-> So that is a separate question. When there are multiple untrusted
-> devices, at the moment it looks like a single bounce buffer is used.
-> 
-> Which to me seems like a security problem, I think we should protect
-> untrusted devices from each other.
+The idle_injection is used by the cpuidle_cooling device which
+computes the idle / run duration to mitigate the temperature by
+injecting idle cycles. The cooling device has no control on the depth
+of the idle state.
 
-I think as first step, let me see if we can make swiotlb driver accept a target
-memory segment as its working area. That may suffice our needs I think.  A
-subsequent step could be to make swiotlb driver recognize multiple pools.
+Allow finer control of the idle injection mechanism by allowing to
+specify the latency for the idle state. Thus the cooling device has
+the ability to have a guarantee on the exit latency of the idle states
+it is injecting.
 
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+  - V4:
+    - Respin against v5.7-rc1
+---
+ drivers/powercap/idle_inject.c | 16 +++++++++++++++-
+ include/linux/idle_inject.h    |  4 ++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+index e9bbd3c42eef..c90f0990968b 100644
+--- a/drivers/powercap/idle_inject.c
++++ b/drivers/powercap/idle_inject.c
+@@ -61,12 +61,14 @@ struct idle_inject_thread {
+  * @timer: idle injection period timer
+  * @idle_duration_us: duration of CPU idle time to inject
+  * @run_duration_us: duration of CPU run time to allow
++ * @latency_us: max allowed latency
+  * @cpumask: mask of CPUs affected by idle injection
+  */
+ struct idle_inject_device {
+ 	struct hrtimer timer;
+ 	unsigned int idle_duration_us;
+ 	unsigned int run_duration_us;
++	unsigned int latency_us;
+ 	unsigned long cpumask[];
+ };
+ 
+@@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
+ 	 */
+ 	iit->should_run = 0;
+ 
+-	play_idle(READ_ONCE(ii_dev->idle_duration_us));
++	play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
++			  READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
+ }
+ 
+ /**
+@@ -169,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
+ }
+ 
++/**
++ * idle_inject_set_latency - set the maximum latency allowed
++ * @latency_us: set the latency requirement for the idle state
++ */
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_us)
++{
++	WRITE_ONCE(ii_dev->latency_us, latency_us);
++}
++
+ /**
+  * idle_inject_start - start idle injections
+  * @ii_dev: idle injection control device structure
+@@ -297,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+ 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+ 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	ii_dev->timer.function = idle_inject_timer_fn;
++	ii_dev->latency_us = UINT_MAX;
+ 
+ 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+ 
+diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+index a445cd1a36c5..91a8612b8bf9 100644
+--- a/include/linux/idle_inject.h
++++ b/include/linux/idle_inject.h
+@@ -26,4 +26,8 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+ 				 unsigned int *run_duration_us,
+ 				 unsigned int *idle_duration_us);
++
++void idle_inject_set_latency(struct idle_inject_device *ii_dev,
++			     unsigned int latency_ns);
++
+ #endif /* __IDLE_INJECT_H__ */
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
