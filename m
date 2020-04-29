@@ -2,133 +2,101 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8509CC83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33763C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1F42072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CEEA2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgD2QLO (ORCPT
+        id S1726862AbgD2QMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:11:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55638 "EHLO mga05.intel.com"
+        Wed, 29 Apr 2020 12:12:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:41580 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbgD2QLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:11:14 -0400
-IronPort-SDR: YUm3PqD1sz9z329ebCkWLr8Sx5Wqt/gEXJjdfSjVAOqcNIUJnm5YgFuUBdNPrdzYgB908uDrzB
- rLkjAluXueSw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 09:11:13 -0700
-IronPort-SDR: lx2KkyTZPhRl1sD40I4Y7gLUcq7I5rdu5EFyb/8mWtnfuMy8EnenzMatqwkSikUnQqCqGtHMR3
- hmFSOvd9wCxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="249494877"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Apr 2020 09:11:13 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 52DD8580613;
-        Wed, 29 Apr 2020 09:11:13 -0700 (PDT)
-Message-ID: <537edbfaa088a655eb22e7eba05075aa61d941be.camel@linux.intel.com>
-Subject: Re: [PATCH 0/2] Add support for StorageD3Enable _DSD property
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>
-Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        id S1726423AbgD2QMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:12:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7552E1045;
+        Wed, 29 Apr 2020 09:12:31 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89FE63F73D;
+        Wed, 29 Apr 2020 09:12:29 -0700 (PDT)
+Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Date:   Wed, 29 Apr 2020 09:11:13 -0700
-In-Reply-To: <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
-         <20200428051312.GB17146@lst.de>
-         <de052d30cc881ac67f9410b50b0760ee5bf9a623.camel@linux.intel.com>
-         <20200428142247.GB5439@lst.de>
-         <de2d78556fcb10f97364201256ac8f342a58eb75.camel@linux.intel.com>
-         <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
+ <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <70e743cf-b88e-346a-5114-939b8724c83d@arm.com>
+Date:   Wed, 29 Apr 2020 17:12:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 05:20 +0000, Williams, Dan J wrote:
-> On Tue, 2020-04-28 at 08:27 -0700, David E. Box wrote:
-> > On Tue, 2020-04-28 at 16:22 +0200, Christoph Hellwig wrote:
-> > > On Tue, Apr 28, 2020 at 07:09:59AM -0700, David E. Box wrote:
-> > > > > I'm not sure who came up with the idea to put this into ACPI,
-> > > > > but
-> > > > > it
-> > > > > belongs into NVMe.  Please talk to the NVMe technical working
-> > > > > group
-> > > > > instead of trying to overrules them in an unrelated group
-> > > > > that
-> > > > > doesn't
-> > > > > apply to all of PCIe.
-> > > > 
-> > > > Agreed that this is not ideal since it does not apply to all of
-> > > > PCIe.
-> > > > But as the property already exists on shipping systems, we need
-> > > > to
-> > > > be
-> > > > able to read it in the NVMe driver and the patch is consitent
-> > > > with
-> > > > the
-> > > > way properties under PCI ports are read.
-> > > 
-> > > The point is that it is not the BIOSes job do decide how Linux
-> > > does
-> > > power management.  For example D3 has really horrible entry and
-> > > exit
-> > > latencies in many cases, and will lead to higher power usage.
-> > 
-> > The platform can know which pm policies will save the most power.
-> > But
-> > since the solution doesn't apply to all PCIe devices (despite BIOS
-> > specifying it that way) I'll withdraw this patch. Thanks.
+On 29/04/2020 16:57, Benjamin GAIGNARD wrote:
 > 
-> Wait, why withdraw? In this case the platform is unfortunately
-> preventing the standard driver from making a proper determination. So
-> while I agree that it's not the BIOSes job, when the platform
-> actively
-> prevents proper operation due to some ill conceived non-standard
-> platform property what is Linux left to do on these systems?
 > 
-> The *patch* is not trying to overrule NVME, and the best I can say is
-> that the Intel Linux team was not in the loop when this was being
-> decided between the platform BIOS implemenation
-> and  whomever  thought
-> they could just publish random ACPI properties that impacted NVME
-> operation [1].
-> 
-> So now David is trying to get these platform unbroken because they
-> are
-> already shipping with this b0rkage.
+> On 4/29/20 5:50 PM, Rafael J. Wysocki wrote:
+>> On Friday, April 24, 2020 1:40:55 PM CEST Benjamin Gaignard wrote:
+>>> When start streaming from the sensor the CPU load could remain very low
+>>> because almost all the capture pipeline is done in hardware (i.e. without
+>>> using the CPU) and let believe to cpufreq governor that it could use lower
+>>> frequencies. If the governor decides to use a too low frequency that
+>>> becomes a problem when we need to acknowledge the interrupt during the
+>>> blanking time.
+>>> The delay to ack the interrupt and perform all the other actions before
+>>> the next frame is very short and doesn't allow to the cpufreq governor to
+>>> provide the required burst of power. That led to drop the half of the frames.
+>>>
+>>> To avoid this problem, DCMI driver informs the cpufreq governors by adding
+>>> a cpufreq minimum load QoS resquest.
+>> This seems to be addressing a use case that can be addressed with the help of
+>> utilization clamps with less power overhead.
+> Do mean clamping the policy frequencies ? I may have miss the API to do 
+> that...
+>>
 
-Not drop completely. This patch copied the code used to read _DSD
-properties under PCI root ports. But I agree that such properties
-should apply to all devices on those ports and unfortuntely that's not
-the case here. BIOS got it wrong. My thought in dropping this patch is
-to rewrite it to read the property directly from the nvme driver. Not
-the way it's typically done either but it would avoid a global change
-in the pci core while allowing us to deal with the firmware we have.
+IIUC Rafael is referring to uclamp, i.e. scheduler utilization clamping, see:
 
-David
+  https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#cpu
 
+The above describes the cgroup interface, note that you can also set clamps
+per task (via sched_setattr()).
+
+One thing that comes to mind however is that schedutil only "sees" the clamps
+of runnable tasks, and from reading your changelog you may not have moments
+without any (i.e. gears are grinding in HW). You'd have to try boosting
+(setting a high uclamp.min) whatever tasks you have on the software side and
+see how it all behaves.
+
+>> Thanks!
+>>
+>>
+>>
