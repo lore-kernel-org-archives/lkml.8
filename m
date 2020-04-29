@@ -2,95 +2,203 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB915C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73C2C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824DA206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E251206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q+ify96+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxbxXPmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgD2IOK (ORCPT
+        id S1726617AbgD2IOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:14:10 -0400
-Received: from ozlabs.org ([203.11.71.1]:48853 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD2IOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:14:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BrrZ2nKrz9sSM;
-        Wed, 29 Apr 2020 18:14:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588148047;
-        bh=aV0PEZPNtfTNVHHepqbBqkTosbZbpsGAfAJk+1cZnFs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Q+ify96+D3WB501DW64HOaDzCsOTz6olVhWC9SYpH/BYrDumMYmDxvrbm2RKqtaE4
-         NqlPz0P444rxK9Cu0CTB4T8fU06v7xyaT//qNILtFBgF81aMHKPoGpZF2qK9z9R4YX
-         B4OPDtJ1LxDn4I+ib+IZfz5d+tHH+SVXwVW2v9Ja12BcOcxSWAOdLeyrXAwSNxJcpu
-         OS7988cT/RphFgwq3bq0PlXJdlYLWuEAEeJFD7o1xWWmxfzvT/KxexsttUl+Eze5Pe
-         W8givRR/nqfsm+7tkvpSU7IPjAtJzmj2MCN/1Mo0d3PYQfs3GhVec4mttwY7LK3ZAs
-         I/ucZFqXxn5yg==
-Date:   Wed, 29 Apr 2020 18:14:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: linux-next: build warning after merge of the soundwire tree
-Message-ID: <20200429181403.07a54d40@canb.auug.org.au>
+        Wed, 29 Apr 2020 04:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD2IOx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:14:53 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA063C03C1AD;
+        Wed, 29 Apr 2020 01:14:52 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x17so1363140wrt.5;
+        Wed, 29 Apr 2020 01:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mZ9nmYfVscIKSoOv3hAxmlwFmolTjEnwI6aGV+jeb+k=;
+        b=SxbxXPmnAXwclFkA74EISkW0ObMw6vOlZf6ZJRuBBuq1ZCSDU4zctOAbgM3bISr3tB
+         2R7abtwmeP57H/EfqoEOyWHnUN3MR6vMogkFLboRiF/CoXOPfV3P9X5r0lXA+i2/eqsM
+         AZEQN2jv+4x0nB7tJrM7EFpPaCIoaNVXSL3sveAdF7S1dsDMa47bwJ5xFEXwB8lRDrPQ
+         Lr+FOjiRs7A0ThjpmlGfAPz03XPA2AAaPzeL/ko4T6b5W947HJ+pQrv0MaHdSjbRYNMY
+         +DinsAunPJdjrrpc1PcoCMQJavYKdIKNY/EBYlsGma+Y38DaksOcHzD6nG13i8NhZ5ny
+         bR6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mZ9nmYfVscIKSoOv3hAxmlwFmolTjEnwI6aGV+jeb+k=;
+        b=Sd9LZ7wJwo4eD7RGawTb1ORmN6euYX0E/NZDoftqUvw7cUsAlgn8kzgz5438zt8FAR
+         re5nAaJQ63aOv/t7krEknPXyiHQTJdnoeUW8koGy03JZsI8s0B8/Gnmul6jbiffQypl5
+         P9OxqJN6qz4XLHprQB5POA59kpu5jvp4mGgA874qdayNCiu8rVuQlU4EP5pCbpDbDyOy
+         DV23ltNLJNfD2ix/r7wrmGM8ffuF0sJHfNwhkB+41ZjN7HGm1kzvy8cagp5/EzDRCrHT
+         x24A3WiUCV9m4bEAzKpBA9+7Yy/ANie7iOcKTaD5j6wbZuyemoeZYR4kQ+iLJkE4qbE8
+         pF/g==
+X-Gm-Message-State: AGi0PuabFwuGbfrr7Z2R1UERWo+VuOmKknM81oF6xkpIO/8Q/lbnzMNp
+        ZS0NN/cl+EE4d1ohRwmVTCRxRLtr
+X-Google-Smtp-Source: APiQypJnsa4b+iDoWDzclN3hPXMZgJptYeH58mnXNTXoQZ/LTjRyi4nFzH54WL1sPr6+YPDPu9hj4w==
+X-Received: by 2002:a5d:4042:: with SMTP id w2mr35157333wrp.195.1588148091373;
+        Wed, 29 Apr 2020 01:14:51 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id d5sm29169088wrp.44.2020.04.29.01.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 01:14:49 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:14:48 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+Message-ID: <20200429081448.GA2345465@ulmo>
+References: <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+ <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+ <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+ <20200427151234.GE3464906@ulmo>
+ <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/T44KkzRtqgVZ2Lm5bKFtiq6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Disposition: inline
+In-Reply-To: <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/T44KkzRtqgVZ2Lm5bKFtiq6
-Content-Type: text/plain; charset=US-ASCII
+
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Mon, Apr 27, 2020 at 06:18:34PM +0300, Dmitry Osipenko wrote:
+> 27.04.2020 18:12, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Mon, Apr 27, 2020 at 05:21:30PM +0300, Dmitry Osipenko wrote:
+> >> 27.04.2020 14:00, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Mon, Apr 27, 2020 at 12:52:10PM +0300, Dmitry Osipenko wrote:
+> >>>> 27.04.2020 10:48, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>>> ...
+> >>>>>> Maybe but all these other problems appear to have existed for some=
+time
+> >>>>>> now. We need to fix all, but for the moment we need to figure out =
+what's
+> >>>>>> best for v5.7.
+> >>>>>
+> >>>>> To me it doesn't sound like we have a good handle on what exactly is
+> >>>>> going on here and we're mostly just poking around.
+> >>>>>
+> >>>>> And even if things weren't working quite properly before, it sounds=
+ to
+> >>>>> me like this patch actually made things worse.
+> >>>>
+> >>>> There is a plenty of time to work on the proper fix now. To me it so=
+unds
+> >>>> like you're giving up on fixing the root of the problem, sorry.
+> >>>
+> >>> We're at -rc3 now and I haven't seen any promising progress in the la=
+st
+> >>> week. All the while suspend/resume is now broken on at least one board
+> >>> and that may end up hiding any other issues that could creep in in the
+> >>> meantime.
+> >>>
+> >>> Furthermore we seem to have a preexisting issue that may very well
+> >>> interfere with this patch, so I think the cautious thing is to revert
+> >>> for now and then fix the original issue first. We can always come back
+> >>> to this once everything is back to normal.
+> >>>
+> >>> Also, people are now looking at backporting this to v5.6. Unless we
+> >>> revert this from v5.7 it may get picked up for backports to other
+> >>> kernels and then I have to notify stable kernel maintainers that they
+> >>> shouldn't and they have to back things out again. That's going to cau=
+se
+> >>> a lot of wasted time for a lot of people.
+> >>>
+> >>> So, sorry, I disagree. I don't think we have "plenty of time".
+> >>
+> >> There is about a month now before the 5.7 release. It's a bit too early
+> >> to start the panic, IMO :)
+> >=20
+> > There's no panic. A patch got merged and it broken something, so we
+> > revert it and try again. It's very much standard procedure.
+> >=20
+> >> Jon already proposed a reasonable simple solution: to keep PCIe
+> >> regulators always-ON. In a longer run we may want to have I2C atomic
+> >> transfers supported for a late suspend phase.
+> >=20
+> > That's not really a solution, though, is it? It's just papering over
+> > an issue that this patch introduced or uncovered. I'm much more in
+> > favour of fixing problems at the root rather than keep papering over
+> > until we loose track of what the actual problems are.
+>=20
+> It's not "papering over an issue". The bug can't be fixed properly
+> without introducing I2C atomic transfers support for a late suspend
+> phase, I don't see any other solutions for now. Stable kernels do not
+> support atomic transfers at all, that proper solution won't be backportab=
+le.
 
-[Sorry that I did not report this earlier.]
+Hm... on a hunch I tried something and, lo and behold, it worked. I can
+get Cardhu to properly suspend/resume on top of v5.7-rc3 with the
+following sequence:
 
-After merging the soundwire tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+	revert 9f42de8d4ec2 i2c: tegra: Fix suspending in active runtime PM state
+	apply http://patchwork.ozlabs.org/project/linux-tegra/patch/20191213134417=
+=2E222720-1-thierry.reding@gmail.com/
 
-drivers/soundwire/intel_init.c:193:14: warning: 'sdw_intel_init' defined bu=
-t not used [-Wunused-function]
-  193 | static void *sdw_intel_init(acpi_handle *parent_handle,
-      |              ^~~~~~~~~~~~~~
+I also ran that through our test farm and I don't see any other issues.
+At the time I was already skeptical about pm_runtime_force_suspend() and
+pm_runtime_force_resume() and while I'm not fully certain why exactly it
+doesn't work, the above on top of v5.7-rc3 seems like a good option.
 
-Introduced by commit
+I'll try to do some digging if I can find out why exactly force suspend
+and resume doesn't work.
 
-  2978a43e7690 ("soundwire: intel: Make sdw_intel_init static")
+Thierry
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/T44KkzRtqgVZ2Lm5bKFtiq6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6pN0sACgkQAVBC80lX
-0GyiDgf+MeySdb0MFM9y5ONWf0wElC6K3bCe1yZVCiJQPTRVScyr22RQtX02vqHg
-o4XZR4YggZVU9Q2FljgVr2dlP2ctxo9NXfitndY4Oxqk5182A8aWi2HwybJ96kbG
-RgYkFLGrPmuneP6SgGdTq4eQvEq+INDmzerOWCCC+58w+X1XO+f9YDoQQJO8GlXG
-JD7jBhmRjF51zCy3JQ7QImr/CR7YUEt/2vcr3sG+SgjZZG0ykKP7yH1gy6NWM6+x
-veTNYxI7ffbQofbhopChdurUBsyV6uuSz7f0Q9TdhYhxutOzan3o/+Vy2TJPwQ96
-iEuvXOa0P8i15bxjEHxuuxnJNkOyTw==
-=uLAY
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6pN3QACgkQ3SOs138+
+s6FqAQ//RHJgl9oNrYYROPHrxVn2OtMcmj5+/dkO6Kh5NhE2esqn/x81QNWSgHwJ
+b2KkOJJW9z7npldk5w6IR5VPwN8Su4bcK16e9gGOBLvOyjltOm50txt/rRIByKpI
+0/9H158SB13+ppy1tfOMnq6u3imcbO/3YgjZ8+NXSpghACCAhwEfgh5sccG/ZoXK
+GC1AsI7QHQxDR/HONQKhQNqnUWeEW8OJ9+WrZJrFZQ7PgkSF7bEEReAGFlR7jMTJ
+d8oqCP7OdrAWWskeHOdvlGeYyxl0EjTIwEDFe/ggh0hNBuG1RmcyPQSf/FOo5n54
+ZgaSfi7wwQbnK3XTjJSBZBKwBGwlio0Fky0UbP2fZpWNLnf161n0QTPNc7xsu/Ex
+jNjqZx1KE1xLgo1Hv+2rz6xRFT1TTyB7J/jIxazqhn5cP1Sk+8oY/4/IAr7kmPbq
+2DZS+ijyqcGO+P4qDtPsdHn1j9MQTimVfF/tTzLIx31PH/+b92btgl0MMx3/tPXt
+14K7kJ6idTPm34vPVw0Lk3NWkI3oCr2xBawY9gSWYETQd5FUlA/OtP0aP91A1CQU
+BVv3txR7kxVCsGqKtv5PCS1PgLWcpJDBxsffOELv/FIb/X6SlbFBkOV51aptOlYS
+PZkLNNzV4KkFQMipM/E+p3gPx366wnhHXo1MhCqlVfwnQZtzCWI=
+=NmFD
 -----END PGP SIGNATURE-----
 
---Sig_/T44KkzRtqgVZ2Lm5bKFtiq6--
+--bp/iNruPH9dso1Pn--
