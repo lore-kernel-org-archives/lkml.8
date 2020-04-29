@@ -2,64 +2,63 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3666DC83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F941C83001
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06C772068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653B62068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSUOxeDY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNtHgy3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgD2D1C (ORCPT
+        id S1726662AbgD2D1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42644 "EHLO
+        Tue, 28 Apr 2020 23:27:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726535AbgD2D1B (ORCPT
+        by vger.kernel.org with ESMTP id S1726508AbgD2D1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:27:01 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF03AC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:27:01 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a7so209786pju.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:27:01 -0700 (PDT)
+        Tue, 28 Apr 2020 23:27:06 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26187C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:27:06 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id h11so319710plr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pxvKdEsbzWLexhjczXLGWAsQ8wUE/7iE8HqIboMrVpI=;
-        b=lSUOxeDYze8V31PTz+egnzCkEh33P7lSJWrg5PHVpeYJ6FbWnBHiqx1iV5B5gKH4mc
-         mHDkgD2O1N6p2K+umxFLEmCUSx4lNQgF2ynH2aZ1IabsHKyM0KjhdKkxGc1Zo3OkUKi9
-         pCBPxa1CoUm4ZFexb0FB6+ftPSqZiyaTpZMt4VlJOrjaVcSL5/B7tTibVgxy+3a0eaus
-         uXP+/ICx3qNHizcr+fs2nwlSJuoRsGLX8HqkHqkHSIS0qQubC1t+0cALqtqW+36spGJC
-         CYDDyuEzGiKpZqUsUjHymldoISiDajkx+RcdvKSmbCLik6iSeWmTl9smpTF7XnVU9A2E
-         nBzQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Unb6vzKYfZVHOut29YQ6Kvm+UYMfQLEK+TJmxHNNGJY=;
+        b=bNtHgy3NUjLmwef1ZHhK57fe3JiO55VlxYKnn5RshIkUTMNjEQ8/R2+4Hox/hDl4Sw
+         BlrWHCBt89hiCS7EtfeMIJiLpnazYudS4VtnG2Mqlac5rz0sN2koMm6vnH8ZahohhMiH
+         IkZCYgsdeC593M0bWx+yBa3myqFB+cwngBfY4Na2par4h98l19BJA4+eOH+ZjIljPwAI
+         5YpcX6cyBHaFOTv//9m+ziunxBzEQPAY/VfUmaubLTeZZalHI/eNAoOF8DezNFMZstKq
+         MT4r2GgN4BjWDpk/E8qYPoMa3rqYBxXBn+T8G1Gf07YQ9/eztqfXUOpBY7VeJKg47laa
+         ozNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pxvKdEsbzWLexhjczXLGWAsQ8wUE/7iE8HqIboMrVpI=;
-        b=r7khTK5z1InhLxVGKStSpg/etIEtwHrewXmU9xc34qk0Q8ngUNyEaU16uVc8HS5EZl
-         D1Axw/KF82pfiGmVsC/BlGaDvceeaa2wcSOfwhMNXBI2Ao9PuvAg4jJ+RNlPsZ+2XnFw
-         FapXqhdfTkklX4KIz8crcOhtzGerEv00Pp+TwlQX+X3CYkjtTRZS9s9X9Ig61MUbaplf
-         nPyOudfYNGJK0AgqGJGHF0+86JFmyQc2Q9zXq4DUv6jAz8n42xLXp2rydLmMIBUdMUOm
-         aWyfHGkQyqHjLvENdFeqp+bTQbOmUjQ2XjvvNpshRAD6DxCtUwXyG8XIsFif+/vK2BUG
-         wHYg==
-X-Gm-Message-State: AGi0PuZpOPxZd+IBVg5z3DiEqLERIaHuaBrCryfWUH9NsFrjN+yPcBXz
-        hAos1lE8seGuDz+hu+8J9vI=
-X-Google-Smtp-Source: APiQypJKSgZnczB4t88QIC6U5iAGRia6aXAWJjn7eL62QB9d/UDUX60LObRanrnaMVPF3mgsDQbpWQ==
-X-Received: by 2002:a17:90a:a888:: with SMTP id h8mr679701pjq.174.1588130820755;
-        Tue, 28 Apr 2020 20:27:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Unb6vzKYfZVHOut29YQ6Kvm+UYMfQLEK+TJmxHNNGJY=;
+        b=Ca75bC8QilI49/pYSdkPIbOPsHWRN1oDwxxfn/H4ZWs0T19qGVggmcdosWjNB559fy
+         KIdlSmTFHreoyD+uyKNwDg6adl0rOcMEpnwO8HEloN1YRjvy8IzK+6BLy7pnuJe0Qwdf
+         ox1gnhlXYF/UrpS7cAOdF08m4zBA94gtCWvyMYKk1/OqSGCoOzf0y4WKOS6uEqm6LPcu
+         5MfCcWdOqPmQqA8CWL7lDfrPv4clX3BLUd6Dcf4xP9DRizni3SS+xQ43BmpUMoMTC2o/
+         ok1bHVEI6U/8I8qAqanotSOv1J13JxaL7nT+8eFlzQHrNU8fFeRkF+aUsB0xzpbMw/Sq
+         A8eA==
+X-Gm-Message-State: AGi0Pub1danwV6IMsozSwUdzd5qhTfqMH07eZ7FHWTmwgVA00bykwhRo
+        vEyM1uerpUaXfDCAegPiACg=
+X-Google-Smtp-Source: APiQypLJDJ3XJJjcn6kAUugNzwdYBhQTpB+OKL/tKKH2CCSDLf6KN4mrZ6Rb5Skm00Ui641/P4TW2w==
+X-Received: by 2002:a17:902:d30a:: with SMTP id b10mr18608241plc.3.1588130825605;
+        Tue, 28 Apr 2020 20:27:05 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id q11sm9559796pfl.97.2020.04.28.20.26.56
+        by smtp.gmail.com with ESMTPSA id q11sm9559796pfl.97.2020.04.28.20.27.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 20:27:00 -0700 (PDT)
+        Tue, 28 Apr 2020 20:27:05 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -79,32 +78,18 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
         Christoph Hellwig <hch@infradead.org>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 00/10] change the implementation of the PageHighMem()
-Date:   Wed, 29 Apr 2020 12:26:33 +0900
-Message-Id: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v2 01/10] mm/page-flags: introduce PageHighMemZone()
+Date:   Wed, 29 Apr 2020 12:26:34 +0900
+Message-Id: <1588130803-20527-2-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
+References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-Changes on v2
-- add "acked-by", "reviewed-by" tags
-- replace PageHighMem() with use open-code, instead of using
-new PageHighMemZone() macro. Related file is "include/linux/migrate.h"
-
-Hello,
-
-This patchset separates two use cases of PageHighMem() by introducing
-PageHighMemZone() macro. And, it changes the implementation of
-PageHighMem() to reflect the actual meaning of this macro. This patchset
-is a preparation step for the patchset,
-"mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE" [1].
 
 PageHighMem() is used for two different cases. One is to check if there
 is a direct mapping for this page or not. The other is to check the
@@ -163,41 +148,33 @@ be changed.
 My final plan is to change the name, PageHighMem() to PageNoDirectMapped()
 or something else in order to represent proper meaning.
 
-This patchset is based on next-20200428 and you can find the full patchset on the
-following link.
+Acked-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+---
+ include/linux/page-flags.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-https://github.com/JoonsooKim/linux/tree/page_highmem-cleanup-v2.00-next-20200428
-
-Thanks.
-
-[1]: https://lore.kernel.org/linux-mm/1512114786-5085-1-git-send-email-iamjoonsoo.kim@lge.com
-
-Joonsoo Kim (10):
-  mm/page-flags: introduce PageHighMemZone()
-  drm/ttm: separate PageHighMem() and PageHighMemZone() use case
-  kexec: separate PageHighMem() and PageHighMemZone() use case
-  power: separate PageHighMem() and PageHighMemZone() use case
-  mm/gup: separate PageHighMem() and PageHighMemZone() use case
-  mm/hugetlb: separate PageHighMem() and PageHighMemZone() use case
-  mm: separate PageHighMem() and PageHighMemZone() use case
-  mm/page_alloc: correct the use of is_highmem_idx()
-  mm/migrate: replace PageHighMem() with open-code
-  mm/page-flags: change the implementation of the PageHighMem()
-
- drivers/gpu/drm/ttm/ttm_memory.c         |  4 ++--
- drivers/gpu/drm/ttm/ttm_page_alloc.c     |  2 +-
- drivers/gpu/drm/ttm/ttm_page_alloc_dma.c |  2 +-
- drivers/gpu/drm/ttm/ttm_tt.c             |  2 +-
- include/linux/migrate.h                  |  4 +++-
- include/linux/page-flags.h               | 10 +++++++++-
- kernel/kexec_core.c                      |  2 +-
- kernel/power/snapshot.c                  | 12 ++++++------
- mm/gup.c                                 |  2 +-
- mm/hugetlb.c                             |  2 +-
- mm/memory_hotplug.c                      |  2 +-
- mm/page_alloc.c                          |  4 ++--
- 12 files changed, 29 insertions(+), 19 deletions(-)
-
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 222f6f7..fca0cce 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -378,10 +378,16 @@ PAGEFLAG(Readahead, reclaim, PF_NO_COMPOUND)
+ /*
+  * Must use a macro here due to header dependency issues. page_zone() is not
+  * available at this point.
++ * PageHighMem() is for checking if the direct mapping exists or not.
++ * PageHighMemZone() is for checking the zone, where the page is belong to,
++ * in order to predict previous gfp_flags or to count something for system
++ * memory management.
+  */
+ #define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))
++#define PageHighMemZone(__p) is_highmem_idx(page_zonenum(__p))
+ #else
+ PAGEFLAG_FALSE(HighMem)
++PAGEFLAG_FALSE(HighMemZone)
+ #endif
+ 
+ #ifdef CONFIG_SWAP
 -- 
 2.7.4
 
