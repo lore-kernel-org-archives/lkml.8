@@ -2,188 +2,98 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAFDC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7426EC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D0A2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588196579;
-	bh=gVqHUNjKN4zzGuEIJy47n556tuOP9MZo3cz2lkL4JIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d3m10DqQ9IdNF1Oi6l2Cm62vFbEEF/Uv0/iJl4vV0r9Jc5cxVS6Cv6jOcb9jKrjDq
-	 BDkk+zoDcAqd91v2DoMT72WpU9CSkKG8asasxwrrlNlWkzDmuE0uNYHL43r4G5VjqX
-	 CMynx/NyRBg6QNOZcvr0FyR5jst6uhf+mHO/jsfo=
+	by mail.kernel.org (Postfix) with ESMTP id 4ACE3208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:43:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJMedRCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD2Vm7 (ORCPT
+        id S1727103AbgD2Vnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:42:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42421 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgD2Vm6 (ORCPT
+        Wed, 29 Apr 2020 17:43:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726511AbgD2Vnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:42:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i13so3256801oie.9;
-        Wed, 29 Apr 2020 14:42:56 -0700 (PDT)
+        Wed, 29 Apr 2020 17:43:35 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5088CC03C1AE;
+        Wed, 29 Apr 2020 14:43:35 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id t3so3729153qkg.1;
+        Wed, 29 Apr 2020 14:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wa4goGvORNKpxtYj+ALtCPme3G0z67iutTlHz68eUbY=;
+        b=AJMedRCPiUCF7caPu6vsnawJy06bq6cxDxxXLnXXRtefHEfVaJTl2JNojwSg3spFG/
+         0YcOst0P9qjUokFhBcuXlJBZioOLT9WkFnZFmM1NvcSPmde0jVR+unQ6N7aNTI8mCIo6
+         vpe1JGhieppeVrfsmZK271yfdhevwuQ1dgvSrZQgJaPGMVZ/e3Zj+iC5/yL5TPCSdxY9
+         MLbHrItgu9+E+yedJmgm+olVHLntsHgIEMlvd5H8c8XY76heuB8i4/diANOMH/7A+vBm
+         /jFDuLCHAv6q9eQO4GMlAj9Db9blkMX/rXDRSimy89f2WJGevm200czjnOwHfemN4sg2
+         y+eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZN/QRY3OxMls9AHONLpA7W00pKe4yt6lczGLbOe3TCs=;
-        b=OHP5FA4ujpCRCDbhz0uB+PWV436h924hAc+l/c/RFiPSSn/cjAzioveog6bgAmdLLx
-         IHDLNRAnUbrNC2i7cs4nQbvbK+7sOsfgbPxeCoijUtqNo92Xed8yVNl1DDQ+3wsoLo54
-         02HzvovPYfSvExkoAvSG/MaroUr7mlckLDtoSNqR/HtLWXIJXY87jEyuRbnFYHnNHLmm
-         YGCpmrT4XR4fAGASTXUN3MSDOjpB+l2geNfAvRsAYQgjg9psAxdFFj1H2KYq6Vfi6c1Z
-         FUzB6QGx1ckBJ8Tm1LPftWcHQpctpLbzspqrhODLr3K58ckttT1PnYTwAT93eFV6jc1f
-         f6Aw==
-X-Gm-Message-State: AGi0Pub/C7SwQXyyCQUL1OL5l0T+izsX5gjIezwa6PJR+0luz6A9J2Wo
-        jafNZ3UwMywJRdzXZnzSqg==
-X-Google-Smtp-Source: APiQypKCxdqv61B1T1NpBM6xwpLAjHJI0zpy60RiRUAzF2x8pqxnzmCc+fmPja7HqOoybilLjjX3bQ==
-X-Received: by 2002:aca:4c13:: with SMTP id z19mr258695oia.79.1588196576073;
-        Wed, 29 Apr 2020 14:42:56 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j42sm766426ooi.5.2020.04.29.14.42.54
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=wa4goGvORNKpxtYj+ALtCPme3G0z67iutTlHz68eUbY=;
+        b=H2tlHUIgwr8wtOv0bZYzjixxE7l2m5va3dJWpLnMvGnQcpXkZsPlRKexZFgZYQyw3h
+         x+nG0EDN0ib46RRC1+IY9xFAYhXhZHYJJHrC+O3Lb+sojYqjlziNbp+G99oIC7UOuSc5
+         EkxH4fAJdzi7WldCcAwZfprwb/Vh8D/wwaM6A/wj0iWlH21J228RbH4uoGqeK8LemPob
+         AFK3e8akkbHbHx5pCLIeYLNwwwnszrWkLLHETMBTcDpFag9B/q7l04EeEr+Z1vnU6mnW
+         8s7Sfsh02u8Kj1NfyK1l5ulB2qZ8Ob+Hk2QhZ/IU4IkR0DkBUKbVdT6NQLQv694UfBP6
+         gGHg==
+X-Gm-Message-State: AGi0PuaH2BQru4Tqd8T2nVHy9BplWAIuHqtHu1W3Bx7BoZrf3z0SlK0o
+        Nb8Wjd1OUD2OrPb01VihvAA=
+X-Google-Smtp-Source: APiQypJcBVrMfq1wK1lF7RPKKCrrgPz+vDyXnMD1mPuewHZHNZo6FwaPD8YtQ22MuuKC6jzlr7IL3w==
+X-Received: by 2002:a37:602:: with SMTP id 2mr519873qkg.255.1588196614530;
+        Wed, 29 Apr 2020 14:43:34 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id b68sm305288qkc.132.2020.04.29.14.43.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:42:55 -0700 (PDT)
-Received: (nullmailer pid 17398 invoked by uid 1000);
-        Wed, 29 Apr 2020 21:42:54 -0000
-Date:   Wed, 29 Apr 2020 16:42:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        saravanan sekar <sravanhome@gmail.com>,
-        andy.shevchenko@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200429214254.GA9175@bogus>
-References: <20200417085003.6124-1-sravanhome@gmail.com>
- <20200417085003.6124-2-sravanhome@gmail.com>
- <20200418155308.681df38f@archlinux>
- <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
- <20200418170619.155222fa@archlinux>
- <20200420071910.GH3737@dell>
+        Wed, 29 Apr 2020 14:43:33 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 29 Apr 2020 17:43:32 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
+Message-ID: <20200429214332.GC1621173@rani.riverdale.lan>
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-5-nivedita@alum.mit.edu>
+ <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+ <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420071910.GH3737@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 08:19:10AM +0100, Lee Jones wrote:
-> On Sat, 18 Apr 2020, Jonathan Cameron wrote:
+On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
+> On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
+> >
+> > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
+> > > Use pr_efi_err instead of bare efi_printk for error messages.
+> >
+> > Perhaps it'd be better to rename pr_efi_err to eri_err
+> > to it's clearer it's a typical efi_ logging function.
+> >
+> > $ git grep -w --name-only pr_efi_err | \
+> >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
+> >
 > 
-> > On Sat, 18 Apr 2020 17:01:17 +0200
-> > saravanan sekar <sravanhome@gmail.com> wrote:
-> > 
-> > > Hi Jonathan,
-> > > 
-> > > On 18/04/20 4:53 pm, Jonathan Cameron wrote:
-> > > > On Fri, 17 Apr 2020 10:49:58 +0200
-> > > > Saravanan Sekar <sravanhome@gmail.com> wrote:
-> > > >  
-> > > >> Add device tree binding information for mp2629 mfd driver.
-> > > >>
-> > > >> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > >> ---
-> > > >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
-> > > >>   1 file changed, 61 insertions(+)
-> > > >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > >>
-> > > >> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > >> new file mode 100644
-> > > >> index 000000000000..b25b29259d67
-> > > >> --- /dev/null
-> > > >> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > >> @@ -0,0 +1,61 @@
-> > > >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > >> +%YAML 1.2
-> > > >> +---
-> > > >> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> > > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > >> +
-> > > >> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
-> > > >> +
-> > > >> +maintainers:
-> > > >> +  - Saravanan Sekar <sravanhome@gmail.com>
-> > > >> +
-> > > >> +description: |
-> > > >> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-> > > >> +  wireless camera and portable devices. Chip is controlled over I2C.
-> > > >> +
-> > > >> +  The battery charge management device handles battery charger controller and
-> > > >> +  ADC IIO device for battery, system voltage
-> > > >> +
-> > > >> +properties:
-> > > >> +  compatible:
-> > > >> +    const: mps,mp2629
-> > > >> +
-> > > >> +  reg:
-> > > >> +    maxItems: 1
-> > > >> +
-> > > >> +  interrupts:
-> > > >> +    maxItems: 1
-> > > >> +
-> > > >> +  interrupt-controller: true
-> > > >> +
-> > > >> +  "#interrupt-cells":
-> > > >> +    const: 2
-> > > >> +    description:
-> > > >> +      The first cell is the IRQ number, the second cell is the trigger type.
-> > > >> +
-> > > >> +required:
-> > > >> +  - compatible
-> > > >> +  - reg
-> > > >> +  - interrupts
-> > > >> +  - interrupt-controller
-> > > >> +  - "#interrupt-cells"
-> > > >> +
-> > > >> +examples:
-> > > >> +  - |
-> > > >> +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > >> +    #include <dt-bindings/input/linux-event-codes.h>
-> > > >> +    i2c@7e205000 {  
-> > > > I thought the general trend for i2c devices was to leave the i2c
-> > > > part 'vague'.
-> > > >
-> > > >      i2c {
-> > > >            #address-cells = <1>;
-> > > >            #size-cells = <0>;
-> > > >           
-> > > >            pmic@4b.. etc  
-> > > I agree with you and initial patch was as like above, but Lee was 
-> > > somehow unhappy and not satisfied with
+> Yeah, pr_efi_err() is probably not the best name
 
-Jonathan is correct.
-
-> > > 
-> > > my explanations. Please find more info on v4.
-> > 
-> > Ah. Curious.  Oh well - over to Rob for a definitive answer!
-> 
-> I haven't seen this spoken about before.  The comments were based
-> solely on my own views of, the example should provide a solid, valid,
-> potentially working block for people to use as a reference.
-
-I agree that the part matching this schema should be. The rest is just 
-boilerplate.
-
-> Would an I2C node missing an address be a valid DTS/DTSI entry?
-
-i2c-gpio?
-
-Rob
-
-
-
+Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
