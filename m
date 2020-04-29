@@ -2,186 +2,156 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00564C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A03BC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D087E2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588146036;
-	bh=vT0nc6JP1XAbhEu/xWlWApVMT/AgweeuCYtCLOPZvik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wAMGG2S8FIHiAm4MCklTa/lmzh29HxMy15aavAATQ8BfwjnUdxyqFljuYX5xUiAKR
-	 oV5MnxKyipqDC/wCanMBVjEDyq2fXZr8bCisGG4AYbsR7x1kYRJKU+C8V8pCb7dZrE
-	 SkleepGxn74r3OWAAw6DuZJVaOnx9yIPypDpMGv8=
+	by mail.kernel.org (Postfix) with ESMTP id F3D8E2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:40:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDLgGsPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgD2Hkg (ORCPT
+        id S1726567AbgD2Hkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD2Hkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:40:35 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.46.25.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1AA42073E;
-        Wed, 29 Apr 2020 07:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588146034;
-        bh=vT0nc6JP1XAbhEu/xWlWApVMT/AgweeuCYtCLOPZvik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aOWD4Hlawou5o0CTYK8q0icBT7hswPxiDZC3nVwT0Jo9Xd8Z2M8CP1kLZhS2/9AVs
-         bYPgaHHY6+OCUhAEhO5SpvHoLtuS0cpNVRwQMuDPQAAGlomZT+ZrVwmx2zeW/+MCz5
-         qHQZTI8CawBO30E2PgMwf+HahaIU0UyIRIAD20e4=
-Date:   Wed, 29 Apr 2020 13:10:26 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patong.mxl@gmail.com
-Subject: Re: [PATCH 1/2] usb: serial: Add MaxLinear/Exar USB to Serial driver
-Message-ID: <20200429074025.GA6443@Mani-XPS-13-9360>
-References: <20200428195651.6793-1-mani@kernel.org>
- <20200428195651.6793-2-mani@kernel.org>
- <20200429072036.GA2045202@kroah.com>
+        Wed, 29 Apr 2020 03:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD2Hky (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:40:54 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012D4C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 00:40:53 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id b24so183507lfp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 00:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S6vndLuaeXb6bB9uiepv0GIEKfn+kuOCySzTjAzHsMU=;
+        b=FDLgGsPFHgxlMBjFNmkfnE/Jr4mIXNB0ns9FLOBMmwPRIyZAlEnLT6cTCgVk6vLaCW
+         ttoowgf6aOut7y2PxCcyMO7iByXRbafn3qJt+BEsv13U45mOcDHqmNm3MT7KhHXp02s8
+         qNIODLOep7LI6mc5PkRyIZQkcJPxNxdJbwAhk7uhCmWq48lMQcj25Pu5LwbYN2bIMoAn
+         gniHdU1zqIfIAJJQEwtEf1I9od2tl1RQ+3At4RTciCU3gNLSIxB+sLpX3Z4BQC9m6hiP
+         K9rXPnNmEK76QnKzxjl6YrH0FewLuscVAmm2rpuLKi0NVxWe4nau8n7rvoBvBx9GwCIt
+         6YFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S6vndLuaeXb6bB9uiepv0GIEKfn+kuOCySzTjAzHsMU=;
+        b=EVauGuqJrNXli22zY31tt69i6PJv4+PLNRK5h3oILURpdH0SfLr8aCfxFPH+J2kcoq
+         gSZoqH2SPkqZh+sklt5DAcN8LAdWhdzfT40zsNEydaqSxb9dFprzrWHwgokwGcaPDUBp
+         Q2SsrG/SJYyN8BIsSywZNi44Qno5zPa0oOs1tsBfkQOlq4bHD1e+BU/tbIIjvwur0aj3
+         CSecDoiu3fdYo5kj3cKtTB1wB8FTX+l2IPt55r8GoxcfY0IwEGhSV/N1FYQT4ac+iQ+9
+         SaorlhHGpsg5GVXQ/aLhW+IGQ6tXIP+kwzuR1mRSDZb+0VmjMKdT2rMUip+wd9vMZQIa
+         VypQ==
+X-Gm-Message-State: AGi0PuYKWq6Tf6yxS0XcqDfEmhfRRK8aKbB9NrxGzn2yAG1Vo07JeiHN
+        PhQyxC+uHw/202P+UBc/QGZumILmZQLDOA7QRnY=
+X-Google-Smtp-Source: APiQypLMoZakO/8ExLncaCmnnOtNMCr57sttCek7NXn2hztLvfuFdT+oQQxp8aJPkYV2kumt/lzBA/5xwKhJMFDHg7I=
+X-Received: by 2002:ac2:5c07:: with SMTP id r7mr22066594lfp.160.1588146051463;
+ Wed, 29 Apr 2020 00:40:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429072036.GA2045202@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1582175719-7401-1-git-send-email-yash.shah@sifive.com> <MN2PR13MB3552ADB09621545F67A914E28CFA0@MN2PR13MB3552.namprd13.prod.outlook.com>
+In-Reply-To: <MN2PR13MB3552ADB09621545F67A914E28CFA0@MN2PR13MB3552.namprd13.prod.outlook.com>
+From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
+Date:   Wed, 29 Apr 2020 10:40:15 +0300
+Message-ID: <CAEn-LTqUWfiV_QV3hyCQ9YouaHCzNFPq=WABfioNEiMJVP8ZVg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] cacheinfo support to read no. of L2 cache ways enabled
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bp@suse.de" <bp@suse.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Ping.
 
-On Wed, Apr 29, 2020 at 09:20:36AM +0200, Greg KH wrote:
-> On Wed, Apr 29, 2020 at 01:26:50AM +0530, mani@kernel.org wrote:
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> > 
-> > Add support for MaxLinear/Exar USB to Serial converters. This driver
-> > only supports XR21V141X series but provision has been made to support
-> > other series in future.
-> > 
-> > This driver is inspired from the initial one submitted by Patong Yang:
-> > 
-> > https://patchwork.kernel.org/patch/10543261/
-> > 
-> > While the initial driver was a custom tty USB driver exposing whole
-> > new serial interface ttyXRUSBn, this version is completely based on USB
-> > serial core thus exposing the interfaces as ttyUSBn. This will avoid
-> > the overhead of exposing a new USB serial interface which the userspace
-> > tools are unaware of.
-> 
-> Nice work!
-> 
-> Some comments below:
-> 
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * MaxLinear/Exar USB to Serial driver
-> > + *
-> > + * Based on initial driver written by Patong Yang <patong.mxl@gmail.com>
-> > + *
-> > + * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/tty.h>
-> > +#include <linux/usb.h>
-> > +#include <linux/usb/serial.h>
-> > +
-> > +#include "xr_serial.h"
-> 
-> No need for a .h file for a single .c file.
-> 
+I think this one got lost in time. I don't see it in v5.6 or v5.7.
 
-Yeah but since this driver can support multiple series of XR chips (they
-might have separate register definitions and such), I thought it is a good
-idea to have a header file to keep the driver sane. But can club it to the
-source file for now.
+david
 
-> > +static int xr_get_reg(struct usb_serial_port *port, u8 block, u16 reg,
-> > +		      u16 *val)
-> > +{
-> > +	struct usb_serial *serial = port->serial;
-> > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> > +	void *dmabuf;
-> > +	int ret = -EINVAL;
-> > +
-> > +	dmabuf = kmalloc(sizeof(reg), GFP_KERNEL);
-> 
-> So that is 2 bytes?
-> 
-
-Explanation below...
-
-> > +	if (!dmabuf)
-> > +		return -ENOMEM;
-> > +
-> > +	if (port_priv->idProduct == XR21V141X_ID) {
-> > +		/* XR21V141X uses custom command for reading UART registers */
-> > +		ret = usb_control_msg(serial->dev,
-> > +				      usb_rcvctrlpipe(serial->dev, 0),
-> > +				      XR_GET_XR21V141X,
-> > +				      USB_DIR_IN | USB_TYPE_VENDOR, 0,
-> > +				      reg | (block << 8), dmabuf,
-> > +				      port_priv->reg_width,
-> > +				      USB_CTRL_SET_TIMEOUT);
-> > +	}
-> > +
-> > +	if (ret == port_priv->reg_width) {
-> > +		memcpy(val, dmabuf, port_priv->reg_width);
-> 
-> But here you copy ->reg_width bytes in?  How do you know val can hold
-> that much?  It's only set to be 1, so you copy 1 byte to a 16bit value?
-> What part of the 16bits did you just copy those 8 bits to (hint, think
-> cpu endian issues...)
-> 
-> That feels really really odd and a bit broken.
-> 
-
-Right. The reason is, the other series which can be supported by this driver
-have different register widths. For instance XR2280x. I haven't used them
-personally but seen this in initial driver. So I just used the max u16 type
-to make the reg_{set/get} routines work with those.
-
-But agree, I should've used le16_to_cpu() cast to avoid endian issues.
-
-If you think this hack is not required now, I can just use u8 and worry about
-compatibility later.
-
-> > --- /dev/null
-> > +++ b/drivers/usb/serial/xr_serial.h
-> > @@ -0,0 +1,103 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> 
-> Are you sure about the "+"?  I have to ask :)
-> 
-
-I'm not a fan but since I've inherited the code from initial driver (which
-was GPL-2.0+), I kept it.
-
-> > +
-> > +#ifndef __LINUX_USB_SERIAL_XR_SERIAL_H
-> > +#define __LINUX_USB_SERIAL_XR_SERIAL_H
-> 
-> As you will drop this file, just a general statement, no need for
-> __LINUX as this is all Linux :)
-> 
-
-Sure.
-
-Thanks,
-Mani
-
-> thanks,
-> 
-> greg k-h
+On Fri, Mar 13, 2020 at 8:03 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> Any comments or updates on this series?
+>
+> - Yash
+>
+> > -----Original Message-----
+> > From: Yash Shah <yash.shah@sifive.com>
+> > Sent: 20 February 2020 10:45
+> > To: palmer@dabbelt.com; Paul Walmsley ( Sifive)
+> > <paul.walmsley@sifive.com>
+> > Cc: aou@eecs.berkeley.edu; anup@brainfault.org;
+> > gregkh@linuxfoundation.org; alexios.zavras@intel.com; tglx@linutronix.de;
+> > bp@suse.de; linux-riscv@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > Sachin Ghadi <sachin.ghadi@sifive.com>; Yash Shah
+> > <yash.shah@sifive.com>
+> > Subject: [PATCH v5 0/2] cacheinfo support to read no. of L2 cache ways
+> > enabled
+> >
+> > The patchset includes 2 patches. Patch 1 implements cache_get_priv_group
+> > which make use of a generic ops structure to return a private attribute group
+> > for custom cacheinfo. Patch 2 implements a private attribute named
+> > "number_of_ways_enabled" in the cacheinfo framework. Reading this
+> > attribute returns the number of L2 cache ways enabled at runtime,
+> >
+> > This patchset is based on Linux v5.6-rc2 and tested on HiFive Unleashed
+> > board.
+> >
+> > v5:
+> > - Since WayEnable is 8bits, mask out and return only the last 8 bit in
+> >   l2_largest_wayenabled()
+> > - Rebased on Linux v5.6-rc2
+> >
+> > v4:
+> > - Rename "sifive_l2_largest_wayenabled" to "l2_largest_wayenabled" and
+> >   make it a static function
+> >
+> > v3:
+> > - As per Anup Patel's suggestion[0], implement a new approach which uses
+> >   generic ops structure. Hence addition of patch 1 to this series and
+> >   corresponding changes to patch 2.
+> > - Dropped "riscv: dts: Add DT support for SiFive L2 cache controller"
+> >   patch since it is already merged
+> > - Rebased on Linux v5.5-rc6
+> >
+> > Changes in v2:
+> > - Rebase the series on v5.5-rc3
+> > - Remove the reserved-memory node from DT
+> >
+> > [0]: https://lore.kernel.org/linux-
+> > riscv/CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-
+> > Z_FaOr8LPni+s_615Q@mail.gmail.com/
+> >
+> > Yash Shah (2):
+> >   riscv: cacheinfo: Implement cache_get_priv_group with a generic ops
+> >     structure
+> >   riscv: Add support to determine no. of L2 cache way enabled
+> >
+> >  arch/riscv/include/asm/cacheinfo.h   | 15 ++++++++++++++
+> >  arch/riscv/kernel/cacheinfo.c        | 17 ++++++++++++++++
+> >  drivers/soc/sifive/sifive_l2_cache.c | 38
+> > ++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 70 insertions(+)
+> >  create mode 100644 arch/riscv/include/asm/cacheinfo.h
+> >
+> > --
+> > 2.7.4
+>
+>
