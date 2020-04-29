@@ -2,180 +2,186 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39B4C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A88C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C95002064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0708D2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRi64CTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgD2Srw (ORCPT
+        id S1727064AbgD2SsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:47:52 -0400
-Received: from smtprelay0228.hostedemail.com ([216.40.44.228]:60936 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2Srv (ORCPT
+        Wed, 29 Apr 2020 14:48:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26619 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726423AbgD2SsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:47:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 75836483C;
-        Wed, 29 Apr 2020 18:47:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: kick44_a1d68a6ba161
-X-Filterd-Recvd-Size: 5691
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 29 Apr 2020 14:48:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588186079;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9c/8llqBZkCeNlra1PyT1QmApy4gucK27prTzV0bdxM=;
+        b=dRi64CTpk8NPxuYkMCbnjSXcMWVa9Gilu1CMjR7UMDGnzg6lNs+H7/hNSGQlLO2pXnCi9O
+        K7PQsmzk9jTeRJIicAT7cNfTeDhSZ4MP0bCW/i+puD3FZ6nU1l+1W+YmFYC5kt2QbHoHUn
+        lMRpz3OLmwQ+AX7C7A5NomSnFg+KXOY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-knXWLH00MVG2roC0QEQWvQ-1; Wed, 29 Apr 2020 14:47:58 -0400
+X-MC-Unique: knXWLH00MVG2roC0QEQWvQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5456C107ACF7;
+        Wed, 29 Apr 2020 18:47:56 +0000 (UTC)
+Received: from x2.localnet (ovpn-114-53.phx2.redhat.com [10.3.114.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 415D54D6F1;
         Wed, 29 Apr 2020 18:47:49 +0000 (UTC)
-Message-ID: <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
-Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
-From:   Joe Perches <joe@perches.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 29 Apr 2020 11:47:48 -0700
-In-Reply-To: <20200429174120.1497212-5-nivedita@alum.mit.edu>
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
-         <20200429174120.1497212-5-nivedita@alum.mit.edu>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
+        ebiederm@xmission.com, tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG record to cover async unregister
+Date:   Wed, 29 Apr 2020 14:47:48 -0400
+Message-ID: <3348737.k9gCtgYObn@x2>
+Organization: Red Hat
+In-Reply-To: <20200429143146.3vlcmwvljo74ydb4@madcap2.tricolour.ca>
+References: <cover.1587500467.git.rgb@redhat.com> <CAHC9VhR9sNB58A8uQ4FNgAXOgVJ3RaWF4y5MAo=3mcTojaym0Q@mail.gmail.com> <20200429143146.3vlcmwvljo74ydb4@madcap2.tricolour.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
-> Use pr_efi_err instead of bare efi_printk for error messages.
-
-Perhaps it'd be better to rename pr_efi_err to eri_err
-to it's clearer it's a typical efi_ logging function.
-
-$ git grep -w --name-only pr_efi_err | \
-  xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
-
-Looking at code for efi_printk -> efi_char16_printk,
-it's somewhat difficult to see where the "output_string"
-function pointer is set.  Any clue?
-
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  drivers/firmware/efi/libstub/x86-stub.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
+On Wednesday, April 29, 2020 10:31:46 AM EDT Richard Guy Briggs wrote:
+> On 2020-04-28 18:25, Paul Moore wrote:
+> > On Wed, Apr 22, 2020 at 5:40 PM Richard Guy Briggs <rgb@redhat.com> 
+wrote:
+> > > Some table unregister actions seem to be initiated by the kernel to
+> > > garbage collect unused tables that are not initiated by any userspace
+> > > actions.  It was found to be necessary to add the subject credentials
+> > > to  cover this case to reveal the source of these actions.  A sample
+> > > record:
+> > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat
+> > >   family=bridge entries=0 op=unregister pid=153 uid=root auid=unset
+> > >   tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0
+> > >   comm=kworker/u4:2 exe=(null)> 
+> > [I'm going to comment up here instead of in the code because it is a
+> > bit easier for everyone to see what the actual impact might be on the
+> > records.]
+> > 
+> > Steve wants subject info in this case, okay, but let's try to trim out
+> > some of the fields which simply don't make sense in this record; I'm
+> > thinking of fields that are unset/empty in the kernel case and are
+> > duplicates of other records in the userspace/syscall case.  I think
+> > that means we can drop "tty", "ses", "comm", and "exe" ... yes?
 > 
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 677b5a1e0543..933205772d8c 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -49,7 +49,7 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
->  	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size,
->  			     (void **)&rom);
->  	if (status != EFI_SUCCESS) {
-> -		efi_printk("Failed to allocate memory for 'rom'\n");
-> +		pr_efi_err("Failed to allocate memory for 'rom'\n");
->  		return status;
->  	}
->  
-> @@ -65,7 +65,7 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
->  				PCI_VENDOR_ID, 1, &rom->vendor);
->  
->  	if (status != EFI_SUCCESS) {
-> -		efi_printk("Failed to read rom->vendor\n");
-> +		pr_efi_err("Failed to read rom->vendor\n");
->  		goto free_struct;
->  	}
->  
-> @@ -73,7 +73,7 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
->  				PCI_DEVICE_ID, 1, &rom->devid);
->  
->  	if (status != EFI_SUCCESS) {
-> -		efi_printk("Failed to read rom->devid\n");
-> +		pr_efi_err("Failed to read rom->devid\n");
->  		goto free_struct;
->  	}
->  
-> @@ -118,7 +118,7 @@ static void setup_efi_pci(struct boot_params *params)
->  				     (void **)&pci_handle);
->  
->  		if (status != EFI_SUCCESS) {
-> -			efi_printk("Failed to allocate memory for 'pci_handle'\n");
-> +			pr_efi_err("Failed to allocate memory for 'pci_handle'\n");
->  			return;
->  		}
->  
-> @@ -172,7 +172,7 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
->  		return;
->  
->  	if (efi_table_attr(p, version) != 0x10000) {
-> -		efi_printk("Unsupported properties proto version\n");
-> +		pr_efi_err("Unsupported properties proto version\n");
->  		return;
->  	}
->  
-> @@ -185,7 +185,7 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
->  				     size + sizeof(struct setup_data),
->  				     (void **)&new);
->  		if (status != EFI_SUCCESS) {
-> -			efi_printk("Failed to allocate memory for 'properties'\n");
-> +			pr_efi_err("Failed to allocate memory for 'properties'\n");
->  			return;
->  		}
->  
-> @@ -372,7 +372,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->  
->  	status = efi_bs_call(handle_protocol, handle, &proto, (void **)&image);
->  	if (status != EFI_SUCCESS) {
-> -		efi_printk("Failed to get handle for LOADED_IMAGE_PROTOCOL\n");
-> +		pr_efi_err("Failed to get handle for LOADED_IMAGE_PROTOCOL\n");
->  		efi_exit(handle, status);
->  	}
->  
-> @@ -382,7 +382,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->  	status = efi_allocate_pages(sizeof(struct boot_params),
->  				    (unsigned long *)&boot_params, ULONG_MAX);
->  	if (status != EFI_SUCCESS) {
-> -		efi_printk("Failed to allocate lowmem for boot params\n");
-> +		pr_efi_err("Failed to allocate lowmem for boot params\n");
->  		efi_exit(handle, status);
->  	}
->  
-> @@ -749,7 +749,7 @@ unsigned long efi_main(efi_handle_t handle,
->  					     hdr->kernel_alignment,
->  					     LOAD_PHYSICAL_ADDR);
->  		if (status != EFI_SUCCESS) {
-> -			efi_printk("efi_relocate_kernel() failed!\n");
-> +			pr_efi_err("efi_relocate_kernel() failed!\n");
->  			goto fail;
->  		}
->  		/*
-> @@ -786,7 +786,7 @@ unsigned long efi_main(efi_handle_t handle,
->  			efi_set_u64_split(size, &hdr->ramdisk_size,
->  					  &boot_params->ext_ramdisk_size);
->  		} else if (status != EFI_NOT_FOUND) {
-> -			efi_printk("efi_load_initrd_dev_path() failed!\n");
-> +			pr_efi_err("efi_load_initrd_dev_path() failed!\n");
->  			goto fail;
->  		}
->  	}
-> @@ -813,13 +813,13 @@ unsigned long efi_main(efi_handle_t handle,
->  
->  	status = exit_boot(boot_params, handle);
->  	if (status != EFI_SUCCESS) {
-> -		efi_printk("exit_boot() failed!\n");
-> +		pr_efi_err("exit_boot() failed!\n");
->  		goto fail;
->  	}
->  
->  	return bzimage_addr;
->  fail:
-> -	efi_printk("efi_main() failed!\n");
-> +	pr_efi_err("efi_main() failed!\n");
->  
->  	efi_exit(handle, status);
->  }
+> From the ghak28 discussion, this list and order was selected due to
+> Steve's preference for the "kernel" record convention, so deviating from
+> this will create yet a new field list.  I'll defer to Steve on this.  It
+> also has to do with the searchability of fields if they are missing.
+> 
+> I do agree that some fields will be superfluous in the kernel case.
+> The most important field would be "subj", but then "pid" and "comm", I
+> would think.  Based on this contents of the "subj" field, I'd think that
+> "uid", "auid", "tty", "ses" and "exe" are not needed.
+
+We can't be adding deleting fields based on how its triggered. If they are 
+unset, that is fine. The main issue is they have to behave the same.
+
+> > While "auid" is a potential target for removal based on the
+> > dup-or-unset criteria, I think it falls under Steve's request for
+> > subject info here, even if it is garbage in this case.
+
+auid is always unset for daemons. We do not throw it away because of that.
+
+-Steve
+
+> If we keep auid, I'd say keep ses, since they usually go together,
+> though they are separated by another field in this "kernel" record field
+> ordering.
+> 
+> I expect this orphan record to occur so infrequently that I don't think
+> bandwidth or space are a serious concern.
+> 
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > > 
+> > >  kernel/auditsc.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > > 
+> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > > index d281c18d1771..d7a45b181be0 100644
+> > > --- a/kernel/auditsc.c
+> > > +++ b/kernel/auditsc.c
+> > > @@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af,
+> > > unsigned int nentries,> > 
+> > >                        enum audit_nfcfgop op)
+> > >  
+> > >  {
+> > >  
+> > >         struct audit_buffer *ab;
+> > > 
+> > > +       const struct cred *cred;
+> > > +       struct tty_struct *tty;
+> > > +       char comm[sizeof(current->comm)];
+> > > 
+> > >         ab = audit_log_start(audit_context(), GFP_KERNEL,
+> > >         AUDIT_NETFILTER_CFG);
+> > >         if (!ab)
+> > >         
+> > >                 return;
+> > >         
+> > >         audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
+> > >         
+> > >                          name, af, nentries, audit_nfcfgs[op].s);
+> > > 
+> > > +
+> > > +       cred = current_cred();
+> > > +       tty = audit_get_tty();
+> > > +       audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
+> > > +                        task_pid_nr(current),
+> > > +                        from_kuid(&init_user_ns, cred->uid),
+> > > +                        from_kuid(&init_user_ns,
+> > > audit_get_loginuid(current)), +                        tty ?
+> > > tty_name(tty) : "(none)",
+> > > +                        audit_get_sessionid(current));
+> > > +       audit_put_tty(tty);
+> > > +       audit_log_task_context(ab); /* subj= */
+> > > +       audit_log_format(ab, " comm=");
+> > > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
+> > > +       audit_log_d_path_exe(ab, current->mm); /* exe= */
+> > > +
+> > > 
+> > >         audit_log_end(ab);
+> > >  
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
+> 
+> - RGB
+> 
+> --
+> Richard Guy Briggs <rgb@redhat.com>
+> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> Remote, Ottawa, Red Hat Canada
+> IRC: rgb, SunRaycer
+> Voice: +1.647.777.2635, Internal: (81) 32635
+
+
+
 
