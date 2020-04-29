@@ -2,114 +2,146 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B60C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACB4C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96774214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F4F21973
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="IQhJtA3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD2UqV (ORCPT
+        id S1727068AbgD2UqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:46:21 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:32928 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgD2UqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:46:21 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 333BE20025;
-        Wed, 29 Apr 2020 22:46:15 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 22:46:13 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH] drm/bridge: fix stack usage warning on old gcc
-Message-ID: <20200429204613.GA24103@ravnborg.org>
-References: <20200428215408.4111675-1-arnd@arndb.de>
+        Wed, 29 Apr 2020 16:46:24 -0400
+Received: from plaes.org ([188.166.43.21]:34960 "EHLO plaes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgD2UqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:46:23 -0400
+Received: from localhost (unknown [IPv6:2001:1530:1000:d397:940e:6b9e:3deb:3])
+        by plaes.org (Postfix) with ESMTPSA id 92F91406D2;
+        Wed, 29 Apr 2020 20:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
+        t=1588193180; bh=oXxncios4NGf2aktHiZX8FnCvunPuUkRAB5eO78zbrg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IQhJtA3O6U6JCR32OoY0yGZk+wkoR+mazjBOT2uiJTHCusppZ2YPufw/sgfbmANCu
+         UDqRAeOOmk8wz4ILHVCOJkGEH6SEsUfzdkPSadRR/GLi/ataECoiQx7PoN568Zx4nO
+         qFsPMesW6/IxRbvUMYm0cAW83f+vIjQh26akHkO17W31aaLyBgEFdk+gJwacuNMmYO
+         oAh2spSY91Fz6L7j7oENLHG56F3M+Dfp4dhOxE2+tbzQgLvWORrYsbd/DecsKwjBUy
+         5dYJe+HQQ7ZTEtx80OjzkiXYYqZsgcbCvJ3gAp4PN62a/deQhNVdx0kCUIyomm2yBd
+         frsWFybK4wQNQ==
+From:   Priit Laes <plaes@plaes.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc:     Priit Laes <plaes@plaes.org>
+Subject: [PATCH v2 1/6] clk: sunxi-ng: a20: Register regmap for sun7i CCU
+Date:   Wed, 29 Apr 2020 23:46:07 +0300
+Message-Id: <20200429204612.31883-2-plaes@plaes.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200429204612.31883-1-plaes@plaes.org>
+References: <20200429204612.31883-1-plaes@plaes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428215408.4111675-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=mDV3o1hIAAAA:8 a=e5mUnYsNAAAA:8
-        a=ZNoC2qXWVDHt2F1EEv0A:9 a=CjuIK1q_8ugA:10 a=_FVE-zBwftR9WsbkzFJk:22
-        a=Vxmtnl_E_bksehYqCbjh:22 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd.
+On sun7i, the gmac clock is handled by the dwmac-sunxi driver, but
+its configuration register is located in the CCU register range,
+requiring proper regmap setup.
 
-On Tue, Apr 28, 2020 at 11:53:54PM +0200, Arnd Bergmann wrote:
-> Some older versions of gcc badly optimize code that passes
-> an inline function argument into another function by reference,
-> causing huge stack usage:
-> 
-> drivers/gpu/drm/bridge/tc358768.c: In function 'tc358768_bridge_pre_enable':
-> drivers/gpu/drm/bridge/tc358768.c:840:1: error: the frame size of 2256 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-> 
-> Use a temporary variable as a workaround and add a comment pointing
-> to the gcc bug.
-> 
-> Fixes: ff1ca6397b1d ("drm/bridge: Add tc358768 driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+In order to do that, we use CLK_OF_DECLARE_DRIVER to initialize
+sun7i ccu, which clears the OF_POPULATED flag, allowing the
+platform device to probe the same resource with proper device node.
 
-Thanks, pushed to drm-misc-next with Tomi's r-b.
+Signed-off-by: Priit Laes <plaes@plaes.org>
+---
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.c | 60 +++++++++++++++++++++++++++-
+ 1 file changed, 59 insertions(+), 1 deletion(-)
 
-	Sam
+diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+index f32366d9336e..fbdf9ecf21b8 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
++++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+@@ -8,6 +8,8 @@
+ #include <linux/clk-provider.h>
+ #include <linux/io.h>
+ #include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
+ 
+ #include "ccu_common.h"
+ #include "ccu_reset.h"
+@@ -1478,5 +1480,61 @@ static void __init sun7i_a20_ccu_setup(struct device_node *node)
+ {
+ 	sun4i_ccu_init(node, &sun7i_a20_ccu_desc);
+ }
+-CLK_OF_DECLARE(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
++CLK_OF_DECLARE_DRIVER(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
+ 	       sun7i_a20_ccu_setup);
++
++/*
++ * Regmap for the GMAC driver (dwmac-sunxi) to allow access to
++ * GMAC configuration register.
++ */
++#define SUN7I_A20_GMAC_CFG_REG 0x164
++static bool sun7i_a20_ccu_regmap_accessible_reg(struct device *dev,
++						unsigned int reg)
++{
++	if (reg == SUN7I_A20_GMAC_CFG_REG)
++		return true;
++	return false;
++}
++
++static struct regmap_config sun7i_a20_ccu_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= 0x1f4, /* clk_out_b */
++
++	.readable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
++	.writeable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
++};
++
++static int sun7i_a20_ccu_probe_regmap(struct platform_device *pdev)
++{
++	void __iomem *reg;
++	struct resource *res;
++	struct regmap *regmap;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	regmap = devm_regmap_init_mmio(&pdev->dev, reg,
++				       &sun7i_a20_ccu_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return 0;
++}
++
++static const struct of_device_id sun7i_a20_ccu_ids[] = {
++	{ .compatible = "allwinner,sun7i-a20-ccu"},
++	{ }
++};
++
++static struct platform_driver sun7i_a20_ccu_driver = {
++	.probe = sun7i_a20_ccu_probe_regmap,
++	.driver = {
++		.name = "sun7i-a20-ccu",
++		.of_match_table = sun7i_a20_ccu_ids,
++	},
++};
++builtin_platform_driver(sun7i_a20_ccu_driver);
+-- 
+2.26.2
 
-> ---
->  drivers/gpu/drm/bridge/tc358768.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
-> index 1b39e8d37834..6650fe4cfc20 100644
-> --- a/drivers/gpu/drm/bridge/tc358768.c
-> +++ b/drivers/gpu/drm/bridge/tc358768.c
-> @@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
->  
->  static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
->  {
-> +	/* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
-> +	int tmpval = val;
->  	size_t count = 2;
->  
->  	if (priv->error)
-> @@ -187,7 +189,7 @@ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
->  	if (reg < 0x100 || reg >= 0x600)
->  		count = 1;
->  
-> -	priv->error = regmap_bulk_write(priv->regmap, reg, &val, count);
-> +	priv->error = regmap_bulk_write(priv->regmap, reg, &tmpval, count);
->  }
->  
->  static void tc358768_read(struct tc358768_priv *priv, u32 reg, u32 *val)
-> -- 
-> 2.26.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
