@@ -2,87 +2,181 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2392C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3268CC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DBD20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7F02076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ul2ClHCm"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cyFtsWgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgD2Bvb (ORCPT
+        id S1726524AbgD2BzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 21:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
+        Tue, 28 Apr 2020 21:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgD2Bva (ORCPT
+        with ESMTP id S1726158AbgD2BzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 21:51:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F324C03C1AC;
-        Tue, 28 Apr 2020 18:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WbbJxxgU3/2bFydTDSvswBZ7GGGONTFQzERhB4EnAUc=; b=Ul2ClHCmMLDUyloGhXGz54hFzD
-        fMR+V0dNgvkNCYvShBkoTv6vBoaB8q70JyqyVLyqXTRrRx8yre3Sj8KAOfTYayVF+xLVzJwcsYB0s
-        hjurit9iWN4a5sfT/dChjGHZuP5ERi+QmDTiiNv0kCZTz8PZM16OX32LiQsN4Em+etdl3Yrc30Yxw
-        g/FLckZ/pLl7ZUy6rZCNq18s1PAAYOaxZB8Pr4KVT3AKuNvF9uNXhTJRGRiSx6zGLAYTsDr4gk9N0
-        skWVoLsycEX4MKtlyewMifsVXMO+sT7X1qmpJQJKOt9VDpJ2AVrLCslMj+PaSe2mIz9EdWa+BzpBC
-        gssJLDhA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTbsk-000812-Hw; Wed, 29 Apr 2020 01:51:26 +0000
-Date:   Tue, 28 Apr 2020 18:51:26 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 0/7] Record the mm_struct in the page table pages
-Message-ID: <20200429015126.GP29705@bombadil.infradead.org>
-References: <20200428194449.22615-1-willy@infradead.org>
- <20200429002624.qkhb362moj6v3vtw@box>
+        Tue, 28 Apr 2020 21:55:00 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A81C03C1AC;
+        Tue, 28 Apr 2020 18:55:00 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BhR60mNPz9sRf;
+        Wed, 29 Apr 2020 11:54:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588125298;
+        bh=/c+EfpOSJR2UL33JintQJhQ1ZBprSxo+oKXBpMbirJk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cyFtsWgfaeHb4k1+NRFsD/tWgJl2MM/lfKgBQJAoJEfye1qctuFMhDRGA+ngkpMLn
+         R6OsAOG0DUtljvVy2bUU2VaeGJuPf7ncwqkZcsyEmCwp330pzKJBj75CG/oXSC0Z+J
+         KodEoiTlqFyxNU9Nq2ECaAuTvn2Ab+K8iPY3nAfiMcUknJ50WarlWfWMDyYM4lNavr
+         ldXdM9DiQkbckTY4fWu0Nol8e4gCy7zFfGRpL22s2aKeGIMCjPEfT7Cwa3Rqgpenfc
+         041UMp+y60lK3+yzvtFyHjB/1yg6bplUVzE4+DneiDKOskMbjmNe//0Lli4h41AqLm
+         BVgaEEtkzLcIg==
+Date:   Wed, 29 Apr 2020 11:54:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org
+Subject: Re: linux-next: Tree for Apr 28
+Message-ID: <20200429115456.34d511a0@canb.auug.org.au>
+In-Reply-To: <20200429013435.GA1133928@ubuntu-s3-xlarge-x86>
+References: <20200428181006.06b4e3bc@canb.auug.org.au>
+        <20200428190459.GA2299615@ubuntu-s3-xlarge-x86>
+        <20200429012421.GA132200@google.com>
+        <20200429013435.GA1133928@ubuntu-s3-xlarge-x86>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429002624.qkhb362moj6v3vtw@box>
+Content-Type: multipart/signed; boundary="Sig_/gasmWOgPFOuCsqK9DhGzRnS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:26:24AM +0300, Kirill A. Shutemov wrote:
-> On Tue, Apr 28, 2020 at 12:44:42PM -0700, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > Pages which are in use as page tables have some space unused in struct
-> > page.  It would be handy to have a pointer to the struct mm_struct that
-> > they belong to so that we can handle uncorrectable errors in page tables
-> > more gracefully.  There are a few other things we could use it for too,
-> > such as checking that the page table entry actually belongs to the task
-> > we think it ought to.  This patch series does none of that, but does
-> > lay the groundwork for it.
-> > 
-> > Matthew Wilcox (Oracle) (7):
-> 
-> How does it work for kernel side of virtual address space?
+--Sig_/gasmWOgPFOuCsqK9DhGzRnS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-init_mm
+Hi all,
 
-> And your employer may be interested in semantics around
-> CONFIG_ARCH_WANT_HUGE_PMD_SHARE :P
+On Tue, 28 Apr 2020 18:34:35 -0700 Nathan Chancellor <natechancellor@gmail.=
+com> wrote:
+>
+> On Tue, Apr 28, 2020 at 06:24:21PM -0700, Minchan Kim wrote:
+> >=20
+> > On Tue, Apr 28, 2020 at 12:04:59PM -0700, Nathan Chancellor wrote:=20
+> > >=20
+> > > I am seeing the following build error on s390 defconfig, caused by
+> > > commit 743f242d65ec ("mm: support compat_sys_process_madvise").
+> > > Apologies if it has already been reported, I did a search of lore and
+> > > found nothing.
+> > >=20
+> > > Cheers,
+> > > Nathan
+> > >=20
+> > > $ make -j$(nproc) -s ARCH=3Ds390 CROSS_COMPILE=3Ds390x-linux- defconf=
+ig all
+> > > ...
+> > > mm/madvise.c: In function '__se_compat_sys_process_madvise':
+> > > ./include/linux/compiler.h:394:38: error: call to '__compiletime_asse=
+rt_162' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned=
+ long) > 4 && !__TYPE_IS_PTR(unsigned long)
+> > >   394 |  _compiletime_assert(condition, msg, __compiletime_assert_, _=
+_COUNTER__)
+> > >       |                                      ^
+> >=20
+> > Could you try this patch? I think it should fix it.
+> >=20
+> > From 3f993353c310a027f138d822a79ce49770fe6e50 Mon Sep 17 00:00:00 2001
+> > From: Minchan Kim <minchan@kernel.org>
+> > Date: Tue, 28 Apr 2020 18:20:24 -0700
+> > Subject: [PATCH] mm: fix s390 compat build error
+> >=20
+> > Nathan reported build error with sys_compat_process_madvise.
+> > This patch should fix it.
+> >=20
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Minchan Kim <minchan@kernel.org> =20
+>=20
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+>=20
+> > ---
+> >  include/linux/compat.h | 5 +++--
+> >  mm/madvise.c           | 9 ++++++---
+> >  2 files changed, 9 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/include/linux/compat.h b/include/linux/compat.h
+> > index 1134ba3e61d0..19c524513cbb 100644
+> > --- a/include/linux/compat.h
+> > +++ b/include/linux/compat.h
+> > @@ -820,9 +820,10 @@ asmlinkage long compat_sys_pwritev64v2(unsigned lo=
+ng fd,
+> >  		unsigned long vlen, loff_t pos, rwf_t flags);
+> >  #endif
+> > =20
+> > -asmlinkage ssize_t compat_sys_process_madvise(int which,
+> > +asmlinkage ssize_t compat_sys_process_madvise(compat_int_t which,
+> >  		compat_pid_t upid, const struct compat_iovec __user *vec,
+> > -		unsigned long vlen, int behavior, unsigned long flags);
+> > +		compat_ulong_t vlen, compat_int_t behavior,
+> > +		compat_ulong_t flags);
+> > =20
+> >  /*
+> >   * Deprecated system calls which are still defined in
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 8fec261457a6..99c06d5f0785 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -1311,9 +1311,12 @@ SYSCALL_DEFINE6(process_madvise, int, which, pid=
+_t, upid,
+> >  }
+> > =20
+> >  #ifdef CONFIG_COMPAT
+> > -COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
+> > -		const struct compat_iovec __user *, vec, unsigned long, vlen,
+> > -		int, behavior, unsigned long, flags)
+> > +COMPAT_SYSCALL_DEFINE6(process_madvise, compat_int_t, which,
+> > +			compat_pid_t, upid,
+> > +			const struct compat_iovec __user *, vec,
+> > +			compat_ulong_t, vlen,
+> > +			compat_int_t, behavior,
+> > +			compat_ulong_t, flags)
+> > =20
+> >  {
+> >  	ssize_t ret;
 
-I was thinking about that.  Right now, it's only useful for debugging
-purposes (as you point out in a later email).  I think it's OK if shared
-PMDs aren't supported as well as regular PTEs, just because there are
-so few of them that uncorrectable errors are less likely to strike in
-those pages.
+I have applied that fix to linux-next for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gasmWOgPFOuCsqK9DhGzRnS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6o3nAACgkQAVBC80lX
+0Gz+Igf9Hb8ZlJssg//EROPEfO1qasV0kDfSSXtR6c6fjxlGQTZhCNIsUkVWFAmM
+k48ouvgZPo0b1BNiaKD8O32/d87JpVVhrPOyIFDk0qLu6Om2FSK3oDS2yLyeWJvb
+jmTdDpcy2pgG3tgata6jXc8U7/xTIyNCkb+Y+5vRzCLbsd5wywMXTiy6yOWbAW+k
+O1llVGbkle6+vLbQU9vP966BLIRh01GXX2yE/vtS2r4+Dyjbqt3zJP4NwinkRQgM
+5KBTdFwEYLG2z/W41PdWDfPR6StT0dofRnRmZpc/DJyAlx1NuhnDBf4xww1bhrLj
+d7YXTUbNMJQ63WW6rKrcs2DMjN01Ww==
+=KlNm
+-----END PGP SIGNATURE-----
+
+--Sig_/gasmWOgPFOuCsqK9DhGzRnS--
