@@ -2,87 +2,129 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4CCC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D4BC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB10F2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0175E2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="LrdIfbup"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kg+m6tJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgD2L0k (ORCPT
+        id S1726763AbgD2L1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:26:40 -0400
-Received: from out1.migadu.com ([91.121.223.63]:54796 "EHLO out1.migadu.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726345AbgD2L0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:26:40 -0400
-X-Greylist: delayed 449 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 07:26:39 EDT
+        Wed, 29 Apr 2020 07:27:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2L1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:27:00 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82D8C03C1AD;
+        Wed, 29 Apr 2020 04:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oMyZzcwYB9QX35xXWfMxn1LcoCBA2vSTd5XHHBAVDLs=; b=kg+m6tJ4HaLGqGi7L7gstSvKMs
+        YDgkaZ/cGPu6ODEqaVw232Je5GEWjRRYEjHK9uOFWaUO4atRWg2BXWiI1LPIHTLBDFplziRU5H4ox
+        iqBXcF7fqWs/xGGbdZMrsFfQNXONb0PeNewAdFs8D8C7gGh8Qd93dcCHhCOj9xSG9KhFSX9vBGFd7
+        2E0DlHpiVavu8Rp/hnJ+XjDqt7X64gadEpHZlb6llzDdzmw+boxgIp0pztPc8PbaNz1L9uC+SFjin
+        DBqBBaU1br6h3UiT90ARqme+gdqd+rGPrBLkH0pIRMpRSLouPI9xpjg+OoOopTse/EsY+/3NFwI+E
+        Mi8PEgcw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTkrN-0008GQ-VZ; Wed, 29 Apr 2020 11:26:37 +0000
+Date:   Wed, 29 Apr 2020 04:26:37 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
+Message-ID: <20200429112637.GD21892@infradead.org>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-5-mcgrof@kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=default;
-        t=1588159147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=imyH5i/2Y9yMNzm7UXaBN/+s9A++43Lu0do6gm4lZAo=;
-        b=LrdIfbupDauYnhNB/LVW7socv26n2fC4hjUAyHuPXJNEkxTUwwClvoDTrPINu4HaMhyLgo
-        2rAzNOU032gKGBlrYK/tFlmA75qh/N18BQ6tDUJLLelE+4b/sKqm4B7YwCj+vx8S6HsmSc
-        AY1CCPyS+l3NPDGicr7OJQ8/QFbU5I0=
-Date:   Wed, 29 Apr 2020 11:19:07 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   kl@kl.wtf
-Message-ID: <e8d385dbfbbb09acfe58d716c588722c@kl.wtf>
-Subject: Re: [PATCH v2] drm: make drm_file use keyed wakeups
-To:     "Daniel Vetter" <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        airlied@linux.ie, tzimmermann@suse.de, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20200428151410.GU3456981@phenom.ffwll.local>
-References: <20200428151410.GU3456981@phenom.ffwll.local>
- <20200424162615.10461-1-kl@kl.wtf>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429074627.5955-5-mcgrof@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-April 28, 2020 5:14 PM, "Daniel Vetter" <daniel@ffwll.ch> wrote:=0A=0A> O=
-n Fri, Apr 24, 2020 at 06:26:15PM +0200, Kenny Levinsen wrote:=0A> =0A>> =
-Some processes, such as systemd, are only polling for EPOLLERR|EPOLLHUP.=
-=0A>> As drm_file uses unkeyed wakeups, such a poll can receive many spur=
-ious=0A>> wakeups from uninteresting events if, for example, the file des=
-cription=0A>> is subscribed to vblank events. This is the case with syste=
-md, as it=0A>> polls a file description from logind that is shared with t=
-he users'=0A>> compositor.=0A>> =0A>> Use keyed wakeups to allow the wake=
-up target to more efficiently discard=0A>> these uninteresting events.=0A=
->> =0A>> Signed-off-by: Kenny Levinsen <kl@kl.wtf>=0A> =0A> Hm I applied =
-v1 and I'm not spotting what's different here, and there's no=0A> changel=
-og explaining what changed ...=0A> =0A> Please send a fixup if there's an=
-ything important missing.=0A> -Daniel=0A>=0A=0AIt's only the summary that=
- differed as you and sravn requested in #dri-devel, so it's probably fine=
-.=0A=0AI should have explained the change. I'm still trying to get the ha=
-ng of the email-based workflow. :)=0A=0ABest regards,=0AKenny Levinsen=0A=
-=0A>> ---=0A>> drivers/gpu/drm/drm_file.c | 6 ++++--=0A>> 1 file changed,=
- 4 insertions(+), 2 deletions(-)=0A>> =0A>> diff --git a/drivers/gpu/drm/=
-drm_file.c b/drivers/gpu/drm/drm_file.c=0A>> index c4c704e01961..ec25b3d9=
-79d9 100644=0A>> --- a/drivers/gpu/drm/drm_file.c=0A>> +++ b/drivers/gpu/=
-drm/drm_file.c=0A>> @@ -608,7 +608,8 @@ ssize_t drm_read(struct file *fil=
-p, char __user *buffer,=0A>> file_priv->event_space -=3D length;=0A>> lis=
-t_add(&e->link, &file_priv->event_list);=0A>> spin_unlock_irq(&dev->event=
-_lock);=0A>> - wake_up_interruptible(&file_priv->event_wait);=0A>> + wake=
-_up_interruptible_poll(&file_priv->event_wait,=0A>> + EPOLLIN | EPOLLRDNO=
-RM);=0A>> break;=0A>> }=0A>> =0A>> @@ -804,7 +805,8 @@ void drm_send_even=
-t_locked(struct drm_device *dev, struct drm_pending_event *e)=0A>> list_d=
-el(&e->pending_link);=0A>> list_add_tail(&e->link,=0A>> &e->file_priv->ev=
-ent_list);=0A>> - wake_up_interruptible(&e->file_priv->event_wait);=0A>> =
-+ wake_up_interruptible_poll(&e->file_priv->event_wait,=0A>> + EPOLLIN | =
-EPOLLRDNORM);=0A>> }=0A>> EXPORT_SYMBOL(drm_send_event_locked);=0A>> =0A>=
-> --=0A>> 2.26.1=0A> =0A> --=0A> Daniel Vetter=0A> Software Engineer, Int=
-el Corporation=0A> http://blog.ffwll.ch
+I can't say I'm a fan of all these long backtraces in commit logs..
+
+> +static struct dentry *blk_debugfs_dir_register(const char *name)
+> +{
+> +	return debugfs_create_dir(name, blk_debugfs_root);
+> +}
+
+I don't think we really need this helper.
+
+> +void blk_part_debugfs_unregister(struct hd_struct *p)
+> +{
+> +	debugfs_remove_recursive(p->debugfs_dir);
+> +	p->debugfs_dir = NULL;
+> +}
+
+Why do we need to clear the pointer here?
+
+> +#ifdef CONFIG_DEBUG_FS
+> +	/* Currently only used by kernel/trace/blktrace.c */
+> +	struct dentry *debugfs_dir;
+> +#endif
+
+Does that comment really add value?
+
+> +static struct dentry *blk_trace_debugfs_dir(struct block_device *bdev,
+> +					    struct request_queue *q)
+>  {
+> +	struct hd_struct *p = NULL;
+>  
+> +	 * Some drivers like scsi-generic use a NULL block device. For
+> +	 * other drivers when bdev != bdev->bd_contain we are doing a blktrace
+> +	 * on a parition, otherwise we know we are working on the whole
+> +	 * disk, and for that the request_queue already has its own debugfs_dir.
+> +	 * which we have been using for other things other than blktrace.
+> +	 */
+> +	if (bdev && bdev != bdev->bd_contains)
+> +		p = bdev->bd_part;
+>  
+> +	if (p)
+> +		return p->debugfs_dir;
+> +
+> +	return q->debugfs_dir;
+
+This could be simplified down to:
+
+	if (bdev && bdev != bdev->bd_contains)
+		return bdev->bd_part->debugfs_dir;
+	return q->debugfs_dir;
+
+Given that bd_part is in __blkdev_get very near bd_contains.
+
+Also given that this patch completely rewrites blk_trace_debugfs_dir is
+there any point in the previous patch?
+
+> @@ -491,6 +500,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  	struct dentry *dir = NULL;
+>  	int ret;
+>  
+> +
+>  	if (!buts->buf_size || !buts->buf_nr)
+>  		return -EINVAL;
+>  
+
+Spurious whitespace change.
