@@ -2,79 +2,92 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361E2C83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9A4C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0CA2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9522083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:46:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cWGcfd37"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Haw4PU8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgD2Oqi (ORCPT
+        id S1726974AbgD2Oqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35840 "EHLO
+        Wed, 29 Apr 2020 10:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2Oqh (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2Oqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:46:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C159C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:46:36 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j1so2908822wrt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:46:36 -0700 (PDT)
+        Wed, 29 Apr 2020 10:46:50 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E1F5C03C1AD;
+        Wed, 29 Apr 2020 07:46:50 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id w14so1475316lfk.3;
+        Wed, 29 Apr 2020 07:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2Ficmofxvg1gGlcOqmwoo/4T3OdE1Nj+sekhSCfgbec=;
-        b=cWGcfd37tz1qVZcYhvT2L/iBeU7Z9JdDjY+jlvkqguZEBWg21l9NQBbEhfqreAHF0r
-         PgFOGOS0MuAq132t+zlontVtEyhwErfv+U75h8RTQVurtuURP+rNnNwItWYiPXCfrdHV
-         M0aPXzhFltqtsifSRCoICBK9GZvlMeEtQqt6DgYTKdkeb+TpCnlNguP/Xv6wxhoFkJWG
-         tYIBTK1lJVb2HjZCuOovIjkp1WTLPka/RHm4hD0HC20Zoy212oEIgR2awZtUMzR5c3XI
-         aUTxaOZ4iJXDWIUI8OQS8pHpNV8iVSsHW2+ZUV3oVUJIGte4ATKKW/APRmdqMVeu/1Br
-         eN5A==
+        bh=6Iqx43ooxgoOivq+n0TDZ4CBXmi8xKAeuxrrrbvkGzA=;
+        b=Haw4PU8yu6NVYE7MFuT40CZ3zAtmD0g1aiMZvzucctoEE/7fVReA0DnGM0evnNxklX
+         VrPaV3Rel3X5PwawyZrwOI2ZADt9RRF1gmZosRewqRm61ySFMJ3H2LMcudOPmUMg1Cfl
+         4PfQZD1qvzEB8EyDDEXyky19RxawxmRXsjHXPLQ/82CT8nWQwzYSNc17PnjJYFNsOEBk
+         CyC4NbnO1oj0ozCPd3Gw7mIOeOVsm5vbFapHZrwgO5CbuoR9b8oTGeUROT1Bcjt0kCM1
+         WVh1icy15qq64apDWa27qcmPzVgopwE+xF7KD4/BwFL+hmjugFOVUDoprHTYKGHt0dzt
+         x6DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=2Ficmofxvg1gGlcOqmwoo/4T3OdE1Nj+sekhSCfgbec=;
-        b=ZjGznnhDMTmxPedlewZqRyDuWt5rqjsWpdCn5BER3uux1Q0psFt9hH3T1SqVhptgZ7
-         nndhXqypYFyOzJUN1wUzDpW32YkfaYwnKBa9fJD4DBdfmBzxyFp+iFRJ8yy4bRCIWk2J
-         ouJiXqxQWoLbzGceHIWP0yvZqZZnlTGIoYwDC2hJZZKRMwSHaUYAR1vIqzlNTyk7QTlJ
-         2OxaSpl3eW5CwjJl8hwuihWvOBwj8IbMgcqfRqL1jsJTd0Z/JO01q0rNd5kHVo0bQ0ZU
-         MHta8AoQNTT45y57SI6ngEMRPQr/06maJ2n5rFx4EHIKzeie9cRGaNHhTXvJE3EXxf+p
-         nOGw==
-X-Gm-Message-State: AGi0PuYp0JywqquFo8qXywbEzCHgW+zv/5nniBUQWM101zoKR6nwW2zu
-        zKpWXBiixIi0hpMzNR27s4r9WA==
-X-Google-Smtp-Source: APiQypIJBdvXFYtYk7flefaHVSe/KkfD3c1Yp1Mc7/t3OCPyBa7dFoaFaqO6BQHC4L0I7gFa541a+w==
-X-Received: by 2002:a5d:69c9:: with SMTP id s9mr39673966wrw.307.1588171594821;
-        Wed, 29 Apr 2020 07:46:34 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.googlemail.com with ESMTPSA id a9sm7675575wmm.38.2020.04.29.07.46.32
+        bh=6Iqx43ooxgoOivq+n0TDZ4CBXmi8xKAeuxrrrbvkGzA=;
+        b=qYubLza8qUGMh65bEBZY0te9Hr0UmqRfqyHHq1KbdFgKfDZ1fJKjLXsdr9suVPXXHX
+         OSRR3Imt5S0u1ZbBj2Jr+/gzEVk10rOzpjYcjCe7MrBUQHX4SkojDjuyzLI/sy1B4Ke5
+         KutbCItietMcdJ3ZoHc6StPZROuiLD4ftKzsKeiQLuCf5PFARYewKtWMRTVqoDWaw4kM
+         9fCLgwNPq15F3nCbs1sHA3khIrg/Uhz+l0/esxMbxFIj6tdOOiAWsaOMcRkaTV2Uf5N3
+         dF4asR3gQmo5jdD2IvUetDbBgGyPu5AL7ByME3yECgcLZIn+QWedAisuct7Sk/+YsZXd
+         NkVw==
+X-Gm-Message-State: AGi0PuZFBrf/j0C3+i16ogGQuHh3m6TX0KiKGjLSbBAPVK4W7wCnV9a0
+        jUUMcrN3QMp19jieKE1x3tqj6C4Z
+X-Google-Smtp-Source: APiQypIXFKXW0+23X9m4XvsDEPOtHxVzRdJkkgu45IxeYCDiHfwes9airQTCiDzijLwznTWJQcOT5A==
+X-Received: by 2002:a19:2389:: with SMTP id j131mr5921216lfj.116.1588171608227;
+        Wed, 29 Apr 2020 07:46:48 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id f2sm2428460lja.30.2020.04.29.07.46.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 07:46:34 -0700 (PDT)
-Subject: Re: [PATCH v2] thermal: ti-soc-thermal: avoid dereferencing ERR_PTR
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-omap@vger.kernel.org
-References: <20200424161944.6044-1-sudipm.mukherjee@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <6255085b-984b-58b1-69e7-81c3b9cf1fc7@linaro.org>
-Date:   Wed, 29 Apr 2020 16:46:31 +0200
+        Wed, 29 Apr 2020 07:46:47 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
+ <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
+ <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
+ <20200427074837.GC3451400@ulmo>
+ <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
+ <20200427110033.GC3464906@ulmo>
+ <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
+ <20200427151234.GE3464906@ulmo>
+ <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
+ <20200429081448.GA2345465@ulmo> <20200429085502.GB2345465@ulmo>
+ <9e36c4ec-ca02-bd15-d765-15635f09db4b@gmail.com>
+ <7442f4cd-6406-41f6-5c9b-932bff8ad5b2@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5863e364-480e-7839-c42b-73a7f6990a30@gmail.com>
+Date:   Wed, 29 Apr 2020 17:46:46 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200424161944.6044-1-sudipm.mukherjee@gmail.com>
+In-Reply-To: <7442f4cd-6406-41f6-5c9b-932bff8ad5b2@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -83,21 +96,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/2020 18:19, Sudip Mukherjee wrote:
-> On error the function ti_bandgap_get_sensor_data() returns the error
-> code in ERR_PTR() but we only checked if the return value is NULL or
-> not. And, so we can dereference an error code inside ERR_PTR.
-> While at it, convert a check to IS_ERR_OR_NULL.
+29.04.2020 16:57, Jon Hunter пишет:
 > 
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> ---
+> On 29/04/2020 13:35, Dmitry Osipenko wrote:
+>> 29.04.2020 11:55, Thierry Reding пишет:
+>> ...
+>>>>> It's not "papering over an issue". The bug can't be fixed properly
+>>>>> without introducing I2C atomic transfers support for a late suspend
+>>>>> phase, I don't see any other solutions for now. Stable kernels do not
+>>>>> support atomic transfers at all, that proper solution won't be backportable.
+>>>>
+>>>> Hm... on a hunch I tried something and, lo and behold, it worked. I can
+>>>> get Cardhu to properly suspend/resume on top of v5.7-rc3 with the
+>>>> following sequence:
+>>>>
+>>>> 	revert 9f42de8d4ec2 i2c: tegra: Fix suspending in active runtime PM state
+>>>> 	apply http://patchwork.ozlabs.org/project/linux-tegra/patch/20191213134417.222720-1-thierry.reding@gmail.com/
+>>>>
+>>>> I also ran that through our test farm and I don't see any other issues.
+>>>> At the time I was already skeptical about pm_runtime_force_suspend() and
+>>>> pm_runtime_force_resume() and while I'm not fully certain why exactly it
+>>>> doesn't work, the above on top of v5.7-rc3 seems like a good option.
+>>>>
+>>>> I'll try to do some digging if I can find out why exactly force suspend
+>>>> and resume doesn't work.
+>>>
+>>> Ah... so it looks like pm_runtime_force_resume() never actually does
+>>> anything in this case and then disable_depth remains at 1 and the first
+>>> tegra_i2c_xfer() will then fail to runtime resume the controller.
+>>
+>> That's the exactly expected behaviour of the RPM force suspend/resume.
+>> The only unexpected part for me is that the tegra_i2c_xfer() runtime
+>> resume then fails in the NOIRQ phase.
+> 
+> From reading the changelog for commit 1e2ef05bb8cf ("PM: Limit race
+> conditions between runtime PM and system sleep (v2))", this is the
+> expected behaviour for runtime resume in the noirq phase.
 
-Applied thanks
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I'm curious whether there is a way to tell RPM that it's okay to do it
+for a particular device, like I2C that uses IRQ-safe RPM + doesn't have
+parent devices that need to be resumed.
