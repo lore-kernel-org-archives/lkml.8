@@ -2,98 +2,233 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7A1C83008
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE51C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19D182073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AC7208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgD2ICq (ORCPT
+        id S1726598AbgD2IEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:02:46 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:52837 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgD2ICm (ORCPT
+        Wed, 29 Apr 2020 04:04:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44814 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726175AbgD2IEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:02:42 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MplsZ-1iop1226mL-00q6z3 for <linux-kernel@vger.kernel.org>; Wed, 29 Apr
- 2020 10:02:41 +0200
-Received: by mail-qk1-f176.google.com with SMTP id b188so1081187qkd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:02:41 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYUzxkjSCGf7zSNdyF6QHdRSjaweXexQUIvf8xSIqOEjBGVgRlu
-        7fseAFSswIMRdu44s1vPJ88KvUaf30d2HmK9n5k=
-X-Google-Smtp-Source: APiQypIb7rbzxVNgizgliUE9cuI6uHb2puyxpFpWzxm5GRei060dQZgRQpS434PhF854JL+xI5SHvYYGPatYF2vesJk=
-X-Received: by 2002:ae9:f712:: with SMTP id s18mr15249636qkg.394.1588147360437;
- Wed, 29 Apr 2020 01:02:40 -0700 (PDT)
+        Wed, 29 Apr 2020 04:04:54 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T7WvPa069563;
+        Wed, 29 Apr 2020 04:02:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6vc5cr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 04:02:16 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03T7f2rA097986;
+        Wed, 29 Apr 2020 04:02:16 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6vc5b8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 04:02:16 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03T7uRKb022662;
+        Wed, 29 Apr 2020 08:02:14 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 30mcu59k5f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 08:02:14 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03T82BEw43057160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 08:02:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E943AE051;
+        Wed, 29 Apr 2020 08:02:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E9D26AE045;
+        Wed, 29 Apr 2020 08:02:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.81.16])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Apr 2020 08:02:05 +0000 (GMT)
+Subject: Re: [PATCH v7 2/5] powerpc/hv-24x7: Add rtas call in hv-24x7 driver
+ to get processor details
+To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+References: <20200327063642.26175-1-kjain@linux.ibm.com>
+ <20200327063642.26175-3-kjain@linux.ibm.com>
+From:   Madhavan Srinivasan <maddy@linux.ibm.com>
+Message-ID: <fc2f519f-7dc9-cc72-496e-bc1403aa2178@linux.ibm.com>
+Date:   Wed, 29 Apr 2020 13:32:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200428215408.4111675-1-arnd@arndb.de> <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
-In-Reply-To: <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Apr 2020 10:02:24 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
-Message-ID: <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: fix stack usage warning on old gcc
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Kc7ExT19m2I7yRzQqPmBHzvy9Fwd+WE8NYR5jX3/ZmZPeP+ycZE
- oI77cS2vUJj+SVjV1t+MACKwHFihuWlk4/xItDbQM3fGyV8qtatC+lXkxe+ojRMtsyioaII
- nQ9P6P1DdMVm/tICZisDQZ6AX01/DONmc3JBb/Q7HvyjEkigoskD67sqjV+PaBRo1+yBjdD
- iu9HXB3zM61TbDdbdn2ZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UuZTpsjqqO4=:2VAiJ2G4MkIz0cpx11v4+F
- wuWmATlsgNv2qUx4fPOhYFjD41SbeCaew8NGfGoX3VdiQicj/kPRa+Bi3TUJJ+OBXCXtBD5ds
- wOOF+YzPqZzV8cB5TpDmYTkHKQSEt91Br6KC8ieJ16IwMDNd38i8BxjRt6QoFuZ2sFh6k3M08
- lTQJpYnxfoikbbX04qdl4NK7tshZfOzugT2GZe/7mLiL+Pph9BvgAHcHBysDNlCEd5HEX7qv1
- K4mbOOYnAggwUGfnsKBBN2gX4L14Wr0RM5a3EyFslJN/Sow/HGzsCzdWHRxLoroWP8rG237BJ
- /bQIX0fCBzcZ66j99o6ke+4bqWaxYW+LvaSMG5bsSkZBWPcRwtaqsjIE37XOfnGr3n1WBTm6i
- iD+52oD8QhIhIWns2Ie0PQciSS9O5Jo3ODYJQXOBP2ITa9nKbch2UZplC9x4mjmBuYJvTGRKw
- ykO5MzGqpJWeC0mWeJuYAL0ZAcBzHVdG2Hdc708PHWd74hNXzD+88YjQCjAiBeuIMexcuEB8S
- L/Qg+hP+zUsp7N6f+7LpY+jr/1dpMFM9hNj9x2vc9mP9V1fLMuplooKU0iD3BfwivVtzgjyNH
- hBPDKKAbcq7irnAqEP8UbjMI036rWBXTNTFeHeZCybYQQfuTu6mipkpwy0imfwpDdKimqpPr3
- ypB/629zxuAoodzddgb4rrdpGcByOLLY6TX0/C7vX13eRf06W6YKceRKDwom/lUplbjD5DEaj
- pjOQXC/L9bFkB8mQpt2Vk110fYGIBO0AK1EqIMdIkXM3pEEA7bnoXOc6mA/eAKjagBLCrSXNd
- aJ7xWmmuadhUkoJYxbo379dihpHr0XSEw9wSdZxKCLpX+A3PBQ=
+In-Reply-To: <20200327063642.26175-3-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 9:56 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> > diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
-> > index 1b39e8d37834..6650fe4cfc20 100644
-> > --- a/drivers/gpu/drm/bridge/tc358768.c
-> > +++ b/drivers/gpu/drm/bridge/tc358768.c
-> > @@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
-> >
-> >   static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
-> >   {
-> > +     /* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
-> > +     int tmpval = val;
 
+
+On 3/27/20 12:06 PM, Kajol Jain wrote:
+> For hv_24x7 socket/chip level events, specific chip-id to which
+> the data requested should be added as part of pmu events.
+> But number of chips/socket in the system details are not exposed.
 >
-> tc358768_write is not inline. What is the inline function here? Or is tc358768_write optimized to
-> inline by the compiler?
+> Patch implements read_sys_info_pseries() to get system
+> parameter values like number of sockets and chips per socket.
+> Rtas_call with token "PROCESSOR_MODULE_INFO"
+> is used to get these values.
 
-I missed the lack of an explicit inline tag when looking at the bug. gcc
-usually decides which functions to inline on its own, so there is little
-difference in practice. Let me know if I should clarify the changelog and
-resend it.
+Patch looks good to me.
 
-      Arnd
+Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+
+> Sub-sequent patch exports these values via sysfs.
+>
+> Patch also make these parameters default to 1.
+>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>   arch/powerpc/perf/hv-24x7.c              | 72 ++++++++++++++++++++++++
+>   arch/powerpc/platforms/pseries/pseries.h |  3 +
+>   2 files changed, 75 insertions(+)
+>
+> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+> index 48e8f4b17b91..9ae00f29bd21 100644
+> --- a/arch/powerpc/perf/hv-24x7.c
+> +++ b/arch/powerpc/perf/hv-24x7.c
+> @@ -20,6 +20,11 @@
+>   #include <asm/io.h>
+>   #include <linux/byteorder/generic.h>
+>
+> +#ifdef CONFIG_PPC_RTAS
+> +#include <asm/rtas.h>
+> +#include <../../platforms/pseries/pseries.h>
+> +#endif
+> +
+>   #include "hv-24x7.h"
+>   #include "hv-24x7-catalog.h"
+>   #include "hv-common.h"
+> @@ -57,6 +62,69 @@ static bool is_physical_domain(unsigned domain)
+>   	}
+>   }
+>
+> +#ifdef CONFIG_PPC_RTAS
+> +#define PROCESSOR_MODULE_INFO   43
+> +#define PROCESSOR_MAX_LENGTH	(8 * 1024)
+> +
+> +static int strbe16toh(const char *buf, int offset)
+> +{
+> +	return (buf[offset] << 8) + buf[offset + 1];
+> +}
+> +
+> +static u32		physsockets;	/* Physical sockets */
+> +static u32		physchips;	/* Physical chips */
+> +
+> +/*
+> + * Function read_sys_info_pseries() make a rtas_call which require
+> + * data buffer of size 8K. As standard 'rtas_data_buf' is of size
+> + * 4K, we are adding new local buffer 'rtas_local_data_buf'.
+> + */
+> +char rtas_local_data_buf[PROCESSOR_MAX_LENGTH] __cacheline_aligned;
+> +
+> +/*
+> + * read_sys_info_pseries()
+> + * Retrieve the number of sockets and chips per socket details
+> + * through the get-system-parameter rtas call.
+> + */
+> +void read_sys_info_pseries(void)
+> +{
+> +	int call_status, len, ntypes;
+> +
+> +	/*
+> +	 * Making system parameter: chips and sockets default to 1.
+> +	 */
+> +	physsockets = 1;
+> +	physchips = 1;
+> +	memset(rtas_local_data_buf, 0, PROCESSOR_MAX_LENGTH);
+> +	spin_lock(&rtas_data_buf_lock);
+> +
+> +	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
+> +				NULL,
+> +				PROCESSOR_MODULE_INFO,
+> +				__pa(rtas_local_data_buf),
+> +				PROCESSOR_MAX_LENGTH);
+> +
+> +	spin_unlock(&rtas_data_buf_lock);
+> +
+> +	if (call_status != 0) {
+> +		pr_info("%s %s Error calling get-system-parameter (0x%x)\n",
+> +			__FILE__, __func__, call_status);
+> +	} else {
+> +		rtas_local_data_buf[PROCESSOR_MAX_LENGTH - 1] = '\0';
+> +		len = strbe16toh(rtas_local_data_buf, 0);
+> +		if (len < 6)
+> +			return;
+> +
+> +		ntypes = strbe16toh(rtas_local_data_buf, 2);
+> +
+> +		if (!ntypes)
+> +			return;
+> +		physsockets = strbe16toh(rtas_local_data_buf, 4);
+> +		physchips = strbe16toh(rtas_local_data_buf, 6);
+> +	}
+> +}
+> +#endif /* CONFIG_PPC_RTAS */
+> +
+>   /* Domains for which more than one result element are returned for each event. */
+>   static bool domain_needs_aggregation(unsigned int domain)
+>   {
+> @@ -1605,6 +1673,10 @@ static int hv_24x7_init(void)
+>   	if (r)
+>   		return r;
+>
+> +#ifdef CONFIG_PPC_RTAS
+> +	read_sys_info_pseries();
+> +#endif
+> +
+>   	return 0;
+>   }
+>
+> diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
+> index 13fa370a87e4..1727559ce304 100644
+> --- a/arch/powerpc/platforms/pseries/pseries.h
+> +++ b/arch/powerpc/platforms/pseries/pseries.h
+> @@ -19,6 +19,9 @@ extern void request_event_sources_irqs(struct device_node *np,
+>   struct pt_regs;
+>
+>   extern int pSeries_system_reset_exception(struct pt_regs *regs);
+> +#ifdef CONFIG_PPC_RTAS
+> +extern void read_sys_info_pseries(void);
+> +#endif
+>   extern int pSeries_machine_check_exception(struct pt_regs *regs);
+>   extern long pseries_machine_check_realmode(struct pt_regs *regs);
+>
+
