@@ -2,147 +2,108 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39C4C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B6C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9A82082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3FxWpoT"
+	by mail.kernel.org (Postfix) with ESMTP id 04BB520731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgD2If6 (ORCPT
+        id S1726620AbgD2IgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:35:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28603 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726345AbgD2If6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:35:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588149356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qdJ9Tssfd21+vkaPztq8wUNJY05TZTVous+kbqb7BpY=;
-        b=Q3FxWpoTSnIld4BjN9jytf5XtCtX+xwBN6uLscw7jbiXZvg4+YBGP5HNg3X5cQDzr/PMbZ
-        5spnBwQ9Hl3rashvX6X4vTbVymSB9mOASav+dm011a7QLaDI3aoPYjoH1IFqOCQoCaNoEV
-        2lVRMCshmS41YVudIbrUG8qTS7cCVaY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-Hyw3QahcPUe1rCfNcFmAKw-1; Wed, 29 Apr 2020 04:35:54 -0400
-X-MC-Unique: Hyw3QahcPUe1rCfNcFmAKw-1
-Received: by mail-wm1-f70.google.com with SMTP id o26so725614wmh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:35:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=qdJ9Tssfd21+vkaPztq8wUNJY05TZTVous+kbqb7BpY=;
-        b=XCBodhJb2R+k6CJpBMRDCtwCUA73vJAmuCGUvYTqJcxmoAa6wpODJS2kkm/gVvYndx
-         WHUtS566K1RNVFSF3/rzmyoIL0WPYYLonpbSR5HLr4pClmjv/8B7+raQLl5HgS5zRnlf
-         lKwQEQ6g0dvoykvPOxLeLzOGgv+w/lPq1Tx3YsgCFzwrLU6tmBEphPdsSFnKitLJCrB9
-         8AUzDZDbACxXynrysG7Cfa4dC2vY7qOFctXh8ikjk+PHGpX0ugGJjhE3QGVD2FYtZHWv
-         uSRlUuIljDWimK6+uXpdiXroxEC6Mr6pJ53mexrLp4Uemy7RtnYHQcXEwhwyU5nBXpMK
-         mLUw==
-X-Gm-Message-State: AGi0PuZuVUKn4CWvPDayLoiBl3VfTGOUF4MRHoPBYIKp12j1x7do2CJz
-        av4ymWqi0kxMnO3FhW3sbnZBx1OiD6xP89h893guD0EkDIDi/LarL6XSHYlr/SBP/4JkbueSAK0
-        eBx74aBeQZBSkrxXodgTSF8vt
-X-Received: by 2002:a1c:7f86:: with SMTP id a128mr1912727wmd.95.1588149353524;
-        Wed, 29 Apr 2020 01:35:53 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIBRr85ezZitL4y/lv7Xl5LCtDwiiwsjxzrPLzALJ4qDzhFmjEVYJ8D+cpir1X8GMvK6w0BZw==
-X-Received: by 2002:a1c:7f86:: with SMTP id a128mr1912713wmd.95.1588149353322;
-        Wed, 29 Apr 2020 01:35:53 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a205sm7221889wmh.29.2020.04.29.01.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 01:35:52 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kvm: x86: Cleanup vcpu->arch.guest_xstate_size
-In-Reply-To: <20200429154312.1411-1-xiaoyao.li@intel.com>
-References: <20200429154312.1411-1-xiaoyao.li@intel.com>
-Date:   Wed, 29 Apr 2020 10:35:43 +0200
-Message-ID: <87368mit9c.fsf@vitty.brq.redhat.com>
+        Wed, 29 Apr 2020 04:36:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34046 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726543AbgD2IgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:36:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D9C5AABCF;
+        Wed, 29 Apr 2020 08:36:01 +0000 (UTC)
+Subject: Re: [PATCH 1/1] dma: actions: Fix lockdep splat for owl-dma
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+References: <7d503c3dcac2b3ef29d4122a74eacfce142a8f98.1588069418.git.cristian.ciocaltea@gmail.com>
+ <20200428164921.GC5259@Mani-XPS-13-9360> <20200428181115.GB26885@BV030612LT>
+ <20200428181803.GD5259@Mani-XPS-13-9360>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <a70a2352-7b22-6b85-848b-94d9ee17c022@suse.de>
+Date:   Wed, 29 Apr 2020 10:36:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200428181803.GD5259@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
+Am 28.04.20 um 20:18 schrieb Manivannan Sadhasivam:
+> On Tue, Apr 28, 2020 at 09:11:15PM +0300, Cristian Ciocaltea wrote:
+>> On Tue, Apr 28, 2020 at 10:19:21PM +0530, Manivannan Sadhasivam wrote:
+>>> On Tue, Apr 28, 2020 at 01:56:12PM +0300, Cristian Ciocaltea wrote:
+>>>> When the kernel is build with lockdep support and the owl-dma driver is
+>>>> used, the following message is shown:
+[...]
+>>>> The required fix is to use spin_lock_init() on the pchan lock before
+>>>> attempting to call any spin_lock_irqsave() in owl_dma_get_pchan().
+>>>
+>>> Right, this is a bug. But while looking at the code now, I feel that we don't
+>>> need 'pchan->lock'. The idea was to protect 'pchan->vchan', but I think
+>>> 'od->lock' is the better candidate for that since it already protects it in
+>>> 'owl_dma_terminate_pchan'.
+>>>
+>>> So I'd be happy if you remove the lock from 'pchan' and just directly use the
+>>> one in 'od'.
+>>>
+>>> Out of curiosity, on which platform you're testing this?
+>>
+>> Totally agree, I will send a new patch revision as soon as I do some
+>> more testing.
+> 
+> Coo[l], thanks!
+> 
+>> I'm currently experimenting on an Actions S500 based board (Roseapple Pi)
+>> trying to extend, if possible, the existing mainline support for those
+>> SoCs.
+> 
+> Awesome! It's great to see that Actions platform is seeing some attention
+> these days :)
+> 
+>> I don't have much progress so far, since I started quite recently
+>> and I also lack experience in the kernel development area, but I do my
+>> best to come back with more patches once I get a consistent functionality.
+> 
+> No worries. Feel free to reach out to me if you have any questions. There is
+> a lot of work to do and for sure it will be a good learning curve.
+> 
+> We do have an IRC channel (##linux-actions) for quick discussions. Fee[l] free
+> to join!
 
-> vcpu->arch.guest_xstate_size lost its only user since commit df1daba7d1cb
-> ("KVM: x86: support XSAVES usage in the host"), so clean it up.
->
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 1 -
->  arch/x86/kvm/cpuid.c            | 8 ++------
->  arch/x86/kvm/x86.c              | 2 --
->  3 files changed, 2 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 7cd68d1d0627..34a05ca3c904 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -654,7 +654,6 @@ struct kvm_vcpu_arch {
->  
->  	u64 xcr0;
->  	u64 guest_supported_xcr0;
-> -	u32 guest_xstate_size;
->  
->  	struct kvm_pio_request pio;
->  	void *pio_data;
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 6828be99b908..f3eb4f171d3d 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -84,15 +84,11 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->  				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
-> -	if (!best) {
-> +	if (!best)
->  		vcpu->arch.guest_supported_xcr0 = 0;
-> -		vcpu->arch.guest_xstate_size = XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET;
-> -	} else {
-> +	else
->  		vcpu->arch.guest_supported_xcr0 =
->  			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
-> -		vcpu->arch.guest_xstate_size = best->ebx =
-> -			xstate_required_size(vcpu->arch.xcr0, false);
-> -	}
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
->  	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 856b6fc2c2ba..7cd51a3acc43 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9358,8 +9358,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  	}
->  	fx_init(vcpu);
->  
-> -	vcpu->arch.guest_xstate_size = XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET;
-> -
->  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
->  
->  	vcpu->arch.pat = MSR_IA32_CR_PAT_DEFAULT;
+Please also CC the linux-actions mailing list on any patches:
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+https://lists.infradead.org/mailman/listinfo/linux-actions
+
+Mani, do you have a 5.7-rc1 tree set up or should I queue patches this 
+round? It still seems missing in MAINTAINERS, and then there's Matheus' 
+patches in review.
+
+Thanks,
+Andreas
 
 -- 
-Vitaly
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
