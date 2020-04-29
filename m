@@ -7,112 +7,153 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01908C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BB4C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7602087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199552087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD2NYE (ORCPT
+        id S1726961AbgD2NZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:24:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:49507 "EHLO
+        Wed, 29 Apr 2020 09:25:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:58085 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgD2NYD (ORCPT
+        with ESMTP id S1726780AbgD2NY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:24:03 -0400
+        Wed, 29 Apr 2020 09:24:59 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MDv1A-1jM2us3zwy-009zpL; Wed, 29 Apr 2020 15:23:55 +0200
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MN5W9-1jmHai06Xl-00J200; Wed, 29 Apr 2020 15:24:45 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: [PATCH] [v2] ARM: oabi-compat: fix epoll_ctl build failure
-Date:   Wed, 29 Apr 2020 15:23:24 +0200
-Message-Id: <20200429132349.1294904-1-arnd@arndb.de>
+To:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Wang <sean.wang@mediatek.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] pinctrl: mediatek: fix mtk_eint link error
+Date:   Wed, 29 Apr 2020 15:24:22 +0200
+Message-Id: <20200429132443.1295194-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:YesVeQBh9Q/IA+uNWz/5JCdSN2u4hoTMC5shuvSJ4yxM1Q6iwui
- wXUQ5wEe7ndWD4fD5QG/iF3Y8iVx9+DoiTgHcTG3Zt64TuTyLiawqer+CYnMad2oEvSXwMI
- 2/lferA/lpp5qT7D4jF7OFcvNkdsovgGrDcKxXLycrOrO6KrgW7Et+inVFPWiWkeSGciNNC
- JwsBwNoMFhx1RLcB8D5wA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oM3nSM6auHQ=:YMn63bge2D4TN2BuE+kKP0
- JrAZ/FMokb4p0ZyrHUM4qR0NA28gOEyw9/frW6jIeZT9ZFzUTawj2+BG78WMhpuK+40T/RSSi
- nNPR+JiuYxNF2J4vY+3fAd51EFTWauTu5xMoGWOVySj3WOoLr1TLsr1kfC/bMNNZQVbL2AgJw
- bx2vYWsjclCyCUq1jqykhL/t9/Cc3GiMiq4qKUpW+1N524zStvlFqfR1yT6S7tiO4viaeK+iW
- 60LSU6yk/eR2RMtxXOFAwYh6ufSwp1wNRYnXByk/0rzo7Fc4ObZLWMwS31G13se7u66vX1DuD
- Yc0usPp7QFqq16Tw25wwEc6SD8vmVrxo08WIO/S4qJx4LYMA8u2OH4lZfbpLbsRjyvAXjdopb
- LtQ3tGT8dmx5BhhIHIyjNLC+CN9eRy7Swp33GF9+A6cq+TpY8nZZdd6Cc/16i6I+NGjVE5YlQ
- hvOeF8fZr0al6jqNcfZP75cwdEFDINBNT/CsVRIADuORToS0JJRutEoPjf1cBQ8/x9/mfPFCo
- 75mrVhTY792ttYUO+IpdlAA3CN7npw7CvbxsGwYNdomtrepM7ZyDTeJXyo4LD51gjqSz7yKAP
- NXUYYaQliD7yVdZMKhk/akMo0fmTLNHvFXpxqMQ5gYKH6VJimNzGDQJRuDK/qZmWCkY9UTOJn
- W9g1yj2Y3kHglEvm9g18lAN1lgDAfE4uC4XCxEKXSn7kiKtdNvqX4tuIeeFnV1A6P+IZ+6C5/
- 6T2KeFyMhQ0NuMvcKWmwGzHAuOyOsW7az6PZcsNoNpFFmz1aK9wArASmf6BSOGjuhMGivRGTx
- wcVEG1X2v99IGprRPFLEIinmJsYOld7tuS1C17jp6XpwTgDyfM=
+X-Provags-ID: V03:K1:b2K8SGt0tNbKweRcNNd5na2gw56bnc7GqSkapPSRkiyRREMbXnV
+ mXoroDsDHSuU5UDemW+096Q1oGLBjSb9A8Q0oGheHoi6a2eWYKpL9j2P6FuZgQX7IeczDrW
+ dwxi0yxqo0aWJTzwXgrZJ/4d15zI6Rog4TWtotc5l3cB8KfW+IoAMQzurz+hLhsY3jkN6mR
+ YdY+2SSUVRM3JY69A4Ilg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tIEy99GNx+8=:kozTZI20UsvqYUvArP7lrr
+ CVSueE5VSluslq5ErNIWyj2CWFhgMtHmXt3v/rGC9X/UHxPaqC6LLL5noG0k4Dq5j41EXHWCb
+ PMCNwTdKHUWN7fgmBpIjU4XPqpfHUH7QjTCqCZ5VnwonmySixRq/IaLaahcEMNm+XBu5NVV7h
+ ROxryqcjmRKSV1UYN1qIEVJ6hSQEaHnkncCnI/ytOdhIZcz5LzUlvCE4Lir6+xxNkpB344DM7
+ ljN/nt5iPRp+jhgNSvTe+zFPC8IURT295IA1JzDCSL9t4ueK+qD3QiuK57tJnHlITjKTqwN96
+ F6KAPbHCFr/8pswmCN1jvldq/Z+76YbCHp+O2rSTTgaTTtzyM8IhfOKSW2PnP6iAfU0/qtvUc
+ wAn+TTxJsVRKcHwW6DB/WQTbw3uRrJXs8OIUbqzVCq2BFazyT+12LVD2iEiZ0WFMTKEkRfCpX
+ FTeFLNHCNkEOZ2V3gyE5XZcK0A8h+hHbjg2CvXmWyqrVDLkyf6ulkl8J3ZaBy8DD7i6iYs1SF
+ NLDTEZrh5IRuSqTzXGjHdZ4BAcT+7k4CaiWVYGiLPHAOo5iy0bhN1962tmSTdUKH2f/yl6gUv
+ qZxwcFLKnqH1cLBdstIpvMOo98khu7iN5Ae3ffSf12Lfzqq7W5tD72pU12fmGOa3ScgKo++eV
+ rlKjKWK9To2C68fLzv0YtoPT190SQ0/2hGz4P5iSl4kVdtqg2lzNtCYAyKKj3GZfqF3QvpKVW
+ 7z1cbRxFdgv2pbmIdbkW4gC5TLeHnAkMZ7SbwAsr/FtwiodtzHLJdfMR2m+bkNPRRUsuQv75P
+ 0xarjRVA9hEnrsUt/yUbISYhgeHa+OrMmkGh8ORCnQZWR5f9Wg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two functions are not declared or defined when CONFIG_EPOLL is
-disabled:
+In a configuration with CONFIG_PINCTRL_MTK_MOORE=y and CONFIG_PINCTRL_MTK_PARIS=m,
+we end up with the mtk_eint driver as a loadable module that cannot be
+linked from built-in code:
 
-arch/arm/kernel/sys_oabi-compat.c: In function 'sys_oabi_epoll_ctl':
-arch/arm/kernel/sys_oabi-compat.c:258:6: error: implicit declaration of function 'ep_op_has_event' [-Werror=implicit-function-declaration]
-  258 |  if (ep_op_has_event(op) &&
-      |      ^~~~~~~~~~~~~~~
-arch/arm/kernel/sys_oabi-compat.c:265:9: error: implicit declaration of function 'do_epoll_ctl'; did you mean 'sys_epoll_ctl'? [-Werror=implicit-function-declaration]
-  265 |  return do_epoll_ctl(epfd, op, fd, &kernel, false);
-      |         ^~~~~~~~~~~~
-      |         sys_epoll_ctl
+aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.o: in function `mtk_build_eint':
+(.text+0x304): undefined reference to `mtk_eint_do_init'
+aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-moore.o: in function `mtk_gpio_set_config':
+pinctrl-moore.c:(.text+0xf80): undefined reference to `mtk_eint_set_debounce'
+aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-moore.o: in function `mtk_gpio_to_irq':
+pinctrl-moore.c:(.text+0x1028): undefined reference to `mtk_eint_find_irq'
 
-Replace the function with the sys_ni_syscall stub in this case.
+Simplify the Kconfig logic to always select EINT_MTK when it is needed, and
+remove the 'default' statements.
 
-Fixes: c281634c8652 ("ARM: compat: remove KERNEL_DS usage in sys_oabi_epoll_ctl()")
+Fixes: 8174a8512e3e ("pinctrl: mediatek: make MediaTek pinctrl v2 driver ready for buidling loadable module")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v2: use sys_ni_syscall() instead of removing the function body
----
- arch/arm/kernel/sys_oabi-compat.c | 2 ++
- kernel/sys_ni.c                   | 1 +
- 2 files changed, 3 insertions(+)
+ drivers/pinctrl/mediatek/Kconfig    |  4 +---
+ drivers/pinctrl/mediatek/mtk-eint.h | 28 ----------------------------
+ 2 files changed, 1 insertion(+), 31 deletions(-)
 
-diff --git a/arch/arm/kernel/sys_oabi-compat.c b/arch/arm/kernel/sys_oabi-compat.c
-index 85a1e95341d8..2488c69242cf 100644
---- a/arch/arm/kernel/sys_oabi-compat.c
-+++ b/arch/arm/kernel/sys_oabi-compat.c
-@@ -249,6 +249,7 @@ struct oabi_epoll_event {
- 	__u64 data;
- } __attribute__ ((packed,aligned(4)));
+diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+index f32d3644c509..b6a8d91f4885 100644
+--- a/drivers/pinctrl/mediatek/Kconfig
++++ b/drivers/pinctrl/mediatek/Kconfig
+@@ -7,8 +7,6 @@ config EINT_MTK
+ 	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
+ 	select GPIOLIB
+ 	select IRQ_DOMAIN
+-	default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
+-	default PINCTRL_MTK_PARIS
  
-+#ifdef CONFIG_EPOLL
- asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
- 				   struct oabi_epoll_event __user *event)
- {
-@@ -264,6 +265,7 @@ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
+ config PINCTRL_MTK
+ 	bool
+@@ -20,6 +18,7 @@ config PINCTRL_MTK
+ 	select OF_GPIO
  
- 	return do_epoll_ctl(epfd, op, fd, &kernel, false);
- }
-+#endif
+ config PINCTRL_MTK_V2
++	select EINT_MTK
+ 	tristate
  
- asmlinkage long sys_oabi_epoll_wait(int epfd,
- 				    struct oabi_epoll_event __user *events,
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 42ce28c460f6..9ee6a46b1795 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -68,6 +68,7 @@ COND_SYSCALL(epoll_create1);
- COND_SYSCALL(epoll_ctl);
- COND_SYSCALL(epoll_pwait);
- COND_SYSCALL_COMPAT(epoll_pwait);
-+COND_SYSCALL(oabi_epoll_ctl); /* ARM OABI specific */
+ config PINCTRL_MTK_MOORE
+@@ -38,7 +37,6 @@ config PINCTRL_MTK_PARIS
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
+-	select EINT_MTK
+ 	select OF_GPIO
+ 	select PINCTRL_MTK_V2
  
- /* fs/fcntl.c */
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
+index 48468d0fae68..f40dab50a5f3 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.h
++++ b/drivers/pinctrl/mediatek/mtk-eint.h
+@@ -68,7 +68,6 @@ struct mtk_eint {
+ 	const struct mtk_eint_xt *gpio_xlate;
+ };
  
+-#if IS_ENABLED(CONFIG_EINT_MTK)
+ int mtk_eint_do_init(struct mtk_eint *eint);
+ int mtk_eint_do_suspend(struct mtk_eint *eint);
+ int mtk_eint_do_resume(struct mtk_eint *eint);
+@@ -76,31 +75,4 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
+ 			  unsigned int debounce);
+ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n);
+ 
+-#else
+-static inline int mtk_eint_do_init(struct mtk_eint *eint)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+-static inline int mtk_eint_do_suspend(struct mtk_eint *eint)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+-static inline int mtk_eint_do_resume(struct mtk_eint *eint)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+-static inline int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
+-			  unsigned int debounce)
+-{
+-	return -EOPNOTSUPP;
+-}
+-
+-static inline int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
+-{
+-	return -EOPNOTSUPP;
+-}
+-#endif
+ #endif /* __MTK_EINT_H */
 -- 
 2.26.0
 
