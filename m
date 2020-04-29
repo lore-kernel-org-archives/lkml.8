@@ -2,232 +2,116 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C863FC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3704AC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973702072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E4120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="FvcA1Fjy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SKEgniF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgD2Q4b (ORCPT
+        id S1727057AbgD2Q47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:56:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56212 "EHLO
+        Wed, 29 Apr 2020 12:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726689AbgD2Q4a (ORCPT
+        by vger.kernel.org with ESMTP id S1726689AbgD2Q46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:56:30 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75051C035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:56:30 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id v26so2477407qto.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:56:30 -0700 (PDT)
+        Wed, 29 Apr 2020 12:56:58 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AF5C035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:56:58 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id s202so2442997oih.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:56:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rnHHxaQhtT4+RdRDGU5tOE+9a9rrpNd1LdRaMA/8Xws=;
-        b=FvcA1FjygqWE42unECNdDBWBlDyRl6w5nneqciqqk+57WN0ZdyDO6khok8kIDfjNuk
-         fAGZ9N28xSsYZPPUmEqUALlpo2Yb+Q6xQMtLX3Bu2UqauKHvzReNsR4x0dLu7pVondaP
-         NuiMQ9QOMCj93k0M3T29tJbkldsoUpHqoP6DDWrOEEIPaTfKgJ1U0WTgqR3H2FB+bzAP
-         JHKyV+U7REU96PTrWNZ0wkeHwhy+D7NiK2DmEHNClIfJASJdO3iHTsY5EnKRCxN0hgLz
-         xhSVEIVZD7MKcIJih1Wwz02CwM2l4WwkdpGReuC+8V1P0sdL3hgqnFGkXvSgV4C+6B7x
-         g3KQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jS410y1rm5OfNNRCCW0JAfor+cQs9RvCO91EhwcQ5qM=;
+        b=SKEgniF11L1lsRsuok+38sxpcfheThEexuS7GTd0xZtTs01ku+ZWsyxgA+TYnf15xR
+         Vnfl7IsYVhPLLkA5uNu7Zv0xrwtAGz2JCrm+/RzruMRFfOHOSVKpCWQ/d0OifaRObJT5
+         4nxzQGPIoqRMiIlbx1JwzrRt7GrtyGMf0GKtxHc8g5ib5NVQAO9cB2voK5LQslsq8YLi
+         jCJUlMr4swyHEuJ6y5bMN13lB2g6uOM1qk7EOLv0Rl5pzz7nairt2NamL3XXrpwV3kxw
+         eQf0OmqYiXJnbW3D0j+hsYlNtUHomr6inPNZEAFtr0pmcRtmlLL9aGRrZZE3DADZjLcu
+         qAhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rnHHxaQhtT4+RdRDGU5tOE+9a9rrpNd1LdRaMA/8Xws=;
-        b=ZAwoDc8Vq6UQ8s1iLIIwroTBjEh67xpmgbvkcGtvPG022f+vt/LEoxddQV0SswFvAd
-         7NKhJNgyl2H43+r6w8go3lMS0Mon4bxHXMkE9PuL3F4sZC5AR/ntqQ6tHSufMSGRGZz7
-         Y4LaezleadXpsQG3OurFa+4Y9MSHPjXT/tvI0x59GBLT77LJ7uRijFhHMzvP0R+PbHG+
-         jTprHmcFOPIbkUOlMwjGKabX8Ip+RgeD7GhaQj1/Hcfym3mJmmTYkDK/clMF9eKLvs3F
-         AHbjij5psMRLpJovIx/XHxFx28eNyMGXWYpbzZYANg/SYlR+cjMmcHZ7HhDsrnLdcUl8
-         Dn8g==
-X-Gm-Message-State: AGi0PuaS1JxUnGeDPv+53EFUBBYGEXmjMQJBWR8B8gnxFNIVGmFoAedK
-        OUzaLuNs6wqgb5rlBtpdBwCJ+A==
-X-Google-Smtp-Source: APiQypKNSspppIYZLX8YP/iqVnuJ4JDLFmLd4r/PtvUxAHzpIvgHAdgju2vibc9BHt/Ts2nWYrvrMQ==
-X-Received: by 2002:ac8:27b4:: with SMTP id w49mr36250211qtw.111.1588179389453;
-        Wed, 29 Apr 2020 09:56:29 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id k127sm16013425qkb.35.2020.04.29.09.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 09:56:28 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 12:56:27 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-Message-ID: <20200429165627.GA24768@cmpxchg.org>
-References: <cover.1588092152.git.chris@chrisdown.name>
- <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <20200429101510.GA28637@dhcp22.suse.cz>
- <20200429140330.GA5054@cmpxchg.org>
- <20200429150414.GI28637@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jS410y1rm5OfNNRCCW0JAfor+cQs9RvCO91EhwcQ5qM=;
+        b=Y/nLutuVWxfZWVvNyN3OA7wLr27jYmhycH0MRKDO+aNiqLOnuQZwRKVDiNegE0PhcV
+         Q9Uh+Ux5MEiRmiMtvDBE4c140K1UKP7FjFYyofDjA/3xd1vew4X4vmnQ/F/0bZN6PwJe
+         rGIVTXfZbsMyJzIMedWP2kuhd9NZNGErRS7O4+GNZEd/4QNzaDYNSQrG30dqAyTFreRs
+         KKLQh/IvxXLkOq9+tR3tNEA+1iGg3om6ER14r8yKgzcLNTNDMiFzy6UXXeV9eCVjbGgE
+         8Dz/FM0w+N6ZVesITpXYiQLlvYGdJBbsezM56n2NitIopTjiZRKQX0Wd3JiXvMCokk6N
+         d+sQ==
+X-Gm-Message-State: AGi0PuaKwl8LkYX0ZEJf0ZTClq1HTrdusnnwJBAkZMDx72D12VHLE1tN
+        zURtkUkjNeyTcgIWur/WGP6CXuLBOfcwZnVBB/jLdg==
+X-Google-Smtp-Source: APiQypJWdOOaCWqMgIakohtvjOfQJ6gmQBDUoadsUDsa2Bq+T8SAlu8GGSFWb6qJ+xMUCMYQoyebcVqFRBAhUNOLfwA=
+X-Received: by 2002:aca:c311:: with SMTP id t17mr2202051oif.169.1588179417419;
+ Wed, 29 Apr 2020 09:56:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429150414.GI28637@dhcp22.suse.cz>
+References: <20200422203245.83244-1-john.stultz@linaro.org>
+ <20200422203245.83244-2-john.stultz@linaro.org> <CGME20200429134605eucas1p2bd601082e7a6b8c8fdbe79c83972e2e3@eucas1p2.samsung.com>
+ <9e0501b5-c8c8-bc44-51e7-4bde2844b912@samsung.com> <20200429135228.GL4201@sirena.org.uk>
+In-Reply-To: <20200429135228.GL4201@sirena.org.uk>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 29 Apr 2020 09:56:44 -0700
+Message-ID: <CALAqxLWD95Ls53d+Mh2K=hn7HtTDqy2nG-APSdmwYajrw1q61Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] driver core: Revert default driver_deferred_probe_timeout
+ value to 0
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 05:04:14PM +0200, Michal Hocko wrote:
-> On Wed 29-04-20 10:03:30, Johannes Weiner wrote:
-> > On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
-> > > On Tue 28-04-20 19:26:47, Chris Down wrote:
-> > > > From: Yafang Shao <laoar.shao@gmail.com>
-> > > > 
-> > > > A cgroup can have both memory protection and a memory limit to isolate
-> > > > it from its siblings in both directions - for example, to prevent it
-> > > > from being shrunk below 2G under high pressure from outside, but also
-> > > > from growing beyond 4G under low pressure.
-> > > > 
-> > > > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
-> > > > implemented proportional scan pressure so that multiple siblings in
-> > > > excess of their protection settings don't get reclaimed equally but
-> > > > instead in accordance to their unprotected portion.
-> > > > 
-> > > > During limit reclaim, this proportionality shouldn't apply of course:
-> > > > there is no competition, all pressure is from within the cgroup and
-> > > > should be applied as such. Reclaim should operate at full efficiency.
-> > > > 
-> > > > However, mem_cgroup_protected() never expected anybody to look at the
-> > > > effective protection values when it indicated that the cgroup is above
-> > > > its protection. As a result, a query during limit reclaim may return
-> > > > stale protection values that were calculated by a previous reclaim cycle
-> > > > in which the cgroup did have siblings.
-> > > > 
-> > > > When this happens, reclaim is unnecessarily hesitant and potentially
-> > > > slow to meet the desired limit. In theory this could lead to premature
-> > > > OOM kills, although it's not obvious this has occurred in practice.
-> > > 
-> > > Thanks this describes the underlying problem. I would be also explicit
-> > > that the issue should be visible only on tail memcgs which have both
-> > > max/high and protection configured and the effect depends on the
-> > > difference between the two (the smaller it is the largrger the effect).
-> > > 
-> > > There is no mention about the fix. The patch resets effective values for
-> > > the reclaim root and I've had some concerns about that
-> > > http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
-> > > Johannes has argued that other races are possible and I didn't get to
-> > > think about it thoroughly. But this patch is introducing a new
-> > > possibility of breaking protection. If we want to have a quick and
-> > > simple fix that would be easier to backport to older kernels then I
-> > > would feel much better if we simply workedaround the problem as
-> > > suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
-> > > We can rework the effective values calculation to be more robust against
-> > > races on top of that because this is likely a more tricky thing to do.
-> > 
-> > Well, can you please *do* think more thoroughly about what I wrote,
-> > instead of pushing for an alternative patch on gut feeling alone?
-> > 
-> > Especially when you imply that this should be a stable patch.
-> 
-> The patch has a Fixes tag and so it is not unrealistic to assume that it
-> will hit older trees. I wasn't really implying stable tree backport and
-> I do not think this is a stable material.
+On Wed, Apr 29, 2020 at 6:52 AM Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Apr 29, 2020 at 03:46:04PM +0200, Marek Szyprowski wrote:
+> > On 22.04.2020 22:32, John Stultz wrote:
+>
+> > > Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+>
+> > Please also revert dca0b44957e5 "regulator: Use
+> > driver_deferred_probe_timeout for regulator_init_complete_work" then,
+> > because now with the default 0 timeout some regulators gets disabled
+> > during boot, before their supplies gets instantiated.
+>
+> Yes, please - I requested this when the revert was originally proposed :(
 
-Okay, thanks for clarifying.
+Oh, my apologies. I misunderstood what you were suggesting earlier.
+Sorry for being thick headed.
 
-> > Not only does your alternative patch not protect against the race you
-> > are worried about, the race itself doesn't matter. Racing reclaimers
-> > will write their competing views of the world into the shared state on
-> > all other levels anyway.
-> > 
-> > And that's okay. If the configuration and memory usage is such that
-> > there is at least one reclaimer that scans without any protection
-> > (like a limit reclaimer), it's not a problem when a second reclaimer
-> > that meant to do protected global reclaim will also do one iteration
-> > without protection. It's no different than if a second thread had
-> > entered limit reclaim through another internal allocation.
-> 
-> Yes I do agree here.
+I'll spin up a revert here shortly.
 
-Okay.
-
-> > There is no semantical violation with the race in your patch or the
-> > race in this patch. Any effective protection that becomes visible is
-> > 1) permitted by the configuration, but 2) also triggered *right now*
-> > by an acute need to reclaim memory with these parameters.
-> > 
-> > The *right now* part is important. That's what's broken before either
-> > patch, and that's what we're fixing: to see really, really *old* stale
-> > that might not be representative of the config semantics anymore.
-> 
-> No disagreement here either. But please remember that the example I've
-> given is a clear violation of the protection. Let me paste it here so
-> that we have both examples in one email:
-> : Let's have global and A's reclaim in parallel:
-> :  |
-> :  A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
-> :  |\
-> :  | C (low = 1G, usage = 2.5G)
-> :  B (low = 1G, usage = 0.5G)
-> : 
-> : for A reclaim we have
-> : B.elow = B.low
-> : C.elow = C.low
-> : 
-> : For the global reclaim
-> : A.elow = A.low
-> : B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
-> : C.elow = min(C.usage, C.low)
-> : 
-> : With the effective values reseting we have A reclaim
-> : A.elow = 0
-> : B.elow = B.low
-> : C.elow = C.low
-> : 
-> : and global reclaim could see the above and then
-> : B.elow = C.elow = 0 because children_low_usage > A.elow
-> 
-> I hope we both agree that B shouldn't be reclaimed whether the reclaim
-> comes from A or above A. The race is not possible with with the patch
-> working around the problem in mem_cgroup_protection().
-
-Okay, I misread this the first time.
-
-The problem is that in limit reclaim we reset A.elow in anticipation
-of treating B and C as the top-level groups of our scan cycle and will
-be using their B.low and C.low verbatim. Global reclaim can then visit
-them before us and propagate A.elow=0 down to them.
-
-But doesn't this problem cut both ways? Say you have the following
-subtree:
-
-	A (memory.max=10G, memory.low=2G)
-	`- A1 (memory.low=max)
-	`- A2 (memory.low=max)
-	`- A3 (memory.low=0)
-
-A similar race can give A1 and A2 absolute exemption from global
-reclaim instead of proportional distribution of the parental 2G.
-
-The chances of that happening could be boosted maliciously by
-triggering many short limit reclaim invocations, like ioless cache
-from sparse files, to keep overwriting A1.elow and A2.elow to max.
-
-I think to address this, we need a more comprehensive solution and
-introduce some form of serialization. I'm not sure yet how that would
-look like yet.
-
-I'm still not sure it's worth having a somewhat ugly workaround in
-mem_cgroup_protection() to protect against half of the bug. If you
-think so, the full problem should at least be documented and marked
-XXX or something.
-
-In practice, I doubt this matters all that much because limit reclaim
-and global reclaim tend to occur in complementary
-containerization/isolation strategies, not heavily simultaneously.
+thanks
+-john
