@@ -2,146 +2,118 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BAC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BBFC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC452073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F53B2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgD2HBL (ORCPT
+        id S1726575AbgD2HBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:01:11 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40291 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgD2HBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:01:11 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y4so1416205ljn.7;
-        Wed, 29 Apr 2020 00:01:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ptPYLDei9LMsvhdKW9/nay5bhWp9Qq4b7cAcaUxshS0=;
-        b=sI7Q3oMH3ORGN4oKJKwqzteji/kk9Q7ewqE3/Y7odvuM0e2BrYhh5TWi3hPNyAj0G0
-         tFqetBv5RxQj0P0V2mM8noMXqZrkJVRTHYJs0BKIB7RlihiLUxu9JduA1P+ows7wG0nJ
-         R3O5NfaOyrbAAxh3vMvyQkLb2pav5CBz2HYhdiLQSzPbalLiH3RGTrvKIH6g93eWD3cZ
-         sj9zHrnrysnAwJdjPUm0h1/3SsfazfuWrQHE+pgvu7URXktOoYH2bQ8FDBc6L0PL15wx
-         GXdHWUeQCgjht+EeuABBiT8XZUa/CSUoQ9mFkzxD4HRu8tPTsBZmTSePgwtnoaVPr0kn
-         KwlA==
-X-Gm-Message-State: AGi0PuaPI+LONLGG8aNn+8X+fhPKfHhPahUFeSee6ysBkFRleRigCGyf
-        VY0SNZgmqXTKEcDNo9qxzWU=
-X-Google-Smtp-Source: APiQypKMS7huMXVCwkN0xqaQZEasmGknHyh+qzVqmq/W6qhQomOoC00vc8yxZ9z4Kv8EM7paUv0ttQ==
-X-Received: by 2002:a2e:96c2:: with SMTP id d2mr20730865ljj.214.1588143668845;
-        Wed, 29 Apr 2020 00:01:08 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id w29sm1775466lfq.35.2020.04.29.00.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 00:01:08 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 10:00:22 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     sre@kernel.org, robh+dt@kernel.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v10 06/11] dt-bindings: battery: add new battery
- parameters
-Message-ID: <f2f0eef84a3b0bf852ffb07e2a6224f5b19ab653.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 29 Apr 2020 03:01:21 -0400
+Received: from mga07.intel.com ([134.134.136.100]:42563 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbgD2HBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 03:01:21 -0400
+IronPort-SDR: lZ3219YFCMq0Em6g3ODZ4xcW7vqiOHIOctgQM89qBUQw7+ZJC5QJyMX9lOk3OV2kBgKy+wHJkA
+ jsbA0lY83yRQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 00:01:20 -0700
+IronPort-SDR: 4DvuVAJfnwee41/vUOY7D8kJA2vxdQDguCSVgDEfD+VPgf23D9je1CKT13vT2xgvP4h9E5vTMK
+ lf2m1SGXRZSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
+   d="scan'208";a="404952135"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.210.254]) ([10.254.210.254])
+  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2020 00:01:15 -0700
+Cc:     baolu.lu@linux.intel.com,
+        Srivatsa Vaddagiri <vatsa@codeaurora.org>,
+        tsoni@codeaurora.org, virtio-dev@lists.oasis-open.org,
+        konrad.wilk@oracle.com, jan.kiszka@siemens.com,
+        jasowang@redhat.com, christoffer.dall@arm.com,
+        virtualization@lists.linux-foundation.org, alex.bennee@linaro.org,
+        iommu@lists.linux-foundation.org, stefano.stabellini@xilinx.com,
+        will@kernel.org, linux-kernel@vger.kernel.org,
+        pratikp@codeaurora.org
+Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+References: <1588073958-1793-1-git-send-email-vatsa@codeaurora.org>
+ <1588073958-1793-6-git-send-email-vatsa@codeaurora.org>
+ <20200428121232-mutt-send-email-mst@kernel.org>
+ <20200428174952.GA5097@quicinc.com>
+ <20200428163448-mutt-send-email-mst@kernel.org>
+ <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
+ <20200429004531-mutt-send-email-mst@kernel.org>
+ <b676430c-65b3-096e-ca48-ceebf10f4b28@linux.intel.com>
+ <20200429023842-mutt-send-email-mst@kernel.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <80a3a471-0a2c-3ab3-529c-1b8b624679f8@linux.intel.com>
+Date:   Wed, 29 Apr 2020 15:01:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1586925868.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200429023842-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add:
+On 2020/4/29 14:50, Michael S. Tsirkin wrote:
+> On Wed, Apr 29, 2020 at 01:42:13PM +0800, Lu Baolu wrote:
+>> On 2020/4/29 12:57, Michael S. Tsirkin wrote:
+>>> On Wed, Apr 29, 2020 at 10:22:32AM +0800, Lu Baolu wrote:
+>>>> On 2020/4/29 4:41, Michael S. Tsirkin wrote:
+>>>>> On Tue, Apr 28, 2020 at 11:19:52PM +0530, Srivatsa Vaddagiri wrote:
+>>>>>> * Michael S. Tsirkin<mst@redhat.com>   [2020-04-28 12:17:57]:
+>>>>>>
+>>>>>>> Okay, but how is all this virtio specific?  For example, why not allow
+>>>>>>> separate swiotlbs for any type of device?
+>>>>>>> For example, this might make sense if a given device is from a
+>>>>>>> different, less trusted vendor.
+>>>>>> Is swiotlb commonly used for multiple devices that may be on different trust
+>>>>>> boundaries (and not behind a hardware iommu)?
+>>>>> Even a hardware iommu does not imply a 100% security from malicious
+>>>>> hardware. First lots of people use iommu=pt for performance reasons.
+>>>>> Second even without pt, unmaps are often batched, and sub-page buffers
+>>>>> might be used for DMA, so we are not 100% protected at all times.
+>>>>>
+>>>> For untrusted devices, IOMMU is forced on even iommu=pt is used;
+>>> I think you are talking about untrusted*drivers*  like with VFIO.
+>> No. I am talking about untrusted devices like thunderbolt peripherals.
+>> We always trust drivers hosted in kernel and the DMA APIs are designed
+>> for them, right?
+>>
+>> Please refer to this series.
+>>
+>> https://lkml.org/lkml/2019/9/6/39
+>>
+>> Best regards,
+>> baolu
+> Oh, thanks for that! I didn't realize Linux is doing this.
+> 
+> So it seems that with modern Linux, all one needs
+> to do on x86 is mark the device as untrusted.
+> It's already possible to do this with ACPI and with OF - would that be
+> sufficient for achieving what this patchset is trying to do?
 
- - trickle-charge-current-microamp:
+Yes.
 
-Some chargers have 3 charging stages. First one when battery is almost
-empty is often called as trickle-charge. Last state when battery has been
-"woken up" is usually called as fast-charge. In addition to this some
-chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-pre-charge. Some batteries can benefit from this 3-phase charging
-[citation needed].
+> 
+> Adding more ways to mark a device as untrusted, and adding
+> support for more platforms to use bounce buffers
+> sounds like a reasonable thing to do.
+> 
 
-Introduce trickle-charge-current-microamp so that batteries can give
-charging current limit for all three states.
+Agreed.
 
- - precharge-upper-limit-microvolt:
-
-When battery voltage has reached certain limit we change from
-trickle-charge to next charging state (pre-charge for BD99954). Allow
-battery to specify this limit.
-
- - re-charge-voltage-microvolt:
-
-Allow giving a battery specific voltage limit for chargers which can
-automatically re-start charging when battery has discharghed down to
-this limit.
-
-- over-voltage-threshold-microvolt
-
-Allow specifying voltage threshold after which the battery is assumed to
-be faulty.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
-
-No changes since v9
-
- Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-index 3049cf88bdcf..5e29595edd74 100644
---- a/Documentation/devicetree/bindings/power/supply/battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
- behavior should a replacement that changes the battery type occur
- without a corresponding update to the dtb.
- 
-+Please note that not all charger drivers respect all of the properties.
-+
- Required Properties:
-  - compatible: Must be "simple-battery"
- 
- Optional Properties:
-+ - over-voltage-threshold-microvolt: battery over-voltage limit
-+ - re-charge-voltage-microvolt: limit to automatically start charging again
-  - voltage-min-design-microvolt: drained battery voltage
-  - voltage-max-design-microvolt: fully charged battery voltage
-  - energy-full-design-microwatt-hours: battery design energy
-  - charge-full-design-microamp-hours: battery design capacity
-+ - trickle-charge-current-microamp: current for trickle-charge phase
-  - precharge-current-microamp: current for pre-charge phase
-+ - precharge-upper-limit-microvolt: limit when to change to constant charging
-  - charge-term-current-microamp: current for charge termination phase
-  - constant-charge-current-max-microamp: maximum constant input current
-  - constant-charge-voltage-max-microvolt: maximum constant input voltage
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Best regards,
+baolu
