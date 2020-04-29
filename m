@@ -2,112 +2,202 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55181C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46984C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C8520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB8D20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LI/1BzJk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BtnKVoGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgD2SE7 (ORCPT
+        id S1726844AbgD2SIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:04:59 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:51417 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726481AbgD2SE7 (ORCPT
+        Wed, 29 Apr 2020 14:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbgD2SIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:04:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588183498; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=2FALkhGpM2HPL37dTrh6ykdf3xZBris2h6ZDdsxWFkQ=; b=LI/1BzJkAhcixKNoNimspbwF3iUEoQi1xo2CvUwgUhqhJNAFULUxtGnEhIgYmLD8XPYtWS58
- mGsgwNHkPNFahezNF5RvSJhhix6/F4Nv77OoEssK5nibeOr9+59gpUCQsh9DrxrdJ0ATcpBH
- yTCIWtjuhavk/E0/1c65iwn4oUs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9c1c2.7f19aea4b148-smtp-out-n02;
- Wed, 29 Apr 2020 18:04:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D73E1C433BA; Wed, 29 Apr 2020 18:04:49 +0000 (UTC)
-Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBC25C433CB;
-        Wed, 29 Apr 2020 18:04:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBC25C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
-From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     linux-remoteproc@vger.kernel.org, bjorn.andersson@linaro.org
-Cc:     ohad@wizery.com, linux-kernel@vger.kernel.org,
-        tsoni@codeaurora.org, psodagud@codeaurora.org,
-        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH] remoteproc: core: Prevent system suspend during remoteproc recovery
-Date:   Wed, 29 Apr 2020 11:04:42 -0700
-Message-Id: <1588183482-21146-1-git-send-email-rishabhb@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 29 Apr 2020 14:08:22 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3C8C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:08:22 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so1122476plo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jgBesrZnxL+kYNZAUBc2q+AIqwIcsT3SbcObjZ7pa0c=;
+        b=BtnKVoGw4kWLf1dY5ZduBxtig5LWR/+sTfMaOBFb7ji6TCHMdWzbkCejWER0S+j3+M
+         0KbT39v5FI1GqWAqgBt1a5pt8r7kBNANGTYOO0Z9FsNeE7aVu56ZIotcaii0lzzPOkq8
+         fiMwloXlhwUl5/A3l1efDgqVkGIUqbvwKCF4gLAM1J21QirA23ksdEKRDzLeM/ne9HPW
+         muSQY6CkBxeSN/6WR9uSsuK1ZSSW975apfCBU0ez259rvXb+K/NogBQgAFYDoFDFPT5H
+         sMSXN+0EiL1JKooomEb8IMKO3OTVOOT7M/1zWIGSQIhJZBdTixGA3oAj+l2bgC3cpBWE
+         Jx8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jgBesrZnxL+kYNZAUBc2q+AIqwIcsT3SbcObjZ7pa0c=;
+        b=r3k2aF7wCEs8kk3FziEn9v6xhu06DHX4souj1RNa9MlNLYb1J3Nnew8fjZMrgK7798
+         J0nqqE5h7fmzcPTOBJAiyWVsHbDf6lWjGPfkQHqcxX+U8y0aiJpR9doZ0d7you+eaZ/Z
+         B0L0QjwrEnRDKdrCzSs2sXHaf2lzNkdC73WIs16/k0J7DDa92JaOmiPOJAaHhMnHtfh9
+         wbRLgylEMtVYA7Q5+zR1NAGHoCRzbAk+Gxymo8EZYvU88gYC7AWUn/uIWQPljxbV2w85
+         e0k20BvMOEDLofOsFoI7WAq6d6wMmBXa1mXAJV1MgjiUW9G9zOnSsoYuc9gVbrO4rx6S
+         zfIw==
+X-Gm-Message-State: AGi0PuYR6LPbP4srkb+4z++Z61LegJ22ZJqGdC1wHaol934wB4lZHmNn
+        oAbJGpaGPlq+efU5H6Iz5Cs2lXA9bxw=
+X-Google-Smtp-Source: APiQypIrICIQc3PhjIH1wr0MALmKG/hxL05bEOwS+tytX4MzkuSmDE71EzBQl9ILXyX0kZP0iWI4Kw==
+X-Received: by 2002:a17:90b:34c:: with SMTP id fh12mr4640772pjb.134.1588183702070;
+        Wed, 29 Apr 2020 11:08:22 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 202sm1497020pgf.41.2020.04.29.11.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 11:08:21 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 12:08:18 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v2 1/2] coresight: Include required headers in C files
+Message-ID: <20200429180818.GA3062@xps15>
+References: <20200428181010.170568-1-swboyd@chromium.org>
+ <20200428181010.170568-2-swboyd@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428181010.170568-2-swboyd@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The system might go into suspend during recovery of any remoteproc.
-This will interrupt the recovery process in between increasing the
-recovery time. Make the platform device as wakeup capable and
-use pm_stay_wake/pm_relax APIs to avoid system from going into
-suspend during recovery.
+Hi Stephen,
 
-Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/remoteproc/qcom_q6v5_pas.c   | 2 ++
- drivers/remoteproc/remoteproc_core.c | 5 +++++
- 2 files changed, 7 insertions(+)
+On Tue, Apr 28, 2020 at 11:10:09AM -0700, Stephen Boyd wrote:
+> We should include headers that C files use in the C files that use them
+> and avoid relying on implicit includes as much as possible. This helps
+> avoid compiler errors in the future about missing declarations when
+> header files change includes in the future.
+> 
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  .../hwtracing/coresight/coresight-cti-platform.c    |  8 +++++++-
+>  drivers/hwtracing/coresight/coresight-cti-sysfs.c   |  7 +++++++
+>  drivers/hwtracing/coresight/coresight-cti.c         | 13 +++++++++++++
+>  drivers/hwtracing/coresight/coresight-cti.h         |  8 +++++++-
+>  4 files changed, 34 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> index c6c0c9b4827e..ab3bd4ed0910 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> @@ -2,11 +2,17 @@
+>  /*
+>   * Copyright (c) 2019, The Linaro Limited. All rights reserved.
+>   */
+> +#include <linux/coresight.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/property.h>
+> +#include <linux/slab.h>
+>  
+>  #include <dt-bindings/arm/coresight-cti-dt.h>
+> -#include <linux/of.h>
+>  
+>  #include "coresight-cti.h"
+> +#include "coresight-priv.h"
+>  
+>  /* Number of CTI signals in the v8 architecturally defined connection */
+>  #define NR_V8PE_IN_SIGS		2
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index aeea39cbd161..77e14e770806 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -4,7 +4,14 @@
+>   * Author: Mike Leach <mike.leach@linaro.org>
+>   */
+>  
+> +#include <linux/atomic.h>
+>  #include <linux/coresight.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/sysfs.h>
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index edf9d0e..e608578 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -398,6 +398,8 @@ static int adsp_probe(struct platform_device *pdev)
- 	adsp->has_aggre2_clk = desc->has_aggre2_clk;
- 	platform_set_drvdata(pdev, adsp);
- 
-+	device_wakeup_enable(adsp->dev);
-+
- 	ret = adsp_alloc_memory_region(adsp);
- 	if (ret)
- 		goto free_rproc;
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 097f33e..6a1cb98 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
- 
- 	if (!rproc->recovery_disabled)
- 		rproc_trigger_recovery(rproc);
-+
-+	pm_relax(rproc->dev.parent);
- }
- 
- /**
-@@ -2208,6 +2210,9 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
- 		return;
- 	}
- 
-+	/* Prevent suspend while the remoteproc is being recovered */
-+	pm_stay_awake(rproc->dev.parent);
-+
- 	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
- 		rproc->name, rproc_crash_to_string(type));
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+What is io.h and slab.h used for in coresight-cti-sysfs.c ?
+
+>  
+>  #include "coresight-cti.h"
+>  
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+> index 7fc1fc8d7738..be61c1705916 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti.c
+> @@ -4,7 +4,20 @@
+>   * Author: Mike Leach <mike.leach@linaro.org>
+>   */
+>  
+> +#include <linux/amba/bus.h>
+> +#include <linux/atomic.h>
+> +#include <linux/bits.h>
+> +#include <linux/coresight.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+
+Same comment as above.
+
+No need to send another version if these are mistakes - just let me know and
+I'll do the adjustment.
+
+Thanks,
+Mathieu
+
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/property.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "coresight-priv.h"
+>  #include "coresight-cti.h"
+>  
+>  /**
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
+> index 004df3ab9dd0..acf7b545e6b9 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.h
+> +++ b/drivers/hwtracing/coresight/coresight-cti.h
+> @@ -7,8 +7,14 @@
+>  #ifndef _CORESIGHT_CORESIGHT_CTI_H
+>  #define _CORESIGHT_CORESIGHT_CTI_H
+>  
+> -#include <asm/local.h>
+> +#include <linux/coresight.h>
+> +#include <linux/device.h>
+> +#include <linux/fwnode.h>
+> +#include <linux/list.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+> +
+>  #include "coresight-priv.h"
+>  
+>  /*
+> -- 
+> Sent by a computer, using git, on the internet
+> 
