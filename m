@@ -2,113 +2,112 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A8CC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E5AC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07B9206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Bs7BV2ns"
+	by mail.kernel.org (Postfix) with ESMTP id 7F11020784
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgD2GkR (ORCPT
+        id S1726611AbgD2Gnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 02:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgD2GkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 02:40:16 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A84C03C1AE
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 23:40:15 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id k12so1010094qtm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 23:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yG9vpPKDzpfRJJCk2llJaWFnWsJYaiICHL0xvUKSsXA=;
-        b=Bs7BV2nsK5MflmzjP5qR1H1SKL2RyWuvjV5dRy4PwylwWd2puZuGbhRmxG2Tjfc7pK
-         6v1lAYPstBsxTH7gSPFHpwMI9kd5ppsETqxsuEkfbeNJu84FZXDqKGejIE50RbaBS1p8
-         YV+SxL9CDCR+XMf6lga3L5RTanyFYXyJ4Vk4RMYqZ1N9kgb//Wt0YHItFB79+qWRXg68
-         SHQhvxi088v7r8mtiNy4+ld8CCovMYlh0RezNiduUHlfZuF7sXVQrwUkSlGj3tlpiiOu
-         zgYHvkt3wJw9UKbX8z2TDmXDcP0iWw9qnLHv6Fj/qnNbRyE3x82dH6Q9D/hREX60J0Ug
-         5vag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yG9vpPKDzpfRJJCk2llJaWFnWsJYaiICHL0xvUKSsXA=;
-        b=LPJfFqYvumQ/MPaex9a2lium1hVG/mtntAqZW70NdpUNLV4UasGlyoTtjtocB0i00y
-         gbAodCn20BqArNL1KB5c1Yy8nDWjN9SEPXXXSBOvYrLI1TIGqjfAMnR793c0bf+khSUT
-         1KbtxSu2epEcD5klbp1AefZx4/ZCBmCnItFBYlTgKzfAHNIciDcKMc70sa5Ow93nHgg2
-         9mjW+9WJOIwMlPcgp3KRyXR7vSvOHjvVihMFUWTc7jxa7h92yoi7AEazmhL1KWkKoIqi
-         VqbeCKbaIywcbSVMMLmoxASdOzDe/QlZtrLRyFcaO7XU+/8Q2+yRsmUUEkpHWE1ihMcK
-         W8Kg==
-X-Gm-Message-State: AGi0PuaVfnt8Uh/xPf5mzvTpa6GyknhP4sK98Ek34aUsPUIDls0PvMQn
-        nGqjcrZPxEsCY1Oip6gmALFpW9awaw1Ne19EmUoBDw==
-X-Google-Smtp-Source: APiQypLel6yd42EX4hCUgJ2g2Y4ZLCLoCH0juyg1zdK4uk7xQQ8uHZN/7SJaLSvNB3C9dIMq2LoGdqu106l9KFNjX6k=
-X-Received: by 2002:aed:2a43:: with SMTP id k3mr32657429qtf.208.1588142414184;
- Tue, 28 Apr 2020 23:40:14 -0700 (PDT)
+        Wed, 29 Apr 2020 02:43:37 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2124 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726158AbgD2Gng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 02:43:36 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 0529315BC91E05DB2692;
+        Wed, 29 Apr 2020 07:43:35 +0100 (IST)
+Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
+ LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
+ (TLS) id 14.3.487.0; Wed, 29 Apr 2020 07:43:34 +0100
+Received: from lhreml722-chm.china.huawei.com (10.201.108.73) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 29 Apr 2020 08:43:33 +0200
+Received: from lhreml722-chm.china.huawei.com ([10.201.108.73]) by
+ lhreml722-chm.china.huawei.com ([10.201.108.73]) with mapi id 15.01.1913.007;
+ Wed, 29 Apr 2020 07:43:33 +0100
+From:   Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2 6/6] ima: Fix return value of ima_write_policy()
+Thread-Topic: [PATCH v2 6/6] ima: Fix return value of ima_write_policy()
+Thread-Index: AQHWHH9bJMB74MHPBU+JlJn2oiegG6iOwCwAgADnE9A=
+Date:   Wed, 29 Apr 2020 06:43:33 +0000
+Message-ID: <cee0cd9d63864ed4a39422c6be818e36@huawei.com>
+References: <20200427102900.18887-1-roberto.sassu@huawei.com>
+         <20200427103128.19229-1-roberto.sassu@huawei.com>
+ <1588095998.5195.49.camel@linux.ibm.com>
+In-Reply-To: <1588095998.5195.49.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.9.247]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
- <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com> <CAHp75Vdpb=hNiR3c7G_yTeSt70Vcy3DWHin0B5+WYV1hbRMBJQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vdpb=hNiR3c7G_yTeSt70Vcy3DWHin0B5+WYV1hbRMBJQ@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 29 Apr 2020 08:40:03 +0200
-Message-ID: <CAMpxmJVT4wm26hQB-_BV73tC5_nqH5JG9KmDuNQ2OJe+tE+gLg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 28 kwi 2020 o 17:53 Andy Shevchenko <andy.shevchenko@gmail.com> napisa=
-=C5=82(a):
->
-> On Tue, Apr 14, 2020 at 6:35 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> >
-> > wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napis=
-a=C5=82(a):
-> > >
-> > > On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
-> > >
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > We must not call pinctrl_gpio_can_use_line() with the gpio_lock tak=
-en
-> > > > as it takes a mutex internally. Let's move the call before taking t=
-he
-> > > > spinlock and store the return value.
-> > > >
-> > > > This isn't perfect - there's a moment between calling
-> > > > pinctrl_gpio_can_use_line() and taking the spinlock where the situa=
-tion
-> > > > can change but it isn't a regression either: previously this part w=
-asn't
-> > > > protected at all and it only affects the information user-space is
-> > > > seeing.
->
-> It seems I have no original at hand, so, commenting here.
->
-> It looks like we need a mutex less function which can be used here and
-> in the call you are considering racy.
-
-The thing is this mutex is in pinctrl - we'd need to export it too so
-that gpio can use it.
-
-Bart
+SGkgTWltaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpv
+aGFyIFttYWlsdG86em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogVHVlc2RheSwgQXByaWwg
+MjgsIDIwMjAgNzo0NyBQTQ0KPiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3
+ZWkuY29tPjsgS3J6eXN6dG9mIFN0cnVjenluc2tpDQo+IDxrcnp5c3p0b2Yuc3RydWN6eW5za2lA
+aHVhd2VpLmNvbT4NCj4gQ2M6IGxpbnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LXNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4gPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNv
+bT47IEtyenlzenRvZiBTdHJ1Y3p5bnNraQ0KPiA8a3J6eXN6dG9mLnN0cnVjenluc2tpQGh1YXdl
+aS5jb20+OyBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIg
+Ni82XSBpbWE6IEZpeCByZXR1cm4gdmFsdWUgb2YgaW1hX3dyaXRlX3BvbGljeSgpDQo+IA0KPiBI
+aSBSb2JlcnRvLA0KPiANCj4gT24gTW9uLCAyMDIwLTA0LTI3IGF0IDEyOjMxICswMjAwLCBSb2Jl
+cnRvIFNhc3N1IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggZml4ZXMgdGhlIHJldHVybiB2YWx1ZSBv
+ZiBpbWFfd3JpdGVfcG9saWN5KCkgd2hlbiBhIG5ldw0KPiA+IHBvbGljeSBpcyBkaXJlY3RseSBw
+YXNzZWQgdG8gSU1BIGFuZCB0aGUgY3VycmVudCBwb2xpY3kgcmVxdWlyZXMNCj4gPiBhcHByYWlz
+YWwgb2YgdGhlIGZpbGUgY29udGFpbmluZyB0aGUgcG9saWN5LiBDdXJyZW50bHksIGlmIGFwcHJh
+aXNhbA0KPiA+IGlzIG5vdCBpbiBFTkZPUkNFIG1vZGUsDQo+ID4gaW1hX3dyaXRlX3BvbGljeSgp
+IHJldHVybnMgMCBhbmQgbGVhZHMgdXNlciBzcGFjZSBhcHBsaWNhdGlvbnMgdG8gYW4NCj4gPiBl
+bmRsZXNzIGxvb3AuIEZpeCB0aGlzIGlzc3VlIGJ5IGRlbnlpbmcgdGhlIG9wZXJhdGlvbiByZWdh
+cmRsZXNzIG9mDQo+ID4gdGhlIGFwcHJhaXNhbCBtb2RlLg0KPiA+DQo+ID4gQ2hhbmdlbG9nDQo+
+ID4NCj4gPiB2MToNCj4gPiAtIGRlbnkgdGhlIG9wZXJhdGlvbiBpbiBhbGwgY2FzZXMgKHN1Z2dl
+c3RlZCBieSBNaW1pLCBLcnp5c3p0b2YpDQo+IA0KPiBSZWxhdGl2ZWx5IHJlY2VudGx5LCBwZW9w
+bGUgaGF2ZSBtb3ZlZCBhd2F5IGZyb20gaW5jbHVkaW5nIHRoZSAiQ2hhbmdlbG9nIg0KPiBpbiB0
+aGUgdXBzdHJlYW0gY29tbWl0LiAoSSdtIHJlbW92aW5nIHRoZW0gbm93LikNCj4gDQo+ID4NCj4g
+PiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZyAjIDQuMTAueA0KPiA+IEZpeGVzOiAxOWY4YTg0
+NzEzZWRjICgiaW1hOiBtZWFzdXJlIGFuZCBhcHByYWlzZSB0aGUgSU1BIHBvbGljeQ0KPiA+IGl0
+c2VsZiIpDQo+ID4gU2lnbmVkLW9mZi1ieTogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBo
+dWF3ZWkuY29tPg0KPiANCj4gV2l0aG91dCB0aGUgQ2hhbmdlbG9nLCB0aGUgb25seSB3YXkgb2Yg
+YWNrbm93bGVkZ2luZyBwZW9wbGUncyBjb250cmlidXRpb25zDQo+IGlzIGJ5IGluY2x1ZGluZyB0
+aGVpciB0YWdzLiDCoEtyenlzenRvZiwgZGlkIHlvdSB3YW50IHRvIGFkZCB5b3VyICJSZXZpZXdl
+ZC1ieSINCj4gdGFnPw0KDQpQbGVhc2UgYWRkOg0KUmV2aWV3ZWQtYnk6IEtyenlzenRvZiBTdHJ1
+Y3p5bnNraSA8a3J6eXN6dG9mLnN0cnVjenluc2tpQGh1YXdlaS5jb20+DQoNClRoYW5rcywNCkty
+enlzenRvZg0KDQo+IA0KPiA+IC0tLQ0KPiANCj4gUGVvcGxlIGhhdmUgc3RhcnRlZCBwdXR0aW5n
+IHRoZSBDaGFuZ2Vsb2cgb3IgYW55IGNvbW1lbnRzIGltbWVkaWF0ZWx5DQo+IGJlbG93IHRoZSBz
+ZXBhcmF0b3IgIi0tLSIgaGVyZS4NCj4gDQo+IHRoYW5rcywNCj4gDQo+IE1pbWkNCj4gDQo+ID4g
+IHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMgfCAzICstLQ0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
+IGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfZnMuYw0KPiA+IGIvc2VjdXJpdHkvaW50ZWdy
+aXR5L2ltYS9pbWFfZnMuYyBpbmRleCA4YjAzMGExYzVlMGQuLmUzZmNhZDg3MTg2MQ0KPiA+IDEw
+MDY0NA0KPiA+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMNCj4gPiArKysg
+Yi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5jDQo+ID4gQEAgLTMzOCw4ICszMzgsNyBA
+QCBzdGF0aWMgc3NpemVfdCBpbWFfd3JpdGVfcG9saWN5KHN0cnVjdCBmaWxlICpmaWxlLCBjb25z
+dA0KPiBjaGFyIF9fdXNlciAqYnVmLA0KPiA+ICAJCWludGVncml0eV9hdWRpdF9tc2coQVVESVRf
+SU5URUdSSVRZX1NUQVRVUywgTlVMTCwgTlVMTCwNCj4gPiAgCQkJCSAgICAicG9saWN5X3VwZGF0
+ZSIsICJzaWduZWQgcG9saWN5IHJlcXVpcmVkIiwNCj4gPiAgCQkJCSAgICAxLCAwKTsNCj4gPiAt
+CQlpZiAoaW1hX2FwcHJhaXNlICYgSU1BX0FQUFJBSVNFX0VORk9SQ0UpDQo+ID4gLQkJCXJlc3Vs
+dCA9IC1FQUNDRVM7DQo+ID4gKwkJcmVzdWx0ID0gLUVBQ0NFUzsNCj4gPiAgCX0gZWxzZSB7DQo+
+ID4gIAkJcmVzdWx0ID0gaW1hX3BhcnNlX2FkZF9ydWxlKGRhdGEpOw0KPiA+ICAJfQ0KDQo=
