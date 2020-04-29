@@ -2,166 +2,159 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA70C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809C7C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B46420757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B2F2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="isI3J18W"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="f42xaq0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgD2Sdq (ORCPT
+        id S1726852AbgD2SfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:33:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2Sdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:33:45 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FA2C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:33:44 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so3723453ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cir/lv0gr0jqM/9RAZTjqohFxMF8rxZT7xpH/V9tx08=;
-        b=isI3J18WjpIGZO4EXpJhkASI5rqAKW4KQeH7U6lgW2hDd71iIRmx579BvS8WKq5wit
-         ebHIJbs3dginlnOGzEEUmHreOZITcmFxtsu81uL7od9yLYAZNfYj/a0f7Rp7X0goJ8OC
-         hUa+fZtmO/xxg60NMMjDnUFhUglozu3dIHPLUTtt8JrLx1aSmwre3S5s88HWRqTZn8XI
-         G8WEkD2YV3eHdmEZC6DKfCv09PuFykTpuWi2e1FttPMu/kIpZ3Vu+jL8h2E+0NCmik0r
-         IlCztZC/HZk0MNEiBJRYIoylrFd8dfFJigXEoIBI8DEVBmkp/9FE+zo6aHbHvDvrYAhO
-         U6Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cir/lv0gr0jqM/9RAZTjqohFxMF8rxZT7xpH/V9tx08=;
-        b=aMJZCVhpGTL3xBhdgDKa2+IQ+IpqJ530+5LAXko03PfRBjbAfnzdv8A8BCIoTzedkj
-         Wm9MdpEKDsazqBQJdZV6FBs6EAJP/BigNT09rf96Af1/oXsN9dfGUEEusRWEFB5ls+Bo
-         0PWzSb+60IKkwrBVWpJRftxVPnIDILDolE2OdpxtGWMqe7RZAfzdD6CAspCqsWlOzfjo
-         Wk3Le+EuRzgMy3I8ltrNeBTG0q/EjgloMLIhcZAh/JzplMvgvvq0OhEmvpRqvDowWyXV
-         d4ppJev/t/8wvJQuRU447mcAK2+NGyACmfvglU1EGXxKSyQ/WlDi3HIMIgjH1yr+AD0p
-         R2rQ==
-X-Gm-Message-State: AGi0Pua0VOSewX5Ed0EROlIft+LB3EJXwTEJdUY/hlslg2DkraxNjl+r
-        qpwclwEVmDveBHClpcfOnOfSUNufBZP1iYi038uznA==
-X-Google-Smtp-Source: APiQypK7H+WNjl7MgV9H6VpCJ21cqNs0D1HA8YsqIg1WUfIpRmpzTfDFiRtqZQtTY6pGPn7Q0vQyNa18W8Hr28IJUFM=
-X-Received: by 2002:a2e:8999:: with SMTP id c25mr22226153lji.73.1588185222389;
- Wed, 29 Apr 2020 11:33:42 -0700 (PDT)
+        Wed, 29 Apr 2020 14:35:24 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:49245 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgD2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 14:35:24 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49C6dQ5PGTz9vBJp;
+        Wed, 29 Apr 2020 20:35:22 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=f42xaq0v; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id TswvTeYISwmU; Wed, 29 Apr 2020 20:35:22 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49C6dQ3hXCz9vBJn;
+        Wed, 29 Apr 2020 20:35:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1588185322; bh=sIfYf0j48uBfXDJpyWR7ybHRDv0EMtWI1mQFSLuL7SY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=f42xaq0vAMNu/h83QvG9I3UBt+iWYECC+3YzXGi40/6Zjd5sSZkFykiYlkDA2TvP2
+         7GA2RtEgtL745ipZxvu+L+mjRLLbsdkkVxZJBqhM/eT9oG363OZQB/R26v/Qjpl2aZ
+         rBnYHjViNEuwRfBtrKqpEQgkZdPYQKo6uEWz0U/M=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7B7328B8D9;
+        Wed, 29 Apr 2020 20:35:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ijXr73YsbsvL; Wed, 29 Apr 2020 20:35:22 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 580548B8CD;
+        Wed, 29 Apr 2020 20:35:20 +0200 (CEST)
+Subject: Re: [LKP] Re: [mm/debug] fa6726c1e7: kernel_BUG_at_include/linux/mm.h
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        "Chen, Rong A" <rong.a.chen@intel.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Qian Cai <cai@lca.pw>, kernel test robot <lkp@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <9e9091b9-6918-d0af-dd92-3bdc0e29a4d5@arm.com>
+ <813D7CD3-F31C-4056-92DF-D462633E9D69@lca.pw> <20200428092105.GB3868@gaia>
+ <b62c66c8-1550-087f-f5d2-b33a18bb0edc@arm.com>
+ <07ea0efd-0145-eaaf-c628-e48957154a2c@intel.com>
+ <20200429181550.GF10651@gaia>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <410b5235-bbd0-6cff-c361-c25665a854ae@c-s.fr>
+Date:   Wed, 29 Apr 2020 20:34:17 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
- <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
- <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
- <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
- <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
- <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
- <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
- <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
- <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
- <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
- <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com> <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
-In-Reply-To: <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 29 Apr 2020 20:33:14 +0200
-Message-ID: <CAG48ez06PwxJ5ysTapByKnm6O0ifJv8Py2Ln0ypZZCwdxTU9zw@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429181550.GF10651@gaia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 7:58 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Tue, Apr 28, 2020 at 4:36 PM Jann Horn <jannh@google.com> wrote:
-> >
-> > On Wed, Apr 29, 2020 at 12:14 AM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > >  - we move check_unsafe_exec() down. As far as I can tell, there's no
-> > > reason it's that early - the flags it sets aren't actually used until
-> > > when we actually do that final set_creds..
-> >
-> > Right, we should be able to do that stuff quite a bit later than it happens now.
->
-> Actually, looking at it, this looks painful for multiple reasons.
->
-> The LSM_UNSAFE_xyz flags are used by security_bprm_set_creds(), which
-> when I traced it through, happened much earlier than I thought. Making
-> things worse, it's done by prepare_binprm(), which also potentially
-> gets called from random points by the low-level binfmt handlers too.
 
-Yeah, but all of that happens before we actually need to do anything
-with the accumulated credential information from the prepare_binprm()
-calls. We can probably move the unsafe calculation and a new LSM hook
-into flush_old_exec(), right before de_thread().
 
-> And we also have that odd "fs->in_exec" flag, which is used by thread
-> cloning and io_uring, and I'm not sure what the exact semantics are.
+Le 29/04/2020 à 20:15, Catalin Marinas a écrit :
+> On Wed, Apr 29, 2020 at 08:52:25PM +0800, Chen, Rong A wrote:
+>> On 4/29/2020 11:28 AM, Anshuman Khandual wrote:
+>>> On 04/28/2020 02:51 PM, Catalin Marinas wrote:
+>>>> On Tue, Apr 28, 2020 at 04:41:11AM -0400, Qian Cai wrote:
+>>>>> On Apr 28, 2020, at 1:54 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>>>>> That is true. There is a slight change in the rules, making it explicit yes
+>>>>>> only when both ARCH_HAS_DEBUG_VM_PGTABLE and DEBUG_VM are enabled.
+>>>>>>
+>>>>>> +config DEBUG_VM_PGTABLE
+>>>>>> +    bool "Debug arch page table for semantics compliance"
+>>>>>> +    depends on MMU
+>>>>>> +    depends on !IA64 && !ARM
+>>>>>> +    depends on ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
+>>>>>> +    default y if ARCH_HAS_DEBUG_VM_PGTABLE && DEBUG_VM
+>>>>>> +    help
+>>>>>>
+>>>>>> The default is really irrelevant as the config option can be set explicitly.
+>>>>> That could also explain. Since not long time ago, it was only “default
+>>>>> y if DEBUG_VM”, that caused the robot saved a .config with
+>>>>> DEBUG_VM_PGTABLE=y by default.
+>>>>>
+>>>>> Even though you changed the rule recently, it has no effect as the
+>>>>> robot could “make oldconfig” from the saved config for each linux-next
+>>>>> tree execution and the breakage will go on.
+>>>> I'm not entirely sure that's the case. This report still points at the
+>>>> old commit fa6726c1e7 which has:
+>>>>
+>>>> +       depends on ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
+>>>> +       default n if !ARCH_HAS_DEBUG_VM_PGTABLE
+>>>> +       default y if DEBUG_VM
+>>>>
+>>>> In -next we now have commit 647d9a0de34c and subsequently modified by
+>>>> commit 0a8646638865. So hopefully with the latest -next tree we won't
+>>>> see this report.
+>>> Could some one from LKP test framework, please confirm if this still causes
+>>> above problem on the latest linux-next by default ?
+>>
+>> The .config is a rand config, the problem is still exist if run "make
+>> oldconfig" for the config with commit 0a8646638865.
+> 
+> Is randconfig expected to boot? I don't think it is but I guess it
+> should not trigger a BUG_ON during boot.
+> 
+>> $ grep -e CONFIG_MMU= -e CONFIG_EXPERT= -e CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE=
+>> -e CONFIG_DEBUG_VM= .config
+>> CONFIG_EXPERT=y
+>> CONFIG_MMU=y
+>> CONFIG_DEBUG_VM=y
+>>
+>> should we disable DEBUG_VM_PGTABLE by default?
+> 
+> If that's the only case where this fails in LKP, I'd rather remove the
+> EXPERT dependency so that it cannot be enabled. Architectures that want
+> to experiment with this feature will have to select
+> ARCH_HAS_DEBUG_VM_PGTABLE explicitly.
+> 
 
-The idea is to ensure that once we're through check_unsafe_exec() and
-have computed our LSM_UNSAFE_* flags, another thread that's still
-running must not be able to fork() off a child with CLONE_FS, because
-having an fs_struct that's shared with anything other than sibling
-threads (which will be killed off) is supposed to only be possible if
-LSM_UNSAFE_SHARE is set. So:
+But when something is not selectable, people won't even know it exists.
 
-If check_unsafe_exec() can match each reference in the refcount
-->fs->users with a reference from a sibling thread (iow the fs_struct
-is not currently shared with another task), it sets p->fs->in_exec.
-
-If another thread tries to clone(CLONE_FS) while we're in execve(),
-copy_fs() will throw -EAGAIN. And if io_uring tries to grab a
-reference to the fs_struct with the intent to use it on a kernel
-worker thread (which conceptually is kinda similar to the
-clone(CLONE_FS) case), that also aborts.
-
-And then at the end of execve(), we clear the ->fs->in_exec flag again.
-
-So this should work fine as long as we ensure that we can't have two
-threads from the same process going through execve concurrently. (Or
-if we actually want to support that, we could make ->in_exec a counter
-instead of a flag, but really, preventing concurrent execve()s from a
-multithreaded process seems saner...)
-
-> I'm _almost_ inclined to say that we should just abort the execve()
-> entirely if somebody tries to attach in the middle.
->
-> IOW, get rid of the locking, and replace it all just with a sequence
-> count. Make execve() abort if the sequence count has changed between
-> loading the original creds, and having installed the new creds.
->
-> You can ptrace _over_ an execve, and you can ptrace _after_ an
-> execve(), but trying to attach just as we execve() would just cause
-> the execve() to fail.
->
-> We could maybe make it conditional on the credentials actually having
-> changed at all (set another flag in bprm_fill_uid()). So it would only
-> fail for the suid exec case.
->
-> Because honestly, trying to ptrace in the middle of a suid execve()
-> sounds like an attack, not a useful thing.
->
-> That sequence count approach would be a much simpler change.
-
-In that model, what should happen if someone tries to attach to a
-process that's in execve(), but after the point of no return in
-de_thread()? "Abort" after the point of no return normally means
-force_sigsegv(), right?
+Why not try and fix the problems reported by the robots instead ?
