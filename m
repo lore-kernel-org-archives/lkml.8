@@ -2,115 +2,116 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E023EC8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A26C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DDD2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zwlAAJ9n"
+	by mail.kernel.org (Postfix) with ESMTP id D188F20B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588162399;
+	bh=u4q8FeVjq66c39pqaDcuSEyHVkmprJELW74mmEQTIaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=odpEVPQ7hxtXbKIAxbCJvLktsIxNU6d93sxVaVz3k8BGMXOWiaPAbQLy+K5+tdOjr
+	 GX3ECKlEYoIkWoHHwd4sJF7CvRQr/9+CDlhcoeCDltkgg1GzEwUFDERUIMxrEeYvWU
+	 WHu7yb/Phpizxch+yXAO8VB5iAJgsGtXs2cLlm2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgD2MMk (ORCPT
+        id S1727069AbgD2MNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726617AbgD2MMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:12:38 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565D0C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:12:38 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b2so2356388ljp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+vmsu/fwPs4oBXZNMxWYLe7MCK2oXBROz7k2oW8iuVU=;
-        b=zwlAAJ9nJlMD2a5IChrfCW2OFWh0NNBeo2TJZRkCy2uyh37eWiMVFQ72IPC7DcpMxx
-         fQRcjYZJ5JKxaU8fs/knzvbTgYG0HoF02FuSesWF09CKEwzf14V+pyXM5eCxyLv3anxY
-         crZSju5V3kzYc0GRbRYi1qiyuQsAWQzWRlTo34hgoCWWxVhBrUFMRVcKHsuapJABo4T4
-         xIZ2EeNzKCB6GucCqqcPeNVhHwtCx8SA93ToNo19jWk/BnOmKuwq/sw2FBlvsQNcZASw
-         O5IK8Ldupd2KxPbf8XLp7bV72eGzyjxKqRPaSuN/8adAJuqQj6KEb3bs31YGhRgRgZx+
-         tfdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+vmsu/fwPs4oBXZNMxWYLe7MCK2oXBROz7k2oW8iuVU=;
-        b=QaEVWrWZkaiy1xayQY7eT/HfcLViMpmPVr/G2emEIrtwhM0gwKtZOvGovCnwqU7wel
-         BeXFRV7MyfDZwgzRIFFIMxnKCypJa2iy9k/rFTPVcqytjje1p9X2Brz1HX6CrKkdCjE/
-         SB9VcU1Zp4KzrmJPNgpdhx7d1mJqQadqtSZfCE+X6x0SSEmvp/rvBiD9b4/XzjF1TKh6
-         5w/WOS56Nb1NQifcBhIo7AuM6H/jwszOq8FC9ymgW3E4eF40VlDTvrcnwwZLODk8jwEu
-         kNEvr6M4YDluA+ZTKRnU5v9zw0bAmShlFEE3zBTN40gFG/0HHwQHZgq9KOEC0lbgt8oQ
-         0dLg==
-X-Gm-Message-State: AGi0PubZY0ZJ/R3SftquT/U55aeW57Kt0Ad12HGXmSPRhd3DPEJwVA04
-        dNMHFksaNLSCYz2my5zT0qiPS9WzILvJXxBnDcUd9A==
-X-Google-Smtp-Source: APiQypJadb433yUV+3CvSyHkcenoW49EI2HbqVsg3NYeo//Kqhy39vGkteTUQQYPvvWVEtHeYRVPW0nafRpsIBBtHdU=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr20911578ljp.277.1588162356793;
- Wed, 29 Apr 2020 05:12:36 -0700 (PDT)
+        Wed, 29 Apr 2020 08:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbgD2MNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:13:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33A292087E;
+        Wed, 29 Apr 2020 12:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588162392;
+        bh=u4q8FeVjq66c39pqaDcuSEyHVkmprJELW74mmEQTIaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LkccZMaFK0HPa/lbTJpwOfhl8YJedaGt+oqHcEse9oxecOG+ePMQl8+6lXN291eQt
+         XMOEz6IrJ3WVM70u8VUu+lzZReL1NMjGZKzI6S/iVHo09sj1mB7r8KpyAoFiY7glgP
+         IM3XoNOsXV/iAUpplEFGhw3FFVTD9pPI8zvfFoQM=
+Date:   Wed, 29 Apr 2020 13:13:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+Message-ID: <20200429121310.GH4201@sirena.org.uk>
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+ <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
 MIME-Version: 1.0
-References: <20200428195651.6793-1-mani@kernel.org> <20200428195651.6793-3-mani@kernel.org>
-In-Reply-To: <20200428195651.6793-3-mani@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Apr 2020 14:12:24 +0200
-Message-ID: <CACRpkdZ3b-VLvxN06H_4cDOtUEQTVbe=Zw+NA=YjssMzK2d2sQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
-To:     mani@kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zq44+AAfm4giZpo5"
+Content-Disposition: inline
+In-Reply-To: <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
+X-Cookie: I know how to do SPECIAL EFFECTS!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 9:57 PM <mani@kernel.org> wrote:
 
-> From: Manivannan Sadhasivam <mani@kernel.org>
->
-> Add gpiochip support for Maxlinear/Exar USB to serial converter
-> for controlling the available gpios.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+--zq44+AAfm4giZpo5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That's a nice and clean GPIO driver.
+On Wed, Apr 29, 2020 at 04:20:53PM +0800, Dilip Kota wrote:
+> On 4/28/2020 7:10 PM, Daniel Schwierzeck wrote:
 
-I would change this:
+> > actually there is no real bottom half. Reading or writing the FIFOs is
+> > fast and is therefore be done in hard IRQ context. But as the comment
 
-   port_priv->gc.label = "xr_gpios";
+> Doing FIFO r/w in threaded irqs shouldn't cause any impact on maximum
+> transfer rate i think.
 
-to something that is device-unique, like "xr-gpios-<serial number>"
-which makes it easy to locate the GPIOs on a specific serial converter
-for lab use. However the USB serial maintainers know better what
-to use here. Whatever makes a USB-to-serial unique from a TTY
-point of view is probably fine with me too.
+Have you actually tested this?  Generally adding extra latency is going
+to lead to some opportunity for the hardware to idle and the longer the
+hardware is idle the lower the throughput.
 
-My idea is that people might want to know which USB cable
-this is sitting on, so I have this USB cable and from this label
-I can always figure out which GPIO device it is.
+> Also the ISR should be quick enough, doing FIFO r/w in ISR adds up more
+> latency to ISR.
+> Handling the FIFOs r/w in threaded irq will be a better way.
 
-Either way, it is not a super-big issue so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Consider what happens on a heavily loaded system - the threaded
+interrupt will have to be scheduled along with other tasks.
 
-Is this a off-the-shelf product that can be bought or is it mainly
-integrated on boards?
+> > for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
+> > after the last interrupt. I don't think it's worth to replace this with
+> > threaded interrupts which add more runtime overhead and likely decrease
+> > the maximum transfer speed.
 
-I'm asking because I'm looking for a neat USB-to-serial adapter
-with some GPIOs (2 is enough) that can be used for reset and
-power cycling of lab boards using one simple piece of equipment.
+> Workqueue has a higher chances of causing SPI transfers timedout.
 
-Yours,
-Linus Walleij
+because...?
+
+--zq44+AAfm4giZpo5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pb1UACgkQJNaLcl1U
+h9B5Xwf9HYTpgwJhe8Mt24YHCYdheKLib494VcuElZXJPwV8qe4CbHLu0OaMB8Nt
+eMnwvPeuQwMCZdAVlUONXcAhodLdAqnQ/vW4Pv3EmsvTsIcpdQwS9U3ECZpg3GsQ
+2/h0SN8MUv4abWuaINGq2aSzrkEo54IdDbKL2hX/EBgb3eYEbslZLADMPrj1GbUq
+XZ/+4/hZYBJGOU0GhMhEICTVLRRn3WaX7D7zsKnhYuJSBy0MawdkHcvbTbMf/5mb
+ueROU1mpDvze2eNPtzaAT/IC63tb9DCL1j3MeVc7Vfr1zbaB/AWtMr4hxjr9+6jP
+tC0FaIJds95B1JxelaCLXRuR7GA0mw==
+=/9PQ
+-----END PGP SIGNATURE-----
+
+--zq44+AAfm4giZpo5--
