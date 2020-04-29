@@ -2,99 +2,153 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179AFC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F221C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8538206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C67B208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T+1y6B6i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i7ovjSpb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgD2Tyh (ORCPT
+        id S1726950AbgD2T4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:54:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50464 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgD2Tyg (ORCPT
+        Wed, 29 Apr 2020 15:56:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21717 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726877AbgD2T4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:54:36 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TJrJrx115545;
-        Wed, 29 Apr 2020 19:54:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=POiU/3zVi3KdBGp40hxpc9qc+KsFESjUKyFeCVtGwzE=;
- b=T+1y6B6iV3nORHfXlzRuhGtcZZL1GKnGdRh6rDLtLEIg5xMxt1qiKmo/DGqxMrUC5WYE
- R9tDUkN45aRIr1izHMQ2x+d6MemU/qpour3GxfYfzazK7ro2MHsG8HIB22Zp3KRZBN0u
- NkeFrI+76hU03lIYaiC8goVBvWOshJ1LbHhT42M31ge/Hjsnv24gtE6wlHiTDhFrTlHK
- Qj6cNfk95rsyyDPYXV45s+3OmCxZ6jBTD94xzXOvql82MhJgBLDkMZijqa0pFGEb11xH
- Ih6R1vmEiZKtUmilqQQTzyOf1LfHcCG6ssIE5Te2HbT8wZaaSZU7y81YrRkxM4101d8a cw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30p01nxbqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 19:54:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03TJqjRA145613;
-        Wed, 29 Apr 2020 19:54:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 30mxpksv80-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 19:54:31 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03TJsS8k007688;
-        Wed, 29 Apr 2020 19:54:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Apr 2020 12:54:28 -0700
-Date:   Wed, 29 Apr 2020 22:54:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: pm80xx: remove redundant assignments to status
-Message-ID: <20200429195402.GS2014@kadam>
-References: <20200429154055.286617-1-colin.king@canonical.com>
+        Wed, 29 Apr 2020 15:56:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588190202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X6rk25Tv2imwj4OrlKEUTzABdfyr8dyAJgvrX//k5fs=;
+        b=i7ovjSpbkEGN6AQXFtzGRonGILEA1r0it3KyilArSKl5VoVin0pToGivkUklGs4V1gvgKA
+        zovAu8emtH8wKkp/19wLIzYAHRR5/UNB37mKeGqKrvZ2hxouiS/CHV4HnUt1QFGf5zx21I
+        D3n7dA7KSl6uZb/uj5vDuMCzFlMKK78=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-Jn-7UCXpM_6y8Jb0umYfuw-1; Wed, 29 Apr 2020 15:56:38 -0400
+X-MC-Unique: Jn-7UCXpM_6y8Jb0umYfuw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D5CC107ACCA;
+        Wed, 29 Apr 2020 19:56:35 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9425366062;
+        Wed, 29 Apr 2020 19:56:33 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 13:56:33 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-doc@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [regression?] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
+Message-ID: <20200429135633.626a8411@w520.home>
+In-Reply-To: <20200429002903.GZ26002@ziepe.ca>
+References: <20200211001536.1027652-7-jhubbard@nvidia.com>
+        <20200424121846.5ee2685f@w520.home>
+        <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
+        <20200424141548.5afdd2bb@w520.home>
+        <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
+        <20200428105455.30343fb4@w520.home>
+        <20200428174957.GV26002@ziepe.ca>
+        <20200428130752.75c153bd@w520.home>
+        <20200428192251.GW26002@ziepe.ca>
+        <20200428141223.5b1653db@w520.home>
+        <20200429002903.GZ26002@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429154055.286617-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004290146
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:40:55PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable status is being assigned with a value that is never read
-> hence the assignment is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Tue, 28 Apr 2020 21:29:03 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-Better to remove the "status" variable entirely.
+> On Tue, Apr 28, 2020 at 02:12:23PM -0600, Alex Williamson wrote:
+> 
+> > > > Maybe I was just getting lucky before this commit.  For a
+> > > > VM_PFNMAP, vaddr_get_pfn() only needs pin_user_pages_remote() to return
+> > > > error and the vma information that we setup in vfio_pci_mmap().    
+> > > 
+> > > I've written on this before, vfio should not be passing pages to the
+> > > iommu that it cannot pin eg it should not touch VM_PFNMAP vma's in the
+> > > first place.
+> > > 
+> > > It is a use-after-free security issue the way it is..  
+> > 
+> > Where is the user after free?  Here I'm trying to map device mmio space
+> > through the iommu, which we need to enable p2p when the user owns
+> > multiple devices.  
+> 
+> Yes, I gathered what the intent was..
+> 
+> > The device is owned by the user, bound to vfio-pci, and can't be
+> > unbound while the user has it open.  The iommu mappings are torn
+> > down on release.  I guess I don't understand the problem.  
+> 
+> For PFNMAP VMAs the lifecycle rule is basically that the PFN inside
+> the VMA can only be used inside the mmap_sem that read it. Ie you
+> cannot take a PFN outside the mmap_sem and continue to use it.
+> 
+> This is because the owner of the VMA owns the lifetime of that PFN,
+> and under the write side of the mmap_sem it can zap the PFN, or close
+> the VMA. Afterwards the VMA owner knows that there are no active
+> reference to the PFN in the system and can reclaim the PFN
+> 
+> ie the PFNMAP has no per-page pin counter. All lifetime revolves around
+> the mmap_sem and the vma.
+> 
+> What vfio does is take the PFN out of the mmap_sem and program it into
+> the iommu.
+> 
+> So when the VMA owner decides the PFN has no references, it actually
+> doesn't: vfio continues to access it beyond its permitted lifetime.
+> 
+> HW like mlx5 and GPUs have BAR pages which have security
+> properties. Once the PFN is returned to the driver the security
+> context of the PFN can be reset and re-assigned to another
+> process. Using VFIO a hostile user space can retain access to the BAR
+> page and upon its reassignment access a security context they were not
+> permitted to access.
+> 
+> This is why GUP does not return PFNMAP pages and vfio should not carry
+> a reference outside the mmap_sem. It breaks all the lifetime rules.
 
-regards,
-dan carpenter
+Thanks for the explanation.  I'm inferring that there is no solution to
+this, but why can't we use mmu notifiers to invalidate the iommu on zap
+or close?  I know that at least QEMU won't consider these sorts of
+mapping fatal, so we could possibly change the default and make support
+for such mappings opt-in, but I don't know if I'd break DPDK, or
+potentially users within QEMU that make use of p2p between devices.
+Thanks,
+
+Alex
 
