@@ -2,120 +2,83 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B7FC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD79EC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07F92076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A451920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 07:26:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V7V1P9rM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgD2HVW (ORCPT
+        id S1726523AbgD2H0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 03:21:22 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8564 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726386AbgD2HVV (ORCPT
+        Wed, 29 Apr 2020 03:26:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgD2H0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 03:21:21 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T7FcRf029194;
-        Wed, 29 Apr 2020 03:21:18 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2c83a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 03:21:18 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03T7LGc3060520
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Apr 2020 03:21:16 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 29 Apr 2020 00:21:15 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 29 Apr 2020 00:21:15 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03T7LCcS006213;
-        Wed, 29 Apr 2020 03:21:12 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <jic23@kernel.org>, <gregkh@linuxfoundation.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] staging: iio: ad2s1210: Fix SPI reading
-Date:   Wed, 29 Apr 2020 10:21:29 +0300
-Message-ID: <20200429072129.81504-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Apr 2020 03:26:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855A6C03C1AD;
+        Wed, 29 Apr 2020 00:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LGUajY3zrEqlVG97WYEWRDf+dd4RxLtAou449QsqwG8=; b=V7V1P9rMO8ynOmu1ucNMN2K119
+        1XXWnJHB7kYIapdre1i+SIFMTjhfsPMlUUjHKR2Am/uBfX3nrnes6gpWaEUSXpOQa+g3dy7a/79gd
+        vddgtayQBI9AgCBhiUnpYZmztiqUj4p1rViwVd1vFelA5QwoBFU8Ryuuddxb7MMtpVHrg/F+UE+6/
+        YS/VTznhQ/FgzibxcCyA7hSYcqmjPiOm8b375zpibp11Y3ZWfTDt7JSkQC+0Mt/VKyDUt+/uN7FEI
+        3Tcl6mJeoqbrpBGeBBtB88UBQVwm/3ncSzS+7SM5sU+7lzSBvbu/ayRY44VyMiHEpikGZc+hXlsQQ
+        EvujYA5w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTh6z-0000w9-VV; Wed, 29 Apr 2020 07:26:29 +0000
+Date:   Wed, 29 Apr 2020 00:26:29 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] blk-mq: Use BUG_ON() instead of BUG()
+Message-ID: <20200429072629.GE11410@infradead.org>
+References: <1588126224-47877-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=960 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290059
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588126224-47877-1-git-send-email-zou_wei@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+On Wed, Apr 29, 2020 at 10:10:24AM +0800, Zou Wei wrote:
+> Fixes coccicheck warning:
+> 
+>  block/blk-mq.c:546:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+> 
+> Fixes: 63151a449eba ("blk-mq: allow drivers to hook into I/O completion")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> ---
+>  block/blk-mq.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index bcc3a23..49a227e 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -542,8 +542,7 @@ EXPORT_SYMBOL(__blk_mq_end_request);
+>  
+>  void blk_mq_end_request(struct request *rq, blk_status_t error)
+>  {
+> -	if (blk_update_request(rq, error, blk_rq_bytes(rq)))
+> -		BUG();
+> +	BUG_ON(blk_update_request(rq, error, blk_rq_bytes(rq)));
 
-If the serial interface is used, the 8-bit address should be latched using
-the rising edge of the WR/FSYNC signal.
-
-This basically means that a CS change is required between the first byte
-sent, and the second one.
-This change splits the single-transfer transfer of 2 bytes into 2 transfers
-with a single byte, and CS change in-between.
-
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/staging/iio/resolver/ad2s1210.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
-index 4b25a3a314ed..ed404355ea4c 100644
---- a/drivers/staging/iio/resolver/ad2s1210.c
-+++ b/drivers/staging/iio/resolver/ad2s1210.c
-@@ -130,17 +130,24 @@ static int ad2s1210_config_write(struct ad2s1210_state *st, u8 data)
- static int ad2s1210_config_read(struct ad2s1210_state *st,
- 				unsigned char address)
- {
--	struct spi_transfer xfer = {
--		.len = 2,
--		.rx_buf = st->rx,
--		.tx_buf = st->tx,
-+	struct spi_transfer xfers[] = {
-+		{
-+			.len = 1,
-+			.rx_buf = &st->rx[0],
-+			.tx_buf = &st->tx[0],
-+			.cs_change = 1,
-+		}, {
-+			.len = 1,
-+			.rx_buf = &st->rx[1],
-+			.tx_buf = &st->tx[1],
-+		},
- 	};
- 	int ret = 0;
- 
- 	ad2s1210_set_mode(MOD_CONFIG, st);
- 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
- 	st->tx[1] = AD2S1210_REG_FAULT;
--	ret = spi_sync_transfer(st->sdev, &xfer, 1);
-+	ret = spi_sync_transfer(st->sdev, xfers, 2);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.17.1
-
+I don't think hiding something that actually does do the work in a
+BUG_ON ever is a good style.
