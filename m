@@ -2,220 +2,111 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C75C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5448C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B30DE2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB715206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zauYR8tU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hSYiyNNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgD2Q6V (ORCPT
+        id S1727042AbgD2Q6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2Q6U (ORCPT
+        Wed, 29 Apr 2020 12:58:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40376 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726423AbgD2Q6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:58:20 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5544AC03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:58:20 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w2so2119142edx.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ogDrOAl7G6R5M0XUTzfpv8HBCXJwGCgP8zEpM4loM3U=;
-        b=zauYR8tU4FWgFSLIPcB0PE18RWF7a1HIGfPTK34kiI8e7KgEh+eHLqnzGD67BckQkM
-         j3WFcfBvXOqqUHWCvynzRnpAu+wylkyVpuagm97sUrX0sYf64Y6Dxgur0LDKRHzpDkbe
-         RBV7hcY9gTSRX6JcjXtwllqshEKfl6w/i66AfeuW9lt5sVyhuQzgLM2QOEk0NIIXkoQX
-         MbcfsQ+/2mEgqiwjxOLZz6Zs+m0GAlopAXflPoE+nb3p7asCRCblpbTh5qJbr/VGc6AX
-         JCJjV9XZDA0DBeHVJ+RIX6zJgMiFD7NWUJlVXV0jk2I7fV5NJCzofwDDCAKTBiC3p14o
-         jOlg==
+        Wed, 29 Apr 2020 12:58:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588179529;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DZj+UypIq11W/7o5dpVittTTONbPwIV/7sCOfZvPFS0=;
+        b=hSYiyNNzMWy9mMq1ejSZFDLevc61Q8pgVxC3kOtPnaZGIc2LojYO9NktwTufJ45RCCgVGm
+        vo+y9Iip2wPSiluLlJlahBvsMnFn6Fs+OsJz3Gu0hNXXcms/+VxA5LOEy9SW0pdHURwDvT
+        2pePlaO0+ZNOLmd/71EN7/7VJEekQjI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-coRN61a5MzCWBh6aP5sB7A-1; Wed, 29 Apr 2020 12:58:48 -0400
+X-MC-Unique: coRN61a5MzCWBh6aP5sB7A-1
+Received: by mail-wr1-f72.google.com with SMTP id i10so2048992wrq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:58:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ogDrOAl7G6R5M0XUTzfpv8HBCXJwGCgP8zEpM4loM3U=;
-        b=Oa1E1s/brfIF9N/Iw6e9JewoLvm//7hUCSELXRTecwQziJSD3m71GK0kQxdd6ukBDJ
-         rpnIl9ptttt/FFDzdr8AD+SiFJFpYiFqsLmOFCVEmUrODRdrD/v1TMTHVO4jw9dsSO+M
-         /7EY+Ml0E2Yuu2+jgzqbw2aD90Cgeeo2APu1/5WlZNg6wAxVZbuCABFpczc2OtNxVgPH
-         MLPQRSunUNfjYcLR/pOSB9anbhG/i5TOqXXwjZo1NUAnw+Jm4qzkMX8RxILV7hrk9UcV
-         DYAIP5dUlSEa+gUu332FSe4lU0XTWhFNCJc8ZWUUxpz3lLxS5N40rf7O84rx7cf1l5+7
-         YgvQ==
-X-Gm-Message-State: AGi0PuYKynHGEn6XHvegmYYmI80I7cYbsv2WactHXo9XGe5ux9E164EV
-        HR9QbGcrI3OCzPhkfe+6hn+kOP0qWL+x3oeqpuQn8g==
-X-Google-Smtp-Source: APiQypJNRESvMoFx0wfjNE/Z9j5gYluuYW53gfqVJJx5bH5mNo6BF1bdmpCLLVEfooL3vo6gpPsjHnPkqB0SQiEPQ5U=
-X-Received: by 2002:a05:6402:712:: with SMTP id w18mr3441495edx.386.1588179498898;
- Wed, 29 Apr 2020 09:58:18 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DZj+UypIq11W/7o5dpVittTTONbPwIV/7sCOfZvPFS0=;
+        b=o+ZWr2vpwIKe4WMgj8LmCzRv3RUVtyYQ+IxVkDaiY8hAe0fswuAzK/8VnJPj6R82JT
+         Jb0gI988PF+9h4OyS6g0Eiqo404bik6kl8oP6jgSonr5lj/7gTwgmRuQwqIMb+g+p0GG
+         l1mJzMr19pUgDAvhw7vWSutwaYGW7P/QUXhhRPjkecEonbI+t3YgCIHWGdk2b1u9wXmt
+         yWzqo3INd9fwQKghKERsfmxA/6hvdAKARPNMP5PLtaFvIoQU3HQmGGcBfqLZULNjeGCp
+         FNciqB4o2rgc/6uO7JcpECTmwMrqs7V1D+/ZSuljr3W2Vy/5L9GSsvqqTyC2+NBIyNfJ
+         KcrA==
+X-Gm-Message-State: AGi0PuazZ4V4kx08KGBiAm7aEwZ7c0SYJhvM7Dv3NZ4/wi7Rk7vM3NRW
+        GtzQ1s9g2rt0uvqdnqdlSN/0GO+NbEqCID3JWqwggO9vuSst5XcXCqnHWidCa+MtRyFIpI3I32C
+        qTItM0tXKzCrigEVzPPGFjIRi
+X-Received: by 2002:a5d:6504:: with SMTP id x4mr43034843wru.164.1588179527021;
+        Wed, 29 Apr 2020 09:58:47 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJNgX/vxwRcj0In+qKlYwCYcXKBrwuybWbL6MJwjPCNHgZ4umK2HzpOL2puRlq6jK7/5EAJjQ==
+X-Received: by 2002:a5d:6504:: with SMTP id x4mr43034816wru.164.1588179526729;
+        Wed, 29 Apr 2020 09:58:46 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
+        by smtp.gmail.com with ESMTPSA id h1sm9392173wme.42.2020.04.29.09.58.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 09:58:46 -0700 (PDT)
+Subject: Re: [PATCH 12/13] KVM: x86: Replace late check_nested_events() hack
+ with more precise fix
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+ <20200423022550.15113-13-sean.j.christopherson@intel.com>
+ <CALMp9eTiGdYPpejAOLNz7zzqP1wPXb_zSL02F27VMHeHGzANJg@mail.gmail.com>
+ <20200428222010.GN12735@linux.intel.com>
+ <6b35ec9b-9565-ea6c-3de5-0957a9f76257@redhat.com>
+ <20200429164547.GF15992@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <286738de-c268-f0b6-f589-6d9d9ad3dc4a@redhat.com>
+Date:   Wed, 29 Apr 2020 18:58:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com> <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com> <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org> <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org> <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
-In-Reply-To: <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 29 Apr 2020 17:58:07 +0100
-Message-ID: <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429164547.GF15992@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 29/04/20 18:45, Sean Christopherson wrote:
+> 
+> Can you just drop 9/13, "Prioritize SMI over nested IRQ/NMI" from kvm/queue?
+> It's probably best to deal with this in a new series rather than trying to
+> squeeze it in.
 
-On Wed, 29 Apr 2020 at 15:48, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Mike,
->
-> On 2020-04-29 19:57, Mike Leach wrote:
-> > Hi,
-> >
->
-> [...]
->
-> >> >> Looking more into replicator1(swao_replicator) values as 0x0 even
-> >> >> after replicator_reset()
-> >> >> in replicator probe, I added dynamic_replicator_reset in
-> >> >> dynamic_replicator_enable()
-> >> >> and am not seeing any hardlockup. Also I added some prints to check
-> >> >> the idfilter
-> >> >> values before and after reset and found that its not set to 0xff even
-> >> >> after replicator_reset()
-> >> >> in replicator probe, I don't see any other path setting it to 0x0.
-> >> >>
-> >> >> After probe:
-> >> >>
-> >> >> [    8.477669] func replicator_probe before reset replicator
-> >> >> replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-> >> >> [    8.489470] func replicator_probe after reset replicator
-> >> >> replicator1 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-> >> >
-> >> > AFAICS, after the reset both of them are set to 0xff.
-> >>
-> >> Yes I see this too as we call replicator_reset() in probe. What I
-> >> wanted
-> >> to highlight was the below part where it is set to 0x0 before enabling
-> >> dynamic replicator.
-> >>
-> >> >
-> >> >> [    8.502738] func replicator_probe before reset replicator
-> >> >> replicator0 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-> >> >> [    8.515214] func replicator_probe after reset replicator
-> >> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-> >> >
-> >> >
-> >> >
-> >> >> localhost ~ #
-> >> >> localhost ~ #
-> >> >> localhost ~ # echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
-> >> >> localhost ~ #
-> >> >> localhost ~ # echo 1 > /sys/bus/coresight/devices/etm0/enable_source
-> >> >> [   58.490485] func dynamic_replicator_enable before reset replicator
-> >> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-> >> >> [   58.503246] func dynamic_replicator_enable after reset replicator
-> >> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
-> >> >> [   58.520902] func dynamic_replicator_enable before reset replicator
-> >> >> replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-> >> >
-> >> > You need to find what is resetting the IDFILTERs to 0 for replicator1.
-> >> >
-> >>
-> >> That is right.
-> >>
-> >
-> > By default all replicators have the IDFILTER registers set to 0 out of
-> > hardware reset. This ensures that programmable replicators behave in
-> > the same way as non-programmable replicators out of reset.
-> >
-> > The  dynamic_replicator_reset() is of course a driver state reset -
-> > which filters out all trace on the output ports. The trace is then
-> > enabled when we set the trace path from source to sink.
-> >
->
-> Thanks for these explanations.
->
-> > It seems to me that you have 2 problems that need solving here:
-> >
-> > 1) Why does the reset_replicator() called from probe() _not_ work
-> > correctly on replicator 1? It seems to work later if you introduce a
-> > reset after more of the system has powered and booted. This is
-> > startiing to look a little like a PM / clocking issue.
->
-> reset_replicator() does work in probe correctly for both replicators,
-> below logs is collected before and after reset in probe. It is later
-> that it's set back to 0x0 and hence the suggestion to look at firmware
-> using this replicator1.
->
-OK - sorry I read your statement saying that replicator1 was 0 after
-the reset in probe(), rather than look at the logs.
+With AMD we just have IRQ/NMI/SMI, and it's important to handle SMI in
+check_nested_events because you can turn SMIs into vmexit without stuff
+such as dual-monitor treatment.  On the other hand there is no MTF and
+we're not handling exceptions yet.  So, since SMIs should be pretty rare
+anyway, I'd rather just add a comment detailing the correct order and
+why we're not following it.  The minimal fix would be to move SMI above
+the preemption timer, right?
 
-From the logs it is working at the time probe() occurs, but by the
-time we come to enable the replicator later, something has reset these
-registers / hardware outside the control of the replicator driver.
+Paolo
 
-
-> [    8.477669] func replicator_probe before reset replicator replicator1
-> REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
-> [    8.489470] func replicator_probe after reset replicator replicator1
-> REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
->
-> >
-> > This failure is causing the state when we are trying to set an output
-> > port that both branches of this replicator are enabled for output.
-> > In effect for this replicator, setting the output port has no effect
-> > as it is already enabled.
-> >
-> > 2) Why does having both ports of this repilicator enabled cause a hard
-> > lockup? This is a separate hardware  / system issue.
-> >
-> > The worst that should happen if both branches of a replicator are
-> > enabled is that you get undesirable back pressure. (e.g. there is a
-> > system we have seen - I think it is Juno - where there is a static
-> > replicator feeding the TPIU and ETR - we need to disable the TPIU to
-> > prevent undesired back pressure).
-> >
->
-> Ok so hardlockup is not expected because of this backpressure.
->
-
-Hardlockup is not expected, but this is not related to any possible
-backpressure.
-
-Ordinarily having both legs of a replicator enabled should not cause
-system failure.
-
-Mike
-
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
-
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
