@@ -2,116 +2,137 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43FEC83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE07C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A7C2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="PKuE5VM0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p8B8FL6C"
+	by mail.kernel.org (Postfix) with ESMTP id 149A6214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgD3Gm7 (ORCPT
+        id S1726466AbgD3Gps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:42:59 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58175 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726180AbgD3Gm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:42:58 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 901365C00AF;
-        Thu, 30 Apr 2020 02:42:57 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 30 Apr 2020 02:42:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=jAz8BqP1L52IWPGLL0vxJ+gS/S+
-        8G9kBMZSXzW897Jo=; b=PKuE5VM0CASyCOgYSdvxd13brg8UVv0R8DaNeR38nkY
-        NqnarYhOpjw7OBZ/Yh9ZHLpHp+M8YcWzOV87zd/RszZMj6VrVpuT6VVhJ2y+43jv
-        BHBrGT/bJfwTri21TxAMb1otvOkHmyLAe9eVzBZtVskXcunQXuGepvmvHS/pcrky
-        +JhdDT0hnHGzQ+gSNYhc2sO76wI1XhaORxPAvQWOHVmTYSGf1PlIGQb23MU/jGty
-        C3KByaKnH2IkTk0d2Ag16Ngic9m0C/GNERLJhv0s9N+kpRjrMK7V94PtNPwLM5L9
-        nc8kNcMHWvfIyDZqe/pfxftqU5q/VUypZnY5EtjGznw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jAz8Bq
-        P1L52IWPGLL0vxJ+gS/S+8G9kBMZSXzW897Jo=; b=p8B8FL6Ci9B9K+4TDUWE7M
-        zLk3HuT3JvOlEpqOxGJ0RUPiGzKM+fgAG3uUV7Fi1qjBnhNRwABZTMHqM8jByczD
-        foHSQWfcXFfzklR91tX/ECcLeXkWpjehC9x8o/iDpwhNMJjWR4qNF3erPwn/BjOL
-        C5NDEjYy7xinXOiKaxEO6w9mlAYor6O57FFiHwduCl95QL17D5AiM6EHup7PIlnf
-        t65lrPuLQhF2tuK+mdRKEEXciXaqCnFq1KXYeZIPFWuRPgXLYIYcpgDmRmg1+DkM
-        aicQgPfThaFPpJturq/yuXMwvFNoWR9L/ApZBxhGZujbKkMuacZwCma5Y1jX/aew
-        ==
-X-ME-Sender: <xms:cXOqXi5h9axX0lwRygHJjlhlzgkKVIIfYsoSOM3XbRSrha_1uhGe2w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieeggddutdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:cXOqXgKBWWYmL9xDvkSG5z6v1QdvV4Y4dWMf8o4vnv3OHvJD86MINw>
-    <xmx:cXOqXuZxw7EShR5fFEC-NHlAXzy4auXu1XEJQw8Ydss-Sp2pq5icpw>
-    <xmx:cXOqXt2jI6BkvWP46eYjuCFTq9qt1MvJ2E7uL8mips-MmNPxpc5ggg>
-    <xmx:cXOqXtOjeRJBxx8wyCkVFeMrbyMaWsvqk4xgy-mmlTppW90ZXa8GRA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DE42B3065F05;
-        Thu, 30 Apr 2020 02:42:56 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 08:42:51 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clement Leger <cleger@kalray.eu>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH] remoteproc: Fix wrong rvring index computation
-Message-ID: <20200430064251.GE2377651@kroah.com>
-References: <20191004073736.8327-1-cleger@kalray.eu>
- <CAD=FV=WgUNySbRE9dZys28fFo3eZwf_2=cj68jaw1ftakJDzVQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WgUNySbRE9dZys28fFo3eZwf_2=cj68jaw1ftakJDzVQ@mail.gmail.com>
+        Thu, 30 Apr 2020 02:45:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51627 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgD3Gps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:45:48 -0400
+IronPort-SDR: f5BZPPJmmBa0zFisnRMC+rvB7dnWWODYtkJzH/H+qaMX55YgL2J/UmjI7HGGYE/iljoD09byPx
+ w8Dk8hnllAzg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 23:45:47 -0700
+IronPort-SDR: 5JDk6IlEH4J//G4hxGQbGfk9EcsA4GLTNYnOGk+Najmtr/DTUSKoGbTimstED8jiExCOByLXVE
+ 4m48v6OIp3rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="459460044"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 23:45:42 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: [PATCH] soundwire: qcom: fix error handling in probe
+Date:   Thu, 30 Apr 2020 02:50:57 +0800
+Message-Id: <20200429185057.12810-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:26:41PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri,  4 Oct 2019 Clement Leger <cleger@kalray.eu> wrote:
-> >
-> > Index of rvring is computed using pointer arithmetic. However, since
-> > rvring->rvdev->vring is the base of the vring array, computation
-> > of rvring idx should be reversed. It previously lead to writing at negative
-> > indices in the resource table.
-> >
-> > Signed-off-by: Clement Leger <cleger@kalray.eu>
-> > ---
-> >  drivers/remoteproc/remoteproc_core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Randomly stumbled upon this in a list of patches.  This patch landed
-> in mainline as:
-> 
-> 00a0eec59ddb remoteproc: Fix wrong rvring index computation
-> 
-> Should it be queued up for stable?  I'm guessing:
-> 
-> Fixes: c0d631570ad5 ("remoteproc: set vring addresses in resource table")
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Thanks, now queued up.
+Make sure all error cases are properly handled and all resources freed.
 
-greg k-h
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/soundwire/qcom.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+index d6c9ad231873..e08a17c13f92 100644
+--- a/drivers/soundwire/qcom.c
++++ b/drivers/soundwire/qcom.c
+@@ -765,12 +765,16 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ctrl->irq = of_irq_get(dev->of_node, 0);
+-	if (ctrl->irq < 0)
+-		return ctrl->irq;
++	if (ctrl->irq < 0) {
++		ret = ctrl->irq;
++		goto err_init;
++	}
+ 
+ 	ctrl->hclk = devm_clk_get(dev, "iface");
+-	if (IS_ERR(ctrl->hclk))
+-		return PTR_ERR(ctrl->hclk);
++	if (IS_ERR(ctrl->hclk)) {
++		ret = PTR_ERR(ctrl->hclk);
++		goto err_init;
++	}
+ 
+ 	clk_prepare_enable(ctrl->hclk);
+ 
+@@ -787,7 +791,7 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 
+ 	ret = qcom_swrm_get_port_config(ctrl);
+ 	if (ret)
+-		return ret;
++		goto err_clk;
+ 
+ 	params = &ctrl->bus.params;
+ 	params->max_dr_freq = DEFAULT_CLK_FREQ;
+@@ -814,28 +818,32 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 					"soundwire", ctrl);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to request soundwire irq\n");
+-		goto err;
++		goto err_clk;
+ 	}
+ 
+ 	ret = sdw_add_bus_master(&ctrl->bus);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to register Soundwire controller (%d)\n",
+ 			ret);
+-		goto err;
++		goto err_clk;
+ 	}
+ 
+ 	qcom_swrm_init(ctrl);
+ 	ret = qcom_swrm_register_dais(ctrl);
+ 	if (ret)
+-		goto err;
++		goto err_master_add;
+ 
+ 	dev_info(dev, "Qualcomm Soundwire controller v%x.%x.%x Registered\n",
+ 		 (ctrl->version >> 24) & 0xff, (ctrl->version >> 16) & 0xff,
+ 		 ctrl->version & 0xffff);
+ 
+ 	return 0;
+-err:
++
++err_master_add:
++	sdw_delete_bus_master(&ctrl->bus);
++err_clk:
+ 	clk_disable_unprepare(ctrl->hclk);
++err_init:
+ 	return ret;
+ }
+ 
+-- 
+2.17.1
+
