@@ -2,198 +2,79 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9D3C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BCC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3B4208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9159E2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNU9le3J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CXmhYwSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgD2MD5 (ORCPT
+        id S1726923AbgD2MEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:03:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60041 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726892AbgD2MD4 (ORCPT
+        Wed, 29 Apr 2020 08:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbgD2MEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:03:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588161834;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PqLyCXunZj5hIFRUBscgO/EQSOL9w9OMkdGXwDOCk6M=;
-        b=VNU9le3J0Fnzu7NyUHsMVo9C80npV4kOpJOAsjsilFZGH5lvXe4f8O6g2FdmJS4+8d9mbp
-        CJFsy8b41E7GP+bsq0RHW6rYECUhtrWx2T1MXVyoJSW2Ho+O3Y7JVomBK4stbe11rayxRY
-        LOIu95UNgm1RzaJGJ7MzZa0FhQst2Fg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-tMgegF2ZPqqe8nZSeMxVwA-1; Wed, 29 Apr 2020 08:03:52 -0400
-X-MC-Unique: tMgegF2ZPqqe8nZSeMxVwA-1
-Received: by mail-wr1-f71.google.com with SMTP id 11so1621935wrc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:03:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=PqLyCXunZj5hIFRUBscgO/EQSOL9w9OMkdGXwDOCk6M=;
-        b=TWp4X93rhYzlAwNc3lzOHmjqdy4MIUvHKqNt84dzttHEwMNez+QcnA3aT7lPYOaxh1
-         PRT7KzLDveFvkjiQnZnqxBY2C3NEKgDTAL4G0y3tGgx3U/uROgz++6giBUGx21poHIuP
-         nI+jrEwpU5qc1otn1gn9lHn2JA3MdZjCk+VM1ZgTomlEu89RqU/qsRia88NSsDjajbWW
-         SKvJCwPv6V1bX/xbHlxV1Brwcfx3kRQUzPaCMgkVuKTvSYbmBkJGyK1N1nDTq4FK0nJZ
-         uiQaoFEwGhXd+1s1FXpNmszTNY7PMBD+hasFgY1cjEdEZnLFcL1uEiOgmqranEaR97nE
-         Uxgg==
-X-Gm-Message-State: AGi0PuZRKXU+yO+1DIUFWoKkknvI2aqfFXH57XkdcqQVE3lmqztPtfok
-        YwJeLPkwLG9CvrmS3xlFVDXhG8cCUiLVJ//oyO90U+i814gq+UshG0ST7TR8KXIalKkpOBAuOsb
-        il+k/6pPsX3F6tSCiAb0RF4nd
-X-Received: by 2002:a5d:470a:: with SMTP id y10mr38056959wrq.63.1588161831812;
-        Wed, 29 Apr 2020 05:03:51 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLf4KZ8Rngx22ZnSSPEeNNoZEwjNixMH7nATd8iA4vBWIWJ++JJzRvFnPP9z8By88bEDzPwkg==
-X-Received: by 2002:a5d:470a:: with SMTP id y10mr38056907wrq.63.1588161831501;
-        Wed, 29 Apr 2020 05:03:51 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id h16sm33279920wrw.36.2020.04.29.05.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 05:03:46 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com
-Subject: Re: [PATCH v4 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
-In-Reply-To: <20200427043514.16144-2-tianjia.zhang@linux.alibaba.com>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com> <20200427043514.16144-2-tianjia.zhang@linux.alibaba.com>
-Date:   Wed, 29 Apr 2020 14:03:41 +0200
-Message-ID: <87r1w6h52a.fsf@vitty.brq.redhat.com>
+        Wed, 29 Apr 2020 08:04:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1111FC03C1AD;
+        Wed, 29 Apr 2020 05:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=O385uY4zHGIJRbWSoL99UmJmEY6lnZgJqFnu8+7Cu40=; b=CXmhYwSfXlX1ebl+S79JE2NY6q
+        XnbTqO+F0IktLJMaZ8QCyjvIaMilP1HM0OlazqM9rA2EOGDQVi6NHpZ9pqFV5Fe6AR+VZEClZ6dZj
+        l4Z1seG7fVFOxDf3beKsjJYigCFR3RFYpqlfcuHEKYMp4PT3GN5gz24f14GG8Xqq6ImWpsAfPE6jb
+        hP1Li8bNfuQx7/eCptaxMWX3vgnAvo9HzXfUUvQQIwp23DCBWlqYhRnVos739pnxtIoPeZUMnDQIC
+        Wb31Bv4cGYfn+WdRK28KbdMYbowLQRS6urnSfU35qXmQcXe+q+w30oN4p8SSj0uysStV5c7WTt9/p
+        Jwp7qi5g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTlRf-0000p0-1K; Wed, 29 Apr 2020 12:04:07 +0000
+Date:   Wed, 29 Apr 2020 05:04:06 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
+Message-ID: <20200429120406.GA913@infradead.org>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-5-mcgrof@kernel.org>
+ <20200429112637.GD21892@infradead.org>
+ <20200429114542.GJ11244@42.do-not-panic.com>
+ <20200429115051.GA27378@infradead.org>
+ <20200429120230.GK11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429120230.GK11244@42.do-not-panic.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
+On Wed, Apr 29, 2020 at 12:02:30PM +0000, Luis Chamberlain wrote:
+> > Err, that function is static and has two callers.
+> 
+> Yes but that is to make it easier to look for who is creating the
+> debugfs_dir for either the request_queue or partition. I'll export
+> blk_debugfs_root and we'll open code all this.
 
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. For historical reasons, many kvm-related function parameters
-> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
-> patch does a unified cleanup of these remaining redundant parameters.
->
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 23 +++++++++++++++--------
->  1 file changed, 15 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index e335a7e5ead7..c0d94eaa00d7 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->  	return rc;
->  }
->  
-> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	struct runtime_instr_cb *riccb;
->  	struct gs_cb *gscb;
->  
-> @@ -4243,8 +4244,10 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  	/* SIE will load etoken directly from SDNX and therefore kvm_run */
->  }
->  
-> -static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +static void sync_regs(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
-> +
->  	if (kvm_run->kvm_dirty_regs & KVM_SYNC_PREFIX)
->  		kvm_s390_set_prefix(vcpu, kvm_run->s.regs.prefix);
->  	if (kvm_run->kvm_dirty_regs & KVM_SYNC_CRS) {
-> @@ -4273,7 +4276,7 @@ static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  
->  	/* Sync fmt2 only data */
->  	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu))) {
-> -		sync_regs_fmt2(vcpu, kvm_run);
-> +		sync_regs_fmt2(vcpu);
->  	} else {
->  		/*
->  		 * In several places we have to modify our internal view to
-> @@ -4292,8 +4295,10 @@ static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  	kvm_run->kvm_dirty_regs = 0;
->  }
->  
-> -static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +static void store_regs_fmt2(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
-> +
->  	kvm_run->s.regs.todpr = vcpu->arch.sie_block->todpr;
->  	kvm_run->s.regs.pp = vcpu->arch.sie_block->pp;
->  	kvm_run->s.regs.gbea = vcpu->arch.sie_block->gbea;
-> @@ -4313,8 +4318,10 @@ static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  	/* SIE will save etoken directly into SDNX and therefore kvm_run */
->  }
->  
-> -static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +static void store_regs(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
-> +
->  	kvm_run->psw_mask = vcpu->arch.sie_block->gpsw.mask;
->  	kvm_run->psw_addr = vcpu->arch.sie_block->gpsw.addr;
->  	kvm_run->s.regs.prefix = kvm_s390_get_prefix(vcpu);
-> @@ -4333,7 +4340,7 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  	current->thread.fpu.fpc = vcpu->arch.host_fpregs.fpc;
->  	current->thread.fpu.regs = vcpu->arch.host_fpregs.regs;
->  	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu)))
-> -		store_regs_fmt2(vcpu, kvm_run);
-> +		store_regs_fmt2(vcpu);
->  }
->  
->  int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-> @@ -4371,7 +4378,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  		goto out;
->  	}
->  
-> -	sync_regs(vcpu, kvm_run);
-> +	sync_regs(vcpu);
->  	enable_cpu_timer_accounting(vcpu);
->  
->  	might_fault();
-> @@ -4393,7 +4400,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  	}
->  
->  	disable_cpu_timer_accounting(vcpu);
-> -	store_regs(vcpu, kvm_run);
-> +	store_regs(vcpu);
->  
->  	kvm_sigset_deactivate(vcpu);
-
-Haven't tried to compile this but the change itself looks obviously
-correct, so
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+No, please not.  exported variables are usually a bad idea.  Just
+skip the somewhat pointless trivial static function.
