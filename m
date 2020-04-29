@@ -2,174 +2,148 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EE1C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52A5C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D10A2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C490620731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:39:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I02X3CZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgD2Ai6 (ORCPT
+        id S1726546AbgD2AjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:38:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29078 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726363AbgD2Ai6 (ORCPT
+        Tue, 28 Apr 2020 20:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbgD2AjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:38:58 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T0Z4iX135750;
-        Tue, 28 Apr 2020 20:38:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh341c6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 20:38:56 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03T0ZcmJ137823;
-        Tue, 28 Apr 2020 20:38:56 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh341c6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 20:38:56 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03T0a0cp021093;
-        Wed, 29 Apr 2020 00:38:55 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 30mcu6rk03-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 00:38:55 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03T0crEh47382980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 00:38:53 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A75E56E04C;
-        Wed, 29 Apr 2020 00:38:53 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F2A76E04E;
-        Wed, 29 Apr 2020 00:38:53 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Apr 2020 00:38:53 +0000 (GMT)
+        Tue, 28 Apr 2020 20:39:10 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3045EC03C1AE
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:39:10 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id v63so220995pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W7gWUUXU/Yr8aGKVFYA0eYnvhip9VKNyy91uupW34i0=;
+        b=I02X3CZM/NUHTH3RQSutmuienX62rm5LBybo8+305etL9oecXnfyo7V6fNMAb2ZqsY
+         GEnD1SVRAVPUrbKTGngrY5QzpG2TxAkPdT23TeWZ9XR+u9tUhgwZVxZ5uA8bl3iMxHRS
+         7mxQERX7ZXWTguvM+vNzEh3xLlDgjIKuwbZ8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W7gWUUXU/Yr8aGKVFYA0eYnvhip9VKNyy91uupW34i0=;
+        b=F8AR9zEvG+Qw0UFksS6GK9Vk+BL2lDjbAi+GnnKnp3LhXhEIsPI3167PpXY/Xp6/fD
+         /XXZ/UNZ1HghB9NgEXSYWT2oCTJKkIbpmokZrff35CV+MmIyk/tVOXn33qqHJm5eIYMQ
+         ZMo323ilK39Ze8IJzlBCTqRzSCVxE36U2U7x/SviXC2EmaAx3gfGSn+pUir6m0r+CzJ/
+         BcWkHJtSzpvF/Rx+n3la0gJ8GEg8NaBc6l3nnF3khHUM2MePPUkiPoNlsTfQeB5QWe3/
+         +qb5BebnXa6KV/VwVCSjA20jD8od1KFALmgaA579w7UqKrFz7wMx6f29IKf+J7ouwMuM
+         bHxA==
+X-Gm-Message-State: AGi0PubUt9jjTYIFl4JIKuLjeccWKvOfG4TyopnaNziYvIbOMd7Jtdf0
+        w1KVaYr7sh7CqFKGkDubur8HPQ==
+X-Google-Smtp-Source: APiQypLbPYTzp9qbzyos35G6tVPdoCiVx7N0aCXfQqih6ccSR97hGwNwigOKEqtptnE5JuFmlqObAA==
+X-Received: by 2002:a63:5717:: with SMTP id l23mr19849633pgb.217.1588120749609;
+        Tue, 28 Apr 2020 17:39:09 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id u15sm3044185pjm.47.2020.04.28.17.39.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2020 17:39:08 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 17:39:07 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
+ tables/perf voting
+Message-ID: <20200429003907.GN4525@google.com>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Apr 2020 20:38:53 -0400
-From:   Jared Rossi <jrossi@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-In-Reply-To: <20200424145007.75101d10.pasic@linux.ibm.com>
-References: <20200417182939.11460-1-jrossi@linux.ibm.com>
- <20200417182939.11460-2-jrossi@linux.ibm.com>
- <20200423155620.493cb7cb.pasic@linux.ibm.com>
- <20200423171103.497dcd02.cohuck@redhat.com>
- <b6dc3d32-3e84-4ce1-59a2-d5de99716027@linux.ibm.com>
- <20200424145007.75101d10.pasic@linux.ibm.com>
-Message-ID: <0d413224be93719a149ce8a5a0aef77b@linux.vnet.ibm.com>
-X-Sender: jrossi@linux.ibm.com
-User-Agent: Roundcube Webmail/1.0.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
- phishscore=0 suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280185
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-24 08:50, Halil Pasic wrote:
-> On Thu, 23 Apr 2020 16:25:39 -0400
-> Eric Farman <farman@linux.ibm.com> wrote:
+On Tue, Apr 28, 2020 at 07:03:00PM +0530, Rajendra Nayak wrote:
+> Add support to add OPP tables and perf voting on the OPP powerdomain.
+> This is needed so venus votes on the corresponding performance state
+> for the OPP powerdomain along with setting the core clock rate.
 > 
->> 
->> 
->> On 4/23/20 11:11 AM, Cornelia Huck wrote:
->> > On Thu, 23 Apr 2020 15:56:20 +0200
->> > Halil Pasic <pasic@linux.ibm.com> wrote:
->> >
->> >> On Fri, 17 Apr 2020 14:29:39 -0400
->> >> Jared Rossi <jrossi@linux.ibm.com> wrote:
->> >>
->> >>> Remove the explicit prefetch check when using vfio-ccw devices.
->> >>> This check is not needed as all Linux channel programs are intended
->> >>> to use prefetch and will be executed in the same way regardless.
->> >>
->> >> Hm. This is a guest thing or? So you basically say, it is OK to do
->> >> this, because you know that the guest is gonna be Linux and that it
->> >> the channel program is intended to use prefetch -- but the ORB supplied
->> >> by the guest that designates the channel program happens to state the
->> >> opposite.
->> >>
->> >> Or am I missing something?
->> >
->> > I see this as a kind of architecture compliance/ease of administration
->> > tradeoff, as we none of the guests we currently support uses something
->> > that breaks with prefetching outside of IPL (which has a different
->> > workaround).>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Cc: linux-media@vger.kernel.org
+> ---
+>  drivers/media/platform/qcom/venus/core.c       | 28 +++++++++++++++++++
+>  drivers/media/platform/qcom/venus/core.h       |  5 ++++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 37 +++++++++++++++++++++++---
+>  3 files changed, 66 insertions(+), 4 deletions(-)
 > 
-> And that workaround AFAIR makes sure that we don't issue a CP that is
-> self-modifying or otherwise reliant on non-prefetch. So any time we see
-> a self-modifying program we know, we have an incompatible setup.
-> 
-> In any case I believe the commit message is inadequate, as it does not
-> reflect about the risks.
-> 
->> > One thing that still concerns me a bit is debuggability if a future
->> > guest indeed does want to dynamically rewrite a channel program: the
->> 
->> +1 for some debuggability, just in general
->> 
->> > guest thinks it instructed the device to not prefetch, and then
->> > suddenly things do not work as expected. We can log when a guest
->> > submits an orb without prefetch set, but we can't find out if the guest
->> > actually does something that relies on non-prefetch.
->> 
->> Without going too far down a non-prefetch rabbit-hole, can we use the
->> cpa_within_range logic to see if the address of the CCW being fetched
->> exists as the CDA of an earlier (non-TIC) CCW in the chain we're
->> processing, and tracing/logging/messaging something about a possible
->> conflict?
->> 
->> (Jared, you did some level of this tracing with our real/synthetic 
->> tests
->> some time ago.  Any chance something of it could be polished and made
->> useful, without being overly heavy on the mainline path?)
->> 
-> 
-> Back then I believe I made a proposal on how this logic could look 
-> like.
-> I think all we need is checking for self rewrites (ccw reads to the
-> addresses that comprise the  complete original channel program), and 
-> for
-> status-modifier 'skips'. The latter could be easily done by putting 
-> some
-> sort of poison at the end of the detected channel program segments.
-> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 194b10b9..e98fea92 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <media/videobuf2-v4l2.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (!core->pm_ops)
+>  		return -ENODEV;
+>  
+> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
+> +	if (IS_ERR(core->opp_table))
+> +		return PTR_ERR(core->opp_table);
+> +
+> +	if (core->res->opp_pmdomain) {
+> +		ret = dev_pm_opp_of_add_table(dev);
+> +		if (!ret) {
+> +			core->has_opp_table = true;
+> +		} else if (ret != -ENODEV) {
+> +			dev_err(dev, "Invalid OPP table in Device tree\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	if (core->pm_ops->core_get) {
+>  		ret = core->pm_ops->core_get(dev);
+>  		if (ret)
+> @@ -301,6 +316,9 @@ static int venus_probe(struct platform_device *pdev)
+>  err_venus_shutdown:
+>  	venus_shutdown(core);
+>  err_runtime_disable:
+> +	if (core->res->opp_pmdomain && core->has_opp_table)
 
- From what I previously did with the tracing, I don't think that there is 
-a
-practical way to determine if a cp is actually doing something that 
-relies
-on non-prefetch.  It seems we would need to examine the CCWs to find 
-reads
-and also validate the addresses those CCWs access to check if there is a
-conflict.  Probably this is too much overhead considering that we expect
-it to be a rare occurrence?
+the check for 'core->res->opp_pmdomain' is not needed, 'core->has_opp_table'
+can only be true when 'core->res->opp_pmdomain' is not NULL.
 
-Is it too simplistic to print a kernel warning stating that an ORB did 
-not
-have the p-bit set, but it is being prefetched anyway?
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(core->opp_table);
+>  	pm_runtime_set_suspended(dev);
+>  	pm_runtime_disable(dev);
+>  	hfi_destroy(core);
+> @@ -326,6 +344,10 @@ static int venus_remove(struct platform_device *pdev)
+>  
+>  	venus_firmware_deinit(core);
+>  
+> +	if (core->res->opp_pmdomain && core->has_opp_table)
 
-Regards,
-Jared Rossi
+ditto
