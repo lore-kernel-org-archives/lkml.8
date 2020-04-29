@@ -2,113 +2,95 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC37C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB915C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E212073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824DA206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zHFWQgW4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q+ify96+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgD2INs (ORCPT
+        id S1726571AbgD2IOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:13:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43412 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgD2INs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:13:48 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03T8DUwW007493;
-        Wed, 29 Apr 2020 03:13:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588148010;
-        bh=dIrVm1/0QLViLtaRRfuBbJNZneOip17ijlKOVSjVhIE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zHFWQgW4G0g/o/UPa18cLyEWT6fX8erJvXdQ9shIsSQD3OjN6AHmJrUAPuzYjyGqq
-         Cw4rEacVXvIiKujfXiS3XPO6fwVSZhK78MzlKHqqDqSiTyHwI+d5pjr2EMaL2y5ky5
-         WOKW6l1eMYGIwRIlfpUZqgEHtNrrks6IacCPg9W8=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03T8DUkI011810
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Apr 2020 03:13:30 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Apr 2020 03:13:30 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Apr 2020 03:13:29 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03T8DQeH056208;
-        Wed, 29 Apr 2020 03:13:27 -0500
-Subject: Re: [PATCH] drm/bridge: fix stack usage warning on old gcc
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200428215408.4111675-1-arnd@arndb.de>
- <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
- <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <cd7c03e3-baba-73fd-f432-5ccc640a6f44@ti.com>
-Date:   Wed, 29 Apr 2020 11:13:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 04:14:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:48853 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726355AbgD2IOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:14:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BrrZ2nKrz9sSM;
+        Wed, 29 Apr 2020 18:14:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588148047;
+        bh=aV0PEZPNtfTNVHHepqbBqkTosbZbpsGAfAJk+1cZnFs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q+ify96+D3WB501DW64HOaDzCsOTz6olVhWC9SYpH/BYrDumMYmDxvrbm2RKqtaE4
+         NqlPz0P444rxK9Cu0CTB4T8fU06v7xyaT//qNILtFBgF81aMHKPoGpZF2qK9z9R4YX
+         B4OPDtJ1LxDn4I+ib+IZfz5d+tHH+SVXwVW2v9Ja12BcOcxSWAOdLeyrXAwSNxJcpu
+         OS7988cT/RphFgwq3bq0PlXJdlYLWuEAEeJFD7o1xWWmxfzvT/KxexsttUl+Eze5Pe
+         W8givRR/nqfsm+7tkvpSU7IPjAtJzmj2MCN/1Mo0d3PYQfs3GhVec4mttwY7LK3ZAs
+         I/ucZFqXxn5yg==
+Date:   Wed, 29 Apr 2020 18:14:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: linux-next: build warning after merge of the soundwire tree
+Message-ID: <20200429181403.07a54d40@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/T44KkzRtqgVZ2Lm5bKFtiq6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 11:02, Arnd Bergmann wrote:
-> On Wed, Apr 29, 2020 at 9:56 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->>> diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
->>> index 1b39e8d37834..6650fe4cfc20 100644
->>> --- a/drivers/gpu/drm/bridge/tc358768.c
->>> +++ b/drivers/gpu/drm/bridge/tc358768.c
->>> @@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
->>>
->>>    static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
->>>    {
->>> +     /* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
->>> +     int tmpval = val;
-> 
->>
->> tc358768_write is not inline. What is the inline function here? Or is tc358768_write optimized to
->> inline by the compiler?
-> 
-> I missed the lack of an explicit inline tag when looking at the bug. gcc
-> usually decides which functions to inline on its own, so there is little
-> difference in practice. Let me know if I should clarify the changelog and
-> resend it.
+--Sig_/T44KkzRtqgVZ2Lm5bKFtiq6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok. I think this is fine.
+Hi all,
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+[Sorry that I did not report this earlier.]
 
-  Tomi
+After merging the soundwire tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+drivers/soundwire/intel_init.c:193:14: warning: 'sdw_intel_init' defined bu=
+t not used [-Wunused-function]
+  193 | static void *sdw_intel_init(acpi_handle *parent_handle,
+      |              ^~~~~~~~~~~~~~
+
+Introduced by commit
+
+  2978a43e7690 ("soundwire: intel: Make sdw_intel_init static")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/T44KkzRtqgVZ2Lm5bKFtiq6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6pN0sACgkQAVBC80lX
+0GyiDgf+MeySdb0MFM9y5ONWf0wElC6K3bCe1yZVCiJQPTRVScyr22RQtX02vqHg
+o4XZR4YggZVU9Q2FljgVr2dlP2ctxo9NXfitndY4Oxqk5182A8aWi2HwybJ96kbG
+RgYkFLGrPmuneP6SgGdTq4eQvEq+INDmzerOWCCC+58w+X1XO+f9YDoQQJO8GlXG
+JD7jBhmRjF51zCy3JQ7QImr/CR7YUEt/2vcr3sG+SgjZZG0ykKP7yH1gy6NWM6+x
+veTNYxI7ffbQofbhopChdurUBsyV6uuSz7f0Q9TdhYhxutOzan3o/+Vy2TJPwQ96
+iEuvXOa0P8i15bxjEHxuuxnJNkOyTw==
+=uLAY
+-----END PGP SIGNATURE-----
+
+--Sig_/T44KkzRtqgVZ2Lm5bKFtiq6--
