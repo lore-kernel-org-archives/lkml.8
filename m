@@ -2,110 +2,75 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0703DC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B882C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E560E206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3975206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:22:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CIaWL4vQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgD2IWj (ORCPT
+        id S1726800AbgD2IW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:22:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44131 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgD2IWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:22:38 -0400
-IronPort-SDR: dMiGYpRM5R3C/CcgAHoz2hsFfpTv2lrCHeVSKimyWK8bsBu4mCGhttxVKcH2oCc/xEV4c67VgW
- L3iBoL47mwlA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 01:22:38 -0700
-IronPort-SDR: F+sD5STICk/m6zujNoE9BvEABvPm9vfHA/7Vwbg/OxHjhyfuFBlI+4A+I2dBRswY9yrVoa2IZs
- NG95l8OV7VzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,330,1583222400"; 
-   d="scan'208";a="459104696"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 01:22:38 -0700
-Received: from [10.215.242.51] (ekotax-mobl.gar.corp.intel.com [10.215.242.51])
-        by linux.intel.com (Postfix) with ESMTP id 142FD5802C8;
-        Wed, 29 Apr 2020 01:22:34 -0700 (PDT)
-Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
- transfers
-To:     Hauke Mehrtens <hauke@hauke-m.de>,
-        Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
-        broonie@kernel.org, robh@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1587702428.git.eswara.kota@linux.intel.com>
- <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
- <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
- <262f2739-494a-a59b-f1e9-80a95ea465b1@hauke-m.de>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <078a68ad-b82b-81c5-2d93-bfa4b70bc5d6@linux.intel.com>
-Date:   Wed, 29 Apr 2020 16:22:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 29 Apr 2020 04:22:57 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:27468 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726430AbgD2IW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:22:56 -0400
+X-UUID: 31ddaf0115284431b141fdb40d541229-20200429
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fyGie+/OjAbHlI/7XZtnPpamWLLZ9oCp6eKZxelllDc=;
+        b=CIaWL4vQ2I1iGf+SfB24qJVU6Xuq1jnlcLtKx092g/WgLUZUKlBX6s6JZEU9veRAZWsv019zLf1sUbmHWCuAS+VuCrM+TmQ2gqE1fL/kOv2coptbrLokEhYlqxx9wmTkZEYqrrbaCkC/DnBGzZnXQ1cswk1jGN4D8zwXJYddfuM=;
+X-UUID: 31ddaf0115284431b141fdb40d541229-20200429
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <xing.zhang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 610312970; Wed, 29 Apr 2020 16:22:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS32DR.mediatek.inc (172.27.6.104) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Apr 2020 16:22:41 +0800
+Received: from localhost.localdomain (10.15.20.246) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Apr 2020 16:22:39 +0800
+From:   Xing Zhang <Xing.Zhang@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        Xing Zhang <xing.zhang@mediatek.com>
+Subject: [PATCH v1 2/3] arm64: mediatek: Add regulator vibrator support
+Date:   Wed, 29 Apr 2020 16:18:01 +0800
+Message-ID: <20200429081759.26964-3-Xing.Zhang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200429081759.26964-1-Xing.Zhang@mediatek.com>
+References: <20200429081759.26964-1-Xing.Zhang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <262f2739-494a-a59b-f1e9-80a95ea465b1@hauke-m.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 38C62FF845592F563F9EA9D9E592780B9FBC921BD881E32504B772285F81C5B72000:8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/28/2020 7:30 PM, Hauke Mehrtens wrote:
-> On 4/28/20 1:10 PM, Daniel Schwierzeck wrote:
->>
->> Am 24.04.20 um 12:42 schrieb Dilip Kota:
->>
-...
-> Hi,
->
-> The Interrupt controller found on Danube till xrx300 which is probably
-> from Infineon like this SPI controller IP acknowledges the interrupts
-> also inside this SPI controller IP automatically, this has to be done
-> manually on the xrx500 and probably also LGM as they use a different
-> interrupt controller. I prepared patches for this internally 2.5 years
-> ago but did not send them upstream because of internal processes.
->
-> I would suggest to only do this ack on the newer platforms starting with
-> the xrx500 and not on the older.
->
-> On SMP systems a lock is needed in lantiq_ssc_xmit_interrupt() to
-> protect against an other thread reading from the RX buffer or writing to
-> the TX buffer in parallel.
->
-> @Dilip. Did you try the patches I send you one months ago on the LGM?
-All the cases you mentioned are taken care in the patch, could you 
-please have a look once.
-
-And the patch you shared internally, has done below change. By referring 
-it i have updated the offsets, mentioning offsets are wrong. But actual 
-case is vrx200 are having different offsets and xrx500, latest chipsets 
-are having different offsets. I think this could be the reason for SPI 
-transfer timeouts when you run test on vrx200 with my patches.
-
--#define LTQ_SPI_IRNICR		0xf8
--#define LTQ_SPI_IRNCR		0xfc
-+#define LTQ_SPI_IRNCR		0xf8
-+#define LTQ_SPI_IRNICR		0xfc
-
-These offsets need to be defined in SoC data structure as they are 
-different across the chipsets(which i have done in initial phase of the 
-patch which i submitted for internal review. I hope you had got a chance 
-to review it).
-
-Regards,
-Dilip
+RnJvbTogWGluZyBaaGFuZyA8eGluZy56aGFuZ0BtZWRpYXRlay5jb20+DQoNCkFkZCBDT05GSUdf
+TEVEU19SRUdVTEFUT1JfVklCUkFUT1I9eSBpbiBkZWZjb25maWcNCg0KU2lnbmVkLW9mZi1ieTog
+WGluZyBaaGFuZyA8eGluZy56aGFuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBhcmNoL2FybTY0L2Nv
+bmZpZ3MvZGVmY29uZmlnIHwgMSArDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQoN
+CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIGIvYXJjaC9hcm02NC9j
+b25maWdzL2RlZmNvbmZpZw0KaW5kZXggMjRlNTM0ZDg1MDQ1Li4yOTI4N2U1MjViNDYgMTAwNjQ0
+DQotLS0gYS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQorKysgYi9hcmNoL2FybTY0L2Nv
+bmZpZ3MvZGVmY29uZmlnDQpAQCAtNzIzLDYgKzcyMyw3IEBAIENPTkZJR19MRURTX0NMQVNTPXkN
+CiBDT05GSUdfTEVEU19HUElPPXkNCiBDT05GSUdfTEVEU19QV009eQ0KIENPTkZJR19MRURTX1NZ
+U0NPTj15DQorQ09ORklHX0xFRFNfUkVHVUxBVE9SX1ZJQlJBVE9SPXkNCiBDT05GSUdfTEVEU19U
+UklHR0VSX0RJU0s9eQ0KIENPTkZJR19MRURTX1RSSUdHRVJfSEVBUlRCRUFUPXkNCiBDT05GSUdf
+TEVEU19UUklHR0VSX0NQVT15DQotLSANCjIuMTguMA0K
 
