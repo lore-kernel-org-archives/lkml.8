@@ -2,183 +2,156 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBE6C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9617C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4D62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D4920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KDzoDVd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgD2JyQ (ORCPT
+        id S1726617AbgD2JzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:54:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:36370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD2JyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:54:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A027C14;
-        Wed, 29 Apr 2020 02:54:15 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D897C3F73D;
-        Wed, 29 Apr 2020 02:54:12 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 10:54:10 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] Documentation/sysctl: Document uclamp sysctl knobs
-Message-ID: <20200429095409.ayofw3qiwk73hlo5@e107158-lin>
-References: <20200428164134.5588-1-qais.yousef@arm.com>
- <20200428164134.5588-2-qais.yousef@arm.com>
- <e16e222b-f61b-a54a-38b2-5a63a9537333@infradead.org>
+        Wed, 29 Apr 2020 05:55:24 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:36606 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726423AbgD2JzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:55:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588154123; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=3iXUY6EYpmcQbL2bjsrp6J9NTxmranLuwsV6XKvgXqY=; b=KDzoDVd+e77z84IEkU6YgpXbq9Bh54WHwsp0kdi1Qzez5INl7HtOjhcadksNLyhj2g2S+cqr
+ 7lWv5E+IcAIc4bB17synA683LM+9jJ3Um/HPti8poomBGxSHkME6iGOT8WDH+nC3wmBnvzAI
+ 3JgxuvziUR5GpI7FiW822MIwTvw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea94f0b.7fd361bc4ae8-smtp-out-n02;
+ Wed, 29 Apr 2020 09:55:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 32DACC433BA; Wed, 29 Apr 2020 09:55:22 +0000 (UTC)
+Received: from [192.168.1.227] (unknown [49.204.176.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07F91C433D2;
+        Wed, 29 Apr 2020 09:55:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07F91C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+Subject: Re: [PATCH] dt-bindings: arm-smmu: Add a new compatible string and a
+ clock
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>, tdas@codeaurora.org
+References: <1588073914-15712-1-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=WPG4x+TTu5-169EPObhvtPEpodzjnk2WSBCQgR434xdA@mail.gmail.com>
+From:   Sharat Masetty <smasetty@codeaurora.org>
+Message-ID: <9aece4ec-6a14-ea73-fe9c-5f097a018354@codeaurora.org>
+Date:   Wed, 29 Apr 2020 15:25:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e16e222b-f61b-a54a-38b2-5a63a9537333@infradead.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <CAD=FV=WPG4x+TTu5-169EPObhvtPEpodzjnk2WSBCQgR434xdA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/28/20 10:43, Randy Dunlap wrote:
-> Hi--
-> 
-> I have a few corrections for you below:
 
-Thanks Randy. I applied all your suggestions for the next version.
+On 4/29/2020 3:57 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Apr 28, 2020 at 4:39 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>> This patch adds a new compatible string for sc7180 and also an
+>> additional clock listing needed to power the TBUs and the TCU.
+>>
+>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+> nit: mention sc7180 in subject, like:
+>
+> dt-bindings: arm-smmu: Add sc7180 compatible string and mem_iface clock
+>
+>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+>> index 6515dbe..15946ac 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+>> @@ -28,6 +28,7 @@ properties:
+>>             - enum:
+>>                 - qcom,msm8996-smmu-v2
+>>                 - qcom,msm8998-smmu-v2
+>> +              - qcom,sc7180-smmu-v2
+>>                 - qcom,sdm845-smmu-v2
+>>             - const: qcom,smmu-v2
+>>
+>> @@ -113,16 +114,22 @@ properties:
+>>         present in such cases.
+>>
+>>     clock-names:
+>> +    minItems: 2
+>> +    maxItems: 3
+>>       items:
+>>         - const: bus
+>>         - const: iface
+>> +      - const: mem_iface_clk
+> People usually frown on clock-names ending in "_clk".  Just name it "mem_iface".
+>
+>
+>>     clocks:
+>> +    minItems: 2
+>> +    maxItems: 3
+>>       items:
+>>         - description: bus clock required for downstream bus access and for the
+>>             smmu ptw
+>>         - description: interface clock required to access smmu's registers
+>>             through the TCU's programming interface.
+>> +      - description: clock required for the SMMU TBUs and the TCU
+> Is this clock only needed for sc7180, or would it be useful if we
+> enabled certain features on existing devices?  Please document exactly
+> when someone would provide this clock and when they'd leave it off.
+>
+> ...also: maybe it's obvious to those that understand IOMMUs in depth,
+> but to me I have no idea what your description means and why it's
+> different from the other two clocks.  Any way you could punch up your
+> description a little bit?
+>
+> Looking at sdm845 I see that this clock seems to exist but wasn't
+> listed in the IOMMU device tree node.  Is that a mistake on sdm845?
+> ...or is it just fine because the GPU holds the clock?  Is there a
+> reason the sdm845 solution and the sc7180 solution shouldn't be the
+> same (AKA we should either add this clock to the sdm845 device tree
+> file or remove it from sc7180)?
 
-Thanks
+I went and checked the downstream SDM845 device tree for GPU SMMU and I 
+do see this clock listed on there. I am no expert in SMMU either but my 
+understanding is that this clock is needed for core working of the SMMU 
+like the pagetable walks, TLB invalidations etc, whereas the other two 
+clocks are required to access SMMU register space from the host.My 
+proposal is to add this clock to SDM845 as well as a follow up effort so 
+that we can remove the Min/MaxItems properties which I do not like.
 
---
-Qais Yousef
+@Jordan, do you remember why this clock was added to SDM845?
 
-> 
-> On 4/28/20 9:41 AM, Qais Yousef wrote:
-> > Uclamp exposes 3 sysctl knobs:
-> > 
-> > 	* sched_util_clamp_min
-> > 	* sched_util_clamp_max
-> > 	* sched_util_clamp_min_rt_default
-> > 
-> > Document them in sysctl/kernel.rst.
-> > 
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > CC: Jonathan Corbet <corbet@lwn.net>
-> > CC: Juri Lelli <juri.lelli@redhat.com>
-> > CC: Vincent Guittot <vincent.guittot@linaro.org>
-> > CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > CC: Steven Rostedt <rostedt@goodmis.org>
-> > CC: Ben Segall <bsegall@google.com>
-> > CC: Mel Gorman <mgorman@suse.de>
-> > CC: Luis Chamberlain <mcgrof@kernel.org>
-> > CC: Kees Cook <keescook@chromium.org>
-> > CC: Iurii Zaikin <yzaikin@google.com>
-> > CC: Quentin Perret <qperret@google.com>
-> > CC: Valentin Schneider <valentin.schneider@arm.com>
-> > CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-> > CC: Pavan Kondeti <pkondeti@codeaurora.org>
-> > CC: linux-doc@vger.kernel.org
-> > CC: linux-kernel@vger.kernel.org
-> > CC: linux-fsdevel@vger.kernel.org
-> > ---
-> >  Documentation/admin-guide/sysctl/kernel.rst | 48 +++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> > 
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> > index 0d427fd10941..e7255f71493c 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -940,6 +940,54 @@ Enables/disables scheduler statistics. Enabling this feature
-> >  incurs a small amount of overhead in the scheduler but is
-> >  useful for debugging and performance tuning.
-> >  
-> > +sched_util_clamp_min:
-> > +=====================
-> > +
-> > +Max allowed *minimum* utilization.
-> > +
-> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-> > +value.
-> > +
-> > +It means that any requested uclamp.min value cannot be greater than
-> > +sched_util_clamp_min, ie: it is restricted to the range
-> 
->                          i.e., it is
-> 
-> > +[0:sched_util_clamp_min].
-> > +
-> > +sched_util_clamp_max:
-> > +=====================
-> > +
-> > +Max allowed *maximum* utilization.
-> > +
-> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-> > +value.
-> > +
-> > +It means that any requested uclamp.max value cannot be greater than
-> > +sched_util_clamp_max, ie: it is restricted to the range
-> 
->                          i.e., it is
-> 
-> > +[0:sched_util_clamp_max].
-> > +
-> > +sched_util_clamp_min_rt_default:
-> > +================================
-> > +
-> > +By default Linux is tuned for performance. Which means that RT tasks always run
-> > +at the highest frequency and most capable (highest capacity) CPU (in
-> > +heterogeneous systems).
-> > +
-> > +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
-> > +SCHED_CAPACITY_SCALE (1024) by default. Which effectively boosts the tasks to
-> 
->                                by default, which
-> 
-> > +run at the highest frequency and bias them to run on the biggest CPU.
-> 
->                                     biases them
-> 
-> > +
-> > +This knob allows admins to change the default behavior when uclamp is being
-> > +used. In battery powered devices particularly, running at the maximum
-> > +capacity and frequency will increase energy consumption and shorten the battery
-> > +life.
-> > +
-> > +This knob is only effective for RT tasks which the user hasn't modified their
-> > +requested uclamp.min value via sched_setattr() syscall.
-> > +
-> > +This knob will not escape the constraint imposed by sched_util_clamp_min
-> > +defined above.
-> > +
-> > +Any modification is applied lazily on the next opportunity the scheduler needs
-> > +to calculate the effective value of uclamp.min of the task.
-> >  
-> >  seccomp
-> >  =======
-> > 
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
+> Thanks!
+>
+> -Doug
