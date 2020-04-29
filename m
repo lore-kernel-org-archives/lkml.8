@@ -2,372 +2,183 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA90EC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EAAC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9171A208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F512085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:32:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oC8ditv7"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DZ8uNnwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgD2NcV (ORCPT
+        id S1726963AbgD2Nc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:32:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbgD2NcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:32:21 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDADC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:32:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id h4so2044261wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+fJnYdS4VG0q/JLhQJrpuQtUR2IKM19c1tFbCpF+iK8=;
-        b=oC8ditv7GxkzZ8PTAkM/gjOTmziHKoRhb2KZDjmQ2zQd2Y60Kss2tsrA3N/76YmykP
-         geQQ0BC/9AUaAdsc9/M7Q2ogRGb4YDl2JwAOO8hMQxZGWo7HZJi3KOVpTQMO9xhuoBDq
-         8KXL1gNyGPUClTLHUmiIpkBCtnwgmMCn8SiprEGk38FlTKp0d/9xqrtyYia/Aidq1bIZ
-         VWM0ykLRhpuWPYyoWmZ5WqGyuZSfn0sPr4njT7meeQt+hBHvmhZO3RmhZqR38al4SZSO
-         ar8rdTveNPNH8OMNt78mc5nj/SaZlsEbyxGUrDKAc7tEIsea3d3hodqJ3arcHJsXozyR
-         m5EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+fJnYdS4VG0q/JLhQJrpuQtUR2IKM19c1tFbCpF+iK8=;
-        b=TAKCuwN5Gw6iClglMDRJAARFEKXTqjaKXogj22Fo8+i8ZU65Vh5Pj6wtSsiRPv2a4f
-         h38CEk1OV+ZCE1TqNt0beYmRg1/mqvPq0gwCxq0lZYpJuYou351pf9XhE3ZDOjJTRiCq
-         vwKOpV5k12kzw7ah2PhsVWmYXS76zXnEa+tu9vOr4dtwjg5NRKsqhvgh6cd4g7m4ad/k
-         1C3F4HAYhgs9p7oFS97FnURTb1s222ipVIHI6kv8fBI2GDWAYom2s4zHiThff4burvCB
-         7yEp4Zqc97PGOr+/C2oNtNpmWOCjVofuSNEg1j5I72WKcXtU7iFMk9MNhGnggLgo9J2O
-         qOTg==
-X-Gm-Message-State: AGi0PubSrLaQpS2MZtsdJgiAiCEWIHbddjI8uE4DOFpZzh7jGHZwYhm9
-        Qvz1whfnDUKRkhyxeaQeuuw=
-X-Google-Smtp-Source: APiQypLJ+JJFK0SuAjhzvvjRMI2YFyrSWHRlP2QLpDZzgqB0GdhzgVGXqkcenGX55Ih8N0OGTII5hA==
-X-Received: by 2002:a1c:44b:: with SMTP id 72mr3295329wme.58.1588167139181;
-        Wed, 29 Apr 2020 06:32:19 -0700 (PDT)
-Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
-        by smtp.googlemail.com with ESMTPSA id s17sm7640296wmc.48.2020.04.29.06.32.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 06:32:18 -0700 (PDT)
-From:   Akira Shimahara <akira215corp@gmail.com>
-To:     greg@kroah.com
-Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org,
-        Akira Shimahara <akira215corp@gmail.com>
-Subject: [PATCH v3 2/5] w1_therm: adding sysfs entry to check device power
-Date:   Wed, 29 Apr 2020 15:32:04 +0200
-Message-Id: <20200429133204.140081-1-akira215corp@gmail.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 29 Apr 2020 09:32:58 -0400
+Received: from mout.gmx.net ([212.227.15.18]:36001 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgD2Nc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:32:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1588167152;
+        bh=aHsnW+3gzO8pCxyORwBO+Ihsp+HtkeIuWsCjVlZWnI8=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=DZ8uNnwI5rDdQnvNCKbdQoNsCK55xaFj+8TAPHlwWV707sR8shiGMzxv+Qrzb45Gw
+         w1UhBLRxIj3xwQ+iPsUHJp3TOuycOAkRFx7DdYqLVGSAStoTS9Tls4pHjfMd3OUy8M
+         bTgXYNJ+JU9Z40Wt8fnokn38OuZz1fzHatmOiuiY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MPGRz-1joVXO2I8r-00Pfqu; Wed, 29
+ Apr 2020 15:32:32 +0200
+Subject: Re: [PATCH] btrfs: fix gcc-4.8 build warning
+To:     Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        ethanwu <ethanwu@synology.com>
+Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200429132743.1295615-1-arnd@arndb.de>
+From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
+ PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
+ 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
+ D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
+ efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
+ ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
+ BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
+ 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
+ 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
+ EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
+ 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
+ ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
+ oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
+ fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
+ 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
+ ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
+ oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
+Message-ID: <fb79edfb-5fce-30f5-40af-cf06316c61e9@gmx.com>
+Date:   Wed, 29 Apr 2020 21:32:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200429132743.1295615-1-arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde"
+X-Provags-ID: V03:K1:6Q3p/I25aT/DaKPoGA/+zWyOb+WMYiqs5U6uPmtlr7dj76bZ7+D
+ BfFY+R6zKubIYMZcj2QgyVYivIUpVWn2oPIFjb3Tl2NOvJK/OoumCHgTTrm2piSN0v11TmA
+ 3pD7m8ZzzQWPxueevowiK5QEfWzIBDXB5GXbF2ou9R8HNfRZvQwu1Br+IhNIxLqIgriKBHx
+ eB9yUtQqOPTlEISDfCRyw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:k0PmqAXVh58=:MqZtzvLdYH8EJ8jP4uG/Uf
+ U2HL3/MRlYn1s7jQZXjD1X+clDip5ANN515TUNvFo13QOTU4Uf6Xl6JC2Y2uJdZ9xSec3t7af
+ m/1XcLq22K7TBei4aufh2g3nAkBmV0nClvdF30MlCz5GV6opVDsROQA8qGvdcYS5gwbpZjMRg
+ xhX9JOa02pHMGADsGcWY4T8e5tccB0W4b39ZEARjhzAyOY4FY4x1WSLra4211Fp6GoZeQqjwd
+ APfirAE4XpVey+YFErUV0cp8cwU+qaKywOztFUEuN9Mt4vY6JENUsGykMIboDzcqhT2rOUaqF
+ l0wnWISnAx1Y7hYwyLxI0HZnuTJX29f2/puDpIHBXMDh+IuG+3uvCWWf9aTkK8OdhIywVnUXy
+ xocnELtrJnsa4QQrPJtz8dsTsEryJ7kvfzW7CNKlv67PoOjqPx+qhdNTGzhEUuQOkleGOOFXw
+ Qtkvm/bIpipqxRb5A4XlF9RNAHvQbQ4PRZBiwRMDHaH1RYRVDZbca90H37vATVAc+Ts04D2M9
+ 9LQ4GwAZ18EA+dR2HgxrQgU7ij6COHkCEyDz78DA5Kvn4ZEVM8BjLouYEIe4ILPKFNJGSaLxC
+ cOmZGybblXpFHAKuhINtP9ZyDPzaoL6awEcMbZZ+60n6nIOywI6ympRGsWAxm5KMnFu0ywwkH
+ bbW4W9cHOt84zIJ53GVN3emGuTP/MvQoIar9+qOlFsbOeWjBkLhohIW6e3fC18fiEc3et3ToD
+ ZRKjt3QyeFZoyR5egBFNMRcFRAuskjtrs0fdk4IepzOtj+ZWwggL3heP+OJMl34RCTNvAT+e4
+ t17ZiDRNCo65W+GhXQ9+M9jxmSqVnRtd4rHPH42PaRI+R469G2slqV3Kjl7UXrjjV7SKop7Jl
+ 1XX9E/Tsn96TpxcFBxGctDKtVv/iaf/tLor+iYTMGu4fCx13UlyjXYWQsSMOeEfRN868dkaV+
+ arc2prIL2Cuci7CwZcYQVNUMYf8WJDtkU/Vj2+DknXR2+BDvXoz6qxpr02DuLW6Y0r18AAbwL
+ jRrQl1IgmHEDz28aXJIf33kBPQnx0myazBeVt7Un4YxmSrqWwX7WxPPcmLrdUuo59uhTuQ0Xc
+ sH2OEahzHtzd30JVlMF1p5nL2FOpmrZSNyOvgNeQrOr/ZYG5+/T3PsRD1p8EC+hoDXDoy7FDR
+ nPEdwljWz5G63Tm0yPZxeEgBLICZIhbRuBmN5jibGRgayKDZm+mAXGRT7fYEFMiNtjl0nmvtF
+ iQQeuUJ6uL/tJqL3P
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch for enhacement of w1_therm module.
-Adding ext_power sysfs entry (RO). Return the power status of the device:
- - 0: device parasite powered
- - 1: device externally powered
- - xx: xx is kernel error
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde
+Content-Type: multipart/mixed; boundary="7Tnk2qS8xsife5TvIYPkRuMZifPQXojKQ"
 
-Creating Documentation/ABI/testing/sysfs-driver-w1_therm for the old 
-driver sysfs and this new entry.
+--7Tnk2qS8xsife5TvIYPkRuMZifPQXojKQ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
----
- .../ABI/testing/sysfs-driver-w1_therm         | 29 ++++++
- drivers/w1/slaves/w1_therm.c                  | 93 ++++++++++++++++++-
- drivers/w1/slaves/w1_therm.h                  | 44 ++++++++-
- 3 files changed, 163 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-w1_therm
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentation/ABI/testing/sysfs-driver-w1_therm
-new file mode 100644
-index 0000000..9aaf625
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
-@@ -0,0 +1,29 @@
-+What:		/sys/bus/w1/devices/.../ext_power
-+Date:		Apr 2020
-+Contact:	Akira Shimahara <akira215corp@gmail.com>
-+Description:
-+		(RO) return the power status by asking the device
-+			* `0`: device parasite powered
-+			* `1`: device externally powered
-+			* `-xx`: xx is kernel error when reading power status
-+Users:		any user space application which wants to communicate with
-+		w1_term device
-+
-+
-+What:		/sys/bus/w1/devices/.../w1_slave
-+Date:		Apr 2020
-+Contact:	Akira Shimahara <akira215corp@gmail.com>
-+Description:
-+		(RW) return the temperature in 1/1000 degC.
-+		*read*: return 2 lines with the hexa output data sent on the
-+		bus, return the CRC check and temperature in 1/1000 degC
-+		*write* :
-+			* `0` : save the 2 or 3 bytes to the device EEPROM
-+			(i.e. TH, TL and config register)
-+			* `9..12` : set the device resolution in RAM
-+			(if supported)
-+			* Anything else: do nothing
-+		refer to Documentation/w1/slaves/w1_therm.rst for detailed
-+		information.
-+Users:		any user space application which wants to communicate with
-+		w1_term device
-\ No newline at end of file
-diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
-index 6245950..a530853 100644
---- a/drivers/w1/slaves/w1_therm.c
-+++ b/drivers/w1/slaves/w1_therm.c
-@@ -39,12 +39,14 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
- 
- static struct attribute *w1_therm_attrs[] = {
- 	&dev_attr_w1_slave.attr,
-+	&dev_attr_ext_power.attr,
- 	NULL,
- };
- 
- static struct attribute *w1_ds28ea00_attrs[] = {
- 	&dev_attr_w1_slave.attr,
- 	&dev_attr_w1_seq.attr,
-+	&dev_attr_ext_power.attr,
- 	NULL,
- };
- 
-@@ -294,6 +296,26 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
- 	return t;
- }
- 
-+/*------------------------ Helpers Functions----------------------------*/
-+
-+static inline bool bus_mutex_lock(struct mutex *lock)
-+{
-+	int max_trying = W1_THERM_MAX_TRY;
-+	/* try to acquire the mutex, if not, sleep retry_delay before retry) */
-+	while (mutex_lock_interruptible(lock) != 0 && max_trying > 0) {
-+		unsigned long sleep_rem;
-+
-+		sleep_rem = msleep_interruptible(W1_THERM_RETRY_DELAY);
-+		if (!sleep_rem)
-+			max_trying--;
-+	}
-+
-+	if (!max_trying)
-+		return false;	/* Didn't acquire the bus mutex */
-+
-+	return true;
-+}
-+
- /*-------------------------Interface Functions------------------------------*/
- static int w1_therm_add_slave(struct w1_slave *sl)
- {
-@@ -302,6 +324,16 @@ static int w1_therm_add_slave(struct w1_slave *sl)
- 	if (!sl->family_data)
- 		return -ENOMEM;
- 	atomic_set(THERM_REFCNT(sl->family_data), 1);
-+
-+	/* Getting the power mode of the device {external, parasite}*/
-+	SLAVE_POWERMODE(sl) = read_powermode(sl);
-+
-+	if (SLAVE_POWERMODE(sl) < 0) {
-+		/* no error returned as device has been added */
-+		dev_warn(&sl->dev,
-+			"%s: Device has been added, but power_mode may be corrupted. err=%d\n",
-+			 __func__, SLAVE_POWERMODE(sl));
-+	}
- 	return 0;
- }
- 
-@@ -512,6 +544,43 @@ error:
- 	return ret;
- }
- 
-+static int read_powermode(struct w1_slave *sl)
-+{
-+	struct w1_master *dev_master = sl->master;
-+	int max_trying = W1_THERM_MAX_TRY;
-+	int  ret = -ENODEV;
-+
-+	if (!sl->family_data)
-+		goto error;
-+
-+	/* prevent the slave from going away in sleep */
-+	atomic_inc(THERM_REFCNT(sl->family_data));
-+
-+	if (!bus_mutex_lock(&dev_master->bus_mutex)) {
-+		ret = -EAGAIN;	// Didn't acquire the mutex
-+		goto dec_refcnt;
-+	}
-+
-+	while ((max_trying--) && (ret < 0)) {
-+		/* safe version to select slave */
-+		if (!reset_select_slave(sl)) {
-+			w1_write_8(dev_master, W1_READ_PSUPPLY);
-+			/* Read only one bit,
-+			 * 1 is externally powered,
-+			 * 0 is parasite powered
-+			 */
-+			ret = w1_touch_bit(dev_master, 1);
-+			/* ret should be either 1 either 0 */
-+		}
-+	}
-+	mutex_unlock(&dev_master->bus_mutex);
-+
-+dec_refcnt:
-+	atomic_dec(THERM_REFCNT(sl->family_data));
-+error:
-+	return ret;
-+}
-+
- /*------------------------Interface sysfs--------------------------*/
- 
- static ssize_t w1_slave_show(struct device *device,
-@@ -565,13 +634,35 @@ static ssize_t w1_slave_store(struct device *device,
- 				ret = w1_therm_families[i].eeprom(device);
- 			else
- 				ret = w1_therm_families[i].precision(device,
--								val);
-+									val);
- 			break;
- 		}
- 	}
- 	return ret ? : size;
- }
- 
-+static ssize_t ext_power_show(struct device *device,
-+	struct device_attribute *attr, char *buf)
-+{
-+	struct w1_slave *sl = dev_to_w1_slave(device);
-+
-+	if (!sl->family_data) {
-+		dev_info(device,
-+			"%s: Device not supported by the driver\n", __func__);
-+		return 0;  /* No device family */
-+	}
-+
-+	/* Getting the power mode of the device {external, parasite}*/
-+	SLAVE_POWERMODE(sl) = read_powermode(sl);
-+
-+	if (SLAVE_POWERMODE(sl) < 0) {
-+		dev_dbg(device,
-+			"%s: Power_mode may be corrupted. err=%d\n",
-+			__func__, SLAVE_POWERMODE(sl));
-+	}
-+	return sprintf(buf, "%d\n", SLAVE_POWERMODE(sl));
-+}
-+
- #if IS_REACHABLE(CONFIG_HWMON)
- static int w1_read_temp(struct device *device, u32 attr, int channel,
- 			long *val)
-diff --git a/drivers/w1/slaves/w1_therm.h b/drivers/w1/slaves/w1_therm.h
-index b73af0b..2f975a4 100644
---- a/drivers/w1/slaves/w1_therm.h
-+++ b/drivers/w1/slaves/w1_therm.h
-@@ -25,6 +25,12 @@
- #include <linux/mutex.h>
- #include <linux/w1.h>
- 
-+/*----------------------------------Defines---------------------------------*/
-+/* Nb of try for an operation */
-+#define W1_THERM_MAX_TRY		5
-+
-+/* ms delay to retry bus mutex */
-+#define W1_THERM_RETRY_DELAY		20
- /*----------------------------------Structs---------------------------------*/
- 
- /**
-@@ -47,10 +53,15 @@ struct w1_therm_family_converter {
-  * struct w1_therm_family_data
-  * @param rom data
-  * @param refcnt ref count
-+ * @param external_powered
-+ *		1 device powered externally,
-+ *		0 device parasite powered,
-+ *		-x error or undefined
-  */
- struct w1_therm_family_data {
- 	uint8_t rom[9];
- 	atomic_t refcnt;
-+	int external_powered;
- };
- 
- /**
-@@ -80,11 +91,24 @@ static inline int w1_DS18B20_convert_temp(u8 rom[9]);
- static inline int w1_DS18S20_convert_temp(u8 rom[9]);
- 
- /*-------------------------------Macros--------------------------------------*/
-+/* return the power mode of the sl slave : 1-ext, 0-parasite, <0 unknown
-+ * always test family data existence before
-+ */
-+#define SLAVE_POWERMODE(sl) \
-+	(((struct w1_therm_family_data *)(sl->family_data))->external_powered)
- 
- /* return the address of the refcnt in the family data */
- #define THERM_REFCNT(family_data) \
- 	(&((struct w1_therm_family_data *)family_data)->refcnt)
- 
-+/*-------------------------- Helpers Functions------------------------------*/
-+
-+/** bus_mutex_lock() get the mutex & retry
-+ *  @param lock w1 bus mutex to get
-+ *  @return value true is mutex is acquired and lock, false otherwise
-+ */
-+static inline bool bus_mutex_lock(struct mutex *lock);
-+
- /*---------------------------Hardware Functions-----------------------------*/
- 
- /**
-@@ -107,7 +131,14 @@ static int reset_select_slave(struct w1_slave *sl);
-  */
- static ssize_t read_therm(struct device *device,
- 			struct w1_slave *sl, struct therm_info *info);
--
-+/** read_powermode()
-+ * @brief ask the device to get its power mode {external, parasite}
-+ * @param sl slave to be interrogated
-+ * @return	0 parasite powered device
-+ *			1 externally powered device
-+ *			<0 kernel error code
-+ */
-+static int read_powermode(struct w1_slave *sl);
- /*----------------------------Interface sysfs-------------------------------*/
- 
- /** @brief A callback function to output the temperature Old way
-@@ -127,11 +158,20 @@ static ssize_t w1_slave_store(struct device *device,
- 
- static ssize_t w1_seq_show(struct device *device,
- 	struct device_attribute *attr, char *buf);
--
-+/** @brief A callback function to output the power mode of the device
-+ *	Once done, it is stored in the sl->family_data to avoid doing the test
-+ *	during data read
-+ *  @return	0 : device parasite powered
-+ *			1 : device externally powered
-+ *			-xx : xx is kernel error code
-+ */
-+static ssize_t ext_power_show(struct device *device,
-+	struct device_attribute *attr, char *buf);
- /*-----------------------------Attributes declarations----------------------*/
- 
- static DEVICE_ATTR_RW(w1_slave);
- static DEVICE_ATTR_RO(w1_seq);
-+static DEVICE_ATTR_RO(ext_power);
- 
- /*--------------------------Interface Functions-----------------------------*/
- 
--- 
-2.25.4
 
+On 2020/4/29 =E4=B8=8B=E5=8D=889:27, Arnd Bergmann wrote:
+> Some older compilers like gcc-4.8 warn about mismatched curly
+> braces in a initializer:
+>=20
+> fs/btrfs/backref.c: In function 'is_shared_data_backref':
+> fs/btrfs/backref.c:394:9: error: missing braces around
+> initializer [-Werror=3Dmissing-braces]
+>   struct prelim_ref target =3D {0};
+>          ^
+> fs/btrfs/backref.c:394:9: error: (near initialization for
+> 'target.rbnode') [-Werror=3Dmissing-braces]
+>=20
+> Use the GNU empty initializer extension to avoid this.
+>=20
+> Fixes: ed58f2e66e84 ("btrfs: backref, don't add refs from shared block =
+when resolving normal backref")
+
+OK, at least this fix is mentioning it's older gcc causing problem, and
+the fix using GNU extension is also clear.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+
+Thanks,
+Qu
+
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  fs/btrfs/backref.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
+> index 60a69f7c0b36..ac3c34f47b56 100644
+> --- a/fs/btrfs/backref.c
+> +++ b/fs/btrfs/backref.c
+> @@ -392,7 +392,7 @@ static int is_shared_data_backref(struct preftrees =
+*preftrees, u64 bytenr)
+>  	struct rb_node **p =3D &preftrees->direct.root.rb_root.rb_node;
+>  	struct rb_node *parent =3D NULL;
+>  	struct prelim_ref *ref =3D NULL;
+> -	struct prelim_ref target =3D {0};
+> +	struct prelim_ref target =3D {};
+>  	int result;
+> =20
+>  	target.parent =3D bytenr;
+>=20
+
+
+--7Tnk2qS8xsife5TvIYPkRuMZifPQXojKQ--
+
+--hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl6pgecACgkQwj2R86El
+/qh83Af+Mi6sxc8pKMdHYx0GySA15pJkfgTmRYbEsqBSoFhbBiowh1ahHS0oM2tY
+Zk27iTPEz/Q5506fJnW+i7r/ctHmPF7JQE+xIzTS6TIWtiSuYyDs1vYXmUfC5W8m
+saz/VulS5un9H08KzVzl/GrsJIW4OTTDMpQXEjJz9+DWDOuA1Lob7I/ew2RSrNHY
+HDEd28yah/ryDK93cMFElZCH84aqaIxHlminqHgsYYd4etPYSMfCYPcg/wCPGlLp
+tBKOHWPA22nIML8VE6rrYUS78anvW7c8Ec0uXdFyKBUFaScWfhyn0/CljP8qVIZ4
+PI8OF0HuiaaETOce/6YY1QLZQWme1g==
+=r/5k
+-----END PGP SIGNATURE-----
+
+--hGiVpMqgzQBpw32GEM0P8G7xiVUYVMVde--
