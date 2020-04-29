@@ -2,70 +2,74 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1AEC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C1C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F352073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26F62074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DP1iuLWx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="heZazT2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgD2KT3 (ORCPT
+        id S1726829AbgD2KTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
+        Wed, 29 Apr 2020 06:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgD2KTH (ORCPT
+        with ESMTP id S1726747AbgD2KTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:19:07 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 714E6C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:19:07 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 188so1396443wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:19:07 -0700 (PDT)
+        Wed, 29 Apr 2020 06:19:10 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1CEC035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:19:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so1821257wrs.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NfUu2nGeZvzugtRyZe9k3R2yz/otRMYIvyVDLh+8gg8=;
-        b=DP1iuLWxyltMrKD5hRdymIQaeg/XxsXT6DwZipDEUi3ZKGr0RsGIT2wo/nffLiYxYj
-         WbiG5JaK3LZ5X51v5H/9nIWlXuyoizWVOmXFeVDm9xHubI+CjdoPKwsKWZgmDiL910o0
-         K3QsEAXG0B3WClIpnnPggb3sjNiuV0uDG0mllN8LqNphnGvOwmCjUxVEEqUe4VE9Di5u
-         U/0tq3N9YBOMwJvRWlSCzNa7CCLVI5epWrQggussR8csPX7yJi0+9ypR7ZYgrly8/SdE
-         cxuG5+Kl0wjr3XkAVqLhTiKso62Q6TBsZ6nQxpSPa1ObjIHyHAXjL52XBrDwMzkL1PnY
-         YDnw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2wu/gy1tHoWVzLeL4pUGCtzvsoDpfDGzq7gpcYUF8tA=;
+        b=heZazT2s9kPfyv6NTu8eImJ1nH2p3ed4yDakzZzC7FnVlRzH1gCJG1NnnURFgRzK3q
+         RuBBWjVYeTG/cPgj+txQ0EtlgfghyyTWT89izOlRYzwaH4UaM5s3xyqy7k2kKZYZ4ykt
+         w76IXMNamSswR1+80emM3I6YbwLXYZaMA9/WMNfUJqRv2v84SBaDkxIbUTG1vMP5MHMr
+         MylxeQWHOZhVjPk38iw4Nrz2DE8psD7D6rd1rJ7lgolnAkcJQs4UDEhmMYTpnh56g5iZ
+         rnOVwROUSxFUCd28VPqX1PaC0fl99MudLhdWeKFstobGWRY5WOvuHfSjctM/kg34xtgf
+         rkYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NfUu2nGeZvzugtRyZe9k3R2yz/otRMYIvyVDLh+8gg8=;
-        b=M1EY9jap3pl7jS87JoO661LynKl7yObLPmDK8l2xe4Mmc/hDHySZ5D2xpZeUwx7M/8
-         0XrISav8tl1hRHBO9Z+Au0ezsviJlolF94PRSDmvBDg5gS6SdVuEFyq6CK5eJrx1MymW
-         ZSF1XgzsN2a+z0F3ZXQ8+sG7SLa9LOA38bd4zrAOvPe5oXPJL8YZ2ZZoo/3hyg3UZJwa
-         tzGcCdqATgKB0T6OEJMCLE0eFH5UxWF7MaeSLZqf3LhOHh07gc9UlrU/BQT8ba2hGvoy
-         OBRebGoyLhV0M6J4ZeTqIh/+CI1bWZ7sb54KPRUjLmYQ5xpO7NYrRFopevdtY3kplfMl
-         QPbw==
-X-Gm-Message-State: AGi0PubBPu0n4Fo6PFfxaf3omFd7TKHq5bOvSc1cwks7u6/fHwUGaNyn
-        14CFADJc+ngIGBWjfbYbil7GoA==
-X-Google-Smtp-Source: APiQypJ+MyKY5nD3uene1XQI380We3nDNzwAwN4QMjzpSHxtKl1+2GyiaefmR6A8G2/wYT2R0Ai9uQ==
-X-Received: by 2002:a1c:bd08:: with SMTP id n8mr2396402wmf.23.1588155546054;
-        Wed, 29 Apr 2020 03:19:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2wu/gy1tHoWVzLeL4pUGCtzvsoDpfDGzq7gpcYUF8tA=;
+        b=jnAlbpjGPFAG7AcQ7gnI1ntK0GH1GRjWJmKo6QKsYn3bC9o+xNksi9pOixhm2nrlHB
+         iz2D1ILs+26zVIVdga9erbGtHid04mtHT3XzwrWXP5KjWLdD5Pbrt1KdI+lsflXGD3Rz
+         D08jtxKLcooPkqSbuesn15qGphyjepQxaUk7C9zF02li8k0iYZQWivNTzApHwOEg3Kmc
+         +qselXOvGUiRVN/hvwRrIsyX2i0z/L4kEbKQIcxV8ZVqSjGrqhXSWBgUn98hdhVwn+Vz
+         UGrwad762FL1RplEPJqqunSEg0P1PP3tb5G7q0gL5JpdlORFN1DycX4g8xuGJv59iLWy
+         EQbg==
+X-Gm-Message-State: AGi0Pua/JbwVOErf42GLNwpsbVIorlr82z9K0HPOnSbbXYRR/YZ3qLM5
+        Fmq5WHRhEVJApItQ9y3ni3RGjYj0Fck=
+X-Google-Smtp-Source: APiQypKX51nZ88wriy0wpsyb6PmJdRjnyn5ipdyt18ZbnclL4eiPGgTcPj6kgXejx8si5pSpE/0g2Q==
+X-Received: by 2002:adf:ead2:: with SMTP id o18mr22591202wrn.333.1588155547393;
+        Wed, 29 Apr 2020 03:19:07 -0700 (PDT)
 Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id c20sm7504873wmd.36.2020.04.29.03.19.04
+        by smtp.googlemail.com with ESMTPSA id c20sm7504873wmd.36.2020.04.29.03.19.06
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 03:19:05 -0700 (PDT)
+        Wed, 29 Apr 2020 03:19:06 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH 0/1] interconnect fix for 5.7-rc
-Date:   Wed, 29 Apr 2020 13:19:03 +0300
-Message-Id: <20200429101904.5771-1-georgi.djakov@linaro.org>
+        georgi.djakov@linaro.org, ChenTao <chentao107@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH 1/1] interconnect: qcom: Move the static keyword to the front of declaration
+Date:   Wed, 29 Apr 2020 13:19:04 +0300
+Message-Id: <20200429101904.5771-2-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200429101904.5771-1-georgi.djakov@linaro.org>
+References: <20200429101904.5771-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,19 +77,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+From: ChenTao <chentao107@huawei.com>
 
-Here is another patch for the current release, which fixes a compiler
-warning. Please apply it to char-misc-linus when you get a chance.
+Fix the following warning:
 
-Thanks,
-Georgi
+Move the static keyword to the front of declaration of sdm845_icc_osm_l3
+sdm845_aggre1_noc sc7180_icc_osm_l3 sdm845_aggre2_noc sdm845_config_noc
+sdm845_dc_noc sdm845_gladiator_noc sdm845_mem_noc sdm845_mmss_noc and
+sdm845_system_noc, resolve the following compiler warning that can be
+when building with warnings enabled (W=1):
 
-ChenTao (1):
-  interconnect: qcom: Move the static keyword to the front of
-    declaration
+drivers/interconnect/qcom/osm-l3.c:81:1: warning:
+ const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
+drivers/interconnect/qcom/osm-l3.c:94:1: warning:
+ const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
+drivers/interconnect/qcom/sdm845.c:195:1: warning:
+ const static struct qcom_icc_desc sdm845_aggre1_noc = {
+drivers/interconnect/qcom/sdm845.c:223:1: warning:
+ const static struct qcom_icc_desc sdm845_aggre2_noc = {
+drivers/interconnect/qcom/sdm845.c:284:1: warning:
+ const static struct qcom_icc_desc sdm845_config_noc = {
+drivers/interconnect/qcom/sdm845.c:300:1: warning:
+ const static struct qcom_icc_desc sdm845_dc_noc = {
+drivers/interconnect/qcom/sdm845.c:318:1: warning:
+ const static struct qcom_icc_desc sdm845_gladiator_noc = {
+drivers/interconnect/qcom/sdm845.c:353:1: warning:
+ const static struct qcom_icc_desc sdm845_mem_noc = {
+drivers/interconnect/qcom/sdm845.c:387:1: warning:
+ const static struct qcom_icc_desc sdm845_mmss_noc = {
+drivers/interconnect/qcom/sdm845.c:433:1: warning:
+ const static struct qcom_icc_desc sdm845_system_noc = {
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: ChenTao <chentao107@huawei.com>
+Link: https://lore.kernel.org/r/20200423132142.45174-1-chentao107@huawei.com
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
  drivers/interconnect/qcom/osm-l3.c |  4 ++--
  drivers/interconnect/qcom/sdm845.c | 16 ++++++++--------
  2 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+index a03c6d6833df..96fb9ff5ff2e 100644
+--- a/drivers/interconnect/qcom/osm-l3.c
++++ b/drivers/interconnect/qcom/osm-l3.c
+@@ -78,7 +78,7 @@ static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
+ 	[SLAVE_OSM_L3] = &sdm845_osm_l3,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
++static const struct qcom_icc_desc sdm845_icc_osm_l3 = {
+ 	.nodes = sdm845_osm_l3_nodes,
+ 	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
+ };
+@@ -91,7 +91,7 @@ static struct qcom_icc_node *sc7180_osm_l3_nodes[] = {
+ 	[SLAVE_OSM_L3] = &sc7180_osm_l3,
+ };
+ 
+-const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
++static const struct qcom_icc_desc sc7180_icc_osm_l3 = {
+ 	.nodes = sc7180_osm_l3_nodes,
+ 	.num_nodes = ARRAY_SIZE(sc7180_osm_l3_nodes),
+ };
+diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+index b013b80caa45..f6c7b969520d 100644
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -192,7 +192,7 @@ static struct qcom_icc_node *aggre1_noc_nodes[] = {
+ 	[SLAVE_ANOC_PCIE_A1NOC_SNOC] = &qns_pcie_a1noc_snoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_aggre1_noc = {
++static const struct qcom_icc_desc sdm845_aggre1_noc = {
+ 	.nodes = aggre1_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(aggre1_noc_nodes),
+ 	.bcms = aggre1_noc_bcms,
+@@ -220,7 +220,7 @@ static struct qcom_icc_node *aggre2_noc_nodes[] = {
+ 	[SLAVE_SERVICE_A2NOC] = &srvc_aggre2_noc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_aggre2_noc = {
++static const struct qcom_icc_desc sdm845_aggre2_noc = {
+ 	.nodes = aggre2_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(aggre2_noc_nodes),
+ 	.bcms = aggre2_noc_bcms,
+@@ -281,7 +281,7 @@ static struct qcom_icc_node *config_noc_nodes[] = {
+ 	[SLAVE_SERVICE_CNOC] = &srvc_cnoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_config_noc = {
++static const struct qcom_icc_desc sdm845_config_noc = {
+ 	.nodes = config_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(config_noc_nodes),
+ 	.bcms = config_noc_bcms,
+@@ -297,7 +297,7 @@ static struct qcom_icc_node *dc_noc_nodes[] = {
+ 	[SLAVE_MEM_NOC_CFG] = &qhs_memnoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_dc_noc = {
++static const struct qcom_icc_desc sdm845_dc_noc = {
+ 	.nodes = dc_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(dc_noc_nodes),
+ 	.bcms = dc_noc_bcms,
+@@ -315,7 +315,7 @@ static struct qcom_icc_node *gladiator_noc_nodes[] = {
+ 	[SLAVE_SERVICE_GNOC] = &srvc_gnoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_gladiator_noc = {
++static const struct qcom_icc_desc sdm845_gladiator_noc = {
+ 	.nodes = gladiator_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(gladiator_noc_nodes),
+ 	.bcms = gladiator_noc_bcms,
+@@ -350,7 +350,7 @@ static struct qcom_icc_node *mem_noc_nodes[] = {
+ 	[SLAVE_EBI1] = &ebi,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_mem_noc = {
++static const struct qcom_icc_desc sdm845_mem_noc = {
+ 	.nodes = mem_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(mem_noc_nodes),
+ 	.bcms = mem_noc_bcms,
+@@ -384,7 +384,7 @@ static struct qcom_icc_node *mmss_noc_nodes[] = {
+ 	[SLAVE_CAMNOC_UNCOMP] = &qns_camnoc_uncomp,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_mmss_noc = {
++static const struct qcom_icc_desc sdm845_mmss_noc = {
+ 	.nodes = mmss_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(mmss_noc_nodes),
+ 	.bcms = mmss_noc_bcms,
+@@ -430,7 +430,7 @@ static struct qcom_icc_node *system_noc_nodes[] = {
+ 	[SLAVE_TCU] = &xs_sys_tcu_cfg,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_system_noc = {
++static const struct qcom_icc_desc sdm845_system_noc = {
+ 	.nodes = system_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(system_noc_nodes),
+ 	.bcms = system_noc_bcms,
