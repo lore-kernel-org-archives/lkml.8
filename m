@@ -2,170 +2,176 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A73C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C7AC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB5420731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE2020787
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588152518;
-	bh=OmeUQgLG2b0au2ewYYU7E5eHExIkjcjT5fVcBESuGrs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wmKX7pwGMT1q+5yBnLYQRpW98dsLEzuZ1qgaQzxA2Rpp8r3lebS9nIxd65TJeQ+op
-	 t8R4e601Qe7u7hoOdEYVOVwlnYG45OYstAYkus/f3e4ks35eHht7gqf6r0iF1/InYT
-	 hw1/iEeuWUfQ+Io8nhxfxpXnm/PnusmfCVpRzjI8=
+	s=default; t=1588152549;
+	bh=IrWdVf5+edDBoeiVwChyNnOmdRKCUVlj/3oxfeED9aI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m0EStpM+DcXTVZC1jV1eNkN4qEZmI/abCMr+5Ma4mCfBJTuKrJS31FJBgU8DiSOMw
+	 zcJ+8h/lmDQ4SeeZ9UhPfJIoIvQzcn9SgCeZCWIQDEEMNpXal5X2qtJNSdLyDgrEwn
+	 Wzzxh9URQuL9WJYdMNRuRkjOi59Ky4bUzH713ZjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgD2J2h (ORCPT
+        id S1726621AbgD2J3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45502 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 05:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2J2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:28:36 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726423AbgD2J3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:29:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F133120787;
-        Wed, 29 Apr 2020 09:28:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C7A20787;
+        Wed, 29 Apr 2020 09:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588152516;
-        bh=OmeUQgLG2b0au2ewYYU7E5eHExIkjcjT5fVcBESuGrs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UX8f/mKyFnCUy0jOhlIXQOHw4jZeTAao7i/3RAzmKcvocb1yOZphm+wojDHM3EMXE
-         Mi8320H/VvSjn3bjRkyCv8scBqP7ZBrBOKXNUQu0DQumOkUbUnFjrj4ISB3LJLN5xv
-         uHUBGXm8IkJoz4lBgZhrF7R86q93C+JB+Zc89gOU=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jTj18-007f7C-B1; Wed, 29 Apr 2020 10:28:34 +0100
-Date:   Wed, 29 Apr 2020 10:28:32 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper
- macros
-Message-ID: <20200429102832.4eee22b4@why>
-In-Reply-To: <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
-References: <20200411045918.179455-1-saravanak@google.com>
-        <86sghas7so.wl-maz@kernel.org>
-        <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
-        <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1588152547;
+        bh=IrWdVf5+edDBoeiVwChyNnOmdRKCUVlj/3oxfeED9aI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HdEItaGKg8LGktGVuE7H+UB+JIPExOsEbGZQfvq47Cr1XeBPzOrpFlFo/3z6UwUG1
+         m78kekXnVq+e34N5uxs+BRPEWLzQiJS59p0t3qXVCQxOP0v8lpvgZyKbNJeyO/GWPk
+         RzOALTGlg9LMRx9+CgfJeVNJVX6St28tI4nh5Hm8=
+Date:   Wed, 29 Apr 2020 11:29:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     johan@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patong.mxl@gmail.com
+Subject: Re: [PATCH 1/2] usb: serial: Add MaxLinear/Exar USB to Serial driver
+Message-ID: <20200429092904.GA2079263@kroah.com>
+References: <20200428195651.6793-1-mani@kernel.org>
+ <20200428195651.6793-2-mani@kernel.org>
+ <20200429072036.GA2045202@kroah.com>
+ <20200429074025.GA6443@Mani-XPS-13-9360>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: saravanak@google.com, john.stultz@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429074025.GA6443@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
-
-Sorry for the delay replying.
-
-On Mon, 13 Apr 2020 15:43:31 -0700
-Saravana Kannan <saravanak@google.com> wrote:
-
-> On Mon, Apr 13, 2020 at 3:13 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Sat, Apr 11, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:  
-> > > On Sat, 11 Apr 2020 05:59:18 +0100,
-> > > Saravana Kannan <saravanak@google.com> wrote:  
-> > > >
-> > > > Add helper macros IRQCHIP_MODULE_BEGIN and IRQCHIP_MODULE_END that add
-> > > > the boilerplate code to be able to compile an irqchip driver as a
-> > > > module.
-> > > >
-> > > > The driver developer just needs to do add IRQCHIP_MODULE_BEGIN and
-> > > > IRQCHIP_MODULE_END(driver_name) around the IRQCHIP_DECLARE macros, like
-> > > > so:
-> > > >
-> > > > IRQCHIP_MODULE_BEGIN
-> > > > IRQCHIP_DECLARE(foo, "acme,foo", acme_foo_init)
-> > > > IRQCHIP_DECLARE(bar, "acme,bar", acme_bar_init)
-> > > > IRQCHIP_MODULE_END(acme_irq)
-> > > >
-> > > > Cc: John Stultz <john.stultz@linaro.org>
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > ---
-> > > > I don't expect this patch to be perfect or the final version. But I'd
-> > > > like to introduce macros like this that don't need the driver developer
-> > > > to copy/paste or repeat the same thing (compat string, function name,
-> > > > etc) in multiple places for the driver to work as a module. If the exact
-> > > > style of my macros aren't appealing, I'm open to other suggestions.
-> > > >
-> > > > There are some checkpatch warning about the > 80 columns that my patch
-> > > > doesn't add. There are also checkpatch warnings about the trailing ; in
-> > > > a macro, but I need those for IRQCHIP_DECLARE to work when the driver is
-> > > > builtin.  
-> > >
-> > > I think you are looking at the problem from the wrong end, and adding
-> > > syntactic sugar should be the least of your worries. The reason for
-> > > not allowing irqchip drivers to be modular is that there is no
-> > > refcounting in place to prevent drivers from being removed whilst the
-> > > IRQ stack still has irq_desc, irq_data and various other objects
-> > > indirectly referencing the driver.
-> > >
-> > > I'm all for addressing these issues, though it begs the question of
-> > > *why* you want to do this. We have been perfectly happy with built-in
-> > > irqchips so far (they are pretty small, and there aren't millions of
-> > > them), so what changed?
-> > >  
-> >
-> > I can't speak for Saravana, but my sense is that moving functionality
-> > to loadable modules is becoming more important for Android devices due
-> > to their efforts to utilize a single kernel image across various
-> > vendor devices[1].  Obviously with mobile device constraints
-> > minimizing the unused vendor code in the kernel image is important,
-> > and modules help there. While the unloading issues you raised are
-> > important, one can still benefit from having a permanent module
-> > (modules that don't have a .remove handler), as they can be only
-> > loaded on the devices that use them. You're also right that irqchip
-> > drivers are fairly small, but one issue is that any code they depend
-> > on also has to be built in if they are not able to be configured as a
-> > module, so by allowing the irqchip driver to be a module, you can also
-> > modularize whatever platform calls are made from that driver.  
+On Wed, Apr 29, 2020 at 01:10:26PM +0530, Manivannan Sadhasivam wrote:
+> Hi Greg,
 > 
-> Thanks John. I was planning on digging up the context for GKI and then
-> replying. Looks like you are better at finding that than me :)
+> On Wed, Apr 29, 2020 at 09:20:36AM +0200, Greg KH wrote:
+> > On Wed, Apr 29, 2020 at 01:26:50AM +0530, mani@kernel.org wrote:
+> > > From: Manivannan Sadhasivam <mani@kernel.org>
+> > > 
+> > > Add support for MaxLinear/Exar USB to Serial converters. This driver
+> > > only supports XR21V141X series but provision has been made to support
+> > > other series in future.
+> > > 
+> > > This driver is inspired from the initial one submitted by Patong Yang:
+> > > 
+> > > https://patchwork.kernel.org/patch/10543261/
+> > > 
+> > > While the initial driver was a custom tty USB driver exposing whole
+> > > new serial interface ttyXRUSBn, this version is completely based on USB
+> > > serial core thus exposing the interfaces as ttyUSBn. This will avoid
+> > > the overhead of exposing a new USB serial interface which the userspace
+> > > tools are unaware of.
+> > 
+> > Nice work!
+> > 
+> > Some comments below:
+> > 
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * MaxLinear/Exar USB to Serial driver
+> > > + *
+> > > + * Based on initial driver written by Patong Yang <patong.mxl@gmail.com>
+> > > + *
+> > > + * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
+> > > + */
+> > > +
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/tty.h>
+> > > +#include <linux/usb.h>
+> > > +#include <linux/usb/serial.h>
+> > > +
+> > > +#include "xr_serial.h"
+> > 
+> > No need for a .h file for a single .c file.
+> > 
 > 
-> And I was also going to suggest the same "permanent" module option and
-> also setting up the driver attributes (bind something?) so that the
-> driver can't be unbound from the device either.
+> Yeah but since this driver can support multiple series of XR chips (they
+> might have separate register definitions and such), I thought it is a good
+> idea to have a header file to keep the driver sane. But can club it to the
+> source file for now.
+
+Don't worry about future stuff, focus on what you need to do now :)
+
+> > > +static int xr_get_reg(struct usb_serial_port *port, u8 block, u16 reg,
+> > > +		      u16 *val)
+> > > +{
+> > > +	struct usb_serial *serial = port->serial;
+> > > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> > > +	void *dmabuf;
+> > > +	int ret = -EINVAL;
+> > > +
+> > > +	dmabuf = kmalloc(sizeof(reg), GFP_KERNEL);
+> > 
+> > So that is 2 bytes?
+> > 
 > 
-> Marc, does that answer your questions? Sorry for not giving enough
-> context in my original email.
+> Explanation below...
+> 
+> > > +	if (!dmabuf)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	if (port_priv->idProduct == XR21V141X_ID) {
+> > > +		/* XR21V141X uses custom command for reading UART registers */
+> > > +		ret = usb_control_msg(serial->dev,
+> > > +				      usb_rcvctrlpipe(serial->dev, 0),
+> > > +				      XR_GET_XR21V141X,
+> > > +				      USB_DIR_IN | USB_TYPE_VENDOR, 0,
+> > > +				      reg | (block << 8), dmabuf,
+> > > +				      port_priv->reg_width,
+> > > +				      USB_CTRL_SET_TIMEOUT);
+> > > +	}
+> > > +
+> > > +	if (ret == port_priv->reg_width) {
+> > > +		memcpy(val, dmabuf, port_priv->reg_width);
+> > 
+> > But here you copy ->reg_width bytes in?  How do you know val can hold
+> > that much?  It's only set to be 1, so you copy 1 byte to a 16bit value?
+> > What part of the 16bits did you just copy those 8 bits to (hint, think
+> > cpu endian issues...)
+> > 
+> > That feels really really odd and a bit broken.
+> > 
+> 
+> Right. The reason is, the other series which can be supported by this driver
+> have different register widths. For instance XR2280x. I haven't used them
+> personally but seen this in initial driver. So I just used the max u16 type
+> to make the reg_{set/get} routines work with those.
 
-This makes more sense, thanks.
+Drop the whole "different register width" stuff for now, as the driver
+does not support it and it adds additional complexity that is hard to
+review for no good reason.  If you want to add support for new devices
+later, _then_ we can add support for that.
 
-One thing though: this seems to be exclusively DT driven. Have you
-looked into how that would look like for other firmware types such as
-ACPI?
+Don't over-engineer :)
 
-Another thing is the handling of dependencies. Statically built
-irqchips are initialized in the right order based on the topology
-described in DT, and are initialized early enough that client devices
-will find their irqchip This doesn't work here, obviously. How do you
-propose we handle these dependencies, both between irqchip drivers and
-client drivers?
+> But agree, I should've used le16_to_cpu() cast to avoid endian issues.
 
-Thanks,
+You have to, the code is broken as-is right now.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> If you think this hack is not required now, I can just use u8 and worry about
+> compatibility later.
+
+Please do so.
+
+thanks,
+
+greg k-h
