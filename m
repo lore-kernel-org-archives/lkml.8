@@ -2,168 +2,188 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0A9C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCED5C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995D420731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74A4208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ls1GMVXz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOc7FDNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgD2Kuy (ORCPT
+        id S1726740AbgD2Kxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:50:54 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59833 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbgD2Kux (ORCPT
+        Wed, 29 Apr 2020 06:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbgD2Kxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:50:53 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200429105050euoutp02beec2b1c5053efd9f82eb7b28a7af7f6~KRMlzMgYg0548305483euoutp02t
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:50:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200429105050euoutp02beec2b1c5053efd9f82eb7b28a7af7f6~KRMlzMgYg0548305483euoutp02t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588157450;
-        bh=P3dN9UfZjsE04XLpG+GBXIoph9+0n1rWBNt4DS13DXY=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=Ls1GMVXzcEkVPlhU58bqnrSlx+AgutJ5EMoQnCqCBLgJSWMlXZQ0Jl0v+7uzPLkUt
-         FK3xKsh6Q9vjPPe3xvKc08/bri2mL1FX95JeZpOalZneKBrEKpXSItdvs4Y9y1bwbs
-         1B86C7yu1h9NGJeKoqL5PWNuZGIST/MpqjX/+JEA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200429105050eucas1p255222f9edd0e6905c93b64b252fbe1a6~KRMlowV7c1748417484eucas1p2X;
-        Wed, 29 Apr 2020 10:50:50 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 40.5E.60698.A0C59AE5; Wed, 29
-        Apr 2020 11:50:50 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200429105049eucas1p1261bfce217bfceb824655d0e6bf62b24~KRMlMZLPW2632526325eucas1p1T;
-        Wed, 29 Apr 2020 10:50:49 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200429105049eusmtrp28fb72971645c1040db23a49e5ae2fb3d~KRMlLwOvS2358123581eusmtrp2N;
-        Wed, 29 Apr 2020 10:50:49 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-92-5ea95c0a6130
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 75.5A.08375.90C59AE5; Wed, 29
-        Apr 2020 11:50:49 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200429105049eusmtip216c467f0823a367b2143dde432932865~KRMk18JgV2417624176eusmtip2N;
-        Wed, 29 Apr 2020 10:50:49 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <cc1dc009-c122-0405-ced5-ede952afe574@samsung.com>
-Date:   Wed, 29 Apr 2020 12:50:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 29 Apr 2020 06:53:40 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56FDCC03C1AD;
+        Wed, 29 Apr 2020 03:53:40 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k6so1714676iob.3;
+        Wed, 29 Apr 2020 03:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O+RxET0x+5VztvWmaNq+4wuYITGQNc1qhSl70TM00l4=;
+        b=dOc7FDNQvz5BsTcW0cOnufOwvSjbv61MVv9RSAGMws+vx8KCvc8/vpeiHrKOJdcHde
+         TYpJT0Ag+yxX6IFD9nEwVCTI8R4bmztJX4yGtfp7gdVtw6OoB5REcVRi9kRUBp6h3veK
+         Yt/kDMGzLq06ib6OsCIik3S3dED/SLRyF+/ALZlFF48V9f2hjVZZ2FtS7+3WjCrOWY8c
+         VL9Kwx/Os8TBQAAuwEhW39IhBLm36dijb1ZJmqy0FqWVFSjOUSnB0RE/y8YGwG4hZ0iR
+         Q+IwZQKlrgRWGXr5fK8XiBhbUV/M+2UFShTT7PuigRTl0DFjGmts/G3fjRUPkznuXEH8
+         R5vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O+RxET0x+5VztvWmaNq+4wuYITGQNc1qhSl70TM00l4=;
+        b=bps5ANQy3Pux9/jw1Hfni73K/MwbR19m2a2JR2G3DLGrqKiuPbr/0UPZNEwTpUOIy1
+         PsGEvn1b+uQ97iA5n+M/p1mOHL2qbf2kgkVtvz1A3sAWZIxrufSvPLgxJrynCPTrFV2o
+         DAaWg+ypeH0SG/Fc7/9vyO+pg3VCWcBHd9x/BWTU9QbGwc6b3rhkMbvRLTm6GRWxiFW1
+         Sz4L/TW0OJ4wLVKqi3AVy0weKTIUQVsUx91rv3/1UkbR7EeXMymXX3qtYMhtTByr5CPb
+         7fdperk0VBypDSwwuTJ20hhjdW8LQmsJaEh44MmbwUPkVMMitu+s8gNdijumF7nPw6D9
+         QlqA==
+X-Gm-Message-State: AGi0PuZaDLv6ElEUaiILDzW27m4MSCykplzorABbXDOEwEWd39fEXGXF
+        xUu1WY3yUNdvKRYj22sjY8yjo53AY0qJ8GKoixXRDkj4
+X-Google-Smtp-Source: APiQypKFyxeXcg4v0DctpbBGI6UJ42AnvLUHhsNXWqlED8ESxrV337Ds94lOb20x/8RoeNJEcAwvx+uI/YWgHMOpvN4=
+X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr30162923iob.10.1588157619542;
+ Wed, 29 Apr 2020 03:53:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <997e83ad-1966-6ebd-13d1-05617b67b7f8@samsung.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7pcMSvjDI7OEbNY+PAus8WVr+/Z
-        LGZP2MxkcXnXHDaLgwvbGC1W/NzKaLF171V2B3aPxhs32Dz2flvA4nG/+ziTx5JpV9k8Pm+S
-        C2CN4rJJSc3JLEst0rdL4Mp4Pzeh4CNvxcbpl1kaGKdxdzFyckgImEhMXH2VuYuRi0NIYAWj
-        xK/ur6wQzhdGiek9/6EynxklDt78ygjTsujfDXaIxHJGiSOzjrBAOG8ZJc7cbGQFqWITsJKY
-        2L4KrENYwF3i+I9GJhBbRMBHYtOyn2DdzAI/GSW+bzgHluAVsJP4/3QiG4jNIqAq8aZjOjuI
-        LSoQIfHpwWFWiBpBiZMzn7CA2JwC9hL7nhwAq2cWMJA4smgOK4QtLnHryXwmCFteYvvbOWA/
-        SAhsY5foWLEPqJkDyHGR+DC/HOIdYYlXx7ewQ9gyEv93gvSC1K9jlPjb8QKqeTujxPLJ/9gg
-        qqwl7pz7BWU7Sqy8cxhqKJ/EjbeCEIv5JCZtm84MEeaV6GgTgqhWk9iwbAMbzK6unSuZJzAq
-        zULy2iwk78xC8s4sJO8sYGRZxSieWlqcm55abJyXWq5XnJhbXJqXrpecn7uJEZiITv87/nUH
-        474/SYcYBTgYlXh4N/CsiBNiTSwrrsw9xCjBwawkwvsoY1mcEG9KYmVValF+fFFpTmrxIUZp
-        DhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYzT7VIu/fTPPTaf9erlByH7jj/5Urzy4QnT
-        3XFh1XMFFseoK19aua38nY2J1y6zGbHpS+svMYdfc5V6MoshQPbxquavJ7M/Rq7M3Fxn7P3p
-        6sqTn/hZXico7N3zTiCRm2FJ3JEJtk1/vnt9rjyqtnreqhZ1raw/OwUu/VoobVU9bcM1Nq0o
-        verFSizFGYmGWsxFxYkAvPJ2VUADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xe7qcMSvjDJafNrNY+PAus8WVr+/Z
-        LGZP2MxkcXnXHDaLgwvbGC1W/NzKaLF171V2B3aPxhs32Dz2flvA4nG/+ziTx5JpV9k8Pm+S
-        C2CN0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mt4
-        Pzeh4CNvxcbpl1kaGKdxdzFyckgImEgs+neDvYuRi0NIYCmjxKy/e4EcDqCEjMTx9WUQNcIS
-        f651sUHUvGaUOLz/BxNIgk3ASmJi+ypGEFtYwF3i+I9GsLiIgI/EpmU/wYYyC/xmlFh/fBJU
-        9xtGiQ1/X7OCVPEK2En8fzqRDcRmEVCVeNMxnR3EFhWIkDi8YxYjRI2gxMmZT1hAbE4Be4l9
-        Tw6A1TML6EnsuP6LFcIWl7j1ZD4ThC0vsf3tHOYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW
-        56bnFhvqFSfmFpfmpesl5+duYgRG3bZjPzfvYLy0MfgQowAHoxIP7waeFXFCrIllxZW5hxgl
-        OJiVRHgfZSyLE+JNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YELIK4k3NDU0t7A0NDc2Nzaz
-        UBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAmFoQnK+6NkjyTkyDxXxGW9vPolPXZIXs6Lu3
-        hM10Y4On18eOkFtbdj7rLuuzW2f/kfHQ+y2ZFoX7TmbsOhd9gn/Fjkr9b0vcpzyfpft1+WJG
-        U8mvyd0+J56UHch+pHmGa87UZS+0Nwsd3ZlS8PfBW/18366YG5c9YorPGKb6uTGkGrwq0mJz
-        UmIpzkg01GIuKk4EAKqXnJDQAgAA
-X-CMS-MailID: 20200429105049eucas1p1261bfce217bfceb824655d0e6bf62b24
-X-Msg-Generator: CA
-X-RootMTR: 20200428223343eucas1p1ef3e4998b8063ade8b456611e39b7865
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200428223343eucas1p1ef3e4998b8063ade8b456611e39b7865
-References: <20200420130118.7a866fd5@canb.auug.org.au>
-        <CGME20200428223343eucas1p1ef3e4998b8063ade8b456611e39b7865@eucas1p1.samsung.com>
-        <20200429083329.30ff39a1@canb.auug.org.au>
-        <997e83ad-1966-6ebd-13d1-05617b67b7f8@samsung.com>
+References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <20200429101510.GA28637@dhcp22.suse.cz>
+In-Reply-To: <20200429101510.GA28637@dhcp22.suse.cz>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 29 Apr 2020 18:53:03 +0800
+Message-ID: <CALOAHbAosoU=+iPgD+TeU_iDXTV7W_WcFdKCi2fdwwyvutG2zQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 6:15 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 28-04-20 19:26:47, Chris Down wrote:
+> > From: Yafang Shao <laoar.shao@gmail.com>
+> >
+> > A cgroup can have both memory protection and a memory limit to isolate
+> > it from its siblings in both directions - for example, to prevent it
+> > from being shrunk below 2G under high pressure from outside, but also
+> > from growing beyond 4G under low pressure.
+> >
+> > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> > implemented proportional scan pressure so that multiple siblings in
+> > excess of their protection settings don't get reclaimed equally but
+> > instead in accordance to their unprotected portion.
+> >
+> > During limit reclaim, this proportionality shouldn't apply of course:
+> > there is no competition, all pressure is from within the cgroup and
+> > should be applied as such. Reclaim should operate at full efficiency.
+> >
+> > However, mem_cgroup_protected() never expected anybody to look at the
+> > effective protection values when it indicated that the cgroup is above
+> > its protection. As a result, a query during limit reclaim may return
+> > stale protection values that were calculated by a previous reclaim cycle
+> > in which the cgroup did have siblings.
+> >
+> > When this happens, reclaim is unnecessarily hesitant and potentially
+> > slow to meet the desired limit. In theory this could lead to premature
+> > OOM kills, although it's not obvious this has occurred in practice.
+>
+> Thanks this describes the underlying problem. I would be also explicit
+> that the issue should be visible only on tail memcgs which have both
+> max/high and protection configured and the effect depends on the
+> difference between the two (the smaller it is the largrger the effect).
+>
+> There is no mention about the fix. The patch resets effective values for
+> the reclaim root and I've had some concerns about that
+> http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
+> Johannes has argued that other races are possible and I didn't get to
+> think about it thoroughly. But this patch is introducing a new
+> possibility of breaking protection.
 
-On 4/29/20 10:09 AM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi Stephen,
-> 
-> On 4/29/20 12:33 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> On Mon, 20 Apr 2020 13:01:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>
->>> After merging the drm-misc tree, today's linux-next build (powerpc
->>> allyesconfig) failed like this:
->>>
->>> drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
->>> drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of function 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=implicit-function-declaration]
->>>   756 |   vma->vm_page_prot = pgprot_cached_wthru(vma->vm_page_prot);
->>>       |                       ^~~~~~~~~~~~~~~~~~~
->>>       |                       pgprot_cached
->>> drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
->>>
->>> Presumably exposed by commit
->>>
->>>   a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
->>>
->>> I just turned off COMPILE_TEST again for today.  Please let me know when
->>> this is fixed.
->>
->> This still appears to have not been addressed.
-> 
-> Sorry for the delay, I've just posted a patch (also included below):
-> 
-> "[PATCH] video: fbdev: controlfb: fix build for COMPILE_TEST=y && PPC_PMAC=y && PPC32=n"
-> 
-> which should fix it.
-> 
-> Please verify it, thank you!
+Agreed with Michal that more writes will cause more bugs.
+We should operate the volatile emin and elow as less as possible.
 
-I have tested it with powerpc allyesconfig now and it adds one dependency too much,
-fixed in v2:
+>  If we want to have a quick and
+> simple fix that would be easier to backport to older kernels then I
+> would feel much better if we simply workedaround the problem as
+> suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
 
-https://lore.kernel.org/lkml/fe520316-3863-e6c4-9581-5d709f49e906@samsung.com/
++1
 
-Sam, could you please review / merge it to drm-misc-next?
+This should be the right workaround to fix the current issue and it is
+worth to be backported to the stable kernel.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+> We can rework the effective values calculation to be more robust against
+> races on top of that because this is likely a more tricky thing to do.
+>
+> > Fixes: 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Signed-off-by: Chris Down <chris@chrisdown.name>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: Roman Gushchin <guro@fb.com>
+> >
+> > [hannes@cmpxchg.org: rework code comment]
+> > [hannes@cmpxchg.org: changelog]
+> > [chris@chrisdown.name: fix store tear]
+> > [chris@chrisdown.name: retitle]
+> > ---
+> >  mm/memcontrol.c | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 0be00826b832..b0374be44e9e 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -6392,8 +6392,19 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+> >
+> >       if (!root)
+> >               root = root_mem_cgroup;
+> > -     if (memcg == root)
+> > +     if (memcg == root) {
+> > +             /*
+> > +              * The cgroup is the reclaim root in this reclaim
+> > +              * cycle, and therefore not protected. But it may have
+> > +              * stale effective protection values from previous
+> > +              * cycles in which it was not the reclaim root - for
+> > +              * example, global reclaim followed by limit reclaim.
+> > +              * Reset these values for mem_cgroup_protection().
+> > +              */
+> > +             WRITE_ONCE(memcg->memory.emin, 0);
+> > +             WRITE_ONCE(memcg->memory.elow, 0);
+> >               return MEMCG_PROT_NONE;
+> > +     }
+> >
+> >       usage = page_counter_read(&memcg->memory);
+> >       if (!usage)
+> > --
+> > 2.26.2
+>
+> --
+> Michal Hocko
+> SUSE Labs
 
+
+
+-- 
+Thanks
+Yafang
