@@ -2,91 +2,124 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEB6C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD8EC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB1121D90
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bulmF0iA"
+	by mail.kernel.org (Postfix) with ESMTP id A19AE2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgD2SZv (ORCPT
+        id S1726776AbgD2S2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
+        Wed, 29 Apr 2020 14:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2SZv (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2S2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:25:51 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE14DC035493
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:25:50 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e26so3122482wmk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=aylaGgHoNCdro4aj1kReOF/0XJzfw3lt+cTfiwLLy4k=;
-        b=bulmF0iAYytHO8GfkiMTz2/wrjQa81ycOghM4qrGUqY/D2OA5I3QqpJenlHxHGHOGN
-         3TRI0k44FcE5kAoqkdT2qqpyYNEVFsteAbGuKJHzaBddtfXUZ92wKIX6oVcIhsjRNqAO
-         tFd4Hdrq70tmRP08i3Cpp8t9YbXNTj3RRgbgqYFtGaOvXGvxH4G2Q0JS3HduP/sJwx3u
-         J0NI4q/KAv+HCiS0m+IiycnPRi3/y4l6TBWHhMfdzqlEBZddW+HKVU/IE4nfdRUQPgXf
-         fQX1XkJIGD5oWKQe2rqdrZ1Er/Pg9VPJFostro/Oy+FqQb6uN/hTy0CcN/QOxn25d9KV
-         StEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=aylaGgHoNCdro4aj1kReOF/0XJzfw3lt+cTfiwLLy4k=;
-        b=nwqVLa4XFPGyzQAUi93yd7gqx8Bkor/vJSJdhoMCOMNPjVlmmkvXgH5RSF5oht5IrB
-         tEDoR0A/IXb4tNOd4WLcRdaWmG0840Rw6/Psh8+dx7VD7DtWAtm4jMmuwM8LJPnI5v4g
-         PTDw1B8UxUEHXZJ8hJlC9EgJM+XGvJlj2wVkUX5VTFgTEyi+hxNzFgH17ipyVNJsMcgL
-         exHHTbITA1JGre4Vw6Co3XPCh0TLt1x4jiDo6UiSru3/Wdkuy1W3dSAvx4mAIAeo7XS0
-         u/E0FfQqmV0X+hTEaWvmK6QfrZORRsFf0+z1upC+/j4slMREapv4H4tWMAmE0pHTJRJu
-         ySUg==
-X-Gm-Message-State: AGi0PuY5boyCecFtFJLkgjyTWxSab+CPB++7WnBYZ8ALEEckr9RJmw/K
-        xLWC/JKY+h7rJVI5Ggv4SxDffA==
-X-Google-Smtp-Source: APiQypKGElxZbwfebnwRtc9YXDqH2ejFiotLM25eOrvcSV/EZexT3pOur5i5ZAGDz25bVOxo6Su9eQ==
-X-Received: by 2002:a1c:bad4:: with SMTP id k203mr4587804wmf.15.1588184749038;
-        Wed, 29 Apr 2020 11:25:49 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id g25sm8741435wmh.24.2020.04.29.11.25.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 11:25:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/5] arm64: dts: meson: dtbs_checks fixups
-In-Reply-To: <20200326165958.19274-1-narmstrong@baylibre.com>
-References: <20200326165958.19274-1-narmstrong@baylibre.com>
-Date:   Wed, 29 Apr 2020 11:25:45 -0700
-Message-ID: <7hk11ykv2u.fsf@baylibre.com>
+        Wed, 29 Apr 2020 14:28:32 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5CAC03C1AE;
+        Wed, 29 Apr 2020 11:28:32 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id DECFE2A223C
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3D4783C08C6; Wed, 29 Apr 2020 20:28:28 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 20:28:28 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Geordan Neukum <gneukum1@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: max17042_battery: Add support for the
+ TTE_NOW prop
+Message-ID: <20200429182828.xgqltubijz7y6wei@earth.universe>
+References: <20200330053352.GA28178@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t2ax7cucttldjspz"
+Content-Disposition: inline
+In-Reply-To: <20200330053352.GA28178@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> Another round of DT fixups of dtbs_checks on Amlogic DT files.
->
-> Neil Armstrong (5):
->   dt-bindings: sram: Add Amlogic SCP SRAM compatibles
->   arm64: dts: meson: fixup SCP sram nodes
->   arm64: dts: meson-g12b-ugoos-am6: fix board compatible
->   arm64: dts: meson-gxbb-kii-pro: fix board compatible
->   arm64: dts: meson: fix leds subnodes name
+--t2ax7cucttldjspz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-All the non-binding patches queued for v5.8,
+Hi,
 
-Kevin
+On Mon, Mar 30, 2020 at 01:33:55AM -0400, Geordan Neukum wrote:
+> The max170{42,47,50,55} family of fuel gauges all provide time-to-empty
+> estimation. As such, let's export this as a property.
+>=20
+> Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/max17042_battery.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/power/supply/max17042_battery.c b/drivers/power/supp=
+ly/max17042_battery.c
+> index 69ec4295d55d..f284547913d6 100644
+> --- a/drivers/power/supply/max17042_battery.c
+> +++ b/drivers/power/supply/max17042_battery.c
+> @@ -87,6 +87,7 @@ static enum power_supply_property max17042_battery_prop=
+s[] =3D {
+>  	POWER_SUPPLY_PROP_SCOPE,
+>  	POWER_SUPPLY_PROP_CURRENT_NOW,
+>  	POWER_SUPPLY_PROP_CURRENT_AVG,
+> +	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
+>  };
+>=20
+>  static int max17042_get_temperature(struct max17042_chip *chip, int *tem=
+p)
+> @@ -411,6 +412,13 @@ static int max17042_get_property(struct power_supply=
+ *psy,
+>  			return -EINVAL;
+>  		}
+>  		break;
+> +	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
+> +		ret =3D regmap_read(map, MAX17042_TTE, &data);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		val->intval =3D data * 5625 / 1000;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> --
+> 2.18.1
+>=20
+
+--t2ax7cucttldjspz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6px0cACgkQ2O7X88g7
++poMqw/9Esv66ea/NvgO4QzIQAsMYGE/irM6QqbHQrmAOPWacir96tsG1Hq4XxXS
+1hoGb3LxtYTBUBws6I+UdLHM4RpuYVEw4pstk97WHpBddNZRRCWjvdzR+8YnFVjR
+bgdkXjYBaE3zE+fV5HogTOFR7l1YR8JSXLjIep+U9bSMoCUWoZvoVrZvpuNkVcMI
+kxBWyZj1lmE0HF7K66eW+ydaDRHbzkBnbWxPsfeWcbxKQmi8+DeTTLSN02P8o3r6
+mlgMEOA/MoQP8OI7VRTnfSDbsagF8njkkvZOXJCU1Vm67tGvbOgfpAaH9Wclixlg
+ODe1fWGnChDzbhHECrTazj73TmsNCCxRMAcQspOWm4akRqNK2bCX3oUWGcAeAaeX
+BOZZ/ai4Hy8iULmnsRQwVJOBi1dfdK78IwU8u1kF4/TPzVo6vBeB5h/z7C00mte6
+bHDBbeM59Adg//KNlutkuFghIDj+rKdFQY8bd0MV25fTXOAowRm3r1VkGaNM4ptm
+zBm1nmorWlUNzbsz/PTXXFRNcfPlgbFuYJMpZCIncQe4DRpR/LVOc8rxlBErKE/0
+L9R1wK6YViWsnO6Q7yCaFd2jQssSudah6nd+5IZ3MZTZE5iSxEe81Bwv1tQWewzb
+LMMXDjS6LsDO74t5X/vvZbob19ZZPpXp40yIVXQ0S1rraT0Azi4=
+=nyOD
+-----END PGP SIGNATURE-----
+
+--t2ax7cucttldjspz--
