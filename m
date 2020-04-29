@@ -2,126 +2,107 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE4CC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41101C8300E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66C9A20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:57:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lcgeCqTd"
+	by mail.kernel.org (Postfix) with ESMTP id 2534620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgD2V5C (ORCPT
+        id S1727783AbgD2V5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbgD2V5C (ORCPT
+        Wed, 29 Apr 2020 17:57:08 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:39061 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726554AbgD2V5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:57:02 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BC2C03C1AE;
-        Wed, 29 Apr 2020 14:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JhIri9Htg0/sN4w6AP/QH7wGRCJsnU/YBI0zvtCnrSE=; b=lcgeCqTdF0/C0XnarY+tI1cLA
-        aTp5plAUZgVFOpQPCrwnTtLwHs8XQhIGrDDx+4JmRdD5VmjaNjo3kqPh/BRBwYRi0ULZSpSwWY0mW
-        TrgemlMVjy5uQmTWtkwO2jv40d3R3lIxts3PSghFetSH2TbL4JnhiGlJwhTroVW/CX7SpjTyhrZpn
-        X/Ez408/p4adJYNff4cxI3KCA5uQPjgzUfuiEZ4LI1/jdP1WfABKNM6VQy8G4/iB464EHLhHoNUBC
-        marQIPhja3Ndlo+onDkpOu7bNy8Fc8qEEX+yBrHUbV6/UqmfyOGOxXHgP9SDfhe6A2l8poddWJOzu
-        YD58Ko3aw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:51674)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jTugs-0001oF-Rn; Wed, 29 Apr 2020 22:56:27 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jTugm-0001S9-Ad; Wed, 29 Apr 2020 22:56:20 +0100
-Date:   Wed, 29 Apr 2020 22:56:20 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+        Wed, 29 Apr 2020 17:57:07 -0400
+X-IronPort-AV: E=Sophos;i="5.73,333,1583161200"; 
+   d="scan'208";a="46009187"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 30 Apr 2020 06:57:05 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D547F40ECBAC;
+        Thu, 30 Apr 2020 06:57:00 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use
- mmap_sem properly in there
-Message-ID: <20200429215620.GM1551@shell.armlinux.org.uk>
-References: <20200429214954.44866-1-jannh@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429214954.44866-1-jannh@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/18]  Add R8A7742/RZG1H board support
+Date:   Wed, 29 Apr 2020 22:56:37 +0100
+Message-Id: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:49:49PM +0200, Jann Horn wrote:
-> At the moment, we have that rather ugly mmget_still_valid() helper to
-> work around <https://crbug.com/project-zero/1790>: ELF core dumping
-> doesn't take the mmap_sem while traversing the task's VMAs, and if
-> anything (like userfaultfd) then remotely messes with the VMA tree,
-> fireworks ensue. So at the moment we use mmget_still_valid() to bail
-> out in any writers that might be operating on a remote mm's VMAs.
-> 
-> With this series, I'm trying to get rid of the need for that as
-> cleanly as possible.
-> In particular, I want to avoid holding the mmap_sem across unbounded
-> sleeps.
-> 
-> 
-> Patches 1, 2 and 3 are relatively unrelated cleanups in the core
-> dumping code.
-> 
-> Patches 4 and 5 implement the main change: Instead of repeatedly
-> accessing the VMA list with sleeps in between, we snapshot it at the
-> start with proper locking, and then later we just use our copy of
-> the VMA list. This ensures that the kernel won't crash, that VMA
-> metadata in the coredump is consistent even in the presence of
-> concurrent modifications, and that any virtual addresses that aren't
-> being concurrently modified have their contents show up in the core
-> dump properly.
-> 
-> The disadvantage of this approach is that we need a bit more memory
-> during core dumping for storing metadata about all VMAs.
-> 
-> After this series has landed, we should be able to rip out
-> mmget_still_valid().
-> 
-> 
-> Testing done so far:
-> 
->  - Creating a simple core dump on X86-64 still works.
->  - The created coredump on X86-64 opens in GDB, and both the stack and the
->    exectutable look vaguely plausible.
->  - 32-bit ARM compiles with FDPIC support, both with MMU and !MMU config.
-> 
-> I'm CCing some folks from the architectures that use FDPIC in case
-> anyone wants to give this a spin.
+Hi All,
 
-I've never had any reason to use FDPIC, and I don't have any binaries
-that would use it.  Nicolas Pitre added ARM support, so I guess he
-would be the one to talk to about it.  (Added Nicolas.)
+This patch set adds initial board support for R8A7742 SoC,
+enabling R8A7742 arch in defconfigs with initial dtsi.
+
+Cheers,
+--Prabhakar
+
+Lad Prabhakar (18):
+  soc: renesas: Add Renesas R8A7742 config option
+  ARM: shmobile: defconfig: Enable r8a7742 SoC
+  ARM: multi_v7_defconfig: Enable r8a7742 SoC
+  ARM: debug-ll: Add support for r8a7742
+  dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+  pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+  ARM: dts: r8a7742: Initial SoC device tree
+  dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add IRQC support
+  dt-bindings: rcar-dmac: Document r8a7742 support
+  ARM: dts: r8a7742: Add SYS-DMAC support
+  dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+  dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+  dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+  dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
+  ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+  dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+  ARM: dts: r8a7742: Add GPIO support
+
+ .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |   1 +
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
+ .../interrupt-controller/renesas,irqc.yaml         |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
+ .../devicetree/bindings/serial/renesas,hscif.yaml  |   1 +
+ .../devicetree/bindings/serial/renesas,scif.yaml   |   1 +
+ .../devicetree/bindings/serial/renesas,scifa.yaml  |   1 +
+ .../devicetree/bindings/serial/renesas,scifb.yaml  |   1 +
+ arch/arm/Kconfig.debug                             |  10 +
+ arch/arm/boot/dts/r8a7742.dtsi                     | 939 +++++++++++++++++++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/shmobile_defconfig                |   1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |   4 +
+ drivers/pinctrl/sh-pfc/Makefile                    |   1 +
+ drivers/pinctrl/sh-pfc/core.c                      |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  24 +
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   1 +
+ drivers/soc/renesas/Kconfig                        |   7 +
+ 18 files changed, 1002 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.7.4
+
