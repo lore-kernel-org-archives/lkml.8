@@ -2,238 +2,140 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72329C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0B2C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539ED21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E6521D81
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:43:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eDaVdQvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgD2RnB (ORCPT
+        id S1727070AbgD2Rnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:43:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27330 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2RnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:43:01 -0400
-IronPort-SDR: 3W92olAfU4AOO6sZFOrLvY3vsWYD8V4i4INxk6YetKwA/DbF4+i8kVdFx+eCKvwx/9+9zmofTQ
- Mwcn0hRmBsLg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 10:43:00 -0700
-IronPort-SDR: RIod/jxEWRog2s7yUwV64h2/mIgYkUV0DztDDgj+sBqj0STUSNqiT8KbcUijE+JqjirkWGEqEY
- 08AkNIDEs2lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="258031160"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 10:42:59 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 05/10] x86/fpu/xstate: Define new functions for clearing fpregs and xstates
-Date:   Wed, 29 Apr 2020 10:42:11 -0700
-Message-Id: <20200429174211.29713-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200328164307.17497-6-yu-cheng.yu@intel.com>
-References: <20200328164307.17497-6-yu-cheng.yu@intel.com>
+        Wed, 29 Apr 2020 13:43:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbgD2Rns (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:43:48 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4F1C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:43:47 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id o139so1686549ybc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GUC2c7qaVi26ZGKWMBOTx0/+sTgSLxjRbpYLLRvQLZ8=;
+        b=eDaVdQvJuHitoEvv+FFtbMIBRroVqMfU+tjQMg7aEAFoQXhmpRuh/lHszkEdf1X9Ub
+         g7lwqRZvjtB0MxIigoHP/vNgG+CJEejguqKc6KeSmi0+EUriGCbQSpkmGwV9yar5/wcC
+         aY/NtJqBYDBQA/i2Byf+FWNAEP+4rQCUAkCTDwsOfLp/qond8/X4YAH/2iO36WqrZjdY
+         QFGpQQqaMpHIox7oyDTVyFxj/VU2FnObbb58nUygQJxQw+Ng/ANauMMUHid6t69Y4bnM
+         k45+v52GS2sOYhPZUJNM7QCtNddYZPs3tWPBTrjgJpB7dlJxg+uQ+5tvyA7rK7mJ3fWx
+         kRHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GUC2c7qaVi26ZGKWMBOTx0/+sTgSLxjRbpYLLRvQLZ8=;
+        b=ujEEGoy55tGwTuFDIjCZMXSBYt79+QAY/e2SDjHB6Sm72fpzYVUtbdK7ETN27GpcXr
+         Kfhzr8XmxBKcEUkIX8F1KWQRbxV7SYHSg9vsRqLBzQnUAauD6gkEW37N9qXIKI05dQN1
+         9q5sgYst/mTx38YDfNV8wYRKvuV6BoNOcZqbwawFJSH1SgWOQTwm3OARz0BqiZ3mvK+Z
+         ANlOpxXkqJSNnEmeZJu1oyQ7atR6hZsHKu1tPm93Ts26DeER/HqdoW++ltMU1V/BNaMb
+         0f67l2ImeQn9U4SmXcsTZzE9gM6QQT09J0IrxWDcfHGdTimhKy/3JuVD0ryRMCA22bkp
+         pKtw==
+X-Gm-Message-State: AGi0PuZp/z+OFeY7sTaPdUtRdni9gyKrd1KfqdyiKu0GitjrQvX/nVX2
+        eLGk4Zu09yLaVtUBmmfdfR47Y+K8RLWFxpUaZCEZCQ==
+X-Google-Smtp-Source: APiQypJoFGf572jCZ3dzXxWizg4289lgkS/VM9I6VCpSem3gJ+VpZPZdvIkbHkxj2bDNFJedH6togd1L5mpn9UPYHQI=
+X-Received: by 2002:a25:4443:: with SMTP id r64mr53632222yba.41.1588182226158;
+ Wed, 29 Apr 2020 10:43:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200319023101.82458-1-irogers@google.com> <20200323105939.GE1534489@krava>
+In-Reply-To: <20200323105939.GE1534489@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 29 Apr 2020 10:43:31 -0700
+Message-ID: <CAP-5=fU4dUPwRA-XTw6B9Xtc5y7Z0jZzDHU=KFvNfbNXVsONkw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf parse-events: fix memory leaks found on parse_events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu <fenghua.yu@intel.com>
+On Mon, Mar 23, 2020 at 3:59 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, Mar 18, 2020 at 07:31:00PM -0700, Ian Rogers wrote:
+> > Memory leaks found by applying LLVM's libfuzzer on the parse_events
+> > function.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+>
+> thanks,
+> jirka
 
-Currently, fpu__clear() clears all fpregs and xstates.  Once XSAVES
-supervisor states are introduced, supervisor settings (e.g. CET xstates)
-must remain active for signals; It is necessary to have separate functions:
+Ping.
 
-- Create fpu__clear_user_states(): clear only user settings for signals;
-- Create fpu__clear_all(): clear both user and supervisor settings in
-   flush_thread().
-
-Also modify copy_init_fpstate_to_fpregs() to take a mask from above two
-functions.
-
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-v3:
-- Put common code into a static function fpu__clear(), with a parameter
-  user_only.
-
-v2:
-- Fixed an issue where fpu__clear_user_states() drops supervisor xstates.
-- Revise commit log.
-
- arch/x86/include/asm/fpu/internal.h |  3 +-
- arch/x86/kernel/fpu/core.c          | 49 +++++++++++++++++++----------
- arch/x86/kernel/fpu/signal.c        |  4 +--
- arch/x86/kernel/process.c           |  2 +-
- arch/x86/kernel/signal.c            |  2 +-
- 5 files changed, 39 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index ccb1bb32ad7d..a42fcb4b690d 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -31,7 +31,8 @@ extern void fpu__save(struct fpu *fpu);
- extern int  fpu__restore_sig(void __user *buf, int ia32_frame);
- extern void fpu__drop(struct fpu *fpu);
- extern int  fpu__copy(struct task_struct *dst, struct task_struct *src);
--extern void fpu__clear(struct fpu *fpu);
-+extern void fpu__clear_user_states(struct fpu *fpu);
-+extern void fpu__clear_all(struct fpu *fpu);
- extern int  fpu__exception_code(struct fpu *fpu, int trap_nr);
- extern int  dump_fpu(struct pt_regs *ptregs, struct user_i387_struct *fpstate);
- 
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 12c70840980e..7fddd5d60443 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -294,12 +294,10 @@ void fpu__drop(struct fpu *fpu)
-  * Clear FPU registers by setting them up from
-  * the init fpstate:
-  */
--static inline void copy_init_fpstate_to_fpregs(void)
-+static inline void copy_init_fpstate_to_fpregs(u64 features_mask)
- {
--	fpregs_lock();
--
- 	if (use_xsave())
--		copy_kernel_to_xregs(&init_fpstate.xsave, -1);
-+		copy_kernel_to_xregs(&init_fpstate.xsave, features_mask);
- 	else if (static_cpu_has(X86_FEATURE_FXSR))
- 		copy_kernel_to_fxregs(&init_fpstate.fxsave);
- 	else
-@@ -307,9 +305,6 @@ static inline void copy_init_fpstate_to_fpregs(void)
- 
- 	if (boot_cpu_has(X86_FEATURE_OSPKE))
- 		copy_init_pkru_to_fpregs();
--
--	fpregs_mark_activate();
--	fpregs_unlock();
- }
- 
- /*
-@@ -318,18 +313,40 @@ static inline void copy_init_fpstate_to_fpregs(void)
-  * Called by sys_execve(), by the signal handler code and by various
-  * error paths.
-  */
--void fpu__clear(struct fpu *fpu)
-+static void fpu__clear(struct fpu *fpu, int user_only)
- {
--	WARN_ON_FPU(fpu != &current->thread.fpu); /* Almost certainly an anomaly */
-+	WARN_ON_FPU(fpu != &current->thread.fpu);
- 
--	fpu__drop(fpu);
-+	if (!static_cpu_has(X86_FEATURE_FPU)) {
-+		fpu__drop(fpu);
-+		fpu__initialize(fpu);
-+		return;
-+	}
- 
--	/*
--	 * Make sure fpstate is cleared and initialized.
--	 */
--	fpu__initialize(fpu);
--	if (static_cpu_has(X86_FEATURE_FPU))
--		copy_init_fpstate_to_fpregs();
-+	fpregs_lock();
-+
-+	if (user_only) {
-+		if (!fpregs_state_valid(fpu, smp_processor_id()) &&
-+		    xfeatures_mask_supervisor())
-+			copy_kernel_to_xregs(&fpu->state.xsave,
-+					     xfeatures_mask_supervisor());
-+		copy_init_fpstate_to_fpregs(xfeatures_mask_user());
-+	} else {
-+		copy_init_fpstate_to_fpregs(xfeatures_mask_all);
-+	}
-+
-+	fpregs_mark_activate();
-+	fpregs_unlock();
-+}
-+
-+void fpu__clear_user_states(struct fpu *fpu)
-+{
-+	fpu__clear(fpu, 1);
-+}
-+
-+void fpu__clear_all(struct fpu *fpu)
-+{
-+	fpu__clear(fpu, 0);
- }
- 
- /*
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 3df0cfae535f..cd6eafba12da 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -289,7 +289,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			 IS_ENABLED(CONFIG_IA32_EMULATION));
- 
- 	if (!buf) {
--		fpu__clear(fpu);
-+		fpu__clear_user_states(fpu);
- 		return 0;
- 	}
- 
-@@ -416,7 +416,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 
- err_out:
- 	if (ret)
--		fpu__clear(fpu);
-+		fpu__clear_user_states(fpu);
- 	return ret;
- }
- 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 9da70b279dad..de182b84723a 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -191,7 +191,7 @@ void flush_thread(void)
- 	flush_ptrace_hw_breakpoint(tsk);
- 	memset(tsk->thread.tls_array, 0, sizeof(tsk->thread.tls_array));
- 
--	fpu__clear(&tsk->thread.fpu);
-+	fpu__clear_all(&tsk->thread.fpu);
- }
- 
- void disable_TSC(void)
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 83b74fb38c8f..0052bbe5dfd4 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -732,7 +732,7 @@ handle_signal(struct ksignal *ksig, struct pt_regs *regs)
- 		/*
- 		 * Ensure the signal handler starts with the new fpu state.
- 		 */
--		fpu__clear(fpu);
-+		fpu__clear_user_states(fpu);
- 	}
- 	signal_setup_done(failed, ksig, stepping);
- }
--- 
-2.21.0
-
+> > ---
+> >  tools/perf/util/parse-events.c | 2 ++
+> >  tools/perf/util/parse-events.y | 3 ++-
+> >  2 files changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index 593b6b03785d..1e0bec5c0846 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+> >
+> >               list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+> >                       list_del_init(&pos->list);
+> > +                     if (pos->free_str)
+> > +                             free(pos->val.str);
+> >                       free(pos);
+> >               }
+> >               return -EINVAL;
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > index 94f8bcd83582..8212cc771667 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+> >
+> >       list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+> >               list_del_init(&evsel->core.node);
+> > -             perf_evsel__delete(evsel);
+> > +             evsel__delete(evsel);
+> >       }
+> >       free(list_evsel);
+> >  }
+> > @@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
+> >       }
+> >       parse_events_terms__delete($2);
+> >       parse_events_terms__delete(orig_terms);
+> > +     free(pattern);
+> >       free($1);
+> >       $$ = list;
+> >  #undef CLEANUP_YYABORT
+> > --
+> > 2.25.1.696.g5e7596f4ac-goog
+> >
+>
