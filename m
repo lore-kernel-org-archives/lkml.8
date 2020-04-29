@@ -2,240 +2,219 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F3C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFFCC8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEB9205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8272C205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qcTL7rWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgD2TKl (ORCPT
+        id S1727049AbgD2TLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:10:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:38220 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2TKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:10:40 -0400
-IronPort-SDR: itTu7O2UbNKhqeLZjZEtp8dy35ePhY0MGsexvZ6UIs+Oce1o9qxn5RJc4PGviTfzoY2q090vBx
- sjyKZ9FsnLng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 12:10:40 -0700
-IronPort-SDR: 8kITfram0gBDZT4mH/oCcj6diWpMSlMW+ywI/MNXXCBR9szUKoXiwQ4E1WvT0jBBENQXXkd+JF
- R5ux37E/z0sA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="294268300"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga008.jf.intel.com with ESMTP; 29 Apr 2020 12:10:39 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 05/10] x86/fpu/xstate: Define new functions for clearing fpregs and xstates
-Date:   Wed, 29 Apr 2020 12:10:03 -0700
-Message-Id: <20200429191003.30036-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200328164307.17497-6-yu-cheng.yu@intel.com>
-References: <20200328164307.17497-6-yu-cheng.yu@intel.com>
+        Wed, 29 Apr 2020 15:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgD2TLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 15:11:05 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1445EC035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:11:05 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so3890019wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=HwBlAhl9IzjqWMkaY5fyYm/8tsGpWsJDdfPbj+qf/cw=;
+        b=qcTL7rWJWMCsNYOvmkLnkfwL1OYQTFMr1oCDP+/LG+yoZ54Rb09KxnGDEhScoCYRWF
+         H4Q948HySr2ev6c5+yXIJk0A7XgdS9Jt3n5zOvgZKwn5N+n/aQSPjIl4Gf4r4dHVsHSg
+         RvkXVOyk5xjFz/WTsFhLoJro+kI6XofIpdZKh8fLCvAcvWp1ZRbzSB86WvgZ12nBDKN4
+         awslm7Rk+FHcP8VphplAImX5lym/fvkXDhdhz7pvJ9MLmKnFP+K3Suau4ZfAzHeXFHz1
+         iPHQ2IVMe8S4FWhMm2gEO/iyjzisibU4+dyYf1sMXI8acPoXKyG8lI9ahmeW+YAHoovv
+         VOyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=HwBlAhl9IzjqWMkaY5fyYm/8tsGpWsJDdfPbj+qf/cw=;
+        b=i+ImA18XhqSE/tK4f2XS6fhQGWakRxfd9b3Xk/zsfYpu1ECckxF3GOVaXkdCJK9Uzs
+         E8NkfCkWhbB9fTgqQySQKvvp88L9XdW8x/tVVFT4cc32PggKnubWGuDlhOEOUZnalvo6
+         ObrFaMNBjNdevUKsDlBWxyAyI+5BH7nAl3n0dgGmqxZ/tRXAG2OjN0Ahc3gCD6QZekht
+         IwobzZKS9EZpP6i5Pkd2Hgz7Gw5daHyLE3G6tmpEtnbLK8ONqOyMn1KFkjPN0/NOIxIW
+         CBhxdbQQqndutJJ+7jitwvmOizXB9Udns/eHzPTIIB77XD998fBq9kB9lZJ3c+l2YbyO
+         VnIQ==
+X-Gm-Message-State: AGi0PuZo/+rCDNOVBNiitXOnV8HxBUbgvb+BAGLCaoEqwcHc9gLvZXA7
+        0U5WrVTyatCCfiJl1f83K5elKA==
+X-Google-Smtp-Source: APiQypKJQgl13isxg5O+xfkBHxn3MAO2tiktrpReGj1EhlU4/X2r3NgW/pVCXn/XoI3DnPrTA122NQ==
+X-Received: by 2002:adf:cd84:: with SMTP id q4mr38584918wrj.320.1588187463599;
+        Wed, 29 Apr 2020 12:11:03 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id m8sm254005wrx.54.2020.04.29.12.11.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 12:11:02 -0700 (PDT)
+References: <20200415102320.4606-1-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     chewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: sm1-khadas-vim3l: add audio playback to vim3l
+In-reply-to: <20200415102320.4606-1-christianshewitt@gmail.com>
+Date:   Wed, 29 Apr 2020 21:11:02 +0200
+Message-ID: <1jmu6uhzuh.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu <fenghua.yu@intel.com>
 
-Currently, fpu__clear() clears all fpregs and xstates.  Once XSAVES
-supervisor states are introduced, supervisor settings (e.g. CET xstates)
-must remain active for signals; It is necessary to have separate functions:
+On Wed 15 Apr 2020 at 12:23, chewitt <christianshewitt@gmail.com> wrote:
 
-- Create fpu__clear_user_states(): clear only user settings for signals;
-- Create fpu__clear_all(): clear both user and supervisor settings in
-   flush_thread().
+> From: Christian Hewitt <christianshewitt@gmail.com>
+>
+> Add the sound and related audio nodes to the VIM3L board.
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> index dbbf29a0dbf6..b900a433ef7a 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> @@ -8,6 +8,7 @@
+>  
+>  #include "meson-sm1.dtsi"
+>  #include "meson-khadas-vim3.dtsi"
+> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+>  
+>  / {
+>  	compatible = "khadas,vim3l", "amlogic,sm1";
+> @@ -31,6 +32,69 @@
+>  		regulator-boot-on;
+>  		regulator-always-on;
+>  	};
+> +
+> +	sound {
+> +		compatible = "amlogic,axg-sound-card";
+> +		model = "SM1-KHADAS-VIM3L";
+> +		audio-aux-devs = <&tdmout_b>;
+> +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+> +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+> +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
+> +				"TDM_B Playback", "TDMOUT_B OUT";
+> +
+> +		assigned-clocks = <&clkc CLKID_MPLL2>,
+> +				  <&clkc CLKID_MPLL0>,
+> +				  <&clkc CLKID_MPLL1>;
+> +		assigned-clock-parents = <0>, <0>, <0>;
+> +		assigned-clock-rates = <294912000>,
+> +				       <270950400>,
+> +				       <393216000>;
+> +		status = "okay";
+> +
+> +		dai-link-0 {
+> +			sound-dai = <&frddr_a>;
+> +		};
+> +
+> +		dai-link-1 {
+> +			sound-dai = <&frddr_b>;
+> +		};
+> +
+> +		dai-link-2 {
+> +			sound-dai = <&frddr_c>;
+> +		};
+> +
+> +		/* 8ch hdmi interface */
 
-Also modify copy_init_fpstate_to_fpregs() to take a mask from above two
-functions.
+VIM3(L) should not use TDMOUT B or C for the HDMI interface
+* B is on the 40pin header
+* C is on the m2 connector
 
-Remove obvious side-comment in fpu__clear(), while at it.
+A is not routed to the outside world and should prefered for this.
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-v3:
-- Put common code into a static function fpu__clear(), with a parameter
-  user_only.
+See :
+https://lore.kernel.org/linux-amlogic/20200421141814.639480-1-jbrunet@baylibre.com/
 
-v2:
-- Fixed an issue where fpu__clear_user_states() drops supervisor xstates.
-- Revise commit log.
-
- arch/x86/include/asm/fpu/internal.h |  3 +-
- arch/x86/kernel/fpu/core.c          | 49 +++++++++++++++++++----------
- arch/x86/kernel/fpu/signal.c        |  4 +--
- arch/x86/kernel/process.c           |  2 +-
- arch/x86/kernel/signal.c            |  2 +-
- 5 files changed, 39 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index ccb1bb32ad7d..a42fcb4b690d 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -31,7 +31,8 @@ extern void fpu__save(struct fpu *fpu);
- extern int  fpu__restore_sig(void __user *buf, int ia32_frame);
- extern void fpu__drop(struct fpu *fpu);
- extern int  fpu__copy(struct task_struct *dst, struct task_struct *src);
--extern void fpu__clear(struct fpu *fpu);
-+extern void fpu__clear_user_states(struct fpu *fpu);
-+extern void fpu__clear_all(struct fpu *fpu);
- extern int  fpu__exception_code(struct fpu *fpu, int trap_nr);
- extern int  dump_fpu(struct pt_regs *ptregs, struct user_i387_struct *fpstate);
- 
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 12c70840980e..7fddd5d60443 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -294,12 +294,10 @@ void fpu__drop(struct fpu *fpu)
-  * Clear FPU registers by setting them up from
-  * the init fpstate:
-  */
--static inline void copy_init_fpstate_to_fpregs(void)
-+static inline void copy_init_fpstate_to_fpregs(u64 features_mask)
- {
--	fpregs_lock();
--
- 	if (use_xsave())
--		copy_kernel_to_xregs(&init_fpstate.xsave, -1);
-+		copy_kernel_to_xregs(&init_fpstate.xsave, features_mask);
- 	else if (static_cpu_has(X86_FEATURE_FXSR))
- 		copy_kernel_to_fxregs(&init_fpstate.fxsave);
- 	else
-@@ -307,9 +305,6 @@ static inline void copy_init_fpstate_to_fpregs(void)
- 
- 	if (boot_cpu_has(X86_FEATURE_OSPKE))
- 		copy_init_pkru_to_fpregs();
--
--	fpregs_mark_activate();
--	fpregs_unlock();
- }
- 
- /*
-@@ -318,18 +313,40 @@ static inline void copy_init_fpstate_to_fpregs(void)
-  * Called by sys_execve(), by the signal handler code and by various
-  * error paths.
-  */
--void fpu__clear(struct fpu *fpu)
-+static void fpu__clear(struct fpu *fpu, int user_only)
- {
--	WARN_ON_FPU(fpu != &current->thread.fpu); /* Almost certainly an anomaly */
-+	WARN_ON_FPU(fpu != &current->thread.fpu);
- 
--	fpu__drop(fpu);
-+	if (!static_cpu_has(X86_FEATURE_FPU)) {
-+		fpu__drop(fpu);
-+		fpu__initialize(fpu);
-+		return;
-+	}
- 
--	/*
--	 * Make sure fpstate is cleared and initialized.
--	 */
--	fpu__initialize(fpu);
--	if (static_cpu_has(X86_FEATURE_FPU))
--		copy_init_fpstate_to_fpregs();
-+	fpregs_lock();
-+
-+	if (user_only) {
-+		if (!fpregs_state_valid(fpu, smp_processor_id()) &&
-+		    xfeatures_mask_supervisor())
-+			copy_kernel_to_xregs(&fpu->state.xsave,
-+					     xfeatures_mask_supervisor());
-+		copy_init_fpstate_to_fpregs(xfeatures_mask_user());
-+	} else {
-+		copy_init_fpstate_to_fpregs(xfeatures_mask_all);
-+	}
-+
-+	fpregs_mark_activate();
-+	fpregs_unlock();
-+}
-+
-+void fpu__clear_user_states(struct fpu *fpu)
-+{
-+	fpu__clear(fpu, 1);
-+}
-+
-+void fpu__clear_all(struct fpu *fpu)
-+{
-+	fpu__clear(fpu, 0);
- }
- 
- /*
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 3df0cfae535f..cd6eafba12da 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -289,7 +289,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 			 IS_ENABLED(CONFIG_IA32_EMULATION));
- 
- 	if (!buf) {
--		fpu__clear(fpu);
-+		fpu__clear_user_states(fpu);
- 		return 0;
- 	}
- 
-@@ -416,7 +416,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 
- err_out:
- 	if (ret)
--		fpu__clear(fpu);
-+		fpu__clear_user_states(fpu);
- 	return ret;
- }
- 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 9da70b279dad..de182b84723a 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -191,7 +191,7 @@ void flush_thread(void)
- 	flush_ptrace_hw_breakpoint(tsk);
- 	memset(tsk->thread.tls_array, 0, sizeof(tsk->thread.tls_array));
- 
--	fpu__clear(&tsk->thread.fpu);
-+	fpu__clear_all(&tsk->thread.fpu);
- }
- 
- void disable_TSC(void)
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 83b74fb38c8f..0052bbe5dfd4 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -732,7 +732,7 @@ handle_signal(struct ksignal *ksig, struct pt_regs *regs)
- 		/*
- 		 * Ensure the signal handler starts with the new fpu state.
- 		 */
--		fpu__clear(fpu);
-+		fpu__clear_user_states(fpu);
- 	}
- 	signal_setup_done(failed, ksig, stepping);
- }
--- 
-2.21.0
+> +		dai-link-3 {
+> +			sound-dai = <&tdmif_b>;
+> +			dai-format = "i2s";
+> +			dai-tdm-slot-tx-mask-0 = <1 1>;
+> +			dai-tdm-slot-tx-mask-1 = <1 1>;
+> +			dai-tdm-slot-tx-mask-2 = <1 1>;
+> +			dai-tdm-slot-tx-mask-3 = <1 1>;
+> +			mclk-fs = <256>;
+> +
+> +			codec {
+> +				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
+> +			};
+> +		};
+> +
+> +		/* hdmi glue */
+> +		dai-link-4 {
+> +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
+> +
+> +			codec {
+> +				sound-dai = <&hdmi_tx>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&arb {
+> +	status = "okay";
+> +};
+> +
+> +&clkc_audio {
+> +	status = "okay";
+>  };
+>  
+>  &cpu0 {
+> @@ -61,6 +125,18 @@
+>  	clock-latency = <50000>;
+>  };
+>  
+> +&frddr_a {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_b {
+> +	status = "okay";
+> +};
+> +
+> +&frddr_c {
+> +	status = "okay";
+> +};
+> +
+>  &pwm_AO_cd {
+>  	pinctrl-0 = <&pwm_ao_d_e_pins>;
+>  	pinctrl-names = "default";
+> @@ -93,3 +169,15 @@
+>  	phy-names = "usb2-phy0", "usb2-phy1";
+>  };
+>   */
+> +
+> +&tdmif_b {
+> +	status = "okay";
+> +};
+> +
+> +&tdmout_b {
+> +	status = "okay";
+> +};
+> +
+> +&tohdmitx {
+> +	status = "okay";
+> +};
 
