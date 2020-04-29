@@ -2,117 +2,92 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752A3C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404A1C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51ABA2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CbULZWEb"
+	by mail.kernel.org (Postfix) with ESMTP id 1EF912072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgD2KpS (ORCPT
+        id S1726740AbgD2Kpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:45:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24838 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726523AbgD2KpS (ORCPT
+        Wed, 29 Apr 2020 06:45:30 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3078 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726554AbgD2Kpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:45:30 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TAjQED032380;
+        Wed, 29 Apr 2020 06:45:26 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2cuge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 06:45:26 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03TAjPaH037238
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 29 Apr 2020 06:45:25 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Apr
+ 2020 06:45:24 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 29 Apr 2020 06:45:23 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03TAjHYR018374;
         Wed, 29 Apr 2020 06:45:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588157116;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ivrbfu7nXm6urIi13dgUtl5GkaF/JA7ff8SBWPZh/VU=;
-        b=CbULZWEbZAKH9bV+G8IywQ2Nrlwm0X/us8Vph1uNAI+3tt4/n+Sc6HBfYjMWUDJ03wY8cQ
-        yWCbaONHY5XfUXnQUFlm4DEYH2dqlura8NS7Vc/uxjUS3J8mRoRu0Tx4gWoehtm3sJXwKr
-        qMAZZvstaD885/aEtu4ULUo1M/NRAJ4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-98v2esonMKOv-L-uhbnRpw-1; Wed, 29 Apr 2020 06:45:15 -0400
-X-MC-Unique: 98v2esonMKOv-L-uhbnRpw-1
-Received: by mail-wr1-f72.google.com with SMTP id v9so1515908wrt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:45:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ivrbfu7nXm6urIi13dgUtl5GkaF/JA7ff8SBWPZh/VU=;
-        b=DC284IhM2xZq8Sw+CPzVOh33tNm2RBkGOtx7enzo3YsysHuN7bX8UGI2RaaU95GHMq
-         CxGv/adINnAUkBgoM9fMo225M8E0zFGcDy/Nb8dFD0K2IoJ24tJ36u0VIH2Ht2JpH8+x
-         BsE3K+rxY/lxfBDd5VyaZEly8peMrC5M2S+Y3h4opRM4KTdB00ksIcZ59b80t0F7LfJ7
-         5yHlaX2spoTLkqMjbnrC/qKLkVGqKfupgy1ar/B4yrE2Lb5qNplpl/OnnlKku9A9TEWz
-         IsGEiZPDxyw4MgrKRsOOdPRz9dK9N3a6/M5+2QKlhGsOQyQFp6pZEZ+K7BfDLJpyee2x
-         Wy9Q==
-X-Gm-Message-State: AGi0PuZxPE25Gn7/KDLhINgHR2W495SOWwRJoLB7+HIRoN54MBHoFtS2
-        9Des06Wjrxf1gnURg/iHaHTqFInoJO+bXC6OGqSt3P3735ytmjmuUN5Lu/T55X3WAaHJCoTuADx
-        tsWMFlffynUfhZCW4F83N90Md
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr2494528wmi.178.1588157114025;
-        Wed, 29 Apr 2020 03:45:14 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLWNbQEy2iyMW7HWmtuY5GYzKFC5cfUOhqKta7BJe6nQlsQf8vGhfuT+8lQWfwqNmKnzgzCfQ==
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr2494510wmi.178.1588157113807;
-        Wed, 29 Apr 2020 03:45:13 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id y70sm7706812wmc.36.2020.04.29.03.45.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 03:45:13 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 06:45:10 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Srivatsa Vaddagiri <vatsa@codeaurora.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>, tsoni@codeaurora.org,
-        virtio-dev@lists.oasis-open.org, konrad.wilk@oracle.com,
-        jasowang@redhat.com, christoffer.dall@arm.com,
-        virtualization@lists.linux-foundation.org, alex.bennee@linaro.org,
-        iommu@lists.linux-foundation.org, stefano.stabellini@xilinx.com,
-        will@kernel.org, linux-kernel@vger.kernel.org,
-        pratikp@codeaurora.org
-Subject: Re: [PATCH 5/5] virtio: Add bounce DMA ops
-Message-ID: <20200429064458-mutt-send-email-mst@kernel.org>
-References: <20200428163448-mutt-send-email-mst@kernel.org>
- <275eba4b-dd35-aa95-b2e3-9c5cbf7c6d71@linux.intel.com>
- <20200429004531-mutt-send-email-mst@kernel.org>
- <b676430c-65b3-096e-ca48-ceebf10f4b28@linux.intel.com>
- <20200429023842-mutt-send-email-mst@kernel.org>
- <20200429094410.GD5097@quicinc.com>
- <20200429055125-mutt-send-email-mst@kernel.org>
- <20200429100953.GE5097@quicinc.com>
- <20200429061621-mutt-send-email-mst@kernel.org>
- <f52556e2-253e-2dbc-cb7a-a7991e3bcfde@siemens.com>
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jic23@kernel.org>
+CC:     <knaack.h@gmx.de>, <Michael.Hennerich@analog.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] iio: adc: ad7768-1: Fix channel endian spec
+Date:   Wed, 29 Apr 2020 13:45:35 +0300
+Message-ID: <20200429104535.82988-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f52556e2-253e-2dbc-cb7a-a7991e3bcfde@siemens.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_04:2020-04-29,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ clxscore=1011 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 12:26:43PM +0200, Jan Kiszka wrote:
-> On 29.04.20 12:20, Michael S. Tsirkin wrote:
-> > On Wed, Apr 29, 2020 at 03:39:53PM +0530, Srivatsa Vaddagiri wrote:
-> > > That would still not work I think where swiotlb is used for pass-thr devices
-> > > (when private memory is fine) as well as virtio devices (when shared memory is
-> > > required).
-> > 
-> > So that is a separate question. When there are multiple untrusted
-> > devices, at the moment it looks like a single bounce buffer is used.
-> > 
-> > Which to me seems like a security problem, I think we should protect
-> > untrusted devices from each other.
-> > 
-> 
-> Definitely. That's the model we have for ivshmem-virtio as well.
-> 
-> Jan
+This change removes the endian description from the iio channel spec.
+In this way, the default (IIO_CPU) endian will be used, matching the
+be32_to_cpu() conversion from ad7768_spi_reg_read().
 
-Want to try implementing that?
+Fixes: 8a15c73a9bcfe ("iio: adc: Add AD7768-1 ADC basic support")
 
-> -- 
-> Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-> Corporate Competence Center Embedded Linux
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/adc/ad7768-1.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+index a0027797a7fe..99da13c3511a 100644
+--- a/drivers/iio/adc/ad7768-1.c
++++ b/drivers/iio/adc/ad7768-1.c
+@@ -144,7 +144,6 @@ static const struct iio_chan_spec ad7768_channels[] = {
+ 			.realbits = 24,
+ 			.storagebits = 32,
+ 			.shift = 8,
+-			.endianness = IIO_BE,
+ 		},
+ 	},
+ };
+-- 
+2.17.1
 
