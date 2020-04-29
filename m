@@ -2,156 +2,260 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8780BC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1745C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64AD92073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938D92083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hU7qODst"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IGr0uPAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgD2CGa (ORCPT
+        id S1726511AbgD2CKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:06:30 -0400
-Received: from ozlabs.org ([203.11.71.1]:34399 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726158AbgD2CGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:06:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BhhN0pBNz9sRf;
-        Wed, 29 Apr 2020 12:06:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588125989;
-        bh=cEUkvXjQx9FeslMTIdQ9lW/uGQZLBM+zUKoD1BqBe9w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hU7qODst0MpO/MKPnMkBxiNzeYcgLxMi+vQ0PQuj9wAH4JrD9xKuBBXbeTC1FyAq9
-         J0pEGYNwQx97cPRI0vkQnYlxiSa23Jbe7gm+XJgH2865vbu7RYqbrD2487AHxxnY74
-         7mGpeoSy3d9LCjhbbCzalhpyHlZWfN3wh5qtETO0n6gnm9UnkKtLlI+2gwBFtpxqPn
-         j7cC6eBtliVh0+py80k629DbgeGMsrJn6tBJkVPLilWWywBuXlyg520s1HL7LdiqGA
-         Vab5xe7afNs1Y+wTAjebCU63GWY1j3xeKWv0ZIAOGVjyBqlixdkbWYsJFLyQZ/YNjU
-         IZSwbkp3cTIhA==
-Date:   Wed, 29 Apr 2020 12:06:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Leon Romanovsky <leon@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huy Nguyen <huyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Raed Salem <raeds@mellanox.com>
-Subject: linux-next: manual merge of the mlx5-next tree with the
- kspp-gustavo tree
-Message-ID: <20200429120625.2b5bb507@canb.auug.org.au>
+        Tue, 28 Apr 2020 22:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbgD2CKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 22:10:18 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB67C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:10:17 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id a7so375472uak.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EEiz4HMJY+gJLMc0IjkJJcjI52MRJi3WFunE6kev/X8=;
+        b=IGr0uPAwPnAUzql39gFbigTf1/E0vT5ToGKW4FnWX3bF56hobtrwxuxfH9C+n1pxjG
+         QofHwiZgi8oufhJDlBpByQQ10aVfZRFVIUrtUo5c/LHQFsbqphHkwoHE1q59g2SVB1NC
+         nFc904DWiFqRUWaWvjJN/hGRl6aDvY3o4cEiU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EEiz4HMJY+gJLMc0IjkJJcjI52MRJi3WFunE6kev/X8=;
+        b=UW9tbBv1+A0zMtfpzd+9IlGRuRwGSN+Xaf5hRjbStt5Ozdq7vH2EX/z9EkEpLDkr3t
+         zebE+bsIGlIOPDD+GziuRYUvMtoyhr1eMKu7kEBZHCK8oieCsMTfl1mRhUe1/MqxgxR4
+         5tFKlXHxmIjZGvQOiwXr99MBrYWprUGHdyHrM1SVlhRpCVjoCqPvCG3cuQXCm5gYaBpw
+         Whsf5tzPEk8wT37kAZZj9njMuvInjjLWKqrnbJXApHFmyPDiF4eND/UHCBUZgjnE5Fes
+         i8KjMjRAEijaEI9g/WSZW7YqsqzC9SNlmWlI5w+IL4HnOpuyjV96D4eFxVJFkzqbsSOT
+         BhLg==
+X-Gm-Message-State: AGi0PuaXzoGkn1vWbsaXgtO3H8K6G19pfn7/g4x2uMGcB6kJZC8XaN5d
+        zMAXmulLrtS7SzkibAY6eeVWNfFnNlAJMy7cbrdCcQ==
+X-Google-Smtp-Source: APiQypItlQAa5e4mGAa1IHYQ7pc+hM+tuChNF99J4Y7tM8loTIXZXHO2lcr4ukwuovUBkRtkL0SxAQLI4QpRoyNBorc=
+X-Received: by 2002:ab0:254:: with SMTP id 78mr22456426uas.77.1588126215976;
+ Tue, 28 Apr 2020 19:10:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kc5ob/m+tWo5k5sswsGpyzC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <cover.1587880280.git.xji@analogixsemi.com> <4d14400b6c19f17c28267f6ebdbce9673333c05c.1587880280.git.xji@analogixsemi.com>
+In-Reply-To: <4d14400b6c19f17c28267f6ebdbce9673333c05c.1587880280.git.xji@analogixsemi.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 29 Apr 2020 10:10:05 +0800
+Message-ID: <CANMq1KC2EUPMDqTcaU-HLqfFivR4=7wxrmiSk-VzF0bjjLgNHA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kc5ob/m+tWo5k5sswsGpyzC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 27, 2020 at 2:18 PM Xin Ji <xji@analogixsemi.com> wrote:
+>
+> The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> for portable device. It converts MIPI DSI/DPI to DisplayPort 1.3 4K.
+>
+> The ANX7625 can support both USB Type-C PD feature and MIPI DSI/DPI
+> to DP feature. This driver only enabled MIPI DSI/DPI to DP feature.
+>
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> ---
+>  drivers/gpu/drm/bridge/Makefile           |    2 +-
+>  drivers/gpu/drm/bridge/analogix/Kconfig   |    6 +
+>  drivers/gpu/drm/bridge/analogix/Makefile  |    1 +
+>  drivers/gpu/drm/bridge/analogix/anx7625.c | 2158 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/bridge/analogix/anx7625.h |  410 ++++++
+>  5 files changed, 2576 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
+>  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
+>
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 4934fcf..bcd388a 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -12,8 +12,8 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
+>  obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
+>  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
+>  obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+> -obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
+>  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+>  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+>  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> +obj-y += analogix/
+>  obj-y += synopsys/
+> diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+> index e930ff9..b2f127e 100644
+> --- a/drivers/gpu/drm/bridge/analogix/Kconfig
+> +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+> @@ -2,3 +2,9 @@
+>  config DRM_ANALOGIX_DP
+>         tristate
+>         depends on DRM
+> +
+> +config ANALOGIX_ANX7625
+> +       tristate "Analogix MIPI to DP interface support"
+> +       help
+> +               ANX7625 is an ultra-low power 4K mobile HD transmitter designed
+> +               for portable devices. It converts MIPI/DPI to DisplayPort1.3 4K.
+> diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+> index fdbf3fd..8a52867 100644
+> --- a/drivers/gpu/drm/bridge/analogix/Makefile
+> +++ b/drivers/gpu/drm/bridge/analogix/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_ANALOGIX_ANX7625) += anx7625.o
+>  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
+>  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+> diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
+> new file mode 100644
+> index 0000000..fff7a49
+> [snip]
+> +static int anx7625_attach_dsi(struct anx7625_data *ctx)
+> +{
+> +       struct mipi_dsi_host *host;
+> +       struct mipi_dsi_device *dsi;
+> +       struct device_node *mipi_host_node;
+> +       struct device *dev = &ctx->client->dev;
+> +       const struct mipi_dsi_device_info info = {
+> +               .type = "anx7625",
+> +               .channel = 0,
+> +               .node = NULL,
+> +       };
+> +
+> +       DRM_DEV_DEBUG_DRIVER(dev, "attach dsi\n");
+> +
+> +       if (ctx->pdata.dsi_supported)
+> +               mipi_host_node = ctx->pdata.node.mipi_dsi_host_node;
+> +       else
+> +               mipi_host_node = ctx->pdata.node.mipi_dpi_host_node;
+> +
+> +       if (!mipi_host_node) {
+> +               DRM_ERROR("dsi host is not configured.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       host = of_find_mipi_dsi_host_by_node(mipi_host_node);
 
-Hi all,
+I tried this driver when connected to a dpi interface, and this fails,
+as of_find_mipi_dsi_host_by_node is not able to find the dpi interface
+from the SoC.
 
-Today's linux-next merge of the mlx5-next tree got a conflict in:
+I'm not too familiar with how dpi bridges are supposed to work in the
+kernel, but should we even call "anx7625_attach_dsi" for DPI
+interface?
 
-  include/linux/mlx5/mlx5_ifc.h
-
-between commit:
-
-  3ba225b506a2 ("treewide: Replace zero-length array with flexible-array me=
-mber")
-
-from the kspp-gustavo tree and commit:
-
-  d65dbedfd298 ("net/mlx5: Add support for COPY steering action")
-
-from the mlx5-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/mlx5/mlx5_ifc.h
-index 8d30f18dcdee,fb243848132d..000000000000
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@@ -5743,7 -5771,7 +5771,7 @@@ struct mlx5_ifc_alloc_modify_header_con
-  	u8         reserved_at_68[0x10];
-  	u8         num_of_actions[0x8];
- =20
-- 	union mlx5_ifc_set_action_in_add_action_in_auto_bits actions[];
- -	union mlx5_ifc_set_add_copy_action_in_auto_bits actions[0];
-++	union mlx5_ifc_set_add_copy_action_in_auto_bits actions[];
-  };
- =20
-  struct mlx5_ifc_dealloc_modify_header_context_out_bits {
-@@@ -9677,9 -9705,32 +9705,32 @@@ struct mlx5_ifc_mcda_reg_bits=20
- =20
-  	u8         reserved_at_60[0x20];
- =20
- -	u8         data[0][0x20];
- +	u8         data[][0x20];
-  };
- =20
-+ enum {
-+ 	MLX5_MFRL_REG_RESET_TYPE_FULL_CHIP =3D BIT(0),
-+ 	MLX5_MFRL_REG_RESET_TYPE_NET_PORT_ALIVE =3D BIT(1),
-+ };
-+=20
-+ enum {
-+ 	MLX5_MFRL_REG_RESET_LEVEL0 =3D BIT(0),
-+ 	MLX5_MFRL_REG_RESET_LEVEL3 =3D BIT(3),
-+ 	MLX5_MFRL_REG_RESET_LEVEL6 =3D BIT(6),
-+ };
-+=20
-+ struct mlx5_ifc_mfrl_reg_bits {
-+ 	u8         reserved_at_0[0x20];
-+=20
-+ 	u8         reserved_at_20[0x2];
-+ 	u8         pci_sync_for_fw_update_start[0x1];
-+ 	u8         pci_sync_for_fw_update_resp[0x2];
-+ 	u8         rst_type_sel[0x3];
-+ 	u8         reserved_at_28[0x8];
-+ 	u8         reset_type[0x8];
-+ 	u8         reset_level[0x8];
-+ };
-+=20
-  struct mlx5_ifc_mirc_reg_bits {
-  	u8         reserved_at_0[0x18];
-  	u8         status_code[0x8];
-
---Sig_/kc5ob/m+tWo5k5sswsGpyzC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6o4SEACgkQAVBC80lX
-0GyHgwgAlTPOPf3m6Uj531tpGne/zC05ApHMYU06GchdDwxp0xdE3afMcwrcmYma
-chOuKHY3LWn6PTDcWNKi2Zat3+boM5EXJiOvuZn6zJWSSp71NuPtx4toowHWzgaI
-4EHGMDdQbMbdUccJo5dN8cSQvNCuzqEkbr8+Q1nbBDrujX23w03iSl8POfjJHhDP
-IcICISYt9hF3xfW6swY90BN3uq058Cj+iwRgCTRqly+k5lpY27XUtNb3jMaCALQ5
-5o3RJxg2Mz4MoO5AYEdbXrg9KODw+obkR8MHinjKfvk0Y7QXDJJNRC7XYQqC2jxD
-edp7Ei8p0ahJgD3lj8bPdHh1oywEbg==
-=Zify
------END PGP SIGNATURE-----
-
---Sig_/kc5ob/m+tWo5k5sswsGpyzC--
+> +       if (!host) {
+> +               DRM_ERROR("failed to find dsi host.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       dsi = mipi_dsi_device_register_full(host, &info);
+> +       if (IS_ERR(dsi)) {
+> +               DRM_ERROR("failed to create dsi device.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       dsi->lanes = 4;
+> +       dsi->format = MIPI_DSI_FMT_RGB888;
+> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO   |
+> +               MIPI_DSI_MODE_VIDEO_SYNC_PULSE  |
+> +               MIPI_DSI_MODE_EOT_PACKET        |
+> +               MIPI_DSI_MODE_VIDEO_HSE;
+> +
+> +       if (mipi_dsi_attach(dsi) < 0) {
+> +               DRM_ERROR("failed to attach dsi to host.\n");
+> +               mipi_dsi_device_unregister(dsi);
+> +               return -EINVAL;
+> +       }
+> +
+> +       ctx->dsi = dsi;
+> +
+> +       DRM_DEV_DEBUG_DRIVER(dev, "attach dsi succeeded.\n");
+> +
+> +       return 0;
+> +}
+> +
+> [snip]
+> +static int anx7625_bridge_attach(struct drm_bridge *bridge)
+> +{
+> +       struct anx7625_data *ctx = bridge_to_anx7625(bridge);
+> +       int err;
+> +       struct device *dev = &ctx->client->dev;
+> +
+> +       DRM_DEV_DEBUG_DRIVER(dev, "drm attach\n");
+> +       if (!bridge->encoder) {
+> +               DRM_ERROR("Parent encoder object not found");
+> +               return -ENODEV;
+> +       }
+> +
+> +       err = drm_connector_init(bridge->dev, &ctx->connector,
+> +                                &anx7625_connector_funcs,
+> +                                ctx->pdata.internal_panel ?
+> +                                       DRM_MODE_CONNECTOR_eDP :
+> +                                       DRM_MODE_CONNECTOR_DisplayPort);
+> +       if (err) {
+> +               DRM_ERROR("Failed to initialize connector: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       drm_connector_helper_add(&ctx->connector,
+> +                                &anx7625_connector_helper_funcs);
+> +
+> +       err = drm_connector_register(&ctx->connector);
+> +       if (err) {
+> +               DRM_ERROR("Failed to register connector: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       ctx->connector.polled = DRM_CONNECTOR_POLL_HPD;
+> +
+> +       err = drm_connector_attach_encoder(&ctx->connector, bridge->encoder);
+> +       if (err) {
+> +               DRM_ERROR("Failed to link up connector to encoder: %d\n", err);
+> +               drm_connector_unregister(&ctx->connector);
+> +               return err;
+> +       }
+> +
+> +       err = anx7625_attach_dsi(ctx);
+> +       if (err) {
+> +               DRM_ERROR("Failed to attach to dsi : %d\n", err);
+> +               drm_connector_unregister(&ctx->connector);
+> +               return err;
+> +       }
+> +
+> +       ctx->bridge_attached = 1;
+> +
+> +       return 0;
+> +}
+> +
