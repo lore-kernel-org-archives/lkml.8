@@ -2,167 +2,83 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1ACC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920C3C8300B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B69D4217D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722392173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgD2Nj1 (ORCPT
+        id S1728371AbgD2Njg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:39:27 -0400
-Received: from 8bytes.org ([81.169.241.247]:40134 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbgD2Nhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:50 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1F089ED8; Wed, 29 Apr 2020 15:37:39 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 20/34] iommu/virtio: Convert to probe/release_device() call-backs
-Date:   Wed, 29 Apr 2020 15:36:58 +0200
-Message-Id: <20200429133712.31431-21-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
+        Wed, 29 Apr 2020 09:39:36 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:52230 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbgD2Nje (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:39:34 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 49B6580507;
+        Wed, 29 Apr 2020 15:39:29 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 15:39:23 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kbuild test robot <lkp@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] video: fbdev: controlfb: fix build for COMPILE_TEST=y
+ && PPC_PMAC=y && PPC32=n
+Message-ID: <20200429133923.GA18115@ravnborg.org>
+References: <CGME20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd@eucas1p1.samsung.com>
+ <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
+ <20200429125101.GA21275@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429125101.GA21275@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=_B__PoOuIxrDVYIAAIsA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Hi Christoph
 
-Convert the VirtIO IOMMU driver to use the probe_device() and
-release_device() call-backs of iommu_ops, so that the iommu core code
-does the group and sysfs setup.
+On Wed, Apr 29, 2020 at 05:51:01AM -0700, Christoph Hellwig wrote:
+> Why do we even bother allocing the driver to compile for !ppc32
+> given that it clearly needs ppc-specific infrastructure?  The whole
+> idea of needing magic stubs for the COMPILE_TEST case seems rather
+> counterproduction.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/virtio-iommu.c | 41 +++++++++---------------------------
- 1 file changed, 10 insertions(+), 31 deletions(-)
+All the usual good arguments.
+If this driver only builds for 32bit powerpc then we will seldom
+build it and every time we do some refactoring we risk introducing
+build errros in this driver that is triggered much later.
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index d5cac4f46ca5..bda300c2a438 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -865,24 +865,23 @@ static struct viommu_dev *viommu_get_by_fwnode(struct fwnode_handle *fwnode)
- 	return dev ? dev_to_virtio(dev)->priv : NULL;
- }
- 
--static int viommu_add_device(struct device *dev)
-+static struct iommu_device *viommu_probe_device(struct device *dev)
- {
- 	int ret;
--	struct iommu_group *group;
- 	struct viommu_endpoint *vdev;
- 	struct viommu_dev *viommu = NULL;
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 
- 	if (!fwspec || fwspec->ops != &viommu_ops)
--		return -ENODEV;
-+		return ERR_PTR(-ENODEV);
- 
- 	viommu = viommu_get_by_fwnode(fwspec->iommu_fwnode);
- 	if (!viommu)
--		return -ENODEV;
-+		return ERR_PTR(-ENODEV);
- 
- 	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
- 	if (!vdev)
--		return -ENOMEM;
-+		return ERR_PTR(-ENOMEM);
- 
- 	vdev->dev = dev;
- 	vdev->viommu = viommu;
-@@ -896,45 +895,25 @@ static int viommu_add_device(struct device *dev)
- 			goto err_free_dev;
- 	}
- 
--	ret = iommu_device_link(&viommu->iommu, dev);
--	if (ret)
--		goto err_free_dev;
-+	return &viommu->iommu;
- 
--	/*
--	 * Last step creates a default domain and attaches to it. Everything
--	 * must be ready.
--	 */
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group)) {
--		ret = PTR_ERR(group);
--		goto err_unlink_dev;
--	}
--
--	iommu_group_put(group);
--
--	return PTR_ERR_OR_ZERO(group);
--
--err_unlink_dev:
--	iommu_device_unlink(&viommu->iommu, dev);
- err_free_dev:
- 	generic_iommu_put_resv_regions(dev, &vdev->resv_regions);
- 	kfree(vdev);
- 
--	return ret;
-+	return ERR_PTR(ret);
- }
- 
--static void viommu_remove_device(struct device *dev)
-+static void viommu_release_device(struct device *dev)
- {
--	struct viommu_endpoint *vdev;
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-+	struct viommu_endpoint *vdev;
- 
- 	if (!fwspec || fwspec->ops != &viommu_ops)
- 		return;
- 
- 	vdev = dev_iommu_priv_get(dev);
- 
--	iommu_group_remove_device(dev);
--	iommu_device_unlink(&vdev->viommu->iommu, dev);
- 	generic_iommu_put_resv_regions(dev, &vdev->resv_regions);
- 	kfree(vdev);
- }
-@@ -960,8 +939,8 @@ static struct iommu_ops viommu_ops = {
- 	.unmap			= viommu_unmap,
- 	.iova_to_phys		= viommu_iova_to_phys,
- 	.iotlb_sync		= viommu_iotlb_sync,
--	.add_device		= viommu_add_device,
--	.remove_device		= viommu_remove_device,
-+	.probe_device		= viommu_probe_device,
-+	.release_device		= viommu_release_device,
- 	.device_group		= viommu_device_group,
- 	.get_resv_regions	= viommu_get_resv_regions,
- 	.put_resv_regions	= generic_iommu_put_resv_regions,
--- 
-2.17.1
+So a few hacks are preferred to actually make it build.
+But hacks should not paper over missing abstractions
+in the general ioremap handlign and such.
+
+I recall someone said the other day that drm folks had a tendency to
+workaround rather than fixing this.
+So this is "drm folks" reaching out and asking if this is a
+case where we have a workaround and need a fix?
+
+I will - after some testing - apply the fix from Bartlomiej.
+But would like to know if this is a workarond or a fix.
+Dropping COMPILE_TEST is not an option as explained above.
+
+	Sam
 
