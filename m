@@ -2,211 +2,121 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F263DC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABC1C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC730214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kASBbSG2"
+	by mail.kernel.org (Postfix) with ESMTP id EAA05214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgD2UCn (ORCPT
+        id S1727870AbgD2UCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgD2UCN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:02:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7307EC03C1AE;
-        Wed, 29 Apr 2020 13:02:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f7so1587277pfa.9;
-        Wed, 29 Apr 2020 13:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SYWum3ZnYsfLSG0jDSyn5h0VUobSFoO/qhOlaCswZZY=;
-        b=kASBbSG2Y+m0qJObDTSTlmTSkZyk0AhBnwpoKMvM1AO3HtMws3K+EBeAANoqC+Wr95
-         eRvbfwJTjDHFsPEfvVx2ZTJgEufX7iSaO+48GOeAl1+fPTvxBVUKXDKdoFkrxuXWl9mC
-         XZHivxeGvDC2slGQGIQKk9b6oSDwm/NqanBRq42bKf1fJ3YTl734Ldu/4nmLQxnAjvC6
-         Lgif7O9E8JKZpEOZ9ESqtCP2cJ4d4DN/jj9OcWQ73qsP12y5kl2FcMoJrto5N8xf3Yam
-         lwa5jxeLYaeG7KTvNfarmtUfbfTsrLsCKnxg1mToMWmSC8u3Y6XEgmIDvK2WI/5GTiNo
-         2/ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SYWum3ZnYsfLSG0jDSyn5h0VUobSFoO/qhOlaCswZZY=;
-        b=j+wAgXPX27Yn9kkWIPRLg564X0WNrSNnexFir10G1YYiThSMeGOMQ4Tx44z1+QMuHq
-         msUmYCUPJhVllAEHuMOLXZoxF9wGTmT+XNkKJER8lcu3KkJHHdQ7pYU5SneWV4Nd7bYb
-         uP2HhTe1C2f7NKgOfUDLPXGCLaG/ECOOjSCuUxzLoxJ3tOJz0C1/xu49lZ5Ga50CJU7R
-         mntmZulD+u8MYqCuUGA8WrnioY603H8Q5bA7Qe7Ko42wjLaPGQco972cj34nXaSEPx2q
-         vSuu08MhWwGkQx2A2kjp0uV0z8diFni2MkdnMaayj1gVIfldnDviQS2D9qjHwKB1s3oK
-         xbSw==
-X-Gm-Message-State: AGi0PuZlKgmsZZZ13vvdQgtZ3DppT7apNV4acZRGOLqffRLUS3PA8Wmu
-        kOojAxt8kleK/INxJrm+ThY=
-X-Google-Smtp-Source: APiQypJP3S9G2ZKqVVgcQlJkrH+KBcIg8Ek96iKCoB8qUyX9E4lyvZnHqhtRiIzaIPRdDm0v5H1+bQ==
-X-Received: by 2002:a63:1e5a:: with SMTP id p26mr34551434pgm.233.1588190532963;
-        Wed, 29 Apr 2020 13:02:12 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r128sm1705817pfc.141.2020.04.29.13.02.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 13:02:12 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 2/7] net: bcmgenet: Fix WoL with password after deep sleep
-Date:   Wed, 29 Apr 2020 13:02:01 -0700
-Message-Id: <1588190526-2082-3-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
-References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
+        Wed, 29 Apr 2020 16:02:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:44232 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgD2UCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:02:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47A581063;
+        Wed, 29 Apr 2020 13:02:41 -0700 (PDT)
+Received: from [10.37.12.43] (unknown [10.37.12.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 330973F68F;
+        Wed, 29 Apr 2020 13:02:39 -0700 (PDT)
+Subject: Re: [PATCH v4 4/4] thermal: cpuidle: Register cpuidle cooling device
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+ <20200429103644.5492-4-daniel.lezcano@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <99b3bc79-f48a-3d51-a8ae-8b9ca4856d36@arm.com>
+Date:   Wed, 29 Apr 2020 21:02:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200429103644.5492-4-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Broadcom STB chips support a deep sleep mode where all register contents
-are lost. Because we were stashing the MagicPacket password into some of
-these registers a suspend into that deep sleep then a resumption would
-not lead to being able to wake-up from MagicPacket with password again.
 
-Fix this by keeping a software copy of the password and program it
-during suspend.
 
-Fixes: c51de7f3976b ("net: bcmgenet: add Wake-on-LAN support code")
-Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  2 ++
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 39 ++++++++++------------
- 2 files changed, 20 insertions(+), 21 deletions(-)
+On 4/29/20 11:36 AM, Daniel Lezcano wrote:
+> The cpuidle driver can be used as a cooling device by injecting idle
+> cycles. The DT binding for the idle state added an optional
+> 
+> When the property is set, register the cpuidle driver with the idle
+> state node pointer as a cooling device. The thermal framework will do
+> the association automatically with the thermal zone via the
+> cooling-device defined in the device tree cooling-maps section.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>   - V4:
+>     - Do not check the return value as the function does no longer return one
+> ---
+>   drivers/cpuidle/cpuidle-arm.c  | 3 +++
+>   drivers/cpuidle/cpuidle-psci.c | 3 +++
+>   2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+> index 9e5156d39627..8c758920d699 100644
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -8,6 +8,7 @@
+>   
+>   #define pr_fmt(fmt) "CPUidle arm: " fmt
+>   
+> +#include <linux/cpu_cooling.h>
+>   #include <linux/cpuidle.h>
+>   #include <linux/cpumask.h>
+>   #include <linux/cpu_pm.h>
+> @@ -124,6 +125,8 @@ static int __init arm_idle_init_cpu(int cpu)
+>   	if (ret)
+>   		goto out_kfree_drv;
+>   
+> +	cpuidle_cooling_register(drv);
+> +
+>   	return 0;
+>   
+>   out_kfree_drv:
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index bae9140a65a5..1f38e0dfc9b2 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -9,6 +9,7 @@
+>   #define pr_fmt(fmt) "CPUidle PSCI: " fmt
+>   
+>   #include <linux/cpuhotplug.h>
+> +#include <linux/cpu_cooling.h>
+>   #include <linux/cpuidle.h>
+>   #include <linux/cpumask.h>
+>   #include <linux/cpu_pm.h>
+> @@ -313,6 +314,8 @@ static int __init psci_idle_init_cpu(int cpu)
+>   	if (ret)
+>   		goto out_kfree_drv;
+>   
+> +	cpuidle_cooling_register(drv);
+> +
+>   	return 0;
+>   
+>   out_kfree_drv:
+> 
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index daf8fb2c39b6..c3bfe97f2e5c 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -14,6 +14,7 @@
- #include <linux/if_vlan.h>
- #include <linux/phy.h>
- #include <linux/dim.h>
-+#include <linux/ethtool.h>
- 
- /* total number of Buffer Descriptors, same for Rx/Tx */
- #define TOTAL_DESC				256
-@@ -676,6 +677,7 @@ struct bcmgenet_priv {
- 	/* WOL */
- 	struct clk *clk_wol;
- 	u32 wolopts;
-+	u8 sopass[SOPASS_MAX];
- 
- 	struct bcmgenet_mib_counters mib;
- 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-index c9a43695b182..597c0498689a 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -41,18 +41,13 @@
- void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
--	u32 reg;
- 
- 	wol->supported = WAKE_MAGIC | WAKE_MAGICSECURE;
- 	wol->wolopts = priv->wolopts;
- 	memset(wol->sopass, 0, sizeof(wol->sopass));
- 
--	if (wol->wolopts & WAKE_MAGICSECURE) {
--		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_MS);
--		put_unaligned_be16(reg, &wol->sopass[0]);
--		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_LS);
--		put_unaligned_be32(reg, &wol->sopass[2]);
--	}
-+	if (wol->wolopts & WAKE_MAGICSECURE)
-+		memcpy(wol->sopass, priv->sopass, sizeof(priv->sopass));
- }
- 
- /* ethtool function - set WOL (Wake on LAN) settings.
-@@ -62,7 +57,6 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct device *kdev = &priv->pdev->dev;
--	u32 reg;
- 
- 	if (!device_can_wakeup(kdev))
- 		return -ENOTSUPP;
-@@ -70,17 +64,8 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- 	if (wol->wolopts & ~(WAKE_MAGIC | WAKE_MAGICSECURE))
- 		return -EINVAL;
- 
--	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
--	if (wol->wolopts & WAKE_MAGICSECURE) {
--		bcmgenet_umac_writel(priv, get_unaligned_be16(&wol->sopass[0]),
--				     UMAC_MPD_PW_MS);
--		bcmgenet_umac_writel(priv, get_unaligned_be32(&wol->sopass[2]),
--				     UMAC_MPD_PW_LS);
--		reg |= MPD_PW_EN;
--	} else {
--		reg &= ~MPD_PW_EN;
--	}
--	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
-+	if (wol->wolopts & WAKE_MAGICSECURE)
-+		memcpy(priv->sopass, wol->sopass, sizeof(priv->sopass));
- 
- 	/* Flag the device and relevant IRQ as wakeup capable */
- 	if (wol->wolopts) {
-@@ -120,6 +105,14 @@ static int bcmgenet_poll_wol_status(struct bcmgenet_priv *priv)
- 	return retries;
- }
- 
-+static void bcmgenet_set_mpd_password(struct bcmgenet_priv *priv)
-+{
-+	bcmgenet_umac_writel(priv, get_unaligned_be16(&priv->sopass[0]),
-+			     UMAC_MPD_PW_MS);
-+	bcmgenet_umac_writel(priv, get_unaligned_be32(&priv->sopass[2]),
-+			     UMAC_MPD_PW_LS);
-+}
-+
- int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- 				enum bcmgenet_power_mode mode)
- {
-@@ -144,13 +137,17 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
- 
- 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
- 	reg |= MPD_EN;
-+	if (priv->wolopts & WAKE_MAGICSECURE) {
-+		bcmgenet_set_mpd_password(priv);
-+		reg |= MPD_PW_EN;
-+	}
- 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
- 
- 	/* Do not leave UniMAC in MPD mode only */
- 	retries = bcmgenet_poll_wol_status(priv);
- 	if (retries < 0) {
- 		reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
--		reg &= ~MPD_EN;
-+		reg &= ~(MPD_EN | MPD_PW_EN);
- 		bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
- 		return retries;
- 	}
-@@ -189,7 +186,7 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
- 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
- 	if (!(reg & MPD_EN))
- 		return;	/* already powered up so skip the rest */
--	reg &= ~MPD_EN;
-+	reg &= ~(MPD_EN | MPD_PW_EN);
- 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
- 
- 	/* Disable CRC Forward */
--- 
-2.7.4
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
+Regards,
+Lukasz
