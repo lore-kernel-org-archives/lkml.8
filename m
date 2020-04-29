@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F767C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC01CC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B652085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39F720B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgD2NiX (ORCPT
+        id S1728186AbgD2NiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:38:23 -0400
-Received: from 8bytes.org ([81.169.241.247]:39874 "EHLO theia.8bytes.org"
+        Wed, 29 Apr 2020 09:38:22 -0400
+Received: from 8bytes.org ([81.169.241.247]:39788 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbgD2Nhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728059AbgD2Nhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 09:37:55 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E8433F15; Wed, 29 Apr 2020 15:37:41 +0200 (CEST)
+        id A52A0F14; Wed, 29 Apr 2020 15:37:41 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -47,9 +46,9 @@ Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 34/34] iommu: Unexport iommu_group_get_for_dev()
-Date:   Wed, 29 Apr 2020 15:37:12 +0200
-Message-Id: <20200429133712.31431-35-joro@8bytes.org>
+Subject: [PATCH v3 33/34] iommu: Move more initialization to __iommu_probe_device()
+Date:   Wed, 29 Apr 2020 15:37:11 +0200
+Message-Id: <20200429133712.31431-34-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
 References: <20200429133712.31431-1-joro@8bytes.org>
@@ -60,58 +59,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The function is now only used in IOMMU core code and shouldn't be used
-outside of it anyway, so remove the export for it.
+Move the calls to dev_iommu_get() and try_module_get() into
+__iommu_probe_device(), so that the callers don't have to do it on
+their own.
 
 Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/iommu.c | 4 ++--
- include/linux/iommu.h | 1 -
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/iommu/iommu.c | 47 +++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 48a95f7d7999..a9e5618cde80 100644
+index 7f99e5ae432c..48a95f7d7999 100644
 --- a/drivers/iommu/iommu.c
 +++ b/drivers/iommu/iommu.c
-@@ -91,6 +91,7 @@ static void __iommu_detach_group(struct iommu_domain *domain,
- 				 struct iommu_group *group);
- static int iommu_create_device_direct_mappings(struct iommu_group *group,
- 					       struct device *dev);
-+static struct iommu_group *iommu_group_get_for_dev(struct device *dev);
- 
- #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
- struct iommu_group_attribute iommu_group_attr_##_name =		\
-@@ -1500,7 +1501,7 @@ static int iommu_alloc_default_domain(struct device *dev)
-  * to the returned IOMMU group, which will already include the provided
-  * device.  The reference should be released with iommu_group_put().
-  */
--struct iommu_group *iommu_group_get_for_dev(struct device *dev)
-+static struct iommu_group *iommu_group_get_for_dev(struct device *dev)
- {
- 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+@@ -194,9 +194,19 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
  	struct iommu_group *group;
-@@ -1531,7 +1532,6 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
+ 	int ret;
  
- 	return ERR_PTR(ret);
++	if (!dev_iommu_get(dev))
++		return -ENOMEM;
++
++	if (!try_module_get(ops->owner)) {
++		ret = -EINVAL;
++		goto err_free;
++	}
++
+ 	iommu_dev = ops->probe_device(dev);
+-	if (IS_ERR(iommu_dev))
+-		return PTR_ERR(iommu_dev);
++	if (IS_ERR(iommu_dev)) {
++		ret = PTR_ERR(iommu_dev);
++		goto out_module_put;
++	}
+ 
+ 	dev->iommu->iommu_dev = iommu_dev;
+ 
+@@ -217,6 +227,12 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
+ out_release:
+ 	ops->release_device(dev);
+ 
++out_module_put:
++	module_put(ops->owner);
++
++err_free:
++	dev_iommu_free(dev);
++
+ 	return ret;
  }
--EXPORT_SYMBOL(iommu_group_get_for_dev);
  
- struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
+@@ -226,14 +242,6 @@ int iommu_probe_device(struct device *dev)
+ 	struct iommu_group *group;
+ 	int ret;
+ 
+-	if (!dev_iommu_get(dev))
+-		return -ENOMEM;
+-
+-	if (!try_module_get(ops->owner)) {
+-		ret = -EINVAL;
+-		goto err_out;
+-	}
+-
+ 	ret = __iommu_probe_device(dev, NULL);
+ 	if (ret)
+ 		goto err_out;
+@@ -1532,14 +1540,10 @@ struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
+ 
+ static int probe_iommu_group(struct device *dev, void *data)
  {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index dd076366383f..7cfd2dddb49d 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -527,7 +527,6 @@ extern int iommu_page_response(struct device *dev,
- 			       struct iommu_page_response *msg);
+-	const struct iommu_ops *ops = dev->bus->iommu_ops;
+ 	struct list_head *group_list = data;
+ 	struct iommu_group *group;
+ 	int ret;
  
- extern int iommu_group_id(struct iommu_group *group);
--extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_group_default_domain(struct iommu_group *);
+-	if (!dev_iommu_get(dev))
+-		return -ENOMEM;
+-
+ 	/* Device is probed already if in a group */
+ 	group = iommu_group_get(dev);
+ 	if (group) {
+@@ -1547,22 +1551,7 @@ static int probe_iommu_group(struct device *dev, void *data)
+ 		return 0;
+ 	}
  
- extern int iommu_domain_get_attr(struct iommu_domain *domain, enum iommu_attr,
+-	if (!try_module_get(ops->owner)) {
+-		ret = -EINVAL;
+-		goto err_free_dev_iommu;
+-	}
+-
+ 	ret = __iommu_probe_device(dev, group_list);
+-	if (ret)
+-		goto err_module_put;
+-
+-	return 0;
+-
+-err_module_put:
+-	module_put(ops->owner);
+-err_free_dev_iommu:
+-	dev_iommu_free(dev);
+-
+ 	if (ret == -ENODEV)
+ 		ret = 0;
+ 
 -- 
 2.17.1
 
