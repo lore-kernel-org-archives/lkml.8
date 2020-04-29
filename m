@@ -4,65 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE4C83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BB3C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6CD206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2770D206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dwdHcP3p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hIiC1FDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgD2OPq (ORCPT
+        id S1727078AbgD2OQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:15:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:13811 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726847AbgD2OPq (ORCPT
+        Wed, 29 Apr 2020 10:16:06 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:15306 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbgD2OQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:15:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588169745; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=bIN4xF93iRJ+VRYE4AruY+YqNKP4UWPj3P+2URriqLk=; b=dwdHcP3p5JDWQ2CSVB+A9jznWY+bkXjCbov3bt0U8Es4b2am4jnteOiLixUuMehuqKRNYCZZ
- 4SFH50IIEhEsYIM0UzimOiuKSetY35Zqk8ks/m/qYfI2pvbMmYusDIxGRi9riBDoxALNCgi4
- qx0j9Vw0yJmDhHSi+c8iIpjKHzA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea98c06.7f7375cb6688-smtp-out-n03;
- Wed, 29 Apr 2020 14:15:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 623D7C43636; Wed, 29 Apr 2020 14:15:33 +0000 (UTC)
-Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB73FC432C2;
-        Wed, 29 Apr 2020 14:15:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CB73FC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
- devices
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
- <20200429000234.GK4525@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
-Date:   Wed, 29 Apr 2020 19:45:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 29 Apr 2020 10:16:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1588169765; x=1619705765;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=fUIXPujQe0+9QpgzpvomVP/BdpWJkMkzfXPolLDQ6R0=;
+  b=hIiC1FDC/Dd+UN4XMsnNauC5T/W7ZM/ALBkkIROeT5HarED2Zv02YTxQ
+   yEUsCKeTsJPakd9Qfk/LO8ZfjKssGRj8vsUzWrMRqP4fpEQHEPnKHJJFn
+   0+CvwlGGj3cUdVGOdZgSFQbjWhUQIyDAaZhi5kRhR1rjwyk0cwAkBul3Y
+   jpAuaiYTuILPwQnMy+rVTIPu5RT8lWNYk4YFp+/RMoS2dWF85gq81lfg4
+   sOAM77qfO9oS99p42OVmjcxJss+U8M8/jmx64DHrkySC4p37wFaHufrZm
+   8ybBCcEfHsusTirpnDYhnHJ8OfCrUEpCZCELZvJtL8kh75mVW5Ous/8jc
+   A==;
+IronPort-SDR: C29Q0VgoMsJXcLV7bfoL0uqaItF7K9hkaz9JgETNTvrIcskJOJ2ykCdh2XNZllOQyA7osCm6Wu
+ 64bNCk/stk/Si0pFz1ijBTEAywYeyCJEM84YekOle0LVirYepVo/xsbZ68Mpl5KbW1zVGbzHMX
+ LvgxicFjNJJRlqxEu/O+zAk0mX4Xe0px+Yb5qf2I/adJzvLwmuONtRL0/6SQvU9AOeYK7xlySY
+ 9PCRT515OlSSdqZCcT8khlUD6lbLZi42JwMX9sBIia2QyNGdVXPsZD7Toy3kZFodl82EkqaDkL
+ 4l4=
+X-IronPort-AV: E=Sophos;i="5.73,332,1583218800"; 
+   d="scan'208";a="74958230"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Apr 2020 07:16:04 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 29 Apr 2020 07:16:03 -0700
+Received: from [10.205.29.86] (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 29 Apr 2020 07:16:01 -0700
+Subject: Re: [PATCH net v2] net: macb: fix an issue about leak related system
+ resources
+To:     Dejin Zheng <zhengdejin5@gmail.com>, <davem@davemloft.net>,
+        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+        <yash.shah@sifive.com>, <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200429135651.32635-1-zhengdejin5@gmail.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <3ed83017-f3de-b6b0-91d0-d9075ad9eed5@microchip.com>
+Date:   Wed, 29 Apr 2020 16:15:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200429000234.GK4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200429135651.32635-1-zhengdejin5@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,60 +76,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 29/04/2020 at 15:56, Dejin Zheng wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> A call of the function macb_init() can fail in the function
+> fu540_c000_init. The related system resources were not released
+> then. use devm_platform_ioremap_resource() to replace ioremap()
+> to fix it.
+> 
+> Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Yash Shah <yash.shah@sifive.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+> v1 -> v2:
+>          - Nicolas and Andy suggest use devm_platform_ioremap_resource()
+>            to repalce devm_ioremap() to fix this issue. Thanks Nicolas
+>            and Andy.
+>          - Yash help me to review this patch, Thanks Yash!
+> 
+>   drivers/net/ethernet/cadence/macb_main.c | 8 +-------
+>   1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index a0e8c5bbabc0..99354e327d1f 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -4172,13 +4172,7 @@ static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
+> 
+>   static int fu540_c000_init(struct platform_device *pdev)
+>   {
+> -       struct resource *res;
+> -
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -       if (!res)
+> -               return -ENODEV;
+> -
+> -       mgmt->reg = ioremap(res->start, resource_size(res));
+> +       mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
+>          if (!mgmt->reg)
 
-On 4/29/2020 5:32 AM, Matthias Kaehlcke wrote:
-> Hi Rajendra,
-> 
-> On Tue, Apr 28, 2020 at 07:02:51PM +0530, Rajendra Nayak wrote:
->> qup has a requirement to vote on the performance state of the CX domain
->> in sdm845 devices. Add OPP tables for these and also add power-domains
->> property for all qup instances.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 115 +++++++++++++++++++++++++++++++++++
->>   1 file changed, 115 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 8f926b5..36b9fb1 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -804,6 +804,25 @@
->>   			clock-names = "core";
->>   		};
->>   
->> +		qup_opp_table: qup-opp-table {
->> +			compatible = "operating-points-v2";
->> +
->> +			opp-19200000 {
->> +				opp-hz = /bits/ 64 <19200000>;
->> +				required-opps = <&rpmhpd_opp_min_svs>;
->> +			};
->> +
->> +			opp-75000000 {
->> +				opp-hz = /bits/ 64 <75000000>;
->> +				required-opps = <&rpmhpd_opp_low_svs>;
->> +			};
->> +
->> +			opp-100000000 {
->> +				opp-hz = /bits/ 64 <100000000>;
->> +				required-opps = <&rpmhpd_opp_svs>;
->> +			};
->> +		};
->> +
-> 
-> Judging from SDM845 (which has more OPP tables) the convention seems to be
-> to add OPP tables to the nodes that use them, which seems reasonable and
-> keeps them out of the device list.
-> 
-> Unfortunately this convention isn't completely suitable for cases like this
-> (and the DSI OPPs later in this series), where the same OPP table is used by
-> multiple devices. A possible compromise would be to add the table to the
-> node of the first device that uses them.
+Is your test valid then?
 
-Sounds fair, I will do that and respin. Thanks.
+Please use:
+if (IS_ERR(base))
+    return PTR_ERR(base);
+As advised by:
+lib/devres.c:156
+
+Regards,
+   Nicolas
+
+>                  return -ENOMEM;
+> 
+> --
+> 2.25.0
+> 
+
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Nicolas Ferre
