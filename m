@@ -2,131 +2,90 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C79EC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48437C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C06B21D90
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D5E21D90
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vb+0Lti5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FKjVRVJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgD2SQ0 (ORCPT
+        id S1726905AbgD2SRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:16:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60216 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgD2SQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:16:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=htNy/yZSV8dTTKaFzroif1bSJdhUGBMPffp1OI7OoVg=; b=vb+0Lti5y17+Y5ZcvB29hOcG29
-        //qk7T77GMcVOPoie9JYtgjpm7Lvuq0gyycFfJx0p+HGeSpaeSb4x6Khm+1LMZjMy2i4nz3HvQ4hY
-        8sPJmK0DeT1ltSal1sJStVMR0pkbGFm9uRSdJZ30pDchObPlWpy6ZVOHcEcTqnyV5uHs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jTrFm-000IzQ-Jx; Wed, 29 Apr 2020 20:16:14 +0200
-Date:   Wed, 29 Apr 2020 20:16:14 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY
- master/slave configuration.
-Message-ID: <20200429181614.GL30459@lunn.ch>
-References: <20200428075308.2938-1-o.rempel@pengutronix.de>
- <20200428075308.2938-2-o.rempel@pengutronix.de>
+        Wed, 29 Apr 2020 14:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgD2SRh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 14:17:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E255AC035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:17:36 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id g13so3690579wrb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=6lfBNlbD4T5zHjO+6zb4aZNCWH8fCBIeJ2zjUEDU5Bc=;
+        b=FKjVRVJHicGYD5WTdJMpWpXGtXFSDFjc3LSxc/83GGZ8OWLBuAvH48kbmhFmH5ZKHB
+         d6KbAlikjeM2P79sOAnW/zi0L2TjWf6Cr6J/FSc9jNiv/XGitGeOwKbgrCuHv9ganP1U
+         /fZeIlvVbQ1LF9LRihu8SJyJ4OHY0kVwWrIMT4nC0afpeRcj4PspcxUtSdELtnTvVhRv
+         5rFC1BrK19UiqlmhPKi8ZsKVsvwJC4YuRI2YvtiSDgPHSiH0Qz01kzhtgLmpHjiY2U1K
+         +LdAafAP9WKp1Z4p9nowV648/ClsicXciqHrLDPmj4I2kWcm5QXnh+y7IOgSx9nDF1lw
+         AWFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=6lfBNlbD4T5zHjO+6zb4aZNCWH8fCBIeJ2zjUEDU5Bc=;
+        b=cf7s3MLuNzFoltfodBaceo5VPTT66d+slKaQ8/0EPDLDGZlDsHhURZ1gTcB4xVgAGr
+         YSLw4E2LyHRjUQX1nGocd2jm9bcICUAE32G+77srecFnlcuQf3NJLQxePpiNV+QpxSjp
+         PTJHpdbkSjhpK7gbGUpCGpgMPd2QXklgOJ28BYVw+Fs6fTb8z1G/wBN5GKauLMLeaH/7
+         /JdO91uWlWRetd4kdvivSAggLAX+YwpoeZ5D2qef6a0SAzhJXfLdEMif5R74DC/1P6t1
+         PNab7LOyKXA9PGm5yzwqSZtWMpHhjtXmhp9B4BoKXD1C2kVTJTa1OU+T4RnP8b2bMI0z
+         PquA==
+X-Gm-Message-State: AGi0PuaJ1Ea6+Tumu6En6AWfYl4QFa8r4N9Kf6WmvSldaL+r/Hv4EfEk
+        02j9y13E1613l0SPrAYYbfKjng==
+X-Google-Smtp-Source: APiQypKmIw7W+i+Z4WSURtf6yTrOuBc3eZpc5F2oz+HJ9/6IIKwwniMHrNOG570XslOxNrE5vDfyfA==
+X-Received: by 2002:a5d:5081:: with SMTP id a1mr44188891wrt.81.1588184255519;
+        Wed, 29 Apr 2020 11:17:35 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id a24sm8596897wmb.24.2020.04.29.11.17.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 11:17:34 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com,
+        balbi@kernel.org, martin.blumenstingl@googlemail.com
+Cc:     linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 10/14] arm64: dts: amlogic: use the new USB control driver for GXL and GXM
+In-Reply-To: <20200326134507.4808-11-narmstrong@baylibre.com>
+References: <20200326134507.4808-1-narmstrong@baylibre.com> <20200326134507.4808-11-narmstrong@baylibre.com>
+Date:   Wed, 29 Apr 2020 11:17:31 -0700
+Message-ID: <7hr1w6kvgk.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428075308.2938-2-o.rempel@pengutronix.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:53:07AM +0200, Oleksij Rempel wrote:
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Hi Oleksij
+> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>
+> Add the correcly architectured USB Glue node and adapt all the Amlogic
+> GXL and GXM board to the new organization.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Sorry for taking a while to review this. I was busy fixing the FEC
-driver which i broke :-(
+Queued for v5.8,
 
-> --- a/Documentation/networking/ethtool-netlink.rst
-> +++ b/Documentation/networking/ethtool-netlink.rst
-> @@ -399,6 +399,8 @@ Kernel response contents:
->    ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
->    ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
->    ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
-> +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG``  u8      Master/slave port mode
-> +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE``  u8      Master/slave port mode
->    ====================================  ======  ==========================
-
-I've not used Sphinx for a while. But it used to be, tables had to be
-correctly aligned. I think you need to pad the other rows with spaces.
-
-Also, the comments should differ. The first is how we want it
-configured, the second is the current state.
-
->  
->  For ``ETHTOOL_A_LINKMODES_OURS``, value represents advertised modes and mask
-> @@ -421,6 +423,7 @@ Request contents:
->    ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
->    ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
->    ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
-> +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG``  u8      Master/slave port mode
->    ====================================  ======  ==========================
-
-Same table cleanup needed here.
-
-> +static int genphy_read_master_slave(struct phy_device *phydev)
-> +{
-> +	int cfg, state = 0;
-> +	u16 val;
-> +
-> +	phydev->master_slave_get = 0;
-> +	phydev->master_slave_state = 0;
-
-Could you use the _UNKNOWN #defined here?
-
-> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> index 92f737f101178..eb680e3d6bda5 100644
-> --- a/include/uapi/linux/ethtool.h
-> +++ b/include/uapi/linux/ethtool.h
-> @@ -1666,6 +1666,31 @@ static inline int ethtool_validate_duplex(__u8 duplex)
->  	return 0;
->  }
->  
-> +static inline int ethtool_validate_master_slave_cfg(__u8 cfg)
-> +{
-> +	switch (cfg) {
-> +	case PORT_MODE_CFG_MASTER_PREFERRED:
-> +	case PORT_MODE_CFG_SLAVE_PREFERRED:
-> +	case PORT_MODE_CFG_MASTER_FORCE:
-> +	case PORT_MODE_CFG_SLAVE_FORCE:
-> +	case PORT_MODE_CFG_UNKNOWN:
-> +		return 1;
-> +	}
-> +
-> +	return 0;
-> +}
-
-Does this need to be an inline function? 
-
-     Andrew
+Kevin
