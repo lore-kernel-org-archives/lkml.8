@@ -2,164 +2,170 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA495C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A73C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42D62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Co9D5tuY"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB5420731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588152518;
+	bh=OmeUQgLG2b0au2ewYYU7E5eHExIkjcjT5fVcBESuGrs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wmKX7pwGMT1q+5yBnLYQRpW98dsLEzuZ1qgaQzxA2Rpp8r3lebS9nIxd65TJeQ+op
+	 t8R4e601Qe7u7hoOdEYVOVwlnYG45OYstAYkus/f3e4ks35eHht7gqf6r0iF1/InYT
+	 hw1/iEeuWUfQ+Io8nhxfxpXnm/PnusmfCVpRzjI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgD2J2L (ORCPT
+        id S1726766AbgD2J2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:28:11 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49922 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2J2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:28:10 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T9CQf8021661;
-        Wed, 29 Apr 2020 11:27:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=QHQmACS4JkGdXe2F2AdzPzvqSzi1Ni+9J4M+JTLtdlI=;
- b=Co9D5tuYwBeP3sLw4po3/lTa0MJYvSHte6qIVIDWbVmIW7gM5bhiWyYzm5iOaoEhmikg
- foOAy+hpnzUF7ucZG+q0gXvErcqRBinVnovqegS8iMz9Se2fnesBV0Dh0uIVH+4JIjMP
- VpgxJjuLan5zTEvBP/GH1wDAb/wOZ0D/1XiOo8KfB/LyveB5TvxZ+1mQJ5BrJ+WDnAmF
- rvCzuT3Ksrlc4mnUF1FIAgYACGpSahxaB6DVikZ94wkGTEBgglSreAnI/HnuPpNjigXw
- Wut5HQDizB668deaGthT/ASl/M1cee6F1zZ8kAfiXih961GTZIJQD0u2L2fo6PK7S/NF Ow== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhjwwe2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 11:27:47 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BF5D4100034;
-        Wed, 29 Apr 2020 11:27:46 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A0DB7207569;
-        Wed, 29 Apr 2020 11:27:46 +0200 (CEST)
-Received: from [10.211.9.35] (10.75.127.46) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
- 2020 11:27:44 +0200
-Subject: Re: [PATCH v2 06/12] mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS
- for timeouts
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
- <1586966256-29548-7-git-send-email-christophe.kerello@st.com>
- <20200427202212.0235d987@xps13>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <0e2c9a6a-aa21-7814-9af8-629de6568fab@st.com>
-Date:   Wed, 29 Apr 2020 11:27:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 Apr 2020 05:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2J2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:28:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F133120787;
+        Wed, 29 Apr 2020 09:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588152516;
+        bh=OmeUQgLG2b0au2ewYYU7E5eHExIkjcjT5fVcBESuGrs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UX8f/mKyFnCUy0jOhlIXQOHw4jZeTAao7i/3RAzmKcvocb1yOZphm+wojDHM3EMXE
+         Mi8320H/VvSjn3bjRkyCv8scBqP7ZBrBOKXNUQu0DQumOkUbUnFjrj4ISB3LJLN5xv
+         uHUBGXm8IkJoz4lBgZhrF7R86q93C+JB+Zc89gOU=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jTj18-007f7C-B1; Wed, 29 Apr 2020 10:28:34 +0100
+Date:   Wed, 29 Apr 2020 10:28:32 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper
+ macros
+Message-ID: <20200429102832.4eee22b4@why>
+In-Reply-To: <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
+References: <20200411045918.179455-1-saravanak@google.com>
+        <86sghas7so.wl-maz@kernel.org>
+        <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
+        <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200427202212.0235d987@xps13>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_03:2020-04-28,2020-04-29 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: saravanak@google.com, john.stultz@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-team@android.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquèl,
+Hi Saravana,
 
-On 4/27/20 8:22 PM, Miquel Raynal wrote:
-> Hi Christophe,
-> 
-> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 15 Apr
-> 2020 17:57:30 +0200:
-> 
->> This patch removes the constant FMC2_TIMEOUT_US.
->> FMC2_TIMEOUT_MS is set to 5 seconds and this constant is used
->> each time that we need to wait (except when the timeout value
->> is set by the framework)
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->> ---
->>   drivers/mtd/nand/raw/stm32_fmc2_nand.c | 11 +++++------
->>   1 file changed, 5 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
->> index ab53314..f159c39 100644
->> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
->> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
->> @@ -37,8 +37,7 @@
->>   /* Max ECC buffer length */
->>   #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)
->>   
->> -#define FMC2_TIMEOUT_US			1000
->> -#define FMC2_TIMEOUT_MS			1000
->> +#define FMC2_TIMEOUT_MS			5000
->>   
->>   /* Timings */
->>   #define FMC2_THIZ			1
->> @@ -525,9 +524,9 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
->>   	u32 sr, heccr;
->>   	int ret;
->>   
->> -	ret = readl_relaxed_poll_timeout(fmc2->io_base + FMC2_SR,
->> -					 sr, sr & FMC2_SR_NWRF, 10,
->> -					 FMC2_TIMEOUT_MS);
->> +	ret = readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR,
->> +						sr, sr & FMC2_SR_NWRF, 1,
->> +						1000 * FMC2_TIMEOUT_MS);
-> 
-> Is the _atomic suffix needed here? If yes it would deserve a separate
-> patch with Fixes/Stable tags.
-> 
+Sorry for the delay replying.
 
-I have currently not seen any issues. So, I will remove this 
-modification as we will move to regmap_read_poll_timeout in patch 10.
+On Mon, 13 Apr 2020 15:43:31 -0700
+Saravana Kannan <saravanak@google.com> wrote:
 
->>   	if (ret) {
->>   		dev_err(fmc2->dev, "ham timeout\n");
->>   		return ret;
->> @@ -1315,7 +1314,7 @@ static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
->>   	/* Check if there is no pending requests to the NAND flash */
->>   	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
->>   					      sr & FMC2_SR_NWRF, 1,
->> -					      FMC2_TIMEOUT_US))
->> +					      1000 * FMC2_TIMEOUT_MS))
->>   		dev_warn(fmc2->dev, "Waitrdy timeout\n");
->>   
->>   	/* Wait tWB before R/B# signal is low */
+> On Mon, Apr 13, 2020 at 3:13 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Sat, Apr 11, 2020 at 2:14 AM Marc Zyngier <maz@kernel.org> wrote:  
+> > > On Sat, 11 Apr 2020 05:59:18 +0100,
+> > > Saravana Kannan <saravanak@google.com> wrote:  
+> > > >
+> > > > Add helper macros IRQCHIP_MODULE_BEGIN and IRQCHIP_MODULE_END that add
+> > > > the boilerplate code to be able to compile an irqchip driver as a
+> > > > module.
+> > > >
+> > > > The driver developer just needs to do add IRQCHIP_MODULE_BEGIN and
+> > > > IRQCHIP_MODULE_END(driver_name) around the IRQCHIP_DECLARE macros, like
+> > > > so:
+> > > >
+> > > > IRQCHIP_MODULE_BEGIN
+> > > > IRQCHIP_DECLARE(foo, "acme,foo", acme_foo_init)
+> > > > IRQCHIP_DECLARE(bar, "acme,bar", acme_bar_init)
+> > > > IRQCHIP_MODULE_END(acme_irq)
+> > > >
+> > > > Cc: John Stultz <john.stultz@linaro.org>
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > > I don't expect this patch to be perfect or the final version. But I'd
+> > > > like to introduce macros like this that don't need the driver developer
+> > > > to copy/paste or repeat the same thing (compat string, function name,
+> > > > etc) in multiple places for the driver to work as a module. If the exact
+> > > > style of my macros aren't appealing, I'm open to other suggestions.
+> > > >
+> > > > There are some checkpatch warning about the > 80 columns that my patch
+> > > > doesn't add. There are also checkpatch warnings about the trailing ; in
+> > > > a macro, but I need those for IRQCHIP_DECLARE to work when the driver is
+> > > > builtin.  
+> > >
+> > > I think you are looking at the problem from the wrong end, and adding
+> > > syntactic sugar should be the least of your worries. The reason for
+> > > not allowing irqchip drivers to be modular is that there is no
+> > > refcounting in place to prevent drivers from being removed whilst the
+> > > IRQ stack still has irq_desc, irq_data and various other objects
+> > > indirectly referencing the driver.
+> > >
+> > > I'm all for addressing these issues, though it begs the question of
+> > > *why* you want to do this. We have been perfectly happy with built-in
+> > > irqchips so far (they are pretty small, and there aren't millions of
+> > > them), so what changed?
+> > >  
+> >
+> > I can't speak for Saravana, but my sense is that moving functionality
+> > to loadable modules is becoming more important for Android devices due
+> > to their efforts to utilize a single kernel image across various
+> > vendor devices[1].  Obviously with mobile device constraints
+> > minimizing the unused vendor code in the kernel image is important,
+> > and modules help there. While the unloading issues you raised are
+> > important, one can still benefit from having a permanent module
+> > (modules that don't have a .remove handler), as they can be only
+> > loaded on the devices that use them. You're also right that irqchip
+> > drivers are fairly small, but one issue is that any code they depend
+> > on also has to be built in if they are not able to be configured as a
+> > module, so by allowing the irqchip driver to be a module, you can also
+> > modularize whatever platform calls are made from that driver.  
 > 
-> You change the timeouts from 1ms to 5s.
+> Thanks John. I was planning on digging up the context for GKI and then
+> replying. Looks like you are better at finding that than me :)
 > 
-> Maybe 5s is a little bit too much IMHO but we don't really care as this
-> is a timeout. However 1ms is tight. If you are changing this value
-> because it triggers error (eg. when the machine is loaded), then it is
-> a fix and should appear like it.
+> And I was also going to suggest the same "permanent" module option and
+> also setting up the driver attributes (bind something?) so that the
+> driver can't be unbound from the device either.
 > 
-> Thanks,
-> Miquèl
-> 
+> Marc, does that answer your questions? Sorry for not giving enough
+> context in my original email.
 
-No errors currently happens.
-During our stress tests, in a overloaded system, we have seen that we 
-could be close to 1 second, even if we never met this value.
-So, to be safe, I have set this timeout to 5 seconds.
-As it is just a timeout value, I have not seen any side effect.
-I am using the same timeout constant to avoid to have one timeout per 
-cases.
+This makes more sense, thanks.
 
-Regards,
-Christophe Kerello.
+One thing though: this seems to be exclusively DT driven. Have you
+looked into how that would look like for other firmware types such as
+ACPI?
+
+Another thing is the handling of dependencies. Statically built
+irqchips are initialized in the right order based on the topology
+described in DT, and are initialized early enough that client devices
+will find their irqchip This doesn't work here, obviously. How do you
+propose we handle these dependencies, both between irqchip drivers and
+client drivers?
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
