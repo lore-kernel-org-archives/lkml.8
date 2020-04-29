@@ -2,125 +2,136 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2305C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEB4C83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D00952085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588167337;
-	bh=B8pSobiKyn8CUfQ+seeTjOXCyKoAE7PEkBa529ZuO9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bhu8Zk3TrCDGyoL3gH33PPgdzQ1VJ0odvvnqF3FhT+ncbeoO76EGlssSl0DLzmfvf
-	 MKyuntGerCRYkbqaRHSOBmdeA1bLLUQpr6qgVkSd/XcdFpqzEz2GsKT1LwhsDx5sVe
-	 bpiw3YjjYhDFgY0oMVb5AMxl1LAV8fyFZkDUJ3CA=
+	by mail.kernel.org (Postfix) with ESMTP id 1054F206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:37:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NHSXfgm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgD2Nfh (ORCPT
+        id S1727768AbgD2NhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:35:37 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:52617 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgD2Nfg (ORCPT
+        Wed, 29 Apr 2020 09:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgD2Ng7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:35:36 -0400
-Received: by mail-wm1-f46.google.com with SMTP id 188so2055647wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 06:35:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zVcMyyXgly8dcZ1W48/YJRsJdPDZ29G6svQLPAiabDU=;
-        b=l7CiP0E5tOiPKMGBSKl2zi/RjIZJp0CHspE6MvAjKMidoI3tJjJftz33Od7lPEJbvM
-         cOqLketS0uKZ+RhaiZLZCLJ5zspfMpWMjrSbLnmQAFj1Ms3JsXDKsnpm5dnEdBMks48w
-         MGZQx0jpE2QOYrT2J0ARj/4zkjvG3MLc0a4FzXGL0KEch4vBMQBvY6l77GsjiocBXtqB
-         KXTJvBx+VfSI0mV+nvAcVtD2g+bAkzMBh9c5j1LS7fbqItTH8PzhemIPEPmlpqSawWx7
-         WjMHJTFcPvO4QTAH7oEdN9T6FQuRTMXEdIz6kn/A1QXNi+E3zJNRXt1FCzQxGLNz06fq
-         rApg==
-X-Gm-Message-State: AGi0Pubx0TsBLzTGVmg6pEvtco7kzyhCMZTxehVQQUenLqHU+zB7gH+1
-        sw3IEIKHOjiFtr3uw5f4xJQ=
-X-Google-Smtp-Source: APiQypIfI2Iu/A8rMm0AqpV0Ln7Plf5ZvMG4mOEGuK6Ja6mwzohrK5s6Wa1wqyfvDlvwJf2IjaOFDw==
-X-Received: by 2002:a1c:c2d6:: with SMTP id s205mr3520417wmf.90.1588167334367;
-        Wed, 29 Apr 2020 06:35:34 -0700 (PDT)
-Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
-        by smtp.gmail.com with ESMTPSA id 138sm8249950wmb.14.2020.04.29.06.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 06:35:33 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 15:35:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vaneet Narang <v.narang@samsung.com>
-Cc:     Maninder Singh <maninder1.s@samsung.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>
-Subject: Re: (2) [PATCH 1/1] mm/vmscan.c: change prototype for
- shrink_page_list
-Message-ID: <20200429133532.GF28637@dhcp22.suse.cz>
-References: <20200429130912.GE28637@dhcp22.suse.cz>
- <20200429120951.GC28637@dhcp22.suse.cz>
- <1588139967-19012-1-git-send-email-maninder1.s@samsung.com>
- <20200429125323epcms5p67a539511c573cd598d78b726503e3204@epcms5p6>
- <CGME20200429055946epcas5p2d5faf2b320913d59a4a8380cb017053c@epcms5p8>
- <20200429132940epcms5p81e75e09469b62253ff512222c568556f@epcms5p8>
+        Wed, 29 Apr 2020 09:36:59 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CC4C03C1AD;
+        Wed, 29 Apr 2020 06:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=2R/FYBpDxf8n8DUKZHEPryWyNhbKsTabgMS9K6/ChLE=; b=NHSXfgm8lk/2Hx8SW1rWpWtiV3
+        CMlijdePU4dNUxJhfYwYKKr++zz3A3vWmZ0U+m39yRV3QnD1yEK6fEIj30dwVbZmhkJGaXB6a4hCS
+        9WPxVP/ku95he8yuNEd9dWy4YIkAUHLgX17mPcszOtUkVc7gqxXx081Wt/XyobfJJaqzzPVUmiPwx
+        9ZDVdyUFB/jYmVvKEq+hdDheMxldBQB3n4xgppgq5QNMBECHin+il0gJINg8YZ7tpgjooDajwaTEJ
+        8iBfm3wuj0F//WR35WQ2hQp9jPNF23EQhb9gPpc6la3Z+JY7BRbk6rU8oFCkwqmTyXmpLtISGbOFA
+        do5Dx+UA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTmtX-0005uB-2T; Wed, 29 Apr 2020 13:36:59 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/25] Large pages in the page cache
+Date:   Wed, 29 Apr 2020 06:36:32 -0700
+Message-Id: <20200429133657.22632-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200429132940epcms5p81e75e09469b62253ff512222c568556f@epcms5p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-04-20 18:59:40, Vaneet Narang wrote:
-> Hi Michal, 
-> 
-> >> >
-> >> >Acked-by: Michal Hocko <mhocko@suse.com>
-> >> >
-> >> >Is there any reason to move declarations here?
-> >> >
-> >> 
-> >> "unsigned int ret" was changed mistakenely, sending V2.
-> >> and "unsigned int nr_reclaimed" is changed to remove hole.
->  
-> >Could you be more specific? Have you seen a better stack allocation
-> >footprint?
-> 
-> We didn't check stack allocation footprint, we did changes just by looking into the code.
-> we thought changing reclaimed type from long to int on 64 bit platform will add 
-> hole of 4 bytes between two stack variables nr_reclaimed & nr_taken.
-> 
-> So we tried to remove that hole by packing it with bool.
-> 
->  	unsigned long nr_scanned;                 --> Size and alignment 8 byte for long 
-> -	unsigned long nr_reclaimed = 0;           --> Changing to int will make its size as 4  
->  	unsigned long nr_taken;                   --> nr_taken needs alignment of 8 so will add hole.
->  	struct reclaim_stat stat;
->  	int file = is_file_lru(lru);
->  	enum vm_event_item item;
->  	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
->  	struct zone_reclaim_stat *reclaim_stat = &lruvec->reclaim_stat;
-> +	unsigned int nr_reclaimed = 0;            --> So moving to this place to pack it along with bool 
->  	bool stalled = false;
-> 
-> 
-> Overall stack footprint might not change as compiler makes function stack pointer as 16 byte aligned but we did this 
-> as we normally follow this coding convention when defining structures or stack variables. 
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-My understanding is that gcc can and does tricks when allocating space
-for local variables. It can use registers and there is no dictated
-structure on the placing of variable or ordering (unlike for
-structures).
+This patch set does not pass xfstests.  Test at your own risk.  It is
+based on the readahead rewrite which is in Andrew's tree.  The large
+pages somehow manage to fall off the LRU, so the test VM quickly runs
+out of memory and freezes.  To reproduce:
 
-Anyway, I would prefer if the patch was doing one thing at the time.
-If you can see some (have a look ./scripts/bloat-o-meter) improvements
-from reordering, make it a separate patch with some numbers attached.
+# mkfs.xfs /dev/sdb && mount /dev/sdb /mnt && dd if=/dev/zero bs=1M count=2048 of=/mnt/bigfile && sync && sleep 2 && sync && echo 1 >/proc/sys/vm/drop_caches 
+# /host/home/willy/kernel/xarray-2/tools/vm/page-types | grep thp
+0x0000000000401800	       511        1  ___________Ma_________t____________________	mmap,anonymous,thp
+0x0000000000405868	         1        0  ___U_lA____Ma_b_______t____________________	uptodate,lru,active,mmap,anonymous,swapbacked,thp
+# dd if=/mnt/bigfile of=/dev/null bs=2M count=5
+# /host/home/willy/kernel/xarray-2/tools/vm/page-types | grep thp
+0x0000000000400000	      2516        9  ______________________t____________________	thp
+0x0000000000400028	         1        0  ___U_l________________t____________________	uptodate,lru,thp
+0x000000000040006c	       106        0  __RU_lA_______________t____________________	referenced,uptodate,lru,active,thp
+0x0000000000400228	         1        0  ___U_l___I____________t____________________	uptodate,lru,reclaim,thp
+0x0000000000401800	       511        1  ___________Ma_________t____________________	mmap,anonymous,thp
+0x0000000000405868	         1        0  ___U_lA____Ma_b_______t____________________	uptodate,lru,active,mmap,anonymous,swapbacked,thp
+
+
+The principal idea here is that a large part of the overhead in dealing
+with individual pages is that there's just so darned many of them.  We
+would be better off dealing with fewer, larger pages, even if they don't
+get to be the size necessary for the CPU to use a larger TLB entry.
+
+Matthew Wilcox (Oracle) (24):
+  mm: Allow hpages to be arbitrary order
+  mm: Introduce thp_size
+  mm: Introduce thp_order
+  mm: Introduce offset_in_thp
+  fs: Add a filesystem flag for large pages
+  fs: Introduce i_blocks_per_page
+  fs: Make page_mkwrite_check_truncate thp-aware
+  fs: Support THPs in zero_user_segments
+  bio: Add bio_for_each_thp_segment_all
+  iomap: Support arbitrarily many blocks per page
+  iomap: Support large pages in iomap_adjust_read_range
+  iomap: Support large pages in read paths
+  iomap: Support large pages in write paths
+  iomap: Inline data shouldn't see large pages
+  xfs: Support large pages
+  mm: Make prep_transhuge_page return its argument
+  mm: Add __page_cache_alloc_order
+  mm: Allow large pages to be added to the page cache
+  mm: Allow large pages to be removed from the page cache
+  mm: Remove page fault assumption of compound page size
+  mm: Add DEFINE_READAHEAD
+  mm: Make page_cache_readahead_unbounded take a readahead_control
+  mm: Make __do_page_cache_readahead take a readahead_control
+  mm: Add large page readahead
+
+William Kucharski (1):
+  mm: Align THP mappings for non-DAX
+
+ drivers/nvdimm/btt.c    |   4 +-
+ drivers/nvdimm/pmem.c   |   6 +-
+ fs/ext4/verity.c        |   4 +-
+ fs/f2fs/verity.c        |   4 +-
+ fs/iomap/buffered-io.c  | 110 ++++++++++++++++--------------
+ fs/jfs/jfs_metapage.c   |   2 +-
+ fs/xfs/xfs_aops.c       |   4 +-
+ fs/xfs/xfs_super.c      |   2 +-
+ include/linux/bio.h     |  13 ++++
+ include/linux/bvec.h    |  23 +++++++
+ include/linux/fs.h      |   1 +
+ include/linux/highmem.h |  15 +++--
+ include/linux/huge_mm.h |  25 +++++--
+ include/linux/mm.h      |  97 ++++++++++++++-------------
+ include/linux/pagemap.h |  62 ++++++++++++++---
+ mm/filemap.c            |  60 ++++++++++++-----
+ mm/highmem.c            |  62 ++++++++++++++++-
+ mm/huge_memory.c        |  49 ++++++--------
+ mm/internal.h           |  13 ++--
+ mm/memory.c             |   7 +-
+ mm/page_io.c            |   2 +-
+ mm/page_vma_mapped.c    |   4 +-
+ mm/readahead.c          | 145 ++++++++++++++++++++++++++++++----------
+ 23 files changed, 485 insertions(+), 229 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.26.2
+
