@@ -2,184 +2,114 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F61C8300E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EECC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39E12076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E912076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nfq1JhG+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iH+tSoZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgD2WBy (ORCPT
+        id S1728234AbgD2WB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:01:54 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6498 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbgD2WB3 (ORCPT
+        Wed, 29 Apr 2020 18:01:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727918AbgD2WBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:01:29 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea9f8be0001>; Wed, 29 Apr 2020 14:59:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Apr 2020 15:01:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 15:01:29 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 22:01:29 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 29 Apr 2020 22:01:28 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.152]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ea9f9370000>; Wed, 29 Apr 2020 15:01:28 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v11 5/9] dt-binding: tegra: Add VI and CSI bindings
-Date:   Wed, 29 Apr 2020 15:00:02 -0700
-Message-ID: <1588197606-32124-6-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 29 Apr 2020 18:01:55 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF7BC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:01:54 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l78so3746349qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UuUxt8JMnTEs4OAjNK08FbzOYCL0sHXtPjyxW/ugHQQ=;
+        b=iH+tSoZVnk+t534QuXcEkoBvf2RuLlBZm1dEZiSxi1CnI+aqg5vU4GhbvY3YwGjOQD
+         828WzweKwX98QwJPMRH31iOvt5zUOHskFeus4myH/404tARuw1e3qdtT3n7DFWSgSuDD
+         hnrlN+8YBjk9e7H0rp1aKB7j7WOaPW1CLbyNceLG6sEpl7ugMExpGifqdNGKTBTOTE5M
+         ODLSY2MA1gT2k4vJ+ALE28Gv0NIWBK89eygt3sTNXiZ1mFo9p1OykiaV7UG9g3PV5vz3
+         cgyGtl36XmkDfVw0tUJpek9JuWewLtZ7cO0/XDkyx3OUQJ/cYtz5bxrYDGZdiQ2wmkGC
+         YItg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=UuUxt8JMnTEs4OAjNK08FbzOYCL0sHXtPjyxW/ugHQQ=;
+        b=Adz625YVX15iUhkU5nwtwFGlRBn3r9Ohxia2jeUXapz4RQfBAaLCu4r1oCtVu8NEzc
+         Hm0QcyaNhqcY/JuzrtYnRBTq+wlu9nSMSQkqqUfpj1bFfqaoK4teZYp6iTPi4NOkJe0w
+         RxRDOBjy9WbwDg9E4iyF6fxy7zitibhdaEclPIolttAr5+PixCOpGWNhm4FIZbIwrjVM
+         d8GzHbyigbMiyoPFkFwe0UnDD4ME6pzZcxGv6+fkSoTxEAKcdn/S0avD0PjgGl7WUiP2
+         3c8trl3NU25qAJKU7cKXUn2lb3TuGRBaANih9bG2RH4VLLL/X4DR55sQkxVI+GmLI/vd
+         SBeA==
+X-Gm-Message-State: AGi0PubMjwLBK3TgLDk/ASiUs4RDTt9iIrSQUTWGDgg9C8xqqeJJaYWu
+        VdMxsa+Jm12jLRTDg8s7MQzHKQEbR30=
+X-Google-Smtp-Source: APiQypJMYRmplV6FdwByrU828qgKs5JAn1PNyZl2hqlUAifhY+kKslMV0mizWQew+8wQPLG3AgoMmQ==
+X-Received: by 2002:a05:620a:22ab:: with SMTP id p11mr598163qkh.373.1588197713843;
+        Wed, 29 Apr 2020 15:01:53 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id b201sm358512qkg.32.2020.04.29.15.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 15:01:53 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 29 Apr 2020 18:01:51 -0400
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: BPF vs objtool again
+Message-ID: <20200429220151.GA1642005@rani.riverdale.lan>
+References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
+ <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+ <20200429215159.eah6ksnxq6g5adpx@treble>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588197566; bh=c1+1RY3DNymVc+W/nvOMO+FEXi1aSIH/IA3CL9uJZY0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=nfq1JhG+OROKSn6oANVADPAfejS1uq+J/Cj8y6Tm8tkNDlIY6dgZjK1jtyKuAfGlJ
-         1Kv5ZcyPCbvUHA/5e9OIhYqxeCBGD2ci0puacZVOGSEfITGEKuNftAKBCjFwWnH/Up
-         i9rr/GgcDAP4y8RuxRgXEKhLCLo9OWqXdTWpakMNXxYVXexfpgZCNkMBkv4LSIQTD/
-         IAqzkdVdSnvm12zopJaAGVBl0McAncEhZsYnTOwdFcCBTmDXVJSyAUrTHuK1WAaDvp
-         pDrCFZUb7+YYlSYeNUMkbxBA8ZgM/rNyr5E/7vcdumkwevuWRwmpwtcf7KVhK+VXaO
-         SmKGc5bN/FrHg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200429215159.eah6ksnxq6g5adpx@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra contains VI controller which can support up to 6 MIPI CSI
-camera sensors.
+On Wed, Apr 29, 2020 at 04:51:59PM -0500, Josh Poimboeuf wrote:
+> On Thu, Jul 18, 2019 at 12:14:08PM -0700, tip-bot for Josh Poimboeuf wrote:
+> > Commit-ID:  3193c0836f203a91bef96d88c64cccf0be090d9c
+> > Gitweb:     https://git.kernel.org/tip/3193c0836f203a91bef96d88c64cccf0be090d9c
+> > Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+> > AuthorDate: Wed, 17 Jul 2019 20:36:45 -0500
+> > Committer:  Thomas Gleixner <tglx@linutronix.de>
+> > CommitDate: Thu, 18 Jul 2019 21:01:06 +0200
+> > 
+> > bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
+> 
+> For some reason, this
+> 
+>   __attribute__((optimize("-fno-gcse")))
+> 
+> is disabling frame pointers in ___bpf_prog_run().  If you compile with
+> CONFIG_FRAME_POINTER it'll show something like:
+> 
+>   kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call without frame pointer save/setup
+> 
+> Also, since GCC 9.1, the GCC docs say "The optimize attribute should be
+> used for debugging purposes only. It is not suitable in production
+> code."  That doesn't sound too promising.
+> 
 
-Each Tegra CSI port from CSI unit can be one-to-one mapper to
-VI channel and can capture from an external camera sensor or
-from built-in test pattern generator.
+It turns out that the optimize attribute doesn't append options to the
+command-line arguments, it starts from the defaults and only adds
+whatever you specify in the attribute. So it's not very useful for
+production code.
 
-This patch adds dt-bindings for Tegra VI and CSI.
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- .../display/tegra/nvidia,tegra20-host1x.txt        | 73 ++++++++++++++++++----
- 1 file changed, 60 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-index 9999255..4731921 100644
---- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-@@ -40,14 +40,30 @@ of the following host1x client modules:
- 
-   Required properties:
-   - compatible: "nvidia,tegra<chip>-vi"
--  - reg: Physical base address and length of the controller's registers.
-+  - reg: Physical base address and length of the controller registers.
-   - interrupts: The interrupt outputs from the controller.
--  - clocks: Must contain one entry, for the module clock.
-+  - clocks: clocks: Must contain one entry, for the module clock.
-     See ../clocks/clock-bindings.txt for details.
--  - resets: Must contain an entry for each entry in reset-names.
--    See ../reset/reset.txt for details.
--  - reset-names: Must include the following entries:
--    - vi
-+  - Tegra20/Tegra30/Tegra114/Tegra124:
-+    - resets: Must contain an entry for each entry in reset-names.
-+      See ../reset/reset.txt for details.
-+    - reset-names: Must include the following entries:
-+      - vi
-+  - Tegra210:
-+    - power-domains: Must include venc powergate node as vi is in VE partition.
-+  - Tegra210 has CSI part of VI sharing same host interface and register space.
-+    So, VI device node should have CSI child node.
-+
-+    - csi: mipi csi interface to vi
-+
-+      Required properties:
-+      - compatible: "nvidia,tegra210-csi"
-+      - reg: Physical base address offset to parent and length of the controller
-+        registers.
-+      - clocks: Must contain entries csi, cilab, cilcd, cile, csi_tpg clocks.
-+        See ../clocks/clock-bindings.txt for details.
-+      - power-domains: Must include sor powergate node as csicil is in
-+        SOR partition.
- 
- - epp: encoder pre-processor
- 
-@@ -309,13 +325,44 @@ Example:
- 			reset-names = "mpe";
- 		};
- 
--		vi {
--			compatible = "nvidia,tegra20-vi";
--			reg = <0x54080000 0x00040000>;
--			interrupts = <0 69 0x04>;
--			clocks = <&tegra_car TEGRA20_CLK_VI>;
--			resets = <&tegra_car 100>;
--			reset-names = "vi";
-+		vi@54080000 {
-+			compatible = "nvidia,tegra210-vi";
-+			reg = <0x0 0x54080000 0x0 0x700>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+
-+			clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			power-domains = <&pd_venc>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0x0 0x0 0x54080000 0x2000>;
-+
-+			csi@838 {
-+				compatible = "nvidia,tegra210-csi";
-+				reg = <0x838 0x1300>;
-+				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
-+						  <&tegra_car TEGRA210_CLK_CILCD>,
-+						  <&tegra_car TEGRA210_CLK_CILE>,
-+						  <&tegra_car TEGRA210_CLK_CSI_TPG>;
-+				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>;
-+				assigned-clock-rates = <102000000>,
-+						       <102000000>,
-+						       <102000000>,
-+						       <972000000>;
-+
-+				clocks = <&tegra_car TEGRA210_CLK_CSI>,
-+					 <&tegra_car TEGRA210_CLK_CILAB>,
-+					 <&tegra_car TEGRA210_CLK_CILCD>,
-+					 <&tegra_car TEGRA210_CLK_CILE>,
-+					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
-+				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
-+				power-domains = <&pd_sor>;
-+			};
- 		};
- 
- 		epp {
--- 
-2.7.4
-
+See this for eg where the same thing came up in a different context.
+https://lore.kernel.org/lkml/alpine.LSU.2.21.2004151445520.11688@wotan.suse.de/
