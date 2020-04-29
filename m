@@ -2,67 +2,136 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB03AC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CC8C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B098A208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4B8214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588161755;
+	bh=ay5m6ljkjaKgMH3E1jGBExtvUh1yIckcB0vO3k9/+eI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tmDB7sVxPsVycv0XdLgiEIYjfP5XWeJ+oe//KsRw3uTerg/OCTFqMAAa9OllL7DDi
+	 8wbeLAzt4SAbCEx2kMr0MMfErf1WOFisiBlVG2mXVK0SUeS5oKueU8X4cFRYwZEyo0
+	 Bmbaq1VtONpm216GC5g0OX6dpOUN69xL6RyQanxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgD2MBo (ORCPT
+        id S1726883AbgD2MCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:01:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:37862 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgD2MBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:01:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09DC9106F;
-        Wed, 29 Apr 2020 05:01:43 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC3693F73D;
-        Wed, 29 Apr 2020 05:01:41 -0700 (PDT)
-References: <20200428050242.17717-1-swood@redhat.com> <20200428050242.17717-4-swood@redhat.com> <jhjees7s29u.mognet@arm.com> <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/3] sched,rt: break out of load balancing if an RT task appears
-In-reply-to: <fa406883f0eace37fe7f658814e29f82a4f0addf.camel@redhat.com>
-Date:   Wed, 29 Apr 2020 13:01:39 +0100
-Message-ID: <jhjr1w6pkkc.mognet@arm.com>
+        Wed, 29 Apr 2020 08:02:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46661 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgD2MCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:02:34 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q124so910136pgq.13;
+        Wed, 29 Apr 2020 05:02:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T/5a3HTQNKy4AqGfHf3RhknW3g8HjozXrYnmRz796hw=;
+        b=tkXPzRXFmzRVn8cTlJVqIA6mPwSvX/ZA5RCU1PsM/IDoz1iWWuiCSEVhd3YiOqje6M
+         LaDn1larJKJCaGtdWUBSQwm2CciGpptJcstiItqk1Q2h5jlNiM84QL+L44w1boDr7OKu
+         Bt6Som4rivqfNfdCIZxWqdvIDVhNUidgD7+URxN8ckJANnnHMx7FvJDAITOw9FfSwnFE
+         zStKfir0lTekwX8G3x/ufVgxMMM4yMlCAwX1n3A/WVl6TZ2DE6fQG2v8Cw+JqPXvQGh8
+         rTyDiYcTQvmwjrISak81roDmoDJ7aI8JvwYWamKFIDStyE4bNAUIWN8nFC6KmHkdneK4
+         l4CA==
+X-Gm-Message-State: AGi0PuatFt1McH5yjZiIgznMFAUWSUC+cYsbM6fCwGDGZAix+lMzdVbA
+        skyIg1zVbuLg3295CXDyjDc=
+X-Google-Smtp-Source: APiQypJ38NBctgYyPwK0lHxz55CDL9L9Qm4z5+xuG8K/h7rrUF64qLHgrKt8mPW901ViFL1i3OsRXQ==
+X-Received: by 2002:a63:4646:: with SMTP id v6mr34499795pgk.426.1588161753233;
+        Wed, 29 Apr 2020 05:02:33 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 4sm1095932pff.18.2020.04.29.05.02.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 05:02:31 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D48B1403AB; Wed, 29 Apr 2020 12:02:30 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 12:02:30 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
+Message-ID: <20200429120230.GK11244@42.do-not-panic.com>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-5-mcgrof@kernel.org>
+ <20200429112637.GD21892@infradead.org>
+ <20200429114542.GJ11244@42.do-not-panic.com>
+ <20200429115051.GA27378@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429115051.GA27378@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 04:50:51AM -0700, Christoph Hellwig wrote:
+> On Wed, Apr 29, 2020 at 11:45:42AM +0000, Luis Chamberlain wrote:
+> > On Wed, Apr 29, 2020 at 04:26:37AM -0700, Christoph Hellwig wrote:
+> > > I can't say I'm a fan of all these long backtraces in commit logs..
+> > > 
+> > > > +static struct dentry *blk_debugfs_dir_register(const char *name)
+> > > > +{
+> > > > +	return debugfs_create_dir(name, blk_debugfs_root);
+> > > > +}
+> > > 
+> > > I don't think we really need this helper.
+> > 
+> > We don't export blk_debugfs_root, didn't think we'd want to, and
+> > since only a few scew funky drivers would use the struct gendisk
+> > and also support BLKTRACE, I didn't think we'd want to export it
+> > now.
+> > 
+> > A new block private symbol namespace alright?
+> 
+> Err, that function is static and has two callers.
 
-On 28/04/20 23:33, Scott Wood wrote:
->> > +
->> > +/* Is there a task of a high priority class? */
->> > +static inline bool rq_has_runnable_rt_task(struct rq *rq)
->> > +{
->> > +	return unlikely(rq->nr_running != rq->cfs.h_nr_running);
->>
->> Seeing as that can be RT, DL or stopper, that name is somewhat misleading.
->
-> rq_has_runnable_rt_dl_task()?  Or is there some term that unambiguously
-> encompasses both?
->
+Yes but that is to make it easier to look for who is creating the
+debugfs_dir for either the request_queue or partition. I'll export
+blk_debugfs_root and we'll open code all this.
 
-Naming is a pain as always; I'd shove it in fair.c as
-"rq_has_higher_tasks()" or similar.
+> > > This could be simplified down to:
+> > > 
+> > > 	if (bdev && bdev != bdev->bd_contains)
+> > > 		return bdev->bd_part->debugfs_dir;
+> > > 	return q->debugfs_dir;
+> > >
+> > > Given that bd_part is in __blkdev_get very near bd_contains.
+> > 
+> > Ah neat.
+> > 
+> > > Also given that this patch completely rewrites blk_trace_debugfs_dir is
+> > > there any point in the previous patch?
+> > 
+> > Still think it helps with making this patch easier to read, but I don't
+> > care, lemme know if I should just fold it.
+> 
+> In fact I'm not even sure we need the helper.  Modulo the comment
+> this just becomes a:
+> 
+> 	if (bdev && bdev != bdev->bd_contains)
+>  		dir = bdev->bd_part->debugfs_dir;
+> 	else
+> 	 	dir = q->debugfs_dir;
+> 
+> in do_blk_trace_setup.
 
-> -Scott
+True, alright will remove that patch.
+
+  Luis
