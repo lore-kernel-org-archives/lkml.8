@@ -2,77 +2,216 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF95C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F80C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2628F21973
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEEB21973
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588172660;
+	bh=VgNyKCWRl6pBRPNRiCv4s6W0SbkewsNdNo8ObfKvi10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EFd7bqigDobFrrzHwpCSxnmZpTj3vf7xfB54vVmCqlJPUCeaXpiwMPI4hkls2MEfb
+	 R8d4Lf9xy55TspOM5Km0RcJtsL/yg5QaRgM/7NvuwcNT3YQ/hVRE9CORyvGLNDZzVN
+	 rShAiGqYwGIZIJdDpWXKeRKEiyn1k+F8ibMGxLeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgD2PDb convert rfc822-to-8bit (ORCPT
+        id S1726862AbgD2PET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:03:31 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:45604 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgD2PDb (ORCPT
+        Wed, 29 Apr 2020 11:04:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36602 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbgD2PES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:03:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id F3AD2609D2FA;
-        Wed, 29 Apr 2020 17:03:28 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id lX7sjEyPFomq; Wed, 29 Apr 2020 17:03:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 740FF6075EB6;
-        Wed, 29 Apr 2020 17:03:28 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 8Uf7_MeP4EgF; Wed, 29 Apr 2020 17:03:28 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 5288660632C0;
-        Wed, 29 Apr 2020 17:03:28 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 17:03:28 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <191182038.171422.1588172608162.JavaMail.zimbra@nod.at>
-In-Reply-To: <875zdibasg.fsf@vostro.fn.ogness.net>
-References: <20200119215233.7292-1-richard@nod.at> <875zdibasg.fsf@vostro.fn.ogness.net>
-Subject: Re: [PATCH] ubifs: Fix ubifs_tnc_lookup() usage in
- do_kill_orphans()
+        Wed, 29 Apr 2020 11:04:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u127so2409166wmg.1;
+        Wed, 29 Apr 2020 08:04:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=f6PNWoApVwTcNiHkF4wVW5LJWKT70kv2j5V0Jnz1S1k=;
+        b=RLB3i9MZ2qwmkz62Rl39c2d0HQ1qVWMGBNg0e5rj0vSmRxRrO5JihpDTSPC8Kvsfm6
+         VMMdImb7FKTuMR6Sx7WveXMYZ6yQUKc4ZCpQWCYRnqKcSCSso5QJCZ74YWRf8BLHqIDK
+         T625+Y2hkrKK3cXHpv94bVguTYArSfK0JeH5qYHSnNu11PNLJgd7PWu17UpGXDDncchB
+         KLPHCMpem1VPIdjCmqQOzVg+5t8Kcxuf0vJS1qO5Q82i7a01tjZiNy7Fr9h79WuQGo3E
+         lJGTtRre0g00CawR5ze8lgXvC3aBxGFVdYOOS0EVrskETQkAQxoYQ082IIQgd979A49L
+         SrLQ==
+X-Gm-Message-State: AGi0PuafnOgVyGV0+xBpJrlt9Vk4jEZHnHuO23dSCzav3eP/ayo42nV3
+        XY7Sq5m2LmNv/UEF854YEp/3ZTF9
+X-Google-Smtp-Source: APiQypKOnajIsXuLEH4rnEOU5AvTKKehO3+viyceO9NBQH+ns5wSdIn0st/Ud1Mh5/6PP+8xpceg7w==
+X-Received: by 2002:a1c:5f56:: with SMTP id t83mr3594290wmb.61.1588172657038;
+        Wed, 29 Apr 2020 08:04:17 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id e11sm29807237wrn.87.2020.04.29.08.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:04:15 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 17:04:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+Message-ID: <20200429150414.GI28637@dhcp22.suse.cz>
+References: <cover.1588092152.git.chris@chrisdown.name>
+ <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <20200429101510.GA28637@dhcp22.suse.cz>
+ <20200429140330.GA5054@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: ubifs: Fix ubifs_tnc_lookup() usage in do_kill_orphans()
-Thread-Index: VZvOuEmGG52wsyHCwYg4ePnx4nCziw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429140330.GA5054@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello John,
-
------ Ursprüngliche Mail -----
-> Von: "John Ogness" <john.ogness@linutronix.de>
-> An: "richard" <richard@nod.at>
-> CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>
-> Gesendet: Mittwoch, 29. April 2020 16:56:31
-> Betreff: Re: [PATCH] ubifs: Fix ubifs_tnc_lookup() usage in do_kill_orphans()
-
-> Hi Richard,
+On Wed 29-04-20 10:03:30, Johannes Weiner wrote:
+> On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
+> > On Tue 28-04-20 19:26:47, Chris Down wrote:
+> > > From: Yafang Shao <laoar.shao@gmail.com>
+> > > 
+> > > A cgroup can have both memory protection and a memory limit to isolate
+> > > it from its siblings in both directions - for example, to prevent it
+> > > from being shrunk below 2G under high pressure from outside, but also
+> > > from growing beyond 4G under low pressure.
+> > > 
+> > > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> > > implemented proportional scan pressure so that multiple siblings in
+> > > excess of their protection settings don't get reclaimed equally but
+> > > instead in accordance to their unprotected portion.
+> > > 
+> > > During limit reclaim, this proportionality shouldn't apply of course:
+> > > there is no competition, all pressure is from within the cgroup and
+> > > should be applied as such. Reclaim should operate at full efficiency.
+> > > 
+> > > However, mem_cgroup_protected() never expected anybody to look at the
+> > > effective protection values when it indicated that the cgroup is above
+> > > its protection. As a result, a query during limit reclaim may return
+> > > stale protection values that were calculated by a previous reclaim cycle
+> > > in which the cgroup did have siblings.
+> > > 
+> > > When this happens, reclaim is unnecessarily hesitant and potentially
+> > > slow to meet the desired limit. In theory this could lead to premature
+> > > OOM kills, although it's not obvious this has occurred in practice.
+> > 
+> > Thanks this describes the underlying problem. I would be also explicit
+> > that the issue should be visible only on tail memcgs which have both
+> > max/high and protection configured and the effect depends on the
+> > difference between the two (the smaller it is the largrger the effect).
+> > 
+> > There is no mention about the fix. The patch resets effective values for
+> > the reclaim root and I've had some concerns about that
+> > http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
+> > Johannes has argued that other races are possible and I didn't get to
+> > think about it thoroughly. But this patch is introducing a new
+> > possibility of breaking protection. If we want to have a quick and
+> > simple fix that would be easier to backport to older kernels then I
+> > would feel much better if we simply workedaround the problem as
+> > suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
+> > We can rework the effective values calculation to be more robust against
+> > races on top of that because this is likely a more tricky thing to do.
 > 
-> Could you CC this patch to stable? It fixes a serious problem that I am
-> seeing on real devices (i.e. Linux not being able to mount its root
-> filesystem after a power cut). Thanks.
+> Well, can you please *do* think more thoroughly about what I wrote,
+> instead of pushing for an alternative patch on gut feeling alone?
+> 
+> Especially when you imply that this should be a stable patch.
 
-It has a Fixes-Tag, so it should make it into stable.
+The patch has a Fixes tag and so it is not unrealistic to assume that it
+will hit older trees. I wasn't really implying stable tree backport and
+I do not think this is a stable material.
 
-Thanks,
-//richard
+All I was arguing here is that a fix/workaround which doesn't add new
+side effects is a safer option.
+
+> Not only does your alternative patch not protect against the race you
+> are worried about, the race itself doesn't matter. Racing reclaimers
+> will write their competing views of the world into the shared state on
+> all other levels anyway.
+> 
+> And that's okay. If the configuration and memory usage is such that
+> there is at least one reclaimer that scans without any protection
+> (like a limit reclaimer), it's not a problem when a second reclaimer
+> that meant to do protected global reclaim will also do one iteration
+> without protection. It's no different than if a second thread had
+> entered limit reclaim through another internal allocation.
+
+Yes I do agree here.
+
+> There is no semantical violation with the race in your patch or the
+> race in this patch. Any effective protection that becomes visible is
+> 1) permitted by the configuration, but 2) also triggered *right now*
+> by an acute need to reclaim memory with these parameters.
+> 
+> The *right now* part is important. That's what's broken before either
+> patch, and that's what we're fixing: to see really, really *old* stale
+> that might not be representative of the config semantics anymore.
+
+No disagreement here either. But please remember that the example I've
+given is a clear violation of the protection. Let me paste it here so
+that we have both examples in one email:
+: Let's have global and A's reclaim in parallel:
+:  |
+:  A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
+:  |\
+:  | C (low = 1G, usage = 2.5G)
+:  B (low = 1G, usage = 0.5G)
+: 
+: for A reclaim we have
+: B.elow = B.low
+: C.elow = C.low
+: 
+: For the global reclaim
+: A.elow = A.low
+: B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
+: C.elow = min(C.usage, C.low)
+: 
+: With the effective values reseting we have A reclaim
+: A.elow = 0
+: B.elow = B.low
+: C.elow = C.low
+: 
+: and global reclaim could see the above and then
+: B.elow = C.elow = 0 because children_low_usage > A.elow
+
+I hope we both agree that B shouldn't be reclaimed whether the reclaim
+comes from A or above A. The race is not possible with with the patch
+working around the problem in mem_cgroup_protection().
+
+> Since you haven't linked to my email, here is my counter argument to
+> the alternative patch "fixing" this race somehow.
+> 
+> A reclaim:
+> 
+>   root
+>      `- A (low=2G, max=3G -> elow=0)
+>         `- A1 (low=0G -> elow=0)
+> 
+> Global reclaim:
+> 
+>   root
+>      `- A (low=2G, max=3G -> elow=2G)
+>         `- A1 (low=0G -> elow=2G)
+> 
+> During global reclaim, A1 is supposed to have 2G effective low
+> protection. If A limit reclaim races, it can set A1's elow to
+> 0. Global reclaim will now query mem_cgroup_protection(root, A1), the
+> root == memcg check you insist we add will fail and it'll reclaim A1
+> without protection.
+
+You are right that hooking into mem_cgroup_protection wouldn't prevent
+the race in this example. But in this example the race really doesn't
+matter because the overall protection is not violated. A1 would get
+reclaimed by A anyway. But in my example there is a protected memcg
+which shouldn't get reclaimed.
+
+-- 
+Michal Hocko
+SUSE Labs
