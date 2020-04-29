@@ -2,246 +2,206 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9D0C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906FAC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1EE42074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCE92083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZTuGFBTe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIb8uPmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgD2Lbm (ORCPT
+        id S1726842AbgD2LcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        Wed, 29 Apr 2020 07:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726556AbgD2Lbl (ORCPT
+        by vger.kernel.org with ESMTP id S1726556AbgD2LcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:31:41 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929EEC03C1AD;
-        Wed, 29 Apr 2020 04:31:41 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BxDV0QRfz9sRY;
-        Wed, 29 Apr 2020 21:31:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1588159898;
-        bh=JUxQ1DDlvwJDXTYSg0PlVcfy+qm/d19EKj5KPqykW4A=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ZTuGFBTe5ZDCRYmRf8ONj9kw4OOzYV0cVIHj998pCw1d1JqRzoZJWA0/c/y5gCTPk
-         r+rzuwz8o6St+ED8g3XKqbQA4xaZRRDi4QqNt4PRDUJKACWR6chSzombKXzCoXMXG9
-         cNNlLtk3BoJYaKhgz5D8NG6Iwn2PgptzNZgNPNvIezf8TIbTfRsa2v7K8D/hRLMv1b
-         jRlhdEsR529HAa8t01dU2Tj8b0ZVgvH9VEzW831JCo8HMi0I7p72w767xTZ15+735C
-         Q/pND6PdteTKnPxv4mNt2lnQ7bSE71jwBvZ9ZQbD4lEZdtH+zFnUoVGLWSBCdP0cl5
-         H+Fr6RImwBrrw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, kjain@linux.ibm.com
-Subject: Re: [PATCH v7 2/5] powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor details
-In-Reply-To: <20200327063642.26175-3-kjain@linux.ibm.com>
-References: <20200327063642.26175-1-kjain@linux.ibm.com> <20200327063642.26175-3-kjain@linux.ibm.com>
-Date:   Wed, 29 Apr 2020 21:31:54 +1000
-Message-ID: <87ftcmfryt.fsf@mpe.ellerman.id.au>
+        Wed, 29 Apr 2020 07:32:18 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EA3C03C1AD;
+        Wed, 29 Apr 2020 04:32:18 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id k12so1489280qtm.4;
+        Wed, 29 Apr 2020 04:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TN8Zd1ovr5Y9BIds5efwwQrWI/OoatX8UM2U2pugr28=;
+        b=fIb8uPmC7LFx407+LbeeHnYbvSHQtjF9vnz94PIwVwVZDJNPzaG/dBejgW3ehEd8w7
+         uUtyVU/3pRfmPXZlCrHRj4rt1Kv+WbluYZXxCJ3kRBUC8I3REHwq6RvSQmyYXGIOGygH
+         AJUp458zCPtLy0h2Zs8xuHGdlcOtC/GcvV83qTEwtf4p26CzLAMlKdT/T/VHFI8xTM+m
+         K29DmIuZvweUUJIRm+u6bJdcDklh9m+gPIUJnPhXETEcl/B6zNLx/0i0WCl4P/ci2yG6
+         j1vIHmtawEOOvFxG0NkwQsalj3bITQKosMRU5kcFFJ7OlEelVGO0Q3b2RThaDy8mcLEV
+         Q3sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TN8Zd1ovr5Y9BIds5efwwQrWI/OoatX8UM2U2pugr28=;
+        b=I/Hsa0aUSXhpzk0fxyTmLto64UPovBlQp9C93TlN3mg58ksKOc+2kZJY0zHDDwo9R9
+         U/4ylf2FZV9NqFkERMTBIgpcyr0ybuYjK6CdVDtLW2hluYwPhJnaPMYasWDF5mDc+6Kp
+         5jW4ki3NEfhi/lUZLJy+Usuqon+hYFyQ+iHqjRqJP/i/IWDDCDpzGMz1CaTpOKwHPSsL
+         4Txnmp1ckI5Mm/CH+IWqKr4g67NL39Oa4pE7fg4x5eNwNTIqOGX8oZ+1XJjqAW25WsSt
+         RqlEz30hTuWx7WpkyJ8czkXi9o/cBXSYlfmuYGWBwDZ3+51MOroS38pv+h1j/hd4l+LK
+         1/cw==
+X-Gm-Message-State: AGi0PubN+FsGEID8udwtM4eEXd1Jtae3lN9zzguA6jLKK0wyji7YVgTq
+        M+j+qTwGGUI3as94VhwnWXE=
+X-Google-Smtp-Source: APiQypKCa4PTP6G9UvwU/CMzNX267N/00FQqAzAdRG+V6IYPHso19QLnZmCbPHdXiRnrp9SI2urHyA==
+X-Received: by 2002:ac8:37e6:: with SMTP id e35mr33836338qtc.19.1588159937031;
+        Wed, 29 Apr 2020 04:32:17 -0700 (PDT)
+Received: from errol.ini.cmu.edu (pool-71-112-157-130.pitbpa.fios.verizon.net. [71.112.157.130])
+        by smtp.gmail.com with ESMTPSA id z26sm15734754qkg.39.2020.04.29.04.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 04:32:16 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 07:32:09 -0400
+From:   "Gabriel L. Somlo" <gsomlo@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Mateusz Holenko <mholenko@antmicro.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+Message-ID: <20200429113209.GB23743@errol.ini.cmu.edu>
+References: <20200425133939.3508912-0-mholenko@antmicro.com>
+ <20200425133939.3508912-3-mholenko@antmicro.com>
+ <CAPk366REVxz7qRfJ0dJOVPRey6+01q1JRvqANDNffYV8Lvh73g@mail.gmail.com>
+ <55e1e941457cd596c4273e9c55dc2cfc9027c5ba.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55e1e941457cd596c4273e9c55dc2cfc9027c5ba.camel@kernel.crashing.org>
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kajol,
+Hi Ben,
 
-Some comments inline ...
+On Wed, Apr 29, 2020 at 01:21:11PM +1000, Benjamin Herrenschmidt wrote:
+> On Mon, 2020-04-27 at 11:13 +0200, Mateusz Holenko wrote:
+> > As Gabriel Somlo <gsomlo@gmail.com> suggested to me, I could still use
+> > readl/writel/ioread/iowrite() standard functions providing memory
+> > barriers *and* have values in CPU native endianness by using the
+> > following constructs:
+> > 
+> > `le32_to_cpu(readl(addr))`
+> > 
+> > and
+> > 
+> > `writel(cpu_to_le32(value), addr)`
+> > 
+> > as le32_to_cpu/cpu_to_le32():
+> > - does nothing on LE CPUs and
+> > - reorders bytes on BE CPUs which in turn reverts swapping made by
+> > readl() resulting in returning the original value.
+> 
+> It's a bit sad... I don't understand why you need this. The HW has a
+> fied endian has you have mentioned earlier (and that is a good design).
+> 
+> The fact that you are trying to shove things into a "smaller pipe" than
+> the actual register shouldn't affect at what address the MSB and LSB
+> reside. And readl/writel (or ioread32/iowrite32) will always be LE as
+> well, so will match the HW layout. Thus I don't see why you need to
+> play swapping games here.
+> 
+> This however would be avoided completely if the HW was a tiny bit
+> smarter and would do the multi-beat access for you which shouldn't be
+> terribly hard to implement.
+> 
+> That said, it would be even clearer if you just open coded the 2 or 3
+> useful cases: 32/8, 32/16 and 32/32. The loop with calculated shifts
+> (and no masks) makes the code hard to understand.
 
-Kajol Jain <kjain@linux.ibm.com> writes:
-> For hv_24x7 socket/chip level events, specific chip-id to which
-> the data requested should be added as part of pmu events.
-> But number of chips/socket in the system details are not exposed.
->
-> Patch implements read_sys_info_pseries() to get system
-> parameter values like number of sockets and chips per socket.
-> Rtas_call with token "PROCESSOR_MODULE_INFO"
-> is used to get these values.
->
-> Sub-sequent patch exports these values via sysfs.
->
-> Patch also make these parameters default to 1.
->
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  arch/powerpc/perf/hv-24x7.c              | 72 ++++++++++++++++++++++++
->  arch/powerpc/platforms/pseries/pseries.h |  3 +
->  2 files changed, 75 insertions(+)
->
-> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-> index 48e8f4b17b91..9ae00f29bd21 100644
-> --- a/arch/powerpc/perf/hv-24x7.c
-> +++ b/arch/powerpc/perf/hv-24x7.c
-> @@ -20,6 +20,11 @@
->  #include <asm/io.h>
->  #include <linux/byteorder/generic.h>
->  
-> +#ifdef CONFIG_PPC_RTAS
+A "compound" LiteX MMIO register of 32 bits total, starting at address
+0x80000004, containing value 0x12345678, is spread across 4 8-bit
+subregisters aligned at ulong in the MMIO space like this on LE:
 
-This driver can only be build on pseries, and pseries always selects
-RTAS. So the ifdef is unncessary.
+0x82000000  00 00 00 00 12 00 00 00 34 00 00 00 56 00 00 00  ........4...V...
+                        ^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^
+0x82000010  78 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  x...............
+            ^^^^^^^^^^^
 
-> +#include <asm/rtas.h>
-> +#include <../../platforms/pseries/pseries.h>
-> +#endif
+and like this on BE:
 
-That's not really what the platform header is intended for.
+0x82000000  00 00 00 00 00 00 00 12 00 00 00 34 00 00 00 56  ...........4...V
+                        ^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^
+0x82000010  00 00 00 78 00 00 00 00 00 00 00 00 00 00 00 00  ...x............
+            ^^^^^^^^^^^
 
-You should put the extern in arch/powerpc/include/asm somewhere.
+LiteX can be optionally built to use larger than 8-bit subregisters,
+here's an example with 16-bit subregisters (also aligned at ulong),
+for the same "compound" register:
 
-Maybe rtas.h
+on LE:
+0x82000000  00 00 00 00 34 12 00 00 78 56 00 00 00 00 00 00  ....4...xV......
+                        ^^^^^^^^^^^ ^^^^^^^^^^^
 
-> @@ -57,6 +62,69 @@ static bool is_physical_domain(unsigned domain)
->  	}
->  }
->  
-> +#ifdef CONFIG_PPC_RTAS
+and on BE:
+0x82000000  00 00 00 00 00 00 12 34 00 00 56 78 00 00 00 00  .......4..Vx....
+                        ^^^^^^^^^^^ ^^^^^^^^^^^
 
-Not needed.
+Essentially (back to the more common 8-bit subregister size), a compound
+register foo = 0x12345678 is stored as
 
-> +#define PROCESSOR_MODULE_INFO   43
+	ulong foo[4] = {0x12, 0x34, 0x56, 0x78};
 
-Please document where these come from, presumably LoPAPR somewhere?
+in the CPU's native endianness, aligned at the CPU's native word width
+(hence "ulong").
 
-> +#define PROCESSOR_MAX_LENGTH	(8 * 1024)
-> +
-> +static int strbe16toh(const char *buf, int offset)
-> +{
-> +	return (buf[offset] << 8) + buf[offset + 1];
-> +}
+With 16-bit subregisters that would then be:
 
-I'm confused by this. "str" implies string, a string is an array of
-bytes and has no endian. But then be16 implies it's an array of __be16,
-in which case buf should be a __be16 *.
+	ulong foo[2] = {0x1234, 0x5678};
 
-> +
-> +static u32		physsockets;	/* Physical sockets */
-> +static u32		physchips;	/* Physical chips */
+Trouble with readl() and writel() is that they convert everything to LE
+internally, which on BE would get us something different *within* each
+subregister (i.e., 0x12000000 instead of 0x12, or 0x34120000 instead of
+0x1234).
 
-No tabs there please.
+The cleanest way (IMHO) to accomplish an endian-agnostic readl() (that
+preserves both barriers AND native endianness) is to undo the internal
+__le32_to_cpu() using:
 
-> +
-> +/*
-> + * Function read_sys_info_pseries() make a rtas_call which require
-> + * data buffer of size 8K. As standard 'rtas_data_buf' is of size
-> + * 4K, we are adding new local buffer 'rtas_local_data_buf'.
-> + */
-> +char rtas_local_data_buf[PROCESSOR_MAX_LENGTH] __cacheline_aligned;
+	cpu_to_le32(readl(addr))
 
-static?
+This keeps us away from using any '__' internals directly (e.g.,
+__raw_readl()), or open-coding our own `litex_readl()`, e.g.:
 
-> +/*
-> + * read_sys_info_pseries()
-> + * Retrieve the number of sockets and chips per socket details
-> + * through the get-system-parameter rtas call.
-> + */
-> +void read_sys_info_pseries(void)
-> +{
-> +	int call_status, len, ntypes;
-> +
-> +	/*
-> +	 * Making system parameter: chips and sockets default to 1.
-> +	 */
-> +	physsockets = 1;
-> +	physchips = 1;
-> +	memset(rtas_local_data_buf, 0, PROCESSOR_MAX_LENGTH);
-> +	spin_lock(&rtas_data_buf_lock);
+	static inline u32 litex_readl(const volatile void __iomem *addr)
+	{
+		u32 val;
+		__io_br();
+		val = __raw_readl(addr)); /* No le32 byteswap here! */
+		__io_ar(val);
+		return val;
+	}
 
-You're not using the rtas_data_buf, so why are you taking the
-rtas_data_buf_lock?
+... which is something that was strongly advised against in earlier
+revisions of this series.
 
-> +	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
-> +				NULL,
-> +				PROCESSOR_MODULE_INFO,
-> +				__pa(rtas_local_data_buf),
-> +				PROCESSOR_MAX_LENGTH);
-> +
-> +	spin_unlock(&rtas_data_buf_lock);
-> +
-> +	if (call_status != 0) {
-> +		pr_info("%s %s Error calling get-system-parameter (0x%x)\n",
-> +			__FILE__, __func__, call_status);
-
-pr_err(), don't use __FILE__, this file already uses pr_fmt(). Not sure
-__func__ is really necessary either.
-
-		return;
-
-Then you can deindent the next block.
-
-> +	} else {
-> +		rtas_local_data_buf[PROCESSOR_MAX_LENGTH - 1] = '\0';
-> +		len = strbe16toh(rtas_local_data_buf, 0);
-
-Why isn't the buffer a __be16 array, and then you just use be16_to_cpu() ?
-
-> +		if (len < 6)
-> +			return;
-> +
-> +		ntypes = strbe16toh(rtas_local_data_buf, 2);
-> +
-> +		if (!ntypes)
-> +			return;
-
-What is ntypes?
-
-> +		physsockets = strbe16toh(rtas_local_data_buf, 4);
-> +		physchips = strbe16toh(rtas_local_data_buf, 6);
-> +	}
-> +}
-> +#endif /* CONFIG_PPC_RTAS */
-> +
->  /* Domains for which more than one result element are returned for each event. */
->  static bool domain_needs_aggregation(unsigned int domain)
->  {
-> @@ -1605,6 +1673,10 @@ static int hv_24x7_init(void)
->  	if (r)
->  		return r;
->  
-> +#ifdef CONFIG_PPC_RTAS
-> +	read_sys_info_pseries();
-> +#endif
-
-> +
->  	return 0;
->  }
->  
-> diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
-> index 13fa370a87e4..1727559ce304 100644
-> --- a/arch/powerpc/platforms/pseries/pseries.h
-> +++ b/arch/powerpc/platforms/pseries/pseries.h
-> @@ -19,6 +19,9 @@ extern void request_event_sources_irqs(struct device_node *np,
->  struct pt_regs;
->  
->  extern int pSeries_system_reset_exception(struct pt_regs *regs);
-> +#ifdef CONFIG_PPC_RTAS
-> +extern void read_sys_info_pseries(void);
-> +#endif
->  extern int pSeries_machine_check_exception(struct pt_regs *regs);
->  extern long pseries_machine_check_realmode(struct pt_regs *regs);
-
-
-cheers
+Cheers,
+--Gabriel
