@@ -2,117 +2,186 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5EAC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFF6C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD8C12073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6D92073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588155987;
+	bh=CUtGxsArQanQwON+6LaDG7zI4D5FvGfnQkLD3FxockQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Vf+H8rX8Q/w0+WNgqE8WhE1TqiahzarStwJX2WoxU+HKZ/NOp2dvXzDG+pG05nNfS
+	 Zs+ljCMjDLVoRnWmZGGToNFmXudMa3y1kK0lXj34LcrTrrBrPHVUNEF8zXYTd+P1V7
+	 Bppy34r+sP2AneHnfbcsHhpkQ2tHvzQySBwNgO2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgD2KZq (ORCPT
+        id S1726784AbgD2K00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:25:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41060 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD2KZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:25:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3F218AC44;
-        Wed, 29 Apr 2020 10:25:42 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id DD8A91E1298; Wed, 29 Apr 2020 12:25:40 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 12:25:40 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
-Message-ID: <20200429102540.GA12716@quack2.suse.cz>
-References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
- <20200428214653.GD2005@dread.disaster.area>
+        Wed, 29 Apr 2020 06:26:26 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46400 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgD2K00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 06:26:26 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z25so1199844otq.13;
+        Wed, 29 Apr 2020 03:26:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mvIHWhU04g3v6LjKSsky5pEk63GBz533E/sobmoo7Wc=;
+        b=f3Nkvak66UjmGA9qsFMGjnOQsHTxX7S/iX5P4MRLEb2ZD7LUsHMkfaeeMZBN2dhf5I
+         yMav5dxFky3KGtmstKdvClOyOAOj6QNjEp8ZKv2p4X0bbhyTpCSV4eDYfUvJDqkCyV8l
+         aKuTF4yjCgvOA1bygw0cuYpKL6XMNQHXYxtpES/YN/FR1dJ1+WX1AF6BhXFpeEjrKJLd
+         OUDlBrAlNb0922P9R1vV8XDmXXh6gqsuK5NDcryBtJIoIOA7PWNqQdunBBdfV5EBvlU5
+         oo469ys7e1i2Kti0+5wOIWJmxOyDVHAIkcMfTIwVQBdmiqeNE5pGTgOgm15tNYrULjUV
+         nqjg==
+X-Gm-Message-State: AGi0PuYkJcfbc9hr6VSyJAX6wxFbnMcIkwRUosuZ0530+uVcj0T0WXtA
+        ldPT6x+wE9P5+nCagBOODKdetDwviEu3xPZJcvw=
+X-Google-Smtp-Source: APiQypJnyzo4VqldDo304UGZQtLY+7AXB7jFtaFmqclX/7CuNEy43JujxFtdEqaZN6afWwi2LXcTKDkxwr3nMu1panQ=
+X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr26003040otq.262.1588155984780;
+ Wed, 29 Apr 2020 03:26:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428214653.GD2005@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
+ <20200427135820.GH25745@shell.armlinux.org.uk> <20200427143238.GA26436@lsv03152.swis.in-blr01.nxp.com>
+ <20200427144806.GI25745@shell.armlinux.org.uk> <20200429053753.GA12533@lsv03152.swis.in-blr01.nxp.com>
+In-Reply-To: <20200429053753.GA12533@lsv03152.swis.in-blr01.nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 29 Apr 2020 12:26:12 +0200
+Message-ID: <CAJZ5v0g4oaDGGk1Jg5rihaG1kj1BYHpZpwTFrXX4Jo4tettbgg@mail.gmail.com>
+Subject: Re: [net-next PATCH v2 0/3] Introduce new APIs to support phylink and
+ phy layers
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux.cj@gmail.com,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-04-20 07:47:34, Dave Chinner wrote:
-> On Tue, Apr 28, 2020 at 12:13:46PM -0400, Dan Schatzberg wrote:
-> > The loop device runs all i/o to the backing file on a separate kworker
-> > thread which results in all i/o being charged to the root cgroup. This
-> > allows a loop device to be used to trivially bypass resource limits
-> > and other policy. This patch series fixes this gap in accounting.
-> 
-> How is this specific to the loop device? Isn't every block device
-> that offloads work to a kthread or single worker thread susceptible
-> to the same "exploit"?
-> 
-> Or is the problem simply that the loop worker thread is simply not
-> taking the IO's associated cgroup and submitting the IO with that
-> cgroup associated with it? That seems kinda simple to fix....
-> 
-> > Naively charging cgroups could result in priority inversions through
-> > the single kworker thread in the case where multiple cgroups are
-> > reading/writing to the same loop device.
-> 
-> And that's where all the complexity and serialisation comes from,
-> right?
-> 
-> So, again: how is this unique to the loop device? Other block
-> devices also offload IO to kthreads to do blocking work and IO
-> submission to lower layers. Hence this seems to me like a generic
-> "block device does IO submission from different task" issue that
-> should be handled by generic infrastructure and not need to be
-> reimplemented multiple times in every block device driver that
-> offloads work to other threads...
+On Wed, Apr 29, 2020 at 7:38 AM Calvin Johnson
+<calvin.johnson@oss.nxp.com> wrote:
+>
+> On Mon, Apr 27, 2020 at 03:48:07PM +0100, Russell King - ARM Linux admin wrote:
+> > On Mon, Apr 27, 2020 at 08:02:38PM +0530, Calvin Johnson wrote:
+> > > On Mon, Apr 27, 2020 at 02:58:20PM +0100, Russell King - ARM Linux admin wrote:
+> > > > On Mon, Apr 27, 2020 at 06:54:06PM +0530, Calvin Johnson wrote:
+> > > > > Following functions are defined:
+> > > > >   phylink_fwnode_phy_connect()
+> > > > >   phylink_device_phy_connect()
+> > > > >   fwnode_phy_find_device()
+> > > > >   device_phy_find_device()
+> > > > >   fwnode_get_phy_node()
+> > > > >
+> > > > > First two help in connecting phy to phylink instance.
+> > > > > Next two help in finding a phy on a mdiobus.
+> > > > > Last one helps in getting phy_node from a fwnode.
+> > > > >
+> > > > > Changes in v2:
+> > > > >   move phy code from base/property.c to net/phy/phy_device.c
+> > > > >   replace acpi & of code to get phy-handle with fwnode_find_reference
+> > > > >   replace of_ and acpi_ code with generic fwnode to get phy-handle.
+> > > > >
+> > > > > Calvin Johnson (3):
+> > > > >   device property: Introduce phy related fwnode functions
+> > > > >   net: phy: alphabetically sort header includes
+> > > > >   phylink: Introduce phylink_fwnode_phy_connect()
+> > > >
+> > > > Thanks for this, but there's more work that needs to be done here.  I
+> > > > also think that we must have an ack from ACPI people before this can be
+> > > > accepted - you are in effect proposing a new way for representing PHYs
+> > > > in ACPI.
+> > >
+> > > Thanks for your review.
+> > >
+> > > Agree that we need an ack from ACPI people.
+> > > However, I don't think it is a completely new way as similar acpi approach to
+> > > get phy-handle is already in place.
+> > > Please see this:
+> > > https://elixir.bootlin.com/linux/v5.7-rc3/source/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c#L832
+> >
+> > That was added by:
+> >
+> > commit 8089a96f601bdfe3e1b41d14bb703aafaf1b8f34
+> > Author: Iyappan Subramanian <isubramanian@apm.com>
+> > Date:   Mon Jul 25 17:12:41 2016 -0700
+> >
+> >     drivers: net: xgene: Add backward compatibility
+> >
+> >     This patch adds xgene_enet_check_phy_hanlde() function that checks whether
+> >     MDIO driver is probed successfully and sets pdata->mdio_driver to true.
+> >     If MDIO driver is not probed, ethernet driver falls back to backward
+> >     compatibility mode.
+> >
+> >     Since enum xgene_enet_cmd is used by MDIO driver, removing this from
+> >     ethernet driver.
+> >
+> >     Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+> >     Tested-by: Fushen Chen <fchen@apm.com>
+> >     Tested-by: Toan Le <toanle@apm.com>
+> >     Signed-off-by: David S. Miller <davem@davemloft.net>
+> >
+> > The commit message says nothing about adding ACPI stuff, and searching
+> > the 'net for the posting of this patch seems to suggest that it wasn't
+> > obviously copied to any ACPI people:
+> >
+> >     https://lists.openwall.net/netdev/2016/07/26/11
+> >
+> > Annoyingly, searching for:
+> >
+> >     "drivers: net: xgene: Add backward compatibility" site:lore.kernel.org
+> >
+> > doesn't find it on lore, so can't get the full headers and therefore
+> > addresses.
+> >
+> > So, yes, there's another driver using it, but the ACPI folk probably
+> > never got a look-in on that instance.  Even if they had been copied,
+> > the patch description is probably sufficiently poor that they wouldn't
+> > have read the patch.
+> >
+> > I'd say there's questions over whether ACPI people will find this an
+> > acceptable approach.
+> >
+> > Given that your patch moves this from one driver to a subsystem thing,
+> > it needs to be ratified by ACPI people, because it's effectively
+> > becoming a standardised way to represent a PHY in ACPI.
+>
+> How can we get attention/response from ACPI people?
 
-Yeah, I was thinking about the same when reading the patch series
-description. We already have some cgroup workarounds for btrfs kthreads if
-I remember correctly, we have cgroup handling for flush workers, now we are
-adding cgroup handling for loopback device workers, and soon I'd expect
-someone comes with a need for DM/MD worker processes and IMHO it's getting
-out of hands because the complexity spreads through the kernel with every
-subsystem comming with slightly different solution to the problem and also
-the number of kthreads gets multiplied by the number of cgroups. So I
-agree some generic solution how to approach IO throttling of kthreads /
-workers would be desirable.
+This is in my queue, but the processing of this has been slow for a
+while, sorry about that.
 
-OTOH I don't have a great idea how the generic infrastructure should look
-like...
+If you have a new version of the series, please submit it, otherwise
+ping me in a couple of days if I don't respond to the patches in the
+meantime.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks!
