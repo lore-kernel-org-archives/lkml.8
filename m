@@ -3,136 +3,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70996C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E0C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F64521569
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05802083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgD2WxE (ORCPT
+        id S1727096AbgD2Wxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:53:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35163 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2WxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:53:03 -0400
-IronPort-SDR: jTcaeB9QlaWo/3Ht8nW44N+KHkb6W2J2tO8ibdAHQ4BHk7svP9hY0ZDejjNrviNp8sJWsT+KFn
- rUNIh503I2AA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:53:01 -0700
-IronPort-SDR: IvXiqauwleqNe5SZwf+pAE9v2rWRk9fkZpIl53+u6tI+uwDAP3lW1+tEbIFjx766ZGUraqdyBf
- 3dP9t8vXw+xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="261579499"
-Received: from isdasana-mobl1.amr.corp.intel.com (HELO [10.254.74.214]) ([10.254.74.214])
-  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2020 15:53:00 -0700
-Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
- <20200429220732.31602-2-yu-cheng.yu@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
-Date:   Wed, 29 Apr 2020 15:53:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 18:53:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15522 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727057AbgD2Wxh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:53:37 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TMV0Qq137223;
+        Wed, 29 Apr 2020 18:53:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30pjmm0duf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 18:53:19 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03TMlXiU009367;
+        Wed, 29 Apr 2020 18:53:19 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30pjmm0dtg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 18:53:18 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TMpDIh014864;
+        Wed, 29 Apr 2020 22:53:17 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu71bqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 22:53:16 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TMrE6J56754402
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 22:53:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2909A42041;
+        Wed, 29 Apr 2020 22:53:14 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 773204203F;
+        Wed, 29 Apr 2020 22:53:13 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.4.15])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Apr 2020 22:53:13 +0000 (GMT)
+Date:   Thu, 30 Apr 2020 00:53:10 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
+ pages
+Message-ID: <20200430005310.7b25efab@p-imbrenda>
+In-Reply-To: <609afef2-43c2-d048-1c01-448a53a54d4e@intel.com>
+References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
+        <2a1abf38-d321-e3c7-c3b1-53b6db6da310@intel.com>
+        <b077744e-65be-f89c-55bb-4fc0f712eb76@de.ibm.com>
+        <609afef2-43c2-d048-1c01-448a53a54d4e@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200429220732.31602-2-yu-cheng.yu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_11:2020-04-29,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004290159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/20 3:07 PM, Yu-cheng Yu wrote:
-> +Note:
-> +  There is no CET-enabling arch_prctl function.  By design, CET is enabled
-> +  automatically if the binary and the system can support it.
+On Wed, 29 Apr 2020 10:55:52 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-I think Andy and I danced around this last time.  Let me try to say it
-more explicitly.
+> On 4/29/20 10:31 AM, Christian Borntraeger wrote:
+> > On 29.04.20 18:07, Dave Hansen wrote:  
+> >> On 4/28/20 3:50 PM, Claudio Imbrenda wrote:  
+> >>> If a page is inaccesible and it is used for things like sendfile,
+> >>> then the content of the page is not always touched, and can be
+> >>> passed directly to a driver, causing issues.
+> >>>
+> >>> This patch fixes the issue by adding a call to
+> >>> arch_make_page_accessible in page_cache_pipe_buf_confirm; this
+> >>> fixes the issue.  
+> >> I spent about 5 minutes putting together a patch:
+> >>
+> >> 	https://sr71.net/~dave/intel/accessible.patch
+> >>
+> >> It adds a page flag ("daccess") which starts out set.  It clears
+> >> the flag it when the page is added to the page cache or mapped as
+> >> anonymous.  
+> > And that of course does not work. Pages are not made unaccessible
+> > at a random point in time. We do check for several page flags and
+> > page count before doing so and we also do this while with
+> > paqe_ref_freeze to avoid several races. I guess you just hit one of
+> > those.  
+> 
+> Actually, that's the problem.  You've gone through all these careful
+> checks and made the page inaccessible.  *After* that process, how do
+> you keep the page from being hit by an I/O device before it's made
+> accessible again?  My patch just assumes that *all* pages have gone
+> through that process and passed those checks.
 
-I want CET kernel enabling to able to be disconnected from the on-disk
-binary.  I want a binary compiled with CET to be able to disable it, and
-I want a binary not compiled with CET to be able to enable it.  I want
-different threads in a process to be able to each have different CET status.
+I don't understand what you are saying here.
 
-Which JITs was this tested with?  I think as a bare minimum we need to
-know that this design can accommodate _a_ modern JIT.  It would be
-horrible if the browser javascript engines couldn't use this design, for
-instance.
+we start with all pages accessible, we mark pages as inaccessible when
+they are imported in the secure guest (we use the PG_arch_1 bit in
+struct page). we then try to catch all I/O on inaccessible pages and
+make them accessible so that I/O devices are happy. when we need to
+make page inaccessible again, we mark the page, make sure the counters
+and the flag in struct page look ok, then we actually make it
+inaccessible. this way pages that are undergoing I/O will never
+actually transition from from accessible to inaccessible, although they
+might briefly marked as inaccessible. this means that the flag we use
+to mark a page inaccessible is overindicating, but that is fine.
+
+pages need to be accessible in order to be used for I/O, and need to be
+inaccessible in order to be used by protected VMs.
+
+> I'm pretty sure if I lifted all the checks in
+> arch/s390/kernel/uv.c::make_secure_pte() and duplicated them at the
+> sites where I'm doing ClearPageAccessible(), they'd happily pass.
+> 
+> Freezing page refs is a transient thing you do *during* the
+> conversion, but it doesn't stop future access to the page.  That's
+> what these incomplete hooks are trying to do.
+
+we use the PG_arch_1 bit to actually stop access to the page, freezing
+is used just for a short moment to make sure nobody is touching the
+page and avoid races while we are checking.
+
+> Anyway, I look forward to seeing the patch for the FOLL_PIN issue I
+> pointed out, and I hope to see another copy of the fs/splice changes
+> with a proper changelog and the maintainer on cc.  It's starting to
+> get late in the rc's.
+
+either your quick and dirty patch was too dirty (e.g. not accounting
+for possible races between make_accessible/make_inaccessible), or some
+of the functions in the trace you provided should do pin_user_page
+instead of get_user_page (or both)
+
+
+our first implementation (before FOLL_PIN was introduced) called
+make_page_accessible for each FOLL_GET. Once FOLL_PIN was introduced,
+we thought it would be the right place. If you think calling
+make_accessible for both FOLL_PIN and FOLL_GET is the right thing, then
+I can surely patch it that way.
+
+I'll send out an v2 for fs/splice later on today.
