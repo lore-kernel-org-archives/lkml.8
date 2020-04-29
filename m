@@ -2,176 +2,176 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6187DC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C87C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22C2F2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="eEKrRJry"
+	by mail.kernel.org (Postfix) with ESMTP id 52A542072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgD2QEV (ORCPT
+        id S1726781AbgD2QFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:04:21 -0400
-Received: from mail-bn8nam12on2046.outbound.protection.outlook.com ([40.107.237.46]:6261
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726476AbgD2QEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:04:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b7zSrXN5cgVrw1zmLKE4R/R0ks4qXjXV6r3CntICsIDVBZhBsu2LAkVleg3hFpZM1t0XLeFqb4icUZD3lvIF3ftuQVfprS2tylED2pTWgWLuYVK+jzu+YC8h8iYQulngqj6LFiMINIgT0J+F/QRAps0SxXtpdO1BmuzGWrPC/0d7QRcErXBdycJpZmyIqYtOsvSU4sImtrV1IxFp6eBwN0xGsWypSJA/Jkxom23nrNiFx31Q3CIbzQaGe5+FVq6QfWAXLVfN7jgVG1ri3AwIu65+5qFRKpeBosQSM4ThKhRCCe+hzSCA1FZEN6TYdDwVueUraKwjHxYFBe1HHPFkLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=awVt15CK6307gmzu2M1d49T5JfWnzkVqPpxTjk0lgDc=;
- b=jjUpv0y27txVPnUg50Q94JI4BN2K+4cMBdYkhSG7nQshyE45OQPe6ptrPENSKtnS7ArCTnAc2/hdSWOBnsVJxf4ay8u1C/mGnDafOJ1DDqazeQjSbADjB/8um4yCzn9lCa+Sm85jNvXjmbTJ3WiRfHRF1cWY0HDEJMEwP53pr/ELo9tqB+CuYRUSjGhLSlNgQhSYwdBjv2ot+lItO9KYhEUJlbyKAyTG/1jk3PXoEbDFTUQEgmNoNP+oingqcg2Z+TR9riJ9DSB/1PrAVb/qmZGfCRrg78TExtBSvOQMO8AxgYBADZpsk4d6hLFohDinvoF/qWHOOv4MukQwP+zabg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=awVt15CK6307gmzu2M1d49T5JfWnzkVqPpxTjk0lgDc=;
- b=eEKrRJryfRhsKozOhb5LgeqMeIi4V9RGx8CMy6QexcMrBBZ5AMF7wttLUHsTwaXs+oek/5USNuICSg/TifqrZbxPP9rMy01HgRIfjK37tVuE/hroyox/hF+DIJHu9bOrRH7PZiO9vbP3SXVJGFu6xM1ER7Q3Jy+NrP4LOKJQJnI=
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB0014.namprd11.prod.outlook.com (2603:10b6:301:64::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Wed, 29 Apr
- 2020 16:04:17 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2937.028; Wed, 29 Apr
- 2020 16:04:17 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: wfx: avoid compiler warning on empty array
-Thread-Topic: [PATCH] staging: wfx: avoid compiler warning on empty array
-Thread-Index: AQHWHjF5vlfoO7puXUWgUhn1WHjUDaiQQ0QA
-Date:   Wed, 29 Apr 2020 16:04:16 +0000
-Message-ID: <3943343.tW1xmJHsB6@pc-42>
-References: <20200429142119.1735196-1-arnd@arndb.de>
-In-Reply-To: <20200429142119.1735196-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=silabs.com;
-x-originating-ip: [82.67.86.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e3ab641-8e68-44f3-c678-08d7ec56f822
-x-ms-traffictypediagnostic: MWHPR11MB0014:
-x-microsoft-antispam-prvs: <MWHPR11MB00146E7F0EC6E63A80D35A5193AD0@MWHPR11MB0014.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 03883BD916
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(376002)(366004)(39850400004)(136003)(346002)(396003)(316002)(186003)(54906003)(2906002)(66574012)(66556008)(66946007)(66446008)(64756008)(76116006)(91956017)(5660300002)(66476007)(71200400001)(26005)(33716001)(478600001)(6506007)(8676002)(4326008)(86362001)(6486002)(9686003)(6512007)(8936002)(6916009)(39026012);DIR:OUT;SFP:1101;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I8ldv3mmdYEzDyyvyuog+jebCxNqBEnTu8WhJnzlldX6uqItMRcgM0GPCM5F15dd5PaK3XS97icO5QcnD+ePh8qHRYN6AaCiuLGIKtZhXlsyZHFo6grYBmEqlO5DPHRc5xyCD2YqivYVAzqGzldTdFzuX4quR8IBMIbqFeg5kjCbSaAixsvMfGyhKTg6Tv3JHE+m+Iku4cVtzjwHquROxjecRXY0/0FhNgznTSOLJtNSbdKfngcrjOFcgHVTKAkcZGeyzMvxvLR6KglfY2Fz5o3ByJronA9kcP0JRxcvX9eIVsjt/hwD93IPbZE8F+4pFx4OCOIP/b4/Ezj3kbx2V0CeT4LUL32Gq8lROZfai1jYOEzZEf9KUhk1uzxtcV8INfKOLU+YzEaYJ716RpVAuoFooH2Z9wa9RFlWhA6Siw+6qyS0R/XkeYDYHj9e1GyyfmriR3QC7arWZvSbAL2hCoxFk8iXPGnCjxRJFleN5CE9w4ieDHW58JzSBJwX5zmd
-x-ms-exchange-antispam-messagedata: I+lN+zVGK7cPYWT22qsqP1aKdyz0y0gdX8gubpNx+iTNba/vbOKmVr+lsPWjTueiHtHIyLDTYzHHZVq9ltgG1P3oPBmAGEBwbRtT9/4dLTcoEPN1PPvGd5EBkqgRlItBuuW+J309oEKnUd7gG3j8m7z/iiug5ismFQ7xOxC1HNf+6KCl97s3BX8UX6M3+0bJMUjn1O6pzGYKtVxWr9NAuHw5WVazE/nz+8IhyxD+IuU4ZmXXiDYpB+ziARmRbhITJCdN9Ep+a1fFwFl+5NAFiogu8dmaUYXAxCRZGV/RSZ1Qko49sbWXgSI45Nzm3G1Y5zeDaPF9JfcgsiVkmsnLu6Y1KvQ2FQ0O6mjLLS7JC3yRRpQFsH+0J6/nz4jGm+jsQFzQOdctUEDzC8wosqwyXTrx5DhjPLl1VKfcLL6lB6DVJti6tQ8VSHLq2bqsgHiH249d/0MllVM1Anej+WXR2ABOt6nyQ5yZ0sQJz7HPN1zWv3UULBDbTLbSqPDb7Goqh7YpD/Kr2UQ7H2D03lxv38ti1LnksKz4btklmuRHLoCIYG7iE+Sb0TRCpUmO+iwKEDAkV24ShhdMyLZoLwUN1bL1lu0GbmXMFFDezKRJfKPEtWH7In+Jh1fw8qH7Uvwguf55rGChJD7vKWqlJ7bbZKaEoZhiFDtuASbDOPF0H4ikTUExSBW+OCD78PUf7zhMXQNDRgykMQdYX2mETnyd8KFJRwDo3paKaNKlRKBnmklZw8HJGvDgCEs9ddwmoS/Amyt9C2fDUe+8RnrsYxrMYS9WlmJ1zMJL+YGZRLTNdlA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-2"
-Content-ID: <8DC2BB2508D84F49A627E80CC3308FE3@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e3ab641-8e68-44f3-c678-08d7ec56f822
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2020 16:04:16.9266
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tmrOUnZcz9gUkT5BfcotSOJvCF4P8IuSbdA8qO11BWemkK9y2uoL5ObdqqlQZiBai+/RTjmgdKauMxp+zzOoyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0014
+        Wed, 29 Apr 2020 12:05:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35326 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgD2QFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:05:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6C07DAB91;
+        Wed, 29 Apr 2020 16:05:04 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 18:05:04 +0200
+Message-ID: <s5h1ro6jn0v.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+        <s5ho8rdnems.wl-tiwai@suse.de>
+        <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+        <s5h4kt4ojrf.wl-tiwai@suse.de>
+        <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+        <s5hv9lkm49n.wl-tiwai@suse.de>
+        <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5ha72ulp2y.wl-tiwai@suse.de>
+        <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 29 April 2020 16:21:09 CEST Arnd Bergmann wrote:
->=20
-> When CONFIG_OF is disabled, gcc-9 produces a warning about the
-> wfx_sdio_of_match[] array having a declaration without a dimension:
->=20
-> drivers/staging/wfx/bus_sdio.c:159:34: error: array 'wfx_sdio_of_match' a=
-ssumed to have one element [-Werror]
->   159 | static const struct of_device_id wfx_sdio_of_match[];
->       |                                  ^~~~~~~~~~~~~~~~~
->=20
-> Move the proper declaration up and out of the #ifdef instead.
->=20
-> Fixes: a7a91ca5a23d ("staging: wfx: add infrastructure for new driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/staging/wfx/bus_sdio.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/staging/wfx/bus_sdio.c b/drivers/staging/wfx/bus_sdi=
-o.c
-> index dedc3ff58d3e..c2e4bd1e3b0a 100644
-> --- a/drivers/staging/wfx/bus_sdio.c
-> +++ b/drivers/staging/wfx/bus_sdio.c
-> @@ -156,7 +156,13 @@ static const struct hwbus_ops wfx_sdio_hwbus_ops =3D=
- {
->         .align_size             =3D wfx_sdio_align_size,
->  };
->=20
-> -static const struct of_device_id wfx_sdio_of_match[];
-> +static const struct of_device_id wfx_sdio_of_match[] =3D {
-> +       { .compatible =3D "silabs,wfx-sdio" },
-> +       { .compatible =3D "silabs,wf200" },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
-I suggest to keep the '#ifdef CONFIG_OF' around this definition. If
-CONFIG_OF is undefined, of_match_ptr() and of_match_node() will be NULL
-and it should compile.
+On Wed, 29 Apr 2020 17:47:47 +0200,
+Alex Deucher wrote:
+> 
+> On Wed, Apr 29, 2020 at 11:27 AM Nicholas Johnson
+> <nicholas.johnson-opensource@outlook.com.au> wrote:
+> >
+> > On Wed, Apr 29, 2020 at 09:37:41AM +0200, Takashi Iwai wrote:
+> > > On Tue, 28 Apr 2020 16:48:45 +0200,
+> > > Nicholas Johnson wrote:
+> > > >
+> > > > > > > >
+> > > > > > > > FWIW, I have a fiji board in a desktop system and it worked fine when
+> > > > > > > > this code was enabled.
+> > > > > > >
+> > > > > > > Is the new DC code used for Fiji boards?  IIRC, the audio component
+> > > > > > > binding from amdgpu is enabled only for DC, and without the audio
+> > > > > > > component binding the runtime PM won't be linked up, hence you can't
+> > > > > > > power up GPU from the audio side access automatically.
+> > > > > > >
+> > > > > >
+> > > > > > Yes, DC is enabled by default for all cards with runtime pm enabled.
+> > > > >
+> > > > > OK, thanks, I found that amdgpu got bound via component in the dmesg
+> > > > > output, too:
+> > > > >
+> > > > > [   21.294927] snd_hda_intel 0000:08:00.1: bound 0000:08:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
+> > > > >
+> > > > > This is the place soon after amdgpu driver gets initialized.
+> > > > > Then we see later another initialization phase:
+> > > > >
+> > > > > [   26.904127] rfkill: input handler enabled
+> > > > > [   37.264152] [drm] PCIE GART of 1024M enabled (table at 0x000000F400000000).
+> > > > >
+> > > > > here shows 10 seconds between them.  Then, it complained something:
+> > > > >
+> > > > >
+> > > > > [   37.363287] [drm] UVD initialized successfully.
+> > > > > [   37.473340] [drm] VCE initialized successfully.
+> > > > > [   37.477942] amdgpu 0000:08:00.0: [drm] Cannot find any crtc or sizes
+> > > >
+> > > > The above would be me hitting WindowsKey+P to change screens, but with
+> > > > no DisplayPort attached to Fiji, hence it unable to find crtc.
+> > > >
+> > > > >
+> > > > > ... and go further, and hitting HD-audio error:
+> > > > >
+> > > > That would be me having attached the DisplayPort and done WindowsKey+P
+> > > > again.
+> > > >
+> > > > > [   38.936624] [drm] fb mappable at 0x4B0696000
+> > > > > [   38.936626] [drm] vram apper at 0x4B0000000
+> > > > > [   38.936626] [drm] size 33177600
+> > > > > [   38.936627] [drm] fb depth is 24
+> > > > > [   38.936627] [drm]    pitch is 15360
+> > > > > [   38.936673] amdgpu 0000:08:00.0: fb1: amdgpudrmfb frame buffer device
+> > > > > [   40.092223] snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching to polling mode: last cmd=0x00170500
+> > > > >
+> > > > > After this point, HD-audio communication was screwed up.
+> > > > >
+> > > > > This lastcmd in the above message is AC_SET_POWER_STATE verb for the
+> > > > > root node to D0, so the very first command to power up the codec.
+> > > > > The rest commands are also about the power up of each node, so the
+> > > > > whole error indicate that the power up at runtime resume failed.
+> > > > >
+> > > > > So, this looks to me as if the device gets runtime-resumed at the bad
+> > > > > moment?
+> > > > It does. However, this is not going to be easy to pin down.
+> > > >
+> > > > I moved from Arch to Ubuntu, and it behaves differently. I cannot
+> > > > trigger the bug in Ubuntu. Plus, it puts the GPUs asleep, even if
+> > > > attached at boot, unlike Arch. I will continue to try to trigger it. But
+> > > > even if this is a problem with the Linux distribution, it should not be
+> > > > able to trigger a kernel mode bug, so we should persist with finding it.
+> > >
+> > > Sure, that's a bug to be fixed.
+> > >
+> > > This made me thinking what happens if we load the HD-audio driver very
+> > > late.  Could you try to blacklist snd-hda-intel module, then load it
+> > > manually after plugging the DP monitor and activating it?
+> > Attached dmesg-blacklist-*
+> >
+> > It is interesting. If I enable the monitor with the module unloaded, and
+> > then load the module, I cannot trigger the bug, even if disabling the
+> > monitor, waiting for GPU to sleep, and then waking again.
+> >
+> > Even if I wake monitor up, put to sleep again, and then insmod when
+> > sleeping, it does not cause bug when waking again.
+> >
+> > Is there anything special about the first time the monitor is used?
+> >
+> 
+> What do you mean by used?  Do you mean plugged in to the GPU or used
+> in the GUI?  It might be easier to debug this without a GUI involved.
+> Can you try this at runlevel 3 or something equivalent for your
+> distro?
+> 
+> When the GPU is powered up, the driver gets an interrupt when a
+> display is hotplugged and generates an event and userspace
+> applications can listen for these events.  When the GPU is powered
+> down, there's no interrupt.  I think most GUIs poll GPUs periodically
+> to handle this case so they can detect a new display even when the GPU
+> is off.  Maybe we are getting some sort of race here.  GUI queries GPU
+> driver, causes GPU to wake up, checks attached displays, GPU driver
+> resets runtime pm timer.  GPU goes back to sleep.  The detection
+> updates the ELD data which causes the HDA driver to wake up.  It
+> assumes the hw is on and tries to query it.  In the meantime, the GPU
+> has already powered everything down again.
+
+Well, but the code path there is the runtime PM resume of the audio
+device and it means that GPU must have been runtime-resumed again
+beforehand via the device link.  So, it should have worked from the
+beginning but in reality not -- that is, apparently some inconsistency
+is found in the initial attempt of the runtime resume...
 
 
-> +
->  static int wfx_sdio_probe(struct sdio_func *func,
->                           const struct sdio_device_id *id)
->  {
-> @@ -248,15 +254,6 @@ static const struct sdio_device_id wfx_sdio_ids[] =
-=3D {
->  };
->  MODULE_DEVICE_TABLE(sdio, wfx_sdio_ids);
->=20
-> -#ifdef CONFIG_OF
-> -static const struct of_device_id wfx_sdio_of_match[] =3D {
-> -       { .compatible =3D "silabs,wfx-sdio" },
-> -       { .compatible =3D "silabs,wf200" },
-> -       { },
-> -};
-> -MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
-> -#endif
-> -
->  struct sdio_driver wfx_sdio_driver =3D {
->         .name =3D "wfx-sdio",
->         .id_table =3D wfx_sdio_ids,
-> @@ -264,6 +261,6 @@ struct sdio_driver wfx_sdio_driver =3D {
->         .remove =3D wfx_sdio_remove,
->         .drv =3D {
->                 .owner =3D THIS_MODULE,
-> -               .of_match_table =3D of_match_ptr(wfx_sdio_of_match),
-> +               .of_match_table =3D wfx_sdio_of_match,
-
-... and obviously keep of_match_ptr() here.
-
->         }
->  };
-
-
---=20
-J=E9r=F4me Pouiller
-
+Takashi
