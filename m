@@ -2,146 +2,199 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CFFC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4F7C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7375820731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDjWY3QT"
+	by mail.kernel.org (Postfix) with ESMTP id 791692083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgD2JWC (ORCPT
+        id S1726598AbgD2JWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:22:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60886 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726511AbgD2JWB (ORCPT
+        Wed, 29 Apr 2020 05:22:23 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:58897 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgD2JWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:22:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588152119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VZvr/skNPOFKMD3ogXhoD9tnQHqLrRRqrmLtubG1DcI=;
-        b=HDjWY3QTT5t0DJdEycL/IFlcPHFAwAj0hVjprL8q5ffO4RLTfeSgdCFHDVZ+RzI5Cmz+M4
-        Z67b5Rocfr+iWabyXMU40WSf5B5xuK0QTaRkmbcsRLIhuSt1qA0NkgblMhzPxP9McVm7TH
-        XPnYgKWvvbCqe5KdKObupJaYcNi8hQk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-urpKaGkpMHmnm-m04i_PzA-1; Wed, 29 Apr 2020 05:21:55 -0400
-X-MC-Unique: urpKaGkpMHmnm-m04i_PzA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96E72107ACF4;
-        Wed, 29 Apr 2020 09:21:53 +0000 (UTC)
-Received: from [10.72.13.2] (ovpn-13-2.pek2.redhat.com [10.72.13.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 752B65C1BE;
-        Wed, 29 Apr 2020 09:21:44 +0000 (UTC)
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     davem@davemloft.net, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        netdev@vger.kernel.org
-References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200427142518.uwssa6dtasrp3bfc@steredhat>
- <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com>
- <20200428160052.o3ihui4262xogyg4@steredhat>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6dc937e4-0ef9-617d-c9c8-8b1f8c428d90@redhat.com>
-Date:   Wed, 29 Apr 2020 17:21:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 05:22:22 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MfpKZ-1iwc612wNl-00gGTR; Wed, 29 Apr 2020 11:22:12 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] amdgpu: fix gcc-4.8 build warnings
+Date:   Wed, 29 Apr 2020 11:20:42 +0200
+Message-Id: <20200429092207.4049268-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200428160052.o3ihui4262xogyg4@steredhat>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:x/Y2ttaKh8S4oSIHZuCcQJcIg3m35dCZcGbCfqBWDyKe6L/H8TJ
+ iPhHhkmD0/Z8JCtJuJf/MsKD9MwsTLHZilEXd/MEpqujXLEE8A0Hth9nRUfolyRtw5enShd
+ GFPbhOprj+sG0VfzyOhbSt4cUDkdQlz6u50FUMimF7FA1zPPx+xPL4b6jJnRjD9ooD+EexR
+ yjN45AdLttxbasdfJXE2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I1U8bIBgt5Q=:nkG5R3DDKbefs9Nak+vMK6
+ cKgQSJAkcHCdprpBC7yP13QN2c9q/MiSM5Z+2gK9wGVeVxnuaLV9rPlsFeg+M1aRSDka18+b5
+ rlB1toFZr/DyMbAhyRvI/SE/ADwvLNVGSfNOEoURqsGxyqbDVdZkgCSctUdDLW1vp2ERR6T47
+ zQbQSWD5M4PPyeEI2M/TDMNYmt1Hwy0FdbHBSJLFFhnMOkAQiRJihxT1G7ClG1PkGmqooZN6z
+ U40AM2vhrSmq7mTjwF0uaWYpwZf1NuH82QY3Xhk6FI/fHl4HQG3Qh9/nssqueZd4crncAzkh8
+ yNZ2yHrFckogPSoKDOFJof2EUv6jVNa3EoDg1isG5GK5IjZN655Vawq1zHiBEdhiTctoeNpGs
+ 2Mu73KqlJ6mTYMc9v1/QYZSdEjQZxCXhSRmCSNLCAUqS/0l3kvanXVAkSBbnQAejp7cmr+wzX
+ w1Cs+WYtYw2N86/1fb3aiZu0ZwrimHm/O84twtXk3B81mi9q2uoLBbx4qMSX4k/bS0QU0jTd6
+ Mygb15AI8Ex/ez3NKxMa34bEfantpSnO7tBOzR6INDWUDBQpuFxvP0WLnFOApmzh4VVeJsEGx
+ lKXJIXPnzYLJS4NZgYBeYTECob5SSANv5HmtDsB6UI/WLPynMCC+JpTY7P5ly1Kl1uAgkegU8
+ fbcr5GaJVGVV0Gktsn+qJIz2v1ZTNsizde5/ZnyDkAIRGlNuh+kqyi3+T3d5iPbQdFpmwIKC3
+ piLUsUmeVJrZrMJNDduRDuRS/U1cPDnicQAATdHXbKrC+ZrC9rJ8mUvcf9ZCTEYoJdCAQ7Lkl
+ YzWYa2T4vCyN4hwJloNemuIQgbuiNjB5NbCnNbZdxvZZCi/hCM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Older compilers warn about initializers with incorrect curly
+braces:
 
-On 2020/4/29 =E4=B8=8A=E5=8D=8812:00, Stefano Garzarella wrote:
-> On Tue, Apr 28, 2020 at 04:13:22PM +0800, Jason Wang wrote:
->> On 2020/4/27 =E4=B8=8B=E5=8D=8810:25, Stefano Garzarella wrote:
->>> Hi David, Michael, Stefan,
->>> I'm restarting to work on this topic since Kata guys are interested t=
-o
->>> have that, especially on the guest side.
->>>
->>> While working on the v2 I had few doubts, and I'd like to have your
->>> suggestions:
->>>
->>>    1. netns assigned to the device inside the guest
->>>
->>>      Currently I assigned this device to 'init_net'. Maybe it is bett=
-er
->>>      if we allow the user to decide which netns assign to the device
->>>      or to disable this new feature to have the same behavior as befo=
-re
->>>      (host reachable from any netns).
->>>      I think we can handle this in the vsock core and not in the sing=
-le
->>>      transports.
->>>
->>>      The simplest way that I found, is to add a new
->>>      IOCTL_VM_SOCKETS_ASSIGN_G2H_NETNS to /dev/vsock to enable the fe=
-ature
->>>      and assign the device to the same netns of the process that do t=
-he
->>>      ioctl(), but I'm not sure it is clean enough.
->>>
->>>      Maybe it is better to add new rtnetlink messages, but I'm not su=
-re if
->>>      it is feasible since we don't have a netdev device.
->>>
->>>      What do you suggest?
->> As we've discussed, it should be a netdev probably in either guest or =
-host
->> side. And it would be much simpler if we want do implement namespace t=
-hen.
->> No new API is needed.
->>
-> Thanks Jason!
->
-> It would be cool, but I don't have much experience on netdev.
-> Do you see any particular obstacles?
+drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_dp_mst_dsc_aux_for_port':
+drivers/gpu/drm/drm_dp_mst_topology.c:5497:9: error: missing braces around initializer [-Werror=missing-braces]
+  struct drm_dp_desc desc = { 0 };
+         ^
 
+Change all instances in the amd gpu driver to using the GNU empty
+initializer extension.
 
-I don't see but if there's we can try to find a solution or ask for=20
-netdev experts for that. I do hear from somebody that is interested in=20
-having netdev in the past.
+Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: some context changes linux-next stopped yesterday's patch from
+applying today.
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c         | 2 +-
+ drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c        | 2 +-
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c          | 6 +++---
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c         | 6 +++---
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c     | 2 +-
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c         | 6 +++---
+ 7 files changed, 13 insertions(+), 13 deletions(-)
 
-
->
-> I'll take a look to understand how to do it, surely in the guest would
-> be very useful to have the vsock device as a netdev and maybe also in t=
-he host.
-
-
-Yes, it's worth to have a try then we will have a unified management=20
-interface and we will benefit from it in the future.
-
-Starting form guest is good idea which should be less complicated than ho=
-st.
-
-Thanks
-
-
->
-> Stefano
->
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 7f4417981bff..81ce3103d751 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -8695,7 +8695,7 @@ bool amdgpu_dm_psr_enable(struct dc_stream_state *stream)
+ {
+ 	struct dc_link *link = stream->link;
+ 	unsigned int vsync_rate_hz = 0;
+-	struct dc_static_screen_params params = {0};
++	struct dc_static_screen_params params = { };
+ 	/* Calculate number of static frames before generating interrupt to
+ 	 * enter PSR.
+ 	 */
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+index 37fa7b48250e..5484a316eaa8 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+@@ -294,7 +294,7 @@ static enum bp_result bios_parser_get_i2c_info(struct dc_bios *dcb,
+ 	struct atom_display_object_path_v2 *object;
+ 	struct atom_common_record_header *header;
+ 	struct atom_i2c_record *record;
+-	struct atom_i2c_record dummy_record = {0};
++	struct atom_i2c_record dummy_record = { };
+ 	struct bios_parser *bp = BP_FROM_DCB(dcb);
+ 
+ 	if (!info)
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+index 24c5765890fa..ee3ef5094fd1 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+@@ -698,7 +698,7 @@ void rn_clk_mgr_construct(
+ 		struct dccg *dccg)
+ {
+ 	struct dc_debug_options *debug = &ctx->dc->debug;
+-	struct dpm_clocks clock_table = { 0 };
++	struct dpm_clocks clock_table = { };
+ 
+ 	clk_mgr->base.ctx = ctx;
+ 	clk_mgr->base.funcs = &dcn21_funcs;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 9ef9e50a34fa..7cbfe740a947 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -2683,9 +2683,9 @@ static void dp_test_send_link_test_pattern(struct dc_link *link)
+ 
+ static void dp_test_get_audio_test_data(struct dc_link *link, bool disable_video)
+ {
+-	union audio_test_mode            dpcd_test_mode = {0};
+-	struct audio_test_pattern_type   dpcd_pattern_type = {0};
+-	union audio_test_pattern_period  dpcd_pattern_period[AUDIO_CHANNELS_COUNT] = {0};
++	union audio_test_mode            dpcd_test_mode = { };
++	struct audio_test_pattern_type   dpcd_pattern_type = { };
++	union audio_test_pattern_period  dpcd_pattern_period[AUDIO_CHANNELS_COUNT] = { };
+ 	enum dp_test_pattern test_pattern = DP_TEST_PATTERN_AUDIO_OPERATOR_DEFINED;
+ 
+ 	struct pipe_ctx *pipes = link->dc->current_state->res_ctx.pipe_ctx;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
+index 84d7ac5dd206..dfa541f0b0d3 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
+@@ -1253,9 +1253,9 @@ void hubp2_validate_dml_output(struct hubp *hubp,
+ 		struct _vcs_dpi_display_ttu_regs_st *dml_ttu_attr)
+ {
+ 	struct dcn20_hubp *hubp2 = TO_DCN20_HUBP(hubp);
+-	struct _vcs_dpi_display_rq_regs_st rq_regs = {0};
+-	struct _vcs_dpi_display_dlg_regs_st dlg_attr = {0};
+-	struct _vcs_dpi_display_ttu_regs_st ttu_attr = {0};
++	struct _vcs_dpi_display_rq_regs_st rq_regs = { };
++	struct _vcs_dpi_display_dlg_regs_st dlg_attr = { };
++	struct _vcs_dpi_display_ttu_regs_st ttu_attr = { };
+ 	DC_LOGGER_INIT(ctx->logger);
+ 	DC_LOG_DEBUG("DML Validation | Running Validation");
+ 
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+index 60ea499c1ca8..beea5e129c24 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -449,7 +449,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv14_soc = {
+ 	.use_urgent_burst_bw = 0
+ };
+ 
+-struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { 0 };
++struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { };
+ 
+ #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
+ 	#define mmDP0_DP_DPHY_INTERNAL_CTRL		0x210f
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
+index 960a0716dde5..4aae6fb333bb 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
+@@ -365,9 +365,9 @@ void hubp21_validate_dml_output(struct hubp *hubp,
+ 		struct _vcs_dpi_display_ttu_regs_st *dml_ttu_attr)
+ {
+ 	struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
+-	struct _vcs_dpi_display_rq_regs_st rq_regs = {0};
+-	struct _vcs_dpi_display_dlg_regs_st dlg_attr = {0};
+-	struct _vcs_dpi_display_ttu_regs_st ttu_attr = {0};
++	struct _vcs_dpi_display_rq_regs_st rq_regs = { };
++	struct _vcs_dpi_display_dlg_regs_st dlg_attr = { };
++	struct _vcs_dpi_display_ttu_regs_st ttu_attr = { };
+ 	DC_LOGGER_INIT(ctx->logger);
+ 	DC_LOG_DEBUG("DML Validation | Running Validation");
+ 
+-- 
+2.26.0
 
