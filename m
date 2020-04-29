@@ -2,131 +2,154 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85545C8300B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B498C8300D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B232072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067B420731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 04:55:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="M18fEnzU"
+	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="NquLEErk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HP/TZYcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgD2EwG (ORCPT
+        id S1726778AbgD2EzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 00:52:06 -0400
-Received: from mail-mw2nam12on2061.outbound.protection.outlook.com ([40.107.244.61]:6083
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726619AbgD2EwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 00:52:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iHa7aR5e2biWYAzdNwcK7hdM6aTwh7FDOY6XIeY+dqpaQRzx+1Ro1E8o5S5qvkDbSrUV3KobxtO8q/nn6rwr9JwtHGgLCm/HZQ0+Czt96Q4W6s3M+TBL54mQNwqsiJeQNM6tOn4W9785oUX3OKBYNaE7q9Q4V8WuJpfFfdhkUAtdM7wJ8wgOj5zdxbTYdMOVpf2R6gl/1iyn85ujxu3IJah/bPw2ZG6pliXT7zIxqmmAmAtwPYlT7Er9xbcM69WoC1bDR31J/sdw2/0fjGyaQtQ/hFyxWo4j2+DrVAhIvUrZlybJPyR3gZ5kv7kZ8yrHksMyfRG0y7x5uD4dFmnp3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZthqLQTk3WoLNPbzfQm5ebCUDkyag79vT8INTOozvao=;
- b=VAujawwuOlBAw+8ARD1rCgF16T9IlIbDhmH/VB/uGJf2++gl8ixv07yQKASAYCY+bNpNShjbccsblmwqm1zs7btZaFmAJsEbj8LgDPQKFectFmncqxm4FyUfp5j1WoDoVk1gqFoxBMuGe+NDhz2h9zMPpP7abk64Dwq0VPeuk/3wGCMd2XQ7YB/0uDMPB5g+TPeX0bRsU4CKiCTDijRPPrxOEsG3509aLJaT38rU24JcT6TAiR2Ie1aUEm8Qd27DQIASbl25i8MUtP5+JyVAlf/dhjlie/ZUhXHZZDa+RtNwMFVfUQh6MjW0KDuCUNr8HYovAAVf9ftdSlqd/waR8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZthqLQTk3WoLNPbzfQm5ebCUDkyag79vT8INTOozvao=;
- b=M18fEnzUq6qWdu2lcA5BPzqtz9dPWkuxhW6kfRmN/1M9s1srfvtSBcVplYBA7D6Ic8FNBBVirUSHFhgMO7KKtXYIbrgDrFPuVNZKJXLA+dnH5hBMQ2T6wTKvY5IZr57FqlJ6knfoHUuyysywyDtT+4jbJG7cB2mskNat9S3707A=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from CH2PR11MB4215.namprd11.prod.outlook.com (2603:10b6:610:3b::26)
- by CH2PR11MB4392.namprd11.prod.outlook.com (2603:10b6:610:3e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Wed, 29 Apr
- 2020 04:52:03 +0000
-Received: from CH2PR11MB4215.namprd11.prod.outlook.com
- ([fe80::48e7:73e7:ca6d:c32a]) by CH2PR11MB4215.namprd11.prod.outlook.com
- ([fe80::48e7:73e7:ca6d:c32a%3]) with mapi id 15.20.2937.023; Wed, 29 Apr 2020
- 04:52:03 +0000
-Subject: Re: [PATCH] perf: perf can not parser the backtrace of app in the
- 32bit system and 64bit kernel.
-To:     will.deacon@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1588132911-64901-1-git-send-email-jiping.ma2@windriver.com>
-From:   Jiping Ma <Jiping.Ma2@windriver.com>
-Message-ID: <32a473bb-2760-b967-5d54-a22677b8018d@windriver.com>
-Date:   Wed, 29 Apr 2020 12:51:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
-In-Reply-To: <1588132911-64901-1-git-send-email-jiping.ma2@windriver.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: HKAPR04CA0016.apcprd04.prod.outlook.com
- (2603:1096:203:d0::26) To CH2PR11MB4215.namprd11.prod.outlook.com
- (2603:10b6:610:3b::26)
+        Wed, 29 Apr 2020 00:55:20 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51847 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgD2EzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 00:55:19 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 818D35C03A3;
+        Wed, 29 Apr 2020 00:55:18 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 29 Apr 2020 00:55:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=/qkEJFxQQnd+DohDVJwiAH2Q88T
+        56mCRQ/dGzRWSAe0=; b=NquLEErkc+H3mfU66c2KdmdeMbGYLKw8iHHObVYhCx1
+        L1FeY0fhdsWfuPUERh5Y/MHfM0QsB2l5Wi4maeLXWwogeCU2q8H8CxzcUldzCNFQ
+        ZnFYzdTYxIKEIkNSgln2Qi/IS1FFf0b1FmXbdU1E3oPl4DGh2Euut5LEyC8Ro8SU
+        SK8AWX10XObr59hLZ0SHZSO35AJiX60+eaauKJmofi4CAfOnGPqgLl1AXj9R21y7
+        24Ono03VnXXNZ0cZ3UZgX5PwuOQZrdLbrVuHVPfPdkQxQH3LCPcypDeEz8WZ0F1o
+        Lc6ROSMGhIqK1q+HAng0nbxXdT7cqcM6euBDJk6llFQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/qkEJF
+        xQQnd+DohDVJwiAH2Q88T56mCRQ/dGzRWSAe0=; b=HP/TZYcChIkCuJFrXQnDtr
+        lpV55mIILTGUQI1glACIz4aeCfSe5TlNzhE++8PnKcfg5YncJVxoSY78i35W84Ga
+        71kFJS63X78JlcWu3LC0kfBQjMvVDvq1FpBY20Aq3ZESjjqPxfx9QKfxGMF9sgTM
+        MWJcEo9QdblAMoudhGFMor4sIcIUsB6cnIcOQcQFRUsxxhq3JEImGqdTWj3BX9Zp
+        qWsF5wohZPSIxQw7UwESKGeB5WvAJgdREkZcqMDmi3G5do4VFK1uYRjuaPJYavTi
+        EmuS9UD0r4o/cDlaDLxnz3cm+OM5hrejtkcH7hr7k7ox4AmCk1xWv2YKhlR9CJrA
+        ==
+X-ME-Sender: <xms:tQipXg3YSOru4BPTrvz6WauC2-nVZa7MGLj5Usf13U1mbXhVmjob5g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedriedvgdekiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
+    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecukfhppedutdekrd
+    egledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
+X-ME-Proxy: <xmx:tQipXl8TgdFMb0C-6CmjiXZtR0vh-CecGoc_7NLSo-WxF_G0NvpzBg>
+    <xmx:tQipXp15-Na2mv-nXVzB139H2NvbcG9jUQjjnWfPV5grRXrBylLd1g>
+    <xmx:tQipXg00oQJ5b716J1JJ9RQCc3u2gVYbFyZ0og1bHL2QrWbonUc1dA>
+    <xmx:tgipXj699o_t9VAaWyUWLZ-xXj1S1alWTVahOrNjyI5Nu9Jt9Ug4Lw>
+Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A59A83280069;
+        Wed, 29 Apr 2020 00:55:17 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 00:55:16 -0400
+From:   Rylan Dmello <mail@rylan.coffee>
+To:     Joe Perches <joe@perches.com>
+Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] staging: qlge: Remove multi-line dereferences from
+ qlge_main.c
+Message-ID: <20200429045516.GA2421@athena>
+References: <aae9feb569c60758ab09c923c09b600295f4cb32.1588132908.git.mail@rylan.coffee>
+ <0dcf9712a49968da1935061de130bc3668e63088.camel@perches.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.195] (60.247.85.82) by HKAPR04CA0016.apcprd04.prod.outlook.com (2603:1096:203:d0::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Wed, 29 Apr 2020 04:52:00 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 653e200b-cb5e-4da3-9ef5-08d7ebf90ec6
-X-MS-TrafficTypeDiagnostic: CH2PR11MB4392:
-X-Microsoft-Antispam-PRVS: <CH2PR11MB439265743E614CD1CD7EBBFDD8AD0@CH2PR11MB4392.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 03883BD916
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /mupf5z2gj0c95vM9Qj3BWT5LREoEs8htz88w6bN8UKV4U5GRI1uiYWaO8oZfSrZvze0OUHnBK+SEY4/kONYCcrSFkvCVKBeltSPJKyiXX4kkhCkC56tpFW5ETHqTJA2u2B+bmwZxRQT7idoO5RdaM126eYnBda5rpuXqNZjhPuQhhaIcZdzTSpl5PFiv8jeGpqEmXAECWFRTynNRDEQoDpw6KCKqU/PlUv+fCvnJo8yM/lPhpCj9SKAehzx/HGWxp+S/DwSekw7XH1GiZ97BBNGyjkwX6k9f85ivnN3jBFu3N/9IG/zQxjgwOLoDFqzx/0FilN89UTshEcnlhAnVqnbRhR/Jqb0Ua8gih7HNlLLcDK9ETi+SOHIDvqDIE++VXIy2uyS5AwCsyGW6VWyFSq3PfnEiJ8UKcD2hCKSZwISVqAgKKNEE8k8oSdb4koSbELYjcuQ4DQFyV0OB0JWHsPPr7cpFQ+W9o9G38sfqiJTEVTYiiJaHyGDIMiH7wkmIsCZZjWpEcxYp4AvpHRuoQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR11MB4215.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(39850400004)(396003)(376002)(346002)(5660300002)(31686004)(66946007)(66556008)(16576012)(66476007)(316002)(4744005)(8676002)(36756003)(26005)(2616005)(31696002)(2906002)(6486002)(52116002)(16526019)(186003)(8936002)(4326008)(86362001)(53546011)(6666004)(956004)(478600001)(6706004)(78286006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Xf/+QeL6pHBc048kL19mu0MTQKpljve8D4G/uP9fJz56hF7tvOsnTh6c19BJbMbMvdeF3hor6VFe4C2bV6AJRx87OhJwtz/gqkqdVeoNKC4aZNH2zNJOktSwbWJ48WdwVVJz387g9pNPiHdzWLS+Zi7ZvA5yOQatQrURXy9PzfVACXxZ+iNn9wtq5juQ+EaA1iMWmSLH61YekLUCgj3TfmnV+PUTzEa8toTokAwGYBMTnRiEJ78k13fCxBWAh32x6FEckDkWZhpwzDaJWSk4vvg48rKXIOHcNcEg5XLNMq1gULZZEaU8vQ3MWrY9A11G3lozaiXu+IDGsoFxr+YvhyoqEFXn4iATDRuf8tQCw89D1enK1EHTgSe4RNjzHMctbvtZVCpWtlrEhtGPvtDF/Hcc3sl2zgCmUjGTmhymFX5iwdBsHUJcSmD46ioKYVMWPWoi00AEfIhW+COujhkJq8qf5fa2ToklnlQxwehwxIPwoaauXnlD78OZUEK5DTzXcZotSeYomuS1i2eCuwI1SJr7i8eRD0q66590uO+w9q+WmEedyaVHi9dhH/zNO3+Xo/bapSiFZ37pLMOoGyWdCSIdb2Cekdk+xizfg1qgoVPEEDxcHGghjDoQKZvTKszcmQF4tejJ/RY53Ry98zCUYKF+v876dKB3fAy8mlvC2ngCO146Kf3oqWSlYA7JT/j/HJRoIrckL5hnXE8jYXxHxk4pmP+qHqjPp0FpENDERe5JkEAt/5AQze95eay/aR7oU4qL0G9zvt4V3TGleAv+VbY82opTvyYMYnE80BuNsNg=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 653e200b-cb5e-4da3-9ef5-08d7ebf90ec6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2020 04:52:02.8293
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DCrqYddevwHvwG1AujpCHFEbRurnMbG8SqYkR99b0LBtt9cN6bbmCSufVK6le8M87u54qFf88eK18hlxuC2hFQTKwr+Phwfs0KvTBvc+2/Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4392
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0dcf9712a49968da1935061de130bc3668e63088.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We test it as the following steps.
-# gcc -g -mthumb -gdwarf -o test test.c
-# export CALLGRAPH=dwarf
-#(./perftest ./test profiling 1; cd ./profiling/; perf script)
-
-Thanks,
-Jiping
-
-On 04/29/2020 12:01 PM, Jiping Ma wrote:
-> Record PC value from regs[15], it should be regs[32], which cause perf
-> parser the backtrace failed.
+On Tue, Apr 28, 2020 at 09:31:10PM -0700, Joe Perches wrote:
+> On Wed, 2020-04-29 at 00:04 -0400, Rylan Dmello wrote:
+> > Fix checkpatch.pl warnings:
+> > 
+> >   WARNING: Avoid multiple line dereference - prefer 'qdev->func'
+> >   WARNING: Avoid multiple line dereference - prefer 'qdev->flags'
+> 
+> Assuming you are doing this for exercise:
+> 
+> It'd be better to unindent all the switch/case
+> blocks for the entire function so more functions
+> fit on single lines
+> 
+> 	switch (foo) {
+> 	case bar:
+> 		{
+> 			...;
+> 
+> should be:
+> 
+> 	switch (foo) {
+> 	case bar: {
+> 		...;
+> 
+> goto exit; might as well be break; and remove
+> the exit label too.
 >
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-> ---
->   arch/arm64/kernel/perf_regs.c | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-> index 0bbac61..04088e6 100644
-> --- a/arch/arm64/kernel/perf_regs.c
-> +++ b/arch/arm64/kernel/perf_regs.c
-> @@ -32,6 +32,10 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
->   	if ((u32)idx == PERF_REG_ARM64_PC)
->   		return regs->pc;
->   
-> +	if (perf_reg_abi(current) == PERF_SAMPLE_REGS_ABI_32
-> +		&& idx == 15)
-> +		return regs->regs[PERF_REG_ARM64_PC];
-> +
->   	return regs->regs[idx];
->   }
->   
 
+Thank you - I noticed that clang-format unindented the switch-case blocks, but
+wasn't sure whether to include that in this patch set or not.
+
+I will send a V2 patch that unindents these switch-case blocks throughout
+the two functions listed here, and also removes the exit label from this
+function.
+
+> > Signed-off-by: Rylan Dmello <mail@rylan.coffee>
+> > ---
+> >  drivers/staging/qlge/qlge_main.c | 9 ++++-----
+> >  1 file changed, 4 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+> > index d7e4dfafc1a3..10daae025790 100644
+> > --- a/drivers/staging/qlge/qlge_main.c
+> > +++ b/drivers/staging/qlge/qlge_main.c
+> > @@ -396,8 +396,7 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
+> >  			 * the route field to NIC core.
+> >  			 */
+> >  			cam_output = (CAM_OUT_ROUTE_NIC |
+> > -				      (qdev->
+> > -				       func << CAM_OUT_FUNC_SHIFT) |
+> > +				      (qdev->func << CAM_OUT_FUNC_SHIFT) |
+> >  					(0 << CAM_OUT_CQ_ID_SHIFT));
+> >  			if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
+> >  				cam_output |= CAM_OUT_RV;
+> > @@ -3432,9 +3431,9 @@ static int ql_request_irq(struct ql_adapter *qdev)
+> >  				     &qdev->rx_ring[0]);
+> >  			status =
+> >  			    request_irq(pdev->irq, qlge_isr,
+> > -					test_bit(QL_MSI_ENABLED,
+> > -						 &qdev->
+> > -						 flags) ? 0 : IRQF_SHARED,
+> > +					test_bit(QL_MSI_ENABLED, &qdev->flags)
+> > +						? 0
+> > +						: IRQF_SHARED,
+> >  					intr_context->name, &qdev->rx_ring[0]);
+> >  			if (status)
+> >  				goto err_irq;
+> 
