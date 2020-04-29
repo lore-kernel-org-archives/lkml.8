@@ -2,93 +2,107 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB14CC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418C0C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B152068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDE622203
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YRJMFTxb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h0NgVJZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgD2SW4 (ORCPT
+        id S1726773AbgD2SZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        Wed, 29 Apr 2020 14:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2SW4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2SZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:22:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB5FC03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:22:54 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j1so3761968wrt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=B4AExkQ/skCkgH//SVAJ+HY/UbjZ3z29vi0E6Yau+cc=;
-        b=YRJMFTxbM0bgeSz3RuGdHJxxLuwdgSWTgLgtoiXIweL8tIX9FGlQlYaJuSUPBBJz0K
-         jPCUAaMxuGVVpRauDZzmKr/3YoCbJ8dGgBs4OfNCURbd46wqVR17diEUaD4lxblwDd9c
-         rsKW63ZlF0YCMIMPUQT6JYhjBEUCvhRkmQ3tlpSdKpy79JwByxKi2bPbiCo5G2U3xqLz
-         bjiHLqA6rzM3UqfIv4hcmbEeqCS7uT3R8NzQ6ydkUH7wkEtNdpeSvRd8rckqycaIWWkv
-         L+l9Ip1j3qWw+VwY+VJRYHlAZ2TU9W196zkfI5yFx4ESXLU5l2gnaJVEfdhvY5u9L8F+
-         ZjZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=B4AExkQ/skCkgH//SVAJ+HY/UbjZ3z29vi0E6Yau+cc=;
-        b=Kv8rvu/gFnDY+3emBhLR8aFsxXfSn7De+8H/O2Bc6txOLvMLwfkqljZ/7+yv4e2kIF
-         ejD8SsXddeiOD3cuK7FGEYJg/tJYiL3ObrpYBT0ETW1m+vO102pAMeh1d2oLWkCVBYqo
-         z+nNhXKO0bWcBbhVUOOb1i41zbTCENqVWBEjI45yjcG56yxB+y4G1RjupNZeEh+atf07
-         SLWHIHWBFQVLwyoKzIKlLluXybmGJuDyiogH/wDLbYkY0pj1cwjImM0Z9ugEiMutK7kQ
-         2gF0euFjpvlT802RTUploybkTn67F3sRJquI1VFXdqqQyCySS3oFvgRL3lOhkWWW3KR5
-         Qxog==
-X-Gm-Message-State: AGi0Pub1PhwWCfjkDKMx6irljLW2sCG9y3+XWPzT0LF0XVn0X1kQetL/
-        xQT9Yt4DtP+GXUABrTjnhgSMuw==
-X-Google-Smtp-Source: APiQypIgFkCETUKcnEqx8tMuAByNY5IhjOfevdMmAgkZMz9mukDUiKUpnYW6PV1StwGdsiqRyq/pRw==
-X-Received: by 2002:adf:8b1b:: with SMTP id n27mr38786679wra.385.1588184573262;
-        Wed, 29 Apr 2020 11:22:53 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id e13sm117683wrp.15.2020.04.29.11.22.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 11:22:52 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] arm64: dts: meson-g12: usb DT fixes
-In-Reply-To: <CAFBinCCwvfycP9VZ35Jn=yNRbgbUYkRucLPpRGCJv2XCTR+o6Q@mail.gmail.com>
-References: <20200326160857.11929-1-narmstrong@baylibre.com> <CAFBinCCwvfycP9VZ35Jn=yNRbgbUYkRucLPpRGCJv2XCTR+o6Q@mail.gmail.com>
-Date:   Wed, 29 Apr 2020 11:22:49 -0700
-Message-ID: <7ho8rakv7q.fsf@baylibre.com>
+        Wed, 29 Apr 2020 14:25:21 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A388EC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 11:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mk8Z9sCY0AhAexl6PYPVinqKRa9QYElOCdGLIqmtc8Y=; b=h0NgVJZnMQxSMXEuqfJICAC3T9
+        DVTnQvYxycKsv119y9J9+OnK1xPBqKoOR2PzIMa+JPHZwiYWXb4EMkeDgGRU2AX5x0vdOMVmgOmSE
+        8eWtvR4CrHy/U2yEyWpy2SBgyZ/tKI2xbT7qpHjwOT3x+1mXJLdnuBHtSnaiVPx3lnW7fL0HLCoer
+        29gnZMWOkrivqfvC//UzEW8RHJmYHhDxbsAYgo35Goc1Khg5XZ9dIfEOm24XjJVFDS02HP8OFBot/
+        wvNgnzAQtcHCHkX4ANTRtpwbAjyrfCGobZGvRfPs5bApZTRz1dot8UtI4KoccJkt/8ho14puFjqGZ
+        /VKECLDw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTrOO-0006rY-LW; Wed, 29 Apr 2020 18:25:08 +0000
+Date:   Wed, 29 Apr 2020 11:25:08 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Waiman Long <longman@redhat.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Changbin Du <changbin.du@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm/slub: Fix incorrect interpretation of s->offset
+Message-ID: <20200429182508.GU29705@bombadil.infradead.org>
+References: <20200429135328.26976-1-longman@redhat.com>
+ <af19e771-062f-6ed7-0b9a-e8cd8d0fdb6a@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af19e771-062f-6ed7-0b9a-e8cd8d0fdb6a@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+On Wed, Apr 29, 2020 at 06:42:55PM +0200, Markus Elfring wrote:
+> > In a couple of places in the slub memory allocator, the code uses
+> > "s->offset" as a check to see if the free pointer is put right after the
+> > object. That check is no longer true with commit 3202fa62fb43 ("slub:
+> > relocate freelist pointer to middle of object").
+> 
+> Will any further collateral evolution become interesting?
 
-> On Thu, Mar 26, 2020 at 5:09 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Misc USB DT fixes for G12A.
->>
->> Neil Armstrong (2):
->>   arm64: dts: meson-g12b-ugoos-am6: fix usb vbus-supply
->>   arm64: dts: meson-g12-common: fix dwc2 clock names
-> for both patches:
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+What do you mean by this question?
 
-Queued as fixes for v5.7-rc,
+> > +static inline unsigned int get_info_end(struct kmem_cache *s)
+> > +{
+> > +	if (freeptr_outside_object(s))
+> > +		return s->inuse + sizeof(void *);
+> > +	else
+> > +		return s->inuse;
+> > +}
+> 
+> How do you think about the following source code variants?
+> 
+> +	return freeptr_outside_object(s)
+> +	       ? s->inuse + sizeof(void *)
+> +	       : s->inuse;
 
-Thanks,
+That is less clear than the version Wayman posted.
 
-Kevin
+> >  static struct track *get_track(struct kmem_cache *s, void *object,
+> >  	enum track_item alloc)
+> >  {
+> >  	struct track *p;
+> >
+> > -	if (s->offset)
+> > -		p = object + s->offset + sizeof(void *);
+> > -	else
+> > -		p = object + s->inuse;
+> > +	p = object + get_info_end(s);
+> >
+> >  	return p + alloc;
+> >  }
+> 
+> +	struct track *p = object + get_info_end(s);
+> 
+>  	return p + alloc;
+
+Yes, I think that's an improvement.
