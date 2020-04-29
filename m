@@ -2,87 +2,175 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9020C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3093C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C3B2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:37:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588174648;
-	bh=OC/uuBry5MdIo9PpQACpMz2esvnupqKlJxtQqhDFs7I=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Oc50gkJhahBflfO7RE1FmcDj0w9ngXBNGFKDQRLxX+WQ0YcmYVKdGj0OxEj+uBLOP
-	 oAawz9OexzvnWZfl0H5ljsTZtVWoja+WUmge7rl7HXwqLHYN73FS85edUaS8sUyr1Z
-	 aEXL3QopuVruU6QbZBrGz9dMEjGkt0t2G0yXT+Vk=
+	by mail.kernel.org (Postfix) with ESMTP id B29932073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzBVTnbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgD2Ph1 (ORCPT
+        id S1726949AbgD2Phc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2Ph1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:37:27 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4B5206F0;
-        Wed, 29 Apr 2020 15:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588174647;
-        bh=OC/uuBry5MdIo9PpQACpMz2esvnupqKlJxtQqhDFs7I=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hC/poJiU62MLjpG2Eb7UzqyClM21ktkHjXXUTqANwMhgAZ6imhdwolsLl1CoYYafR
-         RVkWZyH0JNJmhEvjL2wOxfe0kPAJ85NTi1en9Kghb+R2miMtWserT85WcD1Riis999
-         zxUzOy04iwTXsSChHZfXUZswXEc6saoeCpBTwIL4=
-Message-ID: <591b050483a0326bbcaf075254a69bfefc77550f.camel@kernel.org>
-Subject: Re: [PATCH] fs/ceph:fix speical error code in ceph_try_get_caps()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Wu Bo <wubo40@huawei.com>, sage@redhat.com, idryomov@gmail.com
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liuzhiqiang26@huawei.com, linfeilong@huawei.com
-Date:   Wed, 29 Apr 2020 11:37:25 -0400
-In-Reply-To: <1588125715-188363-1-git-send-email-wubo40@huawei.com>
-References: <1588125715-188363-1-git-send-email-wubo40@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Wed, 29 Apr 2020 11:37:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgD2Pha (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:37:30 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CA7C03C1AD;
+        Wed, 29 Apr 2020 08:37:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so2531922wmk.5;
+        Wed, 29 Apr 2020 08:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rlQ2CSVV6XANNoo1iZF8vKF1KcyKLoixPtiCb4LIRmU=;
+        b=UzBVTnboUM1rw6sSV38W0WKxcXHMlyDVGxvSlM+eJKNTZeceQEoiV20qojzMEmljPz
+         9S2TRJyT1FaSwi9l9G9Tv2lqDHvk8PGrzhNRT7M3+QDzqVWITFQzpOB+aRoEcVHk1+Zx
+         bUQu4D/nMUJnNFX+LaStHa9gmtvkhdBMn1p4DQ89cbvBFPsz0gDFGIgsECZTIR5wQz9D
+         iyaqBsyFYMWvVvjFcFXZFjV9p0RAmgF/lSkqFFH7n5do/kC/zmZOnjDZ0gaMnTHzkiNb
+         cITdZ2TpLrcJUaR60kV0FV9Yfigj0/TJte1oCMebG84UdiqohIIuhqzkrcOgg9h/4DcP
+         WJQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rlQ2CSVV6XANNoo1iZF8vKF1KcyKLoixPtiCb4LIRmU=;
+        b=Wg0gC3t+CzldSh6aJRFZZk9q1v71+aIz00d2/+ckvFZDP14xCNtnn3KStL1yi5nqUk
+         T6EjgPeRSGXK0/gKxlYankID/hImk5MV9C8jMnSXn2GBA7OL8u0VjhprzkEG3TK711AP
+         A3qW2+z/Pv13JUQSSYNHoz2AaqRugm1NCG4w52272upjBl3VpIuAZTGxKui0f44JVTN+
+         MXdZ9OAgqm6R9InqzFVBP1mqIMHgh+WEF1Dg2qDslFuYod03R/WpFjwBy/1anQ83NBiE
+         sHAWi+OZFubKmwqEweIZUF11SwNuvTX1IlFcalBPN7twRSiWGmSCljSt2ljgs5+HfEtn
+         J+mQ==
+X-Gm-Message-State: AGi0PuZMOpw5Ck7f6ziqCWsA6Kbxy8pnxXAl1gWFhKLgf+bC5MJPXOP1
+        fSD8qrQAyQ0+p/QmHdnzGDw=
+X-Google-Smtp-Source: APiQypIg8WaDaKeSC+d4Fk1TXb+PTmnDD/c+xUPJUF1So7oC4slxG/rIYm8O+NdsZmPI4F8Zqjf2zw==
+X-Received: by 2002:a1c:ba56:: with SMTP id k83mr3825211wmf.1.1588174647248;
+        Wed, 29 Apr 2020 08:37:27 -0700 (PDT)
+Received: from [192.168.1.23] (afgd208.neoplus.adsl.tpnet.pl. [95.49.159.208])
+        by smtp.gmail.com with ESMTPSA id k14sm31165910wrp.53.2020.04.29.08.37.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 08:37:26 -0700 (PDT)
+Subject: Re: [PATCH v22 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+References: <20200429125631.7044-1-dmurphy@ti.com>
+ <20200429125631.7044-2-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <769c19a1-4124-b674-5b03-6100f176768e@gmail.com>
+Date:   Wed, 29 Apr 2020 17:37:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200429125631.7044-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 10:01 +0800, Wu Bo wrote:
-> There are 3 speical error codes: -EAGAIN/-EFBIG/-ESTALE.
-> After call try_get_cap_refs function, judge the same 
-> error code -EAGAIN twice. So corrected the error code of judgment 
-> from -EAGAIN to -ESTAE.
-> 
-> Signed-off-by: Wu Bo <wubo40@huawei.com>
-> ---
->  fs/ceph/caps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> index 185db76..1a8e20e 100644
-> --- a/fs/ceph/caps.c
-> +++ b/fs/ceph/caps.c
-> @@ -2749,7 +2749,7 @@ int ceph_try_get_caps(struct inode *inode, int need, int want,
->  
->  	ret = try_get_cap_refs(inode, need, want, 0, flags, got);
->  	/* three special error codes */
-> -	if (ret == -EAGAIN || ret == -EFBIG || ret == -EAGAIN)
-> +	if (ret == -EAGAIN || ret == -EFBIG || ret == -ESTALE)
->  		ret = 0;
->  	return ret;
->  }
+Hi Dan,
 
-Good catch! Merged into testing branch.
--- 
-Jeff Layton <jlayton@kernel.org>
+Thanks for the conversion, but now the binding example is missing.
+In Documentation/devicetree/bindings/leds/common.yaml we do have
+examples.
+
+Best regards,
+Jacek Anaszewski
+
+On 4/29/20 2:56 PM, Dan Murphy wrote:
+> Add DT bindings for the LEDs multicolor class framework.
+> Add multicolor ID to the color ID list for device tree bindings.
+> 
+> CC: Rob Herring <robh@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   .../bindings/leds/leds-class-multicolor.yaml  | 34 +++++++++++++++++++
+>   drivers/leds/led-core.c                       |  1 +
+>   include/dt-bindings/leds/common.h             |  3 +-
+>   3 files changed, 37 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> new file mode 100644
+> index 000000000000..3d4f23d07440
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common properties for the multicolor LED class.
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  Bindings for multi color LEDs show how to describe current outputs of
+> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
+> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
+> +  modules. This is achieved by adding multi-led nodes layer to the
+> +  monochrome LED bindings.
+> +  The nodes and properties defined in this document are unique to the multicolor
+> +  LED class.  Common LED nodes and properties are inherited from the common.txt
+> +  within this documentation directory.
+> +
+> +properties:
+> +  color:
+> +    description: |
+> +      For multicolor LED support this property should be defined as
+> +      LED_COLOR_ID_MULTI and further definition can be found in
+> +      include/linux/leds/common.h.
+> +
+> +required:
+> +  - color
+> +
+> +additionalProperties: false
+> +
+> +...
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index f1f718dbe0f8..846248a0693d 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
+>   	[LED_COLOR_ID_VIOLET] = "violet",
+>   	[LED_COLOR_ID_YELLOW] = "yellow",
+>   	[LED_COLOR_ID_IR] = "ir",
+> +	[LED_COLOR_ID_MULTI] = "multicolor",
+>   };
+>   EXPORT_SYMBOL_GPL(led_colors);
+>   
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index 0ce7dfc00dcb..a463ce6a8794 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -30,7 +30,8 @@
+>   #define LED_COLOR_ID_VIOLET	5
+>   #define LED_COLOR_ID_YELLOW	6
+>   #define LED_COLOR_ID_IR		7
+> -#define LED_COLOR_ID_MAX	8
+> +#define LED_COLOR_ID_MULTI	8
+> +#define LED_COLOR_ID_MAX	9
+>   
+>   /* Standard LED functions */
+>   /* Keyboard LEDs, usually it would be input4::capslock etc. */
+> 
 
