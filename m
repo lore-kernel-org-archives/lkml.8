@@ -2,86 +2,183 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B69CC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBE6C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB692082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588153966;
-	bh=fgchB9Hy9Q42vSE4QE2yDAjnccaNZoihYV4J2q/0wB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UvJG3963ScfGxU2XdVinY0MYKJydGpBb044SPAaqsbOrXOZImHXSGGSvF7QZvDZYe
-	 hmh5BIT9+Th5C0rGYHFvtn1raftllOzcTmnZsyDEPMTpCi79Hb30GqJ8ZnCIHgE1jH
-	 XhK0SldnKlP3WCdXGY626qc5zgRUdoYoSu7WIV5I=
+	by mail.kernel.org (Postfix) with ESMTP id 0D4D62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgD2Jwp (ORCPT
+        id S1726669AbgD2JyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 05:54:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:36370 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD2Jwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:52:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C675120775;
-        Wed, 29 Apr 2020 09:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588153965;
-        bh=fgchB9Hy9Q42vSE4QE2yDAjnccaNZoihYV4J2q/0wB8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NL5FjF5ygH7Ft8laDmQpxD/1zZBl4lX0HV+97yFiBP3SIV0MpQXz45XDwJMwNjglc
-         FEDk7CKptHwotxvO5Cd09dpOacPlTYCKNWmrAUvU0pSGXDWCVP/xhvJvwf4iFYqlFg
-         YYtx6Bg2Ds299GawNfLq0OtE0Le6cISDIGaghFMc=
-Date:   Wed, 29 Apr 2020 10:52:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: spi-amd: remove unused variable
-Message-ID: <20200429095242.GA4201@sirena.org.uk>
-References: <20200428213711.3643464-1-arnd@arndb.de>
+        id S1726355AbgD2JyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:54:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A027C14;
+        Wed, 29 Apr 2020 02:54:15 -0700 (PDT)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D897C3F73D;
+        Wed, 29 Apr 2020 02:54:12 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:54:10 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] Documentation/sysctl: Document uclamp sysctl knobs
+Message-ID: <20200429095409.ayofw3qiwk73hlo5@e107158-lin>
+References: <20200428164134.5588-1-qais.yousef@arm.com>
+ <20200428164134.5588-2-qais.yousef@arm.com>
+ <e16e222b-f61b-a54a-38b2-5a63a9537333@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200428213711.3643464-1-arnd@arndb.de>
-X-Cookie: I know how to do SPECIAL EFFECTS!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e16e222b-f61b-a54a-38b2-5a63a9537333@infradead.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/28/20 10:43, Randy Dunlap wrote:
+> Hi--
+> 
+> I have a few corrections for you below:
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks Randy. I applied all your suggestions for the next version.
 
-On Tue, Apr 28, 2020 at 11:37:02PM +0200, Arnd Bergmann wrote:
-> This variable was defined in the original version of this file but
-> never used, so remove it to avoid the warning:
+Thanks
 
-This is already fixed.
+--
+Qais Yousef
 
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pTmQACgkQJNaLcl1U
-h9ApRQf/Rmb30mXV3uAh+LPCXo9mjqQkznzhNXBAHpkPlLwsvm7t7KJp/JMHRcCA
-O2Vn1VadekdHlp8Rq7g8Woq3Vh6/HyT4S5vQHZRI3rFPclIE8Kdzu7Q2PNnDa6JI
-BiVNzuL8cBdyYtL8H83BXVB24/NSE4c7eeVvQpv9KGhAkCllG1QclfB/yqISWfub
-i8v+ftCj9p2tMxbjfgaw540AYPs1GcvTKy3VN2lYtnR83lNBriHm6tdTX4Hd8/pZ
-oMhz9nQvdKGn/OTcM1BVuAuDWV7ZCUDMl5kmeR1Uyms8o6g/j201V4LWHN4Vn21x
-UUcwUxzY+piJRQ0V2IMjiQxS8JGnRw==
-=YC61
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+> 
+> On 4/28/20 9:41 AM, Qais Yousef wrote:
+> > Uclamp exposes 3 sysctl knobs:
+> > 
+> > 	* sched_util_clamp_min
+> > 	* sched_util_clamp_max
+> > 	* sched_util_clamp_min_rt_default
+> > 
+> > Document them in sysctl/kernel.rst.
+> > 
+> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > CC: Jonathan Corbet <corbet@lwn.net>
+> > CC: Juri Lelli <juri.lelli@redhat.com>
+> > CC: Vincent Guittot <vincent.guittot@linaro.org>
+> > CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> > CC: Steven Rostedt <rostedt@goodmis.org>
+> > CC: Ben Segall <bsegall@google.com>
+> > CC: Mel Gorman <mgorman@suse.de>
+> > CC: Luis Chamberlain <mcgrof@kernel.org>
+> > CC: Kees Cook <keescook@chromium.org>
+> > CC: Iurii Zaikin <yzaikin@google.com>
+> > CC: Quentin Perret <qperret@google.com>
+> > CC: Valentin Schneider <valentin.schneider@arm.com>
+> > CC: Patrick Bellasi <patrick.bellasi@matbug.net>
+> > CC: Pavan Kondeti <pkondeti@codeaurora.org>
+> > CC: linux-doc@vger.kernel.org
+> > CC: linux-kernel@vger.kernel.org
+> > CC: linux-fsdevel@vger.kernel.org
+> > ---
+> >  Documentation/admin-guide/sysctl/kernel.rst | 48 +++++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> > index 0d427fd10941..e7255f71493c 100644
+> > --- a/Documentation/admin-guide/sysctl/kernel.rst
+> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> > @@ -940,6 +940,54 @@ Enables/disables scheduler statistics. Enabling this feature
+> >  incurs a small amount of overhead in the scheduler but is
+> >  useful for debugging and performance tuning.
+> >  
+> > +sched_util_clamp_min:
+> > +=====================
+> > +
+> > +Max allowed *minimum* utilization.
+> > +
+> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
+> > +value.
+> > +
+> > +It means that any requested uclamp.min value cannot be greater than
+> > +sched_util_clamp_min, ie: it is restricted to the range
+> 
+>                          i.e., it is
+> 
+> > +[0:sched_util_clamp_min].
+> > +
+> > +sched_util_clamp_max:
+> > +=====================
+> > +
+> > +Max allowed *maximum* utilization.
+> > +
+> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
+> > +value.
+> > +
+> > +It means that any requested uclamp.max value cannot be greater than
+> > +sched_util_clamp_max, ie: it is restricted to the range
+> 
+>                          i.e., it is
+> 
+> > +[0:sched_util_clamp_max].
+> > +
+> > +sched_util_clamp_min_rt_default:
+> > +================================
+> > +
+> > +By default Linux is tuned for performance. Which means that RT tasks always run
+> > +at the highest frequency and most capable (highest capacity) CPU (in
+> > +heterogeneous systems).
+> > +
+> > +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
+> > +SCHED_CAPACITY_SCALE (1024) by default. Which effectively boosts the tasks to
+> 
+>                                by default, which
+> 
+> > +run at the highest frequency and bias them to run on the biggest CPU.
+> 
+>                                     biases them
+> 
+> > +
+> > +This knob allows admins to change the default behavior when uclamp is being
+> > +used. In battery powered devices particularly, running at the maximum
+> > +capacity and frequency will increase energy consumption and shorten the battery
+> > +life.
+> > +
+> > +This knob is only effective for RT tasks which the user hasn't modified their
+> > +requested uclamp.min value via sched_setattr() syscall.
+> > +
+> > +This knob will not escape the constraint imposed by sched_util_clamp_min
+> > +defined above.
+> > +
+> > +Any modification is applied lazily on the next opportunity the scheduler needs
+> > +to calculate the effective value of uclamp.min of the task.
+> >  
+> >  seccomp
+> >  =======
+> > 
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
