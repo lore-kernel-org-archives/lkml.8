@@ -2,172 +2,363 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B83BC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72212C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62ABD206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBC4206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOLU4sE0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+KCxue4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgD2XA3 (ORCPT
+        id S1727857AbgD2XAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 19:00:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57072 "EHLO
+        Wed, 29 Apr 2020 19:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726164AbgD2XA2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726164AbgD2XAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 19:00:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541DBC03C1AE;
-        Wed, 29 Apr 2020 16:00:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so1434519plq.12;
-        Wed, 29 Apr 2020 16:00:28 -0700 (PDT)
+        Wed, 29 Apr 2020 19:00:44 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F42C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:00:44 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x18so4565102wrq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 16:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g1EdP6P5Ej+cnNaiXzjN2EMNWJCHDBgnEmgFoyJp1Eg=;
-        b=JOLU4sE0KfvtMXMGzrFrxDhR6plcBm/m4Qi2dxFgJ9AZzrnywvjpH4JQLtQ22tpXg5
-         BrXi8MqkhIFehh5bZX+5ZvAKbDfhmgzfUP3JErpBVtMgKyiXHLB/NBAlm9+/i1NRyD50
-         bOfPw7YwgtexP6yFH/dhsvPNmwkbzA8zvD7CePZv9TVH7PlFpemVHWPlxX4F/gJvfoTn
-         TkfyhMtciOyz3bL4VSR7ZzY14CiPVpn9BsVWKA1uCFy4UJadZgBnBLIv+1aDyHIlJ9rx
-         svaH6ka+ioje3wJsdMMkVSaMAz5Kgw/5UcBEBglQJonBcNt0z/D2rILcvkpQJRWMpm4/
-         YUIQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s3KxK6bjL0OB0EIR5mFE74z6J4G8EdFfW/RdE8urrAo=;
+        b=o+KCxue4qPRv0DLqMJPyij4SUkLDcduJifrSXGjXaldP0uBF4gDnGQjNPobS7EZaBb
+         E1Oe56BjnwD6N6i25fiOOt2ZD5YBonqEY+l8ak8wM4nXw8Ex2bIuDMXyxiZxwcYz3WDG
+         v2ZUb+xEIKge8U/Gr7cWb+4/DOWriIalgpHATswAyBjmFqNfQWYAwiF2Ix2xQVmJ0owx
+         VeKZpcLqkcHdVxpN21Pwkf0irAz83GxnLh9QlVzQrwk+CPjdjaoRIdCN19xG6Tz3myfP
+         OYwjcq52GkZ+bK1Gc4cigN056Yf2SvSxVc461l7AnjW90nn/QOWSNhtYCHVB1rEma6B5
+         TC3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=g1EdP6P5Ej+cnNaiXzjN2EMNWJCHDBgnEmgFoyJp1Eg=;
-        b=Wyv/dqFZwv45T6sLvwbj3auttHB3OM0LPyNN+Wd2TZZhPLKco5cXpJdvsGuSRBZ0A5
-         9/2VRMjFsT/IrKVGYtES/1GBQN0Py1OLNg2IXtus3YAHn7c3xiG9LVwrzqNDriEgefTv
-         QR7o9GkIhHu8rL7th07vQNjY/WczFYK3LrlEzd1jHZaC9e30U0zIQCgn8nQgEWtXrrar
-         AjHeGrV/aGG9XeUiyxS4fTadEm3n+TTJ3intSDHCFHNO0ZfKFNugXbDOleul4fUJby+t
-         eTpSSTuBBEqpXzLnftaN+bOB3UpNEsVTANTd/yqkotL+DXTyo5T27PmmtJBOZOj2S3VN
-         Ksng==
-X-Gm-Message-State: AGi0PuaNxjpt9TqQ9aRcE/QGNP++czCO1Isv77X2487qfDxgR41uAACY
-        WdZbjmwzt03CtERlnVZGhgowLrhL
-X-Google-Smtp-Source: APiQypKmBG0zaLSPZSRcP4PmomNs9cX4ryesM0YUtpQ8hawSctkf/7VIIu4Llqr+ltl9ZaMuxqs7UQ==
-X-Received: by 2002:a17:90a:1941:: with SMTP id 1mr863131pjh.65.1588201227518;
-        Wed, 29 Apr 2020 16:00:27 -0700 (PDT)
-Received: from [10.67.49.112] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m18sm264109pjl.14.2020.04.29.16.00.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 16:00:26 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 0/7] net: bcmgenet: add support for Wake on
- Filter
-From:   Doug Berger <opendmb@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
- <8ebd11c0-97f5-dfd4-d194-009d4df99aa6@gmail.com>
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- rQQYjNSD8+NSdOsIpGNCZ9xhWw==
-Message-ID: <c9dd1fa8-0119-b723-46ea-1ded5720e7d6@gmail.com>
-Date:   Wed, 29 Apr 2020 16:00:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s3KxK6bjL0OB0EIR5mFE74z6J4G8EdFfW/RdE8urrAo=;
+        b=bDL9i0d3U7AXcuLrA5tNj3LbL01vytWnkmyaphBTH9ttGM155jdzVs/dkeWq3hWERJ
+         O+0Nd69xrA5PYeeAo/2VtNSt5nV3NUIHvRBVKCl8DBteRoW2HHXglm++T+5xNFLoFe0u
+         V098fb1sQBG+v8qs/yZ/C0y/C6foT16unm/vzOhJfPmE0iwYKIVkqVna+WY5txtu17x0
+         sx3yrlS+xfIwb7fgGRp6ekM6xBMCl9TZybDnZp9hpQv6uxcfN6DqynM+fJDUH4G4vkXJ
+         uHWnhFvUOIGq7iBMxjy+TxOlzGiJSWQGruksqrT9yvLXj9jj8jProklB2n7G4tcDz9cb
+         Q+ZA==
+X-Gm-Message-State: AGi0PubWfIpnx2a126hl6a2AlvImbE0PAFaq3IPkXJU+4nYjFip9XoEN
+        MGm05gJKKZAYun92krxwyjs=
+X-Google-Smtp-Source: APiQypL7DvXQNDDLR7JAtUXiTv8NAAd5/vaa9HhlNLy3Lk9M8Eb6Acyt7I7hHf6MxgXH+8f4Sud6nQ==
+X-Received: by 2002:adf:fe44:: with SMTP id m4mr311285wrs.188.1588201243168;
+        Wed, 29 Apr 2020 16:00:43 -0700 (PDT)
+Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.googlemail.com with ESMTPSA id s6sm9834867wmh.17.2020.04.29.16.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 16:00:42 -0700 (PDT)
+From:   Akira Shimahara <akira215corp@gmail.com>
+To:     greg@kroah.com
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org,
+        Akira Shimahara <akira215corp@gmail.com>
+Subject: [PATCH v4 4/9] w1_therm: adding ext_power sysfs entry
+Date:   Thu, 30 Apr 2020 01:00:31 +0200
+Message-Id: <20200429230031.199752-1-akira215corp@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <8ebd11c0-97f5-dfd4-d194-009d4df99aa6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/20 3:07 PM, Doug Berger wrote:
-> On 4/29/20 1:01 PM, Doug Berger wrote:
->> Changes in v2:
->> 	Corrected Signed-off-by for commit 3/7.
->>
->> This commit set adds support for waking from 'standby' using a
->> Rx Network Flow Classification filter specified with ethtool.
->>
->> The first two commits are bug fixes that should be applied to the
->> stable branches, but are included in this patch set to reduce merge
->> conflicts that might occur if not applied before the other commits
->> in this set.
->>
->> The next commit consolidates WoL clock managment as a part of the
->> overall WoL configuration.
->>
->> The next commit restores a set of functions that were removed from
->> the driver just prior to the 4.9 kernel release.
->>
->> The following commit relocates the functions in the file to prevent
->> the need for additional forward declarations.
->>
->> Next, support for the Rx Network Flow Classification interface of
->> ethtool is added.
->>
->> Finally, support for the WAKE_FILTER wol method is added.
->>
->> Doug Berger (7):
->>   net: bcmgenet: set Rx mode before starting netif
->>   net: bcmgenet: Fix WoL with password after deep sleep
->>   net: bcmgenet: move clk_wol management to bcmgenet_wol
->>   Revert "net: bcmgenet: remove unused function in bcmgenet.c"
->>   net: bcmgenet: code movement
->>   net: bcmgenet: add support for ethtool rxnfc flows
->>   net: bcmgenet: add WAKE_FILTER support
->>
->>  drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 673 +++++++++++++++++++--
->>  drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  21 +-
->>  drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  90 ++-
->>  3 files changed, 708 insertions(+), 76 deletions(-)
->>
-> Please holdoff on this version as there is a bug here that I'd like to
-> patch first.
-> 
-> Thanks,
->     Doug
-> 
-Apparently the bug was in my head. This should be good to go.
+Adding ext_power sysfs entry (RO). Return the power status of the device:
+ - 0: device parasite powered
+ - 1: device externally powered
+ - xx: xx is kernel error
 
-Sorry for the confusion,
-    Doug
+The power status of each device is check when the device is
+discover by the bus master, in w1_therm_add_slave(struct w1_slave *).
+The status is stored in the device structure w1_therm_family_data so
+that the driver always knows the power state of each device, which could
+be used later to determine the required strong pull up to apply on the
+line.
+
+The power status is re evaluate each time the sysfs ext_power read by
+a user.
+
+Updating Documentation/ABI/testing/sysfs-driver-w1_therm accordingly.
+
+Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
+---
+ .../ABI/testing/sysfs-driver-w1_therm         | 12 +++
+ drivers/w1/slaves/w1_therm.c                  | 94 ++++++++++++++++++-
+ drivers/w1/slaves/w1_therm.h                  | 43 ++++++++-
+ 3 files changed, 146 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentation/ABI/testing/sysfs-driver-w1_therm
+index 4108f4c..9aaf625 100644
+--- a/Documentation/ABI/testing/sysfs-driver-w1_therm
++++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
+@@ -1,3 +1,15 @@
++What:		/sys/bus/w1/devices/.../ext_power
++Date:		Apr 2020
++Contact:	Akira Shimahara <akira215corp@gmail.com>
++Description:
++		(RO) return the power status by asking the device
++			* `0`: device parasite powered
++			* `1`: device externally powered
++			* `-xx`: xx is kernel error when reading power status
++Users:		any user space application which wants to communicate with
++		w1_term device
++
++
+ What:		/sys/bus/w1/devices/.../w1_slave
+ Date:		Apr 2020
+ Contact:	Akira Shimahara <akira215corp@gmail.com>
+diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
+index 6245950..f10a210 100644
+--- a/drivers/w1/slaves/w1_therm.c
++++ b/drivers/w1/slaves/w1_therm.c
+@@ -39,12 +39,14 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
+ 
+ static struct attribute *w1_therm_attrs[] = {
+ 	&dev_attr_w1_slave.attr,
++	&dev_attr_ext_power.attr,
+ 	NULL,
+ };
+ 
+ static struct attribute *w1_ds28ea00_attrs[] = {
+ 	&dev_attr_w1_slave.attr,
+ 	&dev_attr_w1_seq.attr,
++	&dev_attr_ext_power.attr,
+ 	NULL,
+ };
+ 
+@@ -294,6 +296,27 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
+ 	return t;
+ }
+ 
++/*------------------------ Helpers Functions----------------------------*/
++
++static inline bool bus_mutex_lock(struct mutex *lock)
++{
++	int max_trying = W1_THERM_MAX_TRY;
++
++	/* try to acquire the mutex, if not, sleep retry_delay before retry) */
++	while (mutex_lock_interruptible(lock) != 0 && max_trying > 0) {
++		unsigned long sleep_rem;
++
++		sleep_rem = msleep_interruptible(W1_THERM_RETRY_DELAY);
++		if (!sleep_rem)
++			max_trying--;
++	}
++
++	if (!max_trying)
++		return false;	/* Didn't acquire the bus mutex */
++
++	return true;
++}
++
+ /*-------------------------Interface Functions------------------------------*/
+ static int w1_therm_add_slave(struct w1_slave *sl)
+ {
+@@ -302,6 +325,16 @@ static int w1_therm_add_slave(struct w1_slave *sl)
+ 	if (!sl->family_data)
+ 		return -ENOMEM;
+ 	atomic_set(THERM_REFCNT(sl->family_data), 1);
++
++	/* Getting the power mode of the device {external, parasite}*/
++	SLAVE_POWERMODE(sl) = read_powermode(sl);
++
++	if (SLAVE_POWERMODE(sl) < 0) {
++		/* no error returned as device has been added */
++		dev_warn(&sl->dev,
++			"%s: Device has been added, but power_mode may be corrupted. err=%d\n",
++			 __func__, SLAVE_POWERMODE(sl));
++	}
+ 	return 0;
+ }
+ 
+@@ -512,6 +545,43 @@ error:
+ 	return ret;
+ }
+ 
++static int read_powermode(struct w1_slave *sl)
++{
++	struct w1_master *dev_master = sl->master;
++	int max_trying = W1_THERM_MAX_TRY;
++	int  ret = -ENODEV;
++
++	if (!sl->family_data)
++		goto error;
++
++	/* prevent the slave from going away in sleep */
++	atomic_inc(THERM_REFCNT(sl->family_data));
++
++	if (!bus_mutex_lock(&dev_master->bus_mutex)) {
++		ret = -EAGAIN;	// Didn't acquire the mutex
++		goto dec_refcnt;
++	}
++
++	while ((max_trying--) && (ret < 0)) {
++		/* safe version to select slave */
++		if (!reset_select_slave(sl)) {
++			w1_write_8(dev_master, W1_READ_PSUPPLY);
++			/* Read only one bit,
++			 * 1 is externally powered,
++			 * 0 is parasite powered
++			 */
++			ret = w1_touch_bit(dev_master, 1);
++			/* ret should be either 1 either 0 */
++		}
++	}
++	mutex_unlock(&dev_master->bus_mutex);
++
++dec_refcnt:
++	atomic_dec(THERM_REFCNT(sl->family_data));
++error:
++	return ret;
++}
++
+ /*------------------------Interface sysfs--------------------------*/
+ 
+ static ssize_t w1_slave_show(struct device *device,
+@@ -565,13 +635,35 @@ static ssize_t w1_slave_store(struct device *device,
+ 				ret = w1_therm_families[i].eeprom(device);
+ 			else
+ 				ret = w1_therm_families[i].precision(device,
+-								val);
++									val);
+ 			break;
+ 		}
+ 	}
+ 	return ret ? : size;
+ }
+ 
++static ssize_t ext_power_show(struct device *device,
++	struct device_attribute *attr, char *buf)
++{
++	struct w1_slave *sl = dev_to_w1_slave(device);
++
++	if (!sl->family_data) {
++		dev_info(device,
++			"%s: Device not supported by the driver\n", __func__);
++		return 0;  /* No device family */
++	}
++
++	/* Getting the power mode of the device {external, parasite}*/
++	SLAVE_POWERMODE(sl) = read_powermode(sl);
++
++	if (SLAVE_POWERMODE(sl) < 0) {
++		dev_dbg(device,
++			"%s: Power_mode may be corrupted. err=%d\n",
++			__func__, SLAVE_POWERMODE(sl));
++	}
++	return sprintf(buf, "%d\n", SLAVE_POWERMODE(sl));
++}
++
+ #if IS_REACHABLE(CONFIG_HWMON)
+ static int w1_read_temp(struct device *device, u32 attr, int channel,
+ 			long *val)
+diff --git a/drivers/w1/slaves/w1_therm.h b/drivers/w1/slaves/w1_therm.h
+index ba11c96..e4f4c9e 100644
+--- a/drivers/w1/slaves/w1_therm.h
++++ b/drivers/w1/slaves/w1_therm.h
+@@ -25,6 +25,11 @@
+ #include <linux/mutex.h>
+ #include <linux/w1.h>
+ 
++/* Nb of try for an operation */
++#define W1_THERM_MAX_TRY		5
++
++/* ms delay to retry bus mutex */
++#define W1_THERM_RETRY_DELAY		20
+ /*----------------------------------Structs---------------------------------*/
+ 
+ /**
+@@ -47,10 +52,15 @@ struct w1_therm_family_converter {
+  * struct w1_therm_family_data
+  * @param rom data
+  * @param refcnt ref count
++ * @param external_powered
++ *		1 device powered externally,
++ *		0 device parasite powered,
++ *		-x error or undefined
+  */
+ struct w1_therm_family_data {
+ 	uint8_t rom[9];
+ 	atomic_t refcnt;
++	int external_powered;
+ };
+ 
+ /**
+@@ -80,11 +90,24 @@ static inline int w1_DS18B20_convert_temp(u8 rom[9]);
+ static inline int w1_DS18S20_convert_temp(u8 rom[9]);
+ 
+ /*-------------------------------Macros--------------------------------------*/
++/* return the power mode of the sl slave : 1-ext, 0-parasite, <0 unknown
++ * always test family data existence before
++ */
++#define SLAVE_POWERMODE(sl) \
++	(((struct w1_therm_family_data *)(sl->family_data))->external_powered)
+ 
+ /* return the address of the refcnt in the family data */
+ #define THERM_REFCNT(family_data) \
+ 	(&((struct w1_therm_family_data *)family_data)->refcnt)
+ 
++/*-------------------------- Helpers Functions------------------------------*/
++
++/** bus_mutex_lock() get the mutex & retry
++ *  @param lock w1 bus mutex to get
++ *  @return value true is mutex is acquired and lock, false otherwise
++ */
++static inline bool bus_mutex_lock(struct mutex *lock);
++
+ /*---------------------------Hardware Functions-----------------------------*/
+ 
+ /**
+@@ -107,7 +130,14 @@ static int reset_select_slave(struct w1_slave *sl);
+  */
+ static ssize_t read_therm(struct device *device,
+ 			struct w1_slave *sl, struct therm_info *info);
+-
++/** read_powermode()
++ * @brief ask the device to get its power mode {external, parasite}
++ * @param sl slave to be interrogated
++ * @return	0 parasite powered device
++ *			1 externally powered device
++ *			<0 kernel error code
++ */
++static int read_powermode(struct w1_slave *sl);
+ /*----------------------------Interface sysfs-------------------------------*/
+ 
+ /** @brief A callback function to output the temperature Old way
+@@ -127,11 +157,20 @@ static ssize_t w1_slave_store(struct device *device,
+ 
+ static ssize_t w1_seq_show(struct device *device,
+ 	struct device_attribute *attr, char *buf);
+-
++/** @brief A callback function to output the power mode of the device
++ *	Once done, it is stored in the sl->family_data to avoid doing the test
++ *	during data read
++ *  @return	0 : device parasite powered
++ *			1 : device externally powered
++ *			-xx : xx is kernel error code
++ */
++static ssize_t ext_power_show(struct device *device,
++	struct device_attribute *attr, char *buf);
+ /*-----------------------------Attributes declarations----------------------*/
+ 
+ static DEVICE_ATTR_RW(w1_slave);
+ static DEVICE_ATTR_RO(w1_seq);
++static DEVICE_ATTR_RO(ext_power);
+ 
+ /*--------------------------Interface Functions-----------------------------*/
+ 
+-- 
+2.26.2
+
