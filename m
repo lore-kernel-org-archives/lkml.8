@@ -7,36 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3348FC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3B1C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF36206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41022073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgD2IZY (ORCPT
+        id S1726683AbgD2IZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:25:24 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38178 "EHLO inva020.nxp.com"
+        Wed, 29 Apr 2020 04:25:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49962 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgD2IZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:25:24 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 84CEF1A181F;
-        Wed, 29 Apr 2020 10:25:22 +0200 (CEST)
+        id S1726366AbgD2IZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:25:27 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9DF2A200049;
+        Wed, 29 Apr 2020 10:25:25 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 272791A030B;
-        Wed, 29 Apr 2020 10:25:20 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 41826200311;
+        Wed, 29 Apr 2020 10:25:23 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CE02D402DA;
-        Wed, 29 Apr 2020 16:25:16 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E0EA3402B4;
+        Wed, 29 Apr 2020 16:25:19 +0800 (SGT)
 From:   Qiang Zhao <qiang.zhao@nxp.com>
 To:     shawnguo@kernel.org
 Cc:     leoyang.li@nxp.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [patch v2 1/2] ls1043ardb: add qe node to ls1043ardb
-Date:   Wed, 29 Apr 2020 16:20:51 +0800
-Message-Id: <20200429082052.18519-1-qiang.zhao@nxp.com>
+Subject: [patch v2 2/2] ls1043ardb: add ds26522 node to dts
+Date:   Wed, 29 Apr 2020 16:20:52 +0800
+Message-Id: <20200429082052.18519-2-qiang.zhao@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200429082052.18519-1-qiang.zhao@nxp.com>
+References: <20200429082052.18519-1-qiang.zhao@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -45,120 +47,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zhao Qiang <qiang.zhao@nxp.com>
 
-Add qe node to fsl-ls1043a.dtsi and fsl-ls1043a-rdb.dts
+add ds26522 node to fsl-ls1043a-rdb.dts
 
 Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 ---
-v2:
-- add commit msg and drop a new blank line
-
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 65 +++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index 4223a23..96e87ba 100644
+index 96e87ba..b60c742 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -96,6 +96,22 @@
+@@ -94,6 +94,22 @@
+ 		reg = <0>;
+ 		spi-max-frequency = <1000000>; /* input clock */
  	};
- };
- 
-+&uqe {
-+	ucc_hdlc: ucc@2000 {
-+		compatible = "fsl,ucc-hdlc";
-+		rx-clock-name = "clk8";
-+		tx-clock-name = "clk9";
-+		fsl,rx-sync-clock = "rsync_pin";
-+		fsl,tx-sync-clock = "tsync_pin";
-+		fsl,tx-timeslot-mask = <0xfffffffe>;
-+		fsl,rx-timeslot-mask = <0xfffffffe>;
-+		fsl,tdm-framer-type = "e1";
-+		fsl,tdm-id = <0>;
-+		fsl,siram-entry-id = <0>;
-+		fsl,tdm-interface;
++
++	slic@2 {
++		compatible = "maxim,ds26522";
++		reg = <2>;
++		spi-max-frequency = <2000000>;
++		fsl,spi-cs-sck-delay = <100>;
++		fsl,spi-sck-cs-delay = <50>;
 +	};
-+};
 +
- &duart0 {
- 	status = "okay";
++	slic@3 {
++		compatible = "maxim,ds26522";
++		reg = <3>;
++		spi-max-frequency = <2000000>;
++		fsl,spi-cs-sck-delay = <100>;
++		fsl,spi-sck-cs-delay = <50>;
++	};
  };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index c084c7a4..674e671 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -525,6 +525,71 @@
- 			#interrupt-cells = <2>;
- 		};
  
-+		uqe: uqe@2400000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			device_type = "qe";
-+			compatible = "fsl,qe", "simple-bus";
-+			ranges = <0x0 0x0 0x2400000 0x40000>;
-+			reg = <0x0 0x2400000 0x0 0x480>;
-+			brg-frequency = <100000000>;
-+			bus-frequency = <200000000>;
-+			fsl,qe-num-riscs = <1>;
-+			fsl,qe-num-snums = <28>;
-+
-+			qeic: qeic@80 {
-+				compatible = "fsl,qe-ic";
-+				reg = <0x80 0x80>;
-+				#address-cells = <0>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				interrupts = <0 77 0x04 0 77 0x04>;
-+			};
-+
-+			si1: si@700 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,ls1043-qe-si",
-+						"fsl,t1040-qe-si";
-+				reg = <0x700 0x80>;
-+			};
-+
-+			siram1: siram@1000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "fsl,ls1043-qe-siram",
-+						"fsl,t1040-qe-siram";
-+				reg = <0x1000 0x800>;
-+			};
-+
-+			ucc@2000 {
-+				cell-index = <1>;
-+				reg = <0x2000 0x200>;
-+				interrupts = <32>;
-+				interrupt-parent = <&qeic>;
-+			};
-+
-+			ucc@2200 {
-+				cell-index = <3>;
-+				reg = <0x2200 0x200>;
-+				interrupts = <34>;
-+				interrupt-parent = <&qeic>;
-+			};
-+
-+			muram@10000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "fsl,qe-muram", "fsl,cpm-muram";
-+				ranges = <0x0 0x10000 0x6000>;
-+
-+				data-only@0 {
-+					compatible = "fsl,qe-muram-data",
-+					"fsl,cpm-muram-data";
-+					reg = <0x0 0x6000>;
-+				};
-+			};
-+		};
-+
- 		lpuart0: serial@2950000 {
- 			compatible = "fsl,ls1021a-lpuart";
- 			reg = <0x0 0x2950000 0x0 0x1000>;
+ &uqe {
 -- 
 2.9.5
 
