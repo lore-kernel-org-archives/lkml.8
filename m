@@ -4,216 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002A7C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83FFC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC5EE20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93532082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgD2Ioz (ORCPT
+        id S1726565AbgD2IpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:44:55 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60904 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbgD2Ioy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:44:54 -0400
-Received: from localhost.cn (unknown [10.40.23.12])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL2twPqleuLMtAA--.20S2;
-        Wed, 29 Apr 2020 16:44:33 +0800 (CST)
-From:   Guoyun Sun <sunguoyun@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guoyun Sun <sunguoyun@loongson.cn>
-Subject: [PATCH v2] mips/mm: Add page soft dirty tracking
-Date:   Wed, 29 Apr 2020 16:44:32 +0800
-Message-Id: <1588149872-9780-1-git-send-email-sunguoyun@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxL2twPqleuLMtAA--.20S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw1xuw4rXr17Gr47Ary3twb_yoWrZw1rpF
-        s5JF4FvFWFqFWxKayftrs3Krya9rs7XFy5Xr9rGF4UKa45J3y8XFWagr4YvrZ5XFW8Aayr
-        XrWvqw45GrW2y3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        64x0Y40En7xvr7AKxVWUJVW8JwAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI
-        0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CE
-        Vc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUDrcfUUUUU=
-X-CM-SenderInfo: 5vxqw3hr1x0qxorr0wxvrqhubq/
+        Wed, 29 Apr 2020 04:45:13 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:48392 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2IpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:45:13 -0400
+Received: from localhost.localdomain ([92.148.159.11])
+        by mwinf5d03 with ME
+        id YYl72200G0F2omL03Yl75P; Wed, 29 Apr 2020 10:45:11 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 29 Apr 2020 10:45:11 +0200
+X-ME-IP: 92.148.159.11
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     b.zolnierkie@samsung.com, sumit.semwal@linaro.org,
+        rafael.j.wysocki@intel.com, corbet@lwn.net,
+        viresh.kumar@linaro.org, jani.nikula@intel.com,
+        mchehab+samsung@kernel.org, eric.miao@marvell.com
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] video: pxafb: Fix the function used to balance a 'dma_alloc_coherent()' call
+Date:   Wed, 29 Apr 2020 10:45:05 +0200
+Message-Id: <20200429084505.108897-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-User space checkpoint and restart tool (CRIU) needs the page's change
-to be soft tracked. This allows to do a pre checkpoint and then dump
-only touched pages.
+'dma_alloc_coherent()' must be balanced by a call to 'dma_free_coherent()'
+not 'dma_free_wc()'.
+The correct dma_free_ function is already used in the error handling path
+of the probe function.
 
-Signed-off-by: Guoyun Sun <sunguoyun@loongson.cn>
+Fixes: 77e196752bdd ("[ARM] pxafb: allow video memory size to be configurable")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- arch/mips/include/asm/pgtable-bits.h | 20 +++++++++++++--
- arch/mips/include/asm/pgtable.h      | 48 ++++++++++++++++++++++++++++++++++--
- 2 files changed, 64 insertions(+), 4 deletions(-)
+ drivers/video/fbdev/pxafb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/pgtable-bits.h b/arch/mips/include/asm/pgtable-bits.h
-index 4da79b8..e26dc41 100644
---- a/arch/mips/include/asm/pgtable-bits.h
-+++ b/arch/mips/include/asm/pgtable-bits.h
-@@ -55,6 +55,9 @@ enum pgtable_bits {
- #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
- 	_PAGE_SPECIAL_SHIFT,
- #endif
-+#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
-+	_PAGE_SOFT_DIRTY_SHIFT,
-+#endif
- };
+diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
+index 00b96a78676e..6f972bed410a 100644
+--- a/drivers/video/fbdev/pxafb.c
++++ b/drivers/video/fbdev/pxafb.c
+@@ -2417,8 +2417,8 @@ static int pxafb_remove(struct platform_device *dev)
  
- /*
-@@ -84,6 +87,9 @@ enum pgtable_bits {
- #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
- 	_PAGE_SPECIAL_SHIFT,
- #endif
-+#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
-+	_PAGE_SOFT_DIRTY_SHIFT,
-+#endif
- };
+ 	free_pages_exact(fbi->video_mem, fbi->video_mem_size);
  
- #elif defined(CONFIG_CPU_R3K_TLB)
-@@ -99,6 +105,9 @@ enum pgtable_bits {
- #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
- 	_PAGE_SPECIAL_SHIFT,
- #endif
-+#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
-+	_PAGE_SOFT_DIRTY_SHIFT,
-+#endif
+-	dma_free_wc(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
+-		    fbi->dma_buff_phys);
++	dma_free_coherent(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
++			  fbi->dma_buff_phys);
  
- 	/* Used by TLB hardware (placed in EntryLo) */
- 	_PAGE_GLOBAL_SHIFT = 8,
-@@ -125,7 +134,9 @@ enum pgtable_bits {
- #if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
- 	_PAGE_SPECIAL_SHIFT,
- #endif
--
-+#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
-+	_PAGE_SOFT_DIRTY_SHIFT,
-+#endif
- 	/* Used by TLB hardware (placed in EntryLo*) */
- #if defined(CONFIG_CPU_HAS_RIXI)
- 	_PAGE_NO_EXEC_SHIFT,
-@@ -152,6 +163,11 @@ enum pgtable_bits {
- #else
- # define _PAGE_SPECIAL		0
- #endif
-+#if defined(CONFIG_HAVE_ARCH_SOFT_DIRTY)
-+# define _PAGE_SOFT_DIRTY	(1 << _PAGE_SOFT_DIRTY_SHIFT)
-+#else
-+# define _PAGE_SOFT_DIRTY	0
-+#endif
- 
- /* Used by TLB hardware (placed in EntryLo*) */
- #if defined(CONFIG_XPA)
-@@ -269,6 +285,6 @@ static inline uint64_t pte_to_entrylo(unsigned long pte_val)
- #define __WRITEABLE	(_PAGE_SILENT_WRITE | _PAGE_WRITE | _PAGE_MODIFIED)
- 
- #define _PAGE_CHG_MASK	(_PAGE_ACCESSED | _PAGE_MODIFIED |	\
--			 _PFN_MASK | _CACHE_MASK)
-+			 _PAGE_SOFT_DIRTY | _PFN_MASK | _CACHE_MASK)
- 
- #endif /* _ASM_PGTABLE_BITS_H */
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index aab0ec1..9b01d2d 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -400,7 +400,7 @@ static inline pte_t pte_mkwrite(pte_t pte)
- 
- static inline pte_t pte_mkdirty(pte_t pte)
- {
--	pte_val(pte) |= _PAGE_MODIFIED;
-+	pte_val(pte) |= _PAGE_MODIFIED | _PAGE_SOFT_DIRTY;
- 	if (pte_val(pte) & _PAGE_WRITE)
- 		pte_val(pte) |= _PAGE_SILENT_WRITE;
- 	return pte;
-@@ -423,6 +423,30 @@ static inline pte_t pte_mkhuge(pte_t pte)
- 	return pte;
+ 	return 0;
  }
- #endif /* CONFIG_MIPS_HUGE_TLB_SUPPORT */
-+
-+#ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
-+static inline bool pte_soft_dirty(pte_t pte)
-+{
-+	return pte_val(pte) & _PAGE_SOFT_DIRTY;
-+}
-+#define pte_swp_soft_dirty pte_soft_dirty
-+
-+static inline pte_t pte_mksoft_dirty(pte_t pte)
-+{
-+	pte_val(pte) |= _PAGE_SOFT_DIRTY;
-+	return pte;
-+}
-+#define pte_swp_mksoft_dirty pte_mksoft_dirty
-+
-+static inline pte_t pte_clear_soft_dirty(pte_t pte)
-+{
-+	pte_val(pte) &= ~(_PAGE_SOFT_DIRTY);
-+	return pte;
-+}
-+#define pte_swp_clear_soft_dirty pte_clear_soft_dirty
-+
-+#endif /* CONFIG_HAVE_ARCH_SOFT_DIRTY */
-+
- #endif
- 
- /*
-@@ -576,7 +600,7 @@ static inline pmd_t pmd_mkclean(pmd_t pmd)
- 
- static inline pmd_t pmd_mkdirty(pmd_t pmd)
- {
--	pmd_val(pmd) |= _PAGE_MODIFIED;
-+	pmd_val(pmd) |= _PAGE_MODIFIED | _PAGE_SOFT_DIRTY;
- 	if (pmd_val(pmd) & _PAGE_WRITE)
- 		pmd_val(pmd) |= _PAGE_SILENT_WRITE;
- 
-@@ -605,6 +629,26 @@ static inline pmd_t pmd_mkyoung(pmd_t pmd)
- 	return pmd;
- }
- 
-+#ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
-+static inline int pmd_soft_dirty(pmd_t pmd)
-+{
-+	return !!(pmd_val(pmd) & _PAGE_SOFT_DIRTY);
-+}
-+
-+static inline pmd_t pmd_mksoft_dirty(pmd_t pmd)
-+{
-+	pmd_val(pmd) |= _PAGE_SOFT_DIRTY;
-+	return pmd;
-+}
-+
-+static inline pmd_t pmd_clear_soft_dirty(pmd_t pmd)
-+{
-+	pmd_val(pmd) &= ~(_PAGE_SOFT_DIRTY);
-+	return pmd;
-+}
-+
-+#endif /* CONFIG_HAVE_ARCH_SOFT_DIRTY */
-+
- /* Extern to avoid header file madness */
- extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
- 
 -- 
-2.1.0
+2.25.1
 
