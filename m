@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549A7C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F62BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289292137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE942137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Hdf6TXEV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wzVe5h5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgD2Uwy (ORCPT
+        id S1727840AbgD2Uw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:52:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19546 "EHLO
+        Wed, 29 Apr 2020 16:52:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62431 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727122AbgD2Uwr (ORCPT
+        by vger.kernel.org with ESMTP id S1727112AbgD2Uwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 16:52:47 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588193567; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588193566; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=qRdYWMIAcK9FRaoesTP+Q+KhDEjeUPFIsX7HKgjdxQ8=; b=Hdf6TXEVj63m9dlG1Bfj7spbz0y0Iuh0Mq5Sir70nkaoYXaz0iPv5ItionbspisHlA5pxk2K
- QKdOzvb1K5Q9eb2vVAKfR7z9n/f+gxx6uKsCtBmlmAqDatQNuDlHd4k8XZHaGV+XS4dnfqji
- FIVcNtLrgh40Mr98cULm2fOVq6c=
+ bh=lEs6L2yislRXJmnPp78fvmNo55W3guoPRto/jHfjHwk=; b=wzVe5h5bXulqP04qXVW833CtLEwaLzni4ZJelUq8BtzpqRl9xVyHa/AN31aTzQ4RZD+ohdYF
+ FEiCrvVQmM5D3cbK0u+gO6YXxzrNGhmLabHEN+7x5DKOQUX/hoJc2Wl277fYzLPLViVyFqwd
+ K9Y/csOELVHF3F+WR7zYH75OPfE=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea9e918.7f5a2d5d9ab0-smtp-out-n05;
- Wed, 29 Apr 2020 20:52:40 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ea9e917.7fc2f805f260-smtp-out-n05;
+ Wed, 29 Apr 2020 20:52:39 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 80ABBC433F2; Wed, 29 Apr 2020 20:52:39 +0000 (UTC)
+        id EF9F2C433D2; Wed, 29 Apr 2020 20:52:38 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F02A0C4478C;
-        Wed, 29 Apr 2020 20:52:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F02A0C4478C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0379C433F2;
+        Wed, 29 Apr 2020 20:52:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0379C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v3 4/9] bus: mhi: core: Read transfer length from an event properly
-Date:   Wed, 29 Apr 2020 13:52:26 -0700
-Message-Id: <1588193551-31439-5-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v3 1/9] bus: mhi: core: Refactor mhi queue APIs
+Date:   Wed, 29 Apr 2020 13:52:23 -0700
+Message-Id: <1588193551-31439-2-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
@@ -63,36 +63,233 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hemant Kumar <hemantk@codeaurora.org>
 
-When MHI Driver receives an EOT event, it reads xfer_len from the
-event in the last TRE. The value is under control of the MHI device
-and never validated by Host MHI driver. The value should never be
-larger than the real size of the buffer but a malicious device can
-set the value 0xFFFF as maximum. This causes driver to memory
-overflow (both read or write). Fix this issue by reading minimum of
-transfer length from event and the buffer length provided.
+Move all the common code to generate TREs from mhi_queue_dma and
+mhi_queue_skb to mhi_gen_tre. This helps to centralize the TRE
+generation code which makes any future bug fixing easier to manage
+in these APIs.
 
+Suggested-by: Jeffrey Hugo <jhugo@codeaurora.org>
 Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 ---
- drivers/bus/mhi/core/main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/bus/mhi/core/internal.h |   3 +-
+ drivers/bus/mhi/core/main.c     | 107 +++++++++++++++++-----------------------
+ 2 files changed, 47 insertions(+), 63 deletions(-)
 
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index 5deadfa..a9087aa 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -673,8 +673,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+ irqreturn_t mhi_intvec_handler(int irq_number, void *dev);
+ 
+ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+-		void *buf, void *cb, size_t buf_len, enum mhi_flags flags);
+-
++		struct mhi_buf_info *info, enum mhi_flags flags);
+ int mhi_map_single_no_bb(struct mhi_controller *mhi_cntrl,
+ 			 struct mhi_buf_info *buf_info);
+ int mhi_map_single_use_bb(struct mhi_controller *mhi_cntrl,
 diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index b8e4aac..0afbaa1 100644
+index eb4256b..aee64f9 100644
 --- a/drivers/bus/mhi/core/main.c
 +++ b/drivers/bus/mhi/core/main.c
-@@ -521,7 +521,10 @@ static int parse_xfer_event(struct mhi_controller *mhi_cntrl,
- 				mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
+@@ -926,9 +926,7 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
+ 							     mhi_dev->dl_chan;
+ 	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+-	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
+-	struct mhi_buf_info *buf_info;
+-	struct mhi_tre *mhi_tre;
++	struct mhi_buf_info buf_info = { };
+ 	int ret;
  
- 			result.buf_addr = buf_info->cb_buf;
--			result.bytes_xferd = xfer_len;
+ 	/* If MHI host pre-allocates buffers then client drivers cannot queue */
+@@ -953,27 +951,15 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
+ 
+-	/* Generate the TRE */
+-	buf_info = buf_ring->wp;
+-
+-	buf_info->v_addr = skb->data;
+-	buf_info->cb_buf = skb;
+-	buf_info->wp = tre_ring->wp;
+-	buf_info->dir = mhi_chan->dir;
+-	buf_info->len = len;
+-	ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+-	if (ret)
+-		goto map_error;
+-
+-	mhi_tre = tre_ring->wp;
+-
+-	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+-	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
+-	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
++	buf_info.v_addr = skb->data;
++	buf_info.cb_buf = skb;
++	buf_info.len = len;
+ 
+-	/* increment WP */
+-	mhi_add_ring_element(mhi_cntrl, tre_ring);
+-	mhi_add_ring_element(mhi_cntrl, buf_ring);
++	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
++	if (unlikely(ret)) {
++		read_unlock_bh(&mhi_cntrl->pm_lock);
++		return ret;
++	}
+ 
+ 	if (mhi_chan->dir == DMA_TO_DEVICE)
+ 		atomic_inc(&mhi_cntrl->pending_pkts);
+@@ -987,11 +973,6 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	read_unlock_bh(&mhi_cntrl->pm_lock);
+ 
+ 	return 0;
+-
+-map_error:
+-	read_unlock_bh(&mhi_cntrl->pm_lock);
+-
+-	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mhi_queue_skb);
+ 
+@@ -1003,9 +984,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 							     mhi_dev->dl_chan;
+ 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+ 	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+-	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
+-	struct mhi_buf_info *buf_info;
+-	struct mhi_tre *mhi_tre;
++	struct mhi_buf_info buf_info = { };
++	int ret;
+ 
+ 	/* If MHI host pre-allocates buffers then client drivers cannot queue */
+ 	if (mhi_chan->pre_alloc)
+@@ -1032,25 +1012,16 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	/* Toggle wake to exit out of M2 */
+ 	mhi_cntrl->wake_toggle(mhi_cntrl);
+ 
+-	/* Generate the TRE */
+-	buf_info = buf_ring->wp;
+-	WARN_ON(buf_info->used);
+-	buf_info->p_addr = mhi_buf->dma_addr;
+-	buf_info->pre_mapped = true;
+-	buf_info->cb_buf = mhi_buf;
+-	buf_info->wp = tre_ring->wp;
+-	buf_info->dir = mhi_chan->dir;
+-	buf_info->len = len;
+-
+-	mhi_tre = tre_ring->wp;
+-
+-	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+-	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
+-	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
++	buf_info.p_addr = mhi_buf->dma_addr;
++	buf_info.cb_buf = mhi_buf;
++	buf_info.pre_mapped = true;
++	buf_info.len = len;
+ 
+-	/* increment WP */
+-	mhi_add_ring_element(mhi_cntrl, tre_ring);
+-	mhi_add_ring_element(mhi_cntrl, buf_ring);
++	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
++	if (unlikely(ret)) {
++		read_unlock_bh(&mhi_cntrl->pm_lock);
++		return ret;
++	}
+ 
+ 	if (mhi_chan->dir == DMA_TO_DEVICE)
+ 		atomic_inc(&mhi_cntrl->pending_pkts);
+@@ -1068,7 +1039,7 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ EXPORT_SYMBOL_GPL(mhi_queue_dma);
+ 
+ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+-		void *buf, void *cb, size_t buf_len, enum mhi_flags flags)
++			struct mhi_buf_info *info, enum mhi_flags flags)
+ {
+ 	struct mhi_ring *buf_ring, *tre_ring;
+ 	struct mhi_tre *mhi_tre;
+@@ -1080,15 +1051,22 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+ 	tre_ring = &mhi_chan->tre_ring;
+ 
+ 	buf_info = buf_ring->wp;
+-	buf_info->v_addr = buf;
+-	buf_info->cb_buf = cb;
++	WARN_ON(buf_info->used);
++	buf_info->pre_mapped = info->pre_mapped;
++	if (info->pre_mapped)
++		buf_info->p_addr = info->p_addr;
++	else
++		buf_info->v_addr = info->v_addr;
++	buf_info->cb_buf = info->cb_buf;
+ 	buf_info->wp = tre_ring->wp;
+ 	buf_info->dir = mhi_chan->dir;
+-	buf_info->len = buf_len;
++	buf_info->len = info->len;
+ 
+-	ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+-	if (ret)
+-		return ret;
++	if (!info->pre_mapped) {
++		ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
++		if (ret)
++			return ret;
++	}
+ 
+ 	eob = !!(flags & MHI_EOB);
+ 	eot = !!(flags & MHI_EOT);
+@@ -1097,7 +1075,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+ 
+ 	mhi_tre = tre_ring->wp;
+ 	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+-	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_len);
++	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+ 	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+ 
+ 	/* increment WP */
+@@ -1114,6 +1092,7 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
+ 							     mhi_dev->dl_chan;
+ 	struct mhi_ring *tre_ring;
++	struct mhi_buf_info buf_info = { };
+ 	unsigned long flags;
+ 	int ret;
+ 
+@@ -1129,7 +1108,11 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+ 	if (mhi_is_ring_full(mhi_cntrl, tre_ring))
+ 		return -ENOMEM;
+ 
+-	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, buf, buf, len, mflags);
++	buf_info.v_addr = buf;
++	buf_info.cb_buf = buf;
++	buf_info.len = len;
 +
-+			/* truncate to buf len if xfer_len is larger */
-+			result.bytes_xferd =
-+				min_t(u16, xfer_len, buf_info->len);
- 			mhi_del_ring_element(mhi_cntrl, buf_ring);
- 			mhi_del_ring_element(mhi_cntrl, tre_ring);
- 			local_rp = tre_ring->rp;
++	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
+ 	if (unlikely(ret))
+ 		return ret;
+ 
+@@ -1330,7 +1313,7 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 
+ 		while (nr_el--) {
+ 			void *buf;
+-
++			struct mhi_buf_info info = { };
+ 			buf = kmalloc(len, GFP_KERNEL);
+ 			if (!buf) {
+ 				ret = -ENOMEM;
+@@ -1338,8 +1321,10 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 			}
+ 
+ 			/* Prepare transfer descriptors */
+-			ret = mhi_gen_tre(mhi_cntrl, mhi_chan, buf, buf,
+-					  len, MHI_EOT);
++			info.v_addr = buf;
++			info.cb_buf = buf;
++			info.len = len;
++			ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &info, MHI_EOT);
+ 			if (ret) {
+ 				kfree(buf);
+ 				goto error_pre_alloc;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
