@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D9BC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02308C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880B2206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39942085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dBK7yFj/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eZgRG+MW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgD2NlJ (ORCPT
+        id S1728633AbgD2NlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:41:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52970 "EHLO
+        Wed, 29 Apr 2020 09:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgD2NhB (ORCPT
+        with ESMTP id S1727074AbgD2NhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:01 -0400
+        Wed, 29 Apr 2020 09:37:00 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02285C035493;
-        Wed, 29 Apr 2020 06:37:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14ADC09B051;
+        Wed, 29 Apr 2020 06:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=7jF/5Wz0vEdYXDOMS0hCwx2KuSkqA3em8Ujbgxg5dVM=; b=dBK7yFj/JmjuhLlR+U0eT0TW3f
-        wQu7LsAg/m1llsfBMqNeYklmfsFXV7MV98YxOwQOy2IxLOSNX1wcl0AIP0WsyjDLLdkzPul9a1I0R
-        D7icGCmgTquHd9wcU38JFHKQF6mpO2oCOCQr79dvOiL9TAaQoNu+v7jVNUoyJxbSG1hQaU2LGm7cE
-        EiHBnyV6mACvAKLNsXAHxFXUHwjGOgX7EMiq/KtYyHiKNZYJENx5cmoSk7PRyVI/1f61rsU7D4GXq
-        QzZj5c5qiiGoqvCRJCtumWpBzkvMKfObBx5D8OZTc28WYguirycNKTdGgQ6xpi+bUkG0m0dkUopyH
-        127uhj2g==;
+        bh=2bQkIqpgUB37LvBPYV8/XJBmZx89qdwplflUzXZDdzY=; b=eZgRG+MWuSDIxW8xuSIKZX4CC4
+        O7BBTAj4GIo9PMR2BfqW96XQ+3n7IWUqPJx3dTe8vvPYv7tWctZW0zJd280Dq0uYj57pYGPXgWWq7
+        St/XNIsOVakSCLd+IZI43a7b9t2v1Wi6bNpBW8G+EvGV0eeKXIcwSQ6iCvsbWnlA1voKT/hUibOPd
+        Jth3H7jZGbbwcNpiScGlAa812u1d10UwL0bDdohkacDPSH3duUUSf+zvsR21ODCmXEYLtKeldiycl
+        OH4ieG0znRurJCnBBqPSkHmaehJ4QVC7bJzogEjx6CZeiT6G3HyCt6AyHfLRyAJ1U/gA/daYLzuz6
+        zpF+MRlg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTmtX-0005wQ-RF; Wed, 29 Apr 2020 13:36:59 +0000
+        id 1jTmtX-0005vo-KG; Wed, 29 Apr 2020 13:36:59 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 20/25] mm: Remove page fault assumption of compound page size
-Date:   Wed, 29 Apr 2020 06:36:52 -0700
-Message-Id: <20200429133657.22632-21-willy@infradead.org>
+Subject: [PATCH v3 15/25] xfs: Support large pages
+Date:   Wed, 29 Apr 2020 06:36:47 -0700
+Message-Id: <20200429133657.22632-16-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
 References: <20200429133657.22632-1-willy@infradead.org>
@@ -57,36 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-A compound page in the page cache will not necessarily be of PMD size,
-so check explicitly.
+There is one place which assumes the size of a page; fix it.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/memory.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_aops.c  | 2 +-
+ fs/xfs/xfs_super.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index f703fe8c8346..d68ce428ddd2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3549,13 +3549,14 @@ static vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
- 	pmd_t entry;
- 	int i;
--	vm_fault_t ret;
-+	vm_fault_t ret = VM_FAULT_FALLBACK;
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index 5b25f5ee84dc..bb677ecbdf32 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -548,7 +548,7 @@ xfs_discard_page(
+ 	if (error && !XFS_FORCED_SHUTDOWN(mp))
+ 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
+ out_invalidate:
+-	iomap_invalidatepage(page, 0, PAGE_SIZE);
++	iomap_invalidatepage(page, 0, thp_size(page));
+ }
  
- 	if (!transhuge_vma_suitable(vma, haddr))
--		return VM_FAULT_FALLBACK;
-+		return ret;
+ static const struct iomap_writeback_ops xfs_writeback_ops = {
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index abf06bf9c3f3..0c7c4afa5afd 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1793,7 +1793,7 @@ static struct file_system_type xfs_fs_type = {
+ 	.init_fs_context	= xfs_init_fs_context,
+ 	.parameters		= xfs_fs_parameters,
+ 	.kill_sb		= kill_block_super,
+-	.fs_flags		= FS_REQUIRES_DEV,
++	.fs_flags		= FS_REQUIRES_DEV | FS_LARGE_PAGES,
+ };
+ MODULE_ALIAS_FS("xfs");
  
--	ret = VM_FAULT_FALLBACK;
- 	page = compound_head(page);
-+	if (page_order(page) != HPAGE_PMD_ORDER)
-+		return ret;
- 
- 	/*
- 	 * Archs like ppc64 need additonal space to store information
 -- 
 2.26.2
 
