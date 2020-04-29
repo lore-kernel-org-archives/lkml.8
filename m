@@ -2,115 +2,92 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E52C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D717C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EFE20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3jXwt47"
+	by mail.kernel.org (Postfix) with ESMTP id 7C2EA208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgD2Rk6 (ORCPT
+        id S1727104AbgD2RlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:40:58 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49762 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726822AbgD2Rk6 (ORCPT
+        Wed, 29 Apr 2020 13:41:24 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42002 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgD2RlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:40:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588182056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+ifxZyJaIcgDMF24Z/FnGdjxceJQS9w7pXlbPKDemc0=;
-        b=Q3jXwt47s/rLcW65RCo4z8AFPM7E7U8cxtTpYwJddsT8t+gWSu+DJiNR+A1SF0KL04BYsh
-        7z/4DAzWtZQ4x5PGKLDg45nkL6OLw4lFUIoK6vQr5F2AQY4SZsMof1APlCSMZF6EpcAXrq
-        0pDFZ4/q9qq9JDpcH6rxPZ1/uKyhvwA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-dtlrjSQBNNWyFAZH5nv2vA-1; Wed, 29 Apr 2020 13:40:55 -0400
-X-MC-Unique: dtlrjSQBNNWyFAZH5nv2vA-1
-Received: by mail-wr1-f69.google.com with SMTP id y10so2118234wrn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:40:55 -0700 (PDT)
+        Wed, 29 Apr 2020 13:41:23 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x12so2568538qts.9;
+        Wed, 29 Apr 2020 10:41:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+ifxZyJaIcgDMF24Z/FnGdjxceJQS9w7pXlbPKDemc0=;
-        b=n2YQob6EE0eWNMvxR9u9k4yHYj1s9Fp7kFzYkmY4P93aE+T8887kSQ5/0nWcMZH05B
-         eWdcbC3V+ySYaq1A7HyvjBJEKuzLXTpg7sVAM0pcPour2CWeSOkSBsSWi3B9eBDyfmjP
-         22uvOVRDaoMkocnyrregdrvlM6aaKDPACRp6LgUF3EcFLlTTfFvaTKOLVb21cR6sUpet
-         Di4mUPdkCd3+xOhpYXKMbDeS76Jw+EqzwH4hCfnXZzxXjzO1zb9h8GMNRPr/jn3lRhj5
-         +CTAm8Mw1IlZyBZe8fqJV9A5WvAuMyO8PO+5HjuhCd1xmbXNKVh1ET9kdn0WnvZtwq5R
-         2UUg==
-X-Gm-Message-State: AGi0PubEwt1FTmukfvjUJ0aMIggjKUzAWSv59PACEPGsPRKKukVKyye6
-        mh2QsYh0lcqk+48YBJMz2bLJ/rYMPQSDXRlfqJWfAbU4K7YYZKoOCOIT3YGxPGJG2mAQKGf3uTE
-        8sOyMDPS6lIJfUE9xKWi1x+L7
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr4387554wmd.67.1588182054031;
-        Wed, 29 Apr 2020 10:40:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKJurOLijS7qOB8eqd6TzSPyHSGOpNFHCTkIqRnaycYuXvYCsf9epD1BeOSFaygjfwcKqsDRA==
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr4387530wmd.67.1588182053727;
-        Wed, 29 Apr 2020 10:40:53 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:2c8e:3b22:4882:7794? ([2001:b07:6468:f312:2c8e:3b22:4882:7794])
-        by smtp.gmail.com with ESMTPSA id n6sm33498690wrs.81.2020.04.29.10.40.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 10:40:53 -0700 (PDT)
-Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
- page ready notifications
-To:     Andy Lutomirski <luto@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com>
- <20200429093634.1514902-5-vkuznets@redhat.com>
- <CALCETrXEzpKNhNJQm+SshiEfyHjYkB7+1c+7iusZy66rRsWunA@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0de4a809-e965-d0ad-489f-5b011aa5bf89@redhat.com>
-Date:   Wed, 29 Apr 2020 19:40:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        bh=QmaqVWTwC+lifYOHHk5qJWZIkbjYOF5n6zq/dLJ9qS8=;
+        b=tLV+9VAkXyWZZviO0O8/8kFafwP+AcTqn6UHC1UNuMAxBEfMDfGxInei9A6ZHaPbqD
+         pSlqUY8C6DSm1sOnaMPOXK1JZV851LnYj0qFHwYbl1b1EkhTojHf4uHurTF65bCQyOlk
+         mNI+FuvIjXsQba582OVTO/5m54kuyuoqqp41EmmfaUJFZLFuNf3xyEx2beYtnRV4k+5e
+         UDkGR6Msk5Bf+M33VVBzgJBjCIC02hVWufkyMfx0SPTmZoPrWMOJSqg8UqVuQ5NCz0Sf
+         amAOPxudMlWAZrHyUPhfS1su7wHBl/dp2z2pmwIWjjBu+oySvHg+4rfborbE8f7WZ8oY
+         k3yQ==
+X-Gm-Message-State: AGi0PuY7nlTBpGMz2uWAe9ry79kEPERtyhOoGZ8/6qgwfNZkQCXSsGoP
+        m5eG1D6sf7uPO1qQsXvsjMM=
+X-Google-Smtp-Source: APiQypLxyLPkkPxJ7hAxvBZh2k8InnCXzIzNkEn7fexexbKw1lrg9fRqSlEQnYPvPhf/Y//hKel9Lg==
+X-Received: by 2002:ac8:6d1d:: with SMTP id o29mr35735607qtt.327.1588182081959;
+        Wed, 29 Apr 2020 10:41:21 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z1sm14766448qkz.3.2020.04.29.10.41.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 10:41:21 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] efi: some cleanups/refactoring for efi/next
+Date:   Wed, 29 Apr 2020 13:41:09 -0400
+Message-Id: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CALCETrXEzpKNhNJQm+SshiEfyHjYkB7+1c+7iusZy66rRsWunA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/20 19:28, Andy Lutomirski wrote:
-> This seems functional, but I'm wondering if it could a bit simpler and
-> more efficient if the data structure was a normal descriptor ring with
-> the same number slots as whatever the maximum number of waiting pages
-> is.  Then there would never need to be any notification from the guest
-> back to the host, since there would always be room for a notification.
+This series is on top of efi/next.
 
-No, it would be much more complicated code for a slow path which is
-already order of magnitudes slower than a vmexit.  It would also use
-much more memory.
+Patch 1 fixes the size allocated for x86 boot_params.
+Patch 2 refactors the setting of various hi/lo 32-bit fields, mainly on x86.
+Patches 3-5 convert the remaining uses of efi_printk to print error
+messages to use pr_efi_err instead.
+Patches 6-8 refactor initrd loading, moving it into efi-stub-helper.
+Patch 9 adds support for x86 builtin command line.
+Patch 10 adds error checking for efi_parse_options.
 
-> It might be even better if a single unified data structure was used
-> for both notifications.
+Arvind Sankar (10):
+  efi/x86: Use correct size for boot_params
+  efi/libstub: Add a helper function to split 64-bit values
+  efi/x86: Use pr_efi_err for error messages
+  efi/gop: Use pr_efi_err for error messages
+  efi/tpm: Use pr_efi_err for error messages
+  efi/x86: Move command-line initrd loading to efi_main
+  efi/libstub: Unify initrd loading across architectures
+  efi/x86: Drop soft_limit for x86 initrd loading
+  efi/x86: Support builtin command line
+  efi/libstub: Check return value of efi_parse_options
 
-That's a very bad idea since one is synchronous and one is asynchronous.
- Part of the proposal we agreed upon was to keep "page not ready"
-synchronous while making "page ready" an interrupt.  The data structure
-for "page not ready" will be #VE.
+ .../firmware/efi/libstub/efi-stub-helper.c    |  42 +++++-
+ drivers/firmware/efi/libstub/efi-stub.c       |  29 +++--
+ drivers/firmware/efi/libstub/efistub.h        |  32 ++---
+ drivers/firmware/efi/libstub/file.c           |  13 +-
+ drivers/firmware/efi/libstub/gop.c            |  16 +--
+ drivers/firmware/efi/libstub/tpm.c            |   2 +-
+ drivers/firmware/efi/libstub/x86-stub.c       | 121 ++++++++----------
+ 7 files changed, 130 insertions(+), 125 deletions(-)
 
-Paolo
+-- 
+2.26.2
 
