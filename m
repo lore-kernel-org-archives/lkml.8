@@ -2,79 +2,63 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C4FC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4572FC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1E82064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588186783;
-	bh=mCzgndZV9oSgYH3A5npWh8MPllIC/3Qa3Gd80PeFISk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XoczhTTrSX4jb9SZskx6darZ2iDGsxUK5tuxHS+eJ/5tg1Nb7zyx6NORN+8KWK4kJ
-	 Kb7kLhqiPW4nhmcGTwt7fRt4nna5p10Yk9JoUbNWjn4GOWO2H2HoMNNMjZMXWoV1qe
-	 Q88bxrQoMKmLfF8kTxIaEpycbOtJq5i9iP+b39sk=
+	by mail.kernel.org (Postfix) with ESMTP id 325882064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgD2S7n (ORCPT
+        id S1727774AbgD2S7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:59:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgD2S7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:59:42 -0400
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4678020B80;
-        Wed, 29 Apr 2020 18:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588186782;
-        bh=mCzgndZV9oSgYH3A5npWh8MPllIC/3Qa3Gd80PeFISk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CqWc7zHruZXF9PobL6vlCmR2JVxmu1hSKnbyUeP/6FvwejRNOemqRKiWdGBjaCK1Y
-         QLTjFAP9qDi3xbg6Dl4RFp2LVqEcN+w+oTHDzhY+niYQnunw9/5w0hXg6YBgLMth7S
-         ic2HSGgf4n+gR6SfcGhfCu0imLrIlRNILWD2R9xY=
-Received: by mail-il1-f174.google.com with SMTP id w6so3544692ilg.1;
-        Wed, 29 Apr 2020 11:59:42 -0700 (PDT)
-X-Gm-Message-State: AGi0Puba9cv/wpA1RGEcmQeAbJRBvnMeXyTVWFVWWFcHqwotOuXAnaBq
-        3xNWpWp59vKc0SabAq5yZS5vVdhdEVXs9x1MEZ4=
-X-Google-Smtp-Source: APiQypIMmAxIAz8HiXRShXUeJVDGv62oB+5s7tuAIyLsW6eHj+7cNblrdjh9dWJqmS+bsEUB2xAQPg6nP5AIHxGdDmE=
-X-Received: by 2002:a92:405:: with SMTP id 5mr31534493ile.279.1588186780730;
- Wed, 29 Apr 2020 11:59:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-5-nivedita@alum.mit.edu> <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
- <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com> <3fa8fba37f9339adc993cdb7afc77ed0e063967d.camel@perches.com>
-In-Reply-To: <3fa8fba37f9339adc993cdb7afc77ed0e063967d.camel@perches.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 29 Apr 2020 20:59:29 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHN1j4+h-mTf_EpsaX3-ifAtKJOPmSSq9LvHoFUUg+0bw@mail.gmail.com>
-Message-ID: <CAMj1kXHN1j4+h-mTf_EpsaX3-ifAtKJOPmSSq9LvHoFUUg+0bw@mail.gmail.com>
-Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
-To:     Joe Perches <joe@perches.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Apr 2020 14:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726519AbgD2S7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 14:59:49 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD2CC03C1AE;
+        Wed, 29 Apr 2020 11:59:49 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C77C41210A3E3;
+        Wed, 29 Apr 2020 11:59:47 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 11:59:46 -0700 (PDT)
+Message-Id: <20200429.115946.788260021055034651.davem@davemloft.net>
+To:     robert.marko@sartura.hr
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v4 0/3] net: phy: mdio: add IPQ40xx MDIO
+ support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200429110726.448625-1-robert.marko@sartura.hr>
+References: <20200429110726.448625-1-robert.marko@sartura.hr>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 29 Apr 2020 11:59:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 20:57, Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2020-04-29 at 20:49 +0200, Ard Biesheuvel wrote:
-> > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
-> > > Looking at code for efi_printk -> efi_char16_printk,
-> > > it's somewhat difficult to see where the "output_string"
-> > > function pointer is set.  Any clue?
-> > It is set by the firmware.
->
-> Sure, where in the code though?
->
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Wed, 29 Apr 2020 13:07:24 +0200
 
-In which code? The firmware code?
+> This patch series provides support for the IPQ40xx built-in MDIO interface.
+> Included are driver, devicetree bindings for it and devicetree node.
+
+The DT changes don't apply cleanly to net-next, please respin.
+
+Thanks.
