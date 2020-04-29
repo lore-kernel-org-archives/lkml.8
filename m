@@ -2,152 +2,119 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A098EC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A45DC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA652073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588174309;
-	bh=cz2GRQMmobQIU8Dm3XppVkcHbEvwo+MsQ2UDSbo/Nso=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=dP6hTrSXcbc4iwZ2L4h7zihdXIP+34x+iIvaOACjJ47x3lr/kiijnAmv4MqqGpuiY
-	 KdkNEiTodqZJApFR9yQhubJKK29xmuQ8V26wj8e0wBQPeeuJgyOW3KCoyhA67Nzx9R
-	 i9L1xVi2J/jJ+980/uevHdDe0V8/BeBBu3+M8CGM=
+	by mail.kernel.org (Postfix) with ESMTP id 101312073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgD2Pbs (ORCPT
+        id S1726775AbgD2Pdj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54526 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 11:33:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8618 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2Pbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:31:48 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DD9206F0;
-        Wed, 29 Apr 2020 15:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588174307;
-        bh=cz2GRQMmobQIU8Dm3XppVkcHbEvwo+MsQ2UDSbo/Nso=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JkiBRNRGIihwWrIm7TmLD0OHzJ1ywldClvr5mPhqCfN0nC7742gsdK+I5GDPzQViw
-         PhW1LWaxV9f/D8CO1eAIuZuPmo4zJ0vJficejaMQRYM6sY/v9nAw4EbCN5R5WUEwd2
-         w/7UhV7fM+0Rki5Soiw+9Xuku8QviaYrXSBJ7MBE=
-Message-ID: <018c93fd12244f173ede8e6f4e9f453cbb447bff.camel@kernel.org>
-Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Wu Bo <wubo40@huawei.com>, sage@redhat.com, idryomov@gmail.com,
-        "Yan, Zheng" <ukernel@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liuzhiqiang26@huawei.com, linfeilong@huawei.com
-Date:   Wed, 29 Apr 2020 11:31:45 -0400
-In-Reply-To: <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
-References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
-         <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org>
-         <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        id S1726519AbgD2Pdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:33:38 -0400
+IronPort-SDR: NCPOqmRNQEwt/lEYKO3OrRp6m/RsVEyDKp9PPeyf0xNxwsZDhSDKYBaicHC6bzCkHuZwqCcfcz
+ uCDnK6PMB6NA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:33:34 -0700
+IronPort-SDR: RJYX6NhL9qb6YXik0zGyrdsVjGAZts+z5OR23h/AT1O1RfL4r9BCr92aVLXAMEfP2p78jM7Zhd
+ JTaLfbA5ZX7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="459236582"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Apr 2020 08:33:33 -0700
+Received: from fmsmsx161.amr.corp.intel.com (10.18.125.9) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 29 Apr 2020 08:33:33 -0700
+Received: from fmsmsx124.amr.corp.intel.com ([169.254.8.70]) by
+ FMSMSX161.amr.corp.intel.com ([10.18.125.9]) with mapi id 14.03.0439.000;
+ Wed, 29 Apr 2020 08:33:33 -0700
+From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
+To:     "Denis V. Lunev" <den@openvz.org>
+CC:     Konstantin Khorenko <khorenko@virtuozzo.com>,
+        "Latif, Faisal" <faisal.latif@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] i40iw: remove bogus call to
+ netdev_master_upper_dev_get
+Thread-Topic: [PATCH 1/1] i40iw: remove bogus call to
+ netdev_master_upper_dev_get
+Thread-Index: AQHWHV8iCMr9rO8fnEWOWdKxb9e/t6iQNmwQ
+Date:   Wed, 29 Apr 2020 15:33:32 +0000
+Message-ID: <9DD61F30A802C4429A01CA4200E302A7DCD5849C@fmsmsx124.amr.corp.intel.com>
+References: <20200428131511.11049-1-den@openvz.org>
+In-Reply-To: <20200428131511.11049-1-den@openvz.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.106]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 08:46 +0800, Wu Bo wrote:
-> On 2020/4/28 22:48, Jeff Layton wrote:
-> > On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
-> > > if the ceph_mdsc_open_export_target_session() return fails,
-> > > should add a lock to avoid twice unlocking.
-> > > Because the lock will be released at the retry or out_unlock tag.
-> > > 
-> > 
-> > The problem looks real, but...
-> > 
-> > > --
-> > > v1 -> v2:
-> > > add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag.
-> > > 
-> > > Signed-off-by: Wu Bo <wubo40@huawei.com>
-> > > ---
-> > >   fs/ceph/caps.c | 27 +++++++++++++++------------
-> > >   1 file changed, 15 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> > > index 185db76..414c0e2 100644
-> > > --- a/fs/ceph/caps.c
-> > > +++ b/fs/ceph/caps.c
-> > > @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
-> > >   
-> > >   	/* open target session */
-> > >   	tsession = ceph_mdsc_open_export_target_session(mdsc, target);
-> > > -	if (!IS_ERR(tsession)) {
-> > > -		if (mds > target) {
-> > > -			mutex_lock(&session->s_mutex);
-> > > -			mutex_lock_nested(&tsession->s_mutex,
-> > > -					  SINGLE_DEPTH_NESTING);
-> > > -		} else {
-> > > -			mutex_lock(&tsession->s_mutex);
-> > > -			mutex_lock_nested(&session->s_mutex,
-> > > -					  SINGLE_DEPTH_NESTING);
-> > > -		}
-> > > -		new_cap = ceph_get_cap(mdsc, NULL);
-> > > -	} else {
-> > > +	if (IS_ERR(tsession)) {
-> > >   		WARN_ON(1);
-> > >   		tsession = NULL;
-> > >   		target = -1;
-> > > +		mutex_lock(&session->s_mutex);
-> > > +		spin_lock(&ci->i_ceph_lock);
-
-Rather than taking the spinlock here, it'd be nicer to set a new label
-above the mutex (out_unlock_mutex or something) and jump to that.
-
-> > > +		goto out_unlock;
-> > 
-> > Why did you make this case goto out_unlock instead of retrying as it did
-> > before?
-> > 
+> Subject: [PATCH 1/1] i40iw: remove bogus call to netdev_master_upper_dev_get
 > 
-> If the problem occurs, target = -1, and goto retry lable, you need to 
-> call __get_cap_for_mds() or even call __ceph_remove_cap(), and then jump 
-> to out_unlock lable. All I think is unnecessary, goto out_unlock instead 
-> of retrying directly.
+> Local variable netdev is not used in these calls.
+> 
+> It should be noted, that this change is required to work in bonded mode.
+> In the other case we would get the following assert:
+>  "RTNL: assertion failed at net/core/dev.c (5665)"
+> with the calltrace as follows:
+> 	dump_stack+0x19/0x1b
+> 	netdev_master_upper_dev_get+0x61/0x70
+> 	i40iw_addr_resolve_neigh+0x1e8/0x220
+> 	i40iw_make_cm_node+0x296/0x700
+> 	? i40iw_find_listener.isra.10+0xcc/0x110
+> 	i40iw_receive_ilq+0x3d4/0x810
+> 	i40iw_puda_poll_completion+0x341/0x420
+> 	i40iw_process_ceq+0xa5/0x280
+> 	i40iw_ceq_dpc+0x1e/0x40
+> 	tasklet_action+0x83/0x140
+> 	__do_softirq+0x125/0x2bb
+> 	call_softirq+0x1c/0x30
+> 	do_softirq+0x65/0xa0
+> 	irq_exit+0x105/0x110
+> 	do_IRQ+0x56/0xf0
+> 	common_interrupt+0x16a/0x16a
+> 	? cpuidle_enter_state+0x57/0xd0
+> 	cpuidle_idle_call+0xde/0x230
+> 	arch_cpu_idle+0xe/0xc0
+> 	cpu_startup_entry+0x14a/0x1e0
+> 	start_secondary+0x1f7/0x270
+> 	start_cpu+0x5/0x14
+> 
+> Signed-off-by: Denis V. Lunev <den@openvz.org>
+> CC: Konstantin Khorenko <khorenko@virtuozzo.com>
+> CC: Faisal Latif <faisal.latif@intel.com>
+> CC: Shiraz Saleem <shiraz.saleem@intel.com>
+> CC: Doug Ledford <dledford@redhat.com>
+> CC: Jason Gunthorpe <jgg@ziepe.ca>
+> CC: linux-rdma@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
+>  1 file changed, 8 deletions(-)
 > 
 
-(cc'ing Zheng since he understands the IMPORT/EXPORT code better than I)
+Looks right. Thanks!
 
-I'm not quite convinced. It certainly looks like this was done
-deliberately before, and that the expectation is that the cap be removed
-in this case.
-
-If we do want to make this change, then at the very least the changelog
-needs to spell out why this safe and desirable.
-
-> > > +	}
-> > > +
-> > > +	if (mds > target) {
-> > > +		mutex_lock(&session->s_mutex);
-> > > +		mutex_lock_nested(&tsession->s_mutex,
-> > > +					SINGLE_DEPTH_NESTING);
-> > > +	} else {
-> > > +		mutex_lock(&tsession->s_mutex);
-> > > +		mutex_lock_nested(&session->s_mutex,
-> > > +					SINGLE_DEPTH_NESTING);
-> > >   	}
-> > > +	new_cap = ceph_get_cap(mdsc, NULL);
-> > >   	goto retry;
-> > >   
-> > >   out_unlock:
-> 
-> 
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
