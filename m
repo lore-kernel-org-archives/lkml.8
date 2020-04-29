@@ -2,86 +2,54 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C38C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E690DC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40772082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:20:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="T3FVr+bE"
+	by mail.kernel.org (Postfix) with ESMTP id CDCB021775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgD2UUe (ORCPT
+        id S1726893AbgD2UYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:20:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgD2UUd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:20:33 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473A9C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 13:20:33 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id ck5so1828692qvb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 13:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/23J5CKDV/ipNHmolXue3R/OfIDiPvGpq+jfAvjfA5w=;
-        b=T3FVr+bEt2VdzBPMrzXS/XIBxyIAVSo4cc5hilgAj6z9UGWVPy1IuxFPnoT9gd0kVR
-         8j66U0ETtEaBNKqmVbLPTSoEAYnVqJkUHq7EfZK7BQwuHLGoug0Vdon9V2qaYFQStqAf
-         CHXthQOZBq9OkumERtJVuwIGOLluR/p+aF7IPzIH18TaatoKoKyNLgAgiIeo4GlAqK7C
-         rBWRIsUEGMdQNFxhtCrIrQkglZ16dH7U3dRq5ABqKKDVEEgoDfL28Up7BPkw5Jkx/tXT
-         2u5FXuxBKNZHuJZ5mhQ4mCevIAKWqr4DB7Yjpllf0yY4CwIYW6wrafJ1V+YKeYn35lbC
-         0jOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/23J5CKDV/ipNHmolXue3R/OfIDiPvGpq+jfAvjfA5w=;
-        b=ovIfAYse1nqel9qOUZlCiKV8+cLDzdbgEr7X8xJIfRqoAjgxxH+zlJD2u7tE7qPcAe
-         3EolExrGB677m+dmznzZzUz+pKDd6AcU4fxxypgAuc/7Xw/OLme0LS6uZbpOhZWweSaI
-         mW6s8F9EuV01Jy3PNsUK5LmRKF7a0U5kht3zPgnnlXzV6CS8I/GR1Ns5Ep3gJICa9GEW
-         ZKoOovkZyD6/yS3pX5KflVvVYpN4ugtUQEI5htHUjVeMXaHb4QWf4GjeXyoFivPa8oZQ
-         4mDcXWa6+61bYmIeOfMKWTy9OQSMQY2953QPVYvbiAaqzAC6/10Xez9lbYqUAout1C3l
-         Tgjw==
-X-Gm-Message-State: AGi0PuZ42QssyOCUHfPcI9Fklok11EpWuL4e5X4iRCeABMRCjzzGjC7y
-        V1GmvPtdZryId53IzzVi0ocb5w==
-X-Google-Smtp-Source: APiQypKkMahvKj397sz1q0I94z5LXn5ICNCS326/RH9ZD8NjE6V34eIR2HY3CUeHtvPO8iqWEXzn6A==
-X-Received: by 2002:a05:6214:6af:: with SMTP id s15mr35100420qvz.215.1588191632179;
-        Wed, 29 Apr 2020 13:20:32 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d23sm174920qkj.26.2020.04.29.13.20.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 13:20:31 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] kvm: Fix false positive RCU usage warning
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200428155249.19990-1-madhuparnabhowmik10@gmail.com>
-Date:   Wed, 29 Apr 2020 16:20:29 -0400
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        wanpengli@tencent.com, jmattson@google.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>, x86 <x86@kernel.org>,
-        kvm@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <014AD5C4-1E88-4694-8637-C07D34A93F58@lca.pw>
-References: <20200428155249.19990-1-madhuparnabhowmik10@gmail.com>
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 29 Apr 2020 16:24:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:44566 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgD2UYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:24:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6F311063;
+        Wed, 29 Apr 2020 13:24:48 -0700 (PDT)
+Received: from [10.37.12.43] (unknown [10.37.12.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF1A3F68F;
+        Wed, 29 Apr 2020 13:24:45 -0700 (PDT)
+Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
+To:     Michael Kao <michael.kao@mediatek.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20200424071601.2636-1-michael.kao@mediatek.com>
+ <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
+ <1588156776.3573.1.camel@mtksdccf07>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <03286571-c110-7f5e-a911-24f8c3e4fd42@arm.com>
+Date:   Wed, 29 Apr 2020 21:24:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1588156776.3573.1.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,153 +57,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Apr 28, 2020, at 11:52 AM, madhuparnabhowmik10@gmail.com wrote:
->=20
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->=20
-> Fix the following false positive warnings:
->=20
-> [ 9403.765413][T61744] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [ 9403.786541][T61744] WARNING: suspicious RCU usage
-> [ 9403.807865][T61744] 5.7.0-rc1-next-20200417 #4 Tainted: G           =
-  L
-> [ 9403.838945][T61744] -----------------------------
-> [ 9403.860099][T61744] arch/x86/kvm/mmu/page_track.c:257 RCU-list =
-traversed in non-reader section!!
->=20
-> and
->=20
-> [ 9405.859252][T61751] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [ 9405.859258][T61751] WARNING: suspicious RCU usage
-> [ 9405.880867][T61755] -----------------------------
-> [ 9405.911936][T61751] 5.7.0-rc1-next-20200417 #4 Tainted: G           =
-  L
-> [ 9405.911942][T61751] -----------------------------
-> [ 9405.911950][T61751] arch/x86/kvm/mmu/page_track.c:232 RCU-list =
-traversed in non-reader section!!
->=20
-> Since srcu read lock is held, these are false positive warnings.
-> Therefore, pass condition srcu_read_lock_held() to
-> list_for_each_entry_rcu().
+On 4/29/20 11:39 AM, Michael Kao wrote:
+> On Fri, 2020-04-24 at 10:22 +0100, Lukasz Luba wrote:
+>> Hi Michael,
+>>
+>> On 4/24/20 8:16 AM, Michael Kao wrote:
+>>> The upper and lower limits of thermal throttle state in the
+>>> device tree do not apply to the power_allocate governor.
+>>> Add the upper and lower limits to the power_allocate governor.
+>>>
+>>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+>>> ---
+>>>    drivers/thermal/thermal_core.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+>>> index 9a321dc548c8..f6feed2265bd 100644
+>>> --- a/drivers/thermal/thermal_core.c
+>>> +++ b/drivers/thermal/thermal_core.c
+>>> @@ -598,7 +598,7 @@ int power_actor_set_power(struct thermal_cooling_device *cdev,
+>>>    	if (ret)
+>>>    		return ret;
+>>>    
+>>> -	instance->target = state;
+>>> +	instance->target = clamp_val(state, instance->lower, instance->upper);
+>>>    	mutex_lock(&cdev->lock);
+>>>    	cdev->updated = false;
+>>>    	mutex_unlock(&cdev->lock);
+>>>
+>>
+>> Thank you for the patch and having to look at it. I have some concerns
+>> with this approach. Let's analyze it further.
+>>
+>> In default the cooling devices in the thermal zone which is used by IPA
+>> do not have this 'lower' and 'upper' limits. They are set to
+>> THERMAL_NO_LIMIT in DT to give full control to IPA over the states.
+>>
+>> This the function 'power_actor_set_power' actually translates granted
+>> power to the state that device will run for the next period.
+>> The IPA algorithm has already split the power budget.
+>> Now what happen when the 'lower' value will change the state to a state
+>> which consumes more power than was calculated in the IPA alg... It will
+>> became unstable.
+>>
+>> I would rather see a change which uses these 'lower' and 'upper' limits
+>> before the IPA do the calculation of the power budget. But this wasn't
+>> a requirement and we assumed that IPA has full control over the cooling
+>> device (which I described above with this DT THERMAL_NO_LIMIT).
+>>
+>> Is there a problem with your platform that it has to provide some
+>> minimal performance, so you tried to introduce this clamping?
+>>
+>> Regards,
+>> Lukasz
+> 
+> 
+> Hi Lukasz,
+> 
+> I refer to the documentation settings of the thermal device tree
+> (Documentation / devicetree / bindings / thermal / thermal.txt).
+> 
+> It shows that cooling-device is a mandatory property, so max/min cooling
+> state should be able to support in framework point of view.
+> Otherwise, the limitation should be added in binding document.
+> 
+> Different hardware mechanisms have different heat dissipation
+> capabilities.
+> Limiting the input heat source can slow down the heat accumulation and
+> temperature burst.
+> We want to reduce the accumulation of heat at high temperature by
+> limiting the minimum gear of thermal throttle.
 
-You forgot to add KVM maintainer (adding Paolo now). On the other hand, =
-there could be more places need to audit in x86 KVM. Not sure you want =
-to add them together to one patch or doing separately for each file. For =
-example,
+I agree that these 'lower' and 'upper' limits shouldn't be just
+ignored as is currently. This patch clamps the value at late stage,
+though.
 
-[29179.937976][T75781] WARNING: suspicious RCU usage
-[29179.942789][T75781] 5.7.0-rc3-next-20200429 #1 Tainted: G           O =
-L  =20
-[29179.949752][T75781] -----------------------------
-[29179.954498][T75781] arch/x86/kvm/../../../virt/kvm/eventfd.c:472 =
-RCU-list traversed in non-reader section!!
-[29179.964768][T75781]=20
-[29179.964768][T75781] other info that might help us debug this:
-[29179.964768][T75781]=20
-[29179.974958][T75781]=20
-[29179.974958][T75781] rcu_scheduler_active =3D 2, debug_locks =3D 1
-[29179.982961][T75781] 3 locks held by qemu-kvm/75781:
-[29179.988145][T75781]  #0: ffff95b3755300d0 (&vcpu->mutex){+.+.}-{3:3}, =
-at: kvm_vcpu_ioctl+0xbd/0x860 [kvm]
-[29179.998450][T75781]  #1: ffffa45946cd7e10 (&kvm->srcu){....}-{0:0}, =
-at: vcpu_enter_guest+0x94e/0x2e50 [kvm]
-[29180.009264][T75781]  #2: ffffa45946cd8b98 =
-(&kvm->irq_srcu){....}-{0:0}, at: kvm_notify_acked_irq+0x92/0x290 [kvm]
-[29180.020471][T75781]=20
-[29180.020471][T75781] stack backtrace:
-[29180.026318][T75781] CPU: 16 PID: 75781 Comm: qemu-kvm Tainted: G      =
-     O L    5.7.0-rc3-next-20200429 #1
-[29180.036480][T75781] Hardware name: HPE ProLiant DL385 Gen10/ProLiant =
-DL385 Gen10, BIOS A40 03/09/2018
-[29180.045765][T75781] Call Trace:
-[29180.048942][T75781]  dump_stack+0xab/0x100
-[29180.053132][T75781]  lockdep_rcu_suspicious+0xea/0xf3
-[29180.058802][T75781]  kvm_notify_acked_gsi+0x10d/0x120 [kvm]
-[29180.065386][T75781]  kvm_notify_acked_irq+0xe5/0x290 [kvm]
-[29180.071529][T75781]  pic_clear_isr+0xa1/0xc0 [kvm]
-[29180.077118][T75781]  pic_ioport_write+0x335/0x5e0 [kvm]
-[29180.082453][T75781]  ? do_raw_spin_lock+0x115/0x1b0
-[29180.088205][T75781]  picdev_write+0x7d/0x130 [kvm]
-[29180.093677][T75781]  picdev_master_write+0x3a/0x50 [kvm]
-[29180.099730][T75781]  __kvm_io_bus_write+0x147/0x180 [kvm]
-[29180.105700][T75781]  kvm_io_bus_write+0xfc/0x1b0 [kvm]
-[29180.111701][T75781]  kernel_pio+0xeb/0x110 [kvm]
-[29180.116991][T75781]  emulator_pio_out+0x14f/0x400 [kvm]
-[29180.122342][T75781]  ? __lock_acquire+0x5c2/0x23f0
-[29180.127229][T75781]  ? __svm_vcpu_run+0x95/0x110 [kvm_amd]
-[29180.133481][T75781]  kvm_fast_pio+0x12f/0x200 [kvm]
-[29180.138733][T75781]  io_interception+0xba/0xe0 [kvm_amd]
-[29180.144164][T75781]  ? svm_sync_dirty_debug_regs+0x170/0x170 =
-[kvm_amd]
-[29180.150843][T75781]  handle_exit+0x403/0x9f0 [kvm_amd]
-[29180.156652][T75781]  ? kvm_arch_vcpu_ioctl_run+0x286/0xb50 [kvm]
-[29180.163648][T75781]  vcpu_enter_guest+0xa08/0x2e50 [kvm]
-[29180.169007][T75781]  ? lock_acquire+0xcd/0x450
-[29180.174364][T75781]  ? kvm_skip_emulated_instruction+0x67/0x80 [kvm]
-[29180.181422][T75781]  kvm_arch_vcpu_ioctl_run+0x286/0xb50 [kvm]
-[29180.188256][T75781]  kvm_vcpu_ioctl+0x2d4/0x860 [kvm]
-[29180.193391][T75781]  ? __fget_light+0xa3/0x170
-[29180.197879][T75781]  ksys_ioctl+0x227/0xb90
-[29180.202159][T75781]  ? find_held_lock+0x35/0xa0
-[29180.206777][T75781]  __x64_sys_ioctl+0x4c/0x5d
-[29180.211443][T75781]  do_syscall_64+0x91/0xb10
-[29180.215840][T75781]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[29180.221307][T75781]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-[29180.227100][T75781] RIP: 0033:0x7f2f5a90487b
-[29180.231414][T75781] Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 =
-00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 =
-00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 =
-89 01 48
-[29180.251241][T75781] RSP: 002b:00007f2f4b7fd678 EFLAGS: 00000246 =
-ORIG_RAX: 0000000000000010
-[29180.259660][T75781] RAX: ffffffffffffffda RBX: 00007f2f5fc31001 RCX: =
-00007f2f5a90487b
-[29180.267730][T75781] RDX: 0000000000000000 RSI: 000000000000ae80 RDI: =
-0000000000000011
-[29180.275619][T75781] RBP: 0000000000000001 R08: 000055c707b6fad0 R09: =
-00000000000000ff
-[29180.283533][T75781] R10: 0000000000000001 R11: 0000000000000246 R12: =
-000055c707b58100
-[29180.291622][T75781] R13: 0000000000000000 R14: 00007f2f5fc30000 R15: =
-000055c70a1b4c60
+Let me have a look how it could be taken into account in the early
+stage, before the power calculation and split are done. Maybe there
+is a clean way to inject this.
 
->=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
-> arch/x86/kvm/mmu/page_track.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/kvm/mmu/page_track.c =
-b/arch/x86/kvm/mmu/page_track.c
-> index ddc1ec3bdacd..1ad79c7aa05b 100644
-> --- a/arch/x86/kvm/mmu/page_track.c
-> +++ b/arch/x86/kvm/mmu/page_track.c
-> @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, =
-gpa_t gpa, const u8 *new,
-> 		return;
->=20
-> 	idx =3D srcu_read_lock(&head->track_srcu);
-> -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-> +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
-> +				srcu_read_lock_held(&head->track_srcu))
-> 		if (n->track_write)
-> 			n->track_write(vcpu, gpa, new, bytes, n);
-> 	srcu_read_unlock(&head->track_srcu, idx);
-> @@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, =
-struct kvm_memory_slot *slot)
-> 		return;
->=20
-> 	idx =3D srcu_read_lock(&head->track_srcu);
-> -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
-> +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
-> +				srcu_read_lock_held(&head->track_srcu))
-> 		if (n->track_flush_slot)
-> 			n->track_flush_slot(kvm, slot, n);
-> 	srcu_read_unlock(&head->track_srcu, idx);
-> --=20
-> 2.17.1
->=20
-
+Regards,
+Lukasz
