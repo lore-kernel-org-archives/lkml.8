@@ -2,144 +2,187 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2877C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54633C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF59520B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588161916;
-	bh=BHx6Adc582HX/EI7gEWPQT8miSuzlW266b32vPCYeME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h/qSFA2iErhPfDOO5CwJhrEfBOZ9+E5hPuc6PuIdTsaNCYzhbtug5RDwKoc4TQvQ/
-	 2ijWHcW5ZOxTNGu7S6P+mLgFmuQFMWpE2aY4UmWHZKLZzzd733WDDXQJutVjozdHPy
-	 ZNaMb8MTHycZ56Jgi+V2WV1cWsdGkxGgH8tDcwIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2BC55208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Tp+w2+Fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgD2MFQ (ORCPT
+        id S1726871AbgD2MGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgD2MFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:05:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F8B208FE;
-        Wed, 29 Apr 2020 12:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588161914;
-        bh=BHx6Adc582HX/EI7gEWPQT8miSuzlW266b32vPCYeME=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=StwkJngH70s5roDZrk0Vd0cSxaoWgkq9/v/SdRm0VsfveIt/PScZ4eGrr0cCqV5Yi
-         bgXyOwH5HMG8tiQL2kbbdS1mALhVuxn6iUOzJd9DzIKPw4LwXeyZ8XdAOiDFocEt5O
-         rfDMpk4aRr6mied40vjSshkkuH1tA5VSghN9ckWA=
-Date:   Wed, 29 Apr 2020 13:05:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [linux-sunxi] Re: Audio sound card name [was [PATCH 4/7] arm64:
- dts: allwinner: a64: Add HDMI audio]
-Message-ID: <20200429120511.GG4201@sirena.org.uk>
-References: <20200426120442.11560-1-peron.clem@gmail.com>
- <20200426120442.11560-5-peron.clem@gmail.com>
- <20200428080020.35qcuylwq2ylmubu@gilmour.lan>
- <CAJiuCcc2LQ4L36KSfO8iLVFBUO6k+zsZFX+_Ovm_10PoWO4AsA@mail.gmail.com>
- <20200428160417.6q5oab2guaumhhwi@gilmour.lan>
- <CAJiuCccFFUJJzXwygLQbDK4fGJ61p72Hv7vj3WVP-=z=J1Yj0Q@mail.gmail.com>
- <031ee5d3-8a30-82ee-76db-c0e8a1073046@arm.com>
- <CAGb2v65rRbRpUTdkTF3hd5LnLQQt19YVOyVzM5te5XNVhQQH=A@mail.gmail.com>
- <20200429081729.qa3gqtl5sof2jhem@gilmour.lan>
- <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
+        Wed, 29 Apr 2020 08:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726617AbgD2MGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:06:49 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA50C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:06:47 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id q10so2180463ile.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:06:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TIqAcmi3CCZVVh/ji2pLzKpj1uM3+1gSxtRQTFT+Ouk=;
+        b=Tp+w2+FrdLCJUimSTjGqniD+POTP8Os4cX486cB0qDkka4hhqdPfOJWY9YoDvPAQFe
+         XkDm5r9ZM7a6Lq8zxoyMgXVbk30i01oBPgeqLUAwUnLZDeJXBwfQKmdWCyfHpCldLYFv
+         54scgDOznbzd7zvIAWzX+KvmvjR69fm7Nm5V08kbuLqN2feqwyXft7lhaKXA2CY2Bdbl
+         vj/PKmeRtaHJbMsByKL+nWzKh+lXkf8A0kuJRO6QySs9q/lihh4q5QdGxcOtgx5ukFEP
+         l/x3lBQZusexGrwS9IHzA1+DdxAFhPAxx2kXz7sIHleBDojf/s7/z5mNRLDxsL3rJUkJ
+         tL6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TIqAcmi3CCZVVh/ji2pLzKpj1uM3+1gSxtRQTFT+Ouk=;
+        b=Bscaol64lR/pRK8+1lRCZrrJt9EKD5BWqBoUcTo3fHkKmYhfRbGTA9t2xkKE0qOfQ7
+         nwb/YEsvl4jZmkajSv3TBC2nlLVDmJcf4cLS4at9SqxWDlMgFVnUehBtDx7H9nuUT7Lm
+         XkZ9kf75oJD6pWsfSsl047FySLWzYvEnseFXX2jCGxZ9KSPp7skzev2zc084vdYjfwgL
+         NJdrPZADClnsFDuW16Q8pSCV9DdKmR3leNTMPk0mP+c2bfXI53b3wWvRASRvUyicKf2l
+         OrvQGmVpLLDri0/1ytQP6XQ3vygKrBg8iM/MkHlL11syYlS8iHqT86yOZ2gZcxLF2D54
+         FH+g==
+X-Gm-Message-State: AGi0Pua7QoQgbsIZYvwpKUQeyRfISy5SJeE53W361N1hdWBy48Px3vyT
+        PoeFuyymokY1+jrS5rIRgansKEWcvgRskNpKHxTEVg==
+X-Google-Smtp-Source: APiQypIE3Tg4mcSCiwE/iB03Y0Syj4+SRctek6gVLNmjr+m0P85VcB3LsK0kWpqeyvAfdT9Rd5Fm0ty07/W0W/Um4h0=
+X-Received: by 2002:a92:cac7:: with SMTP id m7mr31904269ilq.6.1588162006553;
+ Wed, 29 Apr 2020 05:06:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
-Content-Disposition: inline
-In-Reply-To: <f9b701d9-0c4e-6e41-1ce8-52adf0f59a2a@arm.com>
-X-Cookie: I know how to do SPECIAL EFFECTS!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+In-Reply-To: <20200419001858.105281-1-hector.bujanda@digi.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 29 Apr 2020 14:06:35 +0200
+Message-ID: <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+To:     Hector Bujanda <hector.bujanda@digi.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+niedz., 19 kwi 2020 o 02:19 Hector Bujanda <hector.bujanda@digi.com> napisa=
+=C5=82(a):
+>
+> This allows calling gpiod_set_debounce function through char device ioctl=
+.
+>
+> Signed-off-by: Hector Bujanda <hector.bujanda@digi.com>
+> ---
 
---RMedoP2+Pr6Rq0N2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Hector,
 
-On Wed, Apr 29, 2020 at 11:43:06AM +0100, Robin Murphy wrote:
-> On 2020-04-29 9:17 am, Maxime Ripard wrote:
-> > On Wed, Apr 29, 2020 at 02:24:00PM +0800, Chen-Yu Tsai wrote:
+please keep in mind to Cc me on GPIO patches - especially when
+touching uAPI. For uAPI you can also Cc Kent Gibson for a second
+opinion.
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+>  drivers/gpio/gpiolib.c    | 12 ++++++++++++
+>  include/uapi/linux/gpio.h | 12 ++++++++++++
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 70f0dedca59f..c959c2962f15 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1073,6 +1073,18 @@ static long gpio_ioctl(struct file *filp, unsigned=
+ int cmd, unsigned long arg)
+>                 if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+>                         return -EFAULT;
+>                 return 0;
+> +       } else if (cmd =3D=3D GPIO_SET_DEBOUNCE_IOCTL) {
+> +               struct gpioline_debounce linedebounce;
+> +               struct gpio_desc *desc;
+> +
+> +               if (copy_from_user(&linedebounce, ip, sizeof(linedebounce=
+)))
+> +                       return -EFAULT;
+> +               if (linedebounce.line_offset >=3D gdev->ngpio)
+> +                       return -EINVAL;
+> +
+> +               desc =3D &gdev->descs[linedebounce.line_offset];
+> +
+> +               return gpiod_set_debounce(desc, linedebounce.debounce_use=
+c);
 
-> > If we also end up with "HDMI" as our card name, then the userspace has no way to
-> > tell anymore if it's running from an rk3328 or an allwinner SoC, or something
-> > else entirely. And therefore it cannot really configure anything to work out of
-> > the box anymore.
+As Linus pointed out: adding a new ioctl() for this is out of question
+- especially if this new ioctl() would be called on the chip file
+descriptor. Modifying any config settings can only happen on lines
+previously requested too in user-space.
 
-> OK, you're a userspace audio application - enlighten me as to what exact
-> chip you're running on here, and why you need to know:
+>         } else if (cmd =3D=3D GPIO_GET_LINEHANDLE_IOCTL) {
+>                 return linehandle_create(gdev, ip);
+>         } else if (cmd =3D=3D GPIO_GET_LINEEVENT_IOCTL) {
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 1bf6e6df084b..4b092990d4c8 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -53,6 +53,17 @@ struct gpioline_info {
+>         char consumer[32];
+>  };
+>
+> +/**
+> + * struct gpioline_debounce - GPIO line debounce
+> + * @line_offset: the local offset on this GPIO device, fill this in when
+> + * requesting the line information from the kernel
+> + * @debounce_usec: debounce in uSeconds to set for this line
+> + */
+> +struct gpioline_debounce {
+> +       __u32 line_offset;
+> +       __u32 debounce_usec;
+> +};
+> +
+>  /* Maximum number of requested handles */
+>  #define GPIOHANDLES_MAX 64
+>
+> @@ -154,5 +165,6 @@ struct gpioevent_data {
+>  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+>  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_re=
+quest)
+>  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_requ=
+est)
+> +#define GPIO_SET_DEBOUNCE_IOCTL _IOW(0xB4, 0x05, struct gpioline_debounc=
+e)
+>
+>  #endif /* _UAPI_GPIO_H_ */
+> --
+> 2.17.1
+>
 
-> card 0: HDMI [HDA ATI HDMI]
+I understand the need to set debounce time to make line events
+reliable. As I see it: there'll be a couple steps to add this.
 
-> or how about here?
+First: this information (debounce setting) isn't exported to
+user-space in any way yet. While we can't extend the gpioline_info
+structure because there's no padding for future use (unfortunately :(
+) we should at least have a flag coming after
+GPIOHANDLE_REQUEST_BIAS_DISABLE that would indicate to user-space that
+the line is debounced at all e.g. GPIOHANDLE_REQUEST_DEBOUNCED.
 
-> card 0: Intel [HDA Intel]
+At the same time as the above: the line state change notifier chain
+must be called from gpiod_set_debounce() - in the end: if we export
+this information to the user-space, we also need to notify it when it
+changes.
 
-In the case of HDMI for embedded platforms since there is generally no
-control in the audio path it is unlikely to make a *huge* difference,
-though if there are expansion buses or multiple HDMI ports it can be
-useful to help people identify which particular HDMI port it is.  For
-other cards the names are part of userspace working out which config
-file to apply to the card so deduplication can help, and also the
-plastics tend to matter.
+Next: the SET_CONFIG ioctl() should be extended to work with lineevent
+file descriptors too (of course - not all options would make sense
+here and they'd need to be properly filtered).
 
-> With simple-audio-card we're talking about trivial interfaces that often
-> don't expose any controls at all, so there's unlikely to be much
-> 'configuration' for userspace to do beyond choosing which card to output to.
+Finally: we can extend the gpiohandle_config structure with a field
+containing the debounce time which would be read by the kernel if the
+debounce flag is set in gpiohandle_config.flags.
 
-This is a reasonable assumption for HDMI but it is not at all a
-reasonable assumption for simple-audio-card in general - just because
-the links between the SoC and the external components are simple that
-doesn't mean that any of those components are simple, and even if the
-hardware is simple that does not mean that configuration is unimportant
-- the difference between full scale output and appropriate headphone
-volumes is for example *extremely* important.
+Does this make sense?
 
---RMedoP2+Pr6Rq0N2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6pbXcACgkQJNaLcl1U
-h9Bzugf/c28iLtVw25sffS7FxnwHu5kFpEMA6AESU/nbib3pIGkMPZg+yn69tK3S
-bdnoVTnaJl2n84nFz/STXBtafZ0xebeAN+eZu0Gd7vtygVQlVGBP0QqPBo04u2Ko
-xSfYbaycfHROmTbbL5xIoJ0XaxNOgnZd0epZRpcvNDkDZJ8YvlwoR5Ooi8C/SR9E
-xqmpX9gmh59QtZf3NS5mQ+4PIHwxw35rxIgA1P6mIFRaseuz6njlFAlpKpCfWHy8
-ZOYQ79RmdZDUSkqlOtUToBxkOrVCPHHmr5YoblVd3P3olP4ZBcmpnRuB4+QkxifA
-7T5xU5H+PZPzUMBmDu6Mtx6P+4INhA==
-=xohR
------END PGP SIGNATURE-----
-
---RMedoP2+Pr6Rq0N2--
+Bart
