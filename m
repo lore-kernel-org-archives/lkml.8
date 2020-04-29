@@ -2,174 +2,190 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D12EC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE9BC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56209206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021C8214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HkoAt8vH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l8kNMZol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgD2ORs (ORCPT
+        id S1727822AbgD2OSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
+        Wed, 29 Apr 2020 10:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726836AbgD2ORs (ORCPT
+        by vger.kernel.org with ESMTP id S1726836AbgD2OSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:17:48 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509D9C03C1AD;
-        Wed, 29 Apr 2020 07:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gy20xOpcARjPE/WRcsIp2GKWb0LL9aFImxYlWNFOUEc=; b=HkoAt8vH0GBzy0bZZ5RF/d4Em
-        vUijMxI/1wth5CHT46lActRXcXYzn4o7f8gNZ4vHFTkNpcBw5UTR7+AbIWOrxl89sfvGNsIYAGM/A
-        1fBIiUMeygZbsjakO9er37YLCiMLd1J3G7FPtFxU6DqX7/IBTA4q9PHRrDx0DarhsnTWeRY8qzKtH
-        2CIKbxH3Whuetu9WblsOw6brOc8eBn1jQHTXuabT54Sv90D9wTxz9YPxJyzQ1EiZoutbgCx4Es/bV
-        3ms48XhWlQkoXK7RYvOAlHwzLisoYnp/eTQGVX3bnKyzF7nbqJbHP0v2wp4ETboJ/58BnbPkExMdq
-        PbEStFMmQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33810)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jTnWs-000843-6k; Wed, 29 Apr 2020 15:17:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jTnWo-00019D-01; Wed, 29 Apr 2020 15:17:34 +0100
-Date:   Wed, 29 Apr 2020 15:17:33 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: remove duplicate assignment of
- struct members
-Message-ID: <20200429141733.GG1551@shell.armlinux.org.uk>
-References: <20200429141001.8361-1-yanaijie@huawei.com>
+        Wed, 29 Apr 2020 10:18:00 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BFE7C03C1AD;
+        Wed, 29 Apr 2020 07:18:00 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id z2so2324766iol.11;
+        Wed, 29 Apr 2020 07:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cpXUf/vkO/R5yvacaxjyLtNiC2qft6yapuPXFNqdrtk=;
+        b=l8kNMZolNNRTje0ib1VyxH/4hTylfD414hWySHi/Pk5fJDdLTzmXJ+tL4bwZfbBrwe
+         x5aQaQIkJtYncgehYFquzLcHki7V2njzUJqCVP9iQ4Zunpp44t4JYWi3j/io5iVnRoMW
+         1xmQhmWhiq1P4108Evf5bFjMHPtdpV9v9Eo8PShJ2xq8IAGkmu6K6Y0S8RD5YrFN9b2p
+         hK94zWWO+FvBM3q9jwp82O5zwEgl4eGa3nIGqGMoH0cdScve/oMIdgpnQ/+y0515LRFF
+         o/6JUz4+Ndj+GUQiqd43ji0ijprsKeJTzaOCV8jQTMhGPObZdjzrM2buPfhN4z6lbB/+
+         gOBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cpXUf/vkO/R5yvacaxjyLtNiC2qft6yapuPXFNqdrtk=;
+        b=Fa1m7vJLYT0L+WBssuQjiOOhDgzApzxvYCAZgnWTsTqKETJ9LDgC1QNBPm0pe1TmZg
+         +uNUJj65BdGwsG2saL+Sbn+lKHy+S0ANrimPy6oZsIZE+kvOhHJ3imlO7bNuV7SozfRF
+         kw2YlqOmhWUC60Ce9LLML2fMjceQsfjYemyIm7LHCRNkL+fhlAi7lFsn/3jX56OqT/S5
+         wDzH9+wRh+Vb2xyRUi3a1b7hNReikXKRCmQSQRLBltGkZI8Ibk+gVJZmCnP0C0p7SEI2
+         PqN69x1+OL4u1WfqXovB0GhOQMCmp5HhoPEK+jN7+euuetP5dZEnOgb0W+0XBNbjwgKb
+         JJzw==
+X-Gm-Message-State: AGi0PuZ4hVqZdtoMTU2/TtRaTFQen8wtGIHnhMd4aM9sFy/rGPLqOHGB
+        yUXE6DIZxTi0TT1XQz9f/rsQUkwEhFAfOnh5tCY=
+X-Google-Smtp-Source: APiQypK82VvXMlKNIqQa1QabCy02RcVqT8OoQ2IeGadn05A3gUPuRWf7A0wd9yYXJiPYRbjYNrz1I2L+gZGWkydziIc=
+X-Received: by 2002:a05:6638:31b:: with SMTP id w27mr29082935jap.94.1588169878532;
+ Wed, 29 Apr 2020 07:17:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429141001.8361-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <20200429101510.GA28637@dhcp22.suse.cz> <20200429140330.GA5054@cmpxchg.org>
+In-Reply-To: <20200429140330.GA5054@cmpxchg.org>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 29 Apr 2020 22:17:21 +0800
+Message-ID: <CALOAHbCC-oT+CwzyokNfomEMf0GdzpipBeZJjnnE8RrPPZ_Maw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:10:01PM +0800, Jason Yan wrote:
-> These struct members named 'phylink_validate' was assigned twice:
-> 
-> static const struct mv88e6xxx_ops mv88e6190_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> };
-> 
-> static const struct mv88e6xxx_ops mv88e6190x_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390x_phylink_validate,
-> };
-> 
-> static const struct mv88e6xxx_ops mv88e6191_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> };
-> 
-> static const struct mv88e6xxx_ops mv88e6290_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> };
-> 
-> Remove all the first one and leave the second one which are been used in
-> fact. Be aware that for 'mv88e6190x_ops' the assignment functions is
-> different while the others are all the same. This fixes the following
-> coccicheck warning:
-> 
-> drivers/net/dsa/mv88e6xxx/chip.c:3911:48-49: phylink_validate: first
-> occurrence line 3965, second occurrence line 3967
-> drivers/net/dsa/mv88e6xxx/chip.c:3970:49-50: phylink_validate: first
-> occurrence line 4024, second occurrence line 4026
-> drivers/net/dsa/mv88e6xxx/chip.c:4029:48-49: phylink_validate: first
-> occurrence line 4082, second occurrence line 4085
-> drivers/net/dsa/mv88e6xxx/chip.c:4184:48-49: phylink_validate: first
-> occurrence line 4238, second occurrence line 4242
+On Wed, Apr 29, 2020 at 10:03 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
+> > On Tue 28-04-20 19:26:47, Chris Down wrote:
+> > > From: Yafang Shao <laoar.shao@gmail.com>
+> > >
+> > > A cgroup can have both memory protection and a memory limit to isolate
+> > > it from its siblings in both directions - for example, to prevent it
+> > > from being shrunk below 2G under high pressure from outside, but also
+> > > from growing beyond 4G under low pressure.
+> > >
+> > > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> > > implemented proportional scan pressure so that multiple siblings in
+> > > excess of their protection settings don't get reclaimed equally but
+> > > instead in accordance to their unprotected portion.
+> > >
+> > > During limit reclaim, this proportionality shouldn't apply of course:
+> > > there is no competition, all pressure is from within the cgroup and
+> > > should be applied as such. Reclaim should operate at full efficiency.
+> > >
+> > > However, mem_cgroup_protected() never expected anybody to look at the
+> > > effective protection values when it indicated that the cgroup is above
+> > > its protection. As a result, a query during limit reclaim may return
+> > > stale protection values that were calculated by a previous reclaim cycle
+> > > in which the cgroup did have siblings.
+> > >
+> > > When this happens, reclaim is unnecessarily hesitant and potentially
+> > > slow to meet the desired limit. In theory this could lead to premature
+> > > OOM kills, although it's not obvious this has occurred in practice.
+> >
+> > Thanks this describes the underlying problem. I would be also explicit
+> > that the issue should be visible only on tail memcgs which have both
+> > max/high and protection configured and the effect depends on the
+> > difference between the two (the smaller it is the largrger the effect).
+> >
+> > There is no mention about the fix. The patch resets effective values for
+> > the reclaim root and I've had some concerns about that
+> > http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
+> > Johannes has argued that other races are possible and I didn't get to
+> > think about it thoroughly. But this patch is introducing a new
+> > possibility of breaking protection. If we want to have a quick and
+> > simple fix that would be easier to backport to older kernels then I
+> > would feel much better if we simply workedaround the problem as
+> > suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
+> > We can rework the effective values calculation to be more robust against
+> > races on top of that because this is likely a more tricky thing to do.
+>
+> Well, can you please *do* think more thoroughly about what I wrote,
+> instead of pushing for an alternative patch on gut feeling alone?
+>
+> Especially when you imply that this should be a stable patch.
+>
+> Not only does your alternative patch not protect against the race you
+> are worried about, the race itself doesn't matter. Racing reclaimers
+> will write their competing views of the world into the shared state on
+> all other levels anyway.
+>
+> And that's okay. If the configuration and memory usage is such that
+> there is at least one reclaimer that scans without any protection
+> (like a limit reclaimer), it's not a problem when a second reclaimer
+> that meant to do protected global reclaim will also do one iteration
+> without protection. It's no different than if a second thread had
+> entered limit reclaim through another internal allocation.
+>
+> There is no semantical violation with the race in your patch or the
+> race in this patch. Any effective protection that becomes visible is
+> 1) permitted by the configuration, but 2) also triggered *right now*
+> by an acute need to reclaim memory with these parameters.
+>
+> The *right now* part is important. That's what's broken before either
+> patch, and that's what we're fixing: to see really, really *old* stale
+> that might not be representative of the config semantics anymore.
+>
+> Since you haven't linked to my email, here is my counter argument to
+> the alternative patch "fixing" this race somehow.
+>
+> A reclaim:
+>
+>   root
+>      `- A (low=2G, max=3G -> elow=0)
+>         `- A1 (low=0G -> elow=0)
+>
+> Global reclaim:
+>
+>   root
+>      `- A (low=2G, max=3G -> elow=2G)
+>         `- A1 (low=0G -> elow=2G)
+>
+> During global reclaim, A1 is supposed to have 2G effective low
+> protection. If A limit reclaim races, it can set A1's elow to
+> 0.
 
-This looks like a mistake while rebasing / updating the code which
-resulted in commit 4262c38dc42e ("net: dsa: mv88e6xxx: Add SERDES stats
-counters to all 6390 family members").
+Before the commit  8a931f801340c2be ("mm: memcontrol: recursive
+memory.low protection"), the A1's elow should be 0, while after this
+commit A1's elow is 2G.
+That is a behavior change.
 
-In light of what the commit which introduced this did, this patch looks
-correct to me.
+Then this case gives us another example why accessing emin and elow in
+the very deap reclaiming code (get_scan_count) is the root of ALL
+EVIL.
 
-Fixes: 4262c38dc42e ("net: dsa: mv88e6xxx: Add SERDES stats counters to all 6390 family members")
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+>  Global reclaim will now query mem_cgroup_protection(root, A1), the
+> root == memcg check you insist we add will fail and it'll reclaim A1
+> without protection.
+>
+> The alternative patch is nothing except slightly worse code.
 
-Thanks.
 
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/net/dsa/mv88e6xxx/chip.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> index dd8a5666a584..2b4a723c8306 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> @@ -3962,7 +3962,6 @@ static const struct mv88e6xxx_ops mv88e6190_ops = {
->  	.serdes_get_stats = mv88e6390_serdes_get_stats,
->  	.serdes_get_regs_len = mv88e6390_serdes_get_regs_len,
->  	.serdes_get_regs = mv88e6390_serdes_get_regs,
-> -	.phylink_validate = mv88e6390_phylink_validate,
->  	.gpio_ops = &mv88e6352_gpio_ops,
->  	.phylink_validate = mv88e6390_phylink_validate,
->  };
-> @@ -4021,7 +4020,6 @@ static const struct mv88e6xxx_ops mv88e6190x_ops = {
->  	.serdes_get_stats = mv88e6390_serdes_get_stats,
->  	.serdes_get_regs_len = mv88e6390_serdes_get_regs_len,
->  	.serdes_get_regs = mv88e6390_serdes_get_regs,
-> -	.phylink_validate = mv88e6390_phylink_validate,
->  	.gpio_ops = &mv88e6352_gpio_ops,
->  	.phylink_validate = mv88e6390x_phylink_validate,
->  };
-> @@ -4079,7 +4077,6 @@ static const struct mv88e6xxx_ops mv88e6191_ops = {
->  	.serdes_get_stats = mv88e6390_serdes_get_stats,
->  	.serdes_get_regs_len = mv88e6390_serdes_get_regs_len,
->  	.serdes_get_regs = mv88e6390_serdes_get_regs,
-> -	.phylink_validate = mv88e6390_phylink_validate,
->  	.avb_ops = &mv88e6390_avb_ops,
->  	.ptp_ops = &mv88e6352_ptp_ops,
->  	.phylink_validate = mv88e6390_phylink_validate,
-> @@ -4235,7 +4232,6 @@ static const struct mv88e6xxx_ops mv88e6290_ops = {
->  	.serdes_get_stats = mv88e6390_serdes_get_stats,
->  	.serdes_get_regs_len = mv88e6390_serdes_get_regs_len,
->  	.serdes_get_regs = mv88e6390_serdes_get_regs,
-> -	.phylink_validate = mv88e6390_phylink_validate,
->  	.gpio_ops = &mv88e6352_gpio_ops,
->  	.avb_ops = &mv88e6390_avb_ops,
->  	.ptp_ops = &mv88e6352_ptp_ops,
-> -- 
-> 2.21.1
-> 
-> 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Thanks
+Yafang
