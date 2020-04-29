@@ -2,91 +2,96 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB49C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBAAC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A7820757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E7520BED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588197319;
+	bh=vewqOcHFnU47ZJ5WNNQy7fqQ0TcKyqwkwZMTG3+vyhc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lMSZlNQXw2VOg8Fym7ZSFafyMVoWuE/wGjB/+hBJ4Z/TIBHH3Gck+5CTFLVAR77xS
+	 IV67lMDxkpx+huKsO4o1OISlUlEx4L4NRSfuxVn4nXC8N58MhegoMZOO80MqopKlfd
+	 EWEvgyU1hU5eIbKG41EEATJeWFEkAUaxENbuVcUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgD2VzH (ORCPT
+        id S1728105AbgD2VzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:55:07 -0400
-Received: from muru.com ([72.249.23.125]:51888 "EHLO muru.com"
+        Wed, 29 Apr 2020 17:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgD2VyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:54:21 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id EFA9681AC;
-        Wed, 29 Apr 2020 21:55:07 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Keerthy <j-keerthy@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 06/15] ARM: OMAP2+: Add omap_init_time_of()
-Date:   Wed, 29 Apr 2020 14:53:53 -0700
-Message-Id: <20200429215402.18125-7-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200429215402.18125-1-tony@atomide.com>
-References: <20200429215402.18125-1-tony@atomide.com>
+        id S1726554AbgD2VzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:55:16 -0400
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5121020B1F;
+        Wed, 29 Apr 2020 21:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588197316;
+        bh=vewqOcHFnU47ZJ5WNNQy7fqQ0TcKyqwkwZMTG3+vyhc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KAx2y1B42AP9M4XQw3RqJaR9BwgRY3SneHaE2rbaSTXnJr5GM23JOgOGMOqObwHPa
+         6TqyRM/D6WzYbASRcZjuC5r3tKYMc1CP/9qijqELGStK3CAA4PfwrN5Agd04J6Spo8
+         HbsOnlt8FV0umJICUw1wAm6eT+ZAEYqURhOh4/ao=
+Received: by mail-io1-f51.google.com with SMTP id w4so3954396ioc.6;
+        Wed, 29 Apr 2020 14:55:16 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYmEq7zUY0scsP74DOvM7xnvllXykgf9TYi31RUUyg4dorLpLfY
+        txrLewQPlay22/AnLt6WLtVFZTGWaCo/tlla53c=
+X-Google-Smtp-Source: APiQypItj/kGtyqj70QsmARttGhJeM/nKI8NF6Q8BeFnmaxVwj64QgMRsuRBkqyngrJSAaO/IzhFsrJpRKlozWSRvko=
+X-Received: by 2002:a02:969a:: with SMTP id w26mr142960jai.71.1588197315770;
+ Wed, 29 Apr 2020 14:55:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-5-nivedita@alum.mit.edu> <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+ <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
+ <20200429214332.GC1621173@rani.riverdale.lan> <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
+In-Reply-To: <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 29 Apr 2020 23:55:04 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com>
+Message-ID: <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com>
+Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
+To:     Joe Perches <joe@perches.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows us to move the SoCs to probe system timers one SoC
-at at time. As arch/arm/mach-omap2/timer.c will be eventually gone,
-let's just add omap_init_time_of() to board-generic.c directly.
+On Wed, 29 Apr 2020 at 23:53, Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2020-04-29 at 17:43 -0400, Arvind Sankar wrote:
+> > On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
+> > > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
+> > > > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
+> > > > > Use pr_efi_err instead of bare efi_printk for error messages.
+> > > >
+> > > > Perhaps it'd be better to rename pr_efi_err to eri_err
+> > > > so it's clearer it's a typical efi_ logging function.
+> > > >
+> > > > $ git grep -w --name-only pr_efi_err | \
+> > > >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
+> > > >
+> > >
+> > > Yeah, pr_efi_err() is probably not the best name
+> >
+> > Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
+>
+> Perhaps not use pr_ in the name at all.
+>
+> I suggest:
+>
+> pr_efi          -> efi_info (or efi_debug or efi_dbg)
+>                    (it is guarded by an efi_quiet flag, default: on)
+> pr_efi_err      -> efi_err
+>
 
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/board-generic.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -12,6 +12,7 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/irqdomain.h>
-+#include <linux/clocksource.h>
- 
- #include <asm/setup.h>
- #include <asm/mach/arch.h>
-@@ -31,6 +32,13 @@ static void __init __maybe_unused omap_generic_init(void)
- 	omap_soc_device_init();
- }
- 
-+/* Clocks are needed early, see drivers/clocksource for the rest */
-+void __init __maybe_unused omap_init_time_of(void)
-+{
-+	omap_clk_init();
-+	timer_probe();
-+}
-+
- #ifdef CONFIG_SOC_OMAP2420
- static const char *const omap242x_boards_compat[] __initconst = {
- 	"ti,omap2420",
--- 
-2.26.2
+Agreed. Shorter is better if there is no risk of confusion..
