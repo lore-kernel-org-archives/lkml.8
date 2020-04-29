@@ -2,165 +2,113 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EC8C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A75AC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C45B320775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612C22074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588153306;
+	bh=AG5TFQjS0TvO7P2NrdT+6GM8hq5daMrhEGzYpdrsVw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IQ05PknHGYKs561d4cJiUxM3SnoDaCrNTUP5xM3qtWxITZZH6okDjnhp2NNP1943A
+	 ujGzvEmgqLRn1SVPrrJa343A9Phc3Uu/zp7all02HiYCrma3nm9R+rsbDYsMH4FFn2
+	 8g01ooZikh8VkTh2/waz8P8cU5Xzlg/yw82adAJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgD2JkT (ORCPT
+        id S1726580AbgD2Jlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:40:19 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:13147 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgD2JkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:40:18 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75ea94b759d5-addd0; Wed, 29 Apr 2020 17:40:05 +0800 (CST)
-X-RM-TRANSID: 2ee75ea94b759d5-addd0
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.104.146.39])
-        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35ea94b714a2-d9f76;
-        Wed, 29 Apr 2020 17:40:04 +0800 (CST)
-X-RM-TRANSID: 2ee35ea94b714a2-d9f76
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] ASoC: mxs-saif: Add variable dev to simplify code
-Date:   Wed, 29 Apr 2020 17:40:23 +0800
-Message-Id: <20200429094023.12856-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 29 Apr 2020 05:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2Jlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:41:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00DE62073E;
+        Wed, 29 Apr 2020 09:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588153303;
+        bh=AG5TFQjS0TvO7P2NrdT+6GM8hq5daMrhEGzYpdrsVw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hm8896I728fS54R8e60Rm+0EU2cD8L9ZwDgyfgFL+9eaCwKaqGavDdau5oK8KOPjV
+         c2uOqi6/bwTgKj33Wnfuvgw1PubZmlJvzbH/jYgTIZtTbd49msJ5wyKLH1SQ/q1E+r
+         GNcegYa6TkdGV7gtBbMvfahji+toB12Z74Agvm+o=
+Date:   Wed, 29 Apr 2020 11:41:41 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Stahl, Manuel" <manuel.stahl@iis-extern.fraunhofer.de>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sojkam1@fel.cvut.cz" <sojkam1@fel.cvut.cz>
+Subject: Re: [PATCH v4] Add new uio device for PCI with dynamic memory
+ allocation
+Message-ID: <20200429094141.GB2080576@kroah.com>
+References: <1507296707.2915.14.camel@iis-extern.fraunhofer.de>
+ <20200416163830.30623-1-manuel.stahl@iis-extern.fraunhofer.de>
+ <20200428135443.GA1437053@kroah.com>
+ <eb405ab3782844e379629a655a3dcaf38dd2552d.camel@iis-extern.fraunhofer.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb405ab3782844e379629a655a3dcaf38dd2552d.camel@iis-extern.fraunhofer.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add variable 'dev' to make the code cleaner in the function
-mxs_saif_probe(). And now that the function mxs_saif_mclk_init()
-have defined the variables 'ret' as the error returned value,
-then it should be used instead in this place.
+On Wed, Apr 29, 2020 at 07:51:01AM +0000, Stahl, Manuel wrote:
+> On Di, 2020-04-28 at 15:54 +0200, gregkh @ linuxfoundation . org wrote:
+> > On Thu, Apr 16, 2020 at 06:38:30PM +0200, Manuel Stahl wrote:
+> > > 
+> > > + *
+> > > + * Since the driver does not declare any device ids, you must allocate
+> > > + * id and bind the device to the driver yourself.  For example:
+> > > + *
+> > > + * # echo "8086 10f5" > /sys/bus/pci/drivers/uio_pci_dmem_genirq/new_id
+> > > + * # echo -n 0000:00:19.0 > /sys/bus/pci/drivers/e1000e/unbind
+> > > + * # echo -n 0000:00:19.0 > /sys/bus/pci/drivers/uio_pci_dmem_genirq/bind
+> > > + * # ls -l /sys/bus/pci/devices/0000:00:19.0/driver
+> > > + * .../0000:00:19.0/driver -> ../../../bus/pci/drivers/uio_pci_dmem_genirq
+> > > + *
+> > > + * Or use a modprobe alias:
+> > > + * # alias pci:v000010EEd00001000sv*sd*sc*i* uio_pci_dmem_genirq
+> > > + *
+> > > + * Driver won't bind to devices which do not support the Interrupt Disable Bit
+> > > + * in the command register. All devices compliant to PCI 2.3 (circa 2002) and
+> > > + * all compliant PCI Express devices should support this bit.
+> > > + *
+> > > + * The DMA mask bits and sizes of dynamic regions are derived from module
+> > > + * parameters.
+> > > + *
+> > > + * The format for specifying dynamic region sizes in module parameters
+> > > + * is as follows:
+> > > + *
+> > > + * uio_pci_dmem_genirq.dmem_sizes := <uio_dmem_sizes_def>[;<uio_dmem_sizes_def>]
+> > > + * <uio_dmem_sizes_def>           := <pci_id>:<size>[,<size>]
+> > > + * <pci_id>                       := <vendor>:<device>
+> > > + * <size>                         := standard linux memsize
+> > > + *
+> > > + * Examples:
+> > > + *
+> > > + * 1) UIO dmem device with 3 dynamic regions:
+> > > + * uio_pci_dmem_genirq.dmem_sizes=8086:10f5:4K,16K,4M
+> > > + *
+> > > + * 2) Two UIO dmem devices with different number of dynamic regions:
+> > > + * uio_pci_dmem_genirq.dmem_sizes=8086:10f5:4K,16K,4M;1234:0001:8K
+> > 
+> > Module parameters are horrid, are you sure there is no other way?
+> 
+> You're right, seemed to be the simplest solution back when we started developing this driver. I will try to change it to sysfs, so that one can add regions while the module is already loaded.
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- sound/soc/mxs/mxs-saif.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+/me hands you some \n characters...
 
-diff --git a/sound/soc/mxs/mxs-saif.c b/sound/soc/mxs/mxs-saif.c
-index dc197883e..f4e441183 100644
---- a/sound/soc/mxs/mxs-saif.c
-+++ b/sound/soc/mxs/mxs-saif.c
-@@ -719,7 +719,7 @@ static int mxs_saif_mclk_init(struct platform_device *pdev)
- 		if (ret == -EEXIST)
- 			return 0;
- 		dev_err(&pdev->dev, "failed to register mclk: %d\n", ret);
--		return PTR_ERR(clk);
-+		return ret;
- 	}
- 
- 	ret = of_clk_add_provider(np, of_clk_src_simple_get, clk);
-@@ -732,6 +732,7 @@ static int mxs_saif_mclk_init(struct platform_device *pdev)
- static int mxs_saif_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
- 	struct mxs_saif *saif;
- 	int irq, ret;
- 	struct device_node *master;
-@@ -739,7 +740,7 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 	if (!np)
- 		return -EINVAL;
- 
--	saif = devm_kzalloc(&pdev->dev, sizeof(*saif), GFP_KERNEL);
-+	saif = devm_kzalloc(dev, sizeof(*saif), GFP_KERNEL);
- 	if (!saif)
- 		return -ENOMEM;
- 
-@@ -750,7 +751,7 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 		saif->id = ret;
- 
- 	if (saif->id >= ARRAY_SIZE(mxs_saif)) {
--		dev_err(&pdev->dev, "get wrong saif id\n");
-+		dev_err(dev, "get wrong saif id\n");
- 		return -EINVAL;
- 	}
- 
-@@ -770,18 +771,17 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 			saif->master_id = ret;
- 
- 		if (saif->master_id >= ARRAY_SIZE(mxs_saif)) {
--			dev_err(&pdev->dev, "get wrong master id\n");
-+			dev_err(dev, "get wrong master id\n");
- 			return -EINVAL;
- 		}
- 	}
- 
- 	mxs_saif[saif->id] = saif;
- 
--	saif->clk = devm_clk_get(&pdev->dev, NULL);
-+	saif->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(saif->clk)) {
- 		ret = PTR_ERR(saif->clk);
--		dev_err(&pdev->dev, "Cannot get the clock: %d\n",
--			ret);
-+		dev_err(dev, "Cannot get the clock: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -793,11 +793,11 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
--	saif->dev = &pdev->dev;
--	ret = devm_request_irq(&pdev->dev, irq, mxs_saif_irq, 0,
--			       dev_name(&pdev->dev), saif);
-+	saif->dev = dev;
-+	ret = devm_request_irq(dev, irq, mxs_saif_irq, 0,
-+			       dev_name(dev), saif);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to request irq\n");
-+		dev_err(dev, "failed to request irq\n");
- 		return ret;
- 	}
- 
-@@ -807,19 +807,19 @@ static int mxs_saif_probe(struct platform_device *pdev)
- 	if (saif->id == 0) {
- 		ret = mxs_saif_mclk_init(pdev);
- 		if (ret)
--			dev_warn(&pdev->dev, "failed to init clocks\n");
-+			dev_warn(dev, "failed to init clocks\n");
- 	}
- 
--	ret = devm_snd_soc_register_component(&pdev->dev, &mxs_saif_component,
-+	ret = devm_snd_soc_register_component(dev, &mxs_saif_component,
- 					      &mxs_saif_dai, 1);
- 	if (ret) {
--		dev_err(&pdev->dev, "register DAI failed\n");
-+		dev_err(dev, "register DAI failed\n");
- 		return ret;
- 	}
- 
--	ret = mxs_pcm_platform_register(&pdev->dev);
-+	ret = mxs_pcm_platform_register(dev);
- 	if (ret) {
--		dev_err(&pdev->dev, "register PCM failed: %d\n", ret);
-+		dev_err(dev, "register PCM failed: %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.20.1.windows.1
+Anyway, configfs is for configuring stuff, don't make a sysfs file that
+you have to somehow "parse" please.
 
+thanks,
 
-
+greg k-h
