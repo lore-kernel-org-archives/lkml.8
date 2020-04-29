@@ -2,157 +2,176 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5C3C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7355BC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0B72072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515D72072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZPrrd8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgD2QHg (ORCPT
+        id S1726774AbgD2QIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:07:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:11787 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgD2QHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:07:35 -0400
-IronPort-SDR: 5G2OECDghIxwFCdDqjVsDdFVnSXHjtFOet7cyP4g+uMCbbGP1TR5FFpBV1COT/b2GrgtCTZCvU
- 4yclyotbSD8g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 09:07:13 -0700
-IronPort-SDR: 6XXD8YOw9oy4krwDAXLkRRD6uvWHJGHSYCImZAR5zF/lscXKjMhDvFolN8k0o4GEgWEBHoros/
- J6mAgegfy8uQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="261474020"
-Received: from poovizhi-mobl1.amr.corp.intel.com (HELO [10.254.110.237]) ([10.254.110.237])
-  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2020 09:07:13 -0700
-Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
- pages
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name
-Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, peterz@infradead.org,
-        sean.j.christopherson@intel.com
-References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <2a1abf38-d321-e3c7-c3b1-53b6db6da310@intel.com>
-Date:   Wed, 29 Apr 2020 09:07:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 12:08:35 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34269 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726519AbgD2QIf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:08:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588176513;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RqcnavPFirGVOTXHhjY5q5DM9FLFgis6bxz7RvWdVJE=;
+        b=QZPrrd8zNNebgZXnzhIAYA2aP84wbXzXTC4SfYYO6rv5ju2/aeWwsXYRoUwkzVKNDRurdJ
+        YxExOEc0hr+rJQkkFgPUr+ph31cSB3GXU2c+/TgswYJtJaAdE4hLZ9KBhaCdgY7s0ei/vk
+        ZW/gaMqEpwiuaxXcYVMdRLbEU5DvYnE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-F36vCcGRMVu93iH7TXheIg-1; Wed, 29 Apr 2020 12:08:26 -0400
+X-MC-Unique: F36vCcGRMVu93iH7TXheIg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4E0C1895A28;
+        Wed, 29 Apr 2020 16:08:21 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-55.ams2.redhat.com [10.36.114.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAF7C605FB;
+        Wed, 29 Apr 2020 16:08:07 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Len Brown <lenb@kernel.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH v1 0/3] mm/memory_hotplug: Make virtio-mem play nicely with kexec-tools
+Date:   Wed, 29 Apr 2020 18:08:00 +0200
+Message-Id: <20200429160803.109056-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/20 3:50 PM, Claudio Imbrenda wrote:
-> If a page is inaccesible and it is used for things like sendfile, then
-> the content of the page is not always touched, and can be passed
-> directly to a driver, causing issues.
-> 
-> This patch fixes the issue by adding a call to arch_make_page_accessible
-> in page_cache_pipe_buf_confirm; this fixes the issue.
+This series is based on [1]:
+	[PATCH v2 00/10] virtio-mem: paravirtualized memory
+That will hopefull get picked up soon, rebased to -next.
 
-I spent about 5 minutes putting together a patch:
+The following patches were reverted from -next [2]:
+	[PATCH 0/3] kexec/memory_hotplug: Prevent removal and accidental use
+As discussed in that thread, they should be reverted from -next already.
 
-	https://sr71.net/~dave/intel/accessible.patch
+In theory, if people agree, we could take the first two patches via the
+-mm tree now and the last (virtio-mem) patch via MST's tree once picking =
+up
+virtio-mem. No strong feelings.
 
-It adds a page flag ("daccess") which starts out set.  It clears the
-flag it when the page is added to the page cache or mapped as anonymous.
- This are presumably the the two mostly likely kinds of pages to be
-problematic.  It re-sets the flag when it hits the new hook for s390:
-arch_make_page_accessible().
 
-It then patches the DMA mapping API.  If a page gets to the DMA mapping
-API without being accessible, it hits a tracepoint.
+Memory added by virtio-mem is special and might contain logical holes,
+especially after memory unplug, but also when adding memory in
+sub-section size. While memory in these holes can usually be read, that
+memory should not be touched. virtio-mem managed device memory is never
+exposed via any firmware memmap (esp., e820). The device driver will
+request to plug memory from the hypervisor and add it to Linux.
 
-It goes boom shortly after hitting userspace underneath a sys_sendto().
- That code uses lib/iov_iter.c which does get_user_pages_fast() and
-apparently does not set FOLL_PIN, so never hits the s390 arch hooks.
+On a cold start, all memory is unplugged, and the guest driver will first
+request to plug memory from the hypervisor, to then add it to Linux. Afte=
+r
+a reboot, all memory will get unplugged (except in rare, special cases). =
+In
+case the device driver comes up and detects that some memory is still
+plugged after a reboot, it will manually request to unplug all memory fro=
+m
+the hypervisor first - to then request to plug memory from the hypervisor
+and add to Linux. This is essentially a defragmentation step, where all
+logical holes are removed.
 
-I hacked out the FOLL_PIN check and just universally call the hook for
-all gup_pte_range() calls.  I think you'll need to do that as well.  I
-don't think the assumptions about FOLL_PIN always preceding I/O is true
-universally.  Hacking out FOLL_PIN quiets down the warning spew quite a
-bit, but it still hits a few of them.
+As the device driver is responsible for detecting, adding and managing th=
+at
+memory, also kexec should treat it like that. It is special. We need a wa=
+y
+to teach kexec-tools to not add that memory to the fixed-up firmware
+memmap, to not place kexec images onto this memory, but still allow kdump
+to dump it. Add a flag to tell memory hotplug code to
+not create /sys/firmware/memmap entries and to indicate it via
+"System RAM (driver managed)" in /proc/iomem.
 
-Here's one example:
+Before this series, kexec_file_load() already did the right thing (for
+virtio-mem) by not adding that memory to the fixed-up firmware memmap and
+letting the device driver handle it. With this series, also kexec_load() =
+-
+which relies on user space to provide a fixed up firmware memmap - does
+the right thing with virtio-mem memory.
 
- 0)  sd-reso-410   |               |  /* mm_accessible_error: ...
-      sd-resolve-410   [000] ....   212.918838: <stack trace>
- => trace_event_raw_event_mm_accessible_error
- => check_page_accessible
- => e1000_xmit_frame
- => dev_hard_start_xmit
- => sch_direct_xmit
- => __qdisc_run
- => __dev_queue_xmit
- => ip_finish_output2
- => ip_output
- => ip_send_skb
- => udp_send_skb.isra.59
- => udp_sendmsg
- => ____sys_sendmsg
- => ___sys_sendmsg
- => __sys_sendmmsg
- => __x64_sys_sendmmsg
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
+When the virtio-mem device driver(s) come up, they will request to unplug
+all memory from the hypervisor first (esp. defragment), to then request t=
+o
+plug consecutive memory ranges from the hypervisor, and add them to Linux
+- just like on a reboot where we still have memory plugged.
 
-This is just from booting and sitting on an idle Ubuntu 16.04.6 system.
- I think the process in question here is the systemd resolver.
+[1] https://lore.kernel.org/r/20200311171422.10484-1-david@redhat.com/
+[2] https://lore.kernel.org/r/20200326180730.4754-1-james.morse@arm.com
+
+David Hildenbrand (3):
+  mm/memory_hotplug: Prepare passing flags to add_memory() and friends
+  mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
+  virtio-mem: Add memory with MHP_DRIVER_MANAGED
+
+ arch/powerpc/platforms/powernv/memtrace.c     |  2 +-
+ .../platforms/pseries/hotplug-memory.c        |  2 +-
+ drivers/acpi/acpi_memhotplug.c                |  2 +-
+ drivers/base/memory.c                         |  2 +-
+ drivers/dax/kmem.c                            |  2 +-
+ drivers/hv/hv_balloon.c                       |  2 +-
+ drivers/s390/char/sclp_cmd.c                  |  2 +-
+ drivers/virtio/virtio_mem.c                   |  3 +-
+ drivers/xen/balloon.c                         |  2 +-
+ include/linux/memory_hotplug.h                | 15 +++++++--
+ mm/memory_hotplug.c                           | 31 +++++++++++++------
+ 11 files changed, 44 insertions(+), 21 deletions(-)
+
+--=20
+2.25.3
+
