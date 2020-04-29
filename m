@@ -2,172 +2,232 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6034C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DABC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6EEF20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4M+LEfk"
+	by mail.kernel.org (Postfix) with ESMTP id 2E5D1208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588181711;
+	bh=HCu4rd3iGFe31INEB+mn0hoOQeWn8CQzYZyDgXLQLoQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ps3l1B/M6RlXdvzKx9TV9R+cfiQCC5blHfrVVgZeHZNfucrRhg1qgG9LGhRQBKHjJ
+	 JvaQOUc+mPIkp0Fo1uVEgfbcYabSytVnwpoxm6xvxcydRHG2KXwWLa9g9w7aU9Se56
+	 xp+/FuGYWo9zpBQT/Bcuy0I57tnWfBUwZw3371oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgD2ReV (ORCPT
+        id S1726869AbgD2RfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2ReU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:34:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4913FC03C1AE;
-        Wed, 29 Apr 2020 10:34:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y4so3506762ljn.7;
-        Wed, 29 Apr 2020 10:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x1AFbLndQ8YqHGnJDb3MA42SAMhniur+u9+ugWrG7Fk=;
-        b=t4M+LEfkvpdZKXDogmoVp+QhskKxi/S9RB5zs+sqXpM6x1Ex1srgxxvU67UcYoHRdh
-         IxF2IMU0IxyI6qWv08vTKlcAxi3prmITml/CVeG7HHbA6zZ/rSVjZJ2MJJaUIMrFe3DX
-         PPHgzLxt9x2GGCMT4Q9QjSU/fZJ5LdwfWpKcwYQUiGdbgnhG+dzV4ZIDSR3FeZwOJYe+
-         MYb++17FdBTr6TVcU+w5N6rP2QEh4ZNIcRnij5g8dAZ9rY3HW4Qh6ViDFiyoX0Db1eOK
-         SUX7O0dXFJa2bxdaNBMIM5N2qpml//BP4rc3xoHWuA/IYGOGDJ0NBblkWF0rf5FCnhXT
-         GyBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x1AFbLndQ8YqHGnJDb3MA42SAMhniur+u9+ugWrG7Fk=;
-        b=ichZAMTDV194vJW3MlEC3h3xzhgpIwTfXM9RYrZQ8YhGsvcCIUnDjU4hik+GToa9jm
-         FIB0gz1aLdWU+Qi52X6NwHmTbIvdcg6AvGkk2oOke++PNMCu0ZeTbIM6wsrNyaarR/LF
-         2XvfwY60vJ9rNvsPCoWGZKJxgSaaJZqOlgGHfgYt8fO/FhbFmTpFH0StP069buhk5R6h
-         q/+fdUy9OIVBA+DH14TFoV3JanplbVq2KewLZWwAIr73SwJD8jcCEYPnLx2lIg9F7Uey
-         Mb75hvdC1LfYd0KDcqtvMDly+/0jTVPRIFXkJugp7+1HVljAIY2c6y7tH0SKt1DC2rt3
-         xFhw==
-X-Gm-Message-State: AGi0PuYRYpjgXNXifAuDDnPIBDHxrEiTcioq7jyiU5V1tZLO/RqCm9eP
-        8ecv4/rASOkM9lvIyjCAW9Wwjb+h
-X-Google-Smtp-Source: APiQypJi65P6DNd1r0b4JeH7f8LZbvQHODxwAIU6idCBvOX9B5zVqyVAw9pfoEfsE+4YIMcfMKECjA==
-X-Received: by 2002:a2e:5847:: with SMTP id x7mr21345240ljd.61.1588181658244;
-        Wed, 29 Apr 2020 10:34:18 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id e4sm1816587lfn.37.2020.04.29.10.34.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 10:34:17 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo>
- <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
- <20200427110033.GC3464906@ulmo>
- <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
- <20200427151234.GE3464906@ulmo>
- <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
- <20200429081448.GA2345465@ulmo> <20200429085502.GB2345465@ulmo>
- <9e36c4ec-ca02-bd15-d765-15635f09db4b@gmail.com>
- <20200429163020.GB3157354@ulmo>
- <bd622667-9364-abfa-ad98-5ed51919ca09@gmail.com>
-Message-ID: <31976259-f420-9ebf-f799-e5c6f4bd8921@gmail.com>
-Date:   Wed, 29 Apr 2020 20:34:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 13:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgD2RfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:35:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B7B520757;
+        Wed, 29 Apr 2020 17:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588181708;
+        bh=HCu4rd3iGFe31INEB+mn0hoOQeWn8CQzYZyDgXLQLoQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Mbct03VHiVYz9/BwCDjssF+MlW4jv2b7iou5lYdSYCAiqKANc8LJzvh3woRim0zs8
+         +MsGtan1eBFjRTw+3rbZWUE0ukpEXR8Y95G5tm1BNU2P4dMcNIeEjCVXRqpoz7g1mr
+         aLSyzRRAChfojm9onMKIobgPbAEVFgHmgvjFVNYQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jTqby-007mdk-PK; Wed, 29 Apr 2020 18:35:06 +0100
 MIME-Version: 1.0
-In-Reply-To: <bd622667-9364-abfa-ad98-5ed51919ca09@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Apr 2020 18:35:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, james.morse@arm.com,
+        vladimir.murzin@arm.com, matthias.bgg@gmail.com,
+        bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com,
+        steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de,
+        selindag@gmail.com
+Subject: Re: [PATCH v9 15/18] arm64: kexec: kexec EL2 vectors
+In-Reply-To: <20200326032420.27220-16-pasha.tatashin@soleen.com>
+References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
+ <20200326032420.27220-16-pasha.tatashin@soleen.com>
+User-Agent: Roundcube Webmail/1.4.3
+Message-ID: <e5f1ee17f8e4ac3a5f5077d85318e0ed@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.04.2020 19:54, Dmitry Osipenko пишет:
-> 29.04.2020 19:30, Thierry Reding пишет:
->> On Wed, Apr 29, 2020 at 03:35:26PM +0300, Dmitry Osipenko wrote:
->>> 29.04.2020 11:55, Thierry Reding пишет:
->>> ...
->>>>>> It's not "papering over an issue". The bug can't be fixed properly
->>>>>> without introducing I2C atomic transfers support for a late suspend
->>>>>> phase, I don't see any other solutions for now. Stable kernels do not
->>>>>> support atomic transfers at all, that proper solution won't be backportable.
->>>>>
->>>>> Hm... on a hunch I tried something and, lo and behold, it worked. I can
->>>>> get Cardhu to properly suspend/resume on top of v5.7-rc3 with the
->>>>> following sequence:
->>>>>
->>>>> 	revert 9f42de8d4ec2 i2c: tegra: Fix suspending in active runtime PM state
->>>>> 	apply http://patchwork.ozlabs.org/project/linux-tegra/patch/20191213134417.222720-1-thierry.reding@gmail.com/
->>>>>
->>>>> I also ran that through our test farm and I don't see any other issues.
->>>>> At the time I was already skeptical about pm_runtime_force_suspend() and
->>>>> pm_runtime_force_resume() and while I'm not fully certain why exactly it
->>>>> doesn't work, the above on top of v5.7-rc3 seems like a good option.
->>>>>
->>>>> I'll try to do some digging if I can find out why exactly force suspend
->>>>> and resume doesn't work.
->>>>
->>>> Ah... so it looks like pm_runtime_force_resume() never actually does
->>>> anything in this case and then disable_depth remains at 1 and the first
->>>> tegra_i2c_xfer() will then fail to runtime resume the controller.
->>>
->>> That's the exactly expected behaviour of the RPM force suspend/resume.
->>> The only unexpected part for me is that the tegra_i2c_xfer() runtime
->>> resume then fails in the NOIRQ phase.
->>>
->>> Anyways, again, today it's wrong to use I2C in the NOIRQ phase becasue
->>> I2C interrupt is disabled. It's the PCIe driver that should be fixed.
->>
->> I don't think so. Everything works perfectly fine if we fix system
->> suspend/resume not to rely on pm_runtime_force_{suspend,resume}() and
->> directly call the runtime suspend/resume implementations.
+On 2020-03-26 03:24, Pavel Tatashin wrote:
+> If we have a EL2 mode without VHE, the EL2 vectors are needed in order
+> to switch to EL2 and jump to new world with hyperivsor privileges.
 > 
-> It should "work" only in conjunction with my I2C patch, otherwise you'll
-> get a spurious I2C timeout error. And it will "work" only because
-> interrupt is handled manually after the timeout, meaning that yours
-> suspending time will take few hundreds ms more.
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/include/asm/kexec.h      |  5 +++++
+>  arch/arm64/kernel/asm-offsets.c     |  1 +
+>  arch/arm64/kernel/machine_kexec.c   |  5 +++++
+>  arch/arm64/kernel/relocate_kernel.S | 35 +++++++++++++++++++++++++++++
+>  4 files changed, 46 insertions(+)
 > 
->> So can we please stop deflecting and fix the damn I2C driver. From my
->> perspective we have two choices:
->>
->>   1) do what I suggested above and revert the force suspend/resume patch
->>      and apply the "manual" suspend/resume patch instead
->>
->>   2) revert this patch and go back to the drawing board
->>
->> I suspect that with 2) we'd end up back where we started and have to do
->> 1) anyway.
->>
->> An alternative that I'd prefer even more would be to do 2) now for v5.7
->> and then we do 1) for v5.8 and give this some more soaking time.
+> diff --git a/arch/arm64/include/asm/kexec.h 
+> b/arch/arm64/include/asm/kexec.h
+> index d944c2e289b2..0f758fd51518 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -95,6 +95,7 @@ static inline void crash_post_resume(void) {}
+>  extern const unsigned long kexec_relocate_code_size;
+>  extern const unsigned char kexec_relocate_code_start[];
+>  extern const unsigned long kexec_kern_reloc_offset;
+> +extern const unsigned long kexec_el2_vectors_offset;
+>  #endif
 > 
-> I2C driver isn't broken, PCIe driver is. IMO.
+>  /*
+> @@ -104,6 +105,9 @@ extern const unsigned long kexec_kern_reloc_offset;
+>   *		kernel, or purgatory entry address).
+>   * kern_arg0	first argument to kernel is its dtb address. The other
+>   *		arguments are currently unused, and must be set to 0
+> + * el2_vector	If present means that relocation routine will go to EL1
+> + *		from EL2 to do the copy, and then back to EL2 to do the jump
+> + *		to new world.
+>   */
+>  struct kern_reloc_arg {
+>  	phys_addr_t head;
+> @@ -112,6 +116,7 @@ struct kern_reloc_arg {
+>  	phys_addr_t kern_arg1;
+>  	phys_addr_t kern_arg2;
+>  	phys_addr_t kern_arg3;
+> +	phys_addr_t el2_vector;
+>  };
 > 
-> Both yours variants are not going to be a backportable fix for the
-> stable kernels, they won't fix the suspended interrupt problem. What I'm
-> missing?
+>  #define ARCH_HAS_KIMAGE_ARCH
+> diff --git a/arch/arm64/kernel/asm-offsets.c 
+> b/arch/arm64/kernel/asm-offsets.c
+> index 448230684749..ff974b648347 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -136,6 +136,7 @@ int main(void)
+>    DEFINE(KEXEC_KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, 
+> kern_arg1));
+>    DEFINE(KEXEC_KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, 
+> kern_arg2));
+>    DEFINE(KEXEC_KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, 
+> kern_arg3));
+> +  DEFINE(KEXEC_KRELOC_EL2_VECTOR,	offsetof(struct kern_reloc_arg, 
+> el2_vector));
+>  #endif
+>    return 0;
+>  }
+> diff --git a/arch/arm64/kernel/machine_kexec.c
+> b/arch/arm64/kernel/machine_kexec.c
+> index ab571fca9bd1..bd398def7627 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -84,6 +84,11 @@ int machine_kexec_post_load(struct kimage *kimage)
+>  	kern_reloc_arg->head = kimage->head;
+>  	kern_reloc_arg->entry_addr = kimage->start;
+>  	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
+> +	/* Setup vector table only when EL2 is available, but no VHE */
+> +	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode()) {
+> +		kern_reloc_arg->el2_vector = __pa(reloc_code)
+> +						+ kexec_el2_vectors_offset;
+> +	}
+>  	kexec_image_info(kimage);
 > 
+>  	return 0;
+> diff --git a/arch/arm64/kernel/relocate_kernel.S
+> b/arch/arm64/kernel/relocate_kernel.S
+> index aa9f2b2cd77c..6fd2fc0ef373 100644
+> --- a/arch/arm64/kernel/relocate_kernel.S
+> +++ b/arch/arm64/kernel/relocate_kernel.S
+> @@ -89,6 +89,38 @@ ENTRY(arm64_relocate_new_kernel)
+>  .ltorg
+>  END(arm64_relocate_new_kernel)
+> 
+> +.macro el1_sync_64
+> +	br	x4			/* Jump to new world from el2 */
+> +	.fill 31, 4, 0			/* Set other 31 instr to zeroes */
+> +.endm
 
-My proposal:
+The common idiom to write this is to align the beginning of the
+macro, and not to bother about what follows:
 
-1. Fix PCIe driver by keeping regulator always-ON, propagate it to
-stable kernels.
+.macro whatever
+         .align 7
+         br      x4
+.endm
 
-2. Make I2C driver usable in NOIRQ phase.
+Specially given that 0 is an undefined instruction, and I really hate to 
+see
+those in the actual text. On the contrary, .align generates NOPs.
 
-3. Make PCIe driver to handle errors properly.
+> +
+> +.macro invalid_vector label
+> +\label:
+> +	b \label
+> +	.fill 31, 4, 0			/* Set other 31 instr to zeroes */
+> +.endm
+> +
+> +/* el2 vectors - switch el2 here while we restore the memory image. */
+> +	.align 11
+> +ENTRY(kexec_el2_vectors)
 
-4. Revert the PCIe driver "fix".
+Please see commit 617a2f392c92 ("arm64: kvm: Annotate assembly using 
+modern
+annoations"), and follow the same pattern.
+
+> +	invalid_vector el2_sync_invalid_sp0	/* Synchronous EL2t */
+> +	invalid_vector el2_irq_invalid_sp0	/* IRQ EL2t */
+> +	invalid_vector el2_fiq_invalid_sp0	/* FIQ EL2t */
+> +	invalid_vector el2_error_invalid_sp0	/* Error EL2t */
+> +	invalid_vector el2_sync_invalid_spx	/* Synchronous EL2h */
+> +	invalid_vector el2_irq_invalid_spx	/* IRQ EL2h */
+> +	invalid_vector el2_fiq_invalid_spx	/* FIQ EL2h */
+> +	invalid_vector el2_error_invalid_spx	/* Error EL2h */
+> +		el1_sync_64			/* Synchronous 64-bit EL1 */
+> +	invalid_vector el1_irq_invalid_64	/* IRQ 64-bit EL1 */
+> +	invalid_vector el1_fiq_invalid_64	/* FIQ 64-bit EL1 */
+> +	invalid_vector el1_error_invalid_64	/* Error 64-bit EL1 */
+> +	invalid_vector el1_sync_invalid_32	/* Synchronous 32-bit EL1 */
+> +	invalid_vector el1_irq_invalid_32	/* IRQ 32-bit EL1 */
+> +	invalid_vector el1_fiq_invalid_32	/* FIQ 32-bit EL1 */
+> +	invalid_vector el1_error_invalid_32	/* Error 32-bit EL1 */
+> +END(kexec_el2_vectors)
+
+Please write the vectors in 4 groups of 4, as this makes it a lot easier
+to follow what is what.
+
+> +
+>  .Lkexec_relocate_code_end:
+>  .org	KEXEC_CONTROL_PAGE_SIZE
+>  .align 3	/* To keep the 64-bit values below naturally aligned. */
+> @@ -102,3 +134,6 @@ kexec_relocate_code_size:
+>  .globl kexec_kern_reloc_offset
+>  kexec_kern_reloc_offset:
+>  	.quad	arm64_relocate_new_kernel - kexec_relocate_code_start
+> +.globl kexec_el2_vectors_offset
+> +kexec_el2_vectors_offset:
+> +	.quad	kexec_el2_vectors - kexec_relocate_code_start
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
