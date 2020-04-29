@@ -2,157 +2,151 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C81C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB31C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD454206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DtXWrjwc"
+	by mail.kernel.org (Postfix) with ESMTP id BA09A208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgD2NlM (ORCPT
+        id S1728609AbgD2NlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgD2NhB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E357AC09B054;
-        Wed, 29 Apr 2020 06:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=7CmfqOJK6S19EckditoMkvWvGLDrCQNnv0HgEdn9l3o=; b=DtXWrjwccPuY+GQBBQ67oO8Rk9
-        4MsYFoEsxJaT+XuKLfigNfQvaAGeyc941g4/O1qVdXQhGxuHIV/t8StKWw3VYS/fQyPV99C9gk/AV
-        hfoig8Yye9pi54kgWiAYPvHg6Ecyvy3YNCNvdoc6xUJ6LD+dE9897vBfH7ICBeMSEhBL6wd7M/NS9
-        S1taO1QBsfsDN9bTmmsykfBKgAGoUHDMQhQpKSbYyF3JxUJVeMoKl2J5woH0/G4HCLdI0YmyHmQod
-        Ul6AqLNuxoKaPzae9zBdz3DLHu93mBAArADWQSeTbnjpAmfTZCQOtBvz8AduEppKkLGZ1BB1I5wnB
-        FqppMCKw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTmtX-0005w9-O8; Wed, 29 Apr 2020 13:36:59 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 18/25] mm: Allow large pages to be added to the page cache
-Date:   Wed, 29 Apr 2020 06:36:50 -0700
-Message-Id: <20200429133657.22632-19-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
-References: <20200429133657.22632-1-willy@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 29 Apr 2020 09:41:07 -0400
+Received: from 8bytes.org ([81.169.241.247]:39514 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727865AbgD2Nhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:37:37 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 49DD72E2; Wed, 29 Apr 2020 15:37:35 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 00/34] iommu: Move iommu_group setup to IOMMU core code
+Date:   Wed, 29 Apr 2020 15:36:38 +0200
+Message-Id: <20200429133712.31431-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Hi,
 
-We return -EEXIST if there are any non-shadow entries in the page
-cache in the range covered by the large page.  If there are multiple
-shadow entries in the range, we set *shadowp to one of them (currently
-the one at the highest index).  If that turns out to be the wrong
-answer, we can implement something more complex.  This is mostly
-modelled after the equivalent function in the shmem code.
+here is the third version of this patch-set. Older versions can be found
+here:
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- mm/filemap.c | 46 +++++++++++++++++++++++++++++++++-------------
- 1 file changed, 33 insertions(+), 13 deletions(-)
+	v1: https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
+	    (Has some more introductory text)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 9abba062973a..842afee3d066 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -834,6 +834,7 @@ static int __add_to_page_cache_locked(struct page *page,
- 	int huge = PageHuge(page);
- 	struct mem_cgroup *memcg;
- 	int error;
-+	unsigned int nr = 1;
- 	void *old;
- 
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
-@@ -845,31 +846,50 @@ static int __add_to_page_cache_locked(struct page *page,
- 					      gfp_mask, &memcg, false);
- 		if (error)
- 			return error;
-+		xas_set_order(&xas, offset, thp_order(page));
-+		nr = hpage_nr_pages(page);
- 	}
- 
--	get_page(page);
-+	page_ref_add(page, nr);
- 	page->mapping = mapping;
- 	page->index = offset;
- 
- 	do {
-+		unsigned long exceptional = 0;
-+		unsigned int i = 0;
-+
- 		xas_lock_irq(&xas);
--		old = xas_load(&xas);
--		if (old && !xa_is_value(old))
--			xas_set_err(&xas, -EEXIST);
--		xas_store(&xas, page);
-+		xas_for_each_conflict(&xas, old) {
-+			if (!xa_is_value(old)) {
-+				xas_set_err(&xas, -EEXIST);
-+				break;
-+			}
-+			exceptional++;
-+			if (shadowp)
-+				*shadowp = old;
-+		}
-+		xas_create_range(&xas);
- 		if (xas_error(&xas))
- 			goto unlock;
- 
--		if (xa_is_value(old)) {
--			mapping->nrexceptional--;
--			if (shadowp)
--				*shadowp = old;
-+next:
-+		xas_store(&xas, page);
-+		if (++i < nr) {
-+			xas_next(&xas);
-+			goto next;
- 		}
--		mapping->nrpages++;
-+		mapping->nrexceptional -= exceptional;
-+		mapping->nrpages += nr;
- 
- 		/* hugetlb pages do not participate in page cache accounting */
--		if (!huge)
--			__inc_node_page_state(page, NR_FILE_PAGES);
-+		if (!huge) {
-+			__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES,
-+						nr);
-+			if (nr > 1) {
-+				__inc_node_page_state(page, NR_FILE_THPS);
-+				filemap_nr_thps_inc(mapping);
-+			}
-+		}
- unlock:
- 		xas_unlock_irq(&xas);
- 	} while (xas_nomem(&xas, gfp_mask & GFP_RECLAIM_MASK));
-@@ -886,7 +906,7 @@ static int __add_to_page_cache_locked(struct page *page,
- 	/* Leave page->index set: truncation relies upon it */
- 	if (!huge)
- 		mem_cgroup_cancel_charge(page, memcg, false);
--	put_page(page);
-+	page_ref_sub(page, nr);
- 	return xas_error(&xas);
- }
- ALLOW_ERROR_INJECTION(__add_to_page_cache_locked, ERRNO);
+	v2: https://lore.kernel.org/lkml/20200414131542.25608-1-joro@8bytes.org/
+
+Changes v2 -> v3:
+
+	* Rebased v5.7-rc3
+
+	* Added a missing iommu_group_put() as reported by Lu Baolu.
+
+	* Added a patch to consolidate more initialization work in
+	  __iommu_probe_device(), fixing a bug where no 'struct
+	  device_iommu' was allocated in the hotplug path.
+
+There is also a git-branch available with these patches applied:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v3
+
+Please review. If there are no objections I plan to put these patches
+into the IOMMU tree early next week.
+
+Thanks,
+
+	Joerg
+
+Joerg Roedel (33):
+  iommu: Move default domain allocation to separate function
+  iommu/amd: Implement iommu_ops->def_domain_type call-back
+  iommu/vt-d: Wire up iommu_ops->def_domain_type
+  iommu/amd: Remove dma_mask check from check_device()
+  iommu/amd: Return -ENODEV in add_device when device is not handled by
+    IOMMU
+  iommu: Add probe_device() and release_device() call-backs
+  iommu: Move default domain allocation to iommu_probe_device()
+  iommu: Keep a list of allocated groups in __iommu_probe_device()
+  iommu: Move new probe_device path to separate function
+  iommu: Split off default domain allocation from group assignment
+  iommu: Move iommu_group_create_direct_mappings() out of
+    iommu_group_add_device()
+  iommu: Export bus_iommu_probe() and make is safe for re-probing
+  iommu/amd: Remove dev_data->passthrough
+  iommu/amd: Convert to probe/release_device() call-backs
+  iommu/vt-d: Convert to probe/release_device() call-backs
+  iommu/arm-smmu: Convert to probe/release_device() call-backs
+  iommu/pamu: Convert to probe/release_device() call-backs
+  iommu/s390: Convert to probe/release_device() call-backs
+  iommu/virtio: Convert to probe/release_device() call-backs
+  iommu/msm: Convert to probe/release_device() call-backs
+  iommu/mediatek: Convert to probe/release_device() call-backs
+  iommu/mediatek-v1 Convert to probe/release_device() call-backs
+  iommu/qcom: Convert to probe/release_device() call-backs
+  iommu/rockchip: Convert to probe/release_device() call-backs
+  iommu/tegra: Convert to probe/release_device() call-backs
+  iommu/renesas: Convert to probe/release_device() call-backs
+  iommu/omap: Remove orphan_dev tracking
+  iommu/omap: Convert to probe/release_device() call-backs
+  iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+  iommu/exynos: Convert to probe/release_device() call-backs
+  iommu: Remove add_device()/remove_device() code-paths
+  iommu: Move more initialization to __iommu_probe_device()
+  iommu: Unexport iommu_group_get_for_dev()
+
+Sai Praneeth Prakhya (1):
+  iommu: Add def_domain_type() callback in iommu_ops
+
+ drivers/iommu/amd_iommu.c       |  97 ++++----
+ drivers/iommu/amd_iommu_types.h |   1 -
+ drivers/iommu/arm-smmu-v3.c     |  38 +---
+ drivers/iommu/arm-smmu.c        |  39 ++--
+ drivers/iommu/exynos-iommu.c    |  24 +-
+ drivers/iommu/fsl_pamu_domain.c |  22 +-
+ drivers/iommu/intel-iommu.c     |  68 +-----
+ drivers/iommu/iommu.c           | 387 +++++++++++++++++++++++++-------
+ drivers/iommu/ipmmu-vmsa.c      |  60 ++---
+ drivers/iommu/msm_iommu.c       |  34 +--
+ drivers/iommu/mtk_iommu.c       |  24 +-
+ drivers/iommu/mtk_iommu_v1.c    |  50 ++---
+ drivers/iommu/omap-iommu.c      |  99 ++------
+ drivers/iommu/qcom_iommu.c      |  24 +-
+ drivers/iommu/rockchip-iommu.c  |  26 +--
+ drivers/iommu/s390-iommu.c      |  22 +-
+ drivers/iommu/tegra-gart.c      |  24 +-
+ drivers/iommu/tegra-smmu.c      |  31 +--
+ drivers/iommu/virtio-iommu.c    |  41 +---
+ include/linux/iommu.h           |  21 +-
+ 20 files changed, 531 insertions(+), 601 deletions(-)
+
 -- 
-2.26.2
+2.17.1
 
