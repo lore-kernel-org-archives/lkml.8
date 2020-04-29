@@ -2,142 +2,129 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E9DC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74310C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E95F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588183115;
-	bh=MdxFZeC9lSI4iC70ueh3NmpBDxIWz8CxTIVmPQB8qXQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OD280xrOgqXDXwIfQPBJbX4GxRF2uVlg5PbRId3En2NOTMcO3kkI01mRbixlfXU2M
-	 lOON+ldp7ZgoYqC9DtN1Le2hj/ZLwMCydOyycXZS0fgPTwv9JykZy2BSYxyWAtAjSF
-	 RBniM7W3LZvToL80k2tSIqBxdQrWyWQvp4+SmmbE=
+	by mail.kernel.org (Postfix) with ESMTP id 5C01B221F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD2R6e (ORCPT
+        id S1726940AbgD2R72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2R6e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:58:34 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDF7C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:58:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so3621846ljd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fohD9+nFMXnHZGAk7WijufaPtKOKI6hmvHAYohVrRCI=;
-        b=IOIuMB8KVA2CA3zAwNci/S/oMZNaZhM3X/ZPaSDb0dKJ5zlUA6/4BBhdaD7fVWAtz2
-         5bvopEKDrgRcsm72D40yhKr/rRESxc02lahrjC+5aZIcaffjtfiTvl0IiqCX4M1V+Vt9
-         wyxrtRLuPvSSNE9EggEr7GtOgMUS5CMVN6UzI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fohD9+nFMXnHZGAk7WijufaPtKOKI6hmvHAYohVrRCI=;
-        b=U9ZsPzEnZNqIcmRXjk1X+nyDvERI6oeXcZft1LF6bb2+7qZ8PfCWKiNbK2KrWNowLi
-         Earjas7XxHlF2itarDKgwbOYJ94rznIIXws7T8l9kRVUiTuQCjlyWYoRmyfdYR5MFM9F
-         FUwZ6elmO0yqDlYtFUeCl6yMXx78TNZBQM41xUYhtYBPN83HdGimpCpo76L/tbaiA2BJ
-         viJIp0FruO3ggqRBURo378WnYBv17fknN4N33Gg+NctqbGZEiIhx4gwqAH5JFSXNKmW7
-         l6Ti4eL4+D1gKQO8pJJjlCZkAXHLSoJs9j5EeWaamIig8UsJEiRhMPyx3ikjJdcKg9/o
-         MPkA==
-X-Gm-Message-State: AGi0PubhE+sFphunP1qWK6JDOfGwE7eoeAcRp9zydRgrbGBpkIoxTE+c
-        6nD/WZZ3wpEWSw42ZnPkRzaGBNWYGdg=
-X-Google-Smtp-Source: APiQypL2TSD90EPfPWbgFoqgbWsYxwP1YY0KGnQFBFvpU+xt0i5Bg9CSA6j6Y/DSEwYVTmGVCtx06A==
-X-Received: by 2002:a2e:8ed0:: with SMTP id e16mr22064323ljl.96.1588183110256;
-        Wed, 29 Apr 2020 10:58:30 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id t16sm2750649ljg.41.2020.04.29.10.58.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 10:58:29 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id j3so3578436ljg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:58:29 -0700 (PDT)
-X-Received: by 2002:a2e:3017:: with SMTP id w23mr22142434ljw.150.1588183108706;
- Wed, 29 Apr 2020 10:58:28 -0700 (PDT)
+        Wed, 29 Apr 2020 13:59:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41536 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2R71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:59:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3CF9DACC2;
+        Wed, 29 Apr 2020 17:59:24 +0000 (UTC)
+Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <87e4f05f-e942-2a39-1f87-fe01fb6c4248@suse.de>
+Date:   Wed, 29 Apr 2020 19:59:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <87imi8nzlw.fsf@x220.int.ebiederm.org> <CAHk-=wgh4zts+3hdkGzHLJ6pBGumcJ=23gRbMfubDrLstis2Bg@mail.gmail.com>
- <CAHk-=whKHpERyVv2-C+kxq9KV_mJPW3hkGDpn6f4yOvs+au8SA@mail.gmail.com>
- <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
- <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
- <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
- <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
- <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
- <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
- <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
- <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com> <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
-In-Reply-To: <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 29 Apr 2020 10:58:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
-Message-ID: <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 4:36 PM Jann Horn <jannh@google.com> wrote:
->
-> On Wed, Apr 29, 2020 at 12:14 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> >  - we move check_unsafe_exec() down. As far as I can tell, there's no
-> > reason it's that early - the flags it sets aren't actually used until
-> > when we actually do that final set_creds..
->
-> Right, we should be able to do that stuff quite a bit later than it happens now.
+Am 29.04.20 um 17:28 schrieb Cristian Ciocaltea:
+> When the kernel is built with lockdep support and the owl-dma driver is
+> used, the following message is shown:
+> 
+> [    2.496939] INFO: trying to register non-static key.
+> [    2.501889] the code is fine but needs lockdep annotation.
+> [    2.507357] turning off the locking correctness validator.
+> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
+> [    2.519084] Hardware name: Generic DT based system
+> [    2.523878] Workqueue: events_freezable mmc_rescan
+> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
+> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
+> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
+> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
+> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
+> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
+> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
+> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
+> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
+> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
+> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
+> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
+> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
+> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
+> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
+> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
+> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
+> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
+> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
+> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
+> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
+> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> 
+> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
+> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+> 
+> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
+> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
+> 'owl_dma_terminate_pchan'.
+> 
+> Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
+> and removes the 'lock' attribute in 'owl_dma_pchan' struct.
+> 
 
-Actually, looking at it, this looks painful for multiple reasons.
+Please add:
 
-The LSM_UNSAFE_xyz flags are used by security_bprm_set_creds(), which
-when I traced it through, happened much earlier than I thought. Making
-things worse, it's done by prepare_binprm(), which also potentially
-gets called from random points by the low-level binfmt handlers too.
+Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA 
+driver")
 
-And we also have that odd "fs->in_exec" flag, which is used by thread
-cloning and io_uring, and I'm not sure what the exact semantics are.
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Changes in v3:
+> * Get rid of the kerneldoc comment for the removed struct attribute
+> * Add the Reviewed-by tag in the commit message
+> 
+> Changes in v2:
+> * Improve the fix as suggested by Manivannan Sadhasivam: substitute
+>    'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
+>    'owl_dma_pchan' struct
+> * Update the commit message to reflect the changes
+> 
+>   drivers/dma/owl-dma.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
 
-I'm _almost_ inclined to say that we should just abort the execve()
-entirely if somebody tries to attach in the middle.
+Otherwise no objections from my side,
 
-IOW, get rid of the locking, and replace it all just with a sequence
-count. Make execve() abort if the sequence count has changed between
-loading the original creds, and having installed the new creds.
+Acked-by: Andreas Färber <afaerber@suse.de>
 
-You can ptrace _over_ an execve, and you can ptrace _after_ an
-execve(), but trying to attach just as we execve() would just cause
-the execve() to fail.
+Maybe the DMA maintainers can add those two lines when picking it up, to 
+avoid a v4?
 
-We could maybe make it conditional on the credentials actually having
-changed at all (set another flag in bprm_fill_uid()). So it would only
-fail for the suid exec case.
+Regards,
+Andreas
 
-Because honestly, trying to ptrace in the middle of a suid execve()
-sounds like an attack, not a useful thing.
-
-That sequence count approach would be a much simpler change.
-
-              Linus
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
