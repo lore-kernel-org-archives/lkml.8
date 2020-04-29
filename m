@@ -2,70 +2,86 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3195BC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB1C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7942072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1742076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 06:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588142205;
+	bh=N4/e8rFbJKShvQh4pRtyzPbTxIkVgTMXGfjkTkX/wsM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KQaEs600QXGlnpj7qal7N7kqYig5nwsLu5kz1Uie8F8g+pVzb2mENQNvehJiK8wpz
+	 iUorCh8j4t840iM52S0+7nE6l25rHZdwBXMoGJoA+19trfyXRg/PY0tZ9jytU8sld/
+	 O6zmXxNBmpZYgMnCG2orYTOdoi6k2TxF1mZHCsFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgD2GeX (ORCPT
+        id S1726562AbgD2Ggp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 02:34:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3333 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726381AbgD2GeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 02:34:23 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6F08776129585477CC03;
-        Wed, 29 Apr 2020 14:34:20 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 29 Apr 2020 14:34:12 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH RESEND] perf tools: Fix function name in comment
-Date:   Wed, 29 Apr 2020 14:33:12 +0800
-Message-ID: <1588141992-48382-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 Apr 2020 02:36:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbgD2Ggo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 02:36:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BBA8206F0;
+        Wed, 29 Apr 2020 06:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588142204;
+        bh=N4/e8rFbJKShvQh4pRtyzPbTxIkVgTMXGfjkTkX/wsM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KR+V3CfLTztAr2Ai7CKhLA9t6joaigtvxDED4TdDWUcSZenQfTmAix2ZsUCdCa/9c
+         /P1eKkeA4oY83wHb+d9S7ZuDhPhXzstj6kBTmDWnfXbEE81pkz8Ex/+cTYA2JZgpLd
+         FuA5Wu5V9Yf+f7xRXLkMAOK8Tr9ehd1jLa0ZvKQg=
+Date:   Wed, 29 Apr 2020 08:36:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/167] 5.6.8-rc1 review
+Message-ID: <20200429063640.GA2007811@kroah.com>
+References: <20200428182225.451225420@linuxfoundation.org>
+ <37127381-3bd6-e32c-ab2e-e0f542a3fca7@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37127381-3bd6-e32c-ab2e-e0f542a3fca7@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-get_cpuid_str() is used in tools/perf/arch/xxx/util/header.c,
-fix the name in comment.
+On Tue, Apr 28, 2020 at 06:44:16PM -0600, shuah wrote:
+> On 4/28/20 12:22 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.8 release.
+> > There are 167 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 30 Apr 2020 18:20:42 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.8-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
- tools/perf/pmu-events/pmu-events.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Great, thanks for testing these and letting me know.
 
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index 53e76d5d5b37..c8f306b572f4 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -26,7 +26,7 @@ struct pmu_event {
-  * Map a CPU to its table of PMU events. The CPU is identified by the
-  * cpuid field, which is an arch-specific identifier for the CPU.
-  * The identifier specified in tools/perf/pmu-events/arch/xxx/mapfile
-- * must match the get_cpustr() in tools/perf/arch/xxx/util/header.c)
-+ * must match the get_cpuid_str() in tools/perf/arch/xxx/util/header.c)
-  *
-  * The  cpuid can contain any character other than the comma.
-  */
--- 
-2.7.4
-
+greg k-h
