@@ -2,165 +2,175 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AA6C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7374DC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2503920731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EDE208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Z29GhzAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgD2ODD (ORCPT
+        id S1727932AbgD2ODe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:03:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726861AbgD2ODC (ORCPT
+        Wed, 29 Apr 2020 10:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726923AbgD2ODe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:03:02 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TE2Pjv088174;
-        Wed, 29 Apr 2020 10:02:54 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30me469ptw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 10:02:52 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03TE2qKG090752;
-        Wed, 29 Apr 2020 10:02:52 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30me469ps6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 10:02:52 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TDoQ7F010553;
-        Wed, 29 Apr 2020 14:02:50 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5rhr3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 14:02:49 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TE2lls786710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 14:02:47 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1D58AE04D;
-        Wed, 29 Apr 2020 14:02:47 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9994AE051;
-        Wed, 29 Apr 2020 14:02:44 +0000 (GMT)
-Received: from drishya.in.ibm.com (unknown [9.85.83.72])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 29 Apr 2020 14:02:44 +0000 (GMT)
-Date:   Wed, 29 Apr 2020 19:32:42 +0530
-From:   Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
-        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        pratik.r.sampat@gmail.com
-Subject: Re: [Skiboot] [PATCH v8 1/3] Self Save: Introducing Support for SPR
- Self Save
-Message-ID: <20200429140242.GB4852@drishya.in.ibm.com>
-Reply-To: svaidy@linux.ibm.com
-References: <20200423105438.29034-1-psampat@linux.ibm.com>
- <20200423105438.29034-2-psampat@linux.ibm.com>
+        Wed, 29 Apr 2020 10:03:34 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD59C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:33 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id y19so1167539qvv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3AIdfHtqoNsFBzshUFCQLbur342SiMxvBTxBWk02TNs=;
+        b=Z29GhzAshaBzwKo0DDBUn+TJtaUBjsuW0107/RWcL4BRG19OLBEyxAdycULUE+WSKj
+         cBaOxrI9tgM4HLh4Oap3ItOhRh6fOO8ghJ5gBawufm1ciYNynW0iSO3Hojo2mnCLaylF
+         YEwECLyVFEiKYavaRD/vtGTKNyJIIP6DtfEnTNDKrCj5cndhve6ozi8Yq1Gymk7qKzkh
+         9nCRNm0q5RFhvgVCbRfVwM9EmcIMYYD90xCU7ObMq59Lxx2JBz4EH3Tjno0hxptvKui7
+         SDCZE2HvLnOd61BAFSR0x4m/UaXIlcc5dFs0ow+NXWUAkHs/jxVwux4H/L1zjDSWJ1sN
+         w+wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3AIdfHtqoNsFBzshUFCQLbur342SiMxvBTxBWk02TNs=;
+        b=PSGOzMPQlIVCR4JQsR2ZtRIPwzNQYa0yvoiv6d5wiPi3cOhcwFzhAhZNddSVvQUxkU
+         94NtcnhrkuksHkMSzpbx87N12hucqsbLlAx+DCYSStJ6zMmU0YU40iBoyUZkD8wRApjs
+         5pQIclHXwSVVaM5m31FzcFr5LLSB2FhpXe/AtnGofRlVonbRpoM+7csQyZS3a8Zu38l1
+         LaPw2R4wMnDp+F8zwXu2oTXGbzdXJqeKPQhY109/hvw/pkMEu3e/DLOvstN3wTWTJduc
+         EAHGICJqm4xQRrksgJTOzMGlw/H5voQO2eXUycPSnRYcpl+RBePmIsKqEruLSNDcqVSa
+         InRg==
+X-Gm-Message-State: AGi0PuaZr+6As2UyAbYxfDs61vfEB4lgU3dpp86un7mZYQfcVvoQHVLi
+        7fQzNhqh4QB3ioQICOdltoTe6g==
+X-Google-Smtp-Source: APiQypKIOK7TwOIDU3P3paLnhDob8aiAysD4JgM9FFj9WqckQNqOh6Omw6e6OnHvCun/RfQQUaRfag==
+X-Received: by 2002:a0c:c28b:: with SMTP id b11mr32350633qvi.112.1588169012888;
+        Wed, 29 Apr 2020 07:03:32 -0700 (PDT)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id x8sm15933232qti.51.2020.04.29.07.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 07:03:32 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:03:30 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+Message-ID: <20200429140330.GA5054@cmpxchg.org>
+References: <cover.1588092152.git.chris@chrisdown.name>
+ <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <20200429101510.GA28637@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423105438.29034-2-psampat@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_05:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 phishscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290115
+In-Reply-To: <20200429101510.GA28637@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pratik Rajesh Sampat <psampat@linux.ibm.com> [2020-04-23 16:24:36]:
-
-> From: Prem Shanker Jha <premjha2@in.ibm.com>
+On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
+> On Tue 28-04-20 19:26:47, Chris Down wrote:
+> > From: Yafang Shao <laoar.shao@gmail.com>
+> > 
+> > A cgroup can have both memory protection and a memory limit to isolate
+> > it from its siblings in both directions - for example, to prevent it
+> > from being shrunk below 2G under high pressure from outside, but also
+> > from growing beyond 4G under low pressure.
+> > 
+> > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> > implemented proportional scan pressure so that multiple siblings in
+> > excess of their protection settings don't get reclaimed equally but
+> > instead in accordance to their unprotected portion.
+> > 
+> > During limit reclaim, this proportionality shouldn't apply of course:
+> > there is no competition, all pressure is from within the cgroup and
+> > should be applied as such. Reclaim should operate at full efficiency.
+> > 
+> > However, mem_cgroup_protected() never expected anybody to look at the
+> > effective protection values when it indicated that the cgroup is above
+> > its protection. As a result, a query during limit reclaim may return
+> > stale protection values that were calculated by a previous reclaim cycle
+> > in which the cgroup did have siblings.
+> > 
+> > When this happens, reclaim is unnecessarily hesitant and potentially
+> > slow to meet the desired limit. In theory this could lead to premature
+> > OOM kills, although it's not obvious this has occurred in practice.
 > 
-> The commit is a merger of commits that makes the following changes:
-> 1. Commit fixes some issues with code found during integration test
->   -  replacement of addi with xor instruction during self save API.
->   -  fixing instruction generation for MFMSR during self save
->   -  data struct updates in STOP API
->   -  error RC updates for hcode image build
->   -  HOMER parser updates.
->   -  removed self save support for URMOR and HRMOR
->   -  code changes for compilation with OPAL
->   -  populating CME Image header with unsecure HOMER address.
+> Thanks this describes the underlying problem. I would be also explicit
+> that the issue should be visible only on tail memcgs which have both
+> max/high and protection configured and the effect depends on the
+> difference between the two (the smaller it is the largrger the effect).
 > 
-> Key_Cronus_Test=PM_REGRESS
-> 
-> Change-Id: I7cedcc466267c4245255d8d75c01ed695e316720
-> Reviewed-on: http://rchgit01.rchland.ibm.com/gerrit1/66580
-> Tested-by: FSP CI Jenkins <fsp-CI-jenkins+hostboot@us.ibm.com>
-> Tested-by: HWSV CI <hwsv-ci+hostboot@us.ibm.com>
-> Tested-by: PPE CI <ppe-ci+hostboot@us.ibm.com>
-> Tested-by: Jenkins Server <pfd-jenkins+hostboot@us.ibm.com>
-> Tested-by: Cronus HW CI <cronushw-ci+hostboot@us.ibm.com>
-> Tested-by: Hostboot CI <hostboot-ci+hostboot@us.ibm.com>
-> Reviewed-by: Gregory S. Still <stillgs@us.ibm.com>
-> Reviewed-by: RAHUL BATRA <rbatra@us.ibm.com>
-> Reviewed-by: Jennifer A. Stofer <stofer@us.ibm.com>
-> Reviewed-on: http://rchgit01.rchland.ibm.com/gerrit1/66587
-> Reviewed-by: Christian R. Geddes <crgeddes@us.ibm.com>
-> Signed-off-by: Prem Shanker Jha <premjha2@in.ibm.com>
-> Signed-off-by: Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+> There is no mention about the fix. The patch resets effective values for
+> the reclaim root and I've had some concerns about that
+> http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
+> Johannes has argued that other races are possible and I didn't get to
+> think about it thoroughly. But this patch is introducing a new
+> possibility of breaking protection. If we want to have a quick and
+> simple fix that would be easier to backport to older kernels then I
+> would feel much better if we simply workedaround the problem as
+> suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
+> We can rework the effective values calculation to be more robust against
+> races on top of that because this is likely a more tricky thing to do.
 
-Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Well, can you please *do* think more thoroughly about what I wrote,
+instead of pushing for an alternative patch on gut feeling alone?
 
-> 2. The commit also incorporates changes that make STOP API project
-> agnostic changes include defining wrapper functions which call legacy
-> API. It also adds duplicate enum members which start with prefix PROC
-> instead of P9.
-> 
-> Key_Cronus_Test=PM_REGRESS
-> 
-> Change-Id: If87970f3e8cf9b507f33eb1be249e03eb3836a5e
-> RTC: 201128
-> Reviewed-on: http://rchgit01.rchland.ibm.com/gerrit1/71307
-> Tested-by: FSP CI Jenkins <fsp-CI-jenkins+hostboot@us.ibm.com>
-> Tested-by: Jenkins Server <pfd-jenkins+hostboot@us.ibm.com>
-> Tested-by: Hostboot CI <hostboot-ci+hostboot@us.ibm.com>
-> Tested-by: Cronus HW CI <cronushw-ci+hostboot@us.ibm.com>
-> Reviewed-by: RANGANATHPRASAD G. BRAHMASAMUDRA <prasadbgr@in.ibm.com>
-> Reviewed-by: Gregory S. Still <stillgs@us.ibm.com>
-> Reviewed-by: Jennifer A Stofer <stofer@us.ibm.com>
-> Reviewed-on: http://rchgit01.rchland.ibm.com/gerrit1/71314
-> Tested-by: Jenkins OP Build CI <op-jenkins+hostboot@us.ibm.com>
-> Tested-by: Jenkins OP HW <op-hw-jenkins+hostboot@us.ibm.com>
-> Reviewed-by: Daniel M. Crowell <dcrowell@us.ibm.com>
-> Signed-off-by: Prem Shanker Jha <premjha2@in.ibm.com>
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-> ---
->  include/p9_stop_api.H                    |  79 +-
->  libpore/p9_cpu_reg_restore_instruction.H |   4 +
->  libpore/p9_stop_api.C                    | 954 +++++++++++++----------
->  libpore/p9_stop_api.H                    | 115 ++-
->  libpore/p9_stop_data_struct.H            |   4 +-
->  libpore/p9_stop_util.H                   |   7 +-
->  6 files changed, 721 insertions(+), 442 deletions(-)
+Especially when you imply that this should be a stable patch.
 
+Not only does your alternative patch not protect against the race you
+are worried about, the race itself doesn't matter. Racing reclaimers
+will write their competing views of the world into the shared state on
+all other levels anyway.
 
-These code changes are from hcode component copied as is into OPAL
-project for integration and use of stop-api.
+And that's okay. If the configuration and memory usage is such that
+there is at least one reclaimer that scans without any protection
+(like a limit reclaimer), it's not a problem when a second reclaimer
+that meant to do protected global reclaim will also do one iteration
+without protection. It's no different than if a second thread had
+entered limit reclaim through another internal allocation.
 
-Hcode component in cooperation with hostboot would be loaded in memory
-before OPAL is loaded. This code will allow runtime changes and usage
-of various power management save restore functions.
+There is no semantical violation with the race in your patch or the
+race in this patch. Any effective protection that becomes visible is
+1) permitted by the configuration, but 2) also triggered *right now*
+by an acute need to reclaim memory with these parameters.
 
-This patch specifically enables self-save feature by the microcode.
+The *right now* part is important. That's what's broken before either
+patch, and that's what we're fixing: to see really, really *old* stale
+that might not be representative of the config semantics anymore.
 
---Vaidy
+Since you haven't linked to my email, here is my counter argument to
+the alternative patch "fixing" this race somehow.
 
+A reclaim:
+
+  root
+     `- A (low=2G, max=3G -> elow=0)
+        `- A1 (low=0G -> elow=0)
+
+Global reclaim:
+
+  root
+     `- A (low=2G, max=3G -> elow=2G)
+        `- A1 (low=0G -> elow=2G)
+
+During global reclaim, A1 is supposed to have 2G effective low
+protection. If A limit reclaim races, it can set A1's elow to
+0. Global reclaim will now query mem_cgroup_protection(root, A1), the
+root == memcg check you insist we add will fail and it'll reclaim A1
+without protection.
+
+The alternative patch is nothing except slightly worse code.
