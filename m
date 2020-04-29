@@ -2,396 +2,429 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82305C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3544C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1F2214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956122083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="NaZG81+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD2LhY (ORCPT
+        id S1726817AbgD2Lhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:37:24 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:58693 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726737AbgD2LhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:37:24 -0400
-X-IronPort-AV: E=Sophos;i="5.73,331,1583164800"; 
-   d="scan'208";a="90776289"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 29 Apr 2020 19:37:15 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 6A44B4BCC88B;
-        Wed, 29 Apr 2020 19:37:14 +0800 (CST)
-Received: from [10.167.220.69] (10.167.220.69) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 29 Apr 2020 19:37:14 +0800
-Message-ID: <5EA966E8.30901@cn.fujitsu.com>
-Date:   Wed, 29 Apr 2020 19:37:12 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Wed, 29 Apr 2020 07:37:39 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:46238 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726556AbgD2Lhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:37:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 107BB4C84A;
+        Wed, 29 Apr 2020 11:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1588160253; x=
+        1589974654; bh=ris/S+h/BaYOTDo3Pe8u3fQ3xLa1WXG1qllWW6QAfuc=; b=N
+        aZG81+gZaNF1YUpTyisS4B3+10BmQ2WYvhqnrDFGfLsrzDZFwbVpmnZ8USJVKslr
+        uOS7u8EXshDMc+W36dTgQ41yDdSScn8XuiKw48wTgUn2+kTpRZv1MqwC4/iSuLLj
+        BWKlBcOm65LkUqYrqyFY6caca0RB6ljM8K7Cl1FMPQ=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hJO9ugMjHQkP; Wed, 29 Apr 2020 14:37:33 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 112B14A498;
+        Wed, 29 Apr 2020 14:37:33 +0300 (MSK)
+Received: from bbwork.com (172.17.14.122) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 29
+ Apr 2020 14:37:34 +0300
+From:   Alexander Filippov <a.filippov@yadro.com>
+To:     <linux-aspeed@lists.ozlabs.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Geissler <geissonator@yahoo.com>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH v7] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+Date:   Wed, 29 Apr 2020 14:37:11 +0300
+Message-ID: <20200429113711.13183-1-a.filippov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-CC:     <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq
- module unload
-References: <20200424223630.224895-1-joel@joelfernandes.org> <5EA80319.7080005@cn.fujitsu.com>
-In-Reply-To: <5EA80319.7080005@cn.fujitsu.com>
-Content-Type: text/plain; charset="GB2312"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.220.69]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 6A44B4BCC88B.AD039
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.14.122]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel, Steven
+Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
+by YADRO.
 
-First of all, the previous dmesg may not be reliable and I often got the
-following dmesg by inserting and remving preemptirq_delay_test in loops:
-(btw: I think these dmesgs are caused by the same bug).
----------------------------------------------------
-[  178.484520] ------------[ cut here ]------------
-[  178.510058] refcount_t: addition on 0; use-after-free.
-[  178.511663] WARNING: CPU: 0 PID: 2389 at lib/refcount.c:25
-refcount_warn_saturate+0x9c/0x140
-[  178.512266] Modules linked in: preemptirq_delay_test(-) sunrpc vfat
-fat ext4 mbcache jbd2 crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce
-ip_tables xfs libcrc32c virtio_net net_failover virtio_mmio failover
-virtio_blk [last unloaded: preemptirq_delay_test]
-[  178.514061] CPU: 0 PID: 2389 Comm: rmmod Not tainted 5.6.0-rc7+ #18
-[  178.514389] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0
-02/06/2015
-[  178.514988] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  178.515259] pc : refcount_warn_saturate+0x9c/0x140
-[  178.515562] lr : refcount_warn_saturate+0x9c/0x140
-[  178.515865] sp : fffffe001300fd70
-[  178.516082] x29: fffffe001300fd70 x28: fffffc004533e380
-[  178.516366] x27: 0000000000000000 x26: 0000000000000000
-[  178.516611] x25: 0000000000000000 x24: fffffe00115bbbf0
-[  178.516847] x23: 0000000000000000 x22: 0000000000000200
-[  178.517121] x21: fffffe0011273988 x20: fffffc007cf7af28
-[  178.517554] x19: fffffc007cf7af00 x18: 0000000000000010
-[  178.517795] x17: 0000000000000000 x16: 0000000000000000
-[  178.518044] x15: ffffffffffffffff x14: fffffe0011273988
-[  178.518279] x13: fffffe009300fa97 x12: fffffe001300fa9f
-[  178.518518] x11: fffffe00112b0000 x10: fffffe001300fa20
-[  178.518885] x9 : 00000000ffffffd0 x8 : 75203b30206e6f20
-[  178.519316] x7 : 000000000000014e x6 : fffffe001127cf50
-[  178.519661] x5 : fffffe001127c000 x4 : 0000000000000000
-[  178.519978] x3 : fffffe001127cf50 x2 : 0000000000000000
-[  178.520245] x1 : cecd1d29479b5500 x0 : 0000000000000000
-[  178.520659] Call trace:
-[  178.520850]  refcount_warn_saturate+0x9c/0x140
-[  178.521084]  kthread_stop+0x48/0x278
-[  178.521703]  preemptirq_delay_exit+0x28/0xfc8c [preemptirq_delay_test]
-[  178.522006]  __arm64_sys_delete_module+0x14c/0x298
-[  178.522226]  do_el0_svc+0xf8/0x1e0
-[  178.522403]  el0_sync_handler+0x134/0x1bc
-[  178.522598]  el0_sync+0x140/0x180
-[  178.522862] ---[ end trace 437c7bc9df5e92dd ]---
-[  178.524159] ------------[ cut here ]------------
-[  178.524420] refcount_t: underflow; use-after-free.
-[  178.524734] WARNING: CPU: 0 PID: 2389 at lib/refcount.c:28
-refcount_warn_saturate+0xf0/0x140
-[  178.525079] Modules linked in: preemptirq_delay_test(-) sunrpc vfat
-fat ext4 mbcache jbd2 crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce
-ip_tables xfs libcrc32c virtio_net net_failover virtio_mmio failover
-virtio_blk [last unloaded: preemptirq_delay_test]
-[  178.526190] CPU: 0 PID: 2389 Comm: rmmod Tainted: G        W
-5.6.0-rc7+ #18
-[  178.526541] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0
-02/06/2015
-[  178.526836] pstate: 40000005 (nZcv daif -PAN -UAO)
-[  178.527060] pc : refcount_warn_saturate+0xf0/0x140
-[  178.527269] lr : refcount_warn_saturate+0xf0/0x140
-[  178.527484] sp : fffffe001300fd70
-[  178.527643] x29: fffffe001300fd70 x28: fffffc004533e380
-[  178.527905] x27: 0000000000000000 x26: 0000000000000000
-[  178.528166] x25: 0000000000000000 x24: fffffe00115bbbf0
-[  178.528489] x23: 0000000000000000 x22: 0000000000000200
-[  178.528808] x21: 0000000000000000 x20: fffffc007cf7af28
-[  178.529080] x19: fffffc007cf7af00 x18: 0000000000000010
-[  178.529429] x17: 0000000000000000 x16: 0000000000000000
-[  178.529747] x15: ffffffffffffffff x14: 0720072007200720
-[  178.530100] x13: 0720072007200720 x12: 0720072007200720
-[  178.530366] x11: 0720072007200720 x10: 0720072007200720
-[  178.530632] x9 : 0720072007200720 x8 : 072007200720072e
-[  178.530891] x7 : 0000000000000170 x6 : fffffe001127cf50
-[  178.531154] x5 : fffffe001127c000 x4 : 0000000000000000
-[  178.531431] x3 : fffffe001127cf50 x2 : 0000000000000000
-[  178.531705] x1 : cecd1d29479b5500 x0 : 0000000000000000
-[  178.532003] Call trace:
-[  178.532166]  refcount_warn_saturate+0xf0/0x140
-[  178.532434]  kthread_stop+0x254/0x278
-[  178.532644]  preemptirq_delay_exit+0x28/0xfc8c [preemptirq_delay_test]
-[  178.532963]  __arm64_sys_delete_module+0x14c/0x298
-[  178.533210]  do_el0_svc+0xf8/0x1e0
-[  178.533415]  el0_sync_handler+0x134/0x1bc
-[  178.533627]  el0_sync+0x140/0x180
-[  178.533807] ---[ end trace 437c7bc9df5e92de ]---
-[  178.626471] Unable to handle kernel paging request at virtual address
-0000fffffc0043ca
-[  178.627253] Mem abort info:
-[  178.627539]   ESR = 0x96000004
-[  178.627927]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  178.628414]   SET = 0, FnV = 0
-[  178.628806]   EA = 0, S1PTW = 0
-[  178.629090] Data abort info:
-[  178.639723]   ISV = 0, ISS = 0x00000004
-[  178.640182]   CM = 0, WnR = 0
-[  178.640530] [0000fffffc0043ca] address between user and kernel
-address ranges
-[  178.641300] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[  178.641931] Modules linked in: sunrpc vfat fat ext4 mbcache jbd2
-crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ip_tables xfs
-libcrc32c virtio_net net_failover virtio_mmio failover virtio_blk [last
-unloaded: preemptirq_delay_test]
-[  178.643547] CPU: 1 PID: 2394 Comm: pmlogger_check Tainted: G        W
-        5.6.0-rc7+ #18
-[  178.644219] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0
-02/06/2015
-[  178.644782] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  178.645219] pc : __kmalloc+0xc8/0x2e8
-[  178.645538] lr : __kmalloc+0x9c/0x2e8
-[  178.645841] sp : fffffe001312fc20
-[  178.646127] x29: fffffe001312fc20 x28: fffffc0042a0af00
-[  178.646532] x27: fffffc005a7ad000 x26: 00000000cc79f001
-[  178.647037] x25: fffffc0042a0af00 x24: fffffc007d76fc00
-[  178.647431] x23: fffffe00103e95e4 x22: 000000000000001b
-[  178.647895] x21: 0000000000000cc0 x20: fffffc007d76fc00
-[  178.648276] x19: 0000fffffc0043ca x18: 0000000000000000
-[  178.648673] x17: 0000000000000000 x16: 0000000000000000
-[  178.649077] x15: 0000000000000000 x14: 0000000000000010
-[  178.649608] x13: 0000000000000000 x12: 0000000000000000
-[  178.649963] x11: 0000000000000000 x10: 0000000000000000
-[  178.650337] x9 : 0000000000000000 x8 : 0000000000001f18
-[  178.650683] x7 : 0000000000001f18 x6 : fffffc005a7ad1f8
-[  178.651099] x5 : 0000000000000000 x4 : 0000000000000000
-[  178.651557] x3 : 0000000000000000 x2 : fffffe001021d1e0
-[  178.652006] x1 : 0000000000000000 x0 : 0000000000000001
-[  178.652407] Call trace:
-[  178.652694]  __kmalloc+0xc8/0x2e8
-[  178.652972]  load_elf_binary+0xdc/0xdb8
-[  178.653286]  search_binary_handler+0x98/0x268
-[  178.653626]  __do_execve_file+0x4ec/0x7c8
-[  178.653985]  __arm64_sys_execve+0x40/0x50
-[  178.654310]  do_el0_svc+0xf8/0x1e0
-[  178.654578]  el0_sync_handler+0x134/0x1bc
-[  178.654962]  el0_sync+0x140/0x180
-[  178.655509] Code: b4001073 b9402281 b9401380 11000400 (f8616a7b)
-[  178.656543] ---[ end trace 437c7bc9df5e92df ]---
-[  178.657100] Kernel panic - not syncing: Fatal exception
-[  178.657630] SMP: stopping secondary CPUs
-[  178.658237] Kernel Offset: disabled
-[  178.658644] CPU features: 0x10002,20006082
-[  178.658903] Memory Limit: none
-[  178.659263] ---[ end Kernel panic - not syncing: Fatal exception ]---
----------------------------------------------------
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts | 326 ++++++++++++++++++++
+ 2 files changed, 327 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
 
-Thanks,
-Xiao Yang
-On 2020/4/28 18:19, Xiao Yang wrote:
-> Hi Joel,
-> 
-> Thanks for your quick fix.
-> 
-> Unfortunately, it fixes my original panic but introduces other
-> issues(two wanings and one panic) on my arm64 vm, as below:
-> --------------------------------------------------------------------
-> [ 3465.434942] ------------[ cut here ]------------
-> [ 3465.435481] refcount_t: addition on 0; use-after-free.
-> [ 3465.437071] WARNING: CPU: 1 PID: 6708 at lib/refcount.c:25
-> refcount_warn_saturate+0x9c/0x140
-> [ 3465.437720] Modules linked in: preemptirq_delay_test(O-) sunrpc vfat
-> fat ext4 mbcache jbd2 crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce
-> ip_tables xfs libcrc32c virtio_net net_failover failover virtio_mmio
-> virtio_blk
-> [ 3465.439787] CPU: 1 PID: 6708 Comm: rmmod Tainted: G           O
-> 5.6.0-rc7+ #18
-> [ 3465.440316] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0
-> 02/06/2015
-> [ 3465.440967] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [ 3465.441297] pc : refcount_warn_saturate+0x9c/0x140
-> [ 3465.441592] lr : refcount_warn_saturate+0x9c/0x140
-> [ 3465.441919] sp : fffffe001382fd70
-> [ 3465.442160] x29: fffffe001382fd70 x28: fffffc004876d200
-> [ 3465.442649] x27: 0000000000000000 x26: 0000000000000000
-> [ 3465.443071] x25: 0000000000000000 x24: fffffe00115bbbf0
-> [ 3465.443670] x23: 0000000000000000 x22: 0000000000000200
-> [ 3465.444194] x21: fffffe0011273988 x20: fffffc0063fdd228
-> [ 3465.444576] x19: fffffc0063fdd200 x18: 0000000000000010
-> [ 3465.444939] x17: 0000000000000000 x16: 0000000000000000
-> [ 3465.445329] x15: ffffffffffffffff x14: fffffe0011273988
-> [ 3465.445698] x13: fffffe009382fa97 x12: fffffe001382fa9f
-> [ 3465.446116] x11: fffffe00112b0000 x10: fffffe001382fa20
-> [ 3465.446498] x9 : 00000000ffffffd0 x8 : 6572662d72657466
-> [ 3465.446941] x7 : 0000000000000149 x6 : fffffe001127cf50
-> [ 3465.447375] x5 : fffffe001127c000 x4 : 0000000000000000
-> [ 3465.447757] x3 : fffffe001127cf50 x2 : 0000000000000000
-> [ 3465.448161] x1 : 2e36d2803fe6b700 x0 : 0000000000000000
-> [ 3465.448702] Call trace:
-> [ 3465.448979]  refcount_warn_saturate+0x9c/0x140
-> [ 3465.449330]  kthread_stop+0x48/0x278
-> [ 3465.450144]  preemptirq_delay_exit+0x28/0xfc8c [preemptirq_delay_test]
-> [ 3465.450625]  __arm64_sys_delete_module+0x14c/0x298
-> [ 3465.450998]  do_el0_svc+0xf8/0x1e0
-> [ 3465.451372]  el0_sync_handler+0x134/0x1bc
-> [ 3465.451701]  el0_sync+0x140/0x180
-> [ 3465.452099] ---[ end trace 1a8ec2201af5e8c7 ]---
-> [ 3465.478208] ------------[ cut here ]------------
-> [ 3465.478696] WARNING: CPU: 1 PID: 6708 at kernel/kthread.c:400
-> __kthread_bind_mask+0x34/0x90
-> [ 3465.479210] Modules linked in: preemptirq_delay_test(O-) sunrpc vfat
-> fat ext4 mbcache jbd2 crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce
-> ip_tables xfs libcrc32c virtio_net net_failover failover virtio_mmio
-> virtio_blk
-> [ 3465.480509] CPU: 1 PID: 6708 Comm: rmmod Tainted: G        W  O
-> 5.6.0-rc7+ #18
-> [ 3465.480966] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0
-> 02/06/2015
-> [ 3465.481465] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [ 3465.481821] pc : __kthread_bind_mask+0x34/0x90
-> [ 3465.482129] lr : __kthread_bind_mask+0x30/0x90
-> [ 3465.482419] sp : fffffe001382fd30
-> [ 3465.482639] x29: fffffe001382fd30 x28: fffffc004876d200
-> [ 3465.483017] x27: 0000000000000000 x26: 0000000000000000
-> [ 3465.483385] x25: 0000000000000000 x24: fffffe00115bbbf0
-> [ 3465.483795] x23: 0000000000000000 x22: 0000000000000200
-> [ 3465.484251] x21: fffffe0010a9cb88 x20: 0000000000000040
-> [ 3465.484599] x19: fffffc0063fdd200 x18: 0000000000000010
-> [ 3465.484957] x17: 0000000000000000 x16: 0000000000000000
-> [ 3465.485347] x15: ffffffffffffffff x14: fffffe0011273988
-> [ 3465.485714] x13: fffffe009382fa97 x12: fffffe001382fa9f
-> [ 3465.486210] x11: fffffe00112b0000 x10: fffffe001382fa20
-> [ 3465.486599] x9 : 00000000ffffffd0 x8 : 6572662d72657466
-> [ 3465.487039] x7 : 0000000000000149 x6 : fffffe001127cf50
-> [ 3465.487447] x5 : fffffe001127c000 x4 : 0000000000000001
-> [ 3465.487868] x3 : fffffe001127cf50 x2 : 2e36d2803fe6b700
-> [ 3465.488252] x1 : 0000000000000000 x0 : 0000000000000000
-> [ 3465.488628] Call trace:
-> [ 3465.488851]  __kthread_bind_mask+0x34/0x90
-> [ 3465.489192]  kthread_unpark+0xa0/0xb0
-> [ 3465.489456]  kthread_stop+0x8c/0x278
-> [ 3465.489736]  preemptirq_delay_exit+0x28/0xfc8c [preemptirq_delay_test]
-> [ 3465.490216]  __arm64_sys_delete_module+0x14c/0x298
-> [ 3465.490594]  do_el0_svc+0xf8/0x1e0
-> [ 3465.490850]  el0_sync_handler+0x134/0x1bc
-> [ 3465.491157]  el0_sync+0x140/0x180
-> [ 3465.491413] ---[ end trace 1a8ec2201af5e8c8 ]---
-> [ 3465.504614] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000000
-> [ 3465.505340] Mem abort info:
-> [ 3465.505553]   ESR = 0x96000006
-> [ 3465.505855]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [ 3465.506234]   SET = 0, FnV = 0
-> [ 3465.506525]   EA = 0, S1PTW = 0
-> [ 3465.506786] Data abort info:
-> [ 3465.507037]   ISV = 0, ISS = 0x00000006
-> [ 3465.507304]   CM = 0, WnR = 0
-> [ 3465.507685] user pgtable: 64k pages, 42-bit VAs, pgdp=0000000082450000
-> [ 3465.508225] [0000000000000000] pgd=0000000000000000,
-> pud=0000000000000000, pmd=0000000000000000
-> [ 3465.509049] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [ 3465.509527] Modules linked in: preemptirq_delay_test(O-) sunrpc vfat
-> fat ext4 mbcache jbd2 crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce
-> ip_tables xfs libcrc32c virtio_net net_failover failover virtio_mmio
-> virtio_blk
-> [ 3465.510964] CPU: 1 PID: 6708 Comm: rmmod Tainted: G        W  O
-> 5.6.0-rc7+ #18
-> [ 3465.511527] Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0
-> 02/06/2015
-> [ 3465.512031] pstate: 60000085 (nZCv daIf -PAN -UAO)
-> [ 3465.512392] pc : __list_add_valid+0x18/0xa0
-> [ 3465.512740] lr : wait_for_completion+0xc8/0x178
-> [ 3465.513085] sp : fffffe001382fd00
-> [ 3465.513362] x29: fffffe001382fd00 x28: fffffc004876d200
-> [ 3465.513769] x27: 0000000000000000 x26: 0000000000000000
-> [ 3465.514205] x25: 0000000000000000 x24: fffffc0076e616c8
-> [ 3465.514638] x23: fffffe001382fd68 x22: 0000000000000000
-> [ 3465.515030] x21: fffffe0011273988 x20: fffffc0076e616c0
-> [ 3465.515444] x19: fffffc0076e616b8 x18: 0000000000000010
-> [ 3465.515826] x17: 0000000000000000 x16: 0000000000000000
-> [ 3465.516184] x15: ffffffffffffffff x14: fffffe0011273988
-> [ 3465.516584] x13: fffffe009382fa97 x12: fffffe001382fa9f
-> [ 3465.516976] x11: fffffe00112b0000 x10: fffffe001382fa20
-> [ 3465.517351] x9 : 00000000ffffffd0 x8 : 6572662d72657466
-> [ 3465.517750] x7 : 0000000000000149 x6 : fffffe001127cf50
-> [ 3465.518169] x5 : 0000000000000001 x4 : fffffc0076e616c8
-> [ 3465.518454] x3 : fffffe0010128b38 x2 : 0000000000000000
-> [ 3465.518711] x1 : 0000000000000000 x0 : fffffe001382fd68
-> [ 3465.518985] Call trace:
-> [ 3465.519157]  __list_add_valid+0x18/0xa0
-> [ 3465.519351]  wait_for_completion+0xc8/0x178
-> [ 3465.519578]  kthread_stop+0x9c/0x278
-> [ 3465.519779]  preemptirq_delay_exit+0x28/0xfc8c [preemptirq_delay_test]
-> [ 3465.520109]  __arm64_sys_delete_module+0x14c/0x298
-> [ 3465.520342]  do_el0_svc+0xf8/0x1e0
-> [ 3465.520520]  el0_sync_handler+0x134/0x1bc
-> [ 3465.520718]  el0_sync+0x140/0x180
-> [ 3465.521177] Code: 910003fd f9400442 eb01005f 54000141 (f9400041)
-> [ 3465.522258] ---[ end trace 1a8ec2201af5e8c9 ]---
-> [ 3465.522746] Kernel panic - not syncing: Fatal exception
-> [ 3465.523242] SMP: stopping secondary CPUs
-> [ 3465.523898] Kernel Offset: disabled
-> [ 3465.524423] CPU features: 0x10002,20006082
-> [ 3465.524939] Memory Limit: none
-> [ 3465.525534] ---[ end Kernel panic - not syncing: Fatal exception ]---
-> --------------------------------------------------------------------
-> 
-> I am looking into these issues.
-> 
-> Thanks,
-> Xiao Yang
-> On 2020/4/25 6:36, Joel Fernandes (Google) wrote:
->> Kthread running the test needs to be stopped or it can continue
->> executing code unloaded by module causing a crash.
->>
->> Suggested-by: Steven Rostedt<rostedt@goodmis.org>
->> Reported-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
->> Link: http://lore.kernel.org/r/5EA2B0C8.2080706@cn.fujitsu.com
->> Signed-off-by: Joel Fernandes (Google)<joel@joelfernandes.org>
->> ---
->>    kernel/trace/preemptirq_delay_test.c | 5 ++++-
->>    1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
->> index 31c0fad4cb9e1..1c28ca20e30b6 100644
->> --- a/kernel/trace/preemptirq_delay_test.c
->> +++ b/kernel/trace/preemptirq_delay_test.c
->> @@ -145,10 +145,10 @@ static struct attribute_group attr_group = {
->>    };
->>
->>    static struct kobject *preemptirq_delay_kobj;
->> +static struct task_struct *test_task;
->>
->>    static int __init preemptirq_delay_init(void)
->>    {
->> -	struct task_struct *test_task;
->>    	int retval;
->>
->>    	test_task = preemptirq_start_test();
->> @@ -171,6 +171,9 @@ static int __init preemptirq_delay_init(void)
->>    static void __exit preemptirq_delay_exit(void)
->>    {
->>    	kobject_put(preemptirq_delay_kobj);
->> +
->> +	if (test_task)
->> +		kthread_stop(test_task);
->>    }
->>
->>    module_init(preemptirq_delay_init)
-> 
-
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..6f9fe0f959f2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1347,6 +1347,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-microsoft-olympus.dtb \
+ 	aspeed-bmc-opp-lanyang.dtb \
+ 	aspeed-bmc-opp-mihawk.dtb \
++	aspeed-bmc-opp-nicole.dtb \
+ 	aspeed-bmc-opp-palmetto.dtb \
+ 	aspeed-bmc-opp-romulus.dtb \
+ 	aspeed-bmc-opp-swift.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+new file mode 100644
+index 000000000000..91dced7e7849
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+@@ -0,0 +1,326 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 YADRO
++/dts-v1/;
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Nicole BMC";
++	compatible = "yadro,nicole-bmc", "aspeed,ast2500";
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		vga_memory: framebuffer@9f000000 {
++			no-map;
++			reg = <0x9f000000 0x01000000>; /* 16M */
++		};
++
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x04000000>; /* 64M */
++		};
++
++		coldfire_memory: codefire_memory@9ef00000 {
++			reg = <0x9ef00000 0x00100000>;
++			no-map;
++		};
++
++		gfx_memory: framebuffer {
++			size = <0x01000000>;
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++
++		video_engine_memory: jpegbuffer {
++			size = <0x02000000>;	/* 32M */
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		power {
++			label = "platform:green:power";
++			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
++		};
++
++		identify {
++			label = "platform:blue:indicator";
++			gpios = <&gpio ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
++		};
++
++		fault {
++			label = "platform:red:fault";
++			gpios = <&gpio ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
++		};
++
++		attention {
++			label = "platform:yellow:alarm";
++			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	fsi: gpio-fsi {
++		compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
++		#address-cells = <2>;
++		#size-cells = <0>;
++		no-gpio-delays;
++
++		memory-region = <&coldfire_memory>;
++		aspeed,sram = <&sram>;
++		aspeed,cvic = <&cvic>;
++
++		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
++		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
++		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
++		trans-gpios = <&gpio ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		checkstop {
++			label = "checkstop";
++			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(J, 2)>;
++		};
++	};
++
++	iio-hwmon-battery {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 12>;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "bmc";
++		spi-max-frequency = <50000000>;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "pnor";
++		spi-max-frequency = <100000000>;
++	};
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
++&uart1 {
++	/* Rear RS-232 connector */
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++			&pinctrl_rxd1_default
++			&pinctrl_nrts1_default
++			&pinctrl_ndtr1_default
++			&pinctrl_ndsr1_default
++			&pinctrl_ncts1_default
++			&pinctrl_ndcd1_default
++			&pinctrl_nri1_default>;
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	use-ncsi;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
++		 <&syscon ASPEED_CLK_MAC1RCLK>;
++	clock-names = "MACCLK", "RCLK";
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++		pagesize = <64>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++	/* CPU0 characterization connector */
++};
++
++&i2c3 {
++	status = "okay";
++	/* CLK GEN SI5338 */
++};
++
++&i2c4 {
++	status = "okay";
++	/* Voltage regulators for CPU0 */
++};
++
++&i2c5 {
++	status = "okay";
++	/* Voltage regulators for CPU1 */
++};
++
++&i2c6 {
++	status = "okay";
++
++	rtc@32 {
++		compatible = "epson,rx8900";
++		reg = <0x32>;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++	/* CPLD */
++};
++
++&gpio {
++	gpio-line-names =
++	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
++	/*B0-B7*/	"","","","","","","","",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"fsi-enable","bmc_power_up","sys_pwrok_buf",
++			"func_mode0","func_mode1","func_mode2","","",
++	/*E0-E7*/	"","ncsi_cfg","","","","","","",
++	/*F0-F7*/	"","","","","","","","",
++	/*G0-G7*/	"","","","","","","","",
++	/*H0-H7*/	"","","","","","","","",
++	/*I0-I7*/	"","","","","","","","",
++	/*J0-J7*/	"","","checkstop","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"","","","","","","","",
++	/*N0-N7*/	"","","","","","","","",
++	/*O0-O7*/	"","","power-button","","","","","",
++	/*P0-P7*/	"","fsi-trans","pm_rtc_adc_en","","","","","",
++	/*Q0-Q7*/	"","","","","","","","id-button",
++	/*R0-R7*/	"","software_pwrgood","","","","","","",
++	/*S0-S7*/	"","","","","","","","seq_cont",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"","","","","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","","","","","","","",
++	/*Z0-Z7*/	"","","","","","","","",
++	/*AA0-AA7*/	"fsi-clock","led-attention","fsi-data","led-fault",
++			"led-power","","","led-identify",
++	/*AB0-AB7*/	"","","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
++
++	func_mode0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	func_mode1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	func_mode2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(D, 5) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	seq_cont {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	ncsi_cfg {
++		gpio-hog;
++		input;
++		gpios = <ASPEED_GPIO(E, 1) GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&vuart {
++	status = "okay";
++};
++
++&gfx {
++	status = "okay";
++	memory-region = <&gfx_memory>;
++};
++
++&pinctrl {
++	aspeed,external-nodes = <&gfx &lhc>;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&vhub {
++	status = "okay";
++};
++
++&adc {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++			&pinctrl_adc1_default
++			&pinctrl_adc2_default
++			&pinctrl_adc3_default
++			&pinctrl_adc4_default
++			&pinctrl_adc5_default
++			&pinctrl_adc6_default
++			&pinctrl_adc7_default
++			&pinctrl_adc8_default
++			&pinctrl_adc9_default
++			&pinctrl_adc10_default
++			&pinctrl_adc11_default
++			&pinctrl_adc12_default
++			&pinctrl_adc13_default
++			&pinctrl_adc14_default
++			&pinctrl_adc15_default>;
++};
++
++&video {
++	status = "okay";
++	memory-region = <&video_engine_memory>;
++};
++
++#include "ibm-power9-dual.dtsi"
+-- 
+2.21.1
 
