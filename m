@@ -2,136 +2,143 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250F4C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CB8C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A022073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0252073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOYnwekw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FUgv5pLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD2Ox2 (ORCPT
+        id S1727115AbgD2Oxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726484AbgD2Ox1 (ORCPT
+        Wed, 29 Apr 2020 10:53:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57412 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726811AbgD2Oxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:53:27 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D05C03C1AD;
-        Wed, 29 Apr 2020 07:53:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so1162776pfw.13;
-        Wed, 29 Apr 2020 07:53:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0ZRCFqU303/twN8hVJ5hqfcmrbnv34m+1dUf1S5stNk=;
-        b=aOYnwekw+Ep61qJAMEnkw1HpeaNpSpUiVZAODecFZzn3FmNASj/FNznKgfNWegoS60
-         Yx5v1NGzv3S/cPXEc3ALlBzUihHvwDLvBYDf17ffCaRVDrXS7RuTipnW8sDa30ggxmse
-         RxoTryFRRFriEs7NCReUY3zAzzqEf45PXnZxoAn9U33LHz7Y/EXsLGugPMvi1SoSxEqq
-         WjhhGe5oRPVT2bScL/FE/cnQ1Q3Ib8s4lq/Dm0vMqw9KXRs1rHPyQ7f9yl8eiLOl1YIb
-         k+wLFh11qK0RwlCEPBLxcBsPeEylR5cfU3rJWCmg4L/vfq9U6d9G6fHsv3rHNlf8jPL7
-         ofNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=0ZRCFqU303/twN8hVJ5hqfcmrbnv34m+1dUf1S5stNk=;
-        b=a0i++ZttpGzhTov6BWEBpoZ8GNv933+x4sUKPNbacyDy/S2AEN4BksqR0xDkYtu8WV
-         Dn9wyIZUBTtvQkfOe+qdsdrNmPBYnJ0QJo0hCgPLofepm/CeLIxoyff47JxqZlfDBjGP
-         2Lf51Q0Cra81G9TaC2nSxax/aW+Q2TvRYAkSgHjmaZIJy7xNAT4uiImkPrD6aJ/7jrlT
-         Otc9BTZxB8Dd6DEHzYrfFY8VZWtZoLdxFsyBYNjqkONfPsOJA8+nfQ593hIYMQ87uRVM
-         jPFLvCnpxCOKFGNve47vMMtP5jDdlagDiqgLuPzgNhPIb3N2xLuktonwYvkAnApyGGgF
-         Lvew==
-X-Gm-Message-State: AGi0PuYLitqG4rOy0CCuuNRbkOFogbIeq1xKaicigL7EOlkBusQaw1mN
-        2FvpMyE4yagGPhCnOeYTU0Y=
-X-Google-Smtp-Source: APiQypII7p7aNkIJuh7yMUE3jid684h7H+f5nYDkdRXBk7Yp8huPtWwgw135zQbdhJ8i10Nsn1nMGA==
-X-Received: by 2002:aa7:951b:: with SMTP id b27mr35415299pfp.2.1588172007216;
-        Wed, 29 Apr 2020 07:53:27 -0700 (PDT)
-Received: from udknight.localhost ([59.57.158.27])
-        by smtp.gmail.com with ESMTPSA id y24sm1243603pfn.211.2020.04.29.07.53.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 07:53:26 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 03SGIdPj000709;
-        Wed, 29 Apr 2020 00:18:39 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id 03SGIVsG000694;
-        Wed, 29 Apr 2020 00:18:31 +0800
-Date:   Wed, 29 Apr 2020 00:18:31 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>
-Subject: Re: [PATCH v3] checkpatch: add dedicated checker for 'Fixes:' tag
-Message-ID: <20200428161831.GB30042@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>
-References: <20200428020223.GA28074@udknight>
- <38e1a926-53a6-bda6-cb07-2614f4c682ba@web.de>
+        Wed, 29 Apr 2020 10:53:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588172021; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=XfHvHIcbuPGCDxtOiJABtMbA03S3CIq/wsmr77Nkc+U=; b=FUgv5pLcdxJHE8lus2+1ibRz8+Heq/8o2lBdAkz7ajy99sJEZZ0stqZL6sO/8XcyzQE8O6Ha
+ eydLEzu5N+/jW4W8u/lOasTPQjDH05jmSTdQsgng3oH2y505M4neE10PbPUzLEVQ+8UnYvQ0
+ 1lvyyOUWrFCQ3u/m5R1YCjpzua8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea994f0.7ff4c7b0c2d0-smtp-out-n04;
+ Wed, 29 Apr 2020 14:53:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C7AF3C43636; Wed, 29 Apr 2020 14:53:36 +0000 (UTC)
+Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35A09C433CB;
+        Wed, 29 Apr 2020 14:53:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35A09C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
+ devices
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
+ <20200429000234.GK4525@google.com>
+ <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
+Message-ID: <cc425e51-9e27-76a3-8ce6-1a751960ff7a@codeaurora.org>
+Date:   Wed, 29 Apr 2020 20:23:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <fe4b60f9-8aa6-0173-a67f-2f0f8451ad85@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <38e1a926-53a6-bda6-cb07-2614f4c682ba@web.de>
-User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 12:52:59PM +0200, Markus Elfring wrote:
-> > And there is no 'Fixes:' tag format checker in checkpatch
-> 
-> I have taken another look at corresponding implementation details.
-> Will programming challenges get any more attention?
-> 
-> 
-> > to check the commit id length too,
-> 
-> The mentioned script contains the following information.
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/scripts/checkpatch.pl?id=b240f960afb900e59112ebcfa5a759bb0a85a14e#n2818
-> 
-> # Check for git id commit length and improperly formed commit descriptions
-> 
-> 
-> > so let's add dedicated checker to check these conditions for 'Fixes:' tag.
-> 
-> How do you think about to reconsider the usage of the word “checker”
-> at specific places?
 
-Yes, I will use the word "check" only in later version.
+On 4/29/2020 7:45 PM, Rajendra Nayak wrote:
+> 
+> On 4/29/2020 5:32 AM, Matthias Kaehlcke wrote:
+>> Hi Rajendra,
+>>
+>> On Tue, Apr 28, 2020 at 07:02:51PM +0530, Rajendra Nayak wrote:
+>>> qup has a requirement to vote on the performance state of the CX domain
+>>> in sdm845 devices. Add OPP tables for these and also add power-domains
+>>> property for all qup instances.
+>>>
+>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 115 +++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 115 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> index 8f926b5..36b9fb1 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> @@ -804,6 +804,25 @@
+>>>               clock-names = "core";
+>>>           };
+>>> +        qup_opp_table: qup-opp-table {
+>>> +            compatible = "operating-points-v2";
+>>> +
+>>> +            opp-19200000 {
+>>> +                opp-hz = /bits/ 64 <19200000>;
+>>> +                required-opps = <&rpmhpd_opp_min_svs>;
+>>> +            };
+>>> +
+>>> +            opp-75000000 {
+>>> +                opp-hz = /bits/ 64 <75000000>;
+>>> +                required-opps = <&rpmhpd_opp_low_svs>;
+>>> +            };
+>>> +
+>>> +            opp-100000000 {
+>>> +                opp-hz = /bits/ 64 <100000000>;
+>>> +                required-opps = <&rpmhpd_opp_svs>;
+>>> +            };
+>>> +        };
+>>> +
+>>
+>> Judging from SDM845 (which has more OPP tables) the convention seems to be
+>> to add OPP tables to the nodes that use them, which seems reasonable and
+>> keeps them out of the device list.
+>>
+>> Unfortunately this convention isn't completely suitable for cases like this
+>> (and the DSI OPPs later in this series), where the same OPP table is used by
+>> multiple devices. A possible compromise would be to add the table to the
+>> node of the first device that uses them.
+> 
+> Sounds fair, I will do that and respin. Thanks.
 
-> 
-> 
-> > +		    my $id = '0123456789ab';
-> > +		    my $orig_desc = "commit description";
-> 
-> * Do you try to extend the existing software analysis approach “GIT_COMMIT_ID”?
-> 
-> * Would you like to avoid the development of duplicate Perl code?
+Looking into this some more, I see we do have..
 
-Fixes: lines don't need to have a "commit" prefix before the commit id, the description
-in normal commit id could across multiple lines, and we don't need to consider the
-$commit_log_possible_stack_dump for 'Fixes:' tag line. I mean it will make the GIT_COMMIT_ID
-code become harder to read and maintain.
+static const struct of_device_id of_skipped_node_table[] = {
+         { .compatible = "operating-points-v2", },
+         {} /* Empty terminated list */
+};
 
-> 
-> Regards,
-> Markus
+..in drivers/of/platform.c, so its not being added to the device list.
+
+And atleast in case of qup, I am having to duplicate the OPP tables once for
+each qup instance. Not to mention, having them inside the first qup device
+just makes it a little confusing to read who the OPP table belongs to.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
