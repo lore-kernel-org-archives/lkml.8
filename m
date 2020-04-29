@@ -2,214 +2,500 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD72C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998F7C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5F520731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D42B20731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KNG5NhrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgD2J0g (ORCPT
+        id S1726754AbgD2J0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2J0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:26:33 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B96C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 02:26:33 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jTiyy-0007rD-OA; Wed, 29 Apr 2020 11:26:20 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jTiyu-00011L-62; Wed, 29 Apr 2020 11:26:16 +0200
-Date:   Wed, 29 Apr 2020 11:26:16 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "sergei.shtylyov@cogentembedded.com" 
-        <sergei.shtylyov@cogentembedded.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "david@protonic.nl" <david@protonic.nl>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-Message-ID: <20200429092616.7ug4kdgdltxowkcs@pengutronix.de>
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
- <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
- <20200428154718.GA24923@lunn.ch>
- <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
- <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
+        Wed, 29 Apr 2020 05:26:42 -0400
+Received: from mail-eopbgr70045.outbound.protection.outlook.com ([40.107.7.45]:29890
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726742AbgD2J0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:26:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X0JC84hgDombjTHflZJMT37pX9SYpX292/M24IOxmMPxC9Dfh2JnWmw3Ki8+ABVF9WsPUU+D+Y18P6etUvOWPp8teCOqDSBd7Qr1kX8lFh83G5zlRM0owa89BGzs6q0DcksTNyRQiReewWwXJu/haWZKKtZH8LBiiHXbuavne7W6nnKU5WBr/OSc/F7aLc+whuJvrBmnMnoTX6BiICvHbEfjA8kNgGPaglugqqn/iQYBJ5OZ4FRPJgEttj3E25Ja0HXABk85+iPBSm0G1D2FkHDaDsdIM1LPiBjb38IBnh0uW2IB7p/iJKK/bg4VAnnBXJSuPnT2cCwlNZhPgCr93A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ly5TevOC4Pu3HBOhVV9mLms+U1Iam9gwtmmrw2h2t8g=;
+ b=KH19zXhjqOqgEb7kgSEiGP4HzInb29VdsEHT8tcyzRWsyKWquYJGcFZ+T+QZkvaveIxvSkYmgrWTmKpvcG0W1EFCBW1cqIWpcTmRPzXSgal1/5cxvv+BTb8TPiSlyipbldDJn2/wGz0+GKh5DdFJSITybyHrN5qlViL9mLDVBrX/Glr+G9/PzaHtNScvnlHHUxZnHmj+3L0OVawpDWS5H54jB8vJt0uZkm87pnRqBN+NnkfWECQjrex8IQLd8CjNh83QCi2uly4hpdhLXtOH7oOLIqJQh6E+h9x3vv+BcQezdLu5CiBOvrDpg4yhVPNoxXJSZzQIQk1td8h/owJCPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ly5TevOC4Pu3HBOhVV9mLms+U1Iam9gwtmmrw2h2t8g=;
+ b=KNG5NhrIoFeGPZ3glyEu67AaHyjZpbuevquK2CNJZmNCkmD3pn1N56bB2dfx1g2vp6SPypvOFgch0DOU1hj/bZ4xcq8SM7urP8OwZ4ea4kNt7D4MwX+GWQm7Zgt1jUg+g/zwD3wRLCK8f/dDH53gaysJk6RND+/YS2uaU5g7V4o=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2694.eurprd04.prod.outlook.com (2603:10a6:4:97::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Wed, 29 Apr
+ 2020 09:26:35 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.023; Wed, 29 Apr 2020
+ 09:26:35 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        allison@lohutok.net, info@metux.net, Anson.Huang@nxp.com,
+        leonard.crestez@nxp.com, git@andred.net, abel.vesa@nxp.com,
+        ard.biesheuvel@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2 3/3] soc: imx: move cpu code to drivers/soc/imx
+Date:   Wed, 29 Apr 2020 17:17:23 +0800
+Message-Id: <1588151843-2133-4-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588151843-2133-1-git-send-email-peng.fan@nxp.com>
+References: <1588151843-2133-1-git-send-email-peng.fan@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0165.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::21) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f37udlmunv3yqdec"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:46:27 up 166 days, 5 min, 179 users,  load average: 0.11, 0.06,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0165.apcprd01.prod.exchangelabs.com (2603:1096:4:28::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.19 via Frontend Transport; Wed, 29 Apr 2020 09:26:30 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b3911fcc-4a9e-4fa8-f9e6-08d7ec1f6901
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2694:|DB6PR0402MB2694:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB2694BD8BFC8D185A491B3B1B88AD0@DB6PR0402MB2694.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:108;
+X-Forefront-PRVS: 03883BD916
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(346002)(136003)(39860400002)(956004)(2616005)(6666004)(8676002)(4326008)(86362001)(6506007)(69590400007)(5660300002)(66556008)(16526019)(66476007)(186003)(36756003)(52116002)(66946007)(9686003)(6486002)(6512007)(8936002)(478600001)(316002)(7416002)(2906002)(26005);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NiDwJ4f7h5dWjU/VLpChJeMn5trmjL0i5ArO0ADG6/5o7Gf/ohNzMqVZ4FKEj3vSbf01p99LLtEOrA8mpNNi13rwbiyY7TowqaA5LZNRpsDF2264udFzyIEW2fwAokKXIP3QRvQ1MpYBXrGM1HM4uzWfHuGpoo933Zzgy33iUCy4qBq/L3GO0/VDWlfDL87lSCSZwqAmasvdIxirDyE0Y3O3KhH7E+fdKzJ9foSlucgkzBT4FhkjkbWETtGsILekR0tXeuF+uVrH+koJVYNDMg72rkAr1/PeFhOgnPaoClm17dx7yhEtkQDAlQckq2clEJpRA8A8A4OjliNEQGGYaQcErdnYQ63xTJ46dvrMZfS0ASNjMSP2wQQess3pBUjMmq3Ew/a8HtOLrcwAbnx0fabZ0uvVQ0lvTp8Z+P67K+wQVSdC4z1TsdjnZ0mRQ4NeynEUuaBQoI73vVEL18GrLYuigyYK7DkKFFyEXowHPZ4u1cdik9wlMN1gRR9gX69c
+X-MS-Exchange-AntiSpam-MessageData: JaUYQcteQpB6QzaZHeJ4pAFB+v28ZEfFRfYCO5olZdz5bzNyRdnKDmaTOLFMWpzzLbhjZnr8b0KxBtcKhmaVgIjbYV0SodjJ+faxVt92Rf7igCNFLHcK6w3FPtfQ15tMxmKQ2EPUTFQEq1QeKXZxZECaTMhcXol/EyBgd4SPfWkRi5iAFur+NPimaNF/1bUZ/lQbFy4Cbx62meYHJwKokbjAUOmxNWWTyvVNO/IQEGBs1VK3zmi4ozCznOiM5RhuAWqyaTRvXT7QfYzQLcx1XlljbqUd4oVKQyKBY6VC9GpfqGd1aRn1pOLk+BXwuY92xJgIry8W3GcnEuXoyeTOaCOWZDWRtHukS7B7wiJ8ECWnpvnA6A1EYdxq4Vkkw2vWWXaibrP3jyGdv4bDJRyRBen6cC9408f4oz10Hye/M1TB3QVboEYm7X8hNp3NyEAVg7yr3du1lgED0/E3XJVSXpRVt7rHRUm0SJp1LQW1NslamhjyrY2EaNRceHNcJjUF5yZwlbOe1uCFbluSMbUGFP0bD1PmC9+l0UrncqSrb8deGzoDS0TO9lha6aod6xtPs/riW2bYjD3XEX9tRQVX6OqKvm2bXfW7bMe5tOrbuIowCf/+R0ixg00ywosm/TPsmUWQiKFgmuIy6+y59Ta8JFSo1OfA5JVV2r0U0+gdIXLh83uAEXes2qT5YEGeW5dmLQoZWgDg1mdSVN/kHC+nmvoBEOyXc+cbSTyx/PXSw1ITs2wsx9R6JuArc/lk7DNatn6YY/bP15DFbvK2+/QifnHq9Pt0aAeuAEXSc2G6F7A=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3911fcc-4a9e-4fa8-f9e6-08d7ec1f6901
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2020 09:26:34.9771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sq/RY3+XBxI4zMJu0PL+hvJLuOtBQ6hLXZprVKxmYuqqoXyYwdR3xKcGClrcRGIBo6Dj1jrJ3nh1VHX3IxDyFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2694
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Peng Fan <peng.fan@nxp.com>
 
---f37udlmunv3yqdec
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Move the soc device register code to drivers/soc/imx to align with
+i.MX8.
 
-Hi Geert,
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-On Wed, Apr 29, 2020 at 10:45:35AM +0200, Geert Uytterhoeven wrote:
-> Hi Philippe,
->=20
-> On Tue, Apr 28, 2020 at 6:16 PM Philippe Schenker
-> <philippe.schenker@toradex.com> wrote:
-> > On Tue, 2020-04-28 at 17:47 +0200, Andrew Lunn wrote:
-> > > On Tue, Apr 28, 2020 at 05:28:30PM +0200, Geert Uytterhoeven wrote:
-> > > > This triggers on Renesas Salvator-X(S):
-> > > >
-> > > >     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
-> > > > *-skew-ps values should be used only with phy-mode =3D "rgmii"
-> > > >
-> > > > which uses:
-> > > >
-> > > >         phy-mode =3D "rgmii-txid";
-> > > >
-> > > > and:
-> > > >
-> > > >         rxc-skew-ps =3D <1500>;
-> > > >
-> > > > If I understand Documentation/devicetree/bindings/net/ethernet-
-> > > > controller.yaml
-> > > > correctly:
-> > >
-> > > Checking for skews which might contradict the PHY-mode is new. I think
-> > > this is the first PHY driver to do it. So i'm not too surprised it has
-> > > triggered a warning, or there is contradictory documentation.
-> > >
-> > > Your use cases is reasonable. Have the normal transmit delay, and a
-> > > bit shorted receive delay. So we should allow it. It just makes the
-> > > validation code more complex :-(
-> >
-> > I reviewed Oleksij's patch that introduced this warning. I just want to
-> > explain our thinking why this is a good thing, but yes maybe we change
-> > that warning a little bit until it lands in mainline.
-> >
-> > The KSZ9031 driver didn't support for proper phy-modes until now as it
-> > don't have dedicated registers to control tx and rx delays. With
-> > Oleksij's patch this delay is now done accordingly in skew registers as
-> > best as possible. If you now also set the rxc-skew-ps registers those
-> > values you previously set with rgmii-txid or rxid get overwritten.
-> >
-> > We chose the warning to occur on phy-modes 'rgmii-id', 'rgmii-rxid' and
-> > 'rgmii-txid' as on those, with the 'rxc-skew-ps' value present,
-> > overwriting skew values could occur and you end up with values you do
-> > not wanted. We thought, that most of the boards have just 'rgmii' set in
-> > phy-mode with specific skew-values present.
-> >
-> > @Geert if you actually want the PHY to apply RXC and TXC delays just
-> > insert 'rgmii-id' in your DT and remove those *-skew-ps values. If you
->=20
-> That seems to work for me, but of course doesn't take into account PCB
-> routing.
+V2:
+ Use CONFIG_ARM to guard compile
 
-On boards with simple design, the clock lines have nearly same length as da=
-ta
-lines. To provide needed clock delay, you should make clock line ~17
-centimeter longer than data lines. Or configure PHY or MAC side to
-provide needed delay.
-Since "phy-mode =3D "rgmii-txid"" was ignored till my patch. And the
-"rxc-skew-ps =3D <1500>" will add a delay of 0.6 nano seconds. Your
-configuration was:
-TX delay =3D 1.2ns
-RX delay =3D 0.6ns
+ arch/arm/mach-imx/cpu.c   | 166 -------------------------------------------
+ drivers/soc/imx/Makefile  |   3 +
+ drivers/soc/imx/soc-imx.c | 176 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 179 insertions(+), 166 deletions(-)
+ create mode 100644 drivers/soc/imx/soc-imx.c
 
-Is it really reflects the configuration of you PCB?
+diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
+index 5b969f31c9e9..65c7224f5250 100644
+--- a/arch/arm/mach-imx/cpu.c
++++ b/arch/arm/mach-imx/cpu.c
+@@ -1,25 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/err.h>
+-#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/regmap.h>
+-#include <linux/slab.h>
+-#include <linux/sys_soc.h>
+ 
+ #include "hardware.h"
+ #include "common.h"
+ 
+-#define OCOTP_UID_H	0x420
+-#define OCOTP_UID_L	0x410
+-
+-#define OCOTP_ULP_UID_1		0x4b0
+-#define OCOTP_ULP_UID_2		0x4c0
+-#define OCOTP_ULP_UID_3		0x4d0
+-#define OCOTP_ULP_UID_4		0x4e0
+-
+ unsigned int __mxc_cpu_type;
+ static unsigned int imx_soc_revision;
+ 
+@@ -82,157 +70,3 @@ void __init imx_aips_allow_unprivileged_access(
+ 		imx_set_aips(aips_base_addr);
+ 	}
+ }
+-
+-static int __init imx_soc_device_init(void)
+-{
+-	struct soc_device_attribute *soc_dev_attr;
+-	const char *ocotp_compat = NULL;
+-	struct soc_device *soc_dev;
+-	struct device_node *root;
+-	struct regmap *ocotp = NULL;
+-	const char *soc_id;
+-	u64 soc_uid = 0;
+-	u32 val;
+-	int ret;
+-
+-	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+-	if (!soc_dev_attr)
+-		return -ENOMEM;
+-
+-	soc_dev_attr->family = "Freescale i.MX";
+-
+-	root = of_find_node_by_path("/");
+-	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
+-	of_node_put(root);
+-	if (ret)
+-		goto free_soc;
+-
+-	switch (__mxc_cpu_type) {
+-	case MXC_CPU_MX1:
+-		soc_id = "i.MX1";
+-		break;
+-	case MXC_CPU_MX21:
+-		soc_id = "i.MX21";
+-		break;
+-	case MXC_CPU_MX25:
+-		soc_id = "i.MX25";
+-		break;
+-	case MXC_CPU_MX27:
+-		soc_id = "i.MX27";
+-		break;
+-	case MXC_CPU_MX31:
+-		soc_id = "i.MX31";
+-		break;
+-	case MXC_CPU_MX35:
+-		soc_id = "i.MX35";
+-		break;
+-	case MXC_CPU_MX51:
+-		soc_id = "i.MX51";
+-		break;
+-	case MXC_CPU_MX53:
+-		soc_id = "i.MX53";
+-		break;
+-	case MXC_CPU_IMX6SL:
+-		ocotp_compat = "fsl,imx6sl-ocotp";
+-		soc_id = "i.MX6SL";
+-		break;
+-	case MXC_CPU_IMX6DL:
+-		ocotp_compat = "fsl,imx6q-ocotp";
+-		soc_id = "i.MX6DL";
+-		break;
+-	case MXC_CPU_IMX6SX:
+-		ocotp_compat = "fsl,imx6sx-ocotp";
+-		soc_id = "i.MX6SX";
+-		break;
+-	case MXC_CPU_IMX6Q:
+-		ocotp_compat = "fsl,imx6q-ocotp";
+-		soc_id = "i.MX6Q";
+-		break;
+-	case MXC_CPU_IMX6UL:
+-		ocotp_compat = "fsl,imx6ul-ocotp";
+-		soc_id = "i.MX6UL";
+-		break;
+-	case MXC_CPU_IMX6ULL:
+-		ocotp_compat = "fsl,imx6ull-ocotp";
+-		soc_id = "i.MX6ULL";
+-		break;
+-	case MXC_CPU_IMX6ULZ:
+-		ocotp_compat = "fsl,imx6ull-ocotp";
+-		soc_id = "i.MX6ULZ";
+-		break;
+-	case MXC_CPU_IMX6SLL:
+-		ocotp_compat = "fsl,imx6sll-ocotp";
+-		soc_id = "i.MX6SLL";
+-		break;
+-	case MXC_CPU_IMX7D:
+-		ocotp_compat = "fsl,imx7d-ocotp";
+-		soc_id = "i.MX7D";
+-		break;
+-	case MXC_CPU_IMX7ULP:
+-		ocotp_compat = "fsl,imx7ulp-ocotp";
+-		soc_id = "i.MX7ULP";
+-		break;
+-	default:
+-		soc_id = "Unknown";
+-	}
+-	soc_dev_attr->soc_id = soc_id;
+-
+-	if (ocotp_compat) {
+-		ocotp = syscon_regmap_lookup_by_compatible(ocotp_compat);
+-		if (IS_ERR(ocotp))
+-			pr_err("%s: failed to find %s regmap!\n", __func__, ocotp_compat);
+-	}
+-
+-	if (!IS_ERR_OR_NULL(ocotp)) {
+-		if (__mxc_cpu_type == MXC_CPU_IMX7ULP) {
+-			regmap_read(ocotp, OCOTP_ULP_UID_4, &val);
+-			soc_uid = val & 0xffff;
+-			regmap_read(ocotp, OCOTP_ULP_UID_3, &val);
+-			soc_uid <<= 16;
+-			soc_uid |= val & 0xffff;
+-			regmap_read(ocotp, OCOTP_ULP_UID_2, &val);
+-			soc_uid <<= 16;
+-			soc_uid |= val & 0xffff;
+-			regmap_read(ocotp, OCOTP_ULP_UID_1, &val);
+-			soc_uid <<= 16;
+-			soc_uid |= val & 0xffff;
+-		} else {
+-			regmap_read(ocotp, OCOTP_UID_H, &val);
+-			soc_uid = val;
+-			regmap_read(ocotp, OCOTP_UID_L, &val);
+-			soc_uid <<= 32;
+-			soc_uid |= val;
+-		}
+-	}
+-
+-	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%d.%d",
+-					   (imx_soc_revision >> 4) & 0xf,
+-					   imx_soc_revision & 0xf);
+-	if (!soc_dev_attr->revision) {
+-		ret = -ENOMEM;
+-		goto free_soc;
+-	}
+-
+-	soc_dev_attr->serial_number = kasprintf(GFP_KERNEL, "%016llX", soc_uid);
+-	if (!soc_dev_attr->serial_number) {
+-		ret = -ENOMEM;
+-		goto free_rev;
+-	}
+-
+-	soc_dev = soc_device_register(soc_dev_attr);
+-	if (IS_ERR(soc_dev)) {
+-		ret = PTR_ERR(soc_dev);
+-		goto free_serial_number;
+-	}
+-
+-	return 0;
+-
+-free_serial_number:
+-	kfree(soc_dev_attr->serial_number);
+-free_rev:
+-	kfree(soc_dev_attr->revision);
+-free_soc:
+-	kfree(soc_dev_attr);
+-	return ret;
+-}
+-device_initcall(imx_soc_device_init);
+diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+index 103e2c93c342..446143241fe7 100644
+--- a/drivers/soc/imx/Makefile
++++ b/drivers/soc/imx/Makefile
+@@ -1,4 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++ifeq ($(CONFIG_ARM),y)
++obj-$(CONFIG_ARCH_MXC) += soc-imx.o
++endif
+ obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
+ obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) += gpcv2.o
+ obj-$(CONFIG_SOC_IMX8M) += soc-imx8m.o
+diff --git a/drivers/soc/imx/soc-imx.c b/drivers/soc/imx/soc-imx.c
+new file mode 100644
+index 000000000000..70819e03ab1e
+--- /dev/null
++++ b/drivers/soc/imx/soc-imx.c
+@@ -0,0 +1,176 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2020 NXP
++ */
++
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/sys_soc.h>
++
++#include <soc/imx/cpu.h>
++#include <soc/imx/revision.h>
++
++#define OCOTP_UID_H	0x420
++#define OCOTP_UID_L	0x410
++
++#define OCOTP_ULP_UID_1		0x4b0
++#define OCOTP_ULP_UID_2		0x4c0
++#define OCOTP_ULP_UID_3		0x4d0
++#define OCOTP_ULP_UID_4		0x4e0
++
++static int __init imx_soc_device_init(void)
++{
++	struct soc_device_attribute *soc_dev_attr;
++	const char *ocotp_compat = NULL;
++	struct soc_device *soc_dev;
++	struct device_node *root;
++	struct regmap *ocotp = NULL;
++	const char *soc_id;
++	u64 soc_uid = 0;
++	u32 val;
++	int ret;
++
++	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
++	if (!soc_dev_attr)
++		return -ENOMEM;
++
++	soc_dev_attr->family = "Freescale i.MX";
++
++	root = of_find_node_by_path("/");
++	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
++	of_node_put(root);
++	if (ret)
++		goto free_soc;
++
++	switch (__mxc_cpu_type) {
++	case MXC_CPU_MX1:
++		soc_id = "i.MX1";
++		break;
++	case MXC_CPU_MX21:
++		soc_id = "i.MX21";
++		break;
++	case MXC_CPU_MX25:
++		soc_id = "i.MX25";
++		break;
++	case MXC_CPU_MX27:
++		soc_id = "i.MX27";
++		break;
++	case MXC_CPU_MX31:
++		soc_id = "i.MX31";
++		break;
++	case MXC_CPU_MX35:
++		soc_id = "i.MX35";
++		break;
++	case MXC_CPU_MX51:
++		soc_id = "i.MX51";
++		break;
++	case MXC_CPU_MX53:
++		soc_id = "i.MX53";
++		break;
++	case MXC_CPU_IMX6SL:
++		ocotp_compat = "fsl,imx6sl-ocotp";
++		soc_id = "i.MX6SL";
++		break;
++	case MXC_CPU_IMX6DL:
++		ocotp_compat = "fsl,imx6q-ocotp";
++		soc_id = "i.MX6DL";
++		break;
++	case MXC_CPU_IMX6SX:
++		ocotp_compat = "fsl,imx6sx-ocotp";
++		soc_id = "i.MX6SX";
++		break;
++	case MXC_CPU_IMX6Q:
++		ocotp_compat = "fsl,imx6q-ocotp";
++		soc_id = "i.MX6Q";
++		break;
++	case MXC_CPU_IMX6UL:
++		ocotp_compat = "fsl,imx6ul-ocotp";
++		soc_id = "i.MX6UL";
++		break;
++	case MXC_CPU_IMX6ULL:
++		ocotp_compat = "fsl,imx6ull-ocotp";
++		soc_id = "i.MX6ULL";
++		break;
++	case MXC_CPU_IMX6ULZ:
++		ocotp_compat = "fsl,imx6ull-ocotp";
++		soc_id = "i.MX6ULZ";
++		break;
++	case MXC_CPU_IMX6SLL:
++		ocotp_compat = "fsl,imx6sll-ocotp";
++		soc_id = "i.MX6SLL";
++		break;
++	case MXC_CPU_IMX7D:
++		ocotp_compat = "fsl,imx7d-ocotp";
++		soc_id = "i.MX7D";
++		break;
++	case MXC_CPU_IMX7ULP:
++		ocotp_compat = "fsl,imx7ulp-ocotp";
++		soc_id = "i.MX7ULP";
++		break;
++	default:
++		soc_id = "Unknown";
++	}
++	soc_dev_attr->soc_id = soc_id;
++
++	if (ocotp_compat) {
++		ocotp = syscon_regmap_lookup_by_compatible(ocotp_compat);
++		if (IS_ERR(ocotp))
++			pr_err("%s: failed to find %s regmap!\n", __func__, ocotp_compat);
++	}
++
++	if (!IS_ERR_OR_NULL(ocotp)) {
++		if (__mxc_cpu_type == MXC_CPU_IMX7ULP) {
++			regmap_read(ocotp, OCOTP_ULP_UID_4, &val);
++			soc_uid = val & 0xffff;
++			regmap_read(ocotp, OCOTP_ULP_UID_3, &val);
++			soc_uid <<= 16;
++			soc_uid |= val & 0xffff;
++			regmap_read(ocotp, OCOTP_ULP_UID_2, &val);
++			soc_uid <<= 16;
++			soc_uid |= val & 0xffff;
++			regmap_read(ocotp, OCOTP_ULP_UID_1, &val);
++			soc_uid <<= 16;
++			soc_uid |= val & 0xffff;
++		} else {
++			regmap_read(ocotp, OCOTP_UID_H, &val);
++			soc_uid = val;
++			regmap_read(ocotp, OCOTP_UID_L, &val);
++			soc_uid <<= 32;
++			soc_uid |= val;
++		}
++	}
++
++	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%d.%d",
++					   (imx_get_soc_revision() >> 4) & 0xf,
++					   imx_get_soc_revision() & 0xf);
++	if (!soc_dev_attr->revision) {
++		ret = -ENOMEM;
++		goto free_soc;
++	}
++
++	soc_dev_attr->serial_number = kasprintf(GFP_KERNEL, "%016llX", soc_uid);
++	if (!soc_dev_attr->serial_number) {
++		ret = -ENOMEM;
++		goto free_rev;
++	}
++
++	soc_dev = soc_device_register(soc_dev_attr);
++	if (IS_ERR(soc_dev)) {
++		ret = PTR_ERR(soc_dev);
++		goto free_serial_number;
++	}
++
++	return 0;
++
++free_serial_number:
++	kfree(soc_dev_attr->serial_number);
++free_rev:
++	kfree(soc_dev_attr->revision);
++free_soc:
++	kfree(soc_dev_attr);
++	return ret;
++}
++device_initcall(imx_soc_device_init);
+-- 
+2.16.4
 
-> > need custom timing due to PCB routing it was thought out to use the phy-
-> > mode 'rgmii' and do the whole required timing with the *-skew-ps values.
->=20
-> That mean we do have to provide all values again?
-
-No. Using proper phy-mode should be enough. If you using default TX dealy a=
-nd
-configuring RX delay manually, the phy-mode =3D "rgmii-id" is
-the right choice for you.
-
-> Using "rgmii" without any skew values makes DHCP fail on R-Car H3 ES2.0,
-> M3-W (ES1.0), and M3-N (ES1.0). Interestingly, DHCP still works on R-Car
-> H3 ES1.0.
-
-The TX delay affects MAC to PHY path. The RX delay affects PHY to MAC
-path. On my HW, disabling TX delays, didn't affected the communication
-in any measurable way. Even with clock line length is equal to the data
-lines length. So, it may work just on the edge of the spec.
-
-> Note that I'm not too-familiar with the actual skew values needed
-> (CC Mizuguchi-san).
->=20
-> Related commits:
->   - 0e45da1c6ea6b186 ("arm64: dts: r8a7795: salvator-x: Fix
-> EthernetAVB PHY timing")
->   - dda3887907d74338 ("arm64: dts: r8a7795: Use rgmii-txid phy-mode
-> for EthernetAVB")
->   - 7eda14afb8843a0d ("arm64: dts: renesas: r8a77990: ebisu: Fix
-> EthernetAVB phy mode to rgmii")
-
-Regards,
-Oleksij.
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---f37udlmunv3yqdec
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6pSDQACgkQ4omh9DUa
-UbPJAQ/+LKRfA0dP7eKYb/DDX4v/6S1nJMmwoCCWrjVB2nGeUL5a/T7s4AwotKvp
-D3uzbGzyVgzYo41Sl+OUDqxVA9vJ2/dKG2AooUL641ptkc03zh4ihhQajjhrIb9h
-1ig4lARM60ngONJprFehqGRbDw7MP+QmYWc9zHfh16xEDeHG/jYnvsCs9bUyIMts
-YMcwCngMANU6qDG2xxsYwAgCp+wuUVbXsn4Syh2kaL5LaoM/4sMEE1nyjQ/a/DZP
-rQN92+rX2KPS2Rp3xY2qD2Cz20c4kcuXfMNOnFJRuyBqNggdFmkezxl+QvRhTULe
-VcGMSwH9uOSVh0zze72JdCI2zj3VZd/iS7Bs94wvQpbYhlB27SpG5eq1msJ7RX8c
-tTjIBm98l4fSRRpDne5dXa+A2ThifkOeh1bGnFjJCIyXffQ1UC2PEgLVp8WW2stf
-wQfOgZnv8c8FXbSx+IgBuIcgiZtCkd3f9Nyn+MbFZqVthqRZdt5Dc2o9UiljABQP
-Rg/JMcuCjYZUWWgFNmvFCKi45I4Xh6RRCwk3TTMQUOmOanMJEY77s8/Jymjsx3tA
-PIbqTf8Nmcv+rGGHAgMm3AWmQc+kGNBoydKtdZ64yfNZjY9FzNAaU7ZmIRLz99UH
-SzocUdqZt91pTtN4G33dJLSTyWgOS1WFdpQJsbrAQl9z0u+0hkU=
-=ZopQ
------END PGP SIGNATURE-----
-
---f37udlmunv3yqdec--
