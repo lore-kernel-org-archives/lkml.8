@@ -2,91 +2,104 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9AC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A52EC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 006E32073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309532073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="whxuS1tB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgD2PaG (ORCPT
+        id S1727044AbgD2Pac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:30:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:53437 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD2PaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:30:05 -0400
-IronPort-SDR: glru2NjHAqeLb9eMFKK5uSxfskdQU5n//BnA/v5vG/YxRC58ax38nqC75wLbpux/g120Jq5xd+
- gIre5RnCqTCw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:30:05 -0700
-IronPort-SDR: IsOo2m5hKDJWvB8cLxXv2tSJTgbWHqTSHwVmntgbu4ZJeYgSkqhJZFzNg96HRz/pCPc/2/jOMh
- iee/vjZ65KWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="257994210"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 08:30:05 -0700
-Date:   Wed, 29 Apr 2020 08:30:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200429153004.GD15992@linux.intel.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200426165753.GA11046@wind.enjellic.com>
+        Wed, 29 Apr 2020 11:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgD2Pac (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:30:32 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A33B3C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:30:31 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so2492783wma.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N9yPL5U8quFESl4Stw3OsG4QqTTqIkWJu59ukHEiK9k=;
+        b=whxuS1tBIOGCXGKR4D9txfj0YrmvLOppPzKf133Orw2xrDFaxNC2NVAj2Yxms3Btjw
+         NHvTheC/ne7068Zqc8rsMg+2BAga/XkLIMao16bcGyxemQ9q9tPqOjHk0EluqowWkXKP
+         rm2JZAmN0vdwbkYiYGVNeiyAnsrCfqjEdvzEutsmoYC9XAyQMi2c6PjQHLansB11bjyF
+         bAUz0LQ+Eq99vqYrtX7aMn19G5+Vdwv7XDOACYvKaODSQs9rSt0XJ86Th9EXer1tOHDZ
+         ZX6Bc45zaPh7n7Ra92xD31RtoqDp7AyFTEGH76JSzCHwW70/ZSoSvsFSSJUMHHiKJ0T5
+         Qbkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N9yPL5U8quFESl4Stw3OsG4QqTTqIkWJu59ukHEiK9k=;
+        b=t0fgS+yB8MnZY6OXsVZd43jWBEMuj3v5/x4jVNr/dJBjeqPmxwiHqWXHlfGewTE6D6
+         YQjDNsXhPT/soeT2VDaQYC+a1Lsgg5ici0/vl30OifMAxpEWmS1yf463naRgzTEqPrIK
+         0VdulGl+IoPOSwTYaBGw36SKsiqVVA5jFkbI2F8qey1ub5Ox6je+gJIOC6Un5XDH3he5
+         GvWJi1OAy/Kl6zDP2H1NIKDBPwXgbMsyWMH6eQ7kKYfwoR9QPRhAUQkRpeTxL8QB3iju
+         cZb4cXKWgXs/0MbBWoxGkO99UL10kxNrjELufj8ABy0mL/mP4+2xVTCyeZiZAHWMegAK
+         QLgw==
+X-Gm-Message-State: AGi0PuaXUAmCrXHylqsmkh3UJKT2e+f3CK1ytXP7b01uDCGyYKsuNXfu
+        iTEBO5Lh+Yq6jZNdqv61N25eglcL19Q=
+X-Google-Smtp-Source: APiQypI9ooSvKXGzfgE7VydIt8jFs20yFTtVFE5oUkIKvGGCN0t6yST0jxtjPo1HsMTn0kxs9wv4CQ==
+X-Received: by 2002:a05:600c:2314:: with SMTP id 20mr4090739wmo.118.1588174200388;
+        Wed, 29 Apr 2020 08:30:00 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id l5sm7923729wmi.22.2020.04.29.08.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:29:59 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] misc: fastrpc: fix memory leak
+Date:   Wed, 29 Apr 2020 16:29:51 +0100
+Message-Id: <20200429152951.18504-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200426165753.GA11046@wind.enjellic.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
-> In closing, it is important to note that the proposed SGX driver is
-> not available as a module.  This effectively excludes any alternative
-> implementations of the driver without replacement of the kernel at
-> large.
+if misc_register() fails, previously allocated data is left without freeing,
+this could result in memory leak.
 
-No it doesn't.  The SGX subsytem won't allocate EPC pages unless userspace
-creates an enclave, i.e. preventing unprivileged userspace from accessing
-/dev/sgx/enclave will allow loading an alternative out-of-tree SGX module.
-Yes, SGX sanitizes the EPC on boot, but that's arguably a good thing for
-out-of-tree modules.
+So fix it!
 
-And if you want to get crafty and squash in-kernel SGX altogether, boot
-with "clearcpuid=<SGX_LC>" and/or "clearcpuid=<SGX>" to disable in-kernel
-support entirely.  SGX won't be correctly enumerated in /proc/cpuinfo
-relative to the existence of an out-of-tree module, but that seems like a
-very minor issue if you're running with a completely different SGX driver.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/misc/fastrpc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> It also means that any platform, with SGX hardware support,
-> running a kernel with this driver, has the potential for the
-> security/privacy issues noted above.
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index e3e085e33d46..9065d3e71ff7 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -1613,8 +1613,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ 					    domains[domain_id]);
+ 	data->miscdev.fops = &fastrpc_fops;
+ 	err = misc_register(&data->miscdev);
+-	if (err)
++	if (err) {
++		kfree(data);
+ 		return err;
++	}
+ 
+ 	kref_init(&data->refcount);
+ 
+-- 
+2.21.0
 
-Unless I'm mistaken, /dev/sgx is root-only by default.  There are far
-scarier mechanisms available to root for hosing the system.
-
-> If key based policy management is not allowed, then the driver needs
-> to be re-architected to have modular support so that alternative
-> implementations or the absence of any driver support are at least
-> tenable.
-
-As above, using an alternative implementation is teneble, albeit a bit
-kludgy.
