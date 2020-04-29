@@ -2,84 +2,70 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B63C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45197C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A79E22192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jVQ5osqf"
+	by mail.kernel.org (Postfix) with ESMTP id 2940121BE5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgD2MQT (ORCPT
+        id S1727073AbgD2MR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726524AbgD2MQT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:16:19 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18A6C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:16:18 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w20so2394928ljj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l4hDIJCDKgb4QJRH77lrv/BKKESfMFPpw/eu45ndVLk=;
-        b=jVQ5osqfPhLb6kqXlke+Yq5O5jpAUgnjip18N6tStX3o84+RcoTxisglPe4PdlIC42
-         YsygTr5CONv4uSYE44kUtuerR+Zz/kyRN3uGKGmUBUvigC9t5umI4z5T44PBdVtR+AVx
-         PGoCNKCQ92iEaFj44zvVjG9i+DQK0lsFDK1Ggv0J6e2qZUbG9ZsKqbe7eEKtCLIM85Bv
-         bkDNlR+QiEj8SXBiWDEfclrL2PGfRrgP3jZ0sC2yuX7AFttD/xdJirC0qaq+oF2aYukF
-         moWBReBCc/T734CNF89iyQnZ3TB69Q09w2FyCmBbD+37GZ+U5HMQFvfC1cewRuraY73n
-         a7mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l4hDIJCDKgb4QJRH77lrv/BKKESfMFPpw/eu45ndVLk=;
-        b=FusjQ8caXWpXEvY/HSyjW8E9wfaFZdhr/fN+RS2nwa60loOJq1O41ZfAsNd6Ozq3vL
-         dKqIWexd8NWAxnO80wHc88H5cIZ+wPI1oopIwydAz9yL/3bdS6pGOyLVFKmQR0quzgg0
-         FMkTLFJIUmN36rWHbNsTuk/RaiiQStxng92eOOAdEPVjl9J2tXl86Rios/5Tg+GJvw89
-         fsFKrY+JtS+WD+f/0WTbSbEqz52BTh0mOAB4rCGNvXsltWD9cmrwcbCXYBu3EvgxmJdD
-         lcu+Zhz9wUzsGmyqCKOVPwxR3NZO8DsQO2K89XKClLOgB6sdeurPUH4K1VU3kIiBQkIf
-         9x0Q==
-X-Gm-Message-State: AGi0PubnjqDzdSc4dp1XbNNoebpa27sSRszVpL1If4R76dP0Vbqs/r95
-        fKSwUBPRwKGGX2Qbk//ZcOQfmGKthzi2/otdDFVaUQ==
-X-Google-Smtp-Source: APiQypIGpYmRMV8dUpi/6uObL1nzzISH+8h5QWHeAlSd8ihzU1MAcUwAWx4wnOAGosmYDQxx8rxVeYSPGbyBjrReLSg=
-X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr20188195ljo.168.1588162577327;
- Wed, 29 Apr 2020 05:16:17 -0700 (PDT)
+        Wed, 29 Apr 2020 08:17:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39160 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726524AbgD2MR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:17:26 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2E69B2FDDB8262AA5332;
+        Wed, 29 Apr 2020 20:16:17 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 29 Apr 2020 20:16:11 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <wangxiongfeng2@huawei.com>
+Subject: [PATCH] scsi: dpt_i2o: Remove always false 'chan < 0' statement
+Date:   Wed, 29 Apr 2020 20:10:18 +0800
+Message-ID: <1588162218-61757-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
-In-Reply-To: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Apr 2020 14:16:05 +0200
-Message-ID: <CACRpkdbHAFiarn8Gn618cuMZpyEkPBkzDZO4-xR4hYd_jNXKdQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: Document proper return value for gpio drivers
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 2:24 AM Douglas Anderson <dianders@chromium.org> wrote:
+The channel index is represented by an unsigned variable 'u32 chan'. We
+don't need to check whether it is less than zero. The following
+statement is always false and let's remove it.
+	'chan < 0'
 
-> The legacy defines GPIOF_DIR_XXX are only for consumers. Document the
-> proper ones.  Also: don't use "_XXX" since that's harder to find with
-> "git grep".  Just list both of the values.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/scsi/dpt_i2o.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied! Sorry for the historical confusion.
+diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
+index 02dff3a..2cf8895 100644
+--- a/drivers/scsi/dpt_i2o.c
++++ b/drivers/scsi/dpt_i2o.c
+@@ -1120,7 +1120,7 @@ static struct adpt_device* adpt_find_device(adpt_hba* pHba, u32 chan, u32 id, u6
+ {
+ 	struct adpt_device* d;
+ 
+-	if(chan < 0 || chan >= MAX_CHANNEL)
++	if (chan >= MAX_CHANNEL)
+ 		return NULL;
+ 	
+ 	d = pHba->channel[chan].device[id];
+-- 
+1.7.12.4
 
-Yours,
-Linus Walleij
