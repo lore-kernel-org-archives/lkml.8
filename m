@@ -2,110 +2,211 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB0C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD590C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8670820B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5B320B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5Rsj6og"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iL3Ls+nt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgD2Tqf (ORCPT
+        id S1726960AbgD2Tqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
+        Wed, 29 Apr 2020 15:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726456AbgD2Tqf (ORCPT
+        by vger.kernel.org with ESMTP id S1726456AbgD2Tql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:46:35 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B768C03C1AE;
-        Wed, 29 Apr 2020 12:46:35 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so1575109pfx.6;
-        Wed, 29 Apr 2020 12:46:35 -0700 (PDT)
+        Wed, 29 Apr 2020 15:46:41 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26381C035493;
+        Wed, 29 Apr 2020 12:46:41 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a5so1204184pjh.2;
+        Wed, 29 Apr 2020 12:46:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Jasr6jlZgCzqBOuA5EUCTCY8i3t2aut5HXZlE2l+ixA=;
-        b=V5Rsj6ogWUsnxpcbrNBduosMFpgn/mqOzZyU41YO7+hJjMaILBQDYl8/3W+pwQBVLW
-         mF1kFlWOaA1lB28nvhuA6RCyhaJb7EYyBEEG7cqnb8LR3yL6ND8ieRjn/Zl/BnWvIFzE
-         tKkEqq70tzoGYRLKjD7EVBCIHQYQgcR6KKwtzuFEGMFNjwzDWVp4uvrEVC8STfCq5l5h
-         dxBzCbQEyAeZ2NCGMMZPhu7gATryqlmkI0monwxKI8mqjHSESR6Par1Rx5gEJ/K/8U7k
-         /mVA/Qirfx9zVaJuJkeCG+BdmBM9zsPEaPV/wojTeyGDn5LDdgDxttaSayGncSVeC6Q9
-         0oRw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=SYWum3ZnYsfLSG0jDSyn5h0VUobSFoO/qhOlaCswZZY=;
+        b=iL3Ls+ntdFBJSjM2bz4+YHeg0DtHnqRps2YE/2gubNg47g6xnBXNRsH7UEdK2CwbYc
+         BZbsUS9Ur46sWQMrxPugSeBTNjQbbSr7TBTs252Un2gEZC/jZ/ICfLtkSoCAu+rbcBsq
+         AXP0PupEUGvlvUVeX5y7yJIZnYwd7oKaCaQREx/CTiztv6yRv/1CTKOw5a7h8HAiW3GL
+         HI+Qc87V1ADL563zV2ePO8ta/uRuHrWE1OtDAvb7cpfEkob3W2qjxe3SSt7jgce5hYjj
+         fS9dAshk3BTAtAChEdh9lsEdMnrRgqVs2YGDZ1FQ7w1poF3UiQYqiJZmALJESvDN6xWu
+         uRdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Jasr6jlZgCzqBOuA5EUCTCY8i3t2aut5HXZlE2l+ixA=;
-        b=gjdkM0hgImXWGmBBLNXiGUkaGVyi0t9jRyjZqHlBycKCN0pusD1M+14S3/qWWqpjEN
-         nnLBxmzoboM6Y2oylg6g3WBWeyFpNGcOpbZKgOn50OtdG4e25PRRupsWcl+EaUH1CRTq
-         3yVlXyo9/sMvp1LMCmRpLIIXpQl3jMjj9kJ/ZxxwTM2fo1Gy/DWj0ORQjvhS9dcP/HDd
-         Jd8V0T6/Eh+1fCCHNWYEZ/q/NEZFPkqCKwP2V6vXW4uL/cXByGa/BXG+XbP+dQdHAHR/
-         mOwQDQB2UDSpYocf4fY07xuCfxQHUuvW5C/odwOlUc40s4dRL94ne4H+/pCyGj3vTps0
-         8+0Q==
-X-Gm-Message-State: AGi0PuYgdvM29/ZVGyZZ/QAGZFr2+N2pw6LVBpH/0DfFZ9eubJLk+QDZ
-        c8CnPZbSxHo201jS9AYayAI=
-X-Google-Smtp-Source: APiQypLNPyaOVHptLXLwofZRhTyh5Co3/5V4oGBIpBOmhMKLW9FtjbmEsf+iMFy9tGKjI1iWiBdT2Q==
-X-Received: by 2002:a62:35c3:: with SMTP id c186mr13328125pfa.261.1588189594608;
-        Wed, 29 Apr 2020 12:46:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=SYWum3ZnYsfLSG0jDSyn5h0VUobSFoO/qhOlaCswZZY=;
+        b=CAfdc+Snu+ssXrgHrXnAdNE7SE63vR4QQFcu/FphXJdSG1uuxZj7cVk5WOhsCBGfcA
+         kH8lt1HuTjPfBBsJdYY2tO+KYDAd1EAPydguN9kl45LgZ6ov2XcHT+JO/8hmbJcy2w7z
+         R9SGxTrlqkLxGl41pXgaSEqJe8Ad8iFgSoKy7mE/sbZ8Ysyac7cyBNcpw7/7o4Z0ObUB
+         dIbsT3RM2V/6vJBc2mzA55SXH9B1YiHOkJ65UR3fIKGxFUhjGcnnGx01TXGaXAdvHjN7
+         5mtwH69fFL2cQtnuOdt2zeA91o965KhHpkz2ewjmkFigv1TSJvzLd2hysSqQg1Qg/J8g
+         9xXw==
+X-Gm-Message-State: AGi0PubMyltGfWlvtE80H7Sp5ap6shJl5cs4um3DoLu86oM7VsjwRqvT
+        YlNdb1zeT6YxiTGLZ3cM/kvtjk6X
+X-Google-Smtp-Source: APiQypJ6HXBv0gezNfvDGSDGYPMI8pGkgrgfYUAgvjp7KzVb+VfTCg0WHegHbU//y6EtteToUAU67Q==
+X-Received: by 2002:a17:90a:3287:: with SMTP id l7mr84089pjb.126.1588189600675;
+        Wed, 29 Apr 2020 12:46:40 -0700 (PDT)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z15sm87956pjt.20.2020.04.29.12.46.33
+        by smtp.gmail.com with ESMTPSA id z15sm87956pjt.20.2020.04.29.12.46.39
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 12:46:33 -0700 (PDT)
+        Wed, 29 Apr 2020 12:46:40 -0700 (PDT)
 From:   Doug Berger <opendmb@gmail.com>
 To:     Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 0/7] net: bcmgenet: add support for Wake on Filter
-Date:   Wed, 29 Apr 2020 12:45:45 -0700
-Message-Id: <1588189552-899-1-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next 2/7] net: bcmgenet: Fix WoL with password after deep sleep
+Date:   Wed, 29 Apr 2020 12:45:47 -0700
+Message-Id: <1588189552-899-3-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588189552-899-1-git-send-email-opendmb@gmail.com>
+References: <1588189552-899-1-git-send-email-opendmb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit set adds support for waking from 'standby' using a
-Rx Network Flow Classification filter specified with ethtool.
+Broadcom STB chips support a deep sleep mode where all register contents
+are lost. Because we were stashing the MagicPacket password into some of
+these registers a suspend into that deep sleep then a resumption would
+not lead to being able to wake-up from MagicPacket with password again.
 
-The first two commits are bug fixes that should be applied to the
-stable branches, but are included in this patch set to reduce merge
-conflicts that might occur if not applied before the other commits
-in this set.
+Fix this by keeping a software copy of the password and program it
+during suspend.
 
-The next commit consolidates WoL clock managment as a part of the
-overall WoL configuration.
+Fixes: c51de7f3976b ("net: bcmgenet: add Wake-on-LAN support code")
+Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  2 ++
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 39 ++++++++++------------
+ 2 files changed, 20 insertions(+), 21 deletions(-)
 
-The next commit restores a set of functions that were removed from
-the driver just prior to the 4.9 kernel release.
-
-The following commit relocates the functions in the file to prevent
-the need for additional forward declarations.
-
-Next, support for the Rx Network Flow Classification interface of
-ethtool is added.
-
-Finally, support for the WAKE_FILTER wol method is added.
-
-Doug Berger (7):
-  net: bcmgenet: set Rx mode before starting netif
-  net: bcmgenet: Fix WoL with password after deep sleep
-  net: bcmgenet: move clk_wol management to bcmgenet_wol
-  Revert "net: bcmgenet: remove unused function in bcmgenet.c"
-  net: bcmgenet: code movement
-  net: bcmgenet: add support for ethtool rxnfc flows
-  net: bcmgenet: add WAKE_FILTER support
-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 673 +++++++++++++++++++--
- drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  21 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |  90 ++-
- 3 files changed, 708 insertions(+), 76 deletions(-)
-
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index daf8fb2c39b6..c3bfe97f2e5c 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -14,6 +14,7 @@
+ #include <linux/if_vlan.h>
+ #include <linux/phy.h>
+ #include <linux/dim.h>
++#include <linux/ethtool.h>
+ 
+ /* total number of Buffer Descriptors, same for Rx/Tx */
+ #define TOTAL_DESC				256
+@@ -676,6 +677,7 @@ struct bcmgenet_priv {
+ 	/* WOL */
+ 	struct clk *clk_wol;
+ 	u32 wolopts;
++	u8 sopass[SOPASS_MAX];
+ 
+ 	struct bcmgenet_mib_counters mib;
+ 
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+index c9a43695b182..597c0498689a 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -41,18 +41,13 @@
+ void bcmgenet_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+-	u32 reg;
+ 
+ 	wol->supported = WAKE_MAGIC | WAKE_MAGICSECURE;
+ 	wol->wolopts = priv->wolopts;
+ 	memset(wol->sopass, 0, sizeof(wol->sopass));
+ 
+-	if (wol->wolopts & WAKE_MAGICSECURE) {
+-		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_MS);
+-		put_unaligned_be16(reg, &wol->sopass[0]);
+-		reg = bcmgenet_umac_readl(priv, UMAC_MPD_PW_LS);
+-		put_unaligned_be32(reg, &wol->sopass[2]);
+-	}
++	if (wol->wolopts & WAKE_MAGICSECURE)
++		memcpy(wol->sopass, priv->sopass, sizeof(priv->sopass));
+ }
+ 
+ /* ethtool function - set WOL (Wake on LAN) settings.
+@@ -62,7 +57,6 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct device *kdev = &priv->pdev->dev;
+-	u32 reg;
+ 
+ 	if (!device_can_wakeup(kdev))
+ 		return -ENOTSUPP;
+@@ -70,17 +64,8 @@ int bcmgenet_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ 	if (wol->wolopts & ~(WAKE_MAGIC | WAKE_MAGICSECURE))
+ 		return -EINVAL;
+ 
+-	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+-	if (wol->wolopts & WAKE_MAGICSECURE) {
+-		bcmgenet_umac_writel(priv, get_unaligned_be16(&wol->sopass[0]),
+-				     UMAC_MPD_PW_MS);
+-		bcmgenet_umac_writel(priv, get_unaligned_be32(&wol->sopass[2]),
+-				     UMAC_MPD_PW_LS);
+-		reg |= MPD_PW_EN;
+-	} else {
+-		reg &= ~MPD_PW_EN;
+-	}
+-	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
++	if (wol->wolopts & WAKE_MAGICSECURE)
++		memcpy(priv->sopass, wol->sopass, sizeof(priv->sopass));
+ 
+ 	/* Flag the device and relevant IRQ as wakeup capable */
+ 	if (wol->wolopts) {
+@@ -120,6 +105,14 @@ static int bcmgenet_poll_wol_status(struct bcmgenet_priv *priv)
+ 	return retries;
+ }
+ 
++static void bcmgenet_set_mpd_password(struct bcmgenet_priv *priv)
++{
++	bcmgenet_umac_writel(priv, get_unaligned_be16(&priv->sopass[0]),
++			     UMAC_MPD_PW_MS);
++	bcmgenet_umac_writel(priv, get_unaligned_be32(&priv->sopass[2]),
++			     UMAC_MPD_PW_LS);
++}
++
+ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
+ 				enum bcmgenet_power_mode mode)
+ {
+@@ -144,13 +137,17 @@ int bcmgenet_wol_power_down_cfg(struct bcmgenet_priv *priv,
+ 
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+ 	reg |= MPD_EN;
++	if (priv->wolopts & WAKE_MAGICSECURE) {
++		bcmgenet_set_mpd_password(priv);
++		reg |= MPD_PW_EN;
++	}
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
+ 	/* Do not leave UniMAC in MPD mode only */
+ 	retries = bcmgenet_poll_wol_status(priv);
+ 	if (retries < 0) {
+ 		reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+-		reg &= ~MPD_EN;
++		reg &= ~(MPD_EN | MPD_PW_EN);
+ 		bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 		return retries;
+ 	}
+@@ -189,7 +186,7 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
+ 	reg = bcmgenet_umac_readl(priv, UMAC_MPD_CTRL);
+ 	if (!(reg & MPD_EN))
+ 		return;	/* already powered up so skip the rest */
+-	reg &= ~MPD_EN;
++	reg &= ~(MPD_EN | MPD_PW_EN);
+ 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
+ 
+ 	/* Disable CRC Forward */
 -- 
 2.7.4
+
