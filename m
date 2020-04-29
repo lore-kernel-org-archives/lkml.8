@@ -2,155 +2,113 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9B9C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86441C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198D72083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JwUMktf4"
+	by mail.kernel.org (Postfix) with ESMTP id 6AD1A218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD2Orb (ORCPT
+        id S1726780AbgD2Osh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:47:31 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57307 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726348AbgD2Ora (ORCPT
+        Wed, 29 Apr 2020 10:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726348AbgD2Osh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:47:30 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TEkRih027849;
-        Wed, 29 Apr 2020 16:47:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=JrIPiTkgDLXSrRQnzVSRty80wJa9TRbjQJelaiwRij0=;
- b=JwUMktf48FF2PsljXEuCR2xkw9mjJjeopDNAzqIeJL97nifniD7adyIsogQB3N1ND0no
- +oynYWeBUAMTnwhqPPRJHeb7OyBwQAhypgu/YsEUYa8w5742NlVpUIwNNL2jhc903xSZ
- cxwUJraOoL5JZ79h+079PzHbMpgKRqOzfoTzouKt6qKEjXLLAh+AEzZ9KGTCUKoMsKYt
- vkTj/cvwlUug+xyunlSIeBd1aRd6F1izLa1EuGFixG1iYGLhr0G+FmRLb9F7NrDO/3WT
- rr7Pg28i1yclIfr3Eu/EIDsnGCAeCtlaRXe5O9tMY5jTJIPdxGPsjLQp6iIxL0Fg56w3 Vg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhcc6yhx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 16:47:22 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07D5910002A;
-        Wed, 29 Apr 2020 16:47:22 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EAFEE2AAF65;
-        Wed, 29 Apr 2020 16:47:21 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 16:47:20 +0200
-Subject: Re: [PATCH v2 12/12] remoteproc: stm32: Set synchronisation state
- machine if needed
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <loic.pallardy@st.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200424202505.29562-1-mathieu.poirier@linaro.org>
- <20200424202505.29562-13-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <defc59b2-4d64-a108-2e5e-ecc579f70a8b@st.com>
-Date:   Wed, 29 Apr 2020 16:47:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 10:48:37 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B450C03C1AD;
+        Wed, 29 Apr 2020 07:48:37 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 632B52A224A;
+        Wed, 29 Apr 2020 15:48:35 +0100 (BST)
+Date:   Wed, 29 Apr 2020 16:48:32 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>, qi-ming.wu@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
+        hauke.mehrtens@intel.com, anders.roxell@linaro.org,
+        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
+        brendanhiggins@google.com, linux-mips@vger.kernel.org,
+        robh+dt@kernel.org, miquel.raynal@bootlin.com, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200429164832.6800fc70@collabora.com>
+In-Reply-To: <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429162249.55d38ee8@collabora.com>
+        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200424202505.29562-13-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 29 Apr 2020 22:33:37 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-
-On 4/24/20 10:25 PM, Mathieu Poirier wrote:
-> Set the flags and operations to use if the M4 has been started
-> by another entity than the remoteproc core.
+> Hi Boris,
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  drivers/remoteproc/stm32_rproc.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
+> > On Wed, 29 Apr 2020 18:42:05 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> +
+> >> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
+> >> +#define EBU_ADDR_MASK		(5 << 4)  
+> > 
+> > It's still unclear what ADDR_MASK is for. Can you add a comment
+> > explaining what it does?  
 > 
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index dcae6103e3df..02dad3f51c7a 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -598,13 +598,20 @@ static struct rproc_ops st_rproc_ops = {
->  	.get_boot_addr	= rproc_elf_get_boot_addr,
->  };
->  
-> -static __maybe_unused struct rproc_ops st_rproc_sync_ops = {
-> +static struct rproc_ops st_rproc_sync_ops = {
->  	.start		= stm32_rproc_sync_start,
->  	.stop		= stm32_rproc_stop,
-> +	.kick		= stm32_rproc_kick,
+> Thank you Boris, keep review and giving inputs, will update.
 
-Seems independent of the path.
+Can you please explain it here before sending a new version?
 
->  	.parse_fw       = stm32_rproc_sync_parse_fw,
->  	.find_loaded_rsc_table = stm32_rproc_sync_elf_find_loaded_rsc_table,
->  };
->  
-> +static struct rproc_sync_flags st_sync_flags = {
-> +	.on_init = true, /* sync with MCU when the kernel boots */
-> +	.after_stop = false, /* don't resync with MCU if stopped from sysfs */
-> +	.after_crash = false, /* don't resync with MCU after a crash */
-> +};
-> +
-could be const
-
->  static const struct of_device_id stm32_rproc_match[] = {
->  	{ .compatible = "st,stm32mp1-m4" },
->  	{},
-> @@ -803,6 +810,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
->  	struct stm32_rproc *ddata;
->  	struct device_node *np = dev->of_node;
->  	struct rproc *rproc;
-> +	struct rproc_sync_flags sync_flags = {0};
->  	unsigned int state;
->  	bool auto_boot = false;
->  	int ret;
-> @@ -837,11 +845,17 @@ static int stm32_rproc_probe(struct platform_device *pdev)
->  	}
->  
->  	if (state == M4_STATE_CRUN) {
-> +		auto_boot = true;
-> +		sync_flags = st_sync_flags;
-
-seems an useless copy 
-
-Regards,
-Arnaud
-
->  		ret = stm32_rproc_get_loaded_rsc_table(pdev, ddata);
->  		if (ret)
->  			goto free_rproc;
->  	}
->  
-> +	ret = rproc_set_state_machine(rproc, &st_rproc_sync_ops, sync_flags);
-> +	if (ret)
-> +		goto free_rproc;
-> +
->  	rproc->auto_boot = auto_boot;
->  	rproc->has_iommu = false;
->  	ddata->workqueue = create_workqueue(dev_name(dev));
+> >   
+> >> +#define EBU_ADDR_SEL_REGEN	0x1  
+> > 
+> >   
+> >> +
+> >> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
+> >> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
+> >> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
+> >> +
+> >> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+> >> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
+> >> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
+> >> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));  
+> > 
+> > That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
+> > sure that's needed, and are we setting EBU_ADDR_SEL(0) here?  
 > 
+> You are right, its weird only, but we need it, since different chip 
+> select has different memory region access address.
+
+Well, that doesn't make any sense, the second write to
+EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
+actually never written to ADDR_SEL(reg).
+
+> 
+> Yes , we are setting both CS0 and CS1 memory access region, if you have 
+> any concern to optimize, please suggest me, Thanks!
+
+If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
+is really related to the nand_pa address, then retrieve resources for
+all CS ranges. If it's not related, please explain what those
+EBU_MEM_BASE_CS_X values encode.
