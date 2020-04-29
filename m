@@ -2,70 +2,88 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45197C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED7C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2940121BE5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2BB521BE5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:19:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HeQpH7rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD2MR0 (ORCPT
+        id S1726760AbgD2MTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:17:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39160 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726524AbgD2MR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:17:26 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2E69B2FDDB8262AA5332;
-        Wed, 29 Apr 2020 20:16:17 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 29 Apr 2020 20:16:11 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH] scsi: dpt_i2o: Remove always false 'chan < 0' statement
-Date:   Wed, 29 Apr 2020 20:10:18 +0800
-Message-ID: <1588162218-61757-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 29 Apr 2020 08:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726524AbgD2MTs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:19:48 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 612AFC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:19:48 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id g10so1434293lfj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C1Ts4DfOpbqwNmKAyV/9/Lll4n9YArjQ/mn7brU53Ks=;
+        b=HeQpH7rxp/Oyh4cRIDkKuEC/nrOQkmhe2swtarQuUReEO9o8Fgc5g5gq10VX8AQ9Ca
+         9FUz0xLE0yzVF97yDlEt5U8ogfTQLqmFS5CBYqICi2zKUeyYtLnU/dG73H3PEFPr4uzg
+         O7fEBhpMIUKX1MZfGlQ3RPfC8YI+3CQ4CWCQ2+9tqLp6xSNSavLwClNKF9av4efRAURB
+         KeARE2/mJ0kKPp8hy5nuL4+z4J2kd9NG229n7jc0ndiQF1qA1xFeAMNAHoETBgACTXeB
+         QqIgG/CQ1UTq3Q8vG88ewPteWzXsxqDvel6D9PYwVvaXXYsiFAA8QiKShxdQzqvsKXpw
+         IdMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C1Ts4DfOpbqwNmKAyV/9/Lll4n9YArjQ/mn7brU53Ks=;
+        b=UXaf/KUgBNy+epVi5OeeVHclCM4+iu4q8/S0Zu6T5SlzB547p5PNmIGnvBihr8MvBk
+         JaojVHSSFz9qKJmn7q3lhf/WDB1fRWh916HhTxWo/jqNNICFPPT7a9nCKhJS659dy1pC
+         Bs3s9a48OOsBOJfiWU3ZSrklY9/KmSoPu9Z+//W0SgF3nY/f2EJ+b43f7A5BYwcUOyp4
+         S1ECcGdBW/0QTkBcaMVdGAVkctARIuCT12GNu6J4UtK/ZkaD7iMnHly2mzf5MvOB1IEG
+         tTk5TB+uPYuQ+WxnL+xmnzy4y3WN4dFDcrdZsgz60gybghB8ODvQA1rRNKzTDeVKDQN8
+         6VFQ==
+X-Gm-Message-State: AGi0PuYGHI8MgFAws/t4yqueousthsY3rWbSuFaoVsgaJa1niVa6mrBv
+        hU0wZpjvxDoAxQ1eCvnJ12STDf2mKFFHm1SVKCxqUw==
+X-Google-Smtp-Source: APiQypJ2jgIIIfWcY9D1adj1uOLPdacJazusj6aGHmHvzzde6RhBsWaPWv8/f2ZwRjyszUh2zAlZgyz1YZbk16iyJ9M=
+X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr21464343lfp.4.1588162786702;
+ Wed, 29 Apr 2020 05:19:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+ <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid>
+In-Reply-To: <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 Apr 2020 14:19:35 +0200
+Message-ID: <CACRpkdaT_G=Wa7iYhfBVGrcViy7EbDH1+Qme+UQTGTWybu7Fzg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just "unsigned"
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The channel index is represented by an unsigned variable 'u32 chan'. We
-don't need to check whether it is less than zero. The following
-statement is always false and let's remove it.
-	'chan < 0'
+On Wed, Apr 29, 2020 at 2:24 AM Douglas Anderson <dianders@chromium.org> wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/scsi/dpt_i2o.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> When I copied the function prototypes from the GPIO header file into
+> my own driver, checkpatch yelled at me saying that I shouldn't use use
+> "unsigned" but instead should say "unsigned int".  Let's make the
+> header file use "unsigned int" so others who copy like I did won't get
+> yelled at.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index 02dff3a..2cf8895 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -1120,7 +1120,7 @@ static struct adpt_device* adpt_find_device(adpt_hba* pHba, u32 chan, u32 id, u6
- {
- 	struct adpt_device* d;
- 
--	if(chan < 0 || chan >= MAX_CHANNEL)
-+	if (chan >= MAX_CHANNEL)
- 		return NULL;
- 	
- 	d = pHba->channel[chan].device[id];
--- 
-1.7.12.4
+Patch applied. Nice cleanup!
 
+Yours,
+Linus Walleij
