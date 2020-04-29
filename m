@@ -2,129 +2,88 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5611C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A51AC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B065620731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pzZU8AEt"
+	by mail.kernel.org (Postfix) with ESMTP id 3380C20731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgD2IbY (ORCPT
+        id S1726558AbgD2Ibp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:31:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2IbX (ORCPT
+        Wed, 29 Apr 2020 04:31:45 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:17564 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgD2Ibo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:31:23 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F7BAC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BvjmK3vN0uGbY28dcKoajhBRy2G9ruAzcetEN/XucG4=; b=pzZU8AEthYq2ZZUpDSbe49q0Ej
-        AJPxtq2h6/F7ecJaUo+ZCCN5jt8ROc9fTWSoy0P2wSUpHPWkO1IAc/lLC6tyc0y+9FhoKIpSgJ1aw
-        api8WWg5ekBhnOfyV7JxA/ah7QczCw5PXFwrmXHdYZnhLg+/6g75KcQXWCaDWlPGTacujWIcc8vm1
-        iT+gM3rlfHoW/CDO0l2IXMX7dgj3WANmQFdM6fSVJwQFlnUvshqNNj9EqqH/zv+cd8DC6o+gc4jnl
-        95V5tiy7D7YhS45V3DW8KJgq+USAn8DS43u8c8iAhzxAZsAVowO7L4incYUSJhDVidoIHuxskDpvZ
-        UMPjahag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTi7M-0006zc-8m; Wed, 29 Apr 2020 08:30:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6B4F3300130;
-        Wed, 29 Apr 2020 10:30:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5706E20BD900F; Wed, 29 Apr 2020 10:30:53 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 10:30:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        jthierry@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH v2 03/14] x86,smap: Fix smap_{save,restore}() alternatives
-Message-ID: <20200429083053.GE13592@hirez.programming.kicks-ass.net>
-References: <20200428191101.886208539@infradead.org>
- <20200428191659.558899462@infradead.org>
- <CAMzpN2jp1mtnf61eXPaj2O5=-8Fp42v+t6Br3ce9Fioq8h=0YA@mail.gmail.com>
+        Wed, 29 Apr 2020 04:31:44 -0400
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start failing
+ soon
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+ <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+ <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004271558540.248401@chino.kir.corp.google.com>
+ <20200427163558.5b08487d63da3cc7a89bf50b@linux-foundation.org>
+ <20200428074301.GK28637@dhcp22.suse.cz>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <94f9b716-b251-79d8-2c8c-70d63a255496@sony.com>
+Date:   Wed, 29 Apr 2020 10:31:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMzpN2jp1mtnf61eXPaj2O5=-8Fp42v+t6Br3ce9Fioq8h=0YA@mail.gmail.com>
+In-Reply-To: <20200428074301.GK28637@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=Nc2YKFL4 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=cl8xLZFz6L8A:10 a=nE2D0_TFZUNrBZwinEYA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 08:54:05PM -0400, Brian Gerst wrote:
-> On Tue, Apr 28, 2020 at 3:21 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > As reported by objtool:
-> >
-> >   lib/ubsan.o: warning: objtool: .altinstr_replacement+0x0: alternative modifies stack
-> >   lib/ubsan.o: warning: objtool: .altinstr_replacement+0x7: alternative modifies stack
-> >
-> > the smap_{save,restore}() alternatives violate (the newly enforced)
-> > rule on stack invariance. That is, due to there only being a single
-> > ORC table it must be valid to any alternative. These alternatives
-> > violate this with the direct result that unwinds will not be correct
-> > in between these calls.
-> >
-> > [ In specific, since we force SMAP on for objtool, running on !SMAP
-> > hardware will observe a different stack-layout and the ORC unwinder
-> > will stumble. ]
-> >
-> > So rewrite the functions to unconditionally save/restore the flags,
-> > which gives an invariant stack layout irrespective of the SMAP state.
-> >
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/x86/include/asm/smap.h |   11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> >
-> > --- a/arch/x86/include/asm/smap.h
-> > +++ b/arch/x86/include/asm/smap.h
-> > @@ -57,16 +57,19 @@ static __always_inline unsigned long sma
-> >  {
-> >         unsigned long flags;
-> >
-> > -       asm volatile (ALTERNATIVE("", "pushf; pop %0; " __ASM_CLAC,
-> > -                                 X86_FEATURE_SMAP)
-> > -                     : "=rm" (flags) : : "memory", "cc");
-> > +       asm volatile ("# smap_save\n\t"
-> > +                     "pushf; pop %0"
-> > +                     : "=rm" (flags) : : "memory");
-> > +
-> > +       clac();
-> >
-> >         return flags;
-> >  }
-> >
-> >  static __always_inline void smap_restore(unsigned long flags)
-> >  {
-> > -       asm volatile (ALTERNATIVE("", "push %0; popf", X86_FEATURE_SMAP)
-> > +       asm volatile ("# smap_restore\n\t"
-> > +                     "push %0; popf"
-> >                       : : "g" (flags) : "memory", "cc");
-> >  }
-> 
-> POPF is an expensive instruction that should be avoided if possible.
-> A better solution would be to have the alternative jump over the
-> push/pop when SMAP is disabled.
+On 4/28/20 9:43 AM, Michal Hocko wrote:
+> On Mon 27-04-20 16:35:58, Andrew Morton wrote:
+> [...]
+>> No consumer of GFP_ATOMIC memory should consume an unbounded amount of
+>> it.
+>> Subsystems such as networking will consume a certain amount and
+>> will then start recycling it.  The total amount in-flight will vary
+>> over the longer term as workloads change.  A dynamically tuning
+>> threshold system will need to adapt rapidly enough to sudden load
+>> shifts, which might require unreasonable amounts of headroom.
+> I do agree. __GFP_HIGH/__GFP_ATOMIC are bound by the size of the
+> reserves under memory pressure. Then allocatios start failing very
+> quickly and users have to cope with that, usually by deferring to a
+> sleepable context. Tuning reserves dynamically for heavy reserves
+> consumers would be possible but I am worried that this is far from
+> trivial.
+>
+> We definitely need to understand what is going on here.  Why doesn't
+> kswapd + N*direct reclaimers do not provide enough memory to satisfy
+> both N threads + reserves consumers? How many times those direct
+> reclaimers have to retry?
 
-Yeah. I think I had that, but then confused myself again. I don't think
-it matters much if you look at where it's used though.
+Was this not supposed to be avoided with PSI, user-space should
+a fair change to take actions before it goes bad in user-space?
 
-Still, let me try the jmp thing again..
+
+> We used to have the allocation stall warning as David mentioned in the
+> patch description and I have seen it triggering without heavy reserves
+> consumers (aka reported free pages corresponded to the min watermark).
+> The underlying problem was usually kswapd being stuck on some FS locks,
+> direct reclaimers stuck in shrinkers or way too overloaded system with
+> dozens if not hundreds of processes stuck in the page allocator each
+> racing with the reclaim and betting on luck. The last problem was the
+> most annoying because it is really hard to tune for.
+
+
