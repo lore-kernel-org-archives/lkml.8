@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C655BC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F786C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB13020757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4914520757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgD2Rlt (ORCPT
+        id S1727773AbgD2Rl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:41:49 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42132 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgD2Rl2 (ORCPT
+        Wed, 29 Apr 2020 13:41:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44129 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbgD2RlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:41:28 -0400
-Received: by mail-qk1-f193.google.com with SMTP id b188so2860067qkd.9;
-        Wed, 29 Apr 2020 10:41:27 -0700 (PDT)
+        Wed, 29 Apr 2020 13:41:24 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c23so2558535qtp.11;
+        Wed, 29 Apr 2020 10:41:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XQn5aZZK1QUl6M8PsTtJbe8TpANyEvuWjsi+0//GA9Q=;
-        b=O94nDGZeFCKGtjGaciU03RKErllX/1eQnVaSU0Im7rbZLqpo24x1PoCRxuqtqGNzJh
-         pYAAbythJCHRbK9LBhL67/Wny1vLADonIKe4fVf0ITMCZygM3weX+Upa/F55uLetFsiP
-         MW6abfkJZD7gIlMY/IxY0/NnAhKdg3KiSMOaGnJooSkMrzC/t6yv21kHoiMVVMVfrkC9
-         ksRfLhOY7uEdigH0DdtE5n65IYmSj/UyszfynyAUIXv+XnY9JHx/zzPHGWj0xpIlp9SG
-         yAe//U3pWm8UK/5siOyQ0mXu26+5VznvcugFNslIrIx/Zd7JTPQW5tJIiDUaNStxMYa5
-         AgoQ==
-X-Gm-Message-State: AGi0PuZ7B2I6mCFEuhx9uFX8PB4wIYkJEbb1knzjJhpAXK5Hglo5W+Jy
-        7M6qRjCrzsRohmtN59NxE2COHEvhGyw=
-X-Google-Smtp-Source: APiQypJzu6DBfkoLOuv3YgL5r9EH4Lm1GaVcmPyIDAROJBqNwM8YLMz2035Dtbma/Zo/sPMVJ+5ewQ==
-X-Received: by 2002:a37:5102:: with SMTP id f2mr17562452qkb.18.1588182087102;
-        Wed, 29 Apr 2020 10:41:27 -0700 (PDT)
+        bh=P15viJAU+0RM8Psz28V6qOX0pe0sVwfTgVh2E8+aZ1I=;
+        b=MANmL+zmeZa1pfF1B0Bpp7e4xIJ3JlC65IE2PUW36JBPMNLGb87HV0yRWIqJRUfPsp
+         YmdQ69q52guz4lojrb8+8OxSUIYt911ZbJexu8sc05HtHaLBx5lTwwy1W8+0YY13sc44
+         RA21aj7edBDtH7PEtrTuSLxU2OKSk5KmcRawD1bOnQYna+JVh5gKIuCBFSG6QlZ3j6PW
+         hGFqq9A7HeQaBslvuuyvpjtvtfpLwguztoX+kW46VTdlTM3713wxJBtXwRPncXIWbtkQ
+         tGsR1JSX34uOJTwUf1GSd1Uk+6icL1g9LamLaJFohVd/1QJtv4RPjQ2YThOLoU5eerWU
+         FIjw==
+X-Gm-Message-State: AGi0PuascN9o69ycNpZ4OZEbhMZyRClW+K/ywgEhpaa1Zm+E2g+MzArA
+        efw0V+Arz8hqX1YlaesRHow=
+X-Google-Smtp-Source: APiQypIFC1kL1kHOsrK5LIv1m3ylQNsvj/MBPF5eIlzcnj6qkPG+1z6BoeD+s2IvNNgbmSe15xM/2g==
+X-Received: by 2002:ac8:3808:: with SMTP id q8mr35924404qtb.245.1588182083306;
+        Wed, 29 Apr 2020 10:41:23 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z1sm14766448qkz.3.2020.04.29.10.41.26
+        by smtp.gmail.com with ESMTPSA id z1sm14766448qkz.3.2020.04.29.10.41.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 10:41:26 -0700 (PDT)
+        Wed, 29 Apr 2020 10:41:22 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/10] efi/x86: Move command-line initrd loading to efi_main
-Date:   Wed, 29 Apr 2020 13:41:16 -0400
-Message-Id: <20200429174120.1497212-8-nivedita@alum.mit.edu>
+Subject: [PATCH 02/10] efi: Add a helper function to split 64-bit values
+Date:   Wed, 29 Apr 2020 13:41:11 -0400
+Message-Id: <20200429174120.1497212-3-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200429174120.1497212-1-nivedita@alum.mit.edu>
 References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
@@ -59,126 +59,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consolidate the initrd loading in efi_main.
+In several places 64-bit values need to be split up into two 32-bit
+fields, in order to be backward-compatible with the old 32-bit ABIs.
 
-The command line options now need to be parsed only once.
+Instead of open-coding this, add a helper function to set a 64-bit value
+as two 32-bit fields.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- drivers/firmware/efi/libstub/x86-stub.c | 64 ++++++++++---------------
- 1 file changed, 25 insertions(+), 39 deletions(-)
+ drivers/firmware/efi/libstub/efistub.h  |  7 ++++++
+ drivers/firmware/efi/libstub/gop.c      |  6 ++---
+ drivers/firmware/efi/libstub/x86-stub.c | 32 +++++++++++--------------
+ 3 files changed, 23 insertions(+), 22 deletions(-)
 
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index 5ff63230a1f1..e8aa70ba08d5 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -87,6 +87,13 @@ extern const efi_system_table_t *efi_system_table;
+ 		((handle = efi_get_handle_at((array), i)) || true);	\
+ 	     i++)
+ 
++static inline
++void efi_set_u64_split(u64 data, u32 *lo, u32 *hi)
++{
++	*lo = lower_32_bits(data);
++	*hi = upper_32_bits(data);
++}
++
+ /*
+  * Allocation types for calls to boottime->allocate_pages.
+  */
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 216327d0b034..64cee0febae0 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -422,7 +422,6 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 	efi_graphics_output_protocol_t *gop;
+ 	efi_graphics_output_protocol_mode_t *mode;
+ 	efi_graphics_output_mode_info_t *info;
+-	efi_physical_addr_t fb_base;
+ 
+ 	gop = find_gop(proto, size, handles);
+ 
+@@ -442,9 +441,8 @@ static efi_status_t setup_gop(struct screen_info *si, efi_guid_t *proto,
+ 	si->lfb_width  = info->horizontal_resolution;
+ 	si->lfb_height = info->vertical_resolution;
+ 
+-	fb_base		 = efi_table_attr(mode, frame_buffer_base);
+-	si->lfb_base	 = lower_32_bits(fb_base);
+-	si->ext_lfb_base = upper_32_bits(fb_base);
++	efi_set_u64_split(efi_table_attr(mode, frame_buffer_base),
++			  &si->lfb_base, &si->ext_lfb_base);
+ 	if (si->ext_lfb_base)
+ 		si->capabilities |= VIDEO_CAPABILITY_64BIT_BASE;
+ 
 diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 933205772d8c..ee4241df4f29 100644
+index d4bafd7f6f9f..677b5a1e0543 100644
 --- a/drivers/firmware/efi/libstub/x86-stub.c
 +++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -22,6 +22,7 @@
+@@ -408,9 +408,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 	if (!cmdline_ptr)
+ 		goto fail;
  
- const efi_system_table_t *efi_system_table;
- extern u32 image_offset;
-+static efi_loaded_image_t *image = NULL;
+-	hdr->cmd_line_ptr = (unsigned long)cmdline_ptr;
+-	/* Fill in upper bits of command line address, NOP on 32 bit  */
+-	boot_params->ext_cmd_line_ptr = (u64)(unsigned long)cmdline_ptr >> 32;
++	efi_set_u64_split((u64)cmdline_ptr,
++			  &hdr->cmd_line_ptr, &boot_params->ext_cmd_line_ptr);
  
- static efi_status_t
- preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
-@@ -355,7 +356,6 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- {
- 	struct boot_params *boot_params;
- 	struct setup_header *hdr;
--	efi_loaded_image_t *image;
- 	void *image_base;
- 	efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
- 	int options_size = 0;
-@@ -414,30 +414,9 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
  	hdr->ramdisk_image = 0;
  	hdr->ramdisk_size = 0;
- 
--	if (efi_is_native()) {
--		status = efi_parse_options(cmdline_ptr);
--		if (status != EFI_SUCCESS)
--			goto fail2;
--
--		if (!efi_noinitrd) {
--			status = efi_load_initrd(image, &ramdisk_addr,
--						 &ramdisk_size,
--						 hdr->initrd_addr_max,
--						 ULONG_MAX);
--			if (status != EFI_SUCCESS)
--				goto fail2;
--			efi_set_u64_split(ramdisk_addr, &hdr->ramdisk_image,
--					  &boot_params->ext_ramdisk_image);
--			efi_set_u64_split(ramdisk_size, &hdr->ramdisk_size,
--					  &boot_params->ext_ramdisk_size);
--		}
--	}
--
- 	efi_stub_entry(handle, sys_table_arg, boot_params);
- 	/* not reached */
- 
--fail2:
--	efi_free(options_size, (unsigned long)cmdline_ptr);
- fail:
- 	efi_free(sizeof(struct boot_params), (unsigned long)boot_params);
- 
-@@ -760,35 +739,42 @@ unsigned long efi_main(efi_handle_t handle,
- 		image_offset = 0;
+@@ -427,10 +426,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 						 ULONG_MAX);
+ 			if (status != EFI_SUCCESS)
+ 				goto fail2;
+-			hdr->ramdisk_image = ramdisk_addr & 0xffffffff;
+-			hdr->ramdisk_size  = ramdisk_size & 0xffffffff;
+-			boot_params->ext_ramdisk_image = (u64)ramdisk_addr >> 32;
+-			boot_params->ext_ramdisk_size  = (u64)ramdisk_size >> 32;
++			efi_set_u64_split(ramdisk_addr, &hdr->ramdisk_image,
++					  &boot_params->ext_ramdisk_image);
++			efi_set_u64_split(ramdisk_size, &hdr->ramdisk_size,
++					  &boot_params->ext_ramdisk_size);
+ 		}
  	}
  
--	/*
--	 * efi_pe_entry() may have been called before efi_main(), in which
--	 * case this is the second time we parse the cmdline. This is ok,
--	 * parsing the cmdline multiple times does not have side-effects.
--	 */
- 	cmdline_paddr = ((u64)hdr->cmd_line_ptr |
- 			 ((u64)boot_params->ext_cmd_line_ptr << 32));
- 	efi_parse_options((char *)cmdline_paddr);
+@@ -639,17 +638,14 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map,
+ 				   : EFI32_LOADER_SIGNATURE;
+ 	memcpy(&p->efi->efi_loader_signature, signature, sizeof(__u32));
  
- 	/*
--	 * At this point, an initrd may already have been loaded, either by
--	 * the bootloader and passed via bootparams, or loaded from a initrd=
--	 * command line option by efi_pe_entry() above. In either case, we
--	 * permit an initrd loaded from the LINUX_EFI_INITRD_MEDIA_GUID device
--	 * path to supersede it.
-+	 * At this point, an initrd may already have been loaded by the
-+	 * bootloader and passed via bootparams. We permit an initrd loaded
-+	 * from the LINUX_EFI_INITRD_MEDIA_GUID device path to supersede it.
-+	 *
-+	 * If the device path is not present, any command-line initrd=
-+	 * arguments will be processed only if image is not NULL, which will be
-+	 * the case only if we were loaded via the PE entry point.
- 	 */
- 	if (!efi_noinitrd) {
- 		unsigned long addr, size;
+-	p->efi->efi_systab		= (unsigned long)efi_system_table;
++	efi_set_u64_split((u64)efi_system_table,
++			  &p->efi->efi_systab, &p->efi->efi_systab_hi);
+ 	p->efi->efi_memdesc_size	= *map->desc_size;
+ 	p->efi->efi_memdesc_version	= *map->desc_ver;
+-	p->efi->efi_memmap		= (unsigned long)*map->map;
++	efi_set_u64_split((u64)*map->map,
++			  &p->efi->efi_memmap, &p->efi->efi_memmap_hi);
+ 	p->efi->efi_memmap_size		= *map->map_size;
+ 
+-#ifdef CONFIG_X86_64
+-	p->efi->efi_systab_hi		= (unsigned long)efi_system_table >> 32;
+-	p->efi->efi_memmap_hi		= (unsigned long)*map->map >> 32;
+-#endif
+-
+ 	return EFI_SUCCESS;
+ }
+ 
+@@ -785,10 +781,10 @@ unsigned long efi_main(efi_handle_t handle,
  
  		status = efi_load_initrd_dev_path(&addr, &size, ULONG_MAX);
--		if (status == EFI_SUCCESS) {
--			efi_set_u64_split(addr, &hdr->ramdisk_image,
--					  &boot_params->ext_ramdisk_image);
--			efi_set_u64_split(size, &hdr->ramdisk_size,
--					  &boot_params->ext_ramdisk_size);
--		} else if (status != EFI_NOT_FOUND) {
--			pr_efi_err("efi_load_initrd_dev_path() failed!\n");
-+		if (status == EFI_NOT_FOUND) {
-+			if (efi_is_native() && image != NULL) {
-+				status = efi_load_initrd(image, &addr, &size,
-+							 hdr->initrd_addr_max,
-+							 ULONG_MAX);
-+			} else {
-+				addr = size = 0;
-+				status = EFI_SUCCESS;
-+			}
-+		}
-+
-+		if (status != EFI_SUCCESS) {
-+			pr_efi_err("Failed to load initrd!\n");
+ 		if (status == EFI_SUCCESS) {
+-			hdr->ramdisk_image		= (u32)addr;
+-			hdr->ramdisk_size 		= (u32)size;
+-			boot_params->ext_ramdisk_image	= (u64)addr >> 32;
+-			boot_params->ext_ramdisk_size 	= (u64)size >> 32;
++			efi_set_u64_split(addr, &hdr->ramdisk_image,
++					  &boot_params->ext_ramdisk_image);
++			efi_set_u64_split(size, &hdr->ramdisk_size,
++					  &boot_params->ext_ramdisk_size);
+ 		} else if (status != EFI_NOT_FOUND) {
+ 			efi_printk("efi_load_initrd_dev_path() failed!\n");
  			goto fail;
- 		}
-+		efi_set_u64_split(addr, &hdr->ramdisk_image,
-+				  &boot_params->ext_ramdisk_image);
-+		efi_set_u64_split(size, &hdr->ramdisk_size,
-+				  &boot_params->ext_ramdisk_size);
- 	}
- 
- 	/*
 -- 
 2.26.2
 
