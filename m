@@ -2,115 +2,202 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4160BC83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3666DC83001
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 254892068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C772068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSUOxeDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgD2DXF (ORCPT
+        id S1726598AbgD2D1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:23:05 -0400
-Received: from smtprelay0177.hostedemail.com ([216.40.44.177]:32962 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726560AbgD2DXF (ORCPT
+        Tue, 28 Apr 2020 23:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726535AbgD2D1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:23:05 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3D253182CED28;
-        Wed, 29 Apr 2020 03:23:04 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: boy68_54e0c4c8a4616
-X-Filterd-Recvd-Size: 3371
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 29 Apr 2020 03:23:03 +0000 (UTC)
-Message-ID: <01d45e599732bc5af33a09b36e63beabfcad8d25.camel@perches.com>
-Subject: Re: [PATCH -next] hinic: Use ARRAY_SIZE for nic_vf_cmd_msg_handler
-From:   Joe Perches <joe@perches.com>
-To:     Zou Wei <zou_wei@huawei.com>, aviad.krawczyk@huawei.com,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 28 Apr 2020 20:23:01 -0700
-In-Reply-To: <1588130136-49236-1-git-send-email-zou_wei@huawei.com>
-References: <1588130136-49236-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 28 Apr 2020 23:27:01 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF03AC03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:27:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a7so209786pju.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pxvKdEsbzWLexhjczXLGWAsQ8wUE/7iE8HqIboMrVpI=;
+        b=lSUOxeDYze8V31PTz+egnzCkEh33P7lSJWrg5PHVpeYJ6FbWnBHiqx1iV5B5gKH4mc
+         mHDkgD2O1N6p2K+umxFLEmCUSx4lNQgF2ynH2aZ1IabsHKyM0KjhdKkxGc1Zo3OkUKi9
+         pCBPxa1CoUm4ZFexb0FB6+ftPSqZiyaTpZMt4VlJOrjaVcSL5/B7tTibVgxy+3a0eaus
+         uXP+/ICx3qNHizcr+fs2nwlSJuoRsGLX8HqkHqkHSIS0qQubC1t+0cALqtqW+36spGJC
+         CYDDyuEzGiKpZqUsUjHymldoISiDajkx+RcdvKSmbCLik6iSeWmTl9smpTF7XnVU9A2E
+         nBzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pxvKdEsbzWLexhjczXLGWAsQ8wUE/7iE8HqIboMrVpI=;
+        b=r7khTK5z1InhLxVGKStSpg/etIEtwHrewXmU9xc34qk0Q8ngUNyEaU16uVc8HS5EZl
+         D1Axw/KF82pfiGmVsC/BlGaDvceeaa2wcSOfwhMNXBI2Ao9PuvAg4jJ+RNlPsZ+2XnFw
+         FapXqhdfTkklX4KIz8crcOhtzGerEv00Pp+TwlQX+X3CYkjtTRZS9s9X9Ig61MUbaplf
+         nPyOudfYNGJK0AgqGJGHF0+86JFmyQc2Q9zXq4DUv6jAz8n42xLXp2rydLmMIBUdMUOm
+         aWyfHGkQyqHjLvENdFeqp+bTQbOmUjQ2XjvvNpshRAD6DxCtUwXyG8XIsFif+/vK2BUG
+         wHYg==
+X-Gm-Message-State: AGi0PuZpOPxZd+IBVg5z3DiEqLERIaHuaBrCryfWUH9NsFrjN+yPcBXz
+        hAos1lE8seGuDz+hu+8J9vI=
+X-Google-Smtp-Source: APiQypJKSgZnczB4t88QIC6U5iAGRia6aXAWJjn7eL62QB9d/UDUX60LObRanrnaMVPF3mgsDQbpWQ==
+X-Received: by 2002:a17:90a:a888:: with SMTP id h8mr679701pjq.174.1588130820755;
+        Tue, 28 Apr 2020 20:27:00 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id q11sm9559796pfl.97.2020.04.28.20.26.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 20:27:00 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Laura Abbott <labbott@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH v2 00/10] change the implementation of the PageHighMem()
+Date:   Wed, 29 Apr 2020 12:26:33 +0900
+Message-Id: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 11:15 +0800, Zou Wei wrote:
-> fix coccinelle warning, use ARRAY_SIZE
-> 
-> drivers/net/ethernet/huawei/hinic/hinic_sriov.c:713:43-44: WARNING: Use ARRAY_SIZE
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> ---
->  drivers/net/ethernet/huawei/hinic/hinic_sriov.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-> index b24788e..ac12725 100644
-> --- a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-> +++ b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-> @@ -710,8 +710,7 @@ int nic_pf_mbox_handler(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
->  	if (!hwdev)
->  		return -EFAULT;
->  
-> -	cmd_number = sizeof(nic_vf_cmd_msg_handler) /
-> -			    sizeof(struct vf_cmd_msg_handle);
-> +	cmd_number = ARRAY_SIZE(nic_vf_cmd_msg_handler);
->  	pfhwdev = container_of(dev, struct hinic_pfhwdev, hwdev);
->  	nic_io = &dev->func_to_io;
->  	for (i = 0; i < cmd_number; i++) {
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Probably better to remove cmd_number altogether
----
- drivers/net/ethernet/huawei/hinic/hinic_sriov.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Changes on v2
+- add "acked-by", "reviewed-by" tags
+- replace PageHighMem() with use open-code, instead of using
+new PageHighMemZone() macro. Related file is "include/linux/migrate.h"
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-index b24788..af70cc 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
-@@ -704,17 +704,15 @@ int nic_pf_mbox_handler(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
- 	struct hinic_hwdev *dev = hwdev;
- 	struct hinic_func_to_io *nic_io;
- 	struct hinic_pfhwdev *pfhwdev;
--	u32 i, cmd_number;
-+	u32 i;
- 	int err = 0;
- 
- 	if (!hwdev)
- 		return -EFAULT;
- 
--	cmd_number = sizeof(nic_vf_cmd_msg_handler) /
--			    sizeof(struct vf_cmd_msg_handle);
- 	pfhwdev = container_of(dev, struct hinic_pfhwdev, hwdev);
- 	nic_io = &dev->func_to_io;
--	for (i = 0; i < cmd_number; i++) {
-+	for (i = 0; i < ARRAY_SIZE(nic_vf_cmd_msg_handler); i++) {
- 		vf_msg_handle = &nic_vf_cmd_msg_handler[i];
- 		if (cmd == vf_msg_handle->cmd &&
- 		    vf_msg_handle->cmd_msg_handler) {
-@@ -725,7 +723,7 @@ int nic_pf_mbox_handler(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
- 			break;
- 		}
- 	}
--	if (i == cmd_number)
-+	if (i == ARRAY_SIZE(nic_vf_cmd_msg_handler))
- 		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_L2NIC,
- 					cmd, buf_in, in_size, buf_out,
- 					out_size, HINIC_MGMT_MSG_SYNC);
+Hello,
 
+This patchset separates two use cases of PageHighMem() by introducing
+PageHighMemZone() macro. And, it changes the implementation of
+PageHighMem() to reflect the actual meaning of this macro. This patchset
+is a preparation step for the patchset,
+"mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE" [1].
+
+PageHighMem() is used for two different cases. One is to check if there
+is a direct mapping for this page or not. The other is to check the
+zone of this page, that is, weather it is the highmem type zone or not.
+
+Until now, both the cases are the perfectly same thing. So, implementation
+of the PageHighMem() uses the one case that checks if the zone of the page
+is the highmem type zone or not.
+
+"#define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))"
+
+ZONE_MOVABLE is special. It is considered as normal type zone on
+!CONFIG_HIGHMEM, but, it is considered as highmem type zone
+on CONFIG_HIGHMEM. Let's focus on later case. In later case, all pages
+on the ZONE_MOVABLE has no direct mapping until now.
+
+However, following patchset
+"mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE"
+, which is once merged and reverted, will be tried again and will break
+this assumption that all pages on the ZONE_MOVABLE has no direct mapping.
+Hence, the ZONE_MOVABLE which is considered as highmem type zone could
+have the both types of pages, direct mapped and not. Since
+the ZONE_MOVABLE could have both type of pages, __GFP_HIGHMEM is still
+required to allocate the memory from it. And, we conservatively need to
+consider the ZONE_MOVABLE as highmem type zone.
+
+Even in this situation, PageHighMem() for the pages on the ZONE_MOVABLE
+when it is called for checking the direct mapping should return correct
+result. Current implementation of PageHighMem() just returns TRUE
+if the zone of the page is on a highmem type zone. So, it could be wrong
+if the page on the MOVABLE_ZONE is actually direct mapped.
+
+To solve this potential problem, this patch introduces a new
+PageHighMemZone() macro. In following patches, two use cases of
+PageHighMem() are separated by calling proper macro, PageHighMem() and
+PageHighMemZone(). Then, implementation of PageHighMem() will be changed
+as just checking if the direct mapping exists or not, regardless of
+the zone of the page.
+
+Note that there are some rules to determine the proper macro.
+
+1. If PageHighMem() is called for checking if the direct mapping exists
+or not, use PageHighMem().
+2. If PageHighMem() is used to predict the previous gfp_flags for
+this page, use PageHighMemZone(). The zone of the page is related to
+the gfp_flags.
+3. If purpose of calling PageHighMem() is to count highmem page and
+to interact with the system by using this count, use PageHighMemZone().
+This counter is usually used to calculate the available memory for an
+kernel allocation and pages on the highmem zone cannot be available
+for an kernel allocation.
+4. Otherwise, use PageHighMemZone(). It's safe since it's implementation
+is just copy of the previous PageHighMem() implementation and won't
+be changed.
+
+My final plan is to change the name, PageHighMem() to PageNoDirectMapped()
+or something else in order to represent proper meaning.
+
+This patchset is based on next-20200428 and you can find the full patchset on the
+following link.
+
+https://github.com/JoonsooKim/linux/tree/page_highmem-cleanup-v2.00-next-20200428
+
+Thanks.
+
+[1]: https://lore.kernel.org/linux-mm/1512114786-5085-1-git-send-email-iamjoonsoo.kim@lge.com
+
+Joonsoo Kim (10):
+  mm/page-flags: introduce PageHighMemZone()
+  drm/ttm: separate PageHighMem() and PageHighMemZone() use case
+  kexec: separate PageHighMem() and PageHighMemZone() use case
+  power: separate PageHighMem() and PageHighMemZone() use case
+  mm/gup: separate PageHighMem() and PageHighMemZone() use case
+  mm/hugetlb: separate PageHighMem() and PageHighMemZone() use case
+  mm: separate PageHighMem() and PageHighMemZone() use case
+  mm/page_alloc: correct the use of is_highmem_idx()
+  mm/migrate: replace PageHighMem() with open-code
+  mm/page-flags: change the implementation of the PageHighMem()
+
+ drivers/gpu/drm/ttm/ttm_memory.c         |  4 ++--
+ drivers/gpu/drm/ttm/ttm_page_alloc.c     |  2 +-
+ drivers/gpu/drm/ttm/ttm_page_alloc_dma.c |  2 +-
+ drivers/gpu/drm/ttm/ttm_tt.c             |  2 +-
+ include/linux/migrate.h                  |  4 +++-
+ include/linux/page-flags.h               | 10 +++++++++-
+ kernel/kexec_core.c                      |  2 +-
+ kernel/power/snapshot.c                  | 12 ++++++------
+ mm/gup.c                                 |  2 +-
+ mm/hugetlb.c                             |  2 +-
+ mm/memory_hotplug.c                      |  2 +-
+ mm/page_alloc.c                          |  4 ++--
+ 12 files changed, 29 insertions(+), 19 deletions(-)
+
+-- 
+2.7.4
 
