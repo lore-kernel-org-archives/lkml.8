@@ -2,127 +2,141 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7630C83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AD8C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDE4208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FFC21D93
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/ulaxB/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rkh5LCfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgD2PZA (ORCPT
+        id S1727783AbgD2PZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgD2PY7 (ORCPT
+        Wed, 29 Apr 2020 11:25:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40291 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726519AbgD2PZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:24:59 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88690C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:24:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so2490411wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zjOeTQqRQtIBclXH1kdBKnLsff8nhyMZrdrXsY6z7Es=;
-        b=X/ulaxB/6Apyr7kAkKvHNrsDORGTl2+KD1I2EjtZJ6rcoKxavRh4Pz1v+jxDYkF3yM
-         jbgwPsXVqxiayh1Zdsq31g2GAnoFH6jnKOEBK7lvwRAeP8OUXCmDvUWk3ZWERxNnHbSC
-         uZOYe2iDreW/OmCT2Q7XvQFI3IoWyYE1c1HRINaPmkrgzhfSAogxikj0hb/4sUB+Lf9j
-         B0SXycfl/w2vRPJoZzjV8eNzbiK3N5P7p7h3x6OBlrkHym0dX0yhy0Q8xcsuCCV3Dq1J
-         inYJaAsxoQSeTYfTmsnWnstf8PMLxDRHx81dhHQ6pBG+C7MqBUelxrnePvpoBLbhC2vV
-         b9sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zjOeTQqRQtIBclXH1kdBKnLsff8nhyMZrdrXsY6z7Es=;
-        b=F0nFN+q3350AJexJKrp0YFA4jx4Rd/XuwQ6tUzcn49qiXgvi68tnQfueJrZf/Ykwq0
-         AlvQkgucHMP6XIhRKr7XnW/Rb+9G84UwUHyMKfFLL7ztM/AIz4htEW3PzovQODWUZ5y6
-         PwRcf0F7ZbcgehCQKVnynJDByNkOjWYediJ2IJ47Z6UEd2xNfx/xniyIS4LhIF05uQGp
-         T3xcYfm4Lv17fzuo8jNwBt1XUhqjF1fi2sHD2/bqyfXroMT/pL4uP6RFgBwir2E1u4eJ
-         VV9WtX+34Q1F2SNf/XVT3zuJkeR+W/XsCEo4qTKPe1oSqtSgABRivHnVwcMRv2kr2BYh
-         9OFQ==
-X-Gm-Message-State: AGi0PuZ24p5MYCVzTARFQhSuk7YPuOO8IoAkEzDNB8eV3E2E3dXOoRVI
-        QE9vJjgeg7Tlth+EiJUxzQRL3UgAZU3NofVNF0c=
-X-Google-Smtp-Source: APiQypIxiVdSfHPCe/FFEwwHjoIPW70Czk4NcFBf+IaZVL7iTbl6w4kP4EvAVlbgSK1GlUyyI2j8y5a2IELQqIg8LXI=
-X-Received: by 2002:a7b:cc0e:: with SMTP id f14mr3856407wmh.39.1588173897248;
- Wed, 29 Apr 2020 08:24:57 -0700 (PDT)
+        Wed, 29 Apr 2020 11:25:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588173914;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=idVKSiABjSNcmACNvJ+0e2upfnSy5o5PlTD947BRr1Y=;
+        b=Rkh5LCfZPmazla0dA6RqAeeseD0j36j67oI8ifDaY9F5JLPvh77LTnfRh1gor7qRXW+PIr
+        MZOiPRODwgLXC3Xc1ER2acnkHgPMzUj+ARrtXvoEunpc+HoknYy910EfyI2mSvZMNc5mHa
+        cvacIMfcT3DBDphP8n047/6qZbZ/a9A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-w8wnoM3MPJ6qwrUmSm7-hA-1; Wed, 29 Apr 2020 11:25:10 -0400
+X-MC-Unique: w8wnoM3MPJ6qwrUmSm7-hA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68C7C8F294B;
+        Wed, 29 Apr 2020 15:25:01 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C383A605CB;
+        Wed, 29 Apr 2020 15:24:57 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH v4 00/11] livepatch,module: Remove .klp.arch and module_disable_ro()
+Date:   Wed, 29 Apr 2020 10:24:42 -0500
+Message-Id: <cover.1588173720.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <20200428063003.24687-1-yanaijie@huawei.com>
-In-Reply-To: <20200428063003.24687-1-yanaijie@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 29 Apr 2020 11:24:45 -0400
-Message-ID: <CADnq5_MvXg0MbLbFVViCf78hyV+xjrnO9=GoSsc7-ScG_-u2ng@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu/smu10: remove duplicate assignment of
- smu10_hwmgr_funcs members
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     "Quan, Evan" <evan.quan@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 8:47 AM Jason Yan <yanaijie@huawei.com> wrote:
->
-> The struct member 'asic_setup' was assigned twice, let's remove one:
->
-> static const struct pp_hwmgr_func smu10_hwmgr_funcs = {
->         ......
->         .asic_setup = NULL,
->         ......
->         .asic_setup = smu10_setup_asic_task,
->         ......
-> };
->
-> This fixes the following coccicheck warning:
->
-> drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c:1357:52-53:
-> asic_setup: first occurrence line 1360, second occurrence line 1388
->
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+v4:
+- Fixed rebase bisection regression [Miroslav]
+- Made module_enable_ro() static [Jessica]
+- Added Acked-by's
 
-Applied.  Thanks!
+v3:
+- klp: split klp_write_relocations() into object/section specific
+  functions [joe]
+- s390: fix plt/got writes [joe]
+- s390: remove text_mutex usage [mbenes]
+- x86: do text_poke_sync() before releasing text_mutex [peterz]
+- split x86 text_mutex changes into separate patch [mbenes]
 
-Alex
+v2:
+- add vmlinux.ko check [peterz]
+- remove 'klp_object' forward declaration [mbenes]
+- use text_mutex [jeyu]
+- fix documentation TOC [jeyu]
+- fix s390 issues [mbenes]
+- upstream kpatch-build now supports this
+  (though it's only enabled for Linux >=3D 5.8)
 
-> ---
->  drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> index 1cc30f750c26..4f8c1b85e688 100644
-> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-> @@ -1357,7 +1357,6 @@ static int smu10_asic_reset(struct pp_hwmgr *hwmgr, enum SMU_ASIC_RESET_MODE mod
->  static const struct pp_hwmgr_func smu10_hwmgr_funcs = {
->         .backend_init = smu10_hwmgr_backend_init,
->         .backend_fini = smu10_hwmgr_backend_fini,
-> -       .asic_setup = NULL,
->         .apply_state_adjust_rules = smu10_apply_state_adjust_rules,
->         .force_dpm_level = smu10_dpm_force_dpm_level,
->         .get_power_state_size = smu10_get_power_state_size,
-> --
-> 2.21.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+These patches add simplifications and improvements for some issues Peter
+found six months ago, as part of his non-writable text code (W^X)
+cleanups.
+
+Highlights:
+
+- Remove the livepatch arch-specific .klp.arch sections, which were used
+  to do paravirt patching and alternatives patching for livepatch
+  replacement code.
+
+- Add support for jump labels in patched code (only for static keys
+  which live in vmlinux).
+
+- Remove the last module_disable_ro() usage.
+
+For more background, see this thread:
+
+  https://lkml.kernel.org/r/20191021135312.jbbxsuipxldocdjk@treble
+
+This has been tested with kpatch-build integration tests and klp-convert
+selftests.
+
+
+Josh Poimboeuf (8):
+  livepatch: Disallow vmlinux.ko
+  livepatch: Apply vmlinux-specific KLP relocations early
+  livepatch: Prevent module-specific KLP rela sections from referencing
+    vmlinux symbols
+  s390: Change s390_kernel_write() return type to match memcpy()
+  livepatch: Remove module_disable_ro() usage
+  module: Remove module_disable_ro()
+  x86/module: Use text_mutex in apply_relocate_add()
+  module: Make module_enable_ro() static again
+
+Peter Zijlstra (3):
+  livepatch: Remove .klp.arch
+  s390/module: Use s390_kernel_write() for late relocations
+  x86/module: Use text_poke() for late relocations
+
+ Documentation/livepatch/module-elf-format.rst |  15 +-
+ arch/s390/include/asm/uaccess.h               |   2 +-
+ arch/s390/kernel/module.c                     | 147 +++++++++------
+ arch/s390/mm/maccess.c                        |   9 +-
+ arch/um/kernel/um_arch.c                      |  16 ++
+ arch/x86/kernel/Makefile                      |   1 -
+ arch/x86/kernel/livepatch.c                   |  53 ------
+ arch/x86/kernel/module.c                      |  43 ++++-
+ include/linux/livepatch.h                     |  17 +-
+ include/linux/module.h                        |   8 -
+ kernel/livepatch/core.c                       | 177 +++++++++++-------
+ kernel/module.c                               |  27 +--
+ 12 files changed, 279 insertions(+), 236 deletions(-)
+ delete mode 100644 arch/x86/kernel/livepatch.c
+
+--=20
+2.21.1
+
