@@ -2,66 +2,91 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F897C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29FC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36B232076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405C62076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgD2UNM (ORCPT
+        id S1727087AbgD2UNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:13:12 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:57389 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726822AbgD2UNM (ORCPT
+        Wed, 29 Apr 2020 16:13:37 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:60299 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgD2UNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:13:12 -0400
-Received: (qmail 25317 invoked by uid 500); 29 Apr 2020 16:13:11 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 Apr 2020 16:13:11 -0400
-Date:   Wed, 29 Apr 2020 16:13:11 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Al Cooper <alcooperx@gmail.com>
-cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 3/4] usb: ehci: Add new EHCI driver for Broadcom STB
- SoC's
-In-Reply-To: <20200429200826.20177-4-alcooperx@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2004291612330.24784-100000@netrider.rowland.org>
+        Wed, 29 Apr 2020 16:13:37 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MlO5j-1ikOiA2IEH-00lklT; Wed, 29 Apr 2020 22:13:35 +0200
+Received: by mail-qk1-f181.google.com with SMTP id g74so3381207qke.13;
+        Wed, 29 Apr 2020 13:13:35 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZKJeyQsi5vXdTIxqcwhP1iOQ+UkecM3VWIOihlJWoBwrN1Q7Bs
+        5y+Eu/6G/l1icwPhX7HSHrW1FNWLbwBMk1b5rIk=
+X-Google-Smtp-Source: APiQypLgwNCOWXi8lqhZ+IOv19XxfH/9iluwOOMdrmf8VHOif7vlkTCUTHkDgO4JZEVtkCieIyzUDvCFIORJYDtFE+I=
+X-Received: by 2002:ae9:f712:: with SMTP id s18mr204482qkg.394.1588191214238;
+ Wed, 29 Apr 2020 13:13:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20200429132349.1294904-1-arnd@arndb.de> <20200429133512.GE1551@shell.armlinux.org.uk>
+In-Reply-To: <20200429133512.GE1551@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 Apr 2020 22:13:18 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2hXhtCx6pk65__U1Msk_OPstT0Qad_skqjCz9DNSfq4A@mail.gmail.com>
+Message-ID: <CAK8P3a2hXhtCx6pk65__U1Msk_OPstT0Qad_skqjCz9DNSfq4A@mail.gmail.com>
+Subject: Re: [PATCH] [v2] ARM: oabi-compat: fix epoll_ctl build failure
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zqjB0K5itibZQxDrMZXbU6dnX9nPzRmtRkBND1WinO3L0z3plWD
+ 9u5ckpGOQBLolZ2lG/bNXZJq3mpAi4a8VWLQ5Yji8cKAntBsXFlOHYR0OAKjKavW5i/lSHf
+ YIdWwMNkY5rXRO8vDKPEX27XBH45Qmi9Aqq7QbSOa2VFv70Cfu2wAO/quqYtYZEa+dx6rvA
+ TStcjRw1udFVmJFUzJppg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BWh5PdHHxKQ=:MpYawQD1ciBPVEX2das18A
+ utk58HKgTGlFGALiNtOAHZO1g5dDgTLCRB+BufUCxdQPSfVjvM9+HFnPAniHVkYZKZ1JY2Ofh
+ chB3FyJgNoOuBLbg+EBgorrDgXqWXpPV8XMUuBG1tEEfa86Iw3OVZK0piwR/VAakS276/CFGx
+ 0I6VsLwPif+2Bum9+CtjP1UxV3oJ+3AFCjxVMzykl++qbjZIYlybXFHJi+q8Hpr2cNtm5Lyaz
+ X2fpCgwtIq9FpHP/PKyhf3ie/Ab0zN5HmmDxmfem7TMRjD0lL1dCdcmqEwHfHlOV5UZnFE1s0
+ t1NfnZYcBPItIFNLwn06l5UuIOqEYqfxbKiN7kA3z57+0NDFx/tub4XSi0qM7mt8VD1rQZqcF
+ RMKSq8Bhfi+72KNBRXC1BVqw9BbSyOtVnmO0Yy9endtw+DazyFCHdhp6lW8oq6XKLrHqBuKx3
+ 3SWTk0srTyDCBa8Dr4fHR0r0AnuTU4SaUcH8c1sLNQFxvq1DpVQAQ0eB8Paz5Sp+7XOt+2D92
+ 1284OhQe2ifSuo2P56O64Lu6PlcgalfSsatr1Y7JFwgeqMrOfRZ65Im7kg6E5G/HeXbhmabt2
+ J7dw/1Jhbg7o1uW2jqJzYBveIL8eeY7lb9ib7bOKiDuRgm4p19M8tp4nEal5VNcA61+9XvEvF
+ Xn3VZXlp+C9ZeJrDCEI+ncmtIlTGnZe1c5zs4YrfyTOFssM9xgWTCdWvKP7LVP5O1kq1jHhiW
+ uK3j2H3SCGeOqJsrEqSRw6rblfw27I1pFPUD6kWrbcfqMJHVjz5xSbSC3DUwAuRk10OiDjRS0
+ 52ytQN8K55Pv22f7FSwYI+0tdDEwKhfX2ECnUoXALHRTjisNYY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020, Al Cooper wrote:
+On Wed, Apr 29, 2020 at 3:35 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Wed, Apr 29, 2020 at 03:23:24PM +0200, Arnd Bergmann wrote:
+> > Two functions are not declared or defined when CONFIG_EPOLL is
+> > disabled:
+> >
+>
+> I know what Chris said, but do we really want to be polluting generic
+> kernel files with arch specific stuff like this?
 
-> Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
-> was created instead of adding support to the existing ehci platform
-> driver because of the code required to workaround bugs in the EHCI
-> controller.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  drivers/usb/host/ehci-brcm.c | 290 +++++++++++++++++++++++++++++++++++
->  1 file changed, 290 insertions(+)
->  create mode 100644 drivers/usb/host/ehci-brcm.c
+The file already has a couple of architecture specific syscalls listed already,
+so it shouldn't be a big deal. If you prefer the first version of my patch,
+or have another suggestion, I don't mind sending a v3 that does it differently
+again.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Unfortunately, COND_SYSCALL() is a locally defined macro in that file,
+so we can't easily use it elsewhere without duplicating it like in
+kernel/time/posix-stubs.c.
 
+As I mentioned in v1, it's also possible to just make this function
+compile without #ifdefs by having conditional stub definitions of the
+missing interfaces.
+
+      Arnd
