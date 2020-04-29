@@ -2,93 +2,86 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E7CC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBB6C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBAF2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588196129;
-	bh=Mpdvb9j54X/xSyzXB7im7QBZnszUMYPNMhLMhncj5gg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tiPUaVcgC7uW+Sp2wixg44CzwweT5aiHLdabeI1ocbVODwdo6PYFXVuq+aG9NR6AD
-	 ilu6X5F+umCxCbFw6Ra3Sei1IJDgaYf3WFZFmiz0E9sFa7HVXyKw6dpD2bx7VY1+Mz
-	 gCtbxhgzF4v0Al5b0yJ8oVBNli0cKTk6nCbd0TEU=
+	by mail.kernel.org (Postfix) with ESMTP id 5F2052083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgD2Vf3 (ORCPT
+        id S1727042AbgD2Vgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:35:29 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37627 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgD2Vf2 (ORCPT
+        Wed, 29 Apr 2020 17:36:31 -0400
+Received: from 8.mo69.mail-out.ovh.net ([46.105.56.233]:32962 "EHLO
+        8.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbgD2Vgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:35:28 -0400
-Received: by mail-oi1-f195.google.com with SMTP id r25so3249707oij.4;
-        Wed, 29 Apr 2020 14:35:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P60CLGRCVH/w+wVlBp6MkL7Ds15Cvq4t9vycfLUjyFI=;
-        b=l+lmEETa2u5ynCMun8a8xy+7aQyvXM4rrpc4TDYoGfigpFkmOZJi8gAy5QNdWdXcfS
-         S/ovB2GnVzl1gA/omdyvkRXHTH2HGS6hILnGAMMjYtqSILem/RbeKvUq169xvY5MaPbR
-         ZKv2ef0eHsqsFN6NysaRSLo1k7YahYOySWKaYz7EUfP+f9kIaKETyVg3BFkrh1RWY8e1
-         cf1szzKpQvM+HmjGNXLh3t/po8Q3ScJNMtyo2PVwSwwGlPzCNfILDinWWe/Ae/rXP//a
-         7WayWGr6hii5xZxNbEzujo+vn3YpB653vpYjgrBKRSceKu66NvYoVDrcMJ0Vbh6q/jQ/
-         wNzQ==
-X-Gm-Message-State: AGi0PuYze/62DMH5KtSeCXXUIoQI7+oiThTER8Dn7WrOYrfcldYy89Cz
-        q0PalazabIg1oARIrvrgTQ==
-X-Google-Smtp-Source: APiQypKoDEYLt06UnLfe/uPG+G9+07x8ZmccseGaZQiUJmc7TvMtKNzH6fV3dRHIJ4P4gPpt97gkag==
-X-Received: by 2002:aca:7251:: with SMTP id p78mr279418oic.32.1588196127566;
-        Wed, 29 Apr 2020 14:35:27 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d18sm691623otk.63.2020.04.29.14.35.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:35:27 -0700 (PDT)
-Received: (nullmailer pid 6694 invoked by uid 1000);
-        Wed, 29 Apr 2020 21:35:26 -0000
-Date:   Wed, 29 Apr 2020 16:35:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] clk: qcom: mmcc-msm8996: Properly describe GPU_GX
- gdsc
-Message-ID: <20200429213526.GA6644@bogus>
-References: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
- <20200417070044.1376212-3-bjorn.andersson@linaro.org>
+        Wed, 29 Apr 2020 17:36:31 -0400
+Received: from player693.ha.ovh.net (unknown [10.108.57.188])
+        by mo69.mail-out.ovh.net (Postfix) with ESMTP id 1787A8CA3C
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:58:36 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player693.ha.ovh.net (Postfix) with ESMTPSA id AF9A011DB2FEA;
+        Wed, 29 Apr 2020 20:58:25 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v2 2/2] docs: sysctl/kernel: document firmware_config
+Date:   Wed, 29 Apr 2020 22:57:57 +0200
+Message-Id: <20200429205757.8677-2-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200429205757.8677-1-steve@sk2.org>
+References: <20200429205757.8677-1-steve@sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417070044.1376212-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 16896098430082108805
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdduheegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeejleelvdefieeiuddtfeevkeegueehkeekvdffgedvhedugeekgfejjeekgfeugeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieelfedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 00:00:42 -0700, Bjorn Andersson wrote:
-> The GPU_GX GDSC depends on both GPU GDSC being enabled and that the
-> VDD_GX rail is powered, so update the description of the node to cover
-> these requirements.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - vdd_gfx -> vdd-gfx
-> 
->  Documentation/devicetree/bindings/clock/qcom,mmcc.yaml | 4 ++++
->  drivers/clk/qcom/mmcc-msm8996.c                        | 2 ++
->  2 files changed, 6 insertions(+)
-> 
+Based on the firmware fallback mechanisms documentation and the
+implementation in drivers/base/firmware_loader/fallback.c.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index b1ad4c86274d..1779455fb2c5 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -265,6 +265,19 @@ domain names are in general different. For a detailed discussion
+ see the ``hostname(1)`` man page.
+ 
+ 
++firmware_config
++===============
++
++See :doc:`/driver-api/firmware/fallback-mechanisms`.
++
++The entries in this directory allow the firmware loader helper
++fallback to be controlled:
++
++* ``force_sysfs_fallback``, when set to 1, forces the use of the
++  fallback;
++* ``ignore_sysfs_fallback``, when set to 1, ignores any fallback.
++
++
+ ftrace_dump_on_oops
+ ===================
+ 
+-- 
+2.20.1
+
