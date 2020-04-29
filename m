@@ -2,97 +2,300 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F157DC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB33C83008
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCDA2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZaoT/ij9"
+	by mail.kernel.org (Postfix) with ESMTP id 811B42070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588154806;
+	bh=rJl6uEC5SuLnnSKrfnvSvhfE2Sva0obwKGIOEbUWh6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yfOAIz8Ff25mBOC3rBT0eCxf0hXZ094MM5Qbbv2/q5rmDh0LyyJUnQ1NHkmUY4hBV
+	 XPY2OYhKe85zErFVKZYoEPgAt18cTt0M2MlxRfYSwbjf1gYfVm+ecpNDdj2MQk+ee9
+	 peuEDNTIiMQuvYVAhC99HQOE1lu8LLMVU2IYjFkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgD2KGo (ORCPT
+        id S1726762AbgD2KGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 06:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgD2KGn (ORCPT
+        Wed, 29 Apr 2020 06:06:45 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36438 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2KGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 06:06:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11693C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:06:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x25so1366677wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 03:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=tRSFF6YjPRMfXBqbX85nqv3CwbxXtG04SneAHAxmtSk=;
-        b=ZaoT/ij9giXypBnwF0vKQfdQYcFEexr7ot2GWI7JdgQrsXo9VYV6KHH4XkLaDuZMPx
-         HZKACur5XS+EEZU8wvMLwnedKLU0hgMWm9SVrHjnF4dsqeSklS1CdXY/au5GlIXXs26E
-         U6ei9jVS7xMgB66/Bnr4sbL/TgjW8MAlcgiZViWSR8TgbfbVeQZTiitKsMqw+TmCGLir
-         n69ERZ4ZudBSPtAlOl1K1Qhu7gQCT2l8ampFm1LlyZ54yV0Sewa4lVJ9IsrNLFl2dmey
-         uj6CD0sgRArdDeOcCUUzJ4f4pBb9ez+Wg/Wgr8iaM2Hbt5M+D4zcDfurKuGfdPsJXQYO
-         HJVw==
+Received: by mail-wm1-f65.google.com with SMTP id u127so1369184wmg.1;
+        Wed, 29 Apr 2020 03:06:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tRSFF6YjPRMfXBqbX85nqv3CwbxXtG04SneAHAxmtSk=;
-        b=beoXjuonBFTMXN8yGYxwyQZkj8w42Q2TqDhgkhW02wHpcdwY9DGjwZ1T7FjEwtBQ2E
-         Zq+ItTvWNNkO4R3hN5mH6kWqEoL1CccR+BOf3kM5tx2wk7Uxgma5ufBXRtCgiOFoiytA
-         UKZiXkefCcSn+f05EKXPfh2foU50gJ40ycL0C3pfpvbQn6bwbT2D99vvfkc4+PLNPhSN
-         OLRg5/dss+yiJ0dfywJkkAhucCRQJ1C8J7uq3BvbwjOoLozQ33Wyg/YaWK3WwqXdrvDZ
-         W+BBvjExVNdpC5Q9uKftr8B9oGhAAMLNahI4HcQB0+ZJh/Cytv4ZzP4h6xH3GRblTWrr
-         vhfw==
-X-Gm-Message-State: AGi0PuZ8sAWtYihRmVz0f9LfZqf69f3hqqunU4QRdL2sGtBwAOdyuTiN
-        ZdK/z3aslM/4jY/PSJB0u0kAzRx8SQ==
-X-Google-Smtp-Source: APiQypL56XDldRfasfPDv99mihTbQk2Mpcz6n7bPRtYAhUmrZBRUyYh8JxA1iA1CBb/pR1zc4ttnDg==
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr2558849wml.189.1588154801433;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tXrWrPumlE2jtN1J/oDfyJrpYks7pUQ//wpKnWHr1xY=;
+        b=KwSVmd80xbikmMvU1y8zTPyijI8wXS415axCQaLrMR0y0P5l1rTUxk/v3VcVH4MrHG
+         K5AodBfX1tIpJrAFbApcdPw+/mKoUAWxiOfTdLFmaREopmIo+bIcru340D4V5ueJ4SqX
+         A8Uvx9nORl9tDaa/q/zIBgLI7e37ivLIlt7syasAij+YDUeA2QtsgzxcuRgpwqqKFeYc
+         0xybiCzuj5ZPBy/mpUGyVun1WILA/WVslUwu9cn2rZaRbR/f0yNpvKcZqUu7+O5jxHwK
+         fKaQXRTwHa+BpoV9BjwZDnBgsDHpuw9+wMQevSohQaJPXelINJhseII2GAHwMiVlIg9R
+         Ygxg==
+X-Gm-Message-State: AGi0PuaDwrOJf5WGRnQvpJUPIRVP4SK22upZlysnFiTeZe9bTOICpoGP
+        hAxnMNpYCu5oCSfvvRdKpFQ=
+X-Google-Smtp-Source: APiQypKj5T16tWJeZwK+YQ8igeZqc4xYmWCZgPcuVSnBLwFyWfb35oXFaS9qmRdq0ZJJ4PJxTS+g7A==
+X-Received: by 2002:a1c:bc05:: with SMTP id m5mr2197843wmf.143.1588154801445;
         Wed, 29 Apr 2020 03:06:41 -0700 (PDT)
-Received: from ninjahost.lan (host-2-102-14-195.as13285.net. [2.102.14.195])
-        by smtp.gmail.com with ESMTPSA id 1sm7205478wmi.0.2020.04.29.03.06.40
-        for <linux-kernel@vger.kernel.org>
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id a1sm29684118wrn.80.2020.04.29.03.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 29 Apr 2020 03:06:40 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] Lock warnings cleanup
-Date:   Wed, 29 Apr 2020 11:05:22 +0100
-Message-Id: <20200429100529.19645-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <0/6>
-References: <0/6>
+Date:   Wed, 29 Apr 2020 12:06:39 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm, memcg: Decouple e{low,min} state mutations from
+ protection checks
+Message-ID: <20200429100639.GZ28637@dhcp22.suse.cz>
+References: <cover.1588092152.git.chris@chrisdown.name>
+ <51ffacb736bb02ecc09c828ebe8f4ec7fda68c48.1588092152.git.chris@chrisdown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51ffacb736bb02ecc09c828ebe8f4ec7fda68c48.1588092152.git.chris@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch serie propose a solution to functions that record context
-imbalance by adding annotations
+On Tue 28-04-20 19:27:00, Chris Down wrote:
+> mem_cgroup_protected currently is both used to set effective low and min
+> and return a mem_cgroup_protection based on the result. As a user, this
+> can be a little unexpected: it appears to be a simple predicate
+> function, if not for the big warning in the comment above about the
+> order in which it must be executed.
+> 
+> This change makes it so that we separate the state mutations from the
+> actual protection checks, which makes it more obvious where we need to
+> be careful mutating internal state, and where we are simply checking and
+> don't need to worry about that.
+> 
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Yafang Shao <laoar.shao@gmail.com>
 
-Jules Irenge (6):
-  usb: gadget: Add missing annotation for xudc_handle_setup()
-  udp: Add missing annotations for busylock_acquire() and
-    busylock_release()
-  udp: Add annotations for udp_rmem_release()
-  net: atm: Add missing annotation for lec_seq_stop()
-  USB: dummy-hcd: Add missing annotation for set_link_state()
-  net: atm: Add annotation for lec_priv_walk()
+Acked-by: Michal Hocko <mhocko@suse.com>
 
- drivers/usb/gadget/udc/dummy_hcd.c  |  1 +
- drivers/usb/gadget/udc/udc-xilinx.c |  1 +
- net/atm/lec.c                       | 11 ++++++++++-
- net/ipv4/udp.c                      | 11 +++++++++++
- 4 files changed, 23 insertions(+), 1 deletion(-)
+> ---
+>  include/linux/memcontrol.h | 48 +++++++++++++++++++++++++++++---------
+>  mm/memcontrol.c            | 30 +++++++-----------------
+>  mm/vmscan.c                | 17 ++++----------
+>  3 files changed, 49 insertions(+), 46 deletions(-)
+> 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index d630af1a4e17..88576b1235b0 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -50,12 +50,6 @@ enum memcg_memory_event {
+>  	MEMCG_NR_MEMORY_EVENTS,
+>  };
+>  
+> -enum mem_cgroup_protection {
+> -	MEMCG_PROT_NONE,
+> -	MEMCG_PROT_LOW,
+> -	MEMCG_PROT_MIN,
+> -};
+> -
+>  struct mem_cgroup_reclaim_cookie {
+>  	pg_data_t *pgdat;
+>  	unsigned int generation;
+> @@ -357,8 +351,26 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
+>  		   READ_ONCE(memcg->memory.elow));
+>  }
+>  
+> -enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+> -						struct mem_cgroup *memcg);
+> +void mem_cgroup_calculate_protection(struct mem_cgroup *root,
+> +				     struct mem_cgroup *memcg);
+> +
+> +static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
+> +{
+> +	if (mem_cgroup_disabled())
+> +		return false;
+> +
+> +	return READ_ONCE(memcg->memory.elow) >=
+> +		page_counter_read(&memcg->memory);
+> +}
+> +
+> +static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
+> +{
+> +	if (mem_cgroup_disabled())
+> +		return false;
+> +
+> +	return READ_ONCE(memcg->memory.emin) >=
+> +		page_counter_read(&memcg->memory);
+> +}
+>  
+>  int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+>  			  gfp_t gfp_mask, struct mem_cgroup **memcgp,
+> @@ -838,13 +850,27 @@ static inline void memcg_memory_event_mm(struct mm_struct *mm,
+>  static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
+>  						  bool in_low_reclaim)
+>  {
+> +
+> +
+> +static inline void mem_cgroup_calculate_protection(struct mem_cgroup *root,
+> +						   struct mem_cgroup *memcg);
+> +{
+> +}
+> +
+> +static inline void mem_cgroup_protection(struct mem_cgroup *memcg,
+> +					 bool in_low_reclaim)
+> +{
+>  	return 0;
+>  }
+>  
+> -static inline enum mem_cgroup_protection mem_cgroup_protected(
+> -	struct mem_cgroup *root, struct mem_cgroup *memcg)
+> +static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
+>  {
+> -	return MEMCG_PROT_NONE;
+> +	return false;
+>  }
+>  
+>  static inline int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index b0374be44e9e..317dbbaac603 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6368,27 +6368,21 @@ static unsigned long effective_protection(unsigned long usage,
+>  }
+>  
+>  /**
+> - * mem_cgroup_protected - check if memory consumption is in the normal range
+> + * mem_cgroup_calculate_protection - calculate and cache effective low and min
+>   * @root: the top ancestor of the sub-tree being checked
+>   * @memcg: the memory cgroup to check
+>   *
+>   * WARNING: This function is not stateless! It can only be used as part
+>   *          of a top-down tree iteration, not for isolated queries.
+> - *
+> - * Returns one of the following:
+> - *   MEMCG_PROT_NONE: cgroup memory is not protected
+> - *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
+> - *     an unprotected supply of reclaimable memory from other cgroups.
+> - *   MEMCG_PROT_MIN: cgroup memory is protected
+>   */
+> -enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+> -						struct mem_cgroup *memcg)
+> +void mem_cgroup_calculate_protection(struct mem_cgroup *root,
+> +				     struct mem_cgroup *memcg)
+>  {
+>  	unsigned long usage, parent_usage;
+>  	struct mem_cgroup *parent;
+>  
+>  	if (mem_cgroup_disabled())
+> -		return MEMCG_PROT_NONE;
+> +		return;
+>  
+>  	if (!root)
+>  		root = root_mem_cgroup;
+> @@ -6403,22 +6397,22 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  		 */
+>  		WRITE_ONCE(memcg->memory.emin, 0);
+>  		WRITE_ONCE(memcg->memory.elow, 0);
+> -		return MEMCG_PROT_NONE;
+> +		return;
+>  	}
+>  
+>  	usage = page_counter_read(&memcg->memory);
+>  	if (!usage)
+> -		return MEMCG_PROT_NONE;
+> +		return;
+>  
+>  	parent = parent_mem_cgroup(memcg);
+>  	/* No parent means a non-hierarchical mode on v1 memcg */
+>  	if (!parent)
+> -		return MEMCG_PROT_NONE;
+> +		return;
+>  
+>  	if (parent == root) {
+>  		memcg->memory.emin = READ_ONCE(memcg->memory.min);
+>  		memcg->memory.elow = memcg->memory.low;
+> -		goto out;
+> +		return;
+>  	}
+>  
+>  	parent_usage = page_counter_read(&parent->memory);
+> @@ -6431,14 +6425,6 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  	WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_usage,
+>  			memcg->memory.low, READ_ONCE(parent->memory.elow),
+>  			atomic_long_read(&parent->memory.children_low_usage)));
+> -
+> -out:
+> -	if (usage <= memcg->memory.emin)
+> -		return MEMCG_PROT_MIN;
+> -	else if (usage <= memcg->memory.elow)
+> -		return MEMCG_PROT_LOW;
+> -	else
+> -		return MEMCG_PROT_NONE;
+>  }
+>  
+>  /**
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 72ac38eb8c29..e913c4652341 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2645,14 +2645,15 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>  		unsigned long reclaimed;
+>  		unsigned long scanned;
+>  
+> -		switch (mem_cgroup_protected(target_memcg, memcg)) {
+> -		case MEMCG_PROT_MIN:
+> +		mem_cgroup_calculate_protection(target_memcg, memcg);
+> +
+> +		if (mem_cgroup_below_min(memcg)) {
+>  			/*
+>  			 * Hard protection.
+>  			 * If there is no reclaimable memory, OOM.
+>  			 */
+>  			continue;
+> -		case MEMCG_PROT_LOW:
+> +		} else if (mem_cgroup_below_low(memcg)) {
+>  			/*
+>  			 * Soft protection.
+>  			 * Respect the protection only as long as
+> @@ -2664,16 +2665,6 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>  				continue;
+>  			}
+>  			memcg_memory_event(memcg, MEMCG_LOW);
+> -			break;
+> -		case MEMCG_PROT_NONE:
+> -			/*
+> -			 * All protection thresholds breached. We may
+> -			 * still choose to vary the scan pressure
+> -			 * applied based on by how much the cgroup in
+> -			 * question has exceeded its protection
+> -			 * thresholds (see get_scan_count).
+> -			 */
+> -			break;
+>  		}
+>  
+>  		reclaimed = sc->nr_reclaimed;
+> -- 
+> 2.26.2
 
 -- 
-2.25.3
-
+Michal Hocko
+SUSE Labs
