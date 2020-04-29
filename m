@@ -2,162 +2,181 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C7BC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A348C8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75E3C2186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50732192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMlppx4p"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Y7SJJo7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD2M0h (ORCPT
+        id S1727062AbgD2M1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726628AbgD2M0g (ORCPT
+        Wed, 29 Apr 2020 08:27:09 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35684 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgD2M1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:26:36 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70FF5C03C1AD;
-        Wed, 29 Apr 2020 05:26:36 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h11so773213plr.11;
-        Wed, 29 Apr 2020 05:26:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mE/G5KaL0uIC70ovNSoaKbcQfn9t7OEF0yBBgrML3hs=;
-        b=KMlppx4pE5inHa/GRFclaen/QiPzJ6iPcMIBuKSKArFoBCartZuz/RdszlFnXo5fJN
-         wU+rOh0GFzzKZgxRSd9An+pJhIO1VpatedA9PZ6Vow/hAM3GXyZINV94WsgG9eCcbUu1
-         24r99OBCXSSf4xTmil7QsEsmdepzEckg56AHWFNNwnw9BggrstxvvPOoSFYMmo0tIG3K
-         Np/Ywbi6JEUNmSW74OF1/skvceyQMF8towsly/jcBv6F2w6/vOPqiibTw8m+H8b7scjd
-         f4WXhfk+BSX3o//fWSoVkmVxCWtjy0/UOhxMGlpXIYB0GNU9f6xG7EuG+U0slU8yn2Ly
-         LttQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=mE/G5KaL0uIC70ovNSoaKbcQfn9t7OEF0yBBgrML3hs=;
-        b=QGyOoa95Y6PYtwRHtWW0yD2+SNTt4VDruDr01JKvzg1ZW2CEMX30iCDNce2Kr6Btkr
-         bHU8tQAL9c/pUg8e7BCIPjaCdAwmgudr6VOu6+UDQ97VMzVOqiVqdlrjJU7HU0A5G6yc
-         XJYrtWTFMQ2lwKhNiX2B823NgJKfPVcngJgEnNd1KKE76PYL47EKuT1cs+J1+Wn0zVOy
-         ehDy/M5EzPrFjHHf+tyDipB+uJxENxSMmHCoF+7YBaoUhw+RTzZvBT/bBNk+19/2amUu
-         zImNNmgIGpStI8EyhDKEtuQ/3mBvEujr7UXHVz8HoIB+lX4iIdHDCOn2CDsGKslWD/W4
-         grTw==
-X-Gm-Message-State: AGi0PuY5ezzMwgP0eSXV8rkRGn/fpGgPJlJWnwIFjDcOu+3NXC3Pub+1
-        UbBOAg96T3xNYKHJdqqEYSV7iHey
-X-Google-Smtp-Source: APiQypKVdpfpEK4zjQRRfP0OMTWMeKy/EpqeeARCpOcK9Duio0dbQ4bVQFiVc9VXeKN/Rz2AR+hMJg==
-X-Received: by 2002:a17:902:5a0b:: with SMTP id q11mr33277048pli.23.1588163195605;
-        Wed, 29 Apr 2020 05:26:35 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b11sm978819pgj.92.2020.04.29.05.26.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 05:26:34 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: iTCO: fix link error
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200428212959.2993304-1-arnd@arndb.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <645115f0-5d3d-d8e5-9c26-64378e0d1c6f@roeck-us.net>
-Date:   Wed, 29 Apr 2020 05:26:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 08:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1588163225; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UB85kJRWkAnE/ldP2rd2WB1otm7LsPHBG/QdCMbeTtw=;
+        b=Y7SJJo7sZnaAuNIPATy0AiHIaWVsd2iyJrs83ZKmUFLR4e0sPDVaCrXhPJh3FdwWeKj5+B
+        ymuqI/fKXp9dnLKIal7QsfsqkUT5AoaSpooZL4M9yoymur1N6pMByU7yw/6mHtmHFpYRn4
+        m+cKuE3cU7bSMeleVwTgsV9u39AqbSE=
+Date:   Wed, 29 Apr 2020 14:26:46 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v7 08/12] arm: dts: s5pv210: Add node for SGX 540
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Message-Id: <MKUJ9Q.OQG3OJ6IYGUE3@crapouillou.net>
+In-Reply-To: <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+References: <cover.1587760454.git.hns@goldelico.com>
+        <3fd18c747426e15fd1f3500b9c4adce2db9ddd0c.1587760454.git.hns@goldelico.com>
+        <NYBE9Q.YH08US7A7DC3@crapouillou.net>
+        <BN6PR04MB0660A180D2069848E5C03D7EA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        <20200427154617.GA1798@pi3>
+        <BN6PR04MB06605F014024061C894AFBA4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        <BN6PR04MB0660044B5B1D45BE4CBCD2AAA3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428212959.2993304-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/20 2:29 PM, Arnd Bergmann wrote:
-> When the MFD driver is a loadable module, the watchdog driver fails
-> to get linked into the kernel:
-> 
-> drivers/watchdog/iTCO_wdt.o: In function `update_no_reboot_bit_pmc':
-> iTCO_wdt.c:(.text+0x54f): undefined reference to `intel_pmc_gcr_update'
-> 
-> The code is written to support operation without the MFD driver, so
-> add a Kconfig dependency that allows this, while disallowing the watchdog
-> to be built-in when the MFD driver is a module.
-> 
-> Fixes: 25f1ca31e230 ("platform/x86: intel_pmc_ipc: Convert to MFD")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Jonathan,
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Le mar. 28 avril 2020 =E0 15:58, Jonathan Bakker <xc-racer2@live.ca> a=20
+=E9crit :
+> Hi all,
+>=20
+> On 2020-04-28 2:39 p.m., Jonathan Bakker wrote:
+>>  Hi Krzysztof,
+>>=20
+>>  On 2020-04-27 8:46 a.m., Krzysztof Kozlowski wrote:
+>>>  On Sun, Apr 26, 2020 at 07:57:12AM -0700, Jonathan Bakker wrote:
+>>>>  Hi Paul,
+>>>>=20
+>>>>  On 2020-04-26 5:56 a.m., Paul Cercueil wrote:
+>>>>>=20
+>>>>>=20
+>>>>>  Le ven. 24 avril 2020 =E0 22:34, H. Nikolaus Schaller=20
+>>>>> <hns@goldelico.com> a =E9crit :
+>>>>>>  From: Jonathan Bakker <xc-racer2@live.ca>
+>>>>>>=20
+>>>>>>  All s5pv210 devices have a PowerVR SGX 540 (revision 120)=20
+>>>>>> attached.
+>>>>>>=20
+>>>>>>  There is no external regulator for it so it can be enabled by=20
+>>>>>> default.
+>>>>>>=20
+>>>>>>  Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>>>>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>>>>  ---
+>>>>>>   arch/arm/boot/dts/s5pv210.dtsi | 13 +++++++++++++
+>>>>>>   1 file changed, 13 insertions(+)
+>>>>>>=20
+>>>>>>  diff --git a/arch/arm/boot/dts/s5pv210.dtsi=20
+>>>>>> b/arch/arm/boot/dts/s5pv210.dtsi
+>>>>>>  index 2ad642f51fd9..abbdda205c1b 100644
+>>>>>>  --- a/arch/arm/boot/dts/s5pv210.dtsi
+>>>>>>  +++ b/arch/arm/boot/dts/s5pv210.dtsi
+>>>>>>  @@ -512,6 +512,19 @@ vic3: interrupt-controller@f2300000 {
+>>>>>>               #interrupt-cells =3D <1>;
+>>>>>>           };
+>>>>>>=20
+>>>>>>  +        gpu: gpu@f3000000 {
+>>>>>>  +            compatible =3D "samsung,s5pv210-sgx540-120";
+>>>=20
+>>>  This should not pass the bindings check because you missed last
+>>>  compatibles.
+>>>=20
+>>=20
+>>  Thanks for pointing that out, I'll add it and make sure it passes=20
+>> the bindings check.
+>>=20
+>>>>>>  +            reg =3D <0xf3000000 0x10000>;
+>>>>>>  +            interrupt-parent =3D <&vic2>;
+>>>>>>  +            interrupts =3D <10>;
+>>>>>>  +            clock-names =3D "core";
+>>>>>>  +            clocks =3D <&clocks CLK_G3D>;
+>>>>>>  +
+>>>>>>  +            assigned-clocks =3D <&clocks MOUT_G3D>, <&clocks=20
+>>>>>> DOUT_G3D>;
+>>>>>>  +            assigned-clock-rates =3D <0>, <66700000>;
+>>>>>>  +            assigned-clock-parents =3D <&clocks MOUT_MPLL>;
+>>>>>=20
+>>>>>  What are these clocks for, and why are they reparented /=20
+>>>>> reclocked?
+>>>>>=20
+>>>>>  Shouldn't they be passed to 'clocks' as well?
+>>>>>=20
+>>>>>  -Paul
+>>>>>=20
+>>>>=20
+>>>>  The G3D clock system can have multiple parents, and for stable=20
+>>>> operation
+>>>>  it's recommended to use the MPLL clock as the parent (which in=20
+>>>> turn
+>>>>  is actually a mux as well).  MOUT_G3D is simply the mux for=20
+>>>> CLK_G3D
+>>>>  (SGX core clock), DOUT_G3D is the divider.  DOUT_G3D could=20
+>>>> equally be CLK_G3D
+>>>>  (and probably should be, for readability) as CLK_G3D is simply=20
+>>>> the gate and
+>>>>  DOUT_G3D is the divider for it.
+>>>=20
+>>>  Good point, it should be CLK_G3D instead of DOUT.  Can you fix=20
+>>> this as
+>>>  well?
+>>=20
+>>  Yep, will do.  Nikolaus, I'll send you an updated patch to include.
+>>=20
+>=20
+> How are assigned-clocks handled in the yaml DT schema?  When running=20
+> make dtbs_check,
+> I end up with messages such as
+>=20
+> arch/arm/boot/dts/s5pv210-aquila.dt.yaml: gpu@f3000000:=20
+> 'assigned-clock-parents', 'assigned-clock-rates', 'assigned-clocks'=20
+> do not match any of the regexes: 'pinctrl-[0-9]+'
+>=20
+> Do they need to explicitly be listed as valid entries?
 
-> ---
->  drivers/watchdog/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 66ca69f30f01..67a83578810e 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1217,6 +1217,7 @@ config ITCO_WDT
->  	depends on (X86 || IA64) && PCI
->  	select WATCHDOG_CORE
->  	depends on I2C || I2C=n
-> +	depends on MFD_INTEL_PMC_BXT || !MFD_INTEL_PMC_BXT
->  	select LPC_ICH if !EXPERT
->  	select I2C_I801 if !EXPERT && I2C
->  	---help---
-> 
+The assigned-* can also be moved inside the node of the clocks=20
+provider. I would say it makes more sense to have them there.
+
+-Paul
+
 
