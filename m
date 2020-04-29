@@ -2,168 +2,152 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BAFC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AEAC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56967206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86CA20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Un+87k17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgD2O5u (ORCPT
+        id S1726781AbgD2PA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:57:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50102 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2O5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:57:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 622A8ABD7;
-        Wed, 29 Apr 2020 14:57:47 +0000 (UTC)
-Subject: Re: [PATCH] drm/ast: remove duplicate assignment of ast_crtc_funcs
- member
-To:     Jason Yan <yanaijie@huawei.com>, airlied@redhat.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200429141010.8445-1-yanaijie@huawei.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <43183725-a490-611d-bf4d-fc23cfca44d9@suse.de>
-Date:   Wed, 29 Apr 2020 16:57:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 29 Apr 2020 11:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgD2PA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:00:27 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149C1C03C1AD;
+        Wed, 29 Apr 2020 08:00:27 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d17so2899315wrg.11;
+        Wed, 29 Apr 2020 08:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rygEgNYoXE3RBYcDWl0SZa70KqwTrtI8yAZZsL8kaoI=;
+        b=Un+87k17XnbFb+NGQBLDmGTmTJopxnh8Fh4Zcwq1QGxuVTmt85YkFeXzDEE6fl0uLi
+         W+1JiCHggQ+MAnEd4sK7IqRmE+rYr15GXGyKhN2DgED4uYrwHXC/8fn3/pcV+Fl4auw1
+         T2DEcOcRZv6g6cYm/F0JZT3an8Yaa9QrszqjlvXSGdU/N3CBjxwfQhVs6r5OyEvRynhm
+         3mjEvLrVd/oATsLDU02iUFtzIDAXnuqs0u/Z65lpwZgynbtzWvCuttOFNbsBJQEFzKpt
+         qyEK7VjbTKnYAOe6CpCt0G6ZXUk8iU8/ZsovVsUhbB3C4LDXOOrD/s65/cAJIcnzY5fR
+         ZgyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rygEgNYoXE3RBYcDWl0SZa70KqwTrtI8yAZZsL8kaoI=;
+        b=XrJ3LqjkpJD9V19KCU8sHeEm7BPev0VfI6AJ77+zKKlEW3O6sX3ldmH+gxTVU/MUHr
+         KSyrDGNc6k+zecUd6YvqmxVaG9E+lVy/wSvm/DWlZlEBUsK4xMkwq4evktp2SRwzOgcx
+         QQ3pASMRqER/P/P3IJnq9O8U76AUIfbLVd2/CAvCC+uV4qSPd9Rzvn2WHA4R+0pgGOXC
+         XD3APCqDbCGSfyAzyCY9VChW2QmO2MEklLRsXxkn5nTekjsWc6DA1xEtRvSx+ODtfRZR
+         08IIuWaEpihYGOGXOxeetuZq179IgtZuIDATq6WGttimpFVURl5M6PfPSC8m1Z5Kqg4x
+         9H0A==
+X-Gm-Message-State: AGi0Pub1bJPqjVd+fFdJVR5iPeG6rPf5qNXuu+9nCcEGLyUy5gNfO92w
+        gkX8cVDUeXeeueQnxN0i6H+OK3ld4zGY
+X-Google-Smtp-Source: APiQypKbU2Sq1MokQaDGhjgl60I0Hq23jAmKivXdQ1yimY8IgMxCPeEOQ/t4LlSOuhTMWJVwE8G6SQ==
+X-Received: by 2002:adf:ce02:: with SMTP id p2mr39471934wrn.173.1588172425424;
+        Wed, 29 Apr 2020 08:00:25 -0700 (PDT)
+Received: from ninjahost.lan (host-2-102-14-195.as13285.net. [2.102.14.195])
+        by smtp.gmail.com with ESMTPSA id n6sm7894617wmc.28.2020.04.29.08.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 08:00:24 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH v2] net: atm: Add annotation for lec_priv_walk() and lec_seq_stop()
+Date:   Wed, 29 Apr 2020 15:58:46 +0100
+Message-Id: <20200429145848.6271-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <0/6>
+References: <0/6>
 MIME-Version: 1.0
-In-Reply-To: <20200429141010.8445-1-yanaijie@huawei.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="q3NSRBFoOQ5Q44HGU4NspjrfPrqs2jjCe"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---q3NSRBFoOQ5Q44HGU4NspjrfPrqs2jjCe
-Content-Type: multipart/mixed; boundary="PdHyAhPwIUQwBcMYmwi3tyjBpfBzIKV1b";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Jason Yan <yanaijie@huawei.com>, airlied@redhat.com, airlied@linux.ie,
- daniel@ffwll.ch, kraxel@redhat.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Message-ID: <43183725-a490-611d-bf4d-fc23cfca44d9@suse.de>
-Subject: Re: [PATCH] drm/ast: remove duplicate assignment of ast_crtc_funcs
- member
-References: <20200429141010.8445-1-yanaijie@huawei.com>
-In-Reply-To: <20200429141010.8445-1-yanaijie@huawei.com>
+Sparse reports a warning at lec_priv_walk() and lec_seq_stop()
 
---PdHyAhPwIUQwBcMYmwi3tyjBpfBzIKV1b
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+warning: context imbalance in lec_priv_walk() - unexpected unlock
+warning: context imbalance in lec_seq_stop() - unexpected unlock
 
-Hi
+The root cause is the missing annotation at lec_priv_walk()
+	and lec_seq_stop()
+To fix this, __acquire() and __release() annotations
+are added in case conditions are not met.
+This only instruct Sparse to shutdown the warning
 
-Am 29.04.20 um 16:10 schrieb Jason Yan:
-> The struct member 'set_config' was assigned twice:
->=20
-> static const struct drm_crtc_funcs ast_crtc_funcs =3D {
-> 	.reset =3D ast_crtc_reset,
-> 	.set_config =3D drm_crtc_helper_set_config,
-> 	......
-> 	.set_config =3D drm_atomic_helper_set_config,
-> 	......
-> };
->=20
-> Since the second one is which we use now in fact, we can remove the
-> first one.
->=20
-> This fixes the following coccicheck warning:
->=20
-> drivers/gpu/drm/ast/ast_mode.c:932:50-51: set_config: first occurrence
-> line 934, second occurrence line 937
->=20
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Add the  __acquire(&priv->lec_arp_lock)
+Add __release(&priv->lec_arp_lock) annotation
+Add __releases(&state->locked->lec_arp_lock) annotation
+Add  __release(&state->locked->lec_arp_lock) annotation
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+Changes since v2 
+- merge patch No 6 and No 4 into one
 
-Thanks! I'll apply the patch to drm-misc-next soonish.
+ net/atm/lec.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Best regards
-Thomas
+diff --git a/net/atm/lec.c b/net/atm/lec.c
+index 25fa3a7b72bd..7947abb17af2 100644
+--- a/net/atm/lec.c
++++ b/net/atm/lec.c
+@@ -886,12 +886,18 @@ static void *lec_priv_walk(struct lec_state *state, loff_t *l,
+ 	if (!state->locked) {
+ 		state->locked = priv;
+ 		spin_lock_irqsave(&priv->lec_arp_lock, state->flags);
++	} else {
++		/* annotation for sparse */
++		__acquire(&priv->lec_arp_lock);
+ 	}
+ 	if (!lec_arp_walk(state, l, priv) && !lec_misc_walk(state, l, priv)) {
+ 		spin_unlock_irqrestore(&priv->lec_arp_lock, state->flags);
+ 		state->locked = NULL;
+ 		/* Partial state reset for the next time we get called */
+ 		state->arp_table = state->misc_table = 0;
++	} else {
++		/* annotation for sparse */
++		__release(&priv->lec_arp_lock);
+ 	}
+ 	return state->locked;
+ }
+@@ -940,6 +946,7 @@ static void *lec_seq_start(struct seq_file *seq, loff_t *pos)
+ }
+ 
+ static void lec_seq_stop(struct seq_file *seq, void *v)
++	__releases(&state->locked->lec_arp_lock)
+ {
+ 	struct lec_state *state = seq->private;
+ 
+@@ -947,6 +954,9 @@ static void lec_seq_stop(struct seq_file *seq, void *v)
+ 		spin_unlock_irqrestore(&state->locked->lec_arp_lock,
+ 				       state->flags);
+ 		dev_put(state->dev);
++	} else {
++		/* annotation for sparse */
++		__release(&state->locked->lec_arp_lock);
+ 	}
+ }
+ 
+-- 
+2.25.3
 
-> ---
->  drivers/gpu/drm/ast/ast_mode.c | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_m=
-ode.c
-> index d2ab81f9c498..7062bcd78740 100644
-> --- a/drivers/gpu/drm/ast/ast_mode.c
-> +++ b/drivers/gpu/drm/ast/ast_mode.c
-> @@ -931,7 +931,6 @@ static void ast_crtc_atomic_destroy_state(struct dr=
-m_crtc *crtc,
-> =20
->  static const struct drm_crtc_funcs ast_crtc_funcs =3D {
->  	.reset =3D ast_crtc_reset,
-> -	.set_config =3D drm_crtc_helper_set_config,
->  	.gamma_set =3D drm_atomic_helper_legacy_gamma_set,
->  	.destroy =3D ast_crtc_destroy,
->  	.set_config =3D drm_atomic_helper_set_config,
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---PdHyAhPwIUQwBcMYmwi3tyjBpfBzIKV1b--
-
---q3NSRBFoOQ5Q44HGU4NspjrfPrqs2jjCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6plegACgkQaA3BHVML
-eiNUrwf7BzNxEOCYMo4loRRgbH3ob+BUDTqm98C5VqTDbVmHz+XnRQ56D6b72ic0
-JRBWAxfjOKPAQOAmA8+qKFKFCeQ16wvnYD1n4E+OHfoBd53iHDqHkkSd99ll0Erf
-76IlFp1PQ3WgjCC56BjbqbKYX3VbvD7fjarFRrRfK4tzEp5+B31WdHzsMGoRcopU
-Q3ac8fzAXEhLlLM6AOnhtEovYvVz4YVqVXQEgvEwI1GLbUDu78TeJc1FQckcL9Am
-4ogiZ4oAtTt5nQYKq6zDtlD5jI3hnIoIlTj8KHX/m5BNEIQXN2LM+Iq1mG7n3Gag
-9V9n6YX0md0K365JIjrNxo93uyVNPQ==
-=ciLe
------END PGP SIGNATURE-----
-
---q3NSRBFoOQ5Q44HGU4NspjrfPrqs2jjCe--
