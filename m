@@ -2,114 +2,188 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC9C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAFDC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B981920B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D0A2137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588196465;
-	bh=PiKJ0Zcclx7zxFJZauZJsh2q/PZ0w2dzU3Qo8l37Nfs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ilW7z6HxWw0gG5+azumSN/Wp3O9cqzCSOOJzpJAUHcSIpuT+vvcRfIdwKZlv0QUuf
-	 HMocNkX0Iz6S+ZudgqeJQOTF0JtjTbZgPHUCtnjJBFgZzSNXTIQqrci5/pFq3KicwT
-	 Jf968QEP4lV6WBlXXymoJ1W0dMvAwEg5Y01jXpNM=
+	s=default; t=1588196579;
+	bh=gVqHUNjKN4zzGuEIJy47n556tuOP9MZo3cz2lkL4JIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d3m10DqQ9IdNF1Oi6l2Cm62vFbEEF/Uv0/iJl4vV0r9Jc5cxVS6Cv6jOcb9jKrjDq
+	 BDkk+zoDcAqd91v2DoMT72WpU9CSkKG8asasxwrrlNlWkzDmuE0uNYHL43r4G5VjqX
+	 CMynx/NyRBg6QNOZcvr0FyR5jst6uhf+mHO/jsfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgD2VlF (ORCPT
+        id S1727073AbgD2Vm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgD2VlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:41:04 -0400
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F397220B1F;
-        Wed, 29 Apr 2020 21:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588196464;
-        bh=PiKJ0Zcclx7zxFJZauZJsh2q/PZ0w2dzU3Qo8l37Nfs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V2BwzdyddFOhFfOyL9DMOOSHnupl1FQpNSkINwR7Co3bIN4J54qRfdmEli6CPyE9T
-         JgIZcZwo31vF8opxNxOWb6wssnuXzLSB+S1Gkhp2n3822CBCU8zEbcsuJe2zPMv3+P
-         DyVZcfD0/H86/ZZvefZvaOhOyaawQO+FXyK1z5zM=
-Received: by mail-il1-f182.google.com with SMTP id m5so3939273ilj.10;
-        Wed, 29 Apr 2020 14:41:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PubHkJzGP+w1fIXYByolWNeh/EmVwHGjOebi4JD8W0wgyACiML2c
-        7yfPPkvEZVnXzqaQHZICehP2mvrdhTOBYYd1G+8=
-X-Google-Smtp-Source: APiQypIHt4SIaQvB+vzV0BhbTo+9okeeoDEdkxDX4tgP3wDODxAVFVlI09ibxC2HXF7763WE3TQ16D63uu7+xHmIgko=
-X-Received: by 2002:a92:607:: with SMTP id x7mr394396ilg.218.1588196463379;
- Wed, 29 Apr 2020 14:41:03 -0700 (PDT)
+        Wed, 29 Apr 2020 17:42:59 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42421 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgD2Vm6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:42:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i13so3256801oie.9;
+        Wed, 29 Apr 2020 14:42:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZN/QRY3OxMls9AHONLpA7W00pKe4yt6lczGLbOe3TCs=;
+        b=OHP5FA4ujpCRCDbhz0uB+PWV436h924hAc+l/c/RFiPSSn/cjAzioveog6bgAmdLLx
+         IHDLNRAnUbrNC2i7cs4nQbvbK+7sOsfgbPxeCoijUtqNo92Xed8yVNl1DDQ+3wsoLo54
+         02HzvovPYfSvExkoAvSG/MaroUr7mlckLDtoSNqR/HtLWXIJXY87jEyuRbnFYHnNHLmm
+         YGCpmrT4XR4fAGASTXUN3MSDOjpB+l2geNfAvRsAYQgjg9psAxdFFj1H2KYq6Vfi6c1Z
+         FUzB6QGx1ckBJ8Tm1LPftWcHQpctpLbzspqrhODLr3K58ckttT1PnYTwAT93eFV6jc1f
+         f6Aw==
+X-Gm-Message-State: AGi0Pub/C7SwQXyyCQUL1OL5l0T+izsX5gjIezwa6PJR+0luz6A9J2Wo
+        jafNZ3UwMywJRdzXZnzSqg==
+X-Google-Smtp-Source: APiQypKCxdqv61B1T1NpBM6xwpLAjHJI0zpy60RiRUAzF2x8pqxnzmCc+fmPja7HqOoybilLjjX3bQ==
+X-Received: by 2002:aca:4c13:: with SMTP id z19mr258695oia.79.1588196576073;
+        Wed, 29 Apr 2020 14:42:56 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j42sm766426ooi.5.2020.04.29.14.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 14:42:55 -0700 (PDT)
+Received: (nullmailer pid 17398 invoked by uid 1000);
+        Wed, 29 Apr 2020 21:42:54 -0000
+Date:   Wed, 29 Apr 2020 16:42:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        saravanan sekar <sravanhome@gmail.com>,
+        andy.shevchenko@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for
+ mp2629
+Message-ID: <20200429214254.GA9175@bogus>
+References: <20200417085003.6124-1-sravanhome@gmail.com>
+ <20200417085003.6124-2-sravanhome@gmail.com>
+ <20200418155308.681df38f@archlinux>
+ <50ffb42e-4080-415e-dd3d-e38f7b0a6071@gmail.com>
+ <20200418170619.155222fa@archlinux>
+ <20200420071910.GH3737@dell>
 MIME-Version: 1.0
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-11-nivedita@alum.mit.edu> <CAMj1kXF_-ZA4ghy_8Gx831UcAwn0VjFmDub5L1_h28vV+sdPDw@mail.gmail.com>
- <20200429213944.GB1621173@rani.riverdale.lan>
-In-Reply-To: <20200429213944.GB1621173@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 29 Apr 2020 23:40:51 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHf9bXX8uDeSEL46r39uPiBOPjfmvkcL_MFtf9ZAo8ZqQ@mail.gmail.com>
-Message-ID: <CAMj1kXHf9bXX8uDeSEL46r39uPiBOPjfmvkcL_MFtf9ZAo8ZqQ@mail.gmail.com>
-Subject: Re: [PATCH 09/10] efi/x86: Support builtin command line
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420071910.GH3737@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 23:39, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, Apr 29, 2020 at 09:07:32PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 29 Apr 2020 at 19:41, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > Add support for the x86 CMDLINE_BOOL and CMDLINE_OVERRIDE configuration
-> > > options.
-> > >
-> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > ---
-> > >  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++++----
-> > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> > > index 85a924fecc87..0faba30d6406 100644
-> > > --- a/drivers/firmware/efi/libstub/x86-stub.c
-> > > +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> > > @@ -680,7 +680,6 @@ unsigned long efi_main(efi_handle_t handle,
-> > >         unsigned long buffer_start, buffer_end;
-> > >         struct setup_header *hdr = &boot_params->hdr;
-> > >         efi_status_t status;
-> > > -       unsigned long cmdline_paddr;
-> > >
-> > >         efi_system_table = sys_table_arg;
-> > >
-> > > @@ -739,9 +738,14 @@ unsigned long efi_main(efi_handle_t handle,
-> > >                 image_offset = 0;
-> > >         }
-> > >
-> > > -       cmdline_paddr = ((u64)hdr->cmd_line_ptr |
-> > > -                        ((u64)boot_params->ext_cmd_line_ptr << 32));
-> > > -       efi_parse_options((char *)cmdline_paddr);
-> > > +#ifdef CONFIG_CMDLINE_BOOL
-> > > +       efi_parse_options(CONFIG_CMDLINE);
-> > > +#endif
-> >
-> > Can we use IS_ENABLED() here as well?
->
-> Unfortunately on x86, CONFIG_CMDLINE is not defined if
-> CONFIG_CMDLINE_BOOL isn't enabled. So turning this into an
-> IS_ENABLED(CONFIG_CMDLINE_BOOL) causes a compile error when it's
-> disabled due to CONFIG_CMDLINE being an undeclared symbol.
->
+On Mon, Apr 20, 2020 at 08:19:10AM +0100, Lee Jones wrote:
+> On Sat, 18 Apr 2020, Jonathan Cameron wrote:
+> 
+> > On Sat, 18 Apr 2020 17:01:17 +0200
+> > saravanan sekar <sravanhome@gmail.com> wrote:
+> > 
+> > > Hi Jonathan,
+> > > 
+> > > On 18/04/20 4:53 pm, Jonathan Cameron wrote:
+> > > > On Fri, 17 Apr 2020 10:49:58 +0200
+> > > > Saravanan Sekar <sravanhome@gmail.com> wrote:
+> > > >  
+> > > >> Add device tree binding information for mp2629 mfd driver.
+> > > >>
+> > > >> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > >> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > >> ---
+> > > >>   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
+> > > >>   1 file changed, 61 insertions(+)
+> > > >>   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > >> new file mode 100644
+> > > >> index 000000000000..b25b29259d67
+> > > >> --- /dev/null
+> > > >> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > >> @@ -0,0 +1,61 @@
+> > > >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > >> +%YAML 1.2
+> > > >> +---
+> > > >> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> > > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > >> +
+> > > >> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> > > >> +
+> > > >> +maintainers:
+> > > >> +  - Saravanan Sekar <sravanhome@gmail.com>
+> > > >> +
+> > > >> +description: |
+> > > >> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
+> > > >> +  wireless camera and portable devices. Chip is controlled over I2C.
+> > > >> +
+> > > >> +  The battery charge management device handles battery charger controller and
+> > > >> +  ADC IIO device for battery, system voltage
+> > > >> +
+> > > >> +properties:
+> > > >> +  compatible:
+> > > >> +    const: mps,mp2629
+> > > >> +
+> > > >> +  reg:
+> > > >> +    maxItems: 1
+> > > >> +
+> > > >> +  interrupts:
+> > > >> +    maxItems: 1
+> > > >> +
+> > > >> +  interrupt-controller: true
+> > > >> +
+> > > >> +  "#interrupt-cells":
+> > > >> +    const: 2
+> > > >> +    description:
+> > > >> +      The first cell is the IRQ number, the second cell is the trigger type.
+> > > >> +
+> > > >> +required:
+> > > >> +  - compatible
+> > > >> +  - reg
+> > > >> +  - interrupts
+> > > >> +  - interrupt-controller
+> > > >> +  - "#interrupt-cells"
+> > > >> +
+> > > >> +examples:
+> > > >> +  - |
+> > > >> +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > >> +    #include <dt-bindings/input/linux-event-codes.h>
+> > > >> +    i2c@7e205000 {  
+> > > > I thought the general trend for i2c devices was to leave the i2c
+> > > > part 'vague'.
+> > > >
+> > > >      i2c {
+> > > >            #address-cells = <1>;
+> > > >            #size-cells = <0>;
+> > > >           
+> > > >            pmic@4b.. etc  
+> > > I agree with you and initial patch was as like above, but Lee was 
+> > > somehow unhappy and not satisfied with
 
-What about
+Jonathan is correct.
 
-efi_parse_options(CONFIG_CMDLINE "");
+> > > 
+> > > my explanations. Please find more info on v4.
+> > 
+> > Ah. Curious.  Oh well - over to Rob for a definitive answer!
+> 
+> I haven't seen this spoken about before.  The comments were based
+> solely on my own views of, the example should provide a solid, valid,
+> potentially working block for people to use as a reference.
 
-?
+I agree that the part matching this schema should be. The rest is just 
+boilerplate.
+
+> Would an I2C node missing an address be a valid DTS/DTSI entry?
+
+i2c-gpio?
+
+Rob
+
+
+
