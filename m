@@ -2,152 +2,124 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB7C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A0FC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2736220B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoIbu0RH"
+	by mail.kernel.org (Postfix) with ESMTP id AC0532083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgD2RCl (ORCPT
+        id S1727872AbgD2RCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726776AbgD2RCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:02:40 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4487BC03C1AE;
-        Wed, 29 Apr 2020 10:02:40 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id g10so2276689lfj.13;
-        Wed, 29 Apr 2020 10:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3lN2EUXREobqihKThRa5uh5/wHV6odRCA05HFH35DSU=;
-        b=SoIbu0RHOhRpTU2fkuLoy+Lfc7aodBaq73tQfdVAsZtGusods24Mx67wE8GG2X2T7W
-         m3RxkAkz9MkzF0p/4UA1upUmAvMxL1k5rCp42SyiYDFM0dKpBT28Tvp6L9Hm30PLnS+X
-         vhqhSu9FVaEEidbRsYLpD+eOIWfHKiEP4gxgaDQXZBFgB80BcKCoKkkGV/oF4cC+BUPV
-         nHpz48iRE/mB2yjmXSRwWDLakeDpCQ36eMZhaPiSCD4t6zAty58nXzwyCUH0w4z83rjD
-         KcaOiyq4g9X0RIks7S035RQwA0pCZ8zz7j98ZK0RI/e42JouGzARrL7H4ByM0mRkqBHs
-         1xyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3lN2EUXREobqihKThRa5uh5/wHV6odRCA05HFH35DSU=;
-        b=sfQ3LjyK6BiYvlKKvaPFwbNqBBx/hry+KBU94ZU4QXF1X4DI+4RK1V0maOy+JgUUtS
-         jwjMijIe5HgGDqw0GU3ONnlN+lUUHBl3lbZIaq3c3mVH8WB+loR+qiEEfuCkL0MCvIQb
-         qZAQml/5OyCdwCmUktrAQiPQEEpWBFGV0ouZJePGqIUe2tAtZqt58Q9wJeKTiMA2cWbr
-         PIQtyotwxEm9r4DZw7z7f7CGdEmal04QDYhMy4Jcqp8C+oGvoLsH1wqWPyvXqczxCVwE
-         1yqxEGN6dde1uzBM6Xm+FgMykN7RGj2UyC8vQOyQzgh4pyHSnG2wEundWez+dtrO/IC9
-         ya5g==
-X-Gm-Message-State: AGi0PuYnWbRrQ81RLeWnjWawzithAikp3iy6a8is98ypjfhaITAqxsm/
-        oMCohVka+dsRclHO/fcGhx+5fVdG
-X-Google-Smtp-Source: APiQypKzr4qKOw+dJP7w9+CQO0MSB3QXu+WGnEu7EBlI1u2hLHht+xgHU++Cj4Vs2H0mkPq2nxI1ug==
-X-Received: by 2002:ac2:5338:: with SMTP id f24mr2213922lfh.197.1588179758290;
-        Wed, 29 Apr 2020 10:02:38 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id m15sm2573038lji.21.2020.04.29.10.02.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 10:02:37 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
- <20200427110033.GC3464906@ulmo>
- <3a06811c-02dc-ce72-ebef-78c3fc3f4f7c@gmail.com>
- <20200427151234.GE3464906@ulmo>
- <1ab276cf-c2b0-e085-49d8-b8ce3dba8fbe@gmail.com>
- <20200429081448.GA2345465@ulmo> <20200429085502.GB2345465@ulmo>
- <9e36c4ec-ca02-bd15-d765-15635f09db4b@gmail.com>
- <7442f4cd-6406-41f6-5c9b-932bff8ad5b2@nvidia.com>
- <5863e364-480e-7839-c42b-73a7f6990a30@gmail.com>
- <20200429162434.GA3157354@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bb4d97b6-c3c6-dcf0-c2a7-51f094998381@gmail.com>
-Date:   Wed, 29 Apr 2020 20:02:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 13:02:50 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16013 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbgD2RCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:02:49 -0400
+IronPort-SDR: OnVH5QCIA1TEd9TRkzGzUxpzSAA+w4znlZO3msVnx6qTQiM9eqkmdK/wcAMUyJKYDJ2nJd8SXU
+ CMhIEI/FYpXg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 10:02:45 -0700
+IronPort-SDR: mQULBHZb41yIVnbCt9y5lfq/YPmOopAi1d86ySjeS9k08T2lUaNk7f+0PmCj6GMa7h3CkMF6HB
+ +IfCa2rYO9UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="258020657"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 10:02:44 -0700
+Message-ID: <1b43e3cc36dd707c0268e96b166eca4421d7c2e2.camel@intel.com>
+Subject: Re: [PATCH v3 05/10] x86/fpu/xstate: Define new functions for
+ clearing fpregs and xstates
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Wed, 29 Apr 2020 10:02:46 -0700
+In-Reply-To: <20200429163906.GC16407@zn.tnic>
+References: <20200328164307.17497-6-yu-cheng.yu@intel.com>
+         <20200429160644.28584-1-yu-cheng.yu@intel.com>
+         <20200429163906.GC16407@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20200429162434.GA3157354@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.04.2020 19:24, Thierry Reding пишет:
-> On Wed, Apr 29, 2020 at 05:46:46PM +0300, Dmitry Osipenko wrote:
->> 29.04.2020 16:57, Jon Hunter пишет:
->>>
->>> On 29/04/2020 13:35, Dmitry Osipenko wrote:
->>>> 29.04.2020 11:55, Thierry Reding пишет:
->>>> ...
->>>>>>> It's not "papering over an issue". The bug can't be fixed properly
->>>>>>> without introducing I2C atomic transfers support for a late suspend
->>>>>>> phase, I don't see any other solutions for now. Stable kernels do not
->>>>>>> support atomic transfers at all, that proper solution won't be backportable.
->>>>>>
->>>>>> Hm... on a hunch I tried something and, lo and behold, it worked. I can
->>>>>> get Cardhu to properly suspend/resume on top of v5.7-rc3 with the
->>>>>> following sequence:
->>>>>>
->>>>>> 	revert 9f42de8d4ec2 i2c: tegra: Fix suspending in active runtime PM state
->>>>>> 	apply http://patchwork.ozlabs.org/project/linux-tegra/patch/20191213134417.222720-1-thierry.reding@gmail.com/
->>>>>>
->>>>>> I also ran that through our test farm and I don't see any other issues.
->>>>>> At the time I was already skeptical about pm_runtime_force_suspend() and
->>>>>> pm_runtime_force_resume() and while I'm not fully certain why exactly it
->>>>>> doesn't work, the above on top of v5.7-rc3 seems like a good option.
->>>>>>
->>>>>> I'll try to do some digging if I can find out why exactly force suspend
->>>>>> and resume doesn't work.
->>>>>
->>>>> Ah... so it looks like pm_runtime_force_resume() never actually does
->>>>> anything in this case and then disable_depth remains at 1 and the first
->>>>> tegra_i2c_xfer() will then fail to runtime resume the controller.
->>>>
->>>> That's the exactly expected behaviour of the RPM force suspend/resume.
->>>> The only unexpected part for me is that the tegra_i2c_xfer() runtime
->>>> resume then fails in the NOIRQ phase.
->>>
->>> From reading the changelog for commit 1e2ef05bb8cf ("PM: Limit race
->>> conditions between runtime PM and system sleep (v2))", this is the
->>> expected behaviour for runtime resume in the noirq phase.
->>
->> I'm curious whether there is a way to tell RPM that it's okay to do it
->> for a particular device, like I2C that uses IRQ-safe RPM + doesn't have
->> parent devices that need to be resumed.
+On Wed, 2020-04-29 at 18:39 +0200, Borislav Petkov wrote:
+> On Wed, Apr 29, 2020 at 09:06:44AM -0700, Yu-cheng Yu wrote:
+> > From: Fenghua Yu <fenghua.yu@intel.com>
+> > 
+> > Currently, fpu__clear() clears all fpregs and xstates.  Once XSAVES
+> > supervisor states are introduced, supervisor settings (e.g. CET xstates)
+> > must remain active for signals; It is necessary to have separate functions:
+> > 
+> > - Create fpu__clear_user_states(): clear only user settings for signals;
+> > - Create fpu__clear_all(): clear both user and supervisor settings in
+> >    flush_thread().
+> > 
+> > Also modify copy_init_fpstate_to_fpregs() to take a mask from above two
+> > functions.
+> > 
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Reviewed-by: Tony Luck <tony.luck@intel.com>
+> > 
+> > v3:
+> > - Put common code into a static function fpu__clear(), with a parameter
+> >   user_only.
+> > 
+> > v2:
+> > - Fixed an issue where fpu__clear_user_states() drops supervisor xstates.
+> > - Revise commit log.
 > 
-> Been there, done that:
+> Try applying that patch from this mail yourself and see whether the
+> patch changelog will remain in the commit message or it will get
+> discarded.
+
+My mistake!  I will fix it.
+
 > 
-> 	http://patchwork.ozlabs.org/project/linux-tegra/patch/20191128160314.2381249-2-thierry.reding@gmail.com/
+> > @@ -318,18 +313,40 @@ static inline void copy_init_fpstate_to_fpregs(void)
+> >   * Called by sys_execve(), by the signal handler code and by various
+> >   * error paths.
+> >   */
+> > -void fpu__clear(struct fpu *fpu)
+> > +static void fpu__clear(struct fpu *fpu, int user_only)
+> >  {
+> > -	WARN_ON_FPU(fpu != &current->thread.fpu); /* Almost certainly an anomaly */
+> > +	WARN_ON_FPU(fpu != &current->thread.fpu);
+> 
+> Why did you remove the side comment?
+> 
+> Is it wrong?
+> 
+> Why do you do such arbitrary changes which are not needed instead of
+> concentrating on only the changes the patch should do?
 
-It should work, but it looks to me more like a hack rather than a proper
-fix. At least I haven't seen any other drivers doing anything like that.
+It has been some time since Thomas commented on this tail comment.
+https://lore.kernel.org/lkml/alpine.DEB.2.21.1908161703010.1923@nanos.tec.linutronix.de/
 
-I don't have any better suggestions for now, so perhaps it should be a
-good enough solution for the starter, combined with setting the
-IRQF_NO_SUSPEND flag for I2C interrupt. It should allow drivers like
-PCIe to use I2C in the NOIRQ phase.
+I think why not fixing it while at it.
 
-Maybe it could be worthwhile to try to ask Rafael about how drivers
-should handle this situation in regards to the RPM usage.
+Yu-cheng
+
