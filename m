@@ -2,113 +2,284 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0A2C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95EDC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C45206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QKBgOWhX"
+	by mail.kernel.org (Postfix) with ESMTP id B969F206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgD2FqO (ORCPT
+        id S1726575AbgD2Fq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 01:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgD2FqN (ORCPT
+        Wed, 29 Apr 2020 01:46:57 -0400
+Received: from mx137-tc.baidu.com ([61.135.168.137]:43907 "EHLO
+        tc-sys-mailedm02.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725798AbgD2Fq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 01:46:13 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22FFC03C1AD
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 22:46:12 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 20so848765qkl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 22:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z6P3Px4RUsQGpCsP0tLcahroG5Q7PAYgk++UN9Efoaw=;
-        b=QKBgOWhXO0CGqmIPgmrY/waFwwJCD1tMEsHj/0+i4Yksqe4nRqI9ez82ompbl4Znkt
-         R75KhHsT+uL4Mb/QXMcentByrET3RCOnXsUuIyfA0S0Q6cTjIqlSXYv+4O+StaNST7Sr
-         ByBO3ho9QnYrSomRn0ge+mt3rNN9oM5M5WREw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z6P3Px4RUsQGpCsP0tLcahroG5Q7PAYgk++UN9Efoaw=;
-        b=ZTC6dZCHg/XJ9y/NvbsnOA/n5lWsH9+CrGqVjC69tFJrYVDqRfJPHreQR/4QXxbjqT
-         UJswrXWTbB+cDqP72Nn1dTz9e+3Cv30gBdVdtAgayr8ZHrj34oG3FB/6il75uIZ/5eUx
-         4FrNQ8/jV0YID+a3VxLlQvpuGRYvS19CzYVg9YElarzgkFIwexXioNiecznu2U3A7d5b
-         Rlj0E4oMoFCXFcs1w7dGGPdxnEkqXpbOKdR1guYeNGE7gLFKAjkKTnJmsimi013W/Kko
-         fsQmnC33WU2+KPdAkCtkJ+PO/dRCOW5vBULtnICCbsb2RN6SPSzaMyVthrIo8oL9N5vc
-         8Owg==
-X-Gm-Message-State: AGi0PubinSYvUitmQZQBTC5KvvblDeemBgYu8YleTVitJDwZkQ2k0w1z
-        8vy+t4TVRbL5ODJoI0Xi7eyezFycZwI0VWNm7Nuc5pig
-X-Google-Smtp-Source: APiQypK60pdEJh5Y5blGk+UcYQ0UpsJDO7M+MfFFuZSKu+VULMZ67IsZJHyhKEZjZ8OnqsEQng7a6fxdrUIP3BnEcjU=
-X-Received: by 2002:a05:620a:7f6:: with SMTP id k22mr19884854qkk.180.1588139171615;
- Tue, 28 Apr 2020 22:46:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429053319.113508-1-pmalani@chromium.org>
-In-Reply-To: <20200429053319.113508-1-pmalani@chromium.org>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Tue, 28 Apr 2020 22:45:59 -0700
-Message-ID: <CACeCKaesd4tbHEfM+dX=cjRMAkWEwYtqF-d7D2vvjOsECfsb1w@mail.gmail.com>
-Subject: Re: [PATCH] usb: typec: mux: intel: Handle alt mode HPD_LVL
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 Apr 2020 01:46:57 -0400
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm02.tc.baidu.com (Postfix) with ESMTP id 044A211C0069;
+        Wed, 29 Apr 2020 13:46:37 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
+        joro@8bytes.org, jmattson@google.com, wanpengli@tencent.com,
+        vkuznets@redhat.com, sean.j.christopherson@intel.com,
+        pbonzini@redhat.com
+Subject: [PATCH][v2] kvm: x86: emulate APERF/MPERF registers
+Date:   Wed, 29 Apr 2020 13:46:36 +0800
+Message-Id: <1588139196-23802-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, didn't compose the Commit message quite right, have sent out v2.
+Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
+this is confused to user when turbo is enable, and aperf/mperf
+can be used to show current cpu frequency after 7d5905dc14a
+"(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
+so we should emulate aperf mperf to achieve it
 
-Thanks,
+the period of aperf/mperf in guest mode are accumulated as
+emulated value, and add per-VM knod to enable emulate mperfaperf
 
-On Tue, Apr 28, 2020 at 10:34 PM Prashant Malani <pmalani@chromium.org> wro=
-te:
->
-> According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
-> 0.6, when a device is transitioning to DP Alternate Mode state, if the
-> HPD_LVL in the status update command VDO is set, the HPD_HIGH field in
-> the Alternate Mode request =E2=80=9Cmode_data=E2=80=9D field (bit 14) sho=
-uld also be
-> set. Ensure the bit is correctly handled while issuing the Alternate
-> Mode request.
->
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
-> ---
->  drivers/usb/typec/mux/intel_pmc_mux.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mu=
-x/intel_pmc_mux.c
-> index f5c5e0aef66f..c599112559e7 100644
-> --- a/drivers/usb/typec/mux/intel_pmc_mux.c
-> +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-> @@ -157,6 +157,10 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typ=
-ec_mux_state *state)
->         req.mode_data |=3D (state->mode - TYPEC_STATE_MODAL) <<
->                          PMC_USB_ALTMODE_DP_MODE_SHIFT;
->
-> +       if (data->status & DP_STATUS_HPD_STATE)
-> +               req.mode_data |=3D PMC_USB_DP_HPD_LVL <<
-> +                                PMC_USB_ALTMODE_DP_MODE_SHIFT;
-> +
->         return pmc_usb_command(port, (void *)&req, sizeof(req));
->  }
->
-> --
-> 2.26.2.303.gf8c07b1a785-goog
->
+diff v1:
+1. support AMD
+2. support per-vm capability to enable
+
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Chai Wen <chaiwen@baidu.com>
+Signed-off-by: Jia Lina <jialina01@baidu.com>
+---
+ Documentation/virt/kvm/api.rst  |  7 +++++++
+ arch/x86/include/asm/kvm_host.h |  4 ++++
+ arch/x86/kvm/cpuid.c            | 13 ++++++++++++-
+ arch/x86/kvm/svm.c              |  6 ++++++
+ arch/x86/kvm/vmx/vmx.c          |  6 ++++++
+ arch/x86/kvm/x86.c              | 37 +++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.h              |  6 ++++++
+ include/uapi/linux/kvm.h        |  1 +
+ 8 files changed, 79 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index efbbe570aa9b..dc4b4036e5d2 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6109,3 +6109,10 @@ KVM can therefore start protected VMs.
+ This capability governs the KVM_S390_PV_COMMAND ioctl and the
+ KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+ guests when the state change is invalid.
++
++8.23 KVM_CAP_MPERFAPERF
++----------------------------
++
++:Architectures: x86
++
++This capability indicates that KVM supports APERF and MPERF MSR registers
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 42a2d0d3984a..58fd3254804f 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -820,6 +820,9 @@ struct kvm_vcpu_arch {
+ 
+ 	/* AMD MSRC001_0015 Hardware Configuration */
+ 	u64 msr_hwcr;
++
++	u64 v_mperf;
++	u64 v_aperf;
+ };
+ 
+ struct kvm_lpage_info {
+@@ -979,6 +982,7 @@ struct kvm_arch {
+ 
+ 	bool guest_can_read_msr_platform_info;
+ 	bool exception_payload_enabled;
++	bool guest_has_mperfaperf;
+ 
+ 	struct kvm_pmu_event_filter *pmu_event_filter;
+ 	struct task_struct *nx_lpage_recovery_thread;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 901cd1fdecd9..3bdd907981b5 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -124,6 +124,14 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 					   MSR_IA32_MISC_ENABLE_MWAIT);
+ 	}
+ 
++	best = kvm_find_cpuid_entry(vcpu, 6, 0);
++	if (best) {
++		if (guest_has_mperfaperf(vcpu->kvm) &&
++			boot_cpu_has(X86_FEATURE_APERFMPERF))
++			best->ecx |= 1;
++		else
++			best->ecx &= ~1;
++	}
+ 	/* Update physical-address width */
+ 	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+ 	kvm_mmu_reset_context(vcpu);
+@@ -558,7 +566,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 	case 6: /* Thermal management */
+ 		entry->eax = 0x4; /* allow ARAT */
+ 		entry->ebx = 0;
+-		entry->ecx = 0;
++		if (boot_cpu_has(X86_FEATURE_APERFMPERF))
++			entry->ecx = 0x1;
++		else
++			entry->ecx = 0x0;
+ 		entry->edx = 0;
+ 		break;
+ 	/* function 7 has additional index. */
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 851e9cc79930..1d157a8dba46 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -4310,6 +4310,12 @@ static int svm_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_F10H_DECFG:
+ 		msr_info->data = svm->msr_decfg;
+ 		break;
++	case MSR_IA32_MPERF:
++		msr_info->data = vcpu->arch.v_mperf;
++		break;
++	case MSR_IA32_APERF:
++		msr_info->data = vcpu->arch.v_aperf;
++		break;
+ 	default:
+ 		return kvm_get_msr_common(vcpu, msr_info);
+ 	}
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 91749f1254e8..b05e276e262b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1914,6 +1914,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
+ 			return 1;
+ 		goto find_shared_msr;
++	case MSR_IA32_MPERF:
++		msr_info->data = vcpu->arch.v_mperf;
++		break;
++	case MSR_IA32_APERF:
++		msr_info->data = vcpu->arch.v_aperf;
++		break;
+ 	default:
+ 	find_shared_msr:
+ 		msr = find_msr_entry(vmx, msr_info->index);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b8124b562dea..38deb11b1544 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3435,6 +3435,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+ 		r = kvm_x86_ops.nested_enable_evmcs != NULL;
+ 		break;
++	case KVM_CAP_MPERFAPERF:
++		r = boot_cpu_has(X86_FEATURE_APERFMPERF) ? 1 : 0;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -4883,6 +4886,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++	case KVM_CAP_MPERFAPERF:
++		kvm->arch.guest_has_mperfaperf =
++			boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
++		r = 0;
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+@@ -8163,6 +8171,25 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+ 
++
++static void guest_enter_mperfaperf(u64 *mperf, u64 *aperf)
++{
++	rdmsrl(MSR_IA32_MPERF, *mperf);
++	rdmsrl(MSR_IA32_APERF, *aperf);
++}
++
++static void guest_exit_mperfaperf(struct kvm_vcpu *vcpu,
++		u64 mperf, u64 aperf)
++{
++	u64 perf;
++
++	rdmsrl(MSR_IA32_MPERF, perf);
++	vcpu->arch.v_mperf += perf - mperf;
++
++	rdmsrl(MSR_IA32_APERF, perf);
++	vcpu->arch.v_aperf += perf - aperf;
++}
++
+ /*
+  * Returns 1 to let vcpu_run() continue the guest execution loop without
+  * exiting to the userspace.  Otherwise, the value will be returned to the
+@@ -8176,7 +8203,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		kvm_cpu_accept_dm_intr(vcpu);
+ 	enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
+ 
++	bool enable_mperfaperf = guest_has_mperfaperf(vcpu->kvm);
+ 	bool req_immediate_exit = false;
++	u64 mperf, aperf;
+ 
+ 	if (kvm_request_pending(vcpu)) {
+ 		if (kvm_check_request(KVM_REQ_GET_VMCS12_PAGES, vcpu)) {
+@@ -8326,6 +8355,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	preempt_disable();
+ 
++	mperf = aperf = 0;
++	if (unlikely(enable_mperfaperf))
++		guest_enter_mperfaperf(&mperf, &aperf);
++
+ 	kvm_x86_ops.prepare_guest_switch(vcpu);
+ 
+ 	/*
+@@ -8449,6 +8482,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	local_irq_enable();
++
++	if (unlikely(enable_mperfaperf) && mperf)
++		guest_exit_mperfaperf(vcpu, mperf, aperf);
++
+ 	preempt_enable();
+ 
+ 	vcpu->srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index b968acc0516f..69b66ed8d82a 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -355,6 +355,12 @@ static inline bool kvm_dr7_valid(u64 data)
+ 	return !(data >> 32);
+ }
+ 
++
++static inline bool guest_has_mperfaperf(struct kvm *kvm)
++{
++	return kvm->arch.guest_has_mperfaperf;
++}
++
+ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+ void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 428c7dde6b4b..1f9abdf0d1a9 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_S390_VCPU_RESETS 179
+ #define KVM_CAP_S390_PROTECTED 180
+ #define KVM_CAP_PPC_SECURE_GUEST 181
++#define KVM_CAP_MPERFAPERF 182
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+-- 
+2.16.2
+
