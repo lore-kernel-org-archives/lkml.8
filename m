@@ -2,88 +2,117 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AD3C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFBBC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE78520787
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92A220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588127967;
+	bh=D1gVWlWPfPUu5gU2o0YhgfWsinEEkHq7CT422h/IvKc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RYNmpUTlokh6EGr5I6WnswC5G5f8DhOaAio4x/xR08mV5+N88sVofhuTU9oRgNegf
+	 ojLBRUbcDtg7cUpeLLa9JcET0mA1GubqN4MJfEPLelVNUj2lSpcrLDQBYU8DCTMMO3
+	 xzSO5vl06xPa1OnbFVJ0tizeHmHojcJ9PB6sCXaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgD2Ccw (ORCPT
+        id S1726544AbgD2Cj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:32:52 -0400
-Received: from smtprelay0004.hostedemail.com ([216.40.44.4]:44880 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Ccw (ORCPT
+        Tue, 28 Apr 2020 22:39:27 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:38533 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2Cj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:32:52 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 20E12180A7351;
-        Wed, 29 Apr 2020 02:32:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cause42_52f75aad21c32
-X-Filterd-Recvd-Size: 3266
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 29 Apr 2020 02:32:50 +0000 (UTC)
-Message-ID: <8e225a3166998c441049e9561703f357919d5499.camel@perches.com>
-Subject: Re: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just
- "unsigned"
-From:   Joe Perches <joe@perches.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     LinusW <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Apr 2020 19:32:48 -0700
-In-Reply-To: <CAD=FV=VtUEgwwB6C4GhTKx3TP37=i4shtwbG41r=wkELcpNmyQ@mail.gmail.com>
-References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
-         <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid>
-         <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
-         <CAD=FV=Us6LyfgeXvxnqq+KhHN1djok1y+W_xzSb-KGFy2wgEMg@mail.gmail.com>
-         <bc5c8165908facbb4781b2f29903dfacdf625e83.camel@perches.com>
-         <CAD=FV=VtUEgwwB6C4GhTKx3TP37=i4shtwbG41r=wkELcpNmyQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Tue, 28 Apr 2020 22:39:26 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 03T2cw95003502;
+        Wed, 29 Apr 2020 11:38:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03T2cw95003502
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588127939;
+        bh=kIACvKnbNQjmmvD9XNnXXeDcJn3YI4tRb66fZvzH6o0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1cVlTgtdT4Ze4na5pj7IAc2NYgNk2ylZxPHOfpt61kpTZIbSilpO7JhIq30479+FY
+         nlw6qbetxb6UzLkfMk0q39EBaAFGpppH1WTvlZJNZ/R7R8U/IqkB82fno6HNhEQjeA
+         DVGKsjqI9rBAU75zCuBhh1Ys0FhcNJeWx/PRIH4lrlEgG+M8Sdaf9ZMSClBXtommLX
+         8kkCtxlK3KB7/1CEpnheJblngxDGCUckcUhCapePv+/kAz8/ihRy85BB15osC2Fp3Y
+         HWz6lQAfDrhWJsQXaFyfheRKbUp8t8WJCiHZc+o83HKnNRR5ujg+zI8mRPlVFPkdqk
+         rgF5kTwNhPASw==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id s11so357926vsm.3;
+        Tue, 28 Apr 2020 19:38:59 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua2LuB2zvD8DI0EYTyDVh3qUAIx/Cs4x3I0+0BAZjoJIOJmJEDA
+        mrji9wueqgWUrUgmk/k9pGfUjRyrSal38HhULFo=
+X-Google-Smtp-Source: APiQypL9CzoFbaf4j03sWX7eNvmAC6tL/Lcuadex+fAZ5CS6CzTX3uUDunisReRWfuw07vnycbUbrt1H7bvxqgJy6Zg=
+X-Received: by 2002:a67:e94d:: with SMTP id p13mr23892835vso.215.1588127938122;
+ Tue, 28 Apr 2020 19:38:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200423073929.127521-1-masahiroy@kernel.org> <20200425115303.GA10048@ravnborg.org>
+In-Reply-To: <20200425115303.GA10048@ravnborg.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 29 Apr 2020 11:38:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARRxS6nnbBAa495Bh4nCdDAixinpMG1Tn6SV_w38uOzdg@mail.gmail.com>
+Message-ID: <CAK7LNARRxS6nnbBAa495Bh4nCdDAixinpMG1Tn6SV_w38uOzdg@mail.gmail.com>
+Subject: Re: [PATCH 00/16] kbuild: support 'userprogs' syntax
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Christian Brauner <christian@brauner.io>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Song Liu <songliubraving@fb.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Yonghong Song <yhs@fb.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-28 at 18:04 -0700, Doug Anderson wrote:
-> Hi,
+Hi Sam,
 
-<slurring but replying with hi again...>
+On Sat, Apr 25, 2020 at 8:53 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Masahiro
+>
+> On Thu, Apr 23, 2020 at 04:39:13PM +0900, Masahiro Yamada wrote:
+> >
+> > Several Makefiles use 'hostprogs' for building the code for
+> > the host architecture is not appropriate.
+> >
+> > This is just because Kbuild does not provide the syntax to do it.
+> >
+> > This series introduce 'userprogs' syntax and use it from
+> > sample and bpf Makefiles.
+> >
+> > Sam worked on this in 2014.
+> > https://lkml.org/lkml/2014/7/13/154
+>
+> I wonder how you managed to dig that up, but thanks for the reference.
 
-> On Tue, Apr 28, 2020 at 5:57 PM Joe Perches <joe@perches.com> wrote:
-> > On Tue, 2020-04-28 at 17:50 -0700, Doug Anderson wrote:
-> > > $ git grep -P -n '\bunsigned\s+(?!int|long)' include/linux/gpio/driver.h
-> > include/linux/gpio/driver.h:352:                                                unsigned offset);
-> > include/linux/gpio/driver.h:354:                                                unsigned offset);
-> > include/linux/gpio/driver.h:356:                                                unsigned offset);
-> > include/linux/gpio/driver.h:358:                                                unsigned offset);
-> > include/linux/gpio/driver.h:360:                                                unsigned offset, int value);
-> > include/linux/gpio/driver.h:362:                                                unsigned offset);
-> > include/linux/gpio/driver.h:367:                                                unsigned offset, int value);
-> > include/linux/gpio/driver.h:372:                                              unsigned offset,
-> > include/linux/gpio/driver.h:375:                                                unsigned offset);
-> > include/linux/gpio/driver.h:462:                        unsigned offset);
-> > include/linux/gpio/driver.h:660:int gpiochip_generic_request(struct gpio_chip *gc, unsigned offset);
-> > include/linux/gpio/driver.h:661:void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset);
-> > include/linux/gpio/driver.h:662:int gpiochip_generic_config(struct gpio_chip *gc, unsigned offset,
-> 
-> ...riiiiiggght.   ...and now I run your sed script _after_ my patch
-> and I get no hits.  ...so I'm still confused about what you want me to
-> do that's not already done in my patch.
 
-So you did say it's the g&t.
-It seems I only looked at the first diff block.
+I just remembered your work back in 2014.
 
-cheers, <hck>, Joe
+I did not remember the patch title exactly,
+but I searched for 'From: Sam Ravnborg' and
+'To: linux-kbuild@vger.kernel.org' in my mail box.
 
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
