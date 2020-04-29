@@ -2,125 +2,151 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE8C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66FCC83001
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE502208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC6D20730
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="yIS7iHAs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UN3MlWNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgD2C1p (ORCPT
+        id S1726512AbgD2Cbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgD2C1o (ORCPT
+        Tue, 28 Apr 2020 22:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2Cbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:27:44 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D20C03C1AE
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:27:44 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id s30so700919qth.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:27:44 -0700 (PDT)
+        Tue, 28 Apr 2020 22:31:38 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A8AC03C1AD
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:31:36 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id h1so1029353qkl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=j2BqRPlqFlKV+qbCocfSi2x/JssbK9MFgCKLqYpp14M=;
-        b=yIS7iHAsJKIugA/8A/w12xYgJlTB3URYy1+zVBuG/07z9SfuYhVCBj5PiJkT0Sl+ji
-         cXf8c1c1kahDA3yAOtTmKXArjKHd14VfmKaMdkMTPmYUTGT9rsh59FKalKFxHpPk83j/
-         6h5k65Ipm/JdoKcB0TayOyf566CF1TYMAnhztvxsSe+BwiBqA3qd2wd4dPDUqUbXZhpF
-         uHbegIniPpIGde6atAbSiqkWT/YfgXbyfmFXEoZf/A4Dbl49g/JVdbycBygXIQdXrWsS
-         7yHAyDqE2Kg2ihWZShc7QF2VtZtp/xOzHOrit4A75A9vYuKtIEkgUrnHDttEgHdPRgAE
-         B1jg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=WsSQ4el//Y+73KDhxO8BeZ1dCh/HLj2RZlsq36dRgcM=;
+        b=UN3MlWNwt95WQYace+eSywTdugcKroUN4Rd4NIhK+DFYyrDN8XkL//M3xB36wTSsv6
+         CxaSgj15LnjkemeN+zYX8X989x6bk/g2OIjPhWWm2M28gV94gJklXPGiyptdOYM9EgTm
+         8MzkmI90JUtviXhr+Au/1KgR8bR+pp3Xx+3fifJsP/iNaFjalBpc5/Rz1AA3Ym4StixO
+         e9O7YpChBZnl+h0Qe6CjS6qzLHuDAegMNWajom+8Z7TPYlEU9sHbnK5iNXL0yOdeEUca
+         DplJ4WvwsA074Kv3xkzisUWar4asmsgH5DVpf4KN7Z6mO8xSxAsUV8WmdLTQ/l6snGz3
+         E7sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=j2BqRPlqFlKV+qbCocfSi2x/JssbK9MFgCKLqYpp14M=;
-        b=a9OP2yN4m2xrjI7JD6Udl9QuzcMW1EyA2PgEqyIMtjK0BdXFLyMtSbNZoyJKoL860A
-         6epKxHMw6GOlfNojz4aRHNfg/1DSkETiGCfe0K68uJ3F1VbAYrAKiv/0eLmDgzi9ls7k
-         qAwfLyXdGs1Cro5IWsVIrSYYZRlNmlsjTsrkPzDijY/H007iDkyvK1cTffumDEKKGBSk
-         vaAwK39yQTjFt2TgIydUzKLCcIZbLn9g6A57/BB2D3/2vcDOgQ8sjekhN74B8AN34shX
-         o4oQ5hGuTqaWkVbq9kox9Ks0vnFHPF19agEXvAOSz/eckMIsG6Z0ddkvSYhndeoNkNor
-         OtYw==
-X-Gm-Message-State: AGi0PuZaGYJ0OLJgtj04faiKD0QFKG34XzwORREg9EPUzX2IPrBdQgaP
-        6ZChOK0yAP0Q4KeAFK04VzbBeA==
-X-Google-Smtp-Source: APiQypLsEKenWN4WzB6ddMhGOd0xHUK1mWQIdZD+RG622mVERdaN6cZAXO8dAWWRsrXwQyIKvlFoGA==
-X-Received: by 2002:ac8:4ccc:: with SMTP id l12mr31941572qtv.129.1588127263372;
-        Tue, 28 Apr 2020 19:27:43 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id s190sm5345219qkh.23.2020.04.28.19.27.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 19:27:42 -0700 (PDT)
-Date:   Tue, 28 Apr 2020 22:27:32 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
-Message-ID: <20200429022732.GA401038@cmpxchg.org>
-References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
- <20200428214653.GD2005@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428214653.GD2005@dread.disaster.area>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=WsSQ4el//Y+73KDhxO8BeZ1dCh/HLj2RZlsq36dRgcM=;
+        b=qHt8BKSycznpZrXmx+BBbTWPi6jpKKiJZli+nxq28Vdvf4vd/fqFm+bTLqJ+OTJkK0
+         QOnBXU79O3vfeGarjyDN1AKY/c8jyX03LMhXRFdq5L/N2NYMMr7cja3vC59JMeUMtxSZ
+         VtcL2hbtBuL246lycZ+VQUNzAEzPESpmnlSZ/HmxBtRyIZL4Ez04hR6383SisCNj5hft
+         mtsQHmTplSmANEeneTfY9KixkjwVOLSAEopyPcaaK5SezZ37Sh7PXB/7H2/BcJ4N77Gb
+         7cC6/uEHGIRRyokOaIZz1X680SZQ1O467mDLC5Q6Cz2B9c55ArK9MXE7+c21bG9pRSwp
+         8YFw==
+X-Gm-Message-State: AGi0PuYYGDaUjRHjDyBD5wyMALHt1Yr/3wjhAiW0Q+Dhfk8gOgkCsFR3
+        b5tUSoBbx1uBQolAMFgx1Ykvl2JGdA==
+X-Google-Smtp-Source: APiQypL+uTWlVZWQKpSDFQTh731+sLTLvg0x4UaDIiB+KECbx00T+FVEJZxwGuXSKvn0BGAlyzOjd/5Caw==
+X-Received: by 2002:ad4:5a06:: with SMTP id ei6mr23544919qvb.70.1588127495938;
+ Tue, 28 Apr 2020 19:31:35 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 04:31:04 +0200
+Message-Id: <20200429023104.131925-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH] epoll: Fix UAF dentry name access in wakeup source setup
+From:   Jann Horn <jannh@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
+        NeilBrown <neilb@suse.de>, "Rafael J . Wysocki" <rjw@sisk.pl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 07:47:34AM +1000, Dave Chinner wrote:
-> On Tue, Apr 28, 2020 at 12:13:46PM -0400, Dan Schatzberg wrote:
-> > This patch series does some
-> > minor modification to the loop driver so that each cgroup can make
-> > forward progress independently to avoid this inversion.
-> > 
-> > With this patch series applied, the above script triggers OOM kills
-> > when writing through the loop device as expected.
-> 
-> NACK!
-> 
-> The IO that is disallowed should fail with ENOMEM or some similar
-> error, not trigger an OOM kill that shoots some innocent bystander
-> in the head. That's worse than using BUG() to report errors...
+In ep_create_wakeup_source(), epi->ffd.file is some random file we're
+watching with epoll, so it might well be renamed concurrently. And when a
+file gets renamed, the buffer containing its name may be freed.
 
-Did you actually read the script?
+This can be reproduced by racing a task that keeps adding and removing
+EPOLLWAKEUP epoll entries for a fifo with another task that keeps renaming
+the fifo between two long names if you add an mdelay(200) call directly
+before wakeup_source_register(); KASAN then complains:
 
-It's OOMing because it's creating 256M worth of tmpfs pages inside a
-64M cgroup. It's not killing an innocent bystander, it's killing in
-the cgroup that is allocating all that memory - after Dan makes sure
-that memory is accounted to its rightful owner.
+BUG: KASAN: use-after-free in strlen+0xa/0x40
+Read of size 1 at addr ffff888065fda990 by task wakemeup/2375
+[...]
+Call Trace:
+[...]
+ strlen+0xa/0x40
+ kstrdup+0x1a/0x60
+ wakeup_source_create+0x43/0xb0
+ wakeup_source_register+0x13/0x60
+ ep_create_wakeup_source+0x7f/0xf0
+ do_epoll_ctl+0x13d0/0x1880
+[...]
+ __x64_sys_epoll_ctl+0xc3/0x110
+[...]
+Allocated by task 2376:
+[...]
+ __d_alloc+0x323/0x3c0
+ d_alloc+0x30/0xf0
+ __lookup_hash+0x61/0xc0
+ do_renameat2+0x3fa/0x6d0
+ __x64_sys_rename+0x3a/0x40
+[...]
+Freed by task 2379:
+[...]
+ kfree_rcu_work+0x9b/0x5d0
+[...]
 
-As opposed to before this series, where all this memory isn't
-accounted properly and goes to the root cgroup - where, ironically, it
-could cause OOM and kill an actually innocent bystander.
+Backporting note: This patch depends on commit 49d31c2f389a ("dentry name
+snapshots"). Maybe that one should also be backported as a dependency for
+pre-v4.13? (Sorry, I wasn't sure how to properly express this as a "Fixes:"
+tag.)
+
+Cc: stable@vger.kernel.org
+Fixes: 4d7e30d98939 ("epoll: Add a flag, EPOLLWAKEUP, to prevent suspend while epoll events are ready")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+I'm guessing this will go through akpm's tree?
+
+ fs/eventpoll.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 8c596641a72b0..5052a41670479 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1450,7 +1450,7 @@ static int reverse_path_check(void)
+ 
+ static int ep_create_wakeup_source(struct epitem *epi)
+ {
+-	const char *name;
++	struct name_snapshot name;
+ 	struct wakeup_source *ws;
+ 
+ 	if (!epi->ep->ws) {
+@@ -1459,8 +1459,9 @@ static int ep_create_wakeup_source(struct epitem *epi)
+ 			return -ENOMEM;
+ 	}
+ 
+-	name = epi->ffd.file->f_path.dentry->d_name.name;
+-	ws = wakeup_source_register(NULL, name);
++	take_dentry_name_snapshot(&name, epi->ffd.file->f_path.dentry);
++	ws = wakeup_source_register(NULL, name.name.name);
++	release_dentry_name_snapshot(&name);
+ 
+ 	if (!ws)
+ 		return -ENOMEM;
+
+base-commit: 96c9a7802af7d500a582d89a8b864584fe878c1b
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
