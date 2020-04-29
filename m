@@ -2,118 +2,103 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C27EC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9A4C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54ABB21707
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5776820757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:42:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgD2RmB (ORCPT
+        id S1726891AbgD2Rmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:42:01 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35427 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbgD2Rl0 (ORCPT
+        Wed, 29 Apr 2020 13:42:50 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:40896 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgD2Rmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:41:26 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c63so2900201qke.2;
-        Wed, 29 Apr 2020 10:41:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6ObA95TOcsUIrsAwh/ldNlUXAoZVqtd9nWst9CXusb4=;
-        b=V3UpQ3doY0Arsz3DBvBHiRxIcwbjSYgkc8g9v3xvd0f9RUsdl4u9OSiP+atXx4ceV1
-         kYG318qffpqG/zkzowGqda9bphu4ixxOtYTbh6C3ZyKUWZXfTpDh33vbJNCKpv5QlStU
-         yR4mUSe+d09W9kgdmp4YajixnHcRCu4A9vaxR2jh7DUbuXrR8EEt51A3mTZVNNzb0Y7w
-         n3UlZLwyEeCdQDrILUBrPK+Ak8J0sA1rm9HrTriEBpOj/0n+yNGJSlmglh8yoyd1l9sC
-         xE0XEM8C+OpO4OZa98+6y1IedOwoENecaibd/5eDd0PZUAlBoHGVcCVQdRYHijaolDAU
-         nhGA==
-X-Gm-Message-State: AGi0PubNmkPHU0ckobDGAz6iJp/DpmnLqskHYfSGkzZDUDWlYPwnJjML
-        sYQgrjCv0ssP4/XMv+9cr2w=
-X-Google-Smtp-Source: APiQypLh3qEgqYqA/M2LWQBpykORff3wmocDzmI569k1Ctt4bKeYFUblTsYxC+EHZ6GSRgOPHlBHGg==
-X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr33999791qki.120.1588182085516;
-        Wed, 29 Apr 2020 10:41:25 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z1sm14766448qkz.3.2020.04.29.10.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 10:41:25 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 04/10] efi/gop: Use pr_efi_err for error messages
-Date:   Wed, 29 Apr 2020 13:41:14 -0400
-Message-Id: <20200429174120.1497212-6-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200429174120.1497212-1-nivedita@alum.mit.edu>
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+        Wed, 29 Apr 2020 13:42:50 -0400
+Received: from [192.168.42.210] ([93.22.38.239])
+        by mwinf5d58 with ME
+        id Yhig2200R59bE5H03hig2Q; Wed, 29 Apr 2020 19:42:48 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 29 Apr 2020 19:42:48 +0200
+X-ME-IP: 93.22.38.239
+Subject: Re: [PATCH] video: fbdev: pxa3xx_gcu: Fix some resource leak in an
+ error handling path in 'pxa3xx_gcu_probe()'
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
+        mpe@ellerman.id.au, zhenzhong.duan@gmail.com, arnd@arndb.de,
+        tglx@linutronix.de, eric.y.miao@gmail.com, daniel@caiaq.de,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
+ <20200429122538.GO2014@kadam>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <0db91149-fa85-6ec3-1787-d5effd41a1b9@wanadoo.fr>
+Date:   Wed, 29 Apr 2020 19:42:40 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200429122538.GO2014@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use pr_efi_err instead of bare efi_printk for error messages.
+Le 29/04/2020 à 14:25, Dan Carpenter a écrit :
+> On Wed, Apr 29, 2020 at 06:34:38AM +0200, Christophe JAILLET wrote:
+>> If an error occurs in the loop where we call 'pxa3xx_gcu_add_buffer()',
+>> any resource already allocated should be freed.
+>>
+>> In order to fix it, add a call to 'pxa3xx_gcu_free_buffers()' in the error
+>> handling path, as already done in the remove function.
+>>
+>> Fixes: 364dbdf3b6c3 ("video: add driver for PXA3xx 2D graphics accelerator")
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/video/fbdev/pxa3xx-gcu.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
+>> index 4279e13a3b58..68d9c7a681d4 100644
+>> --- a/drivers/video/fbdev/pxa3xx-gcu.c
+>> +++ b/drivers/video/fbdev/pxa3xx-gcu.c
+>> @@ -675,6 +675,7 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
+>>   
+>>   err_disable_clk:
+>>   	clk_disable_unprepare(priv->clk);
+>> +	pxa3xx_gcu_free_buffers(dev, priv);
+> The error handling in this function makes no sense and is buggy.  It
+> should be that it unwinds in the reverse order from the allocation.  The
+> goto should be "goto free_most_recently_allocated_resource;".  Since the
+> unwind is done in the wrong order it causes a couple bugs.
+>
+> These buffers are the last thing which we allocated so they should be
+> the first thing which we free.  In this case, calling
+> pxa3xx_gcu_free_buffers() before the buffers are allocated is confusing
+> but harmless.  The clk_disable_unprepare() is done on some paths where
+> the clock was not enabled and that will trigger a WARN() so that's a
+> bug.  Syzcaller will complain and if you have reboot on WARN then it's
+> annoying.
+>
+> The second bug is that we don't deregister the misc device or release
+> the DMA memory on failure when we allocate the buffers in the loop.
+>
+> regards,
+> dan carpenter
+>
+Agreed. I've been a little too fast on this one.
+I'll update it.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/firmware/efi/libstub/gop.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thx for the review.
 
-diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index 64cee0febae0..1d9bb40acd86 100644
---- a/drivers/firmware/efi/libstub/gop.c
-+++ b/drivers/firmware/efi/libstub/gop.c
-@@ -134,14 +134,14 @@ static u32 choose_mode_modenum(efi_graphics_output_protocol_t *gop)
- 
- 	max_mode = efi_table_attr(mode, max_mode);
- 	if (cmdline.mode >= max_mode) {
--		efi_printk("Requested mode is invalid\n");
-+		pr_efi_err("Requested mode is invalid\n");
- 		return cur_mode;
- 	}
- 
- 	status = efi_call_proto(gop, query_mode, cmdline.mode,
- 				&info_size, &info);
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Couldn't get mode information\n");
-+		pr_efi_err("Couldn't get mode information\n");
- 		return cur_mode;
- 	}
- 
-@@ -150,7 +150,7 @@ static u32 choose_mode_modenum(efi_graphics_output_protocol_t *gop)
- 	efi_bs_call(free_pool, info);
- 
- 	if (pf == PIXEL_BLT_ONLY || pf >= PIXEL_FORMAT_MAX) {
--		efi_printk("Invalid PixelFormat\n");
-+		pr_efi_err("Invalid PixelFormat\n");
- 		return cur_mode;
- 	}
- 
-@@ -222,7 +222,7 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
- 			return m;
- 	}
- 
--	efi_printk("Couldn't find requested mode\n");
-+	pr_efi_err("Couldn't find requested mode\n");
- 
- 	return cur_mode;
- }
-@@ -316,7 +316,7 @@ static void set_mode(efi_graphics_output_protocol_t *gop)
- 		return;
- 
- 	if (efi_call_proto(gop, set_mode, new_mode) != EFI_SUCCESS)
--		efi_printk("Failed to set requested mode\n");
-+		pr_efi_err("Failed to set requested mode\n");
- }
- 
- static void find_bits(u32 mask, u8 *pos, u8 *size)
--- 
-2.26.2
+CJ
+
 
