@@ -2,81 +2,119 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879CCC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA52EC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F642083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B9421707
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lnbJ1GYk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUrMkgpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgD2N4a (ORCPT
+        id S1728051AbgD2N5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:56:30 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:8034 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727824AbgD2N4S (ORCPT
+        Wed, 29 Apr 2020 09:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727089AbgD2N47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:56:18 -0400
-X-UUID: 296e7c4f75e2431d9c2513b10fa65ab4-20200429
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=eBu6n9Q7M7tHJH+fRBo2sVMNVovtAv6ga0Cyd+P4xQE=;
-        b=lnbJ1GYk83qnM7wOzQcwduKDC2tLtA9OZHRAq6u/meLaFSXvZO2Oza0L70Xy+7PW9ygeLOtY7Asaq4BDAB25rimDK+OnQPg5oi4Wirc66FL97soSgwZCSXJ2gyFz98/8hE9Nzzho4G9AOzt2rGUKI12KitkaYdvdvUGqXsvB2BA=;
-X-UUID: 296e7c4f75e2431d9c2513b10fa65ab4-20200429
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2053633473; Wed, 29 Apr 2020 21:56:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Apr 2020 21:56:11 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Apr 2020 21:56:09 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v2 4/5] scsi: ufs-mediatek: enable WriteBooster capability
-Date:   Wed, 29 Apr 2020 21:56:09 +0800
-Message-ID: <20200429135610.23750-5-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200429135610.23750-1-stanley.chu@mediatek.com>
-References: <20200429135610.23750-1-stanley.chu@mediatek.com>
+        Wed, 29 Apr 2020 09:56:59 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 785E9C03C1AD;
+        Wed, 29 Apr 2020 06:56:59 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id h12so2341859pjz.1;
+        Wed, 29 Apr 2020 06:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U2+xNJj7blIBAN27XYooXiQDtKXv0S4FTtN6zbBijtI=;
+        b=HUrMkgpKn/ZQfsXraS+H1vmtx/FSvAbCf908nuuZ7ZDLAdtoWMU8EkzdzlU9JQ8QZu
+         ANH8otGBqQl1q8UKJ2BjvOLrPE/YUkMH0q7UJYzSgGxKc2hXik53ixcLC5VWbrBfD14G
+         1Z1mu6ZdCWob82MPl0lnDmXBq9sobyEHrLjc7S+8hveoKPmNgzUjJYh4YYeJhGc6xlNr
+         DMHFpsP3cMWgpeULqF22dvF6j5frUCp6jOHv6Fvk52H/DB/MTfJXqI/ZLKA0Xog92Ozu
+         VUH5PIb0x3uZ1qJKdRPSMA65ZyjNRwWpOqydQknghkWfN8EQxcTd7wBF466HVIiqKwXL
+         rxjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U2+xNJj7blIBAN27XYooXiQDtKXv0S4FTtN6zbBijtI=;
+        b=dNHqoIi0MKxZ1Yfx5u8jsRaAhS819pEOApvHDFzeVAvX+x5kqKI3eXjK1E6zzP0VdL
+         jix5gzdhde1swZ/EA3r+e4uLZflnD5L+VSYobMJUqCPII6Do963QtmZbzSBVhUilyX7Q
+         xFYiDVRJ5chCqDcNrzrt+EK/ckR1KHiZjbotOf5EcWIsvFnONIkMkAYEjMPZq3vwHULT
+         DBpz8TUzIe9XLAQAS2yk6W1l/l1E5oapQpMZQdDxNvjsExrhX/pVW++T8B6R7Us2ekjf
+         cpzejkMvj9oG7nBjKESh9vVZjix/UFwOa+iVL9wFoovuO0JvbtSj2YSa4tYgNDl2waDl
+         Pb7w==
+X-Gm-Message-State: AGi0PuZt/Gd9cl63ftTk0fJBNjSuUf/BOlPat1F7Y59UxZMoG/jVsRI6
+        a1Hd6CYH236AL0wHGSv/Sj8=
+X-Google-Smtp-Source: APiQypKa+Cdcrw/FaZJ+foMVdSOwfzVUl6D63+bLwA17pYPZl+DSsM1xY5H1GhaEVm3nVM20+u00ZA==
+X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr33887861plo.180.1588168619043;
+        Wed, 29 Apr 2020 06:56:59 -0700 (PDT)
+Received: from localhost ([89.208.244.169])
+        by smtp.gmail.com with ESMTPSA id y24sm1151342pfn.211.2020.04.29.06.56.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 06:56:58 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, yash.shah@sifive.com,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH net v2] net: macb: fix an issue about leak related system resources
+Date:   Wed, 29 Apr 2020 21:56:51 +0800
+Message-Id: <20200429135651.32635-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: B65B5A2B8F099684A3BBBDE30FCC559F81A9EB6C0CBD3C1DB63A1E4E430155702000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RW5hYmxlIFdyaXRlQm9vc3RlciBjYXBhYmlsaXR5IG9uIE1lZGlhVGVrIFVGUyBwbGF0Zm9ybXMu
-DQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+
-DQpSZXZpZXdlZC1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCi0tLQ0KIGRyaXZl
-cnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMgfCAzICsrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
-c2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVr
-LmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQppbmRleCA2NzNjMTY1OTZmYjIu
-LjE1YjljNDIwYTNhNSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVr
-LmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCkBAIC0yNjMsNiArMjYz
-LDkgQEAgc3RhdGljIGludCB1ZnNfbXRrX2luaXQoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJLyog
-RW5hYmxlIGNsb2NrLWdhdGluZyAqLw0KIAloYmEtPmNhcHMgfD0gVUZTSENEX0NBUF9DTEtfR0FU
-SU5HOw0KIA0KKwkvKiBFbmFibGUgV3JpdGVCb29zdGVyICovDQorCWhiYS0+Y2FwcyB8PSBVRlNI
-Q0RfQ0FQX1dCX0VOOw0KKw0KIAkvKg0KIAkgKiB1ZnNoY2Rfdm9wc19pbml0KCkgaXMgaW52b2tl
-ZCBhZnRlcg0KIAkgKiB1ZnNoY2Rfc2V0dXBfY2xvY2sodHJ1ZSkgaW4gdWZzaGNkX2hiYV9pbml0
-KCkgdGh1cw0KLS0gDQoyLjE4LjANCg==
+A call of the function macb_init() can fail in the function
+fu540_c000_init. The related system resources were not released
+then. use devm_platform_ioremap_resource() to replace ioremap()
+to fix it.
+
+Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Yash Shah <yash.shah@sifive.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+v1 -> v2:
+	- Nicolas and Andy suggest use devm_platform_ioremap_resource()
+	  to repalce devm_ioremap() to fix this issue. Thanks Nicolas
+	  and Andy.
+	- Yash help me to review this patch, Thanks Yash!
+
+ drivers/net/ethernet/cadence/macb_main.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index a0e8c5bbabc0..99354e327d1f 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4172,13 +4172,7 @@ static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 
+ static int fu540_c000_init(struct platform_device *pdev)
+ {
+-	struct resource *res;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!res)
+-		return -ENODEV;
+-
+-	mgmt->reg = ioremap(res->start, resource_size(res));
++	mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
+ 	if (!mgmt->reg)
+ 		return -ENOMEM;
+ 
+-- 
+2.25.0
 
