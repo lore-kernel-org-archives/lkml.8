@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F05C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B73C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95FC206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0291620BED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvnLVLo7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="paR6J4V7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgD2Tqo (ORCPT
+        id S1727087AbgD2Tqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54886 "EHLO
+        Wed, 29 Apr 2020 15:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726871AbgD2Tql (ORCPT
+        by vger.kernel.org with ESMTP id S1726971AbgD2Tqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:46:41 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097D8C03C1AE;
-        Wed, 29 Apr 2020 12:46:40 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u22so1210686plq.12;
-        Wed, 29 Apr 2020 12:46:40 -0700 (PDT)
+        Wed, 29 Apr 2020 15:46:43 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275F2C03C1AE;
+        Wed, 29 Apr 2020 12:46:43 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o185so1517818pgo.3;
+        Wed, 29 Apr 2020 12:46:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CevivX0aGr8AmmZvoR5A9jtsq4aH4kUQzZm/M7FIZ5A=;
-        b=OvnLVLo7JsmafyOP56LiVZlXjvz/UCsktk492j7PZzhvCZvqkP/JZcbYJjN4mZdZUw
-         5ScQfQzl/6qw9Aj/01sTwpQj3liXvx24C1bvkUvxHXdgNsc/UlwrYFWHkGptq7zxE6A8
-         3sO82bsxCimlqD9x3o+vfbayrNh1jUgcZMCFeGfpQtopZqyjqNDL7S5+1GldiE42yS5u
-         Sra/CIoRPBm7+lu0JGnYILP0JZy41uMpJcikFJ1OgTW0GNbLyIvKxV7ArCRPu8g1Duf9
-         hn3aR2AVUvWXt7g9j7zsVv7nG5ebUiC5Y+cL9SBSSAGib8tA6TtGNo9gtqQJmLGttvhU
-         LqBQ==
+        bh=IC8rInsRsfxQQkeZ96jiqZI2NB9+ZDmlgZxQ89+Ot80=;
+        b=paR6J4V7t7ggij3212zO9WTKEHqxQ694sFMqY5KOZ6Kj80QQQWcOfaNTFW9mNpeNJB
+         zkfylNpl61H4q3BShKA6SvHuadb/M+9lFT+342Bi3z49vxWc6nfdHfZGIOcwGm/AEAOd
+         4Go4ygTVo5yEtEbGz852J0YB73dNU9wi96IgXKRqIoKvUigvUiH83f74ld28/nIOK40d
+         u4/u6nRLBMNlsHNblfS3AxXpH5O1CG65TpopLnOz5lSwtGEiJrbZgt6AAv7FcFizP2RW
+         6qe3h9qzLjFWF4DD4OrCp4uIiWt/NB/gxKWsYnWjqENgRwiZN6iIAWiOYvwVsbKEFOMh
+         xGlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CevivX0aGr8AmmZvoR5A9jtsq4aH4kUQzZm/M7FIZ5A=;
-        b=CUFCi+IcOPFrg+V2w8UQeFeNs0R5cH62tuFLQ+z7HUyBfjBrYWupR093AuziNRloGt
-         El8Y8VRi2bkEDF1FYSXkE2/+7hxsuX9tAXHTquSgA+WaTtWVZESnVsx88HDWGw3OnGhk
-         EmSMndtQS6UyVqEZgJUFR8c+bWMdFnyC80vTIkgddn/WAlXgn6IYy9j3dmvEMF4Sj41t
-         ksKnewVOrrZ9dfc5FSj2ibtE1EXjlfKyWCyP+4QNxZ0Ta0BaEazGbeHH/mEi+IfMBF2T
-         cSI/7iIGg/fyKRzGUr8SA+HvLEdDyMUrc18ilsGuBCYYzeJKhBTR4gthpx+u/0Ax44a8
-         R/yw==
-X-Gm-Message-State: AGi0PuZ90u3cWdG7iNFqtZRXgnQFJYYxE6H0yFAzpRJCwIe3qdKrQAlv
-        O/lalK45b/PYfKAj82Qs11uJ2O5w
-X-Google-Smtp-Source: APiQypISUd7EZlfcLZvZMvRhh0ePXs1/HnWwKnFI/ESk/kaSRzH78Jo1DyMSqiuAZ21xeOgGiB7E3g==
-X-Received: by 2002:a17:90a:e28f:: with SMTP id d15mr52503pjz.79.1588189595828;
-        Wed, 29 Apr 2020 12:46:35 -0700 (PDT)
+        bh=IC8rInsRsfxQQkeZ96jiqZI2NB9+ZDmlgZxQ89+Ot80=;
+        b=jNsg1T66rWoBmADRifCwzt2roVcclcJNB/mEEAjETfm2D4ckAw0OI4nTtGSGZsG04K
+         B5VGaKdh+V6G5K+xI1GX5r6o12qDiLElbud9c0QuJoC7OZVikNsLMd1ULn1SEc68V0jc
+         tRh7e0qfFakC7znXioB3EvtRz7pcZS4bE072pWc6/Fwoskv4R+7YS+tIr9Jbtiq4p2cX
+         VBzT+YlWMtDk60jrkWev4F4Sjz6PqewmwNjbEVYNFejoNgkuieUpYZKoIyYn4j7WPT03
+         hVV3Iut1VJtEBRDg6WBV5RnfgyWLtZJQxxl40PfNfddDL1yYcWORfCmc0J4whHXep0Eg
+         KMMg==
+X-Gm-Message-State: AGi0Pub3Oc+zztkxmBlDlkRF1PJ+4nvjb7oOwEGbMC5PFU6xTen+9wm2
+        eEyuit6+brJS5b9waEsti1E=
+X-Google-Smtp-Source: APiQypKb6CuWqjtblFyZXArLk7f3xcyxGSQoP6KBmr2h3ic5miU4eeuz6w4pDkhmY0pz+y1l2qmk/g==
+X-Received: by 2002:aa7:948f:: with SMTP id z15mr29197733pfk.129.1588189602515;
+        Wed, 29 Apr 2020 12:46:42 -0700 (PDT)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z15sm87956pjt.20.2020.04.29.12.46.34
+        by smtp.gmail.com with ESMTPSA id z15sm87956pjt.20.2020.04.29.12.46.41
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 12:46:35 -0700 (PDT)
+        Wed, 29 Apr 2020 12:46:41 -0700 (PDT)
 From:   Doug Berger <opendmb@gmail.com>
 To:     Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 1/7] net: bcmgenet: set Rx mode before starting netif
-Date:   Wed, 29 Apr 2020 12:45:46 -0700
-Message-Id: <1588189552-899-2-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next 4/7] Revert "net: bcmgenet: remove unused function in bcmgenet.c"
+Date:   Wed, 29 Apr 2020 12:45:49 -0700
+Message-Id: <1588189552-899-5-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588189552-899-1-git-send-email-opendmb@gmail.com>
 References: <1588189552-899-1-git-send-email-opendmb@gmail.com>
@@ -75,42 +75,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit explicitly calls the bcmgenet_set_rx_mode() function when
-the network interface is started. This function is normally called by
-ndo_set_rx_mode when the flags are changed, but apparently not when
-the driver is suspended and resumed.
+This reverts commit e2072600a24161b7ddcfb26814f69f5fbc8ef85a.
 
-This change ensures that address filtering or promiscuous mode are
-properly restored by the driver after the MAC may have been reset.
+This commit restores the previous implementation of Hardware Filter
+Block functions to the file for use in subsequent commits.
 
-Fixes: b6e978e50444 ("net: bcmgenet: add suspend/resume callbacks")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 122 +++++++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 351d0282f199..eb0dd4d4800c 100644
+index 57b8608feae1..b37ef05c5083 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -65,6 +65,9 @@
- #define GENET_RDMA_REG_OFF	(priv->hw_params->rdma_offset + \
- 				TOTAL_DESC * DMA_DESC_SIZE)
+@@ -2759,6 +2759,128 @@ static void bcmgenet_enable_dma(struct bcmgenet_priv *priv, u32 dma_ctrl)
+ 	bcmgenet_tdma_writel(priv, reg, DMA_CTRL);
+ }
  
-+/* Forward declarations */
-+static void bcmgenet_set_rx_mode(struct net_device *dev);
++static bool bcmgenet_hfb_is_filter_enabled(struct bcmgenet_priv *priv,
++					   u32 f_index)
++{
++	u32 offset;
++	u32 reg;
 +
- static inline void bcmgenet_writel(u32 value, void __iomem *offset)
- {
- 	/* MIPS chips strapped for BE will automagically configure the
-@@ -2793,6 +2796,7 @@ static void bcmgenet_netif_start(struct net_device *dev)
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 
- 	/* Start the network engine */
-+	bcmgenet_set_rx_mode(dev);
- 	bcmgenet_enable_rx_napi(priv);
- 
- 	umac_enable_set(priv, CMD_TX_EN | CMD_RX_EN, true);
++	offset = HFB_FLT_ENABLE_V3PLUS + (f_index < 32) * sizeof(u32);
++	reg = bcmgenet_hfb_reg_readl(priv, offset);
++	return !!(reg & (1 << (f_index % 32)));
++}
++
++static void bcmgenet_hfb_enable_filter(struct bcmgenet_priv *priv, u32 f_index)
++{
++	u32 offset;
++	u32 reg;
++
++	offset = HFB_FLT_ENABLE_V3PLUS + (f_index < 32) * sizeof(u32);
++	reg = bcmgenet_hfb_reg_readl(priv, offset);
++	reg |= (1 << (f_index % 32));
++	bcmgenet_hfb_reg_writel(priv, reg, offset);
++}
++
++static void bcmgenet_hfb_set_filter_rx_queue_mapping(struct bcmgenet_priv *priv,
++						     u32 f_index, u32 rx_queue)
++{
++	u32 offset;
++	u32 reg;
++
++	offset = f_index / 8;
++	reg = bcmgenet_rdma_readl(priv, DMA_INDEX2RING_0 + offset);
++	reg &= ~(0xF << (4 * (f_index % 8)));
++	reg |= ((rx_queue & 0xF) << (4 * (f_index % 8)));
++	bcmgenet_rdma_writel(priv, reg, DMA_INDEX2RING_0 + offset);
++}
++
++static void bcmgenet_hfb_set_filter_length(struct bcmgenet_priv *priv,
++					   u32 f_index, u32 f_length)
++{
++	u32 offset;
++	u32 reg;
++
++	offset = HFB_FLT_LEN_V3PLUS +
++		 ((priv->hw_params->hfb_filter_cnt - 1 - f_index) / 4) *
++		 sizeof(u32);
++	reg = bcmgenet_hfb_reg_readl(priv, offset);
++	reg &= ~(0xFF << (8 * (f_index % 4)));
++	reg |= ((f_length & 0xFF) << (8 * (f_index % 4)));
++	bcmgenet_hfb_reg_writel(priv, reg, offset);
++}
++
++static int bcmgenet_hfb_find_unused_filter(struct bcmgenet_priv *priv)
++{
++	u32 f_index;
++
++	for (f_index = 0; f_index < priv->hw_params->hfb_filter_cnt; f_index++)
++		if (!bcmgenet_hfb_is_filter_enabled(priv, f_index))
++			return f_index;
++
++	return -ENOMEM;
++}
++
++/* bcmgenet_hfb_add_filter
++ *
++ * Add new filter to Hardware Filter Block to match and direct Rx traffic to
++ * desired Rx queue.
++ *
++ * f_data is an array of unsigned 32-bit integers where each 32-bit integer
++ * provides filter data for 2 bytes (4 nibbles) of Rx frame:
++ *
++ * bits 31:20 - unused
++ * bit  19    - nibble 0 match enable
++ * bit  18    - nibble 1 match enable
++ * bit  17    - nibble 2 match enable
++ * bit  16    - nibble 3 match enable
++ * bits 15:12 - nibble 0 data
++ * bits 11:8  - nibble 1 data
++ * bits 7:4   - nibble 2 data
++ * bits 3:0   - nibble 3 data
++ *
++ * Example:
++ * In order to match:
++ * - Ethernet frame type = 0x0800 (IP)
++ * - IP version field = 4
++ * - IP protocol field = 0x11 (UDP)
++ *
++ * The following filter is needed:
++ * u32 hfb_filter_ipv4_udp[] = {
++ *   Rx frame offset 0x00: 0x00000000, 0x00000000, 0x00000000, 0x00000000,
++ *   Rx frame offset 0x08: 0x00000000, 0x00000000, 0x000F0800, 0x00084000,
++ *   Rx frame offset 0x10: 0x00000000, 0x00000000, 0x00000000, 0x00030011,
++ * };
++ *
++ * To add the filter to HFB and direct the traffic to Rx queue 0, call:
++ * bcmgenet_hfb_add_filter(priv, hfb_filter_ipv4_udp,
++ *                         ARRAY_SIZE(hfb_filter_ipv4_udp), 0);
++ */
++int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
++			    u32 f_length, u32 rx_queue)
++{
++	int f_index;
++	u32 i;
++
++	f_index = bcmgenet_hfb_find_unused_filter(priv);
++	if (f_index < 0)
++		return -ENOMEM;
++
++	if (f_length > priv->hw_params->hfb_filter_size)
++		return -EINVAL;
++
++	for (i = 0; i < f_length; i++)
++		bcmgenet_hfb_writel(priv, f_data[i],
++			(f_index * priv->hw_params->hfb_filter_size + i) *
++			sizeof(u32));
++
++	bcmgenet_hfb_set_filter_length(priv, f_index, 2 * f_length);
++	bcmgenet_hfb_set_filter_rx_queue_mapping(priv, f_index, rx_queue);
++	bcmgenet_hfb_enable_filter(priv, f_index);
++	bcmgenet_hfb_reg_writel(priv, 0x1, HFB_CTRL);
++
++	return 0;
++}
++
+ /* bcmgenet_hfb_clear
+  *
+  * Clear Hardware Filter Block and disable all filtering.
 -- 
 2.7.4
 
