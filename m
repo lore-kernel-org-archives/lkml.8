@@ -2,120 +2,141 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD87BC83008
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF41C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3452073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="egh/oqyI"
+	by mail.kernel.org (Postfix) with ESMTP id D1B89206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgD2IYP (ORCPT
+        id S1726523AbgD2IZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:24:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:36145 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2IYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:24:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Bs492gLvz9sSM;
-        Wed, 29 Apr 2020 18:24:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588148651;
-        bh=syudK3ycUSJ0xlTm8LxvK+FlS93PkfQA7GEviu2GQjs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=egh/oqyIh5YrPqtO2x5VeYEiNFDrRaCxS9XLAKOdF2AiKaNEM5jaHt+Q+/iyvz3y7
-         GyHWi5UrTNttiPjwhzgNiYRx4dEuPcRyQsw5Yu7b1s1g3qImLmuhTSlFqMYhwxk5Eo
-         flrELQY+FKT+Zp9EXiYPEY4siEhOrKFdGxle8tamFRYtht3wgPPxQAAsVIiMQw8LIw
-         KqHVdZrPAR7mf3iDDla31yoxfM/eFnqjg/i7jQiNbZ0Ufz25z5BqRgVpepxX1xANFD
-         TOmOu1A9XlzU3+dgcGR1UOpwQN7rYbXPTTXm0zp2Lm9gXUpJEIeeWinaAzeYmNmLcN
-         /gePv+09WPyfQ==
-Date:   Wed, 29 Apr 2020 18:24:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- bpf-next tree
-Message-ID: <20200429182406.67582a6a@canb.auug.org.au>
-In-Reply-To: <20200429065404.GA32139@lst.de>
-References: <20200429164507.35ac444b@canb.auug.org.au>
-        <20200429064702.GA31928@lst.de>
-        <CAADnVQJWLPpt6tEGo=KkLBaHLpwZFLBfZX7UB4Z6+hMf6g220w@mail.gmail.com>
-        <20200429065404.GA32139@lst.de>
+        Wed, 29 Apr 2020 04:25:04 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgD2IZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:25:04 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MtwQk-1jBDAQ2IIu-00uF3o for <linux-kernel@vger.kernel.org>; Wed, 29 Apr
+ 2020 10:25:02 +0200
+Received: by mail-lf1-f41.google.com with SMTP id f8so885280lfe.12
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:25:02 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua8gDD1YzhlCUT2AwIsakNBc1aS3Jpukdr2y5ag9ZRQBs3CJkjr
+        1zArKHGhIVzvMQlvSkxcKVv9xNzMElwE/o9G3fo=
+X-Google-Smtp-Source: APiQypKYwuif1CT2TpVka5FFL7aLnwCZS2moXiiZbTlODTEUY1BIra8wbAmWai01XE2gYsYojcCm4wCdH9lAq0wmfsY=
+X-Received: by 2002:a19:505b:: with SMTP id z27mr4237553lfj.123.1588148702030;
+ Wed, 29 Apr 2020 01:25:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/W8DO522oYpzojNSk.1B7cDm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200428212752.2901778-1-arnd@arndb.de> <6b39fbba-c65d-2c02-14bf-11c2d00547af@linux.intel.com>
+ <CAK8P3a24whg2RhJE3Vf5u3EWy+wvFqhXdp7EQZuQx0shPsMARw@mail.gmail.com>
+ <f91c9a68-7641-beb8-a23e-bd1b9b8d0acb@linux.intel.com> <b784c008-7094-05cb-6200-6b246ff39bb8@linux.intel.com>
+In-Reply-To: <b784c008-7094-05cb-6200-6b246ff39bb8@linux.intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 Apr 2020 10:24:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3vri_-tdEy3x6tRGUjb_k-+Mc+Jt9bQpgFvqm2RN+cJA@mail.gmail.com>
+Message-ID: <CAK8P3a3vri_-tdEy3x6tRGUjb_k-+Mc+Jt9bQpgFvqm2RN+cJA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: SOF: sort out Kconfig, again
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        sound-open-firmware@alsa-project.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:86EeJyH+/ActAOlbYrnMSx4hzYaVuqqOBSwdFI6ZXY4pnrAnL5L
+ 7ejvAoYbD0S8Sj6cMtRzDWicOQXIwGCdMeYPnPHZ9oxSq7+uTHDTktMjIpMlNJ5i8K9S7/d
+ hjs/S9xuCP7hZmzSXp5S77FC3hWXnfWJ8MYZwotSbjl51Xm3tzmuYRj9BZ39Lno6X8aSFAJ
+ u4gByjW6UIkIot4lkKk8g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RPkyGWEqyjM=:yn3Xr3A9yaDk09ZdH0WaJm
+ W5FH7H9EroekqXxs4XQd/NmWgk/Ylno2bTNHZbG6vaV5hvSEt+vrm2vpfm8BS8KtUgkfub88t
+ f2WwcxNoq2Dx1RXCy9K9/LrKFhFgR6QL88P42pQhAeHGkZtWu6l5nL2Ra/nkt97/QwAUHAAJ7
+ CshBKYARojtns1RhNHm6YiRceNlPDeTOhPN5JpNsLO4tlwc8OGIzVcaS9KXK6+JQzZxiKarRJ
+ BSu6oNnC0jgVnwzoshtTAY7QyG4A+WO3IoW5081RIQUMq1ynMX+4PhXxwyskT72WjNL+B4Dmm
+ q0btOrRqXtS2a2nWtyXI/8nTzzP3zGCZDDPIjtbN8hW1A0S4itxKvDl3Da7/NJ1h65rRm6Y57
+ 5rqGyqj9qrfK07+I9jiABlKFQx4/QFjcFvBPA9BepEMAD7GTcDV4iSg27/sOSLoZa5LXBNToY
+ Nc4bpocsxLlJLKwHATAXvMjZQZgeWKy2JBM8R5T48H4cxgg8lR6xZVyBNn7ANKu0JGKkwzZB7
+ PP5+YPOHMxl2256yb7Lj8Y832rCgEzE8/qj8XbyVHacRKJXR44lFwrAbJ7d4agdS2K9UaYLgo
+ 5exiMsdorm40AbZRYuaMjXC6RNeu+1fAZlF6GstPHYAMkJC50rKmRHS2T6vYvjRMvAQK/u+BP
+ fXMSAee13nmLDHjQMMs+qVJptwSC98wFG3yaTZN93zozQn1u5WA5Q2bdtfCFJ30ysiHwqGxyc
+ BfS7GJsPRvsWmC/nP7W4A48t2aSKit2UnXkicacRvcy8K0vw5aoozkXZHDb76CZ1KkJOnqldn
+ nj2XRxnOqfmwHPZBFrXTLdSp60/w8dhtOCO4zXWK2wmGYa9CXg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/W8DO522oYpzojNSk.1B7cDm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Christoph,
-
-On Wed, 29 Apr 2020 08:54:04 +0200 Christoph Hellwig <hch@lst.de> wrote:
+On Wed, Apr 29, 2020 at 1:00 AM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> wrote:
+> >>> Thanks Arnd, do you mind sharing your config?
+> >>
+> >> https://pastebin.com/HRX5xi3R
+> >
+> > will give it a try, thanks!
+> >
+> >>> We noticed last week that
+> >>> there's a depend/select confusion might be simpler to fix, see
+> >>> https://github.com/thesofproject/linux/pull/2047/commits
+> >>>
+> >>> If I look at the first line I see a IMX_DSP=n which looks exactly like
+> >>> what we wanted to fix.
+> >>
+> >> Yes, I think that fix addresses the build warning as well, but looking
+> >> more closely I don't think it's what you want: If you do this on
+> >> a config that has the IMX_DSP disabled, it would appear to the
+> >> user that you have enabled the drivers, but the actual code is still
+> >> disabled.
+> >
+> > Are you sure? we added a select IMX_DSP, so not sure how it can be
+> > disabled?
 >
-> On Tue, Apr 28, 2020 at 11:49:34PM -0700, Alexei Starovoitov wrote:
-> > On Tue, Apr 28, 2020 at 11:47 PM Christoph Hellwig <hch@lst.de> wrote: =
-=20
-> > >
-> > > On Wed, Apr 29, 2020 at 04:45:07PM +1000, Stephen Rothwell wrote: =20
-> > > >
-> > > > Today's linux-next merge of the akpm-current tree got a conflict in:
-> > > >
-> > > >   kernel/sysctl.c
-> > > >
-> > > > between commit:
-> > > >
-> > > >   f461d2dcd511 ("sysctl: avoid forward declarations")
-> > > >
-> > > > from the bpf-next tree and commits: =20
-> > >
-> > > Hmm, the above should have gone in through Al.. =20
-> >=20
-> > Al pushed them into vfs tree and we pulled that tag into bpf-next. =20
->=20
-> Ok.  And Stephen pulled your tree first.
+> I just tested Arnd's config with the patch we came up with for SOF
+> (attached) and it makes the unmet dependency go away and builds fine.
+> the problem is really using select IMX_DSP if it can be disabled by
+> something else. My proposal looks simpler but I will agree it's not
+> necessarily super elegant to move the dependency on IMX_BOX into SOF, so
+> no sustained objection from me on Arnd's proposal.
 
-No, it is not in the branch I fetch from Al yet.
+Ok, thanks for testing!
 
---=20
-Cheers,
-Stephen Rothwell
+I looked at the bigger picture again and found that the more fundamental
+problem is the dependency reversal in sound/soc/sof/sof-of-dev.c, where
+you have common code that knows about and links against a hardware
+specific driver. This is something we try hard do avoid in general in the
+kernel, as it causes all kinds of problems:
 
---Sig_/W8DO522oYpzojNSk.1B7cDm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+- Expressing the Kconfig dependencies is rather unnatural and error-prone,
+  as you found
 
------BEGIN PGP SIGNATURE-----
+- Adding multiple new drivers at the same time leads to merge conflicts
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6pOaYACgkQAVBC80lX
-0GyfPgf5AfDRR+uaAmpYyPjYWiIziyaXRfGhaZxYrS0542Jel2ojgZZlJOPKqEYJ
-UGHZgKYR8CYrHZzQg8/4+oSPk0qGhFz5tg8BjCQpaqTMTDSKeZ9WraDohke4CoJf
-8TyBurjmVASZqwiVBAJJSvIYyszdUmK1D1XzeZ7qb9snSADRKDT8wKkeSRzwdL8a
-MVRCdXbkXyI6jlBvqocsPe13WNaHMgNk/7iXRfpkoEclxylotRwhH7iBrl100pgw
-SkBQOKW1R8RQBAZDjPqXPAqIBYPzENFecb4NKKjWNsFEQ6dkqnz0dcjwEkCGLr3w
-ItdEZpCS//knWCcZnw1cc68FbPgEXw==
-=U/RL
------END PGP SIGNATURE-----
+- A kernel that supports multiple SoC families, like all general-purpose
+  distros do, and Android is going to do in the future means that you have
+  to load every hardware specific module in order to just use one of them.
 
---Sig_/W8DO522oYpzojNSk.1B7cDm--
+- In Android's case, it also breaks the model of having one vendor provide
+  support for a new SoC by enabling additional modules they ship in
+  their vendor specific partition
+
+I think this is all solved by moving the "module_platform_driver()"
+and of_device_id array for each driver into the module that defines
+the corresponding sof_dev_desc structure, and have those drivers
+call the exported sof_of_probe() and sof_of_remove() functions.
+
+      Arnd
