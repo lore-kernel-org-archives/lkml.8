@@ -2,133 +2,115 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFC2C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FB3C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFFF20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0360B20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588178522;
-	bh=aX2W39xGpw+P2FdBdahRps9uF3z83+r+7nJTKoL/TXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PBd5NTEbzKyh2QSeKzBQdy1jUHCbV7GsjUBRT4mvhnWhezCPWrSEn7sz03wAdUx/Q
-	 P6yTXKTxL5jxP/NylyAqDo1kHmcfcTzTg9ad9HsovcAJZjLhlZlY57Hh9wRLyZOjHq
-	 s3fUf9gapQolKTdWHJBtnLqIyY6tq0ZUnWsAwemQ=
+	s=default; t=1588178559;
+	bh=vH8eIR3MMlTacZK4WfkYpv1el05yTxrI9SEhKlzGIcg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Nu0+zRxTkc9zm+UnuT21tGD9cZp5sEBB15sHorXTaxDCto9TJbnEQwRSZNw9aDc2b
+	 2dWcalpChxd8EKuzzAE9rh7qkr7PBpEjCjy4Bx3XilhRK3QpIboDi3mvIha+vUkYbW
+	 4VGhXT0xvPkBje3Vyd2RhZ6Anc0k5oPZ9BzmLCv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgD2QmB (ORCPT
+        id S1726869AbgD2Qmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:42:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35340 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbgD2QmA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:42:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r26so2765278wmh.0;
-        Wed, 29 Apr 2020 09:41:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b1NmnG+Bha+R6DCsicsXkjR18of0wt/SYtjmCqwDrqU=;
-        b=PR+6NhRs7ma3EUG96L3i8LgOEy/NDjUnLNIwxK3li0CbGM8rXzGX+vp6eF78DZ/nSM
-         QKKNjhEniYZCMrsVyoqFGrDqevTsPXmtyJvMe3kYaYe/UZPzCPf9H9f3cyxcYlVi7ma7
-         xesPgqgAFheQeKVS9kCy+VG3z6j6ybPcgFfzNgV2+aKaBM2DJErDrjs8mFKaDEEk/kfp
-         WpOxVxh1u+b0QgaVsv6Kum4Aq5GUArU7d/Gok3e4rQicnPLolDibhGNG2EfCDbMUknD6
-         ZnECIh6/ivV5WxnBvqV0ICbyIrx88Vxt7h3WtHHNCDFV3lUggPT/dAs5VlAx00g+1cWl
-         GV0Q==
-X-Gm-Message-State: AGi0PuaPD2jbx8GrkKc+at1Aw19eXwGMlU3ydOlAcU7Z/ajiTWQ6KJp+
-        B/VN+Z+qmZ8gvWrBfBu13rE=
-X-Google-Smtp-Source: APiQypK92COmCk6jtDXQuM8RbqIzlQmTZkmvIjtD7/GMtqebIJTWbJ+7ip3K+A9bRbw+AFyvMNQEDw==
-X-Received: by 2002:a1c:2383:: with SMTP id j125mr4175112wmj.6.1588178518352;
-        Wed, 29 Apr 2020 09:41:58 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id i25sm8360761wml.43.2020.04.29.09.41.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 09:41:57 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 16:41:55 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>, Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v1 1/3] mm/memory_hotplug: Prepare passing flags to
- add_memory() and friends
-Message-ID: <20200429164154.ctflq4ouwrwwe4wq@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200429160803.109056-1-david@redhat.com>
- <20200429160803.109056-2-david@redhat.com>
+        Wed, 29 Apr 2020 12:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726493AbgD2Qmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 12:42:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B6020787;
+        Wed, 29 Apr 2020 16:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588178557;
+        bh=vH8eIR3MMlTacZK4WfkYpv1el05yTxrI9SEhKlzGIcg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aV5IKpRSmbzOy/KapP8clDwAjF1XQgvhlAAKcGpyPC3fA71gVOlb1VJEFJUyWeh5R
+         b8Q2FzDd80vPcdKaLjRdVqQEl3atumGCJaFIhAFsbNFW1Fz0nhWOEWLApaaE/SvBfl
+         OZn2BehNgeP9BLcn27Z3FwzmO5d9zEizNcZLDDyU=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jTpn9-007lrk-7s; Wed, 29 Apr 2020 17:42:35 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
+Date:   Wed, 29 Apr 2020 17:42:30 +0100
+Message-Id: <20200429164230.309922-1-maz@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429160803.109056-2-david@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, khilman@baylibre.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 06:08:01PM +0200, David Hildenbrand wrote:
-> We soon want to pass flags - prepare for that.
-> 
-> This patch is based on a similar patch by Oscar Salvador:
-> 
-> https://lkml.kernel.org/r/20190625075227.15193-3-osalvador@suse.de
-> 
-[...]
-> ---
->  drivers/hv/hv_balloon.c                         |  2 +-
+My vim3l board stubbornly refuses to play ball with a bog
+standard PCIe switch (ASM1184e), spitting all kind of errors
+ranging from link never coming up to crazy things like downstream
+ports falling off the face of the planet.
 
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 32e3bc0aa665..0194bed1a573 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -726,7 +726,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->  
->  		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
->  		ret = add_memory(nid, PFN_PHYS((start_pfn)),
-> -				(HA_CHUNK << PAGE_SHIFT));
-> +				(HA_CHUNK << PAGE_SHIFT), 0);
->  
->  		if (ret) {
->  			pr_err("hot_add memory failed error is %d\n", ret);
+Upon investigating how the PCIe RC is configured, I found the
+following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
+section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
+as:
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+"Sets all internal timers to fast mode for simulation purposes."
+
+I completely understand the need for setting this bit from a simulation
+perspective, but what I have on my desk is actual silicon, which
+expects timers to have a nominal value (and I expect this is the
+case for most people).
+
+Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
+solves this problem.
+
+Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/pci/controller/dwc/pci-meson.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 3715dceca1bf..ca59ba9e0ecd 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
+ 	meson_cfg_writel(mp, val, PCIE_CFG0);
+ 
+ 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
+-	val &= ~LINK_CAPABLE_MASK;
++	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
+ 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+ 
+ 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
+-	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
++	val |= LINK_CAPABLE_X1;
+ 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+ 
+ 	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
+-- 
+2.26.2
+
