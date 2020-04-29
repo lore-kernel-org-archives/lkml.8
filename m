@@ -2,135 +2,117 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5072C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704C4C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 963F820B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="OTk4BhDe"
+	by mail.kernel.org (Postfix) with ESMTP id 57A1C20B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgD2OuY (ORCPT
+        id S1727093AbgD2Oum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726929AbgD2OuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:50:21 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8ACC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:50:21 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id e20so1862218otk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qyI0SNEnQtXEbJwY1Ck/cg35XSFvpALxjDJPBXBhrnQ=;
-        b=OTk4BhDexgtYj45AbedwxqiaNtEWMz5vICEz3FjS2ASgEs8RDykY5nycZKJdyYbvnn
-         xdYRSxrMo55Daa/iS9BaQRTfDRlJL96e4tSX6UHp/duPNiog6mElo/qalSUKyuNe2+2N
-         FywOGF2rs+Lg/lbWRbixNls/EZK2awg/bnYNn07l121KiDC7cS3+PpjNLSCT4vphjz9Q
-         8+Qvo/Jpc4uxv0X7IfL1rgTr7vmGDeAVK+o2Evv+5128QbHUGYjhzwz3j8odYXtGvUjn
-         MHsz/jK4o0FM3/8LMB8RHP46ODdQNZsg6uZaFmQaGKJ55XRjyCSufzRH3kpLiEfiZ5zN
-         8GxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qyI0SNEnQtXEbJwY1Ck/cg35XSFvpALxjDJPBXBhrnQ=;
-        b=PU4bUdNritx0WjqefG9McFDhhnz9+K57M08gAjVAEsEWJxvCBlzWwoJhhi/SUtrqW2
-         U+HyR8uIBSuVr98hp5bgyZVhPSCPnrIF/W6HSRJ+CLVjRtIcfkg9p8NKYOYhwNlz96gw
-         Flbn0y+0DgwUalsEIV+acVlpHNUAyl1UL6bp4W8M2kHhLYqd8HhbYzFzIlOMLIO/dB8Z
-         0W9kvRLEMIwVGIsYCFv7Gqnpxs2pL6HmACa2CPeTCskvPgqB+/uI9tkaLkVF6H3FzKii
-         YVVUnEJx+VdEa/Yg16BibpqMhnEVAKq3GTgJUrPmA8GW5PPqk2bDIJwcfdXerfAyfE4k
-         RtgA==
-X-Gm-Message-State: AGi0PuYU/av/8PUhiYJxnOsN3oBFyQqPVvvu/MDc0OmJWWQceJXahv55
-        DYpZ7TPzbDm0wh3G5osFv/MKQB6IEh6fhQcF5WhtHQ==
-X-Google-Smtp-Source: APiQypIXL8I2wEME01DT2EGMJ0/M/DnYHbWLA+pVPwZCB7X9EbvdQ5yUHo7uSB8IJZb4WwLhqG0FGhPpcw/e0s52+Ik=
-X-Received: by 2002:a9d:2f48:: with SMTP id h66mr24840284otb.252.1588171820828;
- Wed, 29 Apr 2020 07:50:20 -0700 (PDT)
+        Wed, 29 Apr 2020 10:50:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:48625 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgD2Oum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:50:42 -0400
+IronPort-SDR: UDWzAqqCjLLyHarYtbpjNt1UQRI9PghqyabRKJpto5QAlJuwwWQpOxXOqCQM6HUWEl6E7LfBZk
+ qZHkor+kzSQg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 07:50:41 -0700
+IronPort-SDR: /CUW6veITOGaL328946rO9ZoBt7dZGCUr4lv91D0xopfsMKl10QH5StxrIJokqk5mc25775ZKn
+ 1K4JckKKJzuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="459603004"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Apr 2020 07:50:41 -0700
+Date:   Wed, 29 Apr 2020 07:50:40 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Subject: Re: [PATCH 09/13] KVM: nVMX: Prioritize SMI over nested IRQ/NMI
+Message-ID: <20200429145040.GA15992@linux.intel.com>
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+ <20200423022550.15113-10-sean.j.christopherson@intel.com>
+ <CALMp9eSuYqeVmWhb6q7T5DAW_Npbuin_N1+sbWjvcu0zTqiwsQ@mail.gmail.com>
+ <20200428225949.GP12735@linux.intel.com>
+ <CALMp9eRFfEB1avbQv0O0V=EGrJdSNTxg8Z-BONmQ--dV66CuAg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
- <1585341214-25285-3-git-send-email-tharvey@gateworks.com> <20200428094426.GL3559@dell>
- <CAJ+vNU0UCugbM7Q7WZ1Hw-U=Je483jYGdrvS0Vq6idxtuUmz2Q@mail.gmail.com> <20200429063319.GV3559@dell>
-In-Reply-To: <20200429063319.GV3559@dell>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Wed, 29 Apr 2020 07:50:09 -0700
-Message-ID: <CAJ+vNU1e10F_g51UXgJ+o1R9zhf_1J9xHJ6SYEuZC4615QfG1w@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] mfd: add Gateworks System Controller core driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALMp9eRFfEB1avbQv0O0V=EGrJdSNTxg8Z-BONmQ--dV66CuAg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 11:33 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 28 Apr 2020, Tim Harvey wrote:
->
-> > On Tue, Apr 28, 2020 at 2:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Tue, Apr 28, 2020 at 04:16:16PM -0700, Jim Mattson wrote:
+> On Tue, Apr 28, 2020 at 3:59 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Tue, Apr 28, 2020 at 03:04:02PM -0700, Jim Mattson wrote:
+> > > From the SDM, volume 3:
 > > >
-> > <snip>
-> > > > +
-> > > > +static int gsc_probe(struct i2c_client *client)
-> > > > +{
-> > > > +     struct device *dev = &client->dev;
-> > > > +     struct gsc_dev *gsc;
-> > > > +     int ret;
-> > > > +     unsigned int reg;
-> > > > +
-> > > > +     gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
-> > > > +     if (!gsc)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     gsc->dev = &client->dev;
-> > > > +     gsc->i2c = client;
-> > > > +     i2c_set_clientdata(client, gsc);
-> > > > +
-> > > > +     gsc->bus.reg_write = gsc_regmap_regwrite;
-> > > > +     gsc->bus.reg_read = gsc_regmap_regread;
+> > > • System-management interrupts (SMIs), INIT signals, and higher
+> > > priority events take priority over MTF VM exits.
 > > >
-> > > Why do you need to store these in ddata?
+> > > I think this block needs to be moved up.
 > >
-> > Lee,
+> > Hrm.  It definitely needs to be moved above the preemption timer, though I
+> > can't find any public documentation about the preemption timer's priority.
+> > Preemption timer is lower priority than MTF, ergo it's not in the same
+> > class as SMI.
 > >
-> > Thanks for the review!
-> >
-> > I need the remap_bus* for devm_regmap_init() in the hwmon sub-module driver:
-> >
-> > hwmon->regmap = devm_regmap_init(dev, &gsc->bus, gsc->i2c_hwmon,
-> > &gsc_hwmon_regmap_config);
-> >
-> > Is there something easier I'm missing?
->
-> This is an odd setup.  I haven't seen one driver registering another
-> driver's Regmap call-backs before, related or otherwise.  Normally the
-> Regmap is setup (initialised) in the parent driver and child drivers
-> just make use of it.  Here it looks like you are registering 2
-> separate Regmaps, but using the same call-backs for both, which seems
-> wrong to me.
->
+> > Regarding SMI vs. MTF and #DB trap, to actually prioritize SMIs above MTF
+> > and #DBs, we'd need to save/restore MTF and pending #DBs via SMRAM.  I
+> > think it makes sense to take the easy road and keep SMI after the traps,
+> > with a comment to say it's technically wrong but not worth fixing.
+> 
+> Pending debug exceptions should just go in the pending debug
+> exceptions field. End of story and end of complications. I don't
+> understand why kvm is so averse to using this field the way it was
+> intended.
 
-Lee,
+Ah, it took my brain a bit to catch on.  I assume you're suggesting calling
+nested_vmx_updated_pending_dbg() so that the pending #DB naturally gets
+propagated to/from vmcs12 on SMI/RSM?  I think that should work.
 
-It is perhaps an odd setup. The hwmon sub-device is at a different i2c
-slave address than the other sub-devices. The same callbacks are used
-for reg read/write to take advantage of the retries due to the errata
-resulting in occasional NAK'd register reads.
+> As for the MTF, section 34.14.1 of the SDM, volume 3, clearly states:
+> 
+> The pseudocode above makes reference to the saving of VMX-critical
+> state. This state consists of the following:
+> (1) SS.DPL (the current privilege level); (2) RFLAGS.VM; (3) the state
+> of blocking by STI and by MOV SS (see
+> Table 24-3 in Section 24.4.2); (4) the state of virtual-NMI blocking
+> (only if the processor is in VMX non-root oper-
+> ation and the “virtual NMIs” VM-execution control is 1); and (5) an
+> indication of whether an MTF VM exit is pending
+> (see Section 25.5.2). These data may be saved internal to the
+> processor or in the VMCS region of the current
+> VMCS. Processors that do not support SMI recognition while there is
+> blocking by STI or by MOV SS need not save
+> the state of such blocking.
+> 
+> I haven't really looked at kvm's implementation of SMM (because Google
+> doesn't support it), but it seems that the "MTF VM exit is pending"
+> bit should be trivial to deal with. I assume we save the other
+> VMX-critical state somewhere!
 
-Tim
+True, I spaced on the extistence of vmx_pre_{enter,leave}_smm().
+
+I'll send a patch, the delta to what's in kvm/queue should actually be
+quite small.
