@@ -2,74 +2,73 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF49CC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18647C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAB42073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED300206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CekuV0J8"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Lm3tknJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgD2LB7 (ORCPT
+        id S1726654AbgD2LHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56940 "EHLO
+        Wed, 29 Apr 2020 07:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2LB6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726516AbgD2LHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:01:58 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252B9C03C1AD;
-        Wed, 29 Apr 2020 04:01:58 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id z6so1531018wml.2;
-        Wed, 29 Apr 2020 04:01:58 -0700 (PDT)
+        Wed, 29 Apr 2020 07:07:46 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58923C03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:07:46 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g12so1548909wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Nuf8dwcrjX3dNT8pb1qPoIHBU9UzXx/Q2WQpqmKN7MM=;
-        b=CekuV0J8SOjnr1sBAQ1Kk04qxrk1dBsmfUWYQnh2DDFeJoTaDUGViG2RIuId7BIDPe
-         XAK/kkfJlabmfZSkX/aizsmqpWeVqhkY0v9IDhhXUEzak+/LG7qeYx3EDS7OtLJ/ui02
-         rEED4HcY82oWEUuwAafPJTWsVr/tGaR5Bi8zV5X9sK3YL9mMKF5aeP/AozGA3AZff/ql
-         uPLG1JqepjJBAWMVTqoCpKqVtJ6wwlKqMxBwPdIlmUSPBixAXQ8R9n5uHo4ytoLjjRnL
-         wZOPq+XM0d9PN9nbIYqx3K3SrX5cZzQDk1goDPKSuMIaarH9D3BuOdNEc7TyJgw4egkU
-         GD0A==
+        bh=j/VyKcY8b8oiztzP2PPDO3W5n2EDqYUH2AhxchTmUF0=;
+        b=Lm3tknJGHzMuoo/JoKQcKf/hq4d9/u81G9cSDkiJvcxCVQSQzcl6q9J5/V8Ycxz6F/
+         U+gDZbCQdbhZHXlkVzcz1f72M1K5qjNwzfGBcEu+IqARI2VGamUJOEbQqEifS184y/Dz
+         pV9iR1c/pHqOEFNQlK5EX+6aiGHVU9Blbm4mVDvkjn0gLp5vGRI6Tiv9OPH1WxkgAWop
+         dMgNj9r8mvXP79+eqS27Pch3gAYX40tuies6jIZH0FbzMK7g4JBcO7N40GM+MU/K5zHx
+         SlVrjBbBam5GkD1cuMa+Wr0Lr0gtsWIuZL3n+fT8ITCPpjOEM4Z5Ry7lDc9HFd7Np77Q
+         bcpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Nuf8dwcrjX3dNT8pb1qPoIHBU9UzXx/Q2WQpqmKN7MM=;
-        b=fYVjUNCcHO/fVIcnT9DjEeDE4vUlTl9TGvq2E+vIz/5/bRsY/VnQ5NbDI5K/xdxlvs
-         IsxMRxxocgUelfTELtge8n/Wfw7RheLBHOe0LLWO3ddLwpfx3xTK1fOoJs5AsTaKh6om
-         7Q3ARHDyYjRL14BywW92hQa9o0Cjt7eq3KsFKBlCy/4fO1iDnTIn+EJA+y9AIS4bGQ8/
-         noTKoJNxY1jcZNuEaVKjDRfeRdGkEORfdjNQLMONXTi5Wr5tDQXsIZ51Av1K/000uqd5
-         qw4JtB6b0n9RxFVlI3f8FlYY0Ud9MnrMYnAYU4suNE+KyI47+oXgOtf7Zr4idYY554IK
-         MW8g==
-X-Gm-Message-State: AGi0PuasxeR1iDARWuaINDstPG/YrNK8yGFqstLts1kHj2VN2HwkmPYc
-        Mpox3zwf9pX1has4DYXC2uGpuR3kvWk=
-X-Google-Smtp-Source: APiQypKZIgGaeRSn1GVJlz0TSvMRo05dmppm5CI0NwQeQqOmRf6pYn7lHEQT8aCIzeE1xLleAYmW9A==
-X-Received: by 2002:a1c:6344:: with SMTP id x65mr2661658wmb.56.1588158116628;
-        Wed, 29 Apr 2020 04:01:56 -0700 (PDT)
-Received: from localhost.localdomain ([188.24.130.199])
-        by smtp.gmail.com with ESMTPSA id i4sm15334969wrp.79.2020.04.29.04.01.55
+        bh=j/VyKcY8b8oiztzP2PPDO3W5n2EDqYUH2AhxchTmUF0=;
+        b=TJMmRNG1Sp6m3eWqb3/1KUgtJz5NRABuNqUO/GCXJliZl5KPmBep5eX4nHowkb9Wfn
+         RUjlQO2Bu1bL4kOnCXgmZH9GZ80OZVMJDEUKdc/J6aiPyuQ6FuncbypmFodjSNpdqXfY
+         vV0CeEtarfCI0WiA8cLeo7L3msdnqBlAxgVreMuAxfkYSAk6/c1c8165xG2UD/Dfo2Nw
+         oLVtVt24X+G8q8u2qQu/SyTjmpk3hrv7cqKUYHJqHVvMTPQMze5GzvKsPF5i/eRLa9bA
+         J+OcOUBBnChzrcdRh85seT0wL/v5boLCjBdT17hcxKHt9UdGFzpA0yl4YZls8PT2kvDq
+         FgDQ==
+X-Gm-Message-State: AGi0PuYe/9z50Gu61jeLu7CPVhFo/3JxtZpO0DgVNyklcBY9SENXtyVG
+        CAXqZtmK+c4u+0hIjp3rUbiyDg==
+X-Google-Smtp-Source: APiQypL5WqrsJXFEguAFnCHDsfTAN940DneFBGtmY/ARw5g4wutj/XK9n/4MOOXWknLhcLYqKfK1Wg==
+X-Received: by 2002:a7b:cd10:: with SMTP id f16mr2779712wmj.21.1588158464824;
+        Wed, 29 Apr 2020 04:07:44 -0700 (PDT)
+Received: from localhost.localdomain ([2a0e:b107:830:0:47e5:c676:4796:5818])
+        by smtp.googlemail.com with ESMTPSA id u7sm7679963wmg.41.2020.04.29.04.07.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 04:01:56 -0700 (PDT)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] dma: actions: Fix lockdep splat for owl-dma
-Date:   Wed, 29 Apr 2020 14:01:54 +0300
-Message-Id: <1d77970a82cf9b7cdf9f4731439b1e58c37ca3fb.1588156137.git.cristian.ciocaltea@gmail.com>
+        Wed, 29 Apr 2020 04:07:44 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH net-next v4 0/3] net: phy: mdio: add IPQ40xx MDIO support
+Date:   Wed, 29 Apr 2020 13:07:24 +0200
+Message-Id: <20200429110726.448625-1-robert.marko@sartura.hr>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,90 +77,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the kernel is built with lockdep support and the owl-dma driver is
-used, the following message is shown:
+This patch series provides support for the IPQ40xx built-in MDIO interface.
+Included are driver, devicetree bindings for it and devicetree node.
 
-[    2.496939] INFO: trying to register non-static key.
-[    2.501889] the code is fine but needs lockdep annotation.
-[    2.507357] turning off the locking correctness validator.
-[    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-[    2.519084] Hardware name: Generic DT based system
-[    2.523878] Workqueue: events_freezable mmc_rescan
-[    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-[    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-[    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-[    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-[    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-[    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-[    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-[    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-[    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-[    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-[    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-[    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-[    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-[    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-[    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-[    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-[    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-[    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-[    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-[    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-[    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-[    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+Robert Marko (3):
+  net: phy: mdio: add IPQ4019 MDIO driver
+  dt-bindings: add Qualcomm IPQ4019 MDIO bindings
+  ARM: dts: qcom: ipq4019: add MDIO node
 
-The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+ .../bindings/net/qcom,ipq4019-mdio.yaml       |  61 +++++++
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           |  28 +++
+ drivers/net/phy/Kconfig                       |   7 +
+ drivers/net/phy/Makefile                      |   1 +
+ drivers/net/phy/mdio-ipq4019.c                | 160 ++++++++++++++++++
+ 5 files changed, 257 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml
+ create mode 100644 drivers/net/phy/mdio-ipq4019.c
 
-However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-'owl_dma_terminate_pchan'.
-
-Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
-and removes the 'lock' attribute in 'owl_dma_pchan' struct.
-
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
----
-Changes in v2:
-* Improve the fix as suggested by Manivannan Sadhasivam: substitute 
-  'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
-  'owl_dma_pchan' struct
-* Update the commit message to reflect the changes
-
- drivers/dma/owl-dma.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index c683051257fd..5b1c715a56c8 100644
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -181,7 +181,6 @@ struct owl_dma_pchan {
- 	u32			id;
- 	void __iomem		*base;
- 	struct owl_dma_vchan	*vchan;
--	spinlock_t		lock;
- };
- 
- /**
-@@ -437,14 +436,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
- 	for (i = 0; i < od->nr_pchans; i++) {
- 		pchan = &od->pchans[i];
- 
--		spin_lock_irqsave(&pchan->lock, flags);
-+		spin_lock_irqsave(&od->lock, flags);
- 		if (!pchan->vchan) {
- 			pchan->vchan = vchan;
--			spin_unlock_irqrestore(&pchan->lock, flags);
-+			spin_unlock_irqrestore(&od->lock, flags);
- 			break;
- 		}
- 
--		spin_unlock_irqrestore(&pchan->lock, flags);
-+		spin_unlock_irqrestore(&od->lock, flags);
- 	}
- 
- 	return pchan;
 -- 
 2.26.2
 
