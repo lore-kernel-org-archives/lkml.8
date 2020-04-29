@@ -2,178 +2,123 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA7DC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BA7C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF70E208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588186544;
-	bh=q9AP5/1f5H0lI/5Q1aYWFF9szGbdO+zLdBeKR8D1y5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rLRMPVSVvZs6Y4kGdH8BFSETO35eLLm7PdkfF/S5lLwMYWYzL8v8UJgi2tnMlSvZw
-	 KjSbTZWGuGeGN/1oFOGQwQVckxHtErHjf9wiwhpDKjkHfyrz1Pw1Za611vMUYNPCm2
-	 SbJcJyGgimFv1EgnD2ai3oYzfZLytiJUZ9+HaYro=
+	by mail.kernel.org (Postfix) with ESMTP id 3F1A5208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 18:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SKyEC1FR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgD2Szo (ORCPT
+        id S1726973AbgD2Szr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 14:55:44 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:44627 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgD2Szn (ORCPT
+        Wed, 29 Apr 2020 14:55:47 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21181 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbgD2Szo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:55:43 -0400
-Received: by mail-oo1-f65.google.com with SMTP id p67so666476ooa.11;
-        Wed, 29 Apr 2020 11:55:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u16NUB++zzs8ASIrzVSF/fR0H3eWvFCKsVAOeZG9UVg=;
-        b=Qtsk3cpCaPfBW1rwZ2GN8FasqARBsgTiv0V/ihpjNJPyfAg9mFzjDHVmw/vAVYb5nm
-         u1YO7ASxx84MkQ6kV3aqBCVqlV3KUWFUTJc86NroeVfNOoOHe97WfOg6EIAct7U6qC5V
-         lnyBwKkiJBhANfigqYRhjNSYh41Yz/RK2Dz31uWH7dsiHlkO2wmhWDwQnWfLxkQ65AII
-         ycFrhNeAWivOfVEkEmyXArUxOUpkQS2i5F5tdT+cx/vQ/gZ6XXNPsmcZpXBhsdpsPd7U
-         dtTKLY4s7v+IgpUO6fHL8oWnY/jouYpCstea2LjmxivDYXXKfStq5C1i5+7GkDYNqRPi
-         wo7A==
-X-Gm-Message-State: AGi0PuZ/jAQHmsHJtrB6L3lj1OKMwbop+o5dTJWJhutXoJIx4ogZ3MMj
-        wCS626DifHZzlbrXj7MHxsKF+T8=
-X-Google-Smtp-Source: APiQypKZmFn4ieLoQnLl00W9LHE8B+/oqsFhymLM2UBRFIfqezRtXikGpPwDFP7DIfapNQ/TtUH37Q==
-X-Received: by 2002:a4a:a98b:: with SMTP id w11mr28658046oom.80.1588186542853;
-        Wed, 29 Apr 2020 11:55:42 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t5sm650514oor.36.2020.04.29.11.55.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 11:55:42 -0700 (PDT)
-Received: (nullmailer pid 31714 invoked by uid 1000);
-        Wed, 29 Apr 2020 18:55:41 -0000
-Date:   Wed, 29 Apr 2020 13:55:41 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com, rgummal@xilinx.com
-Subject: Re: [PATCH v6 1/2] PCI: xilinx-cpm: Add device tree binding for
- Versal CPM Root Port
-Message-ID: <20200429185541.atk5k4j7rgh7ipmr@bogus>
-References: <1587729844-20798-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1587729844-20798-2-git-send-email-bharat.kumar.gogada@xilinx.com>
+        Wed, 29 Apr 2020 14:55:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588186543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IIaLFaQGg2nyuh0QfLxI7tJeBjanOQ/yrgdSNuszGiQ=;
+        b=SKyEC1FRlfusVwFsPB/rgwOCzhCIyR+GDRa07ZEXfXxrsMC3npdMdrdyDM5ecoTCQAoP1F
+        ra+0EZI9CDOoWDx7YOFlNqGvcDqI1PSbrTII6N1lT/UM/S82/+xcEutZbOlvTDo23CmVT0
+        Z3cf/fvY4JZ2YSMQ1V7zwErftYeTLPA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-70-IJS93RWjOvOESnVGsPZDxw-1; Wed, 29 Apr 2020 14:55:40 -0400
+X-MC-Unique: IJS93RWjOvOESnVGsPZDxw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91BFC45F;
+        Wed, 29 Apr 2020 18:55:39 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D84CC600EF;
+        Wed, 29 Apr 2020 18:55:38 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 13:55:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+Message-ID: <20200429185536.5xshpcwtn4be4llh@treble>
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <20200428161044.caamvx67t2z4t6vd@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1587729844-20798-2-git-send-email-bharat.kumar.gogada@xilinx.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200428161044.caamvx67t2z4t6vd@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 05:34:03PM +0530, Bharat Kumar Gogada wrote:
-> Add device tree binding documentation for Versal CPM Root Port driver.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  .../devicetree/bindings/pci/xilinx-versal-cpm.txt  | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+On Tue, Apr 28, 2020 at 11:10:44AM -0500, Josh Poimboeuf wrote:
+> > ==> build/x86/0xE0F2ACFF_defconfig/log <==
+> > kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
 
-DT bindings need to Cc DT list to be reviewed. Bindings are now in DT 
-schema format. See Documentation/devicetree/writing-schema.rst.
+This one is fixed with the following cleanup:
 
-Sorry to tell you this on v6, but first I'm seeing it.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] linkage: Convert syscall alias macros to C
 
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> new file mode 100644
-> index 0000000..eac6144
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> @@ -0,0 +1,68 @@
-> +* Xilinx Versal CPM DMA Root Port Bridge DT description
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- compatible: Should contain "xlnx,versal-cpm-host-1.00"
-> +- reg: Should contain configuration space (includes bridge registers) and
-> +	CPM system level control and status registers, and length
-> +- reg-names: Must include the following entries:
-> +	"cfg": configuration space region and bridge registers
-> +	"cpm_slcr": CPM system level control and status registers
-> +- interrupts: Should contain AXI PCIe interrupt
-> +- interrupt-map-mask,
-> +  interrupt-map: standard PCI properties to define the mapping of the
-> +	PCI interface to interrupt numbers.
-> +- bus-range: Range of bus numbers associated with this controller
-> +- ranges: ranges for the PCI memory regions (I/O space region is not
-> +	supported by hardware)
-> +	Please refer to the standard PCI bus binding document for a more
-> +	detailed explanation
-> +- msi-map: Maps a Requester ID to an MSI controller and associated MSI
-> +	sideband data
-> +- interrupt-names: Must include the following entries:
-> +	"misc": interrupt asserted when legacy or error interrupt is received
+There's no need to use inline asm to create ELF alias symbols.
+Annotated C function declarations can be used instead.
 
-Don't really need a name when only 1.
+This also makes the ordering of the ELF symbol table more logical, with
+the real function now always coming before the aliases.  This makes it
+easier for objtool, objdump and other tools to differentiate them.
 
-> +
-> +Interrupt controller child node
-> ++++++++++++++++++++++++++++++++
-> +Required properties:
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #address-cells: specifies the number of cells needed to encode an
-> +	address. The value must be 0.
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +
-> +
-> +Refer to the following binding document for more detailed description on
-> +the use of 'msi-map':
-> +	 Documentation/devicetree/bindings/pci/pci-msi.txt
-> +
-> +Example:
-> +	pci@fca10000 {
+This fixes the following warning:
 
-Unit address is normally the first entry.
+  kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
 
-> +		#address-cells = <3>;
-> +		#interrupt-cells = <1>;
-> +		#size-cells = <2>;
-> +		compatible = "xlnx,versal-cpm-host-1.00";
-> +		interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
-> +				<0 0 0 2 &pcie_intc_0 1>,
-> +				<0 0 0 3 &pcie_intc_0 2>,
-> +				<0 0 0 4 &pcie_intc_0 3>;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-parent = <&gic>;
-> +		interrupt-names = "misc";
-> +		interrupts = <0 72 4>;
-> +		bus-range = <0x00 0xff>;
-> +		ranges = <0x02000000 0x00000000 0xE0000000 0x0 0xE0000000 0x00000000 0x10000000>,
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ include/linux/linkage.h | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-lowercase hex please.
+diff --git a/include/linux/linkage.h b/include/linux/linkage.h
+index d796ec20d114..2d7dd6361f91 100644
+--- a/include/linux/linkage.h
++++ b/include/linux/linkage.h
+@@ -22,18 +22,12 @@
+ #define asmlinkage CPP_ASMLINKAGE
+ #endif
+ 
+-#ifndef cond_syscall
+-#define cond_syscall(x)	asm(				\
+-	".weak " __stringify(x) "\n\t"			\
+-	".set  " __stringify(x) ","			\
+-		 __stringify(sys_ni_syscall))
++#ifndef SYSCALL_ALIAS
++#define SYSCALL_ALIAS(alias, name) __alias(name) typeof(name) alias
+ #endif
+ 
+-#ifndef SYSCALL_ALIAS
+-#define SYSCALL_ALIAS(alias, name) asm(			\
+-	".globl " __stringify(alias) "\n\t"		\
+-	".set   " __stringify(alias) ","		\
+-		  __stringify(name))
++#ifndef cond_syscall
++#define cond_syscall(x) __weak SYSCALL_ALIAS(x, sys_ni_syscall)
+ #endif
+ 
+ #define __page_aligned_data	__section(.data..page_aligned) __aligned(PAGE_SIZE)
+-- 
+2.21.1
 
-> +			 <0x43000000 0x00000080 0x00000000 0x00000080 0x00000000 0x00000000 0x80000000>;
-> +		msi-map = <0x0 &its_gic 0x0 0x10000>;
-> +		reg = <0x6 0x00000000 0x0 0x10000000>,
-> +		      <0x0 0xFCA10000 0x0 0x1000>;
-> +		reg-names = "cfg", "cpm_slcr";
-> +		pcie_intc_0: pci-interrupt-controller {
-
-interrupt-controller {
-
-> +			#address-cells = <0>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-controller ;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
 
