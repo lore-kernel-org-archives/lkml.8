@@ -2,74 +2,161 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8FCC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A538DC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3B120B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83869208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DX66KKJL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QOU1du+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD2RXB (ORCPT
+        id S1726955AbgD2RXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:23:01 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:33056 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgD2RXA (ORCPT
+        Wed, 29 Apr 2020 13:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726781AbgD2RXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:23:00 -0400
-Received: from [192.168.0.109] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2070820B4737;
-        Wed, 29 Apr 2020 10:23:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2070820B4737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1588180980;
-        bh=dXAt2PJpTkQ9MnX44sOk0KMteaTwRrL51u5353hkQ94=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DX66KKJLYlVCgw3mkUmwBYA5r5p9uA0owtBrZiqT/fvRcYj2ij8ej744ulJGGriIP
-         M+TtRbsGp1WRXWWOXXaasL/93q3GfwfUdI4zMPJgNFS6mdR881LmoXxWpJMxRDa8sZ
-         U8F3tYpm+QUpp1oP42gQw04i0AJhfgXXhXdh67o4=
-Subject: Re: [PATCH 2/2] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     Mickael Salaun <mic@digikod.net>, Steve Grubb <sgrubb@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588167523-7866-1-git-send-email-zohar@linux.ibm.com>
- <1588167523-7866-3-git-send-email-zohar@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <5c7a4ef6-db0b-431a-b745-987176fa41ed@linux.microsoft.com>
-Date:   Wed, 29 Apr 2020 10:22:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1588167523-7866-3-git-send-email-zohar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 29 Apr 2020 13:23:53 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614CEC035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:23:53 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id x26so1316860pgc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8FQ5I0LPhVl6eGhASWpUBR6rw0WhPP4gGji6IhYEdAI=;
+        b=QOU1du+HE3JgAOh4rUSq9U57cptJkja6ysGuZe3A2vHYbkftoM+sSoCIowLosbnnb/
+         xu/BvdUqRZev4Jwmb6Fm77ugbEMoCIGs7YDMZ1NkA51v4vQEUEkTKb+nNz+ttjmd+9oQ
+         /C6ChCYBZFMZEbBDRcZVDF+Z8eCcAiOBdcjjSYgKML54CfOYIxwU74P5g95/9rYRJbJd
+         8BZ6V7q+tbxSdVctyZloz1iX/uTNh4lpIheO2VUsizG0glJkXN0Z0E1kTffGvIC4bgtl
+         KMAelFQtpwayijR2u6M3SzMMZdxkqXGCyz6HOBEYPi0d8HZ1c6nII09f+xyYFk39JWBk
+         SCNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8FQ5I0LPhVl6eGhASWpUBR6rw0WhPP4gGji6IhYEdAI=;
+        b=c/6MF+9Al9B61fuUo7p9c2G1iBch05SIRD3I2rZHLY16Vr2A/i/QtRmUj3IXTUHPIV
+         6o7gQ1l3GysbQIeF6C0oqZETKIXpmamB+mofWU6JeXFQDF5ymVhzXi6bte9gwl/GLVxQ
+         erQNx2QwZhyG5+NAXP7C7wf4tIJEUHNVzZyCATQmss/RpnGHcLH3C36wlmWhIEmH2d3v
+         jS+QjKUah5P58je56eqYWEhbEdV9EPwxFwVLHZvu3+bYfXqWqTXtAVGvudLPwNY4ftyf
+         yyGCDmZ7FyTuJ5GIAHP32BIyNVbexkRPsCXMp6FS+BBpSYzGx31GLOQKWoNjDp0q3GOY
+         62xw==
+X-Gm-Message-State: AGi0PuYCTdMLy13d3wDnjDYPM46V+j7MTpDfJlKPKpVk2yygGpjtNL53
+        HOyfTCl1SigIJ78v31bsNu+kw1TFcPw=
+X-Google-Smtp-Source: APiQypIw4v36udMuIWZcDFrQCZjgfjNurzviIuoAGQ7/1O3k+fz5uu5zvLh7g78WqTBtufAZneh1Bw==
+X-Received: by 2002:a63:4d11:: with SMTP id a17mr32571000pgb.392.1588181032618;
+        Wed, 29 Apr 2020 10:23:52 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id y21sm1451523pfn.148.2020.04.29.10.23.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 10:23:51 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>, linux-pm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH] regulator: Revert "Use driver_deferred_probe_timeout for regulator_init_complete_work"
+Date:   Wed, 29 Apr 2020 17:23:49 +0000
+Message-Id: <20200429172349.55979-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/20 6:38 AM, Mimi Zohar wrote:
-> The kernel has no way of differentiating between a file containing data
-> or code being opened by an interpreter.  The proposed RESOLVE_MAYEXEC
-> openat2(2) flag bridges this gap by defining and enabling the MAY_OPENEXEC
-> flag.
-> 
-> This patch adds IMA policy support for the new MAY_OPENEXEC flag.
-> 
-> Example:
-> measure func=FILE_CHECK mask=^MAY_OPENEXEC
-> appraise func=FILE_CHECK appraise_type=imasig mask=^MAY_OPENEXEC
-> 
-> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+This reverts commit dca0b44957e5 ("regulator: Use
+driver_deferred_probe_timeout for regulator_init_complete_work"),
+as we ended up reverting the default deferred_probe_timeout
+value back to zero, to preserve behavior with 5.6 we need to
+decouple the regulator timeout which was previously 30 seconds.
 
-Reviewed.
+This avoids breaking some systems that depend on the regulator
+timeout but don't require the deferred probe timeout.
+
+Cc: linux-pm@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Kevin Hilman <khilman@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Rob Herring <robh@kernel.org>
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Suggested-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/regulator/core.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index c340505150b6..7486f6e4e613 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5754,10 +5754,6 @@ static DECLARE_DELAYED_WORK(regulator_init_complete_work,
+ 
+ static int __init regulator_init_complete(void)
+ {
+-	int delay = driver_deferred_probe_timeout;
+-
+-	if (delay < 0)
+-		delay = 0;
+ 	/*
+ 	 * Since DT doesn't provide an idiomatic mechanism for
+ 	 * enabling full constraints and since it's much more natural
+@@ -5768,17 +5764,18 @@ static int __init regulator_init_complete(void)
+ 		has_full_constraints = true;
+ 
+ 	/*
+-	 * If driver_deferred_probe_timeout is set, we punt
+-	 * completion for that many seconds since systems like
+-	 * distros will load many drivers from userspace so consumers
+-	 * might not always be ready yet, this is particularly an
+-	 * issue with laptops where this might bounce the display off
+-	 * then on.  Ideally we'd get a notification from userspace
+-	 * when this happens but we don't so just wait a bit and hope
+-	 * we waited long enough.  It'd be better if we'd only do
+-	 * this on systems that need it.
++	 * We punt completion for an arbitrary amount of time since
++	 * systems like distros will load many drivers from userspace
++	 * so consumers might not always be ready yet, this is
++	 * particularly an issue with laptops where this might bounce
++	 * the display off then on.  Ideally we'd get a notification
++	 * from userspace when this happens but we don't so just wait
++	 * a bit and hope we waited long enough.  It'd be better if
++	 * we'd only do this on systems that need it, and a kernel
++	 * command line option might be useful.
+ 	 */
+-	schedule_delayed_work(&regulator_init_complete_work, delay * HZ);
++	schedule_delayed_work(&regulator_init_complete_work,
++			      msecs_to_jiffies(30000));
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
