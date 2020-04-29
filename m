@@ -2,345 +2,138 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1255C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05B4C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EA72074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B64E2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxa+H+hO"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="VN9jSEoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgD2Lj0 (ORCPT
+        id S1726662AbgD2LmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726519AbgD2LjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:39:24 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D72C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:39:24 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id m13so1379266otf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 04:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o9VrpMFGjOZAS3Z1MSBGkfDTiC/JRHokO7emMoXoeIE=;
-        b=pxa+H+hOMi3z5vWJlv69Dxx4Isvr/SWvy5GTYEsKmySqlgpAvDWT/pCeHv+EPwqCyM
-         ruGoQe8ND8601mqmCQObvux9EZ884oLXSzjlgckjwDhjUjY08IbzoeP41vXhgAwAj/eW
-         tPxsqWfe8wg5llAwmHiUZbdE3rcoueGzCJnSwy0ryepv6QJy1c2lt4VvbGraQqAYKEEp
-         7YgxIjQ1lVdoW6Jg7nY2Thx2dHW0lvontdVtbRKKGaABSMJvSOj2TyOGA5Sps0EUrQKi
-         wx0IlP/coReesElhwHv0UZ1D/K7TzwiZznSjm2GizSB4PRsh2IZgA9vBpe7KZHk1FJ1E
-         L4/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o9VrpMFGjOZAS3Z1MSBGkfDTiC/JRHokO7emMoXoeIE=;
-        b=dme3OqO3RIE32TMPlpzSFy1PvsmhQUP1IrcvAhWmVnN6GQikZNJpVJLwqIK+uFVKQa
-         Yp91UC2VUEdbq0g4kD91qlxsT7yamgXIeOAT1kx0Zv1H86TnCDQ8OCb+4aAvxUwZ1UUF
-         HamLSA/6DOWZWU6j/DE4ydw85mLM4b+ZaXIAZ+iGw0S+AG2EHTk/1SgX3S2aDQObtdzf
-         8hYitz2rCwYd5Pqq5f46euKIddbWFGBHtlMn3SUpAQ+mZSWTDhfab9h3dIxNmn7eS5mF
-         tqrWwp6XusUDlSkGkGnUPGzwss6POIWl65h5a1Syoi7vbxPmIDghExpdNOADoZaTwcGx
-         eH+g==
-X-Gm-Message-State: AGi0PuYTvCdB6NMrKEyLa0/bDOTNKIvXtcQ53pafoI/ZavwU36/mQEzd
-        mHmBrLnZq79wXRx9PREGSxWMBYKAX1YEWkVzSuqTkw==
-X-Google-Smtp-Source: APiQypITz23O96j+VAKXsxtYRMC+UiqrZWtT6Qk/x0g9an80p19WixC+bUNecs3lb0W7N89TLaP+nCuleQLr+IvG8ns=
-X-Received: by 2002:a05:6830:1e4e:: with SMTP id e14mr25681406otj.91.1588160363652;
- Wed, 29 Apr 2020 04:39:23 -0700 (PDT)
+        Wed, 29 Apr 2020 07:42:25 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53637 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgD2LmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:42:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49BxSt4pGzz9sPF;
+        Wed, 29 Apr 2020 21:42:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588160543;
+        bh=1tlusSBwGr5U0w6ErMbJb/gNa+IXcP1MkkFVn6Y7ZS4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=VN9jSEoOBhTB0p7EzleihEGvDqn7BKfU3Cu5uchJytHan/oluvoCAsbvHah1ywvX6
+         03PZ0H6jz1OeHzfonu9hVvZStkygHM4752zpFI5LAEZ+RNKl57gC0jM80kll0LzVY6
+         ZnT4PiKsu2ii0Fd4sGYZxGSxVhCMcQMKjhIhqKgkIC/PKNDjzkiz+B7f3ypWbgum0x
+         0gPTGfbVuuc6J11czz8r+wn2MJb9ZCCWdBmPwgR4NokJJ5rizd0HhGuvaxjpjhqnXb
+         mT5GFrV9GWYM/Mbt8Ijx6t1L++y/J2NdDG/bfDS4iTbvAdJtBPSYIo7yp6FOBvki4G
+         cUWQl8eQ7nvug==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linuxppc-dev@ozlabs.org, hch@lst.de, jk@ozlabs.org,
+        viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/spufs: Add rcu_read_lock() around fcheck()
+In-Reply-To: <20200428135245.GA2827@lst.de>
+References: <20200428114811.68436-1-mpe@ellerman.id.au> <20200428135245.GA2827@lst.de>
+Date:   Wed, 29 Apr 2020 21:42:39 +1000
+Message-ID: <875zdifrgw.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200428180718.1609826-1-robert.foss@linaro.org>
- <20200428180718.1609826-2-robert.foss@linaro.org> <20200429090012.vhhwatojkncjquwd@gilmour.lan>
- <CAG3jFyvcgqi_rm-Enf3gTyHowbgX6iBe3coDPu91p9EBTxS2XA@mail.gmail.com> <20200429111307.GA867@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200429111307.GA867@valkosipuli.retiisi.org.uk>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 29 Apr 2020 13:39:12 +0200
-Message-ID: <CAG3jFyvvX6J6TSnXr=KUzu5BuQ351sNbNC2mtY0QWdqBdAz7JA@mail.gmail.com>
-Subject: Re: [PATCH v5 v5 2/3] media: ov8856: Add devicetree support
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 13:13, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+Christoph Hellwig <hch@lst.de> writes:
+> On Tue, Apr 28, 2020 at 09:48:11PM +1000, Michael Ellerman wrote:
+>> 
+>> This comes from fcheck_files() via fcheck().
+>> 
+>> It's pretty clearly documented that fcheck() must be wrapped with
+>> rcu_read_lock(), so fix it.
 >
-> Hi Robert, Maxime,
->
-> On Wed, Apr 29, 2020 at 12:19:38PM +0200, Robert Foss wrote:
-> > On Wed, 29 Apr 2020 at 11:00, Maxime Ripard <maxime@cerno.tech> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Tue, Apr 28, 2020 at 08:07:17PM +0200, Robert Foss wrote:
-> > > > Add match table, enable ov8856_probe() to support
-> > > > both ACPI and DT modes.
-> > > >
-> > > > ACPI and DT modes are primarily distinguished from
-> > > > each other by relying on devm_XXX_get_optional()
-> > > > will return NULL instead of a reference for the
-> > > > desired managed resource.
-> > > >
-> > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > > > ---
-> > > >
-> > > > - Changes since v4:
-> > > >   * Maxime & Sakari: Switch to clock-frequency
-> > > >
-> > > > - Changes since v3:
-> > > >   * Remove redundant {}-brackets
-> > > >   * Compare xvclk_rate to 5% tolerance
-> > > >   * Andy: Use dev_fwnode()
-> > > >   * Andy: Use %pe instead of %ld + PTR_ERR()
-> > > >   * Andy: Invert reset_gpio logic
-> > > >   * Andy: Remove dev_dbg() from failing reset_gpio setup
-> > > >   * Andy: Use dev_err for logging for failures
-> > > >   * Andy: Remove dev_warn from EDEFER/regulator error path
-> > > >   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
-> > > >   * Maxime & Sakari: Verify clock frequency from DT
-> > > >   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
-> > > >   * Sakari: Remove duplicate ov8856->dev assignment
-> > > >
-> > > > - Changes since v2:
-> > > >   * Added "struct device *dev" member to struct ov8856
-> > > >   * Andy: Switch to optional version of devm_gpiod_get
-> > > >   * Andy: Switch to optional version of devm_clk_get
-> > > >   * Fabio: Add reset sleep period
-> > > >   * Sakari: Unify defines for 19.2Mhz
-> > > >   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
-> > > >   * Sakari: Replace dev_info() with dev_dbg()
-> > > >   * Sakari: Switch induction variable type to unsigned
-> > > >   * Sakari: Don't wait for reset_gpio when in ACPI mode
-> > > >   * Sakari: Pull reset GPIO high on power on failure
-> > > >   * Sakari: Add power on/off to resume/suspend
-> > > >   * Sakari: Fix indentation
-> > > >   * Sakari: Power off during ov8856_remove()
-> > > >   * Sakari: Don't sleep during power-on in ACPI mode
-> > > >   * Sakari: Switch to getting xvclk from clk_get_rate
-> > > >
-> > > > - Changes since v1:
-> > > >   * Andy & Sakari: Make XVCLK optional since to not break ACPI
-> > > >   * Fabio: Change n_shutdown_gpio name to reset_gpio
-> > > >   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
-> > > >   * Fabio: Remove empty line
-> > > >   * Fabio: Remove real error from devm_gpiod_get() failures
-> > > >   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
-> > > >   * Sakari: Use XVCLK rate as provided by DT
-> > > >
-> > > >  drivers/media/i2c/ov8856.c | 139 +++++++++++++++++++++++++++++++++----
-> > > >  1 file changed, 126 insertions(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> > > > index 8655842af275..48b02b8d205f 100644
-> > > > --- a/drivers/media/i2c/ov8856.c
-> > > > +++ b/drivers/media/i2c/ov8856.c
-> > > > @@ -3,10 +3,13 @@
-> > > >
-> > > >  #include <asm/unaligned.h>
-> > > >  #include <linux/acpi.h>
-> > > > +#include <linux/clk.h>
-> > > >  #include <linux/delay.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > >  #include <linux/i2c.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/pm_runtime.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > >  #include <media/v4l2-ctrls.h>
-> > > >  #include <media/v4l2-device.h>
-> > > >  #include <media/v4l2-fwnode.h>
-> > > > @@ -18,7 +21,7 @@
-> > > >  #define OV8856_LINK_FREQ_360MHZ              360000000ULL
-> > > >  #define OV8856_LINK_FREQ_180MHZ              180000000ULL
-> > > >  #define OV8856_SCLK                  144000000ULL
-> > > > -#define OV8856_MCLK                  19200000
-> > > > +#define OV8856_XVCLK_19_2            19200000
-> > > >  #define OV8856_DATA_LANES            4
-> > > >  #define OV8856_RGB_DEPTH             10
-> > > >
-> > > > @@ -64,6 +67,12 @@
-> > > >
-> > > >  #define to_ov8856(_sd)                       container_of(_sd, struct ov8856, sd)
-> > > >
-> > > > +static const char * const ov8856_supply_names[] = {
-> > > > +     "dovdd",        /* Digital I/O power */
-> > > > +     "avdd",         /* Analog power */
-> > > > +     "dvdd",         /* Digital core power */
-> > > > +};
-> > > > +
-> > > >  enum {
-> > > >       OV8856_LINK_FREQ_720MBPS,
-> > > >       OV8856_LINK_FREQ_360MBPS,
-> > > > @@ -566,6 +575,11 @@ struct ov8856 {
-> > > >       struct media_pad pad;
-> > > >       struct v4l2_ctrl_handler ctrl_handler;
-> > > >
-> > > > +     struct device           *dev;
-> > > > +     struct clk              *xvclk;
-> > > > +     struct gpio_desc        *reset_gpio;
-> > > > +     struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
-> > > > +
-> > > >       /* V4L2 Controls */
-> > > >       struct v4l2_ctrl *link_freq;
-> > > >       struct v4l2_ctrl *pixel_rate;
-> > > > @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
-> > > >       return ret;
-> > > >  }
-> > > >
-> > > > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > > > +{
-> > > > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > > > +     int ret;
-> > > > +
-> > > > +     ret = clk_prepare_enable(ov8856->xvclk);
-> > > > +     if (ret < 0) {
-> > > > +             dev_err(&client->dev, "failed to enable xvclk\n");
-> > > > +             return ret;
-> > > > +     }
-> > > > +
-> > > > +     if (is_acpi_node(dev_fwnode(ov8856->dev)))
-> > > > +             return 0;
-> > > > +
-> > > > +     if (ov8856->reset_gpio) {
-> > > > +             gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > > +             usleep_range(1000, 2000);
-> > > > +     }
-> > > > +
-> > > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> > > > +                                 ov8856->supplies);
-> > > > +     if (ret < 0) {
-> > > > +             dev_err(&client->dev, "failed to enable regulators\n");
-> > > > +             goto disable_clk;
-> > > > +     }
-> > > > +
-> > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-> > > > +     usleep_range(1500, 1800);
-> > > > +
-> > > > +     return 0;
-> > > > +
-> > > > +disable_clk:
-> > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > > +     clk_disable_unprepare(ov8856->xvclk);
-> > > > +
-> > > > +     return ret;
-> > > > +}
-> > > > +
-> > > > +static void __ov8856_power_off(struct ov8856 *ov8856)
-> > > > +{
-> > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > > +     regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
-> > > > +                            ov8856->supplies);
-> > > > +     clk_disable_unprepare(ov8856->xvclk);
-> > > > +}
-> > > > +
-> > > >  static int __maybe_unused ov8856_suspend(struct device *dev)
-> > > >  {
-> > > >       struct i2c_client *client = to_i2c_client(dev);
-> > > > @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
-> > > >       if (ov8856->streaming)
-> > > >               ov8856_stop_streaming(ov8856);
-> > > >
-> > > > +     __ov8856_power_off(ov8856);
-> > > >       mutex_unlock(&ov8856->mutex);
-> > > >
-> > > >       return 0;
-> > > > @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
-> > > >       int ret;
-> > > >
-> > > >       mutex_lock(&ov8856->mutex);
-> > > > +
-> > > > +     __ov8856_power_on(ov8856);
-> > > >       if (ov8856->streaming) {
-> > > >               ret = ov8856_start_streaming(ov8856);
-> > > >               if (ret) {
-> > > > @@ -1092,29 +1155,58 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > -static int ov8856_check_hwcfg(struct device *dev)
-> > > > +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
-> > > >  {
-> > > > +     struct device *dev = ov8856->dev;
-> > > >       struct fwnode_handle *ep;
-> > > >       struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > > >       struct v4l2_fwnode_endpoint bus_cfg = {
-> > > >               .bus_type = V4L2_MBUS_CSI2_DPHY
-> > > >       };
-> > > > -     u32 mclk;
-> > > > +     u32 xvclk_rate;
-> > > >       int ret;
-> > > >       unsigned int i, j;
-> > > >
-> > > >       if (!fwnode)
-> > > >               return -ENXIO;
-> > > >
-> > > > -     ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > > > +     ret = fwnode_property_read_u32(fwnode, "clock-frequency",
-> > > > +             &xvclk_rate);
-> > > >       if (ret)
-> > > >               return ret;
-> > > >
-> > > > -     if (mclk != OV8856_MCLK) {
-> > > > -             dev_err(dev, "external clock %d is not supported", mclk);
-> > > > +     if (!is_acpi_node(fwnode)) {
-> > > > +             ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > > > +             if (IS_ERR(ov8856->xvclk)) {
-> > > > +                     dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > > > +                                     ov8856->xvclk);
-> > > > +                     return PTR_ERR(ov8856->xvclk);
-> > > > +             }
-> > > > +
-> > > > +             clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > > > +             xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > > > +     }
-> > > > +
-> > > > +     /* external clock must be 19.2MHz, allow 5% tolerance */
-> > >
-> > > Where is that 5% tolerance coming from? Experimentations, datasheets, something
-> > > that looks good enough? Either way, this should be in the comment.
-> >
-> > I don't have access to the full datasheet unfortunately. A 24Mhz rate
-> > is as far as I understand it supported and required for higher
-> > bandwidth count modes.
-> > It was suggested to me that adding a tolerance is the best practice,
-> > the ov5645 driver uses a 1% tolerance, which may be more appropriate.
->
-> The frequency should really be exact. Sometimes what happens is, however,
-> that a register list based driver does not have the register lists for a
-> frequency that is available on a given system. That's why some drivers have
-> allowed some difference to the intended frequency.
->
-> That 5 % seems like a random value, just like any other number that differs
-> from the exact frequency would be.
->
-> I'd issue a warning if the frequency differs from what was intended, but
-> still proceed with probe. This way we can make sure the difference is noted
-> while boards that cannot provide the exact frequency supported by the
-> driver can still function.
+> But for this to actually be useful you'd need the rcu read lock until
+> your are done with the file (or got a reference).
 
-Issuing a warning sounds like a good solution to me. What do you think Maxime?
+Hmm OK. My reasoning was that we were done with the struct file, because
+we return the ctx that's hanging off the inode.
 
->
-> --
-> Regards,
->
-> Sakari Ailus
++	ctx = SPUFS_I(file_inode(file))->i_ctx;
+
+But I guess the lifetime of the ctx is not guaranteed if the file goes
+away.
+
+It looks like the only long lived reference on the ctx is the one
+taken in spufs_new_file() and dropped in spufs_evict_inode().
+
+So if we take a reference to the ctx with the RCU lock held we should be
+safe, I think. But I've definitely exhausted my spufs/vfs knowledge at
+this point.
+
+Something like below.
+
+cheers
+
+
+diff --git a/arch/powerpc/platforms/cell/spufs/coredump.c b/arch/powerpc/platforms/cell/spufs/coredump.c
+index 8b3296b62f65..37c155254cd5 100644
+--- a/arch/powerpc/platforms/cell/spufs/coredump.c
++++ b/arch/powerpc/platforms/cell/spufs/coredump.c
+@@ -82,13 +82,20 @@ static int match_context(const void *v, struct file *file, unsigned fd)
+  */
+ static struct spu_context *coredump_next_context(int *fd)
+ {
++       struct spu_context *ctx;
+        struct file *file;
+        int n = iterate_fd(current->files, *fd, match_context, NULL);
+        if (!n)
+                return NULL;
+        *fd = n - 1;
++
++       rcu_read_lock();
+        file = fcheck(*fd);
+-       return SPUFS_I(file_inode(file))->i_ctx;
++       ctx = SPUFS_I(file_inode(file))->i_ctx;
++       get_spu_context(ctx);
++       rcu_read_unlock();
++
++       return ctx;
+ }
+
+ int spufs_coredump_extra_notes_size(void)
+@@ -99,17 +106,23 @@ int spufs_coredump_extra_notes_size(void)
+        fd = 0;
+        while ((ctx = coredump_next_context(&fd)) != NULL) {
+                rc = spu_acquire_saved(ctx);
+-               if (rc)
++               if (rc) {
++                       put_spu_context(ctx);
+                        break;
++               }
++
+                rc = spufs_ctx_note_size(ctx, fd);
+                spu_release_saved(ctx);
+-               if (rc < 0)
++               if (rc < 0) {
++                       put_spu_context(ctx);
+                        break;
++               }
+
+                size += rc;
+
+                /* start searching the next fd next time */
+                fd++;
++               put_spu_context(ctx);
+        }
+
+        return size;
+
