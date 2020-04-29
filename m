@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1758C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30ACC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A153A20731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE74820731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJlRoZMR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7cK+1uG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgD2PZ2 (ORCPT
+        id S1727894AbgD2PZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:25:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27176 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727854AbgD2PZ0 (ORCPT
+        Wed, 29 Apr 2020 11:25:31 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35076 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727887AbgD2PZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:25:26 -0400
+        Wed, 29 Apr 2020 11:25:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588173925;
+        s=mimecast20190719; t=1588173926;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fw/rARHKh3ajo0pSJAYwVDVNeUoRc15uksT01bWh3Uw=;
-        b=QJlRoZMRzQg3f04s/Bb1Xjn5pgxLIdMh2df6bSiyjAFMQDYIPD5S/RHyKof8xV/2pUmd6c
-        2np+zCmsmU7yQgzDKtrsCpVCQpxqKl52unbXXYBaHgWR8x0Z73TGRzdAJ6IkTkOMlFHvHn
-        wOgwrMUDcrNBvYiLpYXV1+hWJK2PxeE=
+        bh=n7MNVntR2hzdBos1b1qY3omx/9gteBl17M6iJffUlGU=;
+        b=D7cK+1uGKo5qhslaVTWyjklYgFV1+HNM5k+VmCpycYBJl6W1oqqV0z7YhAUoRf1+dQHmtG
+        9hXJ8udYMQXX6d91+d/Dl4OB+Vizfo4VTcGAk+sCeeyNiZpp4IRMz7TJDcfsXiPcIC9kIB
+        wavzFl6psAHw8XzWfAWz0ZdFpCR1nZc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-sM0PG7XPPDmRlIWYtbQzbA-1; Wed, 29 Apr 2020 11:25:23 -0400
-X-MC-Unique: sM0PG7XPPDmRlIWYtbQzbA-1
+ us-mta-405-4uGGnM5wOgOOSpEELuMYZw-1; Wed, 29 Apr 2020 11:25:22 -0400
+X-MC-Unique: 4uGGnM5wOgOOSpEELuMYZw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4798C18FE87E;
-        Wed, 29 Apr 2020 15:25:12 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EF2B80BC52;
+        Wed, 29 Apr 2020 15:25:14 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86CEB50FFB;
-        Wed, 29 Apr 2020 15:25:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 516C163BBE;
+        Wed, 29 Apr 2020 15:25:13 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     live-patching@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -52,9 +52,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Jessica Yu <jeyu@kernel.org>,
         Joe Lawrence <joe.lawrence@redhat.com>,
         Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH v4 09/11] module: Remove module_disable_ro()
-Date:   Wed, 29 Apr 2020 10:24:51 -0500
-Message-Id: <9684509017022ad6738560a85bb984210a4025b0.1588173720.git.jpoimboe@redhat.com>
+Subject: [PATCH v4 11/11] module: Make module_enable_ro() static again
+Date:   Wed, 29 Apr 2020 10:24:53 -0500
+Message-Id: <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1588173720.git.jpoimboe@redhat.com>
 References: <cover.1588173720.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
@@ -65,58 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-module_disable_ro() has no more users.  Remove it.
+Now that module_enable_ro() has no more external users, make it static
+again.
 
+Suggested-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-Acked-by: Miroslav Benes <mbenes@suse.cz>
 ---
- include/linux/module.h |  2 --
- kernel/module.c        | 13 -------------
- 2 files changed, 15 deletions(-)
+ include/linux/module.h | 6 ------
+ kernel/module.c        | 4 ++--
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/include/linux/module.h b/include/linux/module.h
-index 1ad393e62bef..e4ef7b36feda 100644
+index e4ef7b36feda..2c2e988bcf10 100644
 --- a/include/linux/module.h
 +++ b/include/linux/module.h
-@@ -860,10 +860,8 @@ extern int module_sysfs_initialized;
+@@ -858,12 +858,6 @@ extern int module_sysfs_initialized;
 =20
- #ifdef CONFIG_STRICT_MODULE_RWX
- extern void module_enable_ro(const struct module *mod, bool after_init);
--extern void module_disable_ro(const struct module *mod);
- #else
- static inline void module_enable_ro(const struct module *mod, bool after=
+ #define __MODULE_STRING(x) __stringify(x)
+=20
+-#ifdef CONFIG_STRICT_MODULE_RWX
+-extern void module_enable_ro(const struct module *mod, bool after_init);
+-#else
+-static inline void module_enable_ro(const struct module *mod, bool after=
 _init) { }
--static inline void module_disable_ro(const struct module *mod) { }
- #endif
-=20
+-#endif
+-
  #ifdef CONFIG_GENERIC_BUG
+ void module_bug_finalize(const Elf_Ehdr *, const Elf_Shdr *,
+ 			 struct module *);
 diff --git a/kernel/module.c b/kernel/module.c
-index 96b2575329f4..f0e414a01d91 100644
+index f0e414a01d91..572d626508d2 100644
 --- a/kernel/module.c
 +++ b/kernel/module.c
-@@ -2016,19 +2016,6 @@ static void frob_writable_data(const struct module=
-_layout *layout,
+@@ -2016,7 +2016,7 @@ static void frob_writable_data(const struct module_=
+layout *layout,
  		   (layout->size - layout->ro_after_init_size) >> PAGE_SHIFT);
  }
 =20
--/* livepatching wants to disable read-only so it can frob module. */
--void module_disable_ro(const struct module *mod)
--{
--	if (!rodata_enabled)
--		return;
--
--	frob_text(&mod->core_layout, set_memory_rw);
--	frob_rodata(&mod->core_layout, set_memory_rw);
--	frob_ro_after_init(&mod->core_layout, set_memory_rw);
--	frob_text(&mod->init_layout, set_memory_rw);
--	frob_rodata(&mod->init_layout, set_memory_rw);
--}
--
- void module_enable_ro(const struct module *mod, bool after_init)
+-void module_enable_ro(const struct module *mod, bool after_init)
++static void module_enable_ro(const struct module *mod, bool after_init)
  {
  	if (!rodata_enabled)
+ 		return;
+@@ -2057,7 +2057,7 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hd=
+r, Elf_Shdr *sechdrs,
+ }
+=20
+ #else /* !CONFIG_STRICT_MODULE_RWX */
+-/* module_{enable,disable}_ro() stubs are in module.h */
++static void module_enable_ro(const struct module *mod, bool after_init) =
+{}
+ static void module_enable_nx(const struct module *mod) { }
+ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 				       char *secstrings, struct module *mod)
 --=20
 2.21.1
 
