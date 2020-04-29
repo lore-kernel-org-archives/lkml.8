@@ -2,84 +2,96 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94673C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735D3C83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783CB206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5194B206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 05:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD2Fyf (ORCPT
+        id S1726596AbgD2Fzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 01:54:35 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:52222 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgD2Fye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 01:54:34 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jTffd-0008AU-2m; Wed, 29 Apr 2020 15:54:10 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 29 Apr 2020 15:54:20 +1000
-Date:   Wed, 29 Apr 2020 15:54:20 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.7
-Message-ID: <20200429055420.GA26381@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200408061513.GA23636@gondor.apana.org.au>
+        Wed, 29 Apr 2020 01:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgD2Fzb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 01:55:31 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C960C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 22:55:31 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jTfgq-0001EU-VB; Wed, 29 Apr 2020 07:55:24 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jTfgm-0000Th-Q1; Wed, 29 Apr 2020 07:55:20 +0200
+Date:   Wed, 29 Apr 2020 07:55:20 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v8 v5 1/3] media: dt-bindings: ov8856: Document YAML
+ bindings
+Message-ID: <20200429055520.GA31414@pengutronix.de>
+References: <20200428180718.1609826-1-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408061513.GA23636@gondor.apana.org.au>
+In-Reply-To: <20200428180718.1609826-1-robert.foss@linaro.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:53:01 up 67 days, 17:09, 133 users,  load average: 0.07, 0.07,
+ 0.08
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+Hi Robert,
 
-This push fixes a bunch of bugs detected by KASAN in the caam driver.
+On 20-04-28 20:07, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> 
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+> 
+> - Changes since v7:
+>   * Marco: Make 'port' property optional
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Sorry if my comment was not precise enough but this wasn't my intention.
+The port property must be required.
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+>   * Maxime & Sakari: Add 'link-frequencies' property to dt binding
+>   * robher: Improve description for 'port' property
+> 
+> - Changes since v6:
+>   * Marco: remove qcom specifics from DT example
 
-are available in the Git repository at:
+This was my intention :)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
-
-for you to fetch changes up to 55b3209acbb01cb02b1ee6b1afe80d83b1aab36d:
-
-  crypto: caam - fix the address of the last entry of S/G (2020-04-16 16:48:56 +1000)
-
-----------------------------------------------------------------
-Iuliana Prodan (5):
-      crypto: caam - fix use-after-free KASAN issue for SKCIPHER algorithms
-      crypto: caam - fix use-after-free KASAN issue for AEAD algorithms
-      crypto: caam - fix use-after-free KASAN issue for HASH algorithms
-      crypto: caam - fix use-after-free KASAN issue for RSA algorithms
-      crypto: caam - fix the address of the last entry of S/G
-
- drivers/crypto/caam/caamalg.c  | 10 +++++++---
- drivers/crypto/caam/caamhash.c |  8 ++++++--
- drivers/crypto/caam/caampkc.c  |  8 ++++++--
- 3 files changed, 19 insertions(+), 7 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Regards,
+  Marco
