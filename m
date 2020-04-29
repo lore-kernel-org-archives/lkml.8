@@ -6,87 +6,99 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29FC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A0CC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405C62076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523CF2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgD2UNh (ORCPT
+        id S1726891AbgD2UQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:13:37 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:60299 "EHLO
+        Wed, 29 Apr 2020 16:16:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:44135 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgD2UNh (ORCPT
+        with ESMTP id S1726456AbgD2UQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:13:37 -0400
-Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MlO5j-1ikOiA2IEH-00lklT; Wed, 29 Apr 2020 22:13:35 +0200
-Received: by mail-qk1-f181.google.com with SMTP id g74so3381207qke.13;
-        Wed, 29 Apr 2020 13:13:35 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZKJeyQsi5vXdTIxqcwhP1iOQ+UkecM3VWIOihlJWoBwrN1Q7Bs
-        5y+Eu/6G/l1icwPhX7HSHrW1FNWLbwBMk1b5rIk=
-X-Google-Smtp-Source: APiQypLgwNCOWXi8lqhZ+IOv19XxfH/9iluwOOMdrmf8VHOif7vlkTCUTHkDgO4JZEVtkCieIyzUDvCFIORJYDtFE+I=
-X-Received: by 2002:ae9:f712:: with SMTP id s18mr204482qkg.394.1588191214238;
- Wed, 29 Apr 2020 13:13:34 -0700 (PDT)
+        Wed, 29 Apr 2020 16:16:30 -0400
+Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MzQbw-1jGV2Z47ii-00vMwI for <linux-kernel@vger.kernel.org>; Wed, 29 Apr
+ 2020 22:16:28 +0200
+Received: by mail-qv1-f51.google.com with SMTP id di6so1834486qvb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 13:16:27 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZe7Uew5U/oEsOZv+Nq1I4+4sJ15IiZqWZ/TO8LnWWf35ef1hCY
+        BzhZeYqJy2xaWnvrjC6gae2w8Y4cRzH4rwZU/SM=
+X-Google-Smtp-Source: APiQypLcjPwxokzpMF7Rw8kO99qPhqxtI0E31pommY4IAHy487ZiF1AuTEEi6jnKVWVL5iHLduQMeGZW8J6vPMtaFeU=
+X-Received: by 2002:a0c:ea43:: with SMTP id u3mr26292131qvp.211.1588191386818;
+ Wed, 29 Apr 2020 13:16:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429132349.1294904-1-arnd@arndb.de> <20200429133512.GE1551@shell.armlinux.org.uk>
-In-Reply-To: <20200429133512.GE1551@shell.armlinux.org.uk>
+References: <20200429092207.4049268-1-arnd@arndb.de> <f9738a59-5c7d-57ad-0d56-6455d6938964@amd.com>
+In-Reply-To: <f9738a59-5c7d-57ad-0d56-6455d6938964@amd.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Apr 2020 22:13:18 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2hXhtCx6pk65__U1Msk_OPstT0Qad_skqjCz9DNSfq4A@mail.gmail.com>
-Message-ID: <CAK8P3a2hXhtCx6pk65__U1Msk_OPstT0Qad_skqjCz9DNSfq4A@mail.gmail.com>
-Subject: Re: [PATCH] [v2] ARM: oabi-compat: fix epoll_ctl build failure
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
+Date:   Wed, 29 Apr 2020 22:16:10 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3YCKtkt2pHQZGg8SQsbdA2Ai3ZhxCGKToD2KVRHQgnrw@mail.gmail.com>
+Message-ID: <CAK8P3a3YCKtkt2pHQZGg8SQsbdA2Ai3ZhxCGKToD2KVRHQgnrw@mail.gmail.com>
+Subject: Re: [PATCH] [v2] amdgpu: fix gcc-4.8 build warnings
+To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zqjB0K5itibZQxDrMZXbU6dnX9nPzRmtRkBND1WinO3L0z3plWD
- 9u5ckpGOQBLolZ2lG/bNXZJq3mpAi4a8VWLQ5Yji8cKAntBsXFlOHYR0OAKjKavW5i/lSHf
- YIdWwMNkY5rXRO8vDKPEX27XBH45Qmi9Aqq7QbSOa2VFv70Cfu2wAO/quqYtYZEa+dx6rvA
- TStcjRw1udFVmJFUzJppg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BWh5PdHHxKQ=:MpYawQD1ciBPVEX2das18A
- utk58HKgTGlFGALiNtOAHZO1g5dDgTLCRB+BufUCxdQPSfVjvM9+HFnPAniHVkYZKZ1JY2Ofh
- chB3FyJgNoOuBLbg+EBgorrDgXqWXpPV8XMUuBG1tEEfa86Iw3OVZK0piwR/VAakS276/CFGx
- 0I6VsLwPif+2Bum9+CtjP1UxV3oJ+3AFCjxVMzykl++qbjZIYlybXFHJi+q8Hpr2cNtm5Lyaz
- X2fpCgwtIq9FpHP/PKyhf3ie/Ab0zN5HmmDxmfem7TMRjD0lL1dCdcmqEwHfHlOV5UZnFE1s0
- t1NfnZYcBPItIFNLwn06l5UuIOqEYqfxbKiN7kA3z57+0NDFx/tub4XSi0qM7mt8VD1rQZqcF
- RMKSq8Bhfi+72KNBRXC1BVqw9BbSyOtVnmO0Yy9endtw+DazyFCHdhp6lW8oq6XKLrHqBuKx3
- 3SWTk0srTyDCBa8Dr4fHR0r0AnuTU4SaUcH8c1sLNQFxvq1DpVQAQ0eB8Paz5Sp+7XOt+2D92
- 1284OhQe2ifSuo2P56O64Lu6PlcgalfSsatr1Y7JFwgeqMrOfRZ65Im7kg6E5G/HeXbhmabt2
- J7dw/1Jhbg7o1uW2jqJzYBveIL8eeY7lb9ib7bOKiDuRgm4p19M8tp4nEal5VNcA61+9XvEvF
- Xn3VZXlp+C9ZeJrDCEI+ncmtIlTGnZe1c5zs4YrfyTOFssM9xgWTCdWvKP7LVP5O1kq1jHhiW
- uK3j2H3SCGeOqJsrEqSRw6rblfw27I1pFPUD6kWrbcfqMJHVjz5xSbSC3DUwAuRk10OiDjRS0
- 52ytQN8K55Pv22f7FSwYI+0tdDEwKhfX2ECnUoXALHRTjisNYY=
+X-Provags-ID: V03:K1:RDmGAp3DV7ndHjMb0upD3PfacNxAEoJ+GIDIHPBWlTpPshUWvtW
+ Y/sItoQVbL690fZo0YZoGNCPE+I6x/jTJukkcZz/2Y14uaNe65ImNIZd+IuCL4QqtnPeNdy
+ dgHsIAs71aDhjbX5Q87a7hKTTuECtICSVtzbG8GM+8aRGaY7aobHl6tbzWObcu1bIsc/Q3d
+ +KJExGLC7Fu8HAXqR3eqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W5mb7fICL+Q=:nNBWL6Dz2/VF/uxJqrh9kx
+ qOggmqDbriu1Xy/Lg4QPUuoRcxGl8TuXSTrUKTs72Olcsx5rSkrmqLPmUutH+W5DTdY+P9rgV
+ dh9Ox8ZUV8uF4CFDzmU5EiUDIHBixuu+iy90d6wPe4lgYvYajAmSDq9dJudR9n99VagBvTclM
+ /lI19iLirk8VKSdQpdm8mWwyyyFnEyl44PCyVWqb2yaSkGEB/Eh8bSyNxQPNzpx9DJCIC8uSx
+ e4hgkFZUhWlSRHJqJQ/rNazKJuc1zl2YSHYEX6jt8BKjMETKnKFGeWddmaliIAIkbwGTu8Ipj
+ MiXsN+GZ9bRnj5c4bCF2ifnD0wXl4CBrm6X238OXawYfQlvAv3yEu93jU51Gny0w9pVQt+w5n
+ luktri9S4/hQKiIDRpiWzsqhcpipewlUgqDsk5SVquJ/NlbssE889mrm+jZlPxdVnqjqujk68
+ IjotsXQvhjCvxjYqejFvIiCHO9PW7fJPBxS7liC59vUjvW6HflsCuwGqid1wbC5XLZVGSCMJs
+ GvMnJK4ep38f3VIQURUl97G0RSC04+M2pEnre18klpxMMWLXPHVW85mCwVEtjfz7VZuzvrI0m
+ aaROec7uoDz14pKIbKgJYsjJ7mWbZcP1uYphpvtoXxAYf+lq0JX4DAFQMXzQYUMg+5CXjEsOG
+ fJD3lKijQb8oYvwS1AQKG/1rWjWX39bUEkissv0N6mVarHnkn5Km2YSozg4uIc5juWqRX1Vyl
+ uUBx/hzyCSh5uOR+gRAVxoIlIZ3pjnSLpd2MzZlCBcvsPje/h7qTJD3Bu0GHveRhrSqcE9MRe
+ FwL+5vsZfg41gXxh2w4tmEP6zqWw/Vo/WMn6D1dy22ZLprcH34=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 3:35 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
-> On Wed, Apr 29, 2020 at 03:23:24PM +0200, Arnd Bergmann wrote:
-> > Two functions are not declared or defined when CONFIG_EPOLL is
-> > disabled:
-> >
+On Wed, Apr 29, 2020 at 3:42 PM Kazlauskas, Nicholas
+<nicholas.kazlauskas@amd.com> wrote:
 >
-> I know what Chris said, but do we really want to be polluting generic
-> kernel files with arch specific stuff like this?
+> On 2020-04-29 5:20 a.m., Arnd Bergmann wrote:
+> > Older compilers warn about initializers with incorrect curly
+> > braces:
+> >
+> > drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_dp_mst_dsc_aux_for_port':
+> > drivers/gpu/drm/drm_dp_mst_topology.c:5497:9: error: missing braces around initializer [-Werror=missing-braces]
+> >    struct drm_dp_desc desc = { 0 };
+> >           ^
+> >
+> > Change all instances in the amd gpu driver to using the GNU empty
+> > initializer extension.
+>
+> These should actually be memset - instead of GCC complaining, it'll be
+> clang instead.
 
-The file already has a couple of architecture specific syscalls listed already,
-so it shouldn't be a big deal. If you prefer the first version of my patch,
-or have another suggestion, I don't mind sending a v3 that does it differently
-again.
+I'm not sure what you mean, clang certainly supports most GNU extensions,
+and this one is used all over the kernel.
 
-Unfortunately, COND_SYSCALL() is a locally defined macro in that file,
-so we can't easily use it elsewhere without duplicating it like in
-kernel/time/posix-stubs.c.
+There is a good reason for using memset instead of ={}, e.g. when you want
+to be sure that all padding fields get initialized before copying
+stack variables
+to user space, but I find it a little harder to read.
 
-As I mentioned in v1, it's also possible to just make this function
-compile without #ifdefs by having conditional stub definitions of the
-missing interfaces.
-
-      Arnd
+       Arnd
