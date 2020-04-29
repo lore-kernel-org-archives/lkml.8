@@ -2,66 +2,70 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A19C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99988C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B9F208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KWI8M1r0"
+	by mail.kernel.org (Postfix) with ESMTP id 7EAD9208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgD2MvQ (ORCPT
+        id S1726797AbgD2MwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbgD2MvQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:51:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B86C03C1AD;
-        Wed, 29 Apr 2020 05:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sRCgO9neRwXg7E1Pg9BwAuwaIvQxv5KwGOu2dgYS/Cs=; b=KWI8M1r0PtDE6DshAvv8FXzjgq
-        K8DyhGM2SK9tf/h/5ZsGeK8hrKsQbN3L+3M2DmfffsofsbVUUC//sOVYvmCZu6+qAecegP2EDSt3L
-        4tVTf2+Su9Oat6P7YaOteD2E9G+e23Kxd4WGRsSOe+xqeyjUT48WWqtxFoC6ClHeSdJTJT07eIYQh
-        b1H3TA2GFDAjcugmn/oklh3iE5L5dtHPSHLDL2ZKxazkqIGx/SODNvzGWOCt4DdosVwOaDDPGmfox
-        j3gu6ngQxu4jAoq5mG/U664a6M9+Xkt6UG5b4U+dW7K1PI2rAd8PAUZddBrA5J1sBsFzDu+s0D5gn
-        QyWSh/eQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTmB3-0003dB-B6; Wed, 29 Apr 2020 12:51:01 +0000
-Date:   Wed, 29 Apr 2020 05:51:01 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        kbuild test robot <lkp@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] video: fbdev: controlfb: fix build for COMPILE_TEST=y
- && PPC_PMAC=y && PPC32=n
-Message-ID: <20200429125101.GA21275@infradead.org>
-References: <CGME20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd@eucas1p1.samsung.com>
- <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
+        Wed, 29 Apr 2020 08:52:06 -0400
+Received: from mga09.intel.com ([134.134.136.24]:25045 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbgD2MwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:52:05 -0400
+IronPort-SDR: Wmhk3jsCsvoC6Z3/7SNjhmpPS5r340ziCuvzcwNZliu5MqaCTcyG24VXaE6gDoy+SOq0s+i1lI
+ IB7nztwoP6jw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 05:52:04 -0700
+IronPort-SDR: iorrW9uinQQLgZ3jMTcDE4CwtW/fP8p8ODYzeuGnvWB09QfLQC2sW/R9h91q7ig8VKPY2q4znR
+ Xsk/jxy/WH8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="367795695"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 29 Apr 2020 05:52:01 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 29 Apr 2020 15:52:00 +0300
+Date:   Wed, 29 Apr 2020 15:52:00 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: iTCO: fix link error
+Message-ID: <20200429125200.GO487496@lahna.fi.intel.com>
+References: <20200428212959.2993304-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200428212959.2993304-1-arnd@arndb.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why do we even bother allocing the driver to compile for !ppc32
-given that it clearly needs ppc-specific infrastructure?  The whole
-idea of needing magic stubs for the COMPILE_TEST case seems rather
-counterproduction.
+On Tue, Apr 28, 2020 at 11:29:11PM +0200, Arnd Bergmann wrote:
+> When the MFD driver is a loadable module, the watchdog driver fails
+> to get linked into the kernel:
+> 
+> drivers/watchdog/iTCO_wdt.o: In function `update_no_reboot_bit_pmc':
+> iTCO_wdt.c:(.text+0x54f): undefined reference to `intel_pmc_gcr_update'
+> 
+> The code is written to support operation without the MFD driver, so
+> add a Kconfig dependency that allows this, while disallowing the watchdog
+> to be built-in when the MFD driver is a module.
+> 
+> Fixes: 25f1ca31e230 ("platform/x86: intel_pmc_ipc: Convert to MFD")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
