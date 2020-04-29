@@ -2,118 +2,124 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094A7C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8E2C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8B5206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588194091;
-	bh=nmlTkhTlFNyPlxJKnBvBNrwiBW0oVUjso5r+oqKXKr8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YeY51lU9GnlhyXQIN1wE4Z87bngZpJudsVSCIj23dCXsAtYhBf6TLnt1amylP7k4U
-	 64IO3bNAXWsPKJq7ZMhBzvk+Pyj2Y19cTloYs7oJexSKPPZFTq6otUyzii7UMX1+Zi
-	 2AJ6QaVQHyMoh2Ua63nk60gQ9anv+ui8NbyWeayM=
+	by mail.kernel.org (Postfix) with ESMTP id 94F44206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H9LCYrG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgD2VBb (ORCPT
+        id S1726974AbgD2VB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:01:31 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44030 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgD2VBa (ORCPT
+        Wed, 29 Apr 2020 17:01:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgD2VB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:01:30 -0400
-Received: by mail-oi1-f193.google.com with SMTP id j16so3125132oih.10;
-        Wed, 29 Apr 2020 14:01:30 -0700 (PDT)
+        Wed, 29 Apr 2020 17:01:57 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A30BC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 14:01:57 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so3598808wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 14:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+TvQcFiU3aloZC/hJe73C/3yo1nULr9/ZJUA32G7jIE=;
+        b=H9LCYrG0FR/boqVhN935EFeTEvmRileVmKdUA0aVoLMMqYWBxAGooFAv607/oc09gQ
+         jcrZAm3GONS/8m39QndXY49RaLER9NEFUa653B2ngCBn7ZCGrcdAVjocnNbTrSf25qN4
+         vPvKoFVeAsf11wHlPIf7AXMWs6x32q9H7Kzt+1uk4dVUYBPU4TtvcZ8TPmOVqPjx5PWT
+         mBAtkgsL671JFF5+qX11uhNIFLn7WPMlr5vI+VKPn92kxe2x9O7zW+lmuKzIekqSOCzv
+         Oj3bjL5fQnRn0ScVfPNGTWPkxyJaZbsHQllHV1J0X1F0BbTLG0gkXmvNdH8gq58yCwdh
+         DveA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sjv8xbtiF5VJ25YlOqqY8GTwXuNo2deA4xSa7WAS5uY=;
-        b=eIN0B7uzF4hP3BiQ4xgPeDkwZSFQl9Wrlr/VIfxDoi0nk/YACKPB3C+MfxZ/HA9QNW
-         zU6vi7MD1s7PHhifhe5C4vEcS6SoSp/f8GiZArAiDMdFLAhss5qqjPWNW0O4EgvOL7+6
-         yi2NwblABcYuAPntF0ICEms6HCYviofUWNv8BhEoOcT2KUgZYmNFk6QWkMi0SDIQFwBK
-         ocD16xlfJBndGPP4buRFRPu0WUxszdBOnkkRkIFGczsAHupc/Y9DnM7Q4vitW0jvKn50
-         CPRqT2iOVhtxeXTfgSBjuS69Ew1WYjj+pR59M93/5WDxkxOOLsmsa/8iM+yGVoprIVsY
-         +O6A==
-X-Gm-Message-State: AGi0Pua9x/kRXbPj6IiixzQ/GxGBLq92EoejX2H2i3Snc4ugm32n0P2M
-        dRhFvdrkSMNWouYRCE5Neg==
-X-Google-Smtp-Source: APiQypIzSLMtyIzqU2ZEb1BZ77J1RfgsOD6XLRhb3ggRh/7d+26Wu8tnRl5N3v1bfZdsxlLsKPcOCw==
-X-Received: by 2002:a05:6808:998:: with SMTP id a24mr133484oic.65.1588194089606;
-        Wed, 29 Apr 2020 14:01:29 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q12sm656933otn.57.2020.04.29.14.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 14:01:28 -0700 (PDT)
-Received: (nullmailer pid 19382 invoked by uid 1000);
-        Wed, 29 Apr 2020 21:01:27 -0000
-Date:   Wed, 29 Apr 2020 16:01:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: mfd: Document QTI I2C PMIC controller
-Message-ID: <20200429210127.GA18663@bogus>
-References: <cover.1588115326.git.gurus@codeaurora.org>
- <0960b5d17013124d9bbdbe7f28374b3d6c9c026e.1588115326.git.gurus@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+TvQcFiU3aloZC/hJe73C/3yo1nULr9/ZJUA32G7jIE=;
+        b=ftQMCtCnSXYZvgiaDkO3vdbLVK3IsGvPSkgSSzRMKDpOYN6h8LAX+8x3EGpLYaC0HG
+         oydkUfX3nyP7uNQuczbWevi8N0BMWUB7a0iz+tQOf3h5pNubq8TR79iJLjiGqiepk1V9
+         QhxYsz2LplYsZgToNpjyjZpd8fsmefS5UFBhi17zxvoXuif03UL//NEVgU1WtZen+M6H
+         e2CBmMoZyWqnxE+NVKkjIqlt3AzkL6rB4ErMAnBAPLcWCe2H0kvENzcVfc6Lgq9v1f6a
+         FsgU5TVYWfBiuBLK5YGrdl/UjjHYUAJ3dUxbH4jelsAS7KTTTcnBglkg23z5G/AprUzs
+         DldQ==
+X-Gm-Message-State: AGi0PubJ9dzsfgpWCqMZ9LdXXXQqyHGIl4ILIxswP+5GifzdLHTuMiF+
+        hGTc9Zw+tOX8pEfJYSrQ8boqq5w9WOw=
+X-Google-Smtp-Source: APiQypIvQ29o70NDaZXlBpTOIaRhPrpz0gn3DVu8Qm0SOXFFXbUtbluMOqQ01NrQtAIBEVVefhXGfg==
+X-Received: by 2002:a05:600c:2f88:: with SMTP id t8mr5151772wmn.46.1588194115762;
+        Wed, 29 Apr 2020 14:01:55 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id i25sm9242483wml.43.2020.04.29.14.01.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 14:01:55 -0700 (PDT)
+Subject: Re: [PATCH v4 4/4] thermal: cpuidle: Register cpuidle cooling device
+To:     Lukasz Luba <lukasz.luba@arm.com>, rui.zhang@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200429103644.5492-1-daniel.lezcano@linaro.org>
+ <20200429103644.5492-4-daniel.lezcano@linaro.org>
+ <99b3bc79-f48a-3d51-a8ae-8b9ca4856d36@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <04b5da25-d591-b08a-e554-6e084d7ea908@linaro.org>
+Date:   Wed, 29 Apr 2020 23:01:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0960b5d17013124d9bbdbe7f28374b3d6c9c026e.1588115326.git.gurus@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <99b3bc79-f48a-3d51-a8ae-8b9ca4856d36@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 17:30:11 -0700, Guru Das Srinagesh wrote:
-> The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
-> multi-function PMIC devices which communicate over the I2C bus.  The
-> controller enumerates all child nodes as platform devices, and
-> instantiates a regmap interface for them to communicate over the I2C
-> bus.
+On 29/04/2020 22:02, Lukasz Luba wrote:
 > 
-> The controller also controls interrupts for all of the children platform
-> devices.  The controller handles the summary interrupt by deciphering
-> which peripheral triggered the interrupt, and which of the peripheral
-> interrupts were triggered.  Finally, it calls the interrupt handlers for
-> each of the virtual interrupts that were registered.
 > 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
-> Changes from v0:
-> - Fixed "FATAL ERROR: Unable to parse input tree" error thrown by `make
->   dt_binding_check`.
-> 
->  .../devicetree/bindings/mfd/qcom,i2c-pmic.yaml     | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.yaml
-> 
+> On 4/29/20 11:36 AM, Daniel Lezcano wrote:
+>> The cpuidle driver can be used as a cooling device by injecting idle
+>> cycles. The DT binding for the idle state added an optional
+>>
+>> When the property is set, register the cpuidle driver with the idle
+>> state node pointer as a cooling device. The thermal framework will do
+>> the association automatically with the thermal zone via the
+>> cooling-device defined in the device tree cooling-maps section.
+>>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
+>>   - V4:
+>>     - Do not check the return value as the function does no longer
+>> return one
+>> ---
 
-My bot found errors running 'make dt_binding_check' on your patch:
+[ ... ]
 
-Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dts:19.11-23: Warning (reg_format): /example-0/qcom,smb138x@8:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/qcom,i2c-pmic.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-See https://patchwork.ozlabs.org/patch/1278818
+Thanks Lukasz for the review.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Rafael, as Lorenzo and Sudeep are not responsive, could you consider ack
+this patch so I can merge the series through the thermal tree ?
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-Please check and re-submit.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
