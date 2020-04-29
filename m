@@ -2,123 +2,187 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0D4C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A58EC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09DD20731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336172076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAlkn1uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgD2Ijk convert rfc822-to-8bit (ORCPT
+        id S1726526AbgD2Ing (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:39:40 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:57053 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Ijj (ORCPT
+        Wed, 29 Apr 2020 04:43:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43540 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726345AbgD2Inf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:39:39 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-153-r75nPERROFeEoEJIwkJHxw-1; Wed, 29 Apr 2020 09:39:34 +0100
-X-MC-Unique: r75nPERROFeEoEJIwkJHxw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 29 Apr 2020 09:39:33 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 29 Apr 2020 09:39:33 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sami Tolvanen' <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-CC:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Marc Zyngier <maz@kernel.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v13 00/12] add support for Clang's Shadow Call Stack
-Thread-Topic: [PATCH v13 00/12] add support for Clang's Shadow Call Stack
-Thread-Index: AQHWHOCVWHSK1xvpOUef91FgkS/f7KiPxyTg
-Date:   Wed, 29 Apr 2020 08:39:33 +0000
-Message-ID: <6762b8d0974d49de80c3b398d714b3fb@AcuMS.aculab.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200427160018.243569-1-samitolvanen@google.com>
- <CAMj1kXGASSCjTjvXJh=_iPwEPG50_pVRe2QO1hoRW+KHtugFVQ@mail.gmail.com>
- <CAMj1kXFYv6YQJ0KGnFh=d6_K-39PYW+2bUj9TDnutA04czhOjQ@mail.gmail.com>
- <20200427220942.GB80713@google.com>
-In-Reply-To: <20200427220942.GB80713@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 29 Apr 2020 04:43:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588149813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QcZ6PqElQuIY2I5jkNPEa7pluAGzlonQVidKA7ck390=;
+        b=dAlkn1uwdOR4eD6Hqf+FLmuJcZiWqq/BUbDuB2tH63pYzjk9woPrflXEp1svktYfU/ehSn
+        UwrkXatc/SQy1H50idMrdl1sCnkVuuZJG1d4aymLF+Ke0CY8F4hPlkTV0HuCQeUWKlyVNZ
+        JjE3rYSGUKSV7Ce0EaOzDkY2c/IPke0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-Sbjh8u4aNYWlqnHNQQXiVA-1; Wed, 29 Apr 2020 04:43:21 -0400
+X-MC-Unique: Sbjh8u4aNYWlqnHNQQXiVA-1
+Received: by mail-wm1-f70.google.com with SMTP id f17so729308wmm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:43:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QcZ6PqElQuIY2I5jkNPEa7pluAGzlonQVidKA7ck390=;
+        b=Tt5bdbeMMbpV712Hip3/s1kHTmbMQ/QzWt9nlUEiUBgBU3RPjRiUbu7S9EK+FVAvTx
+         3Pmbx3S7MeY3Ye5QNPiTprVcxpzzyPHpN/ULaBFxUhxyfhPFqzWc+MLc/dHz1RTbxQNv
+         x7/uLFH7s4nE6YlcxT0M+C/kaqUXsKEp9uHvcIiZd/MWvhDxahsviNOyINqUH+IxK/K8
+         9fEYJRp0iVHvXRXReFhwrJ7SH2WX2OqrBQpqANLvJlu01n6CpuPnPUPKHM7XxY6sKDZY
+         22Tn3EQTQXp/ygzUbIIWV81Bmmz6CmemopZeUMoYE2CFPgXAZXBmGev8SR0LlyaJS3Xv
+         fkQw==
+X-Gm-Message-State: AGi0PuYERPlfTZV+B+i7qCgsmCv04gFR0D7mVTurRBMolTOvSkjVHhl2
+        Shb2n7pyx7+X7di1sZkQnY7p8ncX4km9nMseWnTUh0IO87Uc5eqEi6LZOaHdeewONm071682Sw8
+        3+Yg8YN6zAqb9Qfh9vYpaU6ed
+X-Received: by 2002:a1c:23d4:: with SMTP id j203mr2121761wmj.49.1588149800194;
+        Wed, 29 Apr 2020 01:43:20 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLcqDVfxUeEvW87fRGWUdN/d4quJBkD2yf6Dic3zqzuiXhubG6tHiMQWsgKcZj9hZwuRxpaoQ==
+X-Received: by 2002:a1c:23d4:: with SMTP id j203mr2121740wmj.49.1588149799911;
+        Wed, 29 Apr 2020 01:43:19 -0700 (PDT)
+Received: from localhost ([2001:470:5b39:28:1273:be38:bc73:5c36])
+        by smtp.gmail.com with ESMTPSA id t20sm6828575wmi.2.2020.04.29.01.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 01:43:19 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:43:18 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject: Re: mmotm 2020-04-26-00-15 uploaded (mm/madvise.c)
+Message-ID: <20200429084318.wh7gjokuk445mr5d@butterfly.localdomain>
+References: <20200426071602.ZmQ_9C0ql%akpm@linux-foundation.org>
+ <bec3b7bd-0829-b430-be1a-f61da01ac4ac@infradead.org>
+ <39bcdbb6-cac8-aa3b-c543-041f9c28c730@infradead.org>
+ <20200427135053.a125f84c62e2857e3dcdce4f@linux-foundation.org>
+ <20200427234512.GD163745@google.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427234512.GD163745@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen
-> Sent: 27 April 2020 23:10
-...
-> > > Alternatively, I wonder if there is a way we could let the SCS and
-> > > ordinary stack share the [bottom of] the vmap'ed region. That would
-> > > give rather nasty results if the ordinary stack overflows into the
-> > > SCS, but for cases where we really recurse out of control, we could
-> > > catch this occurrence on either stack, whichever one occurs first. And
-> > > the nastiness -when it does occur- will not corrupt any state beyond
-> > > the stack of the current task.
-> >
-> > Hmm, I guess that would make it quite hard to keep the SCS address
-> > secret though :-(
+On Mon, Apr 27, 2020 at 04:45:12PM -0700, Minchan Kim wrote:
+> Hi Andrew,
 > 
-> Yes, and the stack potentially overflowing into the SCS sort of defeats
-> the purpose. I'm fine with increasing the SCS size to something safer,
-> but using a vmapped shadow stack seems like the correct solution to this
-> problem, at least on devices where allocating a full page isn't an issue.
+> On Mon, Apr 27, 2020 at 01:50:53PM -0700, Andrew Morton wrote:
+> > On Sun, 26 Apr 2020 15:48:35 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+> > 
+> > > On 4/26/20 10:26 AM, Randy Dunlap wrote:
+> > > > On 4/26/20 12:16 AM, akpm@linux-foundation.org wrote:
+> > > >> The mm-of-the-moment snapshot 2020-04-26-00-15 has been uploaded to
+> > > >>
+> > > >>    http://www.ozlabs.org/~akpm/mmotm/
+> > > >>
+> > > >> mmotm-readme.txt says
+> > > >>
+> > > >> README for mm-of-the-moment:
+> > > >>
+> > > >> http://www.ozlabs.org/~akpm/mmotm/
+> > > >>
+> > > >> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > > >> more than once a week.
+> > > >>
+> > > >> You will need quilt to apply these patches to the latest Linus release (5.x
+> > > >> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > > >> http://ozlabs.org/~akpm/mmotm/series
+> > > >>
+> > > >> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > > >> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > > >> followed by the base kernel version against which this patch series is to
+> > > >> be applied.
+> > > > 
+> > > > Hi,
+> > > > I'm seeing lots of build failures in mm/madvise.c.
+> > > > 
+> > > > Is Minchin's patch only partially applied or is it just missing some pieces?
+> > > > 
+> > > > a.  mm/madvise.c needs to #include <linux/uio.h>
+> > > > 
+> > > > b.  looks like the sys_process_madvise() prototype in <linux/syscalls.h>
+> > > > has not been updated:
+> > > > 
+> > > > In file included from ../mm/madvise.c:11:0:
+> > > > ../include/linux/syscalls.h:239:18: error: conflicting types for ‘sys_process_madvise’
+> > > >   asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__)) \
+> > > >                   ^
+> > > > ../include/linux/syscalls.h:225:2: note: in expansion of macro ‘__SYSCALL_DEFINEx’
+> > > >   __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+> > > >   ^~~~~~~~~~~~~~~~~
+> > > > ../include/linux/syscalls.h:219:36: note: in expansion of macro ‘SYSCALL_DEFINEx’
+> > > >  #define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+> > > >                                     ^~~~~~~~~~~~~~~
+> > > > ../mm/madvise.c:1295:1: note: in expansion of macro ‘SYSCALL_DEFINE6’
+> > > >  SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid,
+> > > >  ^~~~~~~~~~~~~~~
+> > > > In file included from ../mm/madvise.c:11:0:
+> > > > ../include/linux/syscalls.h:880:17: note: previous declaration of ‘sys_process_madvise’ was here
+> > > >  asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
+> > > >                  ^~~~~~~~~~~~~~~~~~~
+> > > 
+> > > I had to add 2 small patches to have clean madvise.c builds:
+> > > 
+> > 
+> > hm, not sure why these weren't noticed sooner, thanks.
+> > 
+> > This patchset is looking a bit tired now.
+> > 
+> > Things to be addressed (might be out of date):
+> > 
+> > - http://lkml.kernel.org/r/293bcd25-934f-dd57-3314-bbcf00833e51@redhat.com
+> 
+> It seems to be not related to process_madvise.
+> 
+> > 
+> > - http://lkml.kernel.org/r/2a767d50-4034-da8c-c40c-280e0dda910e@suse.cz
+> >   (I did this)
+> 
+> Thanks!
+> 
+> > 
+> > - http://lkml.kernel.org/r/20200310222008.GB72963@google.com
+> 
+> I will send foldable patches to handle comments.
+> 
+> > 
+> > - issues arising from the review of
+> >   http://lkml.kernel.org/r/20200302193630.68771-8-minchan@kernel.org
+> 
+> Oleksandr, What's the outcome of this issue?
+> Do we still need to change based on the comment?
+> 
 
-Wouldn't you do it the other way around - so shadow stack overflow
-corrupts the bottom of the normal stack?
-That can be detected 'after the fact' in a few places (eg process
-switch and return to user)
+My current understanding is that we do not mess with signals excessively
+in the given code path.
 
-Actually you might want to do syscall entry at the base of stack area,
-then (effectively) allocate an on-stack buffer for the shadow stack.
-
-I'd have though that kernel code could be the shadow stack address
-by just reading r18?
-Userspace isn't supposed to be able to get the main kernel stack
-address either.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Principal Software Maintenance Engineer
 
