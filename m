@@ -2,130 +2,83 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4F4C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2852C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F4D206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FUd2Q44P"
+	by mail.kernel.org (Postfix) with ESMTP id 962D4208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 23:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgD2XLW (ORCPT
+        id S1727778AbgD2XNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 19:11:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51598 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726775AbgD2XLW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 19:11:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588201880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1paFFo2Yqg1zYoVKIMCaB6BJEuowfAoRJebJ26CU3Yo=;
-        b=FUd2Q44PVoIHyDPaKFVAuFh+hq72ZxWAr1ISyCIQ/gtF1P+UHLEH3uVZ9hFQfU5noOiGUu
-        LEtOqDaE1/8WiXfx1WYgnNrisCTfCQhYylvYHJq2krhWPh9FbqydWzrPhextNXGTUGX/K7
-        f7y9Qup2imu85OPJIaCDDUh4aK0uF+g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-vfauNQyHNUWPHpY4HZ_Dtg-1; Wed, 29 Apr 2020 19:11:19 -0400
-X-MC-Unique: vfauNQyHNUWPHpY4HZ_Dtg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF8AE835B40;
-        Wed, 29 Apr 2020 23:11:17 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 214A960C18;
-        Wed, 29 Apr 2020 23:11:17 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 18:11:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-Message-ID: <20200429231115.z2mo5bsmrmj4oark@treble>
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <20200428161044.caamvx67t2z4t6vd@treble>
- <20200429185536.5xshpcwtn4be4llh@treble>
- <CAK8P3a0M9qh2-_5VKx89ZsTfy5S1zhfWwnO7rN4xYhDwBBvPjw@mail.gmail.com>
+        Wed, 29 Apr 2020 19:13:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:46848 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbgD2XNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 19:13:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C93E01045;
+        Wed, 29 Apr 2020 16:13:22 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 757B03F73D;
+        Wed, 29 Apr 2020 16:13:21 -0700 (PDT)
+References: <20200428050242.17717-1-swood@redhat.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] newidle_balance() latency mitigation
+In-reply-to: <20200428050242.17717-1-swood@redhat.com>
+Date:   Thu, 30 Apr 2020 00:13:14 +0100
+Message-ID: <jhjzhatdgxh.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0M9qh2-_5VKx89ZsTfy5S1zhfWwnO7rN4xYhDwBBvPjw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:46:57AM +0200, Arnd Bergmann wrote:
-> On Wed, Apr 29, 2020 at 8:55 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 11:10:44AM -0500, Josh Poimboeuf wrote:
-> > > > ==> build/x86/0xE0F2ACFF_defconfig/log <==
-> > > > kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
-> >
-> > This one is fixed with the following cleanup:
-> >
-> > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Subject: [PATCH] linkage: Convert syscall alias macros to C
-> >
-> > There's no need to use inline asm to create ELF alias symbols.
-> > Annotated C function declarations can be used instead.
-> >
-> > This also makes the ordering of the ELF symbol table more logical, with
-> > the real function now always coming before the aliases.  This makes it
-> > easier for objtool, objdump and other tools to differentiate them.
-> >
-> > This fixes the following warning:
-> >
-> >   kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
-> >
-> > Reported-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > ---
-> >  include/linux/linkage.h | 14 ++++----------
-> >  1 file changed, 4 insertions(+), 10 deletions(-)
-> 
-> Unfortunately, this patch leads to new warnings when
-> CONFIG_POSIX_TIMERS is disabled:
-> 
-> In file included from /git/arm-soc/kernel/time/posix-stubs.c:9:
-> /git/arm-soc/kernel/time/posix-stubs.c:35:37: error: conflicting types
-> for 'sys_timer_create'
->    35 | #define SYS_NI(name)  SYSCALL_ALIAS(sys_##name, sys_ni_posix_timers)
->       |                                     ^~~~
-> /git/arm-soc/include/linux/linkage.h:26:63: note: in definition of
-> macro 'SYSCALL_ALIAS'
->    26 | #define SYSCALL_ALIAS(alias, name) __alias(name) typeof(name) alias
->       |                                                               ^~~~~
-> /git/arm-soc/kernel/time/posix-stubs.c:42:1: note: in expansion of
-> macro 'SYS_NI'
->    42 | SYS_NI(timer_create);
->       | ^~~~~~
-> In file included from /git/arm-soc/kernel/time/posix-stubs.c:13:
-> /git/arm-soc/include/linux/syscalls.h:616:17: note: previous
-> declaration of 'sys_timer_create' was here
->   616 | asmlinkage long sys_timer_create(clockid_t which_clock,
->       |                 ^~~~~~~~~~~~~~~~
-> 
-> We can probably move those SYS_NI() instances to kernel/sys_ni.c,
-> which does not include the header, but it's still a bit ugly. I'll try
-> that tomorrow
-> unless you come up with a better suggestion first.
 
-Oh I guess arm32 doesn't have SYS_NI defined.  All this syscall aliasing
-stuff is a total mystery to me.
+On 28/04/20 06:02, Scott Wood wrote:
+> These patches mitigate latency caused by newidle_balance() on large
+> systems, by enabling interrupts when the lock is dropped, and exiting
+> early at various points if an RT task is runnable on the current CPU.
+>
+> When applied to an RT kernel on a 72-core machine (2 threads per core), I
+> saw significant reductions in latency as reported by rteval -- from
+> over 500us to around 160us with hyperthreading disabled, and from
+> over 1400us to around 380us with hyperthreading enabled.
+>
+> This isn't the first time something like this has been tried:
+> https://lore.kernel.org/lkml/20121222003019.433916240@goodmis.org/
+> That attempt ended up being reverted:
+> https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/
+>
+> The problem in that case was the failure to keep BH disabled, and the
+> difficulty of fixing that when called from the post_schedule() hook.
+> This patchset uses finish_task_switch() to call newidle_balance(), which
+> enters in non-atomic context so we have full control over what we disable
+> and when.
+>
+> There was a note at the end about wanting further discussion on the matter --
+> does anyone remember if that ever happened and what the conclusion was?
+> Are there any other issues with enabling interrupts here and/or moving
+> the newidle_balance() call?
+>
 
--- 
-Josh
+Random thought that just occurred to me; in the grand scheme of things,
+with something in the same spirit as task-stealing (i.e. don't bother with
+a full fledged balance at newidle, just pick one spare task somewhere),
+none of this would be required.
 
+Sadly I don't think anyone has been looking at it any recently.
