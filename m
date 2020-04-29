@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B74C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1144CC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB86A20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3B0208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgD2Nhy (ORCPT
+        id S1728206AbgD2Nid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:37:54 -0400
-Received: from 8bytes.org ([81.169.241.247]:39788 "EHLO theia.8bytes.org"
+        Wed, 29 Apr 2020 09:38:33 -0400
+Received: from 8bytes.org ([81.169.241.247]:39838 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgD2Nhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:47 -0400
+        id S1728045AbgD2Nhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:37:55 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id BBE82BFC; Wed, 29 Apr 2020 15:37:37 +0200 (CEST)
+        id 52035F0E; Wed, 29 Apr 2020 15:37:41 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -47,9 +46,9 @@ Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 13/34] iommu: Export bus_iommu_probe() and make is safe for re-probing
-Date:   Wed, 29 Apr 2020 15:36:51 +0200
-Message-Id: <20200429133712.31431-14-joro@8bytes.org>
+Subject: [PATCH v3 31/34] iommu/exynos: Convert to probe/release_device() call-backs
+Date:   Wed, 29 Apr 2020 15:37:09 +0200
+Message-Id: <20200429133712.31431-32-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
 References: <20200429133712.31431-1-joro@8bytes.org>
@@ -60,63 +59,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add a check to the bus_iommu_probe() call-path to make sure it ignores
-devices which have already been successfully probed. Then export the
-bus_iommu_probe() function so it can be used by IOMMU drivers.
+Convert the Exynos IOMMU driver to use the probe_device() and
+release_device() call-backs of iommu_ops, so that the iommu core code
+does the group and sysfs setup.
 
 Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/iommu.c | 10 +++++++++-
- include/linux/iommu.h |  1 +
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/iommu/exynos-iommu.c | 26 ++++++--------------------
+ 1 file changed, 6 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 834a45da0ed0..397fd4fd0c32 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1610,11 +1610,19 @@ static int probe_iommu_group(struct device *dev, void *data)
- {
- 	const struct iommu_ops *ops = dev->bus->iommu_ops;
- 	struct list_head *group_list = data;
-+	struct iommu_group *group;
- 	int ret;
- 
- 	if (!dev_iommu_get(dev))
- 		return -ENOMEM;
- 
-+	/* Device is probed already if in a group */
-+	group = iommu_group_get(dev);
-+	if (group) {
-+		iommu_group_put(group);
-+		return 0;
-+	}
-+
- 	if (!try_module_get(ops->owner)) {
- 		ret = -EINVAL;
- 		goto err_free_dev_iommu;
-@@ -1783,7 +1791,7 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group)
- 					  iommu_do_create_direct_mappings);
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index 09cdd163560a..60c8a56e4a3f 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -1235,19 +1235,13 @@ static phys_addr_t exynos_iommu_iova_to_phys(struct iommu_domain *iommu_domain,
+ 	return phys;
  }
  
--static int bus_iommu_probe(struct bus_type *bus)
-+int bus_iommu_probe(struct bus_type *bus)
+-static int exynos_iommu_add_device(struct device *dev)
++static struct iommu_device *exynos_iommu_probe_device(struct device *dev)
  {
- 	const struct iommu_ops *ops = bus->iommu_ops;
- 	int ret;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 30170d191e5e..fea1622408ad 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -445,6 +445,7 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
- #define IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER	6 /* Post Driver unbind */
+ 	struct exynos_iommu_owner *owner = dev->archdata.iommu;
+ 	struct sysmmu_drvdata *data;
+-	struct iommu_group *group;
  
- extern int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops);
-+extern int bus_iommu_probe(struct bus_type *bus);
- extern bool iommu_present(struct bus_type *bus);
- extern bool iommu_capable(struct bus_type *bus, enum iommu_cap cap);
- extern struct iommu_domain *iommu_domain_alloc(struct bus_type *bus);
+ 	if (!has_sysmmu(dev))
+-		return -ENODEV;
+-
+-	group = iommu_group_get_for_dev(dev);
+-
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
++		return ERR_PTR(-ENODEV);
+ 
+ 	list_for_each_entry(data, &owner->controllers, owner_node) {
+ 		/*
+@@ -1259,17 +1253,15 @@ static int exynos_iommu_add_device(struct device *dev)
+ 					     DL_FLAG_STATELESS |
+ 					     DL_FLAG_PM_RUNTIME);
+ 	}
+-	iommu_group_put(group);
+ 
+ 	/* There is always at least one entry, see exynos_iommu_of_xlate() */
+ 	data = list_first_entry(&owner->controllers,
+ 				struct sysmmu_drvdata, owner_node);
+-	iommu_device_link(&data->iommu, dev);
+ 
+-	return 0;
++	return &data->iommu;
+ }
+ 
+-static void exynos_iommu_remove_device(struct device *dev)
++static void exynos_iommu_release_device(struct device *dev)
+ {
+ 	struct exynos_iommu_owner *owner = dev->archdata.iommu;
+ 	struct sysmmu_drvdata *data;
+@@ -1287,15 +1279,9 @@ static void exynos_iommu_remove_device(struct device *dev)
+ 			iommu_group_put(group);
+ 		}
+ 	}
+-	iommu_group_remove_device(dev);
+ 
+ 	list_for_each_entry(data, &owner->controllers, owner_node)
+ 		device_link_del(data->link);
+-
+-	/* There is always at least one entry, see exynos_iommu_of_xlate() */
+-	data = list_first_entry(&owner->controllers,
+-				struct sysmmu_drvdata, owner_node);
+-	iommu_device_unlink(&data->iommu, dev);
+ }
+ 
+ static int exynos_iommu_of_xlate(struct device *dev,
+@@ -1341,8 +1327,8 @@ static const struct iommu_ops exynos_iommu_ops = {
+ 	.unmap = exynos_iommu_unmap,
+ 	.iova_to_phys = exynos_iommu_iova_to_phys,
+ 	.device_group = generic_device_group,
+-	.add_device = exynos_iommu_add_device,
+-	.remove_device = exynos_iommu_remove_device,
++	.probe_device = exynos_iommu_probe_device,
++	.release_device = exynos_iommu_release_device,
+ 	.pgsize_bitmap = SECT_SIZE | LPAGE_SIZE | SPAGE_SIZE,
+ 	.of_xlate = exynos_iommu_of_xlate,
+ };
 -- 
 2.17.1
 
