@@ -3,76 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1925BC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D0FC83008
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3FA920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C314820775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgD2IuZ (ORCPT
+        id S1726702AbgD2Iu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:50:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60898 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726556AbgD2IuZ (ORCPT
+        Wed, 29 Apr 2020 04:50:56 -0400
+Received: from smtp-190a.mail.infomaniak.ch ([185.125.25.10]:34883 "EHLO
+        smtp-190a.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726526AbgD2Iuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:50:25 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-250-ruH5aaJPOy-ZH7BMxoXelQ-1; Wed, 29 Apr 2020 09:50:21 +0100
-X-MC-Unique: ruH5aaJPOy-ZH7BMxoXelQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 29 Apr 2020 09:50:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 29 Apr 2020 09:50:21 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jim Mattson' <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "everdox@gmail.com" <everdox@gmail.com>
-Subject: RE: [PATCH] KVM: x86: handle wrap around 32-bit address space
-Thread-Topic: [PATCH] KVM: x86: handle wrap around 32-bit address space
-Thread-Index: AQHWHPQJ/975q5rp/UiOQx/+1A4bJqiPy+vw
-Date:   Wed, 29 Apr 2020 08:50:21 +0000
-Message-ID: <c3ac5f4c9e3a412cb57ea02df19dd2d2@AcuMS.aculab.com>
-References: <20200427165917.31799-1-pbonzini@redhat.com>
- <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
-In-Reply-To: <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 29 Apr 2020 04:50:55 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49BsfQ1WB6zlhqlx;
+        Wed, 29 Apr 2020 10:50:22 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49BsfM4z8bzmPw5b;
+        Wed, 29 Apr 2020 10:50:19 +0200 (CEST)
+Subject: Re: [PATCH v3 0/5] Add support for RESOLVE_MAYEXEC
+To:     Jann Horn <jannh@google.com>, Florian Weimer <fw@deneb.enyo.de>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <20200428175129.634352-1-mic@digikod.net>
+ <CAG48ez1bKzh1YvbD_Lcg0AbMCH_cdZmrRRumU7UCJL=qPwNFpQ@mail.gmail.com>
+ <87blnb48a3.fsf@mid.deneb.enyo.de>
+ <CAG48ez2TphTj-VdDaSjvnr0Q8BhNmT3n86xYz4bF3wRJmAMsMw@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <ece281a5-8944-65fd-2a76-e4479a0cccaf@digikod.net>
+Date:   Wed, 29 Apr 2020 10:50:19 +0200
+User-Agent: 
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAG48ez2TphTj-VdDaSjvnr0Q8BhNmT3n86xYz4bF3wRJmAMsMw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSmltIE1hdHRzb24NCj4gU2VudDogMjggQXByaWwgMjAyMCAwMToyOQ0KPiBPbiBNb24s
-IEFwciAyNywgMjAyMCBhdCA5OjU5IEFNIFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5j
-b20+IHdyb3RlOg0KPiA+DQo+ID4gS1ZNIGlzIG5vdCBoYW5kbGluZyB0aGUgY2FzZSB3aGVyZSBF
-SVAgd3JhcHMgYXJvdW5kIHRoZSAzMi1iaXQgYWRkcmVzcw0KPiA+IHNwYWNlICh0aGF0IGlzLCBv
-dXRzaWRlIGxvbmcgbW9kZSkuICBUaGlzIGlzIG5lZWRlZCBib3RoIGluIHZteC5jDQo+ID4gYW5k
-IGluIGVtdWxhdGUuYy4gIFNWTSB3aXRoIE5SSVBTIGlzIG9rYXksIGJ1dCBpdCBjYW4gc3RpbGwg
-cHJpbnQNCj4gPiBhbiBlcnJvciB0byBkbWVzZyBkdWUgdG8gaW50ZWdlciBvdmVyZmxvdy4NCi4u
-Lg0KPiA+ICsgICAgICAgICAgICAgICBpZiAodW5saWtlbHkoKChyaXAgXiBvcmlnX3JpcCkgPj4g
-MzEpID09IDMpICYmICFpc182NF9iaXRfbW9kZSh2Y3B1KSkNCg0KSXNuJ3QgdGhlIG1vcmUgb2J2
-aW91czoNCglpZiAoKChyaXAgXiBvcmlnX3JpcCkgJiAxdWxsIDw8IDMyKSAuLi4NCmVxdWl2YWxl
-bnQ/DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
-Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
-biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
+
+On 29/04/2020 00:01, Jann Horn wrote:
+> On Tue, Apr 28, 2020 at 11:21 PM Florian Weimer <fw@deneb.enyo.de> wrote:
+>> * Jann Horn:
+>>
+>>> Just as a comment: You'd probably also have to use RESOLVE_MAYEXEC in
+>>> the dynamic linker.
+>>
+>> Absolutely.  In typical configurations, the kernel does not enforce
+>> that executable mappings must be backed by files which are executable.
+>> It's most obvious with using an explicit loader invocation to run
+>> executables on noexec mounts.  RESOLVE_MAYEXEC is much more useful
+>> than trying to reimplement the kernel permission checks (or what some
+>> believe they should be) in userspace.
+
+Indeed it makes sense to use RESOLVE_MAYEXEC for the dynamic linker too.
+Only the noexec mount option is taken into account for mmap(2) with
+PROT_EXEC, and if you can trick the dynamic linker with JOP as Jann
+explained, it may enable to execute new code. However, a kernel which
+forbids remapping memory with PROT_EXEC still enables to implement a W^X
+policy. Any JOP/ROP still enables unexpected code execution though.
+
+> 
+> Oh, good point.
+> 
+> That actually seems like something Mickaël could add to his series? If
+> someone turns on that knob for "When an interpreter wants to execute
+> something, enforce that we have execute access to it", they probably
+> also don't want it to be possible to just map files as executable? So
+> perhaps when that flag is on, the kernel should either refuse to map
+> anything as executable if it wasn't opened with RESOLVE_MAYEXEC or
+> (less strict) if RESOLVE_MAYEXEC wasn't used, print a warning, then
+> check whether the file is executable and bail out if not?
+> 
+> A configuration where interpreters verify that scripts are executable,
+> but other things can just mmap executable pages, seems kinda
+> inconsistent...
+
+As it is written in the documentation patch, this RESOLVE_MAYEXEC
+feature is an important missing piece, but to implement a consistent
+security policy we need to enable other restrictions starting with a
+noexec mount point policy. The purpose of this patch series is not to
+bring a full-feature LSM with process states handling, but it brings
+what is needed for LSMs such as SELinux, IMA or IPE to extend their
+capabilities to reach what you would expect.
