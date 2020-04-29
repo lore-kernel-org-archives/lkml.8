@@ -2,76 +2,155 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83FFC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B778CC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93532082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C05420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgD2IpN (ORCPT
+        id S1726580AbgD2Ips (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:45:13 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:48392 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgD2IpN (ORCPT
+        Wed, 29 Apr 2020 04:45:48 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35189 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2Ips (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:45:13 -0400
-Received: from localhost.localdomain ([92.148.159.11])
-        by mwinf5d03 with ME
-        id YYl72200G0F2omL03Yl75P; Wed, 29 Apr 2020 10:45:11 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 29 Apr 2020 10:45:11 +0200
-X-ME-IP: 92.148.159.11
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     b.zolnierkie@samsung.com, sumit.semwal@linaro.org,
-        rafael.j.wysocki@intel.com, corbet@lwn.net,
-        viresh.kumar@linaro.org, jani.nikula@intel.com,
-        mchehab+samsung@kernel.org, eric.miao@marvell.com
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] video: pxafb: Fix the function used to balance a 'dma_alloc_coherent()' call
-Date:   Wed, 29 Apr 2020 10:45:05 +0200
-Message-Id: <20200429084505.108897-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Wed, 29 Apr 2020 04:45:48 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e26so1055714otr.2;
+        Wed, 29 Apr 2020 01:45:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nZsuyZk+W3ZQ3D4T7ElXnkZvkP0cegNtGGjskMJOrWs=;
+        b=mqq2Pg3HtS6DAgt1Zvas+71GJAk4oZLDN9sDO21dQ0qQ9jmlW2bJfPaYpdRu7nRHad
+         MiJ4wyzdWnhM7J7HPJU/cEXVBqWA0VQCBJKPt8w0vBNdRx7fqUTGpKmDhosPwYP0lqoX
+         PGXO0p42Rq6h91bYMgTmrLS7OuV8gFGqE2kYjCUnIKCnZVB3LeSdDiA+DWbpqArXDVVd
+         /DZ4ZCfaJ7RHwcNIoeA9hcoRV6Uop5ED1BZVpci8pQtxPjt4KAuSVkwFR0BkmQtlv0Tv
+         tWsQvABSInE8SnoHPyhKiZ9xevKMQrL1VOxnQ8SDf4pxITiA+l5l35zIqpu2V4EGhACF
+         o0Uw==
+X-Gm-Message-State: AGi0PuZNqnL+JOT6oYqjWqan4s85tOwHfMBBbOU480T0UsVBzXKAJOcM
+        mNCs6LuamEs03lFaf2Rdazjn4nO9cQI689XeWbzs7Q==
+X-Google-Smtp-Source: APiQypISoD3rKWZ6uVLPAZhyrACde80GeD/rrdp9qI+e6ZrUlQ2zKUSmtpFRopMPzmvn/lB4sCDboFc8p/Zu0MR6gWQ=
+X-Received: by 2002:a9d:564:: with SMTP id 91mr25765762otw.250.1588149947154;
+ Wed, 29 Apr 2020 01:45:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200422072137.8517-1-o.rempel@pengutronix.de>
+ <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
+ <20200428154718.GA24923@lunn.ch> <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
+In-Reply-To: <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 29 Apr 2020 10:45:35 +0200
+Message-ID: <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'dma_alloc_coherent()' must be balanced by a call to 'dma_free_coherent()'
-not 'dma_free_wc()'.
-The correct dma_free_ function is already used in the error handling path
-of the probe function.
+Hi Philippe,
 
-Fixes: 77e196752bdd ("[ARM] pxafb: allow video memory size to be configurable")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/video/fbdev/pxafb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Apr 28, 2020 at 6:16 PM Philippe Schenker
+<philippe.schenker@toradex.com> wrote:
+> On Tue, 2020-04-28 at 17:47 +0200, Andrew Lunn wrote:
+> > On Tue, Apr 28, 2020 at 05:28:30PM +0200, Geert Uytterhoeven wrote:
+> > > This triggers on Renesas Salvator-X(S):
+> > >
+> > >     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
+> > > *-skew-ps values should be used only with phy-mode = "rgmii"
+> > >
+> > > which uses:
+> > >
+> > >         phy-mode = "rgmii-txid";
+> > >
+> > > and:
+> > >
+> > >         rxc-skew-ps = <1500>;
+> > >
+> > > If I understand Documentation/devicetree/bindings/net/ethernet-
+> > > controller.yaml
+> > > correctly:
+> >
+> > Checking for skews which might contradict the PHY-mode is new. I think
+> > this is the first PHY driver to do it. So i'm not too surprised it has
+> > triggered a warning, or there is contradictory documentation.
+> >
+> > Your use cases is reasonable. Have the normal transmit delay, and a
+> > bit shorted receive delay. So we should allow it. It just makes the
+> > validation code more complex :-(
+>
+> I reviewed Oleksij's patch that introduced this warning. I just want to
+> explain our thinking why this is a good thing, but yes maybe we change
+> that warning a little bit until it lands in mainline.
+>
+> The KSZ9031 driver didn't support for proper phy-modes until now as it
+> don't have dedicated registers to control tx and rx delays. With
+> Oleksij's patch this delay is now done accordingly in skew registers as
+> best as possible. If you now also set the rxc-skew-ps registers those
+> values you previously set with rgmii-txid or rxid get overwritten.
+>
+> We chose the warning to occur on phy-modes 'rgmii-id', 'rgmii-rxid' and
+> 'rgmii-txid' as on those, with the 'rxc-skew-ps' value present,
+> overwriting skew values could occur and you end up with values you do
+> not wanted. We thought, that most of the boards have just 'rgmii' set in
+> phy-mode with specific skew-values present.
+>
+> @Geert if you actually want the PHY to apply RXC and TXC delays just
+> insert 'rgmii-id' in your DT and remove those *-skew-ps values. If you
 
-diff --git a/drivers/video/fbdev/pxafb.c b/drivers/video/fbdev/pxafb.c
-index 00b96a78676e..6f972bed410a 100644
---- a/drivers/video/fbdev/pxafb.c
-+++ b/drivers/video/fbdev/pxafb.c
-@@ -2417,8 +2417,8 @@ static int pxafb_remove(struct platform_device *dev)
- 
- 	free_pages_exact(fbi->video_mem, fbi->video_mem_size);
- 
--	dma_free_wc(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
--		    fbi->dma_buff_phys);
-+	dma_free_coherent(&dev->dev, fbi->dma_buff_size, fbi->dma_buff,
-+			  fbi->dma_buff_phys);
- 
- 	return 0;
- }
--- 
-2.25.1
+That seems to work for me, but of course doesn't take into account PCB
+routing.
 
+> need custom timing due to PCB routing it was thought out to use the phy-
+> mode 'rgmii' and do the whole required timing with the *-skew-ps values.
+
+That mean we do have to provide all values again?
+Using "rgmii" without any skew values makes DHCP fail on R-Car H3 ES2.0,
+M3-W (ES1.0), and M3-N (ES1.0). Interestingly, DHCP still works on R-Car
+H3 ES1.0.
+
+Note that I'm not too-familiar with the actual skew values needed
+(CC Mizuguchi-san).
+
+Related commits:
+  - 0e45da1c6ea6b186 ("arm64: dts: r8a7795: salvator-x: Fix
+EthernetAVB PHY timing")
+  - dda3887907d74338 ("arm64: dts: r8a7795: Use rgmii-txid phy-mode
+for EthernetAVB")
+  - 7eda14afb8843a0d ("arm64: dts: renesas: r8a77990: ebisu: Fix
+EthernetAVB phy mode to rgmii")
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
