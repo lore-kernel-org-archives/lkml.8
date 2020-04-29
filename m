@@ -2,86 +2,104 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C9CC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2FC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7E5A21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F185214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:50:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="HTOA934A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgD2Utl (ORCPT
+        id S1727097AbgD2UuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:49:41 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:27436 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726511AbgD2Utk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:49:40 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 29 Apr 2020 13:46:57 -0700
-Received: from localhost.localdomain (ashwinh-vm-1.vmware.com [10.110.19.225])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 6EBBD40A68;
-        Wed, 29 Apr 2020 13:46:57 -0700 (PDT)
-From:   ashwin-h <ashwinh@vmware.com>
-To:     <tytso@mit.edu>, <adilger.kernel@dilger.ca>
-CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@kernel.org>, <srivatsab@vmware.com>,
-        <srivatsa@csail.mit.edu>, <rostedt@goodmis.org>,
-        <srostedt@vmware.com>, <gregkh@linuxfoundation.org>,
-        <ashwin.hiranniah@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Ashwin H <ashwinh@vmware.com>
-Subject: [PATCH 5/5] ext4: unsigned int compared against zero
-Date:   Thu, 30 Apr 2020 10:05:21 +0530
-Message-ID: <2ead7f45424af49aa7ce34debf479531d0a12904.1587718568.git.ashwinh@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1587718568.git.ashwinh@vmware.com>
-References: <cover.1587718568.git.ashwinh@vmware.com>
+        Wed, 29 Apr 2020 16:50:01 -0400
+Received: from vern.gendns.com ([98.142.107.122]:59342 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgD2UuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:50:01 -0400
+X-Greylist: delayed 1724 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 16:50:00 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Y8MYBDFCYPC4U8pxIx3v4pRrJy5sBdcHs+qbfFFaKhU=; b=HTOA934A6qy/XJhCXv7JieZkm9
+        VDL/VwsXQXfZKMgebwhoX79DwCe1dEyeNLemwXBIk8tM5mFwdDDYFvPECAQCzz75BADr6511h+kZm
+        b8xC6rq+M3ApF0SyHRlkvEHJekU7J0f4DZ8eUQvE4QuZoVDF0ga3EBnACXPC9HY9MiFJVOENmdDtj
+        V6tmcJNN1od8LGMdW7BZHbnD6DX6UdWZuMsTjoiZDME+RGH4YX2Cz59VwIWX2x2edHepq3assRPm5
+        7v+9TI4QaC6GTRJwyxxr7pBa0wkQ6YQmJFqwDC/WN7rMHSh9ev0BsCPqOzmnf/buNsVuHQbXNNHod
+        d6QWNSXQ==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:40316 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1jTtCd-0005BN-Mc; Wed, 29 Apr 2020 16:21:07 -0400
+Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>, jic23@kernel.org
+Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, felipe.balbi@linux.intel.com,
+        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+References: <cover.1588176662.git.vilhelm.gray@gmail.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <a6402ade-648d-6e49-85cd-a7fd7f58fd1d@lechnology.com>
+Date:   Wed, 29 Apr 2020 15:21:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: ashwinh@vmware.com does not
- designate permitted sender hosts)
+In-Reply-To: <cover.1588176662.git.vilhelm.gray@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 4/29/20 1:11 PM, William Breathitt Gray wrote:
+> Over the past couple years we have noticed some shortcomings with the
+> Counter sysfs interface. Although useful in the majority of situations,
+> there are certain use-cases where interacting through sysfs attributes
+> can become cumbersome and inefficient. A desire to support more advanced
+> functionality such as timestamps, multi-axis positioning tables, and
+> other such latency-sensitive applications, has motivated a reevaluation
+> of the Counter subsystem. I believe a character device interface will be
+> helpful for this more niche area of counter device use.
 
-commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
+Nice to see some progress being made. :-)
 
-There are two cases where u32 variables n and err are being checked
-for less than zero error values, the checks is always false because
-the variables are not signed. Fix this by making the variables ints.
+> 
+> Interaction with Counter character devices occurs via ioctl commands.
+> This allows userspace applications to access and set counter data using
+> native C datatypes rather than working through string translations.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Ashwin H <ashwinh@vmware.com>
----
- fs/ext4/block_validity.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+For most aspects of the counter subsystem, this is not an issue since
+configuring a counter is not a time-sensitive operation. Instead of
+ioctls, I was expecting to just be able to read the character device
+and receive counter events or poll to wait for events similar to how
+the input subsystem works or how buffers work in the iio subsystem.
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 3f3d82d..ccd80f2 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -141,7 +141,8 @@ static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
- 	struct inode *inode;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_map_blocks map;
--	u32 i = 0, err = 0, num, n;
-+	u32 i = 0, num;
-+	int err = 0, n;
- 
- 	if ((ino < EXT4_ROOT_INO) ||
- 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
--- 
-2.7.4
-
+I'm afraid I don't really see much use in having ioctls that do
+exactly what sysfs already does. And my intuition tells me that the
+extra work needed to maintain it will probably cost more than any
+benefit gained. (Maybe other have a different experience that leads
+to a different conclusion?)
