@@ -2,103 +2,88 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C30C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7049C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609D32074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXA/vaMt"
+	by mail.kernel.org (Postfix) with ESMTP id 7FC34214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgD2PMe (ORCPT
+        id S1726814AbgD2PPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgD2PMd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:12:33 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C49C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:12:33 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s8so1159915pgq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZtfxcAdJgvL3rHPILIPyvwSO0rRyZfKUkMWQ4mNPZT4=;
-        b=IXA/vaMtixRg5KryB8HwKetJjz1dHyfr7hkD2KT2Lq+cGEbZpYyAkjmwGHsC5/AplN
-         iY4noe7J6oEhFmhssZgyIou2PLm9jHrc8o2bNAPs2IMf6yZH36kzEM55OKXDxyv3XfDS
-         xVp9WS4J0BMoH5gQG9PYdDhcXymiefnDCnKcn13fqbJdgN3u6vI+eF/Jv1yhU1iP7JAr
-         iWbnrzWimQbxSikcM62nTQAJbibNwshiKXqQwNTCgKwbrZN+fpejcydB/hoMCK2yqxTo
-         XVbcUljz9PW5AAgKSnQ7DjRNT6qYX+LBUVDCJMs3Fkjwjzpy3helPEiNtCyXEsx1QLc8
-         dkCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZtfxcAdJgvL3rHPILIPyvwSO0rRyZfKUkMWQ4mNPZT4=;
-        b=XpDcqOlu+YPcPUeW363Z/J7ph7Yo82IoBKiRHiQKyLVc7vXgEo1A8pC+ICo6a1MDM2
-         9OJPZsSytGLYTYJc2UsiGiyRExnDMOzNF4E3FAuR7Qkb7r2mrmx9RPWW8tw7YPWQntED
-         CbSq84LmFj0Qq2zpG6fxCjYgh3g4ZiYYIHKVf3aIrAUSWgIJ/UK0AxLilELHYYR98VBI
-         lHhfmRifsFy4tJMvBnYih4A35Tigs1v6u4hQX0Yn6+x3U6iEVEjjXzVtPuA0qqHunTPP
-         61TiFGcjp1YycCe5xEtHytKp3xfG1J6LwkLjreSuZMVLjwdIFo6bap33rjffM1N2vXfN
-         6qtw==
-X-Gm-Message-State: AGi0PuYjK2nBkuHoOppEFWR2x+3w9ey4CI8xiAT2x7/9WAwxWw0kzcJ1
-        lpAtfnKElSACOmFJT8l0YJQ=
-X-Google-Smtp-Source: APiQypJ9KD3omt64yeDmK+4veD1+/ihs8MYf083XhRt4rgQNF1xaAZTkjvYoCOeSW/uoRsmyklXOow==
-X-Received: by 2002:aa7:82d4:: with SMTP id f20mr36338827pfn.253.1588173153248;
-        Wed, 29 Apr 2020 08:12:33 -0700 (PDT)
-Received: from localhost ([89.208.244.169])
-        by smtp.gmail.com with ESMTPSA id q97sm5305049pjb.7.2020.04.29.08.12.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 08:12:32 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     vgupta@synopsys.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        linux-snps-arc@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v1] clocksource: arc_timer: remove duplicate error message
-Date:   Wed, 29 Apr 2020 23:12:23 +0800
-Message-Id: <20200429151223.3120-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 29 Apr 2020 11:15:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50830 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726516AbgD2PPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:15:00 -0400
+IronPort-SDR: ABOWn+W/AVrAmx+checEvBheBfeJKOistoMotIlyLLgLCG70Ura2OUlruRksTiRem5h1bEBEYf
+ NCn3JJsdp3iQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:15:00 -0700
+IronPort-SDR: jXvz6w5BWc8BhF4Yw8eQgTlJjsIbm6hFW4z+U7AD3TYC8241CayOD4jlD7dwUorvxoGygmiCgm
+ 9FVSALkzNizw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="282534249"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Apr 2020 08:14:59 -0700
+Date:   Wed, 29 Apr 2020 08:14:59 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     "Dr. Greg" <greg@enjellic.com>, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200429151459.GC15992@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <20200426165753.GA11046@wind.enjellic.com>
+ <20200429052329.GD8452@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429052329.GD8452@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-it will print an error message by itself when arc_get_timer_clk()
-goes wrong. so remove the duplicate error message.
+On Wed, Apr 29, 2020 at 08:23:29AM +0300, Jarkko Sakkinen wrote:
+> On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
+> > On Wed, Apr 22, 2020 at 12:52:56AM +0300, Jarkko Sakkinen wrote:
+> > 
+> > Good day, I hope the weekend is going well for everyone.
+> > 
+> > > Intel(R) SGX is a set of CPU instructions that can be used by applications
+> > > to set aside private regions of code and data. The code outside the enclave
+> > > is disallowed to access the memory inside the enclave by the CPU access
+> > > control.
+> > >
+> > > ... [ elided ] ..
+> > > 
+> > > The current implementation requires that the firmware sets
+> > > IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
+> > > decide what enclaves it wants run. The implementation does not create
+> > > any bottlenecks to support read-only MSRs later on.
+> > 
+> > It seems highly unlikely that a driver implementation with any type of
+> > support for read-only launch control registers would ever get into the
+> > kernel.  All one needs to do is review the conversations that Matthew
+> > Garrett's lockdown patches engender to get a sense of that, ie:
+> > 
+> > https://lwn.net/Articles/818277/
+> 
+> We do not require read-only MSRs.
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/clocksource/arc_timer.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/clocksource/arc_timer.c b/drivers/clocksource/arc_timer.c
-index b29b5a75333e..de93dd1a8c7b 100644
---- a/drivers/clocksource/arc_timer.c
-+++ b/drivers/clocksource/arc_timer.c
-@@ -334,10 +334,8 @@ static int __init arc_clockevent_setup(struct device_node *node)
- 	}
- 
- 	ret = arc_get_timer_clk(node);
--	if (ret) {
--		pr_err("clockevent: missing clk\n");
-+	if (ret)
- 		return ret;
--	}
- 
- 	/* Needs apriori irq_set_percpu_devid() done in intc map function */
- 	ret = request_percpu_irq(arc_timer_irq, timer_irq_handler,
--- 
-2.25.0
-
+Greg is pointing out the opposite, that supporting read-only MSRs is highly
+unlikely to ever be supported in the mainline kernel.
