@@ -2,93 +2,107 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D60C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232C1C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD6F20731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:53:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pum+Q+O5"
+	by mail.kernel.org (Postfix) with ESMTP id F086520731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588132444;
+	bh=De6PzrfxSghoqsQ3yniIp4J9/bydVMy1hGfoZX7LRyA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hOq1L96R9aJ0UJpoXh0G6iSUqt8cXeOfQlM7Ytq7DBQcYMWJCbo81DNXfjufWoEQC
+	 6XChIchY2jc8zBuS5BqVp+n/GnKYPC1kdLCHNiBgrd4rSCLkaZeqAzDG44BJbdwvsK
+	 CI3StqyuPOZrzudU+hTuM9yx+UvfeuRGX6I3M8E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgD2DxI (ORCPT
+        id S1726774AbgD2DyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:53:08 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27427 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726548AbgD2DxI (ORCPT
+        Tue, 28 Apr 2020 23:54:03 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:42256 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgD2DyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:53:08 -0400
-X-UUID: b3b0f4c0bfa34ad5b826e995e7092c8a-20200429
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=OiZgzIWXliTigMWS4ngHmC2XsFCzxE9JvxbFZlR5Y5A=;
-        b=pum+Q+O5Zp2uxHclGYj9cXsT8SoFWIVRHAE44jy8rMaHtkwvzjTDHCVLKwZDxTSDb9/VXfQbXXqfMb/sFnS8IwTzQxOfFEMzLMCCbzxrLdhCmoEpAwYW4XAhWRMBQea5tVJnzld4V7EYuEZkaxp8o5jG722jRxyzcdvLg8/vvIA=;
-X-UUID: b3b0f4c0bfa34ad5b826e995e7092c8a-20200429
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 915013963; Wed, 29 Apr 2020 11:53:05 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Apr 2020 11:53:03 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Apr 2020 11:53:02 +0800
-Message-ID: <1588132383.16498.2.camel@mtkswgap22>
-Subject: Re: [PATCH v3 1/2] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Date:   Wed, 29 Apr 2020 11:53:03 +0800
-In-Reply-To: <1588125274311004.11906.seg@mailgw02.mediatek.com>
-References: <1587955977-17207-1-git-send-email-EastL.Lee@mediatek.com>
-         <1587955977-17207-2-git-send-email-EastL.Lee@mediatek.com>
-         <1588125274311004.11906.seg@mailgw02.mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 28 Apr 2020 23:54:02 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03T3rjqE031628
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:53:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03T3rjqE031628
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588132425;
+        bh=Mz2apSt2RX+xw6S7HBmiwyUlKgj81QfS69CFaJ49lRg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2QWMxumD9V6BMmQfEWnqzc9iQ1/01wrbpO17g1KbcazDqJv4YtKBk3lrpcFT4BmH4
+         UduCK29ChKOZuPgqlUytkcS8Wxvr0UFOekvybm78vliobeO5tqU4YVsLbVLfMCeXao
+         Hsutl+89lTG3jgWBOwVUSevDPaITBiVFoGKm/Z8sWGca7YUrso1RAA5H108ZLghqHT
+         061h/LZ5dpt/5pAb1rnAOZIpykT2/z4miToWGqrtqHdVJ5XuU0bKCnlVirciD+NU7t
+         SNAOQkXz2ygW9WCOhIhXw+CsXSq6x/zjgQ/RlCyEyE1qj+/SNwgWzZsOcS4zwrpCS9
+         rdS4C/7GhTgIw==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id t8so432047uap.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 20:53:45 -0700 (PDT)
+X-Gm-Message-State: AGi0PubTge1skEyiYIwnkrgAA6fGBGH+nTda+CGGzGDYsYqOFll/v6fv
+        s62flHw3odsqaxiXa5GMVK9MqVUZqfm7Pd9mwhg=
+X-Google-Smtp-Source: APiQypLVOKMBwctHfkarhyPWDYMPmkP4fYxrx3pmM1MLASVEbEjoBJkP+qKSSzELeGHE9CM2a1+QyMAIHAyghPgt/gU=
+X-Received: by 2002:ab0:2e84:: with SMTP id f4mr24010753uaa.121.1588132424239;
+ Tue, 28 Apr 2020 20:53:44 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: EA5880C4AA2B61D894C249225ED43DB19CC852CE1078F1987B00AF67E97FC2DB2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200428212555.2806258-1-arnd@arndb.de>
+In-Reply-To: <20200428212555.2806258-1-arnd@arndb.de>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 29 Apr 2020 12:53:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARF-hqpcwVX7LvyZeWX5dJnnBBW=k2EBHSWM9cQCLW9Sw@mail.gmail.com>
+Message-ID: <CAK7LNARF-hqpcwVX7LvyZeWX5dJnnBBW=k2EBHSWM9cQCLW9Sw@mail.gmail.com>
+Subject: Re: [PATCH] samples: fix binderfs sample
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA0LTI3IGF0IDE2OjMyIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gTW9uLCAyNyBBcHIgMjAyMCAxMDo1Mjo1NiArMDgwMCwgRWFzdEwgd3JvdGU6DQo+ID4gRG9j
-dW1lbnQgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1hbmQtUXVldWUg
-RE1BIGNvbnRyb2xsZXINCj4gPiB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNVDY3NzkgU29DIG9y
-IG90aGVyIHNpbWlsYXIgTWVkaWF0ZWsgU29Dcy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBF
-YXN0TCA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sICAgICAgICAgfCA5OCArKysrKysrKysrKysr
-KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspDQo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210
-ay1jcWRtYS55YW1sDQo+ID4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21h
-a2UgZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IC9idWlsZHMvcm9iaGVy
-cmluZy9saW51eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
-YS9tdGstY3FkbWEuZXhhbXBsZS5kdC55YW1sOiBkbWEtY29udHJvbGxlckAxMDIxMjAwMDogaW50
-ZXJydXB0czogW1swLCAxMzksIDhdLCBbMCwgMTQwLCA4XSwgWzAsIDE0MSwgOF1dIGlzIHRvbyBz
-aG9ydA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLmV4YW1wbGUuZHQueWFtbDogZG1hLWNv
-bnRyb2xsZXJAMTAyMTIwMDA6IHJlZzogW1swLCAyNzA2MDYzMzYsIDAsIDEyOF0sIFswLCAyNzA2
-MDY0NjQsIDAsIDEyOF0sIFswLCAyNzA2MDY1OTIsIDAsIDEyOF1dIGlzIHRvbyBzaG9ydA0KPiAN
-Cj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTI3NzI5Mg0KPiANCj4g
-SWYgeW91IGFscmVhZHkgcmFuICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGFuZCBkaWRuJ3Qgc2Vl
-IHRoZSBhYm92ZQ0KPiBlcnJvcihzKSwgdGhlbiBtYWtlIHN1cmUgZHQtc2NoZW1hIGlzIHVwIHRv
-IGRhdGU6DQo+IA0KPiBwaXAzIGluc3RhbGwgZ2l0K2h0dHBzOi8vZ2l0aHViLmNvbS9kZXZpY2V0
-cmVlLW9yZy9kdC1zY2hlbWEuZ2l0QG1hc3RlciAtLXVwZ3JhZGUNCj4gDQo+IFBsZWFzZSBjaGVj
-ayBhbmQgcmUtc3VibWl0Lg0KDQpPSywgSSdsbCBmaXggaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo=
+Hi Arnd,
 
+
+On Wed, Apr 29, 2020 at 6:26 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> A routine check for misspelled Kconfig symbols showed on instance
+> from last year, the correct symbol name is CONFIG_ANDROID_BINDERFS,
+> not CONFIG_CONFIG_ANDROID_BINDERFS, so the extra prefix must
+> be removed in the Kconfig file to allow enabling the sample.
+>
+> As the actual sample fails to build as a kernel module, change the
+> Makefile enough to get to build as a hostprog instead.
+>
+> Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+
+Nice catch!
+
+
+I am working on a new syntax 'userprogs'.
+
+This builds programs for the target architecture
+instead of the host.
+
+Once, my series lands,
+you can use 'userprogs', like this:
+https://patchwork.kernel.org/patch/11515977/
+
+Then 'ifndef CROSS_COMPILE' will go away.
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
