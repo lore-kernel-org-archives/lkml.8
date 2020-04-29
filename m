@@ -2,190 +2,488 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F55FC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED4C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0A2208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253872087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TaxHKdPu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YQk2EhXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgD2MHC (ORCPT
+        id S1727032AbgD2MHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:07:02 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56758 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgD2MHB (ORCPT
+        Wed, 29 Apr 2020 08:07:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46802 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726743AbgD2MHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:07:01 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200429120700euoutp012cba1d4259a623e8fde6b938a9534b3c~KSPFonIDx1747417474euoutp01Q
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:07:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200429120700euoutp012cba1d4259a623e8fde6b938a9534b3c~KSPFonIDx1747417474euoutp01Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588162020;
-        bh=dTge4FnxGdh1JeaXARxbuwKGOvOSz9PCdZUO8KY3UGo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=TaxHKdPuhqZIrBXc7TfeZCHU83ET8Ok5USossb7so4fZfgD9ryHCq+l4AyzkHZ7Q5
-         k8ks3yE/YntD8jDZvaok6bMrzpCQKC0jxMVBZRPcmR9HnaVwDS+dlPy6l+b1nuGd5S
-         f92LkZi9dwVqJyx91dcmAT7qN+ukuxGfAQYy42YU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200429120659eucas1p2814adf32c85b42359a578eb93250a675~KSPFSnpKZ1690316903eucas1p2G;
-        Wed, 29 Apr 2020 12:06:59 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4D.76.60679.3ED69AE5; Wed, 29
-        Apr 2020 13:06:59 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200429120659eucas1p22ddcaa5cd23afc8c10a331d868c40d00~KSPFBP46e1690316903eucas1p2F;
-        Wed, 29 Apr 2020 12:06:59 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200429120659eusmtrp1f3533d40502dcc33366a10d13d5ce8bc~KSPFAeTjm2302523025eusmtrp1p;
-        Wed, 29 Apr 2020 12:06:59 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-f7-5ea96de3beea
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 45.F4.08375.3ED69AE5; Wed, 29
-        Apr 2020 13:06:59 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200429120659eusmtip2b424af4cf97043f61fa0d99f98445859~KSPEmClnN0848208482eusmtip2a;
-        Wed, 29 Apr 2020 12:06:59 +0000 (GMT)
-Subject: Re: [PATCH v2] video: fbdev: controlfb: fix build for
- COMPILE_TEST=y && PPC_PMAC=y && PPC32=n
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        kbuild test robot <lkp@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <28839ddd-36bb-3a69-b3dc-9dc14ac7eaee@samsung.com>
-Date:   Wed, 29 Apr 2020 14:06:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 29 Apr 2020 08:07:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588162071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JzCKZLUuLFWol2g0XAdehiMxQ7h8LZkkHyQw/IoI2Lk=;
+        b=YQk2EhXmZgyzR3wYylDoDW6ITzJ/d+FiaUxurAxu67nIW8NjyisbUgdnSptYyitRfV8ylb
+        FnSlWAwXGOqpTecq0W4H5qIGdYB9/ZVBkzS4XRbKCai45984k6K/gu0KtREUUoBxuY1C+D
+        SXaUT7UseOzjS8AsdhLzD9C5Ald0+jg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-290-s1qg_FyhPT2VMfUo5ln0vQ-1; Wed, 29 Apr 2020 08:07:47 -0400
+X-MC-Unique: s1qg_FyhPT2VMfUo5ln0vQ-1
+Received: by mail-wm1-f70.google.com with SMTP id l21so1111393wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 05:07:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=JzCKZLUuLFWol2g0XAdehiMxQ7h8LZkkHyQw/IoI2Lk=;
+        b=GI4l2QWjXysrLl1VjGYwT96RUBzziLuPbVNeGVueR4OtetRzUAGm90AGdMKBv7xX4b
+         HYU4oEuYL6M9xhh2fmLkTmIXu8frIjctdl3U/JsMarfGIQWxMdJlpHPQU9pr06qmcpDy
+         KaAUrmo+0PK/iCyJWwe+uBXHXRPCDDFSuCTGYUvtjTHFJ53MC04+igwz1DhxB/aRiPAA
+         oo0PNCK20N6ku7uBChLvZ8FsuecoRGP8nU25fmi/T7KM1UFkQD80RI5KwrR2eAAKCOS/
+         y/2MgoRi316GwZjoc1bz3xCT23FukWKnmbNait7Xb567ZQw1lHdtqKdlXzPH2BMZQOH/
+         YdFg==
+X-Gm-Message-State: AGi0PubLGkdbOqk1z9zlGX0X8K9CDZAe15jN3h23pfsR0TxnJuxXWngh
+        OI4ZTGE+6QTakXKIzckXyxEkAsq8y/BIWRxJo+hymianONHJVHMoPy4czK2iTCbokLtz/6NiODf
+        h9dxN/J4qRAha3+XsPxoImjZm
+X-Received: by 2002:adf:e450:: with SMTP id t16mr41848710wrm.301.1588162065980;
+        Wed, 29 Apr 2020 05:07:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJyZQDVaRyZH74jjCr4+q3m+V20LIx3RdVwzBd6yW7ZBQVZ06ZZzo/9/5pVPOKWDXkzdNd3zg==
+X-Received: by 2002:adf:e450:: with SMTP id t16mr41848659wrm.301.1588162065538;
+        Wed, 29 Apr 2020 05:07:45 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id a9sm7125563wmm.38.2020.04.29.05.07.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 05:07:27 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com, chenhuacai@gmail.com
+Subject: Re: [PATCH v4 2/7] KVM: arm64: clean up redundant 'kvm_run' parameters
+In-Reply-To: <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com> <20200427043514.16144-3-tianjia.zhang@linux.alibaba.com>
+Date:   Wed, 29 Apr 2020 14:07:10 +0200
+Message-ID: <87o8rah4wh.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429115417.GA12801@ravnborg.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNKsWRmVeSWpSXmKPExsWy7djPc7qPc1fGGfR2mVosfHiX2eLK1/ds
-        FqcnLGKyONH3gdXi8q45bBavmh+xWaz4uZXRYuveq+wOHB6NN26weez9toDFY/MKLY/Fe14y
-        edzvPs7ksWTaVTaPz5vkAtijuGxSUnMyy1KL9O0SuDIOzvzIUrBQpOL//QNsDYwbBboYOTkk
-        BEwkeua/Yu9i5OIQEljBKHFxXh8rhPOFUeLe5x1Qmc+MElvX/WWHafm1byUbRGI5o8SBG/ug
-        Wt4ySvS+f8YKUiUskCHxueMfG4gtIqAscfz8NbAiZoH/jBIfe38xgSTYBKwkJravYgSxeQXs
-        JD4f3ssCYrMIqEqcnnsSrEZUIELi04PDrBA1ghInZz4Bq+EUMJI4c3QV2EnMAuISt57MZ4Kw
-        5SW2v53DDLJMQuAcu8T226tZIe52kfh38h3UD8ISr45vgbJlJE5P7mGBaFjHKPG34wVU93ZG
-        ieWTIX6QELCWuHPuF5DNAbRCU2L9Ln2IsKPEp60f2UHCEgJ8EjfeCkIcwScxadt0Zogwr0RH
-        mxBEtZrEhmUb2GDWdu1cyTyBUWkWktdmIXlnFpJ3ZiHsXcDIsopRPLW0ODc9tdgoL7Vcrzgx
-        t7g0L10vOT93EyMwSZ3+d/zLDsZdf5IOMQpwMCrx8FqkrowTYk0sK67MPcQowcGsJML7KGNZ
-        nBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTBycUg2MomnsaWsZ
-        jppZ8k1ZdlPfJ/TdpsI5muk3QkUv5J+z4bzzfIMyyynefXLFO7In+zyb6sKzpbEsumfeX6mr
-        z6/2Ccm0iB28vWZ+2INf29+/XLzlx96bE3mNGdY6cBncy7G2KgzcXhMiKxSgW2C+o+5S7Tur
-        xa/YtT/+veC79NCSo/ceaJ+6cOdUthJLcUaioRZzUXEiAMI2UllOAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsVy+t/xe7qPc1fGGdy9q2Sx8OFdZosrX9+z
-        WZyesIjJ4kTfB1aLy7vmsFm8an7EZrHi51ZGi617r7I7cHg03rjB5rH32wIWj80rtDwW73nJ
-        5HG/+ziTx5JpV9k8Pm+SC2CP0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXS
-        t7NJSc3JLEst0rdL0Ms4OPMjS8FCkYr/9w+wNTBuFOhi5OSQEDCR+LVvJVsXIxeHkMBSRonu
-        q2/Zuxg5gBIyEsfXl0HUCEv8udbFBmILCbxmlJjX7QBSIiyQIfH7XTFIWERAWeL4+WusIGOY
-        Bf4zSjw5MZUVYuYuRoljc+eBNbMJWElMbF/FCGLzCthJfD68lwXEZhFQlTg99yQTiC0qECFx
-        eMcsqBpBiZMzn4DVcAoYSZw5uoodxGYWUJf4M+8SM4QtLnHryXwmCFteYvvbOcwTGIVmIWmf
-        haRlFpKWWUhaFjCyrGIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiMx23Hfm7ewXhpY/AhRgEO
-        RiUeXovUlXFCrIllxZW5hxglOJiVRHgfZSyLE+JNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8
-        YKrIK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAqHyip/8ko5mK
-        ZFjYr/7zhT4ONVy69S6nZx5a2GNxc17C7K+3bU4Ut78Oe/Y99Q1bd+KL33aHfH8nh3MyXnm0
-        VqhfccWBq2fXMpe+nZRy4VZT/Xet3T6qD9ZsfGc/84VJmsNBtqUrfJ1fTeIxcZVSmfE5f9Uv
-        6/fH3eX3JTlfsXbpVwuqv8drq8RSnJFoqMVcVJwIAKusk8/dAgAA
-X-CMS-MailID: 20200429120659eucas1p22ddcaa5cd23afc8c10a331d868c40d00
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd
-References: <CGME20200429104825eucas1p16bf37b71a3ab3a768d1eff6c48eb61dd@eucas1p1.samsung.com>
-        <fe520316-3863-e6c4-9581-5d709f49e906@samsung.com>
-        <20200429115417.GA12801@ravnborg.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 
-On 4/29/20 1:54 PM, Sam Ravnborg wrote:
-> Hi Bartlomiej.
-> 
-> On Wed, Apr 29, 2020 at 12:48:24PM +0200, Bartlomiej Zolnierkiewicz wrote:
->>
->> powerpc allyesconfig fails like this:
->>
->> drivers/video/fbdev/controlfb.c: In function 'controlfb_mmap':
->> drivers/video/fbdev/controlfb.c:756:23: error: implicit declaration of function 'pgprot_cached_wthru'; did you mean 'pgprot_cached'? [-Werror=implicit-function-declaration]
->>   756 |   vma->vm_page_prot = pgprot_cached_wthru(vma->vm_page_prot);
->>       |                       ^~~~~~~~~~~~~~~~~~~
->>       |                       pgprot_cached
->> drivers/video/fbdev/controlfb.c:756:23: error: incompatible types when assigning to type 'pgprot_t' {aka 'struct <anonymous>'} from type 'int'
->>
->> Fix it by adding missing PPC32 dependency.
-> 
-> Is this really the right fix?
-
-Yes, ifdef in the code should match driver dependencies in Kconfig:
-
-config FB_CONTROL
-        bool "Apple \"control\" display support"
-        depends on (FB = y) && ((PPC_PMAC && PPC32) || COMPILE_TEST)
-
-> Short term I htink it is OK, but I think there should be a common way
-> to do the same for all archtectures so no conditional compilation is
-> needed. In other words the use of pgprot_cached_wthru looks like we
-> need a better abstraction.
-
-This would be of course nice to have but won't be enough to remove
-the ifdef in this particular driver.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> Added Christoph to the mail as he has a good overview of the area.
-> 
-> 	Sam
-> 
-> 
->>
->> Fixes: a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
->> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Cc: Sam Ravnborg <sam@ravnborg.org>
->> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
->> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> ---
->> v2: fix implicit btext_update_display() function declaration error
->>
->>  drivers/video/fbdev/controlfb.c |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> Index: b/drivers/video/fbdev/controlfb.c
->> ===================================================================
->> --- a/drivers/video/fbdev/controlfb.c
->> +++ b/drivers/video/fbdev/controlfb.c
->> @@ -55,7 +55,7 @@
->>  #include "macmodes.h"
->>  #include "controlfb.h"
->>  
->> -#ifndef CONFIG_PPC_PMAC
->> +#if !defined(CONFIG_PPC_PMAC) || !defined(CONFIG_PPC32)
->>  #define invalid_vram_cache(addr)
->>  #undef in_8
->>  #undef out_8
-> 
+> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
 >
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>  arch/arm64/include/asm/kvm_coproc.h | 12 +++++-----
+>  arch/arm64/include/asm/kvm_host.h   | 11 ++++-----
+>  arch/arm64/include/asm/kvm_mmu.h    |  2 +-
+>  arch/arm64/kvm/handle_exit.c        | 36 ++++++++++++++---------------
+>  arch/arm64/kvm/sys_regs.c           | 13 +++++------
+>  virt/kvm/arm/arm.c                  |  6 ++---
+>  virt/kvm/arm/mmio.c                 | 11 +++++----
+>  virt/kvm/arm/mmu.c                  |  5 ++--
+>  8 files changed, 46 insertions(+), 50 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/kvm_coproc.h b/arch/arm64/include/asm/kvm_coproc.h
+> index 0185ee8b8b5e..454373704b8a 100644
+> --- a/arch/arm64/include/asm/kvm_coproc.h
+> +++ b/arch/arm64/include/asm/kvm_coproc.h
+> @@ -27,12 +27,12 @@ struct kvm_sys_reg_target_table {
+>  void kvm_register_target_sys_reg_table(unsigned int target,
+>  				       struct kvm_sys_reg_target_table *table);
+>  
+> -int kvm_handle_cp14_load_store(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> -int kvm_handle_cp14_32(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> -int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> -int kvm_handle_cp15_32(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> -int kvm_handle_cp15_64(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> -int kvm_handle_sys_reg(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> +int kvm_handle_cp14_load_store(struct kvm_vcpu *vcpu);
+> +int kvm_handle_cp14_32(struct kvm_vcpu *vcpu);
+> +int kvm_handle_cp14_64(struct kvm_vcpu *vcpu);
+> +int kvm_handle_cp15_32(struct kvm_vcpu *vcpu);
+> +int kvm_handle_cp15_64(struct kvm_vcpu *vcpu);
+> +int kvm_handle_sys_reg(struct kvm_vcpu *vcpu);
+>  
+>  #define kvm_coproc_table_init kvm_sys_reg_table_init
+>  void kvm_sys_reg_table_init(void);
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 32c8a675e5a4..3fab32e4948c 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -481,18 +481,15 @@ u64 __kvm_call_hyp(void *hypfn, ...);
+>  void force_vm_exit(const cpumask_t *mask);
+>  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
+>  
+> -int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> -		int exception_index);
+> -void handle_exit_early(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> -		       int exception_index);
+> +int handle_exit(struct kvm_vcpu *vcpu, int exception_index);
+> +void handle_exit_early(struct kvm_vcpu *vcpu, int exception_index);
+>  
+>  /* MMIO helpers */
+>  void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+>  unsigned long kvm_mmio_read_buf(const void *buf, unsigned int len);
+>  
+> -int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> -int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> -		 phys_addr_t fault_ipa);
+> +int kvm_handle_mmio_return(struct kvm_vcpu *vcpu);
+> +int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa);
+>  
+>  int kvm_perf_init(void);
+>  int kvm_perf_teardown(void);
+> diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
+> index 30b0e8d6b895..2ec7b9bb25d3 100644
+> --- a/arch/arm64/include/asm/kvm_mmu.h
+> +++ b/arch/arm64/include/asm/kvm_mmu.h
+> @@ -159,7 +159,7 @@ void kvm_free_stage2_pgd(struct kvm *kvm);
+>  int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
+>  			  phys_addr_t pa, unsigned long size, bool writable);
+>  
+> -int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run);
+> +int kvm_handle_guest_abort(struct kvm_vcpu *vcpu);
+>  
+>  void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu);
+>  
+> diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
+> index aacfc55de44c..ec3a66642ea5 100644
+> --- a/arch/arm64/kvm/handle_exit.c
+> +++ b/arch/arm64/kvm/handle_exit.c
+> @@ -25,7 +25,7 @@
+>  #define CREATE_TRACE_POINTS
+>  #include "trace.h"
+>  
+> -typedef int (*exit_handle_fn)(struct kvm_vcpu *, struct kvm_run *);
+> +typedef int (*exit_handle_fn)(struct kvm_vcpu *);
+>  
+>  static void kvm_handle_guest_serror(struct kvm_vcpu *vcpu, u32 esr)
+>  {
+> @@ -33,7 +33,7 @@ static void kvm_handle_guest_serror(struct kvm_vcpu *vcpu, u32 esr)
+>  		kvm_inject_vabt(vcpu);
+>  }
+>  
+> -static int handle_hvc(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int handle_hvc(struct kvm_vcpu *vcpu)
+>  {
+>  	int ret;
+>  
+> @@ -50,7 +50,7 @@ static int handle_hvc(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  	return ret;
+>  }
+>  
+> -static int handle_smc(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int handle_smc(struct kvm_vcpu *vcpu)
+>  {
+>  	/*
+>  	 * "If an SMC instruction executed at Non-secure EL1 is
+> @@ -69,7 +69,7 @@ static int handle_smc(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>   * Guest access to FP/ASIMD registers are routed to this handler only
+>   * when the system doesn't support FP/ASIMD.
+>   */
+> -static int handle_no_fpsimd(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int handle_no_fpsimd(struct kvm_vcpu *vcpu)
+>  {
+>  	kvm_inject_undefined(vcpu);
+>  	return 1;
+> @@ -87,7 +87,7 @@ static int handle_no_fpsimd(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>   * world-switches and schedule other host processes until there is an
+>   * incoming IRQ or FIQ to the VM.
+>   */
+> -static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int kvm_handle_wfx(struct kvm_vcpu *vcpu)
+>  {
+>  	if (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_WFx_ISS_WFE) {
+>  		trace_kvm_wfx_arm64(*vcpu_pc(vcpu), true);
+> @@ -109,16 +109,16 @@ static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>   * kvm_handle_guest_debug - handle a debug exception instruction
+>   *
+>   * @vcpu:	the vcpu pointer
+> - * @run:	access to the kvm_run structure for results
+>   *
+>   * We route all debug exceptions through the same handler. If both the
+>   * guest and host are using the same debug facilities it will be up to
+>   * userspace to re-inject the correct exception for guest delivery.
+>   *
+> - * @return: 0 (while setting run->exit_reason), -1 for error
+> + * @return: 0 (while setting vcpu->run->exit_reason), -1 for error
+>   */
+> -static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	u32 hsr = kvm_vcpu_get_hsr(vcpu);
+>  	int ret = 0;
+>  
+> @@ -144,7 +144,7 @@ static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  	return ret;
+>  }
+>  
+> -static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu)
+>  {
+>  	u32 hsr = kvm_vcpu_get_hsr(vcpu);
+>  
+> @@ -155,7 +155,7 @@ static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  	return 1;
+>  }
+>  
+> -static int handle_sve(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int handle_sve(struct kvm_vcpu *vcpu)
+>  {
+>  	/* Until SVE is supported for guests: */
+>  	kvm_inject_undefined(vcpu);
+> @@ -193,7 +193,7 @@ void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu)
+>   * Guest usage of a ptrauth instruction (which the guest EL1 did not turn into
+>   * a NOP).
+>   */
+> -static int kvm_handle_ptrauth(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int kvm_handle_ptrauth(struct kvm_vcpu *vcpu)
+>  {
+>  	kvm_arm_vcpu_ptrauth_trap(vcpu);
+>  	return 1;
+> @@ -238,7 +238,7 @@ static exit_handle_fn kvm_get_exit_handler(struct kvm_vcpu *vcpu)
+>   * KVM_EXIT_DEBUG, otherwise userspace needs to complete its
+>   * emulation first.
+>   */
+> -static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +static int handle_trap_exceptions(struct kvm_vcpu *vcpu)
+>  {
+>  	int handled;
+>  
+> @@ -253,7 +253,7 @@ static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		exit_handle_fn exit_handler;
+>  
+>  		exit_handler = kvm_get_exit_handler(vcpu);
+> -		handled = exit_handler(vcpu, run);
+> +		handled = exit_handler(vcpu);
+>  	}
+>  
+>  	return handled;
+> @@ -263,9 +263,10 @@ static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>   * Return > 0 to return to guest, < 0 on error, 0 (and set exit_reason) on
+>   * proper exit to userspace.
+>   */
+> -int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> -		       int exception_index)
+> +int handle_exit(struct kvm_vcpu *vcpu, int exception_index)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+> +
+>  	if (ARM_SERROR_PENDING(exception_index)) {
+>  		u8 hsr_ec = ESR_ELx_EC(kvm_vcpu_get_hsr(vcpu));
+>  
+> @@ -291,7 +292,7 @@ int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+>  	case ARM_EXCEPTION_EL1_SERROR:
+>  		return 1;
+>  	case ARM_EXCEPTION_TRAP:
+> -		return handle_trap_exceptions(vcpu, run);
+> +		return handle_trap_exceptions(vcpu);
+>  	case ARM_EXCEPTION_HYP_GONE:
+>  		/*
+>  		 * EL2 has been reset to the hyp-stub. This happens when a guest
+> @@ -315,8 +316,7 @@ int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+>  }
+>  
+>  /* For exit types that need handling before we can be preempted */
+> -void handle_exit_early(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> -		       int exception_index)
+> +void handle_exit_early(struct kvm_vcpu *vcpu, int exception_index)
+>  {
+>  	if (ARM_SERROR_PENDING(exception_index)) {
+>  		if (this_cpu_has_cap(ARM64_HAS_RAS_EXTN)) {
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 51db934702b6..e5a0d0d676c8 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -2116,7 +2116,7 @@ static const struct sys_reg_desc *find_reg(const struct sys_reg_params *params,
+>  	return bsearch((void *)pval, table, num, sizeof(table[0]), match_sys_reg);
+>  }
+>  
+> -int kvm_handle_cp14_load_store(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_cp14_load_store(struct kvm_vcpu *vcpu)
+>  {
+>  	kvm_inject_undefined(vcpu);
+>  	return 1;
+> @@ -2295,7 +2295,7 @@ static int kvm_handle_cp_32(struct kvm_vcpu *vcpu,
+>  	return 1;
+>  }
+>  
+> -int kvm_handle_cp15_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_cp15_64(struct kvm_vcpu *vcpu)
+>  {
+>  	const struct sys_reg_desc *target_specific;
+>  	size_t num;
+> @@ -2306,7 +2306,7 @@ int kvm_handle_cp15_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  				target_specific, num);
+>  }
+>  
+> -int kvm_handle_cp15_32(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_cp15_32(struct kvm_vcpu *vcpu)
+>  {
+>  	const struct sys_reg_desc *target_specific;
+>  	size_t num;
+> @@ -2317,14 +2317,14 @@ int kvm_handle_cp15_32(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  				target_specific, num);
+>  }
+>  
+> -int kvm_handle_cp14_64(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_cp14_64(struct kvm_vcpu *vcpu)
+>  {
+>  	return kvm_handle_cp_64(vcpu,
+>  				cp14_64_regs, ARRAY_SIZE(cp14_64_regs),
+>  				NULL, 0);
+>  }
+>  
+> -int kvm_handle_cp14_32(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_cp14_32(struct kvm_vcpu *vcpu)
+>  {
+>  	return kvm_handle_cp_32(vcpu,
+>  				cp14_regs, ARRAY_SIZE(cp14_regs),
+> @@ -2382,9 +2382,8 @@ static void reset_sys_reg_descs(struct kvm_vcpu *vcpu,
+>  /**
+>   * kvm_handle_sys_reg -- handles a mrs/msr trap on a guest sys_reg access
+>   * @vcpu: The VCPU pointer
+> - * @run:  The kvm_run struct
+>   */
+> -int kvm_handle_sys_reg(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_sys_reg(struct kvm_vcpu *vcpu)
+>  {
+>  	struct sys_reg_params params;
+>  	unsigned long esr = kvm_vcpu_get_hsr(vcpu);
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index f5390ac2165b..dbeb20804a75 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  		return ret;
+>  
+>  	if (run->exit_reason == KVM_EXIT_MMIO) {
+> -		ret = kvm_handle_mmio_return(vcpu, run);
+> +		ret = kvm_handle_mmio_return(vcpu);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -811,11 +811,11 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  		trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu), *vcpu_pc(vcpu));
+>  
+>  		/* Exit types that need handling before we can be preempted */
+> -		handle_exit_early(vcpu, run, ret);
+> +		handle_exit_early(vcpu, ret);
+>  
+>  		preempt_enable();
+>  
+> -		ret = handle_exit(vcpu, run, ret);
+> +		ret = handle_exit(vcpu, ret);
+>  	}
+>  
+>  	/* Tell userspace about in-kernel device output levels */
+> diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
+> index aedfcff99ac5..41ef5c5dbc62 100644
+> --- a/virt/kvm/arm/mmio.c
+> +++ b/virt/kvm/arm/mmio.c
+> @@ -77,9 +77,8 @@ unsigned long kvm_mmio_read_buf(const void *buf, unsigned int len)
+>   *			     or in-kernel IO emulation
+>   *
+>   * @vcpu: The VCPU pointer
+> - * @run:  The VCPU run struct containing the mmio data
+>   */
+> -int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_mmio_return(struct kvm_vcpu *vcpu)
+>  {
+>  	unsigned long data;
+>  	unsigned int len;
+> @@ -92,6 +91,8 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  	vcpu->mmio_needed = 0;
+>  
+>  	if (!kvm_vcpu_dabt_iswrite(vcpu)) {
+> +		struct kvm_run *run = vcpu->run;
+> +
+>  		len = kvm_vcpu_dabt_get_as(vcpu);
+>  		data = kvm_mmio_read_buf(run->mmio.data, len);
+>  
+> @@ -119,9 +120,9 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  	return 0;
+>  }
+>  
+> -int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> -		 phys_addr_t fault_ipa)
+> +int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	unsigned long data;
+>  	unsigned long rt;
+>  	int ret;
+> @@ -188,7 +189,7 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
+>  		if (!is_write)
+>  			memcpy(run->mmio.data, data_buf, len);
+>  		vcpu->stat.mmio_exit_kernel++;
+> -		kvm_handle_mmio_return(vcpu, run);
+> +		kvm_handle_mmio_return(vcpu);
+>  		return 1;
+>  	}
+>  
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index e3b9ee268823..c5dc58226b5b 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1892,7 +1892,6 @@ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
+>  /**
+>   * kvm_handle_guest_abort - handles all 2nd stage aborts
+>   * @vcpu:	the VCPU pointer
+> - * @run:	the kvm_run structure
+>   *
+>   * Any abort that gets to the host is almost guaranteed to be caused by a
+>   * missing second stage translation table entry, which can mean that either the
+> @@ -1901,7 +1900,7 @@ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
+>   * space. The distinction is based on the IPA causing the fault and whether this
+>   * memory region has been registered as standard RAM by user space.
+>   */
+> -int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
+>  {
+>  	unsigned long fault_status;
+>  	phys_addr_t fault_ipa;
+> @@ -1980,7 +1979,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		 * of the page size.
+>  		 */
+>  		fault_ipa |= kvm_vcpu_get_hfar(vcpu) & ((1 << 12) - 1);
+> -		ret = io_mem_abort(vcpu, run, fault_ipa);
+> +		ret = io_mem_abort(vcpu, fault_ipa);
+>  		goto out_unlock;
+>  	}
+
+Haven't tried to compile this but the change itself looks obviously
+correct, so
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
