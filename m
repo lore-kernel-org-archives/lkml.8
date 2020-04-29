@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21972C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300D6C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5B7208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F5E2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ipE94I2o"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RhijCmsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgD2UR0 (ORCPT
+        id S1727832AbgD2UR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59654 "EHLO
+        Wed, 29 Apr 2020 16:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgD2URU (ORCPT
+        with ESMTP id S1727784AbgD2URY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:17:20 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F8FC03C1AE;
-        Wed, 29 Apr 2020 13:17:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u16so3468680wmc.5;
-        Wed, 29 Apr 2020 13:17:20 -0700 (PDT)
+        Wed, 29 Apr 2020 16:17:24 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2794C035493;
+        Wed, 29 Apr 2020 13:17:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so4152079wrr.0;
+        Wed, 29 Apr 2020 13:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GrVPUcTD2l9oJ0HPXx8l+PhUQ6rIzd+t7iX8qFgDDUE=;
-        b=ipE94I2oDHFBOK1wvyXv2dDCEJ+N4Iszv0sQleLMdWCyHveYpujY5johVU8kihYH9g
-         Q7Mvf7UdOXUqBLc+R2xZks9rvgRzyn3pL4zurFd2YBqz9lByXmau8QYKuhkD+14Fn8tp
-         Y/WJAgqkwxSN3441r2bv9I99b/EBoORAg9bRHbxaE4zOx9OifBcXW3OEx+0aIMVDnTnv
-         bN0KuMUidxZT4TORBaoScSFlGk40WcxUfYWruGgESQ3T+72m6rtw64WqNT6vDhx6ZWCv
-         rwIWOTKtw4QElEb19488qaxyVRxaKsCI08m+4+qpQcuztJdItKanL0/Ll2+F/12ze6so
-         EmjQ==
+        bh=w5E0z8+RH9QdjVjupYJsFCJKf6+6jAHD7ZKMzQZsttM=;
+        b=RhijCmsTq80bADpuTyOQl20JpLBT/78NnD3MQ7DpsaMPWt49HHCeU8RBMmIuPPR5zy
+         Hw3fdZKnjzibR+NRL4NITQYUiiAMHcNq5Pn6ffl1476/OEbevJ8vBnePxSLscT26c7Jj
+         fYsHf+Wh/RIriLkqg1f1Qbgxa7D7GU5SHAfFyj898dnXTau/MPe38UlF29Kf9ZLOZE7o
+         AEe8t4ybvQDwGbGZFxZ8cZrFlr8YXdFva7ppd3AnA9PWnFAEzKKsmt7aTb2//Qrcigwu
+         e4yZ6xEDPMmcF0LGm8cAZJqR0EVxgFknleEPPH8hXtLMnOQRTlOUEQEkHJCwnrUH9aVx
+         kJ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GrVPUcTD2l9oJ0HPXx8l+PhUQ6rIzd+t7iX8qFgDDUE=;
-        b=GtFuEpnwiA5Rqgqumt6kVi5Nic+A76H5mnVT2ljSquDahHY/pqiTx8qrQgCorEVPud
-         hUhYUqGI3a1OWf6DYwNhMFw5Mi3v8pche5yziy4EWrGzITTluOVLgXvTtDHBzdYLKOyy
-         cnz2BCZ4MOaJjoLx0YwNB20Oe8bqIDb+ZySBStXQirvTr5okIlIMG2V4s9E//b4Uo+lu
-         zmwsEpCsgQil2NzhBoo8pNOz5rI8wAkOXI740jT7cPKqLDztx4IiO6W0hhU/vK+zh9AX
-         C4StOenayZ12DGsulXAds/sPS4LJxKYIxs6kD65T5bHocqLd872IsdRXvuPdzGVvzN8X
-         WIIA==
-X-Gm-Message-State: AGi0Pub3wYIPq13FV3LbqQtuigy+ornUiC1cznf9YXJ01K0hzJ0kYqj3
-        hbS7LXoGxPwf/Gzcp+MHjok=
-X-Google-Smtp-Source: APiQypL4s/mUZ/ZYL0kEimx4vhbQ6WN12EIfKnlQOaoJRiTogeSbY1XH1KXmgf2OGXzZCm2fknw27w==
-X-Received: by 2002:a1c:6402:: with SMTP id y2mr5205603wmb.116.1588191438299;
-        Wed, 29 Apr 2020 13:17:18 -0700 (PDT)
+        bh=w5E0z8+RH9QdjVjupYJsFCJKf6+6jAHD7ZKMzQZsttM=;
+        b=I/hzNUaqSZNrltyo0HdE0++kKsUUEtbG5bVxuLGOK/DV5XpPXvqNMDL00q5cXVudx+
+         fmWqMmyvJ7j8LIOGIx+HByeYHVqQYN0sQA9jutm9IGAf7uC6JZybUQ+RA3zhtE9M0GHe
+         AYNGGulkGHBZkftoVSmK5sOSvDshoiHQUH8glm0pAxpX0lp0KMvyIFWQ+j+kUL/ydGUq
+         FI1lt4CaSDcy1u+oZPlliJxKsooNfwjmy/zCiEwraf007iJ1E5Wbks1pG0k4RaZskzch
+         244QaAVb/ePeSIs+5Bwpa9RutabrLcy7dy6WPAtuKL0i35/3jQwuEoTiVMhBfO1ThJlZ
+         l5kQ==
+X-Gm-Message-State: AGi0Puardy4uXzCIcPOotYZ6vOp4kktJxOCrHSrTL+ijgv8fvnFEHNW1
+        D663jO5MG3mXZ8TTbU522tc=
+X-Google-Smtp-Source: APiQypL6/HjmO2Y5BOTOvHuARmRoeixXyPJyoP3pLs3IZxUHoveUQQ3YxMsDKRuvm8meMzKYkXEN0g==
+X-Received: by 2002:adf:e486:: with SMTP id i6mr39356107wrm.377.1588191441584;
+        Wed, 29 Apr 2020 13:17:21 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q143sm9923623wme.31.2020.04.29.13.17.17
+        by smtp.googlemail.com with ESMTPSA id q143sm9923623wme.31.2020.04.29.13.17.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 13:17:17 -0700 (PDT)
+        Wed, 29 Apr 2020 13:17:20 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH RFC v2 05/11] net: stmmac: dwmac-meson8b: Add the PRG_ETH0_ADJ_* bits
-Date:   Wed, 29 Apr 2020 22:16:38 +0200
-Message-Id: <20200429201644.1144546-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH RFC v2 08/11] net: stmmac: dwmac-meson8b: add support for the RX delay configuration
+Date:   Wed, 29 Apr 2020 22:16:41 +0200
+Message-Id: <20200429201644.1144546-9-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
 References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
@@ -80,50 +80,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PRG_ETH0_ADJ_* are used for applying the RGMII RX delay. The public
-datasheets only have very limited description for these registers, but
-Jianxin Pan provided more detailed documentation from an (unnamed)
-Amlogic engineer. Add the PRG_ETH0_ADJ_* bits along with the improved
-description.
+Configure the PRG_ETH0_ADJ_* bits to enable or disable the RX delay
+based on the various RGMII PHY modes. For now the only supported RX
+delay settings are:
+- disabled, use for example for phy-mode "rgmii-id"
+- 0ns - this is treated identical to "disabled", used for example on
+  boards where the PHY provides 2ns TX delay and the PCB trace length
+  already adds 2ns RX delay
+- 2ns - for whenever the PHY cannot add the RX delay and the traces on
+  the PCB don't add any RX delay
 
-Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Disabling the RX delay (in case u-boot enables it, which is the case
+for example on Meson8b Odroid-C1) simply means that PRG_ETH0_ADJ_ENABLE,
+PRG_ETH0_ADJ_SETUP, PRG_ETH0_ADJ_DELAY and PRG_ETH0_ADJ_SKEW should be
+disabled (just disabling PRG_ETH0_ADJ_ENABLE may be enough, since that
+disables the whole re-timing logic - but I find it makes more sense to
+clear the other bits as well since they depend on that setting).
+
+u-boot on Odroid-C1 uses the following steps to enable a 2ns RX delay:
+- enabling enabling the timing adjustment clock
+- enabling the timing adjustment logic by setting PRG_ETH0_ADJ_ENABLE
+- setting the PRG_ETH0_ADJ_SETUP bit
+
+The documentation for the PRG_ETH0_ADJ_DELAY and PRG_ETH0_ADJ_SKEW
+registers indicates that we can even set different RX delays. However,
+I could not find out how this works exactly, so for now we only support
+a 2ns RX delay using the exact same way that Odroid-C1's u-boot does.
+
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 79 +++++++++++++------
+ 1 file changed, 56 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 1d7526ee09dd..70075628c58e 100644
+index d31f79c455de..73c84108d65b 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -48,6 +48,27 @@
- #define PRG_ETH0_INVERTED_RMII_CLK	BIT(11)
- #define PRG_ETH0_TX_AND_PHY_REF_CLK	BIT(12)
+@@ -85,6 +85,7 @@ struct meson8b_dwmac {
+ 	phy_interface_t			phy_mode;
+ 	struct clk			*rgmii_tx_clk;
+ 	u32				tx_delay_ns;
++	u32				rx_delay_ns;
+ 	struct clk			*timing_adj_clk;
+ };
  
-+/* Bypass (= 0, the signal from the GPIO input directly connects to the
-+ * internal sampling) or enable (= 1) the internal logic for RXEN and RXD[3:0]
-+ * timing tuning.
-+ */
-+#define PRG_ETH0_ADJ_ENABLE		BIT(13)
-+/* Controls whether the RXEN and RXD[3:0] signals should be aligned with the
-+ * input RX rising/falling edge and sent to the Ethernet internals. This sets
-+ * the automatically delay and skew automatically (internally).
-+ */
-+#define PRG_ETH0_ADJ_SETUP		BIT(14)
-+/* An internal counter based on the "timing-adjustment" clock. The counter is
-+ * cleared on both, the falling and rising edge of the RX_CLK. This selects the
-+ * delay (= the counter value) when to start sampling RXEN and RXD[3:0].
-+ */
-+#define PRG_ETH0_ADJ_DELAY		GENMASK(19, 15)
-+/* Adjusts the skew between each bit of RXEN and RXD[3:0]. If a signal has a
-+ * large input delay, the bit for that signal (RXEN = bit 0, RXD[3] = bit 1,
-+ * ...) can be configured to be 1 to compensate for a delay of about 1ns.
-+ */
-+#define PRG_ETH0_ADJ_SKEW		GENMASK(24, 20)
+@@ -284,25 +285,58 @@ static int meson8b_devm_clk_prepare_enable(struct meson8b_dwmac *dwmac,
+ 
+ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
+ {
++	u32 tx_dly_config, rx_dly_config, delay_config;
+ 	int ret;
+-	u8 tx_dly_val = 0;
 +
- #define MUX_CLK_NUM_PARENTS		2
++	tx_dly_config = FIELD_PREP(PRG_ETH0_TXDLY_MASK,
++				   dwmac->tx_delay_ns >> 1);
++
++	if (dwmac->rx_delay_ns == 2)
++		rx_dly_config = PRG_ETH0_ADJ_ENABLE | PRG_ETH0_ADJ_SETUP;
++	else
++		rx_dly_config = 0;
  
- struct meson8b_dwmac;
+ 	switch (dwmac->phy_mode) {
+ 	case PHY_INTERFACE_MODE_RGMII:
++		delay_config = tx_dly_config | rx_dly_config;
++		break;
+ 	case PHY_INTERFACE_MODE_RGMII_RXID:
+-		tx_dly_val = dwmac->tx_delay_ns >> 1;
+-		/* fall through */
+-
+-	case PHY_INTERFACE_MODE_RGMII_ID:
++		delay_config = tx_dly_config;
++		break;
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
++		delay_config = rx_dly_config;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RMII:
++		delay_config = 0;
++		break;
++	default:
++		dev_err(dwmac->dev, "unsupported phy-mode %s\n",
++			phy_modes(dwmac->phy_mode));
++		return -EINVAL;
++	};
++
++	if (rx_dly_config & PRG_ETH0_ADJ_ENABLE) {
++		/* The timing adjustment logic is driven by a separate clock */
++		ret = meson8b_devm_clk_prepare_enable(dwmac,
++						      dwmac->timing_adj_clk);
++		if (ret) {
++			dev_err(dwmac->dev,
++				"Failed to enable the timing-adjustment clock\n");
++			return ret;
++		}
++	}
++
++	meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK |
++				PRG_ETH0_ADJ_ENABLE | PRG_ETH0_ADJ_SETUP |
++				PRG_ETH0_ADJ_DELAY | PRG_ETH0_ADJ_SKEW,
++				delay_config);
++
++	if (phy_interface_mode_is_rgmii(dwmac->phy_mode)) {
+ 		/* only relevant for RMII mode -> disable in RGMII mode */
+ 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
+ 					PRG_ETH0_INVERTED_RMII_CLK, 0);
+ 
+-		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
+-					FIELD_PREP(PRG_ETH0_TXDLY_MASK,
+-						   tx_dly_val));
+-
+ 		/* Configure the 125MHz RGMII TX clock, the IP block changes
+ 		 * the output automatically (= without us having to configure
+ 		 * a register) based on the line-speed (125MHz for Gbit speeds,
+@@ -322,24 +356,11 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
+ 				"failed to enable the RGMII TX clock\n");
+ 			return ret;
+ 		}
+-		break;
+-
+-	case PHY_INTERFACE_MODE_RMII:
++	} else {
+ 		/* invert internal clk_rmii_i to generate 25/2.5 tx_rx_clk */
+ 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
+ 					PRG_ETH0_INVERTED_RMII_CLK,
+ 					PRG_ETH0_INVERTED_RMII_CLK);
+-
+-		/* TX clock delay cannot be configured in RMII mode */
+-		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
+-					0);
+-
+-		break;
+-
+-	default:
+-		dev_err(dwmac->dev, "unsupported phy-mode %s\n",
+-			phy_modes(dwmac->phy_mode));
+-		return -EINVAL;
+ 	}
+ 
+ 	/* enable TX_CLK and PHY_REF_CLK generator */
+@@ -394,6 +415,18 @@ static int meson8b_dwmac_probe(struct platform_device *pdev)
+ 				 &dwmac->tx_delay_ns))
+ 		dwmac->tx_delay_ns = 2;
+ 
++	/* use 0ns as fallback since this is what most boards actually use */
++	if (of_property_read_u32(pdev->dev.of_node, "amlogic,rx-delay-ns",
++				 &dwmac->rx_delay_ns))
++		dwmac->rx_delay_ns = 0;
++
++	if (dwmac->rx_delay_ns != 0 && dwmac->rx_delay_ns != 2) {
++		dev_err(&pdev->dev,
++			"The only allowed RX delays values are: 0ns, 2ns");
++		ret = -EINVAL;
++		goto err_remove_config_dt;
++	}
++
+ 	dwmac->timing_adj_clk = devm_clk_get_optional(dwmac->dev,
+ 						      "timing-adjustment");
+ 	if (IS_ERR(dwmac->timing_adj_clk)) {
 -- 
 2.26.2
 
