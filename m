@@ -2,123 +2,151 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F9C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF4CC83011
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B2B2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbT0/nGl"
+	by mail.kernel.org (Postfix) with ESMTP id 0426B2137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgD2WJ1 (ORCPT
+        id S1728266AbgD2WJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728021AbgD2WJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:09:25 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E791FC03C1AE;
-        Wed, 29 Apr 2020 15:09:24 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g14so3137869otg.10;
-        Wed, 29 Apr 2020 15:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8oqwTr93GONiIRzdNlX+cz19aB6zUtjVhJXAzceD5NI=;
-        b=mbT0/nGlQVzYagaookGp3cEt7WpHHYBvOZ0eg9smcL5aJUbT99dEyaKCU+lwAoXgpi
-         3XWCQanM4wWlKeU1lcb3ywJ046tsjFk0WKR2ctNr2fSHkzgR3Rchv3lQkOLxODyhgi7W
-         zdpySIQe8y3fRub9I9zVCXi362IIZXiEe+OR71DOkOHSpux73eGW9th2DUh4b7wqU9Fs
-         s/CdEqtDZSE0o+8lKUVxEA8+D84EcxNJbzeimiuaCUf3prxmEggk9gmRNSSVQDnbwyXs
-         WWzsP3h99/+yez6l4AhJBHTyVPBHNtzOtu6C/P+mI3kpV3VtW3NIxfcGr3FRNhvcrqlV
-         UdVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8oqwTr93GONiIRzdNlX+cz19aB6zUtjVhJXAzceD5NI=;
-        b=pIBCbyUQw2OWGo6wc0lNJtQi5JAqrhgtThExihwYKGV6RQhIJfgkJ7Rc5S0keXkimH
-         VaRhFOwiiCRh07HIgSD9zdZFEHAJsrVP2STm/treUV70iz3k12XUU81zo4wu51/K8fnx
-         CgrrTzCFybW6zQL+QInwv+0jRBcS3GAKkJcIlrAT0ncwnm6Xs61hdiwEV7drgctQA4cL
-         19wIKWPzamgvILy8wj2YpHH945SdveLo/3fITTyfXhNoc/AlOGtKU0uaTsUDk+0BegdW
-         VRCuJXWQTtf/xRxJ9aNgmlSy9Ub0pgiDLDNRZc/dX/+3P+piv4oO1pVjntyST57KvGxI
-         y2Lg==
-X-Gm-Message-State: AGi0PuZppdDoRbPUoiZMkuIurz0mom53ya3bwUd7C3dwADTHeHxCI9pu
-        DfaEeZBgKn4p1Lm4z/PSWBF2e9Km+1kdUbsIZeNRhk4j
-X-Google-Smtp-Source: APiQypKobiQJJqpqNRhFSNXeLIHjEz81s3WISBQksQoAKf9VSaGW8bghC6rpb+qGC5zWjSngm/v2nXCxiH0QCiwVw68=
-X-Received: by 2002:a9d:7390:: with SMTP id j16mr94578otk.43.1588198164341;
- Wed, 29 Apr 2020 15:09:24 -0700 (PDT)
+        Wed, 29 Apr 2020 18:09:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61308 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727961AbgD2WIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:08:51 -0400
+IronPort-SDR: XCmkXFXzVWUmkNJRRf0wBESQzsmYH44P0LBIa9ULutLMPljIZu1i7q1NDuy3b9mfwu+BkATcmu
+ vdU4oH76aK2w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:50 -0700
+IronPort-SDR: wHiZvt4QeK+1g8UwKX+7tHC1VH92phIoYfNMA55H6uojHwMG3eXRdnqDDBJ8Mm+gl53kjXn4eE
+ 8xXE0tBgskhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="276308915"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:49 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v10 18/26] mm: Update can_follow_write_pte() for shadow stack
+Date:   Wed, 29 Apr 2020 15:07:24 -0700
+Message-Id: <20200429220732.31602-19-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-References: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 29 Apr 2020 23:08:58 +0100
-Message-ID: <CA+V-a8s+rU8PV9nzERGSeiauxekP7MOgMXMOtx579OqnVmMHrA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] media: rcar-vin: Enable MEDIA_BUS_FMT_SRGGB8_1X8 format
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+Can_follow_write_pte() ensures a read-only page is COWed by checking the
+FOLL_COW flag, and uses pte_dirty() to validate the flag is still valid.
 
-On Wed, Apr 15, 2020 at 11:19 AM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi,
->
-> This patch series adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for vin
->
-> Cheers,
-> --Prabhakar
->
-> Changed for v4:
-> * patch 1/3 is new patch which adds a check for conversion from input to
->   output.
-> * patch 2/3 added a comment while setting VNIS_REG for RAW format as
->   suggested by Niklas
->
-> Changes for v3:
-> * Dropped patch 1/1 from v2 as this handled neatly by patches
->   https://patchwork.linuxtv.org/project/linux-media/list/?series=1974
-> * Included Ack from Niklas for patch 2/2
-> * Updated commit message for patch 1/1.
->
-> Changes for v2:
-> * Added support for matching fwnode against endpoints/nodes.
-> * Separated patch for rcar-vin and rcar-csi2.c which added
->   MEDIA_BUS_FMT_SRGGB8_1X8.
->
-> Lad Prabhakar (3):
->   media: rcar-vin: Invalidate pipeline if conversion is not possible on
->     input formats
->   media: rcar-vin: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
->   media: rcar-csi2: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
->
-Gentle ping.
+Like a writable data page, a shadow stack page is writable, and becomes
+read-only during copy-on-write, but it is always dirty.  Thus, in the
+can_follow_write_pte() check, it belongs to the writable page case and
+should be excluded from the read-only page pte_dirty() check.  Apply
+the same changes to can_follow_write_pmd().
 
-Cheers,
---Prabhakar
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+---
+v10:
+- Reverse name changes to can_follow_write_*().
 
->  drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
->  drivers/media/platform/rcar-vin/rcar-dma.c  | 21 +++++++++++++++++++--
->  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
->  3 files changed, 24 insertions(+), 2 deletions(-)
->
-> --
-> 2.20.1
->
+ mm/gup.c         | 8 +++++---
+ mm/huge_memory.c | 8 +++++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index 50681f0286de..c737782403ee 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -385,10 +385,12 @@ static int follow_pfn_pte(struct vm_area_struct *vma, unsigned long address,
+  * FOLL_FORCE can write to even unwritable pte's, but only
+  * after we've gone through a COW cycle and they are dirty.
+  */
+-static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
++static inline bool can_follow_write_pte(pte_t pte, unsigned int flags,
++					struct vm_area_struct *vma)
+ {
+ 	return pte_write(pte) ||
+-		((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte));
++		((flags & FOLL_FORCE) && (flags & FOLL_COW) &&
++		 !arch_shadow_stack_mapping(vma->vm_flags) && pte_dirty(pte));
+ }
+ 
+ static struct page *follow_page_pte(struct vm_area_struct *vma,
+@@ -431,7 +433,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 	}
+ 	if ((flags & FOLL_NUMA) && pte_protnone(pte))
+ 		goto no_page;
+-	if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags)) {
++	if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags, vma)) {
+ 		pte_unmap_unlock(ptep, ptl);
+ 		return NULL;
+ 	}
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 608746bb9d19..cb1b0cb4b4eb 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1520,10 +1520,12 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
+  * FOLL_FORCE can write to even unwritable pmd's, but only
+  * after we've gone through a COW cycle and they are dirty.
+  */
+-static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags)
++static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags,
++					struct vm_area_struct *vma)
+ {
+ 	return pmd_write(pmd) ||
+-	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pmd_dirty(pmd));
++	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) &&
++		!arch_shadow_stack_mapping(vma->vm_flags) && pmd_dirty(pmd));
+ }
+ 
+ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
+@@ -1536,7 +1538,7 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
+ 
+ 	assert_spin_locked(pmd_lockptr(mm, pmd));
+ 
+-	if (flags & FOLL_WRITE && !can_follow_write_pmd(*pmd, flags))
++	if (flags & FOLL_WRITE && !can_follow_write_pmd(*pmd, flags, vma))
+ 		goto out;
+ 
+ 	/* Avoid dumping huge zero page */
+-- 
+2.21.0
+
