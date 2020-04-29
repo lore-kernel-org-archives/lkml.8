@@ -2,155 +2,160 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52859C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF29C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3C620757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C1520757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWlYr3vt"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="bMDmpuLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgD2RkV (ORCPT
+        id S1726955AbgD2Rkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2RkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:40:20 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B828C03C1AE
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:40:19 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id p7so1683734ybo.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 10:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ybBditkV+/AGKhPyVVVgpY9CdlSiEk3WAof8CKaEm10=;
-        b=dWlYr3vtUgKv6jBm/HIuLSNdLoGremE3/WGCDAHx1G5kddDrtBwS87GECWppJgIdVR
-         l+UXGKRFDrzFu4pLdO8TbSbIvcD0ICaz7VMWJPvjuqV1OovJ+seCakxV2ZZ255VhwIoX
-         QJ2yaG7Qw2+q6Ki/Fn/5Ng0teXONSX4ESXtrYVejET2siqnn4R/VJ2+MtA2rF/JvYs9E
-         ykvc48AzGmFx7uDicaWyJEWR3BZoMY31N8m+qpzDZaLorVDRaVcPUVx6IyauAcQi4N4A
-         itlfS3lRm/tqS8dyZe9XFbnJViUMvayi2iBLA8ZB694B6O/O9cstgmrk+CoAaoS/5fxC
-         eeMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ybBditkV+/AGKhPyVVVgpY9CdlSiEk3WAof8CKaEm10=;
-        b=oq4BV5cX64MU86/E3CX337kKuWBFDMXyAnvNndSdJeZWhq/q1TFzc1UCF0AjjIqMMg
-         YG25LlFKmnXxcljhOTuJNgXBfMRjMDqFSj76pGUPgy4u1J+j84XWfdyHDcoLJnk3lqyp
-         Wb/KYxVE49FK4mckADTpJyt2ooW3Vxh0d2jqObyE1CrlAzxg5iXJHMQaTcJTTs69Frzw
-         uBIMDwZf+2mvXtMMJvAXNmr1rpvkDOctlHYfIyVFa+tkOGlgwrb8yKvaUVbc898kRuj/
-         uVqrqwb0mn1sZu8JQVToWgXcYbjrBE3F7J4KZPJLddK7RN80VVBcpk738K5MQVuOZJ9J
-         92bQ==
-X-Gm-Message-State: AGi0PuYp+rdw37Pr+0tMvllT7OAqoD+LJeSOSc2eO29SULI+6y8NEcH4
-        4or5TM4fW11O6HHgaigd4PcBVyCiej/VPQMT++cbow==
-X-Google-Smtp-Source: APiQypKASn4PElNIyJDFDtW/vwaukbvSHYzKjw3SEO5GzYl9TBhuG0RRhCk3VtrEa98V+6GxmgK4STV1CP7055/XssE=
-X-Received: by 2002:a25:3d86:: with SMTP id k128mr57128007yba.403.1588182018093;
- Wed, 29 Apr 2020 10:40:18 -0700 (PDT)
+        Wed, 29 Apr 2020 13:40:31 -0400
+Received: from mout.web.de ([212.227.17.12]:49025 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2Rka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:40:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588182023;
+        bh=8GJNRkN8kw1J3EYxnEcynY7rI245QeKgjvw+lUddvI8=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
+        b=bMDmpuLGDHUFyej0Nx5ElJ+a3O+uZ8R7dOBw80g+9Kukr7dC7knq+td5I8ayfMeEC
+         lab1OO6Gl155CV3lAEcczrqybinU4GCqlTtur7zbpTdNCcYk41YMRh1t/1QJ1yfkz8
+         0jSajBZGX1MoV9TI++2I2FD1FBd6RGrxcHSB4BD4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.72.72]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHXxg-1jSjhT10P6-003MPI; Wed, 29
+ Apr 2020 19:40:23 +0200
+Subject: Re: [PATCH] checkpatch: add support to check 'Fixes:' tag format
+To:     Wang YanQing <udknight@gmail.com>, Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org
+References: <20200429163645.GA13810@udknight>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+Message-ID: <4112ab7e-1f06-d880-e471-084c78bc84d4@web.de>
+Date:   Wed, 29 Apr 2020 19:40:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200320182347.87675-1-irogers@google.com>
-In-Reply-To: <20200320182347.87675-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 29 Apr 2020 10:40:06 -0700
-Message-ID: <CAP-5=fVM4bDJ3bTjvEfBi5oQnaev=9yZN+NwS9Rp2HoLsR0Auw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf mem2node: avoid double free related to realloc
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429163645.GA13810@udknight>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0vthBJFAISaa5ToUbEHvTuV0EqpY1TbM+FuyPwMoMQFU7NIgCxa
+ YyEhtmO9sdGsdyZyph92NlvqNCwAp/INQnKz4ax+0R7XV6iLOQEpkw9tr87LouVLEloH81O
+ ScbAWX4Dg5EiLJVbI0xbKLrIRy4ph0YREDTCE6sE2iYND3zd9REILp6m2kn1Hu53BhaS20Z
+ o5fsFnotvlBVxYuOij2LQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YvA1moCBgxU=:jdEbba/RL+iiimv9e92OII
+ yTEd8R0c8o53QLWk8UBig0F5IHnGRnafACKCBeqNH2izBxyfWzoemOmOyWeEaaz9O/Ro0Bipg
+ 9vu5jKuEouLoux8sZzLUnt2fLwtw77+egr3PGsI4SNWEv6VboonwFLqhWaZfOIL5CfSkkArLP
+ l8W0r4CuWi+5G55pY+Xf1BJPNrsXIMSmysXY+npyinW90aLUMUkU1ecayr3VqTEHn/AJNgwaM
+ 927aCh4PZ5/a7pvrhA3OLhgf/0NFsqTmpXNHFYJ8DbRI+1kWemU3WOXcQUu6UQ/6b5/1gD2ax
+ iQ25iNErCxyCutb9Rqk+PxpyAKuBNpOgMBDwSuY5WnqAurL2A90z/SxBV6Vpxag/gjtVySFoN
+ ni5uBRwruvstzrs0aul8glpr3zrYPlgFbPe1+XSWAOan3J/YF9wUmYWZuOj8a0TXxBVheAFd7
+ YAo5tmfBEaor5Lk5lqn0p4TTxOyMkfL7JpfWWUl5Y+hAQWVFBZDBmcSXQhX1dCS4mTtvaqloT
+ Cc4pflm27X4QovI+epbqGOj3ZjBcL0kSeTLuELMJ0XmDFakoqbN+5dPyQbtkSFwuIqNkuluZB
+ QUoZzIWxwvTseNPzZYGdRRznoU6UtGZ8nvUObgP+sIJH3/Njqa7l55kltl2N6bteW2dL8N3Ll
+ RmZ3VjsJDX1q2K/OjkoAOCz4wKpWnSz8TprnJouC8Jpej9F/WBq+grNs7Y4GE7ONPXDIji4WF
+ /0a/LZLKUmAfnWhlW/rb0Ssb1laEysOc65H/pn0v8gRq+V+vFQR/DpoPqAzCjUFEB8i4RZF8N
+ uv6c/varr4XeHSxDL21KMIrnRoqGTrxBoxmC7nzZhxJDkhJugOcd9/g3mZDzrHrCkBZ+vuuuE
+ 0kxSQZmGvmPhH4lY1wGt25+OvyPSv803SFxYcITMSbrqoma8Yg0iLWdaimlLt66SKhd//cQe5
+ HfCbcz60twSz+7qasQQeNztr5jEmd5aWVgb6YIxF2u7KVIO4h8iq8pRHKc4BRDFqMgSfYjGuD
+ ejehcVMi0/c1UbAo+I+K52uTqqRRdCvv1j0fHUyo9/CbVOmPOnQf0voIYuyHTnWaakhVyKQ5G
+ Hl4Yzb6l/CoNvnyn4ELg+iupU0lnGY0OsKLK9xGqtJsPupUyasRI5xHrRE7wl16i2SYcKU34T
+ mHsC0IS14lPY2e9W1x/+Q33JiFelSU+6BjIQlVfabjMNlHumWKjvdyvdLuzT5ywdSjWqEmm4k
+ ZuFmlTiHl95nYLuY6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping. This is missing an Acked-by:
-v2 addressed Jiri's review comments:
-https://lore.kernel.org/lkml/20200315093013.GC492969@krava/
+> =E2=80=9C...
+> Do not split the tag across multiple
+> lines, tags are exempt from the "wrap at 75 columns" rule in order to si=
+mplify
+> parsing scripts
+> ...=E2=80=9D
 
-Thanks,
-Ian
+Why do you not like the reformatting of the quotation so far
+(if such change descriptions should cope also with specific
+Unicode characters)?
+
+=E2=80=9C=E2=80=A6
+Do not split the tag across multiple lines, tags are exempt from
+the "wrap at 75 columns" rule in order to simplify parsing scripts.
+=E2=80=A6=E2=80=9D
 
 
-On Fri, Mar 20, 2020 at 11:23 AM Ian Rogers <irogers@google.com> wrote:
->
-> Realloc of size zero is a free not an error, avoid this causing a double
-> free. Caught by clang's address sanitizer:
->
-> ==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
->     #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
->     #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
->     #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
->     #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
->     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
->     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
->     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
->     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
->     #8 0x564965942e41 in main tools/perf/perf.c:538:3
->
-> 0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
-> freed by thread T0 here:
->     #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
->     #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
->     #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
->     #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
->     #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
->     #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
->     #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
->     #7 0x564965942e41 in main tools/perf/perf.c:538:3
->
-> previously allocated by thread T0 here:
->     #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
->     #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
->     #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
->     #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
->     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
->     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
->     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
->     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
->     #8 0x564965942e41 in main tools/perf/perf.c:538:3
->
-> v2: add a WARN_ON_ONCE when the free condition arises.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/mem2node.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-> index 797d86a1ab09..c84f5841c7ab 100644
-> --- a/tools/perf/util/mem2node.c
-> +++ b/tools/perf/util/mem2node.c
-> @@ -1,5 +1,6 @@
->  #include <errno.h>
->  #include <inttypes.h>
-> +#include <asm/bug.h>
->  #include <linux/bitmap.h>
->  #include <linux/kernel.h>
->  #include <linux/zalloc.h>
-> @@ -95,7 +96,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
->
->         /* Cut unused entries, due to merging. */
->         tmp_entries = realloc(entries, sizeof(*entries) * j);
-> -       if (tmp_entries)
-> +       if (tmp_entries || WARN_ON_ONCE(j == 0))
->                 entries = tmp_entries;
->
->         for (i = 0; i < j; i++) {
-> --
-> 2.25.1.696.g5e7596f4ac-goog
->
+
+> And there is no sanity check for 'Fixes:' tag format in checkpatch the s=
+ame
+> as GIT_COMMIT_ID for git commit description, so let's expand the GIT_COM=
+MIT_ID
+> to add 'Fixes:' tag format check support.
+
+I have got the impression that this wording might need another bit
+of fine-tuning.
+
+
+> +				      "Please use git commit description style '$prefix <12+ chars =
+of sha1> (\"<$title>\")' - ie: '${init_char}" . substr($prefix, 1) . " $id=
+ (\"$description\")'\n" . $herecurr);
+
+I imagine that the support for different quotation characters
+can become helpful, can't it?
+
+Regards,
+Markus
