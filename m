@@ -2,112 +2,218 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D380C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD8FC83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDB620BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A0C20BED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588195581;
-	bh=MaCkXnxZeesUHYpyP7Lu3SfMr1AsQhB6Xpct+XkQlHs=;
+	s=default; t=1588195587;
+	bh=F7uD432SGEUbxp+6xK1GCD9A4BQJFB+hqOVWdvvvl60=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MaaA0LdOE+0RPwziuEWebhdfFKIVHj4XcGqbOmK92srcyS3dfhR5GXm5PXNMzf15p
-	 LFRZ/Xee+RF7lEBhz/Ya4xWFP4XYQJH2Oktn6H9uqudG8JE2nWxZnO1jslyki2qvso
-	 XNoEQroBcTm+lWpCjnvTHVejfCRKyczZ7BsRp/FI=
+	b=PfevZ4FTJfEi0H42pFlf4AVryHgMGNf96sszAQGYbBmjGPib/GVabrRbQNsXRP1UB
+	 te743Tkx/kjBst2o1fEMogl/F8YCPP+A6QFHkVYVW+ZgyPpA3DVObuVyrZkvegnYlw
+	 LoCXFOuMY3AC5auOlvHAHDGvzotH437JyGq+zbA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgD2V0U (ORCPT
+        id S1727101AbgD2V01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:26:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbgD2V0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:26:20 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308092073E;
-        Wed, 29 Apr 2020 21:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588195579;
-        bh=MaCkXnxZeesUHYpyP7Lu3SfMr1AsQhB6Xpct+XkQlHs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wg6NBLr2LtkWbzxJYrDsfKqukVBwgLUfEJKVdEL0kjfpwdZ+k4QFReJsRr4NSLlOw
-         nUQQq0i8zZ4EMboEDkYuWrzMT30K1TAanS76Bu+dqqte5yH4qxZqvKzwFeP7TN13BG
-         3x6WHb1IJb6kCS3Nlc97pghn74qI1UnoR9H8TleE=
-Date:   Wed, 29 Apr 2020 22:26:15 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        mark.rutland@arm.com, maz@kernel.org, suzuki.poulose@arm.com,
-        James Morse <james.morse@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 00/16] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1,
- ID_MMFR5 and other changes
-Message-ID: <20200429212614.GD8604@willie-the-truck>
-References: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
- <6749304e-8a4d-f4b9-eb40-91f0dd13166e@arm.com>
+        Wed, 29 Apr 2020 17:26:27 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:33390 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgD2V00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 17:26:26 -0400
+Received: by mail-oo1-f67.google.com with SMTP id b17so780192ooa.0;
+        Wed, 29 Apr 2020 14:26:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jZdQqz//+UegbVE8A4Ss6PQqpaUbK0Xf8KqifQRUIYA=;
+        b=arYRatlCEstABDNFzLh8VMvD9y1yX5+F3CdDBUfEOhpe8ZuaEq7GzZFDnYgb2oZaA2
+         8aHH54B4ehd9Rg0ydb4ypfN2HfT2gvi5viMXbeNbWc9x9lwcRl25Mi9iKpwEBDRwt69I
+         ChOI7C6SXy3IxE5mIJd6KxFEzGHgtW7OI9xAFgfX4FKZy1HXwKH0MU9dCKFK/2+GIAVh
+         75QsVL1BA+WKzYexRz3Ou3v75D+sFXoCjEPXgZVo3S5EOKXMVRMKDFnCPfem6QsDwm5H
+         fBkBzOZ/ihoPaPiGABHMM0i5immLlde6I4JE9fwat+XGWPFeyhLKG3Rw6E0wShlBasf7
+         zh6g==
+X-Gm-Message-State: AGi0PuYaITMRbtV76AQGeVZPy6SHt9lB9/lxS6SNqNrCjVN469CHcSzP
+        bNAI6Ho8ggN6Iuru2vqMRQ==
+X-Google-Smtp-Source: APiQypKwsnnuEjrK//ENA1olM+ndEcdtQnnyaYhWVWsNx0ix/MtVtneEX6PtoFrzg2X8/em70PIiow==
+X-Received: by 2002:a4a:621d:: with SMTP id x29mr59980ooc.92.1588195585576;
+        Wed, 29 Apr 2020 14:26:25 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k84sm695519oib.10.2020.04.29.14.26.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 14:26:24 -0700 (PDT)
+Received: (nullmailer pid 26020 invoked by uid 1000);
+        Wed, 29 Apr 2020 21:26:22 -0000
+Date:   Wed, 29 Apr 2020 16:26:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Message-ID: <20200429212622.GA23326@bogus>
+References: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6749304e-8a4d-f4b9-eb40-91f0dd13166e@arm.com>
+In-Reply-To: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+On Fri, Apr 17, 2020 at 08:41:27AM +0800, Anson Huang wrote:
+> Convert the i.MX6Q clock binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V2:
+> 	- Force 'interrupts' minItem/maxItem to 2.
 
-On Wed, Apr 29, 2020 at 03:07:15PM +0530, Anshuman Khandual wrote:
-> On 04/14/2020 03:18 PM, Anshuman Khandual wrote:
-> > This series is primarily motivated from an adhoc list from Mark Rutland
-> > during our previous ID_ISAR6 discussion [1]. The current proposal also
-> > accommodates some more suggestions from Will and Suzuki.
-> > 
-> > This series adds missing 32 bit system registers (ID_PFR2, ID_DFR1 and
-> > ID_MMFR5), adds missing features bits on all existing system registers
-> > (32 and 64 bit) and some other miscellaneous changes. While here it also
-> > includes a patch which does macro replacement for various open bits shift
-> > encodings for various CPU ID registers. There is a slight re-order of the
-> > patches here as compared to the previous version (V1).
-> > 
-> > This series is based on v5.7-rc1. All feature bits enabled here can be
-> > referred in ARM DDI 0487F.a specification. Though I have tried to select
-> > appropriate values for each new feature being added here, there might be
-> > some inconsistencies (or mistakes). In which case, please do let me know
-> > if anything needs to change. Thank you.
-> > 
-> > [1] https://patchwork.kernel.org/patch/11287805/
-> > 
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com> 
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Cc: kvmarm@lists.cs.columbia.edu
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > 
-> > Changes in V2:
-> > 
-> > - Added Suggested-by tag from Mark Rutland for all changes he had proposed
-> > - Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
-> > - Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
-> > - Added ID_DFR1 and ID_MMFR5 system register definitions per Will
-> > - Added remaining features bits for relevant 64 bit system registers per Will
-> > - Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
-> > - Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
-> > - Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
-> > - Changed some commit messages
->
-> Just a gentle ping. I am wondering if you had a chance to glance
-> through this updated series.
+Not necessary. maxItems is sufficient.
 
-Please can you resend based on for-next/cpufeature?
+> ---
+>  .../devicetree/bindings/clock/imx6q-clock.txt      | 41 -------------
+>  .../devicetree/bindings/clock/imx6q-clock.yaml     | 67 ++++++++++++++++++++++
+>  2 files changed, 67 insertions(+), 41 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> deleted file mode 100644
+> index 13d36d4..0000000
+> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -* Clock bindings for Freescale i.MX6 Quad
+> -
+> -Required properties:
+> -- compatible: Should be "fsl,imx6q-ccm"
+> -- reg: Address and length of the register set
+> -- interrupts: Should contain CCM interrupt
+> -- #clock-cells: Should be <1>
+> -
+> -Optional properties:
+> -- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
+> -  on power off.
+> -  Use this property if the SoC should be powered off by external power
+> -  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> -  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> -  be using "syscon-poweroff" driver instead.
+> -- clocks: list of clock specifiers, must contain an entry for each entry
+> -          in clock-names
+> -- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
+> -
+> -The clock consumer should specify the desired clock by having the clock
+> -ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+> -for the full list of i.MX6 Quad and DualLite clock IDs.
+> -
+> -Examples:
+> -
+> -#include <dt-bindings/clock/imx6qdl-clock.h>
+> -
+> -clks: ccm@20c4000 {
+> -	compatible = "fsl,imx6q-ccm";
+> -	reg = <0x020c4000 0x4000>;
+> -	interrupts = <0 87 0x04 0 88 0x04>;
+> -	#clock-cells = <1>;
+> -};
+> -
+> -uart1: serial@2020000 {
+> -	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+> -	reg = <0x02020000 0x4000>;
+> -	interrupts = <0 26 0x04>;
+> -	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
+> -	clock-names = "ipg", "per";
+> -};
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> new file mode 100644
+> index 0000000..0daf789
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock bindings for Freescale i.MX6 Quad
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx6q-ccm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: 24m osc
+> +      - description: 32k osc
+> +      - description: ckih1 clock input
+> +      - description: anaclk1 clock input
+> +      - description: anaclk2 clock input
+> +
+> +  clock-names:
+> +    items:
+> +      - const: osc
+> +      - const: ckil
+> +      - const: ckih1
+> +      - const: anaclk1
+> +      - const: anaclk2
+> +
+> +  fsl,pmic-stby-poweroff:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: |
+> +      Use this property if the SoC should be powered off by external power
+> +      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> +      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> +      be using "syscon-poweroff" driver instead.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Clock Control Module node:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    clks: clock-controller@20c4000 {
 
-Will
+Drop the label.
+
+> +        compatible = "fsl,imx6q-ccm";
+> +        reg = <0x020c4000 0x4000>;
+> +        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> +        #clock-cells = <1>;
+> +    };
+> -- 
+> 2.7.4
+> 
