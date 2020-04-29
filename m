@@ -2,103 +2,238 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9A4C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72329C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5776820757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539ED21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgD2Rmu (ORCPT
+        id S1727931AbgD2RnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:42:50 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:40896 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgD2Rmu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:42:50 -0400
-Received: from [192.168.42.210] ([93.22.38.239])
-        by mwinf5d58 with ME
-        id Yhig2200R59bE5H03hig2Q; Wed, 29 Apr 2020 19:42:48 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 29 Apr 2020 19:42:48 +0200
-X-ME-IP: 93.22.38.239
-Subject: Re: [PATCH] video: fbdev: pxa3xx_gcu: Fix some resource leak in an
- error handling path in 'pxa3xx_gcu_probe()'
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
-        mpe@ellerman.id.au, zhenzhong.duan@gmail.com, arnd@arndb.de,
-        tglx@linutronix.de, eric.y.miao@gmail.com, daniel@caiaq.de,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200429043438.96212-1-christophe.jaillet@wanadoo.fr>
- <20200429122538.GO2014@kadam>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <0db91149-fa85-6ec3-1787-d5effd41a1b9@wanadoo.fr>
-Date:   Wed, 29 Apr 2020 19:42:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 13:43:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27330 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2RnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:43:01 -0400
+IronPort-SDR: 3W92olAfU4AOO6sZFOrLvY3vsWYD8V4i4INxk6YetKwA/DbF4+i8kVdFx+eCKvwx/9+9zmofTQ
+ Mwcn0hRmBsLg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 10:43:00 -0700
+IronPort-SDR: RIod/jxEWRog2s7yUwV64h2/mIgYkUV0DztDDgj+sBqj0STUSNqiT8KbcUijE+JqjirkWGEqEY
+ 08AkNIDEs2lw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="258031160"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga003.jf.intel.com with ESMTP; 29 Apr 2020 10:42:59 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v3 05/10] x86/fpu/xstate: Define new functions for clearing fpregs and xstates
+Date:   Wed, 29 Apr 2020 10:42:11 -0700
+Message-Id: <20200429174211.29713-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200328164307.17497-6-yu-cheng.yu@intel.com>
+References: <20200328164307.17497-6-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429122538.GO2014@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 29/04/2020 à 14:25, Dan Carpenter a écrit :
-> On Wed, Apr 29, 2020 at 06:34:38AM +0200, Christophe JAILLET wrote:
->> If an error occurs in the loop where we call 'pxa3xx_gcu_add_buffer()',
->> any resource already allocated should be freed.
->>
->> In order to fix it, add a call to 'pxa3xx_gcu_free_buffers()' in the error
->> handling path, as already done in the remove function.
->>
->> Fixes: 364dbdf3b6c3 ("video: add driver for PXA3xx 2D graphics accelerator")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->>   drivers/video/fbdev/pxa3xx-gcu.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
->> index 4279e13a3b58..68d9c7a681d4 100644
->> --- a/drivers/video/fbdev/pxa3xx-gcu.c
->> +++ b/drivers/video/fbdev/pxa3xx-gcu.c
->> @@ -675,6 +675,7 @@ static int pxa3xx_gcu_probe(struct platform_device *pdev)
->>   
->>   err_disable_clk:
->>   	clk_disable_unprepare(priv->clk);
->> +	pxa3xx_gcu_free_buffers(dev, priv);
-> The error handling in this function makes no sense and is buggy.  It
-> should be that it unwinds in the reverse order from the allocation.  The
-> goto should be "goto free_most_recently_allocated_resource;".  Since the
-> unwind is done in the wrong order it causes a couple bugs.
->
-> These buffers are the last thing which we allocated so they should be
-> the first thing which we free.  In this case, calling
-> pxa3xx_gcu_free_buffers() before the buffers are allocated is confusing
-> but harmless.  The clk_disable_unprepare() is done on some paths where
-> the clock was not enabled and that will trigger a WARN() so that's a
-> bug.  Syzcaller will complain and if you have reboot on WARN then it's
-> annoying.
->
-> The second bug is that we don't deregister the misc device or release
-> the DMA memory on failure when we allocate the buffers in the loop.
->
-> regards,
-> dan carpenter
->
-Agreed. I've been a little too fast on this one.
-I'll update it.
+From: Fenghua Yu <fenghua.yu@intel.com>
 
-Thx for the review.
+Currently, fpu__clear() clears all fpregs and xstates.  Once XSAVES
+supervisor states are introduced, supervisor settings (e.g. CET xstates)
+must remain active for signals; It is necessary to have separate functions:
 
-CJ
+- Create fpu__clear_user_states(): clear only user settings for signals;
+- Create fpu__clear_all(): clear both user and supervisor settings in
+   flush_thread().
 
+Also modify copy_init_fpstate_to_fpregs() to take a mask from above two
+functions.
+
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+v3:
+- Put common code into a static function fpu__clear(), with a parameter
+  user_only.
+
+v2:
+- Fixed an issue where fpu__clear_user_states() drops supervisor xstates.
+- Revise commit log.
+
+ arch/x86/include/asm/fpu/internal.h |  3 +-
+ arch/x86/kernel/fpu/core.c          | 49 +++++++++++++++++++----------
+ arch/x86/kernel/fpu/signal.c        |  4 +--
+ arch/x86/kernel/process.c           |  2 +-
+ arch/x86/kernel/signal.c            |  2 +-
+ 5 files changed, 39 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index ccb1bb32ad7d..a42fcb4b690d 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -31,7 +31,8 @@ extern void fpu__save(struct fpu *fpu);
+ extern int  fpu__restore_sig(void __user *buf, int ia32_frame);
+ extern void fpu__drop(struct fpu *fpu);
+ extern int  fpu__copy(struct task_struct *dst, struct task_struct *src);
+-extern void fpu__clear(struct fpu *fpu);
++extern void fpu__clear_user_states(struct fpu *fpu);
++extern void fpu__clear_all(struct fpu *fpu);
+ extern int  fpu__exception_code(struct fpu *fpu, int trap_nr);
+ extern int  dump_fpu(struct pt_regs *ptregs, struct user_i387_struct *fpstate);
+ 
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 12c70840980e..7fddd5d60443 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -294,12 +294,10 @@ void fpu__drop(struct fpu *fpu)
+  * Clear FPU registers by setting them up from
+  * the init fpstate:
+  */
+-static inline void copy_init_fpstate_to_fpregs(void)
++static inline void copy_init_fpstate_to_fpregs(u64 features_mask)
+ {
+-	fpregs_lock();
+-
+ 	if (use_xsave())
+-		copy_kernel_to_xregs(&init_fpstate.xsave, -1);
++		copy_kernel_to_xregs(&init_fpstate.xsave, features_mask);
+ 	else if (static_cpu_has(X86_FEATURE_FXSR))
+ 		copy_kernel_to_fxregs(&init_fpstate.fxsave);
+ 	else
+@@ -307,9 +305,6 @@ static inline void copy_init_fpstate_to_fpregs(void)
+ 
+ 	if (boot_cpu_has(X86_FEATURE_OSPKE))
+ 		copy_init_pkru_to_fpregs();
+-
+-	fpregs_mark_activate();
+-	fpregs_unlock();
+ }
+ 
+ /*
+@@ -318,18 +313,40 @@ static inline void copy_init_fpstate_to_fpregs(void)
+  * Called by sys_execve(), by the signal handler code and by various
+  * error paths.
+  */
+-void fpu__clear(struct fpu *fpu)
++static void fpu__clear(struct fpu *fpu, int user_only)
+ {
+-	WARN_ON_FPU(fpu != &current->thread.fpu); /* Almost certainly an anomaly */
++	WARN_ON_FPU(fpu != &current->thread.fpu);
+ 
+-	fpu__drop(fpu);
++	if (!static_cpu_has(X86_FEATURE_FPU)) {
++		fpu__drop(fpu);
++		fpu__initialize(fpu);
++		return;
++	}
+ 
+-	/*
+-	 * Make sure fpstate is cleared and initialized.
+-	 */
+-	fpu__initialize(fpu);
+-	if (static_cpu_has(X86_FEATURE_FPU))
+-		copy_init_fpstate_to_fpregs();
++	fpregs_lock();
++
++	if (user_only) {
++		if (!fpregs_state_valid(fpu, smp_processor_id()) &&
++		    xfeatures_mask_supervisor())
++			copy_kernel_to_xregs(&fpu->state.xsave,
++					     xfeatures_mask_supervisor());
++		copy_init_fpstate_to_fpregs(xfeatures_mask_user());
++	} else {
++		copy_init_fpstate_to_fpregs(xfeatures_mask_all);
++	}
++
++	fpregs_mark_activate();
++	fpregs_unlock();
++}
++
++void fpu__clear_user_states(struct fpu *fpu)
++{
++	fpu__clear(fpu, 1);
++}
++
++void fpu__clear_all(struct fpu *fpu)
++{
++	fpu__clear(fpu, 0);
+ }
+ 
+ /*
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 3df0cfae535f..cd6eafba12da 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -289,7 +289,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			 IS_ENABLED(CONFIG_IA32_EMULATION));
+ 
+ 	if (!buf) {
+-		fpu__clear(fpu);
++		fpu__clear_user_states(fpu);
+ 		return 0;
+ 	}
+ 
+@@ -416,7 +416,7 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 
+ err_out:
+ 	if (ret)
+-		fpu__clear(fpu);
++		fpu__clear_user_states(fpu);
+ 	return ret;
+ }
+ 
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 9da70b279dad..de182b84723a 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -191,7 +191,7 @@ void flush_thread(void)
+ 	flush_ptrace_hw_breakpoint(tsk);
+ 	memset(tsk->thread.tls_array, 0, sizeof(tsk->thread.tls_array));
+ 
+-	fpu__clear(&tsk->thread.fpu);
++	fpu__clear_all(&tsk->thread.fpu);
+ }
+ 
+ void disable_TSC(void)
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 83b74fb38c8f..0052bbe5dfd4 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -732,7 +732,7 @@ handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+ 		/*
+ 		 * Ensure the signal handler starts with the new fpu state.
+ 		 */
+-		fpu__clear(fpu);
++		fpu__clear_user_states(fpu);
+ 	}
+ 	signal_setup_done(failed, ksig, stepping);
+ }
+-- 
+2.21.0
 
