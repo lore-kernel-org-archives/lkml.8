@@ -2,152 +2,236 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E52BC83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086F5C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAD8208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37A420757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:19:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Z/PwLy3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgD2WRF (ORCPT
+        id S1727089AbgD2WTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:17:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11796 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726935AbgD2WRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:17:05 -0400
-IronPort-SDR: 6kWa0COaKlQbNhBypua1gUE1rYiIoPdLnBDOu7djbv79x+uhHe8Hrs8Wv+2NRJ/iYj0M2VIlor
- 3sQRLqpyfCzg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:17:04 -0700
-IronPort-SDR: EGYnLfCVgjRdNT/fYGTKRk+d6V0IiVC/1awiI7IG5cNJU7V0Ldg9SIIizGpH0tjvPk5Gx5q7SB
- nRX3CPWIkgIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="432720256"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 29 Apr 2020 15:17:04 -0700
-Date:   Wed, 29 Apr 2020 15:23:06 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 3/4] iommu/vt-d: Add page request draining support
-Message-ID: <20200429152306.5be6fcdc@jacob-builder>
-In-Reply-To: <3dd69b64-fc2c-bcfe-dc5f-cbca2b8c351f@linux.intel.com>
-References: <20200422080611.15689-1-baolu.lu@linux.intel.com>
-        <20200422080611.15689-4-baolu.lu@linux.intel.com>
-        <20200428203644.3dcf13f2@jacob-builder>
-        <3dd69b64-fc2c-bcfe-dc5f-cbca2b8c351f@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 29 Apr 2020 18:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD2WS7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:18:59 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29877C03C1AE;
+        Wed, 29 Apr 2020 15:18:59 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CC72422F54;
+        Thu, 30 Apr 2020 00:18:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588198733;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OmNmiJrBqjSomX4a3GYQTKJyBa1w0mCqW3xG6X4r7JU=;
+        b=Z/PwLy3ofPJI0xZH8IT5HibD+o80mve3lOqDxmcoLl5fAWYxiphkS3L+FlMZ3hwjqkPVXe
+        FWyxmaG79Gwm3M+Y76olNlSWLCYjY+suQcs/NAmXlgNRFpGqjE3p9qgeG7IWOdSSjMV0EB
+        tuVu73gv8gmi36GFiF4+cMEP6WC8huQ=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Apr 2020 00:18:48 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+In-Reply-To: <20200423174543.17161-4-michael@walle.cc>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+Message-ID: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: CC72422F54
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[linux.intel.com,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,vger.kernel.org,lists.infradead.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 14:00:05 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+Hi Lee,
 
-> Hi Jacob,
-> 
-> On 2020/4/29 11:36, Jacob Pan wrote:
-> > On Wed, 22 Apr 2020 16:06:10 +0800
-> > Lu Baolu<baolu.lu@linux.intel.com>  wrote:
-> >   
-> >> When a PASID is stopped or terminated, there can be pending PRQs
-> >> (requests that haven't received responses) in remapping hardware.
-> >> This adds the interface to drain page requests and call it when a
-> >> PASID is terminated.
-> >>
-> >> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
-> >> Signed-off-by: Liu Yi L<yi.l.liu@intel.com>
-> >> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
-> >> ---
-> >>   drivers/iommu/intel-svm.c   | 103
-> >> ++++++++++++++++++++++++++++++++++-- include/linux/intel-iommu.h |
-> >> 4 ++ 2 files changed, 102 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> >> index 83dc4319f661..2534641ef707 100644
-> >> --- a/drivers/iommu/intel-svm.c
-> >> +++ b/drivers/iommu/intel-svm.c
-> >> @@ -23,6 +23,7 @@
-> >>   #include "intel-pasid.h"
-> >>   
-> >>   static irqreturn_t prq_event_thread(int irq, void *d);
-> >> +static void intel_svm_drain_prq(struct device *dev, int pasid);
-> >>   
-> >>   #define PRQ_ORDER 0
-> >>   
-> >> @@ -66,6 +67,8 @@ int intel_svm_enable_prq(struct intel_iommu
-> >> *iommu) dmar_writeq(iommu->reg + DMAR_PQT_REG, 0ULL);
-> >>   	dmar_writeq(iommu->reg + DMAR_PQA_REG,
-> >> virt_to_phys(iommu->prq) | PRQ_ORDER);
-> >> +	init_completion(&iommu->prq_complete);
-> >> +
-> >>   	return 0;
-> >>   }
-> >>   
-> >> @@ -208,6 +211,7 @@ static void intel_mm_release(struct
-> >> mmu_notifier *mn, struct mm_struct *mm) rcu_read_lock();
-> >>   	list_for_each_entry_rcu(sdev, &svm->devs, list) {
-> >>   		intel_pasid_tear_down_entry(svm->iommu,
-> >> sdev->dev, svm->pasid);
-> >> +		intel_svm_drain_prq(sdev->dev, svm->pasid);  
-> > mmu_notifier release is called in atomic context, drain_prq needs to
-> > wait for completion. I tested exit path when a process crashes. I
-> > got
-> > 
-> > [  +0.696214] BUG: sleeping function called from invalid context at
-> > kernel/sched/completion.c:101 [  +0.000068] in_atomic(): 1,
-> > irqs_disabled(): 0, non_block: 0, pid: 3235, name: dsatest
-> > [  +0.000046] INFO: lockdep is turned off. [  +0.000002] CPU: 1
-> > PID: 3235 Comm: dsatest Not tainted 5.7.0-rc1-z-svmtest+ #1637
-> > [  +0.000000] Hardware name: Intel Corporation Kabylake Client
-> > platform/Skylake Halo DDR4 RVP11, BIOS 04.1709050855 09/05/2017
-> > [  +0.000001] Call Trace: [  +0.000004]  dump_stack+0x68/0x9b
-> > [  +0.000003]  ___might_sleep+0x229/0x250
-> > [  +0.000003]  wait_for_completion_timeout+0x3c/0x110
-> > [  +0.000003]  intel_svm_drain_prq+0x12f/0x210
-> > [  +0.000003]  intel_mm_release+0x73/0x110
-> > [  +0.000003]  __mmu_notifier_release+0x94/0x220
-> > [  +0.000002]  ? do_munmap+0x10/0x10
-> > [  +0.000002]  ? prepare_ftrace_return+0x5c/0x80
-> > [  +0.000003]  exit_mmap+0x156/0x1a0
-> > [  +0.000002]  ? mmput+0x44/0x120
-> > [  +0.000003]  ? exit_mmap+0x5/0x1a0
-> > [  +0.000002]  ? ftrace_graph_caller+0xa0/0xa0
-> > [  +0.000001]  mmput+0x5e/0x120
-> > 
-> >   
-> 
-> Thanks a lot!
-> 
-> Actually, we can't drain page requests in this mm_notifier code path,
-> right? The assumptions of page request draining are that 1) the device
-> driver has drained DMA requests in the device end; 2) the pasid entry
-> has been marked as non-present. So we could only drain page requests
-> in the unbind path.
-> 
-> Thought?
-> 
-Right, we could save the drain here. unbind will come soon when mm
-exits. So even the in flight PRs come through, we could just respond
-with "Invalid Response" after mm exit starts. The current code already
-checks if the mm is exiting by mmget_not_zero.
+Am 2020-04-23 19:45, schrieb Michael Walle:
+> There might be multiple children with the device tree compatible, for
+> example if a MFD has multiple instances of the same function. In this
+> case only the first is matched and the other children get a wrong
+> of_node reference.
+> Add a new option to match also against the unit address of the child
+> node. Additonally, a new helper OF_MFD_CELL_REG is added.
 
-> Best regards,
-> baolu
 
-[Jacob Pan]
+Do you think this is feasible? I guess this is the biggest uncertainty
+for me at the moment in this patch series.
+
+-michael
+
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+>  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+>  2 files changed, 40 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index e735565969b3..4ecb376338f7 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, 
+> int id,
+>  	struct device_node *np = NULL;
+>  	int ret = -ENOMEM;
+>  	int platform_id;
+> +	u32 of_reg;
+>  	int r;
+> 
+>  	if (id == PLATFORM_DEVID_AUTO)
+> @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent, 
+> int id,
+> 
+>  	if (parent->of_node && cell->of_compatible) {
+>  		for_each_child_of_node(parent->of_node, np) {
+> -			if (of_device_is_compatible(np, cell->of_compatible)) {
+> -				if (!of_device_is_available(np)) {
+> -					/* Ignore disabled devices error free */
+> -					ret = 0;
+> -					goto fail_alias;
+> -				}
+> -				pdev->dev.of_node = np;
+> -				pdev->dev.fwnode = &np->fwnode;
+> -				break;
+> +			if (!of_device_is_compatible(np, cell->of_compatible))
+> +				continue;
+> +
+> +			/* also match the unit address if set */
+> +			if (cell->of_reg & MFD_OF_REG_VALID) {
+> +				if (of_property_read_u32(np, "reg", &of_reg))
+> +					continue;
+> +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
+> +					continue;
+>  			}
+> +
+> +			if (!of_device_is_available(np)) {
+> +				/* Ignore disabled devices error free */
+> +				ret = 0;
+> +				goto fail_alias;
+> +			}
+> +
+> +			pdev->dev.of_node = np;
+> +			pdev->dev.fwnode = &np->fwnode;
+> +			break;
+>  		}
+>  	}
+> 
+> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> index d01d1299e49d..c2c0ad6b14f3 100644
+> --- a/include/linux/mfd/core.h
+> +++ b/include/linux/mfd/core.h
+> @@ -13,8 +13,11 @@
+>  #include <linux/platform_device.h>
+> 
+>  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> +#define MFD_OF_REG_VALID	BIT(31)
+> +#define MFD_OF_REG_MASK		GENMASK(30, 0)
+> 
+> -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, 
+> _match)\
+> +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +		     _of_reg, _match)					\
+>  	{								\
+>  		.name = (_name),					\
+>  		.resources = (_res),					\
+> @@ -22,24 +25,32 @@
+>  		.platform_data = (_pdata),				\
+>  		.pdata_size = (_pdsize),				\
+>  		.of_compatible = (_compat),				\
+> +		.of_reg = (_of_reg),					\
+>  		.acpi_match = (_match),					\
+>  		.id = (_id),						\
+>  	}
+> 
+> +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +			_of_reg)					\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
+> +
+>  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
+> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +		     0, NULL)						\
+> 
+>  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
+> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
+> +		     _match)						\
+> 
+>  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
+> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
+> 
+>  #define MFD_CELL_RES(_name, _res)					\
+> -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
+> +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
+> 
+>  #define MFD_CELL_NAME(_name)						\
+> -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
+> +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
+> 
+>  struct irq_domain;
+>  struct property_entry;
+> @@ -78,6 +89,9 @@ struct mfd_cell {
+>  	 */
+>  	const char		*of_compatible;
+> 
+> +	/* matching the reg property if set */
+> +	unsigned int		of_reg;
+> +
+>  	/* Matches ACPI */
+>  	const struct mfd_cell_acpi_match	*acpi_match;
