@@ -2,101 +2,114 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A7C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE80EC8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068D021D82
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988EA206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:15:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fpYAIUKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgD2TPL (ORCPT
+        id S1727089AbgD2TPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49858 "EHLO
+        Wed, 29 Apr 2020 15:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726519AbgD2TPK (ORCPT
+        by vger.kernel.org with ESMTP id S1726910AbgD2TPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:15:10 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95163C03C1AE;
-        Wed, 29 Apr 2020 12:15:10 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B96F31210A3E3;
-        Wed, 29 Apr 2020 12:15:09 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 12:15:08 -0700 (PDT)
-Message-Id: <20200429.121508.82832560496943961.davem@davemloft.net>
-To:     yanaijie@huawei.com
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        linux@armlinux.org.uk, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: remove duplicate assignment of
- struct members
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200429141001.8361-1-yanaijie@huawei.com>
-References: <20200429141001.8361-1-yanaijie@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 29 Apr 2020 12:15:10 -0700 (PDT)
+        Wed, 29 Apr 2020 15:15:19 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDC6DC035493
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:15:18 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id h124so3191351qke.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L70Lu4UkPRTEDG8gb+/xmKCe8SzfFhoJnEpRxIIeFqA=;
+        b=fpYAIUKFWTtRbiyM00izT/fFtpEEUzzgAYX5RWTjg6k+9hsakDXW2+39f1p9s/drqy
+         cNHLDJHD57SLl6tsqIW7ArxiFPoeu/a0Ra9+ALQObhnkHGNBwnE64zPrlMbwAr5X4zDj
+         qgJSr0Tne+KAeZ6wNQhflV7sQ5VmHGcUwqKVt+nZmYRCloY95EPGzlqvZz+aQ4eUtzGn
+         TPz/jx9BhYi0twCyopSjoG6jJrCz8B78PntvIg+4pCXYaIoKJK023np7U+orRedWeDoT
+         y1kHSDkcjfMO58BpdelMoRPh4zhq9WiB1PRrX+2ZxgGyrz5lxlEwQKfhY1s9fIR6B4tM
+         U1Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L70Lu4UkPRTEDG8gb+/xmKCe8SzfFhoJnEpRxIIeFqA=;
+        b=M/0eva3xZK2CU/9927WT1vvV7FqdJ8PpX3de0TwugtPMAzu7ae9XeiS8nE7D5AFjBC
+         jfzTIPmXd43kIgcKXLMGP+42/TFUAG1YYouEBW3BpNmEY3nZPAIrhBxXPLkhwvbiVl+M
+         NYxwSnbdPhFy6wNN22P/7oDu8IFnYE3zUf5+DtKZJhoSZB/OfTNbLITz51m3btAAL6uV
+         vSz71f09SZzTDyZoqCAD7ELjCa7U5MQXSSt4+zY0WRYmNaQNO1WRpAgz8fqN4uT8NCSC
+         f3E1KdzHZA2hyo7bEPEKMjPukL1LZzfh1NsddMj1HayFuX3HeuxaUuZfoMCFmWwhJxSD
+         pogA==
+X-Gm-Message-State: AGi0Pua+4W/kY8u8PVUrcDo4KwBQMg1ppouw3nPLgKCKxmDsUPnYXlLS
+        rQezAN4Uc+lluMUR1K6A5TSkDA==
+X-Google-Smtp-Source: APiQypLo2Uv9TAEfSh+IISXH+Kg0NVSAYiXUQI2v0pVCREPH82taZ3U2fhV+jvGvfOzlTOwh6hOZkg==
+X-Received: by 2002:a37:61d3:: with SMTP id v202mr25564529qkb.142.1588187718111;
+        Wed, 29 Apr 2020 12:15:18 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id k43sm104680qtk.67.2020.04.29.12.15.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 12:15:17 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jTsAu-0002Eq-J1; Wed, 29 Apr 2020 16:15:16 -0300
+Date:   Wed, 29 Apr 2020 16:15:16 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
+Message-ID: <20200429191516.GK26002@ziepe.ca>
+References: <20200429190119.43595-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429190119.43595-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
-Date: Wed, 29 Apr 2020 22:10:01 +0800
+On Wed, Apr 29, 2020 at 09:01:08PM +0200, Arnd Bergmann wrote:
+> Building with gcc-10 causes a harmless warning about a section mismatch:
+> 
+> WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+> The function tpm2_calc_event_log_size() references
+> the function __init early_memunmap().
+> This is often because tpm2_calc_event_log_size lacks a __init
+> annotation or the annotation of early_memunmap is wrong.
+> 
+> Add the missing annotation.
+> 
+> Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/firmware/efi/tpm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-> These struct members named 'phylink_validate' was assigned twice:
-> 
-> static const struct mv88e6xxx_ops mv88e6190_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> };
-> 
-> static const struct mv88e6xxx_ops mv88e6190x_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390x_phylink_validate,
-> };
-> 
-> static const struct mv88e6xxx_ops mv88e6191_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> };
-> 
-> static const struct mv88e6xxx_ops mv88e6290_ops = {
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> 	......
-> 	.phylink_validate = mv88e6390_phylink_validate,
-> };
-> 
-> Remove all the first one and leave the second one which are been used in
-> fact. Be aware that for 'mv88e6190x_ops' the assignment functions is
-> different while the others are all the same. This fixes the following
-> coccicheck warning:
-> 
-> drivers/net/dsa/mv88e6xxx/chip.c:3911:48-49: phylink_validate: first
-> occurrence line 3965, second occurrence line 3967
-> drivers/net/dsa/mv88e6xxx/chip.c:3970:49-50: phylink_validate: first
-> occurrence line 4024, second occurrence line 4026
-> drivers/net/dsa/mv88e6xxx/chip.c:4029:48-49: phylink_validate: first
-> occurrence line 4082, second occurrence line 4085
-> drivers/net/dsa/mv88e6xxx/chip.c:4184:48-49: phylink_validate: first
-> occurrence line 4238, second occurrence line 4242
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Applied, thanks.
+Jason
