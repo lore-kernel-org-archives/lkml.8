@@ -2,190 +2,283 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE9BC83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355DFC8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 021C8214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB91206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l8kNMZol"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="pUkm0ymW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgD2OSB (ORCPT
+        id S1727859AbgD2OSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726836AbgD2OSA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:18:00 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BFE7C03C1AD;
-        Wed, 29 Apr 2020 07:18:00 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z2so2324766iol.11;
-        Wed, 29 Apr 2020 07:18:00 -0700 (PDT)
+        Wed, 29 Apr 2020 10:18:05 -0400
+Received: from mail-eopbgr700055.outbound.protection.outlook.com ([40.107.70.55]:22112
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726701AbgD2OSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:18:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K5BviPSTY7PsYX3mmcaKVEkFMdDH2Z5c7jX8ZqAEQGSWN024T3OSiNbrmO+2f13Vo9CYPAKLxKtmL+c4W+5GM6jHpMnp4CwJd9XRgLCEhHxHOAfSA0bxcf3bh+yHNut2JswtThnfxHnK1OrkOYm2QcG9XRkKVCdO2vB68jJWOCnGSJDYEWLNM86ay8Q8JtX8GNcbtn57P7b6fmah3vx1pg98j2opzXqqOBAiJF0BE02aaIHQJCsEnEcnupQ3KaSSmUEnV2YqJ+GLcTpJYHoG8zKITc4pzpoaIIaCCsuPv+tKgcEjHSHecYLWhFWv2tWlyqT+4S4oLoBmOW7QpUw+ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Etzpn6tzGE/Y5aOX7dnLk1IdG2C7CP3cb0VmoiAI6TM=;
+ b=CVlp1WN2CC4cekRxH/XAc2RMKVk3PoTAq5tlT42sRjSjj/hNJdBqCPdDK7O4A0QTJ0G+uS2+lRj4YkGMZFNVdLzDUSZNtsASRs7L+Edx2i+ARtYWgFoRfglbkK87CnXwPEeI8PKpFmZGRDEF9v9sAbgmYmoAyAaHd8vtIjJYYxhk1xDeEYxdKZzfDeYvuoEyVqZ/6MOkqua67VkIjXIDwLBAATteptjCsLkAyOTTLEFumgtw1kNMnstCfc0iBz2sEji54fvIswxqr6jkskR2jMSXYMULzZQOUlFWSMDo5/SJP0Xgwbc5ebXrxyR27414fqM4ZExoi2/ydXCKVFPvjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=perches.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cpXUf/vkO/R5yvacaxjyLtNiC2qft6yapuPXFNqdrtk=;
-        b=l8kNMZolNNRTje0ib1VyxH/4hTylfD414hWySHi/Pk5fJDdLTzmXJ+tL4bwZfbBrwe
-         x5aQaQIkJtYncgehYFquzLcHki7V2njzUJqCVP9iQ4Zunpp44t4JYWi3j/io5iVnRoMW
-         1xmQhmWhiq1P4108Evf5bFjMHPtdpV9v9Eo8PShJ2xq8IAGkmu6K6Y0S8RD5YrFN9b2p
-         hK94zWWO+FvBM3q9jwp82O5zwEgl4eGa3nIGqGMoH0cdScve/oMIdgpnQ/+y0515LRFF
-         o/6JUz4+Ndj+GUQiqd43ji0ijprsKeJTzaOCV8jQTMhGPObZdjzrM2buPfhN4z6lbB/+
-         gOBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cpXUf/vkO/R5yvacaxjyLtNiC2qft6yapuPXFNqdrtk=;
-        b=Fa1m7vJLYT0L+WBssuQjiOOhDgzApzxvYCAZgnWTsTqKETJ9LDgC1QNBPm0pe1TmZg
-         +uNUJj65BdGwsG2saL+Sbn+lKHy+S0ANrimPy6oZsIZE+kvOhHJ3imlO7bNuV7SozfRF
-         kw2YlqOmhWUC60Ce9LLML2fMjceQsfjYemyIm7LHCRNkL+fhlAi7lFsn/3jX56OqT/S5
-         wDzH9+wRh+Vb2xyRUi3a1b7hNReikXKRCmQSQRLBltGkZI8Ibk+gVJZmCnP0C0p7SEI2
-         PqN69x1+OL4u1WfqXovB0GhOQMCmp5HhoPEK+jN7+euuetP5dZEnOgb0W+0XBNbjwgKb
-         JJzw==
-X-Gm-Message-State: AGi0PuZ4hVqZdtoMTU2/TtRaTFQen8wtGIHnhMd4aM9sFy/rGPLqOHGB
-        yUXE6DIZxTi0TT1XQz9f/rsQUkwEhFAfOnh5tCY=
-X-Google-Smtp-Source: APiQypK82VvXMlKNIqQa1QabCy02RcVqT8OoQ2IeGadn05A3gUPuRWf7A0wd9yYXJiPYRbjYNrz1I2L+gZGWkydziIc=
-X-Received: by 2002:a05:6638:31b:: with SMTP id w27mr29082935jap.94.1588169878532;
- Wed, 29 Apr 2020 07:17:58 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Etzpn6tzGE/Y5aOX7dnLk1IdG2C7CP3cb0VmoiAI6TM=;
+ b=pUkm0ymWy1nsxy861MxNHfwDx8aNe6//lLhvSFCso94ErH0McnRK/L3yNPNXi+ZSIhOZ2Jng+fok/jb7YBHCrjzK6+9xkJevFipuY8ihr0TVt3FoEGMj2P6HmFQqYCLIYhZYC/Odn9NfNNZMaEuQWJ37wIXO7DWAn3MHCa5tvcc=
+Received: from CY4PR15CA0018.namprd15.prod.outlook.com (2603:10b6:910:14::28)
+ by BYAPR02MB4872.namprd02.prod.outlook.com (2603:10b6:a03:46::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Wed, 29 Apr
+ 2020 14:17:25 +0000
+Received: from CY1NAM02FT056.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:910:14:cafe::9e) by CY4PR15CA0018.outlook.office365.com
+ (2603:10b6:910:14::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
+ Transport; Wed, 29 Apr 2020 14:17:25 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; perches.com; dkim=none (message not signed)
+ header.d=none;perches.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT056.mail.protection.outlook.com (10.152.74.160) with Microsoft SMTP
+ Server id 15.20.2937.19 via Frontend Transport; Wed, 29 Apr 2020 14:17:25
+ +0000
+Received: from [149.199.38.66] (port=42024 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jTnWZ-0006Ii-Tt; Wed, 29 Apr 2020 07:17:19 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jTnWe-0007vB-Ua; Wed, 29 Apr 2020 07:17:24 -0700
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03TEHFSB028449;
+        Wed, 29 Apr 2020 07:17:15 -0700
+Received: from [172.23.82.133] (helo=xhdvsagar40x.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jTnWV-0007pS-5R; Wed, 29 Apr 2020 07:17:15 -0700
+From:   Vishal Sagar <vishal.sagar@xilinx.com>
+To:     Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Joe Perches <joe@perches.com>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx UHD-SDI Receiver Subsystem
+Date:   Wed, 29 Apr 2020 19:47:03 +0530
+Message-Id: <20200429141705.18755-2-vishal.sagar@xilinx.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200429141705.18755-1-vishal.sagar@xilinx.com>
+References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <20200429101510.GA28637@dhcp22.suse.cz> <20200429140330.GA5054@cmpxchg.org>
-In-Reply-To: <20200429140330.GA5054@cmpxchg.org>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 29 Apr 2020 22:17:21 +0800
-Message-ID: <CALOAHbCC-oT+CwzyokNfomEMf0GdzpipBeZJjnnE8RrPPZ_Maw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(376002)(346002)(46966005)(8936002)(2906002)(70586007)(316002)(47076004)(110136005)(9786002)(36756003)(7416002)(7696005)(8676002)(5660300002)(4326008)(82310400002)(356005)(426003)(26005)(186003)(81166007)(966005)(1076003)(478600001)(82740400003)(70206006)(2616005)(44832011)(6666004)(336012)(107886003)(921003);DIR:OUT;SFP:1101;
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e78e1eec-d332-4acb-ad10-08d7ec480a64
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4872:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB487209EC9F4C5CB42D1EB7B0A7AD0@BYAPR02MB4872.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1091;
+X-Forefront-PRVS: 03883BD916
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aOLTtcyHdQINdIJ0HLnbcgdc/LhtonED2VhxvAHuvlfOTz0fjmfX5xkSfiyK+MHm3eN1SEXkOtC17L+0Y0ZHYjPMlUt4EWWoZrk9z2r1zMT5F8tc1GUH2i+lDe6kWU37Bk4dO48EUSnJY4aUjFZWWIaYnzAwx1geAt3M+BNbIV+IJUqqe22z4+62HlWR6hvYoHYcrFDSEhmWOq8W811ijlInfyNMNqdfZHTLsgW3nBl9zNruOteoisQxCKegiiX4IAsFrx5zc016b+84iCtCcUYVeCBTtBYfE3W7q1PammBSkxRlFwNJghBLdqjY/BslBznCyQtL8f7ITVEpK6/hLBfJboWiPaE1mvynrWp2Zn2RermeKKTYAS2LIZJ3NwQIv+iMlSNOrkk/xrrIgOvSdvaZfm8S1uDF3Iwdtq8TYAlezMiPc+S/Zmj0tSAOgFzojtNnomOJzWxzNzQIy2xC9dFEJsWKKsrFYl0qWIOYkR+FpYMb5qSNmVKGN20lz61avoSKUiqzU6V9/gyCsE0ouD0gmdhXuRCI835w8YNFRiwKXxzDJBqDFJuhH/6julzyg8VFyfDY/X6aF1UqfdrbHRK9kxhO8tHyGnPaKzv8C4s=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2020 14:17:25.2230
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e78e1eec-d332-4acb-ad10-08d7ec480a64
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4872
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:03 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Wed, Apr 29, 2020 at 12:15:10PM +0200, Michal Hocko wrote:
-> > On Tue 28-04-20 19:26:47, Chris Down wrote:
-> > > From: Yafang Shao <laoar.shao@gmail.com>
-> > >
-> > > A cgroup can have both memory protection and a memory limit to isolate
-> > > it from its siblings in both directions - for example, to prevent it
-> > > from being shrunk below 2G under high pressure from outside, but also
-> > > from growing beyond 4G under low pressure.
-> > >
-> > > Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
-> > > implemented proportional scan pressure so that multiple siblings in
-> > > excess of their protection settings don't get reclaimed equally but
-> > > instead in accordance to their unprotected portion.
-> > >
-> > > During limit reclaim, this proportionality shouldn't apply of course:
-> > > there is no competition, all pressure is from within the cgroup and
-> > > should be applied as such. Reclaim should operate at full efficiency.
-> > >
-> > > However, mem_cgroup_protected() never expected anybody to look at the
-> > > effective protection values when it indicated that the cgroup is above
-> > > its protection. As a result, a query during limit reclaim may return
-> > > stale protection values that were calculated by a previous reclaim cycle
-> > > in which the cgroup did have siblings.
-> > >
-> > > When this happens, reclaim is unnecessarily hesitant and potentially
-> > > slow to meet the desired limit. In theory this could lead to premature
-> > > OOM kills, although it's not obvious this has occurred in practice.
-> >
-> > Thanks this describes the underlying problem. I would be also explicit
-> > that the issue should be visible only on tail memcgs which have both
-> > max/high and protection configured and the effect depends on the
-> > difference between the two (the smaller it is the largrger the effect).
-> >
-> > There is no mention about the fix. The patch resets effective values for
-> > the reclaim root and I've had some concerns about that
-> > http://lkml.kernel.org/r/20200424162103.GK11591@dhcp22.suse.cz.
-> > Johannes has argued that other races are possible and I didn't get to
-> > think about it thoroughly. But this patch is introducing a new
-> > possibility of breaking protection. If we want to have a quick and
-> > simple fix that would be easier to backport to older kernels then I
-> > would feel much better if we simply workedaround the problem as
-> > suggested earlier http://lkml.kernel.org/r/20200423061629.24185-1-laoar.shao@gmail.com
-> > We can rework the effective values calculation to be more robust against
-> > races on top of that because this is likely a more tricky thing to do.
->
-> Well, can you please *do* think more thoroughly about what I wrote,
-> instead of pushing for an alternative patch on gut feeling alone?
->
-> Especially when you imply that this should be a stable patch.
->
-> Not only does your alternative patch not protect against the race you
-> are worried about, the race itself doesn't matter. Racing reclaimers
-> will write their competing views of the world into the shared state on
-> all other levels anyway.
->
-> And that's okay. If the configuration and memory usage is such that
-> there is at least one reclaimer that scans without any protection
-> (like a limit reclaimer), it's not a problem when a second reclaimer
-> that meant to do protected global reclaim will also do one iteration
-> without protection. It's no different than if a second thread had
-> entered limit reclaim through another internal allocation.
->
-> There is no semantical violation with the race in your patch or the
-> race in this patch. Any effective protection that becomes visible is
-> 1) permitted by the configuration, but 2) also triggered *right now*
-> by an acute need to reclaim memory with these parameters.
->
-> The *right now* part is important. That's what's broken before either
-> patch, and that's what we're fixing: to see really, really *old* stale
-> that might not be representative of the config semantics anymore.
->
-> Since you haven't linked to my email, here is my counter argument to
-> the alternative patch "fixing" this race somehow.
->
-> A reclaim:
->
->   root
->      `- A (low=2G, max=3G -> elow=0)
->         `- A1 (low=0G -> elow=0)
->
-> Global reclaim:
->
->   root
->      `- A (low=2G, max=3G -> elow=2G)
->         `- A1 (low=0G -> elow=2G)
->
-> During global reclaim, A1 is supposed to have 2G effective low
-> protection. If A limit reclaim races, it can set A1's elow to
-> 0.
+Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
 
-Before the commit  8a931f801340c2be ("mm: memcontrol: recursive
-memory.low protection"), the A1's elow should be 0, while after this
-commit A1's elow is 2G.
-That is a behavior change.
+The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+core, an SDI RX to Video Bridge IP core to convert SDI video to native
+video and a Video In to AXI4-Stream IP core to convert native video to
+AXI4-Stream.
 
-Then this case gives us another example why accessing emin and elow in
-the very deap reclaiming code (get_scan_count) is the root of ALL
-EVIL.
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+---
+v2
+- Removed references to xlnx,video*
+- Fixed as per Sakari Ailus and Rob Herring's comments
+- Converted to yaml format
 
->  Global reclaim will now query mem_cgroup_protection(root, A1), the
-> root == memcg check you insist we add will fail and it'll reclaim A1
-> without protection.
->
-> The alternative patch is nothing except slightly worse code.
+ .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
+ 1 file changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
 
-
-
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+new file mode 100644
+index 000000000000..9133ad19df55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+@@ -0,0 +1,132 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++
++title: Xilinx SMPTE UHD-SDI Receiver Subsystem
++
++maintainers:
++  - Vishal Sagar <vishal.sagar@xilinx.com>
++
++description: |
++  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
++  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
++  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
++  native SDI using Xilinx transceivers as the physical layer.
++
++  The subsystem consists of
++  1 - SMPTE UHD-SDI Rx
++  2 - SDI Rx to Native Video Bridge
++  3 - Video In to AXI4-Stream Bridge
++
++  The subsystem can capture SDI streams in upto 12G mode 8 data streams and output
++  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: List of clock specifiers
++    items:
++      - description: AXI4-Lite clock
++      - description: SMPTE UHD-SDI Rx core clock
++      - description: Video clock
++
++  clock-names:
++    items:
++      - const: s_axi_aclk
++      - const: sdi_rx_clk
++      - const: video_out_clk
++
++  xlnx,bpp:
++    description: Bits per pixel supported. Can be 10 or 12 bits per pixel only.
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - enum: [10, 12]
++
++  xlnx,line-rate:
++    description: |
++      The maximum mode supported by the design. Possible values are as below
++      12G_SDI_8DS - 12G mode with 8 data streams
++      6G_SDI      -  6G mode
++      3G_SDI      -  3G mode
++    enum:
++      - 12G_SDI_8DS
++      - 6G_SDI
++      - 3G_SDI
++
++  xlnx,include-edh:
++    type: boolean
++    description: |
++      This is present when the Error Detection and Handling processor is
++      enabled in design.
++
++  ports:
++    type: object
++    description: |
++      Generally the SDI port is connected to a device like SDI Broadcast camera
++      which is independently controlled. Hence port@0 is a source port which can be
++      connected to downstream IP which can work with AXI4 Stream data.
++    properties:
++      port@0:
++        type: object
++        description: Source port
++        properties:
++          reg:
++            const: 0
++          endpoint:
++            type: object
++            properties:
++              remote-endpoint: true
++            required:
++              - remote-endpoint
++            additionalProperties: false
++        additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - xlnx,line-rate
++  - xlnx,bpp
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
++      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
++      interrupt-parent = <&gic>;
++      interrupts = <0 89 4>;
++      reg = <0x0 0x80000000 0x0 0x10000>;
++      xlnx,include-edh;
++      xlnx,line-rate = "12G_SDI_8DS";
++      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
++      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
++      xlnx,bpp = <10>;
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        port@0 {
++          reg = <0>;
++          sdirx_out: endpoint {
++            remote-endpoint = <&vcap_sdirx_in>;
++          };
++        };
++      };
++    };
 -- 
-Thanks
-Yafang
+2.21.0
+
