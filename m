@@ -2,113 +2,187 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86441C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD9AC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD1A218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD9A2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:48:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dHn67Cvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgD2Osh (ORCPT
+        id S1726839AbgD2Oss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726348AbgD2Osh (ORCPT
+        Wed, 29 Apr 2020 10:48:48 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13608 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726348AbgD2Oss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:48:37 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B450C03C1AD;
-        Wed, 29 Apr 2020 07:48:37 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Apr 2020 10:48:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588171726; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cBvwW5avddGOz4+VMKe7nngaLFyj5X3264YJy7F3MiY=;
+ b=dHn67CvhZQetVaXTbuLjDUJYyLhAk7VvtugauE8MRIf4CqVHnX2m0jPmHNJDSaxrJ3svbIu4
+ JVhsAEyhjCA/cSxlnQt/gTmPi8nwZ6JwDHRKxayVHZAj4SJbQqrBg3IgZd+r1PbckggQZ+2a
+ AaNP9HYdQ2qAQAFLlKvWRrolE3g=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea993c7.7fd1c86a4ca8-smtp-out-n05;
+ Wed, 29 Apr 2020 14:48:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 254D4C433D2; Wed, 29 Apr 2020 14:48:38 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 632B52A224A;
-        Wed, 29 Apr 2020 15:48:35 +0100 (BST)
-Date:   Wed, 29 Apr 2020 16:48:32 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>, qi-ming.wu@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        hauke.mehrtens@intel.com, anders.roxell@linaro.org,
-        vigneshr@ti.com, arnd@arndb.de, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200429164832.6800fc70@collabora.com>
-In-Reply-To: <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7F75C433CB;
+        Wed, 29 Apr 2020 14:48:37 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Apr 2020 20:18:37 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+ <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
+ <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
+ <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+Message-ID: <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 22:33:37 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+Hi Mike,
 
-> Hi Boris,
+On 2020-04-29 19:57, Mike Leach wrote:
+> Hi,
 > 
-> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
-> > On Wed, 29 Apr 2020 18:42:05 +0800
-> > "Ramuthevar, Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >   
-> >> +
-> >> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
-> >> +#define EBU_ADDR_MASK		(5 << 4)  
-> > 
-> > It's still unclear what ADDR_MASK is for. Can you add a comment
-> > explaining what it does?  
+
+[...]
+
+>> >> Looking more into replicator1(swao_replicator) values as 0x0 even
+>> >> after replicator_reset()
+>> >> in replicator probe, I added dynamic_replicator_reset in
+>> >> dynamic_replicator_enable()
+>> >> and am not seeing any hardlockup. Also I added some prints to check
+>> >> the idfilter
+>> >> values before and after reset and found that its not set to 0xff even
+>> >> after replicator_reset()
+>> >> in replicator probe, I don't see any other path setting it to 0x0.
+>> >>
+>> >> After probe:
+>> >>
+>> >> [    8.477669] func replicator_probe before reset replicator
+>> >> replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
+>> >> [    8.489470] func replicator_probe after reset replicator
+>> >> replicator1 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
+>> >
+>> > AFAICS, after the reset both of them are set to 0xff.
+>> 
+>> Yes I see this too as we call replicator_reset() in probe. What I 
+>> wanted
+>> to highlight was the below part where it is set to 0x0 before enabling
+>> dynamic replicator.
+>> 
+>> >
+>> >> [    8.502738] func replicator_probe before reset replicator
+>> >> replicator0 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
+>> >> [    8.515214] func replicator_probe after reset replicator
+>> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
+>> >
+>> >
+>> >
+>> >> localhost ~ #
+>> >> localhost ~ #
+>> >> localhost ~ # echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
+>> >> localhost ~ #
+>> >> localhost ~ # echo 1 > /sys/bus/coresight/devices/etm0/enable_source
+>> >> [   58.490485] func dynamic_replicator_enable before reset replicator
+>> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
+>> >> [   58.503246] func dynamic_replicator_enable after reset replicator
+>> >> replicator0 REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
+>> >> [   58.520902] func dynamic_replicator_enable before reset replicator
+>> >> replicator1 REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
+>> >
+>> > You need to find what is resetting the IDFILTERs to 0 for replicator1.
+>> >
+>> 
+>> That is right.
+>> 
 > 
-> Thank you Boris, keep review and giving inputs, will update.
-
-Can you please explain it here before sending a new version?
-
-> >   
-> >> +#define EBU_ADDR_SEL_REGEN	0x1  
-> > 
-> >   
-> >> +
-> >> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
-> >> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
-> >> +
-> >> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
-> >> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> >> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));  
-> > 
-> > That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
-> > sure that's needed, and are we setting EBU_ADDR_SEL(0) here?  
+> By default all replicators have the IDFILTER registers set to 0 out of
+> hardware reset. This ensures that programmable replicators behave in
+> the same way as non-programmable replicators out of reset.
 > 
-> You are right, its weird only, but we need it, since different chip 
-> select has different memory region access address.
+> The  dynamic_replicator_reset() is of course a driver state reset -
+> which filters out all trace on the output ports. The trace is then
+> enabled when we set the trace path from source to sink.
+> 
 
-Well, that doesn't make any sense, the second write to
-EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
-actually never written to ADDR_SEL(reg).
+Thanks for these explanations.
+
+> It seems to me that you have 2 problems that need solving here:
+> 
+> 1) Why does the reset_replicator() called from probe() _not_ work
+> correctly on replicator 1? It seems to work later if you introduce a
+> reset after more of the system has powered and booted. This is
+> startiing to look a little like a PM / clocking issue.
+
+reset_replicator() does work in probe correctly for both replicators, 
+below logs is collected before and after reset in probe. It is later 
+that it's set back to 0x0 and hence the suggestion to look at firmware 
+using this replicator1.
+
+[    8.477669] func replicator_probe before reset replicator replicator1 
+REPLICATOR_IDFILTER0=0x0 REPLICATOR_IDFILTER1=0x0
+[    8.489470] func replicator_probe after reset replicator replicator1 
+REPLICATOR_IDFILTER0=0xff REPLICATOR_IDFILTER1=0xff
 
 > 
-> Yes , we are setting both CS0 and CS1 memory access region, if you have 
-> any concern to optimize, please suggest me, Thanks!
+> This failure is causing the state when we are trying to set an output
+> port that both branches of this replicator are enabled for output.
+> In effect for this replicator, setting the output port has no effect
+> as it is already enabled.
+> 
+> 2) Why does having both ports of this repilicator enabled cause a hard
+> lockup? This is a separate hardware  / system issue.
+> 
+> The worst that should happen if both branches of a replicator are
+> enabled is that you get undesirable back pressure. (e.g. there is a
+> system we have seen - I think it is Juno - where there is a static
+> replicator feeding the TPIU and ETR - we need to disable the TPIU to
+> prevent undesired back pressure).
+> 
 
-If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
-is really related to the nand_pa address, then retrieve resources for
-all CS ranges. If it's not related, please explain what those
-EBU_MEM_BASE_CS_X values encode.
+Ok so hardlockup is not expected because of this backpressure.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
