@@ -2,125 +2,137 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C12C83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70996C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2527E20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F64521569
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgD2WrQ (ORCPT
+        id S1727025AbgD2WxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:47:16 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:35987 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgD2WrQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:47:16 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mbkac-1itE5c1Wnu-00dCHZ for <linux-kernel@vger.kernel.org>; Thu, 30 Apr
- 2020 00:47:14 +0200
-Received: by mail-qt1-f177.google.com with SMTP id v26so3462064qto.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 15:47:14 -0700 (PDT)
-X-Gm-Message-State: AGi0PubR1ErpX7LBYGkqttg/ifipVUtihKNiGukwi7CLiDAxNAKGEnvE
-        Y1+cP+Mlu1eBhKYEVLVX9kHAPoDW1TgXuSK+O2s=
-X-Google-Smtp-Source: APiQypLplSKTUGiR0ZWf/3t3HIdK4LBUX9u1J9ZYBeDYJ0hO9VI+n9TLMwvsJxpyu8mxqwLftBlvmV3gGEtsatMttDo=
-X-Received: by 2002:ac8:4c8d:: with SMTP id j13mr684743qtv.142.1588200433220;
- Wed, 29 Apr 2020 15:47:13 -0700 (PDT)
+        Wed, 29 Apr 2020 18:53:04 -0400
+Received: from mga17.intel.com ([192.55.52.151]:35163 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgD2WxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:53:03 -0400
+IronPort-SDR: jTcaeB9QlaWo/3Ht8nW44N+KHkb6W2J2tO8ibdAHQ4BHk7svP9hY0ZDejjNrviNp8sJWsT+KFn
+ rUNIh503I2AA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:53:01 -0700
+IronPort-SDR: IvXiqauwleqNe5SZwf+pAE9v2rWRk9fkZpIl53+u6tI+uwDAP3lW1+tEbIFjx766ZGUraqdyBf
+ 3dP9t8vXw+xA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="261579499"
+Received: from isdasana-mobl1.amr.corp.intel.com (HELO [10.254.74.214]) ([10.254.74.214])
+  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2020 15:53:00 -0700
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+ <20200429220732.31602-2-yu-cheng.yu@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
+Date:   Wed, 29 Apr 2020 15:53:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <20200428161044.caamvx67t2z4t6vd@treble> <20200429185536.5xshpcwtn4be4llh@treble>
-In-Reply-To: <20200429185536.5xshpcwtn4be4llh@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Apr 2020 00:46:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0M9qh2-_5VKx89ZsTfy5S1zhfWwnO7rN4xYhDwBBvPjw@mail.gmail.com>
-Message-ID: <CAK8P3a0M9qh2-_5VKx89ZsTfy5S1zhfWwnO7rN4xYhDwBBvPjw@mail.gmail.com>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:kJXsrWp3/YRsrqGzA4eWIVtdtOGSjvD/4bNuwSAlkACxuVwtuqP
- pCZ/X4KVcMe6O/tg9gyTEG3GEAnGmYuI8iPsKpZ6ORT3Y3Qa4PtfIb4ffbSw9WLlMmE41vO
- u2b7WRSfmOUqSMSGCSy+oz7AYO9ibyE7WPkIynwKsAY2Sk76aVDUK6d/YCSSVwYJX4RxJyu
- zX/MGtYhmPa5C+yxiOagg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kV93q/HSReY=:qk05a4cfYvmQL+cX2GUamo
- ulkTq1tYQoDt9IiDjkrCoa9JOJXHyPfNKgJwB7qVuY1Fx8l/r8wodskd8Lh1Ot24zTuozkGYm
- GkTTIPRCy8u/LRx8hliZYcLgMPz/Qkp/m61RZFCQ4YwYQDv2f9Onl0tio6QiPSKqh4Sa9+Z//
- ssiaq+HtOT6RHeLrUdYeer3XJjD7OlQwT3QI7s7WV3cXycCW/Z3pwkerWqyXpJOEq7oidDmI9
- 8rQYVNL+E9zEpis1xgCJhY3PoI9iuKIEgNbKofcfqzesCEt6aplXN48QHdDc6cQp9ZzxWS3Ts
- 4ZyHl4HR5fUIACiFdoDEbVpN2YUDoOXyPG80IulvNUWXMKwq8TqZZ9b4pnv+B1KV1wFG4zOAq
- ZHc5/k+2KpBjwv3kpz6XVue3rSI8g7q3gM1WofPZ7HZAp1b7rEmxDz/Qw3ZRagggvI+IcdLHY
- kliPG9A8nOu90+dbEXWy2knC40nb73MuITHUOjIayVcJkAw9mnaGQ9xwDWqy7dToAc8vOqNeh
- u6v7k1C/F2RWI5VsJ/sOUZRQwK1sNMotN1jQ08yjAHWVF2BFebl/IyGrJTjAHmwOk1w6qb24E
- bBCPc8jKzLVZCYyJvBzBE1++y8+8M/qjF/Ur1QRpO2cAHuq5mE2TSk+MHHnC2M25+wcLeEZ3E
- 1Pv1opp9KJ6pMpYnbl7TB/syAgH7gu5UpEROGZoRfE9rCe+2Py5JqwPG7YWGFQr+NMp4zXSln
- d2fSyKOZvcMul11g50ifdYOs0Ox0yhsauQVeLHKN+Fv9AkerBo8n9zyKLi1iuH5UhBwNbY+ag
- iPldjwDkhTL0ALRxZU1qG3D0UYvXVkyO3qTOVb4+DGFF6IiHMk=
+In-Reply-To: <20200429220732.31602-2-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 8:55 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Tue, Apr 28, 2020 at 11:10:44AM -0500, Josh Poimboeuf wrote:
-> > > ==> build/x86/0xE0F2ACFF_defconfig/log <==
-> > > kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
->
-> This one is fixed with the following cleanup:
->
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
-> Subject: [PATCH] linkage: Convert syscall alias macros to C
->
-> There's no need to use inline asm to create ELF alias symbols.
-> Annotated C function declarations can be used instead.
->
-> This also makes the ordering of the ELF symbol table more logical, with
-> the real function now always coming before the aliases.  This makes it
-> easier for objtool, objdump and other tools to differentiate them.
->
-> This fixes the following warning:
->
->   kernel/time/posix-stubs.o: warning: objtool: __x64_sys_timer_create()+0x23: sibling call from callable instruction with modified stack frame
->
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->  include/linux/linkage.h | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
+On 4/29/20 3:07 PM, Yu-cheng Yu wrote:
+> +Note:
+> +  There is no CET-enabling arch_prctl function.  By design, CET is enabled
+> +  automatically if the binary and the system can support it.
 
-Unfortunately, this patch leads to new warnings when
-CONFIG_POSIX_TIMERS is disabled:
+I think Andy and I danced around this last time.  Let me try to say it
+more explicitly.
 
-In file included from /git/arm-soc/kernel/time/posix-stubs.c:9:
-/git/arm-soc/kernel/time/posix-stubs.c:35:37: error: conflicting types
-for 'sys_timer_create'
-   35 | #define SYS_NI(name)  SYSCALL_ALIAS(sys_##name, sys_ni_posix_timers)
-      |                                     ^~~~
-/git/arm-soc/include/linux/linkage.h:26:63: note: in definition of
-macro 'SYSCALL_ALIAS'
-   26 | #define SYSCALL_ALIAS(alias, name) __alias(name) typeof(name) alias
-      |                                                               ^~~~~
-/git/arm-soc/kernel/time/posix-stubs.c:42:1: note: in expansion of
-macro 'SYS_NI'
-   42 | SYS_NI(timer_create);
-      | ^~~~~~
-In file included from /git/arm-soc/kernel/time/posix-stubs.c:13:
-/git/arm-soc/include/linux/syscalls.h:616:17: note: previous
-declaration of 'sys_timer_create' was here
-  616 | asmlinkage long sys_timer_create(clockid_t which_clock,
-      |                 ^~~~~~~~~~~~~~~~
+I want CET kernel enabling to able to be disconnected from the on-disk
+binary.  I want a binary compiled with CET to be able to disable it, and
+I want a binary not compiled with CET to be able to enable it.  I want
+different threads in a process to be able to each have different CET status.
 
-We can probably move those SYS_NI() instances to kernel/sys_ni.c,
-which does not include the header, but it's still a bit ugly. I'll try
-that tomorrow
-unless you come up with a better suggestion first.
-
-        Arnd
+Which JITs was this tested with?  I think as a bare minimum we need to
+know that this design can accommodate _a_ modern JIT.  It would be
+horrible if the browser javascript engines couldn't use this design, for
+instance.
