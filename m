@@ -2,86 +2,76 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D620FC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D999DC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF13206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C76206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgD2PlB (ORCPT
+        id S1727073AbgD2PlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:41:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35756 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgD2PlA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:41:00 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jTopT-0004nr-Du; Wed, 29 Apr 2020 15:40:55 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: pm80xx: remove redundant assignments to status
-Date:   Wed, 29 Apr 2020 16:40:55 +0100
-Message-Id: <20200429154055.286617-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 29 Apr 2020 11:41:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:41282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgD2PlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:41:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82FFF1045;
+        Wed, 29 Apr 2020 08:41:02 -0700 (PDT)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3649F3F68F;
+        Wed, 29 Apr 2020 08:41:00 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 16:40:57 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] sched/uclamp: Add a new sysctl to control RT
+ default boost value
+Message-ID: <20200429154056.bznhs6wc2iyxzevy@e107158-lin>
+References: <20200428164134.5588-1-qais.yousef@arm.com>
+ <20200429113255.GA19464@codeaurora.org>
+ <20200429123056.otyedhljlugyf5we@e107158-lin>
+ <20200429152106.GB19464@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200429152106.GB19464@codeaurora.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 04/29/20 20:51, Pavan Kondeti wrote:
+> As we are copying the sysctl_sched_uclamp_util_min_rt_default value into
+> p->uclamp_req[UCLAMP_MIN], user gets it when sched_getattr() is called though
+> sched_setattr() was not called before. I guess that is expected behavior with
+> your definition of this new tunable. Thanks for answering the question in
+> detail.
 
-The variable status is being assigned with a value that is never read
-hence the assignment is redundant and can be removed.
+Yes. That's the original design without this patch actually. Though before it
+was always set to 1024.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/pm8001/pm80xx_hwi.c | 3 ---
- 1 file changed, 3 deletions(-)
+Thanks for having a look!
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 4d205ebaee87..f5e36375a68f 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -235,7 +235,6 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
- 			pm8001_ha->forensic_fatal_step = 1;
- 			pm8001_ha->fatal_forensic_shift_offset = 0;
- 			pm8001_ha->forensic_last_offset	= 0;
--			status = 0;
- 			offset = (int)
- 			((char *)pm8001_ha->forensic_info.data_buf.direct_data
- 			- (char *)buf);
-@@ -258,7 +257,6 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
- 					forensic_info.data_buf.direct_data,
- 					"%08x ", *(temp + index));
- 			}
--			status = 0;
- 			offset = (int)
- 			((char *)pm8001_ha->forensic_info.data_buf.direct_data
- 			- (char *)buf);
-@@ -285,7 +283,6 @@ ssize_t pm80xx_get_fatal_dump(struct device *cdev,
- 		pm8001_cw32(pm8001_ha, 0, MEMBASE_II_SHIFT_REGISTER,
- 			pm8001_ha->fatal_forensic_shift_offset);
- 		pm8001_ha->fatal_bar_loc = 0;
--		status = 0;
- 		offset = (int)
- 			((char *)pm8001_ha->forensic_info.data_buf.direct_data
- 			- (char *)buf);
--- 
-2.25.1
-
+--
+Qais Yousef
