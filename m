@@ -2,123 +2,204 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED37CC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1BC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3622085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588173054;
-	bh=8A+8vDkMP+/JIF1TdfhS0LnIA8WKy9bVLiwsTDkUSTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HzltkVs6qB7tzsnrrfynfFODTJqnh4pC80xzfR0bJdqSeXDeymNA8bsCootCNP5hW
-	 Ek3ickwm7RE+uHH42hCuZK5eswTdvswgMPHSraDkx0Q8G5TOMaQVvwtQO3uLlGhx4U
-	 f2ebbLktc3V9KP6VDH2UFChP63ocuSgkzYcmezU4=
+	by mail.kernel.org (Postfix) with ESMTP id A69412085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:10:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t8CDd/Vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgD2PKy (ORCPT
+        id S1726907AbgD2PK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgD2PKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:10:52 -0400
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Apr 2020 11:10:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14826 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726516AbgD2PK5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:10:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588173057; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Uj1kdH+1z3EYbeBHEefFEkAH70TKfLMeVJuy+wrtzT4=; b=t8CDd/VkOUFgF6WgxHaCZqI+RZ+nNEgPCEpkzZdWaP0nQ963chp2Hlp6pCyErfNKT95T5Mfr
+ aaOWKrBQFH3iCZyRwqHsCtfIQIadSplAeR25VerzTOrHCWew9eAifJu5klauWUceEwveOAtE
+ 0IwZHo5etp+DPBcUEHxPL8sasPo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea998f9.7f1b79ee56c0-smtp-out-n04;
+ Wed, 29 Apr 2020 15:10:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A277DC433BA; Wed, 29 Apr 2020 15:10:48 +0000 (UTC)
+Received: from [10.131.182.194] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164D72074A;
-        Wed, 29 Apr 2020 15:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588173051;
-        bh=8A+8vDkMP+/JIF1TdfhS0LnIA8WKy9bVLiwsTDkUSTI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c+2m4Dap45V77moeWAWH+2CYGA+rcZ2K/2OztHOy+BvupHtxBxuOcFzc0f716mlq8
-         SRHd7Vuz5ZNEnYuu6ClzWTH5I0Z9AfqndxDyjDcbiHIpD9ASe9sglx4azZrWB6rq68
-         aMDBsDpM1DlYf7FagC6/0AkN9e5GAbjA4COdzq3k=
-Date:   Thu, 30 Apr 2020 00:10:46 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>
-Cc:     "hch@lst.de" <hch@lst.de>,
-        "david.e.box@linux.intel.com" <david.e.box@linux.intel.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: Re: [PATCH 0/2] Add support for StorageD3Enable _DSD property
-Message-ID: <20200429151046.GA6222@redsun51.ssa.fujisawa.hgst.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
- <20200428051312.GB17146@lst.de>
- <de052d30cc881ac67f9410b50b0760ee5bf9a623.camel@linux.intel.com>
- <20200428142247.GB5439@lst.de>
- <de2d78556fcb10f97364201256ac8f342a58eb75.camel@linux.intel.com>
- <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1CE6C433CB;
+        Wed, 29 Apr 2020 15:10:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1CE6C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 12/17] media: venus: core: Add support for opp
+ tables/perf voting
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        linux-media@vger.kernel.org
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-13-git-send-email-rnayak@codeaurora.org>
+ <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <425a8828-be17-fe79-99f5-9e20eff51b13@codeaurora.org>
+Date:   Wed, 29 Apr 2020 20:40:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <296064bbcf702744bf603932c9d849307db2e5b7.camel@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <b091dc29-d2e8-ed3f-fe1c-ae60e16d5d78@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 05:20:09AM +0000, Williams, Dan J wrote:
-> On Tue, 2020-04-28 at 08:27 -0700, David E. Box wrote:
-> > On Tue, 2020-04-28 at 16:22 +0200, Christoph Hellwig wrote:
-> > > On Tue, Apr 28, 2020 at 07:09:59AM -0700, David E. Box wrote:
-> > > > > I'm not sure who came up with the idea to put this into ACPI,
-> > > > > but
-> > > > > it
-> > > > > belongs into NVMe.  Please talk to the NVMe technical working
-> > > > > group
-> > > > > instead of trying to overrules them in an unrelated group that
-> > > > > doesn't
-> > > > > apply to all of PCIe.
-> > > > 
-> > > > Agreed that this is not ideal since it does not apply to all of
-> > > > PCIe.
-> > > > But as the property already exists on shipping systems, we need
-> > > > to
-> > > > be
-> > > > able to read it in the NVMe driver and the patch is consitent
-> > > > with
-> > > > the
-> > > > way properties under PCI ports are read.
-> > > 
-> > > The point is that it is not the BIOSes job do decide how Linux does
-> > > power management.  For example D3 has really horrible entry and
-> > > exit
-> > > latencies in many cases, and will lead to higher power usage.
-> > 
-> > The platform can know which pm policies will save the most power. But
-> > since the solution doesn't apply to all PCIe devices (despite BIOS
-> > specifying it that way) I'll withdraw this patch. Thanks.
-> 
-> Wait, why withdraw? In this case the platform is unfortunately
-> preventing the standard driver from making a proper determination. So
-> while I agree that it's not the BIOSes job, when the platform actively
-> prevents proper operation due to some ill conceived non-standard
-> platform property what is Linux left to do on these systems?
-> 
-> The *patch* is not trying to overrule NVME, and the best I can say is
-> that the Intel Linux team was not in the loop when this was being
-> decided between the platform BIOS implemenation and  whomever  thought
-> they could just publish random ACPI properties that impacted NVME
-> operation [1].
-> 
-> So now David is trying to get these platform unbroken because they are
-> already shipping with this b0rkage.
+Hey Stan,
 
-Rather than quirking all these cases, which I get the feeling there
-are many more than we've currently got in our quirk list, perhaps it'd
-be simpler to default to the simple suspend. AFAIK, the simple suspend
-works for all platforms, though it may not realize the best power savings
-and/or exit latency.
+On 4/29/2020 8:06 PM, Stanimir Varbanov wrote:
+> Hi Rajendra,
+> 
+> Thanks for the patch!
+> 
+[]..
+
+>>   #include <linux/pm_runtime.h>
+>>   #include <media/videobuf2-v4l2.h>
+>>   #include <media/v4l2-mem2mem.h>
+>> @@ -214,6 +215,20 @@ static int venus_probe(struct platform_device *pdev)
+>>   	if (!core->pm_ops)
+>>   		return -ENODEV;
+>>   
+>> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
+> 
+> Should we set opp clkname if opp_of_add_table fails? We have platforms
+> which don't have opp tables in Venus DT node. We have to be backward
+> compatible for them.
+
+so the way its designed, you are expected to call dev_pm_opp_set_clkname()
+*before* adding any OPPs from the OPP table.
+As for backward compatibility its already handled by the OPP core now [1]
+which makes sure dev_pm_opp_set_rate() is equivalent to a clk_set_rate()
+in case of a missing OPP table.
+
+>> +	if (IS_ERR(core->opp_table))
+>> +		return PTR_ERR(core->opp_table);
+>> +
+>> +	if (core->res->opp_pmdomain) {
+>> +		ret = dev_pm_opp_of_add_table(dev);
+>> +		if (!ret) {
+>> +			core->has_opp_table = true;
+>> +		} else if (ret != -ENODEV) {
+> 
+> Is it possible dev_pm_opp_of_add_table() to return EPROBE_DEFER?
+
+Nope, it does not, I had checked.
+
+>> +			dev_err(dev, "Invalid OPP table in Device tree\n");
+> 
+> ... if so, please drop dev_err.
+> 
+>> +			return ret;
+>> +		}
+>> +	}
+[]..
+
+>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/iopoll.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/pm_domain.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/types.h>
+>>   #include <media/v4l2-mem2mem.h>
+>> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
+>>   
+>>   static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
+>>   {
+>> -	struct clk *clk = core->clks[0];
+>>   	int ret;
+>>   
+>> -	ret = clk_set_rate(clk, freq);
+>> +	ret = dev_pm_opp_set_rate(core->dev, freq);
+> 
+> Is this will work for legacy platforms without OPP tables?
+
+yes, see [1] which is already merged in mainline.
+
+> 
+> Also what about the other clocks (vicodec0,1) in this function.
+
+We continue to use clk_set_rate() for those. The performance state
+is associated with only the core clk.
+
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> @@ -740,13 +740,15 @@ static int venc_power_v4(struct device *dev, int on)
+>>   
+>>   static int vcodec_domains_get(struct device *dev)
+>>   {
+>> +	struct opp_table *opp_table;
+>> +	struct device **opp_virt_dev;
+>>   	struct venus_core *core = dev_get_drvdata(dev);
+>>   	const struct venus_resources *res = core->res;
+>>   	struct device *pd;
+>>   	unsigned int i;
+>>   
+>>   	if (!res->vcodec_pmdomains_num)
+>> -		return -ENODEV;
+>> +		goto skip_pmdomains;
+>>   
+>>   	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>>   		pd = dev_pm_domain_attach_by_name(dev,
+>> @@ -763,6 +765,24 @@ static int vcodec_domains_get(struct device *dev)
+>>   	if (!core->pd_dl_venus)
+>>   		return -ENODEV;
+>>   
+>> +skip_pmdomains:
+>> +	if (!res->opp_pmdomain || !core->has_opp_table)
+>> +		return 0;
+>> +
+>> +	/* Attach the power domain for setting performance state */
+>> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
+>> +	if (IS_ERR(opp_table)) {
+>> +		return PTR_ERR(opp_table);
+>> +	} else if (opp_virt_dev) {
+>> +		core->opp_pmdomain = *opp_virt_dev;
+>> +		core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
+>> +						     DL_FLAG_RPM_ACTIVE |
+>> +						     DL_FLAG_PM_RUNTIME |
+>> +						     DL_FLAG_STATELESS);
+>> +		if (!core->opp_dl_venus)
+>> +			return -ENODEV;
+> 
+> I think as you return ENODEV you have to detach opp domain here because
+> vcodec_domains_put() is not called in error path.
+
+Ok, I'll fix that up.
+
+Thanks for the review.
+
+[1] https://lkml.org/lkml/2020/4/8/413
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
