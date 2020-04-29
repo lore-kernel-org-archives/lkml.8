@@ -2,88 +2,117 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7049C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BF5C83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC34214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B168F214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:15:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kSmIxl4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgD2PPA (ORCPT
+        id S1726883AbgD2PPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:15:00 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50830 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgD2PPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:15:00 -0400
-IronPort-SDR: ABOWn+W/AVrAmx+checEvBheBfeJKOistoMotIlyLLgLCG70Ura2OUlruRksTiRem5h1bEBEYf
- NCn3JJsdp3iQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 08:15:00 -0700
-IronPort-SDR: jXvz6w5BWc8BhF4Yw8eQgTlJjsIbm6hFW4z+U7AD3TYC8241CayOD4jlD7dwUorvxoGygmiCgm
- 9FVSALkzNizw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="282534249"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Apr 2020 08:14:59 -0700
-Date:   Wed, 29 Apr 2020 08:14:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Dr. Greg" <greg@enjellic.com>, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200429151459.GC15992@linux.intel.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200426165753.GA11046@wind.enjellic.com>
- <20200429052329.GD8452@linux.intel.com>
+        Wed, 29 Apr 2020 11:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgD2PPj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:15:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1426FC03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:15:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d17so1165239pgo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 08:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wi2X5fnXrc4Wem14O3belNCCyMD4pJ4fZWx90xq7ka4=;
+        b=kSmIxl4X/dJxK/z2UQLo2Hq5FhW/TKDijpZa7DWc5fccjpxDOV3kq4/pAnS1NP6zKH
+         TXUlkJ1bApW51fdlSrOFq2TrGcOjqMzzfp7MneoPzTD5xaWxMx5ZSFm/0YbXTjV2H3yO
+         f48HurW1rTpolXUVU3G3vgdFwymfaO0yRjasuw5WuPb8AUdAiLbtSd0qla4DJtZmNLhE
+         HFGzDzzTy7x8fD27jWgFc02/4y81TkZ5hpF764hVAeDUG8BEd7Sle+Ql0Emi/1K4FMuk
+         61VHhQTXPwu/3xzuJMt9XY/QrUG+7vp7PbFwpqcnWpjPlQXBXiJGMHMiD0hvUfOpIMAm
+         VBOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wi2X5fnXrc4Wem14O3belNCCyMD4pJ4fZWx90xq7ka4=;
+        b=EH1ZaczVGqIs363vEHLVCa0yiuBk4riWPIaNB/EFTI+i8H8huybqR2/dLhTwyqm2zK
+         ddKEMs3oBfrguMeQOk6Aa5dH/QWKN7TsqiFtZTGr7t1EWs0OSUvZfmOE3gsGNdw1QbkJ
+         KE4A3IDUjFjEsdIR4HE83qGU/+I3EpDEaMv6rSHr+7H2BJYgd0vZ+dUJ6gkvVvQ+VVv7
+         NGb0d1k5meLfT9mW6mCphb7YhCCR2JhWtUiNByQWzLtIaRzwa1ifA8FIsboAFqg1ueYE
+         iG2ZCrmybgk4gKRVVJtVBYJXcQ4TE6j3C/TxW6ClAZHom9tcyLHvsk7QzWyGOuMYdnoT
+         IM8g==
+X-Gm-Message-State: AGi0PuZ9KTqR53znDPazDfP6qmCiwN8MfPAQxbjR+uyIAmTy9uIal5ta
+        gdSgImqilRgfalMO8Fg+z63fGq76yuwIWA==
+X-Google-Smtp-Source: APiQypL0qbIC75IqB+ONdHFexvFnzR5IPi+nQf4tC8bk0rPdUEhb+MBUjAJ/nafl7kJNhy0177F6vQ==
+X-Received: by 2002:a62:9211:: with SMTP id o17mr9340840pfd.234.1588173337126;
+        Wed, 29 Apr 2020 08:15:37 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id 140sm1345450pfw.96.2020.04.29.08.15.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 08:15:36 -0700 (PDT)
+Subject: Re: [PATCH -next] blk-mq: Use BUG_ON() instead of BUG()
+To:     Christoph Hellwig <hch@infradead.org>, Zou Wei <zou_wei@huawei.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588126224-47877-1-git-send-email-zou_wei@huawei.com>
+ <20200429072629.GE11410@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ca070e04-5de6-8f31-571b-70a67be62281@kernel.dk>
+Date:   Wed, 29 Apr 2020 09:15:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429052329.GD8452@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200429072629.GE11410@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 08:23:29AM +0300, Jarkko Sakkinen wrote:
-> On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
-> > On Wed, Apr 22, 2020 at 12:52:56AM +0300, Jarkko Sakkinen wrote:
-> > 
-> > Good day, I hope the weekend is going well for everyone.
-> > 
-> > > Intel(R) SGX is a set of CPU instructions that can be used by applications
-> > > to set aside private regions of code and data. The code outside the enclave
-> > > is disallowed to access the memory inside the enclave by the CPU access
-> > > control.
-> > >
-> > > ... [ elided ] ..
-> > > 
-> > > The current implementation requires that the firmware sets
-> > > IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
-> > > decide what enclaves it wants run. The implementation does not create
-> > > any bottlenecks to support read-only MSRs later on.
-> > 
-> > It seems highly unlikely that a driver implementation with any type of
-> > support for read-only launch control registers would ever get into the
-> > kernel.  All one needs to do is review the conversations that Matthew
-> > Garrett's lockdown patches engender to get a sense of that, ie:
-> > 
-> > https://lwn.net/Articles/818277/
+On 4/29/20 1:26 AM, Christoph Hellwig wrote:
+> On Wed, Apr 29, 2020 at 10:10:24AM +0800, Zou Wei wrote:
+>> Fixes coccicheck warning:
+>>
+>>  block/blk-mq.c:546:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+>>
+>> Fixes: 63151a449eba ("blk-mq: allow drivers to hook into I/O completion")
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+>> ---
+>>  block/blk-mq.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> index bcc3a23..49a227e 100644
+>> --- a/block/blk-mq.c
+>> +++ b/block/blk-mq.c
+>> @@ -542,8 +542,7 @@ EXPORT_SYMBOL(__blk_mq_end_request);
+>>  
+>>  void blk_mq_end_request(struct request *rq, blk_status_t error)
+>>  {
+>> -	if (blk_update_request(rq, error, blk_rq_bytes(rq)))
+>> -		BUG();
+>> +	BUG_ON(blk_update_request(rq, error, blk_rq_bytes(rq)));
 > 
-> We do not require read-only MSRs.
+> I don't think hiding something that actually does do the work in a
+> BUG_ON ever is a good style.
 
-Greg is pointing out the opposite, that supporting read-only MSRs is highly
-unlikely to ever be supported in the mainline kernel.
+Agree, it's a lot less readable. And, not that we've ever done that, but
+also fragile in a lot of code bases where a non-debug build would turn
+off the BUG_ON() equivalent, and hence never call blk_update_request().
+So not a good practice anywhere for statements that have side effects.
+
+-- 
+Jens Axboe
+
