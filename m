@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C77C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF378C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF81420731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9806320757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588132011;
-	bh=ZMHUFOzjMKmHaBY86nqRN13bAbe1H5JyDFaKwM09lww=;
+	s=default; t=1588132016;
+	bh=Br6FGxvGdibmAm1BPTxgxvxJrQU9o7LJVOCybisL2+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdj6rVJS45D0OuvpSBZAkFVBR+Z6r/U7D1wfZqyhHkck89ia2I8tr8/dIQIZJ3VkY
-	 ZXP7M5wd6tpwp6It4DPtrSkj2ve1qmtUqtvaCpHZSJ0kzL6HhEdfRVOy6co3i2qgzA
-	 wXyfy/SOl/Eo4m9OnSlpMRQcM5jw3gKyC5dBM73w=
+	b=VsqPsSJXehETcbiQ6gqhQ2jM2GWFgEIyT6uGlKzGbVxyvNvgVbarzOLKSqHoKGS8o
+	 9bt0BtjRNNE4mbimKwutEUOKEk9uNqs7bljlsoGaZRJR/dj+XcDYz51NyL8IEECxY3
+	 MQiKUKmYD3fWjgQ8maDJSXgQgFTSVt1jxo2CcjSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgD2Dqu (ORCPT
+        id S1726911AbgD2Dqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:46:50 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:30976 "EHLO
+        Tue, 28 Apr 2020 23:46:55 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:31325 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgD2Dqh (ORCPT
+        with ESMTP id S1726815AbgD2Dqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 23:46:37 -0400
+        Tue, 28 Apr 2020 23:46:48 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 03T3jXln020748;
+        by conuserg-12.nifty.com with ESMTP id 03T3jXlo020748;
         Wed, 29 Apr 2020 12:45:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03T3jXln020748
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03T3jXlo020748
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588131943;
-        bh=O4L7XF+xZH3Fa+t8uXqe3t5Njxb0XPvUWzwpGlKOHhw=;
+        s=dec2015msa; t=1588131944;
+        bh=dLmTyR8PbYHKBJ+qBPitmqWoM4dT1Bxw91nAgF/GfEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=euNQVcgUDchAg9Axw45cSEgaFg3cACAdtfJGPWOQ1pZQ/XfLL1l3NkwTV4fgxlL1V
-         4+dHKwta+O9PBXHkAJkfJT34QKmeNW+MBj2uJ1iw3c27TtRzAw+S0Y8ByLPvr8UQAI
-         E9zAOjfIZG1M73Z+v36ozzpNKuRQKUHQ7Z6yEVp7C4I3LeHqSvclzkRXUcGLCEwVKW
-         CIxYbV4hXWTY2QUi7R85umqJ38wsiYo28eKcAZMAsjlvUDb4ui1eCMjzzx2ODx3Nch
-         yOC0YOsAJzbFnM4xekuAtgJWNj0aqHTVPwFJgTGsSrmV4oA87x1/9H+AY0CAQgGvsO
-         W2PJMtZcx6rrg==
+        b=aqGnmpX/Pvk8aMX9m8Z5cx3ULpXwvI3Nq1XZuKOEISHUtLVaGH146hh97lciC+aSF
+         D0ZSAHqRk+RDpFoHkQeKXfuD/q/ieP0ts+dn4AzrbFjbqCov4dARLYfMrYPl5CPcJq
+         uyoNESUWOIUhNVl5dy+YNl5JbPDpOb8kmJGY8vwhasDTuQdOHgWgwiD3xKft7d5bLF
+         l7Ry5AlMvpjtt9h6se7VvQsi/kBQkHrG9ZWdJEoMAnVzSHndQVgeriTiM0AIhP9DvY
+         ySVIda7S0FvW4VGyr4paWpPu0/xx0nJG9C79A9zaZttPdT9VOkKMYFgfZuzT/oGK8j
+         lMxJ0QXw1xMTA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf <bpf@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH v2 12/15] samples: mei: build sample program for target architecture
-Date:   Wed, 29 Apr 2020 12:45:24 +0900
-Message-Id: <20200429034527.590520-13-masahiroy@kernel.org>
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: [PATCH v2 13/15] samples: auxdisplay: use 'userprogs' syntax
+Date:   Wed, 29 Apr 2020 12:45:25 +0900
+Message-Id: <20200429034527.590520-14-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200429034527.590520-1-masahiroy@kernel.org>
 References: <20200429034527.590520-1-masahiroy@kernel.org>
@@ -61,54 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This userspace program includes UAPI headers exported to usr/include/.
-'make headers' always works for the target architecture (i.e. the same
-architecture as the kernel), so the sample program should be built for
-the target as well. Kbuild now supports 'userprogs' for that.
+Kbuild now supports the 'userprogs' syntax to compile userspace
+programs for the same architecture as the kernel.
 
-I also guarded the CONFIG option by 'depends on CC_CAN_LINK' because
-$(CC) may not provide libc.
+Add the entry to samples/Makefile to put this into the build bot
+coverage.
+
+I also added the CONFIG option guarded by 'depends on CC_CAN_LINK'
+because $(CC) may not provide libc.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
 ---
 
 Changes in v2: None
 
- samples/Kconfig      | 1 +
- samples/mei/Makefile | 9 +++------
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ samples/Kconfig             |  4 ++++
+ samples/Makefile            |  1 +
+ samples/auxdisplay/Makefile | 11 ++---------
+ 3 files changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/samples/Kconfig b/samples/Kconfig
-index c68d391c0602..69699db49675 100644
+index 69699db49675..2322e11e8b80 100644
 --- a/samples/Kconfig
 +++ b/samples/Kconfig
-@@ -193,6 +193,7 @@ config SAMPLE_VFS
- config SAMPLE_INTEL_MEI
- 	bool "Build example program working with intel mei driver"
- 	depends on INTEL_MEI
-+	depends on CC_CAN_LINK && HEADERS_INSTALL
- 	help
- 	  Build a sample program to work with mei device.
+@@ -6,6 +6,10 @@ menuconfig SAMPLES
  
-diff --git a/samples/mei/Makefile b/samples/mei/Makefile
-index f5b9d02be2cd..329411f82369 100644
---- a/samples/mei/Makefile
-+++ b/samples/mei/Makefile
-@@ -1,10 +1,7 @@
+ if SAMPLES
+ 
++config SAMPLE_AUXDISPLAY
++	bool "auxdisplay sample"
++	depends on CC_CAN_LINK
++
+ config SAMPLE_TRACE_EVENTS
+ 	tristate "Build trace_events examples -- loadable modules only"
+ 	depends on EVENT_TRACING && m
+diff --git a/samples/Makefile b/samples/Makefile
+index bdc168405452..0c43b5d34b15 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -1,6 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
- # Copyright (c) 2012-2019, Intel Corporation. All rights reserved.
+ # Makefile for Linux samples code
  
--hostprogs := mei-amt-version
-+userprogs := mei-amt-version
++subdir-$(CONFIG_SAMPLE_AUXDISPLAY)	+= auxdisplay
+ obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
+ obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
+ obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
+diff --git a/samples/auxdisplay/Makefile b/samples/auxdisplay/Makefile
+index 0273bab27233..dbdf939af94a 100644
+--- a/samples/auxdisplay/Makefile
++++ b/samples/auxdisplay/Makefile
+@@ -1,10 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CC := $(CROSS_COMPILE)gcc
+-CFLAGS := -I../../usr/include
+-
+-PROGS := cfag12864b-example
+-
+-all: $(PROGS)
+-
+-clean:
+-	rm -fr $(PROGS)
++userprogs := cfag12864b-example
 +always-y := $(userprogs)
- 
--HOSTCFLAGS_mei-amt-version.o += -I$(objtree)/usr/include
--
--always-y := $(hostprogs)
--
--all: mei-amt-version
-+userccflags += -I usr/include
 -- 
 2.25.1
 
