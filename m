@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BA1C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31166C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCDA1208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA5A208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZ82uXfg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3tvhdUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgD2UC0 (ORCPT
+        id S1727833AbgD2UCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        Wed, 29 Apr 2020 16:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgD2UCT (ORCPT
+        with ESMTP id S1727079AbgD2UCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:02:19 -0400
+        Wed, 29 Apr 2020 16:02:16 -0400
 Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E075EC03C1AE;
-        Wed, 29 Apr 2020 13:02:18 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d17so1543708pgo.0;
-        Wed, 29 Apr 2020 13:02:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56210C03C1AE;
+        Wed, 29 Apr 2020 13:02:16 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o185so1535460pgo.3;
+        Wed, 29 Apr 2020 13:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XjH6F4JHAAsbYpUGPSJyG+L4O1JRXxsxIBKmTIPDjzI=;
-        b=pZ82uXfgZNgUJHjLCidQKrsZV6Ei8JTm5tC2Vg2KRe06zXyxzfpBzd2Yx/1ge+/qzb
-         3Q0SIbLcaVlEDszJkfSx1iOaa5bplD+g+86QOMX8fnbMswCzj6NBjQThnFe1DAuXKt9i
-         05WP8QaD93BNAtMLN526ciwaRPagINs/P6WmoVxIPTv4FfmVuQYdLP4Jr3bAdCQ726O9
-         oW08u0sFXIKKPOlFZdDmsAkGBllZ3MrCBJeAoLc3I7OweII2PCS2V5uUvoGQI9uXKdw8
-         aefRgNTBFKiF1Jv5Ls6o0yqP5ehUmpZ9P6mZV+RrnSeohQPwqa2CnkJYUKKbiv1HHBuw
-         CwNQ==
+        bh=IC8rInsRsfxQQkeZ96jiqZI2NB9+ZDmlgZxQ89+Ot80=;
+        b=Q3tvhdURxNnI8eipt1UAAyDjRNDvN3MOcBNT/modDn4FhNs/nXY29BN63vDWNfwymx
+         yOfBHJDQPmQT47fEVquMDbtT5pqnXVCS5QJ/AZ/mrL6/DaZprbDCt0/VU0kBqh4zniVV
+         XNEnZXluePl5kVGSGOGttZ+Jqct5kpfKSZigh++PvWGJQTHdyDdLLulMiACzcAHHZs1Q
+         B4c4w6Iwk6xFGPx1pFDo3hIxNzBw7SMlTIpPh0lRQ20O6f3PKTfOk3nnROlRBrehUtdm
+         hew0i+G/hAp+KTKjyrbcaKhS9w0o57Ki0YnCl4fc9WVlVVPcBp/5fIlcPD8lgusynfYm
+         uJ/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=XjH6F4JHAAsbYpUGPSJyG+L4O1JRXxsxIBKmTIPDjzI=;
-        b=nPDIGS2w872lPbtb//bIAI6icB406vDNBSFykbYn/IkAd98BbsxGlzNREvnljBS6la
-         H6ejTydp9ORd2Ix6m6FQqVNVzppU0YvnNoTkapLmn6olCxLCpavIa/iT+r9KXqWcL+nq
-         gR2qJfxPpf0jXv9fCr/EZCe76V9+v+lgB8e5hHEae/5uUdVtyu8aFxgS7UJhR29kjqOh
-         tNLNU+G2qXToAIoiB2uNHT+Vs43AMVCmHoZkfE8mrbCZlXW8AiY76ua1vUg3JhZch/5P
-         yPSl7g4zoKT8Frtuai4/dJcPmH96awCeibTPIHIZ/uOe3Vx8hnNFADeh7Ij8d8rwn7rA
-         FeOA==
-X-Gm-Message-State: AGi0PuYoiJGlSBRnzpC3LkXqBbGuuwVff1MPcfUOgjYhAT8m00X/dt5C
-        M7eBC43s2/T7lMo1OuzRhlY=
-X-Google-Smtp-Source: APiQypI7+Zsrx+5H6xuobPG9uuLacU8qBLpa+z91DJCSVBAB0k1Y4T8ZUuQvbsFxglFihOgi94lmYg==
-X-Received: by 2002:a63:5009:: with SMTP id e9mr33082604pgb.381.1588190538162;
-        Wed, 29 Apr 2020 13:02:18 -0700 (PDT)
+        bh=IC8rInsRsfxQQkeZ96jiqZI2NB9+ZDmlgZxQ89+Ot80=;
+        b=iJNBYsCIiDkMzpbnPpPKq6ceLnYkYBErAmwaVw5dsxp/ncil2VGTVM0AhwV8Yjns/U
+         a5kHM3IbGYWMtac+sVoveCynsPrd1s3g+LKWZKIwn6AUyyvQRXj5+xPKKep4oTV/cNHq
+         fD0qjj2S/IMhADNOIEXP7TW/4j+HdOZzb+bwfxivSDnsxghrZmRi/bO3PbBz5SPaMjlx
+         ebCiNiPaCLGobzEhejoAGU2g/NWHc/4VM8Lko5qMsQp+6Ow5nahURpvLhnfKs7LbtVYI
+         VvPjWieJ19xys2LLbIqGKf8GIjhlVrKNVEMm7202ssKg8R3sXY4dDfqnC1/M+5dN32a1
+         b7LQ==
+X-Gm-Message-State: AGi0PuYc9qraZULP+ElLXa9a60n08O1kXLYw7X+gpK+9Hh1j7S85T65b
+        Iuam0um0d2eoX/hwCxPBDXE=
+X-Google-Smtp-Source: APiQypLcivI2c+n9PIkReQk7m+dnLg8JBlSifrz4L3rmjTEVTW+cwfWf5Q6OxQrSMZo+1M3YJdY7tQ==
+X-Received: by 2002:a63:5704:: with SMTP id l4mr9729669pgb.85.1588190535828;
+        Wed, 29 Apr 2020 13:02:15 -0700 (PDT)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r128sm1705817pfc.141.2020.04.29.13.02.16
+        by smtp.gmail.com with ESMTPSA id r128sm1705817pfc.141.2020.04.29.13.02.14
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 13:02:17 -0700 (PDT)
+        Wed, 29 Apr 2020 13:02:15 -0700 (PDT)
 From:   Doug Berger <opendmb@gmail.com>
 To:     Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 6/7] net: bcmgenet: add support for ethtool rxnfc flows
-Date:   Wed, 29 Apr 2020 13:02:05 -0700
-Message-Id: <1588190526-2082-7-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next v2 4/7] Revert "net: bcmgenet: remove unused function in bcmgenet.c"
+Date:   Wed, 29 Apr 2020 13:02:03 -0700
+Message-Id: <1588190526-2082-5-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
 References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
@@ -75,652 +75,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit enables driver support for ethtool commands of this form:
-ethtool -N|-U|--config-nfc|--config-ntuple devname
-    flow-type ether|ip4
-    [src xx:yy:zz:aa:bb:cc [m xx:yy:zz:aa:bb:cc]]
-    [dst xx:yy:zz:aa:bb:cc [m xx:yy:zz:aa:bb:cc]] [proto N [m N]]
-    [src-ip x.x.x.x [m x.x.x.x]] [dst-ip x.x.x.x [m x.x.x.x]] [tos N [m N]]
-    [l4proto N [m N]] [src-port N [m N]] [dst-port N [m N]] [spi N [m N]]
-    [l4data N [m N]] [vlan-etype N [m N]] [vlan N [m N]]
-    [dst-mac xx:yy:zz:aa:bb:cc [m xx:yy:zz:aa:bb:cc]] [action 0] [loc N] |
-    delete N
+This reverts commit e2072600a24161b7ddcfb26814f69f5fbc8ef85a.
 
-Since there is only one Rx Ring in this implementation action 0 behaves no
-differently from not specifying a rule.
-
-The rules can be seen with ethtool commands of this form:
-ethtool -n|-u|--show-nfc|--show-ntuple devname [rule N]
+This commit restores the previous implementation of Hardware Filter
+Block functions to the file for use in subsequent commits.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 483 ++++++++++++++++++++++++-
- drivers/net/ethernet/broadcom/genet/bcmgenet.h |  16 +
- 2 files changed, 488 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 122 +++++++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index ad41944d2cc0..5ef1ea7e5312 100644
+index 57b8608feae1..b37ef05c5083 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -479,6 +479,30 @@ static void bcmgenet_hfb_enable_filter(struct bcmgenet_priv *priv, u32 f_index)
- 	reg = bcmgenet_hfb_reg_readl(priv, offset);
- 	reg |= (1 << (f_index % 32));
- 	bcmgenet_hfb_reg_writel(priv, reg, offset);
-+	reg = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
-+	reg |= RBUF_HFB_EN;
-+	bcmgenet_hfb_reg_writel(priv, reg, HFB_CTRL);
-+}
-+
-+static void bcmgenet_hfb_disable_filter(struct bcmgenet_priv *priv, u32 f_index)
+@@ -2759,6 +2759,128 @@ static void bcmgenet_enable_dma(struct bcmgenet_priv *priv, u32 dma_ctrl)
+ 	bcmgenet_tdma_writel(priv, reg, DMA_CTRL);
+ }
+ 
++static bool bcmgenet_hfb_is_filter_enabled(struct bcmgenet_priv *priv,
++					   u32 f_index)
 +{
-+	u32 offset, reg, reg1;
++	u32 offset;
++	u32 reg;
 +
-+	offset = HFB_FLT_ENABLE_V3PLUS;
++	offset = HFB_FLT_ENABLE_V3PLUS + (f_index < 32) * sizeof(u32);
 +	reg = bcmgenet_hfb_reg_readl(priv, offset);
-+	reg1 = bcmgenet_hfb_reg_readl(priv, offset + sizeof(u32));
-+	if  (f_index < 32) {
-+		reg1 &= ~(1 << (f_index % 32));
-+		bcmgenet_hfb_reg_writel(priv, reg1, offset + sizeof(u32));
-+	} else {
-+		reg &= ~(1 << (f_index % 32));
-+		bcmgenet_hfb_reg_writel(priv, reg, offset);
-+	}
-+	if (!reg && !reg1) {
-+		reg = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
-+		reg &= ~RBUF_HFB_EN;
-+		bcmgenet_hfb_reg_writel(priv, reg, HFB_CTRL);
-+	}
- }
- 
- static void bcmgenet_hfb_set_filter_rx_queue_mapping(struct bcmgenet_priv *priv,
-@@ -513,13 +537,213 @@ static int bcmgenet_hfb_find_unused_filter(struct bcmgenet_priv *priv)
- {
- 	u32 f_index;
- 
--	for (f_index = 0; f_index < priv->hw_params->hfb_filter_cnt; f_index++)
-+	/* First MAX_NUM_OF_FS_RULES are reserved for Rx NFC filters */
-+	for (f_index = MAX_NUM_OF_FS_RULES;
-+	     f_index < priv->hw_params->hfb_filter_cnt; f_index++)
- 		if (!bcmgenet_hfb_is_filter_enabled(priv, f_index))
- 			return f_index;
- 
- 	return -ENOMEM;
- }
- 
-+static int bcmgenet_hfb_validate_mask(void *mask, size_t size)
-+{
-+	while (size) {
-+		switch (*(unsigned char *)mask++) {
-+		case 0x00:
-+		case 0x0f:
-+		case 0xf0:
-+		case 0xff:
-+			size--;
-+			continue;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
++	return !!(reg & (1 << (f_index % 32)));
 +}
 +
-+#define VALIDATE_MASK(x) \
-+	bcmgenet_hfb_validate_mask(&(x), sizeof(x))
-+
-+static int bcmgenet_hfb_insert_data(u32 *f, int offset,
-+				    void *val, void *mask, size_t size)
++static void bcmgenet_hfb_enable_filter(struct bcmgenet_priv *priv, u32 f_index)
 +{
-+	int index;
-+	u32 tmp;
++	u32 offset;
++	u32 reg;
 +
-+	index = offset / 2;
-+	tmp = f[index];
-+
-+	while (size--) {
-+		if (offset++ & 1) {
-+			tmp &= ~0x300FF;
-+			tmp |= (*(unsigned char *)val++);
-+			switch ((*(unsigned char *)mask++)) {
-+			case 0xFF:
-+				tmp |= 0x30000;
-+				break;
-+			case 0xF0:
-+				tmp |= 0x20000;
-+				break;
-+			case 0x0F:
-+				tmp |= 0x10000;
-+				break;
-+			}
-+			f[index++] = tmp;
-+			if (size)
-+				tmp = f[index];
-+		} else {
-+			tmp &= ~0xCFF00;
-+			tmp |= (*(unsigned char *)val++) << 8;
-+			switch ((*(unsigned char *)mask++)) {
-+			case 0xFF:
-+				tmp |= 0xC0000;
-+				break;
-+			case 0xF0:
-+				tmp |= 0x80000;
-+				break;
-+			case 0x0F:
-+				tmp |= 0x40000;
-+				break;
-+			}
-+			if (!size)
-+				f[index] = tmp;
-+		}
-+	}
-+
-+	return 0;
++	offset = HFB_FLT_ENABLE_V3PLUS + (f_index < 32) * sizeof(u32);
++	reg = bcmgenet_hfb_reg_readl(priv, offset);
++	reg |= (1 << (f_index % 32));
++	bcmgenet_hfb_reg_writel(priv, reg, offset);
 +}
 +
-+static void bcmgenet_hfb_set_filter(struct bcmgenet_priv *priv, u32 *f_data,
-+				    u32 f_length, u32 rx_queue, int f_index)
++static void bcmgenet_hfb_set_filter_rx_queue_mapping(struct bcmgenet_priv *priv,
++						     u32 f_index, u32 rx_queue)
 +{
-+	u32 base = f_index * priv->hw_params->hfb_filter_size;
-+	int i;
++	u32 offset;
++	u32 reg;
++
++	offset = f_index / 8;
++	reg = bcmgenet_rdma_readl(priv, DMA_INDEX2RING_0 + offset);
++	reg &= ~(0xF << (4 * (f_index % 8)));
++	reg |= ((rx_queue & 0xF) << (4 * (f_index % 8)));
++	bcmgenet_rdma_writel(priv, reg, DMA_INDEX2RING_0 + offset);
++}
++
++static void bcmgenet_hfb_set_filter_length(struct bcmgenet_priv *priv,
++					   u32 f_index, u32 f_length)
++{
++	u32 offset;
++	u32 reg;
++
++	offset = HFB_FLT_LEN_V3PLUS +
++		 ((priv->hw_params->hfb_filter_cnt - 1 - f_index) / 4) *
++		 sizeof(u32);
++	reg = bcmgenet_hfb_reg_readl(priv, offset);
++	reg &= ~(0xFF << (8 * (f_index % 4)));
++	reg |= ((f_length & 0xFF) << (8 * (f_index % 4)));
++	bcmgenet_hfb_reg_writel(priv, reg, offset);
++}
++
++static int bcmgenet_hfb_find_unused_filter(struct bcmgenet_priv *priv)
++{
++	u32 f_index;
++
++	for (f_index = 0; f_index < priv->hw_params->hfb_filter_cnt; f_index++)
++		if (!bcmgenet_hfb_is_filter_enabled(priv, f_index))
++			return f_index;
++
++	return -ENOMEM;
++}
++
++/* bcmgenet_hfb_add_filter
++ *
++ * Add new filter to Hardware Filter Block to match and direct Rx traffic to
++ * desired Rx queue.
++ *
++ * f_data is an array of unsigned 32-bit integers where each 32-bit integer
++ * provides filter data for 2 bytes (4 nibbles) of Rx frame:
++ *
++ * bits 31:20 - unused
++ * bit  19    - nibble 0 match enable
++ * bit  18    - nibble 1 match enable
++ * bit  17    - nibble 2 match enable
++ * bit  16    - nibble 3 match enable
++ * bits 15:12 - nibble 0 data
++ * bits 11:8  - nibble 1 data
++ * bits 7:4   - nibble 2 data
++ * bits 3:0   - nibble 3 data
++ *
++ * Example:
++ * In order to match:
++ * - Ethernet frame type = 0x0800 (IP)
++ * - IP version field = 4
++ * - IP protocol field = 0x11 (UDP)
++ *
++ * The following filter is needed:
++ * u32 hfb_filter_ipv4_udp[] = {
++ *   Rx frame offset 0x00: 0x00000000, 0x00000000, 0x00000000, 0x00000000,
++ *   Rx frame offset 0x08: 0x00000000, 0x00000000, 0x000F0800, 0x00084000,
++ *   Rx frame offset 0x10: 0x00000000, 0x00000000, 0x00000000, 0x00030011,
++ * };
++ *
++ * To add the filter to HFB and direct the traffic to Rx queue 0, call:
++ * bcmgenet_hfb_add_filter(priv, hfb_filter_ipv4_udp,
++ *                         ARRAY_SIZE(hfb_filter_ipv4_udp), 0);
++ */
++int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
++			    u32 f_length, u32 rx_queue)
++{
++	int f_index;
++	u32 i;
++
++	f_index = bcmgenet_hfb_find_unused_filter(priv);
++	if (f_index < 0)
++		return -ENOMEM;
++
++	if (f_length > priv->hw_params->hfb_filter_size)
++		return -EINVAL;
 +
 +	for (i = 0; i < f_length; i++)
-+		bcmgenet_hfb_writel(priv, f_data[i], (base + i) * sizeof(u32));
++		bcmgenet_hfb_writel(priv, f_data[i],
++			(f_index * priv->hw_params->hfb_filter_size + i) *
++			sizeof(u32));
 +
 +	bcmgenet_hfb_set_filter_length(priv, f_index, 2 * f_length);
 +	bcmgenet_hfb_set_filter_rx_queue_mapping(priv, f_index, rx_queue);
++	bcmgenet_hfb_enable_filter(priv, f_index);
++	bcmgenet_hfb_reg_writel(priv, 0x1, HFB_CTRL);
++
++	return 0;
 +}
 +
-+static int bcmgenet_hfb_create_rxnfc_filter(struct bcmgenet_priv *priv,
-+					    struct bcmgenet_rxnfc_rule *rule)
-+{
-+	struct ethtool_rx_flow_spec *fs = &rule->fs;
-+	int err = 0, offset = 0, f_length = 0;
-+	u16 val_16, mask_16;
-+	u8 val_8, mask_8;
-+	size_t size;
-+	u32 *f_data;
-+
-+	f_data = kcalloc(priv->hw_params->hfb_filter_size, sizeof(u32),
-+			 GFP_KERNEL);
-+	if (!f_data)
-+		return -ENOMEM;
-+
-+	if (fs->flow_type & FLOW_MAC_EXT) {
-+		bcmgenet_hfb_insert_data(f_data, 0,
-+					 &fs->h_ext.h_dest, &fs->m_ext.h_dest,
-+					 sizeof(fs->h_ext.h_dest));
-+	}
-+
-+	if (fs->flow_type & FLOW_EXT) {
-+		if (fs->m_ext.vlan_etype ||
-+		    fs->m_ext.vlan_tci) {
-+			bcmgenet_hfb_insert_data(f_data, 12,
-+						 &fs->h_ext.vlan_etype,
-+						 &fs->m_ext.vlan_etype,
-+						 sizeof(fs->h_ext.vlan_etype));
-+			bcmgenet_hfb_insert_data(f_data, 14,
-+						 &fs->h_ext.vlan_tci,
-+						 &fs->m_ext.vlan_tci,
-+						 sizeof(fs->h_ext.vlan_tci));
-+			offset += VLAN_HLEN;
-+			f_length += DIV_ROUND_UP(VLAN_HLEN, 2);
-+		}
-+	}
-+
-+	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
-+	case ETHER_FLOW:
-+		f_length += DIV_ROUND_UP(ETH_HLEN, 2);
-+		bcmgenet_hfb_insert_data(f_data, 0,
-+					 &fs->h_u.ether_spec.h_dest,
-+					 &fs->m_u.ether_spec.h_dest,
-+					 sizeof(fs->h_u.ether_spec.h_dest));
-+		bcmgenet_hfb_insert_data(f_data, ETH_ALEN,
-+					 &fs->h_u.ether_spec.h_source,
-+					 &fs->m_u.ether_spec.h_source,
-+					 sizeof(fs->h_u.ether_spec.h_source));
-+		bcmgenet_hfb_insert_data(f_data, (2 * ETH_ALEN) + offset,
-+					 &fs->h_u.ether_spec.h_proto,
-+					 &fs->m_u.ether_spec.h_proto,
-+					 sizeof(fs->h_u.ether_spec.h_proto));
-+		break;
-+	case IP_USER_FLOW:
-+		f_length += DIV_ROUND_UP(ETH_HLEN + 20, 2);
-+		/* Specify IP Ether Type */
-+		val_16 = htons(ETH_P_IP);
-+		mask_16 = 0xFFFF;
-+		bcmgenet_hfb_insert_data(f_data, (2 * ETH_ALEN) + offset,
-+					 &val_16, &mask_16, sizeof(val_16));
-+		bcmgenet_hfb_insert_data(f_data, 15 + offset,
-+					 &fs->h_u.usr_ip4_spec.tos,
-+					 &fs->m_u.usr_ip4_spec.tos,
-+					 sizeof(fs->h_u.usr_ip4_spec.tos));
-+		bcmgenet_hfb_insert_data(f_data, 23 + offset,
-+					 &fs->h_u.usr_ip4_spec.proto,
-+					 &fs->m_u.usr_ip4_spec.proto,
-+					 sizeof(fs->h_u.usr_ip4_spec.proto));
-+		bcmgenet_hfb_insert_data(f_data, 26 + offset,
-+					 &fs->h_u.usr_ip4_spec.ip4src,
-+					 &fs->m_u.usr_ip4_spec.ip4src,
-+					 sizeof(fs->h_u.usr_ip4_spec.ip4src));
-+		bcmgenet_hfb_insert_data(f_data, 30 + offset,
-+					 &fs->h_u.usr_ip4_spec.ip4dst,
-+					 &fs->m_u.usr_ip4_spec.ip4dst,
-+					 sizeof(fs->h_u.usr_ip4_spec.ip4dst));
-+		if (!fs->m_u.usr_ip4_spec.l4_4_bytes)
-+			break;
-+
-+		/* Only supports 20 byte IPv4 header */
-+		val_8 = 0x45;
-+		mask_8 = 0xFF;
-+		bcmgenet_hfb_insert_data(f_data, ETH_HLEN + offset,
-+					 &val_8, &mask_8,
-+					 sizeof(val_8));
-+		size = sizeof(fs->h_u.usr_ip4_spec.l4_4_bytes);
-+		bcmgenet_hfb_insert_data(f_data,
-+					 ETH_HLEN + 20 + offset,
-+					 &fs->h_u.usr_ip4_spec.l4_4_bytes,
-+					 &fs->m_u.usr_ip4_spec.l4_4_bytes,
-+					 size);
-+		f_length += DIV_ROUND_UP(size, 2);
-+		break;
-+	}
-+
-+	if (!fs->ring_cookie) {
-+		/* Ring 0 flows can be handled by the default Descriptor Ring
-+		 * We'll map them to ring 0, but don't enable the filter
-+		 */
-+		bcmgenet_hfb_set_filter(priv, f_data, f_length,	0,
-+					fs->location);
-+		rule->state = BCMGENET_RXNFC_STATE_DISABLED;
-+	} else {
-+		/* Other Rx rings are direct mapped here */
-+		bcmgenet_hfb_set_filter(priv, f_data, f_length,
-+					fs->ring_cookie, fs->location);
-+		bcmgenet_hfb_enable_filter(priv, fs->location);
-+		rule->state = BCMGENET_RXNFC_STATE_ENABLED;
-+	}
-+
-+	kfree(f_data);
-+
-+	return err;
-+}
-+
- /* bcmgenet_hfb_add_filter
+ /* bcmgenet_hfb_clear
   *
-  * Add new filter to Hardware Filter Block to match and direct Rx traffic to
-@@ -559,7 +783,6 @@ int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
- 			    u32 f_length, u32 rx_queue)
- {
- 	int f_index;
--	u32 i;
- 
- 	f_index = bcmgenet_hfb_find_unused_filter(priv);
- 	if (f_index < 0)
-@@ -568,15 +791,8 @@ int bcmgenet_hfb_add_filter(struct bcmgenet_priv *priv, u32 *f_data,
- 	if (f_length > priv->hw_params->hfb_filter_size)
- 		return -EINVAL;
- 
--	for (i = 0; i < f_length; i++)
--		bcmgenet_hfb_writel(priv, f_data[i],
--			(f_index * priv->hw_params->hfb_filter_size + i) *
--			sizeof(u32));
--
--	bcmgenet_hfb_set_filter_length(priv, f_index, 2 * f_length);
--	bcmgenet_hfb_set_filter_rx_queue_mapping(priv, f_index, rx_queue);
-+	bcmgenet_hfb_set_filter(priv, f_data, f_length, rx_queue, f_index);
- 	bcmgenet_hfb_enable_filter(priv, f_index);
--	bcmgenet_hfb_reg_writel(priv, 0x1, HFB_CTRL);
- 
- 	return 0;
- }
-@@ -607,9 +823,17 @@ static void bcmgenet_hfb_clear(struct bcmgenet_priv *priv)
- 
- static void bcmgenet_hfb_init(struct bcmgenet_priv *priv)
- {
-+	int i;
-+
- 	if (GENET_IS_V1(priv) || GENET_IS_V2(priv))
- 		return;
- 
-+	INIT_LIST_HEAD(&priv->rxnfc_list);
-+	for (i = 0; i < MAX_NUM_OF_FS_RULES; i++) {
-+		INIT_LIST_HEAD(&priv->rxnfc_rules[i].list);
-+		priv->rxnfc_rules[i].state = BCMGENET_RXNFC_STATE_UNUSED;
-+	}
-+
- 	bcmgenet_hfb_clear(priv);
- }
- 
-@@ -1197,6 +1421,228 @@ static int bcmgenet_set_eee(struct net_device *dev, struct ethtool_eee *e)
- 	return phy_ethtool_set_eee(dev->phydev, e);
- }
- 
-+static int bcmgenet_validate_flow(struct net_device *dev,
-+				  struct ethtool_rxnfc *cmd)
-+{
-+	struct ethtool_usrip4_spec *l4_mask;
-+	struct ethhdr *eth_mask;
-+
-+	if (cmd->fs.location >= MAX_NUM_OF_FS_RULES) {
-+		netdev_err(dev, "rxnfc: Invalid location (%d)\n",
-+			   cmd->fs.location);
-+		return -EINVAL;
-+	}
-+
-+	switch (cmd->fs.flow_type & ~(FLOW_EXT | FLOW_MAC_EXT)) {
-+	case IP_USER_FLOW:
-+		l4_mask = &cmd->fs.m_u.usr_ip4_spec;
-+		/* don't allow mask which isn't valid */
-+		if (VALIDATE_MASK(l4_mask->ip4src) ||
-+		    VALIDATE_MASK(l4_mask->ip4dst) ||
-+		    VALIDATE_MASK(l4_mask->l4_4_bytes) ||
-+		    VALIDATE_MASK(l4_mask->proto) ||
-+		    VALIDATE_MASK(l4_mask->ip_ver) ||
-+		    VALIDATE_MASK(l4_mask->tos)) {
-+			netdev_err(dev, "rxnfc: Unsupported mask\n");
-+			return -EINVAL;
-+		}
-+		break;
-+	case ETHER_FLOW:
-+		eth_mask = &cmd->fs.m_u.ether_spec;
-+		/* don't allow mask which isn't valid */
-+		if (VALIDATE_MASK(eth_mask->h_source) ||
-+		    VALIDATE_MASK(eth_mask->h_source) ||
-+		    VALIDATE_MASK(eth_mask->h_proto)) {
-+			netdev_err(dev, "rxnfc: Unsupported mask\n");
-+			return -EINVAL;
-+		}
-+		break;
-+	default:
-+		netdev_err(dev, "rxnfc: Unsupported flow type (0x%x)\n",
-+			   cmd->fs.flow_type);
-+		return -EINVAL;
-+	}
-+
-+	if ((cmd->fs.flow_type & FLOW_EXT)) {
-+		/* don't allow mask which isn't valid */
-+		if (VALIDATE_MASK(cmd->fs.m_ext.vlan_etype) ||
-+		    VALIDATE_MASK(cmd->fs.m_ext.vlan_tci)) {
-+			netdev_err(dev, "rxnfc: Unsupported mask\n");
-+			return -EINVAL;
-+		}
-+		if (cmd->fs.m_ext.data[0] || cmd->fs.m_ext.data[1]) {
-+			netdev_err(dev, "rxnfc: user-def not supported\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if ((cmd->fs.flow_type & FLOW_MAC_EXT)) {
-+		/* don't allow mask which isn't valid */
-+		if (VALIDATE_MASK(cmd->fs.m_ext.h_dest)) {
-+			netdev_err(dev, "rxnfc: Unsupported mask\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int bcmgenet_insert_flow(struct net_device *dev,
-+				struct ethtool_rxnfc *cmd)
-+{
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	struct bcmgenet_rxnfc_rule *loc_rule;
-+	int err;
-+
-+	if (priv->hw_params->hfb_filter_size < 128) {
-+		netdev_err(dev, "rxnfc: Not supported by this device\n");
-+		return -EINVAL;
-+	}
-+
-+	if (cmd->fs.ring_cookie > priv->hw_params->rx_queues) {
-+		netdev_err(dev, "rxnfc: Unsupported action (%llu)\n",
-+			   cmd->fs.ring_cookie);
-+		return -EINVAL;
-+	}
-+
-+	err = bcmgenet_validate_flow(dev, cmd);
-+	if (err)
-+		return err;
-+
-+	loc_rule = &priv->rxnfc_rules[cmd->fs.location];
-+	if (loc_rule->state == BCMGENET_RXNFC_STATE_ENABLED)
-+		bcmgenet_hfb_disable_filter(priv, cmd->fs.location);
-+	if (loc_rule->state != BCMGENET_RXNFC_STATE_UNUSED)
-+		list_del(&loc_rule->list);
-+	loc_rule->state = BCMGENET_RXNFC_STATE_UNUSED;
-+	memcpy(&loc_rule->fs, &cmd->fs,
-+	       sizeof(struct ethtool_rx_flow_spec));
-+
-+	err = bcmgenet_hfb_create_rxnfc_filter(priv, loc_rule);
-+	if (err) {
-+		netdev_err(dev, "rxnfc: Could not install rule (%d)\n",
-+			   err);
-+		return err;
-+	}
-+
-+	list_add_tail(&loc_rule->list, &priv->rxnfc_list);
-+
-+	return 0;
-+}
-+
-+static int bcmgenet_delete_flow(struct net_device *dev,
-+				struct ethtool_rxnfc *cmd)
-+{
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	struct bcmgenet_rxnfc_rule *rule;
-+	int err = 0;
-+
-+	if (cmd->fs.location >= MAX_NUM_OF_FS_RULES)
-+		return -EINVAL;
-+
-+	rule = &priv->rxnfc_rules[cmd->fs.location];
-+	if (rule->state == BCMGENET_RXNFC_STATE_UNUSED) {
-+		err =  -ENOENT;
-+		goto out;
-+	}
-+
-+	if (rule->state == BCMGENET_RXNFC_STATE_ENABLED)
-+		bcmgenet_hfb_disable_filter(priv, cmd->fs.location);
-+	if (rule->state != BCMGENET_RXNFC_STATE_UNUSED)
-+		list_del(&rule->list);
-+	rule->state = BCMGENET_RXNFC_STATE_UNUSED;
-+	memset(&rule->fs, 0, sizeof(struct ethtool_rx_flow_spec));
-+
-+out:
-+	return err;
-+}
-+
-+static int bcmgenet_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
-+{
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	int err = 0;
-+
-+	switch (cmd->cmd) {
-+	case ETHTOOL_SRXCLSRLINS:
-+		err = bcmgenet_insert_flow(dev, cmd);
-+		break;
-+	case ETHTOOL_SRXCLSRLDEL:
-+		err = bcmgenet_delete_flow(dev, cmd);
-+		break;
-+	default:
-+		netdev_warn(priv->dev, "Unsupported ethtool command. (%d)\n",
-+			    cmd->cmd);
-+		return -EINVAL;
-+	}
-+
-+	return err;
-+}
-+
-+static int bcmgenet_get_flow(struct net_device *dev, struct ethtool_rxnfc *cmd,
-+			     int loc)
-+{
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	struct bcmgenet_rxnfc_rule *rule;
-+	int err = 0;
-+
-+	if (loc < 0 || loc >= MAX_NUM_OF_FS_RULES)
-+		return -EINVAL;
-+
-+	rule = &priv->rxnfc_rules[loc];
-+	if (rule->state == BCMGENET_RXNFC_STATE_UNUSED)
-+		err = -ENOENT;
-+	else
-+		memcpy(&cmd->fs, &rule->fs,
-+		       sizeof(struct ethtool_rx_flow_spec));
-+
-+	return err;
-+}
-+
-+static int bcmgenet_get_num_flows(struct bcmgenet_priv *priv)
-+{
-+	struct list_head *pos;
-+	int res = 0;
-+
-+	list_for_each(pos, &priv->rxnfc_list)
-+		res++;
-+
-+	return res;
-+}
-+
-+static int bcmgenet_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
-+			      u32 *rule_locs)
-+{
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	struct bcmgenet_rxnfc_rule *rule;
-+	int err = 0;
-+	int i = 0;
-+
-+	switch (cmd->cmd) {
-+	case ETHTOOL_GRXRINGS:
-+		cmd->data = priv->hw_params->rx_queues ?: 1;
-+		break;
-+	case ETHTOOL_GRXCLSRLCNT:
-+		cmd->rule_cnt = bcmgenet_get_num_flows(priv);
-+		cmd->data = MAX_NUM_OF_FS_RULES;
-+		break;
-+	case ETHTOOL_GRXCLSRULE:
-+		err = bcmgenet_get_flow(dev, cmd, cmd->fs.location);
-+		break;
-+	case ETHTOOL_GRXCLSRLALL:
-+		list_for_each_entry(rule, &priv->rxnfc_list, list)
-+			if (i < cmd->rule_cnt)
-+				rule_locs[i++] = rule->fs.location;
-+		cmd->rule_cnt = i;
-+		cmd->data = MAX_NUM_OF_FS_RULES;
-+		break;
-+	default:
-+		err = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return err;
-+}
-+
- /* standard ethtool support functions. */
- static const struct ethtool_ops bcmgenet_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS |
-@@ -1221,6 +1667,8 @@ static const struct ethtool_ops bcmgenet_ethtool_ops = {
- 	.get_link_ksettings	= bcmgenet_get_link_ksettings,
- 	.set_link_ksettings	= bcmgenet_set_link_ksettings,
- 	.get_ts_info		= ethtool_op_get_ts_info,
-+	.get_rxnfc		= bcmgenet_get_rxnfc,
-+	.set_rxnfc		= bcmgenet_set_rxnfc,
- };
- 
- /* Power down the unimac, based on mode. */
-@@ -3730,8 +4178,8 @@ static int bcmgenet_resume(struct device *d)
- 	struct net_device *dev = dev_get_drvdata(d);
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	unsigned long dma_ctrl;
-+	u32 offset, reg;
- 	int ret;
--	u32 reg;
- 
- 	if (!netif_running(dev))
- 		return 0;
-@@ -3766,6 +4214,11 @@ static int bcmgenet_resume(struct device *d)
- 
- 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
- 
-+	offset = HFB_FLT_ENABLE_V3PLUS;
-+	bcmgenet_hfb_reg_writel(priv, priv->hfb_en[1], offset);
-+	bcmgenet_hfb_reg_writel(priv, priv->hfb_en[2], offset + sizeof(u32));
-+	bcmgenet_hfb_reg_writel(priv, priv->hfb_en[0], HFB_CTRL);
-+
- 	if (priv->internal_phy) {
- 		reg = bcmgenet_ext_readl(priv, EXT_EXT_PWR_MGMT);
- 		reg |= EXT_ENERGY_DET_MASK;
-@@ -3809,6 +4262,7 @@ static int bcmgenet_suspend(struct device *d)
- 	struct net_device *dev = dev_get_drvdata(d);
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	int ret = 0;
-+	u32 offset;
- 
- 	if (!netif_running(dev))
- 		return 0;
-@@ -3820,6 +4274,13 @@ static int bcmgenet_suspend(struct device *d)
- 	if (!device_may_wakeup(d))
- 		phy_suspend(dev->phydev);
- 
-+	/* Preserve filter state and disable filtering */
-+	priv->hfb_en[0] = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
-+	offset = HFB_FLT_ENABLE_V3PLUS;
-+	priv->hfb_en[1] = bcmgenet_hfb_reg_readl(priv, offset);
-+	priv->hfb_en[2] = bcmgenet_hfb_reg_readl(priv, offset + sizeof(u32));
-+	bcmgenet_hfb_reg_writel(priv, 0, HFB_CTRL);
-+
- 	/* Prepare the device for Wake-on-LAN and switch to the slow clock */
- 	if (device_may_wakeup(d) && priv->wolopts)
- 		ret = bcmgenet_power_down(priv, GENET_POWER_WOL_MAGIC);
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index a858b7305832..031d91f45067 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -32,6 +32,7 @@
- #define DMA_MAX_BURST_LENGTH    0x10
- 
- /* misc. configuration */
-+#define MAX_NUM_OF_FS_RULES		16
- #define CLEAR_ALL_HFB			0xFF
- #define DMA_FC_THRESH_HI		(TOTAL_DESC >> 4)
- #define DMA_FC_THRESH_LO		5
-@@ -609,6 +610,18 @@ struct bcmgenet_rx_ring {
- 	struct bcmgenet_priv *priv;
- };
- 
-+enum bcmgenet_rxnfc_state {
-+	BCMGENET_RXNFC_STATE_UNUSED = 0,
-+	BCMGENET_RXNFC_STATE_DISABLED,
-+	BCMGENET_RXNFC_STATE_ENABLED
-+};
-+
-+struct bcmgenet_rxnfc_rule {
-+	struct	list_head list;
-+	struct ethtool_rx_flow_spec	fs;
-+	enum bcmgenet_rxnfc_state state;
-+};
-+
- /* device context */
- struct bcmgenet_priv {
- 	void __iomem *base;
-@@ -627,6 +640,8 @@ struct bcmgenet_priv {
- 	struct enet_cb *rx_cbs;
- 	unsigned int num_rx_bds;
- 	unsigned int rx_buf_len;
-+	struct bcmgenet_rxnfc_rule rxnfc_rules[MAX_NUM_OF_FS_RULES];
-+	struct list_head rxnfc_list;
- 
- 	struct bcmgenet_rx_ring rx_rings[DESC_INDEX + 1];
- 
-@@ -679,6 +694,7 @@ struct bcmgenet_priv {
- 	u32 wolopts;
- 	u8 sopass[SOPASS_MAX];
- 	bool wol_active;
-+	u32 hfb_en[3];
- 
- 	struct bcmgenet_mib_counters mib;
- 
+  * Clear Hardware Filter Block and disable all filtering.
 -- 
 2.7.4
 
