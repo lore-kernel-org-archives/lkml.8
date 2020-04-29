@@ -2,108 +2,105 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B6C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C01C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BB520731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417A42082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:36:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bt2AeFPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgD2IgF (ORCPT
+        id S1726655AbgD2Ig0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:36:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34046 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726543AbgD2IgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:36:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D9C5AABCF;
-        Wed, 29 Apr 2020 08:36:01 +0000 (UTC)
-Subject: Re: [PATCH 1/1] dma: actions: Fix lockdep splat for owl-dma
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-References: <7d503c3dcac2b3ef29d4122a74eacfce142a8f98.1588069418.git.cristian.ciocaltea@gmail.com>
- <20200428164921.GC5259@Mani-XPS-13-9360> <20200428181115.GB26885@BV030612LT>
- <20200428181803.GD5259@Mani-XPS-13-9360>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <a70a2352-7b22-6b85-848b-94d9ee17c022@suse.de>
-Date:   Wed, 29 Apr 2020 10:36:01 +0200
+        Wed, 29 Apr 2020 04:36:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51406 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726530AbgD2IgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 04:36:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588149384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZRgQdTkn6qzRkQ8VVsW9dG8WYy4nYX+Jt55KEFeKtGA=;
+        b=bt2AeFPbS8c5/9pK9xDWvXzwSgwFvbuP/cLKEYCcrW9MQBN2c3tBEukW95PCiTgUQTYFNx
+        jm8OYNRaDrn43lYVbALuNAekSZHd6un84tF5QmSFr1Ub3oQTq9h9CBZsKiNd968X455Cdt
+        Bs0rGrOM928PdziBwBBzwMK+6VjF+QA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-NbAodbhuNOa1oIDvB6y9HA-1; Wed, 29 Apr 2020 04:36:19 -0400
+X-MC-Unique: NbAodbhuNOa1oIDvB6y9HA-1
+Received: by mail-wr1-f69.google.com with SMTP id p16so1354492wro.16
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:36:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZRgQdTkn6qzRkQ8VVsW9dG8WYy4nYX+Jt55KEFeKtGA=;
+        b=gO1+Oj7PZ/t5L36uweqs9wGD0WgpOvJ+GXDLjRhkPy0iVz6aFfpPbt98/N7PCUFM7T
+         X6rsipSzB70BjtpV6XKidQ4Qqnd1yUwHKOKsk0LasnKiX9BkQ2eFrOflOrjS98n6YE6b
+         UqzLhsfWBitR7mBaWOJLcFXa9j98GkOkPGJzrKzdiSUtyvhPj/KGQPvjrM2PkPEhKMhe
+         2mexHITILuN0JNO7e2/loFBlBO3m/fMAWJsOIvIH84AZ52QHvg7gEnQizQnARSKj2fOz
+         I/FBaGbAahG7DrAkktc3vNLQZRKjBoJ4T6vrr+jh1w/0Xw3hcS1nWncUUp6zxVyduRfJ
+         7PsA==
+X-Gm-Message-State: AGi0Pua9EZg1OUeMn1huk+XXBb7Dm4qjieJ2MXkrhV/cbGknw3db8kuk
+        +Hc8wy+UeGEUvn7+Hgr3pvpORqwwtyEZNx5ZRuyBsIr7dkfW5FL5IvB4nU+0FdYtLXSvtRJELXZ
+        CChTTZTJw/zIeALTZbwAMehtc
+X-Received: by 2002:adf:9342:: with SMTP id 60mr36541879wro.129.1588149378460;
+        Wed, 29 Apr 2020 01:36:18 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLSaWR1sAvWMX7AGwwO6UHEwfuQ24iWbemgcg/Uw0ef/sYvFheYyqtDLemSd+ABFL6cnQwmhw==
+X-Received: by 2002:adf:9342:: with SMTP id 60mr36541854wro.129.1588149378247;
+        Wed, 29 Apr 2020 01:36:18 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
+        by smtp.gmail.com with ESMTPSA id s6sm6686281wmh.17.2020.04.29.01.36.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 01:36:17 -0700 (PDT)
+Subject: Re: [PATCH 12/13] KVM: x86: Replace late check_nested_events() hack
+ with more precise fix
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+ <20200423022550.15113-13-sean.j.christopherson@intel.com>
+ <CALMp9eTiGdYPpejAOLNz7zzqP1wPXb_zSL02F27VMHeHGzANJg@mail.gmail.com>
+ <20200428222010.GN12735@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <6b35ec9b-9565-ea6c-3de5-0957a9f76257@redhat.com>
+Date:   Wed, 29 Apr 2020 10:36:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200428181803.GD5259@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200428222010.GN12735@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 28.04.20 um 20:18 schrieb Manivannan Sadhasivam:
-> On Tue, Apr 28, 2020 at 09:11:15PM +0300, Cristian Ciocaltea wrote:
->> On Tue, Apr 28, 2020 at 10:19:21PM +0530, Manivannan Sadhasivam wrote:
->>> On Tue, Apr 28, 2020 at 01:56:12PM +0300, Cristian Ciocaltea wrote:
->>>> When the kernel is build with lockdep support and the owl-dma driver is
->>>> used, the following message is shown:
-[...]
->>>> The required fix is to use spin_lock_init() on the pchan lock before
->>>> attempting to call any spin_lock_irqsave() in owl_dma_get_pchan().
->>>
->>> Right, this is a bug. But while looking at the code now, I feel that we don't
->>> need 'pchan->lock'. The idea was to protect 'pchan->vchan', but I think
->>> 'od->lock' is the better candidate for that since it already protects it in
->>> 'owl_dma_terminate_pchan'.
->>>
->>> So I'd be happy if you remove the lock from 'pchan' and just directly use the
->>> one in 'od'.
->>>
->>> Out of curiosity, on which platform you're testing this?
->>
->> Totally agree, I will send a new patch revision as soon as I do some
->> more testing.
+On 29/04/20 00:20, Sean Christopherson wrote:
+>> So, that's what this mess was all about! Well, this certainly looks better.
+> Right?  I can't count the number of times I've looked at this code and
+> wondered what the hell it was doing.
 > 
-> Coo[l], thanks!
-> 
->> I'm currently experimenting on an Actions S500 based board (Roseapple Pi)
->> trying to extend, if possible, the existing mainline support for those
->> SoCs.
-> 
-> Awesome! It's great to see that Actions platform is seeing some attention
-> these days :)
-> 
->> I don't have much progress so far, since I started quite recently
->> and I also lack experience in the kernel development area, but I do my
->> best to come back with more patches once I get a consistent functionality.
-> 
-> No worries. Feel free to reach out to me if you have any questions. There is
-> a lot of work to do and for sure it will be a good learning curve.
-> 
-> We do have an IRC channel (##linux-actions) for quick discussions. Fee[l] free
-> to join!
+> Side topic, I just realized you're reviewing my original series.  Paolo
+> commandeered it to extend it to SVM. https://patchwork.kernel.org/cover/11508679/
 
-Please also CC the linux-actions mailing list on any patches:
+If you can just send a patch to squash into 9/13 I can take care of it.
 
-https://lists.infradead.org/mailman/listinfo/linux-actions
+Paolo
 
-Mani, do you have a 5.7-rc1 tree set up or should I queue patches this 
-round? It still seems missing in MAINTAINERS, and then there's Matheus' 
-patches in review.
-
-Thanks,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
