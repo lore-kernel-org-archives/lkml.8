@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26591C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79DCC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F18622220A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A7421D92
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588165895;
-	bh=T+QBw3fWFulSDwnGmQld3vmXaCHwlmIIuIWPC01I/BQ=;
+	s=default; t=1588165897;
+	bh=n9EcOT2FkCDsxsKqknM65PlZojf+JnB9Wjlg3PWyG7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZrrZMyYax8odFL8nCKfhry1iM1tKyFj8vXu04inrTP9tP0EVdhOLZFf5IlQqMLae
-	 8MzIo+KQSDG2kAQcJIzcC+Ry9hww57b3oOJ/H6SQgp7AOVnIz8PggmSBXHhmeqCyTO
-	 BVSKZfWadWBMJmwNEbrK2e4/7Mlx0Tou8puECEiI=
+	b=HstJ0ifX8QRhHxhiPOuuK6wy+cSZlkosE1hAiz8KEh1Z8mV8Q+u+O8ZsXRRKrTAMS
+	 NIhIaKXnC2V30+urHcHMyVh0gK7KZcmHBV1XKZ+F364dDJIZefxcKIoE1sBYBJQFc9
+	 7qX6vOlrwSS/4nnNGKt2LgsRmq7eRl7tvDUKNjt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgD2NLe (ORCPT
+        id S1727778AbgD2NLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48352 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 09:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgD2NL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:11:28 -0400
+        id S1727113AbgD2NLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:11:31 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 880DA2222A;
-        Wed, 29 Apr 2020 13:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 719142222E;
+        Wed, 29 Apr 2020 13:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588165888;
-        bh=T+QBw3fWFulSDwnGmQld3vmXaCHwlmIIuIWPC01I/BQ=;
+        s=default; t=1588165890;
+        bh=n9EcOT2FkCDsxsKqknM65PlZojf+JnB9Wjlg3PWyG7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+CjaUlY79tpVTx/PIef/03GhwQAu5X+y/J5420l9yW5HxQejEs/VVm0qcylbrpFC
-         lkE57c7CtLo6YYlPLsdHcftE9KKIJccbSVQ6wLB/vECbYWqCequO82OgH2VT8k11fU
-         pMY1WVkCmh4zx72myGkDo0le4W1Ap2Ky8vOVrck0=
+        b=kL+yhE70h5XSHlibd6URd3FOB9YRWuJ9w/8oshwVvrhSbbYF66srBejh5Veu9mvKk
+         5/UgYvPQdMOXm4mcykcwBf/dgibGkviCWgHPWmUbd1nmd1xEfWN+Gov65dC14cEwXV
+         1pPH5Cs0Sntyld8186oiOWe5lZybrnPUx4dzNkeI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5/8] perf evlist: Allow reusing the side band thread for more purposes
-Date:   Wed, 29 Apr 2020 10:11:03 -0300
-Message-Id: <20200429131106.27974-6-acme@kernel.org>
+Subject: [PATCH 6/8] libsubcmd: Introduce OPT_CALLBACK_SET()
+Date:   Wed, 29 Apr 2020 10:11:04 -0300
+Message-Id: <20200429131106.27974-7-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200429131106.27974-1-acme@kernel.org>
 References: <20200429131106.27974-1-acme@kernel.org>
@@ -63,76 +63,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I.e. so far we had just one event in that side band thread, a dummy one
-with attr.bpf_event set, so that 'perf record' can go ahead and ask the
-kernel for further information about BPF programs being loaded.
-
-Allow for more than one event to be there, so that we can use it as
-well for the upcoming --switch-output-event feature.
+To register that an option was set, like with the upcoming 'perf record
+--switch-output-option' one.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200427211935.25789-7-acme@kernel.org
+Link: http://lore.kernel.org/lkml/20200428121601.GB2245@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 22 ++++++++++++++++++++++
- tools/perf/util/evlist.h |  1 +
- 2 files changed, 23 insertions(+)
+ tools/lib/subcmd/parse-options.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1d0d36da223b..849058766757 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1777,6 +1777,19 @@ static void *perf_evlist__poll_thread(void *arg)
- 	return NULL;
- }
- 
-+void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		evsel->core.attr.sample_id_all	  = 1;
-+		evsel->core.attr.watermark	  = 1;
-+		evsel->core.attr.wakeup_watermark = 1;
-+		evsel->side_band.cb   = cb;
-+		evsel->side_band.data = data;
-+	}
-+}
-+
- int perf_evlist__start_sb_thread(struct evlist *evlist,
- 				 struct target *target)
- {
-@@ -1788,6 +1801,15 @@ int perf_evlist__start_sb_thread(struct evlist *evlist,
- 	if (perf_evlist__create_maps(evlist, target))
- 		goto out_delete_evlist;
- 
-+	if (evlist->core.nr_entries > 1) {
-+		bool can_sample_identifier = perf_can_sample_identifier();
-+
-+		evlist__for_each_entry(evlist, counter)
-+			perf_evsel__set_sample_id(counter, can_sample_identifier);
-+
-+		perf_evlist__set_id_pos(evlist);
-+	}
-+
- 	evlist__for_each_entry(evlist, counter) {
- 		if (evsel__open(counter, evlist->core.cpus,
- 				     evlist->core.threads) < 0)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 0f02408fff3e..1a8a979ae137 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -111,6 +111,7 @@ int perf_evlist__add_sb_event(struct evlist *evlist,
- 			      struct perf_event_attr *attr,
- 			      perf_evsel__sb_cb_t cb,
- 			      void *data);
-+void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data);
- int perf_evlist__start_sb_thread(struct evlist *evlist,
- 				 struct target *target);
- void perf_evlist__stop_sb_thread(struct evlist *evlist);
+diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
+index af9def589863..d2414144eb8c 100644
+--- a/tools/lib/subcmd/parse-options.h
++++ b/tools/lib/subcmd/parse-options.h
+@@ -151,6 +151,8 @@ struct option {
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = "time", .help = (h), .callback = parse_opt_approxidate_cb }
+ #define OPT_CALLBACK(s, l, v, a, h, f) \
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = (a), .help = (h), .callback = (f) }
++#define OPT_CALLBACK_SET(s, l, v, os, a, h, f) \
++	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = (a), .help = (h), .callback = (f), .set = check_vtype(os, bool *)}
+ #define OPT_CALLBACK_NOOPT(s, l, v, a, h, f) \
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = (a), .help = (h), .callback = (f), .flags = PARSE_OPT_NOARG }
+ #define OPT_CALLBACK_DEFAULT(s, l, v, a, h, f, d) \
 -- 
 2.21.1
 
