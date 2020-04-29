@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A94C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794ABC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06BEF20731
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBE02072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 03:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588132024;
-	bh=W0Pt8pSh7gN38GwwLrCS/zIlYg9zipczQGbCmzxwpgs=;
+	s=default; t=1588132026;
+	bh=Y/KTiIQK+pYl7vYUZ0sgk/qVrN4Yk7EdIrYVKiLOpvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lIiI2R7VbZEArSWX016H57Vl/PeyIJsHi3tkkbedhFhux4lAHRmkfBEamd9eZCUlC
-	 5sDXsrCCJzs5srQtZ7gto8ljKqtacuKlqN2N1yYni16eto4TXi2+z/FyeX3kLF0PSE
-	 I4gAVYimvGTqg4lVqnDTJKwdBMvDG9PjApJm5pu4=
+	b=qmIi9x4Aue2V/vgH59mmxx5hjiM+mIpx8L/9jsU+n8Kk8wkNDjVZDjhdSDjfpZVDX
+	 390czO1sJ3B1jXrP++vYZ04A6AZNoTJjcBY/+E+cAxbOw9+4IHkN/bK2+vCot2CRDo
+	 KcsSJlUTTpgR6jskKPHDPlwkwDH/dEIvC4W9xBzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgD2Dqy (ORCPT
+        id S1726883AbgD2Dqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 23:46:54 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:30983 "EHLO
+        Tue, 28 Apr 2020 23:46:53 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:30961 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgD2Dqh (ORCPT
+        with ESMTP id S1726764AbgD2Dqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 Apr 2020 23:46:37 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 03T3jXll020748;
-        Wed, 29 Apr 2020 12:45:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03T3jXll020748
+        by conuserg-12.nifty.com with ESMTP id 03T3jXlq020748;
+        Wed, 29 Apr 2020 12:45:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03T3jXlq020748
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588131942;
-        bh=ql9A5u0r309svDQxV0TZAKpz7MrANkT7/8YqyeG+d5g=;
+        s=dec2015msa; t=1588131945;
+        bh=ST4GismhdaU/lj6muYeEzeTyohRxpRwjOgKqY5CR0zQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5kDkxObJS0XPZp7CRKqCAe4Cy0Etp3uf+bfb6KxPGVlt0uVAweq8dXYVOW75FfCL
-         HhBOm4PNLQjcidOCI27AUBWhLsh3idjio1GT7WwHU/3CwQSth3XXjkCDx19nOyhiF8
-         dbCkW/01cv+kCQG8E+88V11Js7TSHbeXjeJSvZpRTn9kQBV072S+VTpA5zVWfZ11p8
-         Fq0FaXcVD9ZyJ+X7OOfJLQ+PXXMV0r7c/xnZv8cvEmoFtJXC1J/+T9g7z3Wu5pMuQJ
-         x+q2KU+tuk1M3Un8RkGCokmf0JyMitDNXoIqa8nVVpd/1q7qJcKMzphLjHvWQr9WD1
-         RgWGRKRsPTPJg==
+        b=U9m39c+uDSAkOf6HK9YSmyzjOgpea/75mLlPdimJ+JNwJzFNeAPbr1BvHFBdmIfWC
+         gDKQ8FsMXVWSSpvCVhqJxWo0XU8eu3BEdxLCMCqQtbjBIS/H90ZjgLP+qv+q1YnJ5G
+         C8fhEAdM+n94X/BO2DTWO9kqOYXBeqFffMb0ToBP9BTS7Kr3mNlnl46jA1RD3oBCmH
+         b6+VamTZIfybRTE/GkCNvbdTGXyWVoDvfWxigPbtLhHF6mvBXo8CpfD3pwjdI6jYdS
+         ThroQI4lyPgEN/pHiQEByhV3HGjSYZasuiddtnCupA7Ogd0J28iiTFGmFfm9MnUKCD
+         Q89WpQqbGlXEQ==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf <bpf@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH v2 10/15] samples: vfs: build sample programs for target architecture
-Date:   Wed, 29 Apr 2020 12:45:22 +0900
-Message-Id: <20200429034527.590520-11-masahiroy@kernel.org>
+Subject: [PATCH v2 15/15] samples: watchdog: use 'userprogs' syntax
+Date:   Wed, 29 Apr 2020 12:45:27 +0900
+Message-Id: <20200429034527.590520-16-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200429034527.590520-1-masahiroy@kernel.org>
 References: <20200429034527.590520-1-masahiroy@kernel.org>
@@ -61,13 +61,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These userspace programs include UAPI headers exported to usr/include/.
-'make headers' always works for the target architecture (i.e. the same
-architecture as the kernel), so the sample programs should be built for
-the target as well. Kbuild now supports 'userprogs' for that.
+Kbuild now supports the 'userprogs' syntax to compile userspace
+programs for the same architecture as the kernel.
 
-I also guarded the CONFIG option by 'depends on CC_CAN_LINK' because
-$(CC) may not provide libc.
+Add the entry to samples/Makefile to put this into the build bot
+coverage.
+
+I also added the CONFIG option guarded by 'depends on CC_CAN_LINK'
+because $(CC) may not provide libc.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
@@ -75,41 +76,49 @@ Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
 Changes in v2: None
 
- samples/Kconfig      |  2 +-
- samples/vfs/Makefile | 11 +++--------
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ samples/Kconfig           |  3 +++
+ samples/Makefile          |  1 +
+ samples/watchdog/Makefile | 10 ++--------
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/samples/Kconfig b/samples/Kconfig
-index 08f2d025ca05..831a7ecd3352 100644
+index a8629a0d4f96..5005f74ac0eb 100644
 --- a/samples/Kconfig
 +++ b/samples/Kconfig
-@@ -184,7 +184,7 @@ config SAMPLE_ANDROID_BINDERFS
- 
- config SAMPLE_VFS
- 	bool "Build example programs that use new VFS system calls"
--	depends on HEADERS_INSTALL
-+	depends on CC_CAN_LINK && HEADERS_INSTALL
+@@ -205,5 +205,8 @@ config SAMPLE_INTEL_MEI
  	help
- 	  Build example userspace programs that use new VFS system calls such
- 	  as mount API and statx().  Note that this is restricted to the x86
-diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
-index 65acdde5c117..00b6824f9237 100644
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@ -1,10 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--# List of programs to build
--hostprogs := \
--	test-fsmount \
--	test-statx
-+userprogs := test-fsmount test-statx
-+always-y := $(userprogs)
+ 	  Build a sample program to work with mei device.
  
--always-y := $(hostprogs)
++config SAMPLE_WATCHDOG
++	bool "watchdog sample"
++	depends on CC_CAN_LINK
+ 
+ endif # SAMPLES
+diff --git a/samples/Makefile b/samples/Makefile
+index 042208326689..29c66aadd954 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -26,3 +26,4 @@ obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
+ obj-y					+= vfio-mdev/
+ subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
+ obj-$(CONFIG_SAMPLE_INTEL_MEI)		+= mei/
++subdir-$(CONFIG_SAMPLE_WATCHDOG)	+= watchdog
+diff --git a/samples/watchdog/Makefile b/samples/watchdog/Makefile
+index a9430fa60253..17384cfb387e 100644
+--- a/samples/watchdog/Makefile
++++ b/samples/watchdog/Makefile
+@@ -1,9 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CC := $(CROSS_COMPILE)gcc
+-PROGS := watchdog-simple
 -
--HOSTCFLAGS_test-fsmount.o += -I$(objtree)/usr/include
--HOSTCFLAGS_test-statx.o += -I$(objtree)/usr/include
-+userccflags += -I usr/include
+-all: $(PROGS)
+-
+-clean:
+-	rm -fr $(PROGS)
+-
++userprogs := watchdog-simple
++always-y := $(userprogs)
 -- 
 2.25.1
 
