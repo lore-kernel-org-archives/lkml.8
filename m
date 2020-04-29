@@ -2,122 +2,123 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2273C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F9C8300A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 757C421D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B2B2137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 22:09:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbT0/nGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgD2WJF (ORCPT
+        id S1728241AbgD2WJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 18:09:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61306 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbgD2WI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:08:58 -0400
-IronPort-SDR: 2H9FZd+1ngEaY+f7021506Brjb1PKuoD+VveXcaC74jBboFbxH98YMBln3ERDmMFdnSY0XMTcb
- nzLDnVHn7B1g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 15:08:54 -0700
-IronPort-SDR: 9j1+4qYBMzc2L9aY/UoxwygXzrHMaOIyykJVoAXHFi+cdrMzPDzxCWL0mi7HlRCFpTh8Sy8fgb
- ZorXVBzA4izQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="276308934"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 15:08:53 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v10 23/26] ELF: Introduce arch_setup_elf_property()
-Date:   Wed, 29 Apr 2020 15:07:29 -0700
-Message-Id: <20200429220732.31602-24-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+        Wed, 29 Apr 2020 18:09:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728021AbgD2WJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 18:09:25 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E791FC03C1AE;
+        Wed, 29 Apr 2020 15:09:24 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g14so3137869otg.10;
+        Wed, 29 Apr 2020 15:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8oqwTr93GONiIRzdNlX+cz19aB6zUtjVhJXAzceD5NI=;
+        b=mbT0/nGlQVzYagaookGp3cEt7WpHHYBvOZ0eg9smcL5aJUbT99dEyaKCU+lwAoXgpi
+         3XWCQanM4wWlKeU1lcb3ywJ046tsjFk0WKR2ctNr2fSHkzgR3Rchv3lQkOLxODyhgi7W
+         zdpySIQe8y3fRub9I9zVCXi362IIZXiEe+OR71DOkOHSpux73eGW9th2DUh4b7wqU9Fs
+         s/CdEqtDZSE0o+8lKUVxEA8+D84EcxNJbzeimiuaCUf3prxmEggk9gmRNSSVQDnbwyXs
+         WWzsP3h99/+yez6l4AhJBHTyVPBHNtzOtu6C/P+mI3kpV3VtW3NIxfcGr3FRNhvcrqlV
+         UdVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8oqwTr93GONiIRzdNlX+cz19aB6zUtjVhJXAzceD5NI=;
+        b=pIBCbyUQw2OWGo6wc0lNJtQi5JAqrhgtThExihwYKGV6RQhIJfgkJ7Rc5S0keXkimH
+         VaRhFOwiiCRh07HIgSD9zdZFEHAJsrVP2STm/treUV70iz3k12XUU81zo4wu51/K8fnx
+         CgrrTzCFybW6zQL+QInwv+0jRBcS3GAKkJcIlrAT0ncwnm6Xs61hdiwEV7drgctQA4cL
+         19wIKWPzamgvILy8wj2YpHH945SdveLo/3fITTyfXhNoc/AlOGtKU0uaTsUDk+0BegdW
+         VRCuJXWQTtf/xRxJ9aNgmlSy9Ub0pgiDLDNRZc/dX/+3P+piv4oO1pVjntyST57KvGxI
+         y2Lg==
+X-Gm-Message-State: AGi0PuZppdDoRbPUoiZMkuIurz0mom53ya3bwUd7C3dwADTHeHxCI9pu
+        DfaEeZBgKn4p1Lm4z/PSWBF2e9Km+1kdUbsIZeNRhk4j
+X-Google-Smtp-Source: APiQypKobiQJJqpqNRhFSNXeLIHjEz81s3WISBQksQoAKf9VSaGW8bghC6rpb+qGC5zWjSngm/v2nXCxiH0QCiwVw68=
+X-Received: by 2002:a9d:7390:: with SMTP id j16mr94578otk.43.1588198164341;
+ Wed, 29 Apr 2020 15:09:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 29 Apr 2020 23:08:58 +0100
+Message-ID: <CA+V-a8s+rU8PV9nzERGSeiauxekP7MOgMXMOtx579OqnVmMHrA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] media: rcar-vin: Enable MEDIA_BUS_FMT_SRGGB8_1X8 format
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An ELF file's .note.gnu.property indicates architecture features of the
-file.  These features are extracted earlier and stored in the struct
-'arch_elf_state'.  Introduce arch_setup_elf_property() to setup and enable
-these features.  The first use-case of this function is shadow stack.
+Hi Niklas,
 
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
----
- fs/binfmt_elf.c     | 4 ++++
- include/linux/elf.h | 6 ++++++
- 2 files changed, 10 insertions(+)
+On Wed, Apr 15, 2020 at 11:19 AM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Hi,
+>
+> This patch series adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for vin
+>
+> Cheers,
+> --Prabhakar
+>
+> Changed for v4:
+> * patch 1/3 is new patch which adds a check for conversion from input to
+>   output.
+> * patch 2/3 added a comment while setting VNIS_REG for RAW format as
+>   suggested by Niklas
+>
+> Changes for v3:
+> * Dropped patch 1/1 from v2 as this handled neatly by patches
+>   https://patchwork.linuxtv.org/project/linux-media/list/?series=1974
+> * Included Ack from Niklas for patch 2/2
+> * Updated commit message for patch 1/1.
+>
+> Changes for v2:
+> * Added support for matching fwnode against endpoints/nodes.
+> * Separated patch for rcar-vin and rcar-csi2.c which added
+>   MEDIA_BUS_FMT_SRGGB8_1X8.
+>
+> Lad Prabhakar (3):
+>   media: rcar-vin: Invalidate pipeline if conversion is not possible on
+>     input formats
+>   media: rcar-vin: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
+>   media: rcar-csi2: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
+>
+Gentle ping.
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 327a995ff743..d7a4c0a1245e 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1216,6 +1216,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 
- 	set_binfmt(&elf_format);
- 
-+	retval = arch_setup_elf_property(&arch_state);
-+	if (retval < 0)
-+		goto out;
-+
- #ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES
- 	retval = arch_setup_additional_pages(bprm, !!interpreter);
- 	if (retval < 0)
-diff --git a/include/linux/elf.h b/include/linux/elf.h
-index 7bdc6da160c7..81f2161fa4a8 100644
---- a/include/linux/elf.h
-+++ b/include/linux/elf.h
-@@ -78,9 +78,15 @@ static inline int arch_parse_elf_property(u32 type, const void *data,
- {
- 	return 0;
- }
-+
-+static inline int arch_setup_elf_property(struct arch_elf_state *arch)
-+{
-+	return 0;
-+}
- #else
- extern int arch_parse_elf_property(u32 type, const void *data, size_t datasz,
- 				   bool compat, struct arch_elf_state *arch);
-+extern int arch_setup_elf_property(struct arch_elf_state *arch);
- #endif
- 
- #endif /* _LINUX_ELF_H */
--- 
-2.21.0
+Cheers,
+--Prabhakar
 
+>  drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
+>  drivers/media/platform/rcar-vin/rcar-dma.c  | 21 +++++++++++++++++++--
+>  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
+>  3 files changed, 24 insertions(+), 2 deletions(-)
+>
+> --
+> 2.20.1
+>
