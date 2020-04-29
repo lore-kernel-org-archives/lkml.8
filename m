@@ -2,73 +2,91 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8140C83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA87FC83001
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7D220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A76420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgD2BuV (ORCPT
+        id S1726611AbgD2Bui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 21:50:21 -0400
-Received: from mx140-tc.baidu.com ([61.135.168.140]:33259 "EHLO
-        tc-sys-mailedm02.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726158AbgD2BuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 21:50:21 -0400
-Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
-        by tc-sys-mailedm02.tc.baidu.com (Postfix) with ESMTP id 142A811C0063;
-        Wed, 29 Apr 2020 09:50:07 +0800 (CST)
-From:   Li RongQing <lirongqing@baidu.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, peterz@infradead.org, ggherdovich@suse.cz,
-        linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com
-Subject: [PATCH] x86: move turbo_disabled() out of intel_set_max_freq_ratio
-Date:   Wed, 29 Apr 2020 09:50:07 +0800
-Message-Id: <1588125007-8799-1-git-send-email-lirongqing@baidu.com>
-X-Mailer: git-send-email 1.7.1
+        Tue, 28 Apr 2020 21:50:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3331 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726158AbgD2Bui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 21:50:38 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 301E229E52E30D02CF9B;
+        Wed, 29 Apr 2020 09:50:36 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Apr 2020
+ 09:50:25 +0800
+Subject: Re: [PATCH net-next] net: hns3: adds support for reading module
+ eeprom info
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Yonglong Liu <liuyonglong@huawei.com>
+References: <1588075105-52158-1-git-send-email-tanhuazhong@huawei.com>
+ <20200428114910.7cc5182e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <a43d4e21-d4e7-a439-946d-306db7f7a5d6@huawei.com>
+Date:   Wed, 29 Apr 2020 09:50:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
+MIME-Version: 1.0
+In-Reply-To: <20200428114910.7cc5182e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-move the turbo_disabled before intel_set_max_freq_ratio,
-when turbo is disabled, the max frequency ratio is a const
-value, it is unnecessary to read MSR_TURBO_RATIO* msr to
-compute
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
- arch/x86/kernel/smpboot.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index fe3ab9632f3b..8979c459df2f 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1987,7 +1987,7 @@ static bool intel_set_max_freq_ratio(void)
- out:
- 	arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
- 					base_freq);
--	arch_set_max_freq_ratio(turbo_disabled());
-+	arch_set_max_freq_ratio(false);
- 	return true;
- }
- 
-@@ -2009,6 +2009,9 @@ static void init_freq_invariance(void)
- 	if (smp_processor_id() != 0 || !boot_cpu_has(X86_FEATURE_APERFMPERF))
- 		return;
- 
-+	if (turbo_disabled())
-+		return;
-+
- 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
- 		ret = intel_set_max_freq_ratio();
- 
--- 
-2.16.2
+On 2020/4/29 2:49, Jakub Kicinski wrote:
+> On Tue, 28 Apr 2020 19:58:25 +0800 Huazhong Tan wrote:
+>> From: Yonglong Liu <liuyonglong@huawei.com>
+>>
+>> This patch adds support for reading the optical module eeprom
+>> info via "ethtool -m".
+>>
+>> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+>> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+> 
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> index 4d9c85f..8364e1b 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+>> @@ -12,6 +12,16 @@ struct hns3_stats {
+>>   	int stats_offset;
+>>   };
+>>   
+>> +#define HNS3_MODULE_TYPE_QSFP		0x0C
+>> +#define HNS3_MODULE_TYPE_QSFP_P		0x0D
+>> +#define HNS3_MODULE_TYPE_QSFP_28	0x11
+>> +#define HNS3_MODULE_TYPE_SFP		0x03
+> 
+> Could you use the SFF8024_ID_* defines from sfp.h here as well?
+>
+
+Yes, will send V2 to do that.
+
+
+> Otherwise looks good to me!
+> 
+
+Thanks:)
+
+> .
+> 
 
