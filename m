@@ -2,344 +2,110 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F745C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EFBC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2E6208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:00:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QyLJ3Wdw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IW7WY/v7"
+	by mail.kernel.org (Postfix) with ESMTP id A566820775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588150850;
+	bh=yEzxrstK5dzNT/VLNG968kTNhLrCVF/DhgbUdAc0LcU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LJqrNx2tNqwxKMSYoZg1EYNTO/Od1tMW1uMsmrP0M8tkTnacGzIqbY4aMe64pjVLt
+	 x747XV7m43FLRbBhFyr1dpe3o7/ReWXVah8dtjSczoUCOchfBBE+0ak11QGut5sQLV
+	 dWF+Pbj7KxbleqMaP9ntHIWiLyRkvWFqfBqfvBks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgD2JA0 (ORCPT
+        id S1726599AbgD2JAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:00:26 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:60711 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726355AbgD2JA0 (ORCPT
+        Wed, 29 Apr 2020 05:00:50 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54239 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgD2JAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:00:26 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 60F44A5B;
-        Wed, 29 Apr 2020 05:00:24 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 29 Apr 2020 05:00:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=RyhPXJMZ0K/eykcBAOS0NyPrn8H
-        hUWB7oO+D8Yn2kWI=; b=QyLJ3Wdwpg+HJsUttRtQumo34KoewfTjW/hBQ+vcnTm
-        +MPrz+4pxU6X9YIrLg6PinyVRO0m/wjp4iIZHhQSmyBkkV5UX/VVwwCeGIEDh277
-        +JPAvttg4AcrlH/pa2QPot5ZfWHoFvJbAJt+OKEwBKOlyvLOu85RIB8eyHDikwzF
-        1wrPAxPDrS8OqFk4a+kt3xtj6FtMCAJZQBdwqy1049/FeN10QV4m1cHkgW6sEQLH
-        aIm4uxkHhsPfehRw+SFUvLz1dSJKOcrCzVOAxwmCY4H4C6q0UiQk6tz5vUE8DQom
-        ppWk7xElUBYZmPw8gaRzZgy40G/zLmHM+phJLCfnEPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=RyhPXJ
-        MZ0K/eykcBAOS0NyPrn8HhUWB7oO+D8Yn2kWI=; b=IW7WY/v7e3vObh2vr73kL3
-        v94SZHr7JK48didPWNqaN1DvObqY1bFrtX99OgRbfS7gCuVij5N1dlVzNBeM333z
-        cjR3xsNoOn+6L2Ghlu8AkGxbe2+RAkRAUgvWUNFDi4zCzRJUrachaXS1Dq7qtvuF
-        8/RauFdQuRtN6W1ZnZzllyqaGAr0hNVfSFodVTI3Jp1V+rfY3Lg5ogDJRIfHfKqR
-        QJEorhDziWQlAkXls6PTK1aPpENR/z5HxPaanI1if4QS59uFOH5y47lIyd1lSQg+
-        a4P8zdcMrFKCJM22PQFHXPjfnFWe8Wlg9mThMjKEzfnx3zRWECnnOV9qQW4wwuxA
-        ==
-X-ME-Sender: <xms:HkKpXtBSI6aecXGhblSo9QqNTdysmlPkuX8kRQ1wMYMUTWYt-ievUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieefgdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:HkKpXp8-If2EJxhp6e6sqTiEgzlPn6WyIzyWGbI3oIwv7Zx54wqAlQ>
-    <xmx:HkKpXl_3eH9glYXD6o5o1F0X5xHiIAgpSbZ90sg6ylKMQC8WiYwCmg>
-    <xmx:HkKpXq8y9RdpB1mxHTDuo1lTv4pwsO-nWpjEfojwH5rplnh5CL6H8A>
-    <xmx:KEKpXmMCFZTNZ3SH7JelYsIg1yY4ZEFMZQIHjTdgFBAdn-8F-kpfqPGEVdM>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1E9083280066;
-        Wed, 29 Apr 2020 05:00:14 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 11:00:12 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v5 v5 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200429090012.vhhwatojkncjquwd@gilmour.lan>
-References: <20200428180718.1609826-1-robert.foss@linaro.org>
- <20200428180718.1609826-2-robert.foss@linaro.org>
+        Wed, 29 Apr 2020 05:00:49 -0400
+Received: by mail-wm1-f66.google.com with SMTP id k12so1127191wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 02:00:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aFWKpwDYdj0bi9LcW9uHrGndjd6KiGSzaHWUYSzaL0w=;
+        b=JuHaPUsUJSqfwOkV+mfWaQKlysaa5MdfQoFmoJgoWIdEJqeFMK0ubO1WGHDFf6WKX8
+         5UEIPcSWcIhiT918fpVb6VMfXS5VR4n9spMvxePeybWJ971Ttg6PeM5DX9k8F9zNppY2
+         gx/nV/yXQyKd76xsC98M5RIbotGD6Ic93/rqi27PXYvwH2Nua5s0I9EOsJn3cJ6mPa7i
+         daJEW6v1LurX56m15ZEK6lZPK6WEmJEm+JZYTfhZEamhqTldPmdUQ5HSz5FbJlKVQmEl
+         ynugf7HhHZHkga1EOUCTG0H3bfMWAtKwXGJzQcM79YXnCvPDZX9hxNyaO3mbxCoi8uJG
+         xcfA==
+X-Gm-Message-State: AGi0PuY7bFW9e+nnELmIzJsnGrQfkjThLuG+GZI18sEdv8Yp/eABMo7s
+        d5mC6csVEAQ0qmZI+wG8o2M=
+X-Google-Smtp-Source: APiQypKhm2pknR3kic67AlinqfHRhuuiLKc2SzzCco52awaQIbhagtaRRCfaA9cGxv1D/yNJfeFWxQ==
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr2024417wmd.95.1588150847575;
+        Wed, 29 Apr 2020 02:00:47 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id f18sm32723955wrq.29.2020.04.29.02.00.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 02:00:46 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 11:00:45 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [patch] mm, oom: stop reclaiming if GFP_ATOMIC will start
+ failing soon
+Message-ID: <20200429090045.GW28637@dhcp22.suse.cz>
+References: <alpine.DEB.2.22.394.2004241347310.70176@chino.kir.corp.google.com>
+ <20200425172706.26b5011293e8dc77b1dccaf3@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004261959310.80211@chino.kir.corp.google.com>
+ <20200427133051.b71f961c1bc53a8e72c4f003@linux-foundation.org>
+ <alpine.DEB.2.22.394.2004271558540.248401@chino.kir.corp.google.com>
+ <20200427163558.5b08487d63da3cc7a89bf50b@linux-foundation.org>
+ <20200428074301.GK28637@dhcp22.suse.cz>
+ <94f9b716-b251-79d8-2c8c-70d63a255496@sony.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h6avthptzu4aupac"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428180718.1609826-2-robert.foss@linaro.org>
+In-Reply-To: <94f9b716-b251-79d8-2c8c-70d63a255496@sony.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 29-04-20 10:31:41, peter enderborg wrote:
+> On 4/28/20 9:43 AM, Michal Hocko wrote:
+> > On Mon 27-04-20 16:35:58, Andrew Morton wrote:
+> > [...]
+> >> No consumer of GFP_ATOMIC memory should consume an unbounded amount of
+> >> it.
+> >> Subsystems such as networking will consume a certain amount and
+> >> will then start recycling it.  The total amount in-flight will vary
+> >> over the longer term as workloads change.  A dynamically tuning
+> >> threshold system will need to adapt rapidly enough to sudden load
+> >> shifts, which might require unreasonable amounts of headroom.
+> > I do agree. __GFP_HIGH/__GFP_ATOMIC are bound by the size of the
+> > reserves under memory pressure. Then allocatios start failing very
+> > quickly and users have to cope with that, usually by deferring to a
+> > sleepable context. Tuning reserves dynamically for heavy reserves
+> > consumers would be possible but I am worried that this is far from
+> > trivial.
+> >
+> > We definitely need to understand what is going on here.  Why doesn't
+> > kswapd + N*direct reclaimers do not provide enough memory to satisfy
+> > both N threads + reserves consumers? How many times those direct
+> > reclaimers have to retry?
+> 
+> Was this not supposed to be avoided with PSI, user-space should
+> a fair change to take actions before it goes bad in user-space?
 
---h6avthptzu4aupac
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Apr 28, 2020 at 08:07:17PM +0200, Robert Foss wrote:
-> Add match table, enable ov8856_probe() to support
-> both ACPI and DT modes.
->=20
-> ACPI and DT modes are primarily distinguished from
-> each other by relying on devm_XXX_get_optional()
-> will return NULL instead of a reference for the
-> desired managed resource.
->=20
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
->=20
-> - Changes since v4:
->   * Maxime & Sakari: Switch to clock-frequency
->=20
-> - Changes since v3:
->   * Remove redundant {}-brackets
->   * Compare xvclk_rate to 5% tolerance
->   * Andy: Use dev_fwnode()
->   * Andy: Use %pe instead of %ld + PTR_ERR()
->   * Andy: Invert reset_gpio logic
->   * Andy: Remove dev_dbg() from failing reset_gpio setup
->   * Andy: Use dev_err for logging for failures
->   * Andy: Remove dev_warn from EDEFER/regulator error path
->   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
->   * Maxime & Sakari: Verify clock frequency from DT
->   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
->   * Sakari: Remove duplicate ov8856->dev assignment
->=20
-> - Changes since v2:
->   * Added "struct device *dev" member to struct ov8856
->   * Andy: Switch to optional version of devm_gpiod_get
->   * Andy: Switch to optional version of devm_clk_get
->   * Fabio: Add reset sleep period
->   * Sakari: Unify defines for 19.2Mhz
->   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
->   * Sakari: Replace dev_info() with dev_dbg()
->   * Sakari: Switch induction variable type to unsigned
->   * Sakari: Don't wait for reset_gpio when in ACPI mode
->   * Sakari: Pull reset GPIO high on power on failure
->   * Sakari: Add power on/off to resume/suspend
->   * Sakari: Fix indentation
->   * Sakari: Power off during ov8856_remove()
->   * Sakari: Don't sleep during power-on in ACPI mode
->   * Sakari: Switch to getting xvclk from clk_get_rate
->=20
-> - Changes since v1:
->   * Andy & Sakari: Make XVCLK optional since to not break ACPI
->   * Fabio: Change n_shutdown_gpio name to reset_gpio
->   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW c=
-hange
->   * Fabio: Remove empty line
->   * Fabio: Remove real error from devm_gpiod_get() failures
->   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
->   * Sakari: Use XVCLK rate as provided by DT
->=20
->  drivers/media/i2c/ov8856.c | 139 +++++++++++++++++++++++++++++++++----
->  1 file changed, 126 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> index 8655842af275..48b02b8d205f 100644
-> --- a/drivers/media/i2c/ov8856.c
-> +++ b/drivers/media/i2c/ov8856.c
-> @@ -3,10 +3,13 @@
-> =20
->  #include <asm/unaligned.h>
->  #include <linux/acpi.h>
-> +#include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-fwnode.h>
-> @@ -18,7 +21,7 @@
->  #define OV8856_LINK_FREQ_360MHZ		360000000ULL
->  #define OV8856_LINK_FREQ_180MHZ		180000000ULL
->  #define OV8856_SCLK			144000000ULL
-> -#define OV8856_MCLK			19200000
-> +#define OV8856_XVCLK_19_2		19200000
->  #define OV8856_DATA_LANES		4
->  #define OV8856_RGB_DEPTH		10
-> =20
-> @@ -64,6 +67,12 @@
-> =20
->  #define to_ov8856(_sd)			container_of(_sd, struct ov8856, sd)
-> =20
-> +static const char * const ov8856_supply_names[] =3D {
-> +	"dovdd",	/* Digital I/O power */
-> +	"avdd",		/* Analog power */
-> +	"dvdd",		/* Digital core power */
-> +};
-> +
->  enum {
->  	OV8856_LINK_FREQ_720MBPS,
->  	OV8856_LINK_FREQ_360MBPS,
-> @@ -566,6 +575,11 @@ struct ov8856 {
->  	struct media_pad pad;
->  	struct v4l2_ctrl_handler ctrl_handler;
-> =20
-> +	struct device		*dev;
-> +	struct clk		*xvclk;
-> +	struct gpio_desc	*reset_gpio;
-> +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
-> +
->  	/* V4L2 Controls */
->  	struct v4l2_ctrl *link_freq;
->  	struct v4l2_ctrl *pixel_rate;
-> @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd,=
- int enable)
->  	return ret;
->  }
-> =20
-> +static int __ov8856_power_on(struct ov8856 *ov8856)
-> +{
-> +	struct i2c_client *client =3D v4l2_get_subdevdata(&ov8856->sd);
-> +	int ret;
-> +
-> +	ret =3D clk_prepare_enable(ov8856->xvclk);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "failed to enable xvclk\n");
-> +		return ret;
-> +	}
-> +
-> +	if (is_acpi_node(dev_fwnode(ov8856->dev)))
-> +		return 0;
-> +
-> +	if (ov8856->reset_gpio) {
-> +		gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> +		usleep_range(1000, 2000);
-> +	}
-> +
-> +	ret =3D regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> +				    ov8856->supplies);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "failed to enable regulators\n");
-> +		goto disable_clk;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-> +	usleep_range(1500, 1800);
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> +	clk_disable_unprepare(ov8856->xvclk);
-> +
-> +	return ret;
-> +}
-> +
-> +static void __ov8856_power_off(struct ov8856 *ov8856)
-> +{
-> +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> +	regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
-> +			       ov8856->supplies);
-> +	clk_disable_unprepare(ov8856->xvclk);
-> +}
-> +
->  static int __maybe_unused ov8856_suspend(struct device *dev)
->  {
->  	struct i2c_client *client =3D to_i2c_client(dev);
-> @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct devic=
-e *dev)
->  	if (ov8856->streaming)
->  		ov8856_stop_streaming(ov8856);
-> =20
-> +	__ov8856_power_off(ov8856);
->  	mutex_unlock(&ov8856->mutex);
-> =20
->  	return 0;
-> @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device=
- *dev)
->  	int ret;
-> =20
->  	mutex_lock(&ov8856->mutex);
-> +
-> +	__ov8856_power_on(ov8856);
->  	if (ov8856->streaming) {
->  		ret =3D ov8856_start_streaming(ov8856);
->  		if (ret) {
-> @@ -1092,29 +1155,58 @@ static int ov8856_identify_module(struct ov8856 *=
-ov8856)
->  	return 0;
->  }
-> =20
-> -static int ov8856_check_hwcfg(struct device *dev)
-> +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
->  {
-> +	struct device *dev =3D ov8856->dev;
->  	struct fwnode_handle *ep;
->  	struct fwnode_handle *fwnode =3D dev_fwnode(dev);
->  	struct v4l2_fwnode_endpoint bus_cfg =3D {
->  		.bus_type =3D V4L2_MBUS_CSI2_DPHY
->  	};
-> -	u32 mclk;
-> +	u32 xvclk_rate;
->  	int ret;
->  	unsigned int i, j;
-> =20
->  	if (!fwnode)
->  		return -ENXIO;
-> =20
-> -	ret =3D fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> +	ret =3D fwnode_property_read_u32(fwnode, "clock-frequency",
-> +		&xvclk_rate);
->  	if (ret)
->  		return ret;
-> =20
-> -	if (mclk !=3D OV8856_MCLK) {
-> -		dev_err(dev, "external clock %d is not supported", mclk);
-> +	if (!is_acpi_node(fwnode)) {
-> +		ov8856->xvclk =3D devm_clk_get(dev, "xvclk");
-> +		if (IS_ERR(ov8856->xvclk)) {
-> +			dev_err(dev, "could not get xvclk clock (%pe)\n",
-> +					ov8856->xvclk);
-> +			return PTR_ERR(ov8856->xvclk);
-> +		}
-> +
-> +		clk_set_rate(ov8856->xvclk, xvclk_rate);
-> +		xvclk_rate =3D clk_get_rate(ov8856->xvclk);
-> +	}
-> +
-> +	/* external clock must be 19.2MHz, allow 5% tolerance */
-
-Where is that 5% tolerance coming from? Experimentations, datasheets, somet=
-hing
-that looks good enough? Either way, this should be in the comment.
-
-Maxime
-
---h6avthptzu4aupac
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqlCHAAKCRDj7w1vZxhR
-xTV3AQCiboFbAS2KBYrc9VBYR58qnk9RsGhz4DnGNEDpt3I/VAEAtNDE+6yIGGpO
-1NeqSoNV4bWuHayL3wbWGDsnB2A91go=
-=3ttV
------END PGP SIGNATURE-----
-
---h6avthptzu4aupac--
+Yes, PSI is certainly a tool to help userspace make actions on heavy
+reclaim. And I agree that if there is a desire to trigger the oom killer
+early as David states elsewhere in the thread then this approach should
+be considered.
+-- 
+Michal Hocko
+SUSE Labs
