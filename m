@@ -2,188 +2,158 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A54C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1142C83009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A8C20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D3C208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 14:04:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="CUy816SA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTCggxC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgD2OEC (ORCPT
+        id S1728182AbgD2OEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 10:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
+        Wed, 29 Apr 2020 10:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728132AbgD2OD6 (ORCPT
+        by vger.kernel.org with ESMTP id S1728132AbgD2OED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:03:58 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F61C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:58 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so2680281wrs.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 07:03:58 -0700 (PDT)
+        Wed, 29 Apr 2020 10:04:03 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A1BDC03C1AD;
+        Wed, 29 Apr 2020 07:04:02 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z90so1859466qtd.10;
+        Wed, 29 Apr 2020 07:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WSTM3Qi/4U9iaA1lz8BvS/1iZyuC1rKHgcM75ldZEu4=;
-        b=CUy816SARBoL3Uki3aIIhK4RmGONTtkFUicVkdJGwEY79gT7qkVdXYcuhkWVB7hMOP
-         dWvfwllgHNLuEmmFhBvTQztCjHJPyzkVpBQwTAPZBJB7/akeF4Sldi2OQRO6ZX37f1Vd
-         P7HTOFl1gKJZN8is5CoOkKHL7BhFkubDw+V0nNNa8LPi1bebKXNAPAdeqrUd8aL5awjR
-         9zG+o0v+2l0mOvQ8wsY0VJQhPbaEywfjlJU0sdx5fA7nW+sD2aFKBxdTC8Q8ItMmnWb0
-         OtIurjg7erO3sU910m+PEr/BLGEVYhIAF3tI/ONoxIXSHwyXMztfzoc5naQyKcxaXP7L
-         +1sA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OPeUScr2vL9/Zkz5n3yjWKmeXq3NwFtTvKkYOvdwcJg=;
+        b=LTCggxC9MXNyozRB6RCYBO8Lbp0lLeLTySbNpJQhtIFbSYraYm25VdWaDJlMpN3BN2
+         CqzhR0a16L40HQr0KYxb4JN+MGOqhjvgX63E5A4tba8gwwlnFCg1squLu7pJJkT81JWG
+         qy65myRgm6O+M918NRgjLhXBFp1/UCw1HGPZkkr3KG+mo3ph1CaD3QlOXne8wjvvQ/9k
+         puyVBe991Mmpaa/0UmjaPTufO8PNOhVyp9hX8hEcwcLb8O//uXvqVh5LSgNgfYdLViA1
+         c8eWv1keMyVgk8dLGVIKDN4EvyeFnOZ+2lsrAMpgrO4Pq6AVuf7TOPbrfaPrSXJyPgOw
+         gkXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WSTM3Qi/4U9iaA1lz8BvS/1iZyuC1rKHgcM75ldZEu4=;
-        b=fxGGt9v2VcIIlCcKLd6U6RGbWfeYPI1a7ZtY85xXSlHjodYUymVib1R9N6dAPWeEzO
-         NCIoIuswAfq/6/Sne84h9mtRMKeOjkaKkj2UEjMGsR/qaWze1gW5zqbH3v9OuOh5qDG2
-         AJIhOMCweKew/7mcQwC2FaU5E6bT6w1YpD6JZ/fHyM3LmCfWkjMQ0hCtywyycDDjj4Yg
-         dSppyS5YkeuK1//Ou1EY1EIlE6f0ONK7jCc9BnloZg1CBsuk0PPqy671JzAqrcWrv42W
-         wUFeHv8XniLddxnP3GOSwJpaCuHBBQMVYVnrSoviycdns1S/ajpoWq0Ou20ELEq9DCHM
-         w6iA==
-X-Gm-Message-State: AGi0Pubod3h/L+0gP3EqefOzvVYUViib2KR4JzeQYklAqir3i+7ETZRE
-        oOv2K9AmnwtpksH7PRNI7ObtBQ==
-X-Google-Smtp-Source: APiQypLh806kYCaic9QEG1Qzl0KzfPxn1oM3FQfGFXaXHMJCgdvQnOl9wOD92kYUKJ4GjvyTRpnrhQ==
-X-Received: by 2002:adf:fa04:: with SMTP id m4mr38662555wrr.30.1588169037163;
-        Wed, 29 Apr 2020 07:03:57 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id d133sm8887008wmc.27.2020.04.29.07.03.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OPeUScr2vL9/Zkz5n3yjWKmeXq3NwFtTvKkYOvdwcJg=;
+        b=c2P+TnGRaZfTY3z5Xo6CmrkT3YOsvedsw7uITekQLbxP9VobPZpee6YKsl5pRobp4L
+         atNDw3LoFps5ekXUHIDUIVyo4pvykoPyLKgCr/4NUN37kVxyZW64zfK0hhIcby+S8HAJ
+         FlpArlYqWAod7kPf3rB0vP1nrO8QDtm5Z6WCkojmhh1KlBjUDv1bYfkepL5j2UauwSvP
+         boN22AHY/JmWG6ve3jrh8vEjh+orbo5XbOem028fnnPpNVtjPb6A2NOOzg2sG0kPQ7XB
+         f2h5OEk4Q1js4TPBI8Z9YmXfbjpog5PYpjysJViZUj0sd1lz0KkS7iJFPwbVIilRBRVg
+         wluQ==
+X-Gm-Message-State: AGi0PuapLFDzyUqh9KJ12wh4764oqwdUOTi/yDntnDHZdeqbK5PYQPr/
+        Tbv/VQQjsaw2YUSY47bfTd0=
+X-Google-Smtp-Source: APiQypJyqJaXIDnsm/YAulJYEip+0qmiilCCcy1yOWUQP+L+XgAtkDC94qJjHwuYbiR6+7ZAJ/BCwg==
+X-Received: by 2002:ac8:71d8:: with SMTP id i24mr34585392qtp.223.1588169041381;
+        Wed, 29 Apr 2020 07:04:01 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN ([2620:10d:c091:480::1:14f1])
+        by smtp.gmail.com with ESMTPSA id b10sm12609955qkl.19.2020.04.29.07.03.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 07:03:56 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
-        jaegeuk@kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Martijn Coenen <maco@android.com>
-Subject: [PATCH v4 09/10] loop: Clean up LOOP_SET_STATUS lo_flags handling.
-Date:   Wed, 29 Apr 2020 16:03:40 +0200
-Message-Id: <20200429140341.13294-10-maco@android.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200429140341.13294-1-maco@android.com>
-References: <20200429140341.13294-1-maco@android.com>
+        Wed, 29 Apr 2020 07:04:00 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:03:57 -0400
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
+Message-ID: <20200429140357.GB18499@dschatzberg-fedora-PC0Y6AEN>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+ <20200428214653.GD2005@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428214653.GD2005@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LOOP_SET_STATUS(64) will actually allow some lo_flags to be modified; in
-particular, LO_FLAGS_AUTOCLEAR can be set and cleared, whereas
-LO_FLAGS_PARTSCAN can be set to request a partition scan. Make this
-explicit by updating the UAPI to include the flags that can be
-set/cleared using this ioctl.
+On Wed, Apr 29, 2020 at 07:47:34AM +1000, Dave Chinner wrote:
+> On Tue, Apr 28, 2020 at 12:13:46PM -0400, Dan Schatzberg wrote:
+> > The loop device runs all i/o to the backing file on a separate kworker
+> > thread which results in all i/o being charged to the root cgroup. This
+> > allows a loop device to be used to trivially bypass resource limits
+> > and other policy. This patch series fixes this gap in accounting.
+> 
+> How is this specific to the loop device? Isn't every block device
+> that offloads work to a kthread or single worker thread susceptible
+> to the same "exploit"?
 
-The implementation can then blindly take over the passed in flags,
-and use the previous flags for those flags that can't be set / cleared
-using LOOP_SET_STATUS.
+I believe this is fairly loop device specific. The issue is that the
+loop driver issues I/O by re-entering the VFS layer (resulting in
+tmpfs like in my example or entering the block layer). Normally, I/O
+through the VFS layer is accounted for and controlled (e.g. you can
+OOM if writing to tmpfs, or get throttled by the I/O controller) but
+the loop device completely side-steps the accounting.
 
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c      | 19 +++++++++++++------
- include/uapi/linux/loop.h | 10 ++++++++--
- 2 files changed, 21 insertions(+), 8 deletions(-)
+> 
+> Or is the problem simply that the loop worker thread is simply not
+> taking the IO's associated cgroup and submitting the IO with that
+> cgroup associated with it? That seems kinda simple to fix....
+> 
+> > Naively charging cgroups could result in priority inversions through
+> > the single kworker thread in the case where multiple cgroups are
+> > reading/writing to the same loop device.
+> 
+> And that's where all the complexity and serialisation comes from,
+> right?
+> 
+> So, again: how is this unique to the loop device? Other block
+> devices also offload IO to kthreads to do blocking work and IO
+> submission to lower layers. Hence this seems to me like a generic
+> "block device does IO submission from different task" issue that
+> should be handled by generic infrastructure and not need to be
+> reimplemented multiple times in every block device driver that
+> offloads work to other threads...
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f172a64333aa..cfbdd99fdb1a 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1049,9 +1049,7 @@ loop_set_status_from_info(struct loop_device *lo,
- 	lo->transfer = xfer->transfer;
- 	lo->ioctl = xfer->ioctl;
- 
--	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
--	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
--		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
-+	lo->lo_flags = info->lo_flags;
- 
- 	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
- 	lo->lo_init[0] = info->lo_init[0];
-@@ -1338,6 +1336,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	int err;
- 	struct block_device *bdev;
- 	kuid_t uid = current_uid();
-+	int prev_lo_flags;
- 	bool partscan = false;
- 	bool size_changed = false;
- 	loff_t validated_size;
-@@ -1381,10 +1380,19 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		goto out_unfreeze;
- 	}
- 
-+	prev_lo_flags = lo->lo_flags;
-+
- 	err = loop_set_status_from_info(lo, info);
- 	if (err)
- 		goto out_unfreeze;
- 
-+	/* Mask out flags that can't be set using LOOP_SET_STATUS. */
-+	lo->lo_flags &= ~LOOP_SET_STATUS_SETTABLE_FLAGS;
-+	/* For those flags, use the previous values instead */
-+	lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_SETTABLE_FLAGS;
-+	/* For flags that can't be cleared, use previous values too */
-+	lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_CLEARABLE_FLAGS;
-+
- 	if (size_changed)
- 		loop_set_size(lo, validated_size);
- 
-@@ -1396,9 +1404,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- out_unfreeze:
- 	blk_mq_unfreeze_queue(lo->lo_queue);
- 
--	if (!err && (info->lo_flags & LO_FLAGS_PARTSCAN) &&
--	     !(lo->lo_flags & LO_FLAGS_PARTSCAN)) {
--		lo->lo_flags |= LO_FLAGS_PARTSCAN;
-+	if (!err && (lo->lo_flags & LO_FLAGS_PARTSCAN) &&
-+	     !(prev_lo_flags & LO_FLAGS_PARTSCAN)) {
- 		lo->lo_disk->flags &= ~GENHD_FL_NO_PART_SCAN;
- 		bdev = lo->lo_device;
- 		partscan = true;
-diff --git a/include/uapi/linux/loop.h b/include/uapi/linux/loop.h
-index 080a8df134ef..6b32fee80ce0 100644
---- a/include/uapi/linux/loop.h
-+++ b/include/uapi/linux/loop.h
-@@ -25,6 +25,12 @@ enum {
- 	LO_FLAGS_DIRECT_IO	= 16,
- };
- 
-+/* LO_FLAGS that can be set using LOOP_SET_STATUS(64) */
-+#define LOOP_SET_STATUS_SETTABLE_FLAGS (LO_FLAGS_AUTOCLEAR | LO_FLAGS_PARTSCAN)
-+
-+/* LO_FLAGS that can be cleared using LOOP_SET_STATUS(64) */
-+#define LOOP_SET_STATUS_CLEARABLE_FLAGS (LO_FLAGS_AUTOCLEAR)
-+
- #include <asm/posix_types.h>	/* for __kernel_old_dev_t */
- #include <linux/types.h>	/* for __u64 */
- 
-@@ -37,7 +43,7 @@ struct loop_info {
- 	int		   lo_offset;
- 	int		   lo_encrypt_type;
- 	int		   lo_encrypt_key_size; 	/* ioctl w/o */
--	int		   lo_flags;			/* ioctl r/o */
-+	int		   lo_flags;
- 	char		   lo_name[LO_NAME_SIZE];
- 	unsigned char	   lo_encrypt_key[LO_KEY_SIZE]; /* ioctl w/o */
- 	unsigned long	   lo_init[2];
-@@ -53,7 +59,7 @@ struct loop_info64 {
- 	__u32		   lo_number;			/* ioctl r/o */
- 	__u32		   lo_encrypt_type;
- 	__u32		   lo_encrypt_key_size;		/* ioctl w/o */
--	__u32		   lo_flags;			/* ioctl r/o */
-+	__u32		   lo_flags;
- 	__u8		   lo_file_name[LO_NAME_SIZE];
- 	__u8		   lo_crypt_name[LO_NAME_SIZE];
- 	__u8		   lo_encrypt_key[LO_KEY_SIZE]; /* ioctl w/o */
--- 
-2.26.2.303.gf8c07b1a785-goog
+I'm not familiar with other block device drivers that behave like
+this. Could you point me at a few?
 
+> 
+> > This patch series does some
+> > minor modification to the loop driver so that each cgroup can make
+> > forward progress independently to avoid this inversion.
+> > 
+> > With this patch series applied, the above script triggers OOM kills
+> > when writing through the loop device as expected.
+> 
+> NACK!
+> 
+> The IO that is disallowed should fail with ENOMEM or some similar
+> error, not trigger an OOM kill that shoots some innocent bystander
+> in the head. That's worse than using BUG() to report errors...
+
+The OOM behavior is due to cgroup limit. It mirrors the behavior one
+sees when writing to a too-large tmpfs.
