@@ -2,231 +2,98 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8995C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7A1C83008
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C592073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ECJAvqak"
+	by mail.kernel.org (Postfix) with ESMTP id 19D182073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgD2ICm (ORCPT
+        id S1726798AbgD2ICq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:02:42 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55132 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726175AbgD2ICl (ORCPT
+        Wed, 29 Apr 2020 04:02:46 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:52837 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgD2ICm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:02:41 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T82Tc2000920;
-        Wed, 29 Apr 2020 10:02:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=xAKjtR7pf94l044PtIdkC1ZExxD4NPo7DesKo4PrcN0=;
- b=ECJAvqakrfmc6W3Gk6rr/m6ljTZDc5CCcVoECs20CuUENnn9eh2yq74yVHTyJ1Q08jQo
- D0yuJtLf65sJCPYqpssUQc23oDo7FUNBwGEZlJSgmYaP1movHgXD2QnIval1xsMtN7xO
- WzDamNRELBsJNjqQ6HmeRYlwTawwIBAoN//VKGqJhsTLLTMyGq6EqHPKcKlzU+Ep5x/v
- Ujo/MgmnKuVlcAP6nDS9R84FfP4zMui5+Vc14DQu/8Bzk69FREzTp7i5fPsU1o7uLe0h
- D+fqCN7H1CL29MKuYLj8xwWf4PP7NhwjPFCKQORuNK+OcPTLCnqHfcTljeZIRpctsqfL 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhjwvwd6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 10:02:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1213410002A;
-        Wed, 29 Apr 2020 10:02:31 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 003F1206653;
-        Wed, 29 Apr 2020 10:02:30 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Apr
- 2020 10:02:27 +0200
-Subject: Re: [PATCH 6/6] ARM: dts: stm32mp1: Add IoT Box board support
-To:     <mani@kernel.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200420173124.27416-1-mani@kernel.org>
- <20200420173124.27416-7-mani@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <210a98b3-feea-8faf-316c-d45e1697ea21@st.com>
-Date:   Wed, 29 Apr 2020 10:02:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Apr 2020 04:02:42 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MplsZ-1iop1226mL-00q6z3 for <linux-kernel@vger.kernel.org>; Wed, 29 Apr
+ 2020 10:02:41 +0200
+Received: by mail-qk1-f176.google.com with SMTP id b188so1081187qkd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:02:41 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYUzxkjSCGf7zSNdyF6QHdRSjaweXexQUIvf8xSIqOEjBGVgRlu
+        7fseAFSswIMRdu44s1vPJ88KvUaf30d2HmK9n5k=
+X-Google-Smtp-Source: APiQypIb7rbzxVNgizgliUE9cuI6uHb2puyxpFpWzxm5GRei060dQZgRQpS434PhF854JL+xI5SHvYYGPatYF2vesJk=
+X-Received: by 2002:ae9:f712:: with SMTP id s18mr15249636qkg.394.1588147360437;
+ Wed, 29 Apr 2020 01:02:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420173124.27416-7-mani@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_02:2020-04-28,2020-04-29 signatures=0
+References: <20200428215408.4111675-1-arnd@arndb.de> <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
+In-Reply-To: <22ee464b-f59a-69a3-b669-f821d567fbf5@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 Apr 2020 10:02:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
+Message-ID: <CAK8P3a2YAe0KPQYQi_PhFvaYeA_4jHM8Y0qOR8oy-A07y-zeEQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: fix stack usage warning on old gcc
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Kc7ExT19m2I7yRzQqPmBHzvy9Fwd+WE8NYR5jX3/ZmZPeP+ycZE
+ oI77cS2vUJj+SVjV1t+MACKwHFihuWlk4/xItDbQM3fGyV8qtatC+lXkxe+ojRMtsyioaII
+ nQ9P6P1DdMVm/tICZisDQZ6AX01/DONmc3JBb/Q7HvyjEkigoskD67sqjV+PaBRo1+yBjdD
+ iu9HXB3zM61TbDdbdn2ZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UuZTpsjqqO4=:2VAiJ2G4MkIz0cpx11v4+F
+ wuWmATlsgNv2qUx4fPOhYFjD41SbeCaew8NGfGoX3VdiQicj/kPRa+Bi3TUJJ+OBXCXtBD5ds
+ wOOF+YzPqZzV8cB5TpDmYTkHKQSEt91Br6KC8ieJ16IwMDNd38i8BxjRt6QoFuZ2sFh6k3M08
+ lTQJpYnxfoikbbX04qdl4NK7tshZfOzugT2GZe/7mLiL+Pph9BvgAHcHBysDNlCEd5HEX7qv1
+ K4mbOOYnAggwUGfnsKBBN2gX4L14Wr0RM5a3EyFslJN/Sow/HGzsCzdWHRxLoroWP8rG237BJ
+ /bQIX0fCBzcZ66j99o6ke+4bqWaxYW+LvaSMG5bsSkZBWPcRwtaqsjIE37XOfnGr3n1WBTm6i
+ iD+52oD8QhIhIWns2Ie0PQciSS9O5Jo3ODYJQXOBP2ITa9nKbch2UZplC9x4mjmBuYJvTGRKw
+ ykO5MzGqpJWeC0mWeJuYAL0ZAcBzHVdG2Hdc708PHWd74hNXzD+88YjQCjAiBeuIMexcuEB8S
+ L/Qg+hP+zUsp7N6f+7LpY+jr/1dpMFM9hNj9x2vc9mP9V1fLMuplooKU0iD3BfwivVtzgjyNH
+ hBPDKKAbcq7irnAqEP8UbjMI036rWBXTNTFeHeZCybYQQfuTu6mipkpwy0imfwpDdKimqpPr3
+ ypB/629zxuAoodzddgb4rrdpGcByOLLY6TX0/C7vX13eRf06W6YKceRKDwom/lUplbjD5DEaj
+ pjOQXC/L9bFkB8mQpt2Vk110fYGIBO0AK1EqIMdIkXM3pEEA7bnoXOc6mA/eAKjagBLCrSXNd
+ aJ7xWmmuadhUkoJYxbo379dihpHr0XSEw9wSdZxKCLpX+A3PBQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani
+On Wed, Apr 29, 2020 at 9:56 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> > diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
+> > index 1b39e8d37834..6650fe4cfc20 100644
+> > --- a/drivers/gpu/drm/bridge/tc358768.c
+> > +++ b/drivers/gpu/drm/bridge/tc358768.c
+> > @@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
+> >
+> >   static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
+> >   {
+> > +     /* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
+> > +     int tmpval = val;
 
-On 4/20/20 7:31 PM, mani@kernel.org wrote:
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> IoT Box is an IoT gateway device based on Stinger96 board powered by
-> STM32MP1 SoC, designed and manufactured by Shiratech Solutions. This
-> device makes use of Stinger96 board by having it as a base board with
-> one additional mezzanine on top.
-> 
-> Following are the features exposed by this device in addition to the
-> Stinger96 board:
-> 
-> * WiFi/BT
-> * CCS811 VOC sensor
-> * 2x Digital microphones IM69D130
-> * 12x WS2812B LEDs
-> 
-> Following peripherals are tested and known to work:
-> 
-> * WiFi/BT
-> * CCS811
-> 
-> More information about this device can be found in Shiratech website:
-> https://www.shiratech-solutions.com/products/iot-box/
-> 
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
->   arch/arm/boot/dts/Makefile                |  1 +
->   arch/arm/boot/dts/stm32mp157a-iot-box.dts | 92 +++++++++++++++++++++++
->   2 files changed, 93 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-iot-box.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 966b81dfffd6..455ec6eb6303 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1030,6 +1030,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
->   	stm32h743i-disco.dtb \
->   	stm32mp157a-avenger96.dtb \
->   	stm32mp157a-dk1.dtb \
-> +	stm32mp157a-iot-box.dtb \
->   	stm32mp157a-stinger96.dtb \
->   	stm32mp157c-dhcom-pdk2.dtb \
->   	stm32mp157c-dk2.dtb \
-> diff --git a/arch/arm/boot/dts/stm32mp157a-iot-box.dts b/arch/arm/boot/dts/stm32mp157a-iot-box.dts
-> new file mode 100644
-> index 000000000000..fa1c006ce531
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157a-iot-box.dts
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2020 Manivannan Sadhasivam
-> + */
-> +
-> +/dts-v1/;
-> +#include "stm32mp157a-stinger96.dtsi"
-> +
-> +/ {
-> +	model = "Shiratech STM32MP157A IoT Box";
-> +	compatible = "shiratech,stm32mp157a-iot-box", "st,stm32mp157";
-> +
-> +	wlan_pwr: regulator-wlan {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "wl-reg";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	ccs811@5b {
-> +		compatible = "ams,ccs811";
-> +		reg = <0x5b>;
-> +		wakeup-gpios = <&gpioa 12 GPIO_ACTIVE_LOW>;
-> +		reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> +
-> +&pinctrl {
+>
+> tc358768_write is not inline. What is the inline function here? Or is tc358768_write optimized to
+> inline by the compiler?
 
-Currently all pinmux definition are done in stm32mp15-pinctrl.dtsi file.
-Can you move it ?
+I missed the lack of an explicit inline tag when looking at the bug. gcc
+usually decides which functions to inline on its own, so there is little
+difference in practice. Let me know if I should clarify the changelog and
+resend it.
 
-Otherwise (except commit title) it is ok for me.
-
-thanks
-alex
-
-> +	/*
-> +	 * Note: The SDMMC2 pins lack external pullups on data lines. Hence,
-> +	 * we need to enable it in the SoC.
-> +	 */
-> +	sdmmc2_b4_pins_pull: sdmmc2-b4-pull {
-> +		pins1 {
-> +			pinmux = <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
-> +				 <STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
-> +				 <STM32_PINMUX('B', 3, AF9)>, /* SDMMC2_D2 */
-> +				 <STM32_PINMUX('B', 4, AF9)>, /* SDMMC2_D3 */
-> +				 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
-> +			slew-rate = <1>;
-> +			bias-pull-up;
-> +		};
-> +		pins2 {
-> +			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
-> +			slew-rate = <2>;
-> +			drive-push-pull;
-> +			bias-disable;
-> +		};
-> +	};
-> +};
-> +
-> +/* WiFi */
-> +&sdmmc2 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc2_b4_pins_pull>;
-> +	pinctrl-1 = <&sdmmc2_b4_od_pins_b>;
-> +	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
-> +	broken-cd;
-> +	non-removable;
-> +	st,neg-edge;
-> +	bus-width = <1>;
-> +	vmmc-supply = <&wlan_pwr>;
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +	};
-> +};
-> +
-> +/* Bluetooth */
-> +&uart4 {
-> +	/* Note: HW flow control is broken, hence using custom CTS/RTS gpios */
-> +	/delete-property/st,hw-flow-ctrl;
-> +	cts-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-> +	rts-gpios = <&gpiob 0 GPIO_ACTIVE_LOW>;
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		shutdown-gpios = <&gpiog 2 GPIO_ACTIVE_HIGH>;
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <115200>;
-> +	};
-> +};
-> 
+      Arnd
