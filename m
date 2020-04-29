@@ -2,97 +2,213 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0835EC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77493C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C592F206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547F5206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 16:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="laI5WRAM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfJ4tEOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgD2QTy (ORCPT
+        id S1726905AbgD2QUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 12:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50464 "EHLO
+        Wed, 29 Apr 2020 12:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726423AbgD2QTx (ORCPT
+        by vger.kernel.org with ESMTP id S1726539AbgD2QUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 12:19:53 -0400
-Received: from forwardcorp1j.mail.yandex.net (forwardcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::183])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7218AC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:19:53 -0700 (PDT)
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 3FF022E153D;
-        Wed, 29 Apr 2020 19:19:50 +0300 (MSK)
-Received: from vla5-58875c36c028.qloud-c.yandex.net (vla5-58875c36c028.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:5887:5c36])
-        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id zscGOiGhAs-JlbidVRg;
-        Wed, 29 Apr 2020 19:19:50 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588177190; bh=yzEK/cS0rekVJ08c6ZLjh9KfT00vs5V4t9OpIY0ciEw=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=laI5WRAMVW1RKFVuTHz0OECfdbJ4v6rQbJ9fzmuwbDjBYcVDWX36lQiSAgHkDELH1
-         HGA4pKknYNCUuDIUiMupmUqXDak++FTqdBuXNoJJurma9JAqn2fz1DSrRHMsQnpe4R
-         JBeiKr4etmLiNg2MoPNhQDztB7ZJGrfmU657oDoE=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:508::1:9])
-        by vla5-58875c36c028.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id wwtIzrH1vt-JlYafaE0;
-        Wed, 29 Apr 2020 19:19:47 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH v2 1/3] perf tool: fix reading new topology attribute
- "core_cpus"
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Date:   Wed, 29 Apr 2020 19:19:47 +0300
-Message-ID: <158817718710.747528.11009278875028211991.stgit@buzz>
-User-Agent: StGit/0.19
+        Wed, 29 Apr 2020 12:20:10 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381F4C03C1AD
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:20:10 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d15so3283454wrx.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 09:20:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KLjnW7Dysz3kdSMdG14HgKt8xanjEW1w5wo++IQk2Ik=;
+        b=RfJ4tEOqgeCUGmdBBjdoDwIv6ZcMQd8z0PQuBeNsQWK86kpCplVfsJ2vOOaX3v8hsC
+         8bIhLwB07cNMSbMnqHoDeus1zeXXvz2JZpabpVhS1itbX0sy7XbFy/Eolr5Bnz9Ch599
+         +5w8fOMeAxsrhEYQWNxqLktmyAKjKQUGmGhQeMB3YtUb5emV+Jd/Zka5OKX3tFhxqZm8
+         /te4DCk3YZggeabKaofN8EkYv+rGu7zeooGgS+6t6NKvOrLNYG7FgAfJZI+sQrXsz5/I
+         TyyYSSMTcqefhzOp19h2wub5x1T421cpjT/44hmIMmfP/HSkPxC1FtY9hBG8pjUqaWmu
+         kAmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KLjnW7Dysz3kdSMdG14HgKt8xanjEW1w5wo++IQk2Ik=;
+        b=mK4rMkua77ErjKjmGRTXGDqroG9End61pUl78Wcy38+k4x41wVUIq9TARX3r4J8xv0
+         O0Om+AlZcb/4SAxHciAVuTMJskR86O7cTVeMbtfwuwPLWtcutpUS1vyoFrlENTBh78ac
+         NgS32g+Uxt3lBnfqh/a3w65DfJIQiIZm0NWfT8lvYL1pR0xFyChUBZdtMl8ioAwPdj61
+         RqNJCo+yM0mLP0PplFj1szHs0JQwFFpwSJMSRvQ25NXGqxpzt+pyYRws3FpGAIXfpbiL
+         FEa8i6Du3l7ZKP3EjS8u09Xr45WQXfM7USFnbEf1xd9cJIZQpEQkYmE7lOBgAnaAQp03
+         PTyA==
+X-Gm-Message-State: AGi0PuZa7wt6vWGRsktEU2DnH2mchZ8fixs61Ojx8xM1sAKNDOqOla59
+        Pqn+EUPvkguUN707ZJJCGhOoB1hhoEuJFa1iD5U=
+X-Google-Smtp-Source: APiQypIQ/dGJ4MTojSWWI2+ogBKbaCA53s9pAdQh0eMr4OEAO+IEk/6jOtIhk4tD+GdqLI5wveOJvvL9w4i+9DDcQc8=
+X-Received: by 2002:adf:fe45:: with SMTP id m5mr42917180wrs.124.1588177208892;
+ Wed, 29 Apr 2020 09:20:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <s5ho8rdnems.wl-tiwai@suse.de> <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+ <s5h4kt4ojrf.wl-tiwai@suse.de> <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+ <s5hv9lkm49n.wl-tiwai@suse.de> <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <s5ha72ulp2y.wl-tiwai@suse.de> <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com> <s5h1ro6jn0v.wl-tiwai@suse.de>
+In-Reply-To: <s5h1ro6jn0v.wl-tiwai@suse.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 29 Apr 2020 12:19:57 -0400
+Message-ID: <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check access("devices/system/cpu/cpu%d/topology/core_cpus", F_OK) fails,
-unless current directory is "/sys". Simply try read this file first.
+On Wed, Apr 29, 2020 at 12:05 PM Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Wed, 29 Apr 2020 17:47:47 +0200,
+> Alex Deucher wrote:
+> >
+> > On Wed, Apr 29, 2020 at 11:27 AM Nicholas Johnson
+> > <nicholas.johnson-opensource@outlook.com.au> wrote:
+> > >
+> > > On Wed, Apr 29, 2020 at 09:37:41AM +0200, Takashi Iwai wrote:
+> > > > On Tue, 28 Apr 2020 16:48:45 +0200,
+> > > > Nicholas Johnson wrote:
+> > > > >
+> > > > > > > > >
+> > > > > > > > > FWIW, I have a fiji board in a desktop system and it worked fine when
+> > > > > > > > > this code was enabled.
+> > > > > > > >
+> > > > > > > > Is the new DC code used for Fiji boards?  IIRC, the audio component
+> > > > > > > > binding from amdgpu is enabled only for DC, and without the audio
+> > > > > > > > component binding the runtime PM won't be linked up, hence you can't
+> > > > > > > > power up GPU from the audio side access automatically.
+> > > > > > > >
+> > > > > > >
+> > > > > > > Yes, DC is enabled by default for all cards with runtime pm enabled.
+> > > > > >
+> > > > > > OK, thanks, I found that amdgpu got bound via component in the dmesg
+> > > > > > output, too:
+> > > > > >
+> > > > > > [   21.294927] snd_hda_intel 0000:08:00.1: bound 0000:08:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
+> > > > > >
+> > > > > > This is the place soon after amdgpu driver gets initialized.
+> > > > > > Then we see later another initialization phase:
+> > > > > >
+> > > > > > [   26.904127] rfkill: input handler enabled
+> > > > > > [   37.264152] [drm] PCIE GART of 1024M enabled (table at 0x000000F400000000).
+> > > > > >
+> > > > > > here shows 10 seconds between them.  Then, it complained something:
+> > > > > >
+> > > > > >
+> > > > > > [   37.363287] [drm] UVD initialized successfully.
+> > > > > > [   37.473340] [drm] VCE initialized successfully.
+> > > > > > [   37.477942] amdgpu 0000:08:00.0: [drm] Cannot find any crtc or sizes
+> > > > >
+> > > > > The above would be me hitting WindowsKey+P to change screens, but with
+> > > > > no DisplayPort attached to Fiji, hence it unable to find crtc.
+> > > > >
+> > > > > >
+> > > > > > ... and go further, and hitting HD-audio error:
+> > > > > >
+> > > > > That would be me having attached the DisplayPort and done WindowsKey+P
+> > > > > again.
+> > > > >
+> > > > > > [   38.936624] [drm] fb mappable at 0x4B0696000
+> > > > > > [   38.936626] [drm] vram apper at 0x4B0000000
+> > > > > > [   38.936626] [drm] size 33177600
+> > > > > > [   38.936627] [drm] fb depth is 24
+> > > > > > [   38.936627] [drm]    pitch is 15360
+> > > > > > [   38.936673] amdgpu 0000:08:00.0: fb1: amdgpudrmfb frame buffer device
+> > > > > > [   40.092223] snd_hda_intel 0000:08:00.1: azx_get_response timeout, switching to polling mode: last cmd=0x00170500
+> > > > > >
+> > > > > > After this point, HD-audio communication was screwed up.
+> > > > > >
+> > > > > > This lastcmd in the above message is AC_SET_POWER_STATE verb for the
+> > > > > > root node to D0, so the very first command to power up the codec.
+> > > > > > The rest commands are also about the power up of each node, so the
+> > > > > > whole error indicate that the power up at runtime resume failed.
+> > > > > >
+> > > > > > So, this looks to me as if the device gets runtime-resumed at the bad
+> > > > > > moment?
+> > > > > It does. However, this is not going to be easy to pin down.
+> > > > >
+> > > > > I moved from Arch to Ubuntu, and it behaves differently. I cannot
+> > > > > trigger the bug in Ubuntu. Plus, it puts the GPUs asleep, even if
+> > > > > attached at boot, unlike Arch. I will continue to try to trigger it. But
+> > > > > even if this is a problem with the Linux distribution, it should not be
+> > > > > able to trigger a kernel mode bug, so we should persist with finding it.
+> > > >
+> > > > Sure, that's a bug to be fixed.
+> > > >
+> > > > This made me thinking what happens if we load the HD-audio driver very
+> > > > late.  Could you try to blacklist snd-hda-intel module, then load it
+> > > > manually after plugging the DP monitor and activating it?
+> > > Attached dmesg-blacklist-*
+> > >
+> > > It is interesting. If I enable the monitor with the module unloaded, and
+> > > then load the module, I cannot trigger the bug, even if disabling the
+> > > monitor, waiting for GPU to sleep, and then waking again.
+> > >
+> > > Even if I wake monitor up, put to sleep again, and then insmod when
+> > > sleeping, it does not cause bug when waking again.
+> > >
+> > > Is there anything special about the first time the monitor is used?
+> > >
+> >
+> > What do you mean by used?  Do you mean plugged in to the GPU or used
+> > in the GUI?  It might be easier to debug this without a GUI involved.
+> > Can you try this at runlevel 3 or something equivalent for your
+> > distro?
+> >
+> > When the GPU is powered up, the driver gets an interrupt when a
+> > display is hotplugged and generates an event and userspace
+> > applications can listen for these events.  When the GPU is powered
+> > down, there's no interrupt.  I think most GUIs poll GPUs periodically
+> > to handle this case so they can detect a new display even when the GPU
+> > is off.  Maybe we are getting some sort of race here.  GUI queries GPU
+> > driver, causes GPU to wake up, checks attached displays, GPU driver
+> > resets runtime pm timer.  GPU goes back to sleep.  The detection
+> > updates the ELD data which causes the HDA driver to wake up.  It
+> > assumes the hw is on and tries to query it.  In the meantime, the GPU
+> > has already powered everything down again.
+>
+> Well, but the code path there is the runtime PM resume of the audio
+> device and it means that GPU must have been runtime-resumed again
+> beforehand via the device link.  So, it should have worked from the
+> beginning but in reality not -- that is, apparently some inconsistency
+> is found in the initial attempt of the runtime resume...
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Fixes: 0ccdb8407a46 ("perf tools: Apply new CPU topology sysfs attributes")
----
- tools/perf/util/smt.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Yeah, it should be covered, but I wonder if there is something in the
+ELD update sequence that needs to call pm_runtime_get_sync()?  The ELD
+sequence on AMD GPUs doesn't work the same as on other vendors.  The
+GPU driver has a backdoor into the HDA device's verbs to set update
+the audio state rather than doing it via an ELD buffer update.  We
+still update the ELD buffer for consistency.  Maybe when the GPU
+driver sets the audio state at monitor detection time that triggers an
+interrupt or something on the HDA side which races with the CPU and
+the power down of the GPU.  That still seems unlikely though since the
+runtime pm on the GPU side defaults to a 5 second suspend timer.
 
-diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-index 3b791ef2cd50..8481842e9edb 100644
---- a/tools/perf/util/smt.c
-+++ b/tools/perf/util/smt.c
-@@ -24,13 +24,13 @@ int smt_on(void)
- 
- 		snprintf(fn, sizeof fn,
- 			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
--		if (access(fn, F_OK) == -1) {
-+		if (sysfs__read_str(fn, &str, &strlen) < 0) {
- 			snprintf(fn, sizeof fn,
- 				"devices/system/cpu/cpu%d/topology/thread_siblings",
- 				cpu);
-+			if (sysfs__read_str(fn, &str, &strlen) < 0)
-+				continue;
- 		}
--		if (sysfs__read_str(fn, &str, &strlen) < 0)
--			continue;
- 		/* Entry is hex, but does not have 0x, so need custom parser */
- 		siblings = strtoull(str, NULL, 16);
- 		free(str);
-
+Alex
