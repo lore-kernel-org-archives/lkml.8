@@ -2,62 +2,88 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3D5C83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1281EC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B6120775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE2520775
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 08:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgD2Irn (ORCPT
+        id S1726637AbgD2IsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 04:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2Irm (ORCPT
+        Wed, 29 Apr 2020 04:48:09 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:36793 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgD2IsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 04:47:42 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0C6C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 01:47:42 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6F3E329A; Wed, 29 Apr 2020 10:47:40 +0200 (CEST)
-Date:   Wed, 29 Apr 2020 10:47:38 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
-Message-ID: <20200429084738.GM21900@8bytes.org>
-References: <20200418121022.GA6113@8bytes.org>
- <57CBF6B2-4745-4E36-9AA5-7E0876E3DA8F@lca.pw>
- <20200418183429.GH21900@8bytes.org>
- <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
+        Wed, 29 Apr 2020 04:48:07 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MZCOl-1jgegV2MXh-00V7l9; Wed, 29 Apr 2020 10:47:54 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dpaa2-eth: debugfs: use div64_u64 for division
+Date:   Wed, 29 Apr 2020 10:47:22 +0200
+Message-Id: <20200429084740.2665893-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:JfNeeEx0olSSRzhxiQEp15g+QVP6cDJNVOOCYktX9TalmzZn3hd
+ z2oYTqndiXg/znyl2mxXOxFj7KS9ryp18cKZor6IT+ivkN9a0jsy2CYNqvh4E/NHdMwPkyA
+ n9KqnRTc97pMM/bgE4GfpLcr59CLE/v9wfnud1d3J3+rZJIsMOdlSSkwC7zPyHyCpZJ2AMz
+ qcYy3sqIkRgkF9rMq42uQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:95pt5O6yTM0=:dYCSEoJZBytA9RaJU0hG1/
+ B7Y1bI/hIalo/N/UrY5WGsa7F6DQkyM7TE+KP1ym/+6Nnt8SteugYBLQRqCdoQ1H3MUdNGL+z
+ NktN1U9CEvf+m+KXfh33zKHQh6Dh08uusCP+GNvrFc/wwOfIuUm5qSzgnJAdZUNzMXfRuAFk3
+ Mg8pjIHyTIgYS1zhczCf0Buqltn4MwxEG9QIsXiFhi+7n9/qFcCipRLaCJuNVi5xtfJgfgBFl
+ jbh/XtKCF++HsSRvxTezwYiGGehPjR1KDNJ2dT6zCB07+sfXsjXq+S4ugMkgz17+UiiPv7n92
+ dmMECdJ/yt2yOWa1At026X4/6edpuIS6QJVVlDEFZ7MbXuukFefSpvE0u/NzDRbEd6a8uRoQz
+ q5JeiC2+hPNTDYfGnwxB6QmvsQZYqclYRfMO5BDOWxn7oBlXWIIYz48tZqs4x4WAqpmB+HL1U
+ TF82/bKIG5HOZiq4ki04ghOyWiptBMc4zjhYAFa2yQP2c8uPzoVVrypyRKCbymrtJ+2znVV9F
+ RGi58Wlvsdxp29WHdAWX1SlHwqGRKgvXG1oFySZ5k4Nd/Gog4B6+kUkD+zeaq4H7G0TYNwR9B
+ W1mAIWRSwtsvzWf/cAIVaVvqdCU1UmFSIOav0r15Z5tImXjC6slhM+IO/B2JJtxOU3NTOZ+JR
+ aJ6eJubQkpeDyYs3UF5/w3IFE2sqbRPFozHjt3Al1r5L1BW8jL5cRXzYeJYwUE0c3Ed5JHLrt
+ bLJwsOmpnndNw9kQFxf4lQLf/NTu1ZHg4MvOBvMuhOTfZxKTkSSROkdt+YqUKIz9mldfUpJ4+
+ JKFtNeprj/gXFXLIcjk61v7y1QI8ScRuWXW84dY7JbJMQ4OKis=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
+A plain 64-bit division breaks building on 32-bit architectures:
 
-On Mon, Apr 20, 2020 at 09:26:12AM -0400, Qian Cai wrote:
-> 
-> No dice. There could be some other races. For example,
+ERROR: modpost: "__aeabi_uldivmod" [drivers/net/ethernet/freescale/dpaa2/fsl-dpaa2-eth.ko] undefined!
 
-Okay, I think I know what is happening. The increase_address_space()
-function increases the address space, but does not update the
-DTE and does not flush the old DTE from the caches. But this needs to
-happen before domain->pt_root is updated, because otherwise another CPU
-can come along and map something into the increased address-space which
-is not yet accessible by the device because the DTE is not updated yet.
+As this function is not performance critical, just use the external
+helper instead.
 
-Regards,
+Fixes: 460fd830dd9d ("dpaa2-eth: add channel stat to debugfs")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Joerg
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
+index 80291afff3ea..0a31e4268dfb 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c
+@@ -139,7 +139,7 @@ static int dpaa2_dbg_ch_show(struct seq_file *file, void *offset)
+ 			   ch->stats.dequeue_portal_busy,
+ 			   ch->stats.frames,
+ 			   ch->stats.cdan,
+-			   ch->stats.frames / ch->stats.cdan,
++			   div64_u64(ch->stats.frames, ch->stats.cdan),
+ 			   ch->buf_count);
+ 	}
+ 
+-- 
+2.26.0
+
