@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8929AC83000
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0418AC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED1920B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49B120757
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 21:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5iGzQxB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZI9EqBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD2VsB (ORCPT
+        id S1727772AbgD2Vss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 17:48:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
+        Wed, 29 Apr 2020 17:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2VsB (ORCPT
+        by vger.kernel.org with ESMTP id S1726950AbgD2Vss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 17:48:01 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551A7C03C1AE;
-        Wed, 29 Apr 2020 14:47:59 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id f12so2803891edn.12;
-        Wed, 29 Apr 2020 14:47:59 -0700 (PDT)
+        Wed, 29 Apr 2020 17:48:48 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001E8C03C1AE;
+        Wed, 29 Apr 2020 14:48:47 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id f12so2805187edn.12;
+        Wed, 29 Apr 2020 14:48:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UNHLRZDPOE+yrYVODaNXVx7DwMAJBrtwhuvSjmXh46E=;
-        b=M5iGzQxBACiT1IcMOCDxD0LQ5W2xacYUIhvMjwN1l04Q7wZyg44dUVqGsDoEOchnaR
-         zD4Wst52TKglwEsgQquLDcRXOddg9lpY4uOqqUlwM6l3wqczvOBtK2L7SvAvrEzGOJpR
-         8Df9H+2exmlaV0F0x6oboXXR+vyHB5L/r4uF1WtRJ2LIEszBr/4NCJF98sQrVDtWRaVZ
-         LETg0pkIFuHBgfjd6Fiewm5IyaR2+XBKim1oQzUB32B2AN7h/KOUKa066Iimjj8xqEJ0
-         Z5X1NFEiFjmiY6QQ7FBSpnGNlsGz5M6M/pT9vh0AtzUEnBi7LUj4Ugip+H1sOFeybZaA
-         4TKA==
+        bh=Aq48/n9M1PNfkEkQZMtYV6avU1Sg9OhOWgHmCLSAwlg=;
+        b=DZI9EqBQTOGT+2WTL6ysVUrLX52ji+w99GBAWeDjrOAMi0ITA/nvCUU5xibk+ShDUD
+         WKi7RCckj3y+n2WcaPOUI0wdSkroPX9a+4BOxZg01dRka+xwkyodwYP0JKWi9lS/Wa+k
+         o5ZwGl/hC69tYPsxwm5A71AmzToP+r9Y+ax6u33VuXbAXKIEda1PlYagU5wpRud96p6o
+         gPqEInGdSnDfaLIALMiGip/BfkmdBAwHFR4rV/wq2MI6wNM0/GnIghbGUCh1f3evqs4i
+         Lf5gr17935+rWPWH8dMmfeOMvOVlADh66lCqmBHf3qipjoB1XXcZJmMDIfYdigwfw4cI
+         4QtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=UNHLRZDPOE+yrYVODaNXVx7DwMAJBrtwhuvSjmXh46E=;
-        b=qQJHL9aKwmA07JOiJexvmxCsbuc7G4hMNXiY68e1/xYtA5Iqyt5/vVcCgMbXlN59lU
-         1i3aB/wtdSZDmDW8NApSp+HEYW/SYI88zfU1LN9CiwcgJlXLFb6ubyStFz+BPyMrktOC
-         PIclo8fjHTL20C0ypIl8L4Dwc08dvEJQcNe86lGyZjZIs2HbOS+IMvocafgqe3KZrhp/
-         5uSmZzW3NMq3fDnXsVCshgpq35WQ+MSLIUFmQhikQr8Da2/xuT5TsR3KRUJtOpjBBFrf
-         g2uD2DQuHNUo9Apw4Z4BPv6LoIToDKYpzUCXnQ+gYiM/cmsUpSY81e5bV0uJ3ymUHKDL
-         tFbg==
-X-Gm-Message-State: AGi0PuahszVerTaWzz4FyRnbsok4B++kQd/BLcB7yVonUl2GD4FUnzRa
-        WDZkpsfXhv+NKk/Ila1gpngnAd0Q
-X-Google-Smtp-Source: APiQypIdQAX0vveMsHv2FUS7mdPR6IasbP3M7CSW0oP0ZVqmEL/iNigZ1GJ3iJJQTirCklcI6Fmnrw==
-X-Received: by 2002:aa7:d513:: with SMTP id y19mr18508edq.367.1588196877805;
-        Wed, 29 Apr 2020 14:47:57 -0700 (PDT)
+        bh=Aq48/n9M1PNfkEkQZMtYV6avU1Sg9OhOWgHmCLSAwlg=;
+        b=D5G5juZAWjnk4vzr4MRlYY/IPMH8aey925fqRtPlqi9VribLDdo8sOShqbChA7T6nB
+         E7s+uMVWzmlnyujy+0xwViPDX8lrbJ0SJxTlJagNOjUq4TPm3fFmi+TOUfnvlN+Xavan
+         1MmVCmHLlHfPN2ELebFvvlXDPtnopytM/dBEBh3vKMibJEW6/Y1mD5f0b6v1vDIe3yIH
+         404WXNc8i3KM8DiNkDeUblzduj//ea8kCXFKVuh/GsJkxuKDY4KCbR0+8ChsATZxnL+Y
+         4w8NUtcQEltIWN41skqsPMSAhjwXLVclHkp3JSMcHJ9LD4Ra3fZQloDOfoep7VkNp1Ps
+         xqAA==
+X-Gm-Message-State: AGi0PuaqurcsUpQpCL0ihcOEGYD02cJTt623gTjYGJyqQPA2OGjavaNa
+        DfdLyiVHl3IAN+mlxEqt1IvBAKPc
+X-Google-Smtp-Source: APiQypIFOaJxlkeLpRVmDTmFtRrbDOHBfypfFaBesx/2JFjFAEbZdWKyrujn+IwdzbARgXW5q6cu9A==
+X-Received: by 2002:a50:c016:: with SMTP id r22mr37944edb.388.1588196926443;
+        Wed, 29 Apr 2020 14:48:46 -0700 (PDT)
 Received: from [10.67.49.116] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id n24sm875881ejb.84.2020.04.29.14.47.55
+        by smtp.googlemail.com with ESMTPSA id u18sm741575edx.27.2020.04.29.14.48.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 14:47:56 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 6/7] net: bcmgenet: add support for ethtool
- rxnfc flows
+        Wed, 29 Apr 2020 14:48:45 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 7/7] net: bcmgenet: add WAKE_FILTER support
 To:     Doug Berger <opendmb@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <1588190526-2082-1-git-send-email-opendmb@gmail.com>
- <1588190526-2082-7-git-send-email-opendmb@gmail.com>
+ <1588190526-2082-8-git-send-email-opendmb@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -124,12 +123,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <86fece02-5fc3-43c5-174c-7b732c4e09fd@gmail.com>
-Date:   Wed, 29 Apr 2020 14:47:54 -0700
+Message-ID: <b05f6b6a-28ea-0a5c-61b0-0053c0e81ca6@gmail.com>
+Date:   Wed, 29 Apr 2020 14:48:42 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1588190526-2082-7-git-send-email-opendmb@gmail.com>
+In-Reply-To: <1588190526-2082-8-git-send-email-opendmb@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,28 +138,17 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 4/29/20 1:02 PM, Doug Berger wrote:
-> This commit enables driver support for ethtool commands of this form:
-> ethtool -N|-U|--config-nfc|--config-ntuple devname
->     flow-type ether|ip4
->     [src xx:yy:zz:aa:bb:cc [m xx:yy:zz:aa:bb:cc]]
->     [dst xx:yy:zz:aa:bb:cc [m xx:yy:zz:aa:bb:cc]] [proto N [m N]]
->     [src-ip x.x.x.x [m x.x.x.x]] [dst-ip x.x.x.x [m x.x.x.x]] [tos N [m N]]
->     [l4proto N [m N]] [src-port N [m N]] [dst-port N [m N]] [spi N [m N]]
->     [l4data N [m N]] [vlan-etype N [m N]] [vlan N [m N]]
->     [dst-mac xx:yy:zz:aa:bb:cc [m xx:yy:zz:aa:bb:cc]] [action 0] [loc N] |
->     delete N
+> This commit enables support for the WAKE_FILTER method of Wake on
+> LAN for the GENET driver. The method can be enabled by adding 'f'
+> to the interface 'wol' setting specified by ethtool.
 > 
-> Since there is only one Rx Ring in this implementation action 0 behaves no
-> differently from not specifying a rule.
-> 
-> The rules can be seen with ethtool commands of this form:
-> ethtool -n|-u|--show-nfc|--show-ntuple devname [rule N]
+> Rx network flow rules can be specified using ethtool. Rules that
+> define a flow-type with the RX_CLS_FLOW_WAKE action (i.e. -2) can
+> wake the system from the 'standby' power state when the WAKE_FILTER
+> WoL method is enabled.
 > 
 > Signed-off-by: Doug Berger <opendmb@gmail.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-I thought the Roboswitch CFP was hard, but this is another whole level
-of insane :)
 -- 
 Florian
