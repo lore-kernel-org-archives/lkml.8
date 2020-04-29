@@ -2,140 +2,66 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E765C83006
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC85C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594682083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aCmH7Cwl"
+	by mail.kernel.org (Postfix) with ESMTP id 6362E2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 02:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588128924;
+	bh=xquNFMLDfLZib8aq7iKWDAq0gBSPuoXgBAhfsarUS3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rVGnP6fhOpugRZz9Ydg2+g6/CgLeAT4N4mn2sWLekD4CS8D81y1BbvWvRCWwCP7+V
+	 ROl5qEOoV6glsP4wB0QktEMfr6HshGJycS9Y+2lQy/tgaoy43fWq43qp3WMPTle77e
+	 NIU8SYFsPgssOSLn8iDETtXKezQR+NWz+LNkEGYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgD2Cww (ORCPT
+        id S1726596AbgD2CzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 22:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726498AbgD2Cww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 22:52:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F046FC03C1AC
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:52:51 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 23so643436qkf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 19:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZuYhQOwVqj5I2l0C3mwcWWBRC4vXsL2shmKKYh/lrQg=;
-        b=aCmH7CwlwPl/0ya/suzFuA1fMGqaCRqlG1An9hZRxqlWrWA87i8lAzj19h17I7fVNY
-         SkAcbxzKv2yVzNDU26bW9XPSlaGn08IkxBernQCD5ymMMy10wMAO4iA5SlJgrV6/rHaR
-         UR10WckaYKHTF8QxLVBLYtLz+jd+e24vryNXvlfdrfdWXTi/pS4/yFmx45AuBPT1atFY
-         e3xpNkyL5b2gkq9kVYEGW7ICo5ondTQiiXBy7zypoc2So3d00g3auY/sQKGU43yMdxoG
-         ehNkl1Lxa29e4IJt1e3V3D0XETFGEopBpDd1nTLMoOy1Y1xIImQCuF2KMJqnHHy7H+M9
-         uy/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZuYhQOwVqj5I2l0C3mwcWWBRC4vXsL2shmKKYh/lrQg=;
-        b=Gp+4ayq2x7SsRRXGQP1ZWd0RrkUClcvbqzrlyigf0v+oXhepArp7VE6KHnaB/Ha6Ra
-         xUSM8TPeteKN2/oA2HqXJiO8Rv9sLi/eEO1yEXH45fwrLJsYQGZmyGbcELTkHq8b5+HD
-         gqpuk4oJ91i9oOGwmzJQHMN1D3yExCn/pH0hZ4ekYQcYmZqH8db2O01eDyO1nAVux/sV
-         Q/eSQj3Q/eQCTEPLVtxzJA1R7OTPgyQDray4s+p1AJvxN2d7GWHdYa/6M+ZXeZUoIoVX
-         u1yUzbQmaemVLZsNWgRbBgClvdmyOG2ml0mJm5BEkF/QQf0zu60/55VPoaSrmVdyWKT8
-         igNg==
-X-Gm-Message-State: AGi0Pua9MqTWMWNiWZiT5AuwFbTXUv8/2rW1SAhLp7l4LrFgySuZzTBp
-        ulscG0vsiNqO3Kp9O5h60/oD5A==
-X-Google-Smtp-Source: APiQypJiO5xWI+h/pT4bi47A94HPt7b3SBuTMERGoOCtnJcgSOKc8ipTbQTSRssdaCLVDjQ5/LtWzQ==
-X-Received: by 2002:a37:7b01:: with SMTP id w1mr31743791qkc.167.1588128771014;
-        Tue, 28 Apr 2020 19:52:51 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t67sm14947399qka.17.2020.04.28.19.52.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 19:52:50 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2 4/4] mm/slub: Fix sysfs shrink circular locking
- dependency
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <56327de0-fa44-d5f3-2409-69cf2b97a209@redhat.com>
-Date:   Tue, 28 Apr 2020 22:52:48 -0400
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Juri Lelli <juri.lelli@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0310F66F-0ECB-43BF-B86F-3BDB74F51B06@lca.pw>
-References: <dbbfe685-7374-9a96-b7c2-684142746e30@redhat.com>
- <28BB8A1C-CFDF-4F5A-8686-537C3CE04818@lca.pw>
- <56327de0-fa44-d5f3-2409-69cf2b97a209@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 28 Apr 2020 22:55:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbgD2CzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 22:55:23 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C66BE20737;
+        Wed, 29 Apr 2020 02:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588128923;
+        bh=xquNFMLDfLZib8aq7iKWDAq0gBSPuoXgBAhfsarUS3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XkV0gZPA1BtL5ppuUHd1TwkAiKaTuXY2ImxjnhbZRNNH9A6JRvRh/twyxvGEslq1P
+         riWBPxzljgh3nvpx8GsmcgiDD2vxZyS9qqsjdTmMNn5YhuSwtugpNyOhWwG8ib+sp6
+         qWqkCDT9DHCZhqcuNs/oO580Z5b/wSVZLpjGLevQ=
+Date:   Wed, 29 Apr 2020 10:55:16 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
+Message-ID: <20200429025515.GM32592@dragon>
+References: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 01:39:05PM +0800, Anson Huang wrote:
+> Sort the labels alphabetically for consistency.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-
-> On Apr 28, 2020, at 10:06 AM, Waiman Long <longman@redhat.com> wrote:
->=20
-> On 4/27/20 10:11 PM, Qian Cai wrote:
->>=20
->>> On Apr 27, 2020, at 9:39 PM, Waiman Long <longman@redhat.com> wrote:
->>>=20
->>> The sequence that was prevented by this patch is "kn->count --> =
-mem_hotplug_lock.rwsem". This sequence isn't directly in the splat. Once =
-this link is broken, the 3-lock circular loop cannot be formed. Maybe I =
-should modify the commit log to make this point more clear.
->> I don=E2=80=99t know what you are talking about. Once trylock succeed =
-once, you will have kn->count =E2=80=94> cpu/memory_hotplug_lock.
->>=20
-> Trylock is handled differently from lockdep's perspective as trylock =
-can failed. When trylock succeeds, the critical section is executed. As =
-long as it doesn't try to acquire another lock in the circular chain, =
-the execution will finish at some point and release the lock. On the =
-other hand, if another task has already held all those locks, the =
-trylock will fail and held locks should be released. Again, no deadlock =
-will happen.
-
-So once,
-
-CPU0 (trylock succeed):
-kn->count =E2=80=94> cpu/memory_hotplug_lock.
-
-Did you mean that lockdep will not record this existing chain?
-
-If it did. Then later, are you still sure that CPU1 (via memcg path =
-below) will still be impossible to trigger a splat just because lockdep =
-will be able to tell that those arennon-exclusive =
-(cpu/memory_hotplug_lock) locks instead?
-
- cpu/memory_hotplug_lock -> kn->count
-
-[  290.805818] -> #3 (kn->count#86){++++}-{0:0}:
-[  290.811954]        __kernfs_remove+0x455/0x4c0
-[  290.816428]        kernfs_remove+0x23/0x40
-[  290.820554]        sysfs_remove_dir+0x74/0x80
-[  290.824947]        kobject_del+0x57/0xa0
-[  290.828905]        sysfs_slab_unlink+0x1c/0x20
-[  290.833377]        shutdown_cache+0x15d/0x1c0
-[  290.837964]        kmemcg_cache_shutdown_fn+0xe/0x20
-[  290.842963]        kmemcg_workfn+0x35/0x50   <=E2=80=94=E2=80=94 =
-cpu/memory_hotplug_lock
-[  290.847095]        process_one_work+0x57e/0xb90
-[  290.851658]        worker_thread+0x63/0x5b0
-[  290.855872]        kthread+0x1f7/0x220
-[  290.859653]        ret_from_fork+0x27/0x50=
+Applied both, thanks.
