@@ -4,156 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BB4C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA86C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 199552087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE512087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgD2NZA (ORCPT
+        id S1727027AbgD2NZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:25:00 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:58085 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgD2NY7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:24:59 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MN5W9-1jmHai06Xl-00J200; Wed, 29 Apr 2020 15:24:45 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Wang <sean.wang@mediatek.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pinctrl: mediatek: fix mtk_eint link error
-Date:   Wed, 29 Apr 2020 15:24:22 +0200
-Message-Id: <20200429132443.1295194-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 29 Apr 2020 09:25:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48836 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726654AbgD2NZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 09:25:15 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EDD7B31A2BEF9D52F325;
+        Wed, 29 Apr 2020 21:24:56 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Apr 2020
+ 21:24:46 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <ap420073@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: hsr: remove unused inline functions
+Date:   Wed, 29 Apr 2020 21:24:30 +0800
+Message-ID: <20200429132430.29948-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:b2K8SGt0tNbKweRcNNd5na2gw56bnc7GqSkapPSRkiyRREMbXnV
- mXoroDsDHSuU5UDemW+096Q1oGLBjSb9A8Q0oGheHoi6a2eWYKpL9j2P6FuZgQX7IeczDrW
- dwxi0yxqo0aWJTzwXgrZJ/4d15zI6Rog4TWtotc5l3cB8KfW+IoAMQzurz+hLhsY3jkN6mR
- YdY+2SSUVRM3JY69A4Ilg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tIEy99GNx+8=:kozTZI20UsvqYUvArP7lrr
- CVSueE5VSluslq5ErNIWyj2CWFhgMtHmXt3v/rGC9X/UHxPaqC6LLL5noG0k4Dq5j41EXHWCb
- PMCNwTdKHUWN7fgmBpIjU4XPqpfHUH7QjTCqCZ5VnwonmySixRq/IaLaahcEMNm+XBu5NVV7h
- ROxryqcjmRKSV1UYN1qIEVJ6hSQEaHnkncCnI/ytOdhIZcz5LzUlvCE4Lir6+xxNkpB344DM7
- ljN/nt5iPRp+jhgNSvTe+zFPC8IURT295IA1JzDCSL9t4ueK+qD3QiuK57tJnHlITjKTqwN96
- F6KAPbHCFr/8pswmCN1jvldq/Z+76YbCHp+O2rSTTgaTTtzyM8IhfOKSW2PnP6iAfU0/qtvUc
- wAn+TTxJsVRKcHwW6DB/WQTbw3uRrJXs8OIUbqzVCq2BFazyT+12LVD2iEiZ0WFMTKEkRfCpX
- FTeFLNHCNkEOZ2V3gyE5XZcK0A8h+hHbjg2CvXmWyqrVDLkyf6ulkl8J3ZaBy8DD7i6iYs1SF
- NLDTEZrh5IRuSqTzXGjHdZ4BAcT+7k4CaiWVYGiLPHAOo5iy0bhN1962tmSTdUKH2f/yl6gUv
- qZxwcFLKnqH1cLBdstIpvMOo98khu7iN5Ae3ffSf12Lfzqq7W5tD72pU12fmGOa3ScgKo++eV
- rlKjKWK9To2C68fLzv0YtoPT190SQ0/2hGz4P5iSl4kVdtqg2lzNtCYAyKKj3GZfqF3QvpKVW
- 7z1cbRxFdgv2pbmIdbkW4gC5TLeHnAkMZ7SbwAsr/FtwiodtzHLJdfMR2m+bkNPRRUsuQv75P
- 0xarjRVA9hEnrsUt/yUbISYhgeHa+OrMmkGh8ORCnQZWR5f9Wg=
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a configuration with CONFIG_PINCTRL_MTK_MOORE=y and CONFIG_PINCTRL_MTK_PARIS=m,
-we end up with the mtk_eint driver as a loadable module that cannot be
-linked from built-in code:
+There's no callers in-tree anymore.
 
-aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.o: in function `mtk_build_eint':
-(.text+0x304): undefined reference to `mtk_eint_do_init'
-aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-moore.o: in function `mtk_gpio_set_config':
-pinctrl-moore.c:(.text+0xf80): undefined reference to `mtk_eint_set_debounce'
-aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-moore.o: in function `mtk_gpio_to_irq':
-pinctrl-moore.c:(.text+0x1028): undefined reference to `mtk_eint_find_irq'
-
-Simplify the Kconfig logic to always select EINT_MTK when it is needed, and
-remove the 'default' statements.
-
-Fixes: 8174a8512e3e ("pinctrl: mediatek: make MediaTek pinctrl v2 driver ready for buidling loadable module")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pinctrl/mediatek/Kconfig    |  4 +---
- drivers/pinctrl/mediatek/mtk-eint.h | 28 ----------------------------
- 2 files changed, 1 insertion(+), 31 deletions(-)
+ net/hsr/hsr_main.h | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-index f32d3644c509..b6a8d91f4885 100644
---- a/drivers/pinctrl/mediatek/Kconfig
-+++ b/drivers/pinctrl/mediatek/Kconfig
-@@ -7,8 +7,6 @@ config EINT_MTK
- 	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
- 	select GPIOLIB
- 	select IRQ_DOMAIN
--	default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
--	default PINCTRL_MTK_PARIS
- 
- config PINCTRL_MTK
- 	bool
-@@ -20,6 +18,7 @@ config PINCTRL_MTK
- 	select OF_GPIO
- 
- config PINCTRL_MTK_V2
-+	select EINT_MTK
- 	tristate
- 
- config PINCTRL_MTK_MOORE
-@@ -38,7 +37,6 @@ config PINCTRL_MTK_PARIS
- 	select PINMUX
- 	select GENERIC_PINCONF
- 	select GPIOLIB
--	select EINT_MTK
- 	select OF_GPIO
- 	select PINCTRL_MTK_V2
- 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
-index 48468d0fae68..f40dab50a5f3 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.h
-+++ b/drivers/pinctrl/mediatek/mtk-eint.h
-@@ -68,7 +68,6 @@ struct mtk_eint {
- 	const struct mtk_eint_xt *gpio_xlate;
- };
- 
--#if IS_ENABLED(CONFIG_EINT_MTK)
- int mtk_eint_do_init(struct mtk_eint *eint);
- int mtk_eint_do_suspend(struct mtk_eint *eint);
- int mtk_eint_do_resume(struct mtk_eint *eint);
-@@ -76,31 +75,4 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
- 			  unsigned int debounce);
- int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n);
- 
--#else
--static inline int mtk_eint_do_init(struct mtk_eint *eint)
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index 7321cf8d6d2c..f74193465bf5 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -62,15 +62,6 @@ struct hsr_tag {
+  * with the path field in-between, which seems strange. I'm guessing the MAC
+  * address definition is in error.
+  */
+-static inline u16 get_hsr_tag_path(struct hsr_tag *ht)
 -{
--	return -EOPNOTSUPP;
+-	return ntohs(ht->path_and_LSDU_size) >> 12;
 -}
 -
--static inline int mtk_eint_do_suspend(struct mtk_eint *eint)
+-static inline u16 get_hsr_tag_LSDU_size(struct hsr_tag *ht)
 -{
--	return -EOPNOTSUPP;
+-	return ntohs(ht->path_and_LSDU_size) & 0x0FFF;
+-}
+ 
+ static inline void set_hsr_tag_path(struct hsr_tag *ht, u16 path)
+ {
+@@ -103,16 +94,6 @@ struct hsr_sup_payload {
+ 	unsigned char	macaddress_A[ETH_ALEN];
+ } __packed;
+ 
+-static inline u16 get_hsr_stag_path(struct hsr_sup_tag *hst)
+-{
+-	return get_hsr_tag_path((struct hsr_tag *)hst);
 -}
 -
--static inline int mtk_eint_do_resume(struct mtk_eint *eint)
+-static inline u16 get_hsr_stag_HSR_ver(struct hsr_sup_tag *hst)
 -{
--	return -EOPNOTSUPP;
+-	return get_hsr_tag_LSDU_size((struct hsr_tag *)hst);
 -}
 -
--static inline int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
--			  unsigned int debounce)
--{
--	return -EOPNOTSUPP;
--}
--
--static inline int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
--{
--	return -EOPNOTSUPP;
--}
--#endif
- #endif /* __MTK_EINT_H */
+ static inline void set_hsr_stag_path(struct hsr_sup_tag *hst, u16 path)
+ {
+ 	set_hsr_tag_path((struct hsr_tag *)hst, path);
 -- 
-2.26.0
+2.17.1
+
 
