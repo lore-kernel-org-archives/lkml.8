@@ -2,91 +2,87 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA87FC83001
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2392C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A76420737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DBD20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 01:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ul2ClHCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgD2Bui (ORCPT
+        id S1726621AbgD2Bvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 21:50:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3331 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726158AbgD2Bui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 21:50:38 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 301E229E52E30D02CF9B;
-        Wed, 29 Apr 2020 09:50:36 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Apr 2020
- 09:50:25 +0800
-Subject: Re: [PATCH net-next] net: hns3: adds support for reading module
- eeprom info
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
-        Yonglong Liu <liuyonglong@huawei.com>
-References: <1588075105-52158-1-git-send-email-tanhuazhong@huawei.com>
- <20200428114910.7cc5182e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <a43d4e21-d4e7-a439-946d-306db7f7a5d6@huawei.com>
-Date:   Wed, 29 Apr 2020 09:50:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Tue, 28 Apr 2020 21:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbgD2Bva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Apr 2020 21:51:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F324C03C1AC;
+        Tue, 28 Apr 2020 18:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WbbJxxgU3/2bFydTDSvswBZ7GGGONTFQzERhB4EnAUc=; b=Ul2ClHCmMLDUyloGhXGz54hFzD
+        fMR+V0dNgvkNCYvShBkoTv6vBoaB8q70JyqyVLyqXTRrRx8yre3Sj8KAOfTYayVF+xLVzJwcsYB0s
+        hjurit9iWN4a5sfT/dChjGHZuP5ERi+QmDTiiNv0kCZTz8PZM16OX32LiQsN4Em+etdl3Yrc30Yxw
+        g/FLckZ/pLl7ZUy6rZCNq18s1PAAYOaxZB8Pr4KVT3AKuNvF9uNXhTJRGRiSx6zGLAYTsDr4gk9N0
+        skWVoLsycEX4MKtlyewMifsVXMO+sT7X1qmpJQJKOt9VDpJ2AVrLCslMj+PaSe2mIz9EdWa+BzpBC
+        gssJLDhA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTbsk-000812-Hw; Wed, 29 Apr 2020 01:51:26 +0000
+Date:   Tue, 28 Apr 2020 18:51:26 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 0/7] Record the mm_struct in the page table pages
+Message-ID: <20200429015126.GP29705@bombadil.infradead.org>
+References: <20200428194449.22615-1-willy@infradead.org>
+ <20200429002624.qkhb362moj6v3vtw@box>
 MIME-Version: 1.0
-In-Reply-To: <20200428114910.7cc5182e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429002624.qkhb362moj6v3vtw@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/4/29 2:49, Jakub Kicinski wrote:
-> On Tue, 28 Apr 2020 19:58:25 +0800 Huazhong Tan wrote:
->> From: Yonglong Liu <liuyonglong@huawei.com>
->>
->> This patch adds support for reading the optical module eeprom
->> info via "ethtool -m".
->>
->> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
->> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+On Wed, Apr 29, 2020 at 03:26:24AM +0300, Kirill A. Shutemov wrote:
+> On Tue, Apr 28, 2020 at 12:44:42PM -0700, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > Pages which are in use as page tables have some space unused in struct
+> > page.  It would be handy to have a pointer to the struct mm_struct that
+> > they belong to so that we can handle uncorrectable errors in page tables
+> > more gracefully.  There are a few other things we could use it for too,
+> > such as checking that the page table entry actually belongs to the task
+> > we think it ought to.  This patch series does none of that, but does
+> > lay the groundwork for it.
+> > 
+> > Matthew Wilcox (Oracle) (7):
 > 
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> index 4d9c85f..8364e1b 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
->> @@ -12,6 +12,16 @@ struct hns3_stats {
->>   	int stats_offset;
->>   };
->>   
->> +#define HNS3_MODULE_TYPE_QSFP		0x0C
->> +#define HNS3_MODULE_TYPE_QSFP_P		0x0D
->> +#define HNS3_MODULE_TYPE_QSFP_28	0x11
->> +#define HNS3_MODULE_TYPE_SFP		0x03
-> 
-> Could you use the SFF8024_ID_* defines from sfp.h here as well?
->
+> How does it work for kernel side of virtual address space?
 
-Yes, will send V2 to do that.
+init_mm
 
+> And your employer may be interested in semantics around
+> CONFIG_ARCH_WANT_HUGE_PMD_SHARE :P
 
-> Otherwise looks good to me!
-> 
-
-Thanks:)
-
-> .
-> 
-
+I was thinking about that.  Right now, it's only useful for debugging
+purposes (as you point out in a later email).  I think it's OK if shared
+PMDs aren't supported as well as regular PTEs, just because there are
+so few of them that uncorrectable errors are less likely to strike in
+those pages.
