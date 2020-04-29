@@ -2,127 +2,87 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD3C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1801C83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8122085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF08A2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgD2LsC (ORCPT
+        id S1726877AbgD2LsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:48:02 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:48367 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726457AbgD2LsC (ORCPT
+        Wed, 29 Apr 2020 07:48:06 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:20545 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726457AbgD2LsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:48:02 -0400
-X-IronPort-AV: E=Sophos;i="5.73,331,1583164800"; 
-   d="scan'208";a="90776462"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 29 Apr 2020 19:47:58 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 6CC7E50A996E;
-        Wed, 29 Apr 2020 19:47:58 +0800 (CST)
-Received: from [10.167.220.69] (10.167.220.69) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 29 Apr 2020 19:47:59 +0800
-Message-ID: <5EA9696D.9020505@cn.fujitsu.com>
-Date:   Wed, 29 Apr 2020 19:47:57 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Wed, 29 Apr 2020 07:48:04 -0400
+X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 07:48:04 EDT
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 29 Apr 2020 04:32:57 -0700
+Received: from localhost.localdomain (ashwinh-vm-1.vmware.com [10.110.19.225])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 5FD23B1F56;
+        Wed, 29 Apr 2020 07:32:57 -0400 (EDT)
+From:   ashwin-h <ashwinh@vmware.com>
+To:     <tytso@mit.edu>, <adilger.kernel@dilger.ca>
+CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@kernel.org>, <srivatsab@vmware.com>,
+        <srivatsa@csail.mit.edu>, <rostedt@goodmis.org>,
+        <srostedt@vmware.com>, <gregkh@linuxfoundation.org>,
+        <ashwin.hiranniah@gmail.com>, ashwin-h <ashwinh@vmware.com>
+Subject: [PATCH 0/5] Backport to 4.9- ext4: protect journal inode's blocks using block_validity 
+Date:   Thu, 30 Apr 2020 00:51:34 +0530
+Message-ID: <cover.1587713792.git.ashwinh@vmware.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-To:     Joel Fernandes <joel@joelfernandes.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] kernel/trace: Stop and wait for kthread on preempt irq
- module unload
-References: <20200424223630.224895-1-joel@joelfernandes.org> <5EA80319.7080005@cn.fujitsu.com> <20200428141505.GA141102@google.com>
-In-Reply-To: <20200428141505.GA141102@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.220.69]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 6CC7E50A996E.ABEDC
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: ashwinh@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/28 22:15, Joel Fernandes wrote:
-> I am wondering if it is because in your test, the kthread exits too quickly.
-> We have these comments in kthread_stop():
->   * If threadfn() may call do_exit() itself, the caller must ensure
->   * task_struct can't go away.
->
-> Does the below diff on top of the previous patch help?
->
-> ---8<-----------------------
->
-> diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
-> index 1c28ca20e30b6..8051946a18989 100644
-> --- a/kernel/trace/preemptirq_delay_test.c
-> +++ b/kernel/trace/preemptirq_delay_test.c
-> @@ -152,6 +152,8 @@ static int __init preemptirq_delay_init(void)
->   	int retval;
->
->   	test_task = preemptirq_start_test();
-> +	get_task_struct(test_task);
-> +
->   	retval = PTR_ERR_OR_ZERO(test_task);
->   	if (retval != 0)
->   		return retval;
-> @@ -172,8 +174,10 @@ static void __exit preemptirq_delay_exit(void)
->   {
->   	kobject_put(preemptirq_delay_kobj);
->
-> -	if (test_task)
-> +	if (test_task) {
->   		kthread_stop(test_task);
-> +		put_task_struct(test_task);
-> +	}
->   }
+[PATCH 1/5] ext4: avoid declaring fs inconsistent due to invalid file
+handles
+This patch is backported as functionality in this commit is used by
+Patch 2 in this patchset.
 
-Hi Joel,
+[PATCH 2/5] ext4: protect journal inode's blocks using block_validity
+Backport to 4.9
 
-Thanks for your additional patch.
+[PATCH 3/5] ext4: don't perform block validity checks on the journal
+[PATCH 4/5] ext4: fix block validity checks for journal inodes using
+[PATCH 5/5] ext4: unsigned int compared against zero
+Fixes issues found in Patch 2 in this patchset.
 
-First, We have to avoid kbuild error by including <linux/sched/task.h>
----------------------------------------
-kernel/trace/preemptirq_delay_test.c: In function ‘preemptirq_delay_init’:
-kernel/trace/preemptirq_delay_test.c:155:2: error: implicit declaration 
-of function ‘get_task_struct’; did you mean ‘set_task_cpu’? 
-[-Werror=implicit-function-declaration]
-   get_task_struct(test_task);
-   ^~~~~~~~~~~~~~~
-   set_task_cpu
-kernel/trace/preemptirq_delay_test.c: In function ‘preemptirq_delay_exit’:
-kernel/trace/preemptirq_delay_test.c:179:3: error: implicit declaration 
-of function ‘put_task_struct’; did you mean ‘set_task_cpu’? 
-[-Werror=implicit-function-declaration]
-    put_task_struct(test_task);
-    ^~~~~~~~~~~~~~~
-    set_task_cpu
-cc1: some warnings being treated as errors
----------------------------------------
+These patches addresses CVE-2019-19319
 
-Second, I used the following steps to do test and didn't get any 
-warning/panic after applying your additional patch：
----------------------------------------
-for i in $(seq 1 100); do modprobe preemptirq_delay_test test_mode=irq 
-delay=500000; rmmod preemptirq_delay_test; done
-for i in $(seq 1 100); do modprobe preemptirq_delay_test 
-test_mode=preempt delay=500000; rmmod preemptirq_delay_test; done
----------------------------------------
+Colin Ian King (1):
+  ext4: unsigned int compared against zero
 
-Thanks,
-Xiao Yang
+Theodore Ts'o (4):
+  ext4: avoid declaring fs inconsistent due to invalid file handles
+  ext4: protect journal inode's blocks using block_validity
+  ext4: don't perform block validity checks on the journal inode
+  ext4: fix block validity checks for journal inodes using indirect
+    blocks
 
+ fs/ext4/block_validity.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/ext4/ext4.h           | 15 ++++++++++++--
+ fs/ext4/extents.c        | 12 +++++++----
+ fs/ext4/ialloc.c         |  2 +-
+ fs/ext4/inode.c          | 48 ++++++++++++++++++++++++++++++------------
+ fs/ext4/ioctl.c          |  2 +-
+ fs/ext4/namei.c          |  4 ++--
+ fs/ext4/resize.c         |  5 +++--
+ fs/ext4/super.c          | 19 +++++------------
+ 9 files changed, 122 insertions(+), 39 deletions(-)
+
+-- 
+2.7.4
 
