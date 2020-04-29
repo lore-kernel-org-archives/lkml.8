@@ -2,199 +2,225 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4F7C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0737C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791692083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD87620731
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:22:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ewBoDhby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgD2JWX (ORCPT
+        id S1726636AbgD2JWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:22:23 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:58897 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgD2JWW (ORCPT
+        Wed, 29 Apr 2020 05:22:41 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22130 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726501AbgD2JWk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:22:22 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MfpKZ-1iwc612wNl-00gGTR; Wed, 29 Apr 2020 11:22:12 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] amdgpu: fix gcc-4.8 build warnings
-Date:   Wed, 29 Apr 2020 11:20:42 +0200
-Message-Id: <20200429092207.4049268-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        Wed, 29 Apr 2020 05:22:40 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T9CP7P027186;
+        Wed, 29 Apr 2020 11:22:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=JdA22wLUsyT7xRNUgZmKmICxcJXDajF/ZLpufn6f0Ic=;
+ b=ewBoDhbyQBMgLRk6M4Jj+slQSIMv6ePbgc/Omj7FOMR5TI9S9yzmrtmejs2v1Wgz29M5
+ lGC3LSYFkIz1f4S022/EaBMlVwRbG9Go2HYxH8Fuq0e44UWdTvuOSn2P0Vk70NORVhvF
+ jmIE64L3jwdSSzpIniolt6jxtusrvbnk9y6our1F51w/hz9UJKlVv4rvygW5rPVHF/ml
+ AriVjWbW03y1u5MU3sAooSlEHFxWh49LcGZCQ8zno/2kbJuuzAS2m5vs2SG4ZDiL8NCU
+ C/V17nFuqqI4VnukRPQLNzNd2O9sonn0BJFLZ6IUKNsLg+9KWxBMUhzI1cvuNyqFUNsq 6Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30n4j61gs8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 11:22:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 67A2C10002A;
+        Wed, 29 Apr 2020 11:22:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 53F2020755A;
+        Wed, 29 Apr 2020 11:22:31 +0200 (CEST)
+Received: from lmecxl0889.tpe.st.com (10.75.127.49) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
+ 2020 11:22:29 +0200
+Subject: Re: [PATCH v3 12/14] remoteproc: Introducing function
+ rproc_set_state_machine()
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        <bjorn.andersson@linaro.org>, <ohad@wizery.com>
+CC:     <loic.pallardy@st.com>, <s-anna@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-13-mathieu.poirier@linaro.org>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
+Date:   Wed, 29 Apr 2020 11:22:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:x/Y2ttaKh8S4oSIHZuCcQJcIg3m35dCZcGbCfqBWDyKe6L/H8TJ
- iPhHhkmD0/Z8JCtJuJf/MsKD9MwsTLHZilEXd/MEpqujXLEE8A0Hth9nRUfolyRtw5enShd
- GFPbhOprj+sG0VfzyOhbSt4cUDkdQlz6u50FUMimF7FA1zPPx+xPL4b6jJnRjD9ooD+EexR
- yjN45AdLttxbasdfJXE2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I1U8bIBgt5Q=:nkG5R3DDKbefs9Nak+vMK6
- cKgQSJAkcHCdprpBC7yP13QN2c9q/MiSM5Z+2gK9wGVeVxnuaLV9rPlsFeg+M1aRSDka18+b5
- rlB1toFZr/DyMbAhyRvI/SE/ADwvLNVGSfNOEoURqsGxyqbDVdZkgCSctUdDLW1vp2ERR6T47
- zQbQSWD5M4PPyeEI2M/TDMNYmt1Hwy0FdbHBSJLFFhnMOkAQiRJihxT1G7ClG1PkGmqooZN6z
- U40AM2vhrSmq7mTjwF0uaWYpwZf1NuH82QY3Xhk6FI/fHl4HQG3Qh9/nssqueZd4crncAzkh8
- yNZ2yHrFckogPSoKDOFJof2EUv6jVNa3EoDg1isG5GK5IjZN655Vawq1zHiBEdhiTctoeNpGs
- 2Mu73KqlJ6mTYMc9v1/QYZSdEjQZxCXhSRmCSNLCAUqS/0l3kvanXVAkSBbnQAejp7cmr+wzX
- w1Cs+WYtYw2N86/1fb3aiZu0ZwrimHm/O84twtXk3B81mi9q2uoLBbx4qMSX4k/bS0QU0jTd6
- Mygb15AI8Ex/ez3NKxMa34bEfantpSnO7tBOzR6INDWUDBQpuFxvP0WLnFOApmzh4VVeJsEGx
- lKXJIXPnzYLJS4NZgYBeYTECob5SSANv5HmtDsB6UI/WLPynMCC+JpTY7P5ly1Kl1uAgkegU8
- fbcr5GaJVGVV0Gktsn+qJIz2v1ZTNsizde5/ZnyDkAIRGlNuh+kqyi3+T3d5iPbQdFpmwIKC3
- piLUsUmeVJrZrMJNDduRDuRS/U1cPDnicQAATdHXbKrC+ZrC9rJ8mUvcf9ZCTEYoJdCAQ7Lkl
- YzWYa2T4vCyN4hwJloNemuIQgbuiNjB5NbCnNbZdxvZZCi/hCM=
+In-Reply-To: <20200424200135.28825-13-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_03:2020-04-28,2020-04-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Older compilers warn about initializers with incorrect curly
-braces:
 
-drivers/gpu/drm/drm_dp_mst_topology.c: In function 'drm_dp_mst_dsc_aux_for_port':
-drivers/gpu/drm/drm_dp_mst_topology.c:5497:9: error: missing braces around initializer [-Werror=missing-braces]
-  struct drm_dp_desc desc = { 0 };
-         ^
 
-Change all instances in the amd gpu driver to using the GNU empty
-initializer extension.
+On 4/24/20 10:01 PM, Mathieu Poirier wrote:
+> Introducting function rproc_set_state_machine() to add
+> operations and a set of flags to use when synchronising with
+> a remote processor.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  drivers/remoteproc/remoteproc_core.c     | 54 ++++++++++++++++++++++++
+>  drivers/remoteproc/remoteproc_internal.h |  6 +++
+>  include/linux/remoteproc.h               |  3 ++
+>  3 files changed, 63 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 48afa1f80a8f..5c48714e8702 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -2065,6 +2065,59 @@ int devm_rproc_add(struct device *dev, struct rproc *rproc)
+>  }
+>  EXPORT_SYMBOL(devm_rproc_add);
+>  
+> +/**
+> + * rproc_set_state_machine() - Set a synchronisation ops and set of flags
+> + *			       to use with a remote processor
+> + * @rproc:	The remote processor to work with
+> + * @sync_ops:	The operations to use when synchronising with a remote
+> + *		processor
+> + * @sync_flags:	The flags to use when deciding if the remoteproc core
+> + *		should be synchronising with a remote processor
+> + *
+> + * Returns 0 on success, an error code otherwise.
+> + */
+> +int rproc_set_state_machine(struct rproc *rproc,
+> +			    const struct rproc_ops *sync_ops,
+> +			    struct rproc_sync_flags sync_flags)
 
-Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: some context changes linux-next stopped yesterday's patch from
-applying today.
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c         | 2 +-
- drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c        | 2 +-
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 2 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c          | 6 +++---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c         | 6 +++---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c     | 2 +-
- drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c         | 6 +++---
- 7 files changed, 13 insertions(+), 13 deletions(-)
+So this API should be called by platform driver only in case of synchronization
+support, right?
+In this case i would rename it as there is also a state machine in "normal" boot
+proposal: rproc_set_sync_machine or rproc_set_sync_state_machine
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 7f4417981bff..81ce3103d751 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -8695,7 +8695,7 @@ bool amdgpu_dm_psr_enable(struct dc_stream_state *stream)
- {
- 	struct dc_link *link = stream->link;
- 	unsigned int vsync_rate_hz = 0;
--	struct dc_static_screen_params params = {0};
-+	struct dc_static_screen_params params = { };
- 	/* Calculate number of static frames before generating interrupt to
- 	 * enter PSR.
- 	 */
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index 37fa7b48250e..5484a316eaa8 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -294,7 +294,7 @@ static enum bp_result bios_parser_get_i2c_info(struct dc_bios *dcb,
- 	struct atom_display_object_path_v2 *object;
- 	struct atom_common_record_header *header;
- 	struct atom_i2c_record *record;
--	struct atom_i2c_record dummy_record = {0};
-+	struct atom_i2c_record dummy_record = { };
- 	struct bios_parser *bp = BP_FROM_DCB(dcb);
- 
- 	if (!info)
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-index 24c5765890fa..ee3ef5094fd1 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-@@ -698,7 +698,7 @@ void rn_clk_mgr_construct(
- 		struct dccg *dccg)
- {
- 	struct dc_debug_options *debug = &ctx->dc->debug;
--	struct dpm_clocks clock_table = { 0 };
-+	struct dpm_clocks clock_table = { };
- 
- 	clk_mgr->base.ctx = ctx;
- 	clk_mgr->base.funcs = &dcn21_funcs;
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 9ef9e50a34fa..7cbfe740a947 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2683,9 +2683,9 @@ static void dp_test_send_link_test_pattern(struct dc_link *link)
- 
- static void dp_test_get_audio_test_data(struct dc_link *link, bool disable_video)
- {
--	union audio_test_mode            dpcd_test_mode = {0};
--	struct audio_test_pattern_type   dpcd_pattern_type = {0};
--	union audio_test_pattern_period  dpcd_pattern_period[AUDIO_CHANNELS_COUNT] = {0};
-+	union audio_test_mode            dpcd_test_mode = { };
-+	struct audio_test_pattern_type   dpcd_pattern_type = { };
-+	union audio_test_pattern_period  dpcd_pattern_period[AUDIO_CHANNELS_COUNT] = { };
- 	enum dp_test_pattern test_pattern = DP_TEST_PATTERN_AUDIO_OPERATOR_DEFINED;
- 
- 	struct pipe_ctx *pipes = link->dc->current_state->res_ctx.pipe_ctx;
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
-index 84d7ac5dd206..dfa541f0b0d3 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c
-@@ -1253,9 +1253,9 @@ void hubp2_validate_dml_output(struct hubp *hubp,
- 		struct _vcs_dpi_display_ttu_regs_st *dml_ttu_attr)
- {
- 	struct dcn20_hubp *hubp2 = TO_DCN20_HUBP(hubp);
--	struct _vcs_dpi_display_rq_regs_st rq_regs = {0};
--	struct _vcs_dpi_display_dlg_regs_st dlg_attr = {0};
--	struct _vcs_dpi_display_ttu_regs_st ttu_attr = {0};
-+	struct _vcs_dpi_display_rq_regs_st rq_regs = { };
-+	struct _vcs_dpi_display_dlg_regs_st dlg_attr = { };
-+	struct _vcs_dpi_display_ttu_regs_st ttu_attr = { };
- 	DC_LOGGER_INIT(ctx->logger);
- 	DC_LOG_DEBUG("DML Validation | Running Validation");
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 60ea499c1ca8..beea5e129c24 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -449,7 +449,7 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv14_soc = {
- 	.use_urgent_burst_bw = 0
- };
- 
--struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { 0 };
-+struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { };
- 
- #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
- 	#define mmDP0_DP_DPHY_INTERNAL_CTRL		0x210f
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-index 960a0716dde5..4aae6fb333bb 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
-@@ -365,9 +365,9 @@ void hubp21_validate_dml_output(struct hubp *hubp,
- 		struct _vcs_dpi_display_ttu_regs_st *dml_ttu_attr)
- {
- 	struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
--	struct _vcs_dpi_display_rq_regs_st rq_regs = {0};
--	struct _vcs_dpi_display_dlg_regs_st dlg_attr = {0};
--	struct _vcs_dpi_display_ttu_regs_st ttu_attr = {0};
-+	struct _vcs_dpi_display_rq_regs_st rq_regs = { };
-+	struct _vcs_dpi_display_dlg_regs_st dlg_attr = { };
-+	struct _vcs_dpi_display_ttu_regs_st ttu_attr = { };
- 	DC_LOGGER_INIT(ctx->logger);
- 	DC_LOG_DEBUG("DML Validation | Running Validation");
- 
--- 
-2.26.0
+> +{
+> +	if (!rproc || !sync_ops)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * No point in going further if we never have to synchronise with
+> +	 * the remote processor.
+> +	 */
+> +	if (!sync_flags.on_init &&
+> +	    !sync_flags.after_stop && !sync_flags.after_crash)
+> +		return 0;
+> +
+> +	/*
+> +	 * Refuse to go further if remoteproc operations have been allocated
+> +	 * but they will never be used.
+> +	 */
+> +	if (rproc->ops && sync_flags.on_init &&
+> +	    sync_flags.after_stop && sync_flags.after_crash)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Don't allow users to set this more than once to avoid situations
+> +	 * where the remote processor can't be recovered.
+> +	 */
+> +	if (rproc->sync_ops)
+> +		return -EINVAL;
+> +
+> +	rproc->sync_ops = kmemdup(sync_ops, sizeof(*sync_ops), GFP_KERNEL);
+> +	if (!rproc->sync_ops)
+> +		return -ENOMEM;
+> +
+> +	rproc->sync_flags = sync_flags;
+> +	/* Tell the core what to do when initialising */
+> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_INIT);
 
+Is there a use case where sync_flags.on_init is false and other flags are true?
+
+Look like on_init is useless and should not be exposed to the platform driver.
+Or comments are missing to explain the usage of it vs the other flags.
+
+Regards,
+Arnaud
+ 
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(rproc_set_state_machine);
+> +
+>  /**
+>   * rproc_type_release() - release a remote processor instance
+>   * @dev: the rproc's device
+> @@ -2088,6 +2141,7 @@ static void rproc_type_release(struct device *dev)
+>  	kfree_const(rproc->firmware);
+>  	kfree_const(rproc->name);
+>  	kfree(rproc->ops);
+> +	kfree(rproc->sync_ops);
+>  	kfree(rproc);
+>  }
+>  
+> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> index 7dcc0a26892b..c1a293a37c78 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -27,6 +27,8 @@ struct rproc_debug_trace {
+>  /*
+>   * enum rproc_sync_states - remote processsor sync states
+>   *
+> + * @RPROC_SYNC_STATE_INIT	state to use when the remoteproc core
+> + *				is initialising.
+>   * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
+>   *				has shutdown (rproc_shutdown()) the
+>   *				remote processor.
+> @@ -39,6 +41,7 @@ struct rproc_debug_trace {
+>   * operation to use.
+>   */
+>  enum rproc_sync_states {
+> +	RPROC_SYNC_STATE_INIT,
+>  	RPROC_SYNC_STATE_SHUTDOWN,
+>  	RPROC_SYNC_STATE_CRASHED,
+>  };
+> @@ -47,6 +50,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
+>  				       enum rproc_sync_states state)
+>  {
+>  	switch (state) {
+> +	case RPROC_SYNC_STATE_INIT:
+> +		rproc->sync_with_rproc = rproc->sync_flags.on_init;
+> +		break;
+>  	case RPROC_SYNC_STATE_SHUTDOWN:
+>  		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
+>  		break;
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index ceb3b2bba824..a75ed92b3de6 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -619,6 +619,9 @@ struct rproc *rproc_get_by_child(struct device *dev);
+>  struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  			  const struct rproc_ops *ops,
+>  			  const char *firmware, int len);
+> +int rproc_set_state_machine(struct rproc *rproc,
+> +			    const struct rproc_ops *sync_ops,
+> +			    struct rproc_sync_flags sync_flags);
+>  void rproc_put(struct rproc *rproc);
+>  int rproc_add(struct rproc *rproc);
+>  int rproc_del(struct rproc *rproc);
+> 
