@@ -2,215 +2,156 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D856FC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A044C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11612087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5152F2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgD2L3M (ORCPT
+        id S1726926AbgD2L3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:29:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:37516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgD2L3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:29:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A098811FB;
-        Wed, 29 Apr 2020 04:29:02 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC99F3F73D;
-        Wed, 29 Apr 2020 04:29:01 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 3/4] kselftest: Extend vDSO selftest to clock_getres
-Date:   Wed, 29 Apr 2020 12:28:33 +0100
-Message-Id: <20200429112834.24908-4-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200429112834.24908-1-vincenzo.frascino@arm.com>
-References: <20200429112834.24908-1-vincenzo.frascino@arm.com>
+        Wed, 29 Apr 2020 07:29:44 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:32553 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726743AbgD2L3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:29:44 -0400
+X-IronPort-AV: E=Sophos;i="5.73,331,1583164800"; 
+   d="scan'208";a="90776150"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 29 Apr 2020 19:29:39 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 3E3D14BCC883;
+        Wed, 29 Apr 2020 19:29:38 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 29 Apr 2020 19:29:38 +0800
+Message-ID: <5EA96520.3070200@cn.fujitsu.com>
+Date:   Wed, 29 Apr 2020 19:29:36 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+To:     Po-Hsu Lin <po-hsu.lin@canonical.com>
+CC:     <linux-kselftest@vger.kernel.org>, <rostedt@goodmis.org>,
+        <mingo@redhat.com>, <shuah@kernel.org>, <colin.king@canonical.com>,
+        <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] selftests/ftrace: treat module requirement unmet situation
+ as unsupported
+References: <20200429095044.24625-1-po-hsu.lin@canonical.com>
+In-Reply-To: <20200429095044.24625-1-po-hsu.lin@canonical.com>
+Content-Type: text/plain; charset="GB2312"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 3E3D14BCC883.AE6E6
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current version of the multiarch vDSO selftest verifies only
-gettimeofday.
+Hi Lin,
 
-Extend the vDSO selftest to clock_getres, to verify that the
-syscall and the vDSO library function return the same information.
+It looks fine to me.
+Reviewed-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
 
-The extension has been used to verify the hrtimer_resoltion fix.
+Thanks,
+Xiao Yang
+On 2020/4/29 17:50, Po-Hsu Lin wrote:
+> When the required module for the test does not exist, use
+> exit_unsupported instead of exit_unresolved to indicate this test is
+> not supported.
+> 
+> By doing this we can make test behaviour in sync with the
+> irqsoff_tracer.tc test in preemptirq, which is also treating module
+> existence in this way. Moreover, the test won't exit with a non-zero
+> return value if the module does not exist.
+> 
+> Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
+> Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
+> Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
+> Fixes: af2a0750f374 ("selftests/ftrace: Improve kprobe on module testcase to load/unload module")
+> Signed-off-by: Po-Hsu Lin<po-hsu.lin@canonical.com>
+> ---
+>   tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
+>   tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
+>   tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
+>   tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
+>   tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
+>   5 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> index d75a869..3d6189e 100644
+> --- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> @@ -5,7 +5,7 @@
+>   rmmod ftrace-direct ||:
+>   if ! modprobe ftrace-direct ; then
+>     echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>   fi
+> 
+>   echo "Let the module run a little"
+> diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> index 801ecb6..3d0e3ca 100644
+> --- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> @@ -5,7 +5,7 @@
+>   rmmod ftrace-direct ||:
+>   if ! modprobe ftrace-direct ; then
+>     echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>   fi
+> 
+>   if [ ! -f kprobe_events ]; then
+> diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> index b02550b..dd8b10d 100644
+> --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> @@ -5,7 +5,7 @@
+>   rmmod trace-printk ||:
+>   if ! modprobe trace-printk ; then
+>     echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>   fi
+> 
+>   echo "Waiting for irq work"
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> index 1a4b4a4..26dc06a 100644
+> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> @@ -13,7 +13,7 @@ echo '*:mod:trace_printk'>  set_ftrace_filter
+>   if ! modprobe trace-printk ; then
+>     echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+>   m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>   fi
+> 
+>   : "Wildcard should be resolved after loading module"
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> index d861bd7..4e07c69 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> @@ -8,7 +8,7 @@ rmmod trace-printk ||:
+>   if ! modprobe trace-printk ; then
+>     echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+>   m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>   fi
+> 
+>   MOD=trace_printk
 
-Cc: Shuah Khan <shuah@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- tools/testing/selftests/vDSO/Makefile         |   2 +
- .../selftests/vDSO/vdso_clock_getres.c        | 124 ++++++++++++++++++
- 2 files changed, 126 insertions(+)
- create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
 
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index 46aab4eaccbd..7b096eedfd5d 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -6,6 +6,7 @@ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
- TEST_GEN_PROGS := $(OUTPUT)/vdso_test
- TEST_GEN_PROGS += $(OUTPUT)/vdso_full_test
-+TEST_GEN_PROGS += $(OUTPUT)/vdso_clock_getres
- ifeq ($(ARCH),x86)
- TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
- endif
-@@ -19,6 +20,7 @@ endif
- all: $(TEST_GEN_PROGS)
- $(OUTPUT)/vdso_test: parse_vdso.c vdso_test.c
- $(OUTPUT)/vdso_full_test: parse_vdso.c vdso_full_test.c
-+$(OUTPUT)/vdso_clock_getres: vdso_clock_getres.c
- $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
- 	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
- 		vdso_standalone_test_x86.c parse_vdso.c \
-diff --git a/tools/testing/selftests/vDSO/vdso_clock_getres.c b/tools/testing/selftests/vDSO/vdso_clock_getres.c
-new file mode 100644
-index 000000000000..15dcee16ff72
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_clock_getres.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
-+/*
-+ * vdso_clock_getres.c: Sample code to test clock_getres.
-+ * Copyright (c) 2019 Arm Ltd.
-+ *
-+ * Compile with:
-+ * gcc -std=gnu99 vdso_clock_getres.c
-+ *
-+ * Tested on ARM, ARM64, MIPS32, x86 (32-bit and 64-bit),
-+ * Power (32-bit and 64-bit), S390x (32-bit and 64-bit).
-+ * Might work on other architectures.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <elf.h>
-+#include <err.h>
-+#include <fcntl.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <time.h>
-+#include <sys/auxv.h>
-+#include <sys/mman.h>
-+#include <sys/time.h>
-+#include <unistd.h>
-+#include <sys/syscall.h>
-+
-+#include "../kselftest.h"
-+
-+static long syscall_clock_getres(clockid_t _clkid, struct timespec *_ts)
-+{
-+	long ret;
-+
-+	ret = syscall(SYS_clock_getres, _clkid, _ts);
-+
-+	return ret;
-+}
-+
-+const char *vdso_clock_name[12] = {
-+	"CLOCK_REALTIME",
-+	"CLOCK_MONOTONIC",
-+	"CLOCK_PROCESS_CPUTIME_ID",
-+	"CLOCK_THREAD_CPUTIME_ID",
-+	"CLOCK_MONOTONIC_RAW",
-+	"CLOCK_REALTIME_COARSE",
-+	"CLOCK_MONOTONIC_COARSE",
-+	"CLOCK_BOOTTIME",
-+	"CLOCK_REALTIME_ALARM",
-+	"CLOCK_BOOTTIME_ALARM",
-+	"CLOCK_SGI_CYCLE",
-+	"CLOCK_TAI",
-+};
-+
-+/*
-+ * This function calls clock_getres in vdso and by system call
-+ * with different values for clock_id.
-+ *
-+ * Example of output:
-+ *
-+ * clock_id: CLOCK_REALTIME [PASS]
-+ * clock_id: CLOCK_BOOTTIME [PASS]
-+ * clock_id: CLOCK_TAI [PASS]
-+ * clock_id: CLOCK_REALTIME_COARSE [PASS]
-+ * clock_id: CLOCK_MONOTONIC [PASS]
-+ * clock_id: CLOCK_MONOTONIC_RAW [PASS]
-+ * clock_id: CLOCK_MONOTONIC_COARSE [PASS]
-+ */
-+static inline int vdso_test_clock(unsigned int clock_id)
-+{
-+	struct timespec x, y;
-+
-+	printf("clock_id: %s", vdso_clock_name[clock_id]);
-+	clock_getres(clock_id, &x);
-+	syscall_clock_getres(clock_id, &y);
-+
-+	if ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)) {
-+		printf(" [FAIL]\n");
-+		return KSFT_FAIL;
-+	}
-+
-+	printf(" [PASS]\n");
-+	return KSFT_PASS;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	int ret;
-+
-+#if _POSIX_TIMERS > 0
-+
-+#ifdef CLOCK_REALTIME
-+	ret = vdso_test_clock(CLOCK_REALTIME);
-+#endif
-+
-+#ifdef CLOCK_BOOTTIME
-+	ret += vdso_test_clock(CLOCK_BOOTTIME);
-+#endif
-+
-+#ifdef CLOCK_TAI
-+	ret += vdso_test_clock(CLOCK_TAI);
-+#endif
-+
-+#ifdef CLOCK_REALTIME_COARSE
-+	ret += vdso_test_clock(CLOCK_REALTIME_COARSE);
-+#endif
-+
-+#ifdef CLOCK_MONOTONIC
-+	ret += vdso_test_clock(CLOCK_MONOTONIC);
-+#endif
-+
-+#ifdef CLOCK_MONOTONIC_RAW
-+	ret += vdso_test_clock(CLOCK_MONOTONIC_RAW);
-+#endif
-+
-+#ifdef CLOCK_MONOTONIC_COARSE
-+	ret += vdso_test_clock(CLOCK_MONOTONIC_COARSE);
-+#endif
-+
-+#endif
-+	if (ret > 0)
-+		return KSFT_FAIL;
-+
-+	return KSFT_PASS;
-+}
--- 
-2.25.2
 
