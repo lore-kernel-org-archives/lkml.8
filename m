@@ -2,86 +2,56 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837E4C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0193C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 566CD20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:15:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YcSAHSw6"
+	by mail.kernel.org (Postfix) with ESMTP id 7AD2D206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 11:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgD2LPo (ORCPT
+        id S1726677AbgD2LUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 07:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726345AbgD2LPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 07:15:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E016BC03C1AD;
-        Wed, 29 Apr 2020 04:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kZiL+C64pEB0gGtZIjbEgTMKcXAg4VXf1yvXjFv+qDw=; b=YcSAHSw6S3qB0Tg7W4OVOCRBTL
-        YXvpVMydg9K6WrN4eq5xtf4hAH0jgIntPTDWsKB/3Sq2bhdePBNC1pFzKafwOy382NH0IcyH7zVDO
-        3LXJ0fPUAG+PZJZJs6jozz957nBUeO3eg0nHBVVy5ays3f9nYB3PLLuQewq6wseOK+SosyaWHV5Ih
-        KcxmFTBVX1pQ0wpPJolRTsiDJMs5+FfP82eYLaC1yGOWtf9k/ruEN2TLAgMrAaUBHuueAq7cCyxeL
-        tTPDl3mModtoVgLYgenjyIN3UcM8x6+gvx0w/msMwPZg8ejNKfY+mjnsp98NZi19hH/H+KybTisdz
-        /o4NOevQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTkgU-00013v-I5; Wed, 29 Apr 2020 11:15:22 +0000
-Date:   Wed, 29 Apr 2020 04:15:22 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH v3 2/6] block: move main block debugfs initialization to
- its own file
-Message-ID: <20200429111522.GB21892@infradead.org>
-References: <20200429074627.5955-1-mcgrof@kernel.org>
- <20200429074627.5955-3-mcgrof@kernel.org>
+        Wed, 29 Apr 2020 07:20:17 -0400
+Received: from 8bytes.org ([81.169.241.247]:39468 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726554AbgD2LUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 07:20:17 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 55F392E2; Wed, 29 Apr 2020 13:20:16 +0200 (CEST)
+Date:   Wed, 29 Apr 2020 13:20:14 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
+Message-ID: <20200429112014.GN21900@8bytes.org>
+References: <20200418121022.GA6113@8bytes.org>
+ <57CBF6B2-4745-4E36-9AA5-7E0876E3DA8F@lca.pw>
+ <20200418183429.GH21900@8bytes.org>
+ <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429074627.5955-3-mcgrof@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 07:46:23AM +0000, Luis Chamberlain wrote:
-> make_request-based drivers and and request-based drivers share some
-> debugfs code. By moving this into its own file it makes it easier
-> to expand and audit this shared code.
-> 
-> This patch contains no functional changes.
-> 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Omar Sandoval <osandov@fb.com>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Nicolai Stange <nstange@suse.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: yu kuai <yukuai3@huawei.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+On Mon, Apr 20, 2020 at 09:26:12AM -0400, Qian Cai wrote:
+> No dice. There could be some other races. For example,
 
-Looks good,
+Can you please test this branch:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=amd-iommu-fixes
+
+It has the previous fix in it and a couple more to make sure the
+device-table is updated and flushed before increase_address_space()
+updates domain->pt_root.
+
+Thanks,
+
+	Joerg
