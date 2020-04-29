@@ -2,131 +2,86 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40DCC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB5EC83004
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F91208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBDF208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rR8i7Yuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgD2Mwf (ORCPT
+        id S1726854AbgD2Mxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:52:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11133 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgD2Mwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:52:35 -0400
-IronPort-SDR: AWd6Ifb1KwULWPo4G7aT6O92fY7eZdkrX9gX0w3Wz1IGm026iq/7iRVo73JM5OmYqFoiXEp0N+
- y8JAvkZB9YyQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 05:52:35 -0700
-IronPort-SDR: 2UaTrOx0IU2JFuLtDh2zLVLh8AkFd/TzUTn4ESfgu67UiQFtwQjbVO9dmFy2jwlk1NvuKv4sIq
- XmXTc6mZjKbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="246839106"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.255.30.214]) ([10.255.30.214])
-  by orsmga007.jf.intel.com with ESMTP; 29 Apr 2020 05:52:26 -0700
-Subject: Re: [LKP] Re: [mm/debug] fa6726c1e7: kernel_BUG_at_include/linux/mm.h
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Qian Cai <cai@lca.pw>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        kernel test robot <lkp@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        Wed, 29 Apr 2020 08:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbgD2Mxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:53:44 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DBAC03C1AD;
+        Wed, 29 Apr 2020 05:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uNki6MLM9DcEC3Z6w0/BdO3E8oDPkiulVgaVGz6CEjA=; b=rR8i7Yuho3v8Xo9oVTGli9rVu9
+        Jz34o2MyuO9n3Y7GQP9UTU/qq2SvL3vXOAKUiLRv8a4GAvaovtN4A022s0iNsME3XwtZaYMp33E+9
+        gumxm8EdWWYbFcacSyNuZVPeJTTX1MJBeqA7UwqgIInWyt7QRXedZk/sDJENU4ZQJ1gAy888djzl5
+        Jh9E5hYF6YCh5zEPhXv6fuROU+5Dd5ACbWOIesC9snKyCPZpNOo5v9SG3WNUXVSMDDkpr8ANu9uGg
+        7H0EIj6Es5jQrhs3tVJrjMfiAnBAxzK4rHlkJVBz06+D9wgq5WQpWmwpuYO7942aWU4uXZqcm+H0F
+        BbI5RfQA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTmDc-000427-9q; Wed, 29 Apr 2020 12:53:40 +0000
+Date:   Wed, 29 Apr 2020 05:53:40 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <9e9091b9-6918-d0af-dd92-3bdc0e29a4d5@arm.com>
- <813D7CD3-F31C-4056-92DF-D462633E9D69@lca.pw> <20200428092105.GB3868@gaia>
- <b62c66c8-1550-087f-f5d2-b33a18bb0edc@arm.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <07ea0efd-0145-eaaf-c628-e48957154a2c@intel.com>
-Date:   Wed, 29 Apr 2020 20:52:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Subject: Re: [PATCH 2/7] mm: Move pt_mm within struct page
+Message-ID: <20200429125340.GR29705@bombadil.infradead.org>
+References: <20200428194449.22615-1-willy@infradead.org>
+ <20200428194449.22615-3-willy@infradead.org>
+ <CAMuHMdUw38VD8WJe5Zbaudnee74ZgLwbfhRwU8Pi9ALitre+_Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b62c66c8-1550-087f-f5d2-b33a18bb0edc@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUw38VD8WJe5Zbaudnee74ZgLwbfhRwU8Pi9ALitre+_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 09:34:02AM +0200, Geert Uytterhoeven wrote:
+> > +++ b/include/linux/mm_types.h
+> > @@ -149,11 +149,8 @@ struct page {
+> >                                         pgtable_t pmd_huge_pte;
+> >                                 };
+> >                         };
+> > -                       unsigned long _pt_pad_2;        /* mapping */
+> > -                       union {
+> > -                               struct mm_struct *pt_mm; /* x86 pgds only */
+> > -                               atomic_t pt_frag_refcount; /* powerpc */
+> > -                       };
+> > +                       struct mm_struct *pt_mm;
+> > +                       atomic_t pt_frag_refcount; /* powerpc */
+> 
+> So here is now an implicit hole on 64-bit platforms, right?
+> Do we have any where alignof(long) != 8?
 
+There's an implicit hole if someone's turned on spinlock debugging and
+has split pagetable locks.  Without the need to allocate the spinlock
+separately, the ptl will actually move from the same word as 'private'
+to the same word as 'index', freeing up 'private' entirely.  I don't
+intend to depend on that, but it's not quite as critical to line up the
+various members of struct page as it used to be.
 
-On 4/29/2020 11:28 AM, Anshuman Khandual wrote:
->
-> On 04/28/2020 02:51 PM, Catalin Marinas wrote:
->> On Tue, Apr 28, 2020 at 04:41:11AM -0400, Qian Cai wrote:
->>> On Apr 28, 2020, at 1:54 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>>> That is true. There is a slight change in the rules, making it explicit yes
->>>> only when both ARCH_HAS_DEBUG_VM_PGTABLE and DEBUG_VM are enabled.
->>>>
->>>> +config DEBUG_VM_PGTABLE
->>>> +    bool "Debug arch page table for semantics compliance"
->>>> +    depends on MMU
->>>> +    depends on !IA64 && !ARM
->>>> +    depends on ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
->>>> +    default y if ARCH_HAS_DEBUG_VM_PGTABLE && DEBUG_VM
->>>> +    help
->>>>
->>>> The default is really irrelevant as the config option can be set explicitly.
->>> That could also explain. Since not long time ago, it was only “default
->>> y if DEBUG_VM”, that caused the robot saved a .config with
->>> DEBUG_VM_PGTABLE=y by default.
->>>
->>> Even though you changed the rule recently, it has no effect as the
->>> robot could “make oldconfig” from the saved config for each linux-next
->>> tree execution and the breakage will go on.
->> I'm not entirely sure that's the case. This report still points at the
->> old commit fa6726c1e7 which has:
->>
->> +       depends on ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
->> +       default n if !ARCH_HAS_DEBUG_VM_PGTABLE
->> +       default y if DEBUG_VM
->>
->> In -next we now have commit 647d9a0de34c and subsequently modified by
->> commit 0a8646638865. So hopefully with the latest -next tree we won't
->> see this report.
-> Could some one from LKP test framework, please confirm if this still causes
-> above problem on the latest linux-next by default ?
-
-Hi,
-
-The .config is a rand config, the problem is still exist if run "make 
-oldconfig" for the config
-with commit 0a8646638865.
-
-$ grep -e CONFIG_MMU= -e CONFIG_EXPERT= -e 
-CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE= -e CONFIG_DEBUG_VM= .config
-CONFIG_EXPERT=y
-CONFIG_MMU=y
-CONFIG_DEBUG_VM=y
-
-should we disable DEBUG_VM_PGTABLE by default?
-
-Best Regards,
-Rong Chen
