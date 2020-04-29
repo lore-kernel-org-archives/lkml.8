@@ -2,88 +2,82 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7082AC83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57429C83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534AB2186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347DD2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 12:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgD2Mcw (ORCPT
+        id S1726815AbgD2Mek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 08:32:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:38280 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgD2Mcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:32:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E87BA1063;
-        Wed, 29 Apr 2020 05:32:40 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CF133F73D;
-        Wed, 29 Apr 2020 05:32:39 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 13:32:37 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] Revert "cpu/hotplug: Ignore pm_wakeup_pending() for
- disable_nonboot_cpus()"
-Message-ID: <20200429123236.7iqeon4emnlriyc4@e107158-lin>
-References: <20200409112742.3581-1-qais.yousef@arm.com>
- <26038947.HFycnDbHsR@kreacher>
- <20200427102910.b6iysyumiz5pj4sv@e107158-lin>
- <CAJZ5v0gesatUBMdt0c30tg34mTeFOon=7ntzQq88=tfJLy8CtA@mail.gmail.com>
+        Wed, 29 Apr 2020 08:34:40 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:55021 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgD2Mek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 08:34:40 -0400
+Received: from mail-lf1-f47.google.com ([209.85.167.47]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N17gw-1j1lkl3Gqg-012Vyk; Wed, 29 Apr 2020 14:34:37 +0200
+Received: by mail-lf1-f47.google.com with SMTP id y3so1520037lfy.1;
+        Wed, 29 Apr 2020 05:34:37 -0700 (PDT)
+X-Gm-Message-State: AGi0PubYk73lvsbZtU4/hOtDozH3ED0RXkeJ8fQQ0HMNsD+BiGXViM9Y
+        Ovkvi/0+u2KLaiEkuiXnt9/cfMmKG/MZp+4ZJ10=
+X-Google-Smtp-Source: APiQypJXpncjiHqtF8AXXyPOV1A1AQ0fvHy1iXzeMwNoTg6D5f//C9XrVCZn/K+TfKDZQ9HhN0uOyITz7H5G2DWPENU=
+X-Received: by 2002:a19:3850:: with SMTP id d16mr2697623lfj.161.1588163677296;
+ Wed, 29 Apr 2020 05:34:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gesatUBMdt0c30tg34mTeFOon=7ntzQq88=tfJLy8CtA@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+References: <20200428074827.GA19846@lst.de> <20200428195645.1365019-1-arnd@arndb.de>
+ <20200429115316.GA7886@lst.de>
+In-Reply-To: <20200429115316.GA7886@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 Apr 2020 14:34:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3sh9cCbdVYPaWVrOZiMuZcnw7-nsa0qgaQWPDBufqsYQ@mail.gmail.com>
+Message-ID: <CAK8P3a3sh9cCbdVYPaWVrOZiMuZcnw7-nsa0qgaQWPDBufqsYQ@mail.gmail.com>
+Subject: Re: [PATCH] fixup! signal: factor copy_siginfo_to_external32 from copy_siginfo_to_user32
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:3mn4P/An2ydwnHYRAK8xJSekeqcdwwsqEuXznA6Rg2fxoJWc3CV
+ VRT+TzYxsKy9KrnjFAcljiJfqgkCabnODDX5B74MwKNJS4m0GAG9sdjrSyJtjFHU3Mp5TFy
+ G2wl88NOyPmVCT6HF/0gExLUwfb633YkgWicQ7byWUY9gn31BplCzChXmq50KqcqycjgqSE
+ W+YthH7n1FqpB86z5KZJA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Bb2jBtjFOvE=:8tvRQyuM7yBro1nVcX1Qts
+ qkrPHFqgVOsrFM3leaU/7mtyZHpwMmhl23h56nGds2IHA+x7bVUBywmtY9+82U1xk3URgu7Pl
+ wWbYTYxVu726NKzzozmgoClBnaViYnmlKnGgpn7dHrrZFj8K2iyA8ndwo/E03012Xj8n3O7Dg
+ piSueKbCceaPHGNNmnPuI9R8QC2uRadll4CwqzFtvI1XGFUzq777nD1gCktxe/76bMyn4wyA7
+ MFKKSyLjpB+eOE8TXGbPi5IbZ+xzIR5HdscnnvNj07vlWjSOPBOI+hVOFxScaj54NdoARrFNB
+ Eznpy3iZOKXZ6vfsd+t/1PkyV4Hn68OFhfKFuAMNJjvAQjUtZMH3RAxqm3k2OKN8jVxdbZCCQ
+ JdD6jyT76H/MAyfksPkHH3f4X23rm7ifAReTrfNpeusRjpcujQD1XtRv9yw6NicdHaohSZPgZ
+ D0E6oPOnw+lWsHhzd05VlZeV74JvqMWgf8g0AlVyaDia6lxt+P+o2BgDw755JXJx0eV8jJtEz
+ dVUw6VitUCBgsoNoFfoLEGiknThhJ3QXtpdSHFKEra0oKr9jROJTBXZbGcJuf6UAl2sCC6fTS
+ 6DLQQDKV+cJNEPvvopUnQJM6nAxacw1Kpb2YsONIskk8iFa5lcGtiLUZeM1Xoy8DUZooq5XSQ
+ +3UfefUuqEtaPTnhkMBWBjaiPm1sSifBeRldlDNkCZDvqVvlDt1K2XcUOvLAXNuWUuVJvcg7O
+ e0ixOzCIABT/TgEnHGPoplItIV6IbQ2MZ5Bi5LA0j3JjRnhMOKpM7kTHK5Eg32zVsqT44vRT6
+ Yy2tdIa9XIQ2sRDvz7UTJnf9zRE4s7C0RziQi8wmPPwgwmavmE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/29/20 12:40, Rafael J. Wysocki wrote:
-> On Mon, Apr 27, 2020 at 12:29 PM Qais Yousef <qais.yousef@arm.com> wrote:
-> >
-> > On 04/26/20 17:24, Rafael J. Wysocki wrote:
-> > > I would do this the other way around:
-> > >
-> > > 1. Make x86 call freeze_secondary_cpus() directly, rename
-> > >    enable_nonboot_cpus() and drop disable_nonboot_cpus().
-> >
-> > All of this in a single patch?
-> 
-> Well, why not?
+On Wed, Apr 29, 2020 at 1:53 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> I did another pass at this, reducing the overhead of the x32 magic
+> in common code down to renaming copy_siginfo_to_user32 to
+> copy_siginfo_to_user32 and having a conditional #define to give it
+> the old name back:
 
-I don't mind, was just clarifying. Usually it's requested to split patches :)
+Nice! I guess this is about as good as it gets, so we can stop
+spending more time on it now ;-)
 
-> 
-> Calling freeze_secondary_cpus() directly causes disable_nonboot_cpus()
-> to be unused (and so it can be dropped in the same patch) and it also
-> introduces a name mismatch between freeze_ and enable_, which IMO
-> needs to be addressed right away (also in the same patch).
-> 
-> > > 2. Get rid of __freeze_secondary_cpus().
-> >
-> > I guess you're implying to drop the revert too and manually unroll it instead.
-> 
-> IMO the revert is just an extra step with no real value, so why do it?
-
-Works for me. Will send v2 ASAP.
-
-Thanks
-
---
-Qais Yousef
+       Arnd
