@@ -2,113 +2,72 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDB3C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57569C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA2B217D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:17:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EIZygsMv"
+	by mail.kernel.org (Postfix) with ESMTP id 3FDE82073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 10:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgD2KRm (ORCPT
+        id S1726829AbgD2KRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 29 Apr 2020 06:17:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:30681 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbgD2KRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 06:17:42 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15647 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbgD2KRl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:17:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea954020000>; Wed, 29 Apr 2020 03:16:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 Apr 2020 03:17:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 Apr 2020 03:17:41 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 10:17:40 +0000
-Received: from [10.26.73.139] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Apr
- 2020 10:17:37 +0000
-Subject: Re: [PATCH 5.6 000/167] 5.6.8-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200428182225.451225420@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <aa146242-b3f0-c7f8-9540-5f90e1473896@nvidia.com>
-Date:   Wed, 29 Apr 2020 11:17:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+IronPort-SDR: 3IM+E+WeE7+4VkJwoxzrB9BZH/FghVldTZDBMh/hAJ66IYSWnFsXUT1fAw5/Uv2964DspL7cIm
+ MEQgNmVnTo1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 03:17:41 -0700
+IronPort-SDR: eE+O1+6e1XtGtd8JUdDlakeYwWPFk4LNtvwubLqQnCneIupXarg2zWhgxwP/6zJHH+XbmHkf8n
+ cqRnVG+imodg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,331,1583222400"; 
+   d="scan'208";a="276127910"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 03:17:39 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jTjmg-003huG-1Q; Wed, 29 Apr 2020 13:17:42 +0300
+Date:   Wed, 29 Apr 2020 13:17:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
+        rrichter@marvell.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] gpio: thunderx: Utilize for_each_set_clump macro
+Message-ID: <20200429101742.GE185537@smile.fi.intel.com>
+References: <cover.1588112714.git.syednwaris@gmail.com>
+ <ea25f5cbe03a3bb4bf5d976b004d87c4bab178e3.1588112716.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200428182225.451225420@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588155395; bh=tbtkqZOiAm2kam04d0NkJSsJTXL6c6qAUDGGyb5YaKk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EIZygsMvq8uKtjb0rkedyG6Sl5FUZXGNQ767s0Djc36r8phn407bRcZjYJeE62Sn1
-         LZLcErwJmNsFmwIDzc+MDn7Af4HnFzLJiKG5VIS66WbiNRWgMM3jEmVNo+mfHXe0Pn
-         JIrB4/3XR5CmBleTZY4THZ0g5a6wy4Wa66BWdyLmofl83MSbd41pxIUKJGizhh4Yia
-         NmXD4dAJ/8pa1c+jS7zIYai7G6CMOClGqbJ86s3kS1BUWjvyuVQ3ICeHDmpWuQAt82
-         520ML0HXrZvTRYbRmNLQgRsl0GCc5QxGdxO1jNZJByNtUIrsbB9GxfPH8wzqEOELnX
-         5a2+ajPdftfHw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea25f5cbe03a3bb4bf5d976b004d87c4bab178e3.1588112716.git.syednwaris@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 04:37:41AM +0530, Syed Nayyar Waris wrote:
+> This patch reimplements the thunderx_gpio_set_multiple function in
+> drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
+> Instead of looping for each bank in thunderx_gpio_set_multiple
+> function, now we can skip bank which is not set and save cycles.
 
-On 28/04/2020 19:22, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.8 release.
-> There are 167 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 30 Apr 2020 18:20:42 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.8-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> +	const unsigned long bank_size = 64;
 
-All tests are passing for Tegra ...
-
-Test results for stable-v5.6:
-    13 builds:	13 pass, 0 fail
-    24 boots:	24 pass, 0 fail
-    40 tests:	40 pass, 0 fail
-
-Linux version:	5.6.8-rc1-g853ae83af7cc
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
+Shouldn't be rather definition?
 
 -- 
-nvpublic
+With Best Regards,
+Andy Shevchenko
+
+
