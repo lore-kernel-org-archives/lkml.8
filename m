@@ -2,162 +2,152 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F067CC83009
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A098EC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C82206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA652073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 15:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588174309;
+	bh=cz2GRQMmobQIU8Dm3XppVkcHbEvwo+MsQ2UDSbo/Nso=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=dP6hTrSXcbc4iwZ2L4h7zihdXIP+34x+iIvaOACjJ47x3lr/kiijnAmv4MqqGpuiY
+	 KdkNEiTodqZJApFR9yQhubJKK29xmuQ8V26wj8e0wBQPeeuJgyOW3KCoyhA67Nzx9R
+	 i9L1xVi2J/jJ+980/uevHdDe0V8/BeBBu3+M8CGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgD2PbN (ORCPT
+        id S1727082AbgD2Pbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 11:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgD2PbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:31:12 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A2FC03C1AD;
-        Wed, 29 Apr 2020 08:31:12 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Wed, 29 Apr 2020 11:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgD2Pbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 11:31:48 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 19C752A1B3B;
-        Wed, 29 Apr 2020 16:31:10 +0100 (BST)
-Date:   Wed, 29 Apr 2020 17:31:07 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200429173107.5c6d2f55@collabora.com>
-In-Reply-To: <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-        <20200429164832.6800fc70@collabora.com>
-        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DD9206F0;
+        Wed, 29 Apr 2020 15:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588174307;
+        bh=cz2GRQMmobQIU8Dm3XppVkcHbEvwo+MsQ2UDSbo/Nso=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=JkiBRNRGIihwWrIm7TmLD0OHzJ1ywldClvr5mPhqCfN0nC7742gsdK+I5GDPzQViw
+         PhW1LWaxV9f/D8CO1eAIuZuPmo4zJ0vJficejaMQRYM6sY/v9nAw4EbCN5R5WUEwd2
+         w/7UhV7fM+0Rki5Soiw+9Xuku8QviaYrXSBJ7MBE=
+Message-ID: <018c93fd12244f173ede8e6f4e9f453cbb447bff.camel@kernel.org>
+Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Wu Bo <wubo40@huawei.com>, sage@redhat.com, idryomov@gmail.com,
+        "Yan, Zheng" <ukernel@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liuzhiqiang26@huawei.com, linfeilong@huawei.com
+Date:   Wed, 29 Apr 2020 11:31:45 -0400
+In-Reply-To: <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
+References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
+         <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org>
+         <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 23:18:31 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-
-> Hi Boris,
-> 
-> On 29/4/2020 10:48 pm, Boris Brezillon wrote:
-> > On Wed, 29 Apr 2020 22:33:37 +0800
-> > "Ramuthevar, Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >   
-> >> Hi Boris,
-> >>
-> >> On 29/4/2020 10:22 pm, Boris Brezillon wrote:  
-> >>> On Wed, 29 Apr 2020 18:42:05 +0800
-> >>> "Ramuthevar, Vadivel MuruganX"
-> >>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> >>>      
-> >>>> +
-> >>>> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
-> >>>> +#define EBU_ADDR_MASK		(5 << 4)  
-> >>>
-> >>> It's still unclear what ADDR_MASK is for. Can you add a comment
-> >>> explaining what it does?  
-> >>
-> >> Thank you Boris, keep review and giving inputs, will update.  
+On Wed, 2020-04-29 at 08:46 +0800, Wu Bo wrote:
+> On 2020/4/28 22:48, Jeff Layton wrote:
+> > On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
+> > > if the ceph_mdsc_open_export_target_session() return fails,
+> > > should add a lock to avoid twice unlocking.
+> > > Because the lock will be released at the retry or out_unlock tag.
+> > > 
 > > 
-> > Can you please explain it here before sending a new version?  
-> 
-> Memory Region Address Mask:
-> Specifies the number of right-most bits in the base address that should 
-> be included in the address comparison. bits positions(7:4).
-
-Okay, then the macro should be 
-
-#define EBU_ADDR_MASK(x)	((x) << 4)
-
-And now I'd like you to explain why 5 is the right value for that field
-(I guess that has to do with the position of the CS/ALE/CLE pins).
-
-> 
-> >>>      
-> >>>> +#define EBU_ADDR_SEL_REGEN	0x1  
-> >>>
-> >>>      
-> >>>> +
-> >>>> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
-> >>>> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
-> >>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
-
-You set EBU_ADDR_SEL(reg) once here...
-
-> >>>> +
-> >>>> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> >>>> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
-> >>>> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
-> >>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));  
-
-... and a second time here. That sounds like overwriting the
-EBU_ADDR_SEL(reg) register to me.
-
-> >>>
-> >>> That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
-> >>> sure that's needed, and are we setting EBU_ADDR_SEL(0) here?  
-> >>
-> >> You are right, its weird only, but we need it, since different chip
-> >> select has different memory region access address.  
+> > The problem looks real, but...
 > > 
-> > Well, that doesn't make any sense, the second write to
-> > EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
-> > actually never written to ADDR_SEL(reg).  
-> 
-> it will not overwrite the first one, since two different registers
-> EBU_ADDR_SEL_0 EBU_ADDR_SEL  20H
-> EBU_ADDR_SEL_1 EBU_ADDR_SEL  24H
+> > > --
+> > > v1 -> v2:
+> > > add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag.
+> > > 
+> > > Signed-off-by: Wu Bo <wubo40@huawei.com>
+> > > ---
+> > >   fs/ceph/caps.c | 27 +++++++++++++++------------
+> > >   1 file changed, 15 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> > > index 185db76..414c0e2 100644
+> > > --- a/fs/ceph/caps.c
+> > > +++ b/fs/ceph/caps.c
+> > > @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+> > >   
+> > >   	/* open target session */
+> > >   	tsession = ceph_mdsc_open_export_target_session(mdsc, target);
+> > > -	if (!IS_ERR(tsession)) {
+> > > -		if (mds > target) {
+> > > -			mutex_lock(&session->s_mutex);
+> > > -			mutex_lock_nested(&tsession->s_mutex,
+> > > -					  SINGLE_DEPTH_NESTING);
+> > > -		} else {
+> > > -			mutex_lock(&tsession->s_mutex);
+> > > -			mutex_lock_nested(&session->s_mutex,
+> > > -					  SINGLE_DEPTH_NESTING);
+> > > -		}
+> > > -		new_cap = ceph_get_cap(mdsc, NULL);
+> > > -	} else {
+> > > +	if (IS_ERR(tsession)) {
+> > >   		WARN_ON(1);
+> > >   		tsession = NULL;
+> > >   		target = -1;
+> > > +		mutex_lock(&session->s_mutex);
+> > > +		spin_lock(&ci->i_ceph_lock);
 
-See my above.
+Rather than taking the spinlock here, it'd be nicer to set a new label
+above the mutex (out_unlock_mutex or something) and jump to that.
 
-> 
-> it is an internal address selection w.r.t chip select for nand physical 
-> address update.
-> 
-> 
-> >   
-> >>
-> >> Yes , we are setting both CS0 and CS1 memory access region, if you have
-> >> any concern to optimize, please suggest me, Thanks!  
+> > > +		goto out_unlock;
 > > 
-> > If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
-> > is really related to the nand_pa address, then retrieve resources for
-> > all CS ranges.   
-> If it's not related, please explain what those
-> > EBU_MEM_BASE_CS_X values encode.  
+> > Why did you make this case goto out_unlock instead of retrying as it did
+> > before?
+> > 
 > 
-> Memory Region Base Address
-> FPI Bus addresses are compared to this base address in conjunction with 
-> the mask control(EBU_ADDR_MASK). Driver need to program this field!
+> If the problem occurs, target = -1, and goto retry lable, you need to 
+> call __get_cap_for_mds() or even call __ceph_remove_cap(), and then jump 
+> to out_unlock lable. All I think is unnecessary, goto out_unlock instead 
+> of retrying directly.
+> 
 
-That's not explaining what the base address should be. Is 'nand_pa' the
-value we should have there?
+(cc'ing Zheng since he understands the IMPORT/EXPORT code better than I)
+
+I'm not quite convinced. It certainly looks like this was done
+deliberately before, and that the expectation is that the cap be removed
+in this case.
+
+If we do want to make this change, then at the very least the changelog
+needs to spell out why this safe and desirable.
+
+> > > +	}
+> > > +
+> > > +	if (mds > target) {
+> > > +		mutex_lock(&session->s_mutex);
+> > > +		mutex_lock_nested(&tsession->s_mutex,
+> > > +					SINGLE_DEPTH_NESTING);
+> > > +	} else {
+> > > +		mutex_lock(&tsession->s_mutex);
+> > > +		mutex_lock_nested(&session->s_mutex,
+> > > +					SINGLE_DEPTH_NESTING);
+> > >   	}
+> > > +	new_cap = ceph_get_cap(mdsc, NULL);
+> > >   	goto retry;
+> > >   
+> > >   out_unlock:
+> 
+> 
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
