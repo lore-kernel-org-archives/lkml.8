@@ -2,100 +2,157 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56613C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D077C83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC8E20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C19820737
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 00:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gBF0juzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgD2A2I (ORCPT
+        id S1726554AbgD2A3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Apr 2020 20:28:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60454 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726509AbgD2A2I (ORCPT
+        Tue, 28 Apr 2020 20:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD2A3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Apr 2020 20:28:08 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03T04j9K134445;
-        Tue, 28 Apr 2020 20:28:00 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhq8yc27-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 20:28:00 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03T0GHjc032388;
-        Wed, 29 Apr 2020 00:28:00 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 30mcu6rg59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 00:28:00 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03T0RxjJ32375146
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 00:27:59 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F7A628064;
-        Wed, 29 Apr 2020 00:27:59 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A4D12805C;
-        Wed, 29 Apr 2020 00:27:58 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.160.64.115])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Apr 2020 00:27:58 +0000 (GMT)
-Subject: Re: linux-next: build warning after merge of the scsi-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200429092154.35958687@canb.auug.org.au>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <ba29c840-e327-6f0b-b760-188aec566c6c@linux.ibm.com>
-Date:   Tue, 28 Apr 2020 17:27:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 28 Apr 2020 20:29:07 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FA4C03C1AC
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:29:05 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id h6so321667qvz.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Apr 2020 17:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sum6zvnI9uuuHONOiogQ9HloeE5QbhDG16IxplXpyKw=;
+        b=gBF0juzP6lNNN9CsauhPBhO02OANPJ2mLHyQLraLJuxmTXzYX3a/IrHNLRunWWLgiG
+         YQVRsmq/CQUxnSlv750R4HNOe+f4kPwaWyk0MtrKXzmwYnqUFpOJ5CXJFPShUc+SQm/P
+         4qBERO3b+TESmrHgaop2a4RXN2SQvRu7y9GSisP3W+GLS3SS3+L73GmaaALGOymT7K0K
+         nIIR4A0TZGwRH9dThz9J/IhinJXc+OLdMJaRrWSTTSghWuweWS/w5EJSyzxLOzHuLQl0
+         5dL0b3ddwCB3mIe+/kUSVtBffiLucojHhM3/PGLUAMEKHbSw9EZAapDnMT57NkF8ZjD5
+         LVHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sum6zvnI9uuuHONOiogQ9HloeE5QbhDG16IxplXpyKw=;
+        b=PKDnjEw1sSUPwavjCvaOZJAm9AqciMShIDIQLQfGdB8tVYlbd3V4qDVc71CPKXoMMZ
+         ShY4w39d86ViyIVR+euspG/lPIIXFMsuDxs48itRAqWFWY9q+TO254T51DAf6PmRTTpN
+         3x/6hE6Y/eK+JWEvNXTpNH9hffaH1KOLsn5VZoOIDcdu74j/SwxPoUMgY6LfA/i8txqF
+         l56kfXtiMfqpSxrNn74F0BmvsC/JGgQ1wKuNNSuOY4/UrAVYVkoKPnWw1M688zhLoGMu
+         3c4Xj/4oEAjOeY/8UOEtAOdVNcZIM++rPxn8vpHPiGW/BjK87Gkfm3jmPO+W/WUPYe0k
+         qpSQ==
+X-Gm-Message-State: AGi0PubBQ7yAT9nnVWoXS/oeubE6PpEvLfSP2ZoOUQNKwsDCtw3m3sj8
+        0VdNP0mGERdptHdMVh8VMZLPUw==
+X-Google-Smtp-Source: APiQypKpF7REJXdifsNrbjdxjECMvWqO7VD/BFBVFuZ0JXzB0iNDmPtTStSILhzusynqtgGAwoi6Fw==
+X-Received: by 2002:a0c:b651:: with SMTP id q17mr2047236qvf.135.1588120144906;
+        Tue, 28 Apr 2020 17:29:04 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 134sm14193711qki.16.2020.04.28.17.29.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Apr 2020 17:29:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jTab1-0001tN-Gx; Tue, 28 Apr 2020 21:29:03 -0300
+Date:   Tue, 28 Apr 2020 21:29:03 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-doc@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [regression?] Re: [PATCH v6 06/12] mm/gup: track FOLL_PIN pages
+Message-ID: <20200429002903.GZ26002@ziepe.ca>
+References: <20200211001536.1027652-7-jhubbard@nvidia.com>
+ <20200424121846.5ee2685f@w520.home>
+ <5b901542-d949-8d7e-89c7-f8d5ee20f6e9@nvidia.com>
+ <20200424141548.5afdd2bb@w520.home>
+ <665ffb48-d498-90f4-f945-997a922fc370@nvidia.com>
+ <20200428105455.30343fb4@w520.home>
+ <20200428174957.GV26002@ziepe.ca>
+ <20200428130752.75c153bd@w520.home>
+ <20200428192251.GW26002@ziepe.ca>
+ <20200428141223.5b1653db@w520.home>
 MIME-Version: 1.0
-In-Reply-To: <20200429092154.35958687@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 adultscore=0 suspectscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=884 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280181
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428141223.5b1653db@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/20 4:21 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the scsi-fixes tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
-> 
-> drivers/scsi/ibmvscsi/ibmvscsi.c: In function 'ibmvscsi_remove':
-> drivers/scsi/ibmvscsi/ibmvscsi.c:2323:16: warning: unused variable 'flags' [-Wunused-variable]
->  2323 |  unsigned long flags;
->       |                ^~~~~
-> 
-> Introduced by commit
-> 
->   5b77d181bee1 ("scsi: ibmvscsi: Fix WARN_ON during event pool release")
-> 
+On Tue, Apr 28, 2020 at 02:12:23PM -0600, Alex Williamson wrote:
 
-Crud, artifact from removing the spinlock.
+> > > Maybe I was just getting lucky before this commit.  For a
+> > > VM_PFNMAP, vaddr_get_pfn() only needs pin_user_pages_remote() to return
+> > > error and the vma information that we setup in vfio_pci_mmap().  
+> > 
+> > I've written on this before, vfio should not be passing pages to the
+> > iommu that it cannot pin eg it should not touch VM_PFNMAP vma's in the
+> > first place.
+> > 
+> > It is a use-after-free security issue the way it is..
+> 
+> Where is the user after free?  Here I'm trying to map device mmio space
+> through the iommu, which we need to enable p2p when the user owns
+> multiple devices.
 
-Martin,
+Yes, I gathered what the intent was..
 
-Do you want me to resend, or can you fixup your tree?
+> The device is owned by the user, bound to vfio-pci, and can't be
+> unbound while the user has it open.  The iommu mappings are torn
+> down on release.  I guess I don't understand the problem.
 
--Tyrel
+For PFNMAP VMAs the lifecycle rule is basically that the PFN inside
+the VMA can only be used inside the mmap_sem that read it. Ie you
+cannot take a PFN outside the mmap_sem and continue to use it.
+
+This is because the owner of the VMA owns the lifetime of that PFN,
+and under the write side of the mmap_sem it can zap the PFN, or close
+the VMA. Afterwards the VMA owner knows that there are no active
+reference to the PFN in the system and can reclaim the PFN
+
+ie the PFNMAP has no per-page pin counter. All lifetime revolves around
+the mmap_sem and the vma.
+
+What vfio does is take the PFN out of the mmap_sem and program it into
+the iommu.
+
+So when the VMA owner decides the PFN has no references, it actually
+doesn't: vfio continues to access it beyond its permitted lifetime.
+
+HW like mlx5 and GPUs have BAR pages which have security
+properties. Once the PFN is returned to the driver the security
+context of the PFN can be reset and re-assigned to another
+process. Using VFIO a hostile user space can retain access to the BAR
+page and upon its reassignment access a security context they were not
+permitted to access.
+
+This is why GUP does not return PFNMAP pages and vfio should not carry
+a reference outside the mmap_sem. It breaks all the lifetime rules.
+
+Jason
