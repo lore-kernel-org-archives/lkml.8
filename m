@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C78C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B016C83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E574206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6A12085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BQlRAO3f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fxZ5az4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgD2NmC (ORCPT
+        id S1728717AbgD2NmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
+        Wed, 29 Apr 2020 09:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgD2Ng7 (ORCPT
+        with ESMTP id S1726871AbgD2Ng7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 09:36:59 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACA1C03C1AE;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA62C08E934;
         Wed, 29 Apr 2020 06:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=JN554AxHkc699rtExzajbNN6g4op3qqpvKCSDYBty/c=; b=BQlRAO3fMC2EUWoKwnXUVlY/hx
-        RGoRs0nYIk1xQmmCJ0UgSE2ezmFSPaFvtWUZXnH+K7+nTqGcXgn50tYRGYBIEfzxMJNtc+Zq7AMaq
-        kt6HNQlwsv/0gilnH3tGBExr3d2vjtNqPKsFGn3WQx1HrGP5c6aFSS+Hm9qnKcjgOTJc3/PuQ/vQq
-        0OKFoswKVOKcMheKweFc2Rp2O7ikcpUFG4IWJzryp1YOIc/cVrjA56FbM7vNczZWSFxecSZ25TCf5
-        83aIjz7ci5kuHywKp614LknQlivcJB80ofbuAtcOXdz4jWWCIY+ON+S3WGIHq3BkfxUWPvVt4ye3a
-        2bRNIUqg==;
+        bh=YnI7+Bhh5UkZXE935EtKZ6coz+qLsXX3qU5WuaeRKjg=; b=fxZ5az4CYo0x5qndPDmobRvtOx
+        AS6LZ1Flcbd18sjUj6MeEJop9oPMIYLLJBQq9BT3gD7HD4qJ9tEsJaqooNIuJjG0bppg1q5dds3gR
+        hI2JwwaChpjpuv0TE3NnSQLsOPJCipAS7I3s7O+y8xD54yRQF4ZWqqHfMETnTZOmj/bg6xmU/v2I0
+        5bqB3yesQseeUpEgB7F4tZzOYuByVbeyQJqY5wOGirvvZepVluRDbzFQprt8tOdW+G/SMyTh49mcg
+        ksz7oJBU9lLogDh3I/jblyg1sTC2SafRyzyib4kYUBKSo4pkvzWyF+99K5TgRaGN1z+QjJ/Pu8yTP
+        TPXZTTvw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTmtX-0005uL-4p; Wed, 29 Apr 2020 13:36:59 +0000
+        id 1jTmtX-0005ug-8N; Wed, 29 Apr 2020 13:36:59 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/25] mm: Introduce thp_size
-Date:   Wed, 29 Apr 2020 06:36:34 -0700
-Message-Id: <20200429133657.22632-3-willy@infradead.org>
+Subject: [PATCH v3 05/25] fs: Add a filesystem flag for large pages
+Date:   Wed, 29 Apr 2020 06:36:37 -0700
+Message-Id: <20200429133657.22632-6-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
 References: <20200429133657.22632-1-willy@infradead.org>
@@ -57,127 +57,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-This is like page_size(), but compiles down to just PAGE_SIZE if THP
-are disabled.  Convert the users of hpage_nr_pages() which would prefer
-this interface.
+The page cache needs to know whether the filesystem supports pages >
+PAGE_SIZE.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- drivers/nvdimm/btt.c    | 4 +---
- drivers/nvdimm/pmem.c   | 6 ++----
- include/linux/huge_mm.h | 7 +++++++
- mm/internal.h           | 2 +-
- mm/page_io.c            | 2 +-
- mm/page_vma_mapped.c    | 4 ++--
- 6 files changed, 14 insertions(+), 11 deletions(-)
+ include/linux/fs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 3b09419218d6..78e8d972d45a 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1488,10 +1488,8 @@ static int btt_rw_page(struct block_device *bdev, sector_t sector,
- {
- 	struct btt *btt = bdev->bd_disk->private_data;
- 	int rc;
--	unsigned int len;
- 
--	len = hpage_nr_pages(page) * PAGE_SIZE;
--	rc = btt_do_bvec(btt, NULL, page, len, 0, op, sector);
-+	rc = btt_do_bvec(btt, NULL, page, thp_size(page), 0, op, sector);
- 	if (rc == 0)
- 		page_endio(page, op_is_write(op), 0);
- 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 2df6994acf83..184c8b516543 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -235,11 +235,9 @@ static int pmem_rw_page(struct block_device *bdev, sector_t sector,
- 	blk_status_t rc;
- 
- 	if (op_is_write(op))
--		rc = pmem_do_write(pmem, page, 0, sector,
--				   hpage_nr_pages(page) * PAGE_SIZE);
-+		rc = pmem_do_write(pmem, page, 0, sector, tmp_size(page));
- 	else
--		rc = pmem_do_read(pmem, page, 0, sector,
--				   hpage_nr_pages(page) * PAGE_SIZE);
-+		rc = pmem_do_read(pmem, page, 0, sector, thp_size(page));
- 	/*
- 	 * The ->rw_page interface is subtle and tricky.  The core
- 	 * retries on any error, so we can only invoke page_endio() in
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 6bec4b5b61e1..e944f9757349 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -271,6 +271,11 @@ static inline int hpage_nr_pages(struct page *page)
- 	return compound_nr(page);
- }
- 
-+static inline unsigned long thp_size(struct page *page)
-+{
-+	return page_size(page);
-+}
-+
- struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pmd_t *pmd, int flags, struct dev_pagemap **pgmap);
- struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
-@@ -329,6 +334,8 @@ static inline int hpage_nr_pages(struct page *page)
- 	return 1;
- }
- 
-+#define thp_size(x)		PAGE_SIZE
-+
- static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
- {
- 	return false;
-diff --git a/mm/internal.h b/mm/internal.h
-index f762a34b0c57..5efb13d5c226 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -386,7 +386,7 @@ vma_address(struct page *page, struct vm_area_struct *vma)
- 	unsigned long start, end;
- 
- 	start = __vma_address(page, vma);
--	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
-+	end = start + thp_size(page) - PAGE_SIZE;
- 
- 	/* page should be within @vma mapping range */
- 	VM_BUG_ON_VMA(end < vma->vm_start || start >= vma->vm_end, vma);
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 76965be1d40e..dd935129e3cb 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -41,7 +41,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
- 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
- 		bio->bi_end_io = end_io;
- 
--		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
-+		bio_add_page(bio, page, thp_size(page), 0);
- 	}
- 	return bio;
- }
-diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
-index 719c35246cfa..e65629c056e8 100644
---- a/mm/page_vma_mapped.c
-+++ b/mm/page_vma_mapped.c
-@@ -227,7 +227,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
- 			if (pvmw->address >= pvmw->vma->vm_end ||
- 			    pvmw->address >=
- 					__vma_address(pvmw->page, pvmw->vma) +
--					hpage_nr_pages(pvmw->page) * PAGE_SIZE)
-+					thp_size(pvmw->page))
- 				return not_found(pvmw);
- 			/* Did we cross page table boundary? */
- 			if (pvmw->address % PMD_SIZE == 0) {
-@@ -268,7 +268,7 @@ int page_mapped_in_vma(struct page *page, struct vm_area_struct *vma)
- 	unsigned long start, end;
- 
- 	start = __vma_address(page, vma);
--	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
-+	end = start + thp_size(page) - PAGE_SIZE;
- 
- 	if (unlikely(end < vma->vm_start || start >= vma->vm_end))
- 		return 0;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 55c743925c40..777783c8760b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2241,6 +2241,7 @@ struct file_system_type {
+ #define FS_HAS_SUBTYPE		4
+ #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
+ #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission events */
++#define FS_LARGE_PAGES		8192	/* Remove once all fs converted */
+ #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
+ 	int (*init_fs_context)(struct fs_context *);
+ 	const struct fs_parameter_spec *parameters;
 -- 
 2.26.2
 
