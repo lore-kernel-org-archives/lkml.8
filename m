@@ -2,82 +2,173 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F5C83003
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC5DC83006
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEB9206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D/NhGevB"
+	by mail.kernel.org (Postfix) with ESMTP id D3737208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 13:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgD2Nhq (ORCPT
+        id S1728455AbgD2NkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 09:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
+        Wed, 29 Apr 2020 09:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbgD2NhB (ORCPT
+        with ESMTP id S1727947AbgD2Nhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 09:37:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE717C03C1AE;
-        Wed, 29 Apr 2020 06:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=bLegsrf1DhSkc7w1f1NHk29akaQzX/hYK/HqXtMKqBY=; b=D/NhGevB1GCZkpjQ5e/LyIzhLa
-        MiCHOSb2ZqRew0WiSYEp6RelJc/meuYuQ5BKuBvt4AsHoF2mYVMVBVYW9fSVTMN24WRm4ZL707JqM
-        S9juOe2bWgsJ1km49tzmMVdnbOCLbdw0oJSsYZ8wowk6q7syX3+ZRV4UL6Hh/yIjNbCe0H4MAiL1S
-        h3eqQ3ClygNYMAm6rlUqANJD8gOdzEuYhz6LGqut5C4c56wfeJjAN7ILxjitlYyaWc4vHQYoGrljq
-        AJUV0zjZzknj+w64+fKBcMiJoIekzy9zw+cSYQcPoLXKaO1SBzcqPHCZuBo6wfP46o7pbMFsvfCv7
-        O7gxEpHQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jTmtX-0005wI-Pq; Wed, 29 Apr 2020 13:36:59 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 19/25] mm: Allow large pages to be removed from the page cache
-Date:   Wed, 29 Apr 2020 06:36:51 -0700
-Message-Id: <20200429133657.22632-20-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
-References: <20200429133657.22632-1-willy@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 29 Apr 2020 09:37:46 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E5DC03C1AD;
+        Wed, 29 Apr 2020 06:37:45 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 2A8C6CB4; Wed, 29 Apr 2020 15:37:37 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v3 10/34] iommu: Move new probe_device path to separate function
+Date:   Wed, 29 Apr 2020 15:36:48 +0200
+Message-Id: <20200429133712.31431-11-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
+References: <20200429133712.31431-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: Joerg Roedel <jroedel@suse.de>
 
-page_cache_free_page() assumes compound pages are PMD_SIZE; fix
-that assumption.
+This makes it easier to remove to old code-path when all drivers are
+converted. As a side effect that it also fixes the error cleanup
+path.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- mm/filemap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/iommu.c | 69 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 46 insertions(+), 23 deletions(-)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 842afee3d066..8c174e6064d4 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -248,7 +248,7 @@ static void page_cache_free_page(struct address_space *mapping,
- 		freepage(page);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 18eb3623bd00..8be047a4808f 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -218,12 +218,55 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
+ 	return ret;
+ }
  
- 	if (PageTransHuge(page) && !PageHuge(page)) {
--		page_ref_sub(page, HPAGE_PMD_NR);
-+		page_ref_sub(page, hpage_nr_pages(page));
- 		VM_BUG_ON_PAGE(page_count(page) <= 0, page);
- 	} else {
- 		put_page(page);
++static int __iommu_probe_device_helper(struct device *dev)
++{
++	const struct iommu_ops *ops = dev->bus->iommu_ops;
++	struct iommu_group *group;
++	int ret;
++
++	ret = __iommu_probe_device(dev, NULL);
++	if (ret)
++		goto err_out;
++
++	/*
++	 * Try to allocate a default domain - needs support from the
++	 * IOMMU driver. There are still some drivers which don't
++	 * support default domains, so the return value is not yet
++	 * checked.
++	 */
++	iommu_alloc_default_domain(dev);
++
++	group = iommu_group_get(dev);
++	if (!group)
++		goto err_release;
++
++	if (group->default_domain)
++		ret = __iommu_attach_device(group->default_domain, dev);
++
++	iommu_group_put(group);
++
++	if (ret)
++		goto err_release;
++
++	if (ops->probe_finalize)
++		ops->probe_finalize(dev);
++
++	return 0;
++
++err_release:
++	iommu_release_device(dev);
++err_out:
++	return ret;
++
++}
++
+ int iommu_probe_device(struct device *dev)
+ {
+ 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+ 	int ret;
+ 
+ 	WARN_ON(dev->iommu_group);
++
+ 	if (!ops)
+ 		return -EINVAL;
+ 
+@@ -235,30 +278,10 @@ int iommu_probe_device(struct device *dev)
+ 		goto err_free_dev_param;
+ 	}
+ 
+-	if (ops->probe_device) {
+-		struct iommu_group *group;
+-
+-		ret = __iommu_probe_device(dev, NULL);
+-
+-		/*
+-		 * Try to allocate a default domain - needs support from the
+-		 * IOMMU driver. There are still some drivers which don't
+-		 * support default domains, so the return value is not yet
+-		 * checked.
+-		 */
+-		if (!ret)
+-			iommu_alloc_default_domain(dev);
+-
+-		group = iommu_group_get(dev);
+-		if (group && group->default_domain) {
+-			ret = __iommu_attach_device(group->default_domain, dev);
+-			iommu_group_put(group);
+-		}
+-
+-	} else {
+-		ret = ops->add_device(dev);
+-	}
++	if (ops->probe_device)
++		return __iommu_probe_device_helper(dev);
+ 
++	ret = ops->add_device(dev);
+ 	if (ret)
+ 		goto err_module_put;
+ 
 -- 
-2.26.2
+2.17.1
 
