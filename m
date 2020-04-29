@@ -2,91 +2,122 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D31C83004
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67022C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F4520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EED20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 20:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvj52mA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgD2UfQ (ORCPT
+        id S1727095AbgD2Uga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 16:35:16 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:46373 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgD2UfP (ORCPT
+        Wed, 29 Apr 2020 16:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgD2Ug3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:35:15 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MqJVd-1iqPx30BMp-00nPvX for <linux-kernel@vger.kernel.org>; Wed, 29 Apr
- 2020 22:35:14 +0200
-Received: by mail-qk1-f180.google.com with SMTP id 23so3525306qkf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 13:35:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaPcCML7I7QArqJb0NcnGUkd92pyAkQUgIAZvVxwFDfD+517jE7
-        3A6/TpC4iK2uXZxjlRGSmGWhI5dD5Hku5qpvwkk=
-X-Google-Smtp-Source: APiQypKmqhe1J42Dc9NNIPPjb6h2NIdLKVnO4btIHTL91FOrFIt6m/guokM0LsSiDAM68xNngDTmSmEt8UP92RQMJ6c=
-X-Received: by 2002:a37:63d0:: with SMTP id x199mr276734qkb.3.1588192512920;
- Wed, 29 Apr 2020 13:35:12 -0700 (PDT)
+        Wed, 29 Apr 2020 16:36:29 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB873C03C1AE;
+        Wed, 29 Apr 2020 13:36:29 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n143so3491511qkn.8;
+        Wed, 29 Apr 2020 13:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wa1e1Y92lYvZrPhLeN+VLU3x02Trx+J7qlyl+rZbDUU=;
+        b=mvj52mA/xDeZyh4CUMZzSUOlhh19TXjFKAujr/Pw2bcSm8jhF4MIsrYlxLBJIDBzQF
+         ECoRb6zvSZCVB8YCU4e3EMg6CmDBAOS2tKiII9yKK/LsUKzqajpRY5VF2hPsi7/vOeML
+         ZFhnWJ49pRJjcT+fn91yKO2K/9/KpFnNnN0+b9PpJYCk+ttzf5+UNyr4vd12VSSCaD6N
+         2erVi5RMOMMhfJRe6n/bSJn2OpxxkNo739fHiC/v8Pjoim5Ga1KNMjBOVNckG2MtxzlB
+         pJq5vuOQuTItE3xdT2BjknUqo9/pftJwNz1vZMAH5U5GF6oy+3PeoK1YZDnFvJAGFt7D
+         UPCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wa1e1Y92lYvZrPhLeN+VLU3x02Trx+J7qlyl+rZbDUU=;
+        b=bgd1bliqVNiWbfuZVyHYOGyJYPJERHwhiYKrudvrfV+Bp7NMW91v9nKsOd6qPt2DqV
+         5Z/zP551kd+/qUFLY+4WmwhNJ76WtW5VQXgD7dbeQpeYjsEc3ox+0YXgcffw8JrtG3T2
+         KyolbeUe4RBBbzZz5yD+fEXrpyIbgmCoDHBDMWN9hgsvIhZxVztA3oAm7DMcgNeby12/
+         QkiojcIGa+Y2HLuYeKgJeInnT93Jveuo9rLrQAbIVC/b8VWWWtp63NV8paiPpbhl+UYI
+         hIuUNBdsVxKKIS0dri5vWIfEmeFRAUpqkoMMeRVxDt8HCkUDAvGTetsptX08WbJaIZZd
+         kysA==
+X-Gm-Message-State: AGi0PubTN+iansZ/kxNO6M6+YzBwmuhhU1QxthCWx3gPivvDM268T0qu
+        euQl28x+IQ7JbAkY9xtsAAYc6wGt7DtYAdJrERU=
+X-Google-Smtp-Source: APiQypK+ScNFRjviccmciq+hSgbQJQz0BvntvfGNdmkmNvKb+9q8VMEfGiSIBuE7+efgCn20i36lQOb2Fo5ytWh9By8=
+X-Received: by 2002:ae9:e854:: with SMTP id a81mr338783qkg.36.1588192588839;
+ Wed, 29 Apr 2020 13:36:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429142119.1735196-1-arnd@arndb.de> <3943343.tW1xmJHsB6@pc-42>
-In-Reply-To: <3943343.tW1xmJHsB6@pc-42>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 Apr 2020 22:34:56 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1e=-H_b8_GPJW5-uufye5_6OJ6f+ZWErjKPWkxSRSigw@mail.gmail.com>
-Message-ID: <CAK8P3a1e=-H_b8_GPJW5-uufye5_6OJ6f+ZWErjKPWkxSRSigw@mail.gmail.com>
-Subject: Re: [PATCH] staging: wfx: avoid compiler warning on empty array
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200429132217.1294289-1-arnd@arndb.de>
+In-Reply-To: <20200429132217.1294289-1-arnd@arndb.de>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 29 Apr 2020 13:36:17 -0700
+Message-ID: <CAEf4Bzahz15mGQC21Hr9dfCE6uDrgWvARr2_0f0i592keW3orQ@mail.gmail.com>
+Subject: Re: [PATCH] bpf: fix unused variable warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9QjL77LkDYLmgJ4/MyTpk+/PGzTHnxHnsYkUU7jwiN2MjcgIjzI
- L1ADRf7JM05B3BzLVCVeN5WIQTN2Q/jvKVhqYPID20sSaWpRIntC3qMG0ZOHdwidRiutPzK
- TGfHg91I34gmXdcc9++SfD+yyXG/N2AWF1mf1aMeywBgC1y5sb7FETwfZeuJGt7SkzFfTNV
- cKC/K9fiszofrI8zKEcJQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CGrjO5c+958=:h32JaDyG+MoUxgZJsP/tpS
- FCxyjgAZat4HiXGWcTAWuvacepL57v9oNfOTp7GmtJdtR75R5c1jdNCOlxxYNbW4lSCLlBDi5
- 0JeoPtgPx782yx/UvjR+jHFg4PwRAHnpyhwrgewXRL/NYVQA85PZ+1bnIVakekg2KSk8/SQZV
- lJjuVdgXCX1eRb9TgxUA7UOpe+IEqo9hpko5+0q48crrwNpr3JuBzaR91tWgqalZn6qrxRlHn
- mDM0WHOo0k1FhyilEOAmZMb4MlZHwR1iiOz8XEdUcX1S+7KET4eb7061vUl0G1+y/dZ8Uwfzx
- CVKyOJ6Cl6TClNcU2rm3O10Yg67t2f4MeitLnfBu6YKLB8vpeKaWzFARuWnCrYmPKu7f/Rkkr
- mZvO3uHm73yDIBai7McrkyIE8pZItlPhDW+qt7oi6wBujxhTzQd/zIAKY07nSgETy42hH/N89
- 8GusGJicwSs4StYryCxBlXgh5SRHc2eJDCkBsBvr1xX/tNho8bwwSrLfvG00PPUug7GtpJapP
- 0cQd0FDW/tOj9riI8z0vXCh4KTGFN0vR9OiE69J3EPtuVNpEwTR9srEmF9yU5wsa9U7IGWs9m
- GeLyeIeIgTRYGx9cXZHmZnXk6VfHJBQRUEBSsAQ8natDzedlcqikGxgnGtxzHZ5oTAAkLZ+VK
- hixmyJxC/jechV0YH8iZWs5s6syrxh0uT0ttiz4DqgjPm+D9MC+9tuLmTmEFVaSqZ6xz7O88w
- DaDBhUogm0cST/6Q2HX7xBVZBKU5jNCMkx96zRJHZPPuHrrQO8IpLXoWuNscaNOC88W+VqWZA
- X6xUKYdA4El+zM8mhisdmqPGy0cxa7nMI5NbdzFme0/YczCyKw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 6:04 PM Jerome Pouiller
-<Jerome.Pouiller@silabs.com> wrote:
-> On Wednesday 29 April 2020 16:21:09 CEST Arnd Bergmann wrote:
-> >
-> > -static const struct of_device_id wfx_sdio_of_match[];
-> > +static const struct of_device_id wfx_sdio_of_match[] = {
-> > +       { .compatible = "silabs,wfx-sdio" },
-> > +       { .compatible = "silabs,wf200" },
-> > +       { },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
+On Wed, Apr 29, 2020 at 6:23 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> I suggest to keep the '#ifdef CONFIG_OF' around this definition. If
-> CONFIG_OF is undefined, of_match_ptr() and of_match_node() will be NULL
-> and it should compile.
+> Hiding the only using of bpf_link_type_strs[] in an #ifdef causes
+> an unused-variable warning:
+>
+> kernel/bpf/syscall.c:2280:20: error: 'bpf_link_type_strs' defined but not used [-Werror=unused-variable]
+>  2280 | static const char *bpf_link_type_strs[] = {
+>
+> Move the definition into the same #ifdef.
+>
+> Fixes: f2e10bff16a0 ("bpf: Add support for BPF_OBJ_GET_INFO_BY_FD for bpf_link")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-I would generally always go for fewer #ifdef instead of more when the result
-is the same. Are you worried about wasting 600 bytes of object code size for
-the array on systems that need this driver but not CONFIG_OF, or something
-else?
+Thanks for the fix, LGTM.
 
-     Arnd
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  kernel/bpf/syscall.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 3cea7602de78..5e86d8749e6e 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -2274,6 +2274,7 @@ static int bpf_link_release(struct inode *inode, struct file *filp)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_PROC_FS
+>  #define BPF_PROG_TYPE(_id, _name, prog_ctx_type, kern_ctx_type)
+>  #define BPF_MAP_TYPE(_id, _ops)
+>  #define BPF_LINK_TYPE(_id, _name) [_id] = #_name,
+> @@ -2285,7 +2286,6 @@ static const char *bpf_link_type_strs[] = {
+>  #undef BPF_MAP_TYPE
+>  #undef BPF_LINK_TYPE
+>
+> -#ifdef CONFIG_PROC_FS
+>  static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+>  {
+>         const struct bpf_link *link = filp->private_data;
+> --
+> 2.26.0
+>
