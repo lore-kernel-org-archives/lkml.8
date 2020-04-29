@@ -2,163 +2,218 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC4CC83007
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA4FC83003
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA73020775
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQvDE5r8"
+	by mail.kernel.org (Postfix) with ESMTP id 9A9042082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 09:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD2J6O (ORCPT
+        id S1726787AbgD2J63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 05:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgD2J6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:58:14 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A84C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 02:58:14 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f8so671243plt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 02:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kQWwU0V3P2cG9Df5CLi5Aes1IF7DF82n54z1tZA0tj8=;
-        b=cQvDE5r8qFSkTrzZ4i81Gzp9dqP8ohUksJfLHUOBX+Po2pmMP1o2x1SSUZbwTC8ztO
-         zpFtzt+mwbM1zrcinR/taemda/w0yc07a72tRJ+6+0IqETkEPswX0PzdXQJA5MSkyDmy
-         bKGwQYt2bvw3qkOGUhOoR/WrST1Z0rVWR0Ba7OvU/32/ioUNtW8tLcJLNx7kKr4R5fq9
-         xr7H/GbrVerDj9h4NkOjjmltmQnAiuozN55x/j7xKkGcazgitsrOdRcgn6qX+AmsxrKA
-         bba2c5CNuwCwg+sVjBVP/Qb3NEU0bcRuttgfKRjy1jPmEEYaWLyGS5n2r52Mc3UZ4Gwv
-         K/tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kQWwU0V3P2cG9Df5CLi5Aes1IF7DF82n54z1tZA0tj8=;
-        b=PyTqVDs2rs+9psi8EXpGhoNm5XYoomfy+189w/ETDwYZpJ9Xma7MQrj24IB/oul809
-         zhZIBmXCBusTMIGqntSOO9OtJ0omHJm714DPTXROU/ready3/5JxgTIykeU6xocRk93+
-         f55sek1D92P4N9OVH2rOrgO2JNr1Jw25AmDe7Ht02415tcIVTB+TQW73dzdn7DicapOF
-         cSk0FptBqFazOfC+cXEMvK5ljIVd2ScJtZdghlN28HCpFmo8Kf594qHnBrf99aRbgDsi
-         YS+D0l+eHBApBu/liAfmfCE2HajIxcYA2Pyoh5C/gZcAuE/YQWHRZD1RNZFyI8BqRLl0
-         R8Ig==
-X-Gm-Message-State: AGi0PuaNi9HXw+v6fwK4W9vbDvSld2Adt4ZUv4gFFjpyvkZ2LmMK2e3j
-        FsNS3vTFpo0HVKpHWcadGMCO
-X-Google-Smtp-Source: APiQypJq9Vv8kOy3qRauSuH1fn2l54cguipwDjEbc1fxWc9BOiY6PCKS0U4dHaO2yA/f4lXw0vFZ9A==
-X-Received: by 2002:a17:90a:d085:: with SMTP id k5mr2279937pju.91.1588154293427;
-        Wed, 29 Apr 2020 02:58:13 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6114:a3cc:cde9:1262:3f57:5dd])
-        by smtp.gmail.com with ESMTPSA id f99sm4493906pjg.22.2020.04.29.02.58.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 02:58:12 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 15:28:02 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/1] dma: actions: Fix lockdep splat for owl-dma
-Message-ID: <20200429095802.GB6443@Mani-XPS-13-9360>
-References: <7d503c3dcac2b3ef29d4122a74eacfce142a8f98.1588069418.git.cristian.ciocaltea@gmail.com>
- <20200428164921.GC5259@Mani-XPS-13-9360>
- <20200428181115.GB26885@BV030612LT>
- <20200428181803.GD5259@Mani-XPS-13-9360>
- <a70a2352-7b22-6b85-848b-94d9ee17c022@suse.de>
+        Wed, 29 Apr 2020 05:58:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:36432 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbgD2J62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 05:58:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C131C14;
+        Wed, 29 Apr 2020 02:58:28 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.5.153])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AEE43F73D;
+        Wed, 29 Apr 2020 02:58:26 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 10:58:17 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 4/7] arm64: Thread mm_struct throughout page table
+ allocation
+Message-ID: <20200429095817.GA28631@C02TD0UTHF1T.local>
+References: <20200428194449.22615-1-willy@infradead.org>
+ <20200428194449.22615-5-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a70a2352-7b22-6b85-848b-94d9ee17c022@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200428194449.22615-5-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+Hi Matthew,
 
-On Wed, Apr 29, 2020 at 10:36:01AM +0200, Andreas Färber wrote:
-> Am 28.04.20 um 20:18 schrieb Manivannan Sadhasivam:
-> > On Tue, Apr 28, 2020 at 09:11:15PM +0300, Cristian Ciocaltea wrote:
-> > > On Tue, Apr 28, 2020 at 10:19:21PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Apr 28, 2020 at 01:56:12PM +0300, Cristian Ciocaltea wrote:
-> > > > > When the kernel is build with lockdep support and the owl-dma driver is
-> > > > > used, the following message is shown:
-> [...]
-> > > > > The required fix is to use spin_lock_init() on the pchan lock before
-> > > > > attempting to call any spin_lock_irqsave() in owl_dma_get_pchan().
-> > > > 
-> > > > Right, this is a bug. But while looking at the code now, I feel that we don't
-> > > > need 'pchan->lock'. The idea was to protect 'pchan->vchan', but I think
-> > > > 'od->lock' is the better candidate for that since it already protects it in
-> > > > 'owl_dma_terminate_pchan'.
-> > > > 
-> > > > So I'd be happy if you remove the lock from 'pchan' and just directly use the
-> > > > one in 'od'.
-> > > > 
-> > > > Out of curiosity, on which platform you're testing this?
-> > > 
-> > > Totally agree, I will send a new patch revision as soon as I do some
-> > > more testing.
-> > 
-> > Coo[l], thanks!
-> > 
-> > > I'm currently experimenting on an Actions S500 based board (Roseapple Pi)
-> > > trying to extend, if possible, the existing mainline support for those
-> > > SoCs.
-> > 
-> > Awesome! It's great to see that Actions platform is seeing some attention
-> > these days :)
-> > 
-> > > I don't have much progress so far, since I started quite recently
-> > > and I also lack experience in the kernel development area, but I do my
-> > > best to come back with more patches once I get a consistent functionality.
-> > 
-> > No worries. Feel free to reach out to me if you have any questions. There is
-> > a lot of work to do and for sure it will be a good learning curve.
-> > 
-> > We do have an IRC channel (##linux-actions) for quick discussions. Fee[l] free
-> > to join!
+On Tue, Apr 28, 2020 at 12:44:46PM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Please also CC the linux-actions mailing list on any patches:
+> An upcoming patch will pass mm_struct to the page table constructor.
+> Make sure arm64 has the appropriate mm_struct at the point it needs to
+> call the constructor.
 > 
-> https://lists.infradead.org/mailman/listinfo/linux-actions
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+This generally looks good ot me. I was a little scared that we'd need to
+update the EFI mapping code, but I see that already passes its mm into
+create_pgd_mapping(), and everything else uses init_mm today.
+
+One small comment below.
+
+> ---
+>  arch/arm64/mm/mmu.c | 89 ++++++++++++++++++++++-----------------------
+>  1 file changed, 43 insertions(+), 46 deletions(-)
 > 
-> Mani, do you have a 5.7-rc1 tree set up or should I queue patches this
-> round?
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index a374e4f51a62..69ecc83c3be0 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -88,7 +88,9 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+>  }
+>  EXPORT_SYMBOL(phys_mem_access_prot);
+>  
+> -static phys_addr_t __init early_pgtable_alloc(int shift)
+> +typedef phys_addr_t (arm_pt_alloc_t)(int size, struct mm_struct *);
 
-I haven't set up the branch. You can do the maintainership duties for this
-cycle.
+Sorry to bikeshed, but for consistency with the naming scheme used here
+could we please call this 'pgtable_alloc_fn' ?
 
-> It still seems missing in MAINTAINERS, and then there's Matheus'
-> patches in review.
-> 
+We generally use 'pgtable' here, and 'fn' makes it clearer that this is
+a function pointer rather than data. The 'arm_' prefix is also a bit
+unusual here, and I don't think we need it.
 
-Yeah, the MAINTAINERS patch has fallen through cracks:
+With that:
 
-[PATCH v2 6/6] MAINTAINERS: Add linux-actions mailing list for Actions Semi
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-I did this as a part of S500 clk series. Feel free to pick it up.
+Mark.
 
-Thanks,
-Mani
-
-> Thanks,
-> Andreas
-> 
+> @@ -333,11 +332,9 @@ static void alloc_init_pud(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>  	pud_clear_fixmap();
+>  }
+>  
+> -static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+> -				 unsigned long virt, phys_addr_t size,
+> -				 pgprot_t prot,
+> -				 phys_addr_t (*pgtable_alloc)(int),
+> -				 int flags)
+> +static void __create_pgd_mapping(struct mm_struct *mm, pgd_t *pgdir,
+> +		phys_addr_t phys, unsigned long virt, phys_addr_t size,
+> +		pgprot_t prot, arm_pt_alloc_t pgtable_alloc, int flags)
+>  {
+>  	unsigned long addr, end, next;
+>  	pgd_t *pgdp = pgd_offset_raw(pgdir, virt);
+> @@ -355,13 +352,13 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+>  
+>  	do {
+>  		next = pgd_addr_end(addr, end);
+> -		alloc_init_pud(pgdp, addr, next, phys, prot, pgtable_alloc,
+> +		alloc_init_pud(mm, pgdp, addr, next, phys, prot, pgtable_alloc,
+>  			       flags);
+>  		phys += next - addr;
+>  	} while (pgdp++, addr = next, addr != end);
+>  }
+>  
+> -static phys_addr_t __pgd_pgtable_alloc(int shift)
+> +static phys_addr_t __pgd_pgtable_alloc(int shift, struct mm_struct *mm)
+>  {
+>  	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL);
+>  	BUG_ON(!ptr);
+> @@ -371,9 +368,9 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
+>  	return __pa(ptr);
+>  }
+>  
+> -static phys_addr_t pgd_pgtable_alloc(int shift)
+> +static phys_addr_t pgd_pgtable_alloc(int shift, struct mm_struct *mm)
+>  {
+> -	phys_addr_t pa = __pgd_pgtable_alloc(shift);
+> +	phys_addr_t pa = __pgd_pgtable_alloc(shift, mm);
+>  
+>  	/*
+>  	 * Call proper page table ctor in case later we need to
+> @@ -404,8 +401,8 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+>  			&phys, virt);
+>  		return;
+>  	}
+> -	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL,
+> -			     NO_CONT_MAPPINGS);
+> +	__create_pgd_mapping(&init_mm, init_mm.pgd, phys, virt, size, prot,
+> +			NULL, NO_CONT_MAPPINGS);
+>  }
+>  
+>  void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+> @@ -419,7 +416,7 @@ void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+>  	if (page_mappings_only)
+>  		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>  
+> -	__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+> +	__create_pgd_mapping(mm, mm->pgd, phys, virt, size, prot,
+>  			     pgd_pgtable_alloc, flags);
+>  }
+>  
+> @@ -432,8 +429,8 @@ static void update_mapping_prot(phys_addr_t phys, unsigned long virt,
+>  		return;
+>  	}
+>  
+> -	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL,
+> -			     NO_CONT_MAPPINGS);
+> +	__create_pgd_mapping(&init_mm, init_mm.pgd, phys, virt, size, prot,
+> +			NULL, NO_CONT_MAPPINGS);
+>  
+>  	/* flush the TLBs after updating live kernel mappings */
+>  	flush_tlb_kernel_range(virt, virt + size);
+> @@ -442,8 +439,8 @@ static void update_mapping_prot(phys_addr_t phys, unsigned long virt,
+>  static void __init __map_memblock(pgd_t *pgdp, phys_addr_t start,
+>  				  phys_addr_t end, pgprot_t prot, int flags)
+>  {
+> -	__create_pgd_mapping(pgdp, start, __phys_to_virt(start), end - start,
+> -			     prot, early_pgtable_alloc, flags);
+> +	__create_pgd_mapping(&init_mm, pgdp, start, __phys_to_virt(start),
+> +			end - start, prot, early_pgtable_alloc, flags);
+>  }
+>  
+>  void __init mark_linear_text_alias_ro(void)
+> @@ -547,8 +544,8 @@ static void __init map_kernel_segment(pgd_t *pgdp, void *va_start, void *va_end,
+>  	BUG_ON(!PAGE_ALIGNED(pa_start));
+>  	BUG_ON(!PAGE_ALIGNED(size));
+>  
+> -	__create_pgd_mapping(pgdp, pa_start, (unsigned long)va_start, size, prot,
+> -			     early_pgtable_alloc, flags);
+> +	__create_pgd_mapping(&init_mm, pgdp, pa_start, (unsigned long)va_start,
+> +			size, prot, early_pgtable_alloc, flags);
+>  
+>  	if (!(vm_flags & VM_NO_GUARD))
+>  		size += PAGE_SIZE;
+> @@ -591,8 +588,8 @@ static int __init map_entry_trampoline(void)
+>  
+>  	/* Map only the text into the trampoline page table */
+>  	memset(tramp_pg_dir, 0, PGD_SIZE);
+> -	__create_pgd_mapping(tramp_pg_dir, pa_start, TRAMP_VALIAS, PAGE_SIZE,
+> -			     prot, __pgd_pgtable_alloc, 0);
+> +	__create_pgd_mapping(&init_mm, tramp_pg_dir, pa_start, TRAMP_VALIAS,
+> +			PAGE_SIZE, prot, __pgd_pgtable_alloc, 0);
+>  
+>  	/* Map both the text and data into the kernel page table */
+>  	__set_fixmap(FIX_ENTRY_TRAMP_TEXT, pa_start, prot);
+> @@ -1381,9 +1378,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	if (rodata_full || debug_pagealloc_enabled())
+>  		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>  
+> -	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+> -			     size, params->pgprot, __pgd_pgtable_alloc,
+> -			     flags);
+> +	__create_pgd_mapping(&init_mm, swapper_pg_dir, start,
+> +			__phys_to_virt(start), size, params->pgprot,
+> +			__pgd_pgtable_alloc, flags);
+>  
+>  	memblock_clear_nomap(start, size);
+>  
 > -- 
-> SUSE Software Solutions Germany GmbH
-> Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer
-> HRB 36809 (AG Nürnberg)
+> 2.26.2
+> 
