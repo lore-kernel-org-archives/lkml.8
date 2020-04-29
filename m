@@ -2,115 +2,111 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6935DC8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBF4C83007
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46EEC22206
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588187734;
-	bh=8zGF7J5vU1aHCP5NVrkZGLyiOLpTgil37hVC6FyH4+g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=f4WLfsNGKIygixCzCBdph60H0iQg4v6ZGaur5WYmLGCyIvQeOhcUdI3uT/BPo7Oat
-	 zWSidyulahLnh+m2gQ5j8YCGBqqEEifa5mLik/Pck6EH3wX1x/eigot1S/D6CmRyxT
-	 rBTwyYvRieMzCk4RqjVXO17UUeD9HkCsmIMOaC9M=
+	by mail.kernel.org (Postfix) with ESMTP id 9ADC421D82
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 19:16:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fvrS0VEE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgD2TPd (ORCPT
+        id S1727115AbgD2TQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 15:15:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbgD2TPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 15:15:33 -0400
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F18221EA;
-        Wed, 29 Apr 2020 19:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588187733;
-        bh=8zGF7J5vU1aHCP5NVrkZGLyiOLpTgil37hVC6FyH4+g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CjXDKQe50JwPGFFd2wqJPBv40jTi+sCUJ4DaP44BJ0ffo0qDgF4CCT/up//grV+1X
-         H5XHXUf7VrgTddw49+fLsdqZbguhhBESE0/5YGZddRYiqx0Jo97WEX7mbcnqbaWpIj
-         irEoW5bcty8tZMIKiOKqEusZ2LpinmUtT10U5WJk=
-Received: by mail-il1-f173.google.com with SMTP id e8so3553189ilm.7;
-        Wed, 29 Apr 2020 12:15:33 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ+ljW/oxfpWo3Ry1qNXMbP9fExAPCpODxbdV1xTPROcNRtUrjN
-        ziOtRoYc71d5kEzDvg2Wgph/EW9B0BM7lyV2qT4=
-X-Google-Smtp-Source: APiQypJsnlAvQfc7irLT1YgR+mCRIPtINI2GxAyyU6DQsDAhz6atG1lWYITEEV+JOjR4au3GhCYE9ARuvXzpnDuZRd8=
-X-Received: by 2002:a92:39dd:: with SMTP id h90mr4677889ilf.80.1588187732438;
- Wed, 29 Apr 2020 12:15:32 -0700 (PDT)
+        Wed, 29 Apr 2020 15:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726423AbgD2TQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 15:16:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD2BC03C1AE
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:16:33 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so3282307wmk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 12:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=uTaxYC0jwA+3Mf6QeyL0kxKKg+CdYcd/49GGY7p9esY=;
+        b=fvrS0VEE66iO7kf6DfmoKB0rXIEmgiuWit2Fu+SmZkTgV6Cz07n/xX2l0Biwa1hAvY
+         1rEHDzYF+Wb6TaiiZhFSD0G25jsO/9oCpN6WJ4Ofic0d8qZck24SS0b83d80Q2n9lC+3
+         vjSpHa8acnnKltv95KH9GXphftHAkW4OfVrBeuHMhJsh5bL/o9sEXRrcQ4PmoeoTOuxh
+         oaZK3GiZEZ4cHhxuzNnpKkAiHeBNLqjCNqWK4u0sg/S2vdTywv30jYvWIP2vHJQZCUTv
+         NXkpzzCTNxpxeraY4yOZeKvak+SgmC9CpSWq/NTkuLEhMo09VG1wovwqUeGDWA+/+8Nj
+         MxPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=uTaxYC0jwA+3Mf6QeyL0kxKKg+CdYcd/49GGY7p9esY=;
+        b=anQO0hTuPiFBtXJqc6Ge593GrI6Jx82YA+viCBAQiux4J4uz/DgGqOi1AeXPecDExD
+         wAogyOrK3+zgzXqlMYVwdFDJKTiHRwngvJO4L8kQ1arh4+kHBE/yWQNgl01Te+e1T60E
+         qJArscS43aD8sNhrpU5HC/F/BPmXOr4JKjJ/BJr9W+xh1DDmH2QrXy5kcpaCqaoun+Nr
+         /1DjjNP6AHwn98O+jIeNTmWhWAcl1TXy0674tqJMq5MYPndmq2VA7zHabX2h2ClhPL9s
+         t6mMXmdWjUr+U2pWI2i3IZrnU0TV8Rl+pbv15W89l5YOue2aP0Y3tGVEC+W3WgALDqNP
+         9Nqg==
+X-Gm-Message-State: AGi0PubICw0BF7BYJMx5XisyEpZT5/kSTiJ6sjuXfE6XBDJoR8Sgz11g
+        B0Ymvba003IUk4Xd+odgwXsthw==
+X-Google-Smtp-Source: APiQypLJ0zeDoIhCzi097XAozrXJsq0a0rW6Z3NDWwTzdI9ZLjqD2jG0z5naNye1gwdLaN6JoAuAiA==
+X-Received: by 2002:a1c:2e07:: with SMTP id u7mr4865638wmu.74.1588187792498;
+        Wed, 29 Apr 2020 12:16:32 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id e5sm235982wru.92.2020.04.29.12.16.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Apr 2020 12:16:31 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org,
+        jdelvare@suse.com, linux@roeck-us.net,
+        srinivas.kandagatla@linaro.org
+Cc:     nick@khadas.com, art@khadas.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/8] mfd: Add support for Khadas Microcontroller
+In-Reply-To: <20200421080102.22796-1-narmstrong@baylibre.com>
+References: <20200421080102.22796-1-narmstrong@baylibre.com>
+Date:   Wed, 29 Apr 2020 12:16:28 -0700
+Message-ID: <7h4kt2ksqb.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20200429190119.43595-1-arnd@arndb.de>
-In-Reply-To: <20200429190119.43595-1-arnd@arndb.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 29 Apr 2020 21:15:21 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE4DSOhN7+ydGytHwOCn+L=0VoxW4T76ERL8+_fjyNj7A@mail.gmail.com>
-Message-ID: <CAMj1kXE4DSOhN7+ydGytHwOCn+L=0VoxW4T76ERL8+_fjyNj7A@mail.gmail.com>
-Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 at 21:02, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Building with gcc-10 causes a harmless warning about a section mismatch:
->
-> WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
-> The function tpm2_calc_event_log_size() references
-> the function __init early_memunmap().
-> This is often because tpm2_calc_event_log_size lacks a __init
-> annotation or the annotation of early_memunmap is wrong.
->
-> Add the missing annotation.
->
-> Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Thanks, I'll take it as a fix.
+> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+> connected via I2C.
+>
+> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+> boards.
+>
+> It has multiple boot control features like password check, power-on
+> options, power-off control and system FAN control on recent boards.
+>
+> Thie serie adds :
+> - the bindings
+> - the MFD driver
+> - the HWMON cell driver
+> - the NVMEM cell driver
+> - updates MAINTAINERS
+> - add support into the Khadas VIM3/VIM3L DT
+>
+> Neil Armstrong (8):
+>   dt-bindings: mfd: add Khadas Microcontroller bindings
+>   mfd: add support for the Khadas System control Microcontroller
+>   hwmon: add support for the MCU controlled FAN on Khadas boards
+>   nvmem: add support for the Khadas MCU Programmable User Memory
+>   MAINTAINERS: add myself as maintainer for Khadas MCU drivers
+>   arm64: dts: meson-g12b: move G12B thermal nodes to meson-g12b.dtsi
+>   arm64: dts: meson-sm1: add cpu thermal nodes
 
-> ---
->  drivers/firmware/efi/tpm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-> index 31f9f0e369b9..55b031d2c989 100644
-> --- a/drivers/firmware/efi/tpm.c
-> +++ b/drivers/firmware/efi/tpm.c
-> @@ -16,7 +16,7 @@
->  int efi_tpm_final_log_size;
->  EXPORT_SYMBOL(efi_tpm_final_log_size);
->
-> -static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
-> +static int __init tpm2_calc_event_log_size(void *data, int count, void *size_info)
->  {
->         struct tcg_pcr_event2_head *header;
->         int event_size, size = 0;
-> --
-> 2.26.0
->
+These two could/should be sent separately from this RFC series and
+queued for v5.8.
+
+Kevin
