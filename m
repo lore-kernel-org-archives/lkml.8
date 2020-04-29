@@ -2,94 +2,87 @@ Return-Path: <SRS0=ObIu=6N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09226C8300A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB6FC83000
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB69E2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588179832;
-	bh=7jC9IDuFARUTSjXTY+0/VvRprFL9zCdJIskFeQ3UjIc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=cga12T0bkEKBC6zEYSCLcurZeWzbd+gaZME2hG9Mk3uvCQfVBXNidKzx2N3KohPFN
-	 Lo/SKu1A2dHp8ayPs19gDNsSGH1UhDM/cSh1682Etpu9/MrSK40f2Kccz7DAfjrFbh
-	 rQ5ZlgzT8gkCLbBRpYgbFy8dsbbxjzWStIJGmazg=
+	by mail.kernel.org (Postfix) with ESMTP id 591972083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Apr 2020 17:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgD2RDw (ORCPT
+        id S1726853AbgD2RHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 13:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 13:07:35 -0400
+Received: from mga05.intel.com ([192.55.52.43]:60134 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgD2RDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 13:03:47 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6387920B80;
-        Wed, 29 Apr 2020 17:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588179826;
-        bh=7jC9IDuFARUTSjXTY+0/VvRprFL9zCdJIskFeQ3UjIc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Xt40PtfYySz0xeIL+8IivMPM0lRD3l7gpSEYrvsExi31y37cjrYA4+1YQDXT+l2YA
-         tC4cTzIHqVc3UWA8EyOlUUIRGwkLmq7qTk3CZUvmKayYQMG+rumNEdZ4Hy9sqQP2Ph
-         wY20WMpsdwnL8CZdqmlMtd3GjEGTumGkgSU+ZUj0=
-Date:   Wed, 29 Apr 2020 18:03:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
-References: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
-Subject: Re: [PATCH v4] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
-Message-Id: <158817982434.15847.3216748804713168341.b4-ty@kernel.org>
+        id S1726423AbgD2RHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 13:07:35 -0400
+IronPort-SDR: kMgx6c0YEpzFsZm5ZzhOFkdWWM9cE0Uizaj60paNVtRbGV4w5+8rys/zHLj5IB7D1IImb6CA8m
+ RidxYJGi6ITg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 10:07:33 -0700
+IronPort-SDR: 4XpjKDssQOU52jRwGmVBekrEIif3t0LGERmfHkrJ8yTGZLP/jtaCmkj8m1D16mqwWJvAldr8j0
+ AIwAx81rxcqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
+   d="scan'208";a="276237089"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 29 Apr 2020 10:07:33 -0700
+Date:   Wed, 29 Apr 2020 10:07:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Subject: Re: [PATCH 12/13] KVM: x86: Replace late check_nested_events() hack
+ with more precise fix
+Message-ID: <20200429170733.GG15992@linux.intel.com>
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+ <20200423022550.15113-13-sean.j.christopherson@intel.com>
+ <CALMp9eTiGdYPpejAOLNz7zzqP1wPXb_zSL02F27VMHeHGzANJg@mail.gmail.com>
+ <20200428222010.GN12735@linux.intel.com>
+ <6b35ec9b-9565-ea6c-3de5-0957a9f76257@redhat.com>
+ <20200429164547.GF15992@linux.intel.com>
+ <286738de-c268-f0b6-f589-6d9d9ad3dc4a@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <286738de-c268-f0b6-f589-6d9d9ad3dc4a@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01 Apr 2020 09:00:04 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Wed, Apr 29, 2020 at 06:58:45PM +0200, Paolo Bonzini wrote:
+> On 29/04/20 18:45, Sean Christopherson wrote:
+> > 
+> > Can you just drop 9/13, "Prioritize SMI over nested IRQ/NMI" from kvm/queue?
+> > It's probably best to deal with this in a new series rather than trying to
+> > squeeze it in.
 > 
-> This patch switches from .txt base to .yaml base Document.
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> [...]
+> With AMD we just have IRQ/NMI/SMI, and it's important to handle SMI in
 
-Applied to
+Ah, forgot about that angle.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+> check_nested_events because you can turn SMIs into vmexit without stuff
+> such as dual-monitor treatment.  On the other hand there is no MTF and
+> we're not handling exceptions yet.  So, since SMIs should be pretty rare
+> anyway, I'd rather just add a comment detailing the correct order and
+> why we're not following it.  The minimal fix would be to move SMI above
+> the preemption timer, right?
 
-Thanks!
+Yep, that works for now.
 
-[1/1] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
-      commit: 79149fb835d762493db6b8b545527069d592d51b
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+I'd still like to do a full fix for SMI and INIT.  Correctness aside, I
+think/hope the changes I have in mind will make it easier to connect the
+dots betwen KVM's event priority and the SDM's event priority.  But that
+can definitely wait for 5.9.
