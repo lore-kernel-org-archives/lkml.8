@@ -2,121 +2,247 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33CDC83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D38C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CF520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7661020838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HoJiajny"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xjByJDfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgD3Ihj (ORCPT
+        id S1726626AbgD3IkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:37:39 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:33997 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726127AbgD3Ihi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:37:38 -0400
-X-UUID: ad5f9674fb3c46edb7722b64b2b2972a-20200430
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6fuLsSr7ht5XTQtQNi2tUVonpMMOQGnUTyqQfCtGbyc=;
-        b=HoJiajnysPjLiHqP3nXrg4uXQYs/P3Y2XWVD/MPYwOyG6sIWnCM3uFsHLnY6FDnFf6Gm1YOB15ZVrhTgJkhtvaRbN/v4bH0ndFD5yw4TAkSQjp8mBORqiovtlvrl0yYejJRNz0jQC2WIly/ym8DqY/2cjDQoA6vo5/0hmtAj+No=;
-X-UUID: ad5f9674fb3c46edb7722b64b2b2972a-20200430
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 675497186; Thu, 30 Apr 2020 16:37:35 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 30 Apr 2020 16:37:33 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 30 Apr 2020 16:37:34 +0800
-Message-ID: <1588235853.3197.6.camel@mtkswgap22>
-Subject: RE: [PATCH v2 3/5] scsi: ufs: add LU Dedicated buffer mode support
- for WriteBooster
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Date:   Thu, 30 Apr 2020 16:37:33 +0800
-In-Reply-To: <BYAPR04MB462991CBE166B51BFAF2E6B3FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
-References: <20200429135610.23750-1-stanley.chu@mediatek.com>
-         <20200429135610.23750-4-stanley.chu@mediatek.com>
-         <BYAPR04MB462991CBE166B51BFAF2E6B3FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 30 Apr 2020 04:40:08 -0400
+Received: from mail-dm6nam12on2083.outbound.protection.outlook.com ([40.107.243.83]:6127
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726127AbgD3IkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:40:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eFNThh4XP+o5Koz5sEKYVzcNIqEOVKfDMvyVFG3ymCVmepOP+OC3hO2wfeJHqboGgu5L7FNeo3ERWE/CU1sAwg+oAl7SwzaqTCRX8rvgSOeQx/vru2cHvvgoWk+Frd8T2+IbB7OfM5KooOAc8vrs/kDIzrO6tznSWo43DfEBqsteMtH4+sJ/YlgOy885un9bXWZYU8FziAoosWHOS78RSmPJmXwil+iwpQ/JI4BTy0br6zKnj0ZIycf367VCeqZUm0QPH0sY9M4jtwwX3FuA+w4GptrCuhh9/ZAYszwMxj2vDDNgtYqnMVtFo7RFAzb+mbouP4k4HqrEsTJmiVONBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8JSvXoDvfk/PKQtqIWV3iyCle/egNbUegtRIAqJZ6gw=;
+ b=CSg4PrtwEYDkI9EE1k661IRRvtajah79AP9pOBrwBfmq0VV8fzl0WShGD9uh+z4x1gPeuhdEImPHIeZWMr6D5T7KjG8ReZQeRGre4F0eprFVL1ZnWsyH7aWvXiFt1VXTCM9sqx0oT/LiuXccqqakPjw0MYaF0ykiIzs9x16R0laAUN0Coldqx3TSN+NhxyBgQtb4hFjuTqSNyUUl44Evsc+xiRpAiAWTf2TEiSlS4Er7P46r6zwdj44FyTrhcO0x5CAKh5yoXtz3JxVH9Qn5WynbcdwqwOECTPmSW+yXi3jm9O9P7Fud1iYMMaZ0rE3E6/4dLJjszFgk9fo5ktnCSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8JSvXoDvfk/PKQtqIWV3iyCle/egNbUegtRIAqJZ6gw=;
+ b=xjByJDfZpTXRjREmRLcd0Gl07gBj5F/bCDputa5jZZPiWliwYl6LFB5wSnHyCd163VdwR97S4J1YrP3/od+87mbptJ5eY99pt/JRMftdkGzo+3UImtASttAuCoeOCbAPENe6B+Mh4MlvdE03mwdTnqwMlqMQSmFthzlIpSqhCCM=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1194.namprd12.prod.outlook.com (2603:10b6:3:6e::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.22; Thu, 30 Apr 2020 08:40:01 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
+ 08:40:01 +0000
+From:   Ashish Kalra <Ashish.Kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com, brijesh.singh@amd.com
+Subject: [PATCH v7 00/18] Add AMD SEV guest live migration support
+Date:   Thu, 30 Apr 2020 08:39:50 +0000
+Message-Id: <cover.1588234824.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR16CA0037.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::14) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 830AF5C7FA77C69071E5C6943126B4BF8D7E7B2D8CE0B39DC1FC316DFF1272C52000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN6PR16CA0037.namprd16.prod.outlook.com (2603:10b6:805:ca::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 08:40:00 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5a33a662-3fe4-4840-a8e7-08d7ece21266
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1194:|DM5PR12MB1194:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1194F067C704E473CF68D02C8EAA0@DM5PR12MB1194.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
+X-Forefront-PRVS: 0389EDA07F
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(4326008)(6486002)(6916009)(66476007)(66946007)(52116002)(186003)(36756003)(7696005)(6666004)(316002)(5660300002)(26005)(86362001)(2906002)(8676002)(478600001)(66556008)(8936002)(956004)(2616005)(7416002)(966005)(16526019)(136400200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Rd2znMkmZAzUAjAwO8CC/g9xIJQSuGuvSx6WyOzsQRM3ijF4XLZnsOHR/p4NX/BTDsJvXb225ZKlcQvHkc0geuIOe9Q6VYSohFOJ/SZzPI3Rdx00xSqFjkw7w8QuKSWCdDsevz3hLuS84lXwlU1FN1a4GoJSJ0DZsCmvI9RlIyw1Jix9mOKB4+tNvqcgfUW96GwjIBqahvJOu4ldfPrVbHwoTxCAmZ7xjCefW0kJXy/0bN9LPOJVlFx/hXi1f6D01kSnrIXT8RYEVg30GXjCiX/IgecpLZobWePb/pnyyt1+LrY2/QtC6TI8xhrZwbSZ30Jj591oh4c01BH43xYmLRnHerzSvut35fM300g9IfbO/kUjkwZxHp/O5oksLhPXhTPk+buY4BnNRpeDQxIktCA+tfptTFi8QGSuwDgKbHh9MiKSR7icW6i1+T00zzKmoXsboPgd/SjxENM/eBiIYvLJQAmuUZz4CRlTfgEZk/DWFZRMJu742ADJY/bLON2PoT88siJ+QALKD/frsL4De+tzKdKJadhwUoIO42jlZUgdnRZt4IsscuuXI8s7LJXuIXXc9TrSfUykzPS+xoxz8w==
+X-MS-Exchange-AntiSpam-MessageData: wrKrbeRYi/Vv1G+W+D3gB2FfCz9xYbrjB74lu+/XWC0FTkQD8sB+dBef4XxIB1xdXmgowlyCw3hTJV2TAxLLbhV9LImFq5I7m+c1v2+B3wztC1rzYTvsBZxLns89XMdiv54ZErAyXW28a2Y4xJZ4Mx5QzDtIAw5X0CPgJ0AYOwhlgr4VdYTwCx7OfgtARUi+l2tp1GVR9pWdqvHvJVNTBtyx7jT4vD4HCH7EM+lVWCmVOaQRnn5W+T96bbe9mzMz2ixK1I5ook11CSpD4gm0HouDgiAQP1km4crOmQ3+GcG/Wjt1BbYhkFXflBghKylYuqz66noew6gnuU+w8NGJDEswC2ebLQHBgrYVfhbEKPBTVFw4s++N7RQs+bUirT/VZZWTfs8JoxDKw7fPaqO47m2ZPrSNWwrUTcjDCX7eXnX1ov7P2YetEA0X3w+MqMZRlcnl5c0zjQmS3Ko4kgWjX18k5TA2MO20ALqtq93p11RKwhL8HJFPoi0TuRUt+nWQ/2ETRP63GBzRKczxoMNQYhwVIP6M1HZsctZdtsLBJJudHhTXj1oDufA8l2jV6+8safDuSNdxYetkFTWiL2/msrfh9MglZIp+z1KeZjxmaPiluF1fraOvISyl9GiIn8QU+3DRfj1BEThPjynG+u6cQXmQCSL2I6w09lLWh6wzv5/TVA60wAcmNSMb2w6A9yH4SF1XAcXVpWQmKuhgNXgCDUWAIhxdycnwS6H/rJDsQzAS0ooLVos1ctk4mlaMyn9SaKQ7zySmwVuoqHYvPQH8g5dqvtHiCxFGDBZG70QtyJI=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a33a662-3fe4-4840-a8e7-08d7ece21266
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:40:01.3685
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iXV29ma58TsRYDZapts0Rr6iWsycB2UdtGufwhxgJfZX8+yScL+FdQnfWoZOwthn2AmhgRZOad7C0RdvmyQ6Lg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KT24gVGh1LCAyMDIwLTA0LTMwIGF0IDA4OjMwICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gPiANCj4gPiAgc3RhdGljIHZvaWQgdWZzaGNkX3diX3Byb2JlKHN0cnVjdCB1
-ZnNfaGJhICpoYmEsIHU4ICpkZXNjX2J1ZikNCj4gPiAgew0KPiA+ICsgICAgICAgaW50IHJldDsN
-Cj4gPiArICAgICAgIHU4IGx1bjsNCj4gPiArICAgICAgIHUzMiBkX2x1X3diX2J1Zl9hbGxvYyA9
-IDA7DQo+ID4gKw0KPiA+ICAgICAgICAgaWYgKGhiYS0+ZGVzY19zaXplLmRldl9kZXNjIDw9DQo+
-ID4gREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VGU19GRUFUVVJFX1NVUCkNCj4gPiAgICAgICAgICAg
-ICAgICAgZ290byB3Yl9kaXNhYmxlZDsNCj4gPiANCj4gPiBAQCAtNjgyMSwxNSArNjg0MiwzNSBA
-QCBzdGF0aWMgdm9pZCB1ZnNoY2Rfd2JfcHJvYmUoc3RydWN0IHVmc19oYmENCj4gPiAqaGJhLCB1
-OCAqZGVzY19idWYpDQo+ID4gICAgICAgICBoYmEtPmRldl9pbmZvLmJfd2JfYnVmZmVyX3R5cGUg
-PQ0KPiA+ICAgICAgICAgICAgICAgICBkZXNjX2J1ZltERVZJQ0VfREVTQ19QQVJBTV9XQl9UWVBF
-XTsNCj4gPiANCj4gPiAtICAgICAgIGhiYS0+ZGV2X2luZm8uZF93Yl9hbGxvY191bml0cyA9DQo+
-ID4gLSAgICAgICAgICAgICAgIGdldF91bmFsaWduZWRfYmUzMihkZXNjX2J1ZiArDQo+ID4gLSAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBERVZJQ0VfREVTQ19QQVJBTV9XQl9TSEFS
-RURfQUxMT0NfVU5JVFMpOw0KPiA+ICAgICAgICAgaGJhLT5kZXZfaW5mby5iX3ByZXNydl91c3Bj
-X2VuID0NCj4gPiAgICAgICAgICAgICAgICAgZGVzY19idWZbREVWSUNFX0RFU0NfUEFSQU1fV0Jf
-UFJFU1JWX1VTUlNQQ19FTl07DQo+ID4gDQo+ID4gLSAgICAgICBpZiAoIShoYmEtPmRldl9pbmZv
-LmJfd2JfYnVmZmVyX3R5cGUgJiYNCj4gPiAtICAgICAgICAgICAgIGhiYS0+ZGV2X2luZm8uZF93
-Yl9hbGxvY191bml0cykpDQo+ID4gLSAgICAgICAgICAgICAgIGdvdG8gd2JfZGlzYWJsZWQ7DQo+
-ID4gKyAgICAgICBpZiAoaGJhLT5kZXZfaW5mby5iX3diX2J1ZmZlcl90eXBlID09IFdCX0JVRl9N
-T0RFX1NIQVJFRCkgew0KPiA+ICsgICAgICAgICAgICAgICBoYmEtPmRldl9pbmZvLmRfd2JfYWxs
-b2NfdW5pdHMgPQ0KPiA+ICsgICAgICAgICAgICAgICBnZXRfdW5hbGlnbmVkX2JlMzIoZGVzY19i
-dWYgKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgREVWSUNFX0RFU0Nf
-UEFSQU1fV0JfU0hBUkVEX0FMTE9DX1VOSVRTKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKCFo
-YmEtPmRldl9pbmZvLmRfd2JfYWxsb2NfdW5pdHMpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgZ290byB3Yl9kaXNhYmxlZDsNCj4gPiArICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAg
-ICAgICAgIGZvciAobHVuID0gMDsgbHVuIDwgaGJhLT5kZXZfaW5mby5tYXhfbHVfc3VwcG9ydGVk
-OyBsdW4rKykgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IHVmc2hjZF9yZWFk
-X3VuaXRfZGVzY19wYXJhbShoYmEsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGx1biwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgVU5JVF9ERVNDX1BBUkFNX1dCX0JVRl9BTExPQ19VTklUUywNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgKHU4ICopJmRfbHVfd2JfYnVmX2FsbG9jLA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplb2YoZF9sdV93Yl9i
-dWZfYWxsb2MpKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpZiAocmV0KQ0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byB3Yl9kaXNhYmxlZDsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBpZiAoZF9sdV93Yl9idWZfYWxsb2MpIHsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGhiYS0+ZGV2X2luZm8ud2JfZGVkaWNhdGVkX2x1ID0g
-bHVuOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+IFdoeSBh
-cmUgeW91IGFsbG93aW5nIG9ubHkgYSBzaW5nbGUgV0IgbHVuPw0KPiBZb3Ugc2hvdWxkIGFsbG93
-IHRob3NlIGJ1ZmZlcnMgZm9yIGx1bjAuLmx1bjcNCg0KSW4gVUZTIDMuMSBzcGVjaWZpY2F0aW9u
-LCB0aGUgdmFsaWQgdmFsdWUgb2YgYkRldmljZU1heFdyaXRlQm9vc3RlckxVcw0KaXMgMS4gVGhl
-cmVmb3JlIG9ubHkgb25lIExVIGNhbiBoYXZlIFdyaXRlQm9vc3RlciBidWZmZXIuDQoNClRoYW5r
-cywNClN0YW5sZXkNCg0KDQo=
+From: Ashish Kalra <ashish.kalra@amd.com>
+
+The series add support for AMD SEV guest live migration commands. To protect the
+confidentiality of an SEV protected guest memory while in transit we need to
+use the SEV commands defined in SEV API spec [1].
+
+SEV guest VMs have the concept of private and shared memory. Private memory
+is encrypted with the guest-specific key, while shared memory may be encrypted
+with hypervisor key. The commands provided by the SEV FW are meant to be used
+for the private memory only. The patch series introduces a new hypercall.
+The guest OS can use this hypercall to notify the page encryption status.
+If the page is encrypted with guest specific-key then we use SEV command during
+the migration. If page is not encrypted then fallback to default.
+
+The patch adds new ioctls KVM_{SET,GET}_PAGE_ENC_BITMAP. The ioctl can be used
+by the qemu to get the page encrypted bitmap. Qemu can consult this bitmap
+during the migration to know whether the page is encrypted.
+
+[1] https://developer.amd.com/wp-content/resources/55766.PDF
+
+Changes since v6:
+- Rebasing to mainline and refactoring to the new split SVM
+  infrastructre.
+- Move to static allocation of the unified Page Encryption bitmap
+  instead of the dynamic resizing of the bitmap, the static allocation
+  is done implicitly by extending kvm_arch_commit_memory_region() callack
+  to add svm specific x86_ops which can read the userspace provided memory
+  region/memslots and calculate the amount of guest RAM managed by the KVM
+  and grow the bitmap.
+- Fixed KVM_SET_PAGE_ENC_BITMAP ioctl to set the whole bitmap instead
+  of simply clearing specific bits.
+- Removed KVM_PAGE_ENC_BITMAP_RESET ioctl, which is now performed using
+  KVM_SET_PAGE_ENC_BITMAP.
+- Extended guest support for enabling Live Migration feature by adding a
+  check for UEFI environment variable indicating OVMF support for Live
+  Migration feature and additionally checking for KVM capability for the
+  same feature. If not booted under EFI, then we simply check for KVM
+  capability.
+- Add hypervisor specific hypercall for SEV live migration by adding
+  a new paravirt callback as part of x86_hyper_runtime.
+  (x86 hypervisor specific runtime callbacks)
+- Moving MSR handling for MSR_KVM_SEV_LIVE_MIG_EN into svm/sev code 
+  and adding check for SEV live migration enabled by guest in the 
+  KVM_GET_PAGE_ENC_BITMAP ioctl.
+- Instead of the complete __bss_decrypted section, only specific variables
+  such as hv_clock_boot and wall_clock are marked as decrypted in the
+  page encryption bitmap
+
+Changes since v5:
+- Fix build errors as
+  Reported-by: kbuild test robot <lkp@intel.com>
+
+Changes since v4:
+- Host support has been added to extend KVM capabilities/feature bits to 
+  include a new KVM_FEATURE_SEV_LIVE_MIGRATION, which the guest can
+  query for host-side support for SEV live migration and a new custom MSR
+  MSR_KVM_SEV_LIVE_MIG_EN is added for guest to enable the SEV live
+  migration feature.
+- Ensure that _bss_decrypted section is marked as decrypted in the
+  page encryption bitmap.
+- Fixing KVM_GET_PAGE_ENC_BITMAP ioctl to return the correct bitmap
+  as per the number of pages being requested by the user. Ensure that
+  we only copy bmap->num_pages bytes in the userspace buffer, if
+  bmap->num_pages is not byte aligned we read the trailing bits
+  from the userspace and copy those bits as is. This fixes guest
+  page(s) corruption issues observed after migration completion.
+- Add kexec support for SEV Live Migration to reset the host's
+  page encryption bitmap related to kernel specific page encryption
+  status settings before we load a new kernel by kexec. We cannot
+  reset the complete page encryption bitmap here as we need to
+  retain the UEFI/OVMF firmware specific settings.
+
+Changes since v3:
+- Rebasing to mainline and testing.
+- Adding a new KVM_PAGE_ENC_BITMAP_RESET ioctl, which resets the 
+  page encryption bitmap on a guest reboot event.
+- Adding a more reliable sanity check for GPA range being passed to
+  the hypercall to ensure that guest MMIO ranges are also marked
+  in the page encryption bitmap.
+
+Changes since v2:
+ - reset the page encryption bitmap on vcpu reboot
+
+Changes since v1:
+ - Add support to share the page encryption between the source and target
+   machine.
+ - Fix review feedbacks from Tom Lendacky.
+ - Add check to limit the session blob length.
+ - Update KVM_GET_PAGE_ENC_BITMAP icotl to use the base_gfn instead of
+   the memory slot when querying the bitmap.
+
+
+Ashish Kalra (7):
+  x86/paravirt: Add hypervisor specific hypercall for SEV live
+    migration.
+  KVM: SVM: Add support for static allocation of unified Page Encryption
+    Bitmap.
+  KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION feature &
+    Custom MSR.
+  EFI: Introduce the new AMD Memory Encryption GUID.
+  KVM: x86: Add guest support for detecting and enabling SEV Live
+    Migration feature.
+  KVM: x86: Mark _bss_decrypted section variables as decrypted in page
+    encryption bitmap.
+  KVM: x86: Add kexec support for SEV Live Migration.
+
+Brijesh Singh (11):
+  KVM: SVM: Add KVM_SEV SEND_START command
+  KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+  KVM: SVM: Add KVM_SEV_SEND_FINISH command
+  KVM: SVM: Add support for KVM_SEV_RECEIVE_START command
+  KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
+  KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+  KVM: x86: Add AMD SEV specific Hypercall3
+  KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+  KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+  mm: x86: Invoke hypercall when page encryption status is changed
+  KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
+
+ .../virt/kvm/amd-memory-encryption.rst        | 120 +++
+ Documentation/virt/kvm/api.rst                |  71 ++
+ Documentation/virt/kvm/cpuid.rst              |   5 +
+ Documentation/virt/kvm/hypercalls.rst         |  15 +
+ Documentation/virt/kvm/msr.rst                |  10 +
+ arch/x86/include/asm/kvm_host.h               |   7 +
+ arch/x86/include/asm/kvm_para.h               |  12 +
+ arch/x86/include/asm/mem_encrypt.h            |  11 +
+ arch/x86/include/asm/paravirt.h               |  10 +
+ arch/x86/include/asm/paravirt_types.h         |   2 +
+ arch/x86/include/asm/x86_init.h               |  10 +-
+ arch/x86/include/uapi/asm/kvm_para.h          |   5 +
+ arch/x86/kernel/kvm.c                         | 102 +++
+ arch/x86/kernel/kvmclock.c                    |  12 +
+ arch/x86/kernel/paravirt.c                    |   1 +
+ arch/x86/kvm/svm/sev.c                        | 723 +++++++++++++++++-
+ arch/x86/kvm/svm/svm.c                        |  21 +
+ arch/x86/kvm/svm/svm.h                        |   9 +
+ arch/x86/kvm/vmx/vmx.c                        |   1 +
+ arch/x86/kvm/x86.c                            |  35 +
+ arch/x86/mm/mem_encrypt.c                     |  69 +-
+ arch/x86/mm/pat/set_memory.c                  |   7 +
+ include/linux/efi.h                           |   1 +
+ include/linux/psp-sev.h                       |   8 +-
+ include/uapi/linux/kvm.h                      |  52 ++
+ include/uapi/linux/kvm_para.h                 |   1 +
+ 26 files changed, 1310 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
 
