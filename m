@@ -2,72 +2,102 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4CAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874E0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB552063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFB7206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255866;
+	bh=Nh7gMGFbFDqRDU6KRwGLRELYcn+AP104P30Mc9SedG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rZs1AwHD6VlbGIVpbyiGWhHZB3XWo06Qhw0VD8+BBHeKHuA7pqSuVgebDG88XmIhb
+	 iaNHLX/4PA93IMLDczjJE/L2Pkg+OKQ25cNQsUHnXZxy22CIvc9Wby83qFHvVmASuO
+	 /iiSYTAWuFacg6mFT/mKrCxK6qjHVe1pHNPqZ9DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgD3OKx (ORCPT
+        id S1729258AbgD3OLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:10:53 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60848 "EHLO fornost.hmeau.com"
+        Thu, 30 Apr 2020 10:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbgD3OKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:10:49 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jU9s8-0000qz-47; Fri, 01 May 2020 00:09:05 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 01 May 2020 00:10:11 +1000
-Date:   Fri, 1 May 2020 00:10:11 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
-Message-ID: <20200430141011.GA13992@gondor.apana.org.au>
-References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com>
- <1587987364-4566-2-git-send-email-hadar.gat@arm.com>
- <20200427150658.GA26305@gondor.apana.org.au>
- <DB7PR08MB3003E1459755B853B41490D6E9AC0@DB7PR08MB3003.eurprd08.prod.outlook.com>
- <20200428123007.GA3969@gondor.apana.org.au>
- <AM6PR08MB2999F52B99066C321837144DE9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
- <20200430074941.GA12529@gondor.apana.org.au>
- <AM6PR08MB29990D46BD6C974ACE1914F0E9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
+        id S1728083AbgD3Nva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B9C720873;
+        Thu, 30 Apr 2020 13:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254689;
+        bh=Nh7gMGFbFDqRDU6KRwGLRELYcn+AP104P30Mc9SedG4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ua0SLt/tnmOW2etG8W0WtrGyWNx+WnEccOpK+FiBClgfuIQw3CScxXeW/T95nC8i7
+         EmCyI3JDwHQDpmlXe0dE/kyYTTZoJQz8feoo1mqBkAhSmXRBrR7MAIkRLcSPa+HEkR
+         nA58g7kNBkJo0oxOBsc9JnbCXms3/CjtDp2RVHbs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 40/79] wimax/i2400m: Fix potential urb refcnt leak
+Date:   Thu, 30 Apr 2020 09:50:04 -0400
+Message-Id: <20200430135043.19851-40-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
+References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR08MB29990D46BD6C974ACE1914F0E9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 08:26:00AM +0000, Hadar Gat wrote:
->
-> I don't understand if anything need to be fixed before this patch can be applied.
-> The patch adds dependency on OF, which was missing and is required for the cctrng driver.
-> (Indeed cctrng compilation passed also without CONFIG_OF because of the empty implementation of of_property_read*() functions that simply returns -ENOSYS.)
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-Nevermind, I already have the CONFIG_OF flag on in my build test
-so it shouldn't be a problem.
+[ Upstream commit 7717cbec172c3554d470023b4020d5781961187e ]
 
-Cheers,
+i2400mu_bus_bm_wait_for_ack() invokes usb_get_urb(), which increases the
+refcount of the "notif_urb".
+
+When i2400mu_bus_bm_wait_for_ack() returns, local variable "notif_urb"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
+
+The issue happens in all paths of i2400mu_bus_bm_wait_for_ack(), which
+forget to decrease the refcnt increased by usb_get_urb(), causing a
+refcnt leak.
+
+Fix this issue by calling usb_put_urb() before the
+i2400mu_bus_bm_wait_for_ack() returns.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wimax/i2400m/usb-fw.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/wimax/i2400m/usb-fw.c b/drivers/net/wimax/i2400m/usb-fw.c
+index 529ebca1e9e13..1f7709d24f352 100644
+--- a/drivers/net/wimax/i2400m/usb-fw.c
++++ b/drivers/net/wimax/i2400m/usb-fw.c
+@@ -354,6 +354,7 @@ out:
+ 		usb_autopm_put_interface(i2400mu->usb_iface);
+ 	d_fnend(8, dev, "(i2400m %p ack %p size %zu) = %ld\n",
+ 		i2400m, ack, ack_size, (long) result);
++	usb_put_urb(&notif_urb);
+ 	return result;
+ 
+ error_exceeded:
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.20.1
+
