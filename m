@@ -2,498 +2,320 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBCAC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13CFC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BDF20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67262137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:16:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G97l20gH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ah2g2m1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgD3XDF (ORCPT
+        id S1727838AbgD3XQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 19:03:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24370 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727074AbgD3XDE (ORCPT
+        Thu, 30 Apr 2020 19:16:14 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1955 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgD3XQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 19:03:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588287781;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KNGqGSLo9W3HxJTip6pskQH3gV/RNz99fZv+UYVpfmI=;
-        b=G97l20gHIUSnXodpuakfA9hwNHSq7/CMAzobdQkiutc86s1k2QfMtGbSv2apyAk8ZkiiPA
-        0UsOk5kWr4WEJGUkQx17nOz0ylGOdgCF+5IXrNQyzXYnepXfJipJJ0zxBjFyvExYBDl5CE
-        b1ZVijMs1VunCKOrzFFvDtmYel/F9WI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-GpjACr3wN6ewcLHUzq41Sw-1; Thu, 30 Apr 2020 19:02:57 -0400
-X-MC-Unique: GpjACr3wN6ewcLHUzq41Sw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49E6C800D24;
-        Thu, 30 Apr 2020 23:02:56 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12CF339E;
-        Thu, 30 Apr 2020 23:02:54 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 18:02:52 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-Message-ID: <20200430230252.2wlfroq74syupkkd@treble>
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <20200428161044.caamvx67t2z4t6vd@treble>
- <20200429185536.5xshpcwtn4be4llh@treble>
- <CAK8P3a0M9qh2-_5VKx89ZsTfy5S1zhfWwnO7rN4xYhDwBBvPjw@mail.gmail.com>
- <20200429231115.z2mo5bsmrmj4oark@treble>
- <20200429232835.yw6ajtjyleob3lmz@treble>
- <CAK8P3a07P49-AdHForem=V0_cfiTFSLLhHCEQk6-UDBOg3-Q_g@mail.gmail.com>
- <20200430143350.qezebqmx2xwdxqxq@treble>
- <20200430194630.jkwysx6eftkaf6bu@treble>
- <20200430210805.67h5la6m7rtygeq5@treble>
+        Thu, 30 Apr 2020 19:16:13 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eab5c300002>; Thu, 30 Apr 2020 16:16:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 16:16:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 30 Apr 2020 16:16:13 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 23:16:13 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 23:16:11 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+ <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+ <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+ <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
+ <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
+ <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
+ <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
+ <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
+ <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
+ <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+ <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+Message-ID: <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
+Date:   Thu, 30 Apr 2020 16:14:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200430210805.67h5la6m7rtygeq5@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588288560; bh=Lf1Qbcw4txylM3XQa52HfKdGcybPELunpJDQcMgrvno=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ah2g2m1SY7YJwjZ4/kHHpPscqA0pm98mQ0zkicWrS5JMtclNlmg+1bDzk1oAGVPyt
+         DHLUz6InP6Xw0IkY3MS3ON3lcbE4svLkdSeh9ufexIvC2gIuulkSYf1v/RwEPv9f20
+         8Vw9JPtlk0q3LLopvEF3XSiuvdKyFgAhGpe0y0NYSU9b70j8D1Eg6MiPLxC2K6LdB8
+         DBkI9rvrbjyLZ7x81+u3vPfQy3cW8+OYhmpYfp/XQuwe3JRGXGHgF7SCzqI1D4k0Co
+         87ISnw7pFYyjv3+1t9idqxGYUrnvO1iL7EkynokSTvwHAsRUPROJxCbHdb2fCEKSmT
+         GZYGvYN8GPfWQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 04:08:05PM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 30, 2020 at 02:46:30PM -0500, Josh Poimboeuf wrote:
-> > > Yup, makes sense.  I think I've been getting confused by the syscall
-> > > wrappers.
-> > > 
-> > > > How hard would it be to change objtool instead of changing the sources?
-> 
-> So I just realized this is an objtool bug after all.  Or at least a new
-> GCC quirk.  The quick fix is:
-> 
->   sed -si 's/cold./cold/' tools/objtool/check.c
-> 
-> However... after studying how all this works, I'm actually thinking that
-> it makes sense to move the SYS_NI usage into kernel/sys_ni.c, like you
-> originally suggested.  That seems cleaner to me: all the syscall
-> aliasing code together in one file.  SYS_NI is similar to COND_SYSCALL,
-> except it has a custom ENOSYS handler.  Having "NI" in the name is
-> another clue it belongs in sys_ni.c.
-> 
-> Alternatively, I could do the x86-specific SYSCALL_ALIAS, which is easy
-> enough, but I really prefer the sys_ni.c approach.
-> 
-> Either of those would allow the removal of some hacky objtool code,
-> which only ever existed in the first place because of posix-stubs.c and
-> that inline asm SYSCALL_ALIAS macro.
-> 
-> One of objtool's goals is to standardize ELF data, and it seems
-> reasonable to require the use of C-based aliases.  And I think it would
-> be a nice cleanup anyway.
 
-It's a really nice diffstat.  The only "downside" I can tell is that now
-there's no printk when calling one of the undefined timer syscalls with
-CONFIG_POSIX_TIMERS=n.
+On 4/30/20 3:19 PM, Sowjanya Komatineni wrote:
+>
+> On 4/30/20 3:16 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/30/20 2:53 PM, Sowjanya Komatineni wrote:
+>>>
+>>> On 4/30/20 2:37 PM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 4/30/20 2:26 PM, Sowjanya Komatineni wrote:
+>>>>>
+>>>>> On 4/30/20 2:17 PM, Dmitry Osipenko wrote:
+>>>>>> 30.04.2020 23:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> On 4/30/20 12:53 PM, Sowjanya Komatineni wrote:
+>>>>>>>> On 4/30/20 12:46 PM, Sowjanya Komatineni wrote:
+>>>>>>>>> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
+>>>>>>>>>> 30.04.2020 22:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+>>>>>>>>>>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+>>>>>>>>>>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=
+=B5=D1=82:
+>>>>>>>>>>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=
+=D0=B5=D1=82:
+>>>>>>>>>>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>>>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D d=
+ata;
+>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
+>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_free=
+ze();
+>>>>>>>>>>>>>>>>>> I guess it won't be great to freeze in the middle of=20
+>>>>>>>>>>>>>>>>>> a capture
+>>>>>>>>>>>>>>>>>> process, so:
+>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
+f (list_empty(&chan->done))
+>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
+>>>>>>>>>>>>>>>>> And here should be some locking protection in order=20
+>>>>>>>>>>>>>>>>> not race
+>>>>>>>>>>>>>>>>> with
+>>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>>> chan_capture_kthread_start because kthread_finish=20
+>>>>>>>>>>>>>>>>> could freeze
+>>>>>>>>>>>>>>>>> before
+>>>>>>>>>>>>>>>>> kthread_start.
+>>>>>>>>>>>>>>>> Or maybe both start / finish threads should simply be=20
+>>>>>>>>>>>>>>>> allowed to
+>>>>>>>>>>>>>>>> freeze
+>>>>>>>>>>>>>>>> only when both capture and done lists are empty.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> if (list_empty(&chan->capture) &&
+>>>>>>>>>>>>>>>> list_empty(&chan->done))
+>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
+>>>>>>>>>>>>>>> good to freeze when not in middle of the frame capture=20
+>>>>>>>>>>>>>>> but why
+>>>>>>>>>>>>>>> should we not allow freeze in between captures?
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Other drivers do allow freeze in between frame captures.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> I guess we can freeze before dequeue for capture and in=20
+>>>>>>>>>>>>>>> finish
+>>>>>>>>>>>>>>> thread we can freeze after capture done. This also don't=20
+>>>>>>>>>>>>>>> need to
+>>>>>>>>>>>>>>> check for list_empty with freeze to allow between frame=20
+>>>>>>>>>>>>>>> captures.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Also if we add check for both lists empty, freeze is not=20
+>>>>>>>>>>>>>> allowed as
+>>>>>>>>>>>>>> long as streaming is going on and in case of continuous=20
+>>>>>>>>>>>>>> streaming
+>>>>>>>>>>>>>> freeze will never happen.
+>>>>>>>>>>>> To allow freeze b/w frames (but not in middle of a frame),
+>>>>>>>>>>>>
+>>>>>>>>>>>> for capture_start thread, probably we can do unconditional
+>>>>>>>>>>>> try_to_freeze()
+>>>>>>>>>> Is it possible to use wait_event_freezable()?
+>>>>>>>>>>
+>>>>>>>>>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks=
+.txt=20
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Will the wait_event_interruptible() be woken up when system=20
+>>>>>>>>>> freezes?
+>>>>>>>>> Based on wait_event_freezable implementation, looks like it=20
+>>>>>>>>> similar
+>>>>>>>>> to wait_event_interruptible + try_to_free() as it does
+>>>>>>>>> freezable_schedule unlike schedule with wait_event_interruptible.
+>>>>>>>>>
+>>>>>>>>> So using this for capture_start may be ok to allow freeze before
+>>>>>>>>> start of frame. But can't use for capture_finish as this is=20
+>>>>>>>>> same as
+>>>>>>>>> wait_event_interruptible followed by unconditional try_to_freeze.
+>>>>>>>>>
+>>>>>>>>>>>> for capture_finish thread, at end of capture done we can do
+>>>>>>>>>>>> try_to_freeze() only when done list is empty
+>>>>>>>>>> This doesn't prevent situation where the done-list is empty=20
+>>>>>>>>>> and the
+>>>>>>>>>> "finish" thread freezes, in the same time the "start" thread=20
+>>>>>>>>>> issues new
+>>>>>>>>>> capture and then freezes too.
+>>>>>>>>>>
+>>>>>>>>>> 1. "start" thread issues capture
+>>>>>>>>>>
+>>>>>>>>>> 2. "finish" thread wakes and waits for the capture to complete
+>>>>>>>>>>
+>>>>>>>>>> 3. "start" thread begins another capture, waits for FRAME_START
+>>>>>>>>>>
+>>>>>>>>>> 4. system freezing activates
+>>>>>>>>>>
+>>>>>>>>>> 5. "finish" thread completes the capture and freezes because=20
+>>>>>>>>>> done-list
+>>>>>>>>>> is empty
+>>>>>>>>>>
+>>>>>>>>>> 6. "start" thread gets FRAME_START, issues another capture=20
+>>>>>>>>>> and freezes
+>>>>>>>>> This will not happen as we allow double buffering done list=20
+>>>>>>>>> will not
+>>>>>>>>> be empty till stream stop happens
+>>>>>>>>>
+>>>>>>>>> There will always be 1 outstanding frame in done list
+>>>>>>>> Correction, there will always be 1 outstanding buffer except=20
+>>>>>>>> beginning
+>>>>>>>> during beginning of stream.
+>>>>>>>>
+>>>>>>>> Except during beginning frames, done list will not be empty for=20
+>>>>>>>> all
+>>>>>>>> subsequent streaming process
+>>>>>>> Also to be clear, hardware sees next frame start event prior to=20
+>>>>>>> previous
+>>>>>>> frame mw_ack event as mw_ack event happens after frame end. So once
+>>>>>>> initial buffer got queued to done list to finish processes, while
+>>>>>>> waiting for mw_ack next frame start happens and pushes next=20
+>>>>>>> buffer to
+>>>>>>> done list.
+>>>>>> What about this variant:
+>>>>>>
+>>>>>> 1. "start" thread wakes up to start capture
+>>>>>>
+>>>>>> 2. system freezing activates
+>>>>>>
+>>>>>> 3. "finish" thread wakes up and freezes
+>>>>>
+>>>>> finish thread will wake up only when done list is not=20
+>>>>> empty/kthread_stop/wake even from capture start thread.
+>>>>>
+>>>>> Also when I said will allow try_to_free when done list is empty I=20
+>>>>> meant to have this at end of capture_done() in finish thread
+>>>>>
+>>>>>>
+>>>>>> 4. "start" thread issues capture and freezes
+>>>>>>
+>>>>>> And again, I assume that system's freezing should wake
+>>>>>> wait_event_interruptible(), otherwise it won't be possible to freeze
+>>>>>> idling threads at all and freezing should fail (IIUC).
+>>>>>
+>>>>> Based on kernel doc on freezing, looks like when we mark thread as=20
+>>>>> freezable, freeze state happens when we explicitly call=20
+>>>>> try_to_freeze.
+>>>>>
+>>>>> I don't think its other way where freeze causes=20
+>>>>> wait_event_interruptible to wake up.
+>>>
+>>> Based on my understanding when we mark thread as freezable,
+>>>
+>>> with wait_event_freezable() - after wait event, it invokes=20
+>>> try_to_freeze(). So frozen state enters unconditionally with this.
+>>>
+>>> with wait_event_interruptible - we do try_to_freeze when its safe to=20
+>>> enter frozen state.
+>>>
+>>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
+>>>
+>> Sorry correction. When system tries to freeze tasks looks like it=20
+>> will sending signal to thread and wake up happens when signal is sent=20
+>> to thread and freezable thread should invoke try_to_free when its=20
+>> safe to free
+>
+> freeze_task() sends fake signal
+>
+> https://elixir.bootlin.com/linux/v5.7-rc2/source/kernel/freezer.c#L115
+>
+>>
+>>>
+>>>>>
+>>>>>> And in this case synchronization between start/finish threads=20
+>>>>>> should be
+>>>>>> needed in regards to freezing.
+>>>>>
+>>>>> Was thinking to have counter to track outstanding frame w.r.t=20
+>>>>> single shot issue b/w start and finish and allow to freeze only=20
+>>>>> when no outstanding frames in process.
+>>>>>
+>>>>> This will make sure freeze will not happen when any buffers are in=20
+>>>>> progress
+>>>>>
+>>>>>> Note that this could be a wrong assumption, I'm not closely familiar
+>>>>>> with how freezer works.
+>>>>
+>>>> kthread_start can unconditionally allow try_to_freeze before start=20
+>>>> of frame capture
+>>>>
+>>>> We can compute captures inflight w.r.t single shot issued during=20
+>>>> capture start and finished frames by kthread_finish and allow=20
+>>>> kthread_finish to freeze only when captures inflight is 0.
+>>>>
+>>>> This allows freeze to happen b/w frames but not in middle of frame
+> will have caps inflight check in v12 to allow freeze finish thread=20
+> only when no captures are in progress
 
-Thoughts?
 
-diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-index 94e4cde8071a..a28ed880790e 100644
---- a/arch/alpha/kernel/osf_sys.c
-+++ b/arch/alpha/kernel/osf_sys.c
-@@ -1013,8 +1013,6 @@ SYSCALL_DEFINE2(osf_settimeofday, struct timeval32 __user *, tv,
- 	return do_sys_settimeofday64(tv ? &kts : NULL, tz ? &ktz : NULL);
- }
- 
--asmlinkage long sys_ni_posix_timers(void);
--
- SYSCALL_DEFINE2(osf_utimes, const char __user *, filename,
- 		struct timeval32 __user *, tvs)
- {
-diff --git a/arch/arm64/include/asm/syscall_wrapper.h b/arch/arm64/include/asm/syscall_wrapper.h
-index b383b4802a7b..44226f09e398 100644
---- a/arch/arm64/include/asm/syscall_wrapper.h
-+++ b/arch/arm64/include/asm/syscall_wrapper.h
-@@ -43,9 +43,6 @@ struct pt_regs;
- 		return sys_ni_syscall();						\
- 	}
- 
--#define COMPAT_SYS_NI(name) \
--	SYSCALL_ALIAS(__arm64_compat_sys_##name, sys_ni_posix_timers);
--
- #endif /* CONFIG_COMPAT */
- 
- #define __SYSCALL_DEFINEx(x, name, ...)						\
-@@ -78,6 +75,4 @@ struct pt_regs;
- 		return sys_ni_syscall();					\
- 	}
- 
--#define SYS_NI(name) SYSCALL_ALIAS(__arm64_sys_##name, sys_ni_posix_timers);
--
- #endif /* __ASM_SYSCALL_WRAPPER_H */
-diff --git a/arch/s390/include/asm/syscall_wrapper.h b/arch/s390/include/asm/syscall_wrapper.h
-index 3c3d6fe8e2f0..16f52683fa98 100644
---- a/arch/s390/include/asm/syscall_wrapper.h
-+++ b/arch/s390/include/asm/syscall_wrapper.h
-@@ -61,10 +61,6 @@
- 	cond_syscall(__s390x_sys_##name);				\
- 	cond_syscall(__s390_sys_##name)
- 
--#define SYS_NI(name)							\
--	SYSCALL_ALIAS(__s390x_sys_##name, sys_ni_posix_timers);		\
--	SYSCALL_ALIAS(__s390_sys_##name, sys_ni_posix_timers)
--
- #define COMPAT_SYSCALL_DEFINEx(x, name, ...)					\
- 	__diag_push();								\
- 	__diag_ignore(GCC, 8, "-Wattribute-alias",				\
-@@ -86,15 +82,11 @@
- 
- /*
-  * As some compat syscalls may not be implemented, we need to expand
-- * COND_SYSCALL_COMPAT in kernel/sys_ni.c and COMPAT_SYS_NI in
-- * kernel/time/posix-stubs.c to cover this case as well.
-+ * COND_SYSCALL_COMPAT in kernel/sys_ni.c to cover this case as well.
-  */
- #define COND_SYSCALL_COMPAT(name)					\
- 	cond_syscall(__s390_compat_sys_##name)
- 
--#define COMPAT_SYS_NI(name)						\
--	SYSCALL_ALIAS(__s390_compat_sys_##name, sys_ni_posix_timers)
--
- #else /* CONFIG_COMPAT */
- 
- #define __S390_SYS_STUBx(x, fullname, name, ...)
-@@ -108,9 +100,6 @@
- #define COND_SYSCALL(name)						\
- 	cond_syscall(__s390x_sys_##name)
- 
--#define SYS_NI(name)							\
--	SYSCALL_ALIAS(__s390x_sys_##name, sys_ni_posix_timers);
--
- #endif /* CONFIG_COMPAT */
- 
- #define __SYSCALL_DEFINEx(x, name, ...)						\
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index a84333adeef2..655e7832fc29 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -85,9 +85,6 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 		return sys_ni_syscall();				\
- 	}
- 
--#define __SYS_NI(abi, name)						\
--	SYSCALL_ALIAS(__##abi##_##name, sys_ni_posix_timers);
--
- #ifdef CONFIG_X86_64
- #define __X64_SYS_STUB0(name)						\
- 	__SYS_STUB0(x64, sys_##name)
-@@ -99,13 +96,10 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- #define __X64_COND_SYSCALL(name)					\
- 	__COND_SYSCALL(x64, sys_##name)
- 
--#define __X64_SYS_NI(name)						\
--	__SYS_NI(x64, sys_##name)
- #else /* CONFIG_X86_64 */
- #define __X64_SYS_STUB0(name)
- #define __X64_SYS_STUBx(x, name, ...)
- #define __X64_COND_SYSCALL(name)
--#define __X64_SYS_NI(name)
- #endif /* CONFIG_X86_64 */
- 
- #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
-@@ -119,13 +113,10 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- #define __IA32_COND_SYSCALL(name)					\
- 	__COND_SYSCALL(ia32, sys_##name)
- 
--#define __IA32_SYS_NI(name)						\
--	__SYS_NI(ia32, sys_##name)
- #else /* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
- #define __IA32_SYS_STUB0(name)
- #define __IA32_SYS_STUBx(x, name, ...)
- #define __IA32_COND_SYSCALL(name)
--#define __IA32_SYS_NI(name)
- #endif /* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
- 
- #ifdef CONFIG_IA32_EMULATION
-@@ -134,8 +125,7 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-  * additional wrappers (aptly named __ia32_sys_xyzzy) which decode the
-  * ia32 regs in the proper order for shared or "common" syscalls. As some
-  * syscalls may not be implemented, we need to expand COND_SYSCALL in
-- * kernel/sys_ni.c and SYS_NI in kernel/time/posix-stubs.c to cover this
-- * case as well.
-+ * kernel/sys_ni.c to cover this case as well.
-  */
- #define __IA32_COMPAT_SYS_STUB0(name)					\
- 	__SYS_STUB0(ia32, compat_sys_##name)
-@@ -147,14 +137,10 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- #define __IA32_COMPAT_COND_SYSCALL(name)				\
- 	__COND_SYSCALL(ia32, compat_sys_##name)
- 
--#define __IA32_COMPAT_SYS_NI(name)					\
--	__SYS_NI(ia32, compat_sys_##name)
--
- #else /* CONFIG_IA32_EMULATION */
- #define __IA32_COMPAT_SYS_STUB0(name)
- #define __IA32_COMPAT_SYS_STUBx(x, name, ...)
- #define __IA32_COMPAT_COND_SYSCALL(name)
--#define __IA32_COMPAT_SYS_NI(name)
- #endif /* CONFIG_IA32_EMULATION */
- 
- 
-@@ -174,13 +160,10 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- #define __X32_COMPAT_COND_SYSCALL(name)					\
- 	__COND_SYSCALL(x32, compat_sys_##name)
- 
--#define __X32_COMPAT_SYS_NI(name)					\
--	__SYS_NI(x32, compat_sys_##name)
- #else /* CONFIG_X86_X32 */
- #define __X32_COMPAT_SYS_STUB0(name)
- #define __X32_COMPAT_SYS_STUBx(x, name, ...)
- #define __X32_COMPAT_COND_SYSCALL(name)
--#define __X32_COMPAT_SYS_NI(name)
- #endif /* CONFIG_X86_X32 */
- 
- 
-@@ -211,17 +194,12 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 
- /*
-  * As some compat syscalls may not be implemented, we need to expand
-- * COND_SYSCALL_COMPAT in kernel/sys_ni.c and COMPAT_SYS_NI in
-- * kernel/time/posix-stubs.c to cover this case as well.
-+ * COND_SYSCALL_COMPAT in kernel/sys_ni.c to cover this case as well.
-  */
- #define COND_SYSCALL_COMPAT(name) 					\
- 	__IA32_COMPAT_COND_SYSCALL(name)				\
- 	__X32_COMPAT_COND_SYSCALL(name)
- 
--#define COMPAT_SYS_NI(name)						\
--	__IA32_COMPAT_SYS_NI(name)					\
--	__X32_COMPAT_SYS_NI(name)
--
- #endif /* CONFIG_COMPAT */
- 
- #define __SYSCALL_DEFINEx(x, name, ...)					\
-@@ -242,8 +220,8 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-  * As the generic SYSCALL_DEFINE0() macro does not decode any parameters for
-  * obvious reasons, and passing struct pt_regs *regs to it in %rdi does not
-  * hurt, we only need to re-define it here to keep the naming congruent to
-- * SYSCALL_DEFINEx() -- which is essential for the COND_SYSCALL() and SYS_NI()
-- * macros to work correctly.
-+ * SYSCALL_DEFINEx() -- which is essential for the COND_SYSCALL() macro to
-+ * work correctly.
-  */
- #define SYSCALL_DEFINE0(sname)						\
- 	SYSCALL_METADATA(_##sname, 0);					\
-@@ -256,11 +234,6 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 	__X64_COND_SYSCALL(name)					\
- 	__IA32_COND_SYSCALL(name)
- 
--#define SYS_NI(name)							\
--	__X64_SYS_NI(name)						\
--	__IA32_SYS_NI(name)
--
--
- /*
-  * For VSYSCALLS, we need to declare these three syscalls with the new
-  * pt_regs-based calling convention for in-kernel use.
-diff --git a/init/Kconfig b/init/Kconfig
-index 9e22ee8fbd75..6a24a6d8f906 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2286,8 +2286,7 @@ config ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- # SYSCALL_DEFINE() and __SYSCALL_DEFINEx() macros in <linux/syscalls.h>
- # and the COMPAT_ variants in <linux/compat.h>, in particular to use a
- # different calling convention for syscalls. They can also override the
--# macros for not-implemented syscalls in kernel/sys_ni.c and
--# kernel/time/posix-stubs.c. All these overrides need to be available in
--# <asm/syscall_wrapper.h>.
-+# macros for not-implemented syscalls in kernel/sys_ni.c.  All these
-+# overrides need to be available in <asm/syscall_wrapper.h>.
- config ARCH_HAS_SYSCALL_WRAPPER
- 	def_bool n
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 3b69a560a7ac..8b3fc3a5d4df 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -151,6 +151,10 @@ COND_SYSCALL_COMPAT(get_robust_list);
- /* kernel/hrtimer.c */
- 
- /* kernel/itimer.c */
-+COND_SYSCALL(getitimer);
-+COND_SYSCALL_COMPAT(getitimer);
-+COND_SYSCALL(setitimer);
-+COND_SYSCALL_COMPAT(setitimer);
- 
- /* kernel/kexec.c */
- COND_SYSCALL(kexec_load);
-@@ -161,6 +165,12 @@ COND_SYSCALL(init_module);
- COND_SYSCALL(delete_module);
- 
- /* kernel/posix-timers.c */
-+COND_SYSCALL(timer_create);
-+COND_SYSCALL_COMPAT(timer_create);
-+COND_SYSCALL(timer_gettime);
-+COND_SYSCALL(timer_getoverrun);
-+COND_SYSCALL(timer_settime);
-+COND_SYSCALL(timer_delete);
- 
- /* kernel/printk.c */
- COND_SYSCALL(syslog);
-@@ -312,6 +322,8 @@ COND_SYSCALL(name_to_handle_at);
- COND_SYSCALL(open_by_handle_at);
- COND_SYSCALL_COMPAT(open_by_handle_at);
- 
-+COND_SYSCALL(clock_adjtime);
-+
- COND_SYSCALL(sendmmsg);
- COND_SYSCALL_COMPAT(sendmmsg);
- COND_SYSCALL(process_vm_readv);
-@@ -349,7 +361,6 @@ COND_SYSCALL(pkey_mprotect);
- COND_SYSCALL(pkey_alloc);
- COND_SYSCALL(pkey_free);
- 
--
- /*
-  * Architecture specific weak syscall entries.
-  */
-@@ -449,6 +460,9 @@ COND_SYSCALL(sysfs);
- COND_SYSCALL(ipc);
- COND_SYSCALL_COMPAT(ipc);
- 
-+/* obsolete: __ARCH_WANT_SYS_ALARM */
-+COND_SYSCALL(alarm);
-+
- /* obsolete: UID16 */
- COND_SYSCALL(chown16);
- COND_SYSCALL(fchown16);
-diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
-index fcb3b21d8bdc..e6f6f29e0c4f 100644
---- a/kernel/time/posix-stubs.c
-+++ b/kernel/time/posix-stubs.c
-@@ -17,40 +17,6 @@
- #include <linux/time_namespace.h>
- #include <linux/compat.h>
- 
--#ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
--/* Architectures may override SYS_NI and COMPAT_SYS_NI */
--#include <asm/syscall_wrapper.h>
--#endif
--
--asmlinkage long sys_ni_posix_timers(void)
--{
--	pr_err_once("process %d (%s) attempted a POSIX timer syscall "
--		    "while CONFIG_POSIX_TIMERS is not set\n",
--		    current->pid, current->comm);
--	return -ENOSYS;
--}
--
--#ifndef SYS_NI
--#define SYS_NI(name)  SYSCALL_ALIAS(sys_##name, sys_ni_posix_timers)
--#endif
--
--#ifndef COMPAT_SYS_NI
--#define COMPAT_SYS_NI(name)  SYSCALL_ALIAS(compat_sys_##name, sys_ni_posix_timers)
--#endif
--
--SYS_NI(timer_create);
--SYS_NI(timer_gettime);
--SYS_NI(timer_getoverrun);
--SYS_NI(timer_settime);
--SYS_NI(timer_delete);
--SYS_NI(clock_adjtime);
--SYS_NI(getitimer);
--SYS_NI(setitimer);
--SYS_NI(clock_adjtime32);
--#ifdef __ARCH_WANT_SYS_ALARM
--SYS_NI(alarm);
--#endif
--
- /*
-  * We preserve minimal support for CLOCK_REALTIME and CLOCK_MONOTONIC
-  * as it is easy to remain compatible with little code. CLOCK_BOOTTIME
-@@ -156,18 +122,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
- 				 which_clock);
- }
- 
--#ifdef CONFIG_COMPAT
--COMPAT_SYS_NI(timer_create);
--#endif
--
--#if defined(CONFIG_COMPAT) || defined(CONFIG_ALPHA)
--COMPAT_SYS_NI(getitimer);
--COMPAT_SYS_NI(setitimer);
--#endif
--
- #ifdef CONFIG_COMPAT_32BIT_TIME
--SYS_NI(timer_settime32);
--SYS_NI(timer_gettime32);
- 
- SYSCALL_DEFINE2(clock_settime32, const clockid_t, which_clock,
- 		struct old_timespec32 __user *, tp)
-@@ -248,4 +203,5 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
- 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
- 				 which_clock);
- }
--#endif
-+
-+#endif /* CONFIG_COMPAT_32BIT_TIME */
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index fec890547e04..d3f5efee9f4d 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -655,38 +655,12 @@ static int add_jump_destinations(struct objtool_file *file)
- 			return -1;
- 		}
- 
--		/*
--		 * Cross-function jump.
--		 */
- 		if (insn->func && insn->jump_dest->func &&
--		    insn->func != insn->jump_dest->func) {
-+		    insn->func->pfunc != insn->jump_dest->func->pfunc &&
-+		    insn->jump_dest->offset == insn->jump_dest->func->offset) {
- 
--			/*
--			 * For GCC 8+, create parent/child links for any cold
--			 * subfunctions.  This is _mostly_ redundant with a
--			 * similar initialization in read_symbols().
--			 *
--			 * If a function has aliases, we want the *first* such
--			 * function in the symbol table to be the subfunction's
--			 * parent.  In that case we overwrite the
--			 * initialization done in read_symbols().
--			 *
--			 * However this code can't completely replace the
--			 * read_symbols() code because this doesn't detect the
--			 * case where the parent function's only reference to a
--			 * subfunction is through a jump table.
--			 */
--			if (!strstr(insn->func->name, ".cold.") &&
--			    strstr(insn->jump_dest->func->name, ".cold.")) {
--				insn->func->cfunc = insn->jump_dest->func;
--				insn->jump_dest->func->pfunc = insn->func;
--
--			} else if (insn->jump_dest->func->pfunc != insn->func->pfunc &&
--				   insn->jump_dest->offset == insn->jump_dest->func->offset) {
--
--				/* internal sibling call */
--				insn->call_dest = insn->jump_dest->func;
--			}
-+			/* internal sibling call */
-+			insn->call_dest = insn->jump_dest->func;
- 		}
- 	}
- 
+try_to_freeze() returns thread frozen state and looks like we can use=20
+this in kthread finish to allow finish thread to freeze only when=20
+kthread_start is already frozen and no buffers in progress/initiated for=20
+capture.
+
 
