@@ -2,164 +2,147 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A46FC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6C7C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF7E206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665B2206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GY696NEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgD3VcE (ORCPT
+        id S1727114AbgD3VcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:32:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:48833 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3VcD (ORCPT
+        Thu, 30 Apr 2020 17:32:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26146 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726336AbgD3VcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:32:03 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MfHUx-1iwbf70Yfb-00gsjk; Thu, 30 Apr 2020 23:31:46 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sara Sharon <sara.sharon@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 02/15] iwlwifi: mvm: fix gcc-10 zero-length-bounds warning
-Date:   Thu, 30 Apr 2020 23:30:44 +0200
-Message-Id: <20200430213101.135134-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200430213101.135134-1-arnd@arndb.de>
-References: <20200430213101.135134-1-arnd@arndb.de>
+        Thu, 30 Apr 2020 17:32:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588282342;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=Jzrv5wRZ4K7XtvWDWWDISsbmjMxGQe+9BSaROBXcFYM=;
+        b=GY696NEo5LOX3ASixzG+GHdHN+8eAJkHbSETwU1emugMOKwlUrepykj0WMYwIkNt/w3DyG
+        nTRBz0+ikVppz4QgeD1GOECWvewksqD4SyXxKEy69NVvpjK+Qu88O8qaX2zxKL7gTGdZHn
+        +Ntj3yxQ4xWd/7cE8Y+J2lm64X3+kNc=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-124-pNke-0I0PzK6aSxeZP0gMg-1; Thu, 30 Apr 2020 17:32:18 -0400
+X-MC-Unique: pNke-0I0PzK6aSxeZP0gMg-1
+Received: by mail-qk1-f197.google.com with SMTP id k138so7915601qke.15
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:32:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=Jzrv5wRZ4K7XtvWDWWDISsbmjMxGQe+9BSaROBXcFYM=;
+        b=oG+ObIccwN5ucGpCPnlwhf7P0J7jHgd6uTvlFI64LW69EPZjIuDOVk+BBY1cklvG4B
+         1XI0xk1c1nqwLGaq309EgjIlte9/o+pFDx1dcIMuXxkxADRCglBoTkWxHhi9fHsJNBkW
+         ZlQdUmyGGhqco3KzLzH0Ll9TSFKBZFvYpDPVB3mxe8iNgG240gpnoqSrR2VDsBQC9HHu
+         q73JSj4+nCiq4Uvxr63HFfYbx3N2ayCOWZ8uG9GpBsXbH3HP5Q/ObfQMrj9RqGNRrd7v
+         jG9jjfKp4sd6iEdzXJwpvI/vBBV/0+LydTg73z4pKH5emRL4o/H30eWd8WYssQLmkpGG
+         U04g==
+X-Gm-Message-State: AGi0Publokydn+DQQxixc9Clg3pQq8w+0rUzja228uEMm6zajxwc8GUD
+        nLufAkQrXs4L1z3V0BGKPbMAHiwEzOV4hMADu17NcwPK/zhSC6d9pebszQi6xdWZXSkFz3HZRq1
+        xueH22M9jfqmxj1iYZ3fJd8w/
+X-Received: by 2002:a37:5846:: with SMTP id m67mr569354qkb.78.1588282338108;
+        Thu, 30 Apr 2020 14:32:18 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJZ/+p/l03HZUTw9TAzxeelMsC2X0K+JlusH68UBd280GrosJOpL9Xmkh0soQ588iZsWL59bA==
+X-Received: by 2002:a37:5846:: with SMTP id m67mr569335qkb.78.1588282337907;
+        Thu, 30 Apr 2020 14:32:17 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id x16sm1077258qkh.14.2020.04.30.14.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 14:32:17 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 14:32:15 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
+Message-ID: <20200430213215.jqt2rj452hawj3j7@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, "# 3.4.x" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200429190119.43595-1-arnd@arndb.de>
+ <20200430211516.gkwaefjrzj2dypmr@cantor>
+ <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
+ <CAMj1kXHc0uzzTKp7oj23_=X9ek2KNrKMq1gL09X7cTnjhV=nXQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lQP65S7LwC6OwI92N4uIJiItdidHEpOk62jho5rpr9MQGl0HjXZ
- 61U0AbdpViblUikFmv9NwFYuekR9P0SmnIQkiDlSXipkrAVHEO5BMq88MZI6NRnqryCssyS
- vpgpn5jAG/7xFSbqWmLBDyjm2Rlw6Bv246k8MEhF+J6vpqkjfjwPTx2w3YBFUamsfMxcbal
- HerQDt2KcBHgm1DPAhILQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Eq+KYWUtplI=:bbiSluhmCo/PlA0yETxveN
- 90eKlGoZpYuNinQfPNl9y8guRXUHQPAj+0g31axpsZVcPGPQIAZVTwzWtyMUyfQxG6l3sH6h6
- l3lVCvXlc76LzqgpQCmXlGm+fFopVRqu3WuTm9DXXYDGMAPEK0XXCtvVnYY/mzOiJDd6QS1Mt
- 3/u9JANIkGmRc9kBKOb9RnKa35mTZmvjltyFsRfK4y+VszQB4oXneTbrSoSpAGV6ET0t2F+n/
- xzqdAnY3ZpsaMHUZUAfnTnJz1Pa0NTBV9PB93OlVwqB/HKqYkIHXfWXtjU8gguSyvsu+XtG7I
- QAoRk+tRpgQUcWqY881mD74t9NCG+LAGChcI9xsmnwUjDZjxxGY5xucUtVTmYS5TvC3Eh76fW
- 8Gv9ujukt+BBaiCFJIJ6Caq4IlVanpBQrP4CAxoIcz0Yuo61IGAqUETgJrl0QeEqpkwd7z3fl
- 8sr1HRCBJ4C1gqZ44zf/d9OOpaRHb9MstxDL5puR5lELpXXiC8kwmqB+sFmVL0C6+3J5uaUrD
- sMm1Yctdw1a+Ivu9IZfw9ml3xm87F9vvwJ2aIOFnlEBC4kAwQLpomxwb29vpAqGTtNpTrpod3
- REeXd699bO6GkcXhnbbB6oXrEmf2M8Dyf3ZTM86BQpj0slz4AKvjTDzVSdhfT9kzwVjiDohLz
- tm6q5qBybVGwplf5fUHJNU/ITmwvRsnVSMUWlQI2RKmCbfmUfTpuanzVRYdtrJ9gfZZQYS9M1
- 2qrJRipmwEi5Nk/wjWFRbOpP0kyaUbQkm4tnAlas9Q9cH9IKjvHnf2OaBDyEbfbqNFzzlOZcv
- 5dfXRPv3v1jXC7lgTp20eNIXHMkuri0PCRNJaEX/W1NQ+48kDI=
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHc0uzzTKp7oj23_=X9ek2KNrKMq1gL09X7cTnjhV=nXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc-10 complains when a zero-length array is accessed:
+On Thu Apr 30 20, Ard Biesheuvel wrote:
+>On Thu, 30 Apr 2020 at 23:21, Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> On Thu, Apr 30, 2020 at 11:15 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+>> >
+>> > On Wed Apr 29 20, Arnd Bergmann wrote:
+>> > >Building with gcc-10 causes a harmless warning about a section mismatch:
+>> > >
+>> > >WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+>> > >The function tpm2_calc_event_log_size() references
+>> > >the function __init early_memunmap().
+>> > >This is often because tpm2_calc_event_log_size lacks a __init
+>> > >annotation or the annotation of early_memunmap is wrong.
+>> > >
+>> > >Add the missing annotation.
+>> > >
+>> > >Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
+>> > >Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> >
+>> > Minor thing, but should the Fixes be c46f3405692d ("tpm: Reserve the TPM final events table")? Or what am I missing
+>> > about e658c82be556 that causes this? Just trying to understand what I did. :)
+>>
+>> You are right, I misread the git history. Can you fix it up when applying the
+>> patch, or should I resend it?
+>>
+>
+>I can fix it up, no worries.
+>
 
-drivers/net/wireless/intel/iwlwifi/mvm/tx.c: In function 'iwl_mvm_rx_ba_notif':
-drivers/net/wireless/intel/iwlwifi/mvm/tx.c:1929:17: warning: array subscript 9 is outside the bounds of an interior zero-length array 'struct iwl_mvm_compressed_ba_tfd[0]' [-Wzero-length-bounds]
- 1929 |     &ba_res->tfd[i];
-      |      ~~~~~~~~~~~^~~
-In file included from drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:68,
-                 from drivers/net/wireless/intel/iwlwifi/mvm/fw-api.h:68,
-                 from drivers/net/wireless/intel/iwlwifi/mvm/sta.h:73,
-                 from drivers/net/wireless/intel/iwlwifi/mvm/mvm.h:83,
-                 from drivers/net/wireless/intel/iwlwifi/mvm/tx.c:72:
-drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:769:35: note: while referencing 'tfd'
-  769 |  struct iwl_mvm_compressed_ba_tfd tfd[0];
-      |                                   ^~~
+With the fix applied:
 
-Change this structure to use a flexible-array member for 'tfd' instead,
-along with the various structures using an zero-length ieee80211_hdr
-array that do not show warnings today but might be affected by similar
-issues in the future.
-
-Fixes: 6f68cc367ab6 ("iwlwifi: api: annotate compressed BA notif array sizes")
-Fixes: c46e7724bfe9 ("iwlwifi: mvm: support new BA notification response")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/wireless/intel/iwlwifi/fw/api/tx.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-index f1d1fe96fecc..82d59b5a5f8c 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-@@ -293,7 +293,7 @@ struct iwl_tx_cmd {
- 	__le16 pm_frame_timeout;
- 	__le16 reserved4;
- 	u8 payload[0];
--	struct ieee80211_hdr hdr[0];
-+	struct ieee80211_hdr hdr[];
- } __packed; /* TX_CMD_API_S_VER_6 */
- 
- struct iwl_dram_sec_info {
-@@ -319,7 +319,7 @@ struct iwl_tx_cmd_gen2 {
- 	__le32 flags;
- 	struct iwl_dram_sec_info dram_info;
- 	__le32 rate_n_flags;
--	struct ieee80211_hdr hdr[0];
-+	struct ieee80211_hdr hdr[];
- } __packed; /* TX_CMD_API_S_VER_7 */
- 
- /**
-@@ -342,7 +342,7 @@ struct iwl_tx_cmd_gen3 {
- 	struct iwl_dram_sec_info dram_info;
- 	__le32 rate_n_flags;
- 	__le64 ttl;
--	struct ieee80211_hdr hdr[0];
-+	struct ieee80211_hdr hdr[];
- } __packed; /* TX_CMD_API_S_VER_8 */
- 
- /*
-@@ -766,8 +766,8 @@ struct iwl_mvm_compressed_ba_notif {
- 	__le32 tx_rate;
- 	__le16 tfd_cnt;
- 	__le16 ra_tid_cnt;
--	struct iwl_mvm_compressed_ba_tfd tfd[0];
- 	struct iwl_mvm_compressed_ba_ratid ra_tid[0];
-+	struct iwl_mvm_compressed_ba_tfd tfd[];
- } __packed; /* COMPRESSED_BA_RES_API_S_VER_4 */
- 
- /**
-@@ -784,7 +784,7 @@ struct iwl_mac_beacon_cmd_v6 {
- 	__le32 template_id;
- 	__le32 tim_idx;
- 	__le32 tim_size;
--	struct ieee80211_hdr frame[0];
-+	struct ieee80211_hdr frame[];
- } __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_6 */
- 
- /**
-@@ -805,7 +805,7 @@ struct iwl_mac_beacon_cmd_v7 {
- 	__le32 tim_size;
- 	__le32 ecsa_offset;
- 	__le32 csa_offset;
--	struct ieee80211_hdr frame[0];
-+	struct ieee80211_hdr frame[];
- } __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_7 */
- 
- enum iwl_mac_beacon_flags {
-@@ -840,7 +840,7 @@ struct iwl_mac_beacon_cmd {
- 	__le32 tim_size;
- 	__le32 ecsa_offset;
- 	__le32 csa_offset;
--	struct ieee80211_hdr frame[0];
-+	struct ieee80211_hdr frame[];
- } __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_10 */
- 
- struct iwl_beacon_notif {
--- 
-2.26.0
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
