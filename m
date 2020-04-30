@@ -2,262 +2,165 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D94C47258
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B840C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7DE420873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70361206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nMUJp0KK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I4c8tebj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgD3Vid (ORCPT
+        id S1727044AbgD3Vj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:38:33 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17084 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3Vic (ORCPT
+        Thu, 30 Apr 2020 17:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726447AbgD3Vj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:38:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab45140003>; Thu, 30 Apr 2020 14:37:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 14:38:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 30 Apr 2020 14:38:31 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 21:38:31 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 21:38:29 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
- <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
- <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
- <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
- <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
- <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
- <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
- <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
- <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
-Message-ID: <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
-Date:   Thu, 30 Apr 2020 14:37:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 17:39:27 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F5FC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:39:27 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id e16so1751683ybn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PPXfTr1PUEcnQYtzL1SCshQ9U2tFp7AGyjQ19zmlJjw=;
+        b=I4c8tebjA8xZu+gCahs2SQsh2UhWZwfhlg2Vi1C87wPDXbGFYgn3NggM+qTInIc7Lv
+         bHT2i1H/HmuUNdJWQnQlQgushXfKcCzOOAxmFpOi+QFYpbB/1JCfCNmrlIbXYz/vBhuR
+         jIAf2TuGuNViTa5AXvBYu0IXLarBA1mZwgc0d98D6qJxKRc0uQWcY/TcjW2nv4470QGu
+         vAk6m0442JovQ23wQbzubdY/skvhRhv7GPC/es08YjonG3l7FvyKltFrhbT2sxkS2dpK
+         QkOIXndoaRFCIyH7vby+NtrHwcSM5amM8LRS5wtsu3yJnigqW4BYCGAI6McQUdMv/qEn
+         WfqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PPXfTr1PUEcnQYtzL1SCshQ9U2tFp7AGyjQ19zmlJjw=;
+        b=VOY78L0Brd3ayJNLMfGpP89MiUOtvzn2isaoQPr2DBLHLeD09lwBm9OYlY6hwMGn+t
+         1DLAZTGKyHwIdOFSC/O7bMfvqpsiLJ4afAG8oOJ2jJdA2iL3Oso21QOWyYtjUYUa6BgO
+         DmHEson+oKuCM6SX5m0yijP4OIwOJcLb5EcF4W3/xbauoEX7rxSjSlawuG2snpIijSi0
+         /pdD7B1p9By3pKIq3LAlVdGYPC2VegWfm2Tzsxlvq/64cM1aoQ/qTxSeQHpzMgzEKE9w
+         YwSEsMviMZigBG2H4qPSE6Y1f5kAjVdfWHuayekB4FK2jc9pDSC4kFnVmYWgqSF4ydWc
+         KoAQ==
+X-Gm-Message-State: AGi0PuYbO+8ZZ3j42JqYfs1SvpgYAF/PHquTNhLwlmlESu+32RMjKZhm
+        hptq9Y7TDEavuS652wgrtNp0uz15WhRC1tshSQX02g==
+X-Google-Smtp-Source: APiQypL90WKJDRpQGilXJkYtJHzlvF+LQNlLF+84WBLdncmlNH9kzIV/1eg3WPm0jXEuCHVIFNa7trQZ8Gwq25E93MU=
+X-Received: by 2002:a05:6902:505:: with SMTP id x5mr1358771ybs.286.1588282765903;
+ Thu, 30 Apr 2020 14:39:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588282644; bh=hookx+pyYqTHGImeQX3FFZEfY65VPxDRIYlWFYqHMWQ=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=nMUJp0KKq8J5b8+r2/CpGELtyX2yHzwoh6c1qPomTI4DmZyYuo77qa2Qftz2UW4un
-         y377YQRZOcI0Mp1m2rly/d66pEhLNLujMuNHw4SmYx/HT2oJWT/3hN6Q0W3dhLwT2V
-         IvEMH8xWkhITS1r42gd0p9c5IWQdo26ZW1Pdg6WVBc91f2u8uNnQ9dkESLwdMzM6AA
-         D2GQV1Yoi1APmrzvcO4jjfkNgaLSRnYPB2NMrdTE1cDT+Jj64Az3mPi9DmMbche+RI
-         hiCGuLffsbTFtxRZHllXBnl2AREHxvYg9gIs1NOpV18lD8Im+1CDX45kWFzm0VpnQc
-         dUVF1JdoefQtg==
+References: <20200319023101.82458-1-irogers@google.com> <20200429175420.GD30487@kernel.org>
+In-Reply-To: <20200429175420.GD30487@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 30 Apr 2020 14:39:14 -0700
+Message-ID: <CAP-5=fWTAbyOXr5GghrbvfkaZ6EzH7GNDJiiDJkFqeF5mPgDeA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf parse-events: fix memory leaks found on parse_events
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 10:54 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Wed, Mar 18, 2020 at 07:31:00PM -0700, Ian Rogers escreveu:
+> > Memory leaks found by applying LLVM's libfuzzer on the parse_events
+> > function.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.c | 2 ++
+> >  tools/perf/util/parse-events.y | 3 ++-
+> >  2 files changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index 593b6b03785d..1e0bec5c0846 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+> >
+> >               list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+> >                       list_del_init(&pos->list);
+> > +                     if (pos->free_str)
+> > +                             free(pos->val.str);
+>
+> I'm applying it but only after changing it to zfree(&pos->free_str), to
+> make sure that any othe rcode that may still hold a pointer to pos will
+> see a NULL in ->free_str and crash sooner rather than later.
+>
+> >                       free(pos);
+> >               }
+> >               return -EINVAL;
+>
+> And the following should be in a different patch
+>
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> > index 94f8bcd83582..8212cc771667 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+> >
+> >       list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+> >               list_del_init(&evsel->core.node);
+> > -             perf_evsel__delete(evsel);
+> > +             evsel__delete(evsel);
+> >       }
+> >       free(list_evsel);
+> >  }
+>
+> And this one in another, I'll fix this up, but please try in the future
+> to provide different patches for different fixes, so that if we
+> eventually find out that one of the unrelated fixes is wrong, then we
+> can revert the patch more easily with 'git revert' instead of having to
+> do a patch that reverts just part of the bigger hodge-podge patch.
+>
+> If you go and have a track record of doing this as piecemeal as
+> possible, I will in turn feel more confident of processing your patches
+> in a faster fashion ;-) :-)
 
-On 4/30/20 2:26 PM, Sowjanya Komatineni wrote:
->
-> On 4/30/20 2:17 PM, Dmitry Osipenko wrote:
->> 30.04.2020 23:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 4/30/20 12:53 PM, Sowjanya Komatineni wrote:
->>>> On 4/30/20 12:46 PM, Sowjanya Komatineni wrote:
->>>>> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
->>>>>> 30.04.2020 22:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
->>>>>>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
->>>>>>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
->>>>>>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
->>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze()=
-;
->>>>>>>>>>>>>> I guess it won't be great to freeze in the middle of a=20
->>>>>>>>>>>>>> capture
->>>>>>>>>>>>>> process, so:
->>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (l=
-ist_empty(&chan->done))
->>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>>>>>>>>>>> And here should be some locking protection in order not race
->>>>>>>>>>>>> with
->>>>>>>>>>>>> the
->>>>>>>>>>>>> chan_capture_kthread_start because kthread_finish could=20
->>>>>>>>>>>>> freeze
->>>>>>>>>>>>> before
->>>>>>>>>>>>> kthread_start.
->>>>>>>>>>>> Or maybe both start / finish threads should simply be=20
->>>>>>>>>>>> allowed to
->>>>>>>>>>>> freeze
->>>>>>>>>>>> only when both capture and done lists are empty.
->>>>>>>>>>>>
->>>>>>>>>>>> if (list_empty(&chan->capture) &&
->>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
->>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
->>>>>>>>>>> good to freeze when not in middle of the frame capture but why
->>>>>>>>>>> should we not allow freeze in between captures?
->>>>>>>>>>>
->>>>>>>>>>> Other drivers do allow freeze in between frame captures.
->>>>>>>>>>>
->>>>>>>>>>> I guess we can freeze before dequeue for capture and in finish
->>>>>>>>>>> thread we can freeze after capture done. This also don't=20
->>>>>>>>>>> need to
->>>>>>>>>>> check for list_empty with freeze to allow between frame=20
->>>>>>>>>>> captures.
->>>>>>>>>>>
->>>>>>>>>> Also if we add check for both lists empty, freeze is not=20
->>>>>>>>>> allowed as
->>>>>>>>>> long as streaming is going on and in case of continuous=20
->>>>>>>>>> streaming
->>>>>>>>>> freeze will never happen.
->>>>>>>> To allow freeze b/w frames (but not in middle of a frame),
->>>>>>>>
->>>>>>>> for capture_start thread, probably we can do unconditional
->>>>>>>> try_to_freeze()
->>>>>> Is it possible to use wait_event_freezable()?
->>>>>>
->>>>>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
->>>>>>
->>>>>> Will the wait_event_interruptible() be woken up when system freezes?
->>>>> Based on wait_event_freezable implementation, looks like it similar
->>>>> to wait_event_interruptible + try_to_free() as it does
->>>>> freezable_schedule unlike schedule with wait_event_interruptible.
->>>>>
->>>>> So using this for capture_start may be ok to allow freeze before
->>>>> start of frame. But can't use for capture_finish as this is same as
->>>>> wait_event_interruptible followed by unconditional try_to_freeze.
->>>>>
->>>>>>>> for capture_finish thread, at end of capture done we can do
->>>>>>>> try_to_freeze() only when done list is empty
->>>>>> This doesn't prevent situation where the done-list is empty and the
->>>>>> "finish" thread freezes, in the same time the "start" thread=20
->>>>>> issues new
->>>>>> capture and then freezes too.
->>>>>>
->>>>>> 1. "start" thread issues capture
->>>>>>
->>>>>> 2. "finish" thread wakes and waits for the capture to complete
->>>>>>
->>>>>> 3. "start" thread begins another capture, waits for FRAME_START
->>>>>>
->>>>>> 4. system freezing activates
->>>>>>
->>>>>> 5. "finish" thread completes the capture and freezes because=20
->>>>>> done-list
->>>>>> is empty
->>>>>>
->>>>>> 6. "start" thread gets FRAME_START, issues another capture and=20
->>>>>> freezes
->>>>> This will not happen as we allow double buffering done list will not
->>>>> be empty till stream stop happens
->>>>>
->>>>> There will always be 1 outstanding frame in done list
->>>> Correction, there will always be 1 outstanding buffer except beginning
->>>> during beginning of stream.
->>>>
->>>> Except during beginning frames, done list will not be empty for all
->>>> subsequent streaming process
->>> Also to be clear, hardware sees next frame start event prior to=20
->>> previous
->>> frame mw_ack event as mw_ack event happens after frame end. So once
->>> initial buffer got queued to done list to finish processes, while
->>> waiting for mw_ack next frame start happens and pushes next buffer to
->>> done list.
->> What about this variant:
->>
->> 1. "start" thread wakes up to start capture
->>
->> 2. system freezing activates
->>
->> 3. "finish" thread wakes up and freezes
->
-> finish thread will wake up only when done list is not=20
-> empty/kthread_stop/wake even from capture start thread.
->
-> Also when I said will allow try_to_free when done list is empty I=20
-> meant to have this at end of capture_done() in finish thread
->
->>
->> 4. "start" thread issues capture and freezes
->>
->> And again, I assume that system's freezing should wake
->> wait_event_interruptible(), otherwise it won't be possible to freeze
->> idling threads at all and freezing should fail (IIUC).
->
-> Based on kernel doc on freezing, looks like when we mark thread as=20
-> freezable, freeze state happens when we explicitly call try_to_freeze.
->
-> I don't think its other way where freeze causes=20
-> wait_event_interruptible to wake up.
->
->> And in this case synchronization between start/finish threads should be
->> needed in regards to freezing.
->
-> Was thinking to have counter to track outstanding frame w.r.t single=20
-> shot issue b/w start and finish and allow to freeze only when no=20
-> outstanding frames in process.
->
-> This will make sure freeze will not happen when any buffers are in=20
-> progress
->
->> Note that this could be a wrong assumption, I'm not closely familiar
->> with how freezer works.
+Thanks, at some point I'd like to get libfuzzer with asan working for
+more than just me so that we don't backslide. It'd also make the
+reproductions easier to share.
 
-kthread_start can unconditionally allow try_to_freeze before start of=20
-frame capture
+Ian
 
-We can compute captures inflight w.r.t single shot issued during capture=20
-start and finished frames by kthread_finish and allow kthread_finish to=20
-freeze only when captures inflight is 0.
-
-This allows freeze to happen b/w frames but not in middle of frame
-
-
+> Thanks,
+>
+> - Arnaldo
+>
+> > @@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
+> >       }
+> >       parse_events_terms__delete($2);
+> >       parse_events_terms__delete(orig_terms);
+> > +     free(pattern);
+> >       free($1);
+> >       $$ = list;
+> >  #undef CLEANUP_YYABORT
+> > --
+> > 2.25.1.696.g5e7596f4ac-goog
+> >
+>
+> --
+>
+> - Arnaldo
