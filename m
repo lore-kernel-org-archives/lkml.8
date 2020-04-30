@@ -2,128 +2,106 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FA0C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E14DC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50AF1206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dhy5/MKR"
+	by mail.kernel.org (Postfix) with ESMTP id 58C8F206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgD3OGU (ORCPT
+        id S1728741AbgD3OGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbgD3Nwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:49 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D643C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:52:49 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x17so7006454wrt.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=5aejYnw4VSmDkXwBR2qWfZ3n0YMQYIyda8QYzwtLR08=;
-        b=Dhy5/MKRGKwJgbKg6r+CL+0eTzACExchjS2kNyKFdv45zKMI1cbGx1WFdRvlRs0/kH
-         bPtw+/LbTger2HYJHD23XA0C98R5P7qpTNMZWH6elsaWj2X4h8fjfPehyIiyIyZHfMZc
-         5JO4HLHCw5MIDDMV/pleyIhpSbllvNfQBpipFSuDyDhP7K4h8OqV3+4edD7JZQf3vpap
-         3eNF4DDnt63CTGJL/xGbJWqgWhC1hqwxLhXO/rlfdkdLZTubuky1OmGsEiWqSinmTYqF
-         TuxFhzGszj8s0vuK7XdyNDnveyKNkkwkiMrWWUAxU95bIC6f+v20chfi6XV3E1AnVawG
-         oOrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=5aejYnw4VSmDkXwBR2qWfZ3n0YMQYIyda8QYzwtLR08=;
-        b=totbv8C/i837Q7WYu6tpQ59SFFvtlACpXBbIuvnIosztBqGTcvQXz+AMCLngpmEqai
-         H8j0rcU7y5KypAtn8KJHlH7NzJqTU5Sh3uO8jW9icx4ePdcYv/5JD8OOnhOnxmgI45KV
-         9QyM5LOr88BLLFuaO4UfMPaNBKQOi5rzCzgfIDah6ERDuIOo3pycacD7Xd5+zcifATfG
-         Ric09a7wjFmJzm4zWolcsTnFC2l67CIPej+ABQdR7GzvZWW4wVRVAIR8/9Cq9+ZVfYdu
-         +IS7DaqXb33EO+vV/o+KZMgYuder0pOzGkY7UF/p46CJkn1DkCL2ak8Z2knIDvaV4By7
-         xirw==
-X-Gm-Message-State: AGi0Pua96vDWdiZgLcTtgUM+MM2u4IEE+Q3XnIxTEqWE3pKSXFnussUy
-        HpIeiwSxnT7gmqtZMTQWrWA=
-X-Google-Smtp-Source: APiQypJtsaGseH9cY5zGNMLSwHCPW5Gl7XbXjf3mWknT+/+Tk8NHTL4ckW3FCMnWsH/1EWwzuL93lw==
-X-Received: by 2002:a5d:6504:: with SMTP id x4mr4520153wru.164.1588254768408;
-        Thu, 30 Apr 2020 06:52:48 -0700 (PDT)
-Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
-        by smtp.gmail.com with ESMTPSA id d7sm3868403wrn.78.2020.04.30.06.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 06:52:47 -0700 (PDT)
-Message-ID: <eae142f2141a6add4ab61f4d2d16fa590323ae3c.camel@gmail.com>
-Subject: Re: [PATCH v3 2/5] w1_therm: adding sysfs entry to check device
- power
-From:   Akira shimahara <akira215corp@gmail.com>
-To:     Greg KH <greg@kroah.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 30 Apr 2020 15:52:46 +0200
-In-Reply-To: <20200430112131.GA2945965@kroah.com>
-References: <20200429133204.140081-1-akira215corp@gmail.com>
-         <20200429134655.GB2132814@kroah.com> <330221588173223@mail.yandex.ru>
-         <2602d65b534fc0e9d6738d3c670bdb07fd287e5b.camel@gmail.com>
-         <20200430112131.GA2945965@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Thu, 30 Apr 2020 10:06:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:55612 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728752AbgD3OGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:06:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CB241063;
+        Thu, 30 Apr 2020 07:06:18 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCE0E3F68F;
+        Thu, 30 Apr 2020 07:06:16 -0700 (PDT)
+Subject: Re: [PATCH 2/4] sched: set new prio after checking schedule policy
+To:     Hillf Danton <hdanton@sina.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200424041832.11364-1-hdanton@sina.com>
+ <20200424043650.14940-1-hdanton@sina.com>
+ <20200430121301.3460-1-hdanton@sina.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <da5bf72d-1d50-5c5c-3bdb-113ed555dd10@arm.com>
+Date:   Thu, 30 Apr 2020 16:06:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430121301.3460-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeudi 30 avril 2020 à 13:21 +0200, Greg KH a écrit :
-> On Thu, Apr 30, 2020 at 12:34:03PM +0200, Akira shimahara wrote:
-> > Hello,
-> > 
-> > Le mercredi 29 avril 2020 à 18:18 +0300, Evgeniy Polyakov a écrit :
-> > > Hi
-> > > 
-> > > 
-> > > 
-> > > 29.04.2020, 16:47, "Greg KH" <greg@kroah.com>:
-> > > 
-> > > 
-> > > 
-> > > > >  +What: /sys/bus/w1/devices/.../w1_slave
-> > > > >  +Date: Apr 2020
-> > > > >  +Contact: Akira Shimahara <akira215corp@gmail.com>
-> > > > >  +Description:
-> > > > >  + (RW) return the temperature in 1/1000 degC.
-> > > > >  + *read*: return 2 lines with the hexa output data sent on
-> > > > > the
-> > > > >  + bus, return the CRC check and temperature in 1/1000 degC
-> > > > the w1_slave file returns a temperature???
-> > > > And sysfs is 1 value-per-file, not multiple lines.
-> > > 
-> > > It was 'content crc' previously, and probably a good idea would
-> > > be to
-> > > add just one file with 'content'
-> >  
-> > That's the purpose of the new sysfs entry 'temperature'. It only
-> > content temperature. As already mentionned we have to keep the
-> > w1_slave
-> > entry for compatibility purpose, all existing user application
-> > parse
-> > this file.
+On 30/04/2020 14:13, Hillf Danton wrote:
 > 
-> That's fine, but the document you wrote here says the file is called
-> "w1_slave", not "temperature" :)
+> On Tue, 28 Apr 2020 17:32:45 Valentin Schneider wrote:
+>>
+>>> +	else if (fair_policy(policy)) {
+>>> +		if (attr->sched_nice < MIN_NICE ||
+>>> +		    attr->sched_nice > MAX_NICE)
+>>> +			return -EINVAL;
+>>
+>> We can't hit this with the syscall route, since we (silently) clamp those
+>> values in sched_copy_attr(). setpriority() does the same. There's this
+>> comment in sched_copy_attr() that asks whether we should clamp or return an
+>> error; seems like the current consensus is on clamping, but then we might
+>> want to get rid of that comment :)
+>>
+> Yes it's quite likely for me to miss the cases covered by that clamp;
+> otherwise what is added does not break that consensus.
+> 
+>>> +		newprio = NICE_TO_PRIO(attr->sched_nice);
+>>
+>> This is new, however AFAICT it doesn't change anything for CFS (or about to
+>> be) tasks since what matters is calling check_class_changed() further down.
+> 
+> Yes it's only used by rt_effective_prio(). 
 > 
 
-Yes because it is the patch 2/5. At this stage, I just create the
-sysfs-driver-w1_therm doc for the old w1_slave sysfs entry. The
-temperature  sysfs entry is introduce in v3 patch 3/5 (and v4 patch
-7/9)and the sysfs-driver-w1_therm is updated accordingly.
+Looks like changing a SCHED_NORMAL to a SCHED_BATCH task will create a different
+queue_flags value.
 
-Akira Shimahara
+# chrt -p $$
+pid 2803's current scheduling policy: SCHED_OTHER
+pid 2803's current scheduling priority: 0
 
+# chrt -b -p 0 $$
+
+...
+[bash 2803] policy=3 oldprio=120 newprio=[99->120] new_effective_prio=[99->120] queue_flags=[0xe->0xa]
+[bash 2803] queued=0 running=0
+...
+
+But since in this example 'queued=0' it has no further effect here.
+
+Why is SCHED_NORMAL/SCHED_BATCH (fair_policy()) now treated differently than SCHED_IDLE?
+
+# chrt -i -p 0 $$
+
+...
+[bash 2803] policy=5 newprio=99 oldprio=120 new_effective_prio=99 queue_flags=0xe
+[bash 2803] queued=0 running=0
+...
