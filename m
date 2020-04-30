@@ -2,78 +2,95 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996FFC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A71C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7185B21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB702082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:15:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uU8jiMQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgD3GPE (ORCPT
+        id S1726765AbgD3GPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:15:04 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:54862 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgD3GPD (ORCPT
+        Thu, 30 Apr 2020 02:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726412AbgD3GPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:15:03 -0400
-Received: by mail-io1-f69.google.com with SMTP id u10so276671iog.21
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:15:03 -0700 (PDT)
+        Thu, 30 Apr 2020 02:15:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF28BC035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:15:11 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so294226pjb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x7/KKFn8BCkAckmQr7phq+s/+BjeL7Rl1CFL6HKpG5M=;
+        b=uU8jiMQxr10bGxm1TozvntSNrpr/ofFVgKkcU+ecnvJtkVeym8FAECunFnlZFR0G2Y
+         WhyOkbEirdhHPcBYUu1pigRboOOZG2esfQr8eoOFw0OXW9HJcjtuuD3ZkNIP3RYguMoc
+         ScHCiHedlV342uWa5kG8ZeS/ITDKoWZ0ngJICR6hnpGdkHIF/NUUM2DDVbpSg9QMFUXM
+         BJI50pwbVHokPxJGuiWJRQo6No6yo1uEFAyUm5dvpgknd385NcgRv1vH3yjTYwsdkMw3
+         pcdV5B6DFjV8SeOz5ql+qKl53Rg1N+kVpXDFYoyKRBGViIvdCTSWC4YDxtK8r1IRce2j
+         VBAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=LGPQXr9UFNG0Da8I+jNxRs0HPIkBIqCGuS7p+9YCeGg=;
-        b=ohlCrnx/kqfpwI1jctEhOsXIjIxYBXdUOwBZIJ54PSBwCKWRQM5a9bGWVYudZONm1l
-         pcBlAz1ofWL0gbijOJ+MONpn89hdnErVX6FQeobUfwuyXa3z5GVb5Pwr5qI8gJMP1Hp6
-         YZCM/jLnwDIIf3tHlUD/Hf/fDfkajL76ML2HA1YuN1RP/yvWE0a90E9yAwafYv5bL/7c
-         KIDI+kwZ9pzSqVPMul0ByjYvfisnuRSgxFbC9b72By6LE5gxKyk/WE51HAwe4z1t88o0
-         WNV6xRsNgNZSwn3Qjzl/l6ASHh+3Uf8ktEy9c5zCkYeRnag38SwAMiiJhVsFMXm0D6Bt
-         gOPQ==
-X-Gm-Message-State: AGi0PuadX8MDEMifdjnvb5UfeWMh0EERLTu1U7Qjxoxsv7UM+3QwhNbX
-        r7hn3CbtAbhWri53Xxcig58VuA8SUzDuT/mm/cDKARUL77iz
-X-Google-Smtp-Source: APiQypItWPCp/4iJfpJma41I1BKksbOFHTczxvYLYhN4aAIprmWe1R4Xi8W7XMYKiyqSv2IHXeW1rAQ1iMyE1Dy0TaNFKC2pTaCU
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x7/KKFn8BCkAckmQr7phq+s/+BjeL7Rl1CFL6HKpG5M=;
+        b=XttjDDGzkEvz7FeSvbPuxPwTaVwwwGh9Z2BJAPffUHuk+dZNk5BExwMUh3GmrHkCSN
+         T4/PZvn0ZWq0JqxxTvpTpm6GCirhbs/kBbZ8laWlP+n9NmwSXLWie8HBN6PKK9uJXOcY
+         U70IwvsP5CkFt9/w5AlFiEE0MwQkHRAF7IOdvCDchfiKrkiIXoHPTPy1QiuWVqX2lFEi
+         VGgtWec9PoXysUOFTpDKdGmKlmkwlbMAk771jU42qb7uvVNL9JKei8h78qkev9CX7uPj
+         iSA/Wey1RUrtVapS9blh180yc/ZEMqeoExl4b7V3KnKRQ4gAva1LaKOccU2fF7wjd4FZ
+         yRNQ==
+X-Gm-Message-State: AGi0Pua+qgVhXjttH1GwONaHDmDLzwy/cPpmVQPQKcNL42UhhzOUA1r/
+        xgEilkZ9lWZEPXkHwes0Z2scn/yiJ4U=
+X-Google-Smtp-Source: APiQypLAiOVZAO2gmBRBnYBAlX/vRL0D7u6b7kPT99EVAW2lZmw9h7hDYcoo39quYJ+JkeBMpT6Wrw==
+X-Received: by 2002:a17:90a:5287:: with SMTP id w7mr1254117pjh.66.1588227311459;
+        Wed, 29 Apr 2020 23:15:11 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id s76sm2283379pgc.85.2020.04.29.23.15.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Apr 2020 23:15:10 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 11:45:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
+ devices
+Message-ID: <20200430061508.6ktamklc4nslf5qp@vireshk-i7>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
+ <20200429000234.GK4525@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c004:: with SMTP id q4mr380269ild.93.1588227302698;
- Wed, 29 Apr 2020 23:15:02 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 23:15:02 -0700
-In-Reply-To: <000000000000fdd3f3058bfcf369@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000033365905a47bfcd4@google.com>
-Subject: Re: WARNING: bad unlock balance in rcu_lock_release
-From:   syzbot <syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com>
-To:     ebiggers@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk, will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429000234.GK4525@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On 28-04-20, 17:02, Matthias Kaehlcke wrote:
+> Judging from SDM845 (which has more OPP tables) the convention seems to be
+> to add OPP tables to the nodes that use them, which seems reasonable and
 
-commit 10476e6304222ced7df9b3d5fb0a043b3c2a1ad8
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Fri Mar 13 08:56:38 2020 +0000
+I don't think that's right. The same DT opp tables are used for
+multiple CPUs and they are placed outside of any device's node.
 
-    locking/lockdep: Fix bad recursion pattern
+And that is the reason we have handled that specially in kernel (which
+Rajendra shared in another email), to not create a platform device for
+the opp table.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16d64bac100000
-start commit:   7d194c21 Linux 5.4-rc4
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6c03e4d33fa96d51
-dashboard link: https://syzkaller.appspot.com/bug?extid=f9545ab3e9f85cd43a3a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a0a8c0e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13dd2dd8e00000
-
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: locking/lockdep: Fix bad recursion pattern
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+viresh
