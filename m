@@ -2,232 +2,163 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85F6C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD78C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2DB2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD982073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aRdqN+ob"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HlBhpZe2";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="t0Xe0xwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD3IMH (ORCPT
+        id S1726774AbgD3IOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgD3IMH (ORCPT
+        Thu, 30 Apr 2020 04:14:07 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42452 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbgD3IOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:12:07 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ADDC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:12:06 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n17so3940238ejh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:12:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aPyH7cBulXkr69UeTYsLw8J8jsMaQ8KU1AV45QxO0GM=;
-        b=aRdqN+obvpVV2A+fgMLJy4RekybxRVDiG7lp8OF4bnZx2Ywvd3iCU/W+kNS4ZeZMFO
-         s2KHcqmsaIITIji0juOY7H6rW7Fc6dWrzMOI3EIosswh9jq3YYccKaX2xhcXTvz1nd5V
-         aBV+pihhUiUdyrUO5BWYQElkaX6/osTUoFcDUd3gIMpaDgbgaWZ7XiKQfHXqUsjsTevr
-         xcbBoOAzO8ZeJrHgjs2FlN5xkisQM2/NaUdROIGlFFS2pMP9xFv8klIZrmKxkYMDnngC
-         ZkScurbP2qpL3FH2QS0j799ldY6mMF4VeS1bCDMrE9KedwDuMF2flKOw3iR6FucwjAe8
-         uO/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aPyH7cBulXkr69UeTYsLw8J8jsMaQ8KU1AV45QxO0GM=;
-        b=L1wFs6WI/pZ7BJij975owyApQcsfQzK3cSPm+7CUrDmgh04Em4kVvUKN/SOsOU8qMO
-         wJSSN7IwUCtDIng/Oi4nyFfQKZYtzAHQ7Noe7JHFycKW9JznQmI14+2H1XtZrijHAi5R
-         by/bV/rapkPp9/gPIJO2wdCBQx73L9h/A7bbmm1pkfEOjliYrwY7vE3Yk1YTwIJOgOmx
-         OdSjww2mWm5zS64g3rq9rKiQiaAUJ/r8BdNES9a/nuF3cdPbic1mIiD3JlJqTPaf9NmJ
-         kZn1a+OXqEZ/I8hSEVN6o1Goqz9HF3dJlHVXRN2EPvoRwV+NLd+3DwXoZCQ56HOeb1r/
-         JcFw==
-X-Gm-Message-State: AGi0PuYyCPm3h9mPVOQaO6gK6aLy+0io3cB/qZrlkU6Fm9to99kf2AIc
-        uxMIZ6VtCRrPBWWfdNcJEUxxPJcbMMDOJNycJ1/URQ==
-X-Google-Smtp-Source: APiQypKwCBG4S6M4oBR8TWLxl5ZHi3zkP+L9vXXaCbuE040rlsosdGPooBbFU8EQOuJGeo1PTMYPgjG4Ewt4MDGe5kI=
-X-Received: by 2002:a17:906:7750:: with SMTP id o16mr1646531ejn.12.1588234325407;
- Thu, 30 Apr 2020 01:12:05 -0700 (PDT)
+        Thu, 30 Apr 2020 04:14:06 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 248244016E;
+        Thu, 30 Apr 2020 08:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1588234446; bh=0eAhNewpAk67J5pLDtu9HgQFuTExL02AftNVEpnnDTc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=HlBhpZe2x4XJTr+RQExLlHBq9Zr9plyU3/qjXd0WLlw39mEFalLWIQgFIGtA83STl
+         7G87gnyw84jARPDIhCEX8WYEP1q4SRvOPYl6r1P1WVu9MbBWRWiFF/ExHDyAecJDdn
+         4VpWYoXJhPnTwdDIHqcZ8TMbisNuivz9frll9BA375aWXyOUJnZzhmrRovpKAqf5Vz
+         CSZa5PYf4WSvHydmnS9i1WpSz00417H/IW+nT2X3w9VvAlvmlYhCb7AT+qfcBvO6DS
+         qMSj8mfxXemn7IJmrcyJjLtpij8NtuxNCX9ntnv5L8qwz+jbMqDLTlESNYqWR/J7Bc
+         7fBKhX5KfoGZw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7372FA006E;
+        Thu, 30 Apr 2020 08:14:05 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 Apr 2020 01:14:05 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Thu, 30 Apr 2020 01:14:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ngSLNRwqn1eoAsYNK+eISvNLP3dznUZxWINfeCG9bof3XYV6zgKZCNgbqDMWn1DcnG38cpd30nX9TjdBX7VjcYWZzdyc+FM1+GjAOXgDnjU5xYERjJX2OvZlWk8l+PzXOQdX8IYrUxNudi3dTdmAIAISHb8Jkbq7yEGIKS9Ic+CLPUZqewGe0Y2UNdSbrEaw+66zWpnoEYhkY4J1vfMzYwpmv805A2X2GFuMWjmGuD4nbrft4CqPCn3BLEstbQOb7W6EzC3MjnvnlAFL0A6NrJCu/m1zS+alM75v2bjeqwhHd719OFnhRFpSezxVoR8jj8BI6ZjIIFCkvZHKxkL91w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C0sLmNKMmyDah7X49o5tY/iOBdpb+O7+6/+4VCkOeXM=;
+ b=itcm8/6mLXkM+wdzsQMbBnXBJZgd6x5l8S4/IrAgxpZM4l9hn+TEOojlU1QKmnm+xJhXlquQWDCBEGGXc8C8/dwQ/GIO1E4OyzxLFUBAWnmKzP1My4OEerSW9TArsCl3r4sMQutrYvnkqisUoepSyDkKHBfUF0KgqtZPyVxEoN/RL0r+N26Wu7I777GtevGse3p/3g0Hnu8ghmCUTUcK/TWjB/P6dNCVC1laCyKtcHSXIhE6lCMZfWN1VJV55G0yKgAJecpTR/aV2PJhBmxaX6hWjH8rsD9MSl/acZoI2HzPfwtasEUZNMiMAJsS21IVQLoDG9a+LGylHjaN8pzsEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C0sLmNKMmyDah7X49o5tY/iOBdpb+O7+6/+4VCkOeXM=;
+ b=t0Xe0xwxcynr+/pz/p3e6O9UwDbxaQ0AZeKTq4Czzq1ffLyLmddZmd0cNIX+VDEIWy7smnWbCEQGsWxsHAjQvrlF+tE2Vd+w/b2ppDOk+/65rRWOSItHu/VXX2SLy1PGn0lQ3yedjEhzgcQotq6SDD5w3dGxqkRZQKIGtkOFAWI=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (2603:10b6:408:6e::17)
+ by BN8PR12MB3362.namprd12.prod.outlook.com (2603:10b6:408:44::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
+ 2020 08:14:03 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::651e:afe5:d0fb:def4]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::651e:afe5:d0fb:def4%3]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
+ 08:14:03 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Joao Lima <Joao.Lima@synopsys.com>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v2 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
+Thread-Topic: [EXT] [PATCH v2 1/5] scsi: ufs: Allow UFS 3.0 as a valid version
+Thread-Index: AQHWGj6lcVDTF+IaKE20nlDb1NNdr6iIbYWAgAdCRuCAAGeoAIABQo2w
+Date:   Thu, 30 Apr 2020 08:14:03 +0000
+Message-ID: <BN8PR12MB32664256580771FA9102EB14D3AA0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1587735561.git.Jose.Abreu@synopsys.com>
+ <c006813f8fc3052eef97d5216e4f31829d7cd10b.1587735561.git.Jose.Abreu@synopsys.com>
+ <SN6PR08MB5693C397D88D16EC43E85490DBD00@SN6PR08MB5693.namprd08.prod.outlook.com>
+ <BN8PR12MB3266D1F9B038EF821FA8D503D3AD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <BN7PR08MB56847531D0EC603DD2C7B349DBAD0@BN7PR08MB5684.namprd08.prod.outlook.com>
+In-Reply-To: <BN7PR08MB56847531D0EC603DD2C7B349DBAD0@BN7PR08MB5684.namprd08.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: micron.com; dkim=none (message not signed)
+ header.d=none;micron.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2413acd2-b4af-4e14-2c47-08d7ecde71e4
+x-ms-traffictypediagnostic: BN8PR12MB3362:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB33621A551210F417269A8236D3AA0@BN8PR12MB3362.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0389EDA07F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3266.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(376002)(396003)(366004)(346002)(66556008)(54906003)(110136005)(316002)(478600001)(2906002)(52536014)(4326008)(9686003)(86362001)(55016002)(71200400001)(64756008)(8676002)(66476007)(8936002)(66946007)(76116006)(5660300002)(7696005)(26005)(33656002)(66446008)(186003)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: le0ZHXXHteDvbYCJ4gPQrCNfeQq/Mx8vSW3exM4cEpW87CBHnvmpmH8XmUjYT333I4FuFPYTB2Jmd0ipgCVH1pXgzvbnvUCZNb5t9LgV4zlUsInckE4Emwqhkzia05D3QR3lVxEGpYWGnLqOgm73kM7DW1jvZMrxfNlFdfHxWwb2g5q9rI88BJbq1NlhUzCaFqSoCn2bbnwfVCSyriPweFHqoX8Ec100wBiJE+dF5R0bcTpvG1BNxm67til8CpSNipn0jZBkaf2owYE2AsOjzHU44tUxcOixNt7kz/lL5Vgh0glIi0AXvsmgqqhgwSgjJl3qV7eDZq/1CEeOf0a9f56u/0z5mAZ9PgAz0/kPBt04zA2Z+7wbCwJXDfRk8CiBE1bJkd2l6CnvmFCiiH+LebIfMimQJE7m4F8EMSVGRSRmZYeEkdPrn4uhdJpr3Z5u
+x-ms-exchange-antispam-messagedata: 7CxPQWnrAyk2xiAmrpFjAc7zb5wrZwCjbJvBqarMdLgskFlw9Q/VjgWGExwJfKytfB6IvYwQRuuU3URDfP0LfpI6RB6nxg05UD0nrt6yJjKRf+5KByKtHSA+2lko4YZSffVE1OqDhZ17/pl5yRpakPmTgHRism9FNWq5U/pBkKzM7UKBAZWkpmQIBVH8Y4fNO10bLoMwBHxqb2i0vnOyfg6v/Fikik4jUd3UbMhjHwEsAg2Ar9Ow5B4R55TmYEtcF50uAoHMFQwRpE/jGKgIxwgPEE2QNSI8Cne5cEEOz6jMIwBhYlMzUJlFPYvAYlvtce8ZVrahPc+Xtf2Lk7ukLp846RwJmH/tuEcpUs+hqIsFG33PU2PVyV53seEl+tOLldU21pIhkKBjSClAOicf4Aq4aPYF/x2MOfMou9AYd0S1QHvGnzWaUrCnIXy7YS4v+eXDBNRCgWi+sA8XtQKQkJ8pPq6ImjihW57pwUhOOj5Wf2dEdclyjs8zHjOZ3uVjFhDIuj12JYGHRRGSBmMEim88FcbESoRW0OerI6uGzhHgH9gX1I9o3QhkvuTzaxbEZsFxLzkTyniA+FEBfn+AYOo6qw2beofj2p3wa60ELbj6r++/aOVkdr2DtkN3inJjOshNH7QLg5ZH1JNqvpeZAJDhO7OzWAeIpsCm6B5uxu1PKbIndUzsyzU9qy1AmK2rsF8ZCxzw5AeA7L/dF/L6Ui05paSj8+dSN/i6bk9xY8BJhABtetnXG6z5Uzzl+Vuq/Je4Qq0pzhFJhF3Sr5SaMjwkaolJcR1Sfj2NkzHbRM0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200429160803.109056-1-david@redhat.com> <20200429160803.109056-3-david@redhat.com>
- <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
-In-Reply-To: <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 30 Apr 2020 01:11:54 -0700
-Message-ID: <CAPcyv4i04+QLxiOyz04_eef2DFetEFKBUmi2A4xxw9abQD8hNQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2413acd2-b4af-4e14-2c47-08d7ecde71e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 08:14:03.1329
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rwiTkYQMoPB8LFD/4H4SYd20e75kg/5DTZtnE9dBZtQ1IxxCEfGelkxwfcWhKRlXqdfI6irX8ysHj/7rsnaWAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3362
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:20 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 29.04.20 18:08, David Hildenbrand wrote:
-> > Some paravirtualized devices that add memory via add_memory() and
-> > friends (esp. virtio-mem) don't want to create entries in
-> > /sys/firmware/memmap/ - primarily to hinder kexec from adding this
-> > memory to the boot memmap of the kexec kernel.
-> >
-> > In fact, such memory is never exposed via the firmware (e.g., e820), but
-> > only via the device, so exposing this memory via /sys/firmware/memmap/ is
-> > wrong:
-> >  "kexec needs the raw firmware-provided memory map to setup the
-> >   parameter segment of the kernel that should be booted with
-> >   kexec. Also, the raw memory map is useful for debugging. For
-> >   that reason, /sys/firmware/memmap is an interface that provides
-> >   the raw memory map to userspace." [1]
-> >
-> > We want to let user space know that memory which is always detected,
-> > added, and managed via a (device) driver - like memory managed by
-> > virtio-mem - is special. It cannot be used for placing kexec segments
-> > and the (device) driver is responsible for re-adding memory that
-> > (eventually shrunk/grown/defragmented) memory after a reboot/kexec. It
-> > should e.g., not be added to a fixed up firmware memmap. However, it should
-> > be dumped by kdump.
-> >
-> > Also, such memory could behave differently than an ordinary DIMM - e.g.,
-> > memory managed by virtio-mem can have holes inside added memory resource,
-> > which should not be touched, especially for writing.
-> >
-> > Let's expose that memory as "System RAM (driver managed)" e.g., via
-> > /pro/iomem.
-> >
-> > We don't have to worry about firmware_map_remove() on the removal path.
-> > If there is no entry, it will simply return with -EINVAL.
-> >
-> > [1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-memmap
-> >
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> > Cc: Wei Yang <richard.weiyang@gmail.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  include/linux/memory_hotplug.h |  8 ++++++++
-> >  mm/memory_hotplug.c            | 20 ++++++++++++++++----
-> >  2 files changed, 24 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> > index bf0e3edb8688..cc538584b39e 100644
-> > --- a/include/linux/memory_hotplug.h
-> > +++ b/include/linux/memory_hotplug.h
-> > @@ -68,6 +68,14 @@ struct mhp_params {
-> >       pgprot_t pgprot;
-> >  };
-> >
-> > +/* Flags used for add_memory() and friends. */
-> > +
-> > +/*
-> > + * Don't create entries in /sys/firmware/memmap/ and expose memory as
-> > + * "System RAM (driver managed)" in e.g., /proc/iomem
-> > + */
-> > +#define MHP_DRIVER_MANAGED           1
-> > +
-> >  /*
-> >   * Zone resizing functions
-> >   *
-> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> > index ebdf6541d074..cfa0721280aa 100644
-> > --- a/mm/memory_hotplug.c
-> > +++ b/mm/memory_hotplug.c
-> > @@ -98,11 +98,11 @@ void mem_hotplug_done(void)
-> >  u64 max_mem_size = U64_MAX;
-> >
-> >  /* add this memory to iomem resource */
-> > -static struct resource *register_memory_resource(u64 start, u64 size)
-> > +static struct resource *register_memory_resource(u64 start, u64 size,
-> > +                                              const char *resource_name)
-> >  {
-> >       struct resource *res;
-> >       unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> > -     char *resource_name = "System RAM";
-> >
-> >       /*
-> >        * Make sure value parsed from 'mem=' only restricts memory adding
-> > @@ -1058,7 +1058,8 @@ int __ref add_memory_resource(int nid, struct resource *res,
-> >       BUG_ON(ret);
-> >
-> >       /* create new memmap entry */
-> > -     firmware_map_add_hotplug(start, start + size, "System RAM");
-> > +     if (!(flags & MHP_DRIVER_MANAGED))
-> > +             firmware_map_add_hotplug(start, start + size, "System RAM");
-> >
-> >       /* device_online() will take the lock when calling online_pages() */
-> >       mem_hotplug_done();
-> > @@ -1081,10 +1082,21 @@ int __ref add_memory_resource(int nid, struct resource *res,
-> >  /* requires device_hotplug_lock, see add_memory_resource() */
-> >  int __ref __add_memory(int nid, u64 start, u64 size, unsigned long flags)
-> >  {
-> > +     const char *resource_name = "System RAM";
-> >       struct resource *res;
-> >       int ret;
-> >
-> > -     res = register_memory_resource(start, size);
-> > +     /*
-> > +      * Indicate that memory managed by a driver is special. It's always
-> > +      * detected and added via a driver, should not be given to the kexec
-> > +      * kernel for booting when manually crafting the firmware memmap, and
-> > +      * no kexec segments should be placed on it. However, kdump should
-> > +      * dump this memory.
-> > +      */
-> > +     if (flags & MHP_DRIVER_MANAGED)
-> > +             resource_name = "System RAM (driver managed)";
-> > +
-> > +     res = register_memory_resource(start, size, resource_name);
-> >       if (IS_ERR(res))
-> >               return PTR_ERR(res);
-> >
-> >
->
-> BTW, I was wondering if this is actually also something that
-> drivers/dax/kmem.c wants to use for adding memory.
->
-> Just because we decided to use some DAX memory in the current kernel as
-> system ram, doesn't mean we should make that decision for the kexec
-> kernel (e.g., using it as initial memory, placing kexec binaries onto
-> it, etc.). This is also not what we would observe during a real reboot.
+From: Bean Huo (beanhuo) <beanhuo@micron.com>
+Date: Apr/29/2020, 13:59:08 (UTC+00:00)
 
-Agree.
+> > > > @@ -8441,7 +8441,8 @@ int ufshcd_init(struct ufs_hba *hba, void
+> > > > __iomem *mmio_base, unsigned int irq)
+> > > >  	if ((hba->ufs_version !=3D UFSHCI_VERSION_10) &&
+> > > >  	    (hba->ufs_version !=3D UFSHCI_VERSION_11) &&
+> > > >  	    (hba->ufs_version !=3D UFSHCI_VERSION_20) &&
+> > > > -	    (hba->ufs_version !=3D UFSHCI_VERSION_21))
+> > > > +	    (hba->ufs_version !=3D UFSHCI_VERSION_21) &&
+> > > > +	    (hba->ufs_version !=3D UFSHCI_VERSION_30))
+> > >
+> > > I don't think these checkups of UFSHCI version is necessary,  does th=
+e UFSHCI
+> > have other version number except these?
+> > > Is there somebody still v1.0 and v1.1?
+> >=20
+> > Probably. I think we can leave them or change the dev_err to a dev_warn=
+.
+> > This way we have logs in case someone is using a non-supported version.
+> >=20
+> > What do you think ?
+> >=20
+> Hi, Jose
+> Seems after your patch, all of current released UFS control versions will=
+ be supported except the
+> version suffix is non-zero. Right?
 
-> I can see that the "System RAM" resource will show up as child resource
-> under the device e.g., in /proc/iomem.
->
-> However, entries in /sys/firmware/memmap/ are created as "System RAM".
+I think we cover all versions with this patch.
 
-True. Do you think this rename should just be limited to what type
-/sys/firmware/memmap/ emits? I have the concern, but no proof
-currently, that there are /proc/iomem walkers that explicitly look for
-"System RAM", but might be thrown off by "System RAM (driver
-managed)". I was not aware of /sys/firmware/memmap until about 5
-minutes ago.
+---
+Thanks,
+Jose Miguel Abreu
