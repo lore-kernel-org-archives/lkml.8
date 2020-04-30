@@ -2,90 +2,113 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A53C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71FEC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD7B2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588256042;
-	bh=+cxomEtUWCe6dA12D/rRn4EHfonQqoh5eyGHeFbM9eU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wgt3mJpZcFWPaPxRWmHxToRLtuCeu8Gzia7x14ofU/c1grZiBVq6l1JpyC/ngdqos
-	 Iay5DVcmGOod7lySpX4GbEK8wnvDmpjzTAB6Yfp53cgQQTQtGBCJGv6hNaAu36yp0D
-	 LicNApsG94D6SlEeWq/g87phtfCqnH341qhh0suk=
+	by mail.kernel.org (Postfix) with ESMTP id C140620774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgD3OOC (ORCPT
+        id S1726798AbgD3OPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:14:02 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34943 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgD3OOB (ORCPT
+        Thu, 30 Apr 2020 10:15:25 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:59711 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbgD3OPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:14:01 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o7so5333771oif.2;
-        Thu, 30 Apr 2020 07:14:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X1MbW9Qo4Miysa5TwjV5C+o7hh3lAoWv+hFsO/XdvDw=;
-        b=LL7KgwOJmJNSonng3nWGj40PkFLVPrtAqJ3G1fxBvSKlTQ14m2D+aBGFnXUjCL0Myu
-         GjAhu4dU1k3/DJIRlv6ss/yEVZ7w/3mUILraO3EU7fPqRiIonwsdCu4X854+t4TLxU4v
-         1J7dxpPY421FuGr4lOGrN8hln0FBBisQjC4lZCSkoVl6mbejg9fsCHppKZGBk0RyTqEp
-         u3K/LRDJ2crgRRqic4u9Cz/y44hgSJVpN6z5levlmPGbZs7jX8lKTHZ0FizaxR6ProKZ
-         KMDBHEw6WX8NUmPzjqHLDKUkTuaMuJ3LA/QR4mHUmJS9n9a5E4iFJ8WecfQpBAfEPO9n
-         a3AA==
-X-Gm-Message-State: AGi0Pua2bu7DMDycqSpeIXI1EB+wNX3RGuY6CDzQJrWOLNdwMGa1VV7I
-        kd2HHmJEvdcewoSOguU2fgolxEY=
-X-Google-Smtp-Source: APiQypKqaC+5seFi5xSOnMvPXzp1mosucGBYkNhJOE7FDZIO70API6amH6QsDOIhAKDN787xUbKEdA==
-X-Received: by 2002:aca:2b04:: with SMTP id i4mr1954562oik.137.1588256039885;
-        Thu, 30 Apr 2020 07:13:59 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h21sm15797otr.2.2020.04.30.07.13.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:13:58 -0700 (PDT)
-Received: (nullmailer pid 11709 invoked by uid 1000);
-        Thu, 30 Apr 2020 14:13:57 -0000
-Date:   Thu, 30 Apr 2020 09:13:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 09/10] dt-bindings: marvell,mmp2: Add ids for the power
- domains
-Message-ID: <20200430141357.GA11669@bogus>
-References: <20200419172742.674717-1-lkundrak@v3.sk>
- <20200419172742.674717-10-lkundrak@v3.sk>
+        Thu, 30 Apr 2020 10:15:24 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D1D30240003;
+        Thu, 30 Apr 2020 14:15:20 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 16:15:20 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on
+ MAX77620
+Message-ID: <20200430141520.GA101194@piout.net>
+References: <20200417170825.2551367-1-thierry.reding@gmail.com>
+ <20200430140701.GA21776@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200419172742.674717-10-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200430140701.GA21776@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Apr 2020 19:27:41 +0200, Lubomir Rintel wrote:
-> On MMP2 the audio and GPU blocks are on separate power islands. On MMP3
-> the camera block's power is also controlled separately.
+On 30/04/2020 09:07:01-0500, Rob Herring wrote:
+> On Fri, Apr 17, 2020 at 07:08:23PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> > 
+> > The RTC present on MAX77620 can be used to generate an alarm at a given
+> > time, which in turn can be used as a wakeup source for the system if it
+> > is properly wired up.
+> > 
+> > Document how to enable the RTC to act as a wakeup source.
+> > 
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+> > index 5a642a51d58e..f05005b0993e 100644
+> > --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+> > @@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
+> >  			control) then, GPIO1/nRST_IO goes LOW.
+> >  			this property is valid for max20024 only.
+> >  
+> > +Realtime Clock
+> > +--------------
+> > +The MAX77620 family of power management ICs contain a realtime clock block
+> > +that can be used to keep track of time even when the system is powered off.
+> > +
+> > +The realtime clock can also be programmed to trigger alerts, which can be
+> > +used to wake the system up from sleep. In order to configure the RTC to act
+> > +as a wakeup source, add an "rtc" child node and add the "wakeup-source"
+> > +property.
+> > +
+> > +
+> >  For DT binding details of different sub modules like GPIO, pincontrol,
+> >  regulator, power, please refer respective device-tree binding document
+> >  under their respective sub-system directories.
+> > @@ -159,4 +170,8 @@ max77620@3c {
+> >  			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
+> >  		};
+> >  	};
+> > +
+> > +	rtc {
+> > +		wakeup-source;
 > 
-> Add the numbers that we could use to refer to the power domains for
-> respective power islands from the device tree.
+> Is the RTC really the only thing that could wake the system in this 
+> PMIC?
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  include/dt-bindings/power/marvell,mmp2.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->  create mode 100644 include/dt-bindings/power/marvell,mmp2.h
+> I don't think it's really valid to have 'wakeup-source' without 
+> 'interrupts' unless the wakeup mechanism is somehow not an interrupt. So 
+> I think this belongs in the parent node.
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+I don't think this is true because in the case of a discrete RTC, its
+interrupt pin can be connected directly to a PMIC to power up a board
+instead of being connected to the SoC. In that case we don't have an
+interrupt property but the RTC is still a wakeup source. This is the
+usual use case for wakeup-source in the RTC subsystem. Else, if there is
+an interrupt, then we assume the RTC is a wakeup source and there is no
+need to have the wakeup-source property.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
