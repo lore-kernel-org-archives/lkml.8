@@ -2,121 +2,161 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89086C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B54EC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B6C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7692082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HTntdA1e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kjy5psUP";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="h+RiG8sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgD3Hod (ORCPT
+        id S1726590AbgD3Hos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgD3Hod (ORCPT
+        Thu, 30 Apr 2020 03:44:48 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:62850 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgD3Hor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:44:33 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC761C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:44:32 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id j3so5384711ljg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:44:32 -0700 (PDT)
+        Thu, 30 Apr 2020 03:44:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1588232687; x=1619768687;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=G062Cwk5QU0GnDIYwWhXQ1/tjyK4hwlKsoaWJILACDA=;
+  b=kjy5psUPL2lWtKh4CeidIJuzUIplz/M5EQ0RMJip72bNlkeyTjOq8k0N
+   GoAotN8LzdMP4ReiH+ULaJ+ipoJDNUz7a05bWT0jMZQtHKG8Yb5dpObCF
+   NXYSUKURfdAnLrY+uJXbAplmRZXnWbfbEBLS8wj/Te5F7T7Fj9AEwQUl5
+   eQ0Eb242ypbqL2IvBQiRQCyg0TsdHGD5s8cY9nbado8LzSh+LLRuV1uTe
+   5K4OSzJgP/Q8hWnC9R/PRVORzkXbKc5NahfE+uD/uGf5hE6Nixv5vV8UX
+   fQHIOjxBav1CIXQc8fzI+mxZj8+Lx1zbCPbNRMPhWZTrwc6mS4Cs+YUhQ
+   w==;
+IronPort-SDR: qZlwLocpel+zYdEI7DQLv+dj8rFj2fvuU3OwkKdq5I86jQeZK8kn6AHilpUN6w8+Gy5RsIJRLV
+ QDhKAJBruzshUs8+bLk77r6V5nbUzdtSLbxmnvVHLhmT+IoKLQIY8lrdP7kkw8OsD7ysbbya0r
+ 08ru6loI9YKgYDKxrgesJ+kbtlId+WAh9izCx3vFWLlt9aaFAqFdQGRATaydA9/XBjM68e++R0
+ 2gzRs+U6qQ3XCHaMAcQg3i1s5XHtjbrONb20/qmwIVTBBnGtAlwuJyLsMrN2JApcyzHXs4yso5
+ XWo=
+X-IronPort-AV: E=Sophos;i="5.73,334,1583164800"; 
+   d="scan'208";a="245342953"
+Received: from mail-co1nam11lp2173.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.173])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2020 15:44:46 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X5WT1xSjPuHiRJOc9dp7M3yHE5nD9d7LGK5OgkmWkmhPpWPwOCUVLORG+TTVGrYx7CY0QOYFvX7yB8Aexrto7W+9wrHFJFM3q2ERklK9cATWIW8539lWdJkRpqa1zOLZMUpmmwoFNRK1hZ9aXcEGQMRYtbCZ4Dsrv8GgvNNg0m4ya+jvZkhsDDHxVyJeB3DH2kJcq2ucner89mLkYVy9dJQPmT5DTxVN/TYmVGqMB4rrcodTHiDac2Zct2OlB1z7tiHOkXu0prC2KokboPuqph+XOIdKjntAlQ308OS/lV+scf7zH/PSBegFxsHw7ul1x7WqTzQmX6/Q/b2dFYvnbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G062Cwk5QU0GnDIYwWhXQ1/tjyK4hwlKsoaWJILACDA=;
+ b=M2rEpIg1S9o/cJbqwbXVYgjzQnfQ8SJBRW21+aJhccDsrj8mfltKEaTB/vZtoKoF+4rllk1EVela0C8ZYoEXgSD0ZD8GkVxlMvWOcaEWRNW/hxwKVeWuexRWi7t6qGz5WoDGuOkj2g+pwt79efkrWNEUvecXlP8Xm9UN05L77WtZ4t+yubW2VKvMw//uUSG8ngyf/ju6zyz9hsxhz8bZgb/gg8xmA3U3UnSxr6vDg6k7yDJWUd58oeClkfIzR+5ZDg/g0VJ6z+rqyV3/6LrrbYt1VvMr8THo7YcXpd+c3YjXc5QH1s6FJV/7oJxOCRLjJarOJzPupzJgLzRWfoALzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Me2gp8RxPqDFf1rj2uLX6ZZDuLWQfRcDDy0cz86Ar4=;
-        b=HTntdA1e6qLCVEhkkCFcGCJFM/M5KjS7mWSAH3SEPWbOK3uPptqOf+qIOqMPLPLeqh
-         lZSU14ZbKzzz2QrUYiNs3ll80ddlnMRvpwO1wprzjl4zd7obM6COomWvByQVqBSS7z1Q
-         7WBC770BX5/8rNcU+77BpzBYcooj9v+XjPFyvxu1hbvJP7zCsT5yvMC/RIhh1LASnWBj
-         XiaOEAwFxyl4Z6H0nMIhTSoPvfa9BLyopZH4M1DTInw4JO+GjFx4pUuRF85G1stw9+3e
-         B+sY+43awFa5UKl2edbGLFGwZsZiWudYeFERlsz5qzJ/+1/SQDrh05/9CpELzZiawho4
-         kqSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Me2gp8RxPqDFf1rj2uLX6ZZDuLWQfRcDDy0cz86Ar4=;
-        b=QQ4vls2ZwQQ63TAObC1+VZhKsb6ZBYG4wOzoPQ1UQjj5j5FFj6FPRkPw2uBJZ9F0rK
-         5OXx31MS1eLUqh69XcfHbO1UwvGH4Tf8WJYbLG+0Yt07Iw7JQi1wIfLsxWCLp6snVM9L
-         8ofpHdwWTQSfhg5P9sORxFCqTc7q70CG+ku+A4X2NFwzCeNO5oasae+BwrWOtCASvcMF
-         nsQND3svMcHOtPiYZtNeP0UuhCuGqjXVlhAr5XLpN1nR2ddwziJf3HI0dw0n9JhVR1r/
-         2lGJrQ8oT8V4rotKa77VCgRuVKBnsTxu2oezUIdhRKsKa9paJKkhrzYk3bFKqxiCZFuE
-         KQWQ==
-X-Gm-Message-State: AGi0PuYCP3Mj9Dm8Ax2zWui7W+qIAoul4fojGhFmTrVvfg3dAZUutkZ9
-        mwUVsXNPMBQYzeY9qfahjqUawXObOuPfNRo8JBjD3w==
-X-Google-Smtp-Source: APiQypK82t2gXDGONISJjaTmvRdMLE6WOtWDUR09M9YTvpevPtKquD8diJqwzUaS5wYBPvII8R71cTCBPZpJRYM2eeM=
-X-Received: by 2002:a2e:740f:: with SMTP id p15mr1348569ljc.151.1588232671090;
- Thu, 30 Apr 2020 00:44:31 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G062Cwk5QU0GnDIYwWhXQ1/tjyK4hwlKsoaWJILACDA=;
+ b=h+RiG8srO7JZRnO1K0Kkogt2nw+45MUv6ZD/d0mNKrj8oxPPyytHUG7VQKAAe6skYlBYAHGN9OGfv8EJRgHTBtEHrXG0YWIxfmDbCxxIgn5Scm1pBVTNHkSVRMWRK9lKzLgrsgyFK7LrvfMBSNPRpBC+MVP4D4/9GKLbK0sqvxA=
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com (2603:10b6:a03:14::14)
+ by BYAPR04MB5400.namprd04.prod.outlook.com (2603:10b6:a03:cb::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
+ 2020 07:44:44 +0000
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1]) by BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1%6]) with mapi id 15.20.2958.019; Thu, 30 Apr 2020
+ 07:44:44 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v2 1/5] scsi: ufs: allow legacy UFS devices to enable
+ WriteBooster
+Thread-Topic: [PATCH v2 1/5] scsi: ufs: allow legacy UFS devices to enable
+ WriteBooster
+Thread-Index: AQHWHi34Hoh3MU907kyUtpkKOgDgW6iRSO9Q
+Date:   Thu, 30 Apr 2020 07:44:44 +0000
+Message-ID: <BYAPR04MB4629B87143D7BD7693141D39FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <20200429135610.23750-1-stanley.chu@mediatek.com>
+ <20200429135610.23750-2-stanley.chu@mediatek.com>
+In-Reply-To: <20200429135610.23750-2-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fb71eb94-5929-40ab-d267-08d7ecda59bc
+x-ms-traffictypediagnostic: BYAPR04MB5400:
+x-microsoft-antispam-prvs: <BYAPR04MB540039BE08BE8AC42D4829E4FCAA0@BYAPR04MB5400.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0389EDA07F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4629.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(66556008)(7696005)(478600001)(9686003)(55016002)(186003)(8936002)(316002)(6506007)(110136005)(7416002)(26005)(54906003)(4744005)(86362001)(33656002)(64756008)(66446008)(2906002)(8676002)(66946007)(5660300002)(76116006)(4326008)(66476007)(52536014)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: u/xhfbRD/0jajxKw7N1aVpTe7RJ0Lpr+HueiojA0mHja12h/18ks/yFq3HDg1fJ4vo0UKn7IQkqMGSE8dBwvgk5HYiAIKlOqIxV9jxLunS2Y31LVvYnYt7HX3Pd9fbL7fFACtVZ/CROd/Ar7HiF81eQw6RrtPILKUm6/uoxSkAlO8bCfEl4O7QZB9eeRDRsaZiBYj1BznzXQ56uVpPn8dxgT3DJfZTmAqvvI3Mis26XtR30N5l2uxsOAyUs1nsMeAkL3C7jl2G+hW88o1W3mArNHS4eiRbtXwnnYpJsKumdkGfJIECYDdqkQbl6A+fqno3WO5+qjtWuHTOjb2Y+TLtrhD5NkhW0btHbWolOMt5caSXpoaGl2dTtaN8vSw5h2TslLZTjn91Am6hEoTZtrzvlCn4ddmUnA932S3Dn6VSksYW7uBVxva4ZN6z3Q72xr
+x-ms-exchange-antispam-messagedata: xRXZbVt2/C+BZhg7RPNxGd9gsphyyQwU/W0b0objQj3sfrniwidZBODF7MwpO9rHCIZEBtHc8iSjhaNi3eL7vVyDQNNZU5ZYEcd9AQgqJ5wgW8Oo9qOruXsvymKh/XcgoG2eIqd7VuEPqOi29h48r8TcUni9GJX5mbkhDyOyQhcw/pmNDBXKlUUEL/BL1yXaZCEwHbO+v0cmu4hRCUE2RsapxeENXU+ArQZu5xvMxWY5ZcYjXIPz9C5OXY1rmVKIif1ylq3+3kRN3pct/Dmf9eoLs7ZbW/mM0D4AIcffJWYD8mHmAkDuW0I2Dr8ESbaP5oecVc3A4UN1fW5ZtlNE5tYpkHVahj9WmXxVPZOVOmF91kOZX0h4eCuuqWadz5m/MQI/23Qaiax4jDcc2H4UT3OewSyxOawKjBGWucro2TFbR+sfdlcQH7cONcT+wFUlStzI3ZVrM/VfqHLyjRpoSQaYGUqn69jVqYGpwijvyELUKsOWkq/g5emP/uerF896I3cUqpXwTWo+ldDA/9aW/CzxlaJNjEvdkMe357wgx3Prg35gvJXro02TkjEET4pErqho/innqT3R89gwLr5jG2ko+KIzepefIEaizYxw5OG3fCLepOXAI1FVfuIPFwWNBSo8ng0dp+qbQEoLTNbRy2e6x9ExYzBPuAPgRmDhbzeKcfpZ2XstsRULdw/8huThAt6BcepLfJ5Po3653DBnS/xS/eD7MXpji5V0Wq+TZSXiLiCKATImjiHTQk1IFqPn4RnwHa+SdSxhGpHV/vnYmy74Kry10La9wSXY6uL5WNI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200428050242.17717-1-swood@redhat.com> <jhjzhatdgxh.mognet@arm.com>
-In-Reply-To: <jhjzhatdgxh.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 30 Apr 2020 09:44:19 +0200
-Message-ID: <CAKfTPtDktpTB7d6qhmcX0HtryezzFygk4kOC22Qf=OM77QpLYg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] newidle_balance() latency mitigation
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb71eb94-5929-40ab-d267-08d7ecda59bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 07:44:44.7727
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8I7C21HjbXvoA5J4J4JMZzc6lxZ2mp1sRwXRFAVcNXOAXKGkZ7FnyUX33n1NWIhcMsJ9VcTxkumOcq+IIyCZBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 at 01:13, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On 28/04/20 06:02, Scott Wood wrote:
-> > These patches mitigate latency caused by newidle_balance() on large
-> > systems, by enabling interrupts when the lock is dropped, and exiting
-> > early at various points if an RT task is runnable on the current CPU.
-> >
-> > When applied to an RT kernel on a 72-core machine (2 threads per core), I
-> > saw significant reductions in latency as reported by rteval -- from
-> > over 500us to around 160us with hyperthreading disabled, and from
-> > over 1400us to around 380us with hyperthreading enabled.
-> >
-> > This isn't the first time something like this has been tried:
-> > https://lore.kernel.org/lkml/20121222003019.433916240@goodmis.org/
-> > That attempt ended up being reverted:
-> > https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/
-> >
-> > The problem in that case was the failure to keep BH disabled, and the
-> > difficulty of fixing that when called from the post_schedule() hook.
-> > This patchset uses finish_task_switch() to call newidle_balance(), which
-> > enters in non-atomic context so we have full control over what we disable
-> > and when.
-> >
-> > There was a note at the end about wanting further discussion on the matter --
-> > does anyone remember if that ever happened and what the conclusion was?
-> > Are there any other issues with enabling interrupts here and/or moving
-> > the newidle_balance() call?
-> >
->
-> Random thought that just occurred to me; in the grand scheme of things,
-> with something in the same spirit as task-stealing (i.e. don't bother with
-> a full fledged balance at newidle, just pick one spare task somewhere),
-> none of this would be required.
+Hi Stanley,
+=20
+>=20
+> WriteBooster feature may be supported by some legacy UFS devices
+> (i.e., < 3.1) by upgrading firmware.
+>=20
+> To enable WriteBooster feature in such devices, relax the entrance
+> condition of ufshcd_wb_probe() to allow host driver to check those
+> devices' WriteBooster capability.
+>=20
+> WriteBooster feature can be available if below both conditions are
+> satisfied,
+>=20
+> 1. Device descriptor has dExtendedUFSFeaturesSupport field.
+> 2. WriteBooster support is specified in above field.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+WB was first introduced as part of UFS3.1, and lately as part of UFS2.2.
+Any non-standard behavior should be classified as a quirk.
 
-newly idle load balance already stops after picking 1 task
-Now if your proposal is to pick one random task on one random cpu, I'm
-clearly not sure that's a good idea
-
-
->
-> Sadly I don't think anyone has been looking at it any recently.
+Thanks,
+Avri
