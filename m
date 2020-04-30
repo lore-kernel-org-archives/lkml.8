@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21898C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE62C83009
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0306A2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681E72073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234029;
-	bh=dkqvXTL9+Vx5TfVq+Qm+IxU+y+qPkG/crH1tOtt/POg=;
+	s=default; t=1588234035;
+	bh=z93B9h0QOxKbZaQkEDh4KqmCDdJd+q+kLhHmnwRSlhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3fTCmE8O/DXyKx619zFKwq1Lgg63nJ/YVKvuhlP8IdjQ1RZO/TZ6vHfmTWgpHJ6M
-	 X7XXYgweul/yjOl052cGuTZFt27wJ3SJErphzu/aoaj4U5rwl5SSgUo/LVAO1Ko2+d
-	 ZG3HMoqk/N2FzSZsSS2kLqZe2lNAdnzQ2fhACilQ=
+	b=wD85kmZEcJIUvWzDkQzNpwf328rK8O0RRLZqMkslqw6GNJcunebgmlT71HGjGyiBL
+	 DALULm/Uof1ri+qGTBxAWrOdxB1xRzf4bJVg3DACBEkOBA0FiJoWTYW+tQ+3JO/ynE
+	 pMfLiJQypQitAV0K3NHLx8iCAa9OJLWqY9MtvexM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgD3IHE (ORCPT
+        id S1727100AbgD3IHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbgD3IGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:06:53 -0400
+        id S1726949AbgD3IGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:06:50 -0400
 Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BDC21D7F;
-        Thu, 30 Apr 2020 08:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF2D92073E;
+        Thu, 30 Apr 2020 08:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234013;
-        bh=dkqvXTL9+Vx5TfVq+Qm+IxU+y+qPkG/crH1tOtt/POg=;
+        s=default; t=1588234009;
+        bh=z93B9h0QOxKbZaQkEDh4KqmCDdJd+q+kLhHmnwRSlhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTQfyTVepnOQCOx20RRVjLZSraoxjtBWeUawYEh2WtjnmvgO+3f2FkMIdszbGRf/B
-         eukhcoPnJgJVe/42lJAEoM4WHCwGvoIfNxkVQYy85AiCO59cegPyWGWqIdv6uPN3Pv
-         aEzwptwd0ZDfpN01UsxKiBAEzzzdaoobUFshhXFE=
+        b=kKR8J0xSVQnso1YoPq2jaSZ/9WGmTpXzzo/G6aHpT6yE7LH8yrd98X/uqkZAaXdYQ
+         gIFUa+8Le2KLyf6445xjZ3cM1XzSyN+nTQxIAlm9YzxQWLaCXilSuA9qExow8/zaVi
+         /a/1FIYJfGIqRUzF/jlQenS2wIntwsPDk8F8ftvw=
 Received: by pali.im (Postfix)
-        id 357297AD; Thu, 30 Apr 2020 10:06:51 +0200 (CEST)
+        id E76A8AC9; Thu, 30 Apr 2020 10:06:47 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -56,9 +56,9 @@ To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 11/12] arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
-Date:   Thu, 30 Apr 2020 10:06:24 +0200
-Message-Id: <20200430080625.26070-12-pali@kernel.org>
+Subject: [PATCH v4 08/12] PCI: aardvark: Replace custom macros by standard linux/pci_regs.h macros
+Date:   Thu, 30 Apr 2020 10:06:21 +0200
+Message-Id: <20200430080625.26070-9-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
 References: <20200430080625.26070-1-pali@kernel.org>
@@ -70,59 +70,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+PCI-E capability macros are already defined in linux/pci_regs.h.
+Remove their reimplementation in pcie-aardvark.
 
-Move the comphy handle property of the PCIe node from board specific
-device tree files (EspressoBin and Turris Mox) to the generic
-armada-37xx.dtsi.
-
-This is correct since this is the only possible PCIe PHY configuration
-on Armada 37xx, so when PCIe is enabled on any board, this handle is
-correct.
-
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 1 -
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts   | 1 -
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi             | 1 +
- 3 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 41 ++++++++++++---------------
+ 1 file changed, 18 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-index c92ad664cb0e..b97218c72727 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-@@ -44,7 +44,6 @@
- /* J9 */
- &pcie0 {
- 	status = "okay";
--	phys = <&comphy1 0>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
- 	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index e496bd9d4737..15c1cf5c5b69 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -134,7 +134,6 @@
- 	status = "okay";
- 	max-link-speed = <2>;
- 	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
--	phys = <&comphy1 0>;
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 053ae6c19a3d..c53ae2511a9c 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -34,17 +34,6 @@
+ #define     PCIE_CORE_CMD_MEM_IO_REQ_EN				BIT(2)
+ #define PCIE_CORE_DEV_REV_REG					0x8
+ #define PCIE_CORE_PCIEXP_CAP					0xc0
+-#define PCIE_CORE_DEV_CTRL_STATS_REG				0xc8
+-#define     PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE	(0 << 4)
+-#define     PCIE_CORE_DEV_CTRL_STATS_MAX_PAYLOAD_SZ_SHIFT	5
+-#define     PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE		(0 << 11)
+-#define     PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SIZE_SHIFT	12
+-#define     PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SZ		0x2
+-#define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
+-#define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
+-#define     PCIE_CORE_LINK_TRAINING				BIT(5)
+-#define     PCIE_CORE_LINK_SPEED_SHIFT				16
+-#define     PCIE_CORE_LINK_WIDTH_SHIFT				20
+ #define PCIE_CORE_ERR_CAPCTL_REG				0x118
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN			BIT(6)
+@@ -223,6 +212,11 @@ static inline u32 advk_readl(struct advk_pcie *pcie, u64 reg)
+ 	return readl(pcie->base + reg);
+ }
  
- 	/* enabled by U-Boot if PCIe module is present */
- 	status = "disabled";
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 7909c146eabf..5aaad64a793d 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -493,6 +493,7 @@
- 					<0 0 0 2 &pcie_intc 1>,
- 					<0 0 0 3 &pcie_intc 2>,
- 					<0 0 0 4 &pcie_intc 3>;
-+			phys = <&comphy1 0>;
- 			pcie_intc: interrupt-controller {
- 				interrupt-controller;
- 				#interrupt-cells = <1>;
++static inline u16 advk_read16(struct advk_pcie *pcie, u64 reg)
++{
++	return advk_readl(pcie, (reg & ~0x3)) >> ((reg & 0x3) * 8);
++}
++
+ static int advk_pcie_link_up(struct advk_pcie *pcie)
+ {
+ 	u32 val, ltssm_state;
+@@ -286,16 +280,16 @@ static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
+ 	 * Start link training immediately after enabling it.
+ 	 * This solves problems for some buggy cards.
+ 	 */
+-	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+-	reg |= PCIE_CORE_LINK_TRAINING;
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
++	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
++	reg |= PCI_EXP_LNKCTL_RL;
++	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
+ 
+ 	ret = advk_pcie_wait_for_link(pcie);
+ 	if (ret)
+ 		return ret;
+ 
+-	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+-	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
++	reg = advk_read16(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKSTA);
++	neg_gen = reg & PCI_EXP_LNKSTA_CLS;
+ 
+ 	return neg_gen;
+ }
+@@ -385,13 +379,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 		PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV;
+ 	advk_writel(pcie, reg, PCIE_CORE_ERR_CAPCTL_REG);
+ 
+-	/* Set PCIe Device Control and Status 1 PF0 register */
+-	reg = PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE |
+-		(7 << PCIE_CORE_DEV_CTRL_STATS_MAX_PAYLOAD_SZ_SHIFT) |
+-		PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE |
+-		(PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SZ <<
+-		 PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SIZE_SHIFT);
+-	advk_writel(pcie, reg, PCIE_CORE_DEV_CTRL_STATS_REG);
++	/* Set PCIe Device Control register */
++	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
++	reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
++	reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
++	reg &= ~PCI_EXP_DEVCTL_READRQ;
++	reg |= PCI_EXP_DEVCTL_PAYLOAD; /* Set max payload size */
++	reg |= PCI_EXP_DEVCTL_READRQ_512B;
++	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+ 
+ 	/* Program PCIe Control 2 to disable strict ordering */
+ 	reg = PCIE_CORE_CTRL2_RESERVED |
 -- 
 2.20.1
 
