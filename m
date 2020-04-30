@@ -2,119 +2,107 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80200C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C69C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613312173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234969;
-	bh=GnPZmnr/Ofem6uvXDZbMnuc5+odjfx382ISo2nPA2og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OMknwwQ/PbXM70f6NLZ3MumM+orD/C6yEfPnw7PdhuEVv1Ogtuis2yoPTcdW5gj7r
-	 S5IMbSgx1JTSr9N+/MirNIX5eIa9ZHeQhqQv6pMI9sL5ATfY8eOr2orAIEw0IlRTnS
-	 /MB6ckXUghoz4CpKxm2jQ47X1xLxT4P2zbCJHBs4=
+	by mail.kernel.org (Postfix) with ESMTP id 1B69420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgD3IWs (ORCPT
+        id S1726685AbgD3IXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:23:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1644 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD3IWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:22:48 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 814A020838;
-        Thu, 30 Apr 2020 08:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234967;
-        bh=GnPZmnr/Ofem6uvXDZbMnuc5+odjfx382ISo2nPA2og=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uh2AnTdVFUsSdIHfIkORGr321QfK0oEdiFejgkEUQ5lDxRtZwf8MOcw4JsKHMlIGz
-         8i56R/ssfr+b+as/IcpFK2aMwau3MmjF+Wy9xA80kyYMn3KXAATa+/mRQEv1ZEICdV
-         E0TunFx47hWEaxJco2lF1Czpzn+IgVVwxtzoIhi0=
-Received: by pali.im (Postfix)
-        id 931537AD; Thu, 30 Apr 2020 10:22:45 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 10:22:45 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 05/12] PCI: aardvark: Issue PERST via GPIO
-Message-ID: <20200430082245.xblvb7xeamm4e336@pali>
-References: <20200430080625.26070-1-pali@kernel.org>
- <20200430080625.26070-6-pali@kernel.org>
+        id S1726531AbgD3IXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:23:42 -0400
+IronPort-SDR: R97pwFDK+xNwl81j/ZLTw6OqRp+U2qLwPspqgGJ549wRH9rXa5CmLgZWYC4se7OWoIvDjiVZ1N
+ +u4sCm1/20pw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 01:23:41 -0700
+IronPort-SDR: 36p3/H3GepOLsOJEQt0w0FBY0ss06P1xezuXnKqxyXQBc+HUgDEi1e/HICvGtWCGRK6kmF06/F
+ 6HphBVn0Ibuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="258225161"
+Received: from smirnovi-mobl.ccr.corp.intel.com (HELO localhost) ([10.252.55.1])
+  by orsmga003.jf.intel.com with ESMTP; 30 Apr 2020 01:23:34 -0700
+Date:   Thu, 30 Apr 2020 11:23:28 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200430082328.GA6387@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <07c1a36c-cebc-3a65-6f92-4a5498fcc369@fortanix.com>
+ <20200430034651.GB31820@linux.intel.com>
+ <a9ff7817-32d1-e048-af05-862ca9f8aa46@fortanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-6-pali@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <a9ff7817-32d1-e048-af05-862ca9f8aa46@fortanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 30 April 2020 10:06:18 Pali Rohár wrote:
-> +static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-> +{
-> +	u32 reg;
-> +
-> +	if (!pcie->reset_gpio)
-> +		return;
-> +
-> +	/* PERST does not work for some cards when link training is enabled */
-> +	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-> +	reg &= ~LINK_TRAINING_EN;
-> +	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-> +
-> +	/* 10ms delay is needed for some cards */
-> +	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> +	usleep_range(10000, 11000);
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> +}
+On Thu, Apr 30, 2020 at 09:19:48AM +0200, Jethro Beekman wrote:
+> On 2020-04-30 05:46, Jarkko Sakkinen wrote:
+> > On Wed, Apr 29, 2020 at 05:27:48PM +0200, Jethro Beekman wrote:
+> >> On 2020-04-21 23:52, Jarkko Sakkinen wrote:
+> >>> Intel(R) SGX is a set of CPU instructions that can be used by applications
+> >>> to set aside private regions of code and data. The code outside the enclave
+> >>> is disallowed to access the memory inside the enclave by the CPU access
+> >>> control.
+> >>>
+> >>> There is a new hardware unit in the processor called Memory Encryption
+> >>> Engine (MEE) starting from the Skylake microacrhitecture. BIOS can define
+> >>> one or many MEE regions that can hold enclave data by configuring them with
+> >>> PRMRR registers.
+> >>>
+> >>> The MEE automatically encrypts the data leaving the processor package to
+> >>> the MEE regions. The data is encrypted using a random key whose life-time
+> >>> is exactly one power cycle.
+> >>>
+> >>> The current implementation requires that the firmware sets
+> >>> IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
+> >>> decide what enclaves it wants run. The implementation does not create
+> >>> any bottlenecks to support read-only MSRs later on.
+> >>>
+> >>> You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
+> >>>
+> >>> 	cat /proc/cpuinfo  | grep sgx
+> >>
+> >> Let's merge this.
+> > 
+> > So can I tag reviewed-by's?
+> > 
+> 
+> No, but you already have my tested-by's.
+> 
+> If it helps I can try to review some patches, but 1) I know nothing
+> about kernel coding guidelines and best practices and 2) I know little
+> about most kernel internals, so I won't be able to review every patch.
 
-Just note about delay between changing GPIO reset:
+Ackd-by *acknowledges* that the patches work for you. I think that would
+be then the correct choice for the driver patch and patches before that.
 
-In V2 there as only 1ms, but be figured out that it is not enough for
-WLE900VX cards when they were already initialized in u-boot.
+Lets go with that if that is cool for you of course.
 
-I tried to find in PCI specs if there is a defined timeout for this
-operation. I found following 3 delay definitions which could be related:
+Did you run the selftest only or possibly also some internal Fortanix
+tests?
 
-TPVPERL - PERST# must remain active at least this long after power becomes valid
-TPERST - When asserted, PERST# must remain asserted at least this long
-TPERSTCLK - PERST# must remain active at least this long after any supplied reference clock is stable
-
-In another spec they have defined also minimal values:
-
-TPVPERL - Power stable to PERST# inactive - Min 100 ms
-TPERST - PERST# active time - Min 100 us
-TPERSTCLK - REFCLK stable before PERST# inactive - Min 100 us
-
-After experimenting with those Compex WLE900VX cards, I know that 100us
-delay is not enough. And I'm not sure if TPVPERL is really relevant for
-this case. I understood that TPVPERL is needed when initializing power
-again. And because delaying boot by another 100ms is does not have to be
-acceptable if there is not strict reason for it, I rather decided to
-stay with just 10ms delay.
-
-If you know what is the correct timeout between changing GPIO reset,
-please let me know and in future I can fix/reimplement it.
+/Jarkko
