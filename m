@@ -2,126 +2,182 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C7EC83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DACAC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B57520787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:27:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="StXRVF2Z"
+	by mail.kernel.org (Postfix) with ESMTP id EDC292082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgD3C11 (ORCPT
+        id S1726587AbgD3CbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3C11 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:27:27 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BFCC035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 19:27:26 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id i136so188013qke.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 19:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=n0ueUL4qNH47b8rihpaXCJX1CS3A2QwjcGlCkj6DNLU=;
-        b=StXRVF2Z/oF8mgEHbwGRd4ZgjZsl1Cy/jpVXd7mPocE9mQASuyBOR1afSdGwqz+pLD
-         TLSZZ6hrfL900AHs6UFdkzuJ6T1ZIk+8KDQvcRKfkMf6iqskQGzMHwIcyp0KTBN/B3Jr
-         g3/ic6KlxS4zOurl1rvIPyzp3eTCZukVKBygeVeFutnK0wkK+eLJKsoIADyrDo/uCvih
-         rTNF99Bba52PPEijHtMcy1tXNvF6zHwU2dZvDJkYaxB48lBe5mwH4Ei+O/6Idefys5Rh
-         Cmsk5oB1YL4dIxX9vuDKpKwwnFbv6l0RYfgogeXgN9var+eGCXLr6FRuw71Dv55AOOnH
-         qk5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=n0ueUL4qNH47b8rihpaXCJX1CS3A2QwjcGlCkj6DNLU=;
-        b=hyLYQf4m9krAv/8ktDDvNJUrdxZKgNEA+1tC1dxkmXc8tbSnRLCcFUDf4NMgUxIRNo
-         iUnOs5wS3dVKObeZcJki6GP2SR/0SzuZz10PS7K9p95kAPbg1cc5VVuOVqHJP/V7AZOL
-         94gVKmEx/3Ik8u87qN/ejpZFruHKdgEVs6Syy8ERuxrskHgQEW2DMAGJsIdLi5Uv0uEB
-         R3VTNRd2usMkJr0XWMt4I/gyy1a+5t02d2DNqK83mftbIdt9KYgiA3tOMWxxvJsj3Ha+
-         uEQVLfyJF1z0dU8zR9rCzSyCDMo9yXOEJvrWF5Q9qqppbaxfBW8o94Qld8KlAFNIbh5j
-         Z+fA==
-X-Gm-Message-State: AGi0PuZmEpuX45C/D6RWlSW+PJEZsO6ai2e225YuTEpWSnLsPvsNyFHP
-        4KmiLmTkP2zY6AWZlmhqNcR7gA==
-X-Google-Smtp-Source: APiQypJIgieYBZmgtgtmw8KT3AWQ292kizhBLwc90lYViUzaNYyqOUctQH/KIfh3FW1L9bc3b6KCrg==
-X-Received: by 2002:a37:a312:: with SMTP id m18mr1455117qke.251.1588213645884;
-        Wed, 29 Apr 2020 19:27:25 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id o33sm953420qtj.62.2020.04.29.19.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 19:27:25 -0700 (PDT)
-Message-ID: <0463c90cfbe2036235010c5f8b92af6a96c20f74.camel@massaru.org>
-Subject: Re: [PATCH] dma-buf: Documentation: fix: `make htmldocs` warnings
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        dri-devel@lists.freedesktop.org
-Cc:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Wed, 29 Apr 2020 23:27:22 -0300
-In-Reply-To: <cb4d93a0-b967-f37d-ea01-0368c91b896e@infradead.org>
-References: <20200430015930.32224-1-vitor@massaru.org>
-         <cb4d93a0-b967-f37d-ea01-0368c91b896e@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 29 Apr 2020 22:31:21 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43948 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726180AbgD3CbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:31:21 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr9psOKpeog0uAA--.11S2;
+        Thu, 30 Apr 2020 10:31:08 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v6] MIPS: Loongson: Add DMA support for LS7A
+Date:   Thu, 30 Apr 2020 10:31:07 +0800
+Message-Id: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxr9psOKpeog0uAA--.11S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xtry7XFykWw4UAFy7Jrb_yoWrArWkpa
+        9xA3WkGr4YgF15CrZ5AFW8uryrAFZ5KrW3GF42vw15KasxZ34FqFs3GF18Xr1UAF1DG3Wx
+        XFWrKw48GF1xCrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+        JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUCg4hUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 19:06 -0700, Randy Dunlap wrote:
-> On 4/29/20 6:59 PM, Vitor Massaru Iha wrote:
-> > Add missed ":" on kernel-doc function parameter.
-> > 
-> > This patch fixes this warnings from `make htmldocs`:
-> > ./drivers/dma-buf/dma-buf.c:678: warning: Function parameter or
-> > member 'importer_ops' not described in 'dma_buf_dynamic_attach'
-> > ./drivers/dma-buf/dma-buf.c:678: warning: Function parameter or
-> > member 'importer_priv' not described in 'dma_buf_dynamic_attach'
-> > 
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > ---
-> >  drivers/dma-buf/dma-buf.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > index ccc9eda1bc28..0756d2155745 100644
-> > --- a/drivers/dma-buf/dma-buf.c
-> > +++ b/drivers/dma-buf/dma-buf.c
-> > @@ -655,8 +655,8 @@ EXPORT_SYMBOL_GPL(dma_buf_put);
-> >   * calls attach() of dma_buf_ops to allow device-specific attach
-> > functionality
-> >   * @dmabuf:		[in]	buffer to attach device to.
-> >   * @dev:		[in]	device to be attached.
-> > - * @importer_ops	[in]	importer operations for the
-> > attachment
-> > - * @importer_priv	[in]	importer private pointer for the
-> > attachment
-> > + * @importer_ops:	[in]	importer operations for the
-> > attachment
-> > + * @importer_priv:	[in]	importer private pointer for the
-> > attachment
-> >   *
-> >   * Returns struct dma_buf_attachment pointer for this attachment.
-> > Attachments
-> >   * must be cleaned up by calling dma_buf_detach().
-> > 
-> 
-> Sumit said that he would be applying my patch from April 7:
-> https://lore.kernel.org/linux-media/7bcbe6fe-0b4b-87da-d003-b68a26eb4cf0@infradead.org/
-> 
-> thanks.
+In the current market, the most used bridge chip on the Loongson
+platform are RS780E and LS7A, the RS780E bridge chip is already
+supported by the mainline kernel.
 
-Sorry. I didn't check if the patch has already been sent.
+In order to use the default implementation of __phys_to_dma() and
+__dma_to_phys() in dma-direct.h, remove CONFIG_ARCH_HAS_PHYS_TO_DMA
+and then set the bus's DMA limit to 36 bit for RS780E to maintain
+downward compatibility.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+Hi Christoph and Jiaxun,
+
+Thank you very much for your suggestions.
+
+v5:
+  - use the default implementation of __phys_to_dma()
+    and __dma_to_phys() in dma-direct.h
+
+v6:
+  - make loongson_dma_config() static
+  - put ls7a things before rs780 things
+
+ arch/mips/Kconfig                                  |  1 -
+ arch/mips/include/asm/mach-loongson64/boot_param.h |  5 +++++
+ arch/mips/loongson64/dma.c                         | 22 +++++++++++-----------
+ arch/mips/loongson64/env.c                         |  2 ++
+ 4 files changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 9f15539..12b6bdb 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1454,7 +1454,6 @@ choice
+ config CPU_LOONGSON64
+ 	bool "Loongson 64-bit CPU"
+ 	depends on SYS_HAS_CPU_LOONGSON64
+-	select ARCH_HAS_PHYS_TO_DMA
+ 	select CPU_MIPSR2
+ 	select CPU_HAS_PREFETCH
+ 	select CPU_SUPPORTS_64BIT_KERNEL
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+index f082d87..0c07a96 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -197,6 +197,7 @@ enum loongson_bridge_type {
+ 	RS780E = 2
+ };
+ 
++struct pci_dev;
+ struct loongson_system_configuration {
+ 	u32 nr_cpus;
+ 	u32 nr_nodes;
+@@ -221,9 +222,13 @@ struct loongson_system_configuration {
+ 	u32 nr_sensors;
+ 	struct sensor_device sensors[MAX_SENSORS];
+ 	u64 workarounds;
++	void (*dma_config)(struct pci_dev *pdev);
+ };
+ 
+ extern struct efi_memory_map_loongson *loongson_memmap;
+ extern struct loongson_system_configuration loongson_sysconf;
+ 
++extern void ls7a_dma_config(struct pci_dev *pdev);
++extern void rs780e_dma_config(struct pci_dev *pdev);
++
+ #endif
+diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
+index 5e86635..ef40b0d 100644
+--- a/arch/mips/loongson64/dma.c
++++ b/arch/mips/loongson64/dma.c
+@@ -1,24 +1,24 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/dma-direct.h>
++#include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/swiotlb.h>
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++void ls7a_dma_config(struct pci_dev *pdev)
+ {
+-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+-	 * Loongson-3's 48bit address space and embed it into 40bit */
+-	long nid = (paddr >> 44) & 0x3;
+-	return ((nid << 44) ^ paddr) | (nid << 37);
+ }
+ 
+-phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
++void rs780e_dma_config(struct pci_dev *pdev)
+ {
+-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+-	 * Loongson-3's 48bit address space and embed it into 40bit */
+-	long nid = (daddr >> 37) & 0x3;
+-	return ((nid << 37) ^ daddr) | (nid << 44);
++	pdev->dev.bus_dma_limit = DMA_BIT_MASK(36);
+ }
+ 
++static void loongson_dma_config(struct pci_dev *pdev)
++{
++	loongson_sysconf.dma_config(pdev);
++}
++
++DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, loongson_dma_config);
++
+ void __init plat_swiotlb_setup(void)
+ {
+ 	swiotlb_init(1);
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 71f4aaf..496f401 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -192,8 +192,10 @@ void __init prom_init_env(void)
+ 	if (vendor == PCI_VENDOR_ID_LOONGSON && device == 0x7a00) {
+ 		pr_info("The bridge chip is LS7A\n");
+ 		loongson_sysconf.bridgetype = LS7A;
++		loongson_sysconf.dma_config = ls7a_dma_config;
+ 	} else {
+ 		pr_info("The bridge chip is RS780E or SR5690\n");
+ 		loongson_sysconf.bridgetype = RS780E;
++		loongson_sysconf.dma_config = rs780e_dma_config;
+ 	}
+ }
+-- 
+2.1.0
 
