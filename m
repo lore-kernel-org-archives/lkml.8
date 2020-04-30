@@ -2,113 +2,163 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA3AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE34C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1802076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255809;
-	bh=Y+UUWSoIDCIpgXx9xE6XqRNIwYNkaFmOrUW01mRiSPA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHKs0IXZDjmkTp2syZiNsBFYM4csnYtHarEIwMc1iPXJxZOWjeiKS0vauPcolguG3
-	 oIBzqUEfpMJyZ6zJ5TamqymO90Soh9bu9SmyVLNrxM7JsWKFlEe7g5g23SAFyTM0Lb
-	 IZnUM3Mquy0vzjQc49Y40hqTWiyxMSkx25uBDSTI=
+	by mail.kernel.org (Postfix) with ESMTP id E9853206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgD3OKD (ORCPT
+        id S1729546AbgD3OKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60234 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:10:18 -0400
+Received: from hfcrelay.icp-osb-irony-out7.external.iinet.net.au ([203.59.1.87]:22719
+        "EHLO hfcrelay.icp-osb-irony-out7.external.iinet.net.au"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgD3Nvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:41 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5269C24953;
-        Thu, 30 Apr 2020 13:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254701;
-        bh=Y+UUWSoIDCIpgXx9xE6XqRNIwYNkaFmOrUW01mRiSPA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ztKeGvx8oqtlO69NVtac6yeQI4NrNmp+1ChkjKkc82MuahyoK8PrvnrvsD7/GAy8Z
-         jM6f7sAjTcr7QwEhEyEBqpL7Hg93Ou/DfZgvwbDjlD3vTPQBveNbF7BVX3E0sIt6QK
-         8uCL31jVwGlHC1mCOuCFlzeMiifl3kDgjykBuNKs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 50/79] net/mlx5e: Get the latest values from counters in switchdev mode
-Date:   Thu, 30 Apr 2020 09:50:14 -0400
-Message-Id: <20200430135043.19851-50-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
-References: <20200430135043.19851-1-sashal@kernel.org>
+        id S1727967AbgD3OKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:10:13 -0400
+X-SMTP-MATCH: 0
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2BiAABi26pe//onNcoNWRwBAQEBAQE?=
+ =?us-ascii?q?HAQESAQEEBAEBQIE2BAEBCwGBfIJMhCGPSgEBBAaBCggligSRVgsBAQEBAQE?=
+ =?us-ascii?q?BAQE3BAEBhEQCglQ3Bg4CEAEBAQUBAQEBAQUDAYV3hkkBAQEBAgEjFUEFCws?=
+ =?us-ascii?q?YAgImAgJXBgEMBgIBAYMiglgFsnh2gTKFUINngUCBDioBjFp5gQeBOAyCXT6?=
+ =?us-ascii?q?HYIJgBJB/h3qZPAiCR5JXBoUkCBudBy2PWJ8dgXkzGggoCIMkUCVXkhxuAQi?=
+ =?us-ascii?q?NK2I2AgYIAQEDCZJqAQE?=
+X-IPAS-Result: =?us-ascii?q?A2BiAABi26pe//onNcoNWRwBAQEBAQEHAQESAQEEBAEBQ?=
+ =?us-ascii?q?IE2BAEBCwGBfIJMhCGPSgEBBAaBCggligSRVgsBAQEBAQEBAQE3BAEBhEQCg?=
+ =?us-ascii?q?lQ3Bg4CEAEBAQUBAQEBAQUDAYV3hkkBAQEBAgEjFUEFCwsYAgImAgJXBgEMB?=
+ =?us-ascii?q?gIBAYMiglgFsnh2gTKFUINngUCBDioBjFp5gQeBOAyCXT6HYIJgBJB/h3qZP?=
+ =?us-ascii?q?AiCR5JXBoUkCBudBy2PWJ8dgXkzGggoCIMkUCVXkhxuAQiNK2I2AgYIAQEDC?=
+ =?us-ascii?q?ZJqAQE?=
+X-IronPort-AV: E=Sophos;i="5.73,336,1583164800"; 
+   d="scan'208";a="253537256"
+Received: from 202-53-39-250.tpgi.com.au (HELO [192.168.0.106]) ([202.53.39.250])
+  by icp-osb-irony-out7.iinet.net.au with ESMTP; 30 Apr 2020 22:10:07 +0800
+Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
+ properly in there
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200429214954.44866-1-jannh@google.com>
+ <20200429215620.GM1551@shell.armlinux.org.uk>
+ <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
+Date:   Fri, 1 May 2020 00:10:05 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
 
-[ Upstream commit dcdf4ce0ff4ba206fc362e149c8ae81d6a2f849c ]
 
-In the switchdev mode, when running "cat
-/sys/class/net/NIC/statistics/tx_packets", the ppcnt register is
-accessed to get the latest values. But currently this command can
-not get the correct values from ppcnt.
+On 30/4/20 9:03 am, Linus Torvalds wrote:
+> On Wed, Apr 29, 2020 at 2:57 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+>>
+>> I've never had any reason to use FDPIC, and I don't have any binaries
+>> that would use it.  Nicolas Pitre added ARM support, so I guess he
+>> would be the one to talk to about it.  (Added Nicolas.)
+> 
+> While we're at it, is there anybody who knows binfmt_flat?
+> 
+> It might be Nicolas too.
+> 
+> binfmt_flat doesn't do core-dumping, but it has some other oddities.
+> In particular, I'd like to bring sanity to the installation of the new
+> creds, and all the _normal_ binfmt cases do it largely close together
+> with setup_new_exec().
+> 
+> binfmt_flat is doing odd things. It's doing this:
+> 
+>          /* Flush all traces of the currently running executable */
+>          if (id == 0) {
+>                  ret = flush_old_exec(bprm);
+>                  if (ret)
+>                          goto err;
+> 
+>                  /* OK, This is the point of no return */
+>                  set_personality(PER_LINUX_32BIT);
+>                  setup_new_exec(bprm);
+>          }
+> 
+> in load_flat_file() - which is also used to loading _libraries_. Where
+> it makes no sense at all.
 
-From firmware manual, before getting the 802_3 counters, the 802_3
-data layout should be set to the ppcnt register.
+I haven't looked at the shared lib support in there for a long time,
+but I thought that "id" is only 0 for the actual final program.
+Libraries have a slot or id number associated with them.
 
-When the command "cat /sys/class/net/NIC/statistics/tx_packets" is
-run, before updating 802_3 data layout with ppcnt register, the
-monitor counters are tested. The test result will decide the
-802_3 data layout is updated or not.
+> It does the
+> 
+>          install_exec_creds(bprm);
+> 
+> in load_flat_binary() (which makes more sense: that is only for actual
+> binary loading, no library case).
+> 
+> I would _like_ for every binfmt loader to do
+> 
+>          /* Flush all traces of the currently running executable */
+>          retval = flush_old_exec(bprm);
+>          if (retval)
+>                  return retval;
+> 
+>     .. possibly set up personalities here ..
+> 
+>          setup_new_exec(bprm);
+>          install_exec_creds(bprm);
+> 
+> all together, and at least merge 'setup_new_exec()' with 'install_exec_creds()'.
+> 
+> And I think all the binfmt handlers would be ok with that, but the
+> flat one in particular is really oddly set up.
+> 
+> *Particularly* with that flush_old_exec/setup_new_exec() being done by
+> the same routine that is also loading libraries (and called from
+> 'calc_reloc()' from binary loading too).
+> 
+> Adding Greg Ungerer for m68knommu. Can somebody sort out why that
+> flush_old_exec/setup_new_exec() isn't in load_flat_binary() like
+> install_exec_creds() is?
+> 
+> Most of that file goes back to pre-git days. And most of the commits
+> since are not so much about binfmt_flat, as they are about cleanups or
+> changes elsewhere where binfmt_flat was just a victim.
 
-Actually the monitor counters do not support to monitor rx/tx
-stats of 802_3 in switchdev mode. So the rx/tx counters change
-will not trigger monitor counters. So the 802_3 data layout will
-not be updated in ppcnt register. Finally this command can not get
-the latest values from ppcnt register with 802_3 data layout.
+I'll have a look at this.
 
-Fixes: 5c7e8bbb0257 ("net/mlx5e: Use monitor counters for update stats")
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Quick hack test shows moving setup_new_exec(bprm) to be just before
+install_exec_creds(bprm) works fine for the static binaries case.
+Doing the flush_old_exec(bprm) there too crashed out - I'll need to
+dig into that to see why.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 2650739964326..d02db5aebac45 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3568,7 +3568,12 @@ mlx5e_get_stats(struct net_device *dev, struct rtnl_link_stats64 *stats)
- 	struct mlx5e_vport_stats *vstats = &priv->stats.vport;
- 	struct mlx5e_pport_stats *pstats = &priv->stats.pport;
- 
--	if (!mlx5e_monitor_counter_supported(priv)) {
-+	/* In switchdev mode, monitor counters doesn't monitor
-+	 * rx/tx stats of 802_3. The update stats mechanism
-+	 * should keep the 802_3 layout counters updated
-+	 */
-+	if (!mlx5e_monitor_counter_supported(priv) ||
-+	    mlx5e_is_uplink_rep(priv)) {
- 		/* update HW stats in background for next time */
- 		mlx5e_queue_update_stats(priv);
- 	}
--- 
-2.20.1
+Regards
+Greg
+
 
