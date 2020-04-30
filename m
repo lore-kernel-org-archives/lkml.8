@@ -2,101 +2,148 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E07FC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0DCC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECE220870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5072173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:00:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HdcxtBBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgD3VAD (ORCPT
+        id S1726649AbgD3VAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:00:03 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:43679 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3VAD (ORCPT
+        Thu, 30 Apr 2020 17:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726336AbgD3VAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:00:03 -0400
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MXop2-1jgMhB3zRM-00Y7WU for <linux-kernel@vger.kernel.org>; Thu, 30 Apr
- 2020 23:00:02 +0200
-Received: by mail-qt1-f174.google.com with SMTP id w29so6343999qtv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:00:01 -0700 (PDT)
-X-Gm-Message-State: AGi0PubQb41EYCOfFE5fQc9dJeUZ6RoDrDIcTqPzU0DcMYlIx5yI53HO
-        dsm6r5TK1usxcVo4wamBLcKWi9wRM3G9eGxx5DY=
-X-Google-Smtp-Source: APiQypKmtHGtD1tKNxNdN3qG8SXaY9CsFLu0gLsyCuiF7fJOJ+iQ0mrJupaeBcmHvlzcMCkV1Ol5vIvIJQSJ2catxNQ=
-X-Received: by 2002:ac8:2bce:: with SMTP id n14mr483791qtn.18.1588280400860;
- Thu, 30 Apr 2020 14:00:00 -0700 (PDT)
+        Thu, 30 Apr 2020 17:00:50 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECA3C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:00:50 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j1so9010858wrt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:00:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tUATwzpZxjtae1A7cwapMNJ5haJlC5HtdIYeEo2bhyI=;
+        b=HdcxtBBTqr/xUzKOPsewGq+KhFdgf5wvseNGI2ZEIOXDWE46bkbjUocRTAcZ2uNLHp
+         nForatMzsdPs8+L0IrFQikDJm2msJs+d9Tzz4+5/fMT652hPt+HIxLSJ02HdCHigVrN/
+         9SAhr5CAesG8XtrGURdnaEgujEBNdBceBnfew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tUATwzpZxjtae1A7cwapMNJ5haJlC5HtdIYeEo2bhyI=;
+        b=szfyj5khk13T0KcGGD/u+I8xTfHd/yFOmm6nyR5KCGsDDv7za5HmhtQ4a75NrkVQSQ
+         1+92tmlhdGM1R5uyjwoCRcEj6r7pZK87FXZhB8APoDPO5cVDPW/hUSU7s+Y+6VguzEa0
+         x6oG4Litb0RdTSerPWrhukGyEO7HrS/4yBx1PfSlEBDbp+ySuIM29GOp12TTOBANru6v
+         6nFy8D0fZUl4GPZFlwYElljMvyYRt9Z+4m0axk75pybL1ciErgb8tyBGuW1Ys1FqfjKn
+         Ulxe+3Ies/ucNOxWvChi8CdSunl3EW8VnGJ6/LTcBYbe+/4Kce3WXZQL2/fjxvh280Ai
+         uV9A==
+X-Gm-Message-State: AGi0Pubpgw68gwOkKF3jSD4u5mobU6gmId4t7ESysNmR8LH7DGFOcAV3
+        ccSBs1VCNgOdfODUnw9k5hNqM1Amet4IzKjmZCdnmA==
+X-Google-Smtp-Source: APiQypKv2reBsz0zsRnGDK76QZ4WHS1pIYRkKF7BUdppHJAInOIMuK9/LUue0hxUkkq3QrQxmOz7Y/HtoRhuAgd7rtY=
+X-Received: by 2002:adf:f1c5:: with SMTP id z5mr504368wro.100.1588280448870;
+ Thu, 30 Apr 2020 14:00:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <20200428161044.caamvx67t2z4t6vd@treble> <20200429185536.5xshpcwtn4be4llh@treble>
- <CAK8P3a0M9qh2-_5VKx89ZsTfy5S1zhfWwnO7rN4xYhDwBBvPjw@mail.gmail.com>
- <20200429231115.z2mo5bsmrmj4oark@treble> <20200429232835.yw6ajtjyleob3lmz@treble>
- <CAK8P3a07P49-AdHForem=V0_cfiTFSLLhHCEQk6-UDBOg3-Q_g@mail.gmail.com>
- <20200430143350.qezebqmx2xwdxqxq@treble> <20200430194630.jkwysx6eftkaf6bu@treble>
-In-Reply-To: <20200430194630.jkwysx6eftkaf6bu@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Apr 2020 22:59:44 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3rPDzv4PfOArvkQ6=6b+rWX=ppnJjUaVCWMgF9dntWsA@mail.gmail.com>
-Message-ID: <CAK8P3a3rPDzv4PfOArvkQ6=6b+rWX=ppnJjUaVCWMgF9dntWsA@mail.gmail.com>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
+References: <20200430185522.4116-3-james.quinlan@broadcom.com> <20200430203252.GA62266@bjorn-Precision-5520>
+In-Reply-To: <20200430203252.GA62266@bjorn-Precision-5520>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 30 Apr 2020 17:00:36 -0400
+Message-ID: <CA+-6iNwnMjAYZzYedBqooeJAbot_5A=9C8iFNMc=vdpnzmzVrw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: brcmstb: enable CRS
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:hzjXtPBsY2hOz1lQEuSTS0/praVnnlXY5Se9BujJ0xNOVAHNtKO
- LuW6CE9DnG/jmcXAl5/N5AYZ8vMcbJcIyvFMEEqO8cO9cmBOtNd7/xHZJ/slMgvTmhKkbDW
- dvGzFFfWM276U+E2wNcko83ZdOqmIU5Q9qroZiLHo6UyXoqI8x7KF7/LD3m4jBwIVW8xy6L
- u6DG7VQynuQVPFLCF+4JQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OWYXMygvva4=:CmPHy3ktG5t+pgBXGXyXIf
- AFwpIpm8WqgMJ0IUrHN3USaibGOXjJD5Ic3uZeHtQ7/o8Cc4wkYBF/Z5LX7juOkgH/ApP0b4v
- 2OIlpyNXqjRyodBVq0YT7uGzAP9JjlTzMU73YrJeAn2yZ/gYsiQTe0Y0l6eOCHrKbn7pkzCIi
- jNohNJxdZqPoqJOxYvwzM33e0YCVvAhSebifmuwhU5XrrdqjHKOPZStfDpvU7xN0rlpz6r7zi
- Ttmj7eqoQ5KLWs4y4XCWzwlNoNBueJZWIJgsXB8Y9vbMUV36F9P+9tQqk5s42R739DOwcXgKj
- Xs0y1qyARGaFQc970nI6zlAnI8191NBfvI/1d4DOpwhoqhpYjxBRCe0ADk4r88RARbZ3lpc4N
- 7bGlOPLz988dRSxKniEIrey/cHaXC/E/6rPyETwLNxdJ+WbIEASspnE4Dr/H60+lBwSy1tj5R
- A9A7IilSQYml+VqXGSyfnO3j6jUBXfoJC0sMiJwbssvXtGRHaqm6lM3l4PeoEs6ABVRGUUN9O
- A0OGvb1/IoDJ8kCMCIh/OycsA/59aMpduIbJzPKfy1BPFGM2BZZTO5Qt5cdzYPBBr8Azl2167
- PXk5z8K9aLJwpFbU+eis02EHLMaaJE4ey62lBz1K37LwnC+ElhfzCgPbq+UzpHSHbhN+0JOWh
- XNBweENMrIE1lTFVC9PW+f9lPB5hLKappRCtPC1Tr7Rxw9co0PleWNmvoPgYDyfvpd6lBjPbp
- VFwcayxDPTVFOjNOYAjFyJ6Hy8kdmpkPV05BORo85KGBEeLqw4L4XxSMB2STe9jIHljS5pPVy
- +h/wsjA3rXD04kKaSyYRQ/abe9F1ZHQ3QJYd1PObqZx9lva9uM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 9:46 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> On Thu, Apr 30, 2020 at 09:33:50AM -0500, Josh Poimboeuf wrote:
+On Thu, Apr 30, 2020 at 4:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 02:55:20PM -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Configuration Retry Request Status is off by default on this
+> > PCIe controller.  Turn it on.
+>
+> Are you talking about CRS itself, i.e., the ability of a Root Port to
+> deal with Completions with Configuration Retry Request Status?  That
+> really shouldn't be switchable in the hardware since it's a required
+> feature for all PCIe devices.
+>
+> Or are you talking about CRS Software Visibility, which is controlled
+> by a bit in the PCIe Root Control register?  That *should* be managed
+> by the PCI core in pci_enable_crs().  Does that generic method of
+> controlling it not work for this device?
+>
+My mistake; the commit will be dropped.
 
+Thanks,
+Jim
+> It looks like maybe the latter, since the generic:
 >
-> So there's an easy fix below, just define an x86-specific SYSCALL_ALIAS.
-> It also requries moving the syscall alias macros to syscalls.h, but
-> that's probably where they belong anyway.
+>   #define  PCI_EXP_RTCTL_CRSSVE   0x0010
 >
-> But the objtool .cold parent alias function detection is a little
-> smelly, so I might end up cleaning that up instead if I can figure out a
-> good way to do it.
+> matches your new PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK.
 >
-> diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-> index a84333adeef2..abe6e633f8dc 100644
-> --- a/arch/x86/include/asm/syscall_wrapper.h
-> +++ b/arch/x86/include/asm/syscall_wrapper.h
-> @@ -79,6 +79,8 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
->                 return __se_##name(__VA_ARGS__);                        \
->         }
+> If pci_enable_crs() doesn't work on this device, it sounds like a
+> hardware defect that we need to work around, but I'm not sure that
+> just enabling it unconditionally here is the right thing.
 >
-> +#define SYSCALL_ALIAS(alias, name) __alias(name) typeof(name) alias
-> +
-
-Right, this should work in principle, though I suspect it needs to be
-changed to include the ABI name for x86, as there are separate
-entry points for 32 and 64 bit.
-
-      Arnd
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index 5b0dec5971b8..2bc913c0262c 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -34,6 +34,9 @@
+> >  #define BRCM_PCIE_CAP_REGS                           0x00ac
+> >
+> >  /* Broadcom STB PCIe Register Offsets */
+> > +#define PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL                    0x00c8
+> > +#define  PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK    0x10
+> > +
+> >  #define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1                              0x0188
+> >  #define  PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK       0xc
+> >  #define  PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN                       0x0
+> > @@ -827,6 +830,12 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >                pci_speed_string(pcie_link_speed[cls]), nlw,
+> >                ssc_good ? "(SSC)" : "(!SSC)");
+> >
+> > +     /* Enable configuration request retry (CRS) */
+> > +     tmp = readl(base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+> > +     u32p_replace_bits(&tmp, 1,
+> > +                       PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL_RC_CRS_EN_MASK);
+> > +     writel(tmp, base + PCIE_RC_CFG_PCIE_ROOT_CAP_CONTROL);
+> > +
+> >       /* PCIe->SCB endian mode for BAR */
+> >       tmp = readl(base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+> >       u32p_replace_bits(&tmp, PCIE_RC_CFG_VENDOR_SPCIFIC_REG1_LITTLE_ENDIAN,
+> > --
+> > 2.17.1
+> >
