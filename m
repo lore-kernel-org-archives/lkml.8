@@ -2,125 +2,111 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C9EC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44644C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB33B2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201AC2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoQmpO3G"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="u43mV+hG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgD3VYW (ORCPT
+        id S1727831AbgD3VYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        Thu, 30 Apr 2020 17:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726818AbgD3VYV (ORCPT
+        by vger.kernel.org with ESMTP id S1726470AbgD3VYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:24:21 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D7AC035494;
-        Thu, 30 Apr 2020 14:24:21 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o27so3754339wra.12;
-        Thu, 30 Apr 2020 14:24:21 -0700 (PDT)
+        Thu, 30 Apr 2020 17:24:33 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCABC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:24:32 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id k22so5770161eds.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:24:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PyH2w2vQ2/ttTCu1gA9N4CJ/i81Ue6gR/CAS7sMwVvo=;
-        b=IoQmpO3GmJlAH/aoZ8tWtIO9clTTbyYXCHpE2M77/yadwdU0QcXochTT58EyZDHPfo
-         6Ky3UClDTBEDZlamB61fgp8qZ8OCa76ZhRK7PCf1ZYSRN8zSKzqPhG8h0VPaGqZTXUL2
-         yje20nDGT3vNOE0lzNFrLnkDlkIS/Lxep7a8e+fkTXlTHDWUjttPDuIgBnL7f3PWCqp9
-         avT6HHDbqVptfl4xXRqNLgAk6IcykEH///zA92BxQTXvxA7iRPE7W92qEzXE0sOvvLvp
-         0jXXGlrGL1ihnwZ2ONmbCaOgoV2X5rbGStpJWh0J+zX62jGXhLc2ZMzx9VtOUdIoz0VQ
-         g4Sw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=ZoHEfmnTDcYESuGHbMmk2jQ8V1rJF9rmlj/si8zVjxI=;
+        b=u43mV+hGSTT4+UwN7S5H34Rl13o9HAwNg3reMvcv91FGB3/J/PQKAaZFJ/nQeimszj
+         THdwtNIqmHQ0JM/vyg7n58WK7i+eO6w6ei1Eha2OHMyHSK2yNuB1ZQxeg374ux1IgYzI
+         vRmwvziesLZIYRTX0nTIzUc5dB5xBETPxmwQ66CdMuXnJ1ISnquymOV5aWGUCxILtguO
+         2/V7AYrHZvKXQ/Tlp8jziBb0p/Q0813u8Vwdg4bF/yT5sE4Ho0EVXaNPW2F0YAfac6cf
+         GFZJpTwp/3KlgkjkAz141tqNE1prHqV5Nio3IiZ1VKSmruzUiA9PW9wkiLQF5K6yZdh1
+         FTQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PyH2w2vQ2/ttTCu1gA9N4CJ/i81Ue6gR/CAS7sMwVvo=;
-        b=q087K/TrDvlFLH1OjW3rvZwa92MN0dstGZLfFClYJ2C+0ckVawGkrF/+ywcBQ/qEXE
-         hyJKEvIhHbL+quztmGzh0uhIVedwXLcJbU/AF8yiY15Qyb0CY0KJFgrVtP4ohrbJjxcp
-         tQhMfN6Q1tYiZDsJtDiXv35WEpAzKkRWYTI7dhRLmAOxmFLLYOKQgYYdCW4AEpGPe8Q1
-         BSGXWO00L+6LyGxUqrUQStS3SJmylwNX1cLtokw5CHbMCDIFOtdDJn4nLeaxbvlkdnok
-         sUY518JMc6KmZbfOkQiui2DzZxTAHoHofmi2ZL/h0acn/D+mtPDBiwjKP3Eq1c5cj8ls
-         lePg==
-X-Gm-Message-State: AGi0PuZllKaCoOExBoTyqMrFFwzWR0hYZEvYY+z26DlbQrWo5hvZacJe
-        MuKFzlhZAWOjeKgOsAFPlQE=
-X-Google-Smtp-Source: APiQypJ38a1LjrxqECLlYtfvpgXWAwQDQASib0V5TWlj0xUr7UPGEVPRcz1A/vXoxpgrmLk5qeo7cA==
-X-Received: by 2002:adf:ec09:: with SMTP id x9mr560156wrn.364.1588281860038;
-        Thu, 30 Apr 2020 14:24:20 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id z22sm1237653wma.20.2020.04.30.14.24.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 14:24:19 -0700 (PDT)
-To:     paul.kocialkowski@bootlin.com
-Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
-        hansverk@cisco.com, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        thomas.petazzoni@bootlin.com
-References: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: rockchip-rga: Add PX30 compatible
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
-Date:   Thu, 30 Apr 2020 23:24:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ZoHEfmnTDcYESuGHbMmk2jQ8V1rJF9rmlj/si8zVjxI=;
+        b=eA7A5kcNGieAjkgZOTpnaxI0bqcVo0ilxZiN90nbWZi97c6cqMMbSd8OPwugvEpjI+
+         Ix6zFch47/fkV53Uyw6rYyZCrDb+3trnoWFuZkgEDuDSIWs/STHkx9itetcfp24RJ07F
+         T7ofi6krwd+5BcVm+G4cGqKlnejXEx8wpP3j/Ppn6ZNKJjIp9oy2gWTjxYx/AXJODNWR
+         30d98gtd51FB7gDcgVTonIgg/3bR0sy5lbGFI57i5tf2Trre3iW3PwfO6lE5RGC4x87G
+         9io0QrYJbZIMQco8DB0pG8qb/PUAwd/0yJe893L4T8e/on1t0OboD/+SpkKEhW7fpefM
+         PP/Q==
+X-Gm-Message-State: AGi0PuZFAfgbp4yhHGhVk6m6zNvbvKw0J6hf+0ck8XLVFZcumeI/zzAi
+        2WXHG4QlmJckhlNR6ONSwRzvvRjx6uAx+uv9gJBb
+X-Google-Smtp-Source: APiQypI6YkJcQVy9dVwcQVWuwmfdhb49nrj1ejVM0ZNVwEg0+5MtwD5WvMB0rhXXebaqXN/7l4V5Ld230nhh48E9fV8=
+X-Received: by 2002:a50:d98b:: with SMTP id w11mr865134edj.196.1588281871459;
+ Thu, 30 Apr 2020 14:24:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 30 Apr 2020 17:24:20 -0400
+Message-ID: <CAHC9VhTu3YWPmwtA7RERHDRhQt0wAkmN4GJCmaRY7KSFRwtACQ@mail.gmail.com>
+Subject: [GIT PULL] SELinux fixes for v5.7 (#2)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi Linus,
 
-> 
-> Add a new compatible for the PX30 Rockchip SoC, which also features
-> a RGA block. It is compatible with the RK3288 RGA block.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/media/rockchip-rga.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> index dd645ddccb07..740586299da9 100644
-> --- a/Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> @@ -23,6 +23,9 @@ properties:
+Two more SELinux patches to fix problems in the v5.7-rcX releases.
+Wei Yongjun's patch fixes a return code in an error path, and my patch
+fixes a problem where we were not correctly applying access controls
+to all of the netlink messages in the netlink_send LSM hook.  Both
+patches pass our tests without problem and currently apply cleanly on
+top of your master branch.  Please merge for the next -rcX release.
 
+Thanks,
+-Paul
 
->        - items:
->            - const: rockchip,rk3228-rga
->            - const: rockchip,rk3288-rga
-> +      - items:
-> +          - const: rockchip,px30-rga
-> +          - const: rockchip,rk3288-rga
+--
+The following changes since commit af15f14c8cfcee515f4e9078889045ad63efefe3:
 
-Use enum.
+ selinux: free str on error in str_read() (2020-04-15 17:23:16 -0400)
 
-      - items:
-          - enum:
-            - rockchip,px30-rga
-            - rockchip,rk3228-rga
-          - const: rockchip,rk3288-rga
+are available in the Git repository at:
 
->  
->    reg:
->      maxItems: 1
-> -- 
-> 2.26.0
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+   tags/selinux-pr-20200430
 
+for you to fetch changes up to fb73974172ffaaf57a7c42f35424d9aece1a5af6:
+
+ selinux: properly handle multiple messages in selinux_netlink_send()
+   (2020-04-30 16:18:37 -0400)
+
+----------------------------------------------------------------
+selinux/stable-5.7 PR 20200430
+
+----------------------------------------------------------------
+Paul Moore (1):
+     selinux: properly handle multiple messages in selinux_netlink_send()
+
+Wei Yongjun (1):
+     selinux: fix error return code in cond_read_list()
+
+security/selinux/hooks.c          | 70 +++++++++++++++++++++----------
+security/selinux/ss/conditional.c |  2 +-
+2 files changed, 46 insertions(+), 26 deletions(-)
+-- 
+paul moore
+www.paul-moore.com
