@@ -2,114 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC536C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B0FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C182208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3902076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255402;
-	bh=7W7KGgcOD0KxtaNwh5YpKd1MlDkjCVjYH32gOIyUauQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0Y5yXOri6rXxa2V/RN2MZiV02LCkPT+F0NzSQBCgooBVs7LM9CA5g4AP562ZECERN
-	 MxhDXh5Fbj21PXkVRVpN0CoOPeGjQ2vf89Jtmgb3kK73Rdp9sw9zvX5fYGHDMyqo0g
-	 Abgx8gsfMWN4nFMF492nd41j8P2DtNgsEupWqGT4=
+	s=default; t=1588255408;
+	bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P5eFAvC3NFai0FsX1ApW4KjSpufzZ4lIj4HSuv6UGxnuH7KdYXPdS4yJ6zxma/I/i
+	 zQ1QCi6zPZQZPQXN2MadqATCOD6K9D1mlaxksJrUBU04Qckv/2jvmidDfkr+2VvvMc
+	 7J/gOB/ohz7DYlcAmtJnxq3b5qL9UIq+Dvh6uZ+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgD3ODV (ORCPT
+        id S1729469AbgD3ODY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728620AbgD3ODQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:03:16 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02E0C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:03:15 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f11so6648446ljp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gqs6/WoFCiYvtJs2NOyJ4iHVgMuqbT1GqHeEFPhOPPQ=;
-        b=O8t7ysvn4JbuCgfHB0iclVfyXqKjhyJMADH7fryiwgDIaikCUb2xUHFTGkfrv/kOGT
-         ChdTR92r6FB9qFSdR0QPOufTNyG3cZsWdSpf9JRI7IcOooSDszEv4yLEcFZtwKJToURL
-         x34EdQwoyAhaLyKmaBh1g7sFR+CWi6lGqj6Xo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gqs6/WoFCiYvtJs2NOyJ4iHVgMuqbT1GqHeEFPhOPPQ=;
-        b=dXDLZhckVRBa+1DHOQL9rW6RmR9SVqAP2aOFt63bJ+9Ew3wAW434OP2kwcpqXIJERP
-         sHdXVemW14PMr+ND798zQ9hqcHIcHXDO1l8eo/oOD1dB/y5ow/Ufx9H3taZdyH266HXL
-         A7rt1FcSdf4RMWBtlPfaSgLF31CrOM3/TAa+ODzWFkkwyViUzfyJTOJAVxGLYMn8gNZT
-         2S/9TR9Am2dm5ct1e5FYYHjirZOf+QqJCzdqnK2eukeoLGUtiA5Yy1eWQsBmRtUcyU8w
-         /stLpUatovVHBd4+KzG6pvUAFNbTI85+QCYNTTF3IEBd3BnAuCMDmB2XQddoK6xrZhqX
-         sjYA==
-X-Gm-Message-State: AGi0PubIfYxjb8a/Fy7s1a4EvH1gJzY0lo35oy3Hh7Fjd7U9M5bdLgxj
-        32+qAyLkE4yjm06xLcJvpmgIUHwwIOI=
-X-Google-Smtp-Source: APiQypJ88x8wx5yuj4nFsjPnKG7MasPJZHwq6GriUQ3I180xbuSCyVS6LOp1XwtDdiygaLnmz5sxqQ==
-X-Received: by 2002:a2e:9712:: with SMTP id r18mr2360319lji.225.1588255393039;
-        Thu, 30 Apr 2020 07:03:13 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id u3sm5254387lff.26.2020.04.30.07.03.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 07:03:12 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id u6so6606691ljl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:03:11 -0700 (PDT)
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr2483575ljj.265.1588255391241;
- Thu, 30 Apr 2020 07:03:11 -0700 (PDT)
+        Thu, 30 Apr 2020 10:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728723AbgD3Nxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5154B208CA;
+        Thu, 30 Apr 2020 13:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254811;
+        bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HTmQUJbjyslEJ7lfsQnv8Cp+ndzTycPwmDPk2v9ZS4vEMGwRjlLm/c3qpnoc6RFTf
+         kHP3EKyJZ1yn5ZK0fHvXj7uwyNiVPfRcG6kneMg0Cs0ofeWTpRxuihvrimTjv0wjIg
+         vPQqzCWAv4NRIlKIpVgLIB6vXrHVXLHV5tsbXSv8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/30] selftests/ipc: Fix test failure seen after initial test run
+Date:   Thu, 30 Apr 2020 09:52:59 -0400
+Message-Id: <20200430135325.20762-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 30 Apr 2020 07:02:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
-Message-ID: <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        stable <stable@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 1:41 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> With the above realizations the name "mcsafe" is no longer accurate and
-> copy_safe() is proposed as its replacement. x86 grows a copy_safe_fast()
-> implementation as a default implementation that is independent of
-> detecting the presence of x86-MCA.
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-How is this then different from "probe_kernel_read()" and
-"probe_kernel_write()"? Other than the obvious "it does it for both
-reads and writes"?
+[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
 
-IOW, wouldn't it be sensible to try to match the naming and try to
-find some unified model for all these things?
+After successfully running the IPC msgque test once, subsequent runs
+result in a test failure:
 
-"probe_kernel_copy()"?
+  $ sudo ./run_kselftest.sh
+  TAP version 13
+  1..1
+  # selftests: ipc: msgque
+  # Failed to get stats for IPC queue with id 0
+  # Failed to dump queue: -22
+  # Bail out!
+  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+  not ok 1 selftests: ipc: msgque # exit=1
 
-              Linus
+The dump_queue() function loops through the possible message queue index
+values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
+represents the index value. The first time the test is ran, the initial
+index value of 0 is valid and the test is able to complete. The index
+value of 0 is not valid in subsequent test runs and the loop attempts to
+try index values of 1, 2, 3, and so on until a valid index value is
+found that corresponds to the message queue created earlier in the test.
+
+The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
+index values are used. The test failure is caused by incorrectly
+comparing errno to -EINVAL when cycling through possible index values.
+
+Fix invalid test failures on subsequent runs of the msgque test by
+correctly comparing errno values to a non-negated EINVAL.
+
+Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/ipc/msgque.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index 4c156aeab6b80..5ec4d9e18806c 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
+ 	for (kern_id = 0; kern_id < 256; kern_id++) {
+ 		ret = msgctl(kern_id, MSG_STAT, &ds);
+ 		if (ret < 0) {
+-			if (errno == -EINVAL)
++			if (errno == EINVAL)
+ 				continue;
+ 			printf("Failed to get stats for IPC queue with id %d\n",
+ 					kern_id);
+-- 
+2.20.1
+
