@@ -2,94 +2,178 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FCFC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7B7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28E12063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BA62063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255387;
+	bh=ClO+aYxsbCXzhxSryV9axVy2inPbv6/YGVUuML2J0YQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=swlkpcZ/ZxIzl1uzv8RnyrCW9UyWBWfL3UaG9wmBac4e4fZd2SKBtSv8mZvYn9igT
+	 AvmOG/+uOX3IMhatYxmBr/kZbdtD93UhIdAfcjbLl0W8tHGLkd6LEXjUhz2kvewJx9
+	 lCv62aq8sytnoNe+eROOjBSQl16Hpw15KUOvFkXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgD3ODB (ORCPT
+        id S1727854AbgD3Nxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:03:01 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37029 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729452AbgD3OC4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:02:56 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r25so5294160oij.4;
-        Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sJs/ccRnc3IpftOPmZxsp+U77POq5aMrgerBg7OaDG4=;
-        b=C6sAA3TNK9HOmmQw7lHiHuhS/WEUUHmBnOScvuDjny8G++cyYWIag1+p4NiPy6WG3P
-         1gYfqbxN81AFs4ooqm57N8efmbU6C9UJskl4+qcNm+HklRkKYDpSNyMRK16XY4FaT6nI
-         FPIQ6oIRn2iLIqMRQZ0T9y8QI1hKzEG5lq8ihPLaLOtUAKQW1bqFF0R0Tc+0Nv0f6DUI
-         LQ1FslT5nd60Y9kxFjpspqxTjCMYVXjkQF0MIx8DbkLMBBAwkeabPuzweix5Yc2Yauhl
-         bVxmtHXd4W8bqdEAnmAp/Z6MiTZDU/Neq2VT+trnfpURueKAjGWPktEQE5duQzhSrF4J
-         jOrA==
-X-Gm-Message-State: AGi0PuaGncbbJi8W0MI02FBWyPoL4N0Q7sglndjRU5SBp+8cw3v4Ae5y
-        rPuxthl0VD6vnyzPDm+lgKSzGFriPIymPAs7S+psr4rH
-X-Google-Smtp-Source: APiQypJ0gb+RTtB2XK9qYeGrvR6ZbhTKXtAi0sTZFb9b/YKzwx/yPxkzE6lCQbIOJJ/J3ynAVkE1ekKFQSCnJOLDnKM=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr1887761oig.54.1588255375518;
- Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
+        Thu, 30 Apr 2020 09:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728564AbgD3Nw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B370E2137B;
+        Thu, 30 Apr 2020 13:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254778;
+        bh=ClO+aYxsbCXzhxSryV9axVy2inPbv6/YGVUuML2J0YQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yBQ08xwESY2CN8SNLRQyUFen1a0eunL0+OgkSAwEH7uVt/m2Eq+MRJ0SWeog/6LNO
+         fKfD+rqOAC4TKHDANT/f2jj8de2AHVaLiYDD42QPcecXXJ5wYU7IVDtoUPgBWLGFsc
+         eJkUjd/qDXQFUnnWZ8j5XFJn1AA017cy4FXFtD+g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 35/57] net/mlx5e: Don't trigger IRQ multiple times on XSK wakeup to avoid WQ overruns
+Date:   Thu, 30 Apr 2020 09:51:56 -0400
+Message-Id: <20200430135218.20372-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:02:44 +0200
-Message-ID: <CAMuHMdU4zynHLhxte4gHRc=G9SvcX0ghwZtFFOdN2Vp5x1=hnw@mail.gmail.com>
-Subject: Re: [PATCH 13/18] dt-bindings: serial: renesas,scifa: Document
- r8a7742 bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
-> so document the SoC specific bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[ Upstream commit e7e0004abdd6f83ae4be5613b29ed396beff576c ]
 
-Gr{oetje,eeting}s,
+XSK wakeup function triggers NAPI by posting a NOP WQE to a special XSK
+ICOSQ. When the application floods the driver with wakeup requests by
+calling sendto() in a certain pattern that ends up in mlx5e_trigger_irq,
+the XSK ICOSQ may overflow.
 
-                        Geert
+Multiple NOPs are not required and won't accelerate the process, so
+avoid posting a second NOP if there is one already on the way. This way
+we also avoid increasing the queue size (which might not help anyway).
 
+Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en.h        | 3 ++-
+ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c | 3 +++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c     | 8 +++++---
+ drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c   | 6 +++++-
+ 4 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 11426f94c90c6..38aa55638bbed 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -367,6 +367,7 @@ enum {
+ 	MLX5E_SQ_STATE_AM,
+ 	MLX5E_SQ_STATE_TLS,
+ 	MLX5E_SQ_STATE_VLAN_NEED_L2_INLINE,
++	MLX5E_SQ_STATE_PENDING_XSK_TX,
+ };
+ 
+ struct mlx5e_sq_wqe_info {
+@@ -948,7 +949,7 @@ void mlx5e_page_release_dynamic(struct mlx5e_rq *rq,
+ void mlx5e_handle_rx_cqe(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
+ void mlx5e_handle_rx_cqe_mpwrq(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
+ bool mlx5e_post_rx_wqes(struct mlx5e_rq *rq);
+-void mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
++int mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
+ bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq);
+ void mlx5e_dealloc_rx_wqe(struct mlx5e_rq *rq, u16 ix);
+ void mlx5e_dealloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
+index fe2d596cb361f..3bcdb5b2fc203 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
+@@ -33,6 +33,9 @@ int mlx5e_xsk_wakeup(struct net_device *dev, u32 qid, u32 flags)
+ 		if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &c->xskicosq.state)))
+ 			return 0;
+ 
++		if (test_and_set_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state))
++			return 0;
++
+ 		spin_lock(&c->xskicosq_lock);
+ 		mlx5e_trigger_irq(&c->xskicosq);
+ 		spin_unlock(&c->xskicosq_lock);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+index 1d295a7afc8ce..c4eed5bbcd454 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -587,7 +587,7 @@ bool mlx5e_post_rx_wqes(struct mlx5e_rq *rq)
+ 	return !!err;
+ }
+ 
+-void mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
++int mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
+ {
+ 	struct mlx5e_icosq *sq = container_of(cq, struct mlx5e_icosq, cq);
+ 	struct mlx5_cqe64 *cqe;
+@@ -595,11 +595,11 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
+ 	int i;
+ 
+ 	if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &sq->state)))
+-		return;
++		return 0;
+ 
+ 	cqe = mlx5_cqwq_get_cqe(&cq->wq);
+ 	if (likely(!cqe))
+-		return;
++		return 0;
+ 
+ 	/* sq->cc must be updated only after mlx5_cqwq_update_db_record(),
+ 	 * otherwise a cq overrun may occur
+@@ -646,6 +646,8 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
+ 	sq->cc = sqcc;
+ 
+ 	mlx5_cqwq_update_db_record(&cq->wq);
++
++	return i;
+ }
+ 
+ bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
+index 800d34ed8a96c..76efa9579215c 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
+@@ -145,7 +145,11 @@ int mlx5e_napi_poll(struct napi_struct *napi, int budget)
+ 
+ 	busy |= rq->post_wqes(rq);
+ 	if (xsk_open) {
+-		mlx5e_poll_ico_cq(&c->xskicosq.cq);
++		if (mlx5e_poll_ico_cq(&c->xskicosq.cq))
++			/* Don't clear the flag if nothing was polled to prevent
++			 * queueing more WQEs and overflowing XSKICOSQ.
++			 */
++			clear_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state);
+ 		busy |= mlx5e_poll_xdpsq_cq(&xsksq->cq);
+ 		busy_xsk |= mlx5e_napi_xsk_post(xsksq, xskrq);
+ 	}
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
