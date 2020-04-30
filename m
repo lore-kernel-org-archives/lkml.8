@@ -2,169 +2,336 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79811C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5434C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643E720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BCA20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GMx/LhjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgD3IaX (ORCPT
+        id S1726683AbgD3Ibk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:30:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:47319 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD3IaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:30:22 -0400
-IronPort-SDR: /Bbe3+zKb5OoL2/z1DYDPIyL/41C+z0jlpfhANBpwpPz7gHJ2xcmPkrRd4lV7qcFoNDkYfSkmQ
- ubKFVCGFVbHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 01:30:22 -0700
-IronPort-SDR: aSClzRUyQ6VZ04777ze9vUtggfxRFFi19ImTIhkFOA+juZG9kfSlG8+WFiRp9GwkZlSn0SNT47
- nTYUg1doFG0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
-   d="scan'208";a="261701929"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 01:30:21 -0700
-Received: from [10.215.169.74] (vramuthx-MOBL1.gar.corp.intel.com [10.215.169.74])
-        by linux.intel.com (Postfix) with ESMTP id 0CD3C5805EB;
-        Thu, 30 Apr 2020 01:30:16 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
- <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
- <20200429164832.6800fc70@collabora.com>
- <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
- <20200429173107.5c6d2f55@collabora.com>
- <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
- <20200430102114.29b6552f@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
-Date:   Thu, 30 Apr 2020 16:30:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 04:31:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28700 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726127AbgD3Ibk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:31:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588235497;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mYow4zaXwK1lpPM86H19mSz/v8Kj/lT4XY0f047Q4K8=;
+        b=GMx/LhjU8gE7Z+1BiU56XrYtJtr8pUSiuItd51cRvcX63dLo7q58JdnZPct7Mmzni6Jtgd
+        8dFFfE9KGSdzKw/R7AVSS30ENA/m/h+7g4y90w84vBRtTfLz7q6AMyyih6+VcfkwgNunbE
+        6FmzF8mVq01lGdjK9MmFfjoPxItzgb0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-816nR9VQOQybuuwcphjVJw-1; Thu, 30 Apr 2020 04:31:35 -0400
+X-MC-Unique: 816nR9VQOQybuuwcphjVJw-1
+Received: by mail-wm1-f69.google.com with SMTP id n17so289013wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:31:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=mYow4zaXwK1lpPM86H19mSz/v8Kj/lT4XY0f047Q4K8=;
+        b=gkypN0VRBRAQzsn9P958bhH4OXrM/NkaURZH7znkiiqG2mBhs01bw015FE6B9JT0VV
+         CJZOTJydhC5grCcKcMsGDpZt/OXDypCAvT186BdjjqEuZCW2jyl/iqBcJ4O4qqc94KZs
+         QDsybZBvejohbV6adPfaw+AXwgpvc2xj0UrAqEt7qlQvkFFjdsXw/xYKwl4MO3SCIh71
+         g0ZTfnG+bbx85LyMB3R3TuF4y0Y1eGVaQu9r+DsHXVb+AYNrjcg4aEQeRBcwnCwm4dZr
+         FMoV8UgXbwvFF3O6itkS3c5e+DLlSplv9DgAqE3mCCZS1NU9oyjyRZwaEElNvtepB5SC
+         GrCA==
+X-Gm-Message-State: AGi0PubqFQAQvo3s+wKP873eyCJZoZVono8ezDdGV17A+AkKpfR167jN
+        LjfKH8UZNiOES0xH584PW4lOwPKMa4x+mlMe3A35maWRAxiZA0GWFqIluP6yhKU2SwewA+QnSjc
+        WBbT7XnlWe+k4R7wX6Bppy0iV
+X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr1756724wmg.110.1588235494732;
+        Thu, 30 Apr 2020 01:31:34 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL1OapL/7HxSBhD/1PWoVO3LKBacZMwJu5zGKbmXSQzI/EWQuD7rvMeL+TneMgMKlIb2CX24w==
+X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr1756693wmg.110.1588235494381;
+        Thu, 30 Apr 2020 01:31:34 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id t17sm2624275wro.2.2020.04.30.01.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 01:31:33 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 3/6] KVM: x86: interrupt based APF page-ready event delivery
+In-Reply-To: <20200429212708.GA40678@xz-x1>
+References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-4-vkuznets@redhat.com> <20200429212708.GA40678@xz-x1>
+Date:   Thu, 30 Apr 2020 10:31:32 +0200
+Message-ID: <87v9lhfk7v.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200430102114.29b6552f@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-H Boris,
+Peter Xu <peterx@redhat.com> writes:
 
-On 30/4/2020 4:21 pm, Boris Brezillon wrote:
-> On Thu, 30 Apr 2020 15:50:30 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> Hi Boris,
->>
->>     Thank you very much for keep reviewing the patches and more queries...
->>
->> On 29/4/2020 11:31 pm, Boris Brezillon wrote:
->>> On Wed, 29 Apr 2020 23:18:31 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> Hi Boris,
->>>>
->>>> On 29/4/2020 10:48 pm, Boris Brezillon wrote:
->>>>> On Wed, 29 Apr 2020 22:33:37 +0800
->>>>> "Ramuthevar, Vadivel MuruganX"
->>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>>>       
->>>>>> Hi Boris,
->>>>>>
->>>>>> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
->>>>>>> On Wed, 29 Apr 2020 18:42:05 +0800
->>>>>>> "Ramuthevar, Vadivel MuruganX"
->>>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>>>>>          
->>>>>>>> +
->>>>>>>> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
->>>>>>>> +#define EBU_ADDR_MASK		(5 << 4)
->>>>>>>
->>>>>>> It's still unclear what ADDR_MASK is for. Can you add a comment
->>>>>>> explaining what it does?
->>>>>>
->>>>>> Thank you Boris, keep review and giving inputs, will update.
->>>>>
->>>>> Can you please explain it here before sending a new version?
->>>>
->>>> Memory Region Address Mask:
->>>> Specifies the number of right-most bits in the base address that should
->>>> be included in the address comparison. bits positions(7:4).
->>>
->>> Okay, then the macro should be
->>>
->>> #define EBU_ADDR_MASK(x)	((x) << 4)
->>>
->>> And now I'd like you to explain why 5 is the right value for that field
->>> (I guess that has to do with the position of the CS/ALE/CLE pins).
->>
->> 5 : bit 26, 25, 24, 23, 22 to be included for comparison in the
-> 
-> That's 6 bits to me, not 5.
+> Hi, Vitaly,
+>
+> On Wed, Apr 29, 2020 at 11:36:31AM +0200, Vitaly Kuznetsov wrote:
+>> +	Type 1 page (page missing) events are currently always delivered as
+>> +	synthetic #PF exception. Type 2 (page ready) are either delivered
+>> +	by #PF exception (when bit 3 of MSR_KVM_ASYNC_PF_EN is clear) or
+>> +	via an APIC interrupt (when bit 3 set). APIC interrupt delivery is
+>> +	controlled by MSR_KVM_ASYNC_PF2.
+>
+> How about MSR_KVM_ASYNC_PF_INT instead of MSR_KVM_ASYNC_PF2 (to match
+> MSR_KVM_ASYNC_EN and MSR_KVM_ASYNC_ACK where they're all MSR_KVM_ASYNC_* with a
+> meaningful ending word)?
+>
 
-No , 5 bits only the above case.
-> 
->> ADDR_SELx , it compares only 5 bits.
-> 
-> Definitely not what I would qualify as right-most bits. So, you say the
-> comparison always starts at bit 22, and ends at 22+<num-addr-bits>?
+Sure.
 
-Correct
+>> +
+>> +	For #PF delivery, disabling interrupt inhibits APFs. Guest must
+>> +	not enable interrupt before the reason is read, or it may be
+>> +	overwritten by another APF. Since APF uses the same exception
+>> +	vector as regular page fault guest must reset the reason to 0
+>> +	before it does something that can generate normal page fault.
+>> +	If during pagefault APF reason is 0 it means that this is regular
+>> +	page fault.
+>>  
+>>  	During delivery of type 1 APF cr2 contains a token that will
+>>  	be used to notify a guest when missing page becomes
+>> @@ -319,3 +326,18 @@ data:
+>>  
+>>  	KVM guests can request the host not to poll on HLT, for example if
+>>  	they are performing polling themselves.
+>> +
+>> +MSR_KVM_ASYNC_PF2:
+>> +	0x4b564d06
+>> +
+>> +data:
+>> +	Second asynchronous page fault control MSR.
+>> +
+>> +	Bits 0-7: APIC vector for interrupt based delivery of type 2 APF
+>> +	events (page ready notification).
+>> +        Bit 8: Interrupt based delivery of type 2 APF events is enabled
+>> +        Bits 9-63: Reserved
+>
+> (may need to fix up the indents)
+>
+>> +
+>> +	To switch to interrupt based delivery of type 2 APF events guests
+>> +	are supposed to enable asynchronous page faults and set bit 3 in
+>> +	MSR_KVM_ASYNC_PF_EN first.
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index 42a2d0d3984a..6215f61450cb 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -763,12 +763,15 @@ struct kvm_vcpu_arch {
+>>  		bool halted;
+>>  		gfn_t gfns[roundup_pow_of_two(ASYNC_PF_PER_VCPU)];
+>>  		struct gfn_to_hva_cache data;
+>> -		u64 msr_val;
+>> +		u64 msr_val; /* MSR_KVM_ASYNC_PF_EN */
+>> +		u64 msr2_val; /* MSR_KVM_ASYNC_PF2 */
+>> +		u16 vec;
+>>  		u32 id;
+>>  		bool send_user_only;
+>>  		u32 host_apf_reason;
+>>  		unsigned long nested_apf_token;
+>>  		bool delivery_as_pf_vmexit;
+>> +		bool delivery_as_int;
+>>  	} apf;
+>>  
+>>  	/* OSVW MSRs (AMD only) */
+>> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+>> index df2ba34037a2..1bbb0b7e062f 100644
+>> --- a/arch/x86/include/uapi/asm/kvm_para.h
+>> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+>> @@ -50,6 +50,7 @@
+>>  #define MSR_KVM_STEAL_TIME  0x4b564d03
+>>  #define MSR_KVM_PV_EOI_EN      0x4b564d04
+>>  #define MSR_KVM_POLL_CONTROL	0x4b564d05
+>> +#define MSR_KVM_ASYNC_PF2	0x4b564d06
+>>  
+>>  struct kvm_steal_time {
+>>  	__u64 steal;
+>> @@ -81,6 +82,11 @@ struct kvm_clock_pairing {
+>>  #define KVM_ASYNC_PF_ENABLED			(1 << 0)
+>>  #define KVM_ASYNC_PF_SEND_ALWAYS		(1 << 1)
+>>  #define KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT	(1 << 2)
+>> +#define KVM_ASYNC_PF_DELIVERY_AS_INT		(1 << 3)
+>> +
+>> +#define KVM_ASYNC_PF2_VEC_MASK			GENMASK(7, 0)
+>> +#define KVM_ASYNC_PF2_ENABLED			BIT(8)
+>
+> There are two enable bits, this one in ASYNC_PF_EN and the other old one in
+> ASYNC_PF2.  Could it work with only one knob (e.g., set bit 0 of ASYNC_PF_EN
+> always to enable apf)?  After all we have had bit 3 of ASYNC_PF_EN to show
+> whether interrupt is enabled, which seems to be the real switch for whether to
+> enable interrupt for apf.
+>
+> If we can keep the only knob in ASYNC_PF_EN (bit 0), iiuc we can also keep the
+> below kvm_async_pf_wakeup_all() untouched (so we only set bit 0 of ASYNC_PF_EN
+> after configure everything).
 
-> 
->>>>>> Yes , we are setting both CS0 and CS1 memory access region, if you have
->>>>>> any concern to optimize, please suggest me, Thanks!
->>>>>
->>>>> If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
->>>>> is really related to the nand_pa address, then retrieve resources for
->>>>> all CS ranges.
->>>> If it's not related, please explain what those
->>>>> EBU_MEM_BASE_CS_X values encode.
->>>>
->>>> Memory Region Base Address
->>>> FPI Bus addresses are compared to this base address in conjunction with
->>>> the mask control(EBU_ADDR_MASK). Driver need to program this field!
->>>
->>> That's not explaining what the base address should be. Is 'nand_pa' the
->>> value we should have there?
->>
->> The one prorgrammed in the addr_sel register is used by the HW
->> controller, it remaps to  0x174XX-> CS0 and 0x17CXX->CS1.
->> The hardware itself, decodes only for 1740xx/17c0xx, other random values
->> cannot be programmed
-> 
-> The question is, is it the same value we have in nand_pa or it is
-> different?
-> 
-Different address which is 0xE1400000 NAND_BASE_PHY address.
+Yes,
 
-Thanks!
+as we need to write to two MSRs to configure the new mechanism ordering
+becomes important. If the guest writes to ASYNC_PF_EN first to establish
+the shared memory stucture the interrupt in ASYNC_PF2 is not yet set
+(and AFAIR '0' is a valid interrupt!) so if an async pf happens
+immediately after that we'll be forced to inject INT0 in the guest and
+it'll get confused and linkely miss the event.
 
-Regards
-Vadivel
+We can probably mandate the reverse sequence: guest has to set up
+interrupt in ASYNC_PF2 first and then write to ASYNC_PF_EN (with both
+bit 0 and bit 3). In that case the additional 'enable' bit in ASYNC_PF2
+seems redundant. This protocol doesn't look too complex for guests to
+follow.
+
+>
+> Thanks,
+>
+>> +
+>>  
+>>  /* Operations for KVM_HC_MMU_OP */
+>>  #define KVM_MMU_OP_WRITE_PTE            1
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 7c21c0cf0a33..861dce1e7cf5 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -1243,7 +1243,7 @@ static const u32 emulated_msrs_all[] = {
+>>  	HV_X64_MSR_TSC_EMULATION_STATUS,
+>>  
+>>  	MSR_KVM_ASYNC_PF_EN, MSR_KVM_STEAL_TIME,
+>> -	MSR_KVM_PV_EOI_EN,
+>> +	MSR_KVM_PV_EOI_EN, MSR_KVM_ASYNC_PF2,
+>>  
+>>  	MSR_IA32_TSC_ADJUST,
+>>  	MSR_IA32_TSCDEADLINE,
+>> @@ -2649,8 +2649,8 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>>  {
+>>  	gpa_t gpa = data & ~0x3f;
+>>  
+>> -	/* Bits 3:5 are reserved, Should be zero */
+>> -	if (data & 0x38)
+>> +	/* Bits 4:5 are reserved, Should be zero */
+>> +	if (data & 0x30)
+>>  		return 1;
+>>  
+>>  	vcpu->arch.apf.msr_val = data;
+>> @@ -2667,7 +2667,35 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>>  
+>>  	vcpu->arch.apf.send_user_only = !(data & KVM_ASYNC_PF_SEND_ALWAYS);
+>>  	vcpu->arch.apf.delivery_as_pf_vmexit = data & KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
+>> -	kvm_async_pf_wakeup_all(vcpu);
+>> +	vcpu->arch.apf.delivery_as_int = data & KVM_ASYNC_PF_DELIVERY_AS_INT;
+>> +
+>> +	/*
+>> +	 * If delivery via interrupt is configured make sure MSR_KVM_ASYNC_PF2
+>> +	 * was written to before sending 'wakeup all'.
+>> +	 */
+>> +	if (!vcpu->arch.apf.delivery_as_int ||
+>> +	    vcpu->arch.apf.msr2_val & KVM_ASYNC_PF2_ENABLED)
+>> +		kvm_async_pf_wakeup_all(vcpu);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int kvm_pv_enable_async_pf2(struct kvm_vcpu *vcpu, u64 data)
+>> +{
+>> +	/* Bits 9-63 are reserved */
+>> +	if (data & ~0x1ff)
+>> +		return 1;
+>> +
+>> +	if (!lapic_in_kernel(vcpu))
+>> +		return 1;
+>> +
+>> +	vcpu->arch.apf.msr2_val = data;
+>> +
+>> +	vcpu->arch.apf.vec = data & KVM_ASYNC_PF2_VEC_MASK;
+>> +
+>> +	if (data & KVM_ASYNC_PF2_ENABLED)
+>> +		kvm_async_pf_wakeup_all(vcpu);
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> @@ -2883,6 +2911,10 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>  		if (kvm_pv_enable_async_pf(vcpu, data))
+>>  			return 1;
+>>  		break;
+>> +	case MSR_KVM_ASYNC_PF2:
+>> +		if (kvm_pv_enable_async_pf2(vcpu, data))
+>> +			return 1;
+>> +		break;
+>>  	case MSR_KVM_STEAL_TIME:
+>>  
+>>  		if (unlikely(!sched_info_on()))
+>> @@ -3159,6 +3191,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>  	case MSR_KVM_ASYNC_PF_EN:
+>>  		msr_info->data = vcpu->arch.apf.msr_val;
+>>  		break;
+>> +	case MSR_KVM_ASYNC_PF2:
+>> +		msr_info->data = vcpu->arch.apf.msr2_val;
+>> +		break;
+>>  	case MSR_KVM_STEAL_TIME:
+>>  		msr_info->data = vcpu->arch.st.msr_val;
+>>  		break;
+>> @@ -10367,6 +10402,16 @@ static int apf_get_user(struct kvm_vcpu *vcpu, u32 *val)
+>>  				      sizeof(u32));
+>>  }
+>>  
+>> +static bool apf_slot_free(struct kvm_vcpu *vcpu)
+>> +{
+>> +	u32 val;
+>> +
+>> +	if (apf_get_user(vcpu, &val))
+>> +		return false;
+>> +
+>> +	return !val;
+>> +}
+>> +
+>>  static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
+>>  {
+>>  	if (!vcpu->arch.apf.delivery_as_pf_vmexit && is_guest_mode(vcpu))
+>> @@ -10382,11 +10427,23 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
+>>  
+>>  bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+>>  {
+>> +	/*
+>> +	 * TODO: when we are injecting a 'page present' event with an interrupt
+>> +	 * we may ignore pending exceptions.
+>> +	 */
+>>  	if (unlikely(!lapic_in_kernel(vcpu) ||
+>>  		     kvm_event_needs_reinjection(vcpu) ||
+>>  		     vcpu->arch.exception.pending))
+>>  		return false;
+>>  
+>> +	/*'
+>> +	 * Regardless of the type of event we're trying to deliver, we need to
+>> +	 * check that the previous even was already consumed, this may not be
+>> +	 * the case with interrupt based delivery.
+>> +	 */
+>> +	if (vcpu->arch.apf.delivery_as_int && !apf_slot_free(vcpu))
+>> +		return false;
+>> +
+>>  	if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
+>>  		return false;
+
+-- 
+Vitaly
+
