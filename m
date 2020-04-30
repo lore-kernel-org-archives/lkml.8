@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52750C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C417CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E784206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996CB206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255880;
-	bh=1LZPEe39UMnjvcdUsIgtXXcaZV3h47Euw7lnX/jEmRk=;
+	s=default; t=1588255886;
+	bh=yVDzDf7BPjN8V3Q1sj6RasbrxByVjWam1uXEnqFNqCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFVH141+8hIseuWXENwcuA3b6waFLuc849L4hcUud0dTTu8l9cUIMc6d0Ir/46Un+
-	 p7WxIvXm5KJGvlv6QNuB+Hfn8mNLoDWFn3CB+NqKA/P5cJoCsxeN6Z3JftP9MR3Zb7
-	 bUYZWIsYpog6+D9D2+qU4/S2kObTgAZ1SWU0Msag=
+	b=xeqzFvvzVMcq0GDPbe1ouNKs2vZerpIAOkxUlsDAVwzaxUqxkQngF5QexTs6AqWnC
+	 S3iTJcA2BAP5sZSNVXk/hTMDRkLbeQkfe7GVKpBQBrjjTOv78tmjgWfjbnhl7QJLbP
+	 h7Q6vidxNMZvYTR0Jr+lGy0zzTG5sbY73pF4EdNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgD3OLS (ORCPT
+        id S1729137AbgD3OLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59746 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728072AbgD3Nv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:28 -0400
+        id S1728049AbgD3NvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D06BB2137B;
-        Thu, 30 Apr 2020 13:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 851EF2082E;
+        Thu, 30 Apr 2020 13:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254687;
-        bh=1LZPEe39UMnjvcdUsIgtXXcaZV3h47Euw7lnX/jEmRk=;
+        s=default; t=1588254685;
+        bh=yVDzDf7BPjN8V3Q1sj6RasbrxByVjWam1uXEnqFNqCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j2V4ankSg1LXv2x+qjUkv3aFSLRX9KbEtHQlXnGY6AuUBvGXEJ5FdWjmutKUDz3uo
-         J480RKbzpW4i33ufxdJOvXTaYq24Yoad3RlBSGGE90cAueWM6Z0i2kJDYHSkURtH+U
-         C1Gx3Ng+AUslP65vq07jScIfvYh/1mAPT9FuBglE=
+        b=w4OHDPD8gFHxVnTbmLEhBYaQIzF0wza76jwZWX9dq28S7y70bfndBx8nq/D0LWHMM
+         spnvQoAvAOZqQGWpEem3NqgpJRqU2gso/B8CHMtlUI7q7dRXRbTy9y/HpdTfOFhLC1
+         BRmdIBt+nDT8wnVK8XedN+3hp2EePIk61VoILnWU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prike Liang <Prike.Liang@amd.com>,
-        Mengbing Wang <Mengbing.Wang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Huang Rui <ray.huang@amd.com>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 38/79] drm/amd/powerplay: fix resume failed as smu table initialize early exit
-Date:   Thu, 30 Apr 2020 09:50:02 -0400
-Message-Id: <20200430135043.19851-38-sashal@kernel.org>
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 36/79] ASoC: stm32: sai: fix sai probe
+Date:   Thu, 30 Apr 2020 09:50:00 -0400
+Message-Id: <20200430135043.19851-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -61,46 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit 45a5e639548c459a5accebad340078e4e6e0e512 ]
+[ Upstream commit e2bcb65782f91390952e849e21b82ed7cb05697f ]
 
-When the amdgpu in the suspend/resume loop need notify the dpm disabled,
-otherwise the smu table will be uninitialize and result in resume failed.
+pcm config must be set before snd_dmaengine_pcm_register() call.
 
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-Tested-by: Mengbing Wang <Mengbing.Wang@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Huang Rui <ray.huang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 0d6defc7e0e4 ("ASoC: stm32: sai: manage rebind issue")
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20200417142122.10212-1-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/renoir_ppt.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ sound/soc/stm/stm32_sai_sub.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-index f7a1ce37227cd..4a52c310058d1 100644
---- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-@@ -889,12 +889,17 @@ static int renoir_read_sensor(struct smu_context *smu,
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index d3259de43712b..7e965848796c3 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1543,6 +1543,9 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- static bool renoir_is_dpm_running(struct smu_context *smu)
- {
-+	struct amdgpu_device *adev = smu->adev;
++	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
++		conf = &stm32_sai_pcm_config_spdif;
 +
- 	/*
- 	 * Util now, the pmfw hasn't exported the interface of SMU
- 	 * feature mask to APU SKU so just force on all the feature
- 	 * at early initial stage.
- 	 */
--	return true;
-+	if (adev->in_suspend)
-+		return false;
-+	else
-+		return true;
+ 	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not register pcm dma\n");
+@@ -1551,15 +1554,10 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
  
+ 	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
+ 					 &sai->cpu_dai_drv, 1);
+-	if (ret) {
++	if (ret)
+ 		snd_dmaengine_pcm_unregister(&pdev->dev);
+-		return ret;
+-	}
+-
+-	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
+-		conf = &stm32_sai_pcm_config_spdif;
+ 
+-	return 0;
++	return ret;
  }
  
+ static int stm32_sai_sub_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
