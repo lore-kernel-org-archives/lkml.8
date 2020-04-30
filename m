@@ -2,104 +2,125 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A261C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C9EC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54AC12166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB33B2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IoQmpO3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgD3VYO (ORCPT
+        id S1727788AbgD3VYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:24:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51418 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgD3VYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:24:14 -0400
-IronPort-SDR: ojCHCygKZP267MKtt84Z2Ed6iGkr0lVqWQmLWntTVLOlCFnhVTyGwRkXVsbFx9+GcBY3ZaeDrw
- kYMgG4kBUnqA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 14:24:12 -0700
-IronPort-SDR: Df7fajOEj/tSyneF9JgWSfkmFSgTUO/AJCWyEyuqP4sIDUhH2Gh1ZRARhBNSCthaiL+g72hSEZ
- RN8wUzEqy0qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
-   d="scan'208";a="405551477"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga004.jf.intel.com with ESMTP; 30 Apr 2020 14:24:12 -0700
-Date:   Thu, 30 Apr 2020 14:24:12 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/gup.c: Handle error at earliest for incorrect
- nr_pages value
-Message-ID: <20200430212411.GB582335@iweiny-DESK2.sc.intel.com>
-References: <1588277518-21425-1-git-send-email-jrdr.linux@gmail.com>
+        Thu, 30 Apr 2020 17:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726818AbgD3VYV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:24:21 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D7AC035494;
+        Thu, 30 Apr 2020 14:24:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o27so3754339wra.12;
+        Thu, 30 Apr 2020 14:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PyH2w2vQ2/ttTCu1gA9N4CJ/i81Ue6gR/CAS7sMwVvo=;
+        b=IoQmpO3GmJlAH/aoZ8tWtIO9clTTbyYXCHpE2M77/yadwdU0QcXochTT58EyZDHPfo
+         6Ky3UClDTBEDZlamB61fgp8qZ8OCa76ZhRK7PCf1ZYSRN8zSKzqPhG8h0VPaGqZTXUL2
+         yje20nDGT3vNOE0lzNFrLnkDlkIS/Lxep7a8e+fkTXlTHDWUjttPDuIgBnL7f3PWCqp9
+         avT6HHDbqVptfl4xXRqNLgAk6IcykEH///zA92BxQTXvxA7iRPE7W92qEzXE0sOvvLvp
+         0jXXGlrGL1ihnwZ2ONmbCaOgoV2X5rbGStpJWh0J+zX62jGXhLc2ZMzx9VtOUdIoz0VQ
+         g4Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PyH2w2vQ2/ttTCu1gA9N4CJ/i81Ue6gR/CAS7sMwVvo=;
+        b=q087K/TrDvlFLH1OjW3rvZwa92MN0dstGZLfFClYJ2C+0ckVawGkrF/+ywcBQ/qEXE
+         hyJKEvIhHbL+quztmGzh0uhIVedwXLcJbU/AF8yiY15Qyb0CY0KJFgrVtP4ohrbJjxcp
+         tQhMfN6Q1tYiZDsJtDiXv35WEpAzKkRWYTI7dhRLmAOxmFLLYOKQgYYdCW4AEpGPe8Q1
+         BSGXWO00L+6LyGxUqrUQStS3SJmylwNX1cLtokw5CHbMCDIFOtdDJn4nLeaxbvlkdnok
+         sUY518JMc6KmZbfOkQiui2DzZxTAHoHofmi2ZL/h0acn/D+mtPDBiwjKP3Eq1c5cj8ls
+         lePg==
+X-Gm-Message-State: AGi0PuZllKaCoOExBoTyqMrFFwzWR0hYZEvYY+z26DlbQrWo5hvZacJe
+        MuKFzlhZAWOjeKgOsAFPlQE=
+X-Google-Smtp-Source: APiQypJ38a1LjrxqECLlYtfvpgXWAwQDQASib0V5TWlj0xUr7UPGEVPRcz1A/vXoxpgrmLk5qeo7cA==
+X-Received: by 2002:adf:ec09:: with SMTP id x9mr560156wrn.364.1588281860038;
+        Thu, 30 Apr 2020 14:24:20 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z22sm1237653wma.20.2020.04.30.14.24.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 14:24:19 -0700 (PDT)
+To:     paul.kocialkowski@bootlin.com
+Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
+        hansverk@cisco.com, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        thomas.petazzoni@bootlin.com
+References: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: rockchip-rga: Add PX30 compatible
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <ed1ac7d6-12d3-5480-3699-70a88595cac2@gmail.com>
+Date:   Thu, 30 Apr 2020 23:24:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588277518-21425-1-git-send-email-jrdr.linux@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200430164245.1630174-2-paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 01:41:58AM +0530, Souptick Joarder wrote:
-> As per documentation, pin_user_pages_fast() & get_user_pages_fast()
-> will return 0, if nr_pages <= 0. But this can be figure out only after
-> going inside the internal_get_user_pages_fast().
-
-Why is nr_pages not unsigned?  I seem to have convinced myself before that
-there was a good reason for it but really what is the point of calling either
-of these functions with nr_pages not > 0?
+Hi Paul,
 
 > 
-> This can be handled early. Adding a check for the same.
+> Add a new compatible for the PX30 Rockchip SoC, which also features
+> a RGA block. It is compatible with the RK3288 RGA block.
 > 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 > ---
->  mm/gup.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/media/rockchip-rga.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 50681f0..a13aaa6 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2817,6 +2817,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->  	 */
->  	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
->  		return -EINVAL;
-> +	if (nr_pages <= 0)
-> +		return 0;
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> index dd645ddccb07..740586299da9 100644
+> --- a/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> @@ -23,6 +23,9 @@ properties:
 
-I think the documentation may be wrong here...  Is there a caller who expects a
-return of 0 for this behavior?
 
-It seems like these should be a warn on and return -EINVAL.  I just don't see
-the use case here.
+>        - items:
+>            - const: rockchip,rk3228-rga
+>            - const: rockchip,rk3288-rga
+> +      - items:
+> +          - const: rockchip,px30-rga
+> +          - const: rockchip,rk3288-rga
 
-Ira
+Use enum.
+
+      - items:
+          - enum:
+            - rockchip,px30-rga
+            - rockchip,rk3228-rga
+          - const: rockchip,rk3288-rga
 
 >  
->  	/*
->  	 * The caller may or may not have explicitly set FOLL_GET; either way is
-> @@ -2854,6 +2856,8 @@ int pin_user_pages_fast(unsigned long start, int nr_pages,
->  	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->  	if (WARN_ON_ONCE(gup_flags & FOLL_GET))
->  		return -EINVAL;
-> +	if (nr_pages <= 0)
-> +		return 0;
->  
->  	gup_flags |= FOLL_PIN;
->  	return internal_get_user_pages_fast(start, nr_pages, gup_flags, pages);
+>    reg:
+>      maxItems: 1
 > -- 
-> 1.9.1
-> 
-> 
+> 2.26.0
+
