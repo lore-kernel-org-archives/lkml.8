@@ -2,163 +2,103 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A10C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B464C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5F12076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D336B20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgD3Pl1 (ORCPT
+        id S1727917AbgD3Pl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:41:27 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:50172 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgD3Pl0 (ORCPT
+        Thu, 30 Apr 2020 11:41:59 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:39373 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726745AbgD3Pl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:41:26 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUBJT-0008Qi-7v; Thu, 30 Apr 2020 09:41:23 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUBJS-0002Fp-2k; Thu, 30 Apr 2020 09:41:22 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
-        <20200430102908.10107-3-david@redhat.com>
-Date:   Thu, 30 Apr 2020 10:38:04 -0500
-In-Reply-To: <20200430102908.10107-3-david@redhat.com> (David Hildenbrand's
-        message of "Thu, 30 Apr 2020 12:29:07 +0200")
-Message-ID: <87pnbp2dcz.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 Apr 2020 11:41:58 -0400
+Received: (qmail 4742 invoked by uid 500); 30 Apr 2020 11:41:57 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 30 Apr 2020 11:41:57 -0400
+Date:   Thu, 30 Apr 2020 11:41:57 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+cc:     gregkh@linuxfoundation.org, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <mausb-host-devel@displaylink.com>
+Subject: Re: [External] Re: [PATCH v5 5/8] usb: mausb_host: Introduce PAL
+ processing
+In-Reply-To: <32cc80c0-c2ff-440c-7505-e848aba782d8@displaylink.com>
+Message-ID: <Pine.LNX.4.44L0.2004301139560.3855-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jUBJS-0002Fp-2k;;;mid=<87pnbp2dcz.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18EJxut0ZMAzA6GiTlXjw55Di06eL/sNkE=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
+On Thu, 30 Apr 2020, Vladimir Stankovic wrote:
 
-> Some devices/drivers that add memory via add_memory() and friends (e.g.,
-> dax/kmem, but also virtio-mem in the future) don't want to create entries
-> in /sys/firmware/memmap/ - primarily to hinder kexec from adding this
-> memory to the boot memmap of the kexec kernel.
->
-> In fact, such memory is never exposed via the firmware memmap as System
-> RAM (e.g., e820), so exposing this memory via /sys/firmware/memmap/ is
-> wrong:
->  "kexec needs the raw firmware-provided memory map to setup the
->   parameter segment of the kernel that should be booted with
->   kexec. Also, the raw memory map is useful for debugging. For
->   that reason, /sys/firmware/memmap is an interface that provides
->   the raw memory map to userspace." [1]
->
-> We don't have to worry about firmware_map_remove() on the removal path.
-> If there is no entry, it will simply return with -EINVAL.
->
-> [1]
-> https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-memmap
+> On 30.4.20. 17:18, Alan Stern wrote:
+> > On Thu, 30 Apr 2020, Vladimir Stankovic wrote:
+> > 
+> >> On 26.4.20. 22:56, Alan Stern wrote:
+> >>> On Sun, 26 Apr 2020, Vladimir Stankovic wrote:
+> >>>
+> >>>> On 26.4.20. 16:31, Alan Stern wrote:
+> >>>>> On Sun, 26 Apr 2020, Vladimir Stankovic wrote:
+> >>>>>
+> >>>>>> On 26.4.20. 02:32, Alan Stern wrote:
+> >>>>>>> On Sat, 25 Apr 2020 vladimir.stankovic@displaylink.com wrote:
+> >>>>>>>
+> >>>>>>>> Protocol adaptation layer (PAL) implementation has been added to
+> >>>>>>>> introduce MA-USB structures and logic.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+> >>>>>>>
+> >>>>>>> ...
+> >>>>>>>
+> >>>>>>>> +	/*
+> >>>>>>>> +	 * Masking URB_SHORT_NOT_OK flag as SCSI driver is adding it where it
+> >>>>>>>> +	 * should not, so it is breaking the USB drive on the linux
+> >>>>>>>> +	 */
+> >>>>>>>> +	urb->transfer_flags &= ~URB_SHORT_NOT_OK;
+> > 
+> > ...
 
+> > Also, what makes you think the driver is setting the SHORT_NOT_OK flag
+> > at the wrong time?  In fact, how can there be a wrong time?  
+> > SHORT_NOT_OK is a valid flag to use with any control or bulk URB.
+> > 
+> > Alan Stern
+> > 
+> The comment is clearly wrong - as mentioned earlier, this fix was added in early
+> development phase and I guess that implementer was not clear on how the particular
+> flag was added. Investigation is ongoing around proper fix for this.
+> 
+> Anyhow, it is a usb-storage driver related to this - here is usb-related log snippet:
+> 
+> usb 3-1.1.2: new high-speed USB device number 5 using mausb_host_hcd_dev
+> usb 3-1.1.2: New USB device found, idVendor=0951, idProduct=1666
+> usb 3-1.1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> usb 3-1.1.2: Product: DataTraveler 3.0
+> usb 3-1.1.2: Manufacturer: Kingston
+> usb 3-1.1.2: SerialNumber: 0C9D9210E304E311095E087A
+> usb-storage 3-1.1.2:1.0: USB Mass Storage device detected
+> scsi host3: usb-storage 3-1.1.2:1.0
+> scsi 3:0:0:0: Direct-Access     Kingston DataTraveler 3.0 PMAP PQ: 0 ANSI: 6
+> Attached scsi generic sg2 type 0
+> [sdb] 30277632 512-byte logical blocks: (15.5 GB/14.4 GiB)
+> 
+> As can be seen, USB flash attached to remote device is properly enumerated via
+> MA USB. Without the fix, usb driver is not able to read USB descriptors, ending
+> up in USB storage not being accessible.
 
-You know what this justification is rubbish, and I have previously
-explained why it is rubbish.
+That's strange, considering that the SHORT_NOT_OK flag doesn't get set 
+when the system is reading the device's USB descriptors.
 
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Alan Stern
 
-This needs to be based on weather the added memory is ultimately normal
-ram or is something special.
-
-At least when we are talking memory resources.  Keeping it out of the
-firmware map that is fine.
-
-If the hotplugged memory is the result of plugging a stick of ram
-into the kernel and can and should used be like any other memory
-it should be treated like any normal memory.
-
-If the hotplugged memory is something special it should be treated as
-something special.
-
-Justifying behavior by documentation that does not consider memory
-hotplug is bad thinking.
-
-
-
-
-
-
-
-
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/memory_hotplug.h | 8 ++++++++
->  mm/memory_hotplug.c            | 3 ++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 0151fb935c09..4ca418a731eb 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -68,6 +68,14 @@ struct mhp_params {
->  	pgprot_t pgprot;
->  };
->  
-> +/* Flags used for add_memory() and friends. */
-> +
-> +/*
-> + * Don't create entries in /sys/firmware/memmap/. The memory is detected and
-> + * added via a device driver, not via the initial (firmware) memmap.
-> + */
-> +#define MHP_NO_FIRMWARE_MEMMAP		1
-> +
->  /*
->   * Zone resizing functions
->   *
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c01be92693e3..e94ede9cad00 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1062,7 +1062,8 @@ int __ref add_memory_resource(int nid, struct resource *res,
->  	BUG_ON(ret);
->  
->  	/* create new memmap entry */
-> -	firmware_map_add_hotplug(start, start + size, "System RAM");
-> +	if (!(flags & MHP_NO_FIRMWARE_MEMMAP))
-> +		firmware_map_add_hotplug(start, start + size, "System RAM");
->  
->  	/* device_online() will take the lock when calling online_pages() */
->  	mem_hotplug_done();
