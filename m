@@ -2,112 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF6AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EA6C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E88D720873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCA0208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQBB70FT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgD3Q2C (ORCPT
+        id S1727806AbgD3Q2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:28:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59276 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgD3Q2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:28:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 69D85AC92;
-        Thu, 30 Apr 2020 16:27:59 +0000 (UTC)
-Message-ID: <affd68499ff843e8f3e0d18890699e18cde7582e.camel@suse.de>
-Subject: Re: [PATCH v2 04/91] firmware: rpi: Only create clocks device if we
- don't have a node for it
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Date:   Thu, 30 Apr 2020 18:27:58 +0200
-In-Reply-To: <b181d867cb9523e1877a3dfd258bafde2988024f.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
-         <b181d867cb9523e1877a3dfd258bafde2988024f.1587742492.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-8iAI6Ck2SuZD2phx19xp"
-User-Agent: Evolution 3.36.2 
+        Thu, 30 Apr 2020 12:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726415AbgD3Q2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:28:07 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED40C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:28:07 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id b11so7729855wrs.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+fLMnUMUsPkmSvT0kvVOGp9BzEZPMOJ5XFQJkVIA9QM=;
+        b=RQBB70FTKz8X+ddbM5dnt6rrKCg+XxEhIWD6MQTLU1Wjoh1d7cGWWdULt0ij0F3g2j
+         IPrvKRoeYr7220Odl14eUY0lLlHFNY2H/rjh5iCRudWkAJnVJeX/vFccPhbwj8IcedC7
+         3mK2PQVqVzDMMlWoiE/i2fzFeqmxxVMOOYX5ErV84Rkg4TGw97wc2AnQFgVs/dU7N0Ks
+         VIPDezFVm7flWw90msCt4Y9+8UBkSs0H7RIFdoW7kFwczZV9Y95Ztq7rznwNUjEaKKOD
+         KDfGLoRifyL4AcUJmya/CsPyn+3Q4oO4PR0qh2seoKJhtHm0JSJus0+xYx3+r3tGrd4Z
+         CM5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+fLMnUMUsPkmSvT0kvVOGp9BzEZPMOJ5XFQJkVIA9QM=;
+        b=TSiZr0BWSH62jYuzik6vt6ObzoOkLhDCbN9E88cRDJ5Waef7yHyheRjAdyIG3MaAnc
+         DIEJhu/rjnZNU1LzM9bpnHOIURRiocspZGOBz2l11zMQ6oSD0gxRFbg7t98ovhgoXWFg
+         dCbcR81s4trQVlytCbQ9+30QqNbVc+4KjO08hqnKs17ytBgsxOfQ57hHIRWKbiEmyJPG
+         2yam3kSN92IVwv20D9I6DefiLwpLLb0Wt0zrkirW7zuk+lVvCg79qNGKgwyPUirWfiRW
+         /I/T7tRaGY61ARNwmMgjMOIHzSkXuyOhlOSuJdfpGT+7qj44Sr3W7rFexzWjZQeY8iI0
+         194Q==
+X-Gm-Message-State: AGi0Pub/A+X31DuXj4rQ8vs3O+ykzmFZ7cBW/ChQUdssTFFy86Ud132w
+        28Lq+l4IM56WAFM0dcXHpHRKA5AMJgwcN0ucvsj73g==
+X-Google-Smtp-Source: APiQypKxdWq6TcQWUfjQVg93ONjnBTqIqmPXLEeVuKpLfk+kVhslqEuWc1M9uiC4aVm3X61WiacMj7qfJdjcyGOhI4Y=
+X-Received: by 2002:adf:cd8c:: with SMTP id q12mr5048810wrj.419.1588264086292;
+ Thu, 30 Apr 2020 09:28:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <1588228709-13512-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1588228709-13512-1-git-send-email-zou_wei@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 30 Apr 2020 12:27:55 -0400
+Message-ID: <CADnq5_NcOeCaBY7exuepMC+vtqmdrDbptUxmoq3Xzf3R-g1=_w@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amdgpu: Fix warning Comparison to bool
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 3:32 AM Zou Wei <zou_wei@huawei.com> wrote:
+>
+> fix below warnings reported by coccicheck
+>
+> drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c:630:5-11: WARNING: Comparison to bool
 
---=-8iAI6Ck2SuZD2phx19xp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This seems incorrect.  enable is a bool.
 
-On Fri, 2020-04-24 at 17:33 +0200, Maxime Ripard wrote:
-> The firmware clocks driver was previously probed through a platform_devic=
-e
-> created by the firmware driver.
->=20
-> Since we will now have a node for that clocks driver, we need to create t=
-he
-> device only in the case where there's no node for it already.
->=20
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Alex
+
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
 > ---
->  drivers/firmware/raspberrypi.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
-i.c
-> index da26a584dca0..1874f41b007c 100644
-> --- a/drivers/firmware/raspberrypi.c
-> +++ b/drivers/firmware/raspberrypi.c
-> @@ -210,6 +210,15 @@ rpi_register_hwmon_driver(struct device *dev, struct
-> rpi_firmware *fw)
-> =20
->  static void rpi_register_clk_driver(struct device *dev)
->  {
-> +	/*
-> +	 * Earlier DTs don't have a node for the firmware clocks but
-> +	 * rely on us creating a platform device by hand. If we do
-> +	 * have a node for the firmware clocks, just bail out here.
-> +	 */
-> +	if (of_get_compatible_child(dev->of_node,
-> +				    "raspberrypi,firmware-clocks"))
-
-In the case you find a compatible device node you have to decrement the
-refcount of_get_compatible_child() increased before leaving.
-
-Regards,
-Nicolas
-
-
---=-8iAI6Ck2SuZD2phx19xp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6q/I4ACgkQlfZmHno8
-x/7lFAf/ZpNeGVs0IJARqWX4JgGzfAueqaUdKpDNTfmLeklqw80t61otAkXEg88E
-4MPVJnyIQvyPVDN0mgKg34bytiAYby8jadKUe9/H2e6eCkQ4+5XL2OiJBdsDZtrO
-61TiPBWTOLY4c6Kixyx+0zGElXfcvZF+RLN37NqZVKG0JAsebwUWIbCxLKuf9cWj
-KSMYL2iNFNs6RYVctEdLh5pFAnaEtA14Gg9sJlpXO718MS+UBsa5wRmlN973IWUO
-u8PqR317lotzyFeD1U5iuaWSBPsuZKbQYLhLh2/UXoCpBbLZeV/5wp64hxpBh1vF
-XU33W6eYeOM9fRbgMKq74VUDZlf1DA==
-=+5W0
------END PGP SIGNATURE-----
-
---=-8iAI6Ck2SuZD2phx19xp--
-
+>  drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+> index b544baf..10080e4 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
+> @@ -627,7 +627,7 @@ static void sdma_v5_0_enable(struct amdgpu_device *adev, bool enable)
+>         u32 f32_cntl;
+>         int i;
+>
+> -       if (enable == false) {
+> +       if (!enable) {
+>                 sdma_v5_0_gfx_stop(adev);
+>                 sdma_v5_0_rlc_stop(adev);
+>         }
+> --
+> 2.6.2
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
