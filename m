@@ -2,141 +2,280 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5347C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11E5C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFE620838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B185A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="P/WXp0AV"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WkdANb1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD3Im0 (ORCPT
+        id S1726951AbgD3Imf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:42:26 -0400
-Received: from mail-eopbgr750080.outbound.protection.outlook.com ([40.107.75.80]:3385
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Thu, 30 Apr 2020 04:42:35 -0400
+Received: from mail-dm6nam12on2042.outbound.protection.outlook.com ([40.107.243.42]:27355
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726924AbgD3Im0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:42:26 -0400
+        id S1726412AbgD3Imf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:42:35 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bY5oTOT3Uurr56+s6r6HUGMGwihFYkTf90rqFUHgXVMLFDcfFKwIJtMy72za2BtYucUB8RC3epw1m4StwDBeaTjjIRuOZpyrIGUV0DezfhWE1KT9SG1aV+YMYumrCYD5ipqW7XwjzSPXkRD1GgUpBor4qo49VcvuEtN/C106KZ7nTEWlPi5TdYqrJyhyNmW7dG+uC4BJQ2WSeiqm0LvpMYWKNbbquHHBNfvFCz5CUWUUyAVkuwJ65koIfv8HUjzUPRTeosdxTFsYGfnKjQrds/ajDLEd5CT9SxfMVIFG1Uv9G1zTUe2oIYZEztk+BDXiwAtcMDkULNFSJQfu0bfaWA==
+ b=Uv3DDH5ju/czUiKPJvInqECBFenvUcyd4J4cgAetfrUL21r3fp0aAQtYJcH3kXsCMbVz1QuYRvFxBwze8aEmXRvyRzzpegbg9nlr+EbEYbcBoICks6PdiMBvfYy2ZT9XEEKMWfPu4aW1OwWRtHws/RH5dtiTRMxRtrRVcA37mGtXgNCx4ERHtTh5dp7uymo/X2+c98qyvZlQzpf4VPxQhiK5JHDE8s1lSEJp/UlB7CTo0eDxe8EtcKrBikztzXlR7fcQO/0KJ0AeHdI3J0TdBkfog2KxpgiXrtX9wvDDQEW6Cg9N6L3YR7isavseSQNRO/pHCZCNlUJLE1WcfxvkUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fLMYmDA8OiZV/mj92uTE2ZW9VR2ko3o5mecVSnYPYGI=;
- b=F8Rqg/gplADWwzzW5fvl02LZTAMswzfJJIG0FjtmkT7rQtTKtd3rSc0loj7YJgv9itACXRy+hsY7B6vL/Yyny1B2L+6dO+WMNg/wyfIx0x8aZa8Wo0HQraoJ4iowy4XJdpTiJTmBrzyzYCtpmTfPHj+9NFIt8EfBdKWRnbAGPFECoDmpJF1fIGBlQ/pJiLFzSZE8lZYCITo7Kkmmh+EW9vgOYkHz/2dg2ColryWUq5QRX+C8PnG+0/Cjf1i77ZM+PM5BhKE6uOEdfzZkeQXt7zQ7ZcNIEjZRzmrCQn1IxM7Cn9N+uK3WcvFrGPMSsSZnDTy6cArR3fBd6NJjriAJDQ==
+ bh=6b3VjYnBbMaZnBOtWYZedbsnefh0du4wQJSw6x1hNlI=;
+ b=U/tmm6xjvmVIfrebzzpz+fj5AgMU5CPyYhS9sjSDmeQy9X1IjQJccr70xLY4SX2UtvfVvqEBUcbEkAINTcDQyJsimYoFQfy304swzh9NCaYFFgSpdRwvZLDnYGEbMD4cTSv2obY1tiPLGJpsGKIi6K8sC5CL1Fj8fMQvlAOGwZuAMqoFaulVGjenSDSZ4TGeKZFD5o6/pn3ChlFnTqTOwqBfTNHDZ/BtnNN2nInUKf3BWckcVJPHozLCdIKey5jFlxk1fbeXTa9A0VkSt7kryiH72RTktZx2LTYYDKL79uqOzQKT7zXhkJLUaR2bHV+90EK/R6woAhSG6W8RlVeL6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fLMYmDA8OiZV/mj92uTE2ZW9VR2ko3o5mecVSnYPYGI=;
- b=P/WXp0AVQn0kXtzc643p7N81nLI1IFfaTdmbTeAU9rF4ViJj/obE5pMO1WtbAbT913abyaL6/ZSTc0OZDuqOLsemYhJGoMyiBpoqBp5eHjyAvIBGOIdwj8Q3HqjNiCsuLpejWYobB/QYifimheNGHU8bK8CfA/3AXCjB1AQrBHY=
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1392.namprd11.prod.outlook.com (2603:10b6:300:24::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 30 Apr
- 2020 08:42:24 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::81d5:b62b:3770:ffbe%10]) with mapi id 15.20.2937.028; Thu, 30 Apr
- 2020 08:42:24 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: wfx: avoid compiler warning on empty array
-Thread-Topic: [PATCH] staging: wfx: avoid compiler warning on empty array
-Thread-Index: AQHWHjF5vlfoO7puXUWgUhn1WHjUDaiQQ0QAgABLogCAAMtAgA==
-Date:   Thu, 30 Apr 2020 08:42:24 +0000
-Message-ID: <3063047.NHY2raB2sq@pc-42>
-References: <20200429142119.1735196-1-arnd@arndb.de>
- <3943343.tW1xmJHsB6@pc-42>
- <CAK8P3a1e=-H_b8_GPJW5-uufye5_6OJ6f+ZWErjKPWkxSRSigw@mail.gmail.com>
-In-Reply-To: <CAK8P3a1e=-H_b8_GPJW5-uufye5_6OJ6f+ZWErjKPWkxSRSigw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=silabs.com;
-x-originating-ip: [82.67.86.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c70ee467-daf5-4bcc-834a-08d7ece267c9
-x-ms-traffictypediagnostic: MWHPR11MB1392:
-x-microsoft-antispam-prvs: <MWHPR11MB13922D6E5B0F3DB1C7CD830793AA0@MWHPR11MB1392.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0389EDA07F
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(376002)(366004)(136003)(39850400004)(396003)(346002)(53546011)(316002)(2906002)(6512007)(6506007)(9686003)(6916009)(26005)(66556008)(33716001)(91956017)(64756008)(66476007)(76116006)(66946007)(66446008)(8936002)(4326008)(6486002)(5660300002)(186003)(71200400001)(86362001)(8676002)(54906003)(478600001)(39026012);DIR:OUT;SFP:1101;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vvGPfMgYOcm6ed5rE9isX9N+zvQFgFmyj8nDinzWU5LsJ3kAQ1NArXH95qSI3ZYjbHrZ/6lx24KWoZhKhBQbwrZU89anZEGvoekzZuWTukf+kkmPu10NpBrL5auw7ZIv+0D49S8rbWX7zgu4INJhri9RnbaHLBELq+EF7apAxTn99xJwworILMcDm8yIJLbD1MMCqfe3Gb7qvE0OEkT0dHqERRyu27SU19P/SJCiEYbwZRLy5BZ6j/Yz7tm9j08Z/djbVMuaWRjqO4iC3vLjrHfQiLmvuxOJ06v0lSuY9STchsutfCmstP9gC3cr2tEDYRF3civXnvNvqoR/pM3cLptwvgfECzCdRMC+YrmuxjZkQa6K71v5/OOY92sBaYmoE2deuV7/wBUn89ldXHLbtwEoWS8fUq0rq1A3ySX15CajxioKnrDNblD7cJAQRbyxELq3qOPjAzPW4WW62OTgar6X/Zuz3YjS3ka41TN1u1w6pItvXmIkbj5Jzke9DdT8
-x-ms-exchange-antispam-messagedata: Qh7UVM5uAiEv07nL5ofAF76vGoDAJ4RS/bfclpaTGIqjDfxFks9GELVEJuyg3iF6lIMmeeGA8hjY12Ir3Gtb10yICa4AirU+ku7iIo5quw/CV+AK8DhBapKW4JFZxiR0Sx7ai4jcdjum3LUgKFkqHQDrr4G38SdN/ngfdEYetZ3+EMjVAVI4QJbIwXmAe965YRVNdrk24O2OlonwiPmv2P2j9Ek9GstabqiMoQ1ygFqOm1eLpYb6bALUcqTCNlpbsF4YCg6UTvfdzrJBPfgPM3p4on/VR37qRKBH/VYw42R7NyZtYMuOpkpxfnbhSw1Jdrnh2Rh3hNhx/3vkv3fgj/uzjcQhfSSgt4vXP4QG4F9Ef7VQuwPrs5eR3q9UV/MO7BTyJ5oQoWf7NfKfjyUus7jyJA/O8+BBVQ0rLpXDLjaRXWDQPLP2twLoQRfREqsxSuv7ttSyJh2BlBJQSSGUjMgzFPRyWr88s2gz1aD8VDg8nbv9D3FB/7gd+TfRYJIirtN+wBv+b4wMwv6mzSuLyDVqg8LPaT0jzLjjR034k5BNhN8pWDuOwUVeX1XLO0GOm7DCR5ZZEhIuLJ7fzNRSfd09fap2hNJThlDCPuYa6BHJItnzskMFGOr2QiKdItLeOj0If5EDUZVMkv4zKPyHZLdkRFbj7gWYIbx2JhpwXw7Rox/qyRlMXQgvibHWOIXebiRNtSlh2iHdPSfocpBBSQrwzYS8ZhIETUt/TkMc0bWHJVMjWblXyclMECX6itU71lvuilu099XtXYJu8I0fkxleBGq3g/2FEYPfno/viDo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-2"
-Content-ID: <DC950E9F6F97BF43BF18998A290B3C60@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ bh=6b3VjYnBbMaZnBOtWYZedbsnefh0du4wQJSw6x1hNlI=;
+ b=WkdANb1JJ2F161GPVhyEYZpylI3FMbzVFMLbkeq489axQfPGtakICdUwQkvBG7thDVZD/NMv1PQykYfyoSj5+i76adQiIeqv58Owo2ebydhrw764v82OdXUaocDFI1ahdsuNC7zaj9xlEZm8fY59LdfPjWr3sSioaLbOSfn9R1Y=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1194.namprd12.prod.outlook.com (2603:10b6:3:6e::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.22; Thu, 30 Apr 2020 08:42:31 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
+ 08:42:31 +0000
+From:   Ashish Kalra <Ashish.Kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com, brijesh.singh@amd.com
+Subject: [PATCH v7 05/18] KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
+Date:   Thu, 30 Apr 2020 08:42:21 +0000
+Message-Id: <c1d3a47a7a9a9b8957a132b5265f2d367deefa97.1588234824.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR10CA0021.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::26) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c70ee467-daf5-4bcc-834a-08d7ece267c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 08:42:24.3548
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SA9PR10CA0021.namprd10.prod.outlook.com (2603:10b6:806:a7::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:42:30 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4665b064-c5d8-40cb-f970-08d7ece26ba9
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1194:|DM5PR12MB1194:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1194D490138B71C5872363CB8EAA0@DM5PR12MB1194.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 0389EDA07F
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(4326008)(6486002)(6916009)(66574012)(66476007)(66946007)(52116002)(186003)(36756003)(7696005)(6666004)(316002)(5660300002)(26005)(86362001)(2906002)(8676002)(478600001)(66556008)(8936002)(956004)(2616005)(7416002)(16526019)(136400200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GGWgFkpDCuvIhFx0mQl5aVzRjtmSeWepm14xqJWV13xzxHZDFBGcERt/IsXe/Q/mTZgpukky8Fm35plrB85IV+uY4xVxgNlmT94waj80TXkVQlhTFBknvyOMuCbYN2ADmrsa50N12GL30fz4cypb709YsmE7rfNz8MwCyCBbOJQg0BIa8Ibttowun+2D2kMFgQEmPzX7/XRnZKofTr9NMkA5zyfKr/X+VyOA6bA6E04Hk/XiX6eMGf8WFkaSe4nq+Bu3Uzhn2LAKI91YB84Yx6khun+BmmEO56gg0kCQMtCh8dAbPssyjd8SkhtdbldtXe229HaTJCHQpZcmqwRkHNs//yOd+IEm1Z91rt/scatnkO0gsd7L/iTpuktGpbgOIV55ox+E5chXshoxX+CgIBbWYJMuldf3AwekhDPW30ClnXzlQug5nekqakRprGz7Ko19e2i3XYOFvkHQL/G0e+X3Nbb7PgCvHUM5KUU6rqAo3mg2rDPVXn8tYm1ZuDLy
+X-MS-Exchange-AntiSpam-MessageData: 7XYcMl9k6G4GgBTAunkirpKVc5ESzm7PJ/hbjuuMTdPBngmpYQ4iwrVjhL3jerDpaiUJJdYhFOA/VO5cHWGYBmO0TMpzPjr6JeXsfJr8l8y+wK/zOvozjJoXyOi8knPUR1wLmZTgwmJ/AlQZM5iz67qXrGT4L5zcodxQj1HE3inKzFxAfaPjvq/0oHtMxKNjEQq+3ViBvnL6HfNzWVPRfF0sCLZjjErd1QfEgcnM8U/aPDBCWjLZzlUdTG8RbWNyMJhOUfHP36d7QifcwQslOfkUHYB52mzZheWyCFGVUcnJWNN8VB5jSBQzkoIdkLNiDDpz5V4sWxuucmprQ9RDsOhBEaBXfuPV2e/dLePkt0QsEQM+vXYQGZNGzltq8A7WETKVdsng0DDhbixiO99VKcwEFSldUjo2u+CvoW7eEg8VSImbj763kTcm+sFktm5Ja8HiBiebYW8Lw3k1SWW8zsXSbUBVCki9l67FOJBIkWmboEnpjrFb0qlfPP44bZLdWEE9gP+dXdPbRZ5PvjYvnUXpzonOGL+9fXpHJg3iFpxVtkblDm8Z0T/RrkoULTolTN2mt/VnL4/pAvFQNvTQsPdLg4ZydJ7jTJgJG9yWtWcTn2J6UzdQPKzsUANsLGGcDE3T2bzJK7FJBsFkW2JePxff+gGJnpoSkp8apaWry3Lm5w1nbuXbyQQir0SJFLhVAXeVH8UHaIb9FkvMI2IXxhu05E4m+zaolzwxIe4RhscubsA9zpR1E+NXIjK/5egJG+eNSblkSH+946pWOHiin79g7AMaLz3SmXG1AI5G38Q=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4665b064-c5d8-40cb-f970-08d7ece26ba9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:42:31.1469
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hgIAjaych58pblB2dsP+1hSGCpQk5jkUhuts/owEH4jLLFtFuC0eTTDbyEJr1qy0dASIOYotseX1cHEihzoGgg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1392
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eX8Tyx4CUH3rX4fc3WY/ct3F2TVfk5/1vYuIkbBwBb7Fkxy85NLF3XaaRFvzv3VdxXoxLhwnANM+EsY6Wyi+tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 29 April 2020 22:34:56 CEST Arnd Bergmann wrote:
->=20
-> On Wed, Apr 29, 2020 at 6:04 PM Jerome Pouiller
-> <Jerome.Pouiller@silabs.com> wrote:
-> > On Wednesday 29 April 2020 16:21:09 CEST Arnd Bergmann wrote:
-> > >
-> > > -static const struct of_device_id wfx_sdio_of_match[];
-> > > +static const struct of_device_id wfx_sdio_of_match[] =3D {
-> > > +       { .compatible =3D "silabs,wfx-sdio" },
-> > > +       { .compatible =3D "silabs,wf200" },
-> > > +       { },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
-> >
-> > I suggest to keep the '#ifdef CONFIG_OF' around this definition. If
-> > CONFIG_OF is undefined, of_match_ptr() and of_match_node() will be NULL
-> > and it should compile.
->=20
-> I would generally always go for fewer #ifdef instead of more when the res=
-ult
-> is the same. Are you worried about wasting 600 bytes of object code size =
-for
-> the array on systems that need this driver but not CONFIG_OF, or somethin=
-g
-> else?
+From: Brijesh Singh <Brijesh.Singh@amd.com>
 
-I am not very concerned about the size of the object. However, I think
-that all the modules should apply the same policy regarding the device
-tables. With a few greps, I found 3954 struct of_device_id. About 500 are
-inside #ifdef and about 1000 use of_match_ptr().
+The command is used for copying the incoming buffer into the
+SEV guest memory space.
 
-Should we consider that the structs of_device_id have to be defined even
-if CONFIG_OF is not defined? And In this case, should we drop
-of_match_ptr()?
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+Reviewed-by: Steve Rutherford <srutherford@google.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ .../virt/kvm/amd-memory-encryption.rst        | 24 ++++++
+ arch/x86/kvm/svm/sev.c                        | 79 +++++++++++++++++++
+ include/uapi/linux/kvm.h                      |  9 +++
+ 3 files changed, 112 insertions(+)
 
-Or in contrary, when kernel is compiled without CONFIG_OF, no modules
-should contains OF entries in its device table?
-
---=20
-J=E9r=F4me Pouiller
+diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+index ef1f1f3a5b40..554aa33a99cc 100644
+--- a/Documentation/virt/kvm/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+@@ -351,6 +351,30 @@ On success, the 'handle' field contains a new handle and on error, a negative va
+ 
+ For more details, see SEV spec Section 6.12.
+ 
++14. KVM_SEV_RECEIVE_UPDATE_DATA
++----------------------------
++
++The KVM_SEV_RECEIVE_UPDATE_DATA command can be used by the hypervisor to copy
++the incoming buffers into the guest memory region with encryption context
++created during the KVM_SEV_RECEIVE_START.
++
++Parameters (in): struct kvm_sev_receive_update_data
++
++Returns: 0 on success, -negative on error
++
++::
++
++        struct kvm_sev_launch_receive_update_data {
++                __u64 hdr_uaddr;        /* userspace address containing the packet header */
++                __u32 hdr_len;
++
++                __u64 guest_uaddr;      /* the destination guest memory region */
++                __u32 guest_len;
++
++                __u64 trans_uaddr;      /* the incoming buffer memory region  */
++                __u32 trans_len;
++        };
++
+ References
+ ==========
+ 
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 74a847c9106d..d5dfd0da53b9 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -1251,6 +1251,82 @@ static int sev_receive_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	return ret;
+ }
+ 
++static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
++{
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++	struct kvm_sev_receive_update_data params;
++	struct sev_data_receive_update_data *data;
++	void *hdr = NULL, *trans = NULL;
++	struct page **guest_page;
++	unsigned long n;
++	int ret, offset;
++
++	if (!sev_guest(kvm))
++		return -EINVAL;
++
++	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
++			sizeof(struct kvm_sev_receive_update_data)))
++		return -EFAULT;
++
++	if (!params.hdr_uaddr || !params.hdr_len ||
++	    !params.guest_uaddr || !params.guest_len ||
++	    !params.trans_uaddr || !params.trans_len)
++		return -EINVAL;
++
++	/* Check if we are crossing the page boundary */
++	offset = params.guest_uaddr & (PAGE_SIZE - 1);
++	if ((params.guest_len + offset > PAGE_SIZE))
++		return -EINVAL;
++
++	hdr = psp_copy_user_blob(params.hdr_uaddr, params.hdr_len);
++	if (IS_ERR(hdr))
++		return PTR_ERR(hdr);
++
++	trans = psp_copy_user_blob(params.trans_uaddr, params.trans_len);
++	if (IS_ERR(trans)) {
++		ret = PTR_ERR(trans);
++		goto e_free_hdr;
++	}
++
++	ret = -ENOMEM;
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		goto e_free_trans;
++
++	data->hdr_address = __psp_pa(hdr);
++	data->hdr_len = params.hdr_len;
++	data->trans_address = __psp_pa(trans);
++	data->trans_len = params.trans_len;
++
++	/* Pin guest memory */
++	ret = -EFAULT;
++	guest_page = sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK,
++				    PAGE_SIZE, &n, 0);
++	if (!guest_page)
++		goto e_free;
++
++	/* The RECEIVE_UPDATE_DATA command requires C-bit to be always set. */
++	data->guest_address = (page_to_pfn(guest_page[0]) << PAGE_SHIFT) +
++				offset;
++	data->guest_address |= sev_me_mask;
++	data->guest_len = params.guest_len;
++	data->handle = sev->handle;
++
++	ret = sev_issue_cmd(kvm, SEV_CMD_RECEIVE_UPDATE_DATA, data,
++				&argp->error);
++
++	sev_unpin_memory(kvm, guest_page, n);
++
++e_free:
++	kfree(data);
++e_free_trans:
++	kfree(trans);
++e_free_hdr:
++	kfree(hdr);
++
++	return ret;
++}
++
+ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_sev_cmd sev_cmd;
+@@ -1307,6 +1383,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ 	case KVM_SEV_RECEIVE_START:
+ 		r = sev_receive_start(kvm, &sev_cmd);
+ 		break;
++	case KVM_SEV_RECEIVE_UPDATE_DATA:
++		r = sev_receive_update_data(kvm, &sev_cmd);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		goto out;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 24ac57151d53..0fe1d206d750 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1628,6 +1628,15 @@ struct kvm_sev_receive_start {
+ 	__u32 session_len;
+ };
+ 
++struct kvm_sev_receive_update_data {
++	__u64 hdr_uaddr;
++	__u32 hdr_len;
++	__u64 guest_uaddr;
++	__u32 guest_len;
++	__u64 trans_uaddr;
++	__u32 trans_len;
++};
++
+ #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
+ #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
+ #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
+-- 
+2.17.1
 
