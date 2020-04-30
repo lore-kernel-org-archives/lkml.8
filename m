@@ -2,84 +2,137 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC271C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD24CC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67E02076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E662076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgD3FC1 (ORCPT
+        id S1726449AbgD3FDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 01:02:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:48582 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3FC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 01:02:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 959CC1063;
-        Wed, 29 Apr 2020 22:02:25 -0700 (PDT)
-Received: from [10.163.71.104] (unknown [10.163.71.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A8B33F305;
-        Wed, 29 Apr 2020 22:02:22 -0700 (PDT)
-Subject: Re: [PATCH] arm: mm: use __pfn_to_section() to get mem_section
-To:     Guixiong Wei <guixiongwei@gmail.com>, catalin.marinas@arm.com,
-        will@kernel.org
-Cc:     steve.capper@arm.com, linux-kernel@vger.kernel.org,
-        rppt@linux.ibm.com, linux-arm-kernel@lists.infradead.org,
-        guro@fb.com, akpm@linux-foundation.org, tglx@linutronix.de,
-        nsaenzjulienne@suse.de
-References: <20200430040437.119591-1-guixiongwei@gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <bbe98908-4787-4981-0248-955b2cd2db19@arm.com>
-Date:   Thu, 30 Apr 2020 10:31:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 30 Apr 2020 01:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726040AbgD3FDv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 01:03:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A28CC035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:03:51 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jU1MP-0005xo-Hj; Thu, 30 Apr 2020 07:03:45 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jU1MO-00069c-QN; Thu, 30 Apr 2020 07:03:44 +0200
+Date:   Thu, 30 Apr 2020 07:03:44 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH net-next v3 2/2] net: phy: tja11xx: add support for
+ master-slave configuration
+Message-ID: <20200430050344.u7bsakcrrw2cakex@pengutronix.de>
+References: <20200428075308.2938-1-o.rempel@pengutronix.de>
+ <20200428075308.2938-3-o.rempel@pengutronix.de>
+ <20200429182053.GM30459@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20200430040437.119591-1-guixiongwei@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="aevfvnzd6ykgpc2t"
+Content-Disposition: inline
+In-Reply-To: <20200429182053.GM30459@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:02:42 up 166 days, 20:21, 163 users,  load average: 0.11, 0.08,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--aevfvnzd6ykgpc2t
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 04/30/2020 09:34 AM, Guixiong Wei wrote:
-> Use __pfn_to_section() to get mem_section, instead of open-coding it.
+On Wed, Apr 29, 2020 at 08:20:53PM +0200, Andrew Lunn wrote:
+> > +static int tja11xx_config_aneg(struct phy_device *phydev)
+> > +{
+> > +	u16 ctl =3D 0;
+> > +	int ret;
+> > +
+> > +	switch (phydev->master_slave_set) {
+> > +	case PORT_MODE_CFG_MASTER_FORCE:
+> > +	case PORT_MODE_CFG_MASTER_PREFERRED:
+> > +		ctl |=3D MII_CFG1_MASTER_SLAVE;
+> > +		break;
+> > +	case PORT_MODE_CFG_SLAVE_FORCE:
+> > +	case PORT_MODE_CFG_SLAVE_PREFERRED:
+> > +		break;
+> > +	case PORT_MODE_CFG_UNKNOWN:
+> > +		return 0;
+> > +	default:
+> > +		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
+> > +		return -ENOTSUPP;
+> > +	}
+>=20
+> Does the hardware actually support PORT_MODE_CFG_SLAVE_PREFERRED and
+> PORT_MODE_CFG_MASTER_PREFERRED? I thought that required autoneg, which
+> this PHY does not support? So i would of expected these two values to
+> return ENOTSUPP?
 
-There is no open coding here. __pfn_to_section() helper which already
-wraps around __nr_to_section(pfn_to_section_nr(pfn)), should be used
-directly instead.
+I do not have strong opinion here. Will change it.
 
-> No semantic changes.
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-and functional change. Please reword the commit message.
+--aevfvnzd6ykgpc2t
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Signed-off-by: Guixiong Wei <guixiongwei@gmail.com>
-> ---
->  arch/arm64/mm/init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index e42727e3568e..d2df416b840e 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -272,7 +272,7 @@ int pfn_valid(unsigned long pfn)
->  	if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
->  		return 0;
->  
-> -	if (!valid_section(__nr_to_section(pfn_to_section_nr(pfn))))
-> +	if (!valid_section(__pfn_to_section(pfn))
-Looks good.
+-----BEGIN PGP SIGNATURE-----
 
->  		return 0;
->  #endif
->  	return memblock_is_map_memory(addr);
-> 
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6qXDAACgkQ4omh9DUa
+UbNSIxAAnuqCCyRXMKpPIyGfOO+VHRzckemdFoGwEclePdskhMp3rMPTED/iOcDa
+r75OTE65mCoKQ+epY3Dx5ZitqdinLbSctLlSePg/74lNPsLQBUrr8tH2CnTeQ9z0
+qKfakIIgK5B+MdZLxIzV913Vfp7e29f4vjON/LeqkenNLxoxprVCUsz51cQYta+t
+d2JnwJVRhlMG+wveRVlfFksItFh0W3I+MbN12ICLEKCzqzRYZqjq57RWWu2PLEDV
+sprC2I0p3C9ZZOCzNVqz1LY0nJZnZMFJzbxlCC9BcWT+w3KUk3qoEAxg2jyu2kD4
+DW+kmRcKUwgv+4RYWmmn4jiF+Dmfikf7OmdTvQF5w5KzC82eJwTzaP5qb3X3QFC4
+QeO0FPc3Uf2o0FvEsm1PYXtofamAaUDq2JyvybNjHn6Rto4HfQZWQXkdKJfE33jJ
+h54c9UshwhZ2aOmo0cN2JBJlbQrXV7HtYxVusu9k8nik4w1cNDEetSh74EyeGV5i
+yUpkHRs1lD/TI8r+ZR5JCFMQwqA6BxGw53HYjZFdy4kWpLeIF+gcGhlvF6r1hgdK
+2omXLdYODGYSUCpe9C9tclb6lhmxq1ue48HgFmM577Xi4jJTFLiYeAywQ3M3B7xp
+f1f4WSTdkKKerYzsR+Ce8z/AhmysLBnjCxCb2/bp/Zppq68DCj0=
+=U6If
+-----END PGP SIGNATURE-----
+
+--aevfvnzd6ykgpc2t--
