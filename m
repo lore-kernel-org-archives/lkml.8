@@ -2,133 +2,149 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3B9C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FC9C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282992070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JUYJmd1M"
+	by mail.kernel.org (Postfix) with ESMTP id 5710C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgD3Qcz (ORCPT
+        id S1726472AbgD3QfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726545AbgD3Qcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:32:54 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFDBC08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:32:54 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 19so84309oiy.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ZsclabnnR3wKrS78Exn79EM/lt2n7ZZyGteRGUsI8A=;
-        b=JUYJmd1MBGqCas674WTA1IWfQlE/kGTREfBIK5mpDA0GKQCWA5TWrInT5xqa+cty1P
-         1uf7jMp4ptZNe61WpozNUpn19cau+2xAsPJezxaJ/YkNvLq0Y4Ke8RMtVAAA6GGjYHiE
-         gScspZIdHjRYqpJ2Uno+FQWJL/XiblVg/Mi22ewLmBd/WxxJ9smUOoHF9lr4DrqqMmAI
-         C9OI28yxF+GzrKoTO+j1owgWEJOGkNwuwuNh8Zj6Tpvn/9KtPJiufeBqwE3ogh5pXqwf
-         6/YLrVQoTxsZzAQIfZM8oI6/JkLwFFLp8PmBtms1w/jVWbOij59zxxdfJnRIZKaW6HD3
-         p3DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ZsclabnnR3wKrS78Exn79EM/lt2n7ZZyGteRGUsI8A=;
-        b=f6SyxaCQiAYw+fGCawOgFlNQ7L1IRqib+7EwCfJmKuPWsDJLOqz8luzkqO9Rlnhq/x
-         UwklexyCsaeHTyZeSaOXAgtc8zLcVFJc9/jNAbPzPJ7n/vChlMYHTJr1t7bTy3YIeT8A
-         e4Lpe9jMCQkWle1iDalTd6U1Hqt6c8l036+ZSyBlAHzVIdlVIYQ/QcIiYSt2jMZ4vUFm
-         C3u56aIOxVlKTwxYLw1wFnBGarAomHIgztrgoVdWWPhRaJ5aqwEFRPdEeFCESnkk6D5U
-         pWPOjeeBiydxG+knqVu1DnziPihPkITDugw0kosnV/D0sy4vdvWgMq0uI5SrgKmU+TX+
-         sJDg==
-X-Gm-Message-State: AGi0PuYBHo9mc+uByRJlBuzd2GMDxEgBFDY/tU0Pofk/MaPWbaxh/WFw
-        EiNANIyARjF7h47rQaBldBKL4phxWgTXHv078ZNOhA==
-X-Google-Smtp-Source: APiQypJprzA/+arNVWPUX0khphDyRoZS8i1qOaFeSW8at+OIuNhknrJDu20eedqo9Mv1KETW0rnGhGJV0oxQ/gnyTBI=
-X-Received: by 2002:aca:1c08:: with SMTP id c8mr36776oic.172.1588264373140;
- Thu, 30 Apr 2020 09:32:53 -0700 (PDT)
+        Thu, 30 Apr 2020 12:35:06 -0400
+Received: from sauhun.de ([88.99.104.3]:53466 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbgD3QfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:35:06 -0400
+Received: from localhost (p5486CDDB.dip0.t-ipconnect.de [84.134.205.219])
+        by pokefinder.org (Postfix) with ESMTPSA id A47D92C08FC;
+        Thu, 30 Apr 2020 18:35:03 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 18:35:03 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH] i2c: fix missing pm_runtime_put_sync in i2c_device_probe
+Message-ID: <20200430163503.GA15047@ninjato>
+References: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
- <20200430060901.j7jjw6soo5h5xoul@vireshk-i7> <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
- <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
-In-Reply-To: <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 30 Apr 2020 09:32:17 -0700
-Message-ID: <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Disposition: inline
+In-Reply-To: <1588261401-11914-1-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-04-20, 00:35, Saravana Kannan wrote:
-> > On Wed, Apr 29, 2020 at 11:09 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 24-04-20, 14:18, Saravana Kannan wrote:
-> > > > My only comment is -- can we drop this patch please? I'd like to use
-> > > > devfreq governors for voting on bandwidth and this will effectively
-> > > > override whatever bandwidth decisions are made by the devfreq
-> > > > governor.
-> > >
-> > > And why would that be better ? FWIW, that will have the same problem
-> > > which cpufreq governors had since ages, i.e. they were not proactive
-> > > and were always too late.
-> > >
-> > > The bw should get updated right with frequency, why shouldn't it ?
-> >
-> > I didn't say the bw would be voted based on just CPUfreq. It can also
-> > be based on CPU busy time and other stats. Having said that, this is
-> > not just about CPUfreq. Having the bw be force changed every time a
-> > device has it's OPP is changed is very inflexible. Please don't do it.
->
-> So, the vote based on the requirements of cpufreq driver should come
-> directly from the cpufreq side itself, but no one stops the others
-> layers to aggregate the requests and then act on them. This is how it
-> is done for other frameworks like clk, regulator, genpd, etc.
 
-You are missing the point. This is not about aggregation. This is
-about OPP voting for bandwidth on a path when the vote can/should be
-0.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll give another example. Say one of the interconnect paths needs to
-be voted only when a particular use case is running. Say, the GPU
-needs to vote for bandwidth to L3 only when it's running in cache
-coherent mode. But it always needs to vote for bandwidth to DDR. With
-the way it's written now, OPP is going to force vote a non-zero
-bandwidth to L3 even when it can be zero. Wasting power for no good
-reason.
+On Thu, Apr 30, 2020 at 05:43:21PM +0200, Alain Volmat wrote:
+> In case of the I2C client exposes the flag I2C_CLIENT_HOST_NOTIFY,
+> pm_runtime_get_sync is called in order to always keep active the
+> adapter. However later on, pm_runtime_put_sync is never called
+> within the function in case of an error. This commit add this
+> error handling.
+>=20
+> Fixes: 72bfcee11cf8 ("i2c: Prevent runtime suspend of adapter when Host N=
+otify is required")
 
-Just let the drivers/device get the bandwidth values from OPP without
-forcing them to vote for the bandwidth when they don't need to. Just
-because they decide to use OPP to set their clock doesn't mean they
-should lose to ability to control their bandwidth in a more
-intelligent fashion.
+Adding the patch author to CC.
 
--Saravana
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 139aea351ffb..2e4560671183 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -338,8 +338,10 @@ static int i2c_device_probe(struct device *dev)
+>  		} else if (ACPI_COMPANION(dev)) {
+>  			irq =3D i2c_acpi_get_irq(client);
+>  		}
+> -		if (irq =3D=3D -EPROBE_DEFER)
+> -			return irq;
+> +		if (irq =3D=3D -EPROBE_DEFER) {
+> +			status =3D irq;
+> +			goto put_sync_adapter;
+> +		}
+> =20
+>  		if (irq < 0)
+>  			irq =3D 0;
+> @@ -353,15 +355,19 @@ static int i2c_device_probe(struct device *dev)
+>  	 */
+>  	if (!driver->id_table &&
+>  	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+> -	    !i2c_of_match_device(dev->driver->of_match_table, client))
+> -		return -ENODEV;
+> +	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
+> +		status =3D -ENODEV;
+> +		goto put_sync_adapter;
+> +	}
+> =20
+>  	if (client->flags & I2C_CLIENT_WAKE) {
+>  		int wakeirq;
+> =20
+>  		wakeirq =3D of_irq_get_byname(dev->of_node, "wakeup");
+> -		if (wakeirq =3D=3D -EPROBE_DEFER)
+> -			return wakeirq;
+> +		if (wakeirq =3D=3D -EPROBE_DEFER) {
+> +			status =3D wakeirq;
+> +			goto put_sync_adapter;
+> +		}
+> =20
+>  		device_init_wakeup(&client->dev, true);
+> =20
+> @@ -408,6 +414,10 @@ static int i2c_device_probe(struct device *dev)
+>  err_clear_wakeup_irq:
+>  	dev_pm_clear_wake_irq(&client->dev);
+>  	device_init_wakeup(&client->dev, false);
+> +put_sync_adapter:
+> +	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+> +		pm_runtime_put_sync(&client->adapter->dev);
+> +
+>  	return status;
+>  }
+> =20
+> --=20
+> 2.17.1
+>=20
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6q/jMACgkQFA3kzBSg
+KbbwFBAAhtQzzNeB/GCaKLSF1bZD7pXmWBQHwK11H0kJO7UkmEVuRuLNCn250MMa
+AOmgf8Y27Ij/cb5xcnLfWYpf/c8EKB68QnOawPIpu7P2loT3VwEOcbn3to8yi0WU
+42ZJmWshB26DyiqaH6IWbqRNVL5t6qhPtnIbOU84pO5FExppXlB63kShSUKO2gXi
+kehrRerP6h8hZFYlz0wYSVgBpL/2B4BOydkCGlK4INoGtgIVGPwcrqP557ulqXe4
+kTlu3uCeo3aZFfzmoeui+SoXvBPA1PdHOT4HZRs6Pcw1FFOed95JyrVJxSSiKK35
+zGBOFjDTA9ZbfROzK3YHZR525uEQkceqGJHrRSpxqrM3o02sZXO/W2j359TbEHB2
+PQncp1GAXNePayRakxrd9q8MpBoFRtiRiaGPZVuF9lCof+DERo27cpnINOc4E+Te
+WnW7QRxjyDguqkDdUZEdDGJ9nX6BO+Yg1OhoBQdjZ9vvnqrYMmRZZCDYNAU13ZLi
+lzR3mLPoyJMIj2c251mWUaNrm0nHZrw2PAmrNwygyu4MTmaZGxECu725lRNajqeu
+1SuXby3l59NU+yKTze5oOhRvsjTP55mgDRVxzTbtnmZNDkE6EgKLsSvHG3PX6wAB
+YMBYlbSH6QxZ338/XA0Cvkbc4zn5vScALsa0lT6l69wtPPP6obk=
+=lXSI
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
