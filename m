@@ -2,121 +2,104 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48818C83007
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8922CC83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 302D320787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61AB520787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588207531;
+	bh=N3ANq6sB2a8lmCCJej+V3dGn8w0n7uzbK/eRXsHO3uo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gRIjuI8IV7c416BNqHZnWzdR3uE/77jfAio4OLZUYIKWAPh6bJPAlYQPeRh69b4R8
+	 iEqWteEvNkK7n5crwYoRoOvWzZIf/zmNINCs//G1Dya0hYcKsaUUjwKOmal0nRuIDe
+	 GwqhndcamBl/5SQOYsiBEfmJ6hv3l+A3UlzoB5r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgD3ApL (ORCPT
+        id S1726560AbgD3Apa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:45:11 -0400
-Received: from pbmsgap01.intersil.com ([192.157.179.201]:48772 "EHLO
-        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgD3ApL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:45:11 -0400
-Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
-        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 03U0P6iC005024;
-        Wed, 29 Apr 2020 20:28:50 -0400
-Received: from pbmxdp02.intersil.corp (pbmxdp02.pb.intersil.com [132.158.200.223])
-        by pbmsgap01.intersil.com with ESMTP id 30mgqytds6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 20:28:50 -0400
-Received: from pbmxdp02.intersil.corp (132.158.200.223) by
- pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Wed, 29 Apr 2020 20:28:48 -0400
-Received: from localhost (132.158.202.109) by pbmxdp02.intersil.corp
- (132.158.200.223) with Microsoft SMTP Server id 15.1.1531.3 via Frontend
- Transport; Wed, 29 Apr 2020 20:28:48 -0400
-From:   <vincent.cheng.xh@renesas.com>
-To:     <richardcochran@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: [PATCH net-next 1/3] ptp: Add adjphase function to support phase offset control.
-Date:   Wed, 29 Apr 2020 20:28:23 -0400
-Message-ID: <1588206505-21773-2-git-send-email-vincent.cheng.xh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
-References: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
-X-TM-AS-MML: disable
+        Wed, 29 Apr 2020 20:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbgD3Apa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 20:45:30 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43C0E2192A
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588207529;
+        bh=N3ANq6sB2a8lmCCJej+V3dGn8w0n7uzbK/eRXsHO3uo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xg+cdf9Squc1qTKUxLzUxFRpT+9TYfeljsABrROZLaiBeMCDnwDHdkQ8GsoDUi2UU
+         fIUhxPNAZh/tdtR6cOwQYlph0s2+lDL0vDKeNrE9nGoJSn9aVkoUM/3+J0lm7XTusA
+         23+gHtfzQB9p87PIZja5Ai0Bj29UxM+2OZ9iiG9o=
+Received: by mail-wr1-f46.google.com with SMTP id j2so4747215wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 17:45:29 -0700 (PDT)
+X-Gm-Message-State: AGi0PubsKGhceiCesVro/lVnFojqX6+K1yFJ4l9NUybA8Vtzrg41+OKq
+        ukzLuzWbbrQn9T2cqzZLBUZ+9lVV+TKNDne2LEq94A==
+X-Google-Smtp-Source: APiQypJJOJY3YRF/QTUlTHF0NHfRgu9K+ytc2U5m1lBDYPfYqr3cUXh6I1WPp1YkIROgmKABgcygbJdL9Km/lxxCjH8=
+X-Received: by 2002:adf:bc05:: with SMTP id s5mr880712wrg.70.1588207527548;
+ Wed, 29 Apr 2020 17:45:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_11:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2002250000 definitions=main-2004300000
-X-Proofpoint-Spam-Reason: mlx
+References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-5-vkuznets@redhat.com>
+ <CALCETrXEzpKNhNJQm+SshiEfyHjYkB7+1c+7iusZy66rRsWunA@mail.gmail.com> <0de4a809-e965-d0ad-489f-5b011aa5bf89@redhat.com>
+In-Reply-To: <0de4a809-e965-d0ad-489f-5b011aa5bf89@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 29 Apr 2020 17:45:16 -0700
+X-Gmail-Original-Message-ID: <CALCETrWQBmmVODuSXac965o29Oxqo6uo4Ujm2AN2FUMztwCnzA@mail.gmail.com>
+Message-ID: <CALCETrWQBmmVODuSXac965o29Oxqo6uo4Ujm2AN2FUMztwCnzA@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
+ page ready notifications
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        X86 ML <x86@kernel.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+On Wed, Apr 29, 2020 at 10:40 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 29/04/20 19:28, Andy Lutomirski wrote:
+> > This seems functional, but I'm wondering if it could a bit simpler and
+> > more efficient if the data structure was a normal descriptor ring with
+> > the same number slots as whatever the maximum number of waiting pages
+> > is.  Then there would never need to be any notification from the guest
+> > back to the host, since there would always be room for a notification.
+>
+> No, it would be much more complicated code for a slow path which is
+> already order of magnitudes slower than a vmexit.  It would also use
+> much more memory.
 
-Adds adjust phase function to take advantage of a PHC
-clock's hardware filtering capability that uses phase offset
-control word instead of frequency offset control word.
+Fair enough.
 
-Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
----
- drivers/ptp/ptp_clock.c          | 2 ++
- include/linux/ptp_clock_kernel.h | 6 +++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+>
+> > It might be even better if a single unified data structure was used
+> > for both notifications.
+>
+> That's a very bad idea since one is synchronous and one is asynchronous.
+>  Part of the proposal we agreed upon was to keep "page not ready"
+> synchronous while making "page ready" an interrupt.  The data structure
+> for "page not ready" will be #VE.
+>
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index acabbe7..c46ff98 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -146,6 +146,8 @@ static int ptp_clock_adjtime(struct posix_clock *pc, struct __kernel_timex *tx)
- 		else
- 			err = ops->adjfreq(ops, ppb);
- 		ptp->dialed_frequency = tx->freq;
-+	} else if (tx->modes & ADJ_OFFSET) {
-+		err = ops->adjphase(ops, tx->offset);
- 	} else if (tx->modes == 0) {
- 		tx->freq = ptp->dialed_frequency;
- 		err = 0;
-diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
-index 121a7ed..31144d9 100644
---- a/include/linux/ptp_clock_kernel.h
-+++ b/include/linux/ptp_clock_kernel.h
-@@ -36,7 +36,7 @@ struct ptp_system_timestamp {
- };
- 
- /**
-- * struct ptp_clock_info - decribes a PTP hardware clock
-+ * struct ptp_clock_info - describes a PTP hardware clock
-  *
-  * @owner:     The clock driver should set to THIS_MODULE.
-  * @name:      A short "friendly name" to identify the clock and to
-@@ -65,6 +65,9 @@ struct ptp_system_timestamp {
-  *            parameter delta: Desired frequency offset from nominal frequency
-  *            in parts per billion
-  *
-+ * @adjphase:  Adjusts the phase offset of the hardware clock.
-+ *             parameter delta: Desired change in nanoseconds.
-+ *
-  * @adjtime:  Shifts the time of the hardware clock.
-  *            parameter delta: Desired change in nanoseconds.
-  *
-@@ -128,6 +131,7 @@ struct ptp_clock_info {
- 	struct ptp_pin_desc *pin_config;
- 	int (*adjfine)(struct ptp_clock_info *ptp, long scaled_ppm);
- 	int (*adjfreq)(struct ptp_clock_info *ptp, s32 delta);
-+	int (*adjphase)(struct ptp_clock_info *ptp, s32 phase);
- 	int (*adjtime)(struct ptp_clock_info *ptp, s64 delta);
- 	int (*gettime64)(struct ptp_clock_info *ptp, struct timespec64 *ts);
- 	int (*gettimex64)(struct ptp_clock_info *ptp, struct timespec64 *ts,
--- 
-2.7.4
-
+#VE on SVM will be interesting, to say the least, and I think that a
+solution that is VMX specific doesn't make much sense.  #VE also has
+unpleasant issues involving the contexts in which it can occur.  You
+will have quite a hard time convincing me to ack the addition of a #VE
+entry handler for this.  I think a brand new vector is the right
+solution.
