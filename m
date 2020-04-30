@@ -2,273 +2,120 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BC3C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383F7C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F2C20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YyXKqWpm"
+	by mail.kernel.org (Postfix) with ESMTP id 123642192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588231197;
+	bh=+03YLlI6FbLFcnnQpBsL2PbOhXaeMhXanrbkLEgzXK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T4jj6gN2VtRpavwgLoW7dUFbHDoc78WPOTosRQnjv64+hD+z/zcMns15vciQ4FPw3
+	 RiocaMvgwcJmgn8x56lSPEhcnBF2Hznd2n7xzkGNYVwFhwXy86eVCdPx+1wqo7CgrW
+	 aQfC3jDF/PCRg7f8cSS0CQfbh0lPBLZvbpV0VXJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgD3HTq (ORCPT
+        id S1726685AbgD3HT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:19:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23038 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726474AbgD3HTp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588231183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=1ZVQP21/gRpjdQaiA5iEEwLdE4gKxXG18sO+uoyk77w=;
-        b=YyXKqWpmaEqbqG0mQbsp3TYTvS8Kap4mcBdi9+EIrFBzWh84U3znmfH9o6xtGBVz/Wm2qv
-        jc3YLrrjM3DiMqntWdQjbQCKBFBUqk7LjpNpcnOP+6j+FQMe360QpmANXaS7cNUF/PUQ7C
-        Cz+d01l2y2QD2eUgGH8kRwf1hIl7KUU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-rM1ylhAbMHiuxvT_teIprA-1; Thu, 30 Apr 2020 03:19:37 -0400
-X-MC-Unique: rM1ylhAbMHiuxvT_teIprA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 30 Apr 2020 03:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbgD3HTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:19:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16BAAEC1A7;
-        Thu, 30 Apr 2020 07:19:35 +0000 (UTC)
-Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9F7360BF4;
-        Thu, 30 Apr 2020 07:19:27 +0000 (UTC)
-Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20200429160803.109056-1-david@redhat.com>
- <20200429160803.109056-3-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
-Date:   Thu, 30 Apr 2020 09:19:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E5D214D8;
+        Thu, 30 Apr 2020 07:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588231194;
+        bh=+03YLlI6FbLFcnnQpBsL2PbOhXaeMhXanrbkLEgzXK4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1pfLHqPe5VaNBslXHYWuNkfFCBWTbaqQHyheki6ue5fWS3eL3awJ6612OCpgalhcN
+         +CmA6edbhMz5OZl90aE3+rbTqgGQjEe/O/+5bEmjmz8/a6xrl/hxnjJW0o2G6yHJG4
+         G4Vva72pGv4MfcgdW1Jmg6qZVhMA6evpm8EO9MXk=
+Date:   Thu, 30 Apr 2020 09:19:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>, Arseny Maslennikov <ar@cs.msu.ru>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Landley <rob@landley.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
+        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Subject: Re: [PATCH v3 4/7] linux/signal.h: Ignore SIGINFO by default in new
+ tasks
+Message-ID: <20200430071952.GA2411804@kroah.com>
+References: <20200430064301.1099452-1-ar@cs.msu.ru>
+ <20200430064301.1099452-5-ar@cs.msu.ru>
+ <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
+ <20200430071437.x3ilwkh3lyf4iq6u@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <20200429160803.109056-3-david@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430071437.x3ilwkh3lyf4iq6u@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.04.20 18:08, David Hildenbrand wrote:
-> Some paravirtualized devices that add memory via add_memory() and
-> friends (esp. virtio-mem) don't want to create entries in
-> /sys/firmware/memmap/ - primarily to hinder kexec from adding this
-> memory to the boot memmap of the kexec kernel.
->=20
-> In fact, such memory is never exposed via the firmware (e.g., e820), bu=
-t
-> only via the device, so exposing this memory via /sys/firmware/memmap/ =
-is
-> wrong:
->  "kexec needs the raw firmware-provided memory map to setup the
->   parameter segment of the kernel that should be booted with
->   kexec. Also, the raw memory map is useful for debugging. For
->   that reason, /sys/firmware/memmap is an interface that provides
->   the raw memory map to userspace." [1]
->=20
-> We want to let user space know that memory which is always detected,
-> added, and managed via a (device) driver - like memory managed by
-> virtio-mem - is special. It cannot be used for placing kexec segments
-> and the (device) driver is responsible for re-adding memory that
-> (eventually shrunk/grown/defragmented) memory after a reboot/kexec. It
-> should e.g., not be added to a fixed up firmware memmap. However, it sh=
-ould
-> be dumped by kdump.
->=20
-> Also, such memory could behave differently than an ordinary DIMM - e.g.=
-,
-> memory managed by virtio-mem can have holes inside added memory resourc=
-e,
-> which should not be touched, especially for writing.
->=20
-> Let's expose that memory as "System RAM (driver managed)" e.g., via
-> /pro/iomem.
->=20
-> We don't have to worry about firmware_map_remove() on the removal path.
-> If there is no entry, it will simply return with -EINVAL.
->=20
-> [1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware=
--memmap
->=20
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/memory_hotplug.h |  8 ++++++++
->  mm/memory_hotplug.c            | 20 ++++++++++++++++----
->  2 files changed, 24 insertions(+), 4 deletions(-)
->=20
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotp=
-lug.h
-> index bf0e3edb8688..cc538584b39e 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -68,6 +68,14 @@ struct mhp_params {
->  	pgprot_t pgprot;
->  };
-> =20
-> +/* Flags used for add_memory() and friends. */
-> +
-> +/*
-> + * Don't create entries in /sys/firmware/memmap/ and expose memory as
-> + * "System RAM (driver managed)" in e.g., /proc/iomem
-> + */
-> +#define MHP_DRIVER_MANAGED		1
-> +
->  /*
->   * Zone resizing functions
->   *
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index ebdf6541d074..cfa0721280aa 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -98,11 +98,11 @@ void mem_hotplug_done(void)
->  u64 max_mem_size =3D U64_MAX;
-> =20
->  /* add this memory to iomem resource */
-> -static struct resource *register_memory_resource(u64 start, u64 size)
-> +static struct resource *register_memory_resource(u64 start, u64 size,
-> +						 const char *resource_name)
->  {
->  	struct resource *res;
->  	unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> -	char *resource_name =3D "System RAM";
-> =20
->  	/*
->  	 * Make sure value parsed from 'mem=3D' only restricts memory adding
-> @@ -1058,7 +1058,8 @@ int __ref add_memory_resource(int nid, struct res=
-ource *res,
->  	BUG_ON(ret);
-> =20
->  	/* create new memmap entry */
-> -	firmware_map_add_hotplug(start, start + size, "System RAM");
-> +	if (!(flags & MHP_DRIVER_MANAGED))
-> +		firmware_map_add_hotplug(start, start + size, "System RAM");
-> =20
->  	/* device_online() will take the lock when calling online_pages() */
->  	mem_hotplug_done();
-> @@ -1081,10 +1082,21 @@ int __ref add_memory_resource(int nid, struct r=
-esource *res,
->  /* requires device_hotplug_lock, see add_memory_resource() */
->  int __ref __add_memory(int nid, u64 start, u64 size, unsigned long fla=
-gs)
->  {
-> +	const char *resource_name =3D "System RAM";
->  	struct resource *res;
->  	int ret;
-> =20
-> -	res =3D register_memory_resource(start, size);
-> +	/*
-> +	 * Indicate that memory managed by a driver is special. It's always
-> +	 * detected and added via a driver, should not be given to the kexec
-> +	 * kernel for booting when manually crafting the firmware memmap, and
-> +	 * no kexec segments should be placed on it. However, kdump should
-> +	 * dump this memory.
-> +	 */
-> +	if (flags & MHP_DRIVER_MANAGED)
-> +		resource_name =3D "System RAM (driver managed)";
-> +
-> +	res =3D register_memory_resource(start, size, resource_name);
->  	if (IS_ERR(res))
->  		return PTR_ERR(res);
-> =20
->=20
+On Thu, Apr 30, 2020 at 09:14:37AM +0200, Christian Brauner wrote:
+> On Thu, Apr 30, 2020 at 08:53:56AM +0200, Jiri Slaby wrote:
+> > On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
+> > > This matches the behaviour of other Unix-like systems that have SIGINFO
+> > > and causes less harm to processes that do not install handlers for this
+> > > signal, making the keyboard status character non-fatal for them.
+> > > 
+> > > This is implemented with the assumption that SIGINFO is defined
+> > > to be equivalent to SIGPWR; still, there is no reason for PWR to
+> > > result in termination of the signal recipient anyway — it does not
+> > > indicate there is a fatal problem with the recipient's execution
+> > > context (like e.g. FPE/ILL do), and we have TERM/KILL for explicit
+> > > termination requests.
+> > > 
+> > > To put it another way:
+> > > The only scenario where system behaviour actually changes is when the
+> > > signal recipient has default disposition for SIGPWR. If a process
+> > > chose to interpret a SIGPWR as an incentive to cleanly terminate, it
+> > > would supply its own handler — and this commit does not affect processes
+> > > with non-default handlers.
+> > > 
+> > > Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
+> > > ---
+> > >  include/linux/signal.h | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/include/linux/signal.h b/include/linux/signal.h
+> > > index 05bacd2ab..dc31da8fc 100644
+> > > --- a/include/linux/signal.h
+> > > +++ b/include/linux/signal.h
+> > > @@ -369,7 +369,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
+> > >   *	|  SIGSYS/SIGUNUSED  |	coredump 	|
+> > >   *	|  SIGSTKFLT         |	terminate	|
+> > >   *	|  SIGWINCH          |	ignore   	|
+> > > - *	|  SIGPWR            |	terminate	|
+> > > + *	|  SIGPWR            |	ignore   	|
+> > 
+> > You need to update signal.7 too:
+> > https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man7/signal.7#n285
+> 
+> (I fail this whole thread via b4 and it appears that a bunch of messages
+> are missing on lore. Might just be delay though.)
+> 
+> How this is this not going to break userspace?
 
-BTW, I was wondering if this is actually also something that
-drivers/dax/kmem.c wants to use for adding memory.
+That's my main hesitation for taking this patchset.
 
-Just because we decided to use some DAX memory in the current kernel as
-system ram, doesn't mean we should make that decision for the kexec
-kernel (e.g., using it as initial memory, placing kexec binaries onto
-it, etc.). This is also not what we would observe during a real reboot.
+> Just for a start, SIGPWR (for better or worse) was used for a long time
+> by some sandboxing/container runtimes to shutdown a process and still
+> is.
 
-I can see that the "System RAM" resource will show up as child resource
-under the device e.g., in /proc/iomem.
+That's a good reason to not do this :(
 
-However, entries in /sys/firmware/memmap/ are created as "System RAM".
-
---=20
-Thanks,
-
-David / dhildenb
-
+greg k-h
