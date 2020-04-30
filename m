@@ -2,147 +2,145 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B824CC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE489C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9783A2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EF121974
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgD3EbO (ORCPT
+        id S1726499AbgD3EfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:31:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39172 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbgD3EbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:31:13 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5FFAD95BDE18E57DB1F3;
-        Thu, 30 Apr 2020 12:31:10 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.100) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
- 12:31:01 +0800
-Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
-To:     "Yan, Zheng" <ukernel@gmail.com>
-CC:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "Ilya Dryomov" <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>
-References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
- <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org>
- <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
- <CAAM7YA=OU2jJ9F_p1fAknaxZCDWMY7w9yiRE0z0uqxDNYPG5Mg@mail.gmail.com>
-From:   Wu Bo <wubo40@huawei.com>
-Message-ID: <3fb139b0-062a-9f17-1855-66dacf5d6825@huawei.com>
-Date:   Thu, 30 Apr 2020 12:31:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 30 Apr 2020 00:35:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46888 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726391AbgD3EfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 00:35:06 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U4XtBA146719;
+        Thu, 30 Apr 2020 00:34:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q803axue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 00:34:39 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03U4YJ4a147417;
+        Thu, 30 Apr 2020 00:34:37 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q803axrh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 00:34:37 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U4OmQ0004545;
+        Thu, 30 Apr 2020 04:34:29 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 30mcu52bat-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 04:34:29 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U4YQPI65404952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 04:34:27 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF11C42047;
+        Thu, 30 Apr 2020 04:34:26 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 81BD042041;
+        Thu, 30 Apr 2020 04:34:23 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.59.105])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 04:34:23 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
+        fweisbec@gmail.com, mingo@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com
+Subject: [PATCH v4 00/16] powerpc/watchpoint: Preparation for more than one watchpoint
+Date:   Thu, 30 Apr 2020 10:04:01 +0530
+Message-Id: <20200430043417.30948-1-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-In-Reply-To: <CAAM7YA=OU2jJ9F_p1fAknaxZCDWMY7w9yiRE0z0uqxDNYPG5Mg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.100]
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_01:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=824
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/30 10:50, Yan, Zheng wrote:
-> On Wed, Apr 29, 2020 at 8:49 AM Wu Bo <wubo40@huawei.com> wrote:
->>
->> On 2020/4/28 22:48, Jeff Layton wrote:
->>> On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
->>>> if the ceph_mdsc_open_export_target_session() return fails,
->>>> should add a lock to avoid twice unlocking.
->>>> Because the lock will be released at the retry or out_unlock tag.
->>>>
->>>
->>> The problem looks real, but...
->>>
->>>> --
->>>> v1 -> v2:
->>>> add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag.
->>>>
->>>> Signed-off-by: Wu Bo <wubo40@huawei.com>
->>>> ---
->>>>    fs/ceph/caps.c | 27 +++++++++++++++------------
->>>>    1 file changed, 15 insertions(+), 12 deletions(-)
->>>>
->>>> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->>>> index 185db76..414c0e2 100644
->>>> --- a/fs/ceph/caps.c
->>>> +++ b/fs/ceph/caps.c
->>>> @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
->>>>
->>>>       /* open target session */
->>>>       tsession = ceph_mdsc_open_export_target_session(mdsc, target);
->>>> -    if (!IS_ERR(tsession)) {
->>>> -            if (mds > target) {
->>>> -                    mutex_lock(&session->s_mutex);
->>>> -                    mutex_lock_nested(&tsession->s_mutex,
->>>> -                                      SINGLE_DEPTH_NESTING);
->>>> -            } else {
->>>> -                    mutex_lock(&tsession->s_mutex);
->>>> -                    mutex_lock_nested(&session->s_mutex,
->>>> -                                      SINGLE_DEPTH_NESTING);
->>>> -            }
->>>> -            new_cap = ceph_get_cap(mdsc, NULL);
->>>> -    } else {
->>>> +    if (IS_ERR(tsession)) {
->>>>               WARN_ON(1);
->>>>               tsession = NULL;
->>>>               target = -1;
->>>> +            mutex_lock(&session->s_mutex);
->>>> +            spin_lock(&ci->i_ceph_lock);
->>>> +            goto out_unlock;
->>>
->>> Why did you make this case goto out_unlock instead of retrying as it did
->>> before?
->>>
->>
->> If the problem occurs, target = -1, and goto retry lable, you need to
->> call __get_cap_for_mds() or even call __ceph_remove_cap(), and then jump
->> to out_unlock lable. All I think is unnecessary, goto out_unlock instead
->> of retrying directly.
->>
-> 
-> __ceph_remove_cap() must be called even if opening target session
-> failed. I think adding a mutex_lock(&session->s_mutex) to the
-> IS_ERR(tsession) block should be enough.
-> 
+So far, powerpc Book3S code has been written with an assumption of only
+one watchpoint. But future power architecture is introducing second
+watchpoint register (DAWR). Even though this patchset does not enable
+2nd DAWR, it make the infrastructure ready so that enabling 2nd DAWR
+should just be a matter of changing count.
 
-Yes，I will send the V3 patch later.
+Existing functionality works fine with the patchset. I've tested it with
+perf, ptrace(gdb), xmon. All hw-breakpoint selftests are passing as well.
+And I've build tested for 8xx and 'AMCC 44x, 46x or 47x'.
 
-> 
->> Thanks.
->> Wu Bo
->>
->>>> +    }
->>>> +
->>>> +    if (mds > target) {
->>>> +            mutex_lock(&session->s_mutex);
->>>> +            mutex_lock_nested(&tsession->s_mutex,
->>>> +                                    SINGLE_DEPTH_NESTING);
->>>> +    } else {
->>>> +            mutex_lock(&tsession->s_mutex);
->>>> +            mutex_lock_nested(&session->s_mutex,
->>>> +                                    SINGLE_DEPTH_NESTING);
->>>>       }
->>>> +    new_cap = ceph_get_cap(mdsc, NULL);
->>>>       goto retry;
->>>>
->>>>    out_unlock:
->>>
->>
->>
-> 
-> .
-> 
+Note: kvm or PowerVM guest is not enabled yet.
 
+v3: https://lore.kernel.org/linuxppc-dev/20200414031659.58875-1-ravi.bangoria@linux.ibm.com
+
+v3->v4:
+ - Reduce the scope of local variables to increase readability at some
+   places, suggested by Christophe.
+ - Added Michael Neuling's Reviewed by for the series.
+ - Rebased to powerpc/next
+
+Ravi Bangoria (16):
+  powerpc/watchpoint: Rename current DAWR macros
+  powerpc/watchpoint: Add SPRN macros for second DAWR
+  powerpc/watchpoint: Introduce function to get nr watchpoints
+    dynamically
+  powerpc/watchpoint/ptrace: Return actual num of available watchpoints
+  powerpc/watchpoint: Provide DAWR number to set_dawr
+  powerpc/watchpoint: Provide DAWR number to __set_breakpoint
+  powerpc/watchpoint: Get watchpoint count dynamically while disabling
+    them
+  powerpc/watchpoint: Disable all available watchpoints when
+    !dawr_force_enable
+  powerpc/watchpoint: Convert thread_struct->hw_brk to an array
+  powerpc/watchpoint: Use loop for thread_struct->ptrace_bps
+  powerpc/watchpoint: Introduce is_ptrace_bp() function
+  powerpc/watchpoint: Use builtin ALIGN*() macros
+  powerpc/watchpoint: Prepare handler to handle more than one
+    watcnhpoint
+  powerpc/watchpoint: Don't allow concurrent perf and ptrace events
+  powerpc/watchpoint/xmon: Don't allow breakpoint overwriting
+  powerpc/watchpoint/xmon: Support 2nd dawr
+
+ arch/powerpc/include/asm/cputable.h       |   6 +-
+ arch/powerpc/include/asm/debug.h          |   2 +-
+ arch/powerpc/include/asm/hw_breakpoint.h  |  32 +-
+ arch/powerpc/include/asm/processor.h      |   6 +-
+ arch/powerpc/include/asm/reg.h            |   6 +-
+ arch/powerpc/include/asm/sstep.h          |   2 +
+ arch/powerpc/kernel/dawr.c                |  23 +-
+ arch/powerpc/kernel/hw_breakpoint.c       | 645 ++++++++++++++++++----
+ arch/powerpc/kernel/process.c             |  85 +--
+ arch/powerpc/kernel/ptrace/ptrace-noadv.c |  72 ++-
+ arch/powerpc/kernel/ptrace/ptrace32.c     |   4 +-
+ arch/powerpc/kernel/signal.c              |  13 +-
+ arch/powerpc/kvm/book3s_hv.c              |  12 +-
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S   |  18 +-
+ arch/powerpc/xmon/xmon.c                  |  99 +++-
+ kernel/events/hw_breakpoint.c             |  16 +
+ 16 files changed, 814 insertions(+), 227 deletions(-)
+
+-- 
+2.21.1
 
