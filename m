@@ -2,161 +2,83 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0E7C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6580C8300D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66FF20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="UoP5cDTk"
+	by mail.kernel.org (Postfix) with ESMTP id C5DFD20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588236560;
+	bh=J8dfL1puxygVx/IlBM6DbxBoxp2B2lbaeh0Jyf/zt5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wBjWz1kjtK8QHgvXQOnkAx1lGmjVM7hZIeW05UlYfig3ZHHRZuF4ConNqvXLyr+f0
+	 uTzbe+qzBIJh4/1/L7eNPBZL1GR5AMg/QT5lBYvZ7McOmf9FWn1sJh/GcQMDoW1ZAL
+	 8vH6XLkHZFt5k1MF83wxrdazgBZyDSaCJDIuq6Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgD3Ism (ORCPT
+        id S1726778AbgD3ItU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:48:42 -0400
-Received: from mail-mw2nam10on2078.outbound.protection.outlook.com ([40.107.94.78]:22881
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726611AbgD3Isl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:48:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lqz8ct5ikjwWKAYzQ1Gi6ukBN2WpuugrQ1gL8sP+hXhKJ5enSELQVoVVgnUXnqG8ikUR509HWM7B1mdTDiOCpGoWH2itUjTjRkoD54YEEEs6PJti9FeNNmikUJCYDkcaj1Thw4q+xQNsWIrU4YEPaxaaLOSBbZn4cstZA3PIwB2VyomfNfg77YvBHOKK14BUunXVgcKvRs+ZMLrBT/9m9u1HHqmhu1urpilxFJ4rQf5fqutm8GXPpqajw92Vp22MGjZ8BZlUUQ9RyzVvz90adE/SGbOyTjJKsKCHlk18m2rw7jSak2e1vo+QG6BkUPPs+5+y1XJayP89Ss/uwn4RXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KMnmWSXOVuAuctdePqPIk4ECMJVF0D55bCj+XKGA+uU=;
- b=EwbxZEqUXHV3Lr5czEyWvDtebDwyplWnWTSp1JqrSu7m57eH+qF+NFhym4tHsYT5ziM1E+F06Lk7oJN0yAyWVtZRZYZ55B4VaG+eootnbFsavHgd9vU3Ls5s8lyrfR5qv82owUHoQMysCm2hAdO42jZXRLT/9/TsxIHMwfSGJUIrxjM4YGYVEpRn7qFHBrAB9IzWb3ifuxFj4i99l8o59hpMzHmQUpfuFxnNrZyUyJGodwFYHeeuepEWCUswdf7j6HzVqIYGO2Qv9POuwfmB+gPzbdaeyTWRBx3HMoF/XPSpZviB8vYS9WCXiOYgrreyvYPxx0uT5BJQwYwgRV+/wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KMnmWSXOVuAuctdePqPIk4ECMJVF0D55bCj+XKGA+uU=;
- b=UoP5cDTk9XQMdnsbWT1sP9ZJZKAz6SJ+9WTKbLWzM4gAYDCeH14WHkymIGfPONH07u5/Z6eDZKZVQcHx/BStB46lZFZ3eck+ugcuvwSRcln2YMaBd2Bwbo8FbgGUt858/fxV7rOPmMyyxLUFc7u6y4/gnhAqXCBr6Rp+TwUYYGA=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1883.namprd12.prod.outlook.com (2603:10b6:3:113::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Thu, 30 Apr 2020 08:48:39 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 08:48:39 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com, brijesh.singh@amd.com,
-        kexec@lists.infradead.org
-Subject: [PATCH v7 18/18] KVM: x86: Add kexec support for SEV Live Migration.
-Date:   Thu, 30 Apr 2020 08:48:29 +0000
-Message-Id: <0adf76ea0f88e137bef5e045ebf96ebb004ee8df.1588234824.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SN6PR05CA0016.namprd05.prod.outlook.com
- (2603:10b6:805:de::29) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Thu, 30 Apr 2020 04:49:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgD3ItT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:49:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6931920787;
+        Thu, 30 Apr 2020 08:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588236557;
+        bh=J8dfL1puxygVx/IlBM6DbxBoxp2B2lbaeh0Jyf/zt5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lUgdFv3A3wy6Cj/P0sEaQQmV4uf/6P3kcXZ8rX9/GDr5VkbFPSBo+sRbDzL50gNvz
+         grVtyzjVTf4taIT/s9ZbxFgeIWE/UgM3KvPoEqaZgNvvKbvgdFMBTVC0D/3hRe0Veu
+         aC2Yxj5t8OI6L5lOXN3ZVg3JqAV+B9c2CZXqn2p0=
+Date:   Thu, 30 Apr 2020 10:49:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        stable@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH] tty: xilinx_uartps: Add the id to the console
+Message-ID: <20200430084915.GD2496467@kroah.com>
+References: <06195dc0effe2fb82e264e4faefcfdd6ebc00516.1588234277.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN6PR05CA0016.namprd05.prod.outlook.com (2603:10b6:805:de::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.12 via Frontend Transport; Thu, 30 Apr 2020 08:48:37 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4ed7b96d-b898-453e-235f-08d7ece346e8
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1883:|DM5PR12MB1883:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB18834D26B280D7CF6A4FFAAC8EAA0@DM5PR12MB1883.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(136003)(376002)(39860400002)(478600001)(86362001)(956004)(8936002)(26005)(2906002)(2616005)(6916009)(8676002)(36756003)(6486002)(7416002)(4326008)(16526019)(186003)(7696005)(66476007)(5660300002)(66946007)(6666004)(52116002)(66556008)(316002)(136400200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C+HsTCYEW6FdZIthQxJbm6pL1Nl+FxJQVp09/rh0kiem0AxDlZyCxAE/9dPTmdModyfIoYgzshaPnjTVurKsCs6pjTCVwhp1fnSAaqimJMkPyne5Or5cxkWQarJWVlM4Ae+bHt+1Ez79zXDRNIPdXSIljLGKFCcoabk0KHaa3OcycxT0TKCdrmBmnHLc2bagphc9cvWvQ6FgfsQi5HI5Vq1Rf0Ix0oPmE4fjHRPSB0ADMeXWbHPJGd7j3yd7c7GRwUYxXU9/Y9/wSfYHSWGE1gNDohpcZn9+HCd0szuhF6qtpyIBPIcFa6HS93k9KXIJCgxUXCjiAgNVxhrbjdSnvaUw5xVzvQm1JTh4d36avowcHrZOYxbPqfBcJMiAbzFBFeFHnxy+ekaVpO1G+iRXSXpGvtelWyHV9IrbT/GvLELv1SRAz7Fwa6Ui83fEqt1GWVp6+WNWQo7TQQKI4rtYBvDRQbwapKKDLLf9LH6PSBUSRhN9c8ggzWdRiXE5buB8
-X-MS-Exchange-AntiSpam-MessageData: hklji63G1mQx/Km/dj7Y0UVbSP4x4/xnziRt4TLpNiAAY4ffPSPly5bAmN8bGg2//bTT6TjKTsw46YC49yeagMarSLN1WWKEjY3moYE8PqyOhnDRLt8uyOKrFh5trNfPpcvDZ9C/ROFUA8ZFM5WW4F/Uc0vn9Px4AgYjsGxSVl/FDsiZlZmbwcQKMB1co+pvS0EiLc0yurGhjdBy2fOVE3+V+Bki62GJx0oRRdVeP+Bs0knXeh/kf/348zCZYleZSmTHrhzvyVZIxbRjKldmJ7hiIGlG2E12Vl5oeidNNJRxIZiCO8TJ4e9MJYZ0rI0PBCqr4tiPEfuW1YgwTzq3eBDGkPkoPMtshwPAAwBIlTUxf+5Qs9YBkudOZyo7nEt3xYtY7BdXO7xd0MrE48bWmL3U5OncG7MwXztpJF+shu/rwPUeLhI4jGeVkGNqYI2geNs1NAe+U1nysVYythTpHyFLXwpX5ddV8p9SxQtpcR3hCnZJ4yhpq0/CmBn2/f2XUhB2w+VtCo1l0NzMzhHKs6ML0ESEH3ZPpNX6pXJ/ES5aMnBxogmIrY8/iXCz2xcP4mlCaeeChccA1tXCkqpzzS2Zboa7r4e8+b+Ws3YyUGluGxz/GxRfT8DxbWgliTXmwu72K3KgO4MCSN3iBtfWHj0g3ugl1O/61b39uANQlv2x9Ns/DszjJMGyQa+2lJXWJhwCzaAr2e4tlLAHrur4HpHML6fJx3C06DKC/KIdooTistD8uEDOQsKNny1Ld4XnNsYeejJn/iJybOF7piyYOlyjglG5MPZ5GHoNgxSe854=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ed7b96d-b898-453e-235f-08d7ece346e8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:48:38.9523
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hYA9XJorzJVZIF1Q+62mPXLTQSFaAYzgTFj9zroL1yg4CWBzUZmanD51TqFSi10gCv9c/Y/FOzMU2lS7DMxfDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1883
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06195dc0effe2fb82e264e4faefcfdd6ebc00516.1588234277.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Thu, Apr 30, 2020 at 10:11:21AM +0200, Michal Simek wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> Update the console index. Once the serial node is found update it to the
+> console index.
+> 
+> Fixes: 18cc7ac8a28e ("Revert "serial: uartps: Register own uart console and driver structures"")
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+> Greg: Would be good if you can take this patch to 5.7 and also to stable
+> trees.
 
-Reset the host's page encryption bitmap related to kernel
-specific page encryption status settings before we load a
-new kernel by kexec. We cannot reset the complete
-page encryption bitmap here as we need to retain the
-UEFI/OVMF firmware specific settings.
+WHy?  I don't understand what bug this fixes/resolves, please be much
+more descriptive in your changelog text showing this if you wish for it
+to be backported to a stable tree.  As it is, this just looks like you
+are adding a new feature.
 
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+thanks,
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 8b8cc87a3461..68f2de4c1e74 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,7 @@
- #include <asm/hypervisor.h>
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
-+#include <asm/e820/api.h>
- 
- static int kvmapf = 1;
- 
-@@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
- 	 */
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
- 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-+	/*
-+	 * Reset the host's page encryption bitmap related to kernel
-+	 * specific page encryption status settings before we load a
-+	 * new kernel by kexec. NOTE: We cannot reset the complete
-+	 * page encryption bitmap here as we need to retain the
-+	 * UEFI/OVMF firmware specific settings.
-+	 */
-+	if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
-+		int i;
-+		unsigned long nr_pages;
-+
-+		for (i = 0; i < e820_table->nr_entries; i++) {
-+			struct e820_entry *entry = &e820_table->entries[i];
-+			unsigned long start_pfn;
-+			unsigned long end_pfn;
-+
-+			if (entry->type != E820_TYPE_RAM)
-+				continue;
-+
-+			start_pfn = entry->addr >> PAGE_SHIFT;
-+			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-+			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
-+
-+			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-+					   entry->addr, nr_pages, 1);
-+		}
-+	}
- 	kvm_pv_disable_apf();
- 	kvm_disable_steal_time();
- }
--- 
-2.17.1
-
+greg k-h
