@@ -2,157 +2,273 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0EDC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BC3C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1D2920838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F2C20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k9p0pKH4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YyXKqWpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgD3HTJ (ORCPT
+        id S1726618AbgD3HTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:19:09 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:29355 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgD3HTI (ORCPT
+        Thu, 30 Apr 2020 03:19:46 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23038 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726474AbgD3HTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:19:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588231148; x=1619767148;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version:subject;
-  bh=49aIoMJfZD48Zv0jPVQLv85WcEcgrU7KH5esWay/qvU=;
-  b=k9p0pKH4TREqaVe8zrqwDzlFUwLiLxKchOuetK7CF0J//NCXcamDuCm8
-   ZR2BGIg8ehrmuh0zk0zLpyTGyGZjJtxBgmr5xE9Ms1xSNbM0WgbLerhDb
-   0HvCbGwk0WzvsX485Q+AkQf9zMhx56uR12aoKT7GkDyhcYZP4qB5UTb/t
-   0=;
-IronPort-SDR: IlHjtA3eOb1l09Nb+e8NXZtuMd9Wiq/R1iYFI7f9hxls5nYp7ejSi19bXNpDrn8BE53sgkv4uZ
- 5KZImaeRH56Q==
-X-IronPort-AV: E=Sophos;i="5.73,334,1583193600"; 
-   d="scan'208";a="28239627"
-Subject: RE: [PATCH] net: ena: fix gcc-4.8 missing-braces warning
-Thread-Topic: [PATCH] net: ena: fix gcc-4.8 missing-braces warning
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 30 Apr 2020 07:18:55 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 86C5FA1D38;
-        Thu, 30 Apr 2020 07:18:52 +0000 (UTC)
-Received: from EX13D08EUC003.ant.amazon.com (10.43.164.232) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 30 Apr 2020 07:18:51 +0000
-Received: from EX13D11EUC003.ant.amazon.com (10.43.164.153) by
- EX13D08EUC003.ant.amazon.com (10.43.164.232) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 30 Apr 2020 07:18:50 +0000
-Received: from EX13D11EUC003.ant.amazon.com ([10.43.164.153]) by
- EX13D11EUC003.ant.amazon.com ([10.43.164.153]) with mapi id 15.00.1497.006;
- Thu, 30 Apr 2020 07:18:50 +0000
-From:   "Jubran, Samih" <sameehj@amazon.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "Belgazal, Netanel" <netanel@amazon.com>,
-        "Kiyanovski, Arthur" <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-CC:     "Tzalik, Guy" <gtzalik@amazon.com>,
-        "Bshara, Saeed" <saeedb@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Thread-Index: AQHWHadH74VL29pWn0eLulmochhjwKiRPQvg
-Date:   Thu, 30 Apr 2020 07:18:47 +0000
-Deferred-Delivery: Thu, 30 Apr 2020 07:17:49 +0000
-Message-ID: <03f3568ec8c646cdb7c767b16d19525a@EX13D11EUC003.ant.amazon.com>
-References: <20200428215131.3948527-1-arnd@arndb.de>
-In-Reply-To: <20200428215131.3948527-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.46]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 Apr 2020 03:19:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588231183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=1ZVQP21/gRpjdQaiA5iEEwLdE4gKxXG18sO+uoyk77w=;
+        b=YyXKqWpmaEqbqG0mQbsp3TYTvS8Kap4mcBdi9+EIrFBzWh84U3znmfH9o6xtGBVz/Wm2qv
+        jc3YLrrjM3DiMqntWdQjbQCKBFBUqk7LjpNpcnOP+6j+FQMe360QpmANXaS7cNUF/PUQ7C
+        Cz+d01l2y2QD2eUgGH8kRwf1hIl7KUU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-rM1ylhAbMHiuxvT_teIprA-1; Thu, 30 Apr 2020 03:19:37 -0400
+X-MC-Unique: rM1ylhAbMHiuxvT_teIprA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16BAAEC1A7;
+        Thu, 30 Apr 2020 07:19:35 +0000 (UTC)
+Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B9F7360BF4;
+        Thu, 30 Apr 2020 07:19:27 +0000 (UTC)
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20200429160803.109056-1-david@redhat.com>
+ <20200429160803.109056-3-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
+Date:   Thu, 30 Apr 2020 09:19:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200429160803.109056-3-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> -----Original Message-----
-> From: Arnd Bergmann <arnd@arndb.de>
-> Sent: Wednesday, April 29, 2020 12:51 AM
-> To: Belgazal, Netanel <netanel@amazon.com>; Kiyanovski, Arthur
-> <akiyano@amazon.com>; David S. Miller <davem@davemloft.net>; Alexei
-> Starovoitov <ast@kernel.org>; Daniel Borkmann <daniel@iogearbox.net>;
-> Jakub Kicinski <kuba@kernel.org>; Jesper Dangaard Brouer
-> <hawk@kernel.org>; John Fastabend <john.fastabend@gmail.com>; Jubran,
-> Samih <sameehj@amazon.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>; Tzalik, Guy <gtzalik@amazon.com>;
-> Bshara, Saeed <saeedb@amazon.com>; Machulsky, Zorik
-> <zorik@amazon.com>; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; bpf@vger.kernel.org
-> Subject: [EXTERNAL] [PATCH] net: ena: fix gcc-4.8 missing-braces warning
+On 29.04.20 18:08, David Hildenbrand wrote:
+> Some paravirtualized devices that add memory via add_memory() and
+> friends (esp. virtio-mem) don't want to create entries in
+> /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+> memory to the boot memmap of the kexec kernel.
 >=20
-> CAUTION: This email originated from outside of the organization. Do not c=
-lick
-> links or open attachments unless you can confirm the sender and know the
-> content is safe.
+> In fact, such memory is never exposed via the firmware (e.g., e820), bu=
+t
+> only via the device, so exposing this memory via /sys/firmware/memmap/ =
+is
+> wrong:
+>  "kexec needs the raw firmware-provided memory map to setup the
+>   parameter segment of the kernel that should be booted with
+>   kexec. Also, the raw memory map is useful for debugging. For
+>   that reason, /sys/firmware/memmap is an interface that provides
+>   the raw memory map to userspace." [1]
 >=20
+> We want to let user space know that memory which is always detected,
+> added, and managed via a (device) driver - like memory managed by
+> virtio-mem - is special. It cannot be used for placing kexec segments
+> and the (device) driver is responsible for re-adding memory that
+> (eventually shrunk/grown/defragmented) memory after a reboot/kexec. It
+> should e.g., not be added to a fixed up firmware memmap. However, it sh=
+ould
+> be dumped by kdump.
 >=20
+> Also, such memory could behave differently than an ordinary DIMM - e.g.=
+,
+> memory managed by virtio-mem can have holes inside added memory resourc=
+e,
+> which should not be touched, especially for writing.
 >=20
-> Older compilers warn about initializers with incorrect curly
-> braces:
+> Let's expose that memory as "System RAM (driver managed)" e.g., via
+> /pro/iomem.
 >=20
-> drivers/net/ethernet/amazon/ena/ena_netdev.c: In function
-> 'ena_xdp_xmit_buff':
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:311:2: error: expected ','
-> or ';' before 'struct'
->   struct ena_tx_buffer *tx_info;
->   ^~~~~~
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:321:2: error: 'tx_info'
-> undeclared (first use in this function)
->   tx_info =3D &xdp_ring->tx_buffer_info[req_id];
->   ^~~~~~~
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:321:2: note: each
-> undeclared identifier is reported only once for each function it appears =
-in
+> We don't have to worry about firmware_map_remove() on the removal path.
+> If there is no entry, it will simply return with -EINVAL.
 >=20
-> Use the GNU empty initializer extension to avoid this.
+> [1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware=
+-memmap
 >=20
-> Fixes: 31aa9857f173 ("net: ena: enable negotiating larger Rx ring size")
-Please use the correct fixes, it should be XDP TX commit.
-Otherwise looks good,
-Thanks!
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/memory_hotplug.h |  8 ++++++++
+>  mm/memory_hotplug.c            | 20 ++++++++++++++++----
+>  2 files changed, 24 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> index 2cc765df8da3..ad385652ca24 100644
-> --- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> +++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> @@ -307,7 +307,7 @@ static int ena_xdp_xmit_buff(struct net_device *dev,
->                              struct ena_rx_buffer *rx_info)  {
->         struct ena_adapter *adapter =3D netdev_priv(dev);
-> -       struct ena_com_tx_ctx ena_tx_ctx =3D {0};
-> +       struct ena_com_tx_ctx ena_tx_ctx =3D { };
->         struct ena_tx_buffer *tx_info;
->         struct ena_ring *xdp_ring;
->         u16 next_to_use, req_id;
-> --
-> 2.26.0
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotp=
+lug.h
+> index bf0e3edb8688..cc538584b39e 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -68,6 +68,14 @@ struct mhp_params {
+>  	pgprot_t pgprot;
+>  };
+> =20
+> +/* Flags used for add_memory() and friends. */
+> +
+> +/*
+> + * Don't create entries in /sys/firmware/memmap/ and expose memory as
+> + * "System RAM (driver managed)" in e.g., /proc/iomem
+> + */
+> +#define MHP_DRIVER_MANAGED		1
+> +
+>  /*
+>   * Zone resizing functions
+>   *
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index ebdf6541d074..cfa0721280aa 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -98,11 +98,11 @@ void mem_hotplug_done(void)
+>  u64 max_mem_size =3D U64_MAX;
+> =20
+>  /* add this memory to iomem resource */
+> -static struct resource *register_memory_resource(u64 start, u64 size)
+> +static struct resource *register_memory_resource(u64 start, u64 size,
+> +						 const char *resource_name)
+>  {
+>  	struct resource *res;
+>  	unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> -	char *resource_name =3D "System RAM";
+> =20
+>  	/*
+>  	 * Make sure value parsed from 'mem=3D' only restricts memory adding
+> @@ -1058,7 +1058,8 @@ int __ref add_memory_resource(int nid, struct res=
+ource *res,
+>  	BUG_ON(ret);
+> =20
+>  	/* create new memmap entry */
+> -	firmware_map_add_hotplug(start, start + size, "System RAM");
+> +	if (!(flags & MHP_DRIVER_MANAGED))
+> +		firmware_map_add_hotplug(start, start + size, "System RAM");
+> =20
+>  	/* device_online() will take the lock when calling online_pages() */
+>  	mem_hotplug_done();
+> @@ -1081,10 +1082,21 @@ int __ref add_memory_resource(int nid, struct r=
+esource *res,
+>  /* requires device_hotplug_lock, see add_memory_resource() */
+>  int __ref __add_memory(int nid, u64 start, u64 size, unsigned long fla=
+gs)
+>  {
+> +	const char *resource_name =3D "System RAM";
+>  	struct resource *res;
+>  	int ret;
+> =20
+> -	res =3D register_memory_resource(start, size);
+> +	/*
+> +	 * Indicate that memory managed by a driver is special. It's always
+> +	 * detected and added via a driver, should not be given to the kexec
+> +	 * kernel for booting when manually crafting the firmware memmap, and
+> +	 * no kexec segments should be placed on it. However, kdump should
+> +	 * dump this memory.
+> +	 */
+> +	if (flags & MHP_DRIVER_MANAGED)
+> +		resource_name =3D "System RAM (driver managed)";
+> +
+> +	res =3D register_memory_resource(start, size, resource_name);
+>  	if (IS_ERR(res))
+>  		return PTR_ERR(res);
+> =20
+>=20
+
+BTW, I was wondering if this is actually also something that
+drivers/dax/kmem.c wants to use for adding memory.
+
+Just because we decided to use some DAX memory in the current kernel as
+system ram, doesn't mean we should make that decision for the kexec
+kernel (e.g., using it as initial memory, placing kexec binaries onto
+it, etc.). This is also not what we would observe during a real reboot.
+
+I can see that the "System RAM" resource will show up as child resource
+under the device e.g., in /proc/iomem.
+
+However, entries in /sys/firmware/memmap/ are created as "System RAM".
+
+--=20
+Thanks,
+
+David / dhildenb
 
