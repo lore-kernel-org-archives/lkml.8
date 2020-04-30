@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB44C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98B1C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F742063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88AF206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255909;
-	bh=nsssbZy682qJB1nLB7JZpO040fXKDc94Bx3ipos/8Ik=;
+	s=default; t=1588255911;
+	bh=0wE71sPp4p2eGoQKKwXnvzrVFa+Cv7DXFFOLa6n2n6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OvjaefW8AUTV3jh/kFafspzgu9x3nssstnPqxoA8TnSS2eYZg1/OJv6Ocx7wvc4Cy
-	 77f8bQJAcB6dXwgkq4P6KVk1VlngGyIo8amfNvzyQsXS0zBkajyaPwARnd2S76Ro5Q
-	 VEkSEGAxWq+K5x2dP/ffz2jA9Vsv/ElUpWrf27HI=
+	b=PGORCDnHfrbUyXDQMB7il5vk0PmOi72b8ALzuSmT4xiwF+72E/zCmhqPF/sSB9Ul9
+	 ecO40qoP7en6QHxkC8ui7wFNV/oxMiYu9Yaoi1Pp5xIXDJU5UF6oT+yigpAdSvBHb/
+	 dpGB6WrMbmluLRVN+GUngq5muaYVABq9sqBbCAQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgD3OLs (ORCPT
+        id S1728636AbgD3OLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgD3NvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:19 -0400
+        id S1728021AbgD3NvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A57208DB;
-        Thu, 30 Apr 2020 13:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4349F217BA;
+        Thu, 30 Apr 2020 13:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254678;
-        bh=nsssbZy682qJB1nLB7JZpO040fXKDc94Bx3ipos/8Ik=;
+        s=default; t=1588254681;
+        bh=0wE71sPp4p2eGoQKKwXnvzrVFa+Cv7DXFFOLa6n2n6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmISad+wyL6ocs1NjbGu0GWHl4IDqdVLG1YXzsFtNqiCCLARSfus+Cialyb4RPOT/
-         ccH/hYgkf2VvQTMxrD98+IaNHhV8dQr8WiAbdiQl9ccycVbqceAkqWIEpI9Lp+OqGU
-         hoxLu5A9B6+X3mIZTb+Rg3MeKwdCWSI+5oSSlBYk=
+        b=mVn9m+T6DuysXyWYKE0psF4hYHB8ql7z5dbmtgHa5YN9gy9EsAe04B6yMeGQFqRFC
+         XjP9WV1toLyDzMNbkJN17gCrIRYAG6DJX8uWnbHAWRey3klRdXP2Jsoos799n2Iwe5
+         Sr8L4Db2BBItKZADiOwXCIsAztLZWj3Whz3OYCWs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 30/79] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-Date:   Thu, 30 Apr 2020 09:49:54 -0400
-Message-Id: <20200430135043.19851-30-sashal@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 32/79] ARM: dts: bcm283x: Disable dsi0 node
+Date:   Thu, 30 Apr 2020 09:49:56 -0400
+Message-Id: <20200430135043.19851-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -60,47 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit b94e164759b82d0c1c80d4b1c8f12c9bee83f11d ]
+[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
 
-The HDMI?_SEL register maps up to four stereo SSI data lanes onto the
-sdata[0..3] inputs of the HDMI output block. The upper half of the
-register contains four blocks of 4 bits, with the most significant
-controlling the sdata3 line and the least significant the sdata0 line.
+Since its inception the module was meant to be disabled by default, but
+the original commit failed to add the relevant property.
 
-The shift calculation has an off-by-one error, causing the parent SSI to
-be mapped to sdata3, the first multi-SSI child to sdata0 and so forth.
-As the parent SSI transmits the stereo L/R channels, and the HDMI core
-expects it on the sdata0 line, this causes no audio to be output when
-playing stereo audio on a multichannel capable HDMI out, and
-multichannel audio has permutated channels.
-
-Fix the shift calculation to map the parent SSI to sdata0, the first
-child to sdata1 etc.
-
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200415141017.384017-3-matthias.blankertz@cetitec.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssiu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm283x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/sh/rcar/ssiu.c b/sound/soc/sh/rcar/ssiu.c
-index f35d882118874..9c7c3e7539c93 100644
---- a/sound/soc/sh/rcar/ssiu.c
-+++ b/sound/soc/sh/rcar/ssiu.c
-@@ -221,7 +221,7 @@ static int rsnd_ssiu_init_gen2(struct rsnd_mod *mod,
- 			i;
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index e1abe8c730cef..b83a864e2e8ba 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -372,6 +372,7 @@
+ 					     "dsi0_ddr2",
+ 					     "dsi0_ddr";
  
- 		for_each_rsnd_mod_array(i, pos, io, rsnd_ssi_array) {
--			shift	= (i * 4) + 16;
-+			shift	= (i * 4) + 20;
- 			val	= (val & ~(0xF << shift)) |
- 				rsnd_mod_id(pos) << shift;
- 		}
++			status = "disabled";
+ 		};
+ 
+ 		aux: aux@7e215000 {
 -- 
 2.20.1
 
