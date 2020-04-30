@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA34EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B776C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBE320873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5259E2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254837;
-	bh=iwModBdYnSBiQuxKQuEKfO9ES8TM7ARRk9PlkKU5/ZA=;
+	s=default; t=1588254843;
+	bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/1OnAEEIL4palj4NjcUEw5XsJXSWad1j9yNfP79bilhl0w9bXPcohigkBOIIqS4r
-	 C+PBlw8YrVOSQs0+P/DKW6jm6+5rs67c17ho5xaDRFRODDyH6jzhI37AliimQ6Ixmb
-	 VKBCPoDZKMheqJue+AgH+gWe3h4s3JBeIesW/sLE=
+	b=Er3FEXz++RmhJIXXEQOzx72+IFqG7qbObO67a+yOYdcpiFEGXyFKCN0dqTKThNyXb
+	 /1BG0+mR+OVLRQtcPO5DjaTcWOfATdM2Xng4+ndYpRS+gNhB/x2NV7KPs0wavtPRw1
+	 yCTTmiu6kAQ0Q3Hm9JcmJ8C5ksQU8jjf4M47ZH7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgD3Nx5 (ORCPT
+        id S1728875AbgD3NyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34990 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbgD3NxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:16 -0400
+        id S1727844AbgD3NxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EB1E21775;
-        Thu, 30 Apr 2020 13:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E42124955;
+        Thu, 30 Apr 2020 13:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254796;
-        bh=iwModBdYnSBiQuxKQuEKfO9ES8TM7ARRk9PlkKU5/ZA=;
+        s=default; t=1588254798;
+        bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGaw4tyzBsraI7PY2+Ngh+G1M+GS/LGvS/AA2XRkDWeFVIm1qYYrj7FAzunbKHi2+
-         KMRFrv9WUPeyxCS3zIHtlJT4GVCQRKDMtoozEy7v2NFOm2+ZrZIsw5kjEWMQGiJBUn
-         lwYGWWIkXJSG6izF7cCvFwYtu8woH0hiPejBvPUQ=
+        b=hz/+/Nxjubc/9B8DHww8AD1pu+SoSeXLDD85qendC5cUyA1969tez6eVYpTvYLuFc
+         veCp8KaHl08/Fm1+0/5szBhC0nXpiQgyYibEL+Axc/mVFzb/ZP//C33Q46umMPkUXx
+         PJdPdtG6dHKlgS7lsIHYr7fW5rLqXjd4lD9a83Xk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 51/57] afs: Fix to actually set AFS_SERVER_FL_HAVE_EPOCH
-Date:   Thu, 30 Apr 2020 09:52:12 -0400
-Message-Id: <20200430135218.20372-51-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 53/57] net: bcmgenet: suppress warnings on failed Rx SKB allocations
+Date:   Thu, 30 Apr 2020 09:52:14 -0400
+Message-Id: <20200430135218.20372-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -58,42 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 69cf3978f3ada4e54beae4ad44868b5627864884 ]
+[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
 
-AFS keeps track of the epoch value from the rxrpc protocol to note (a) when
-a fileserver appears to have restarted and (b) when different endpoints of
-a fileserver do not appear to be associated with the same fileserver
-(ie. all probes back from a fileserver from all of its interfaces should
-carry the same epoch).
+The driver is designed to drop Rx packets and reclaim the buffers
+when an allocation fails, and the network interface needs to safely
+handle this packet loss. Therefore, an allocation failure of Rx
+SKBs is relatively benign.
 
-However, the AFS_SERVER_FL_HAVE_EPOCH flag that indicates that we've
-received the server's epoch is never set, though it is used.
+However, the output of the warning message occurs with a high
+scheduling priority that can cause excessive jitter/latency for
+other high priority processing.
 
-Fix this to set the flag when we first receive an epoch value from a probe
-sent to the filesystem client from the fileserver.
+This commit suppresses the warning messages to prevent scheduling
+problems while retaining the failure count in the statistics of
+the network interface.
 
-Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/cmservice.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
-index b378cd780ed54..fc5eb0f893049 100644
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -169,7 +169,7 @@ static int afs_record_cm_probe(struct afs_call *call, struct afs_server *server)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index ff09ee777b2bf..6f01f4e03cef1 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1697,7 +1697,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
+ 	dma_addr_t mapping;
  
- 	spin_lock(&server->probe_lock);
- 
--	if (!test_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
-+	if (!test_and_set_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
- 		server->cm_epoch = call->epoch;
- 		server->probe.cm_epoch = call->epoch;
- 		goto out;
+ 	/* Allocate a new Rx skb */
+-	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
++	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
++				 GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!skb) {
+ 		priv->mib.alloc_rx_buff_failed++;
+ 		netif_err(priv, rx_err, priv->dev,
 -- 
 2.20.1
 
