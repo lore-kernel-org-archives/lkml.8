@@ -2,72 +2,76 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703A1C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C58C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53D0E207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4E12076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="sl7XFsxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgD3USC (ORCPT
+        id S1727092AbgD3UTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:18:02 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:38437 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgD3USC (ORCPT
+        Thu, 30 Apr 2020 16:19:33 -0400
+Received: from mail.kocurkovo.cz ([185.8.236.170]:50388 "EHLO
+        mail.kocurkovo.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgD3UTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:18:02 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 5960D240005;
-        Thu, 30 Apr 2020 20:18:00 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 22:17:59 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: adc: ti-ads8344: optimize consumption
-Message-ID: <20200430201759.GY51277@piout.net>
-References: <20200416205428.437503-1-alexandre.belloni@bootlin.com>
- <20200416205428.437503-3-alexandre.belloni@bootlin.com>
- <20200418161322.71b2b353@archlinux>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418161322.71b2b353@archlinux>
+        Thu, 30 Apr 2020 16:19:32 -0400
+Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
+        id 8112314A6; Thu, 30 Apr 2020 22:10:14 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 8112314A6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
+        s=mail; t=1588277414;
+        bh=DMrCxO5LfF+67B5Swz0IlQISgC769TejVCtIcdOO7Fc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sl7XFsxOSvFR5NUcHyTyS9JTovjTO3bsL2RbMfCf+fohv+FqMviOKFgYBWKRqt3P+
+         bMjIJeF+Pyp0y5j6ebKLu+5QF+U+G0lLjd6AQEMmvtPQk4zCbq//Y16qqRHJzCBfub
+         f2nTF59W7pmKa57uZBQPQrPFplndQz1ZWxwtuPbQ=
+From:   Matej Dujava <mdujava@kocurkovo.cz>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Matej Dujava <mdujava@kocurkovo.cz>
+Subject: [PATCH 3/3] staging: sm750fb: print error message with actual value
+Date:   Thu, 30 Apr 2020 22:09:26 +0200
+Message-Id: <1588277366-19354-4-git-send-email-mdujava@kocurkovo.cz>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1588277366-19354-1-git-send-email-mdujava@kocurkovo.cz>
+References: <1588277366-19354-1-git-send-email-mdujava@kocurkovo.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch will update error message, so it is same as error message in
+another function.
 
-On 18/04/2020 16:13:22+0100, Jonathan Cameron wrote:
-> On Thu, 16 Apr 2020 22:54:28 +0200
-> Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
-> 
-> > Set the clock mode only once, at probe time and then keep the ADC powered
-> > down between conversions.
-> > 
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Looks fine to me. I'd like to be lazy and not take this until the fix is
-> in my upstream (even though I suspect the merge would be fine).
-> 
-> Give me a poke if I seem to have forgotten this after that is true!
-> 
+Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
+---
+ drivers/staging/sm750fb/sm750.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It now landed in your upstream but I guess you want to take Gregory's
-patch as a fix first. To be honest I don't think any of the fixes are
-urgent as it seems we are the only users of the particular ADC.
-
-
+diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+index c3ce7e653c7f..a1a82e59dfee 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -390,7 +390,7 @@ static int lynxfb_ops_set_par(struct fb_info *info)
+ 	var->accel_flags = 0;/*FB_ACCELF_TEXT;*/
+ 
+ 	if (ret) {
+-		pr_err("pixel bpp format not satisfied\n.");
++		pr_err("bpp %d not supported\n", var->bits_per_pixel);
+ 		return ret;
+ 	}
+ 	ret = hw_sm750_crtc_setMode(crtc, var, fix);
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.26.2
+
