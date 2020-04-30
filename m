@@ -2,51 +2,88 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A24C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1618C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38B4621775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5A5214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0kElSQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgD3Gt3 (ORCPT
+        id S1726545AbgD3Gts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:49:29 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47294 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3Gt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:49:29 -0400
-IronPort-SDR: 1bFkaxWvZXU8bvar9uxrx78bh4t2ASTXZQ72ZkWCjqYTtbonQp4LBODjMwj5KX3dOUmrrxhXsf
- YHt8FdxRhz0Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 23:49:28 -0700
-IronPort-SDR: 9kL5j0T1nObJTAxCY6tYRK1s8mnbRHniBzznHbeT4Q0gj5aVkDCyiMBIpCiSZXctQg9u06FfpV
- kAR6ai7G9o7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
-   d="scan'208";a="337203357"
-Received: from unknown (HELO [10.239.13.122]) ([10.239.13.122])
-  by orsmga001.jf.intel.com with ESMTP; 29 Apr 2020 23:49:25 -0700
-Subject: Re: [PATCH][v2] kvm: x86: emulate APERF/MPERF registers
-To:     Li RongQing <lirongqing@baidu.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, x86@kernel.org, hpa@zytor.com, bp@alien8.de,
-        mingo@redhat.com, tglx@linutronix.de, joro@8bytes.org,
-        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, pbonzini@redhat.com
-References: <1588139196-23802-1-git-send-email-lirongqing@baidu.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <5aa01c91-b874-fd4f-a1fb-1d008753ca84@intel.com>
-Date:   Thu, 30 Apr 2020 14:49:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 02:49:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25289 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726491AbgD3Gtr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:49:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588229386;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6jDhUGC0q9fpb0E7nmomakw81mS0R94uGtBxC+k3irk=;
+        b=b0kElSQb60ylUG8YrqZUtsaPUvlxLfbwt17AW9TlbAP4az8FVT3Ah9wuHitck7JIxSJt/R
+        F6Cj3bqO8Yx1ZGfDVrxRm7LoDE8Yxky5Hq0GHc6rP38CjfcnR980FzslJJqMuTS5iQhiqk
+        FZDRqeFQehE7M4dOlgK2DiC6Knodn/c=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-GK0GwWwBPr2AUrjybWXTQw-1; Thu, 30 Apr 2020 02:49:44 -0400
+X-MC-Unique: GK0GwWwBPr2AUrjybWXTQw-1
+Received: by mail-wr1-f69.google.com with SMTP id s11so3382042wru.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:49:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6jDhUGC0q9fpb0E7nmomakw81mS0R94uGtBxC+k3irk=;
+        b=U1uW2Ed+dKIxHU7to+ZFaHAabMyTu8ryHCZC8guYI4ZceksvAh4+bF521TbOMqL5qE
+         YCEswu6xTwIdnmAjUzI3/Zdgn91AG9C6TagK+sKyP6ChjZeZ1L9iWHy0m37UDsu35j0e
+         iRXNW3H2HMQ+R1IxvYNt5ajEyxZgQBmPzMAfrfQb0wDWEFnTsEbQTbrjId7QL2CSxbMB
+         cYpkDbAye4vyyKkhxxb1sR0Y53T1yiu+R0oGV9ByzqbauMMfhzizM4NLeIS0l8mN0aHN
+         cXvVcTH33N5ujDUh1hS/36RlPKsHhQcssNAeBSwkgABeMJipCYyzQQmFD5y29edtxD3M
+         2xCQ==
+X-Gm-Message-State: AGi0PubolWIVTvLYHgh30X7Dv/jn53fG3tvOyBT1XrlmBWnBVX2dkgOc
+        08ICZgQEqflz5poA9bY2W2z2DR9trbkA8VZBZAWwQjNp0HeNAUT8sqE9ok1M1MvJ5l9y8XG3xq4
+        GG1nJ4O6Ic+RlpvvO7kI7SNTd
+X-Received: by 2002:adf:d0ce:: with SMTP id z14mr1006543wrh.179.1588229382511;
+        Wed, 29 Apr 2020 23:49:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJsr6rw4wP2fqMQl3zalW7R42B7drXGchkN9CzcjY2NDZHyXF3Wa5dNOSiiq9a1MPMvoUroSQ==
+X-Received: by 2002:adf:d0ce:: with SMTP id z14mr1006517wrh.179.1588229382284;
+        Wed, 29 Apr 2020 23:49:42 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
+        by smtp.gmail.com with ESMTPSA id g74sm11257055wme.44.2020.04.29.23.49.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 23:49:41 -0700 (PDT)
+Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
+ page ready notifications
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-5-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b1297936-cf69-227b-d758-c3f3ca09ae5d@redhat.com>
+Date:   Thu, 30 Apr 2020 08:49:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1588139196-23802-1-git-send-email-lirongqing@baidu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200429093634.1514902-5-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,59 +91,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/2020 1:46 PM, Li RongQing wrote:
-> Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
-> this is confused to user when turbo is enable, and aperf/mperf
-> can be used to show current cpu frequency after 7d5905dc14a
-> "(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
-> so we should emulate aperf mperf to achieve it
-> 
-> the period of aperf/mperf in guest mode are accumulated as
-> emulated value, and add per-VM knod to enable emulate mperfaperf
-> 
-> diff v1:
-> 1. support AMD
-> 2. support per-vm capability to enable
-> 
-[...]
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 851e9cc79930..1d157a8dba46 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4310,6 +4310,12 @@ static int svm_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   	case MSR_F10H_DECFG:
->   		msr_info->data = svm->msr_decfg;
->   		break;
-> +	case MSR_IA32_MPERF:
-> +		msr_info->data = vcpu->arch.v_mperf;
-> +		break;
-> +	case MSR_IA32_APERF:
-> +		msr_info->data = vcpu->arch.v_aperf;
-> +		break;
->   	default:
->   		return kvm_get_msr_common(vcpu, msr_info);
->   	}
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 91749f1254e8..b05e276e262b 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1914,6 +1914,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
->   			return 1;
->   		goto find_shared_msr;
-> +	case MSR_IA32_MPERF:
-> +		msr_info->data = vcpu->arch.v_mperf;
-> +		break;
-> +	case MSR_IA32_APERF:
-> +		msr_info->data = vcpu->arch.v_aperf;
+On 29/04/20 11:36, Vitaly Kuznetsov wrote:
+> +	case MSR_KVM_ASYNC_PF_ACK:
+> +		if (data & 0x1)
+> +			kvm_check_async_pf_completion(vcpu);
 > +		break;
 
-They are same for both vmx and svm, you can put them in kvm_get_msr_common()
+Does this work if interrupts are turned off?  I think in that case
+kvm_check_async_pf_completion will refuse to make progress.  You need to
+make this bit stateful (e.g. 1 = async PF in progress, 0 = not in
+progress), and check that for page ready notifications instead of
+EFLAGS.IF.  This probably means that;
 
-BTW, are those two MSR always readable regardless of guest's CPUID?
+- it might be simpler to move it to the vector MSR
 
->   	default:
->   	find_shared_msr:
->   		msr = find_msr_entry(vmx, msr_info->index);
+- it's definitely much simpler to remove the #PF-based mechanism for
+injecting page ready notifications.
 
+Thanks,
+
+Paolo
 
