@@ -2,109 +2,119 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7304EC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0651C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBAB20836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB72D2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:23:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="FSwI7Ok+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgD3SVh (ORCPT
+        id S1726616AbgD3SXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:21:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:60060 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgD3SVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:21:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C649C101E;
-        Thu, 30 Apr 2020 11:21:35 -0700 (PDT)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E45CC3F73D;
-        Thu, 30 Apr 2020 11:21:32 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-To:     Qais Yousef <qais.yousef@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200428164134.5588-1-qais.yousef@arm.com>
- <20200429113255.GA19464@codeaurora.org>
- <20200429123056.otyedhljlugyf5we@e107158-lin>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <d3916860-6ee8-4d17-55ea-be5cada1302a@arm.com>
-Date:   Thu, 30 Apr 2020 20:21:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 14:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725844AbgD3SXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:23:42 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1983BC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:23:42 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so3138801wma.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:23:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vzID6dyyEtHnb8W3jUC+1MMjyOI0QnfADZmAC1ounFo=;
+        b=FSwI7Ok+WljTVqHuemSfgBv/l0IPhqe998/WQWww0qZd4jkx/oFKkGXTNi4jWZwtti
+         MRho365ZHO1V33E5E1q6Y2VY+PO5wNd5GVfdPXWEK/V8/zY2Owg+oW/HR3pGcU30Mq/Z
+         vo3ZN2VBw7fklcpV/jZgKkSyrG8KCx4b6K10I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vzID6dyyEtHnb8W3jUC+1MMjyOI0QnfADZmAC1ounFo=;
+        b=n1ip5uU4w+NUkMJdazY8NPzx4U0zh+xGrz31g/Q2jteT3UngT7b/XcxTsyO+otTt/c
+         y43ORDZ5f191Xw2eb7wvXn9rvFSbhziN8dUT9F9Rw4fZMkUmvBCQjZpzOeLuQyu+/d13
+         INBTn1C4HfnLBXBIO7ZtxxFXvwKB7nhBe9jaVp6V85YQOsOEJ52cClNxYz1STe9K57Z+
+         iNf0BdiTsGflu2FbQ5QXD7zPaad/URUx/6GtzsPIfwgeff/mVgbovg0x3TwjwLPxo41h
+         +Mlf+FeIiBGblfARPVaL6k/jkoRCCtEzX06bITAn0oxZQ+dzMIws3B3zn8uNnorx4R4k
+         S59Q==
+X-Gm-Message-State: AGi0PuaP8u2BUpwXFbl+fMxfhcnJVmyVOOSohAlcg+ikcXOqawFJfd5v
+        CwoOo2U6ck2jhpO5Oh6+jkE9hU87o8mRFQLomHqJlX0=
+X-Google-Smtp-Source: APiQypILI/sgZPbbAbvkcpFWeJGx8Ba1qT+Ddq2hduj1iLMhXXXt/vK891UT4CSsJL6MxfikcWFDtk05fG+dazKB6/c=
+X-Received: by 2002:a7b:c38b:: with SMTP id s11mr4348218wmj.55.1588270990928;
+ Thu, 30 Apr 2020 11:23:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200429123056.otyedhljlugyf5we@e107158-lin>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200430095325.111441-1-zong.li@sifive.com>
+In-Reply-To: <20200430095325.111441-1-zong.li@sifive.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Thu, 30 Apr 2020 11:22:59 -0700
+Message-ID: <CAOnJCUJBJ3wrY-KY3YgD-qJfr7dsWzdA83fxFYmOTmjsrYgOfA@mail.gmail.com>
+Subject: Re: [PATCH] riscv: force __cpu_up_ variables to put in data section
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 14:30, Qais Yousef wrote:
-> Hi Pavan
-> 
-> On 04/29/20 17:02, Pavan Kondeti wrote:
->> Hi Qais,
->>
->> On Tue, Apr 28, 2020 at 05:41:33PM +0100, Qais Yousef wrote:
+On Thu, Apr 30, 2020 at 2:53 AM Zong Li <zong.li@sifive.com> wrote:
+>
+> Put __cpu_up_stack_pointer and __cpu_up_task_pointer in data section.
+> Currently, these two variables are put in bss section, there is a
+> potential risk that secondary harts get the uninitialized value before
+> main hart finishing the bss clearing. In this case, all secondary
+> harts would go through the waiting loop and enable the MMU before
+> main hart set up the page table.
+>
 
-[...]
+That would be only true if you are using random booting protocol with
+SBI v0.1 implementation.
+With HSM extension in place, all the secondary cores are waiting in
+firmware. The booting core
+will bring them up one by one from cpu_up method.
 
->>> @@ -907,8 +935,15 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
->>>  static inline struct uclamp_se
->>>  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->>>  {
->>> -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
->>> -	struct uclamp_se uc_max = uclamp_default[clamp_id];
->>> +	struct uclamp_se uc_req, uc_max;
->>> +
->>> +	/*
->>> +	 * Sync up any change to sysctl_sched_uclamp_util_min_rt_default value.
->>> +	 */
->>> +	uclamp_sync_util_min_rt_default(p);
->>> +
->>> +	uc_req = uclamp_tg_restrict(p, clamp_id);
->>> +	uc_max = uclamp_default[clamp_id];
->>
->> We are calling uclamp_sync_util_min_rt_default() unnecessarily for
->> clamp_id == UCLAMP_MAX case. Would it be better to have a separate
-> 
-> It was actually intentional to make sure we update the value ASAP. I didn't
-> think it's a lot of overhead. I can further protect with a check to verify
-> whether the value has changed if it seems heavy handed.
+The HSM extension is already available in OpenSBI v0.7 and Linux
+kernel 5.7-rc1 onwards.
 
-Users of uclamp_eff_value()->uclamp_eff_get() ((like
-rt_task_fits_capacity())) always call both ids.
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/kernel/cpu_ops.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
+> index c4c33bf02369..0ec22354018c 100644
+> --- a/arch/riscv/kernel/cpu_ops.c
+> +++ b/arch/riscv/kernel/cpu_ops.c
+> @@ -15,8 +15,8 @@
+>
+>  const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
+>
+> -void *__cpu_up_stack_pointer[NR_CPUS];
+> -void *__cpu_up_task_pointer[NR_CPUS];
+> +void *__cpu_up_stack_pointer[NR_CPUS] __section(.data);
+> +void *__cpu_up_task_pointer[NR_CPUS] __section(.data);
+>
+>  extern const struct cpu_operations cpu_ops_sbi;
+>  extern const struct cpu_operations cpu_ops_spinwait;
+> --
+> 2.26.1
+>
+>
 
-So calling uclamp_sync_util_min_rt_default() only for UCLAMP_MIN would
-make sense. It's overhead in the fast path for rt tasks.
 
-Since changes to sched_util_clamp_min_rt_default will be fairly rare,
-you might even want to consider only doing the uclamp_se_set(...,
-min_rt_default, ...) in case
-
-  uc_se->value != sysctl_sched_uclamp_util_min_rt_default
-
-[...]
+-- 
+Regards,
+Atish
