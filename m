@@ -2,121 +2,133 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBB2C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3B9C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8C12070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282992070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6eTQuzQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JUYJmd1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgD3Qck (ORCPT
+        id S1726929AbgD3Qcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51942 "EHLO
+        Thu, 30 Apr 2020 12:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726469AbgD3Qcj (ORCPT
+        by vger.kernel.org with ESMTP id S1726545AbgD3Qcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:32:39 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 387DDC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:32:39 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id z6so2687636wml.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:32:39 -0700 (PDT)
+        Thu, 30 Apr 2020 12:32:54 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFDBC08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:32:54 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id 19so84309oiy.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ugyb7Zb4Sysj1bxwGzOmKe/PaiDp8wxsBq9DmhoL44E=;
-        b=j6eTQuzQbAwpZE/KG4Vb3yRnsgDC26xftMT2jvjHHgv2Ry9OmS0pTf+OOaX89NT7xR
-         a6ye+t2bVtIHykJbMOPy5/zJM6YGO1023NU/VCkNr9A861zyXkMeCkiNnwU7yHmSKAmD
-         cBkNlVPk7QQbKMdbAd5LIvfvE3URtUsecxEIDZB9UMbeAn+lluUEzBc+m8U215//CGsG
-         Mje7KcnpQBmmm1f4M5+qYKrpGAwQ/nLtmFc4WgQbM2+oNW8Eaw4oxV8xLrOo3wkzHDDd
-         I8e3hdaH1py0yn6TeFgl1G2KLhNEZ9+QsoUQQ3PK0n6SrJ479pmtaX1QQm3DiT/LlhnY
-         wPHg==
+        bh=7ZsclabnnR3wKrS78Exn79EM/lt2n7ZZyGteRGUsI8A=;
+        b=JUYJmd1MBGqCas674WTA1IWfQlE/kGTREfBIK5mpDA0GKQCWA5TWrInT5xqa+cty1P
+         1uf7jMp4ptZNe61WpozNUpn19cau+2xAsPJezxaJ/YkNvLq0Y4Ke8RMtVAAA6GGjYHiE
+         gScspZIdHjRYqpJ2Uno+FQWJL/XiblVg/Mi22ewLmBd/WxxJ9smUOoHF9lr4DrqqMmAI
+         C9OI28yxF+GzrKoTO+j1owgWEJOGkNwuwuNh8Zj6Tpvn/9KtPJiufeBqwE3ogh5pXqwf
+         6/YLrVQoTxsZzAQIfZM8oI6/JkLwFFLp8PmBtms1w/jVWbOij59zxxdfJnRIZKaW6HD3
+         p3DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ugyb7Zb4Sysj1bxwGzOmKe/PaiDp8wxsBq9DmhoL44E=;
-        b=emnxwZcJpNtJABU5WIWqWOBpq+bOurKFT7ok1ruWFiE1Vz/0AxQhhA2iDhWGTIH9XH
-         m9QJEuONZcqHMS3WjQt1+wwgnYDx2ja6v5YTHIFJt8omEJIkjlj9eYDl96oz1Z3/frFp
-         gBhWjTE1NeYe3oSQITAIHKO9JRdLPoOTUfrgDHmKmAaCds1NKMHqbytP/XsNC0gM1UWQ
-         0m5DkzqtCdsotJb2ZurwmRbMmACXXrUmKjoUWT8SjXEcaN1xdWQ10an5pz1rOaCsmo4R
-         Bw8bv3qLizND5e3LRm7raiUZoo2c8l4q+m/dPqWVY8ZXoqtc49bgaaP9GGyTF8FmW719
-         5q3A==
-X-Gm-Message-State: AGi0PubqdMm/hnxtSuw/KrQM3jcl89YEMByg+0WKaioiNDEdtpoDcm/o
-        dSTRGrTyCvEjDPyjuC+Jk28+GFzBbI0Pxc+7VDw=
-X-Google-Smtp-Source: APiQypKrZHvtErC3cKfTsi/zEKLQ6xIA3UZ+0B7fI1AaibkS6bXo92M3dum2wwZ1ZNScd8GlY0v15RO8THKXaBE6uGQ=
-X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr3960280wme.79.1588264357899;
- Thu, 30 Apr 2020 09:32:37 -0700 (PDT)
+        bh=7ZsclabnnR3wKrS78Exn79EM/lt2n7ZZyGteRGUsI8A=;
+        b=f6SyxaCQiAYw+fGCawOgFlNQ7L1IRqib+7EwCfJmKuPWsDJLOqz8luzkqO9Rlnhq/x
+         UwklexyCsaeHTyZeSaOXAgtc8zLcVFJc9/jNAbPzPJ7n/vChlMYHTJr1t7bTy3YIeT8A
+         e4Lpe9jMCQkWle1iDalTd6U1Hqt6c8l036+ZSyBlAHzVIdlVIYQ/QcIiYSt2jMZ4vUFm
+         C3u56aIOxVlKTwxYLw1wFnBGarAomHIgztrgoVdWWPhRaJ5aqwEFRPdEeFCESnkk6D5U
+         pWPOjeeBiydxG+knqVu1DnziPihPkITDugw0kosnV/D0sy4vdvWgMq0uI5SrgKmU+TX+
+         sJDg==
+X-Gm-Message-State: AGi0PuYBHo9mc+uByRJlBuzd2GMDxEgBFDY/tU0Pofk/MaPWbaxh/WFw
+        EiNANIyARjF7h47rQaBldBKL4phxWgTXHv078ZNOhA==
+X-Google-Smtp-Source: APiQypJprzA/+arNVWPUX0khphDyRoZS8i1qOaFeSW8at+OIuNhknrJDu20eedqo9Mv1KETW0rnGhGJV0oxQ/gnyTBI=
+X-Received: by 2002:aca:1c08:: with SMTP id c8mr36776oic.172.1588264373140;
+ Thu, 30 Apr 2020 09:32:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588218962-75747-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1588218962-75747-1-git-send-email-zou_wei@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 30 Apr 2020 12:32:26 -0400
-Message-ID: <CADnq5_Nawk027_tzc4WChRcPaZqJtorQTy=YrFFdKL-C7+ScKw@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/display: Fix unsigned comparison to zero
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
+ <20200430060901.j7jjw6soo5h5xoul@vireshk-i7> <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
+ <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
+In-Reply-To: <20200430075356.rjtctfuenirvhxgn@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 30 Apr 2020 09:32:17 -0700
+Message-ID: <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Thu, Apr 30, 2020 at 12:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 30-04-20, 00:35, Saravana Kannan wrote:
+> > On Wed, Apr 29, 2020 at 11:09 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 24-04-20, 14:18, Saravana Kannan wrote:
+> > > > My only comment is -- can we drop this patch please? I'd like to use
+> > > > devfreq governors for voting on bandwidth and this will effectively
+> > > > override whatever bandwidth decisions are made by the devfreq
+> > > > governor.
+> > >
+> > > And why would that be better ? FWIW, that will have the same problem
+> > > which cpufreq governors had since ages, i.e. they were not proactive
+> > > and were always too late.
+> > >
+> > > The bw should get updated right with frequency, why shouldn't it ?
+> >
+> > I didn't say the bw would be voted based on just CPUfreq. It can also
+> > be based on CPU busy time and other stats. Having said that, this is
+> > not just about CPUfreq. Having the bw be force changed every time a
+> > device has it's OPP is changed is very inflexible. Please don't do it.
+>
+> So, the vote based on the requirements of cpufreq driver should come
+> directly from the cpufreq side itself, but no one stops the others
+> layers to aggregate the requests and then act on them. This is how it
+> is done for other frameworks like clk, regulator, genpd, etc.
 
-Alex
+You are missing the point. This is not about aggregation. This is
+about OPP voting for bandwidth on a path when the vote can/should be
+0.
 
-On Thu, Apr 30, 2020 at 3:33 AM Zou Wei <zou_wei@huawei.com> wrote:
->
-> Fixes coccicheck warning:
->
-> drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c:1398:60-61:
-> WARNING: Unsigned expression compared with zero: j >= 0
->
-> Fixes: 238387774232 ("drm/amd/display: fix rn soc bb update")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-> index ceaf70a..419cdde 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-> @@ -1384,7 +1384,8 @@ static void update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw_param
->         struct dcn21_resource_pool *pool = TO_DCN21_RES_POOL(dc->res_pool);
->         struct clk_limit_table *clk_table = &bw_params->clk_table;
->         struct _vcs_dpi_voltage_scaling_st clock_limits[DC__VOLTAGE_STATES];
-> -       unsigned int i, j, closest_clk_lvl;
-> +       unsigned int i, closest_clk_lvl;
-> +       int j;
->
->         // Default clock levels are used for diags, which may lead to overclocking.
->         if (!IS_DIAG_DC(dc->ctx->dce_environment)) {
-> --
-> 2.6.2
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+I'll give another example. Say one of the interconnect paths needs to
+be voted only when a particular use case is running. Say, the GPU
+needs to vote for bandwidth to L3 only when it's running in cache
+coherent mode. But it always needs to vote for bandwidth to DDR. With
+the way it's written now, OPP is going to force vote a non-zero
+bandwidth to L3 even when it can be zero. Wasting power for no good
+reason.
+
+Just let the drivers/device get the bandwidth values from OPP without
+forcing them to vote for the bandwidth when they don't need to. Just
+because they decide to use OPP to set their clock doesn't mean they
+should lose to ability to control their bandwidth in a more
+intelligent fashion.
+
+-Saravana
