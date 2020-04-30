@@ -2,170 +2,304 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8656C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDE9C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F6220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983BB20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgD3Pfv (ORCPT
+        id S1727961AbgD3Ph2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:35:51 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:44020 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgD3Pfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:35:50 -0400
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        by skedge04.snt-world.com (Postfix) with ESMTP id 29A1567A7D8;
-        Thu, 30 Apr 2020 17:35:47 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 30 Apr
- 2020 17:35:46 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Thu, 30 Apr 2020 17:35:46 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Adam Ford <aford173@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "Fabio Estevam" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "Li Jun" <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "Russell King" <linux+etnaviv@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/4] drm/etnaviv: Change order of enabling clocks to
- fix boot on i.MX8MM
-Thread-Topic: [RFC PATCH 3/4] drm/etnaviv: Change order of enabling clocks to
- fix boot on i.MX8MM
-Thread-Index: AQHWHu1V9EwL5xxa+UiJnz7nneFudaiRmbMAgAAQ8oA=
-Date:   Thu, 30 Apr 2020 15:35:46 +0000
-Message-ID: <72e8618b-856e-de42-9282-958cd03b239f@kontron.de>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
- <20200430124602.14463-4-frieder.schrempf@kontron.de>
- <3895f202cf5919e41a56878a62f6d5259dea12d3.camel@pengutronix.de>
-In-Reply-To: <3895f202cf5919e41a56878a62f6d5259dea12d3.camel@pengutronix.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9F9D967AC7E63B45A2B9F9A531BF74C8@snt-world.com>
-Content-Transfer-Encoding: base64
+        Thu, 30 Apr 2020 11:37:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60826 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgD3Ph1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:37:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E7D48ABBE;
+        Thu, 30 Apr 2020 15:37:22 +0000 (UTC)
+Subject: Re: [PATCH v7 11/18] mm: x86: Invoke hypercall when page encryption
+ status is changed
+To:     Brijesh Singh <brijesh.singh@amd.com>,
+        Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+ <c167e7191cb8f9c7635f5d8cfecb1157cc96cf6b.1588234824.git.ashish.kalra@amd.com>
+ <486fe740-0c2d-9d2b-d490-bdb3215a120c@suse.com>
+ <c75af894-b216-d8c0-8863-7df1ccff5c9f@amd.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <56455051-055f-e50b-60cb-09d398916305@suse.com>
+Date:   Thu, 30 Apr 2020 17:37:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 29A1567A7D8.A090B
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, anson.huang@nxp.com,
-        christian.gmeiner@gmail.com, daniel.baluta@nxp.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        etnaviv@lists.freedesktop.org, festevam@gmail.com, jun.li@nxp.com,
-        kernel@pengutronix.de, l.stach@pengutronix.de,
-        leonard.crestez@nxp.com, linux+etnaviv@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
+In-Reply-To: <c75af894-b216-d8c0-8863-7df1ccff5c9f@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMzAuMDQuMjAgMTY6MzUsIEx1Y2FzIFN0YWNoIHdyb3RlOg0KPiBBbSBEb25uZXJzdGFnLCBk
-ZW4gMzAuMDQuMjAyMCwgMTI6NDYgKzAwMDAgc2NocmllYiBTY2hyZW1wZiBGcmllZGVyOg0KPj4g
-RnJvbTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KPj4N
-Cj4+IE9uIHNvbWUgaS5NWDhNTSBkZXZpY2VzIHRoZSBib290IGhhbmdzIHdoZW4gZW5hYmxpbmcg
-dGhlIEdQVSBjbG9ja3MuDQo+PiBDaGFuZ2luZyB0aGUgb3JkZXIgb2YgY2xvY2sgaW5pdGFsaXph
-dGlvbiB0bw0KPj4NCj4+IGNvcmUgLT4gc2hhZGVyIC0+IGJ1cyAtPiByZWcNCj4+DQo+PiBmaXhl
-cyB0aGUgaXNzdWUuIFRoaXMgaXMgdGhlIHNhbWUgb3JkZXIgdXNlZCBpbiB0aGUgaW14IHBsYXRm
-b3JtIGNvZGUNCj4+IG9mIHRoZSBkb3duc3RyZWFtIEdQVSBkcml2ZXIgaW4gdGhlIE5YUCBrZXJu
-ZWwgWzFdLiBGb3IgdGhlIHNha2Ugb2YNCj4+IGNvbnNpc3RlbmN5IHdlIGFsc28gYWRqdXN0IHRo
-ZSBvcmRlciBvZiBkaXNhYmxpbmcgdGhlIGNsb2NrcyB0byB0aGUNCj4+IHJldmVyc2UuDQo+Pg0K
-Pj4gWzFdIGh0dHBzOi8vZXVyMDQuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3Vy
-bD1odHRwcyUzQSUyRiUyRnNvdXJjZS5jb2RlYXVyb3JhLm9yZyUyRmV4dGVybmFsJTJGaW14JTJG
-bGludXgtaW14JTJGdHJlZSUyRmRyaXZlcnMlMkZteGMlMkZncHUtdml2JTJGaGFsJTJGb3MlMkZs
-aW51eCUyRmtlcm5lbCUyRnBsYXRmb3JtJTJGZnJlZXNjYWxlJTJGZ2NfaGFsX2tlcm5lbF9wbGF0
-Zm9ybV9pbXguYyUzRmglM0RpbXhfNS40LjNfMi4wLjAlMjNuMTUzOCZhbXA7ZGF0YT0wMiU3QzAx
-JTdDZnJpZWRlci5zY2hyZW1wZiU0MGtvbnRyb24uZGUlN0NkYWUxNWYxNGVkNGE0OTk5MDY1NTA4
-ZDdlZDEzYWU4NyU3QzhjOWQzYzk3M2ZkOTQxYzhhMmIxNjQ2ZjM5NDJkYWYxJTdDMCU3QzAlN0M2
-MzcyMzg1NDEwOTU1OTQwMTkmYW1wO3NkYXRhPSUyQkltdGVYTkglMkZxSkRpb25uSlZIdGpWblhK
-ayUyQkclMkJWbGd2QmRSR2ZubFFybyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gSSBkb24ndCBz
-ZWUgd2h5IHRoZSBvcmRlciBvZiB0aGUgY2xvY2tzIGlzIGltcG9ydGFudC4gSXMgdGhpcyByZWFs
-bHkgYQ0KPiBHUFUgaXNzdWU/IEFzIGluOiBkb2VzIGEgR1BVIGFjY2VzcyBoYW5nIHdoZW4gZW5h
-YmxpbmcgdGhlIGNsb2NrcyBpbg0KPiB0aGUgd3Jvbmcgb3JkZXI/IE9yIGlzIHRoaXMgYSBjbG9j
-ayBkcml2ZXIgaXNzdWUgd2l0aCBhIGNsb2NrIGFjY2Vzcw0KPiBoYW5naW5nIGR1ZSB0byBhbiB1
-cHN0cmVhbSBjbG9jayBzdGlsbCBiZWluZyBkaXNhYmxlZD8NCg0KQWN0dWFsbHkgeW91IG1pZ2h0
-IGJlIHJpZ2h0IHdpdGggdGhpcyBiZWluZyBhIGNsb2NrIGRyaXZlciBpc3N1ZS4gVGhlIA0KaGFu
-Z2luZyBoYXBwZW5zIHdoaWxlIGVuYWJsaW5nIHRoZSBjbG9ja3MgKHVucmVsYXRlZCB0byBhbnkg
-R1BVIHJlZ2lzdGVyIA0KYWNjZXNzKS4gVGhlIHN0cmFuZ2UgdGhpbmcgaXMgdGhhdCBtb3N0IG9m
-IHRoZSBkZXZpY2VzIHdlIGhhdmUgZG9uJ3QgDQpjYXJlIGFuZCB3b3JrIGFzIGlzIGFuZCBzb21l
-IGRldmljZXMgcmVsaWFibHkgZmFpbCBlYWNoIHRpbWUgd2hlbiANCmVuYWJsaW5nIHRoZSBjbG9j
-a3MgaW4gdGhlICJ3cm9uZyIgb3JkZXIuDQoNClNvIEkgZ3Vlc3MgdGhpcyBjb3VsZCBpbmRlZWQg
-YmUgc29tZSBjbG9jayBiZWluZyBlbmFibGVkIHdpdGggYW4gDQp1cHN0cmVhbSBQTEwgbm90IGhh
-dmluZyBsb2NrZWQgeWV0IG9yIHNvbWV0aGluZy4NCg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMN
-Cj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBm
-QGtvbnRyb24uZGU+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9ncHUvZHJtL2V0bmF2aXYvZXRuYXZp
-dl9ncHUuYyB8IDQyICsrKysrKysrKysrKystLS0tLS0tLS0tLS0tLQ0KPj4gICAxIGZpbGUgY2hh
-bmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9ldG5hdml2L2V0bmF2aXZfZ3B1LmMgYi9kcml2ZXJzL2dwdS9k
-cm0vZXRuYXZpdi9ldG5hdml2X2dwdS5jDQo+PiBpbmRleCA3YjEzOGQ0ZGQwNjguLjQyNGIyZTU5
-NTFmMCAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9ldG5hdml2L2V0bmF2aXZfZ3B1
-LmMNCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9ldG5hdml2L2V0bmF2aXZfZ3B1LmMNCj4+IEBA
-IC0xNDg3LDU1ICsxNDg3LDU1IEBAIHN0YXRpYyBpbnQgZXRuYXZpdl9ncHVfY2xrX2VuYWJsZShz
-dHJ1Y3QgZXRuYXZpdl9ncHUgKmdwdSkNCj4+ICAgew0KPj4gICAJaW50IHJldDsNCj4+ICAgDQo+
-PiAtCWlmIChncHUtPmNsa19yZWcpIHsNCj4+IC0JCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShn
-cHUtPmNsa19yZWcpOw0KPj4gKwlpZiAoZ3B1LT5jbGtfY29yZSkgew0KPj4gKwkJcmV0ID0gY2xr
-X3ByZXBhcmVfZW5hYmxlKGdwdS0+Y2xrX2NvcmUpOw0KPj4gICAJCWlmIChyZXQpDQo+PiAgIAkJ
-CXJldHVybiByZXQ7DQo+PiAgIAl9DQo+PiAgIA0KPj4gLQlpZiAoZ3B1LT5jbGtfYnVzKSB7DQo+
-PiAtCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZ3B1LT5jbGtfYnVzKTsNCj4+ICsJaWYgKGdw
-dS0+Y2xrX3NoYWRlcikgew0KPj4gKwkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGdwdS0+Y2xr
-X3NoYWRlcik7DQo+PiAgIAkJaWYgKHJldCkNCj4+IC0JCQlnb3RvIGRpc2FibGVfY2xrX3JlZzsN
-Cj4+ICsJCQlnb3RvIGRpc2FibGVfY2xrX2NvcmU7DQo+PiAgIAl9DQo+PiAgIA0KPj4gLQlpZiAo
-Z3B1LT5jbGtfY29yZSkgew0KPj4gLQkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGdwdS0+Y2xr
-X2NvcmUpOw0KPj4gKwlpZiAoZ3B1LT5jbGtfYnVzKSB7DQo+PiArCQlyZXQgPSBjbGtfcHJlcGFy
-ZV9lbmFibGUoZ3B1LT5jbGtfYnVzKTsNCj4+ICAgCQlpZiAocmV0KQ0KPj4gLQkJCWdvdG8gZGlz
-YWJsZV9jbGtfYnVzOw0KPj4gKwkJCWdvdG8gZGlzYWJsZV9jbGtfc2hhZGVyOw0KPj4gICAJfQ0K
-Pj4gICANCj4+IC0JaWYgKGdwdS0+Y2xrX3NoYWRlcikgew0KPj4gLQkJcmV0ID0gY2xrX3ByZXBh
-cmVfZW5hYmxlKGdwdS0+Y2xrX3NoYWRlcik7DQo+PiArCWlmIChncHUtPmNsa19yZWcpIHsNCj4+
-ICsJCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShncHUtPmNsa19yZWcpOw0KPj4gICAJCWlmIChy
-ZXQpDQo+PiAtCQkJZ290byBkaXNhYmxlX2Nsa19jb3JlOw0KPj4gKwkJCWdvdG8gZGlzYWJsZV9j
-bGtfYnVzOw0KPj4gICAJfQ0KPj4gICANCj4+ICAgCXJldHVybiAwOw0KPj4gICANCj4+IC1kaXNh
-YmxlX2Nsa19jb3JlOg0KPj4gLQlpZiAoZ3B1LT5jbGtfY29yZSkNCj4+IC0JCWNsa19kaXNhYmxl
-X3VucHJlcGFyZShncHUtPmNsa19jb3JlKTsNCj4+ICAgZGlzYWJsZV9jbGtfYnVzOg0KPj4gICAJ
-aWYgKGdwdS0+Y2xrX2J1cykNCj4+ICAgCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZ3B1LT5jbGtf
-YnVzKTsNCj4+IC1kaXNhYmxlX2Nsa19yZWc6DQo+PiAtCWlmIChncHUtPmNsa19yZWcpDQo+PiAt
-CQljbGtfZGlzYWJsZV91bnByZXBhcmUoZ3B1LT5jbGtfcmVnKTsNCj4+ICtkaXNhYmxlX2Nsa19z
-aGFkZXI6DQo+PiArCWlmIChncHUtPmNsa19zaGFkZXIpDQo+PiArCQljbGtfZGlzYWJsZV91bnBy
-ZXBhcmUoZ3B1LT5jbGtfc2hhZGVyKTsNCj4+ICtkaXNhYmxlX2Nsa19jb3JlOg0KPj4gKwlpZiAo
-Z3B1LT5jbGtfY29yZSkNCj4+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZShncHUtPmNsa19jb3Jl
-KTsNCj4+ICAgDQo+PiAgIAlyZXR1cm4gcmV0Ow0KPj4gICB9DQo+PiAgIA0KPj4gICBzdGF0aWMg
-aW50IGV0bmF2aXZfZ3B1X2Nsa19kaXNhYmxlKHN0cnVjdCBldG5hdml2X2dwdSAqZ3B1KQ0KPj4g
-ICB7DQo+PiArCWlmIChncHUtPmNsa19yZWcpDQo+PiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUo
-Z3B1LT5jbGtfcmVnKTsNCj4+ICsJaWYgKGdwdS0+Y2xrX2J1cykNCj4+ICsJCWNsa19kaXNhYmxl
-X3VucHJlcGFyZShncHUtPmNsa19idXMpOw0KPj4gICAJaWYgKGdwdS0+Y2xrX3NoYWRlcikNCj4+
-ICAgCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZ3B1LT5jbGtfc2hhZGVyKTsNCj4+ICAgCWlmIChn
-cHUtPmNsa19jb3JlKQ0KPj4gICAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShncHUtPmNsa19jb3Jl
-KTsNCj4+IC0JaWYgKGdwdS0+Y2xrX2J1cykNCj4+IC0JCWNsa19kaXNhYmxlX3VucHJlcGFyZShn
-cHUtPmNsa19idXMpOw0KPj4gLQlpZiAoZ3B1LT5jbGtfcmVnKQ0KPj4gLQkJY2xrX2Rpc2FibGVf
-dW5wcmVwYXJlKGdwdS0+Y2xrX3JlZyk7DQo+PiAgIA0KPj4gICAJcmV0dXJuIDA7DQo+PiAgIH0N
-Cj4g
+On 30.04.20 17:21, Brijesh Singh wrote:
+> 
+> On 4/30/20 4:49 AM, Jürgen Groß wrote:
+>> On 30.04.20 10:45, Ashish Kalra wrote:
+>>> From: Brijesh Singh <Brijesh.Singh@amd.com>
+>>>
+>>> Invoke a hypercall when a memory region is changed from encrypted ->
+>>> decrypted and vice versa. Hypervisor needs to know the page encryption
+>>> status during the guest migration.
+>>>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>>> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+>>> Cc: Joerg Roedel <joro@8bytes.org>
+>>> Cc: Borislav Petkov <bp@suse.de>
+>>> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+>>> Cc: x86@kernel.org
+>>> Cc: kvm@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+>>> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+>>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+>>> ---
+>>>    arch/x86/include/asm/paravirt.h       | 10 +++++
+>>>    arch/x86/include/asm/paravirt_types.h |  2 +
+>>>    arch/x86/kernel/paravirt.c            |  1 +
+>>>    arch/x86/mm/mem_encrypt.c             | 58 ++++++++++++++++++++++++++-
+>>>    arch/x86/mm/pat/set_memory.c          |  7 ++++
+>>>    5 files changed, 77 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/include/asm/paravirt.h
+>>> b/arch/x86/include/asm/paravirt.h
+>>> index 694d8daf4983..8127b9c141bf 100644
+>>> --- a/arch/x86/include/asm/paravirt.h
+>>> +++ b/arch/x86/include/asm/paravirt.h
+>>> @@ -78,6 +78,12 @@ static inline void paravirt_arch_exit_mmap(struct
+>>> mm_struct *mm)
+>>>        PVOP_VCALL1(mmu.exit_mmap, mm);
+>>>    }
+>>>    +static inline void page_encryption_changed(unsigned long vaddr,
+>>> int npages,
+>>> +                        bool enc)
+>>> +{
+>>> +    PVOP_VCALL3(mmu.page_encryption_changed, vaddr, npages, enc);
+>>> +}
+>>> +
+>>>    #ifdef CONFIG_PARAVIRT_XXL
+>>>    static inline void load_sp0(unsigned long sp0)
+>>>    {
+>>> @@ -946,6 +952,10 @@ static inline void paravirt_arch_dup_mmap(struct
+>>> mm_struct *oldmm,
+>>>    static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
+>>>    {
+>>>    }
+>>> +
+>>> +static inline void page_encryption_changed(unsigned long vaddr, int
+>>> npages, bool enc)
+>>> +{
+>>> +}
+>>>    #endif
+>>>    #endif /* __ASSEMBLY__ */
+>>>    #endif /* _ASM_X86_PARAVIRT_H */
+>>> diff --git a/arch/x86/include/asm/paravirt_types.h
+>>> b/arch/x86/include/asm/paravirt_types.h
+>>> index 732f62e04ddb..03bfd515c59c 100644
+>>> --- a/arch/x86/include/asm/paravirt_types.h
+>>> +++ b/arch/x86/include/asm/paravirt_types.h
+>>> @@ -215,6 +215,8 @@ struct pv_mmu_ops {
+>>>          /* Hook for intercepting the destruction of an mm_struct. */
+>>>        void (*exit_mmap)(struct mm_struct *mm);
+>>> +    void (*page_encryption_changed)(unsigned long vaddr, int npages,
+>>> +                    bool enc);
+>>>      #ifdef CONFIG_PARAVIRT_XXL
+>>>        struct paravirt_callee_save read_cr2;
+>>> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+>>> index c131ba4e70ef..840c02b23aeb 100644
+>>> --- a/arch/x86/kernel/paravirt.c
+>>> +++ b/arch/x86/kernel/paravirt.c
+>>> @@ -367,6 +367,7 @@ struct paravirt_patch_template pv_ops = {
+>>>                (void (*)(struct mmu_gather *, void *))tlb_remove_page,
+>>>          .mmu.exit_mmap        = paravirt_nop,
+>>> +    .mmu.page_encryption_changed    = paravirt_nop,
+>>>      #ifdef CONFIG_PARAVIRT_XXL
+>>>        .mmu.read_cr2        = __PV_IS_CALLEE_SAVE(native_read_cr2),
+>>> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+>>> index f4bd4b431ba1..603f5abf8a78 100644
+>>> --- a/arch/x86/mm/mem_encrypt.c
+>>> +++ b/arch/x86/mm/mem_encrypt.c
+>>> @@ -19,6 +19,7 @@
+>>>    #include <linux/kernel.h>
+>>>    #include <linux/bitops.h>
+>>>    #include <linux/dma-mapping.h>
+>>> +#include <linux/kvm_para.h>
+>>>      #include <asm/tlbflush.h>
+>>>    #include <asm/fixmap.h>
+>>> @@ -29,6 +30,7 @@
+>>>    #include <asm/processor-flags.h>
+>>>    #include <asm/msr.h>
+>>>    #include <asm/cmdline.h>
+>>> +#include <asm/kvm_para.h>
+>>>      #include "mm_internal.h"
+>>>    @@ -196,6 +198,48 @@ void __init sme_early_init(void)
+>>>            swiotlb_force = SWIOTLB_FORCE;
+>>>    }
+>>>    +static void set_memory_enc_dec_hypercall(unsigned long vaddr, int
+>>> npages,
+>>> +                    bool enc)
+>>> +{
+>>> +    unsigned long sz = npages << PAGE_SHIFT;
+>>> +    unsigned long vaddr_end, vaddr_next;
+>>> +
+>>> +    vaddr_end = vaddr + sz;
+>>> +
+>>> +    for (; vaddr < vaddr_end; vaddr = vaddr_next) {
+>>> +        int psize, pmask, level;
+>>> +        unsigned long pfn;
+>>> +        pte_t *kpte;
+>>> +
+>>> +        kpte = lookup_address(vaddr, &level);
+>>> +        if (!kpte || pte_none(*kpte))
+>>> +            return;
+>>> +
+>>> +        switch (level) {
+>>> +        case PG_LEVEL_4K:
+>>> +            pfn = pte_pfn(*kpte);
+>>> +            break;
+>>> +        case PG_LEVEL_2M:
+>>> +            pfn = pmd_pfn(*(pmd_t *)kpte);
+>>> +            break;
+>>> +        case PG_LEVEL_1G:
+>>> +            pfn = pud_pfn(*(pud_t *)kpte);
+>>> +            break;
+>>> +        default:
+>>> +            return;
+>>> +        }
+>>> +
+>>> +        psize = page_level_size(level);
+>>> +        pmask = page_level_mask(level);
+>>> +
+>>> +        if (x86_platform.hyper.sev_migration_hcall)
+>>> +            x86_platform.hyper.sev_migration_hcall(pfn << PAGE_SHIFT,
+>>> +                                   psize >> PAGE_SHIFT,
+>>> +                                   enc);
+>>
+>> Why do you need two indirections? One via pv.mmu_ops and then another
+>> via x86_platform.hyper? Isn't one enough?
+>>
+> Currently, there is no strong reason to have two indirections other than
+> building a flexibility for the future expansion, e.g when we add SEV
+> support for the Xen then hypercall invocation may be slightly different
+> but the code to walk the page table to find the GPA will be same for
+> both KVM and Xen. The pv.mmu_ops provides a generic indirection which
+> can be used by set_memory_{decrypted,encrypted}. I will look into
+> removing the extra indirection in next version. thanks.
+> 
+> 
+>> And if x86_platform.hyper.sev_migration_hcall isn't set the whole loop
+>> is basically a nop.
+>>
+> Yes, this double indirection has a draw back that we will be executing
+> the unnecessary code  when x86_platform.hyper.sev_migration_hcall isn't
+> set. I will look into improving it.
+> 
+> 
+>>> +        vaddr_next = (vaddr & pmask) + psize;
+>>> +    }
+>>> +}
+>>> +
+>>>    static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+>>>    {
+>>>        pgprot_t old_prot, new_prot;
+>>> @@ -253,12 +297,13 @@ static void __init __set_clr_pte_enc(pte_t
+>>> *kpte, int level, bool enc)
+>>>    static int __init early_set_memory_enc_dec(unsigned long vaddr,
+>>>                           unsigned long size, bool enc)
+>>>    {
+>>> -    unsigned long vaddr_end, vaddr_next;
+>>> +    unsigned long vaddr_end, vaddr_next, start;
+>>>        unsigned long psize, pmask;
+>>>        int split_page_size_mask;
+>>>        int level, ret;
+>>>        pte_t *kpte;
+>>>    +    start = vaddr;
+>>>        vaddr_next = vaddr;
+>>>        vaddr_end = vaddr + size;
+>>>    @@ -313,6 +358,8 @@ static int __init
+>>> early_set_memory_enc_dec(unsigned long vaddr,
+>>>          ret = 0;
+>>>    +    set_memory_enc_dec_hypercall(start, PAGE_ALIGN(size) >>
+>>> PAGE_SHIFT,
+>>> +                    enc);
+>>>    out:
+>>>        __flush_tlb_all();
+>>>        return ret;
+>>> @@ -451,6 +498,15 @@ void __init mem_encrypt_init(void)
+>>>        if (sev_active())
+>>>            static_branch_enable(&sev_enable_key);
+>>>    +#ifdef CONFIG_PARAVIRT
+>>> +    /*
+>>> +     * With SEV, we need to make a hypercall when page encryption
+>>> state is
+>>> +     * changed.
+>>> +     */
+>>> +    if (sev_active())
+>>> +        pv_ops.mmu.page_encryption_changed =
+>>> set_memory_enc_dec_hypercall;
+>>> +#endif
+>>> +
+>>>        pr_info("AMD %s active\n",
+>>>            sev_active() ? "Secure Encrypted Virtualization (SEV)"
+>>>                     : "Secure Memory Encryption (SME)");
+>>> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+>>> index 59eca6a94ce7..9aaf1b6f5a1b 100644
+>>> --- a/arch/x86/mm/pat/set_memory.c
+>>> +++ b/arch/x86/mm/pat/set_memory.c
+>>> @@ -27,6 +27,7 @@
+>>>    #include <asm/proto.h>
+>>>    #include <asm/memtype.h>
+>>>    #include <asm/set_memory.h>
+>>> +#include <asm/paravirt.h>
+>>>      #include "../mm_internal.h"
+>>>    @@ -2003,6 +2004,12 @@ static int __set_memory_enc_dec(unsigned
+>>> long addr, int numpages, bool enc)
+>>>         */
+>>>        cpa_flush(&cpa, 0);
+>>>    +    /* Notify hypervisor that a given memory range is mapped
+>>> encrypted
+>>> +     * or decrypted. The hypervisor will use this information during
+>>> the
+>>> +     * VM migration.
+>>> +     */
+>>> +    page_encryption_changed(addr, numpages, enc);
+>>
+>> Is this operation really so performance critical that a pv-op is
+>> needed? Wouldn't a static key be sufficient here?
+>>
+> Well, in a typical Linux kernel boot it does not get called so many
+> times. We noticed that some drivers (mainly nvme) calls it more often
+> than others. I am open for the suggestions, we went with the pv-op path
+> based on the previous feedbacks. A static key maybe sufficient as well.
+> 
+
+I'm fine with a pv-op if this is seen to be the way to go. But I would
+skip the x86_platform.hyper indirection and call the kvm specific
+function directly. In case Xen gains SEV capability we can still either
+add the indirection again or just copy the KVM function and replace the
+hypercall with the Xen variant.
+
+
+Juergen
