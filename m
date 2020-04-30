@@ -2,138 +2,147 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD8C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B824CC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C242083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cUhM7ATN"
+	by mail.kernel.org (Postfix) with ESMTP id 9783A2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgD3EZM (ORCPT
+        id S1726474AbgD3EbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:25:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33971 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgD3EZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:25:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CMjw1yWWz9sPF;
-        Thu, 30 Apr 2020 14:25:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588220710;
-        bh=P5nfkovu1/OBAkOk/3QI+yZz3CFitkClgI4jvHlVaO8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cUhM7ATNYD3BbhYxTgNHMfWooPVRc5BR1LAmqrbU1S9x8rJK9unvfCOCdGetIGxyx
-         xqNPoc4Pky7eOwID8SxlFGbSyu3qWLuzpHGj575/CoCzZ9EDb5k7u6hHHUAp8FzAZE
-         ReoenjEP/dwJ2yNsoP5vd6wkPUrcZ8EhHBmwKoZA/9XUh8VR8UtGbFas1vHMZN5KCg
-         gIJhem5e3D+oocbSrdJGR/DFce4JcU71/14owjH4ne3Z9y7QvX73dMTB5Sqwf3oe72
-         2TYAL8wLBPG875envFHtOqrvCQPnblVfuGmUSSeqW4X7NjQyaVw5HQWR+fvmAOs5aw
-         fzViEzT5/8tFg==
-Date:   Thu, 30 Apr 2020 14:25:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        John Stultz <john.stultz@linaro.org>
-Subject: linux-next: manual merge of the driver-core tree with the
- driver-core.current tree
-Message-ID: <20200430142506.0626f8c4@canb.auug.org.au>
+        Thu, 30 Apr 2020 00:31:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39172 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbgD3EbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 00:31:13 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5FFAD95BDE18E57DB1F3;
+        Thu, 30 Apr 2020 12:31:10 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.100) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
+ 12:31:01 +0800
+Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
+To:     "Yan, Zheng" <ukernel@gmail.com>
+CC:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Ilya Dryomov" <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>
+References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
+ <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org>
+ <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
+ <CAAM7YA=OU2jJ9F_p1fAknaxZCDWMY7w9yiRE0z0uqxDNYPG5Mg@mail.gmail.com>
+From:   Wu Bo <wubo40@huawei.com>
+Message-ID: <3fb139b0-062a-9f17-1855-66dacf5d6825@huawei.com>
+Date:   Thu, 30 Apr 2020 12:31:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ti+4=desnQ7P74nY=HmpiRo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAAM7YA=OU2jJ9F_p1fAknaxZCDWMY7w9yiRE0z0uqxDNYPG5Mg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.100]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ti+4=desnQ7P74nY=HmpiRo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020/4/30 10:50, Yan, Zheng wrote:
+> On Wed, Apr 29, 2020 at 8:49 AM Wu Bo <wubo40@huawei.com> wrote:
+>>
+>> On 2020/4/28 22:48, Jeff Layton wrote:
+>>> On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
+>>>> if the ceph_mdsc_open_export_target_session() return fails,
+>>>> should add a lock to avoid twice unlocking.
+>>>> Because the lock will be released at the retry or out_unlock tag.
+>>>>
+>>>
+>>> The problem looks real, but...
+>>>
+>>>> --
+>>>> v1 -> v2:
+>>>> add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag.
+>>>>
+>>>> Signed-off-by: Wu Bo <wubo40@huawei.com>
+>>>> ---
+>>>>    fs/ceph/caps.c | 27 +++++++++++++++------------
+>>>>    1 file changed, 15 insertions(+), 12 deletions(-)
+>>>>
+>>>> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>>>> index 185db76..414c0e2 100644
+>>>> --- a/fs/ceph/caps.c
+>>>> +++ b/fs/ceph/caps.c
+>>>> @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+>>>>
+>>>>       /* open target session */
+>>>>       tsession = ceph_mdsc_open_export_target_session(mdsc, target);
+>>>> -    if (!IS_ERR(tsession)) {
+>>>> -            if (mds > target) {
+>>>> -                    mutex_lock(&session->s_mutex);
+>>>> -                    mutex_lock_nested(&tsession->s_mutex,
+>>>> -                                      SINGLE_DEPTH_NESTING);
+>>>> -            } else {
+>>>> -                    mutex_lock(&tsession->s_mutex);
+>>>> -                    mutex_lock_nested(&session->s_mutex,
+>>>> -                                      SINGLE_DEPTH_NESTING);
+>>>> -            }
+>>>> -            new_cap = ceph_get_cap(mdsc, NULL);
+>>>> -    } else {
+>>>> +    if (IS_ERR(tsession)) {
+>>>>               WARN_ON(1);
+>>>>               tsession = NULL;
+>>>>               target = -1;
+>>>> +            mutex_lock(&session->s_mutex);
+>>>> +            spin_lock(&ci->i_ceph_lock);
+>>>> +            goto out_unlock;
+>>>
+>>> Why did you make this case goto out_unlock instead of retrying as it did
+>>> before?
+>>>
+>>
+>> If the problem occurs, target = -1, and goto retry lable, you need to
+>> call __get_cap_for_mds() or even call __ceph_remove_cap(), and then jump
+>> to out_unlock lable. All I think is unnecessary, goto out_unlock instead
+>> of retrying directly.
+>>
+> 
+> __ceph_remove_cap() must be called even if opening target session
+> failed. I think adding a mutex_lock(&session->s_mutex) to the
+> IS_ERR(tsession) block should be enough.
+> 
 
-Hi all,
+Yes，I will send the V3 patch later.
 
-Today's linux-next merge of the driver-core tree got a conflict in:
+> 
+>> Thanks.
+>> Wu Bo
+>>
+>>>> +    }
+>>>> +
+>>>> +    if (mds > target) {
+>>>> +            mutex_lock(&session->s_mutex);
+>>>> +            mutex_lock_nested(&tsession->s_mutex,
+>>>> +                                    SINGLE_DEPTH_NESTING);
+>>>> +    } else {
+>>>> +            mutex_lock(&tsession->s_mutex);
+>>>> +            mutex_lock_nested(&session->s_mutex,
+>>>> +                                    SINGLE_DEPTH_NESTING);
+>>>>       }
+>>>> +    new_cap = ceph_get_cap(mdsc, NULL);
+>>>>       goto retry;
+>>>>
+>>>>    out_unlock:
+>>>
+>>
+>>
+> 
+> .
+> 
 
-  drivers/base/dd.c
 
-between commits:
-
-  ce68929f07de ("driver core: Revert default driver_deferred_probe_timeout =
-value to 0")
-  4ccc03e28ec3 ("driver core: Use dev_warn() instead of dev_WARN() for defe=
-rred_probe_timeout warnings")
-  35a672363ab3 ("driver core: Ensure wait_for_device_probe() waits until th=
-e deferred_probe_timeout fires")
-
-from the driver-core.current tree and commit:
-
-  eb7fbc9fb118 ("driver core: Add missing '\n' in log messages")
-
-from the driver-core tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/base/dd.c
-index 94037be7f5d7,efe6df5bff26..000000000000
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@@ -258,8 -266,8 +258,8 @@@ int driver_deferred_probe_check_state(s
-  		return -ENODEV;
-  	}
- =20
- -	if (!driver_deferred_probe_timeout) {
- -		dev_WARN(dev, "deferred probe timeout, ignoring dependency\n");
- +	if (!driver_deferred_probe_timeout && initcalls_done) {
-- 		dev_warn(dev, "deferred probe timeout, ignoring dependency");
-++		dev_warn(dev, "deferred probe timeout, ignoring dependency\n");
-  		return -ETIMEDOUT;
-  	}
- =20
-@@@ -275,8 -283,7 +275,8 @@@ static void deferred_probe_timeout_work
-  	flush_work(&deferred_probe_work);
- =20
-  	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, defer=
-red_probe)
-- 		dev_info(private->device, "deferred probe pending");
-+ 		dev_info(private->device, "deferred probe pending\n");
- +	wake_up(&probe_timeout_waitqueue);
-  }
-  static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_t=
-imeout_work_func);
- =20
-
---Sig_/ti+4=desnQ7P74nY=HmpiRo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6qUyIACgkQAVBC80lX
-0GwsEwf9H2Z4fiZ1Ut98UB/ogxCjL0w5BEHPZ8t8OQYsp1v+62iqHqMW3CsjF2hS
-AqdZRWl0bfoYRfdTCvD43o9Ic89Cw6sKpZQ1P75oHqkWVujH+CqcQUKQ33IoTpMK
-wLiapzjC1tNbZ81AVbYYdM7sjfFfX+AqEsUdKulXBPNDqhNR1s2P9DsjsFmaLQIu
-HlEWV7Eq+TanJxTLaRvM116FtlvaVb1ERHx2gl/3FtkOEeJWrGb7fBVJOVG58WE9
-htWBE9L0Aed7hY3MBJTA43itH2TGzGs1UnflSmWcKjnZ7b8qKNgnGO611mr6hoQM
-Wz5TJPdiCthhGBo1NWV8sLbQX+AiBw==
-=XI/t
------END PGP SIGNATURE-----
-
---Sig_/ti+4=desnQ7P74nY=HmpiRo--
