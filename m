@@ -7,60 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84423C47256
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96DBC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D6F2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C79208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262822;
-	bh=QUfv6scPo1my4zCr4LFZW2U/OmwyKCvSjBoQt0t5VTQ=;
+	s=default; t=1588262833;
+	bh=aYPeW3IqG9lVg2I9kmZNk4mbS6HsxCxvZcoR6oz+QKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3+1HsPBpCs1UPGuGIdIAi5x7MFdNZThLTM4G5ndxj8pLkGrIpBAISW42hd64MQaR
-	 bu5MhuHf74lSotp4QdlpJgxvCRl/b/Frqi/EKtIlTodXqLPWTvGjzDojWvIhY8BR2B
-	 a/b17gUxGFxeq06xp9gNkugMQ473XbY4C2ndC1c4=
+	b=cOxKBdSUEPC1Bg71/68VyZCzArFRNg9vM7K97zx1vhwcGAKgX2b+/iQMI1bJYE61N
+	 h81MIsti7B+Xcl/V95PFmMBTAFE7H0T+OcYBPe2DOV2WIW49yLHwJ9m84bxxNeYiVX
+	 mmFpFTHgLXqiEZc02nwTXYcFLxmnrOBcC7NSaaJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgD3QHB (ORCPT
+        id S1726421AbgD3QG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727058AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCAAE208DB;
-        Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 289DE24964;
+        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=QUfv6scPo1my4zCr4LFZW2U/OmwyKCvSjBoQt0t5VTQ=;
+        bh=aYPeW3IqG9lVg2I9kmZNk4mbS6HsxCxvZcoR6oz+QKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILVqWCsii4IU1ATzx4qBN0ji2HPtDUiD1ypny4cMcn8WIKumlXEoumCQXrWkhGAsS
-         oqJiaJ6yjraaA1oh6BASaq3vxmcTqRowqQ4Stn/vU/B81VCie/cvgBBhe1wx+S7UZI
-         FfWKvLFp4pUWT9e9zstR2q/MmWx/VeFkjhTEP+sU=
+        b=ZwE5aS2k2cfrMPA6I5wlEh4Ce/YUcKtv8lsyqqm+ZvKnlGpMSZl0WNtV1gd6nLBSt
+         Z/IPRbGmtgADNIXX6sQDymcVp/w0OEQRxcqxHhqEM0+CCMiBMokeAgMQgZwKik9ElI
+         ocGvbRQ6U794fdm9Xgt0pXXaqhzc8sjxtw4qyXys=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxEd-5h; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxFT-EE; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
-        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 07/37] docs: networking: convert netconsole.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:02 +0200
-Message-Id: <f6772b566eea20879d82b1a2015fc97b137a5f24.1588261997.git.mchehab+huawei@kernel.org>
+        Remi Denis-Courmont <courmisch@gmail.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH 17/37] docs: networking: convert phonet.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:12 +0200
+Message-Id: <423e28fd2a70f7128a99bc52231fdc6e2a244f65.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -68,353 +65,207 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- add a document title;
-- mark code blocks and literals as such;
-- mark tables as such;
+- adjust title markup;
+- use copyright symbol;
 - add notes markups;
-- adjust identation, whitespaces and blank lines;
+- mark code blocks and literals as such;
+- adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |   2 +-
- Documentation/admin-guide/serial-console.rst  |   2 +-
- Documentation/networking/index.rst            |   1 +
- .../{netconsole.txt => netconsole.rst}        | 125 +++++++++++-------
- drivers/net/Kconfig                           |   4 +-
- drivers/net/ethernet/toshiba/ps3_gelic_net.c  |   2 +-
- drivers/net/ethernet/toshiba/spider_net.c     |   2 +-
- 7 files changed, 84 insertions(+), 54 deletions(-)
- rename Documentation/networking/{netconsole.txt => netconsole.rst} (66%)
+ Documentation/networking/index.rst            |  1 +
+ Documentation/networking/packet_mmap.rst      |  2 +-
+ .../networking/{phonet.txt => phonet.rst}     | 56 ++++++++++++-------
+ MAINTAINERS                                   |  2 +-
+ 4 files changed, 39 insertions(+), 22 deletions(-)
+ rename Documentation/networking/{phonet.txt => phonet.rst} (82%)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 25644daa36ea..5a44c1bf85e7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -638,7 +638,7 @@
- 
- 			See Documentation/admin-guide/serial-console.rst for more
- 			information.  See
--			Documentation/networking/netconsole.txt for an
-+			Documentation/networking/netconsole.rst for an
- 			alternative.
- 
- 		uart[8250],io,<addr>[,options]
-diff --git a/Documentation/admin-guide/serial-console.rst b/Documentation/admin-guide/serial-console.rst
-index a8d1e36b627a..58b32832e50a 100644
---- a/Documentation/admin-guide/serial-console.rst
-+++ b/Documentation/admin-guide/serial-console.rst
-@@ -54,7 +54,7 @@ You will need to create a new device to use ``/dev/console``. The official
- ``/dev/console`` is now character device 5,1.
- 
- (You can also use a network device as a console.  See
--``Documentation/networking/netconsole.txt`` for information on that.)
-+``Documentation/networking/netconsole.rst`` for information on that.)
- 
- Here's an example that will use ``/dev/ttyS1`` (COM2) as the console.
- Replace the sample values as needed.
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 492658bf7c0d..e58f872d401d 100644
+index 8262b535a83e..e460026331c6 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -80,6 +80,7 @@ Contents:
-    mac80211-injection
-    mpls-sysctl
-    multiqueue
-+   netconsole
+@@ -90,6 +90,7 @@ Contents:
+    openvswitch
+    operstates
+    packet_mmap
++   phonet
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/netconsole.txt b/Documentation/networking/netconsole.rst
-similarity index 66%
-rename from Documentation/networking/netconsole.txt
-rename to Documentation/networking/netconsole.rst
-index 296ea00fd3eb..1f5c4a04027c 100644
---- a/Documentation/networking/netconsole.txt
-+++ b/Documentation/networking/netconsole.rst
-@@ -1,7 +1,16 @@
+diff --git a/Documentation/networking/packet_mmap.rst b/Documentation/networking/packet_mmap.rst
+index 5f213d17652f..884c7222b9e9 100644
+--- a/Documentation/networking/packet_mmap.rst
++++ b/Documentation/networking/packet_mmap.rst
+@@ -1076,7 +1076,7 @@ Miscellaneous bits
+ ==================
+ 
+ - Packet sockets work well together with Linux socket filters, thus you also
+-  might want to have a look at Documentation/networking/filter.txt
++  might want to have a look at Documentation/networking/filter.rst
+ 
+ THANKS
+ ======
+diff --git a/Documentation/networking/phonet.txt b/Documentation/networking/phonet.rst
+similarity index 82%
+rename from Documentation/networking/phonet.txt
+rename to Documentation/networking/phonet.rst
+index 81003581f47a..8668dcbc5e6a 100644
+--- a/Documentation/networking/phonet.txt
++++ b/Documentation/networking/phonet.rst
+@@ -1,3 +1,7 @@
 +.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
 +
-+==========
-+Netconsole
-+==========
++============================
+ Linux Phonet protocol family
+ ============================
+ 
+@@ -11,6 +15,7 @@ device attached to the modem. The modem takes care of routing.
+ 
+ Phonet packets can be exchanged through various hardware connections
+ depending on the device, such as:
 +
+   - USB with the CDC Phonet interface,
+   - infrared,
+   - Bluetooth,
+@@ -21,7 +26,7 @@ depending on the device, such as:
+ Packets format
+ --------------
  
- started by Ingo Molnar <mingo@redhat.com>, 2001.09.17
-+
- 2.6 port and netpoll api by Matt Mackall <mpm@selenic.com>, Sep 9 2003
-+
- IPv6 support by Cong Wang <xiyou.wangcong@gmail.com>, Jan 1 2013
-+
- Extended console support by Tejun Heo <tj@kernel.org>, May 1 2015
+-Phonet packets have a common header as follows:
++Phonet packets have a common header as follows::
  
- Please send bug reports to Matt Mackall <mpm@selenic.com>
-@@ -23,34 +32,34 @@ Sender and receiver configuration:
- ==================================
+   struct phonethdr {
+     uint8_t  pn_media;  /* Media type (link-layer identifier) */
+@@ -72,7 +77,7 @@ only the (default) Linux FIFO qdisc should be used with them.
+ Network layer
+ -------------
  
- It takes a string configuration parameter "netconsole" in the
--following format:
-+following format::
+-The Phonet socket address family maps the Phonet packet header:
++The Phonet socket address family maps the Phonet packet header::
  
-  netconsole=[+][src-port]@[src-ip]/[<dev>],[tgt-port]@<tgt-ip>/[tgt-macaddr]
+   struct sockaddr_pn {
+     sa_family_t spn_family;    /* AF_PHONET */
+@@ -94,6 +99,8 @@ protocol from the PF_PHONET family. Each socket is bound to one of the
+ 2^10 object IDs available, and can send and receive packets with any
+ other peer.
  
-    where
--        +             if present, enable extended console support
--        src-port      source for UDP packets (defaults to 6665)
--        src-ip        source IP to use (interface address)
--        dev           network interface (eth0)
--        tgt-port      port for logging agent (6666)
--        tgt-ip        IP address for logging agent
--        tgt-macaddr   ethernet MAC address for logging agent (broadcast)
-+	+             if present, enable extended console support
-+	src-port      source for UDP packets (defaults to 6665)
-+	src-ip        source IP to use (interface address)
-+	dev           network interface (eth0)
-+	tgt-port      port for logging agent (6666)
-+	tgt-ip        IP address for logging agent
-+	tgt-macaddr   ethernet MAC address for logging agent (broadcast)
- 
--Examples:
-+Examples::
- 
-  linux netconsole=4444@10.0.0.1/eth1,9353@10.0.0.2/12:34:56:78:9a:bc
- 
--  or
-+or::
- 
-  insmod netconsole netconsole=@/,@10.0.0.2/
- 
--  or using IPv6
-+or using IPv6::
- 
-  insmod netconsole netconsole=@/,@fd00:1:2:3::1/
- 
- It also supports logging to multiple remote agents by specifying
- parameters for the multiple agents separated by semicolons and the
--complete string enclosed in "quotes", thusly:
-+complete string enclosed in "quotes", thusly::
- 
-  modprobe netconsole netconsole="@/,@10.0.0.2/;@/eth1,6892@10.0.0.3/"
- 
-@@ -67,14 +76,19 @@ for example:
- 
-    On distributions using a BSD-based netcat version (e.g. Fedora,
-    openSUSE and Ubuntu) the listening port must be specified without
--   the -p switch:
-+   the -p switch::
- 
--   'nc -u -l -p <port>' / 'nc -u -l <port>' or
--   'netcat -u -l -p <port>' / 'netcat -u -l <port>'
-+	nc -u -l -p <port>' / 'nc -u -l <port>
-+
-+    or::
-+
-+	netcat -u -l -p <port>' / 'netcat -u -l <port>
- 
- 3) socat
- 
--   'socat udp-recv:<port> -'
 +::
 +
-+   socat udp-recv:<port> -
+   struct sockaddr_pn addr = { .spn_family = AF_PHONET, };
+   ssize_t len;
+   socklen_t addrlen = sizeof(addr);
+@@ -105,7 +112,7 @@ other peer.
  
- Dynamic reconfiguration:
- ========================
-@@ -92,7 +106,7 @@ netconsole module (or kernel, if netconsole is built-in).
- Some examples follow (where configfs is mounted at the /sys/kernel/config
- mountpoint).
+   sendto(fd, msg, msglen, 0, (struct sockaddr *)&addr, sizeof(addr));
+   len = recvfrom(fd, buf, sizeof(buf), 0,
+-                 (struct sockaddr *)&addr, &addrlen);
++		 (struct sockaddr *)&addr, &addrlen);
  
--To add a remote logging target (target names can be arbitrary):
-+To add a remote logging target (target names can be arbitrary)::
+ This protocol follows the SOCK_DGRAM connection-less semantics.
+ However, connect() and getpeername() are not supported, as they did
+@@ -116,7 +123,7 @@ Resource subscription
+ ---------------------
  
-  cd /sys/kernel/config/netconsole/
-  mkdir target1
-@@ -102,12 +116,13 @@ above) and are disabled by default -- they must first be enabled by writing
- "1" to the "enabled" attribute (usually after setting parameters accordingly)
- as described below.
+ A Phonet datagram socket can be subscribed to any number of 8-bits
+-Phonet resources, as follow:
++Phonet resources, as follow::
  
--To remove a target:
-+To remove a target::
+   uint32_t res = 0xXX;
+   ioctl(fd, SIOCPNADDRESOURCE, &res);
+@@ -137,6 +144,8 @@ socket paradigm. The listening socket is bound to an unique free object
+ ID. Each listening socket can handle up to 255 simultaneous
+ connections, one per accept()'d socket.
  
-  rmdir /sys/kernel/config/netconsole/othertarget/
- 
- The interface exposes these parameters of a netconsole target to userspace:
- 
-+	==============  =================================       ============
- 	enabled		Is this target currently enabled?	(read-write)
- 	extended	Extended mode enabled			(read-write)
- 	dev_name	Local network interface name		(read-write)
-@@ -117,12 +132,13 @@ The interface exposes these parameters of a netconsole target to userspace:
- 	remote_ip	Remote agent's IP address		(read-write)
- 	local_mac	Local interface's MAC address		(read-only)
- 	remote_mac	Remote agent's MAC address		(read-write)
-+	==============  =================================       ============
- 
- The "enabled" attribute is also used to control whether the parameters of
- a target can be updated or not -- you can modify the parameters of only
- disabled targets (i.e. if "enabled" is 0).
- 
--To update a target's parameters:
-+To update a target's parameters::
- 
-  cat enabled				# check if enabled is 1
-  echo 0 > enabled			# disable the target (if required)
-@@ -140,12 +156,12 @@ Extended console:
- 
- If '+' is prefixed to the configuration line or "extended" config file
- is set to 1, extended console support is enabled. An example boot
--param follows.
-+param follows::
- 
-  linux netconsole=+4444@10.0.0.1/eth1,9353@10.0.0.2/12:34:56:78:9a:bc
- 
- Log messages are transmitted with extended metadata header in the
--following format which is the same as /dev/kmsg.
-+following format which is the same as /dev/kmsg::
- 
-  <level>,<sequnum>,<timestamp>,<contflag>;<message text>
- 
-@@ -155,12 +171,12 @@ newline is used as the delimeter.
- 
- If a message doesn't fit in certain number of bytes (currently 1000),
- the message is split into multiple fragments by netconsole. These
--fragments are transmitted with "ncfrag" header field added.
-+fragments are transmitted with "ncfrag" header field added::
- 
-  ncfrag=<byte-offset>/<total-bytes>
- 
- For example, assuming a lot smaller chunk size, a message "the first
--chunk, the 2nd chunk." may be split as follows.
-+chunk, the 2nd chunk." may be split as follows::
- 
-  6,416,1758426,-,ncfrag=0/31;the first chunk,
-  6,416,1758426,-,ncfrag=16/31; the 2nd chunk.
-@@ -168,39 +184,52 @@ chunk, the 2nd chunk." may be split as follows.
- Miscellaneous notes:
- ====================
- 
--WARNING: the default target ethernet setting uses the broadcast
--ethernet address to send packets, which can cause increased load on
--other systems on the same ethernet segment.
-+.. Warning::
- 
--TIP: some LAN switches may be configured to suppress ethernet broadcasts
--so it is advised to explicitly specify the remote agents' MAC addresses
--from the config parameters passed to netconsole.
-+   the default target ethernet setting uses the broadcast
-+   ethernet address to send packets, which can cause increased load on
-+   other systems on the same ethernet segment.
- 
--TIP: to find out the MAC address of, say, 10.0.0.2, you may try using:
-+.. Tip::
- 
-- ping -c 1 10.0.0.2 ; /sbin/arp -n | grep 10.0.0.2
-+   some LAN switches may be configured to suppress ethernet broadcasts
-+   so it is advised to explicitly specify the remote agents' MAC addresses
-+   from the config parameters passed to netconsole.
- 
--TIP: in case the remote logging agent is on a separate LAN subnet than
--the sender, it is suggested to try specifying the MAC address of the
--default gateway (you may use /sbin/route -n to find it out) as the
--remote MAC address instead.
-+.. Tip::
- 
--NOTE: the network device (eth1 in the above case) can run any kind
--of other network traffic, netconsole is not intrusive. Netconsole
--might cause slight delays in other traffic if the volume of kernel
--messages is high, but should have no other impact.
-+   to find out the MAC address of, say, 10.0.0.2, you may try using::
- 
--NOTE: if you find that the remote logging agent is not receiving or
--printing all messages from the sender, it is likely that you have set
--the "console_loglevel" parameter (on the sender) to only send high
--priority messages to the console. You can change this at runtime using:
-+	ping -c 1 10.0.0.2 ; /sbin/arp -n | grep 10.0.0.2
- 
-- dmesg -n 8
-+.. Tip::
- 
--or by specifying "debug" on the kernel command line at boot, to send
--all kernel messages to the console. A specific value for this parameter
--can also be set using the "loglevel" kernel boot option. See the
--dmesg(8) man page and Documentation/admin-guide/kernel-parameters.rst for details.
-+   in case the remote logging agent is on a separate LAN subnet than
-+   the sender, it is suggested to try specifying the MAC address of the
-+   default gateway (you may use /sbin/route -n to find it out) as the
-+   remote MAC address instead.
++::
 +
-+.. note::
-+
-+   the network device (eth1 in the above case) can run any kind
-+   of other network traffic, netconsole is not intrusive. Netconsole
-+   might cause slight delays in other traffic if the volume of kernel
-+   messages is high, but should have no other impact.
-+
-+.. note::
-+
-+   if you find that the remote logging agent is not receiving or
-+   printing all messages from the sender, it is likely that you have set
-+   the "console_loglevel" parameter (on the sender) to only send high
-+   priority messages to the console. You can change this at runtime using::
-+
-+	dmesg -n 8
-+
-+   or by specifying "debug" on the kernel command line at boot, to send
-+   all kernel messages to the console. A specific value for this parameter
-+   can also be set using the "loglevel" kernel boot option. See the
-+   dmesg(8) man page and Documentation/admin-guide/kernel-parameters.rst
-+   for details.
+   int lfd, cfd;
  
- Netconsole was designed to be as instantaneous as possible, to
- enable the logging of even the most critical kernel bugs. It works
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index c822f4a6d166..ad64be98330f 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -302,7 +302,7 @@ config NETCONSOLE
- 	tristate "Network console logging support"
- 	---help---
- 	  If you want to log kernel messages over the network, enable this.
--	  See <file:Documentation/networking/netconsole.txt> for details.
-+	  See <file:Documentation/networking/netconsole.rst> for details.
+   lfd = socket(PF_PHONET, SOCK_SEQPACKET, PN_PROTO_PIPE);
+@@ -161,7 +170,7 @@ Connections are traditionally established between two endpoints by a
+ As of Linux kernel version 2.6.39, it is also possible to connect
+ two endpoints directly, using connect() on the active side. This is
+ intended to support the newer Nokia Wireless Modem API, as found in
+-e.g. the Nokia Slim Modem in the ST-Ericsson U8500 platform:
++e.g. the Nokia Slim Modem in the ST-Ericsson U8500 platform::
  
- config NETCONSOLE_DYNAMIC
- 	bool "Dynamic reconfiguration of logging targets"
-@@ -312,7 +312,7 @@ config NETCONSOLE_DYNAMIC
- 	  This option enables the ability to dynamically reconfigure target
- 	  parameters (interface, IP addresses, port numbers, MAC addresses)
- 	  at runtime through a userspace interface exported using configfs.
--	  See <file:Documentation/networking/netconsole.txt> for details.
-+	  See <file:Documentation/networking/netconsole.rst> for details.
+   struct sockaddr_spn spn;
+   int fd;
+@@ -177,38 +186,45 @@ e.g. the Nokia Slim Modem in the ST-Ericsson U8500 platform:
+   close(fd);
  
- config NETPOLL
- 	def_bool NETCONSOLE
-diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.c b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-index 070dd6fa9401..310e6839c6e5 100644
---- a/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-+++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
-@@ -1150,7 +1150,7 @@ static irqreturn_t gelic_card_interrupt(int irq, void *ptr)
-  * gelic_net_poll_controller - artificial interrupt for netconsole etc.
-  * @netdev: interface device structure
-  *
-- * see Documentation/networking/netconsole.txt
-+ * see Documentation/networking/netconsole.rst
-  */
- void gelic_net_poll_controller(struct net_device *netdev)
- {
-diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-index 6576271642c1..3902b3aeb0c2 100644
---- a/drivers/net/ethernet/toshiba/spider_net.c
-+++ b/drivers/net/ethernet/toshiba/spider_net.c
-@@ -1615,7 +1615,7 @@ spider_net_interrupt(int irq, void *ptr)
-  * spider_net_poll_controller - artificial interrupt for netconsole etc.
-  * @netdev: interface device structure
-  *
-- * see Documentation/networking/netconsole.txt
-+ * see Documentation/networking/netconsole.rst
-  */
- static void
- spider_net_poll_controller(struct net_device *netdev)
+ 
+-WARNING:
+-When polling a connected pipe socket for writability, there is an
+-intrinsic race condition whereby writability might be lost between the
+-polling and the writing system calls. In this case, the socket will
+-block until write becomes possible again, unless non-blocking mode
+-is enabled.
++.. Warning:
++
++   When polling a connected pipe socket for writability, there is an
++   intrinsic race condition whereby writability might be lost between the
++   polling and the writing system calls. In this case, the socket will
++   block until write becomes possible again, unless non-blocking mode
++   is enabled.
+ 
+ 
+ The pipe protocol provides two socket options at the SOL_PNPIPE level:
+ 
+   PNPIPE_ENCAP accepts one integer value (int) of:
+ 
+-    PNPIPE_ENCAP_NONE: The socket operates normally (default).
++    PNPIPE_ENCAP_NONE:
++      The socket operates normally (default).
+ 
+-    PNPIPE_ENCAP_IP: The socket is used as a backend for a virtual IP
++    PNPIPE_ENCAP_IP:
++      The socket is used as a backend for a virtual IP
+       interface. This requires CAP_NET_ADMIN capability. GPRS data
+       support on Nokia modems can use this. Note that the socket cannot
+       be reliably poll()'d or read() from while in this mode.
+ 
+-  PNPIPE_IFINDEX is a read-only integer value. It contains the
+-    interface index of the network interface created by PNPIPE_ENCAP,
+-    or zero if encapsulation is off.
++  PNPIPE_IFINDEX
++      is a read-only integer value. It contains the
++      interface index of the network interface created by PNPIPE_ENCAP,
++      or zero if encapsulation is off.
+ 
+-  PNPIPE_HANDLE is a read-only integer value. It contains the underlying
+-    identifier ("pipe handle") of the pipe. This is only defined for
+-    socket descriptors that are already connected or being connected.
++  PNPIPE_HANDLE
++      is a read-only integer value. It contains the underlying
++      identifier ("pipe handle") of the pipe. This is only defined for
++      socket descriptors that are already connected or being connected.
+ 
+ 
+ Authors
+ -------
+ 
+ Linux Phonet was initially written by Sakari Ailus.
++
+ Other contributors include Mikä Liljeberg, Andras Domokos,
+ Carlos Chinea and Rémi Denis-Courmont.
+-Copyright (C) 2008 Nokia Corporation.
++
++Copyright |copy| 2008 Nokia Corporation.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1546ecb855b5..0d2005e8380e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13297,7 +13297,7 @@ F:	drivers/input/joystick/pxrc.c
+ PHONET PROTOCOL
+ M:	Remi Denis-Courmont <courmisch@gmail.com>
+ S:	Supported
+-F:	Documentation/networking/phonet.txt
++F:	Documentation/networking/phonet.rst
+ F:	include/linux/phonet.h
+ F:	include/net/phonet/
+ F:	include/uapi/linux/phonet.h
 -- 
 2.25.4
 
