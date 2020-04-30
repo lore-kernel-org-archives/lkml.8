@@ -2,110 +2,274 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2DFC83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9B5C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2EEA21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A45620838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="izsqNTKj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VfgVR9kK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgD3HU2 (ORCPT
+        id S1726790AbgD3HUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:20:28 -0400
-Received: from mail.cs.msu.ru ([188.44.42.39]:52053 "EHLO mail.cs.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgD3HU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:20:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
-         s=dkim; h=Subject:In-Reply-To:Content-Type:MIME-Version:References:
-        Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E6x7YTRKZyE9vJXUY4aZZd4ADx06WY24vGTZ4p1mfuA=; b=izsqNTKjGwJT6f4cTIkfuZDN6u
-        HkiFIDKOUvlhDjyQ1P4bahFShCtYQzjXC86Epng21f3sG8EkiIu6lMI+LYFZulFS7VhKngdTWuvfS
-        yh4T1A+eA8zJDHB6KQ89xbW54NOWr+/ff3phsALp8Kt0RH6R9nip8t4YuA7sAJJXG61Ku7rh1lpWq
-        TJOfqDJzzKXOBzSQOX8AilC7hO9Ne6634QWb2YaAE6UDBat672BlRrFwpAMwcxAgBqqM0whc1TOWu
-        jwvz5f0NyE9bmgpe03V2ROhN/oI+9xFikCzOvU/zf4eC8zwASjTicD2azWr2qWsshBP+qBT5Jk9CI
-        D6f0825Q==;
-Received: from [37.204.119.143] (port=45544 helo=cello)
-        by mail.cs.msu.ru with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93.0.4 (FreeBSD))
-        (envelope-from <ar@cs.msu.ru>)
-        id 1jU3Ue-0006kd-0Y; Thu, 30 Apr 2020 10:20:24 +0300
-Date:   Thu, 30 Apr 2020 10:20:22 +0300
-From:   Arseny Maslennikov <ar@cs.msu.ru>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Landley <rob@landley.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
-Message-ID: <20200430072022.GI43805@cello>
-References: <20200430064301.1099452-1-ar@cs.msu.ru>
- <20200430064301.1099452-6-ar@cs.msu.ru>
- <323be592-b614-907d-e9be-4748f159fb07@suse.cz>
+        Thu, 30 Apr 2020 03:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726412AbgD3HUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:20:43 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CE7C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:20:42 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b2so5346860ljp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sZr1+3vRqE2FhkSDX5CtrXLEsRTbr/eXU3dnq5Mc93U=;
+        b=VfgVR9kKpczFIeN8+LnvP75Wr/OHUdd2lCZEgYm3svO+8+riMTwzBRxO3Cq9J/TmLy
+         ChH42dOaLXAXEjr5NC5/1e8eDGNWYtF6C0jm+iiDKuZkbZQPWzgw7D3QEc//FdP1Jsf6
+         4666lNVgzk7UM9nzTjLN0iJ+ibaKAS3FF48QAuNBMS7GvyxtQqRiGa42vUoO1TIWK4gT
+         iQkBiiMKb0BIJStddAjAiqa0Z/KOZSANm/AiLNWfKVkVCqHX9I5BMPlA6jCtli3TGAkr
+         brC3qTzapu8AcZ/0uZv78PL84nfqYZkh7DV5N5duQi/Y91l4Mxab5cIqLrjZh7Z4JuFw
+         +0sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sZr1+3vRqE2FhkSDX5CtrXLEsRTbr/eXU3dnq5Mc93U=;
+        b=feEN1ShRp2APWRbNFI58X4RJs8/NERZUQVqKlAmQrHmnuZTks/yGJeyoPRuuC8YUv0
+         g04HsRukotB1A4hxF8HLS7vgpbUqnSfakAFbIq+mOIOvz3oOYWqWac8l6Kf6+5EpVzqM
+         0ff0hUvqdoeoXdLYuViG71FmM6Zpvlq+Ckp9z40TmU9ZTVN7R9j6Xj0f+5hs85ri9p0L
+         OGcJEvR4CgdQiZ36Hg1lGK26ITUrAyvEpfNdH/THHU1vxTYEnxz6/P406RcUirpcStSn
+         tI9GyHrGLDm/GWYee90w9jpYcM36wCwXc8qcaoxsthC/RK1ZxBWNQLSB2/3B02IKFU2M
+         6NFA==
+X-Gm-Message-State: AGi0PuYogNDDu+67x0ffKV/fzrqFkLDHWQ37uOy7Ae8r6n0EB+Ps6GN8
+        sFC4390azTsfeFl+8JY1OHVp+ODH+0RV9z/RjNQQdg==
+X-Google-Smtp-Source: APiQypK4Y04DV3XhNEdb66Dsm96rNOrnM5vyzC6FyLQ9pLxPdGP3mKpGyotMazaX8TgXg6B+lWsEIipHmTHJXN1XPRQ=
+X-Received: by 2002:a2e:a365:: with SMTP id i5mr1242958ljn.293.1588231241153;
+ Thu, 30 Apr 2020 00:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aFi3jz1oiPowsTUB"
-Content-Disposition: inline
-In-Reply-To: <323be592-b614-907d-e9be-4748f159fb07@suse.cz>
-OpenPGP: url=http://grep.cs.msu.ru/~ar/pgp-key.asc
-X-SA-Exim-Connect-IP: 37.204.119.143
-X-SA-Exim-Mail-From: ar@cs.msu.ru
-Subject: Re: [PATCH v3 5/7] tty: Add NOKERNINFO lflag to termios
-X-SA-Exim-Version: 4.2.1
-X-SA-Exim-Scanned: Yes (on mail.cs.msu.ru)
+References: <1587726554-32018-1-git-send-email-sumit.garg@linaro.org>
+ <1587726554-32018-3-git-send-email-sumit.garg@linaro.org> <20200425112950.3a4815b6@why>
+ <6fd3d96181ec53f735ef1b6a79d28da1@kernel.org> <CAFA6WYPNNNZeX5zpadayfiZ7P_mHmiREpUd5LZ3Jp+TjGVqoEw@mail.gmail.com>
+ <ac57cb4bbb6507ee98f199d68a514503@kernel.org>
+In-Reply-To: <ac57cb4bbb6507ee98f199d68a514503@kernel.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 30 Apr 2020 12:50:28 +0530
+Message-ID: <CAFA6WYMheJxeKVC_YWN9owNJhcWTBsaOCvZXxq=GVj5ROJ0cvg@mail.gmail.com>
+Subject: Re: [RFC Patch v1 2/4] irqchip/gic-v3: Add support to handle SGI as
+ pseudo NMI
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, julien.thierry.kdev@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
---aFi3jz1oiPowsTUB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 29 Apr 2020 at 13:53, Marc Zyngier <maz@kernel.org> wrote:
+>
+> Hi Sumit,
+>
+> On 2020-04-28 15:11, Sumit Garg wrote:
+> > Hi Marc,
+> >
+> > Thanks for your comments and apologies for my delayed response as I
+> > was exploring ideas that you have shared.
+> >
+> > On Sat, 25 Apr 2020 at 20:02, Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On 2020-04-25 11:29, Marc Zyngier wrote:
+> >> > On Fri, 24 Apr 2020 16:39:12 +0530
+> >> > Sumit Garg <sumit.garg@linaro.org> wrote:
+> >> >
+> >> > Hi Sumit,
+> >> >
+> >> >> With pseudo NMIs enabled, interrupt controller can be configured to
+> >> >> deliver SGI as a pseudo NMI. So add corresponding handling for SGIs.
+> >> >>
+> >> >> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> >> >> ---
+> >> >>  drivers/irqchip/irq-gic-v3.c | 22 +++++++++++++++++-----
+> >> >>  1 file changed, 17 insertions(+), 5 deletions(-)
+> >> >>
+> >> >> diff --git a/drivers/irqchip/irq-gic-v3.c
+> >> >> b/drivers/irqchip/irq-gic-v3.c
+> >> >> index d7006ef..be361bf 100644
+> >> >> --- a/drivers/irqchip/irq-gic-v3.c
+> >> >> +++ b/drivers/irqchip/irq-gic-v3.c
+> >> >> @@ -609,17 +609,29 @@ static inline void gic_handle_nmi(u32 irqnr,
+> >> >> struct pt_regs *regs)
+> >> >>      if (irqs_enabled)
+> >> >>              nmi_enter();
+> >> >>
+> >> >> -    if (static_branch_likely(&supports_deactivate_key))
+> >> >> -            gic_write_eoir(irqnr);
+> >> >>      /*
+> >> >>       * Leave the PSR.I bit set to prevent other NMIs to be
+> >> >>       * received while handling this one.
+> >> >>       * PSR.I will be restored when we ERET to the
+> >> >>       * interrupted context.
+> >> >>       */
+> >> >> -    err = handle_domain_nmi(gic_data.domain, irqnr, regs);
+> >> >> -    if (err)
+> >> >> -            gic_deactivate_unhandled(irqnr);
+> >> >> +    if (likely(irqnr > 15)) {
+> >> >> +            if (static_branch_likely(&supports_deactivate_key))
+> >> >> +                    gic_write_eoir(irqnr);
+> >> >> +
+> >> >> +            err = handle_domain_nmi(gic_data.domain, irqnr, regs);
+> >> >> +            if (err)
+> >> >> +                    gic_deactivate_unhandled(irqnr);
+> >> >> +    } else {
+> >> >> +            gic_write_eoir(irqnr);
+> >> >> +            if (static_branch_likely(&supports_deactivate_key))
+> >> >> +                    gic_write_dir(irqnr);
+> >> >> +#ifdef CONFIG_SMP
+> >> >> +            handle_IPI(irqnr, regs);
+> >> >> +#else
+> >> >> +            WARN_ONCE(true, "Unexpected SGI received!\n");
+> >> >> +#endif
+> >> >> +    }
+> >> >>
+> >> >>      if (irqs_enabled)
+> >> >>              nmi_exit();
+> >> >
+> >> > If there is one thing I would like to avoid, it is to add more ugly
+> >> > hacks to the way we handle SGIs. There is very little reason why SGIs
+> >> > should be handled differently from all other interrupts. They have the
+> >> > same properties, and it is only because of the 32bit legacy that we
+> >> > deal
+> >> > with them in such a cumbersome way. Nothing that we cannot fix though.
+> >> >
+> >> > What I would really like to see is first a conversion of the SGIs to
+> >> > normal, full fat interrupts. These interrupts can then be configured as
+> >> > NMI using the normal API.
+> >> >
+> >> > I think Julien had something along these lines (or was that limited to
+> >> > the PMU?). Otherwise, I'll happily help you with that.
+> >>
+> >> OK, to give you an idea of what I am after, here's a small series[1]
+> >> that
+> >> can be used as a base (it has been booted exactly *once* on a model,
+> >> and
+> >> is thus absolutely perfect ;-).
+> >
+> > Thanks for this series. I have re-based my patch-set on top of this
+> > series [1] and just dropped this patch #2. It works fine for me.
+>
+> I just had a look.
+>
+> "irqchip/gic-v3: Enable arch specific IPI as pseudo NMI" is still done
+> the wrong way, I'm afraid. You directly poke into the GIC configuration,
+> which isn't acceptable, as you leave the rest of the kernel completely
+> unaware that this is a NMI. You should make the interrupt a NMI as it
+> is being configured in gic_smp_init(), calling request_nmi() at this
+> stage.
 
-On Thu, Apr 30, 2020 at 08:55:43AM +0200, Jiri Slaby wrote:
-> On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
-> > The termios lflag is off by default.
->=20
-> This commit message is too poor. Describing the intended use would help.
->=20
+Sure, I will try to follow your suggestion. But I think it's better to
+first generalize the base IPI allocation scheme.
 
-I described its use in the last patch of the series, where it actually
-gains some use.
+>
+> >>
+> >> There is still a bit of work to be able to actually request a SGI
+> >> (they
+> >> are hard-wired as chained interrupts so far, as this otherwise changes
+> >> the output of /proc/interrupts, among other things), but you will
+> >> hopefully see what I'm aiming for.
+> >
+> > I was exploring this idea: "request a SGI". I guess here you meant to
+> > request a new SGI as a normal NMI/IRQ via common APIs such as
+> > request_percpu_nmi() or request_percpu_irq() rather than statically
+> > adding a new IPI as per this patch [2], correct? If yes, then I have
+> > following follow up queries:
+> >
+> > 1. Do you envision any drivers to use SGIs in a similar manner as they
+> > use SPIs or PPIs?
+>
+> No. SGIs are already pretty much all allocated for the kernel's internal
+> needs and once we allocate an additional one for this KGDB feature,
+> we're out of non-secure SGIs. We could start a multiplexing scheme to
+> overcome this, but the kernel already has plenty of other mechanisms
+> for internal communication. After all, why would you need anything more
+> than smp_call_function()?
+>
+> The single use case I can imagine is that you'd want to signal a CPU
+> that isn't running Linux. This would require a lot more work than
+> just an interrupt, and is out of scope for the time being.
 
-I agree, however, that the limited explanation in this commit does not
-look helpful at all when looking at e.g. git blame output.
+Thanks for the clarification.
 
-I'll resend a v4 with this commit message improved.
+>
+> > 2. How do you envision allocation of SGIs as currently they are
+> > hardcoded in an arch specific file (like arch/arm64/kernel/smp.c
+> > +794)?
+>
+> What I would like is for the arch code to request these interrupts as
+> normal interrupts, for which there is one problem to solve: how do you
+> find out about the Linux IRQ number for a given IPI. Or rather, how
+> do you get rid of the requirement to have IPI numbers at all and just
+> say "give me a per-cpu interrupt that I can use as an IPI, and by the
+> way here's the handler you can call".
 
---aFi3jz1oiPowsTUB
-Content-Type: application/pgp-signature; name="signature.asc"
+I think what you are looking for here is something that could be
+sufficed via enabling "CONFIG_GENERIC_IRQ_IPI" framework for arm64/arm
+architectures. It's currently used for mips architecture. Looking at
+its implementation, I think it should be possible to hook up SGIs
+under new IPI irq_domain for GICv2/v3.
 
------BEGIN PGP SIGNATURE-----
+So with this framework we should be able to dynamically allocate IPIs
+and use common APIs such as request_irq()/request_nmi() to tell IPI
+specific handlers.
 
-iQIzBAEBCgAdFiEE56JD3UKTLEu/ddrm9dQjyAYL01AFAl6qfCkACgkQ9dQjyAYL
-01BFHhAAml+XD+qV4guDdTSNwGuvJNRkulv3C56N+UT8iqccZPDr2kKn38Flkv/W
-2nj2+kuDbtil6wdf9bqojHA1itVdiTaaeNPGfOFNr9jr0FgDaBjwHAQaMrsNWknD
-xHx7XXj9zz4MlnKZx+eWNgSdiyGBPaTZFojZp0fN76HN5oD5/Kx7sEaY8UFs16dw
-uz0p1+rNmwMK9VQ43hcAML1jW1qH/NHTgeOVmvUC0JEqXxvz844E2HjtpttRZvTy
-8iccSRdOLS5f5yFRNucK4gIYXRP+lm1Co3iM3rqOKt02dZm+tooCsydyzFX6glDO
-vcK0ZRoAa8sxQZBmtYXdGhpPsEzhg2ODjcOKfRjRC3fSnXGiU83b9gUg6e5Z7Ocs
-1F9l5bDDjiAQNZBXO2rJPVPjvXNSY/PeVofXJyNWO7mA2+ajHfp4D05lBh03Z6o6
-fhWOjAG2uCTWwNrUf2x8tObGvnUQyZMDStA0jx0JV/HjPQFLYOOlvnxGaP6v/C59
-iYoqctMXY26sphySOon8S3lEubfbL1d/WVYuUK/CHyIajhUP0wHSC1el11ndCJXD
-JMdrxjVFMsUB9J1psz/X7bXcgb5GD/GKkNsRjWwUEwFpB+3RhRcsC0GFYWidiSoC
-djVdRtD0ukmyVCUAYKdgK7q/9LeXNsFOXXDYXeLxUcw40ghhQTo=
-=6OEc
------END PGP SIGNATURE-----
+If this approach looks sane to you then I can start working on a PoC
+implementation for arm64.
 
---aFi3jz1oiPowsTUB--
+>
+> And I insist: this is only for the arch code. Nothing else.
+>
+
+Makes sense.
+
+> > 3. AFAIK, the major difference among SGIs and SPIs or PPIs is the
+> > trigger method where SGIs are software triggered and SPIs or PPIs are
+> > hardware triggered. And I couldn't find a generalized method across
+> > architectures to invoke SGIs. So how do you envision drivers to invoke
+> > SGIs in an architecture agnostic manner?
+>
+> Well, SGIs are not architecture agnostic. They are fundamentally part of
+> the GIC architecture, which only exists for the two ARM architectures.
+>
+> SGIs are not a general purpose mechanism. IPIs are, and we have services
+> on top of IPIs, such as invoking a function on a remote CPU. What else
+> do you need?
+
+Yeah that was mine understanding as well. But I was just clarifying if
+you have any further use-cases in mind for IPIs.
+
+-Sunit
+
+>
+> Thanks,
+>
+>           M.
+> --
+> Jazz is not dead. It just smells funny...
