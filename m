@@ -2,131 +2,123 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23EDC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DE9C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1EA20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75C8207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0YJweBxd"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="fc/Q95Yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgD3Vze (ORCPT
+        id S1727044AbgD3V7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:55:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
+        Thu, 30 Apr 2020 17:59:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgD3Vzd (ORCPT
+        with ESMTP id S1726548AbgD3V7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:55:33 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096C3C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:55:33 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v2so2847996plp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:55:33 -0700 (PDT)
+        Thu, 30 Apr 2020 17:59:23 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3661AC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:59:23 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so2378424lfd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rYEprxh5hRkyIRk0SZJ1yYwJF2zaPFW1K1pdxuC7Zuc=;
-        b=0YJweBxdqRGXk8CKADPYZT2TDMDjlejyhecZFIP6Pdqu2Rol0vua+RkjawOc6lW+4C
-         uye8FqmbkqGQFahJuYyZ/sVkYDn8YKcognO7HZN5LGsmML6yIXlmeCxIkANnyZNQ1gTG
-         /9xSR/dOm1broZSmXWyPapxeqpe3M9DwJQedEjQkHUFGZC4OxPB9a94qfaCo8FkfLTG2
-         z4UdgSMg6xqZqbdaMkkKFbSj8MCsvkht1TJbHhLVLcwEjDr92euBMUJXifl8yCQybF3i
-         0VWB+PK6QrXPrkeZTzbIW4Ds0P1gdgZDHzx3P27ENgTnRXQIqNtK/jjJtTG7opYmGATG
-         kgeg==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/pudPj9Z3XDin0S0F3QD/0p7qf5audyl1OfeTF2rX2k=;
+        b=fc/Q95YrYrYUFOA9a9LZRPKWlYtrdG/4WUSQYHdvOUGlmrgqhbNEi9tbXm1L/69Cr+
+         434cWf0TQ2YAaczpTW6CnEE5si+Wl8AZVpne/5WLW8MqGfI8YHPyP40WUVjOQWGKd7dW
+         qjqOB/cFIpBrahYQFHsrBgxnvEaxcIiqt5m3D9B3bSjtanhJ14qG7siZyVf1dxhYldq8
+         SuLH3j0PaqLE8RUUqy9DEGxoK5Mi2ozcYBXM9aAM8eEO8DICHX2NGjWspp7rCXc9atAp
+         UKIECgFctXH/W7giyd9AI6PJNmIAfuyonJ6TFwCM8u3Ec2MT6U/IXtv8Ihmj3fTngGJH
+         M0xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rYEprxh5hRkyIRk0SZJ1yYwJF2zaPFW1K1pdxuC7Zuc=;
-        b=fHRPwt4ZW/lhKMJ0cPPY40CI0qEtK31hy6HpvewNt3ey8tn5EsBzPbs/UzEClHqZH1
-         3f2NjIotUWFuojABxiwyK4LvGjnbFfNv8mrk4KZ82gljz1809zCDzQJXOJQKAeCyzEBi
-         ydcRAoBP2KshS49G8+1jROAj2InD5tEddLEAtiAjsLAAbPazk4wywrE/JPhOTEo4WnYq
-         3Bb+0NXr3K8FueCfLLZBWfeWni7ExY8GkkAKG6/h0zX4nGFEPhx0Jv8BKm1+8PwvoaeB
-         Os3vebM29cA5S/T7fzFTP0iocqXb8EboY8AhKDISzPfynLets0tDh/2Igx3E1xRXtkeo
-         z5kw==
-X-Gm-Message-State: AGi0PuZeDNd+5TtSF2DGwD3Q+aG8kRXLH6DsiPb6pXRfd03pC+6ohnMV
-        ghI/NMJreePsWt9JlprqmOjqRA==
-X-Google-Smtp-Source: APiQypKZKsYx7E2CGdgFsbEsXPiGTeppVxcKMSgLFPw/aX5eOiEu/pEAX05ugbUD8BcvAoby192kSA==
-X-Received: by 2002:a17:902:7b94:: with SMTP id w20mr1140125pll.8.1588283732465;
-        Thu, 30 Apr 2020 14:55:32 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id i25sm601473pfo.196.2020.04.30.14.55.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 14:55:31 -0700 (PDT)
-Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and latency
- target handling
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org, newella@fb.com,
-        josef@toxicpanda.com, asml.silence@gmail.com, ming.lei@redhat.com,
-        bvanassche@acm.org
-References: <20200413162758.97252-1-tj@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6ee6360e-1a35-874c-2263-6fb21da66591@kernel.dk>
-Date:   Thu, 30 Apr 2020 15:55:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/pudPj9Z3XDin0S0F3QD/0p7qf5audyl1OfeTF2rX2k=;
+        b=Oc4JaBAY0QX5OCqi89qQC7fJNvaNfpARH0AbK9WtyVurax55grOVe1ug1AQ35vkVSy
+         QEKZOAtV7BB8XMawhRw+KlNnI1OX6OpVR9cNQbpku4acbEAEgy+bWD8koovSh/PogFPg
+         LJh65BR9lICbLuTwWMw3fYhPfeKehrB7vL60g20dZ/bcOpxerDS123Y1ajZZjNSwJGeB
+         bkt5S20rT5SAvAYdBEtGa6OzKzxzV64l++2zqxHU9Z9J8bc5quG2KLaiLmY4yZTHtToV
+         un/1tmW9P7LVv3/wzcNXKSJr1Q2WLBU/09weo9NVCwl9d3V4z9o+gGF2qHMyEL0iTT+9
+         1pLw==
+X-Gm-Message-State: AGi0PuY+524y9GY6MkxjTSbVpnPOgAQbNIHQrCVx2umZrLL081RxUoXX
+        h0oBCefQPVmLB14/4ogCMKbwKQ==
+X-Google-Smtp-Source: APiQypJcF2oB/bxZG/9cCepQYZUv7yHEvh5RW/0cskhQgJ0uGU/iHFvu++BRFRg5m4DlrDDJLICyeg==
+X-Received: by 2002:ac2:4257:: with SMTP id m23mr448779lfl.141.1588283961342;
+        Thu, 30 Apr 2020 14:59:21 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id c2sm706801ljk.97.2020.04.30.14.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 14:59:20 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 84161102776; Fri,  1 May 2020 00:59:32 +0300 (+03)
+Date:   Fri, 1 May 2020 00:59:32 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [linux-next PATCH 1/2] mm: khugepaged: add exceed_max_ptes_*
+ helpers
+Message-ID: <20200430215932.5w5dck3rnieppzqa@box>
+References: <1588200982-69492-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200413162758.97252-1-tj@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588200982-69492-1-git-send-email-yang.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/13/20 10:27 AM, Tejun Heo wrote:
-> Changes from v1[1]
+On Thu, Apr 30, 2020 at 06:56:21AM +0800, Yang Shi wrote:
+> The max_ptes_{swap|none|shared} are defined to tune the behavior of
+> khugepaged.  The are checked at a couple of places with open coding.
+> Replace the opencoding to exceed_pax_ptes_{swap|none_shared} helpers to
+> improve the readability.
 > 
-> * Dropped 0002-block-add-request-io_data_len.patch and updated to use
->   rq->stats_sectors instead as suggested by Pavel Begunkov.
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>  mm/khugepaged.c | 27 +++++++++++++++++++++------
+>  1 file changed, 21 insertions(+), 6 deletions(-)
 > 
-> This patchset improves the following two iocost control behaviors.
-> 
-> * iocost was failing to punish heavy shared IO generators (file metadata, memory
->   reclaim) through use_delay mechanism - use_delay automatically decays which
->   works well for iolatency but doesn't match how iocost behaves. This led to
->   e.g. memory bombs which generate a lot of swap IOs to use over their allotted
->   amount. This is fixed by adding non-decaying use_delay mechanism.
-> 
-> * The same latency targets were being applied regardless of the IO sizes. While
->   this works fine for loose targets, it gets in the way when trying to tigthen
->   them - a latency target adequate for a 4k IO is too short for a 1 meg IO.
->   iocost now discounts the size portion of cost when testing whether a given IO
->   met or missed its latency target.
-> 
-> While at it, it also makes minor changse to iocost_monitor.py.
-> 
-> This patchset contains the following five patches.
-> 
->  0001-blk-iocost-switch-to-fixed-non-auto-decaying-use_del.patch
->  0002-blk-iocost-account-for-IO-size-when-testing-latencie.patch
->  0003-iocost_monitor-exit-successfully-if-interval-is-zero.patch
->  0004-iocost_monitor-drop-string-wrap-around-numbers-when-.patch
-> 
-> and is also available in the following git branch.
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git iocost-delay-latency-v2
-> 
-> diffstat follows. Thanks.
-> 
->  block/Kconfig                  |    1 
->  block/blk-cgroup.c             |    6 ++++
->  block/blk-iocost.c             |   56 +++++++++++++++++++++++++++++------------
->  include/linux/blk-cgroup.h     |   43 ++++++++++++++++++++++++-------
->  tools/cgroup/iocost_monitor.py |   48 +++++++++++++++++++----------------
->  5 files changed, 106 insertions(+), 48 deletions(-)
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index a02a4c5..0c8d30b 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -339,6 +339,21 @@ struct attribute_group khugepaged_attr_group = {
+>  };
+>  #endif /* CONFIG_SYSFS */
+>  
+> +static inline bool exceed_max_ptes_none(unsigned int *nr_ptes)
+> +{
+> +	return (++(*nr_ptes) > khugepaged_max_ptes_none);
+> +}
+> +
+> +static inline bool exceed_max_ptes_swap(unsigned int *nr_ptes)
+> +{
+> +	return (++(*nr_ptes) > khugepaged_max_ptes_swap);
+> +}
+> +
+> +static inline bool exceed_max_ptes_shared(unsigned int *nr_ptes)
+> +{
+> +	return (++(*nr_ptes) > khugepaged_max_ptes_shared);
+> +}
+> +
 
-Applied, thanks Tejun.
+Frankly, I find this ugly and confusing. Open-coded version is more
+readable to me.
 
 -- 
-Jens Axboe
-
+ Kirill A. Shutemov
