@@ -2,94 +2,92 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C27BC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08769C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66640206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0F9206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255448;
+	bh=/Wqjtp4C2KTUJ7aU52LARgn34AvNvr/qfNFE2J64GG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=otZ1v8qDuPlBd/pdZEztnRCYgzNCTestH8Q9IhJHfK/fbdsPBK3cLxQ++Snvn2gc0
+	 nL5nPIuvWUZ2VznUdBkGNzrfuf53OLtDsTO0IYfuKtlhFDnWw/KUtRIQsxREBIXMd3
+	 BD/m73M7XdnyZTfzeA3eJUxnrx7MEEZHA0gfnNZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgD3OD5 (ORCPT
+        id S1729488AbgD3OEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:03:57 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39302 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728845AbgD3ODr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:03:47 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m10so5283514oie.6;
-        Thu, 30 Apr 2020 07:03:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x8sgU1Szr34IsxXbirpuvDaAZhkCI+krBrR2ZiJePQw=;
-        b=nnnpUXMs8YnO/kEZg/lUUlcZU01rhsikOsSgRaCs4SXKJrYXWOA3/znD8TbhbqKgnV
-         IlaCf7JGZ7L+iv4rNjjMFzTolXJTThrfpQZanxV1iVSauAxMt6fcfsRy/3GbLgyAKLMB
-         mLk4342rFDqDldx46Qvm6DbIRBXB6imjC67IQl4I3nkov71CmtDqNq9bZVjAufrKAlYf
-         gn8rduT49egOYAcqsRz+hwFUTeUiRLgRgt/hHEHwqrK7tP3eaD5wLL6ZIpPk0nu3ZAJp
-         43Bb+1VvxCysEfyYACyPj8agOrwf4QVNT9aK7OND2qd+VqwVpApRJpqi5WAAlj5JakD8
-         +12g==
-X-Gm-Message-State: AGi0PuaphrQlUyutjFmA53JtE9iki8IFpfgT79jNiPx4WmYxZvv7xM0k
-        1HKQzsWllWcmqSJGzz1bZ01oSFSVVAfOobFiN2U=
-X-Google-Smtp-Source: APiQypL9xeeJpmuZvM5tql+5NXWQ4pW6DcMEWufc5ew+DxYHUpQs0+qo6mOBm2fIsWhIGQsFkQ29kQIrXYqgOowhF2I=
-X-Received: by 2002:aca:895:: with SMTP id 143mr1766140oii.153.1588255426230;
- Thu, 30 Apr 2020 07:03:46 -0700 (PDT)
+        Thu, 30 Apr 2020 10:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728703AbgD3NxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E0424953;
+        Thu, 30 Apr 2020 13:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254803;
+        bh=/Wqjtp4C2KTUJ7aU52LARgn34AvNvr/qfNFE2J64GG4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HPQpQ2or9zsiFTNLtkkSH6AvsaT4qHhQPY7833e570b2+4zW9T966B9dJLRkT0AeP
+         WVLwBTNYXTObrEcL8GZXJKtNATfrbCi0ryZMRf94eAN9UuA4yrsDA7afI4pxzw/bSS
+         hy9ACSpATRE13u+52isy2ZD1q9gWTwf9HfxGAbRM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wang YanQing <udknight@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 57/57] bpf, x86_32: Fix logic error in BPF_LDX zero-extension
+Date:   Thu, 30 Apr 2020 09:52:18 -0400
+Message-Id: <20200430135218.20372-57-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:03:35 +0200
-Message-ID: <CAMuHMdW5UPVStDUHK_9eYEwAnRiCxCBshLPCLeoAsxuhn2LXqQ@mail.gmail.com>
-Subject: Re: [PATCH 15/18] dt-bindings: serial: renesas,hscif: Document
- r8a7742 bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible HSCIF ports,
-> so document the SoC specific bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+From: Wang YanQing <udknight@gmail.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[ Upstream commit 5ca1ca01fae1e90f8d010eb1d83374f28dc11ee6 ]
 
-Gr{oetje,eeting}s,
+When verifier_zext is true, we don't need to emit code
+for zero-extension.
 
-                        Geert
+Fixes: 836256bf5f37 ("x32: bpf: eliminate zero extension code-gen")
+Signed-off-by: Wang YanQing <udknight@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200423050637.GA4029@udknight
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/net/bpf_jit_comp32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
+index ba7d9ccfc6626..66cd150b7e541 100644
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -1847,7 +1847,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 			case BPF_B:
+ 			case BPF_H:
+ 			case BPF_W:
+-				if (!bpf_prog->aux->verifier_zext)
++				if (bpf_prog->aux->verifier_zext)
+ 					break;
+ 				if (dstk) {
+ 					EMIT3(0xC7, add_1reg(0x40, IA32_EBP),
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
