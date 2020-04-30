@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720C4C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4986DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E78E20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C50324953
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254729;
-	bh=BtlbYbV7ZTLuPWVpFdkjQxXtr0m1GdmEM+9Jp5gVnkA=;
+	s=default; t=1588254732;
+	bh=MyBj4qtov3HG2b8+oAL8ufv3SgQnm24ehJlL9VKrxsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JtO9VTMppAu38wg8eqwjOT0+FaZYDd3Jb969wDmffuqRslp1zb97Smi5h2893Xbaq
-	 SQITHEp3WJsqmpvhvtMT0F1jlW+7Vye9qee5gE9BgdByrXPkW+tjk9oIjKiGuWxQrq
-	 ETEyS9m0BfLrtF6DMG3NKjdKKmnmz6GKkOxaZjZU=
+	b=iyacxC/wj6j/YpfQL4MuYoebKbcgcRetpFasUzi1g1hfO9Bi5aT/EUA3GoxiEsCwr
+	 aFu55JacN8pzKCTFKDYvY73/0rcRtIaN4c3JW0DQ6qH5k+zn/mAXCqjy/M2R5M5Bvr
+	 Q7LqyhkUVcWwX/7MLrWS2qNZUwSr6TDW6JtLfkoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgD3NwI (ORCPT
+        id S1728319AbgD3NwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbgD3Nvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:51 -0400
+        id S1728228AbgD3Nvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B290624956;
-        Thu, 30 Apr 2020 13:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A624208D5;
+        Thu, 30 Apr 2020 13:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254711;
-        bh=BtlbYbV7ZTLuPWVpFdkjQxXtr0m1GdmEM+9Jp5gVnkA=;
+        s=default; t=1588254713;
+        bh=MyBj4qtov3HG2b8+oAL8ufv3SgQnm24ehJlL9VKrxsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBiVR1vXuhuBMPdlrx9Fyn7nH6pP0WTdSOq1K8odQh2JIDHRGaXpS7fTaN6GsycZJ
-         I9yTNo+FrKccfH76JryEPxeJHfgJamtYX93lD7w3PJGizbVTDbXdWwdnvUJq2eNPw4
-         /pInd2tXVBxAurTv+MPMlCN/JuhslrFZmqsfhPIs=
+        b=M2C7WagK/52zOTcEsd7IY/XNvZedELvFw3EsBD9ua+wB7CSU+0m9Ut7bTBihEzmjD
+         cnFr8PEp/V+cNXKQhp6QEJThSzJTd5+jbdgtENT3v5o12gCbYisD2mEQmUQ9PXlSco
+         fpxwoAARYeeFv4KJPidNkJ77Lu8Jz+ZzPJSeNVhQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Rudo <prudo@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 59/79] s390/ftrace: fix potential crashes when switching tracers
-Date:   Thu, 30 Apr 2020 09:50:23 -0400
-Message-Id: <20200430135043.19851-59-sashal@kernel.org>
+Cc:     Quentin Perret <qperret@google.com>,
+        Chitti Babu Theegala <ctheegal@codeaurora.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 61/79] sched/core: Fix reset-on-fork from RT with uclamp
+Date:   Thu, 30 Apr 2020 09:50:25 -0400
+Message-Id: <20200430135043.19851-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -59,76 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+From: Quentin Perret <qperret@google.com>
 
-[ Upstream commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 ]
+[ Upstream commit eaf5a92ebde5bca3bb2565616115bd6d579486cd ]
 
-Switching tracers include instruction patching. To prevent that a
-instruction is patched while it's read the instruction patching is done
-in stop_machine 'context'. This also means that any function called
-during stop_machine must not be traced. Thus add 'notrace' to all
-functions called within stop_machine.
+uclamp_fork() resets the uclamp values to their default when the
+reset-on-fork flag is set. It also checks whether the task has a RT
+policy, and sets its uclamp.min to 1024 accordingly. However, during
+reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
+hence leading to an erroneous uclamp.min setting for the new task if it
+was forked from RT.
 
-Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
-Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
-Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fix this by removing the unnecessary check on rt_task() in
+uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
+set.
+
+Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
+Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
+Signed-off-by: Quentin Perret <qperret@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Link: https://lkml.kernel.org/r/20200416085956.217587-1-qperret@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/diag.c  | 2 +-
- arch/s390/kernel/smp.c   | 4 ++--
- arch/s390/kernel/trace.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ kernel/sched/core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index 61f2b0412345a..ccba63aaeb470 100644
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
- }
- EXPORT_SYMBOL(diag_stat_inc);
- 
--void diag_stat_inc_norecursion(enum diag_stat_enum nr)
-+void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
- {
- 	this_cpu_inc(diag_stat.counter[nr]);
- 	trace_s390_diagnose_norecursion(diag_map[nr].code);
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index f87d4e14269c9..4f8cb8d1c51b9 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
- 	return -1;
- }
- 
--bool arch_vcpu_is_preempted(int cpu)
-+bool notrace arch_vcpu_is_preempted(int cpu)
- {
- 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
- 		return false;
-@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
- }
- EXPORT_SYMBOL(arch_vcpu_is_preempted);
- 
--void smp_yield_cpu(int cpu)
-+void notrace smp_yield_cpu(int cpu)
- {
- 	if (!MACHINE_HAS_DIAG9C)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index da8a194702185..3dd6756973013 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1239,13 +1239,8 @@ static void uclamp_fork(struct task_struct *p)
  		return;
-diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
-index 490b52e850145..11a669f3cc93c 100644
---- a/arch/s390/kernel/trace.c
-+++ b/arch/s390/kernel/trace.c
-@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
  
- static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 	for_each_clamp_id(clamp_id) {
+-		unsigned int clamp_value = uclamp_none(clamp_id);
+-
+-		/* By default, RT tasks always get 100% boost */
+-		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+-			clamp_value = uclamp_none(UCLAMP_MAX);
+-
+-		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
++		uclamp_se_set(&p->uclamp_req[clamp_id],
++			      uclamp_none(clamp_id), false);
+ 	}
+ }
  
--void trace_s390_diagnose_norecursion(int diag_nr)
-+void notrace trace_s390_diagnose_norecursion(int diag_nr)
- {
- 	unsigned long flags;
- 	unsigned int *depth;
 -- 
 2.20.1
 
