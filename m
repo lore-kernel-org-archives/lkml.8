@@ -2,182 +2,92 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FDAC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D7EC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74AA2207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D9C20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOWHisTW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2zxv2qd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD3TcQ (ORCPT
+        id S1726884AbgD3TcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52144 "EHLO
+        Thu, 30 Apr 2020 15:32:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgD3TcP (ORCPT
+        with ESMTP id S1726338AbgD3TcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:32:15 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE4EAC035494;
-        Thu, 30 Apr 2020 12:32:14 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id z22so2057832lfd.0;
-        Thu, 30 Apr 2020 12:32:14 -0700 (PDT)
+        Thu, 30 Apr 2020 15:32:23 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5BCC035495;
+        Thu, 30 Apr 2020 12:32:22 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e26so3294851wmk.5;
+        Thu, 30 Apr 2020 12:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IEqqDal1b2CMBBj1J/IhZlw32+Sg+2HPFFmYoJNFiUw=;
-        b=DOWHisTWeBeZBVUEitPME/auY93uAUAgxG6PVUvbHoOc73Sf/iGaOTv49ntHPEtDvD
-         N6Cx3OojCejqvLe4o6E9hTqAlmIXN9IKjCBGwAojzTGoRTxhPlEeaxB8hX+NCRBsbnjR
-         F+Cm7Ljm2cx7hQof0ILpa+VZV6AbpDx30VM1RD32IIjO2EyCvwZOTF2sLN0ftsLiqEeA
-         t3MdhNA3Wamo7wuambjqq5Ow2XfHfE0nzQhnxpOmuckaMZTMpOjWij1o6Eyvaty9gYqP
-         /vhzKP3kik+a1rjRP86OqQ6JSbtALthq0PHjWtic9Mz6H1I2kC/Hu6arE2bFmulALd+E
-         Q3bw==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XSDhy1UgSaVZiR7LQEk+1ZlOV8wfY+KtaRK1hgvRZB8=;
+        b=D2zxv2qd348r2fIRy+qr1VNRMnM+FSpzGDxLccHam9wO37f/YrodpL5Df35JlEmTEF
+         C2VnFLHtMX0wJTOfr3M4Hge5IqTkVQuqHGbGe10u7tMjgBv/SZvWFJEW7dmu1+LFrXX8
+         zZHWXUHDKjGD3pGxrawMRVeN3wkPcFQarlSBCH80YHiDIxfffcprFQQ9UyxvPMwgH/E+
+         5JvvPmQiNI8Y2/x/9YDtJN/BCDYeLyiC5HWSMlEpKXI0Hc+RWm9ZAhDvoK2p0+AKmX5y
+         FQXax0e+Swljc9sg1g4EzN+LMU/hDquNFhFBOjAHUNmaDyAa0jteFqZvXyT08KyYAwQK
+         U41w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=IEqqDal1b2CMBBj1J/IhZlw32+Sg+2HPFFmYoJNFiUw=;
-        b=mzpLgTpyW6G+hUE4GeuraTFulZMzTTMxmKmcyRMa+iHpDCTTyl1b8i3L7h+XtofOFT
-         3lySeRVp1iwA+Cs7xkww7IIAzMLssZFE+MBuy8aDfJ9ZxvlYEtC3e2TaLLHusp/6jcT2
-         Y9xy3OHxDEKsCAx0czAQIvyxara/61eYjKmSaDDxPAz6SlMFcoqluVHP2Uy33fE6GxfZ
-         Opk4dP49BokHa2FFdE0SoXRSzwAtnVpSFJJXHvcbH9scfbUQ5AIiJi9f/XZxrDszn8jN
-         +3nzCk0tyXPc8FSCH3ZGFIdqRE035k+RPicSnns2cyY4ZkqimHqS5rZFIbpZZ7h2Ruk4
-         g2jQ==
-X-Gm-Message-State: AGi0PubhnliPnIssgcfauEiKeUoywlIHs8LBRnxGfK/LihyXfQzGe5Ne
-        BLKyuzBPxwpfj/rlr+7y4nE=
-X-Google-Smtp-Source: APiQypJNFgSpmaFuLg/GY6Gie6VDzGSq5Rv1WOKs4ZofBix+8BkRN2sAbFhFcYeWgtk6CQXKyG8dyw==
-X-Received: by 2002:a19:d:: with SMTP id 13mr114417lfa.167.1588275132329;
-        Thu, 30 Apr 2020 12:32:12 -0700 (PDT)
-Received: from [192.168.0.74] ([178.233.178.9])
-        by smtp.gmail.com with ESMTPSA id i124sm429538lji.95.2020.04.30.12.32.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 12:32:11 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/3] Prefer working VT console over SPCR and
- device-tree chosen stdout-path
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
- <20200430164413.GV185537@smile.fi.intel.com>
-From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
-Message-ID: <f332a19b-e8d1-d2b0-37c8-08381563f41b@gmail.com>
-Date:   Thu, 30 Apr 2020 22:32:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        bh=XSDhy1UgSaVZiR7LQEk+1ZlOV8wfY+KtaRK1hgvRZB8=;
+        b=EafFSEM7RZUPVUXwO3YkoViaixgVpR8qvSvrzvV7VhzbpgtovUuYOpnaemo47QNvX+
+         8yOxh+qmfzMbn8PErm1s52IASmEExmGICrSHvllry4zc++ce5iAMkWbnAt2tnsRfkXtL
+         prFGpOM6j5dUyfWHGbpsP/BaucoFq5L+q31xlTJ76fna9+WA4o6R0HT2HhunSYlZibEL
+         Dwo+NBf6rEtLtI0mD9+UlKlTPxVv0d/ArQ5K1HoRZJ9A+8tkqJ+YPY/a+2lEqZIdPiOG
+         x7U/EgOIS/BuDYLxRKBvIhMU5yQOevKx7TWcxVgZ9wHPKXgEiBOcsrx2rfqaql7LPRwe
+         Uvfw==
+X-Gm-Message-State: AGi0PuYJc8c8TLtYBD0dxHSeCea9dE6Rnjzt/ZrBDQVhispg+SDgdez3
+        WqyYxDvG8ObosKnqtDx2Wx0=
+X-Google-Smtp-Source: APiQypKyhkUHSQnDUVnXg36GJuYqe1LWWoyvr/GLx4reSIVrZ7SUzZXpAAjkomhJXELEQ/MtRWQXWg==
+X-Received: by 2002:a1c:e903:: with SMTP id q3mr175418wmc.76.1588275141202;
+        Thu, 30 Apr 2020 12:32:21 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.131.64])
+        by smtp.gmail.com with ESMTPSA id h188sm917002wme.8.2020.04.30.12.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 12:32:20 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] timeout fixes
+Date:   Thu, 30 Apr 2020 22:31:05 +0300
+Message-Id: <cover.1588253029.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200430164413.GV185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2020 19:44, Andy Shevchenko wrote:
-> First of all I see only cover letter and one out of 3 patches.
+[1,2] are small random patches.
+[3,4] are the last 2 timeout patches, but with 1 var renamed.
+[5] fixes a timeout problem related to batched CQ commits. From
+what I see, this should be the last fixing timeouts.
 
-Apologies, the tool I've used to send the patches (U-Boot's patman)
-Cc-ed the scripts/get_maintainer.pl output per-patch, instead of
-per-series as I had assumed it would. This was the first time I tried
-it, I'll keep that in mind.
+Pavel Begunkov (5):
+  io_uring: check non-sync defer_list carefully
+  io_uring: pass nxt from sync_file_range()
+  io_uring: trigger timeout after any sqe->off CQEs
+  io_uring: don't trigger timeout with another t-out
+  io_uring: fix timeout offset with batch CQ commit
 
-Here are links to all four emails:
+ fs/io_uring.c | 130 +++++++++++++++++++++-----------------------------
+ 1 file changed, 54 insertions(+), 76 deletions(-)
 
-https://lore.kernel.org/linux-serial/20200430161438.17640-1-alpernebiyasak@gmail.com/
-https://lore.kernel.org/linux-serial/20200430161438.17640-2-alpernebiyasak@gmail.com/
-https://lore.kernel.org/linux-serial/20200430161438.17640-3-alpernebiyasak@gmail.com/
-https://lore.kernel.org/linux-serial/20200430161438.17640-4-alpernebiyasak@gmail.com/
+-- 
+2.24.0
 
-Or I can resend the last two patches to you, or resend all the parts to
-everyone again.
-
->> eventually figured out that the kernel preferred the serial port
->> (inaccessible to me) over the built-in working display/keyboard and was
->> probably asking there.
-> 
-> "probably". Please, confirm that first.
-> Also, without command line it's hard to say what you have asked kernel to do.
-
-I was trying to boot a Debian userspace with cryptsetup, with the kernel
-command line:
-
-	root=/dev/mapper/sda3_crypt quiet splash
-
-The Debian initramfs handles most of the work (the password prompt,
-device mounts, etc.).
-
-When I used the same kernel/initramfs/rootfs on a QEMU aarch64 VM, it
-only prompted on the serial console instead the framebuffer. I'm
-assuming the same thing happens on my hardware as well.
-
-I can also ask the Debian initramfs to launch a shell by adding "break"
-to the command line, which won't be printed on my device's screen unless
-I also add "console=tty0". That shell also only appears on the serial
-console on the QEMU aarch64 VM, unless I again add "console=tty0".
-
-This is my primary computer and I'd prefer not dismantling it, so my
-findings above are the best I believe I can do to confirm it now. I'm 
-hoping other people would be interested in this, and would test more 
-than I can.
-
->> Running plymouth in the initramfs solves that specific problem, but
-> 
-> What is plymouth?
-
-Plymouth is a userspace program that's famous for showing a splash
-animation during boot, but in this context: it handles user-interaction
-that might need to happen while the initramfs is running, by printing
-messages and prompts and reading user input to/from all consoles.
-
->>    ------------------+-----------------------+-----------------------+
->>    Chromebook Plus   | tty0     -WU (EC p  ) | tty0     -WU (EC p  ) |
->>    (w/o either)      |                       |                       |
->>    ------------------+-----------------------+-----------------------+
-> 
-> either == SPCR or stdout-path?
-
-As in "When the device has no SPCR _and_ no chosen stdout-path".
-
->> This patchset tries to ensure that VT is preferred in those conditions
->> even in the presence of firmware-mandated serial consoles.
-> 
-> This sounds completely wrong. serial should be preferred over vt due to very
-> debugging on early stages and SPCR is exactly for that.
-
-I'm saying that from a userspace perspective, and the patches explicitly
-try to switch to the vt only after a real framebuffer is initialized. So
-if I did it right, it would still use SPCR/stdout-path's console during
-the early stages. (I admit I haven't adjusted to talking within a kernel 
-context yet).
-
-In all honesty, I'm not sure if this is even considered a kernel bug,
-let alone my patches a correct solution; hence the RFC PATCH as an
-attempt at demonstrating this can be "fixed" in kernel.
-
-> Maybe you should figure out the real root cause?
-
-Thanks for the reply. Any ideas on what else could be causing this 
-behaviour?
