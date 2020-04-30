@@ -2,131 +2,290 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A910C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6FC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47CC9208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588222632;
-	bh=yoriY86hMfyLChk7+O8Pq9vQXhmNjQfWOXeoqFqvspU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sin2graEuyrQ1EPFs6PAmR1y2ibWC3ib3hjkNL/bzcgTCWgPMpdunvO3yg0GuRDdq
-	 TSLjczguCgsIZrqF7RxCkrOWF7UFj+PIZZs6n9tYx14C2CauFVx3WEkOW2kh4f9I39
-	 sDeLS4mGe6/uHiz6EpdLXnUn5vLmLKacbAa0v1E8=
+	by mail.kernel.org (Postfix) with ESMTP id ECF572076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgD3E5L (ORCPT
+        id S1726433AbgD3FBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:57:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726337AbgD3E5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:57:11 -0400
-Received: from localhost (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CB1D2073E;
-        Thu, 30 Apr 2020 04:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588222630;
-        bh=yoriY86hMfyLChk7+O8Pq9vQXhmNjQfWOXeoqFqvspU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ysa2ipNSLD4vWzkghDmrZ0BEfgg4itAl/PLwwvcGuNQeGKTkDgyffoTNme0uNgoQp
-         oFApdhT2vDyJnrJYykiGPy53vZyVxVhHjv4oiIwcCwhNUrmW+uNJSSCLZuzwRtdO9t
-         LHmcDYhuT4iuSybZ0GxkLPMVE7KrVb/I62rJP7mI=
-Date:   Thu, 30 Apr 2020 10:27:01 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard liao <yung-chuan.liao@linux.intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        tiwai@suse.de, mengdong.lin@intel.com,
-        linux-kernel@vger.kernel.org, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com
-Subject: Re: [RFC 1/5] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200430045701.GC948789@vkoul-mobl.Dlink>
-References: <20200416205524.2043-1-yung-chuan.liao@linux.intel.com>
- <20200416205524.2043-2-yung-chuan.liao@linux.intel.com>
- <20200420072631.GW72691@vkoul-mobl>
- <20200423142451.GA4181720@kroah.com>
- <20200428043144.GU56386@vkoul-mobl.Dlink>
- <20200428063736.GB990431@kroah.com>
- <20200428064951.GA56386@vkoul-mobl.Dlink>
- <20200428065524.GA992087@kroah.com>
- <20200428075145.GB56386@vkoul-mobl.Dlink>
- <4ecfa01e-4ef4-5368-3a70-2bd57407d2ad@linux.intel.com>
+        Thu, 30 Apr 2020 01:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726180AbgD3FBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 01:01:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AFC9C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:01:07 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jU1Jk-0005Iw-SY; Thu, 30 Apr 2020 07:01:00 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jU1Ji-0005mJ-Uo; Thu, 30 Apr 2020 07:00:58 +0200
+Date:   Thu, 30 Apr 2020 07:00:58 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY
+ master/slave configuration.
+Message-ID: <20200430050058.cetxv76pyboanbkz@pengutronix.de>
+References: <20200428075308.2938-1-o.rempel@pengutronix.de>
+ <20200428075308.2938-2-o.rempel@pengutronix.de>
+ <20200429195222.GA17581@lion.mk-sys.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ozd5iai3oo5bf5xh"
 Content-Disposition: inline
-In-Reply-To: <4ecfa01e-4ef4-5368-3a70-2bd57407d2ad@linux.intel.com>
+In-Reply-To: <20200429195222.GA17581@lion.mk-sys.cz>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:41:45 up 166 days, 20:00, 163 users,  load average: 0.02, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-20, 11:24, Bard liao wrote:
-> 
-> On 4/28/2020 3:51 PM, Vinod Koul wrote:
-> > On 28-04-20, 08:55, Greg KH wrote:
-> > > On Tue, Apr 28, 2020 at 12:19:51PM +0530, Vinod Koul wrote:
-> > > > On 28-04-20, 08:37, Greg KH wrote:
-> > > > > On Tue, Apr 28, 2020 at 10:01:44AM +0530, Vinod Koul wrote:
-> > > > > > > > That is not true for everyone, it is only true for Intel, pls call that
-> > > > > > > > out as well...
-> > > > > > > Why is it not true for everyone?  How else do you get the pm stuff back
-> > > > > > > to your hardware?
-> > > > > > The rest of the world would do using the real controller device. For
-> > > > > > example the soundwire controller on Qualcomm devices is enumerated as a
-> > > > > > DT device and is using these...
-> > > > > > 
-> > > > > > If Intel had a standalone controller or enumerated as individual
-> > > > > > functions, it would have been a PCI device and would manage as such
-> > > > > If it is not a standalone controller, what exactly is it?  I thought it
-> > > > > was an acpi device, am I mistaken?
-> > > > > 
-> > > > > What is the device that the proper soundwire controller driver binds to
-> > > > > on an Intel-based system?
-> > > > The HDA controller which is a PCI device. The device represent HDA
-> > > > function, DSP and Soundwire controller instances (yes it is typically
-> > > > more than one instance)
-> > > Then those "instances" should be split up into individual devices that a
-> > > driver can bind to.  See the work happening on the "virtual" bus for
-> > > examples of how that can be done.
-> > Yes removing platform devices is the goal for Intel now :) Pierre & Bard
-> > have been diligently trying to solve this.
-> > 
-> > Only difference is the means to end goal. I am not convinced that this
-> > should be in soundwire subsystem.
-> > 
-> > Looks like folks are trying to review and port to use this bus. Makes
-> > sense to me..
-> > https://lore.kernel.org/netdev/c5197d2f-3840-d304-6b09-d334cae81294@linux.intel.com/
-> > 
-> > > A platform device better not be being used here, I'm afraid to look at
-> > > the code now...
-> > Well if the plan for 'virtual-bus' goes well, it should be  a simple
-> > replacement of platform->virtual for Intel driver. Rest of the driver
-> > should not be impacted :)
-> 
-> We can't expect when will 'virtual-bus' be upstream and it's not feasible
-> to wait forever. Can we move forward with current solution and switch to
-> 'virtual-bus' whenever it is upstream?
 
-the move from platform-device to virtual-device should happen once
-the virtual-bus' is accepted upstream. till then imo you should continue
-with current platform device and once you have virtual-bus upstream,
-replace it with virtual-device. Note: I am going to hold you on that :)
+--ozd5iai3oo5bf5xh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rest of the pieces like sdw_master_device and sysfs parts are not
-dependent upon this and should be sent for review and we can merge when
-ready, hopefully for 5.8.
+Hi Michal,
 
-Thanks
--- 
-~Vinod
+On Wed, Apr 29, 2020 at 09:52:22PM +0200, Michal Kubecek wrote:
+> On Tue, Apr 28, 2020 at 09:53:07AM +0200, Oleksij Rempel wrote:
+> > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> > auto-negotiation support, we needed to be able to configure the
+> > MASTER-SLAVE role of the port manually or from an application in user
+> > space.
+> >=20
+> > The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> > force MASTER or SLAVE role. See IEEE 802.3-2018:
+> > 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> > 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> > 40.5.2 MASTER-SLAVE configuration resolution
+> > 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> > 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> >=20
+> > The MASTER-SLAVE role affects the clock configuration:
+> >=20
+> > -----------------------------------------------------------------------=
+--------
+> > When the  PHY is configured as MASTER, the PMA Transmit function shall
+> > source TX_TCLK from a local clock source. When configured as SLAVE, the
+> > PMA Transmit function shall source TX_TCLK from the clock recovered from
+> > data stream provided by MASTER.
+> >=20
+> > iMX6Q                     KSZ9031                XXX
+> > ------\                /-----------\        /------------\
+> >       |                |           |        |            |
+> >  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+> >       |<--- 125 MHz ---+-<------/  |        | \          |
+> > ------/                \-----------/        \------------/
+> >                                                ^
+> >                                                 \-TX_TCLK
+> >=20
+> > -----------------------------------------------------------------------=
+--------
+> >=20
+> > Since some clock or link related issues are only reproducible in a
+> > specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+> > to provide generic (not 100BASE-T1 specific) interface to the user space
+> > for configuration flexibility and trouble shooting.
+> >=20
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> [...]
+> > diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> > index 72c69a9c8a98a..a6a774beb2f90 100644
+> > --- a/drivers/net/phy/phy.c
+> > +++ b/drivers/net/phy/phy.c
+> > @@ -285,6 +285,9 @@ int phy_ethtool_ksettings_set(struct phy_device *ph=
+ydev,
+> >  	      duplex !=3D DUPLEX_FULL)))
+> >  		return -EINVAL;
+> > =20
+> > +	if (!ethtool_validate_master_slave_cfg(cmd->base.master_slave_cfg))
+> > +		return -EINVAL;
+> > +
+>=20
+> Unless we can/want to pass extack down here, I would prefer to have the
+> sanity check in ethtool_update_linkmodes() or ethtool_set_linkmodes() so
+> that we can set meaningful error message and offending attribute in
+> extack. (It could be even part of the policy.) Also, with the check only
+> here, drivers/devices not calling phy_ethtool_set_link_ksettings()
+> (directly or via phy_ethtool_set_link_ksettings()) and not handling the
+> new members themselves would silently ignore any value from userspace.
+
+ok
+
+> >  	phydev->autoneg =3D autoneg;
+> > =20
+> >  	phydev->speed =3D speed;
+> [...]
+> > +static int genphy_setup_master_slave(struct phy_device *phydev)
+> > +{
+> > +	u16 ctl =3D 0;
+> > +
+> > +	if (!phydev->is_gigabit_capable)
+> > +		return 0;
+>=20
+> Shouldn't we rather return -EOPNOTSUPP if value different from
+> CFG_UNKNOWN was requested?
+
+sounds plausible.
+
+> > +
+> > +	switch (phydev->master_slave_set) {
+> > +	case PORT_MODE_CFG_MASTER_PREFERRED:
+> > +		ctl |=3D CTL1000_PREFER_MASTER;
+> > +		break;
+> > +	case PORT_MODE_CFG_SLAVE_PREFERRED:
+> > +		break;
+> > +	case PORT_MODE_CFG_MASTER_FORCE:
+> > +		ctl |=3D CTL1000_AS_MASTER;
+> > +		/* fallthrough */
+> > +	case PORT_MODE_CFG_SLAVE_FORCE:
+> > +		ctl |=3D CTL1000_ENABLE_MASTER;
+> > +		break;
+> > +	case PORT_MODE_CFG_UNKNOWN:
+> > +		return 0;
+> > +	default:
+> > +		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
+> > +		return 0;
+> > +	}
+> [...]
+> > diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> > index 92f737f101178..eb680e3d6bda5 100644
+> > --- a/include/uapi/linux/ethtool.h
+> > +++ b/include/uapi/linux/ethtool.h
+> > @@ -1666,6 +1666,31 @@ static inline int ethtool_validate_duplex(__u8 d=
+uplex)
+> >  	return 0;
+> >  }
+> > =20
+> > +/* Port mode */
+> > +#define PORT_MODE_CFG_UNKNOWN		0
+> > +#define PORT_MODE_CFG_MASTER_PREFERRED	1
+> > +#define PORT_MODE_CFG_SLAVE_PREFERRED	2
+> > +#define PORT_MODE_CFG_MASTER_FORCE	3
+> > +#define PORT_MODE_CFG_SLAVE_FORCE	4
+> > +#define PORT_MODE_STATE_UNKNOWN		0
+> > +#define PORT_MODE_STATE_MASTER		1
+> > +#define PORT_MODE_STATE_SLAVE		2
+> > +#define PORT_MODE_STATE_ERR		3
+>=20
+> You have "MASTER_SLAVE" or "master_slave" everywhere but "PORT_MODE" in
+> these constants which is inconsistent.
+
+What will be preferred name?
+
+> > +
+> > +static inline int ethtool_validate_master_slave_cfg(__u8 cfg)
+> > +{
+> > +	switch (cfg) {
+> > +	case PORT_MODE_CFG_MASTER_PREFERRED:
+> > +	case PORT_MODE_CFG_SLAVE_PREFERRED:
+> > +	case PORT_MODE_CFG_MASTER_FORCE:
+> > +	case PORT_MODE_CFG_SLAVE_FORCE:
+> > +	case PORT_MODE_CFG_UNKNOWN:
+> > +		return 1;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+>=20
+> Should we really allow CFG_UNKNOWN in client requests? As far as I can
+> see, this value is handled as no-op which should be rather expressed by
+> absence of the attribute. Allowing the client to request a value,
+> keeping current one and returning 0 (success) is IMHO wrong.
+
+ok
+
+> Also, should this function be in UAPI header?
+
+It is placed together with other validate functions:
+ethtool_validate_duplex
+ethtool_validate_speed
+
+Doing it in a different place, would be inconsistent.
+
+> [...]
+> > @@ -119,7 +123,12 @@ static int linkmodes_fill_reply(struct sk_buff *sk=
+b,
+> >  	}
+> > =20
+> >  	if (nla_put_u32(skb, ETHTOOL_A_LINKMODES_SPEED, lsettings->speed) ||
+> > -	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
+> > +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex) ||
+> > +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
+> > +		       lsettings->master_slave_cfg) ||
+> > +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE,
+> > +		       lsettings->master_slave_state))
+> > +
+> >  		return -EMSGSIZE;
+>=20
+> From the two handlers you introduced, it seems we only get CFG_UNKNOWN
+> or STATE_UNKNOWN if driver or device does not support the feature at all
+> so it would be IMHO more appropriate to omit the attribute in such case.
+
+STATE_UNKNOWN is returned if link is not active.
+
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--ozd5iai3oo5bf5xh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6qW4IACgkQ4omh9DUa
+UbMW6BAAvgl7UtjAUh2IOL/8TkPA1gr3AEo/DMbY5sDi1EEf03GXGLxo4L481es8
+KJe7FSfkmI5Nn/mXu3zM3phxvA3E6BoBpD+JXPiJdwsfOvqCHU/7u16LxUuK5SBH
+8QFm884aBs4441xaiPKYKshOF/wyP8QeStIAi71LEiiBvFDsYnijGBQ0LCmgoaN3
+22RVSz0hQvgFbYEY8B9Nygw0SEjA+IEREkutJnI2AXDPlJyVlWyfAOovKM9+0UuP
+WaK2HcHoInL/g8PCBS2hm98m5r0eeIls9UvJrQySyd4Qm/p7nnOsgc2x3OhYRyrP
+osUAwbI28A1AGyQNgjuJ4t6isRetE9hvp7yXNN8weXmH+o5jL7AJ0/urJkIHtuyX
+nHQXNQDuBn/R2Hzr9XRMYXR0WakD/qR3gJCfssLrWqlTSl8d/ppgSQqxNRxcLyoj
+E9fm7eNzdXiLZ3+2jd8hkdkcIJd2Pvvi0GLHMqUsBQbD3zfH4Cp69VGypRc8Rbiv
+tvmgdPft8/gRM/ziXz+8VjzadjPcd921E1tZDwK79NDhHKibX7/glRf0/3fyUjnD
+gIVFu/cP6IDSXjyyeD77eg5A6S0WBrCyxFw7L7+tU1rRPpGUoTHWlCkG3KliupAn
+/hIqM9pmlKhGBbvyn2ZeSU1mLUAf625L87paPE+xFEeDQv+b9Ao=
+=oSOt
+-----END PGP SIGNATURE-----
+
+--ozd5iai3oo5bf5xh--
