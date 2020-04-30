@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC499C47258
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F16C47255
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0FFD20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F9E2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262743;
-	bh=d94CsypiJEYQM/PseQEmq5pXeaworePLCyj5TfMicOw=;
+	s=default; t=1588262760;
+	bh=2bKHDTVX1tmuy9i5+dwnxfglvtOh3JSyI/oVDrRUSO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpEAwf7fm6toGHICVR2VCV02WOgEdX1CDAD8XReAuH8aIl5MlVZsV3np3uR8H+V/F
-	 4avwgozw9jtwgxCXHzrqmnRYaxJRI1PgfE5eYdTf9GO8ykSXPdRS0OmD2bZ87R611y
-	 EwpxqJlxTAQVG5Mbacitj39JxOL6r24dNBChr+UI=
+	b=QjJTCl8saTDeETi+BsVcGyoGwNpeKT1wJHoDaPcsS2Hh+HhMin2CWnMtSiJM8lsll
+	 v1NMYApQB23RZAXZqxNnTMEswRI6wqyQlq5P+IDdyB2+AxFQ66EBXQyxWMotRxg+IS
+	 +lLrb1wQuULkw27dXFfaCMZZeYnJ1PiKNig3vkLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgD3QFm (ORCPT
+        id S1728258AbgD3QFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:05:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50948 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgD3QEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727845AbgD3QEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:39 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BB9C24996;
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C61249A0;
         Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=d94CsypiJEYQM/PseQEmq5pXeaworePLCyj5TfMicOw=;
+        bh=2bKHDTVX1tmuy9i5+dwnxfglvtOh3JSyI/oVDrRUSO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QFVTwCE05GKbjAIiVWJcmuvzyWF1jmAYqlXSW9p5IVHDimnMzYxwl18SBzoXsPjOV
-         sjcwD95387WIN+GKr/aHZmRLIuUBhuiNx2v9FHbqtqPuZ/lAhewdf8JEQgX21GVT1m
-         BLthGxSjsmPsVaC5Q/p65FRdBm6y04cfWO3uUZR8=
+        b=fWLvoBhZZlv7vj9lk38wbvbIb6wd0og1ZUBgUgWkTQAxubALwdo/8KPeE7QXVt01d
+         bOR6DexKkB0stClC0cFspRqu7wnd0dxD7SosvYBPM3AMeSMoJGrX9xCSs2kqJfCOlL
+         jo3L7FwAOREwwWlZ9G6usP3gVSTn4IjXysUCOdHs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxGg-Rg; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxH5-Vq; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH 32/37] docs: networking: convert switchdev.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:27 +0200
-Message-Id: <549e294cfa5dc175b4b72c624cbabfbee9f0b84f.1588261997.git.mchehab+huawei@kernel.org>
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: [PATCH 37/37] docs: networking: convert tproxy.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:32 +0200
+Message-Id: <864518c020140359601ce16eda38f00e9cef5a44.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -66,260 +66,147 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- use copyright symbol;
 - adjust title markup;
 - mark code blocks and literals as such;
-- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/index.rst            |   1 +
- .../{switchdev.txt => switchdev.rst}          | 114 ++++++++++--------
- drivers/staging/fsl-dpaa2/ethsw/README        |   2 +-
- 3 files changed, 66 insertions(+), 51 deletions(-)
- rename Documentation/networking/{switchdev.txt => switchdev.rst} (84%)
+ Documentation/networking/index.rst            |  1 +
+ .../networking/{tproxy.txt => tproxy.rst}     | 55 ++++++++++---------
+ net/netfilter/Kconfig                         |  2 +-
+ 3 files changed, 32 insertions(+), 26 deletions(-)
+ rename Documentation/networking/{tproxy.txt => tproxy.rst} (70%)
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index e5a705024c6a..5e495804f96f 100644
+index 8f9a84b8e3f2..b423b2db5f96 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -105,6 +105,7 @@ Contents:
-    seg6-sysctl
-    skfp
-    strparser
-+   switchdev
+@@ -110,6 +110,7 @@ Contents:
+    tcp-thin
+    team
+    timestamping
++   tproxy
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/switchdev.txt b/Documentation/networking/switchdev.rst
-similarity index 84%
-rename from Documentation/networking/switchdev.txt
-rename to Documentation/networking/switchdev.rst
-index 86174ce8cd13..ddc3f35775dc 100644
---- a/Documentation/networking/switchdev.txt
-+++ b/Documentation/networking/switchdev.rst
-@@ -1,7 +1,13 @@
+diff --git a/Documentation/networking/tproxy.txt b/Documentation/networking/tproxy.rst
+similarity index 70%
+rename from Documentation/networking/tproxy.txt
+rename to Documentation/networking/tproxy.rst
+index b9a188823d9f..00dc3a1a66b4 100644
+--- a/Documentation/networking/tproxy.txt
++++ b/Documentation/networking/tproxy.rst
+@@ -1,3 +1,6 @@
 +.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
 +
-+===============================================
- Ethernet switch device driver model (switchdev)
- ===============================================
--Copyright (c) 2014 Jiri Pirko <jiri@resnulli.us>
--Copyright (c) 2014-2015 Scott Feldman <sfeldma@gmail.com>
++=========================
+ Transparent proxy support
+ =========================
+ 
+@@ -11,39 +14,39 @@ From Linux 4.18 transparent proxy support is also available in nf_tables.
+ ================================
+ 
+ The idea is that you identify packets with destination address matching a local
+-socket on your box, set the packet mark to a certain value:
++socket on your box, set the packet mark to a certain value::
+ 
+-# iptables -t mangle -N DIVERT
+-# iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT
+-# iptables -t mangle -A DIVERT -j MARK --set-mark 1
+-# iptables -t mangle -A DIVERT -j ACCEPT
++    # iptables -t mangle -N DIVERT
++    # iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT
++    # iptables -t mangle -A DIVERT -j MARK --set-mark 1
++    # iptables -t mangle -A DIVERT -j ACCEPT
+ 
+-Alternatively you can do this in nft with the following commands:
++Alternatively you can do this in nft with the following commands::
+ 
+-# nft add table filter
+-# nft add chain filter divert "{ type filter hook prerouting priority -150; }"
+-# nft add rule filter divert meta l4proto tcp socket transparent 1 meta mark set 1 accept
++    # nft add table filter
++    # nft add chain filter divert "{ type filter hook prerouting priority -150; }"
++    # nft add rule filter divert meta l4proto tcp socket transparent 1 meta mark set 1 accept
+ 
+ And then match on that value using policy routing to have those packets
+-delivered locally:
++delivered locally::
+ 
+-# ip rule add fwmark 1 lookup 100
+-# ip route add local 0.0.0.0/0 dev lo table 100
++    # ip rule add fwmark 1 lookup 100
++    # ip route add local 0.0.0.0/0 dev lo table 100
+ 
+ Because of certain restrictions in the IPv4 routing output code you'll have to
+ modify your application to allow it to send datagrams _from_ non-local IP
+ addresses. All you have to do is enable the (SOL_IP, IP_TRANSPARENT) socket
+-option before calling bind:
++option before calling bind::
+ 
+-fd = socket(AF_INET, SOCK_STREAM, 0);
+-/* - 8< -*/
+-int value = 1;
+-setsockopt(fd, SOL_IP, IP_TRANSPARENT, &value, sizeof(value));
+-/* - 8< -*/
+-name.sin_family = AF_INET;
+-name.sin_port = htons(0xCAFE);
+-name.sin_addr.s_addr = htonl(0xDEADBEEF);
+-bind(fd, &name, sizeof(name));
++    fd = socket(AF_INET, SOCK_STREAM, 0);
++    /* - 8< -*/
++    int value = 1;
++    setsockopt(fd, SOL_IP, IP_TRANSPARENT, &value, sizeof(value));
++    /* - 8< -*/
++    name.sin_family = AF_INET;
++    name.sin_port = htons(0xCAFE);
++    name.sin_addr.s_addr = htonl(0xDEADBEEF);
++    bind(fd, &name, sizeof(name));
+ 
+ A trivial patch for netcat is available here:
+ http://people.netfilter.org/hidden/tproxy/netcat-ip_transparent-support.patch
+@@ -61,10 +64,10 @@ be able to find out the original destination address. Even in case of TCP
+ getting the original destination address is racy.)
+ 
+ The 'TPROXY' target provides similar functionality without relying on NAT. Simply
+-add rules like this to the iptables ruleset above:
++add rules like this to the iptables ruleset above::
+ 
+-# iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
+-  --tproxy-mark 0x1/0x1 --on-port 50080
++    # iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
++      --tproxy-mark 0x1/0x1 --on-port 50080
+ 
+ Or the following rule to nft:
+ 
+@@ -82,10 +85,12 @@ nf_tables implementation.
+ ====================================
+ 
+ To use tproxy you'll need to have the following modules compiled for iptables:
 +
-+Copyright |copy| 2014 Jiri Pirko <jiri@resnulli.us>
+  - NETFILTER_XT_MATCH_SOCKET
+  - NETFILTER_XT_TARGET_TPROXY
+ 
+ Or the floowing modules for nf_tables:
 +
-+Copyright |copy| 2014-2015 Scott Feldman <sfeldma@gmail.com>
+  - NFT_SOCKET
+  - NFT_TPROXY
  
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index 468fea1aebba..3a3915d2e1ea 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -1043,7 +1043,7 @@ config NETFILTER_XT_TARGET_TPROXY
+ 	  on Netfilter connection tracking and NAT, unlike REDIRECT.
+ 	  For it to work you will have to configure certain iptables rules
+ 	  and use policy routing. For more information on how to set it up
+-	  see Documentation/networking/tproxy.txt.
++	  see Documentation/networking/tproxy.rst.
  
- The Ethernet switch device driver model (switchdev) is an in-kernel driver
-@@ -12,53 +18,57 @@ Figure 1 is a block diagram showing the components of the switchdev model for
- an example setup using a data-center-class switch ASIC chip.  Other setups
- with SR-IOV or soft switches, such as OVS, are possible.
+ 	  To compile it as a module, choose M here.  If unsure, say N.
  
-+::
- 
--                             User-space tools
-+
-+			     User-space tools
- 
-        user space                   |
-       +-------------------------------------------------------------------+
-        kernel                       | Netlink
--                                    |
--                     +--------------+-------------------------------+
--                     |         Network stack                        |
--                     |           (Linux)                            |
--                     |                                              |
--                     +----------------------------------------------+
-+				    |
-+		     +--------------+-------------------------------+
-+		     |         Network stack                        |
-+		     |           (Linux)                            |
-+		     |                                              |
-+		     +----------------------------------------------+
- 
--                           sw1p2     sw1p4     sw1p6
--                      sw1p1  +  sw1p3  +  sw1p5  +          eth1
--                        +    |    +    |    +    |            +
--                        |    |    |    |    |    |            |
--                     +--+----+----+----+----+----+---+  +-----+-----+
--                     |         Switch driver         |  |    mgmt   |
--                     |        (this document)        |  |   driver  |
--                     |                               |  |           |
--                     +--------------+----------------+  +-----------+
--                                    |
-+			   sw1p2     sw1p4     sw1p6
-+		      sw1p1  +  sw1p3  +  sw1p5  +          eth1
-+			+    |    +    |    +    |            +
-+			|    |    |    |    |    |            |
-+		     +--+----+----+----+----+----+---+  +-----+-----+
-+		     |         Switch driver         |  |    mgmt   |
-+		     |        (this document)        |  |   driver  |
-+		     |                               |  |           |
-+		     +--------------+----------------+  +-----------+
-+				    |
-        kernel                       | HW bus (eg PCI)
-       +-------------------------------------------------------------------+
-        hardware                     |
--                     +--------------+----------------+
--                     |         Switch device (sw1)   |
--                     |  +----+                       +--------+
--                     |  |    v offloaded data path   | mgmt port
--                     |  |    |                       |
--                     +--|----|----+----+----+----+---+
--                        |    |    |    |    |    |
--                        +    +    +    +    +    +
--                       p1   p2   p3   p4   p5   p6
-+		     +--------------+----------------+
-+		     |         Switch device (sw1)   |
-+		     |  +----+                       +--------+
-+		     |  |    v offloaded data path   | mgmt port
-+		     |  |    |                       |
-+		     +--|----|----+----+----+----+---+
-+			|    |    |    |    |    |
-+			+    +    +    +    +    +
-+		       p1   p2   p3   p4   p5   p6
- 
--                             front-panel ports
-+			     front-panel ports
- 
- 
--                                    Fig 1.
-+				    Fig 1.
- 
- 
- Include Files
- -------------
- 
--#include <linux/netdevice.h>
--#include <net/switchdev.h>
-+::
-+
-+    #include <linux/netdevice.h>
-+    #include <net/switchdev.h>
- 
- 
- Configuration
-@@ -114,10 +124,10 @@ Using port PHYS name (ndo_get_phys_port_name) for the key is particularly
- useful for dynamically-named ports where the device names its ports based on
- external configuration.  For example, if a physical 40G port is split logically
- into 4 10G ports, resulting in 4 port netdevs, the device can give a unique
--name for each port using port PHYS name.  The udev rule would be:
-+name for each port using port PHYS name.  The udev rule would be::
- 
--SUBSYSTEM=="net", ACTION=="add", ATTR{phys_switch_id}=="<phys_switch_id>", \
--	ATTR{phys_port_name}!="", NAME="swX$attr{phys_port_name}"
-+    SUBSYSTEM=="net", ACTION=="add", ATTR{phys_switch_id}=="<phys_switch_id>", \
-+	    ATTR{phys_port_name}!="", NAME="swX$attr{phys_port_name}"
- 
- Suggested naming convention is "swXpYsZ", where X is the switch name or ID, Y
- is the port name or ID, and Z is the sub-port name or ID.  For example, sw1p1s0
-@@ -173,7 +183,7 @@ Static FDB Entries
- 
- The switchdev driver should implement ndo_fdb_add, ndo_fdb_del and ndo_fdb_dump
- to support static FDB entries installed to the device.  Static bridge FDB
--entries are installed, for example, using iproute2 bridge cmd:
-+entries are installed, for example, using iproute2 bridge cmd::
- 
- 	bridge fdb add ADDR dev DEV [vlan VID] [self]
- 
-@@ -185,7 +195,7 @@ XXX: what should be done if offloading this rule to hardware fails (for
- example, due to full capacity in hardware tables) ?
- 
- Note: by default, the bridge does not filter on VLAN and only bridges untagged
--traffic.  To enable VLAN support, turn on VLAN filtering:
-+traffic.  To enable VLAN support, turn on VLAN filtering::
- 
- 	echo 1 >/sys/class/net/<bridge>/bridge/vlan_filtering
- 
-@@ -194,7 +204,7 @@ Notification of Learned/Forgotten Source MAC/VLANs
- 
- The switch device will learn/forget source MAC address/VLAN on ingress packets
- and notify the switch driver of the mac/vlan/port tuples.  The switch driver,
--in turn, will notify the bridge driver using the switchdev notifier call:
-+in turn, will notify the bridge driver using the switchdev notifier call::
- 
- 	err = call_switchdev_notifiers(val, dev, info, extack);
- 
-@@ -202,7 +212,7 @@ Where val is SWITCHDEV_FDB_ADD when learning and SWITCHDEV_FDB_DEL when
- forgetting, and info points to a struct switchdev_notifier_fdb_info.  On
- SWITCHDEV_FDB_ADD, the bridge driver will install the FDB entry into the
- bridge's FDB and mark the entry as NTF_EXT_LEARNED.  The iproute2 bridge
--command will label these entries "offload":
-+command will label these entries "offload"::
- 
- 	$ bridge fdb
- 	52:54:00:12:35:01 dev sw1p1 master br0 permanent
-@@ -219,11 +229,11 @@ command will label these entries "offload":
- 	01:00:5e:00:00:01 dev br0 self permanent
- 	33:33:ff:12:35:01 dev br0 self permanent
- 
--Learning on the port should be disabled on the bridge using the bridge command:
-+Learning on the port should be disabled on the bridge using the bridge command::
- 
- 	bridge link set dev DEV learning off
- 
--Learning on the device port should be enabled, as well as learning_sync:
-+Learning on the device port should be enabled, as well as learning_sync::
- 
- 	bridge link set dev DEV learning on self
- 	bridge link set dev DEV learning_sync on self
-@@ -314,12 +324,16 @@ forwards the packet to the matching FIB entry's nexthop(s) egress ports.
- 
- To program the device, the driver has to register a FIB notifier handler
- using register_fib_notifier. The following events are available:
--FIB_EVENT_ENTRY_ADD: used for both adding a new FIB entry to the device,
--                     or modifying an existing entry on the device.
--FIB_EVENT_ENTRY_DEL: used for removing a FIB entry
--FIB_EVENT_RULE_ADD, FIB_EVENT_RULE_DEL: used to propagate FIB rule changes
- 
--FIB_EVENT_ENTRY_ADD and FIB_EVENT_ENTRY_DEL events pass:
-+===================  ===================================================
-+FIB_EVENT_ENTRY_ADD  used for both adding a new FIB entry to the device,
-+		     or modifying an existing entry on the device.
-+FIB_EVENT_ENTRY_DEL  used for removing a FIB entry
-+FIB_EVENT_RULE_ADD,
-+FIB_EVENT_RULE_DEL   used to propagate FIB rule changes
-+===================  ===================================================
-+
-+FIB_EVENT_ENTRY_ADD and FIB_EVENT_ENTRY_DEL events pass::
- 
- 	struct fib_entry_notifier_info {
- 		struct fib_notifier_info info; /* must be first */
-@@ -332,12 +346,12 @@ FIB_EVENT_ENTRY_ADD and FIB_EVENT_ENTRY_DEL events pass:
- 		u32 nlflags;
- 	};
- 
--to add/modify/delete IPv4 dst/dest_len prefix on table tb_id.  The *fi
--structure holds details on the route and route's nexthops.  *dev is one of the
--port netdevs mentioned in the route's next hop list.
-+to add/modify/delete IPv4 dst/dest_len prefix on table tb_id.  The ``*fi``
-+structure holds details on the route and route's nexthops.  ``*dev`` is one
-+of the port netdevs mentioned in the route's next hop list.
- 
- Routes offloaded to the device are labeled with "offload" in the ip route
--listing:
-+listing::
- 
- 	$ ip route show
- 	default via 192.168.0.2 dev eth0
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/README b/drivers/staging/fsl-dpaa2/ethsw/README
-index f6fc07f780d1..b48dcbf7c5fb 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/README
-+++ b/drivers/staging/fsl-dpaa2/ethsw/README
-@@ -79,7 +79,7 @@ The DPSW can have ports connected to DPNIs or to PHYs via DPMACs.
- 
- For a more detailed description of the Ethernet switch device driver model
- see:
--	Documentation/networking/switchdev.txt
-+	Documentation/networking/switchdev.rst
- 
- Creating an Ethernet Switch
- ===========================
 -- 
 2.25.4
 
