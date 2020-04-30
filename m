@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1165C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AFCC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0E892082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8308C2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255141;
-	bh=8JRo0BwlFzZ5rDWV4zsiKnnD3Xyq+9giUvYtHt65Wq0=;
+	s=default; t=1588255150;
+	bh=NjaUgs4ZaiThjKvIDR+GLSopQIjvJX6ZX4LDx59JXi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=urJWVcyzvD6V67ah8zsykWq479PAoMslTOZV22fEN4cTB3gPf6GzL10FGQlIYPJts
-	 kRRBLvud8wtPTNZ4hAx7nifbeTJgKCoZq/Q2K2/IOwfNnmsSDTXrYv62PVUR4OU9bK
-	 pkUzaJYdATA5PrAx3zGEGUm/DjLl9yyB8L326uJs=
+	b=A3ZU0uG76Zj9Ubc/6jW2YkvoWEJE867ITJQh50blbdFK2TCrAaBn614Ic7ds2q2lE
+	 fD/OrRCnaMSAdzIRnrWcPPsPFX6/JUVkOynuetoJeHINeCfCnFkhlLfXLHWTreGBYe
+	 Zl6YWWdmw9Xcw12B35aSizARbCvVEK4ay5Y0hQb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgD3N7A (ORCPT
+        id S1729338AbgD3N7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:59:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgD3Nyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:33 -0400
+        id S1728800AbgD3Nya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB60724959;
-        Thu, 30 Apr 2020 13:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A03F24953;
+        Thu, 30 Apr 2020 13:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254872;
-        bh=8JRo0BwlFzZ5rDWV4zsiKnnD3Xyq+9giUvYtHt65Wq0=;
+        s=default; t=1588254870;
+        bh=NjaUgs4ZaiThjKvIDR+GLSopQIjvJX6ZX4LDx59JXi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kfj+2LHPzFWRnpUMvKxjs7n336HQPG1aYmvW+rfIYvCG8SttOYKNgtlY7c+w4zyWW
-         9usqLIcdHpdasTdwGohenpqAOK2FC90dY9627J2NEDmDg2gnUofU5aqVbrKoNSAJgA
-         wVu2sC9oMIFWy0He5DjIAoy4pOsroCGVZTwRkIV8=
+        b=PnTh6wMWuyhenk5VtqmJRYbYvHPsZlF5jSpS7dT4JX7PFyhLuDF5hZuMA+xHQwrMZ
+         6SXAHq6WqTmAmtgVhvPM0YAvAJK4jp5lcXQF6XiTOriMATi1ojkPyZhckzmkOGVScl
+         E6FFyO6f4a1UjqmYYEzcWd7rS519zaPht+X2snF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 27/27] net: systemport: suppress warnings on failed Rx SKB allocations
-Date:   Thu, 30 Apr 2020 09:54:02 -0400
-Message-Id: <20200430135402.20994-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 25/27] macsec: avoid to set wrong mtu
+Date:   Thu, 30 Apr 2020 09:54:00 -0400
+Message-Id: <20200430135402.20994-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
 References: <20200430135402.20994-1-sashal@kernel.org>
@@ -60,45 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 3554e54a46125030c534820c297ed7f6c3907e24 ]
+[ Upstream commit 7f327080364abccf923fa5a5b24e038eb0ba1407 ]
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+When a macsec interface is created, the mtu is calculated with the lower
+interface's mtu value.
+If the mtu of lower interface is lower than the length, which is needed
+by macsec interface, macsec's mtu value will be overflowed.
+So, if the lower interface's mtu is too low, macsec interface's mtu
+should be set to 0.
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
+Test commands:
+    ip link add dummy0 mtu 10 type dummy
+    ip link add macsec0 link dummy0 type macsec
+    ip link show macsec0
 
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
+Before:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 4294967274
+After:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 0
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/macsec.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index f48f7d104af21..123ee5c11bc0c 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -645,7 +645,8 @@ static struct sk_buff *bcm_sysport_rx_refill(struct bcm_sysport_priv *priv,
- 	dma_addr_t mapping;
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 5959e8817a1b8..926e2eb528fd4 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3209,11 +3209,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 			  struct netlink_ext_ack *extack)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
++	rx_handler_func_t *rx_handler;
++	u8 icv_len = DEFAULT_ICV_LEN;
+ 	struct net_device *real_dev;
+-	int err;
++	int err, mtu;
+ 	sci_t sci;
+-	u8 icv_len = DEFAULT_ICV_LEN;
+-	rx_handler_func_t *rx_handler;
  
- 	/* Allocate a new SKB for a new packet */
--	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
-+	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
+ 	if (!tb[IFLA_LINK])
+ 		return -EINVAL;
+@@ -3229,7 +3229,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 
+ 	if (data && data[IFLA_MACSEC_ICV_LEN])
+ 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
+-	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	if (mtu < 0)
++		dev->mtu = 0;
++	else
++		dev->mtu = mtu;
+ 
+ 	rx_handler = rtnl_dereference(real_dev->rx_handler);
+ 	if (rx_handler && rx_handler != macsec_handle_frame)
 -- 
 2.20.1
 
