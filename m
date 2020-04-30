@@ -2,174 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3018C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9A3C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2651206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLbsdDla"
+	by mail.kernel.org (Postfix) with ESMTP id 2EADF2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255553;
+	bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kFzZyQEP1pSV2T+Xo+aKscZAHiYqNwV96mZc4oYNn9sDGyKZ24xcKc5Hl4Uv7q9lB
+	 3v23lyP7w8anZcsy9a5htVWls25/+DWp+kahXC904We/9OQHRbfDlLDKqMfiA6kMZw
+	 eaIZ/m7pvLjNVC+N5mXRkaXRPFDiTWqBuZLlXocI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgD3OFs (ORCPT
+        id S1728559AbgD3Nw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728965AbgD3OFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:05:46 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26BFC035494;
-        Thu, 30 Apr 2020 07:05:45 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id j14so1311724lfg.9;
-        Thu, 30 Apr 2020 07:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=j7xCCu9VuQu0HfGO2skjuS2R2CO/4T63UrJuAd/gmYA=;
-        b=TLbsdDlaakdtow4OFtE/0ekpvlLv6/nFuvtXG816d2BEb6ehtqhhfcTfqmyfiLLAoV
-         XIIB08dZb9nYnUs92wnmR0aI30oRu28+tydDM/O92gz49ePCRftk0BJDNoGteg4VZRxh
-         zP3TK3+aAzM69TejJWrr4FM8MsMEpK8C2ObWYORaNr0gLJbzL3af2HSUJmnNn9xBMxQr
-         ZGWx1zeI4aWGoIUoeDMkRk2S9vuguHOIO0wh3k9g+rSR+OBBVzru7VUK4lMM884vvFMT
-         /XzHWOY106qYz6/J01WULaqlEUqZKVvUXjNO84YYWkukT20vgmsTlVzZuvABb3hMDUVp
-         r1gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=j7xCCu9VuQu0HfGO2skjuS2R2CO/4T63UrJuAd/gmYA=;
-        b=Neh8l7SYQWfRM2M5p0+cjgTOlo50ykoY0ZrYm/h5fPICkY4w255fl6t69KdBSe6rbo
-         fOaxW8n2SqPOndaKhZywJrAL3WtHjQgeOT7kok9rajgL5JeI6wBWQdMNOErrRPo8ceVv
-         M6pi73GdLcvWYyaIEAF0jKQKOrkCxFAYZQTqAGDVikSYBA0Z6sk2y8v8WwibRclNzSJ1
-         PXMXquzeaiFgXggvN94B+aYKDweZNzMs8ladwslVnJnGMPWLeeIX91E+jv2ItARm7/1s
-         tWy9vHJmux20uES4ugVRjpetu4R+JSITKPMZEZx46xvP3+laS5KdSdt7fiHH5u3xsKds
-         GRSw==
-X-Gm-Message-State: AGi0PuYBcmz0YJ3sDP71EpBUKEaKjCz3MVgqN1pLf09+hxgV/VWlGOaw
-        0EHCtjXvj2n9C5vR+M9PbMY=
-X-Google-Smtp-Source: APiQypKMcejORSBVkOt2Y5RkeV20Y6iiGpHY/TlHCvnYcDxDGRMal4cEFSfQC4jjnhoPt1Wqp4Da/w==
-X-Received: by 2002:a05:6512:686:: with SMTP id t6mr2301585lfe.163.1588255542790;
-        Thu, 30 Apr 2020 07:05:42 -0700 (PDT)
-Received: from e123311-lin.cambridge.arm.com (static-91-225-135-18.devs.futuro.pl. [91.225.135.18])
-        by smtp.gmail.com with ESMTPSA id h24sm5034839lji.99.2020.04.30.07.05.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Apr 2020 07:05:42 -0700 (PDT)
-From:   Michal Orzel <michalorzel.eng@gmail.com>
-To:     jdelvare@suse.com, linux@roeck-us.net
-Cc:     Michal Orzel <michalorzel.eng@gmail.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix all coding-style warnings on lm75 driver
-Date:   Thu, 30 Apr 2020 16:05:34 +0200
-Message-Id: <1588255534-28073-1-git-send-email-michalorzel.eng@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 30 Apr 2020 09:52:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728413AbgD3Nwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 562A220870;
+        Thu, 30 Apr 2020 13:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254750;
+        bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S2qOmiAfF3VSRcp5kx3imh3IDyQbnS80tq/U1sKk1cTkuv75yhYeMdqyEF/mpKSIy
+         tC9VHop6TruWVvHXhl4KMxECEHTYLYKctL52LK9FiS9Jj697TZZVlYJBGOBJXQRRng
+         6cp5imhMWAPR5LcaeWei4QnZDFcO/y2oWCZ2+C5E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/57] selftests/ipc: Fix test failure seen after initial test run
+Date:   Thu, 30 Apr 2020 09:51:30 -0400
+Message-Id: <20200430135218.20372-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check/fix all warnings generated by checkpatch.pl script on LM75 driver.
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
+[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
+
+After successfully running the IPC msgque test once, subsequent runs
+result in a test failure:
+
+  $ sudo ./run_kselftest.sh
+  TAP version 13
+  1..1
+  # selftests: ipc: msgque
+  # Failed to get stats for IPC queue with id 0
+  # Failed to dump queue: -22
+  # Bail out!
+  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+  not ok 1 selftests: ipc: msgque # exit=1
+
+The dump_queue() function loops through the possible message queue index
+values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
+represents the index value. The first time the test is ran, the initial
+index value of 0 is valid and the test is able to complete. The index
+value of 0 is not valid in subsequent test runs and the loop attempts to
+try index values of 1, 2, 3, and so on until a valid index value is
+found that corresponds to the message queue created earlier in the test.
+
+The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
+index values are used. The test failure is caused by incorrectly
+comparing errno to -EINVAL when cycling through possible index values.
+
+Fix invalid test failures on subsequent runs of the msgque test by
+correctly comparing errno values to a non-negated EINVAL.
+
+Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/lm75.c |  8 ++++++--
- drivers/hwmon/lm75.h | 31 +++++++++++++++++--------------
- 2 files changed, 23 insertions(+), 16 deletions(-)
+ tools/testing/selftests/ipc/msgque.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-index 5e63922..ba0be48 100644
---- a/drivers/hwmon/lm75.c
-+++ b/drivers/hwmon/lm75.c
-@@ -797,8 +797,10 @@ static int lm75_detect(struct i2c_client *new_client,
- 
- 	/* First check for LM75A */
- 	if (i2c_smbus_read_byte_data(new_client, 7) == LM75A_ID) {
--		/* LM75A returns 0xff on unused registers so
--		   just to be sure we check for that too. */
-+		/*
-+		 * LM75A returns 0xff on unused registers so
-+		 * just to be sure we check for that too.
-+		 */
- 		if (i2c_smbus_read_byte_data(new_client, 4) != 0xff
- 		 || i2c_smbus_read_byte_data(new_client, 5) != 0xff
- 		 || i2c_smbus_read_byte_data(new_client, 6) != 0xff)
-@@ -849,6 +851,7 @@ static int lm75_suspend(struct device *dev)
- {
- 	int status;
- 	struct i2c_client *client = to_i2c_client(dev);
-+
- 	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
- 	if (status < 0) {
- 		dev_dbg(&client->dev, "Can't read config? %d\n", status);
-@@ -863,6 +866,7 @@ static int lm75_resume(struct device *dev)
- {
- 	int status;
- 	struct i2c_client *client = to_i2c_client(dev);
-+
- 	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
- 	if (status < 0) {
- 		dev_dbg(&client->dev, "Can't read config? %d\n", status);
-diff --git a/drivers/hwmon/lm75.h b/drivers/hwmon/lm75.h
-index b614e63..a398171 100644
---- a/drivers/hwmon/lm75.h
-+++ b/drivers/hwmon/lm75.h
-@@ -1,17 +1,15 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
- /*
--    lm75.h - Part of lm_sensors, Linux kernel modules for hardware
--	      monitoring
--    Copyright (c) 2003 Mark M. Hoffman <mhoffman@lightlink.com>
--
--*/
-+ * lm75.h - Part of lm_sensors, Linux kernel modules for hardware monitoring
-+ * Copyright (c) 2003 Mark M. Hoffman <mhoffman@lightlink.com>
-+ */
- 
- /*
--    This file contains common code for encoding/decoding LM75 type
--    temperature readings, which are emulated by many of the chips
--    we support.  As the user is unlikely to load more than one driver
--    which contains this code, we don't worry about the wasted space.
--*/
-+ * This file contains common code for encoding/decoding LM75 type
-+ * temperature readings, which are emulated by many of the chips
-+ * we support.  As the user is unlikely to load more than one driver
-+ * which contains this code, we don't worry about the wasted space.
-+ */
- 
- #include <linux/kernel.h>
- 
-@@ -20,18 +18,23 @@
- #define LM75_TEMP_MAX 125000
- #define LM75_SHUTDOWN 0x01
- 
--/* TEMP: 0.001C/bit (-55C to +125C)
--   REG: (0.5C/bit, two's complement) << 7 */
-+/*
-+ * TEMP: 0.001C/bit (-55C to +125C)
-+ * REG: (0.5C/bit, two's complement) << 7
-+ */
- static inline u16 LM75_TEMP_TO_REG(long temp)
- {
- 	int ntemp = clamp_val(temp, LM75_TEMP_MIN, LM75_TEMP_MAX);
-+
- 	ntemp += (ntemp < 0 ? -250 : 250);
- 	return (u16)((ntemp / 500) << 7);
- }
- 
- static inline int LM75_TEMP_FROM_REG(u16 reg)
- {
--	/* use integer division instead of equivalent right shift to
--	   guarantee arithmetic shift and preserve the sign */
-+	/*
-+	 * use integer division instead of equivalent right shift to
-+	 * guarantee arithmetic shift and preserve the sign
-+	 */
- 	return ((s16)reg / 128) * 500;
- }
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index 4c156aeab6b80..5ec4d9e18806c 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
+ 	for (kern_id = 0; kern_id < 256; kern_id++) {
+ 		ret = msgctl(kern_id, MSG_STAT, &ds);
+ 		if (ret < 0) {
+-			if (errno == -EINVAL)
++			if (errno == EINVAL)
+ 				continue;
+ 			printf("Failed to get stats for IPC queue with id %d\n",
+ 					kern_id);
 -- 
-2.7.4
+2.20.1
 
