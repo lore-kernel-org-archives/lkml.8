@@ -2,216 +2,160 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1E1C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97566C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F28B621973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F135214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="weuv39b2"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Crn54lkB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MfacvNZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgD3IqH (ORCPT
+        id S1727086AbgD3IqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 04:46:09 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:43957 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726412AbgD3IqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 04:46:07 -0400
-Received: from mail-co1nam11on2078.outbound.protection.outlook.com ([40.107.220.78]:6046
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726757AbgD3IqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:46:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FgCfRQcCZyC62B1ZDUjGouFlOSjQMG4ibMjfe5M0OylWJOmapxELgHsekZvZMGOICi2Cs7gL6MuzarApmJmmdrSbO4dNwlh6fjrQoUSPOCYZtD5Z7Ll9hdhqN3E9qtyt0Q5UZy4KsxapdDXs9V5KtH2Zy2vu0pdn7Z1SyFPJ2mTyGBxVaI++u9UbBIOy+tHxUrnLyeWjb9ter48G17CPf27MgcFYql6cLJUDC81TIT6ueK7Fg7m16UWOekRSAwSSOGUCSZq9JVba01bb0ZsP99Ic2w5NG+vZwqJamX/p39JfCE9TR7D38fFHHpA7rm9ZdddLSDqntQQWuK8euakAYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EzwMzHX60rxpYIUI4KqsiBfs2p/n4Z3+Gd9M0tG7y7s=;
- b=icOErLzvhupaPmhCh/DwjqxbXmB2IFMuKpoGo0zAkC2cbFnzcc1VikzTWSwYpV9mgeso0oiypjx0JkE/ll6rR+3X8pLoeRL529X99u5XxUsstn5Q3GWGs3cEOBL8V/zC6g0O2UZUvS3kdf28wQkpNutQvzhdjRa0Ip+uj+W+HBZQ7xVNrVDMUKTeiWLCytHEGtU5Rr7rcxnR+ATEiIg0++iD393Ct3SeCaWHLSbu6e68pnAIa4TN3xTPWkTUqGAMA9rEvAq3Ms9Lhrkbd+2Sqj9XBNpi8FyB6rVm7M1QO8wLPWxcPpy/bTXnRCPVJRmOqu5O4T/0L9aumMYO5KfCqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EzwMzHX60rxpYIUI4KqsiBfs2p/n4Z3+Gd9M0tG7y7s=;
- b=weuv39b2H2BaD4D/q1Pcn+Z5pA4v134+rN7dhJpc7EfQUkL8LWvUNbMzdmkrf/ZgTvEuw+hwt5lowHstE3AFNT5IIginr9CiP59e9VckZwj1Xc94WaVBEIn39M92A43UKjfo/aLQ069umJ53hm1CiQJuqI8Q6vsVLlRnfg2qYsg=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1465.namprd12.prod.outlook.com (2603:10b6:4:7::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Thu, 30 Apr 2020 08:46:04 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 08:46:04 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com, brijesh.singh@amd.com
-Subject: [PATCH v7 13/18] KVM: SVM: Add support for static allocation of unified Page Encryption Bitmap.
-Date:   Thu, 30 Apr 2020 08:45:54 +0000
-Message-Id: <47996d4b5feb7ee8572120dc19bbc5bb9962a979.1588234824.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0701CA0043.namprd07.prod.outlook.com
- (2603:10b6:803:2d::11) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 941B190D;
+        Thu, 30 Apr 2020 04:46:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 30 Apr 2020 04:46:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=fpjtGZf8AqSI48exIlo8OnF8z0r
+        obzEYf4a720y11JI=; b=Crn54lkBtd00EaqOJspktSUBCz50ahh6oNvAj45B9nN
+        Iwl59n8WUN4O2OGxKJz0cNVwsmE3RdYV+3VrQAcA7L7umKCCt2/DUlTmNUBMr56Q
+        BxuwEjBk4fF/pEj8TJOyPTUbKDBAkAxpha/IstRwOrsXiHC+nn78wQf7BVCXC8HC
+        gRpC2Ih4tLzOA5KnczD36BWaZL6SuZQTuoggbyx8ySwZWqhfeRqjGqznqCne+QIq
+        fES7oWLLnLoImdP9lHX0evFtLflOksq9e9Z+1A3dQhGjo+HAPhAQC1voptWLQyUv
+        eKp6xf83V69RUKxIEV6G9GTJtNnN3VcfNvpxQPHuc0A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=fpjtGZ
+        f8AqSI48exIlo8OnF8z0robzEYf4a720y11JI=; b=MfacvNZm1+/+qJ2z+cBQh9
+        CWx/PNOje+aXmEZyXakBvlexfUNKWaee4mYIFb4WPcefbzxemjkRDc6nBp4MOoz4
+        k4PmL1Flr7D9pvwoY8BiDFGOki1p61NVDqiezlvuKoOoamyRc02v40H2jxlNrfSH
+        p35tV48BXr+yHhgL6RNwaDFQcGW+o2mxWIIrDBvLe2ZJkF2cqLh3deifsMOxWXZ6
+        TxHjUoJjnji88vysO/jHChZtcWA0V1YRJNM/h1leuNuCrgGlfxMzjGFCN+7+a5bO
+        0BDRiH+2y82LZUMIhvbK3dCeWTQU+GRMMcVangrSLfvoYzivKhm5alewsSNa2JFg
+        ==
+X-ME-Sender: <xms:SpCqXhoWXIPqto5Zw9q9kGy8eExsyYKiFCJs7MvLNuhXR9-EWk8Ryw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgddtkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdejvdfg
+    veenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:SpCqXt8_Xg_kmJW_z9vDfQNvzkNt0Qy2S24GmNMmKFQqiZAiOHBRvw>
+    <xmx:SpCqXmYF-MTqX7R7WKqDvEh1JI1fs8uIYh1nZDFpPLjek26B8d0uNQ>
+    <xmx:SpCqXn0MbOxK1PQtCxaoNwCyZulXcZPqOBUhbdCAXq3jAvkcAXmQIQ>
+    <xmx:TZCqXsEDR3SBul6X-zgv3p3lwGz03BsnL8RlEu8Btqu5aDV62mGCvDcSyRU>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3765C3280067;
+        Thu, 30 Apr 2020 04:46:02 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 10:46:00 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
+Message-ID: <20200430084600.samghw4zxb5zdbez@gilmour.lan>
+References: <20200426104115.22630-1-peron.clem@gmail.com>
+ <20200426104115.22630-4-peron.clem@gmail.com>
+ <20200428081321.ht3el26yqhsnyfm4@gilmour.lan>
+ <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
+ <20200429123529.y24dpy63wxq7uvkt@gilmour.lan>
+ <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN4PR0701CA0043.namprd07.prod.outlook.com (2603:10b6:803:2d::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 08:46:03 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 99eddf84-8793-4fc9-5df5-08d7ece2ea83
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1465:|DM5PR12MB1465:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1465B8BA5657D0F3E9AFBB868EAA0@DM5PR12MB1465.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:416;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(7416002)(66946007)(26005)(36756003)(86362001)(66556008)(66476007)(5660300002)(478600001)(186003)(8936002)(2906002)(8676002)(16526019)(6916009)(7696005)(956004)(2616005)(52116002)(316002)(4326008)(6666004)(6486002)(136400200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t8N29pZhULQHi8Us8v0k8sA4Ob7vmhOxAmsAADVHyJyb4TsipJL73LOuJCJeVSJINAmwBKLvc11mwBrmIZOBBUWA4b0KWdKJV5VKIwnydd6ZxXVuiHHh3Ljs1cf5wRSG9ZEPRo3dTsQ3lFqvFrFc/5IEb9rhQC5kJ+blOWmJN0WNwjiEvFhgzlJqWpzVtEkFMC3ALhA/qYpXLvm/SsiW5+KirjMWAA5RRQ52lXwC/rR5hRtBNHYFWVPT02Zzkg/B91fYp0PzXb4Rlxg/71/UvEHaRwjSFjC2haAqSGwR8E9rrQIsWE77iVPIuHlfwTlsgYY7ZKoQlNbExGETevF0oofjUHs+E5sV8nwr55ffeN1a4KOzTqdlAKrlIrSZCbt2gSBxH5Z3tG/lf6t8xBBzPzht4qytG00gEJ7YPCsnislU13xfabHKpT9zV5VZQS+pj3bpvJB7UoGHptlpwxREKLqfbfO9oiiAyKlgE8hKYdlF2ryge10FlTWUq+YPl0J+
-X-MS-Exchange-AntiSpam-MessageData: Fbl7PNFu6nvfph7e2P6YGsPsM24TCS7YS6bpGxi2yxpbrNIdHUH26Fnrr3p9zNKGvi4g23WC5EqcOkpjfEREQTDbHr3meCmF2E+xjoxqyuLQZwb8btqTAkVxSHbsmRRXy0yv4KQnuuL12QoGwjyQ178CEeJ5xhwYtbz73LBaol2XUW/1vn3G+5QrTtUwQI3XJZCZ6zLVlH4lDP4HfLqpIeXBLyHrv4GXzFbI2mHN4NAkMOOOKAV7jbffb7REqWs2J1Vd30bvF3zkjbVSyq5mVfTvNtLlA+uaSTcwDAEEL48aXL09xuASXlwYBtl6BbVnHA45v18ydTCermqU4uYNR40gPwX6zBxlSewR7eaPC030Gw6l9fTzVKGZjZtAlZap73aNsHlDd7ROIhVub1Fcqw4VER1vlsAShN2Ka8ZSxFIn6WFzkAlJ95vGAXQhZJKIl7eJp5WmqK0OVPWvx6ba1W/OWF5dOE0hRdO0nD+PH8FJTYuutJzVbhvmkKMjMkQMlTaRwVGNr50Pizfs6msc3BJvPIKW4Rk2O4yOXBuT3G74hlXTIo5x6tp2l+2zhpqNzw8Agp+6M3H6lthcfl7lSdy9qQc+6IqOEDIGIurz5D8pwTtvGZfDwujZDf6v7fP2AZKGvAmLLrgJ06SSIYXv69H+dlHuAOU0Xzi5xMVP02aoK5QiEFKcDz5BomvK+Q2iSstfThHkFwA2uzvxLwrtg1mcR4FExavTfYk+cq74bWOvKaNy+jqe0JgYXTzGYPBt+hPQsRdCIz9r5hOu6iKTESafigbXjDUn5q8Pp/jlbxU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99eddf84-8793-4fc9-5df5-08d7ece2ea83
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:46:03.9345
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0GK0ElkGLXg5Oier4gz+1ToA550csMnKzTL2ByPzZRYwCEHkXY1RjVr9/C9qJM90ve0mRzCm8vpLaluFc0kuVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1465
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y3cvvuhxye45tbpz"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
 
-Add support for static allocation of the unified Page encryption bitmap by
-extending kvm_arch_commit_memory_region() callack to add svm specific x86_ops
-which can read the userspace provided memory region/memslots and calculate
-the amount of guest RAM managed by the KVM and grow the bitmap based
-on that information, i.e. the highest guest PA that is mapped by a memslot.
+--y3cvvuhxye45tbpz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/svm/sev.c          | 35 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.c          |  1 +
- arch/x86/kvm/svm/svm.h          |  1 +
- arch/x86/kvm/x86.c              |  5 +++++
- 5 files changed, 43 insertions(+)
+Hi,
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index fc74144d5ab0..b573ea85b57e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1254,6 +1254,7 @@ struct kvm_x86_ops {
- 
- 	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
- 	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
-+	void (*commit_memory_region)(struct kvm *kvm, enum kvm_mr_change change);
- 	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
- 				  unsigned long sz, unsigned long mode);
- 	int (*get_page_enc_bitmap)(struct kvm *kvm,
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 64ff51ec4933..ba5ecd1de644 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -1377,6 +1377,41 @@ static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
- 	return 0;
- }
- 
-+void svm_commit_memory_region(struct kvm *kvm, enum kvm_mr_change change)
-+{
-+	struct kvm_memslots *slots;
-+	struct kvm_memory_slot *memslot;
-+	gfn_t start, end = 0;
-+
-+	spin_lock(&kvm->mmu_lock);
-+	if (change == KVM_MR_CREATE) {
-+		slots = kvm_memslots(kvm);
-+		kvm_for_each_memslot(memslot, slots) {
-+			start = memslot->base_gfn;
-+			end = memslot->base_gfn + memslot->npages;
-+			/*
-+			 * KVM memslots is a sorted list, starting with
-+			 * the highest mapped guest PA, so pick the topmost
-+			 * valid guest PA.
-+			 */
-+			if (memslot->npages)
-+				break;
-+		}
-+	}
-+	spin_unlock(&kvm->mmu_lock);
-+
-+	if (end) {
-+		/*
-+		 * NORE: This callback is invoked in vm ioctl
-+		 * set_user_memory_region, hence we can use a
-+		 * mutex here.
-+		 */
-+		mutex_lock(&kvm->lock);
-+		sev_resize_page_enc_bitmap(kvm, end);
-+		mutex_unlock(&kvm->lock);
-+	}
-+}
-+
- int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
- 				  unsigned long npages, unsigned long enc)
- {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 501e82f5593c..442adbbb0641 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4015,6 +4015,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 
- 	.check_nested_events = svm_check_nested_events,
- 
-+	.commit_memory_region = svm_commit_memory_region,
- 	.page_enc_status_hc = svm_page_enc_status_hc,
- 	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
- 	.set_page_enc_bitmap = svm_set_page_enc_bitmap,
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 2ebdcce50312..fd99e0a5417a 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -406,6 +406,7 @@ int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
- 				  unsigned long npages, unsigned long enc);
- int svm_get_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
- int svm_set_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
-+void svm_commit_memory_region(struct kvm *kvm, enum kvm_mr_change change);
- 
- /* avic.c */
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c4166d7a0493..8938de868d42 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10133,6 +10133,11 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 		kvm_mmu_change_mmu_pages(kvm,
- 				kvm_mmu_calculate_default_mmu_pages(kvm));
- 
-+	if (change == KVM_MR_CREATE || change == KVM_MR_DELETE) {
-+		if (kvm_x86_ops.commit_memory_region)
-+			kvm_x86_ops.commit_memory_region(kvm, change);
-+	}
-+
- 	/*
- 	 * Dirty logging tracks sptes in 4k granularity, meaning that large
- 	 * sptes have to be split.  If live migration is successful, the guest
--- 
-2.17.1
+On Wed, Apr 29, 2020 at 06:33:00PM +0200, Cl=E9ment P=E9ron wrote:
+> On Wed, 29 Apr 2020 at 14:35, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > On Tue, Apr 28, 2020 at 10:55:47AM +0200, Cl=E9ment P=E9ron wrote:
+> > > > > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> > > > > +                              unsigned int fmt)
+> > > >
+> > > > The alignment is off here
+> > > >
+> > > > > +{
+> > > > > +     u32 mode, val;
+> > > > > +     u8 offset;
+> > > > > +
+> > > > > +     /*
+> > > > > +      * DAI clock polarity
+> > > > > +      *
+> > > > > +      * The setup for LRCK contradicts the datasheet, but under a
+> > > > > +      * scope it's clear that the LRCK polarity is reversed
+> > > > > +      * compared to the expected polarity on the bus.
+> > > > > +      */
+> > > >
+> > > > Did you check this or has it been copy-pasted?
+> > >
+> > > copy-pasted, I will check this.
+> >
+> > It's not going to be easy to do this if you only have a board with HDMI=
+=2E If you
+> > can't test that easily, just remove the comment (or make it explicit th=
+at you
+> > copy pasted it?), no comment is better than a wrong one.
+>=20
+> I have talked with Marcus Cooper it may be able to test this this week-en=
+d.
+> Also this can explain why we need the "
+> simple-audio-card,frame-inversion;" in the device-tree.
+>=20
+> If think this fix has been introduced by you, correct? Could you say
+> on which SoC did you see this issue?
 
+This was seen on an H3
+
+Maxime
+
+--y3cvvuhxye45tbpz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqqQRwAKCRDj7w1vZxhR
+xc06AP4quZAf2DNrCglxI3FnGicJEvn/UCQlNMdBjtAZiNt6NAEAklrbdL9EUUv6
+PaDu07BZiJ7iqnqxZPn5egwCTM/O1Ac=
+=jFs3
+-----END PGP SIGNATURE-----
+
+--y3cvvuhxye45tbpz--
