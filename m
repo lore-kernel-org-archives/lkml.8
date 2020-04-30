@@ -2,160 +2,159 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5691BC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E3DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C98220774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TNJMwVu6"
+	by mail.kernel.org (Postfix) with ESMTP id 8BC7120731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgD3W02 (ORCPT
+        id S1727108AbgD3WcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:26:28 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1432 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgD3W01 (ORCPT
+        Thu, 30 Apr 2020 18:32:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22566 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726784AbgD3WcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:26:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab50500000>; Thu, 30 Apr 2020 15:25:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 15:26:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 15:26:27 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 22:26:26 +0000
-Received: from [10.2.50.180] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 22:26:26 +0000
-Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
- pages
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <jack@suse.cz>, <kirill@shutemov.name>
-CC:     <david@redhat.com>, <aarcange@redhat.com>, <linux-mm@kvack.org>,
-        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <peterz@infradead.org>, <sean.j.christopherson@intel.com>
-References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
- <2a1abf38-d321-e3c7-c3b1-53b6db6da310@intel.com>
- <d77d1e86-ac99-8c18-658c-d8150a71b11e@de.ibm.com>
- <4b32c162-6ea4-ba91-b6d5-8961b7dff6e8@de.ibm.com>
- <f681d61d-c83b-1472-a52f-d5cb951676fd@de.ibm.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <0b7c0575-5d31-e34a-13bf-f2e67c5aa3d4@nvidia.com>
-Date:   Thu, 30 Apr 2020 15:26:25 -0700
+        Thu, 30 Apr 2020 18:32:02 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UM5ucG024980;
+        Thu, 30 Apr 2020 18:31:58 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q8047k8f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 18:31:57 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UMUhM2002264;
+        Thu, 30 Apr 2020 22:31:55 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5uet0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 22:31:55 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UMUi1W64487882
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 22:30:44 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 940FAA4068;
+        Thu, 30 Apr 2020 22:31:53 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4CB64A4069;
+        Thu, 30 Apr 2020 22:31:53 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.146.74])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 22:31:53 +0000 (GMT)
+Subject: Re: [PATCH 1/1] net/mlx5: Call pci_disable_sriov() on remove
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>
+References: <20200430120308.92773-1-schnelle@linux.ibm.com>
+ <20200430120308.92773-2-schnelle@linux.ibm.com>
+ <2409e7071482b8d05447b8660abcac15987ad399.camel@mellanox.com>
+ <36de00e7-cccb-7de8-bd93-84cf647d6d39@linux.ibm.com>
+Message-ID: <0c59cb62-3156-54bb-0f36-837369adf220@linux.ibm.com>
+Date:   Fri, 1 May 2020 00:31:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <f681d61d-c83b-1472-a52f-d5cb951676fd@de.ibm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <36de00e7-cccb-7de8-bd93-84cf647d6d39@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588285520; bh=PfIc0Ej9cQtaja7/GNMf6pJmEyJmx2HiNl1JcjlZMjI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=TNJMwVu65tIQy0f8Eu+UM3gRKR0uy+hIEPwjoqG97gQY5yl45DX4WrNL82IpcqY/H
-         UPj2px7nL/QYT3AqfyOKZ5SZ796Ylk+yKN9Tx1ujJgTNtEJvycUjJl4AR//Ja0NJpi
-         yVN40wmDcT6+eZa7uWEEbCyjV0O7/Jdlz/7f+/o5nNsDUwvTxdeTWNC1SOFZKNGsXG
-         TlbQwpoyR3gYnpbbjCDbO4p4cIrUmwPRh/lTkXqARO+cTp+uQOr5DGBorFtnK9sQtE
-         znNkhTl7fy0k6QKtqMc8iwVpNKP/farng/97d6N2+eM5J+87lcN29eh7DVUCsb0Apj
-         tWxFiFyU11sug==
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_13:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=686
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-30 12:54, Christian Borntraeger wrote:
-> On 30.04.20 21:02, Christian Borntraeger wrote:
->> On 30.04.20 20:12, Christian Borntraeger wrote:
->>> On 29.04.20 18:07, Dave Hansen wrote:
->>>> On 4/28/20 3:50 PM, Claudio Imbrenda wrote:
->>>>> If a page is inaccesible and it is used for things like sendfile, then
->>>>> the content of the page is not always touched, and can be passed
->>>>> directly to a driver, causing issues.
->>>>>
->>>>> This patch fixes the issue by adding a call to arch_make_page_accessible
->>>>> in page_cache_pipe_buf_confirm; this fixes the issue.
->>>>
->>>> I spent about 5 minutes putting together a patch:
->>>>
->>>> 	https://sr71.net/~dave/intel/accessible.patch
->>>
->>> You only set the page flag for compound pages. that of course leaves a big pile
->>> of pages marked a not accessible, thus explaining the sendto trace and all kind
->>> of other random traces.
->>>
->>>
->>> What do you see when you also do the  SetPageAccessible(page);
->>> in the else page of prep_new_page (order == 0).
->>> (I do get > 10000 of these non compound page allocs just during boot).
+
+
+On 4/30/20 9:47 PM, Niklas Schnelle wrote:
+> 
+> 
+> On 4/30/20 5:58 PM, Saeed Mahameed wrote:
+>> On Thu, 2020-04-30 at 14:03 +0200, Niklas Schnelle wrote:
+>>> as described in Documentation/PCI/pci-iov-howto.rst a driver with SR-
+>>> IOV
+>>> support should call pci_disable_sriov() in the remove handler.
+>>
+>> Hi Niklas,
+>>
+>> looking at the documentation, it doesn't say "should" it just gives the
+>> code as example.
+>>
+>>> Otherwise removing a PF (e.g. via pci_stop_and_remove_bus_device())
+>>> with
+>>> attached VFs does not properly shut the VFs down before shutting down
+>>> the PF. This leads to the VF drivers handling defunct devices and
+>>> accompanying error messages.
 >>>
 >>
->> And yes, I think you are right that we should call the callback also for !FOLL_PIN.
-> 
-
-
-Disclaimer: I haven't dug into the details of the latest points above,
-so answers below will be narrowly focused.
-
-
-> 
-> Thinking again about this I am no longer sure. Adding John Hubbard.
-> 
-> Documentation/core-api/pin_user_pages.rst says:
-> -------snip----------
-> Another way of thinking about these flags is as a progression of restrictions:
-> FOLL_GET is for struct page manipulation, without affecting the data that the
-> struct page refers to. FOLL_PIN is a *replacement* for FOLL_GET, and is for
-> short term pins on pages whose data *will* get accessed. As such, FOLL_PIN is
-> a "more severe" form of pinning. And finally, FOLL_LONGTERM is an even more
-> restrictive case that has FOLL_PIN as a prerequisite: this is for pages that
-> will be pinned longterm, and whose data will be accessed.
-> -------snip----------
-> 
-> So John,is it ok to give a page to an I/O device where the code has used gup
-> with FOLL_GET (or gup fast without pup) or would you consider this a bug?
-> 
-
-Well, it's a bug (or a bug-in-waiting): even though gup/FOLL_GET works
-just as well (and as badly) as ever, pup/FOLL_PIN is required in order
-to safely and correctly allow a non-CPU device to operate on a page's
-data. Core mm and fs code is going to key off of page_maybe_dma_pinned()
-in order to make critical decisions about writeback and umount, and
-FOLL_PIN opts into that; FOLL_GET does not.
-
-Basically, you'd be creating another set of call sites that someone
-would have to convert to pup/FOLL_PIN.
-
-btw, on the FOLL_LONGTERM documentation above: that's more of an
-aspiration than a description of current behavior, in some ways.
-The current FOLL_LONGTERM is a little more quirky than is implied
-there.
-
-Also on a related note, I've been slow in posting patches to implement
-the remaining call site conversions, and am trying to get back to that
-asap. There have been some distractions. :) Once every call site is
-correctly using gup or pup, it will be easier for everyone.
-
-
-thanks,
---
-John Hubbard
-NVIDIA
+>> Which should be the admin responsibility .. if the admin want to do
+>> this, then let it be.. why block him ? 
+>>
+>> our mlx5 driver in the vf handles this gracefully and once pf
+>> driver/device is back online the vf driver quickly recovers.
+> See my answer to your other answer ;-)
+>>
+>>> In the current code pci_disable_sriov() is already called in
+>>> mlx5_sriov_disable() but not in mlx5_sriov_detach() which is called
+>>> from
+>>> the remove handler. Fix this by moving the pci_disable_sriov() call
+>>> into
+>>> mlx5_device_disable_sriov() which is called by both.
+>>>
+>>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+>>> ---
+>>>  drivers/net/ethernet/mellanox/mlx5/core/sriov.c | 3 ++-
+>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>>> b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>>> index 3094d20297a9..2401961c9f5b 100644
+>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>>> @@ -114,6 +114,8 @@ mlx5_device_disable_sriov(struct mlx5_core_dev
+>>> *dev, int num_vfs, bool clear_vf)
+>>>  	int err;
+>>>  	int vf;
+>>>  
+>>> +	pci_disable_sriov(dev->pdev);
+>>> +
+>>>  	for (vf = num_vfs - 1; vf >= 0; vf--) {
+>>>  		if (!sriov->vfs_ctx[vf].enabled)
+>>>  			continue;
+>>> @@ -156,7 +158,6 @@ static void mlx5_sriov_disable(struct pci_dev
+>>> *pdev)
+>>>  	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
+>>>  	int num_vfs = pci_num_vf(dev->pdev);
+>>>  
+>>> -	pci_disable_sriov(pdev);
+>>
+>> this patch is no good as it breaks code symmetry.. and could lead to
+>> many new issues.
+> Ah you're right I totally missed that there is a matching pci_enable_sriov() in
+> mlx5_enable_sriov() haven't used these myself before and since it wasn't in the
+> documentation example I somehow expected it to happen in non-driver code,
+aaand it actually is in the documentation example and I definitely sent this
+when it wasn't ready, sorry again…
+> so for symmetry that would also have to move to mlx5_device_enable_sriov(),
+> sorry for the oversight.
+>>
+>>
+>>>  	mlx5_device_disable_sriov(dev, num_vfs, true);
+>>>  }
+>>>  
+>>
