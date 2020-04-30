@@ -2,90 +2,193 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02220C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B10C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C00122082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA2E208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuGyAmUM"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="1U4TH3Sd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD3Nqn (ORCPT
+        id S1726962AbgD3NsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgD3Nqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:46:42 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266D9C035494;
-        Thu, 30 Apr 2020 06:46:42 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id j3so6532125ljg.8;
-        Thu, 30 Apr 2020 06:46:42 -0700 (PDT)
+        Thu, 30 Apr 2020 09:48:01 -0400
+Received: from mail-bn8nam12on2101.outbound.protection.outlook.com ([40.107.237.101]:33088
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726577AbgD3NsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:48:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iKieZCVf49+jocNGD0P/6N+Z/QTNitmSlE4Eahn8U239vFNaD0Nik7bXIZq2AGmYNy0AW7Ru3aaQPQrEk2pti99dtxp9OUH5pLyujIUmRHLKpLyFq4xQU9414GkzbgaMMm7ITUOkYdRxXLGOzPLgRaKVF1GDyy8UPuKDNaH72cWwJfVfsZnO2qbT8Nk403Zgejd5ukuINM/L3+v/sWbmc1niYYuLt0NPXFFea8PKBBVh7SrXoyWlnsNieGR0F8PEJ/9Mz2hBLOTrJgCwoewuAu4s1UuHhjw74hbxO0Qkzu8kzpL89TBaXZloeM7kJcUIgbzRkhZBhX8cKDSC9fXVAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8fFoKeRKi9qJp0dj0IJd4NcM5VKY03LBk03ZJCrvV8o=;
+ b=Ed1td/lTAP8WuC7Ldx6B0dBNeX14wUOjprDnBNKJsu/FHGcCaOAyBFc6TPOSAEWNmU/iiI0+zlVBMSt9KO9ZBpHhDSl2kiZMogcaScsl1JWleo6BBV/HyICNYgKRH6Z/OiDXUXVjojMEoCu9AdqaMl1skiltwSV+qANJ/A5ejAYSS+IEuQvNXvQfe3oHwUIpQi8iv+iFOiKaT+IbVO77SdQrIHoXiGEOc+pubb9cafUG/ka1iqFp7+6NY/TDU68gBB5gwIVDoTYFmOwJtPLQkYl2DNV6lq32RQYUSZ3Am/0vFPboHvlezcJctW5pNT5aKdLlDrk4tOvmGHtyx8c4Ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gByK1hVIoGmpbKq/K564ocm27XhEcO16Cceo/NwgrXg=;
-        b=RuGyAmUMGaCUk0BaYmZOq039/HBT1+/vOb0guZKk8HpZYto9QSJffpDhsVwkdud7Rm
-         pUUtLVEGx3P6Vg19koHRdOiI1KFd9zskQU/Ja+uRB0bRu/JUPst4nE90l05qOmTjjArs
-         ma+mjM6PQvSKUqlstS3FpFkmzG1L6ZBRtIfBONiZznrmG/uowg51AwpEkkoC9dA0RFim
-         Mu4u9bcH0crF0vtG8uebFuyanz5vV3oH3bZTW84a3K6Rcr6ILGzedjQdzK+gr2TAQTPJ
-         fyxI6R7fNjaJo5WGQFN7aTH0pdPjrrTpkZkejzKoyYvoSoKNJmcL4Sxfn2AXGua8P1Q3
-         t0oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gByK1hVIoGmpbKq/K564ocm27XhEcO16Cceo/NwgrXg=;
-        b=S7HCaa8SOpugdwqQ048VH3xDUMUCJISC17H2lKVP4bZB5XH5aM5WYw4ughgp3aKDqc
-         kF7/60G43LPmiOYxLjeltIGcU5YlwPS26swQwNuTjUAAEgATHTAePcralIqpZouG+uDs
-         EyLH7VAseX6KO9cb9X2kIZuQeIWi9zs0F/Qwr8GNVDJH3h9gMI2cNKqQWmzfxC/JvRfu
-         t16CvyUjzUtF/KJB1Qzd+wFecL5RYi4quYvraEyO1X9hVziAwjCO06DlyNr6YOMjvC9O
-         03y8uhgyv7hSOVaE2Eky4XAMabnwqxqVstIOMnO5qDy7yEuuAORRNsbQsEIWUhJ+PLmh
-         oEvA==
-X-Gm-Message-State: AGi0PubAotYqeDeDv7WdeJOLSfLQBlUsyKxXZDJ0sR5HiDDvefhTc5ZR
-        6WYnrpO78/Jsx4giCgaUn9z1QJqU
-X-Google-Smtp-Source: APiQypJWUwti9EK5+POHi+IzMTQqhLMiVMThh/7KFAZyecKiVMN2XH+SR2cfskeyIJ5jXd1GhXWw/w==
-X-Received: by 2002:a2e:8296:: with SMTP id y22mr2418268ljg.254.1588254400429;
-        Thu, 30 Apr 2020 06:46:40 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id a13sm4411192ljm.25.2020.04.30.06.46.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 06:46:39 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ab3db20e-ac9d-0271-802f-dfd99899fc66@gmail.com>
-Date:   Thu, 30 Apr 2020 16:46:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8fFoKeRKi9qJp0dj0IJd4NcM5VKY03LBk03ZJCrvV8o=;
+ b=1U4TH3Sd2PHN0wI3xT6DWUOhHJRG7mMk8YUrKv1zzm0EdkQOFigXx/R5Ae3IfPCMiU8Q7fX15ClDxUx78gAmDUDa3j5CNl233A6WKLNuohPg7TCKiwTKIhUNCOyf76Ke0ES5iMFgZ02FRJuKb0f5lDPuYf5BpPDsxKNEdwpvHNM=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB7122.namprd04.prod.outlook.com (2603:10b6:a03:222::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
+ 2020 13:47:56 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 13:47:56 +0000
+Date:   Thu, 30 Apr 2020 21:47:46 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Message-ID: <20200430134746.GA2188@xin-VirtualBox>
+References: <cover.1582529411.git.xji@analogixsemi.com>
+ <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
+ <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
+ <20200424065124.GA31922@xin-VirtualBox>
+ <CANMq1KBJ6f74aNAr8BwC3wz8MEeJzwXOQE44gv6C=DNzYmUWCQ@mail.gmail.com>
+ <20200428100508.GD3456981@phenom.ffwll.local>
+ <20200430033614.GA6645@xin-VirtualBox>
+ <20200430133731.GA10381@phenom.ffwll.local>
+ <20200430133839.GB10381@phenom.ffwll.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430133839.GB10381@phenom.ffwll.local>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK0PR01CA0064.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::28) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK0PR01CA0064.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::28) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 13:47:55 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 441bbb21-1fb2-40ed-2548-08d7ed0d1633
+X-MS-TrafficTypeDiagnostic: BY5PR04MB7122:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB7122A0D37A5D40E51BF58FCEC7AA0@BY5PR04MB7122.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0389EDA07F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6fd+wCbyQN9Jpc0Oi5NyA8R8arpDcE4masqYN/yXLdvkNrYfJ9IDp1jWFhDHGDEdde9uvDogejCh3GsUo344jEvXfrepuXXXtvV4hSak5+sxMVTqHKNUs4fvmjTuLtxD68MCxcIJ+HgnxeTzyN0UMI6iF6B6Z8en3ZBFfOI1BhVL4RYVuF3rQll+YyHL35t4N6vcwMa71cU8mWxkiVoMM35EpcJQnaaOTCWM7Oy83MtYM69nvuQdOBQtJfknai1XDutqVnYJkwU3+1pcgCfaP0w+qFDCS2rrDY11hJLQKT11RkgrxIij7Rj6tl/OkmaTB/wYjIoTx7+OnNRcGBwPsklJWUy4FrW+5sl5qd6Odwnjy9ngLEUGjEjhYPuwlxN7WUSCDuRHwGfb78ZDqUpeI3rW7TWkcgmdgcrRbPNk9wUSlm44OXzf/Qcxw5qjYEnXPPq0zQT1v6u60Zz6BypSj0Vi1ncgD4fUdK+Mlga+MXuiKJV9SMlSGhntFDnZvdJCWY3s5ZsZyeY1OYCHaqUnAA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(39850400004)(396003)(136003)(376002)(316002)(66476007)(66556008)(66946007)(54906003)(1076003)(5660300002)(107886003)(55016002)(9686003)(33656002)(8676002)(8936002)(86362001)(2906002)(53546011)(478600001)(33716001)(26005)(83080400001)(6496006)(956004)(966005)(52116002)(16526019)(6666004)(7416002)(4326008)(6916009)(186003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 3RLz5S+T1QrCMxYtN33HXxqblnGT6h+rTu8M5YQMFWoMKXzfaxZMJLDxIp8QpksvXjJlCJrKdzYdSWjrQPkeaTwcZ/sjTIVPub0qWHWX0WLwNfxJHZ1E+D44ijFiNHFfRakSs5QIjvHQFpaXoUgowF29bQFfJXK6YW8wwitE8/CNMlw3vVubVKa9thsGfhJhUdsLWH6NvkmEUoW0N2iilWp/2XQhrcH5J7KrsWWTwh0DYO2czYqRaiCO5NP04yfgq4K/sqdGxDrOEDUd5khSCm/c0rXzj63ltKd5yYcjIMEdgi7Okj3NGz+xXimjvudHV7DbsjsSuAStUzj9X2ateY9Ng0372tqxcZAVwGZ8dT6J77S47N517WepDJi+gQNhcjpzLYv903ML5YBtoFeqnEwzx2apL4Xt/PyqgMsPfangcWoSUBC7LWcQK3YavglspyvaM6YAmiRqzuurBXLniv6EYZRtpWx7Ij8CkDegmmjXpoBHrneVgwXjVKCZSrOuY6l3BS36kXo11nq/UKg6xR/qI6M9hMoeSF0WTulbGhqGjPzcPamJaaLlnJImpd/6WuyK2AncZjSUkhNzUDGfs5ZVSJhP/y7PsFH8FyoIQyoxPUvBA33anRF+JPGlWwBEKbzeNQLjBn75dFBjNDQRtQ54JqclwSn235jite6J257HthnkWG0N522oeEhKgjEbRtyelW90y+kLu4vBUviALxEdFbiIBauRdl9O/0JbGhaqEVO9VGAUoMENzyECLoTMQQj+b4Ga+uC0uD/1rDk4XASJnuJ3yZ0/bvfZ6E5HXNvXeJCpdfnepECAfuSmjEJ3
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 441bbb21-1fb2-40ed-2548-08d7ed0d1633
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 13:47:56.2188
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gONIGJwybjQxZSp7gi0NTrqidgNm4SV2XCn8BqO/TLjfbTuD2LQuhGkE1O5cL+xisj5w3GJFztnrafwKU+nzYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.04.2020 01:00, Sowjanya Komatineni пишет:
-> +/* -------------------------------------------------------------------- */
-> +
+Hi Daniel,
 
-Such comments should be unnecessary.
+On Thu, Apr 30, 2020 at 03:38:39PM +0200, Daniel Vetter wrote:
+> On Thu, Apr 30, 2020 at 03:37:31PM +0200, Daniel Vetter wrote:
+> > On Thu, Apr 30, 2020 at 11:36:14AM +0800, Xin Ji wrote:
+> > > On Tue, Apr 28, 2020 at 12:05:08PM +0200, Daniel Vetter wrote:
+> > > > On Fri, Apr 24, 2020 at 08:12:04PM +0800, Nicolas Boichat wrote:
+> > > > > On Fri, Apr 24, 2020 at 2:51 PM Xin Ji <xji@analogixsemi.com> wrote:
+> > > > > >
+> > > > > > On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > Just commenting on the mode_fixup function that was added in v7.
+> > > > > > >
+> > > > > > [snip]
+> > > > > > > > +       /*
+> > > > > > > > +        * once illegal timing detected, use default HFP, HSYNC, HBP
+> > > > > > > > +        */
+> > > > > > > > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
+> > > > > > >
+> > > > > > > should this be adj_hblanking/adj_hfp/adj_hbp?
+> > > > > > NO, need check original HFP and HBP, if they are not legal, driver need
+> > > > > > set default value to adj_hsync, adj_hfp, adj_hbp.
+> > > > > > >
+> > > > > > > > +               adj_hsync = SYNC_LEN_DEF;
+> > > > > > > > +               adj_hfp = HFP_HBP_DEF;
+> > > > > > > > +               adj_hbp = HFP_HBP_DEF;
+> > > > > > > > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
+> > > > > > > > +               if (hblanking < HBLANKING_MIN) {
+> > > > > > > > +                       delta_adj = HBLANKING_MIN - hblanking;
+> > > > > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > > > > > > > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
+> > > > > > > > +               } else {
+> > > > > > > > +                       delta_adj = hblanking - HBLANKING_MIN;
+> > > > > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > > > > > > > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
+> > > > > > > > +               }
+> > > > > > > > +
+> > > > > > > > +               DRM_WARN("illegal hblanking timing, use default.\n");
+> > > > > > > > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
+> > > > > > >
+> > > > > > > How likely is it that this mode is going to work? Can you just return
+> > > > > > > false here to reject the mode?
+> > > > > > We want to set the default minimal Hblancking value, then it may display,
+> > > > > > otherwise. If we just return false, there is no display for sure.
+> > > > > 
+> > > > > Right, understand your argument. I'm pondering if it's not just better
+> > > > > to reject the mode rather than trying a timing that is definitely
+> > > > > quite different from what the monitor was asking for. No super strong
+> > > > > opinion, I'll let other people on the list weigh in.
+> > > > 
+> > > > Yeah mode_fixup is supposed to be used to adjust the mode in intermediate
+> > > > stages (e.g. if you go from progressive to interlaced only at the end of
+> > > > your pipeline or something like that). It's not meant for adjusting the
+> > > > mode yout actually put out through a hdmi or dp connector. For fixed
+> > > > panels adjusting modes to fit the panel is also fairly common, but not for
+> > > > external outputs.
+> > > > 
+> > > > Since this is a DP bridge I'd say no adjusting, just reject what doesn't
+> > > > fit.
+> > > We have found some panel which HBP less than 8, if we reject to adjust
+> > > video timing, then there is no display. The customer does not accept it,
+> > > they push us to fix it, the only resolve way is to adjust timing.
+> > 
+> > Are we talking about external DP screen here, or some built-in panel? For
+> > the later case we do a lot of mode adjusting in many drivers ...
+> > 
+> > I haven't checked, by if our connector type is eDP then this should be all
+> > fine.
+> 
+> Ok I read the patch now, you seem to support both. Would it work if we
+> make this adjustement conditional on it being an internal panel only? I
+> think that would be perfect.
+> -Daniel
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+Based on comments of V8, only keeped eDP built-in panel in V9 version,
+removed external DP screen support.
+> http://blog.ffwll.ch
