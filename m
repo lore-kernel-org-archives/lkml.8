@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC39FC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850A6C83009
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC8072082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFE321973
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XCdaAMPa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CfW2yPPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgD3Hvx (ORCPT
+        id S1726678AbgD3Hvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
+        Thu, 30 Apr 2020 03:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgD3Hvw (ORCPT
+        with ESMTP id S1726596AbgD3Hvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 03:51:52 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6647BC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:50 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j4so6788543ybj.20
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EFBC08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:52 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id m138so6769716ybf.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=D5tpZw1i2R58vBAfGzRizvOpwrXZg+TLaUwg0kTWWxs=;
-        b=XCdaAMPam24ZXt93ooP5BoahXateVjXo5BoCUYusyNVeIHKB/sbE0Un+TitRvAFZeC
-         5A5jtrIQNFdwKbEIhxcDI4PfN3eQEz5K7TLUpstN6qxxBYxrSgh3oN7389USrJ25N1j6
-         VCFnOLwaHEtCiUEhMdUrsgJamBdY5rMJ9RE9ck2LMxmci86jP+D/8MJQ7p13JrjRctu+
-         6TdsgKhATLBU09+uTFmgp/SumWVoCCWgktqdGagsLUFzSMHKL693QXopW1jYwmrsyPp/
-         RbiKFWb+wbCZzSNhxXwK+o8aMnSyRvmgcy5tK+AmKV7+OaD6dLFsFN5Kqs6NZI7Mdbm3
-         AMoQ==
+        bh=9wYxdKZj/jWS2uBsJWtPB4xs5KgCG01/7TEpkkXSh6Q=;
+        b=CfW2yPPqFlKlE8tNQ90LheC3WniA7GjbO3jppC94+w4rPqc16oL4A2w8u420I+TjTK
+         Pi2BOV9+/eY2pE2LaLc7iLOBbAH6MHG9qFyfQRetamPnGptpu655+nJclAkHU9SUUiyG
+         jJeld+kjNHAcmdSzlFd2tjeL2PqAAGBYFYeyUPx92z+zjVy+LAfbB5IYka6OL7ez7kMl
+         Ub9Ih5gfrsgyLmc/1XYWiQD3enYUXTC8foOkvA0qRUt29aoC3ogQQX0Q1oSgmrgvC3nP
+         U1tIKQ6tr90kLIAkuzpbk8+8XgXSMBawqos0lbgCctcDPRk3P/7mUkciVVYDz1I4/FRd
+         2FtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=D5tpZw1i2R58vBAfGzRizvOpwrXZg+TLaUwg0kTWWxs=;
-        b=Mxy2SpAsvAtiXL6ttE75emSdjLqkeLZSQjatdlhTCpKb3dKwX9Qbw96o/QO57/IpOf
-         TSK85LYPcmseZ79/Q7ZtR7SfFFlojPKbaaIV0Lgen/jRgFQ+0N/zYwKBPhr6EUUuW6Lz
-         HZtmMaaRSUyIzqhE5XSGuuO75kJrISNiPA2HHW3IRs85CO105fs8TjJvgbT2ldHApDq9
-         vVPVh6HJ1SZ1FTnxEUzyj/pI+8Bh2+GLBVqNZQH1wk99U2J9R956+BOLlHS4xd1Eh0Sl
-         mUJ+UEuvg6mdlYKoWxDEhn3KF62501h7pA7BUUR9YvXqoHfYqJW0OHYdjOeB/fA3l+Zf
-         zMNg==
-X-Gm-Message-State: AGi0PuYsjKjj18NSqxYxswVhvj9voKFNi57DeI1RDb9Kmbq2pn7leiha
-        idCwFnhk+hN768X6JrbR2hBpb0d/5L7m
-X-Google-Smtp-Source: APiQypI2rjcJY28kTjn6TjpnlSdmooUU7Id9A2nsae1ktEyqi/7mztX0iGBm4MuuISL6nRyiRfQrxT6ovCGj
-X-Received: by 2002:a25:908c:: with SMTP id t12mr3654995ybl.206.1588233109356;
- Thu, 30 Apr 2020 00:51:49 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 00:51:33 -0700
+        bh=9wYxdKZj/jWS2uBsJWtPB4xs5KgCG01/7TEpkkXSh6Q=;
+        b=CIEtretcXjJk4CLx5y/Y8g1j/cJs5Eg0zVSP6Xn8kUj6+mOZ0hEo+okmLwvyc73v7J
+         NxM7skJMOFLYsaXmJJwIHRSwx5FDcomFl8deI5C3HIQx2z5tF4tMYmb0rt905HjPqXW4
+         6Lh0gGS64ZvXCyrO+vB7b9rwmDKh1Bs81eGXUPMddSLd2wyGl/B8mBgVv8jzjePwGM7T
+         1fgny/C597AxHPwa5pRRECGNu8ZN5ZmZ7sgkmmgFDFX0ehLP6QQdlbNWwU0PXnWi1HL6
+         Oiq/vIZvlj0mUUH/dvY8gomXhUlX1pSmj8Xav9Cw8ot+5kpvjGWTb50asXOfsdIoAMGX
+         TQOg==
+X-Gm-Message-State: AGi0Pua7xf6AqxmbNlhX9mhFM8qFTh0MZZTssAofeIdFFpL7Jm7M7/pF
+        7y77jDYIVLjAWtwmsvMb34pqWvlIcXPQ
+X-Google-Smtp-Source: APiQypJk0FPv6cPNuYtm2arTwq8BSJ0htCtxguNICztIwKep6/sEnBqU+ZpIl7KL740sTaYuJdFwTAPFdACv
+X-Received: by 2002:a5b:48f:: with SMTP id n15mr3706762ybp.507.1588233111163;
+ Thu, 30 Apr 2020 00:51:51 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 00:51:34 -0700
 In-Reply-To: <20200430075144.132716-1-irogers@google.com>
-Message-Id: <20200430075144.132716-2-irogers@google.com>
+Message-Id: <20200430075144.132716-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20200430075144.132716-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v3 01/12] perf expr: unlimited escaped characters in a symbol
+Subject: [PATCH v3 02/12] perf metrics: fix parse errors in cascade lake metrics
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,28 +89,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current expression allows 2 escaped '-,=' characters. However, some
-metrics require more, for example Haswell DRAM_BW_Use.
+Remove over escaping with \\.
+Remove extraneous if 1 if 0 == 1 else 0 else 0.
 
-Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
+Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.l | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 2582c2464938..95bcf3629edf 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -73,7 +73,7 @@ number		[0-9]+
- sch		[-,=]
- spec		\\{sch}
- sym		[0-9a-zA-Z_\.:@]+
--symbol		{spec}*{sym}*{spec}*{sym}*
-+symbol		({spec}|{sym})+
- 
- %%
- 	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+index 7fde0d2943cd..d25eebce34c9 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+@@ -328,31 +328,31 @@
+     },
+     {
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
+-        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
++        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x35\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
+-        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
++        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+     {
+         "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
+-        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
++        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "MEM_PMM_Read_Latency"
+     },
+     {
+         "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
+-        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
++        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time )",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "PMM_Read_BW"
+     },
+     {
+         "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
+-        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
++        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time )",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "PMM_Write_BW"
+     },
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
