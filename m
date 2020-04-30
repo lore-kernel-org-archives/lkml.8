@@ -2,113 +2,228 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F60C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4368C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C85322078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZOniMLwP"
+	by mail.kernel.org (Postfix) with ESMTP id A89C120757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgD3LCe (ORCPT
+        id S1726869AbgD3LEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:02:34 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:29636 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgD3LCd (ORCPT
+        Thu, 30 Apr 2020 07:04:16 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:40828 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgD3LEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:02:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588244553; h=In-Reply-To: Content-Type: MIME-Version:
- References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=6O+7YgQwWnlvumFVVWc+1u34+7IdYtJxCQ6pA3ekUCE=; b=ZOniMLwP1UlqusUDbsCzqjBbmMlZkrkdNG8jl0F6ct4iF/GUIhNumsHpXM/pv9CH98sd6rgj
- IoKaVht22y7DahykOvzyAWoWBnVVfB3VEUu3zhA5omqSack4qBWtxliH+vtOSzbN9JUEJngL
- ZhL+ZMY0jLEGsoZbnLXcYBt640Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaab037.7fef5da9f688-smtp-out-n04;
- Thu, 30 Apr 2020 11:02:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 61E23C4478F; Thu, 30 Apr 2020 11:02:14 +0000 (UTC)
-Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: svaddagi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F10AC433D2;
-        Thu, 30 Apr 2020 11:02:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F10AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
-Date:   Thu, 30 Apr 2020 16:32:06 +0530
-From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH 0/1] virtio_mmio: hypervisor specific interfaces for
- MMIO
-Message-ID: <20200430110206.GB3204@quicinc.com>
-Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
-References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
- <20200430100821.GC19932@willie-the-truck>
- <20200430102939.GG5097@quicinc.com>
- <20200430103919.GF19932@willie-the-truck>
+        Thu, 30 Apr 2020 07:04:15 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UAnWFL032315;
+        Thu, 30 Apr 2020 07:04:13 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2gqmt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 07:04:13 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03UB4BWL003415
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 30 Apr 2020 07:04:12 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 30 Apr 2020 04:04:10 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 30 Apr 2020 04:04:10 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 30 Apr 2020 04:04:10 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03UB46tw008447;
+        Thu, 30 Apr 2020 07:04:07 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <dragos.bogdan@analog.com>, <nuno.sa@analog.com>,
+        <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: imu: adis16xxx: use helper to access iio core debugfs dir
+Date:   Thu, 30 Apr 2020 14:04:22 +0300
+Message-ID: <20200430110422.7472-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200430103919.GF19932@willie-the-truck>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_07:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Will Deacon <will@kernel.org> [2020-04-30 11:39:19]:
+The IIO core provides a iio_get_debugfs_dentry() helper.
+It seems that the ADIS IMU drivers access that field directly.
 
-> Hi Vatsa,
-> 
-> On Thu, Apr 30, 2020 at 03:59:39PM +0530, Srivatsa Vaddagiri wrote:
-> > > What's stopping you from implementing the trapping support in the
-> > > hypervisor? Unlike the other patches you sent out, where the guest memory
-> > > is not accessible to the host, there doesn't seem to be any advantage to
-> > > not having trapping support, or am I missing something here?
-> > 
-> > 	I have had this discussion with hypervisor folks. They seem to be
-> > concerned about complexity of having a VM's fault be handled in another
-> > untrusted VM. They are not keen to add MMIO support.
-> 
-> Right, but I'm concerned about forking the implementation from the spec
-> and I'm not keen to add these hooks ;)
-> 
-> What does your hook actually do? I'm assuming an HVC? 
+This change converts them to use iio_get_debugfs_dentry() instead.
 
-Yes, it will issue message-queue related hypercalls
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/gyro/adis16136.c | 10 ++++------
+ drivers/iio/imu/adis16400.c  | 10 ++++------
+ drivers/iio/imu/adis16460.c  | 10 ++++------
+ drivers/iio/imu/adis16475.c  | 15 ++++++---------
+ drivers/iio/imu/adis16480.c  | 16 ++++++----------
+ 5 files changed, 24 insertions(+), 37 deletions(-)
 
-> If so, then where the
-> fault is handled seems to be unrelated and whether the guest exit is due to
-> an HVC or a stage-2 fault should be immaterial. 
-
-A stage-2 fault would be considered fatal normally and result in termination of
-guest. Modifying that behavior to allow resumption in case of virtio config
-space access, especially including the untrusted VM in this flow, is
-perhaps the concern. HVC calls OTOH are more vetted interfaces that the
-hypervisor has to do nothing additional to handle.
-
-> In other words, I don't
-> follow why the trapping mechanism necessitates the way in which the fault is
-> handled.
-
-Let me check with our hypervisor folks again. Thanks for your inputs.
-
+diff --git a/drivers/iio/gyro/adis16136.c b/drivers/iio/gyro/adis16136.c
+index a4c967a5fc5c..afdc57af475d 100644
+--- a/drivers/iio/gyro/adis16136.c
++++ b/drivers/iio/gyro/adis16136.c
+@@ -148,16 +148,14 @@ DEFINE_DEBUGFS_ATTRIBUTE(adis16136_flash_count_fops,
+ static int adis16136_debugfs_init(struct iio_dev *indio_dev)
+ {
+ 	struct adis16136 *adis16136 = iio_priv(indio_dev);
++	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+ 
+ 	debugfs_create_file_unsafe("serial_number", 0400,
+-		indio_dev->debugfs_dentry, adis16136,
+-		&adis16136_serial_fops);
++		d, adis16136, &adis16136_serial_fops);
+ 	debugfs_create_file_unsafe("product_id", 0400,
+-		indio_dev->debugfs_dentry,
+-		adis16136, &adis16136_product_id_fops);
++		d, adis16136, &adis16136_product_id_fops);
+ 	debugfs_create_file_unsafe("flash_count", 0400,
+-		indio_dev->debugfs_dentry,
+-		adis16136, &adis16136_flash_count_fops);
++		d, adis16136, &adis16136_flash_count_fops);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/iio/imu/adis16400.c b/drivers/iio/imu/adis16400.c
+index 439feb755d82..229f2ff98469 100644
+--- a/drivers/iio/imu/adis16400.c
++++ b/drivers/iio/imu/adis16400.c
+@@ -281,18 +281,16 @@ DEFINE_DEBUGFS_ATTRIBUTE(adis16400_flash_count_fops,
+ static int adis16400_debugfs_init(struct iio_dev *indio_dev)
+ {
+ 	struct adis16400_state *st = iio_priv(indio_dev);
++	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+ 
+ 	if (st->variant->flags & ADIS16400_HAS_SERIAL_NUMBER)
+ 		debugfs_create_file_unsafe("serial_number", 0400,
+-				indio_dev->debugfs_dentry, st,
+-				&adis16400_serial_number_fops);
++				d, st, &adis16400_serial_number_fops);
+ 	if (st->variant->flags & ADIS16400_HAS_PROD_ID)
+ 		debugfs_create_file_unsafe("product_id", 0400,
+-				indio_dev->debugfs_dentry, st,
+-				&adis16400_product_id_fops);
++				d, st, &adis16400_product_id_fops);
+ 	debugfs_create_file_unsafe("flash_count", 0400,
+-			indio_dev->debugfs_dentry, st,
+-			&adis16400_flash_count_fops);
++			d, st, &adis16400_flash_count_fops);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/iio/imu/adis16460.c b/drivers/iio/imu/adis16460.c
+index 0957f5cfe9c0..ad20c488a3ba 100644
+--- a/drivers/iio/imu/adis16460.c
++++ b/drivers/iio/imu/adis16460.c
+@@ -129,16 +129,14 @@ DEFINE_DEBUGFS_ATTRIBUTE(adis16460_flash_count_fops,
+ static int adis16460_debugfs_init(struct iio_dev *indio_dev)
+ {
+ 	struct adis16460 *adis16460 = iio_priv(indio_dev);
++	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+ 
+ 	debugfs_create_file_unsafe("serial_number", 0400,
+-			indio_dev->debugfs_dentry, adis16460,
+-			&adis16460_serial_number_fops);
++			d, adis16460, &adis16460_serial_number_fops);
+ 	debugfs_create_file_unsafe("product_id", 0400,
+-			indio_dev->debugfs_dentry, adis16460,
+-			&adis16460_product_id_fops);
++			d, adis16460, &adis16460_product_id_fops);
+ 	debugfs_create_file_unsafe("flash_count", 0400,
+-			indio_dev->debugfs_dentry, adis16460,
+-			&adis16460_flash_count_fops);
++			d, adis16460, &adis16460_flash_count_fops);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/iio/imu/adis16475.c b/drivers/iio/imu/adis16475.c
+index e2bd4214eaeb..4fac24227fae 100644
+--- a/drivers/iio/imu/adis16475.c
++++ b/drivers/iio/imu/adis16475.c
+@@ -228,20 +228,17 @@ DEFINE_DEBUGFS_ATTRIBUTE(adis16475_flash_count_fops,
+ static void adis16475_debugfs_init(struct iio_dev *indio_dev)
+ {
+ 	struct adis16475 *st = iio_priv(indio_dev);
++	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+ 
+ 	debugfs_create_file_unsafe("serial_number", 0400,
+-				   indio_dev->debugfs_dentry, st,
+-				   &adis16475_serial_number_fops);
++				   d, st, &adis16475_serial_number_fops);
+ 	debugfs_create_file_unsafe("product_id", 0400,
+-				   indio_dev->debugfs_dentry, st,
+-				   &adis16475_product_id_fops);
++				   d, st, &adis16475_product_id_fops);
+ 	debugfs_create_file_unsafe("flash_count", 0400,
+-				   indio_dev->debugfs_dentry, st,
+-				   &adis16475_flash_count_fops);
++				   d, st, &adis16475_flash_count_fops);
+ 	debugfs_create_file("firmware_revision", 0400,
+-			    indio_dev->debugfs_dentry, st,
+-			    &adis16475_firmware_revision_fops);
+-	debugfs_create_file("firmware_date", 0400, indio_dev->debugfs_dentry,
++			    d, st, &adis16475_firmware_revision_fops);
++	debugfs_create_file("firmware_date", 0400, d,
+ 			    st, &adis16475_firmware_date_fops);
+ }
+ #else
+diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+index cfae0e4476e7..6a471eee110e 100644
+--- a/drivers/iio/imu/adis16480.c
++++ b/drivers/iio/imu/adis16480.c
+@@ -284,22 +284,18 @@ DEFINE_DEBUGFS_ATTRIBUTE(adis16480_flash_count_fops,
+ static int adis16480_debugfs_init(struct iio_dev *indio_dev)
+ {
+ 	struct adis16480 *adis16480 = iio_priv(indio_dev);
++	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+ 
+ 	debugfs_create_file_unsafe("firmware_revision", 0400,
+-		indio_dev->debugfs_dentry, adis16480,
+-		&adis16480_firmware_revision_fops);
++		d, adis16480, &adis16480_firmware_revision_fops);
+ 	debugfs_create_file_unsafe("firmware_date", 0400,
+-		indio_dev->debugfs_dentry, adis16480,
+-		&adis16480_firmware_date_fops);
++		d, adis16480, &adis16480_firmware_date_fops);
+ 	debugfs_create_file_unsafe("serial_number", 0400,
+-		indio_dev->debugfs_dentry, adis16480,
+-		&adis16480_serial_number_fops);
++		d, adis16480, &adis16480_serial_number_fops);
+ 	debugfs_create_file_unsafe("product_id", 0400,
+-		indio_dev->debugfs_dentry, adis16480,
+-		&adis16480_product_id_fops);
++		d, adis16480, &adis16480_product_id_fops);
+ 	debugfs_create_file_unsafe("flash_count", 0400,
+-		indio_dev->debugfs_dentry, adis16480,
+-		&adis16480_flash_count_fops);
++		d, adis16480, &adis16480_flash_count_fops);
+ 
+ 	return 0;
+ }
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
