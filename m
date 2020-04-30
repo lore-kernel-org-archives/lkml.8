@@ -2,203 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DBEC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824A5C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D75C720774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FE820774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:49:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RCHbH6Vr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgD3Ntb (ORCPT
+        id S1727117AbgD3Ntn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:49:31 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39240 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgD3Nta (ORCPT
+        Thu, 30 Apr 2020 09:49:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54543 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726906AbgD3Ntm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:49:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m10so5241960oie.6;
-        Thu, 30 Apr 2020 06:49:29 -0700 (PDT)
+        Thu, 30 Apr 2020 09:49:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588254581;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IEBaJZZn8G4VkvBwEauwJGfaJC10NnAmuAyBH5fbQnA=;
+        b=RCHbH6VrbDqs9IsoJovxZ0sJbi5CO3Hwsfp/n0Jb0Nqim2qMv/pJzLZtF3wZBvY6Yb/2tH
+        +zdDBgFFUsS2EJb/wXXfLmuVbd5aafXpR5Gfpi61SJ0lbm6dkYg0VJZtQS3Si9j2IduHpd
+        mK8hsjXBo5rmnEZ9K7cAwaz0ggITx78=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-oL5JzGQDNPOwVzUF-7r3Ww-1; Thu, 30 Apr 2020 09:49:39 -0400
+X-MC-Unique: oL5JzGQDNPOwVzUF-7r3Ww-1
+Received: by mail-wr1-f72.google.com with SMTP id r17so3882099wrg.19
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:49:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rjrzO+MFhCxKv5bAtNJEkkZ3+0bygxPZ8Xsyxb6NgPo=;
-        b=mDjuEXlnoEV+mzDCJO25nafMr2d5g5Wu+2lZGKiiSoBU55DgFl92jc5iO3aQ85sMG4
-         Ti6dd24snDqO9DeWpTHgvwgTIL0QozeW5x2GsAmULoG1TR5tloMQDwX+OlqaydXJDf9a
-         jKgzsq/hy1REwN9eQW7JFjooaw93PwV8Jfoi82DOnB4FRBHRTJt3mj896qbnjUcA8ixq
-         450qaPfHtlUZOXWKv+Ol4zb+n02v2H2Se+Phq0ixsSjORkZks0nSmzfz5tKJCHO/SMPt
-         WDZZkEr++oj1IKlGa0zzj+tR9p7BglaV0yD/dbmmi7qUmUm0RgnaCwxMdt1xhcZWc4g3
-         m6CQ==
-X-Gm-Message-State: AGi0PubNweEegZZF7/K8BYd2cdBPTaBDfR2EXx63GFPTFyUs4CSsMW+W
-        Ulum02gGf/5XAEIl0f/QPUrOzpCNU4uN5G+nhZk=
-X-Google-Smtp-Source: APiQypLKYEdDONP0TBzThQv78/9Ygy1b6alSM4Yc0B+LRdJxCQZdxj0F0voJal5X/EWZDKQ3nzYUXD+H8+a8j7LvATM=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr1837989oig.54.1588254569157;
- Thu, 30 Apr 2020 06:49:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 15:49:17 +0200
-Message-ID: <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
-Subject: Re: [PATCH 07/18] ARM: dts: r8a7742: Initial SoC device tree
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=IEBaJZZn8G4VkvBwEauwJGfaJC10NnAmuAyBH5fbQnA=;
+        b=dGXYAVsvUftzgJTyZqXaeKc6zMyL5Ii1DzTh9YyTD0r4lW8wM9+oWm1TxeMp8z4fCK
+         is+NH9B6G1dsq4ddK9Q6huLLRv9wNm8OJJR+tb5W2WSNEOYTNfjeE4waS7OrHkEiYtxr
+         bLYhYnTrVnNFJzfT6/hwJ7MzdHvtudzxfpJvWF3L8EQgQtJ6JjuUHvlmGcttBsXve6Qp
+         ev9kNmiCPnk9XSSydk5Vq9K7VNg5yaE4WcNyiDQ0vOL4fncTDJBhFih2EzE0vQRNWXtW
+         p3BhqXxM3XykI8P32scF/l66cwCmbxNs3amW2yFKYlYfvtuLmrQ/N9+190zKR6sEJk1d
+         k+MA==
+X-Gm-Message-State: AGi0PuaaL94EecAaoQUK0mVvIu9yAMdgyI1pCa/MTofY2zUro1UYczb9
+        u/69dxAXGMMfaKgeJavPRhCi0AsawauQZJxg31GwSPXINqVjcMxAG6jnc4UVXMHXHVWY9Tw5sF5
+        835+5WKhXRiB11eo+WkIvv3R+
+X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr3082440wmc.123.1588254575073;
+        Thu, 30 Apr 2020 06:49:35 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKPdUBEwRbmSXCzUBZ0gX8bjI8gMw9HBoTwk6kFinzxWLo9L+OUtgiEezO+fqbN+i/GXfMCCg==
+X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr3082411wmc.123.1588254574896;
+        Thu, 30 Apr 2020 06:49:34 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 91sm4520928wra.37.2020.04.30.06.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 06:49:34 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 3/6] KVM: x86: interrupt based APF page-ready event delivery
+In-Reply-To: <20200430132805.GB40678@xz-x1>
+References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-4-vkuznets@redhat.com> <20200429212708.GA40678@xz-x1> <87v9lhfk7v.fsf@vitty.brq.redhat.com> <20200430132805.GB40678@xz-x1>
+Date:   Thu, 30 Apr 2020 15:49:33 +0200
+Message-ID: <877dxxf5hu.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Peter Xu <peterx@redhat.com> writes:
 
-Thanks for your patch!
+> On Thu, Apr 30, 2020 at 10:31:32AM +0200, Vitaly Kuznetsov wrote:
+>> as we need to write to two MSRs to configure the new mechanism ordering
+>> becomes important. If the guest writes to ASYNC_PF_EN first to establish
+>> the shared memory stucture the interrupt in ASYNC_PF2 is not yet set
+>> (and AFAIR '0' is a valid interrupt!) so if an async pf happens
+>> immediately after that we'll be forced to inject INT0 in the guest and
+>> it'll get confused and linkely miss the event.
+>> 
+>> We can probably mandate the reverse sequence: guest has to set up
+>> interrupt in ASYNC_PF2 first and then write to ASYNC_PF_EN (with both
+>> bit 0 and bit 3). In that case the additional 'enable' bit in ASYNC_PF2
+>> seems redundant. This protocol doesn't look too complex for guests to
+>> follow.
+>
+> Yep looks good.  We should also update the document too about the fact.
+>
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Basic support for the RZ/G1H (R8A7742) SoC. Added placeholders
-> for the peripherals supported by the SoC which will be filled up
-> by incremental patches.
-
-Please remove the placeholders, as there is nothing that depends on their
-presence.
-
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7742.dtsi
-> @@ -0,0 +1,715 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the r8a7742 SoC
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/r8a7742-cpg-mssr.h>
-> +#include <dt-bindings/power/r8a7742-sysc.h>
-> +
-> +/ {
-> +       compatible = "renesas,r8a7742";
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       /*
-> +        * The external audio clocks are configured as 0 Hz fixed frequency
-> +        * clocks by default.
-> +        * Boards that provide audio clocks should override them.
-> +        */
-> +       audio_clk_a: audio_clk_a {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <0>;
-> +       };
-> +
-> +       audio_clk_b: audio_clk_b {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <0>;
-> +       };
-> +
-> +       audio_clk_c: audio_clk_c {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <0>;
-> +       };
-> +
-> +       /* External CAN clock */
-> +       can_clk: can {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               /* This value must be overridden by the board. */
-> +               clock-frequency = <0>;
-> +       };
-
-Please drop the audio and CAN clocks for now, as they are not used.
-
-> +       /* External root clock */
-> +       extal_clk: extal {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               /* This value must be overridden by the board. */
-> +               clock-frequency = <0>;
-> +       };
-> +
-> +       /* External PCIe clock - can be overridden by the board */
-> +       pcie_bus_clk: pcie_bus {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <0>;
-> +       };
-
-Please drop the PCI clock for now, as it is not used.
-
-> +
-> +       /* External SCIF clock */
-> +       scif_clk: scif {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               /* This value must be overridden by the board. */
-> +               clock-frequency = <0>;
-> +       };
-
-This should be used (see below).
-
-> +
-> +       /* External USB clock - can be overridden by the board */
-> +       usb_extal_clk: usb_extal {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <48000000>;
-> +       };
-> +
-> +       cpus {
-
-Please sort nodes by unit-address (if present) per type, or alphabetically.
-
-> +       soc {
-
-> +               scifa2: serial@e6c60000 {
-> +                       reg = <0 0xe6c60000 0 0x40>;
-> +                       /* placeholder */
-> +               };
-
-I prefer to see a real node for the serial console, so the system can at
-least be boot tested to a console prompt.
-Note that this requires adding a minimal board DTS, too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Of course. It will also mention the fact that #PF-based mechanism is
+now depreceted and unless guest opts into interrupt based delivery
+async_pf is not functional (except for APF_HALT).
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Vitaly
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
