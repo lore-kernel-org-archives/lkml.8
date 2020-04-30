@@ -2,117 +2,157 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED34C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAC9C83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F489206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="njQiGucT"
+	by mail.kernel.org (Postfix) with ESMTP id E5150206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgD3Obm (ORCPT
+        id S1728320AbgD3Ocn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32860 "EHLO
+        Thu, 30 Apr 2020 10:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgD3Obl (ORCPT
+        with ESMTP id S1726571AbgD3Ocm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:31:41 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48535C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:31:41 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id b17so3267565ybq.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ShpsY/1pJ/oL50FAYiypemqFtyyn+iEopdvwAgjtnWk=;
-        b=njQiGucTY/Fcx1F70f7DUaQQLzyx70VAnvdtKsxXqx0EfsK0FpYiX4C1nk/54HfW1t
-         l885kcsHegRF/Qqcoti/QIXdSB8lcAkRjsZ//vLFKMpo0tSpt1/Qpr5NPDney8Ni/sv6
-         +vaBH8bAq9FRYTJXBauxBNGVN9NXeIdi77vWO73cClugQDFJq7GuOXBd9L11u9O0M+VT
-         La+Eq+fSlZNvJRNZ0qcPNLnUdoExccZ1hXtbhjqH+yPST0Yx7w4W8rdnewNwGYOeVtl/
-         UAtHetFNhQlaQXAvYWe0w3Wp1qv1TLwdFXqJ0cPCZKIz2bsmssWUyOy67sqwL8gD8KWG
-         5FFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ShpsY/1pJ/oL50FAYiypemqFtyyn+iEopdvwAgjtnWk=;
-        b=jfVBzutKg9spdXYAcJP/poF7OoWThr6JmZODI7tVkh1RrhGzh3GNo8Vz0btgy//u6p
-         oDoRr6EnZ+tRS1egtx4tqRxhj9JbKUz34YQ6hHnFazmg8dJZOPoKD2SYgNcFq7Y/bmAm
-         0WZdP3vv4N3DRdhDbfsE4rcBT7uEJdWB19QCsWsN8JHvrpsFVoIXlEgax9hbFiKjnKjk
-         1EnzW+3aUakwDug8P9xtlTSTs9vUBRE7ZU5+1PgrZKxk8mUQPTAgcOJl4UaK0/CM3wDn
-         xVTUZ7Npv3CBzLJ4gAshNnCgsgpqtVd5E/h/U8sSZ0WfWKE/Vo4cjZ66P1ZfMHvWq0rU
-         r1Kg==
-X-Gm-Message-State: AGi0PuanghM+StaYcZtmqKJnFl60xtqWdIZHVE4jbY5YbP/zd35NLqkk
-        /8TSmTYQNsuX91F1/Qk9vdexP6mZylbDSnPdOsiLkg==
-X-Google-Smtp-Source: APiQypIe3dmiMibw9PRRB87OPeY7rTmED5SwuKDs6yxYJYHcEEpHUkJQkigv0bjCDoXofbPXXXqjONR/KcNnEfE+Wtk=
-X-Received: by 2002:a25:3d86:: with SMTP id k128mr6420171yba.403.1588257100261;
- Thu, 30 Apr 2020 07:31:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200430075144.132716-1-irogers@google.com> <20200430075144.132716-13-irogers@google.com>
- <6a3d68fd-c489-c0d5-8612-69f15be1bf64@huawei.com>
-In-Reply-To: <6a3d68fd-c489-c0d5-8612-69f15be1bf64@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 30 Apr 2020 07:31:29 -0700
-Message-ID: <CAP-5=fUA3UDNdreJBhdLBPgyFUutN_qUqaL-Diu3yihSDc_niw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/12] perf test: improve pmu event metric testing
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kajoljain <kjain@linux.ibm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        Thu, 30 Apr 2020 10:32:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F29C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:32:42 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jUAEo-0008MV-Bh; Thu, 30 Apr 2020 16:32:30 +0200
+Message-ID: <5e1f804c4c27927d10b2283747c1cae6606abe7c.camel@pengutronix.de>
+Subject: Re: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe
+ time on i.MX8MM
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Adam Ford <aford173@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 30 Apr 2020 16:32:27 +0200
+In-Reply-To: <20200430124602.14463-2-frieder.schrempf@kontron.de>
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+         <20200430124602.14463-2-frieder.schrempf@kontron.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 4:44 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 30/04/2020 08:51, Ian Rogers wrote:
-> > Add a basic floating point number test to expr.
-> > Break pmu-events test into 2 and add a test to verify that all pmu metric
-> > expressions simply parse.
->
-> Could we add also add something in jevents to ensure this?
+Hi Frieder,
 
-I think it is an interesting possibility. Instead of strings we could
-also parse the metrics into C functions, that could cause build time
-errors at least for the simple expressions. An issue I've faced is
-that if jevents fails, such as a json parse error, it has an exit code
-of 0 and creates an empty map file. This allows the build to proceed
-but with the pmu-events functionality broken. I'd prefer a build to
-fail as early as possible.
+Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> On i.MX8MM there is an interrupt getting triggered immediately after
+> requesting the IRQ, which leads to a stall as the handler accesses
+> the GPU registers whithout the clock being enabled.
+> 
+> Enabling the clocks briefly seems to clear the IRQ state, so we do
+> this before requesting the IRQ.
 
-Thanks,
-Ian
+This is most likely caused by improper power-up sequencing. Normally
+the GPC will trigger a hardware reset of the modules inside a power
+domain when the domain is powered on. This requires the clocks to be
+running at this point, as those resets are synchronous, so need clock
+pulses to propagate through the hardware.
 
-> Thanks,
-> John
->
->   Try to parse all metric ids/events, failing if
-> > metrics for the current architecture fail to parse.
-> >
+From what I see the i.MX8MM is still missing the power domain
+controller integration, but I'm pretty confident that this problem
+should be solved in the power domain code, instead of the GPU driver.
+
+Regards,
+Lucas
+
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 29 ++++++++++++++++++++-----
+> --
+>  1 file changed, 22 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> index a31eeff2b297..23877c1f150a 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> @@ -1775,13 +1775,6 @@ static int etnaviv_gpu_platform_probe(struct
+> platform_device *pdev)
+>  		return gpu->irq;
+>  	}
+>  
+> -	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> -			       dev_name(gpu->dev), gpu);
+> -	if (err) {
+> -		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, 
+> err);
+> -		return err;
+> -	}
+> -
+>  	/* Get Clocks: */
+>  	gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
+>  	DBG("clk_reg: %p", gpu->clk_reg);
+> @@ -1805,6 +1798,28 @@ static int etnaviv_gpu_platform_probe(struct
+> platform_device *pdev)
+>  		gpu->clk_shader = NULL;
+>  	gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
+>  
+> +	/*
+> +	 * On i.MX8MM there is an interrupt getting triggered
+> immediately
+> +	 * after requesting the IRQ, which leads to a stall as the
+> handler
+> +	 * accesses the GPU registers whithout the clock being enabled.
+> +	 * Enabling the clocks briefly seems to clear the IRQ state, so
+> we do
+> +	 * this here before requesting the IRQ.
+> +	 */
+> +	err = etnaviv_gpu_clk_enable(gpu);
+> +	if (err)
+> +		return err;
+> +
+> +	err = etnaviv_gpu_clk_disable(gpu);
+> +	if (err)
+> +		return err;
+> +
+> +	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> +			       dev_name(gpu->dev), gpu);
+> +	if (err) {
+> +		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, 
+> err);
+> +		return err;
+> +	}
+> +
+>  	/* TODO: figure out max mapped size */
+>  	dev_set_drvdata(dev, gpu);
+>  
+
