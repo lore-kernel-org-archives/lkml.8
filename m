@@ -2,95 +2,187 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6FDC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ABC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA9F62074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A832074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:51:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="flwRloM8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FsNBbitK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgD3OvC (ORCPT
+        id S1726923AbgD3Ovn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:51:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59788 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726357AbgD3OvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:51:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5F409AC69;
-        Thu, 30 Apr 2020 14:50:59 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 16:50:57 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before text_poke()
-Message-ID: <20200430145057.GB8135@suse.de>
-References: <20200429054857.66e8e333@oasis.local.home>
- <20200429105941.GQ30814@suse.de>
- <20200429082854.6e1796b5@oasis.local.home>
- <20200429100731.201312a9@gandalf.local.home>
- <20200430141120.GA8135@suse.de>
+        Thu, 30 Apr 2020 10:51:43 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:33877 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726357AbgD3Ovm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:51:42 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 68D578D5;
+        Thu, 30 Apr 2020 10:51:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 30 Apr 2020 10:51:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=yUFL1mVF52h7LuiXHr0MmqdXpjr
+        /Do5cG5S9578N9FU=; b=flwRloM80e1YKWVVE0uunwO/B6bCRv7woEQil7ikD9o
+        lRF+leVNAjXiol85Xt4jS877ZBUxSMM3zaL2LZr0D4nAgLlH8gwiAoyRpzeMBPMC
+        y7AGp8KIby+tP6CvL0PIYlsSjgYBNBN0EtP8UMWN+YlDE3Hpo9LwNeo0sSP+/t5b
+        4uSsoJCA53uaSg2kMg9YDTNpCny2GCupw5Finjs4GBm7U5J3xrpfnnCIuPNqZh+x
+        IbPrpHpAm9Zp6JuzGpnsBsoDJGLDNmlXvojSWQLHkD600YhzRo2be5q8sThkMXid
+        iEUW/Xy5bkZSnYjPnrO0wSnA0yyO6hZ4/706pr7pZbQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yUFL1m
+        VF52h7LuiXHr0MmqdXpjr/Do5cG5S9578N9FU=; b=FsNBbitKk8eDiMhklBBZAA
+        6uWhPPb932nl40fozzT8kBomeJztqBJC7UpGWUmlFC8P0ZQ3KW7tyiWkVG/G9cxz
+        YdzozPlEJxs3k6aFZmN3qzHdmeEdrMgmHhIFrJc5muXHiinPNuszNuw7OePxHZud
+        vlwUmfXkbP82FgyaE+XPuywLzW5LZRD5CwWnJ1JtpvL/f/leKCDBZ26FMMLfqfuA
+        DrmCbW5AYo0ilj2TIpRtLI5AbhAZTJwaDLjXehDKn4O161uOMFNiNMQEOPdpf9wz
+        m0hQ/Hn3BNbg4gAzWONhTVlhhAn1UnvAvC+O7zRAqlImA0xrW8fOqUZW90MYdPPQ
+        ==
+X-ME-Sender: <xms:_OWqXh7woC7d2ZzhGmFeRqlJoaykGikxCVc8txyuKlZunkFe5WJT6w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdekudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:_OWqXjImDnPUO9JQ9Nq1R0mGG-HKXJhWsULspBLza0TtxaYpagh9Uw>
+    <xmx:_OWqXjccGgel4Ura7pdRYyl0qZFftTKLhnAWG2WemJTscNhF-xLx_Q>
+    <xmx:_OWqXud2Kj-TNx84bvJnejQUzHxi7ofXVM4ilJkrFgoJ-ZV-CIzYXw>
+    <xmx:_eWqXkps6obGyXVibV8oFaG8LyJp1XAJ4f64IXNV6fion-SIRtZv0g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4EE0D3280064;
+        Thu, 30 Apr 2020 10:51:40 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 16:51:38 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Priit Laes <plaes@plaes.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 1/6] clk: sunxi-ng: a20: Register regmap for sun7i CCU
+Message-ID: <20200430145138.lhj4y5kjfz7bwamu@gilmour.lan>
+References: <20200430115702.5768-1-plaes@plaes.org>
+ <20200430115702.5768-2-plaes@plaes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="veryw4obx5pow3r5"
 Content-Disposition: inline
-In-Reply-To: <20200430141120.GA8135@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200430115702.5768-2-plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 04:11:20PM +0200, Joerg Roedel wrote:
-> The page-fault handler calls a tracing function which again ends up in
-> trace_event_ignore_this_pid(), where it faults again. From here on the CPU is in
-> a page-fault loop, which continues until the stack overflows (with
-> CONFIG_VMAP_STACK).
 
-Did some more testing to find out what this issue has to do with
+--veryw4obx5pow3r5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	763802b53a42 x86/mm: split vmalloc_sync_all()
+On Thu, Apr 30, 2020 at 02:56:57PM +0300, Priit Laes wrote:
+> On sun7i, the gmac clock is handled by the dwmac-sunxi driver, but
+> its configuration register is located in the CCU register range,
+> requiring proper regmap setup.
+>=20
+> In order to do that, we use CLK_OF_DECLARE_DRIVER to initialize
+> sun7i ccu, which clears the OF_POPULATED flag, allowing the
+> platform device to probe the same resource with proper device node.
+>=20
+> Signed-off-by: Priit Laes <plaes@plaes.org>
+> ---
+>  drivers/clk/sunxi-ng/ccu-sun4i-a10.c | 62 +++++++++++++++++++++++++++-
+>  1 file changed, 60 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/=
+ccu-sun4i-a10.c
+> index f32366d9336e..fa147b8ce705 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> @@ -8,6 +8,8 @@
+>  #include <linux/clk-provider.h>
+>  #include <linux/io.h>
+>  #include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> =20
+>  #include "ccu_common.h"
+>  #include "ccu_reset.h"
+> @@ -1478,5 +1480,61 @@ static void __init sun7i_a20_ccu_setup(struct devi=
+ce_node *node)
+>  {
+>  	sun4i_ccu_init(node, &sun7i_a20_ccu_desc);
+>  }
+> -CLK_OF_DECLARE(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
+> -	       sun7i_a20_ccu_setup);
+> +CLK_OF_DECLARE_DRIVER(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
+> +		      sun7i_a20_ccu_setup);
+> +
+> +/*
+> + * Regmap for the GMAC driver (dwmac-sunxi) to allow access to
+> + * GMAC configuration register.
+> + */
+> +#define SUN7I_A20_GMAC_CFG_REG 0x164
+> +static bool sun7i_a20_ccu_regmap_accessible_reg(struct device *dev,
+> +						unsigned int reg)
+> +{
+> +	if (reg =3D=3D SUN7I_A20_GMAC_CFG_REG)
+> +		return true;
+> +	return false;
+> +}
+> +
+> +static struct regmap_config sun7i_a20_ccu_regmap_config =3D {
+> +	.reg_bits	=3D 32,
+> +	.val_bits	=3D 32,
+> +	.reg_stride	=3D 4,
+> +	.max_register	=3D 0x1f4, /* clk_out_b */
+> +
+> +	.readable_reg	=3D sun7i_a20_ccu_regmap_accessible_reg,
+> +	.writeable_reg	=3D sun7i_a20_ccu_regmap_accessible_reg,
+> +};
+> +
+> +static int sun7i_a20_ccu_probe_regmap(struct platform_device *pdev)
+> +{
+> +	void __iomem *reg;
+> +	struct resource *res;
+> +	struct regmap *regmap;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reg =3D devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> +	if (IS_ERR(reg))
+> +		return PTR_ERR(reg);
 
-Above commit removes a call to vmalloc_sync_all() from the vmalloc
-unmapping path, because that call caused severe performance regressions
-on some workloads and was not needed on x86-64 anyway.
+You shouldn't really create a second mapping here but reuse the one you got=
+ in
+sun7i_a20_ccu_setup, since that code expect to be the sole user of it.
 
-But that call caused vmalloc_sync_all() to be called regularily on
-x86-64 machines, so that all page-tables were more likely to be in sync.
+Storing the virtual address in a global variable should work fine since we =
+only
+ever have a single instance of the controller
 
-The call was introduced by commit
+Maxime
 
-	3f8fd02b1bf1 mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
+--veryw4obx5pow3r5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-to fix a correctness issue on x86-32 PAE systems, which also need
-unmappings of large pages in the vmalloc area to be synchronized.
+-----BEGIN PGP SIGNATURE-----
 
-This additional call to vmalloc_sync_all() did hide the problem. I
-verified it by reverting both of the above commits on v5.7-rc3 and
-testing on that kernel. The problem is reproducible there too, the box
-hangs hard.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqrl+gAKCRDj7w1vZxhR
+xQHUAP43Ux7dIPWHzi8KIXHGURaaWzG5Si7pOOXp//+7NhsoJAD+MAMasUWFEicr
+LRkb9qgrRZxckPPqU9fMC5kg2QdCTwg=
+=k6DC
+-----END PGP SIGNATURE-----
 
-So the underlying problem is that a vmalloc()'ed tracing buffer is used
-to trace the page-fault handler, so that it has no chance of faulting in
-the buffer address to poking_mm and maybe other PGDs.
-
-The right fix is to call vmalloc_sync_mappings() right after allocating
-tracing or perf buffers via v[zm]alloc().
-
-Regards,
-
-	Joerg
+--veryw4obx5pow3r5--
