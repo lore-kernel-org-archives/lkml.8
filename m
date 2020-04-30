@@ -2,92 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6219CC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC3DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E5820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A9220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="b4OU7wwb"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VgEzGXuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgD3T3U (ORCPT
+        id S1726930AbgD3T3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgD3T3T (ORCPT
+        Thu, 30 Apr 2020 15:29:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8943 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgD3T3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:29:19 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F8AC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:29:19 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id b1so6088088qtt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/eq6aHDyq4eplML2a4cRLGlwq126IAji+Fvgv3MjJ3w=;
-        b=b4OU7wwbA3wxPurcG9pIX2GntI2Xn9noV/RldtqK/ry2Aih34RZFyG37mvEUhqPgUJ
-         FZuolZ4rblAdaMTfLS/iPurKZ2F/6LgIKXT/SPaEjMRd+QYwp0iY0BM+tlLBA7fvDX0b
-         PoKDmL7E0sHYEdt3HL88joyXkVl1giGBlW/wGc0A4Z+11ui4tXTZR9v+/zrk6N9GA6vQ
-         haEP1z4FLxKtLHf0Jh1JXqAuHFmIlunGDsdbG4opwBuPEkRLvy8YZ6HWRP9GmVpISVqB
-         FH581z7KqQk9BGUSOLm3k9zUxr+9oN1hYP+uY2Iia++2Azdeu1TiYpS2K1o6nZxcsaMj
-         dT1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/eq6aHDyq4eplML2a4cRLGlwq126IAji+Fvgv3MjJ3w=;
-        b=B0+9ypvBAXJXAlq0FMLy5gsbskxn1+/BBgQvT/dOb1aI2jDrqln27Yc4rTccCEE6z5
-         jr14O9rRnuVjJFiZy9NmhVqdAcaGYvZwt/DekCQVLKFqD0N57udHhmr3HSw+sF0Jq4n6
-         1edwuy8dXl7l12adWqRb+UNc3ZSlWXEjhU9AuE1lqOLWB66g7fUvJ9xKDGT7DWvYqwkM
-         1h5c+NNdkh86XS6RHuHXHNDEe865a1IMT4LenBZ9sxgy/hIkOlmsD0bjlCQy+Ywg+jDD
-         s8X7rEmCsQS/8YW/YmdwfYtl4i5XVo6HTR9mY/jyRVOFthdiPR9sPojQ2mTaOdvZpeT9
-         aRfQ==
-X-Gm-Message-State: AGi0PuZZCeN4NV1b1pQM2mBBKsfiUsRf6/EeXoNd+spBCzK/eyq2HcHi
-        vQh8UYmKtQx99fnYdM+eUHKfQQ==
-X-Google-Smtp-Source: APiQypJkMljmJVrYuqw1/FA/joYSeHchiIXs0+3QO3JPks1R2xxvo8ZkpSGPuQBznRyTzHv3YCWvFw==
-X-Received: by 2002:ac8:1885:: with SMTP id s5mr2430qtj.253.1588274958913;
-        Thu, 30 Apr 2020 12:29:18 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:63a7])
-        by smtp.gmail.com with ESMTPSA id u27sm543996qtc.73.2020.04.30.12.29.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:29:18 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 15:29:07 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-Message-ID: <20200430192907.GA2436@cmpxchg.org>
-References: <20200430182712.237526-1-shakeelb@google.com>
+        Thu, 30 Apr 2020 15:29:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eab26ce0001>; Thu, 30 Apr 2020 12:28:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 12:29:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 12:29:21 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 19:29:20 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 19:29:19 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <18d457dd-17cb-633e-cdec-e0abfe73b0b0@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <10286a40-ed3c-1999-68fa-7099130a2423@nvidia.com>
+Date:   Thu, 30 Apr 2020 12:27:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430182712.237526-1-shakeelb@google.com>
+In-Reply-To: <18d457dd-17cb-633e-cdec-e0abfe73b0b0@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588274894; bh=+3lStLw5yssQ0AKxd+sc1j1usFslZ6/M/9XZ4GHBV9w=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=VgEzGXuHYNGSQ+lgeTnPiB/xxffHbRX9bSPslEoyb5hWTxK4OHySD9I0srZBKKBTm
+         Vep79jUMJmlAkESyVFlbqjXU0n7RN2HsDJOqdzui7G9QMu+Rw/DKjINMx/O3eA8xo6
+         FcGdfSV4vaoenWB+ItVETxBgdxBIy7i/KEX3eqoCFeyP3zJ24nLq+3WPN1nDx0U60B
+         SIEI529dw2XeiX/M1JCov7c6OPz4DKKd9FJeMVajjS8z1VexD+5y8Y09VPBAVtr6mV
+         AL4Vd9qcwTRQCW3F8VNB3sx6kiAAbz06kC6uJjFDczETj9v4/T4+MuXwjNSG+Cnsto
+         I/+RD7azUQunA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:27:12AM -0700, Shakeel Butt wrote:
-> Lowering memory.max can trigger an oom-kill if the reclaim does not
-> succeed. However if oom-killer does not find a process for killing, it
-> dumps a lot of warnings.
-> 
-> Deleting a memcg does not reclaim memory from it and the memory can
-> linger till there is a memory pressure. One normal way to proactively
-> reclaim such memory is to set memory.max to 0 just before deleting the
-> memcg. However if some of the memcg's memory is pinned by others, this
-> operation can trigger an oom-kill without any process and thus can log a
-> lot un-needed warnings. So, ignore all such warnings from memory.max.
 
-Can't you set memory.high=0 instead? It does the reclaim portion of
-memory.max, without the actual OOM killing that causes you problems.
+On 4/30/20 6:34 AM, Dmitry Osipenko wrote:
+> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> +static int tegra_csi_init(struct host1x_client *client)
+>> +{
+>> +	struct tegra_csi *csi =3D host1x_client_to_csi(client);
+>> +	struct tegra_video_device *vid =3D dev_get_drvdata(client->host);
+>> +	int ret;
+>> +
+>> +	INIT_LIST_HEAD(&csi->csi_chans);
+>> +
+>> +	ret =3D tegra_csi_tpg_channels_alloc(csi);
+>> +	if (ret < 0) {
+>> +		dev_err(csi->dev,
+>> +			"failed to allocate tpg channels: %d\n", ret);
+>> +		goto cleanup;
+>> +	}
+>> +
+>> +	ret =3D tegra_csi_channels_init(csi);
+>> +	if (ret < 0)
+>> +		goto cleanup;
+>> +
+>> +	vid->csi =3D csi;
+>> +
+>> +	return 0;
+>> +
+>> +cleanup:
+>> +	tegra_csi_channels_cleanup(csi);
+>> +	pm_runtime_put_sync(csi->dev);
+> This pm_runtime_put_sync() should be removed.
+
+Sorry, I had it correct in follow-up patches and missed this to remove=20
+in v12.
+
+Will double check all changes before sending v12 once all v11 feedback=20
+from you is done.
+
+>
+>> +	return ret;
+>> +}
