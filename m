@@ -2,131 +2,134 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B436DC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0062DC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9375B214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2CD2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mHGWABDs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+AJg1G4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgD3G5B (ORCPT
+        id S1726550AbgD3G5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:57:01 -0400
-Received: from mailgw01.mediatek.com ([216.200.240.184]:58815 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgD3G5A (ORCPT
+        Thu, 30 Apr 2020 02:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726427AbgD3G5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:57:00 -0400
-X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 02:57:00 EDT
-X-UUID: 890afbba71374a1788c031df98bde511-20200429
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=s2dkEOMGbr8zmnRl4873RwL4QHEhugqZDl7HL1k+ZTg=;
-        b=mHGWABDsM1tx4gU6tNElmsxKjMk5PfejytxRcMxEuSG1XUJiQG116Nkb9RlcG+ngwTpbqik2rI192R0qqdTEUuOwQfOyMlbKu0BKlSwPMjZ3rxzYKVOF+DsmK1wrsx3W2I8R5wPkouWlwa4psDcvr0uIQ7PmWL7GItcI7UladqY=;
-X-UUID: 890afbba71374a1788c031df98bde511-20200429
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1995040796; Wed, 29 Apr 2020 22:51:52 -0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Apr 2020 23:41:52 -0700
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 30 Apr 2020 14:41:53 +0800
-Message-ID: <1588228913.3817.6.camel@mtkswgap22>
-Subject: Re: [PATCH] pinctrl: mediatek: fix mtk_eint link error
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 30 Apr 2020 14:41:53 +0800
-In-Reply-To: <20200429132443.1295194-1-arnd@arndb.de>
-References: <20200429132443.1295194-1-arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 30 Apr 2020 02:57:47 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 819ADC035495
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:57:46 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e25so5284655ljg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6F+XndsIru6duR0CCwlaQ2qNG4XUe6rojDGrs09hMvY=;
+        b=l+AJg1G4eg8RVQ0OCKtowUmC2BD9hVyGr0Ni76WpLrv3E7LCD7I6ykogl0HvbX7a/x
+         b2zUy+xTgOhx/HikhevbV90OoEjhnmU8zKZqxe02y9VqkI9AQqpOHYOwm6rDCFMS6SeK
+         yC7CAusyyxm2XVbAmbI6qYRplSc/PmaSm9gMEyyO0WxZvOpqjgQG1y34H2jeugd8UJL3
+         XCMJ2xbKhcUGx1yZYSiOHlv3MFlStYIJYE4uKsP9grfQmnGgPW1Ys7UCtT/XaCrt4AZo
+         1rCyNmLfoowCIvBONCjqM0xo+8C5Mb1DPmalBYNpA1fAagJc94NDFmzyo25PVMVQlsGo
+         c5RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6F+XndsIru6duR0CCwlaQ2qNG4XUe6rojDGrs09hMvY=;
+        b=r/VuaaGsLB3VF26UaIQyc2dYFy3AsGvVV73pQP22JKLfE7BW4cAOh4hR5HqH+7ReDx
+         ByKO2G1FFrVuwBFNO7+xLoQWJaHkyXULRuwGMddplRI0wBDxTNmyg44ayeghjm5fmj2F
+         Tn30lMS6ok65+JvRDCWVz7FlXicNoSkRd24kXWa2TLBwoNXCKbrDGYMb1WRQFh5Y8iLf
+         sM827n27OXba0nk13u6Wb6m1DQF5GNOJ/JruknEQp+f0X58GqF+/U76cbB213qOv3mpr
+         L2xrojMIch1zJPARcwmwdd/LNwif0m9yjdRTjacW6HewJEGsVQ1ZseOAGf3T+f/3jWKz
+         roow==
+X-Gm-Message-State: AGi0PubHTtzGNMPy36b1O6VKu9pzfrAkN5JOpHRhZi0s9nRVeGqHENu5
+        2R9rG85vawjgCB5AjyhDgS9aL5JAgcE=
+X-Google-Smtp-Source: APiQypIeFer/HL1t7w5DYHAubotVYeGojlmu3tPBDVbGwjXGJOqMQzNmvf/Is5cSyIwrW/tw9fE4Cg==
+X-Received: by 2002:a2e:81d5:: with SMTP id s21mr1200669ljg.258.1588229864883;
+        Wed, 29 Apr 2020 23:57:44 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-7.NA.cust.bahnhof.se. [98.128.181.7])
+        by smtp.gmail.com with ESMTPSA id q7sm3923866ljp.20.2020.04.29.23.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 23:57:44 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.7-rc4
+Date:   Thu, 30 Apr 2020 08:57:43 +0200
+Message-Id: <20200430065743.21952-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTI5IGF0IDE1OjI0ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
-PiBJbiBhIGNvbmZpZ3VyYXRpb24gd2l0aCBDT05GSUdfUElOQ1RSTF9NVEtfTU9PUkU9eSBhbmQg
-Q09ORklHX1BJTkNUUkxfTVRLX1BBUklTPW0sDQo+IHdlIGVuZCB1cCB3aXRoIHRoZSBtdGtfZWlu
-dCBkcml2ZXIgYXMgYSBsb2FkYWJsZSBtb2R1bGUgdGhhdCBjYW5ub3QgYmUNCj4gbGlua2VkIGZy
-b20gYnVpbHQtaW4gY29kZToNCg0KSG93IGRpZCB5b3Ugc2V0IGFsbCBNVEstcmVsYXRlZCBQSU5D
-VFJMIGNvbmZpZ3M/DQphbmQgd2hhdCBpcyB0aGUgZ2VuZXJhdGVkIHJlc3VsdCBvZiAuY29uZmln
-Pw0KDQoNCg0KPiBhYXJjaDY0LWxpbnV4LWxkOiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
-Y3RybC1tdGstY29tbW9uLXYyLm86IGluIGZ1bmN0aW9uIGBtdGtfYnVpbGRfZWludCc6DQo+ICgu
-dGV4dCsweDMwNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG10a19laW50X2RvX2luaXQnDQo+
-IGFhcmNoNjQtbGludXgtbGQ6IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW1vb3Jl
-Lm86IGluIGZ1bmN0aW9uIGBtdGtfZ3Bpb19zZXRfY29uZmlnJzoNCj4gcGluY3RybC1tb29yZS5j
-OigudGV4dCsweGY4MCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG10a19laW50X3NldF9kZWJv
-dW5jZScNCj4gYWFyY2g2NC1saW51eC1sZDogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0
-cmwtbW9vcmUubzogaW4gZnVuY3Rpb24gYG10a19ncGlvX3RvX2lycSc6DQo+IHBpbmN0cmwtbW9v
-cmUuYzooLnRleHQrMHgxMDI4KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbXRrX2VpbnRfZmlu
-ZF9pcnEnDQo+IA0KPiBTaW1wbGlmeSB0aGUgS2NvbmZpZyBsb2dpYyB0byBhbHdheXMgc2VsZWN0
-IEVJTlRfTVRLIHdoZW4gaXQgaXMgbmVlZGVkLCBhbmQNCj4gcmVtb3ZlIHRoZSAnZGVmYXVsdCcg
-c3RhdGVtZW50cy4NCj4gDQo+IEZpeGVzOiA4MTc0YTg1MTJlM2UgKCJwaW5jdHJsOiBtZWRpYXRl
-azogbWFrZSBNZWRpYVRlayBwaW5jdHJsIHYyIGRyaXZlciByZWFkeSBmb3IgYnVpZGxpbmcgbG9h
-ZGFibGUgbW9kdWxlIikNCj4gU2lnbmVkLW9mZi1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5k
-Yi5kZT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZyAgICB8ICA0
-ICstLS0NCj4gIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5oIHwgMjggLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KSwgMzEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL0tjb25maWcgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZw0KPiBpbmRl
-eCBmMzJkMzY0NGM1MDkuLmI2YThkOTFmNDg4NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tj
-b25maWcNCj4gQEAgLTcsOCArNyw2IEBAIGNvbmZpZyBFSU5UX01USw0KPiAgCWRlcGVuZHMgb24g
-UElOQ1RSTF9NVEsgfHwgUElOQ1RSTF9NVEtfTU9PUkUgfHwgUElOQ1RSTF9NVEtfUEFSSVMgfHwg
-Q09NUElMRV9URVNUDQo+ICAJc2VsZWN0IEdQSU9MSUINCj4gIAlzZWxlY3QgSVJRX0RPTUFJTg0K
-PiAtCWRlZmF1bHQgeSBpZiBQSU5DVFJMX01USyB8fCBQSU5DVFJMX01US19NT09SRQ0KPiAtCWRl
-ZmF1bHQgUElOQ1RSTF9NVEtfUEFSSVMNCj4gIA0KPiAgY29uZmlnIFBJTkNUUkxfTVRLDQo+ICAJ
-Ym9vbA0KPiBAQCAtMjAsNiArMTgsNyBAQCBjb25maWcgUElOQ1RSTF9NVEsNCj4gIAlzZWxlY3Qg
-T0ZfR1BJTw0KPiAgDQo+ICBjb25maWcgUElOQ1RSTF9NVEtfVjINCj4gKwlzZWxlY3QgRUlOVF9N
-VEsNCj4gIAl0cmlzdGF0ZQ0KPiAgDQo+ICBjb25maWcgUElOQ1RSTF9NVEtfTU9PUkUNCj4gQEAg
-LTM4LDcgKzM3LDYgQEAgY29uZmlnIFBJTkNUUkxfTVRLX1BBUklTDQo+ICAJc2VsZWN0IFBJTk1V
-WA0KPiAgCXNlbGVjdCBHRU5FUklDX1BJTkNPTkYNCj4gIAlzZWxlY3QgR1BJT0xJQg0KPiAtCXNl
-bGVjdCBFSU5UX01USw0KPiAgCXNlbGVjdCBPRl9HUElPDQo+ICAJc2VsZWN0IFBJTkNUUkxfTVRL
-X1YyDQoNCldpdGggdGhpcyBtb2RpZmljYXRpb24sUElOQ1RSS19NVEtfTU9PUkUgYWx3YXlzIHNl
-bGVjdCBFSU5UX01USw0KKGluZGlyZWN0bHkgdmlhIHNlbGVjdCBQSU5DVFJMX01US19WMikuDQpI
-b3dldmVyLCBpbiBwcmV2aW91cyByZXZpZXcsIFNlYW4gV2FuZyBzYWlkIHRoYXQgUElOQ1RSTF9N
-VEtfTU9PUkUgZG9lcw0Kbm90IGFsd2F5cyB1c2UgRUlOVF9NVEsgc28gUElOQ1RSTF9NVEtfTU9P
-UkUgc2hhbGwgbm90IHNlbGVjdCBFSU5UX01USw0KdW4tY29uZGl0aW9uYWxseS4NCg0KDQo+ICAN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5oIGIvZHJp
-dmVycy9waW5jdHJsL21lZGlhdGVrL210ay1laW50LmgNCj4gaW5kZXggNDg0NjhkMGZhZTY4Li5m
-NDBkYWI1MGE1ZjMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGst
-ZWludC5oDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5oDQo+IEBA
-IC02OCw3ICs2OCw2IEBAIHN0cnVjdCBtdGtfZWludCB7DQo+ICAJY29uc3Qgc3RydWN0IG10a19l
-aW50X3h0ICpncGlvX3hsYXRlOw0KPiAgfTsNCj4gIA0KPiAtI2lmIElTX0VOQUJMRUQoQ09ORklH
-X0VJTlRfTVRLKQ0KPiAgaW50IG10a19laW50X2RvX2luaXQoc3RydWN0IG10a19laW50ICplaW50
-KTsNCj4gIGludCBtdGtfZWludF9kb19zdXNwZW5kKHN0cnVjdCBtdGtfZWludCAqZWludCk7DQo+
-ICBpbnQgbXRrX2VpbnRfZG9fcmVzdW1lKHN0cnVjdCBtdGtfZWludCAqZWludCk7DQo+IEBAIC03
-NiwzMSArNzUsNCBAQCBpbnQgbXRrX2VpbnRfc2V0X2RlYm91bmNlKHN0cnVjdCBtdGtfZWludCAq
-ZWludCwgdW5zaWduZWQgbG9uZyBlaW50X24sDQo+ICAJCQkgIHVuc2lnbmVkIGludCBkZWJvdW5j
-ZSk7DQo+ICBpbnQgbXRrX2VpbnRfZmluZF9pcnEoc3RydWN0IG10a19laW50ICplaW50LCB1bnNp
-Z25lZCBsb25nIGVpbnRfbik7DQo+ICANCj4gLSNlbHNlDQo+IC1zdGF0aWMgaW5saW5lIGludCBt
-dGtfZWludF9kb19pbml0KHN0cnVjdCBtdGtfZWludCAqZWludCkNCj4gLXsNCj4gLQlyZXR1cm4g
-LUVPUE5PVFNVUFA7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyBpbmxpbmUgaW50IG10a19laW50X2Rv
-X3N1c3BlbmQoc3RydWN0IG10a19laW50ICplaW50KQ0KPiAtew0KPiAtCXJldHVybiAtRU9QTk9U
-U1VQUDsNCj4gLX0NCj4gLQ0KPiAtc3RhdGljIGlubGluZSBpbnQgbXRrX2VpbnRfZG9fcmVzdW1l
-KHN0cnVjdCBtdGtfZWludCAqZWludCkNCj4gLXsNCj4gLQlyZXR1cm4gLUVPUE5PVFNVUFA7DQo+
-IC19DQo+IC0NCj4gLXN0YXRpYyBpbmxpbmUgaW50IG10a19laW50X3NldF9kZWJvdW5jZShzdHJ1
-Y3QgbXRrX2VpbnQgKmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9uLA0KPiAtCQkJICB1bnNpZ25l
-ZCBpbnQgZGVib3VuY2UpDQo+IC17DQo+IC0JcmV0dXJuIC1FT1BOT1RTVVBQOw0KPiAtfQ0KPiAt
-DQo+IC1zdGF0aWMgaW5saW5lIGludCBtdGtfZWludF9maW5kX2lycShzdHJ1Y3QgbXRrX2VpbnQg
-KmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9uKQ0KPiAtew0KPiAtCXJldHVybiAtRU9QTk9UU1VQ
-UDsNCj4gLX0NCj4gLSNlbmRpZg0KPiAgI2VuZGlmIC8qIF9fTVRLX0VJTlRfSCAqLw0KDQo=
+Hi Linus,
 
+Here's a PR with a couple of MMC fixes intended for v5.7-rc4. Details about the
+highlights are as usual found in the signed tag.
+
+Please pull this in!
+
+Kind regards
+Ulf Hansson
+
+
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.7-rc2
+
+for you to fetch changes up to 1a8eb6b373c2af6533c13d1ea11f504e5010ed9a:
+
+  mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers (2020-04-22 17:57:17 +0200)
+
+----------------------------------------------------------------
+MMC host:
+ - meson-mx-sdio: Fix support for HW busy detection
+ - sdhci-msm: Fix support for HW busy detection
+ - cqhci: Fix polling loop by converting to readx_poll_timeout()
+ - sdhci-xenon: Fix annoying 1.8V regulator warning
+ - sdhci-pci: Fix eMMC driver strength for BYT-based controllers
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers
+
+Douglas Anderson (1):
+      mmc: cqhci: Avoid false "cqhci: CQE stuck on" by not open-coding timeout loop
+
+Jason Yan (1):
+      mmc: core: make mmc_interrupt_hpi() static
+
+Marek Behún (1):
+      mmc: sdhci-xenon: fix annoying 1.8V regulator warning
+
+Martin Blumenstingl (2):
+      mmc: meson-mx-sdio: Set MMC_CAP_WAIT_WHILE_BUSY
+      mmc: meson-mx-sdio: remove the broken ->card_busy() op
+
+Veerabhadrarao Badiganti (1):
+      mmc: sdhci-msm: Enable host capabilities pertains to R1b response
+
+ drivers/mmc/core/mmc_ops.c        |  2 +-
+ drivers/mmc/host/cqhci.c          | 21 ++++++++++-----------
+ drivers/mmc/host/meson-mx-sdio.c  | 11 +----------
+ drivers/mmc/host/sdhci-msm.c      |  2 ++
+ drivers/mmc/host/sdhci-pci-core.c |  3 +++
+ drivers/mmc/host/sdhci-xenon.c    | 10 ++++++++++
+ 6 files changed, 27 insertions(+), 22 deletions(-)
