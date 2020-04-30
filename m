@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793A6C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F83C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 569102076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5ED2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262852;
-	bh=AKLSRgDRMriBe2VoqmymF5TgViMK8zitSGO+zOckj4Y=;
+	s=default; t=1588262863;
+	bh=hZ+wPwgu0dNDjrYHYJeJ+kFADL3g1Nq/98DRRRCT+94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sC/8xnHASUP322A3JfCygGbKGhicmEyf5J0UictrX1BnxxgfgT6UranV8I1E6E1zW
-	 1AiyX21yAozNprW0z3VckX40geSFT8CRE3yN6yc9yDKTyhP5eW0nqRgdx0v7khAW03
-	 Md8G6elnxPEAXfPK+BaeKEKAWZheTgldmEL7Bjuk=
+	b=l1NI9uidho8DVGYGfuIf7xKf1SYG5eYi0vGUPOjMCk5XuFaGevpMBKgy5BNwHv7OE
+	 /iwRdHxHYZXXovhccofOmQDthW/CJEI+CZaXKRtT/2r/JfqE5nqiP2u9M+F08oMa6o
+	 t9UTpO5F8UyKNtAA3jvEuWJKlzPy1O7O+EX2uwM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgD3QH0 (ORCPT
+        id S1728530AbgD3QHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50840 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726826AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECD424960;
-        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2A1320873;
+        Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=AKLSRgDRMriBe2VoqmymF5TgViMK8zitSGO+zOckj4Y=;
+        bh=hZ+wPwgu0dNDjrYHYJeJ+kFADL3g1Nq/98DRRRCT+94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmz2JniklUmBdPRbKa2AoCq051T0Mmlq6iC1/X2xhwrCFRLKwyuDwgMbn58tU1E3O
-         H9Fzrae1h+3NJ3h1TRtpKdoGgRXO0knnexhH6niXDR9202ah23t1yFNgpIHGChaSG+
-         v8JUvHp7ECphYKGa1/MlifkBkLyBs8MF5kmRhRYc=
+        b=MFhErx71Mud5k0AUcbTo25KDPqPBQjfqjJ2iOPl5Vlt1Y1WWD5Hq9KzO3PGYavqj5
+         ABjKKUQm3SUj1yHKM3DidjqAEy2hNzU6JVZD66Cds3ypQ4K7YiRzzRMVtsA8uiaeO4
+         VNDsJk0536rSaMiFi2pLo8qAle19nyhFNmopBrKY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxF3-9x; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxEF-0t; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 12/37] docs: networking: convert nf_conntrack-sysctl.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:07 +0200
-Message-Id: <4ce89bb56e2bf138c78dbf9ad9d654051b786be1.1588261997.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-x25@vger.kernel.org
+Subject: [PATCH 02/37] docs: networking: convert lapb-module.txt to ReST
+Date:   Thu, 30 Apr 2020 18:03:57 +0200
+Message-Id: <dfb05763848c4911dca874209ed4e3612a432972.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -62,141 +63,360 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- add a document title;
-- mark lists as such;
+- adjust title markup;
+- mark code blocks and literals as such;
+- mark tables as such;
+- adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/index.rst            |  1 +
- ...ack-sysctl.txt => nf_conntrack-sysctl.rst} | 51 +++++++++++--------
- 2 files changed, 30 insertions(+), 22 deletions(-)
- rename Documentation/networking/{nf_conntrack-sysctl.txt => nf_conntrack-sysctl.rst} (85%)
+ Documentation/networking/index.rst            |   1 +
+ .../{lapb-module.txt => lapb-module.rst}      | 120 ++++++++++++------
+ MAINTAINERS                                   |   2 +-
+ net/lapb/Kconfig                              |   2 +-
+ 4 files changed, 84 insertions(+), 41 deletions(-)
+ rename Documentation/networking/{lapb-module.txt => lapb-module.rst} (74%)
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index d98509f15363..e5128bb7e7df 100644
+index 0c5d7a037983..acd2567cf0d4 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -85,6 +85,7 @@ Contents:
-    netdevices
-    netfilter-sysctl
-    netif-msg
-+   nf_conntrack-sysctl
+@@ -75,6 +75,7 @@ Contents:
+    ipvs-sysctl
+    kcm
+    l2tp
++   lapb-module
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/nf_conntrack-sysctl.txt b/Documentation/networking/nf_conntrack-sysctl.rst
-similarity index 85%
-rename from Documentation/networking/nf_conntrack-sysctl.txt
-rename to Documentation/networking/nf_conntrack-sysctl.rst
-index f75c2ce6e136..11a9b76786cb 100644
---- a/Documentation/networking/nf_conntrack-sysctl.txt
-+++ b/Documentation/networking/nf_conntrack-sysctl.rst
-@@ -1,8 +1,15 @@
+diff --git a/Documentation/networking/lapb-module.txt b/Documentation/networking/lapb-module.rst
+similarity index 74%
+rename from Documentation/networking/lapb-module.txt
+rename to Documentation/networking/lapb-module.rst
+index d4fc8f221559..ff586bc9f005 100644
+--- a/Documentation/networking/lapb-module.txt
++++ b/Documentation/networking/lapb-module.rst
+@@ -1,8 +1,14 @@
+-		The Linux LAPB Module Interface 1.3
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+-		      Jonathan Naylor 29.12.96
++===============================
++The Linux LAPB Module Interface
++===============================
+ 
+-Changed (Henner Eisen, 2000-10-29): int return value for data_indication() 
++Version 1.3
 +
-+===================================
-+Netfilter Conntrack Sysfs variables
-+===================================
++Jonathan Naylor 29.12.96
 +
- /proc/sys/net/netfilter/nf_conntrack_* Variables:
-+=================================================
++Changed (Henner Eisen, 2000-10-29): int return value for data_indication()
  
- nf_conntrack_acct - BOOLEAN
--	0 - disabled (default)
--	not 0 - enabled
-+	- 0 - disabled (default)
-+	- not 0 - enabled
+ The LAPB module will be a separately compiled module for use by any parts of
+ the Linux operating system that require a LAPB service. This document
+@@ -32,16 +38,16 @@ LAPB Initialisation Structure
  
- 	Enable connection tracking flow accounting. 64-bit byte and packet
- 	counters per flow are added.
-@@ -16,8 +23,8 @@ nf_conntrack_buckets - INTEGER
- 	This sysctl is only writeable in the initial net namespace.
+ This structure is used only once, in the call to lapb_register (see below).
+ It contains information about the device driver that requires the services
+-of the LAPB module.
++of the LAPB module::
  
- nf_conntrack_checksum - BOOLEAN
--	0 - disabled
--	not 0 - enabled (default)
-+	- 0 - disabled
-+	- not 0 - enabled (default)
+-struct lapb_register_struct {
+-	void (*connect_confirmation)(int token, int reason);
+-	void (*connect_indication)(int token, int reason);
+-	void (*disconnect_confirmation)(int token, int reason);
+-	void (*disconnect_indication)(int token, int reason);
+-	int  (*data_indication)(int token, struct sk_buff *skb);
+-	void (*data_transmit)(int token, struct sk_buff *skb);
+-};
++	struct lapb_register_struct {
++		void (*connect_confirmation)(int token, int reason);
++		void (*connect_indication)(int token, int reason);
++		void (*disconnect_confirmation)(int token, int reason);
++		void (*disconnect_indication)(int token, int reason);
++		int  (*data_indication)(int token, struct sk_buff *skb);
++		void (*data_transmit)(int token, struct sk_buff *skb);
++	};
  
- 	Verify checksum of incoming packets. Packets with bad checksums are
- 	in INVALID state. If this is enabled, such packets will not be
-@@ -27,8 +34,8 @@ nf_conntrack_count - INTEGER (read-only)
- 	Number of currently allocated flow entries.
+ Each member of this structure corresponds to a function in the device driver
+ that is called when a particular event in the LAPB module occurs. These will
+@@ -54,19 +60,19 @@ LAPB Parameter Structure
  
- nf_conntrack_events - BOOLEAN
--	0 - disabled
--	not 0 - enabled (default)
-+	- 0 - disabled
-+	- not 0 - enabled (default)
+ This structure is used with the lapb_getparms and lapb_setparms functions
+ (see below). They are used to allow the device driver to get and set the
+-operational parameters of the LAPB implementation for a given connection.
++operational parameters of the LAPB implementation for a given connection::
  
- 	If this option is enabled, the connection tracking code will
- 	provide userspace with connection tracking events via ctnetlink.
-@@ -62,8 +69,8 @@ nf_conntrack_generic_timeout - INTEGER (seconds)
- 	protocols.
+-struct lapb_parms_struct {
+-	unsigned int t1;
+-	unsigned int t1timer;
+-	unsigned int t2;
+-	unsigned int t2timer;
+-	unsigned int n2;
+-	unsigned int n2count;
+-	unsigned int window;
+-	unsigned int state;
+-	unsigned int mode;
+-};
++	struct lapb_parms_struct {
++		unsigned int t1;
++		unsigned int t1timer;
++		unsigned int t2;
++		unsigned int t2timer;
++		unsigned int n2;
++		unsigned int n2count;
++		unsigned int window;
++		unsigned int state;
++		unsigned int mode;
++	};
  
- nf_conntrack_helper - BOOLEAN
--	0 - disabled (default)
--	not 0 - enabled
-+	- 0 - disabled (default)
-+	- not 0 - enabled
+ T1 and T2 are protocol timing parameters and are given in units of 100ms. N2
+ is the maximum number of tries on the link before it is declared a failure.
+@@ -78,11 +84,14 @@ link.
+ The mode variable is a bit field used for setting (at present) three values.
+ The bit fields have the following meanings:
  
- 	Enable automatic conntrack helper assignment.
- 	If disabled it is required to set up iptables rules to assign
-@@ -81,14 +88,14 @@ nf_conntrack_icmpv6_timeout - INTEGER (seconds)
- 	Default for ICMP6 timeout.
++======  =================================================
+ Bit	Meaning
++======  =================================================
+ 0	LAPB operation (0=LAPB_STANDARD 1=LAPB_EXTENDED).
+ 1	[SM]LP operation (0=LAPB_SLP 1=LAPB=MLP).
+ 2	DTE/DCE operation (0=LAPB_DTE 1=LAPB_DCE)
+ 3-31	Reserved, must be 0.
++======  =================================================
  
- nf_conntrack_log_invalid - INTEGER
--	0   - disable (default)
--	1   - log ICMP packets
--	6   - log TCP packets
--	17  - log UDP packets
--	33  - log DCCP packets
--	41  - log ICMPv6 packets
--	136 - log UDPLITE packets
--	255 - log packets of any protocol
-+	- 0   - disable (default)
-+	- 1   - log ICMP packets
-+	- 6   - log TCP packets
-+	- 17  - log UDP packets
-+	- 33  - log DCCP packets
-+	- 41  - log ICMPv6 packets
-+	- 136 - log UDPLITE packets
-+	- 255 - log packets of any protocol
+ Extended LAPB operation indicates the use of extended sequence numbers and
+ consequently larger window sizes, the default is standard LAPB operation.
+@@ -99,8 +108,9 @@ Functions
  
- 	Log invalid packets of a type specified by value.
+ The LAPB module provides a number of function entry points.
  
-@@ -97,15 +104,15 @@ nf_conntrack_max - INTEGER
- 	nf_conntrack_buckets value * 4.
++::
  
- nf_conntrack_tcp_be_liberal - BOOLEAN
--	0 - disabled (default)
--	not 0 - enabled
-+	- 0 - disabled (default)
-+	- not 0 - enabled
+-int lapb_register(void *token, struct lapb_register_struct);
++    int lapb_register(void *token, struct lapb_register_struct);
  
- 	Be conservative in what you do, be liberal in what you accept from others.
- 	If it's non-zero, we mark only out of window RST segments as INVALID.
+ This must be called before the LAPB module may be used. If the call is
+ successful then LAPB_OK is returned. The token must be a unique identifier
+@@ -111,33 +121,42 @@ For multiple LAPB links in a single device driver, multiple calls to
+ lapb_register must be made. The format of the lapb_register_struct is given
+ above. The return values are:
  
- nf_conntrack_tcp_loose - BOOLEAN
--	0 - disabled
--	not 0 - enabled (default)
-+	- 0 - disabled
-+	- not 0 - enabled (default)
++=============		=============================
+ LAPB_OK			LAPB registered successfully.
+ LAPB_BADTOKEN		Token is already registered.
+ LAPB_NOMEM		Out of memory
++=============		=============================
  
- 	If it is set to zero, we disable picking up already established
- 	connections.
-@@ -148,8 +155,8 @@ nf_conntrack_tcp_timeout_unacknowledged - INTEGER (seconds)
- 	default 300
++::
  
- nf_conntrack_timestamp - BOOLEAN
--	0 - disabled (default)
--	not 0 - enabled
-+	- 0 - disabled (default)
-+	- not 0 - enabled
+-int lapb_unregister(void *token);
++    int lapb_unregister(void *token);
  
- 	Enable connection tracking flow timestamping.
+ This releases all the resources associated with a LAPB link. Any current
+ LAPB link will be abandoned without further messages being passed. After
+ this call, the value of token is no longer valid for any calls to the LAPB
+ function. The valid return values are:
  
++=============		===============================
+ LAPB_OK			LAPB unregistered successfully.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
++=============		===============================
+ 
++::
+ 
+-int lapb_getparms(void *token, struct lapb_parms_struct *parms);
++    int lapb_getparms(void *token, struct lapb_parms_struct *parms);
+ 
+ This allows the device driver to get the values of the current LAPB
+ variables, the lapb_parms_struct is described above. The valid return values
+ are:
+ 
++=============		=============================
+ LAPB_OK			LAPB getparms was successful.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
++=============		=============================
+ 
++::
+ 
+-int lapb_setparms(void *token, struct lapb_parms_struct *parms);
++    int lapb_setparms(void *token, struct lapb_parms_struct *parms);
+ 
+ This allows the device driver to set the values of the current LAPB
+ variables, the lapb_parms_struct is described above. The values of t1timer,
+@@ -145,42 +164,54 @@ t2timer and n2count are ignored, likewise changing the mode bits when
+ connected will be ignored. An error implies that none of the values have
+ been changed. The valid return values are:
+ 
++=============		=================================================
+ LAPB_OK			LAPB getparms was successful.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
+ LAPB_INVALUE		One of the values was out of its allowable range.
++=============		=================================================
+ 
++::
+ 
+-int lapb_connect_request(void *token);
++    int lapb_connect_request(void *token);
+ 
+ Initiate a connect using the current parameter settings. The valid return
+ values are:
+ 
++==============		=================================
+ LAPB_OK			LAPB is starting to connect.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
+ LAPB_CONNECTED		LAPB module is already connected.
++==============		=================================
+ 
++::
+ 
+-int lapb_disconnect_request(void *token);
++    int lapb_disconnect_request(void *token);
+ 
+ Initiate a disconnect. The valid return values are:
+ 
++=================	===============================
+ LAPB_OK			LAPB is starting to disconnect.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
+ LAPB_NOTCONNECTED	LAPB module is not connected.
++=================	===============================
+ 
++::
+ 
+-int lapb_data_request(void *token, struct sk_buff *skb);
++    int lapb_data_request(void *token, struct sk_buff *skb);
+ 
+ Queue data with the LAPB module for transmitting over the link. If the call
+ is successful then the skbuff is owned by the LAPB module and may not be
+ used by the device driver again. The valid return values are:
+ 
++=================	=============================
+ LAPB_OK			LAPB has accepted the data.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
+ LAPB_NOTCONNECTED	LAPB module is not connected.
++=================	=============================
+ 
++::
+ 
+-int lapb_data_received(void *token, struct sk_buff *skb);
++    int lapb_data_received(void *token, struct sk_buff *skb);
+ 
+ Queue data with the LAPB module which has been received from the device. It
+ is expected that the data passed to the LAPB module has skb->data pointing
+@@ -188,9 +219,10 @@ to the beginning of the LAPB data. If the call is successful then the skbuff
+ is owned by the LAPB module and may not be used by the device driver again.
+ The valid return values are:
+ 
++=============		===========================
+ LAPB_OK			LAPB has accepted the data.
+ LAPB_BADTOKEN		Invalid/unknown LAPB token.
+-
++=============		===========================
+ 
+ Callbacks
+ ---------
+@@ -200,49 +232,58 @@ module to call when an event occurs. They are registered with the LAPB
+ module with lapb_register (see above) in the structure lapb_register_struct
+ (see above).
+ 
++::
+ 
+-void (*connect_confirmation)(void *token, int reason);
++    void (*connect_confirmation)(void *token, int reason);
+ 
+ This is called by the LAPB module when a connection is established after
+ being requested by a call to lapb_connect_request (see above). The reason is
+ always LAPB_OK.
+ 
++::
+ 
+-void (*connect_indication)(void *token, int reason);
++    void (*connect_indication)(void *token, int reason);
+ 
+ This is called by the LAPB module when the link is established by the remote
+ system. The value of reason is always LAPB_OK.
+ 
++::
+ 
+-void (*disconnect_confirmation)(void *token, int reason);
++    void (*disconnect_confirmation)(void *token, int reason);
+ 
+ This is called by the LAPB module when an event occurs after the device
+ driver has called lapb_disconnect_request (see above). The reason indicates
+ what has happened. In all cases the LAPB link can be regarded as being
+ terminated. The values for reason are:
+ 
++=================	====================================================
+ LAPB_OK			The LAPB link was terminated normally.
+ LAPB_NOTCONNECTED	The remote system was not connected.
+ LAPB_TIMEDOUT		No response was received in N2 tries from the remote
+ 			system.
++=================	====================================================
+ 
++::
+ 
+-void (*disconnect_indication)(void *token, int reason);
++    void (*disconnect_indication)(void *token, int reason);
+ 
+ This is called by the LAPB module when the link is terminated by the remote
+ system or another event has occurred to terminate the link. This may be
+ returned in response to a lapb_connect_request (see above) if the remote
+ system refused the request. The values for reason are:
+ 
++=================	====================================================
+ LAPB_OK			The LAPB link was terminated normally by the remote
+ 			system.
+ LAPB_REFUSED		The remote system refused the connect request.
+ LAPB_NOTCONNECTED	The remote system was not connected.
+ LAPB_TIMEDOUT		No response was received in N2 tries from the remote
+ 			system.
++=================	====================================================
+ 
++::
+ 
+-int (*data_indication)(void *token, struct sk_buff *skb);
++    int (*data_indication)(void *token, struct sk_buff *skb);
+ 
+ This is called by the LAPB module when data has been received from the
+ remote system that should be passed onto the next layer in the protocol
+@@ -254,8 +295,9 @@ This method should return NET_RX_DROP (as defined in the header
+ file include/linux/netdevice.h) if and only if the frame was dropped
+ before it could be delivered to the upper layer.
+ 
++::
+ 
+-void (*data_transmit)(void *token, struct sk_buff *skb);
++    void (*data_transmit)(void *token, struct sk_buff *skb);
+ 
+ This is called by the LAPB module when data is to be transmitted to the
+ remote system by the device driver. The skbuff becomes the property of the
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b0cf6c358136..0db63acd07b0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9546,7 +9546,7 @@ F:	drivers/soc/lantiq
+ LAPB module
+ L:	linux-x25@vger.kernel.org
+ S:	Orphan
+-F:	Documentation/networking/lapb-module.txt
++F:	Documentation/networking/lapb-module.rst
+ F:	include/*/lapb.h
+ F:	net/lapb/
+ 
+diff --git a/net/lapb/Kconfig b/net/lapb/Kconfig
+index 6acfc999c952..5b50e8d64f26 100644
+--- a/net/lapb/Kconfig
++++ b/net/lapb/Kconfig
+@@ -15,7 +15,7 @@ config LAPB
+ 	  currently supports LAPB only over Ethernet connections. If you want
+ 	  to use LAPB connections over Ethernet, say Y here and to "LAPB over
+ 	  Ethernet driver" below. Read
+-	  <file:Documentation/networking/lapb-module.txt> for technical
++	  <file:Documentation/networking/lapb-module.rst> for technical
+ 	  details.
+ 
+ 	  To compile this driver as a module, choose M here: the
 -- 
 2.25.4
 
