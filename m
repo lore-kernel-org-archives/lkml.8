@@ -2,87 +2,101 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EC3C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEDEC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7BA2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lmFSRX6V"
+	by mail.kernel.org (Postfix) with ESMTP id E9D302074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgD3O04 (ORCPT
+        id S1728119AbgD3O1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:26:56 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55073 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728296AbgD3O0z (ORCPT
+        Thu, 30 Apr 2020 10:27:18 -0400
+Received: from smtp-42a8.mail.infomaniak.ch ([84.16.66.168]:60817 "EHLO
+        smtp-42a8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727822AbgD3O1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:26:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588256815; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=r8YTGkSYkAs2tX+5jygTmI4J1E3dvGdwC9j2bG2dVjs=; b=lmFSRX6VViu/jPBmaaBbJSxMA78MwoOizpKm6zwsISS4Zf6w0ZJlY/m5gBUXVEhNFu5dtECN
- O4tjrqEE473uJEGMjc8D7EPuUbBJcOomrL8LqBMHn7irZ3seLfMbD7mgV2VjTaY+bw4X49kU
- dLKYUeWVSebqFzxnvFgqGRKGcmA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaae02b.7fdc6137f500-smtp-out-n05;
- Thu, 30 Apr 2020 14:26:51 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C02FDC432C2; Thu, 30 Apr 2020 14:26:51 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B84BCC432C2;
-        Thu, 30 Apr 2020 14:26:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B84BCC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 3/9] bus: mhi: core: Add range check for channel id
- received in event ring
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
- <1588193551-31439-4-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <4838aa03-d673-ab01-e88d-7ebb5b7fdbfe@codeaurora.org>
-Date:   Thu, 30 Apr 2020 08:26:49 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 30 Apr 2020 10:27:18 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Cd436GZyzlhyrF;
+        Thu, 30 Apr 2020 16:26:43 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49Cd4261cTzlndDX;
+        Thu, 30 Apr 2020 16:26:42 +0200 (CEST)
+Subject: Re: [PATCH 2/2] ima: add policy support for the new file open
+ MAY_OPENEXEC flag
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        kbuild test robot <lkp@intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Steve Grubb <sgrubb@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588167523-7866-3-git-send-email-zohar@linux.ibm.com>
+ <202004300526.H4rF1lW2%lkp@intel.com>
+ <1588254156.5167.32.camel@linux.ibm.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <48e67766-89ad-0b55-baa6-761ef09298bd@digikod.net>
+Date:   Thu, 30 Apr 2020 16:26:42 +0200
+User-Agent: 
 MIME-Version: 1.0
-In-Reply-To: <1588193551-31439-4-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1588254156.5167.32.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
-> From: Hemant Kumar <hemantk@codeaurora.org>
-> 
-> MHI data completion handler function reads channel id from event
-> ring element. Value is under the control of MHI devices and can be
-> any value between 0 and 255. In order to prevent out of bound access
-> add a bound check against the max channel supported by controller
-> and skip processing of that event ring element.
-> 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
+OK, I'll add it to the next series.
 
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+On 30/04/2020 15:42, Mimi Zohar wrote:
+> Hi Mickaël,
+> 
+> On Thu, 2020-04-30 at 05:24 +0800, kbuild test robot wrote:
+>> Hi Mimi,
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on integrity/next-integrity]
+>> [also build test ERROR on linus/master v5.7-rc3 next-20200429]
+>> [cannot apply to security/next-testing]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help
+>> improve the system. BTW, we also suggest to use '--base' option to specify the
+>> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> To prevent this sort of message, in the future could you include this
+> patch (2/2) with your patch set?  Please include the "Reviewed-by:
+> Lakshmi Ramasubramanian <nramas@linux.microsoft.com>" tag.
+> 
+> thanks,
+> 
+> Mimi
+> 
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Mimi-Zohar/ima-extending-IMA-policy-to-support-interpreters/20200430-030608
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+>> config: arc-allyesconfig (attached as .config)
+>> compiler: arc-elf-gcc (GCC) 9.3.0
+>> reproduce:
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=arc 
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All error/warnings (new ones prefixed by >>):
+>>
+>>    security/integrity/ima/ima_main.c: In function 'ima_file_check':
+>>>> security/integrity/ima/ima_main.c:442:20: error: 'MAY_OPENEXEC' undeclared (first use in this function); did you mean 'MAY_OPEN'?
+>>      442 |         MAY_EXEC | MAY_OPENEXEC |
+>>          |                    ^~~~~~~~~~~~
+>>          |                    MAY_OPEN
+> 
