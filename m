@@ -2,116 +2,159 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCCEC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D49C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6346B2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588260416;
-	bh=Gc4CSNIYpNL1Sg9aqBxD4gp1PKP4X9xSXcXPNS+Bx0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fzaFJGEZPKy72OsDa5SRvKxjzAIKShTbq72WmJwEOQ7TkaB6O6SIirPeeLWpQ6vMk
-	 ZEFxQb1uXAHLlDPy4EQ08Pq2xPrFtaJ97yptKMuuthzVivBP7Yc3DsPg39usCrie/j
-	 pV/ecG8SeOvsCF5SDQ3LB9u+ByLe8Gx9JuOkDMjY=
+	by mail.kernel.org (Postfix) with ESMTP id 031012082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:27:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z0nBW1zL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgD3P0z (ORCPT
+        id S1726906AbgD3P1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgD3P0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:26:54 -0400
-Received: from localhost (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8276920731;
-        Thu, 30 Apr 2020 15:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588260414;
-        bh=Gc4CSNIYpNL1Sg9aqBxD4gp1PKP4X9xSXcXPNS+Bx0A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PJ/uIJou43m0kJET6CvgCvR7YIAAP+pe//6F8guEs95z2CUfJ/NDPTQ/9rM4LSFJ0
-         NbzWBBhknCEV4wj/v/FWMa4RtiuIm5BuD/bTaeo3WesaPVcMZJ1kgJgdM+Hu2u8HSM
-         uJ55r1b03YwOhgpPzxrGfd/0TJyNo6KUx4+CVnJQ=
-Date:   Thu, 30 Apr 2020 20:56:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 2/5] usb: renesas-xhci: Add the renesas xhci driver
-Message-ID: <20200430152650.GK948789@vkoul-mobl.Dlink>
-References: <20200430101019.1130956-1-vkoul@kernel.org>
- <20200430101019.1130956-3-vkoul@kernel.org>
- <8ffd119b-192f-8fcc-46cc-3a405e30338c@linux.intel.com>
- <20200430144641.GJ948789@vkoul-mobl.Dlink>
- <20200430145302.GB3495619@kroah.com>
+        Thu, 30 Apr 2020 11:27:22 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50514 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgD3P1W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:27:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03UFRJBb071159;
+        Thu, 30 Apr 2020 10:27:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588260439;
+        bh=RR7cXm+NvfzNMNDKtyKq45cJ+sJveavEPZsYUiaQgSE=;
+        h=From:To:CC:Subject:Date;
+        b=Z0nBW1zLGUube+p9QD7mxXdcTUnW8t8MnvWj713SNQVmywLe58KvLRg+PlhulE/YM
+         O4b2ny3xAcl8pfTI1zKZrMx918E+lwCX+6GFwOEc9fIPU6Dsw7NwDKh1/4qN0rLzqS
+         cCySq2gyvw9+LhZjBHrqCajvV9fhsFIDXOsZr6LQ=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UFRJCV018986;
+        Thu, 30 Apr 2020 10:27:19 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Apr 2020 10:27:19 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Apr 2020 10:27:19 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UFRJeq125886;
+        Thu, 30 Apr 2020 10:27:19 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: power: Convert power_supply text to yaml
+Date:   Thu, 30 Apr 2020 10:18:41 -0500
+Message-ID: <20200430151841.17453-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430145302.GB3495619@kroah.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-20, 16:53, Greg Kroah-Hartman wrote:
-> On Thu, Apr 30, 2020 at 08:16:41PM +0530, Vinod Koul wrote:
-> > > > diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> > > > index b191361257cc..c3a79f626393 100644
-> > > > --- a/drivers/usb/host/Makefile
-> > > > +++ b/drivers/usb/host/Makefile
-> > > > @@ -70,7 +70,8 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
-> > > >  obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
-> > > >  obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
-> > > >  obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-> > > > -obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-> > > > +usb-xhci-pci-objs		:= xhci-pci.o xhci-pci-renesas.o
-> > > > +obj-$(CONFIG_USB_XHCI_PCI)	+= usb-xhci-pci.o
-> > > 
-> > > I don't think it's a good idea to rename the xhci-pci module to usb-xhci-pci
-> > > 
-> > > does
-> > > 
-> > > xhci-pci-y			:= xhci-pci.o xhci-pci-renesas.o
-> > > obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-> > > 
-> > > cause some kbuild issues?
-> > 
-> > Yes with this version I get the warning:
-> > make[4]: Circular drivers/usb/host/xhci-pci.o <- drivers/usb/host/xhci-pci.o dependency dropped.
-> > 
-> > I don't speak enough Kbuild, but I guess it does make sense that we have
-> > xhci-pci.o as target for both xhci-pci.o xhci-pci-renesas.o! That was
-> > the reason for adding usb tag to this to resolve the conflict.
-> > 
-> > I am okay for any other mechanism which can work well here. Btw what
-> > issues do you foresee with adding usb tag to module name.
-> 
-> It will break all sorts of things.  Happens every time we rename
-> modules, let's not do it unless we absolutely have to.
+Convert the power_supply.txt to power-supply.yaml.
+This conversion entailed fixing up the binding to being yaml and dt
+checker compliant.
 
-Hmm that is interesting, am not sure why though :)
+Added a note in the power_supply.txt to reference the power-supply.yaml
 
-Anyway, I have fixed it up and was able to make both as modules and
-export two symbols for xhci-pci.ko to use :)
+CC: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
+ .../bindings/power/supply/power_supply.txt    | 25 +-----------
+ 2 files changed, 42 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/power-supply.yaml
 
-Makefile change looks like:
-
-+obj-$(CONFIG_USB_XHCI_PCI)     += xhci-pci.o xhci-pci-renesas.o
-
-Thanks
+diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+new file mode 100644
+index 000000000000..cfbc79833ed8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/supply/power_supply.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Power Supply Core Support
++
++maintainers:
++  - Sebastian Reichel <sre@kernel.org>
++
++properties:
++  power-supplies:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++      This property is added to a supply in order to list the devices which
++      supply it power, referenced by their phandles.
++
++examples:
++  - |
++    power {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      usb_charger:power@e {
++        compatible = "some,usb-charger";
++        reg = <0xe>;
++      };
++
++      ac_charger:power@c {
++        compatible = "some,ac-charger";
++        reg = <0xc>;
++      };
++
++      battery:battery@b {
++        compatible = "some,battery";
++        reg = <0xb>;
++        power-supplies = <&usb_charger>, <&ac_charger>;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/power/supply/power_supply.txt b/Documentation/devicetree/bindings/power/supply/power_supply.txt
+index 8391bfa0edac..d9693e054509 100644
+--- a/Documentation/devicetree/bindings/power/supply/power_supply.txt
++++ b/Documentation/devicetree/bindings/power/supply/power_supply.txt
+@@ -1,23 +1,2 @@
+-Power Supply Core Support
+-
+-Optional Properties:
+- - power-supplies : This property is added to a supply in order to list the
+-   devices which supply it power, referenced by their phandles.
+-
+-Example:
+-
+-	usb-charger: power@e {
+-		compatible = "some,usb-charger";
+-		...
+-	};
+-
+-	ac-charger: power@c {
+-		compatible = "some,ac-charger";
+-		...
+-	};
+-
+-	battery@b {
+-		compatible = "some,battery";
+-		...
+-		power-supplies = <&usb-charger>, <&ac-charger>;
+-	};
++This binding has been converted to yaml please see power-supply.yaml in this
++directory.
 -- 
-~Vinod
+2.25.1
+
