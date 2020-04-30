@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE62C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8BEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E50E2137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A146F2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254873;
-	bh=2aLTZKLe+wSFrXeOLh7dOkpeYDowF5ZnL0QybDV3ROM=;
+	s=default; t=1588254876;
+	bh=LxsFIRnpUZ8gaPNMQhr0294rKM/sSfRPCBVpSBeChxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rGvnsUk3sTjt8AdxNPsCuA4CR7afnHQ2pEys+AzpeqEs74RlU823ajozQNZYGfJ/v
-	 PHhGPM5ncnYzv8gChXva/gelXwrtshprcVxymc/HhTPX4hqVSVxl/vghWHXjG4e/0S
-	 MC6EXd/thGAXpUD5HmUiGZZglgkkuhcRSdclGoDU=
+	b=1ozTJz3Ix74+PuTvh+Bcs5nfPs+dDO4OCx32DTyJcuAqrHXRHcCyOsQ0MOKPLUFFz
+	 ec8Ag6zvNooTqXV20l9hwcLdAEN2jl6mJroZgj/zOlxlxLKTSwHO3syEpJ+smUAeR5
+	 pV3R1cqKmL4UMUHVylpmhlTBVlFpN+wIEcDxDxDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgD3Nyc (ORCPT
+        id S1729003AbgD3Nyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgD3Nxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:47 -0400
+        id S1727080AbgD3Nxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740F024957;
-        Thu, 30 Apr 2020 13:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2884208D5;
+        Thu, 30 Apr 2020 13:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254827;
-        bh=2aLTZKLe+wSFrXeOLh7dOkpeYDowF5ZnL0QybDV3ROM=;
+        s=default; t=1588254829;
+        bh=LxsFIRnpUZ8gaPNMQhr0294rKM/sSfRPCBVpSBeChxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b23ajpo9jfZlUFJmtN3CNI5J+G3SFdyaZvnl69X/aIq3e9inTBcyeZjpGqN5ElH7y
-         vJJXic4doANdzOyFQFb5BzIJuI5hhNUWY5GqzkK0QZzr21lJvum9AsN6dvKxyRe7fE
-         +jb9Dn4Sfl3FrhGs2swj/AuFhrjEVCHb/bVsSV14=
+        b=yEySL5r71VB4zl0atg2BkJzAInYgXgwQEn3q8N8N3oL4mQVmdpjd/ThQI+GRKx99A
+         zbwzvCJJeEXr5YreXmw2BPTb74gktWrOW4ZiTZGKtoY76yFzBheF+jLSgP3IpTMSYV
+         lyWBxdxiMbFvG35NPBOF8mHYmZIQVPa7VTbhyJ8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 19/30] ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-Date:   Thu, 30 Apr 2020 09:53:14 -0400
-Message-Id: <20200430135325.20762-19-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Xiumei Mu <xmu@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/30] cpumap: Avoid warning when CONFIG_DEBUG_PER_CPU_MAPS is enabled
+Date:   Thu, 30 Apr 2020 09:53:16 -0400
+Message-Id: <20200430135325.20762-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
 References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,50 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 54cb6221688660670a2e430892d7f4e6370263b8 ]
+[ Upstream commit bc23d0e3f717ced21fbfacab3ab887d55e5ba367 ]
 
-Fix the rsnd_ssi_stop function to skip disabling the individual SSIs of
-a multi-SSI setup, as the actual stop is performed by rsnd_ssiu_stop_gen2
-- the same logic as in rsnd_ssi_start. The attempt to disable these SSIs
-was harmless, but caused a "status check failed" message to be printed
-for every SSI in the multi-SSI setup.
-The disabling of interrupts is still performed, as they are enabled for
-all SSIs in rsnd_ssi_init, but care is taken to not accidentally set the
-EN bit for an SSI where it was not set by rsnd_ssi_start.
+When the kernel is built with CONFIG_DEBUG_PER_CPU_MAPS, the cpumap code
+can trigger a spurious warning if CONFIG_CPUMASK_OFFSTACK is also set. This
+happens because in this configuration, NR_CPUS can be larger than
+nr_cpumask_bits, so the initial check in cpu_map_alloc() is not sufficient
+to guard against hitting the warning in cpumask_check().
 
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200417153017.1744454-3-matthias.blankertz@cetitec.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by explicitly checking the supplied key against the
+nr_cpumask_bits variable before calling cpu_possible().
+
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Xiumei Mu <xmu@redhat.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200416083120.453718-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/bpf/cpumap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index d5f663bb965f1..a6cf2ac223e42 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -566,10 +566,16 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
- 	 * Capture:  It might not receave data. Do nothing
- 	 */
- 	if (rsnd_io_is_play(io)) {
--		rsnd_mod_write(mod, SSICR, cr | EN);
-+		rsnd_mod_write(mod, SSICR, cr | ssi->cr_en);
- 		rsnd_ssi_status_check(mod, DIRQ);
- 	}
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index 3c18260403dde..61fbcae82f0a1 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -455,7 +455,7 @@ static int cpu_map_update_elem(struct bpf_map *map, void *key, void *value,
+ 		return -EOVERFLOW;
  
-+	/* In multi-SSI mode, stop is performed by setting ssi0129 in
-+	 * SSI_CONTROL to 0 (in rsnd_ssio_stop_gen2). Do nothing here.
-+	 */
-+	if (rsnd_ssi_multi_slaves_runtime(io))
-+		return 0;
-+
- 	/*
- 	 * disable SSI,
- 	 * and, wait idle state
+ 	/* Make sure CPU is a valid possible cpu */
+-	if (!cpu_possible(key_cpu))
++	if (key_cpu >= nr_cpumask_bits || !cpu_possible(key_cpu))
+ 		return -ENODEV;
+ 
+ 	if (qsize == 0) {
 -- 
 2.20.1
 
