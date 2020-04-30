@@ -2,115 +2,107 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7189C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A766DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11D5208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588258013;
-	bh=aYO5VMgCMKsvgPngEI5AIQWgzzrYXij9AqpKosMbAEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pYb1Rs7AfMZC1vDOoPILUOOWe94v24S+iCtVpMC5YxC7BWUVYtmdkzXKKklM9vyrS
-	 5/2QeOT6Mg/DNX4oxwizZIcg2VSnhoDbwypf8pwYJgjYNYIWoJX4O4fO9FwmXsEnjf
-	 PvWxeKalKccZkLQWqnV0MELAoEm8oiHL6SQlT7Zk=
+	by mail.kernel.org (Postfix) with ESMTP id 7D0A92076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:47:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="FxZt9q69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgD3Oqx (ORCPT
+        id S1727949AbgD3OrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgD3Oqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:46:52 -0400
-Received: from localhost (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C5120873;
-        Thu, 30 Apr 2020 14:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588258012;
-        bh=aYO5VMgCMKsvgPngEI5AIQWgzzrYXij9AqpKosMbAEU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WO9Xh6vycyGrEyqikYT9gI9xtPOBLQLi6dAf8JX81WxpUBqDKUZ7MO4GIjr86atKu
-         qVsLXD3JTrobn/FJzqv3cAyQtk8gFRTCMqMA+9lAdzFj+zp2yViwmKw6Jrs9Nf9+kf
-         xLbabOrPC4OaWNZpLmBIOZJbu8+5uZiILJaioMUg=
-Date:   Thu, 30 Apr 2020 20:16:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 2/5] usb: renesas-xhci: Add the renesas xhci driver
-Message-ID: <20200430144641.GJ948789@vkoul-mobl.Dlink>
-References: <20200430101019.1130956-1-vkoul@kernel.org>
- <20200430101019.1130956-3-vkoul@kernel.org>
- <8ffd119b-192f-8fcc-46cc-3a405e30338c@linux.intel.com>
+        Thu, 30 Apr 2020 10:47:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgD3OrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:47:08 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB9DC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:47:08 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c63so5942000qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VQZ8f3nWspkcMVyQxaM9lki0jYoUn+ENmpwlQM54tJI=;
+        b=FxZt9q69WeDISYW/u+FapX+g4AcoQ60SHR3rObRVjDCxZJ6UlTOi0dDCo80/JgOZxn
+         DXt30paSE9HJByZpd9MN/9bqoaSpWnTTzk8huYKSl43IenhzSPYC/6nqzrHL/ZM7l3m0
+         ZYx4yU6m6RbIlqhaO29As71mAiNpfB+eFLqeN8uhtMe8aNYNMnCt2+mMYYBBP3BK56ls
+         5xIIg/Rbx93ERJ0KI+y9BtFSxWflV/zzBmS6MLyPYWkeJj0lVjQfi/iAxyBdd07EIs6i
+         MUrvs4ayiVBB0q/LP8J/0bQNgyfH/yXLTdnOQbJAEkTzD6vHAusumKAYkH7MyPfImSVN
+         UqAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VQZ8f3nWspkcMVyQxaM9lki0jYoUn+ENmpwlQM54tJI=;
+        b=BXgwSZcNnTFpJ2B73aXx2pdspg4UXrj+KeWZEU3zlvTx8TmInV0H3iE5EPfgDffqMX
+         Qj2HQtvSwW0650BcL3rJGKsTmC39H3Kg00TFxgYBivPoJqUMqKrhbfAgmYCxan7qANYe
+         PrldHEx5w1/Pjg+1DSfRo7uW9tSHz8K+3nSV/tQt7A1JEwH4gb87imQoDltQNwxb8Zkc
+         yBgHe3xHWj26XpV92X3Tv19kV4MqpMExKfQbzSZOwAzBFVbZnfQdeuXVGNmCYY5NAs5N
+         Zl4dZg6DcL4grfUlKmMXJWHDEmXbcr7jouosczr0Lk2BogfbJTcks3U0xYdLPEirVwuU
+         wTRg==
+X-Gm-Message-State: AGi0PuYhFbvRIrCvk5HvB9mvGZhED7X8BrGIT0Zg4bbszqqEUfCeFeIs
+        hpfRflVdzJLwBzPIatcCnCAjSEtgWZxNInZGyTgJALlOmxQ=
+X-Google-Smtp-Source: APiQypI4BcCVLkg5AN9fc3sf6hgpcY3Uycdlk5eEMR0cZLkzEcOAknCav+JRxX81uhcEm63uJ9YZeUIFuFufJtosWy4=
+X-Received: by 2002:a37:4792:: with SMTP id u140mr2610211qka.327.1588258027121;
+ Thu, 30 Apr 2020 07:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ffd119b-192f-8fcc-46cc-3a405e30338c@linux.intel.com>
+References: <20200430095325.111441-1-zong.li@sifive.com>
+In-Reply-To: <20200430095325.111441-1-zong.li@sifive.com>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Thu, 30 Apr 2020 22:45:47 +0800
+Message-ID: <CAHCEehJ2pbGUe79Kq6q5DFSHNWwg0FEOinqqL=PRNmTt1nT_kg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: force __cpu_up_ variables to put in data section
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-20, 17:36, Mathias Nyman wrote:
-> On 30.4.2020 13.10, Vinod Koul wrote:
-> > From: Christian Lamparter <chunkeey@googlemail.com>
-> > 
-> > This add a new driver for renesas xhci which is basically a firmware
-> > loader for uPD720201 and uPD720202 w/o ROM. It uses xhci-pci driver for
-> > most of the work.
-> > 
-> > This is added in Makefile before the xhci-pci driver so that it first
-> > get probed for renesas devices before the xhci-pci driver has a chance
-> > to claim any device.
-> 
-> Most of the above is no longer correct
+Zong Li <zong.li@sifive.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8830=E6=97=A5 =
+=E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:53=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Put __cpu_up_stack_pointer and __cpu_up_task_pointer in data section.
+> Currently, these two variables are put in bss section, there is a
+> potential risk that secondary harts get the uninitialized value before
+> main hart finishing the bss clearing. In this case, all secondary
+> harts would go through the waiting loop and enable the MMU before
+> main hart set up the page table.
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/kernel/cpu_ops.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
+> index c4c33bf02369..0ec22354018c 100644
+> --- a/arch/riscv/kernel/cpu_ops.c
+> +++ b/arch/riscv/kernel/cpu_ops.c
+> @@ -15,8 +15,8 @@
+>
+>  const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
+>
+> -void *__cpu_up_stack_pointer[NR_CPUS];
+> -void *__cpu_up_task_pointer[NR_CPUS];
+> +void *__cpu_up_stack_pointer[NR_CPUS] __section(.data);
+> +void *__cpu_up_task_pointer[NR_CPUS] __section(.data);
+>
+>  extern const struct cpu_operations cpu_ops_sbi;
+>  extern const struct cpu_operations cpu_ops_spinwait;
 
-Yes that is correct now, this para need to go.
-
-> > diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> > index b191361257cc..c3a79f626393 100644
-> > --- a/drivers/usb/host/Makefile
-> > +++ b/drivers/usb/host/Makefile
-> > @@ -70,7 +70,8 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
-> >  obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
-> >  obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
-> >  obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-> > -obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-> > +usb-xhci-pci-objs		:= xhci-pci.o xhci-pci-renesas.o
-> > +obj-$(CONFIG_USB_XHCI_PCI)	+= usb-xhci-pci.o
-> 
-> I don't think it's a good idea to rename the xhci-pci module to usb-xhci-pci
-> 
-> does
-> 
-> xhci-pci-y			:= xhci-pci.o xhci-pci-renesas.o
-> obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-> 
-> cause some kbuild issues?
-
-Yes with this version I get the warning:
-make[4]: Circular drivers/usb/host/xhci-pci.o <- drivers/usb/host/xhci-pci.o dependency dropped.
-
-I don't speak enough Kbuild, but I guess it does make sense that we have
-xhci-pci.o as target for both xhci-pci.o xhci-pci-renesas.o! That was
-the reason for adding usb tag to this to resolve the conflict.
-
-I am okay for any other mechanism which can work well here. Btw what
-issues do you foresee with adding usb tag to module name.
-
--- 
-~Vinod
+Reviewed-by: Greentime Hu <greentime.hu@sifive.com>
