@@ -2,105 +2,147 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC174C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C4DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D6A206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYuOYdv7"
+	by mail.kernel.org (Postfix) with ESMTP id 947E0207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgD3Ukp (ORCPT
+        id S1727975AbgD3Ul0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgD3Ukp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:40:45 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1256C035494;
-        Thu, 30 Apr 2020 13:40:44 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c63so7275660qke.2;
-        Thu, 30 Apr 2020 13:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2wXB9P7L6VKnvrEKDuVZ8Fz1x78dwH0yzpQ7LI1qBdQ=;
-        b=nYuOYdv7i3bBXGdXg/0tRS14pcT5A/jnwkPsmkk7D2/iEGPitWHtu2SSm4fBYB72uz
-         LEJYj/5tICP1sWA5mpc6tpGeHNQpUEv63D2kgZMEkoV16sCqRd0DmxYIa2VrMlGjlx4k
-         J3MaAYrzCAyGYMYWDg00z3zuWehzrdx/Tl7/1HxNZWDPnlMX94qfGN9CCcLlqzKiFykZ
-         iYHLT7L9R8ZFfjsuhbC25FepzOh5QLLwR7hgvRe1BraJvLRtTlut50bu2Nnhkugus2BD
-         HMPaCPRgOHN0mxAwh6YcpzPeOb/o+22/bJ3Uys5gJDP9n25p3bCb0BxkUG4J92e+ADeB
-         yvhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=2wXB9P7L6VKnvrEKDuVZ8Fz1x78dwH0yzpQ7LI1qBdQ=;
-        b=DB6eCqP6MxQrG2wSBCxhEHFh5yFZRuFMw6MMeFRps1L2fuIwLQe0jRTlbw5ihAt36/
-         Jyfdzyj3EGUJhUvBjRtJ80EaD8WigM6g4n6M3S9pRWM1dY+TYYXAPHWfQ4083amL4Bw0
-         ZHMsUWaFZC6Nr72NzF/hH9xGkv6bFnsSYT3AZCRPp8HGjfu4Z53dVLBgqQRYmgdPayiu
-         WeFrYFeXZB0/cuSWAss2Myj/6FFtZ2qFk720MjKK72vtCXRYOcfNUhXkVeqm98IlR17e
-         GSrBO9Jof25XI+JUCXtpnepv7tyH+vTS8qXVIDHyLFWBJhidkUftg5TOCRMASKX5vSCx
-         nCFA==
-X-Gm-Message-State: AGi0PuZinGCLYQMMEjQowOAsL3ulBO3dz+oi4C+6CR8RSz18Lbrgr4cG
-        hr1uXLo9LgZsziWj7JLi/Eg=
-X-Google-Smtp-Source: APiQypK2X+EbL4/u6yuToTVoXvzdrYETv1gNeyOhrBY1Iwa28a1bEOJ2lPZub08UxLUQHzoVu2aD2g==
-X-Received: by 2002:a05:620a:1347:: with SMTP id c7mr396651qkl.246.1588279244010;
-        Thu, 30 Apr 2020 13:40:44 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l9sm674497qth.60.2020.04.30.13.40.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 13:40:43 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 30 Apr 2020 16:40:41 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 1/2] efi/libstub: efi_info/efi_err message neatening
-Message-ID: <20200430204041.GA2579913@rani.riverdale.lan>
-References: <20200430182843.2510180-1-nivedita@alum.mit.edu>
- <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
- <CAMj1kXGMnTfYiU_vMDYG0uy7Na7wy=5DRHERTzZQeb4UBusn0g@mail.gmail.com>
+        Thu, 30 Apr 2020 16:41:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53235 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbgD3Ul0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:41:26 -0400
+IronPort-SDR: 6cjgBb5p4/wi34Y8AduGNh3uJQEt8VU+FC1C8P0lqqa+i+mfqZlknMhKsRp6XqCHYOS2uEzIy0
+ 1upZY4zHPOAQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 13:41:24 -0700
+IronPort-SDR: z1RGRQUi4pCy6rG9DAyNKUjXl+0fSSUlsOrSnoHpDJFU6ONyTvf/IJ5/EKMIYR8Y6de5JVUFv8
+ nfOnyaqPOG1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="249853406"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Apr 2020 13:41:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+        KarimAllah Raslan <karahmed@amazon.de>
+Subject: [PATCH] KVM: nVMX: Skip IBPB when switching between vmcs01 and vmcs02
+Date:   Thu, 30 Apr 2020 13:41:23 -0700
+Message-Id: <20200430204123.2608-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGMnTfYiU_vMDYG0uy7Na7wy=5DRHERTzZQeb4UBusn0g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:29:46PM +0200, Ard Biesheuvel wrote:
-> On Thu, 30 Apr 2020 at 21:12, Joe Perches <joe@perches.com> wrote:
-> >
-> > Use a standard style for these output logging messages.
-> >
-> > Miscellanea:
-> >
-> > o Use more common macro #defines with fmt, ##__VA_ARGS__
-> > 0 Remove trailing messages periods and odd ' uses
-> > o Remove embedded function names and use %s, __func__
-> >
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> > ---
-> >
-> > Perhaps these trivialities on top of this series?
-> >
-> 
-> The EFI printing routines don't actually support format strings.
-> 
+Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
+switch when running with spectre_v2_user=on/auto if the switch is
+between two VMCSes in the same guest, i.e. between vmcs01 and vmcs02.
+The IBPB is intended to prevent one guest from attacking another, which
+is unnecessary in the nested case as it's the same guest from KVM's
+perspective.
 
-The x86 real-mode bootup code actually has a printf.o that clocks in at
-under 2k. We could add it in, and it would also be nice to move it into
-lib or something, since at least alpha and powerpc implement something
-very similar for boot-time messages.
+This all but eliminates the overhead observed for nested VMX transitions
+when running with CONFIG_RETPOLINE=y and spectre_v2_user=on/auto, which
+can be significant, e.g. roughly 3x on current systems.
+
+Reported-by: Alexander Graf <graf@amazon.com>
+Cc: KarimAllah Raslan <karahmed@amazon.de>
+Cc: stable@vger.kernel.org
+Fixes: 15d45071523d ("KVM/x86: Add IBPB support")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c |  2 +-
+ arch/x86/kvm/vmx/vmx.c    | 12 ++++++++----
+ arch/x86/kvm/vmx/vmx.h    |  3 ++-
+ 3 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 2c36f3f53108..1a02bdfeeb2b 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -303,7 +303,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
+ 	cpu = get_cpu();
+ 	prev = vmx->loaded_vmcs;
+ 	vmx->loaded_vmcs = vmcs;
+-	vmx_vcpu_load_vmcs(vcpu, cpu);
++	vmx_vcpu_load_vmcs(vcpu, cpu, prev);
+ 	vmx_sync_vmcs_host_state(vmx, prev);
+ 	put_cpu();
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 3ab6ca6062ce..818dd8ba5e9f 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1311,10 +1311,12 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+ 		pi_set_on(pi_desc);
+ }
+ 
+-void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
++void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
++			struct loaded_vmcs *buddy)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
++	struct vmcs *prev;
+ 
+ 	if (!already_loaded) {
+ 		loaded_vmcs_clear(vmx->loaded_vmcs);
+@@ -1333,10 +1335,12 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+ 		local_irq_enable();
+ 	}
+ 
+-	if (per_cpu(current_vmcs, cpu) != vmx->loaded_vmcs->vmcs) {
++	prev = per_cpu(current_vmcs, cpu);
++	if (prev != vmx->loaded_vmcs->vmcs) {
+ 		per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
+ 		vmcs_load(vmx->loaded_vmcs->vmcs);
+-		indirect_branch_prediction_barrier();
++		if (!buddy || buddy->vmcs != prev)
++			indirect_branch_prediction_barrier();
+ 	}
+ 
+ 	if (!already_loaded) {
+@@ -1377,7 +1381,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+-	vmx_vcpu_load_vmcs(vcpu, cpu);
++	vmx_vcpu_load_vmcs(vcpu, cpu, NULL);
+ 
+ 	vmx_vcpu_pi_load(vcpu, cpu);
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index b5e773267abe..d3d48acc6bd9 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -320,7 +320,8 @@ struct kvm_vmx {
+ };
+ 
+ bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
+-void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
++void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
++			struct loaded_vmcs *buddy);
+ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+ int allocate_vpid(void);
+ void free_vpid(int vpid);
+-- 
+2.26.0
+
