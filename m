@@ -2,112 +2,128 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF116C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FCCC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6572063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5818E2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255625;
-	bh=yVDzDf7BPjN8V3Q1sj6RasbrxByVjWam1uXEnqFNqCI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kd3W2mLEhFfpGDnqSBOKz79npv/o2EkkK3Nu+mWhgYOPvVx6zF/AUU+OQyqSOXfAI
-	 Eq+TNND1DL/B3b4m6EYj927NDQJzJDBL8Y3ha0n/7QPYpwKD1I1IobSNC1/4NzIE3f
-	 u7wAGdP3eZ6Be/mBLtRzBkAMT15rwCuIzToBXt14=
+	s=default; t=1588255628;
+	bh=QmxpXR4dciVyyn9iyqFtKl/EzHWQ4Ni0im1DVYEIlXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b8UbOj1QEj02kRpsYN6D7+uByi7dQc7mXjD9nesp1jup6jGNI4VvbkiiVIdSn/m2i
+	 5ese02Ws2zh23tr94spevtIjl3mmJOFL6UUzd6sJ8GskUlKQqD8tTK9K+q7evev5Qk
+	 o72CDvJsxRzWXkqoTZhLF/cO9l023LBX8sKetZ7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgD3OHE (ORCPT
+        id S1729345AbgD3OHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 10:07:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41977 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgD3OHE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 10:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728491AbgD3Nwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:45 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 484EC208D6;
-        Thu, 30 Apr 2020 13:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254765;
-        bh=yVDzDf7BPjN8V3Q1sj6RasbrxByVjWam1uXEnqFNqCI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YSMFJE9OiX3uoaACvAsghtvRXNeshOFE856YUdaLMBtM+opDBhu3E2HPefVXnILN2
-         j2kmmYw0Kjg+lgacxxXoDGNl0vauE33NgpDQ2T9FTjegxEILXOvIrPFtqdFDFimnmo
-         ky3sZoKvPckTAyutniKwxh24nuMwS9HL3lgaN3Ho=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 23/57] ASoC: stm32: sai: fix sai probe
-Date:   Thu, 30 Apr 2020 09:51:44 -0400
-Message-Id: <20200430135218.20372-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
+Received: by mail-oi1-f193.google.com with SMTP id 19so5285305oiy.8;
+        Thu, 30 Apr 2020 07:07:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ypl3TMqHlEyc54S03DtZTNB+eyp6v+vQ5hgOUzmHpUg=;
+        b=SFkYlMRXJa1HQ07Vm9xq+/fUHRF/zrLe5DI+io2D0hUv09irfHHaC3/1RovhELkLl/
+         7M/FtKN16USdyv/qXLMP3gFaobhgra6wepDNXH5YSwnn3Vayon2M0rX0KLs2GZ0vi754
+         Kk9+waZK4mBk35uSo5yYfQWGn0zxsBUsjptk3KoHbsjxzS5k1QBok9S8tk/FkvAvqGjo
+         o//Gv7RHgyqWLfaV+L71c17+USRbGnfwV7QJ1yHrspRHkEIrPQdqKWh+CJl4wTldTOFz
+         oUjn1xw/5p/yS6r0cn8frVkNqxU9/9B/QjORlDM5RcqElLdX5w0tqbAnc3GxdLKBoeB3
+         hPAg==
+X-Gm-Message-State: AGi0PubHnws3Z0Lxpeu4bHQk2Nj8omKENfKHBug8zRvWa3g9ffiy7Bxt
+        1Wh+jeMjG2BeVjWOFaqKUA==
+X-Google-Smtp-Source: APiQypIP8LI9E0STiYnne0hBy5N7yLlgo3kcsx6yXCtmZ7uE9MOuR1kv9WPAh62YT3wAZ4XcJhqUuQ==
+X-Received: by 2002:aca:1709:: with SMTP id j9mr1847601oii.59.1588255622600;
+        Thu, 30 Apr 2020 07:07:02 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j42sm1327968ooi.5.2020.04.30.07.07.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:07:01 -0700 (PDT)
+Received: (nullmailer pid 31546 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:07:01 -0000
+Date:   Thu, 30 Apr 2020 09:07:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on
+ MAX77620
+Message-ID: <20200430140701.GA21776@bogus>
+References: <20200417170825.2551367-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417170825.2551367-1-thierry.reding@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+On Fri, Apr 17, 2020 at 07:08:23PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The RTC present on MAX77620 can be used to generate an alarm at a given
+> time, which in turn can be used as a wakeup source for the system if it
+> is properly wired up.
+> 
+> Document how to enable the RTC to act as a wakeup source.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+> index 5a642a51d58e..f05005b0993e 100644
+> --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+> @@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
+>  			control) then, GPIO1/nRST_IO goes LOW.
+>  			this property is valid for max20024 only.
+>  
+> +Realtime Clock
+> +--------------
+> +The MAX77620 family of power management ICs contain a realtime clock block
+> +that can be used to keep track of time even when the system is powered off.
+> +
+> +The realtime clock can also be programmed to trigger alerts, which can be
+> +used to wake the system up from sleep. In order to configure the RTC to act
+> +as a wakeup source, add an "rtc" child node and add the "wakeup-source"
+> +property.
+> +
+> +
+>  For DT binding details of different sub modules like GPIO, pincontrol,
+>  regulator, power, please refer respective device-tree binding document
+>  under their respective sub-system directories.
+> @@ -159,4 +170,8 @@ max77620@3c {
+>  			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
+>  		};
+>  	};
+> +
+> +	rtc {
+> +		wakeup-source;
 
-[ Upstream commit e2bcb65782f91390952e849e21b82ed7cb05697f ]
+Is the RTC really the only thing that could wake the system in this 
+PMIC?
 
-pcm config must be set before snd_dmaengine_pcm_register() call.
+I don't think it's really valid to have 'wakeup-source' without 
+'interrupts' unless the wakeup mechanism is somehow not an interrupt. So 
+I think this belongs in the parent node.
 
-Fixes: 0d6defc7e0e4 ("ASoC: stm32: sai: manage rebind issue")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20200417142122.10212-1-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/stm/stm32_sai_sub.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index d3259de43712b..7e965848796c3 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -1543,6 +1543,9 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		conf = &stm32_sai_pcm_config_spdif;
-+
- 	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register pcm dma\n");
-@@ -1551,15 +1554,10 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
- 					 &sai->cpu_dai_drv, 1);
--	if (ret) {
-+	if (ret)
- 		snd_dmaengine_pcm_unregister(&pdev->dev);
--		return ret;
--	}
--
--	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
--		conf = &stm32_sai_pcm_config_spdif;
- 
--	return 0;
-+	return ret;
- }
- 
- static int stm32_sai_sub_remove(struct platform_device *pdev)
--- 
-2.20.1
-
+Rob
