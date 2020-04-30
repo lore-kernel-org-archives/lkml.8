@@ -2,124 +2,180 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A36C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D739C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBB92076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9642076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588262686;
+	bh=g9zsgpMU0pRn05Q4I3LMUZnpSVfK6mm2505LsXBMD94=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rY4OLbK4N0p5ZpwSFWr4/Nm3kB8dLGbRomXV0pkn+ghc+avWf3gG/RDRG36onggA7
+	 q9mygrAArGhvTimrDnK1PzrSMkh/I26fHjosvXeA/hp5it4BA8Mj6dBsfWmoRCHpEW
+	 kl4fIg0bn9TgB/wf7LuWV8+JLUBaoe8OwUqTZ90M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgD3QE1 (ORCPT
+        id S1728064AbgD3QEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:04:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:31780 "EHLO mga17.intel.com"
+        Thu, 30 Apr 2020 12:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgD3QE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:04:26 -0400
-IronPort-SDR: Df8We27yhKqo7qpTknh7hRdrJQm27s3PXw/3A3CvYcPFbKTQZc5urqKQYIOE5egkv43DnN+BuO
- Kni/8a7Gavug==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 09:04:24 -0700
-IronPort-SDR: GGSzCMoySeYAUbJAzl2mHzLAbB6NpkILcMU5FKnDmI8Hd9CO4dZEQh8q2QgRszsoQswMn9gG6D
- vRptZ69zdrKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="261827387"
-Received: from rariojas-mobl.amr.corp.intel.com (HELO [10.252.135.40]) ([10.252.135.40])
-  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 09:04:23 -0700
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-To:     David Hildenbrand <david@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
- <20200430102908.10107-3-david@redhat.com>
- <87pnbp2dcz.fsf@x220.int.ebiederm.org>
- <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <c905918d-54f6-0f17-ca5b-cd3371ada788@intel.com>
-Date:   Thu, 30 Apr 2020 09:04:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726928AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:04:38 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25B2E24962;
+        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588262676;
+        bh=g9zsgpMU0pRn05Q4I3LMUZnpSVfK6mm2505LsXBMD94=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ECQ+zWV1v8xBEkDa4frh21wMgN4qKZo8CjC6BwGA6TkLwWMmKzPbJCEEMnJiO2LDq
+         0RenjuWdT1Jgkmy4um/yCCUIUm+D2JOpVPYYEIqf6/Zvv/GpW1MMz2lPMR7bW9p3q0
+         /FS0iuJJST5yLJRe77LY+elwc7IPZRZKeiv3wxpk=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jUBfu-00AxFD-Bc; Thu, 30 Apr 2020 18:04:34 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 14/37] docs: networking: convert openvswitch.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:09 +0200
+Message-Id: <8ef8171942cf528a54c569cae56f8864ed9c74f2.1588261997.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
+References: <cover.1588261997.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/20 8:52 AM, David Hildenbrand wrote:
->> Justifying behavior by documentation that does not consider memory
->> hotplug is bad thinking.
-> Are you maybe confusing this patch series with the arm64 approach? This
-> is not about ordinary hotplugged DIMMs.
-> 
-> I'd love to get Dan's, Dave's and Michal's opinion.
+- add SPDX header;
+- adjust title markup;
+- mark code blocks and literals as such;
+- adjust identation, whitespaces and blank lines;
+- add to networking/index.rst.
 
-The impact on kexec from the DAX "kmem" driver's use of hotplug was
-inadvertent and unfortunate.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/networking/index.rst            |  1 +
+ .../{openvswitch.txt => openvswitch.rst}      | 23 +++++++++++--------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
+ rename Documentation/networking/{openvswitch.txt => openvswitch.rst} (95%)
 
-The problem statement and solution seem pretty sane to me.
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index c4e8a43741be..b7f558480aca 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -87,6 +87,7 @@ Contents:
+    netif-msg
+    nf_conntrack-sysctl
+    nf_flowtable
++   openvswitch
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/networking/openvswitch.txt b/Documentation/networking/openvswitch.rst
+similarity index 95%
+rename from Documentation/networking/openvswitch.txt
+rename to Documentation/networking/openvswitch.rst
+index b3b9ac61d29d..1a8353dbf1b6 100644
+--- a/Documentation/networking/openvswitch.txt
++++ b/Documentation/networking/openvswitch.rst
+@@ -1,3 +1,6 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=============================================
+ Open vSwitch datapath developer documentation
+ =============================================
+ 
+@@ -80,13 +83,13 @@ The <linux/openvswitch.h> header file defines the exact format of the
+ flow key attributes.  For informal explanatory purposes here, we write
+ them as comma-separated strings, with parentheses indicating arguments
+ and nesting.  For example, the following could represent a flow key
+-corresponding to a TCP packet that arrived on vport 1:
++corresponding to a TCP packet that arrived on vport 1::
+ 
+     in_port(1), eth(src=e0:91:f5:21:d0:b2, dst=00:02:e3:0f:80:a4),
+     eth_type(0x0800), ipv4(src=172.16.0.20, dst=172.18.0.52, proto=17, tos=0,
+     frag=no), tcp(src=49163, dst=80)
+ 
+-Often we ellipsize arguments not important to the discussion, e.g.:
++Often we ellipsize arguments not important to the discussion, e.g.::
+ 
+     in_port(1), eth(...), eth_type(0x0800), ipv4(...), tcp(...)
+ 
+@@ -151,20 +154,20 @@ Some care is needed to really maintain forward and backward
+ compatibility for applications that follow the rules listed under
+ "Flow key compatibility" above.
+ 
+-The basic rule is obvious:
++The basic rule is obvious::
+ 
+-    ------------------------------------------------------------------
++    ==================================================================
+     New network protocol support must only supplement existing flow
+     key attributes.  It must not change the meaning of already defined
+     flow key attributes.
+-    ------------------------------------------------------------------
++    ==================================================================
+ 
+ This rule does have less-obvious consequences so it is worth working
+ through a few examples.  Suppose, for example, that the kernel module
+ did not already implement VLAN parsing.  Instead, it just interpreted
+ the 802.1Q TPID (0x8100) as the Ethertype then stopped parsing the
+ packet.  The flow key for any packet with an 802.1Q header would look
+-essentially like this, ignoring metadata:
++essentially like this, ignoring metadata::
+ 
+     eth(...), eth_type(0x8100)
+ 
+@@ -172,7 +175,7 @@ Naively, to add VLAN support, it makes sense to add a new "vlan" flow
+ key attribute to contain the VLAN tag, then continue to decode the
+ encapsulated headers beyond the VLAN tag using the existing field
+ definitions.  With this change, a TCP packet in VLAN 10 would have a
+-flow key much like this:
++flow key much like this::
+ 
+     eth(...), vlan(vid=10, pcp=0), eth_type(0x0800), ip(proto=6, ...), tcp(...)
+ 
+@@ -187,7 +190,7 @@ across kernel versions even though it follows the compatibility rules.
+ 
+ The solution is to use a set of nested attributes.  This is, for
+ example, why 802.1Q support uses nested attributes.  A TCP packet in
+-VLAN 10 is actually expressed as:
++VLAN 10 is actually expressed as::
+ 
+     eth(...), eth_type(0x8100), vlan(vid=10, pcp=0), encap(eth_type(0x0800),
+     ip(proto=6, ...), tcp(...)))
+@@ -215,14 +218,14 @@ For example, consider a packet that contains an IP header that
+ indicates protocol 6 for TCP, but which is truncated just after the IP
+ header, so that the TCP header is missing.  The flow key for this
+ packet would include a tcp attribute with all-zero src and dst, like
+-this:
++this::
+ 
+     eth(...), eth_type(0x0800), ip(proto=6, ...), tcp(src=0, dst=0)
+ 
+ As another example, consider a packet with an Ethernet type of 0x8100,
+ indicating that a VLAN TCI should follow, but which is truncated just
+ after the Ethernet type.  The flow key for this packet would include
+-an all-zero-bits vlan and an empty encap attribute, like this:
++an all-zero-bits vlan and an empty encap attribute, like this::
+ 
+     eth(...), eth_type(0x8100), vlan(0), encap()
+ 
+-- 
+2.25.4
+
