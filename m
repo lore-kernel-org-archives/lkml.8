@@ -2,107 +2,215 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE293C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB51C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD80420873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905802076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588261853;
+	bh=AWlUUUEQmtBP6tJdyVBdRVvYUBKUIGdA1MEl0dfcZ1c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RVJFvOLbHG8Ec8IX6u7BFNtxZMlfJChSFpJuKunod2EDEQt3B02jfdlUHo6n2Uome
+	 w/IM5OxTXRb9t6jFaCI6MSqPvRClTpidSa8LR0NGnA+/h6FdRjW4FSAQGjFrzIOAYe
+	 mpnXtnRBuJgq++d/01iAuWQCZk8V3zXtXcrfjJOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgD3Puq (ORCPT
+        id S1726851AbgD3Puw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:50:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:57778 "EHLO foss.arm.com"
+        Thu, 30 Apr 2020 11:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgD3Pup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:50:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C539931B;
-        Thu, 30 Apr 2020 08:50:44 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9F273F68F;
-        Thu, 30 Apr 2020 08:50:42 -0700 (PDT)
-References: <20200424114058.21199-1-benjamin.gaignard@st.com> <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com> <70e743cf-b88e-346a-5114-939b8724c83d@arm.com> <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com> <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com> <a234e123-6c15-8e58-8921-614b58ca24ca@st.com> <jhjtv11cabk.mognet@arm.com> <a20c5214-211b-1f70-1162-57b32e60549b@st.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "viresh.kumar\@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab\@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32\@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel\@ucw.cz" <pavel@ucw.cz>,
-        "len.brown\@intel.com" <len.brown@intel.com>,
-        "linux-pm\@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media\@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32\@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
-Message-ID: <jhjmu6tc6rz.mognet@arm.com>
-In-reply-to: <a20c5214-211b-1f70-1162-57b32e60549b@st.com>
-Date:   Thu, 30 Apr 2020 16:50:40 +0100
+        id S1725844AbgD3Puw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:50:52 -0400
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A7392137B
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588261851;
+        bh=AWlUUUEQmtBP6tJdyVBdRVvYUBKUIGdA1MEl0dfcZ1c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=blFWQQqDR5s9d3ZEJt7rWSG47Ui51YmWTKkh3itQ/Sp3SU0kVuXu63FPnOk2WS56J
+         zW77QmZcKSZJszbq/CKFhEiS+PSGTxjHBYA2jEAYMkYU/coTMAB0qLBIOeZbeo9tlb
+         28HbThPQWnva6dMg986HdyvMzNJmd6p02ghaf77g=
+Received: by mail-ed1-f41.google.com with SMTP id a8so4951712edv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:50:51 -0700 (PDT)
+X-Gm-Message-State: AGi0PuajhhFXFOumtIWRpwjhKP5NnE5eWgot6vkGOgcBynYQl4dvfNJC
+        M1N+tmXvg0NU9uWBjhgyi6dENPp3fXZdgjJQfA==
+X-Google-Smtp-Source: APiQypLNtAe4WGt202vWspF3DK8VQGAkLi64NfyhwMTDL4r2HZtxav6S7QTWNUTBLfZims+Y6t3pKABbZl+n/V80byk=
+X-Received: by 2002:a05:6402:48b:: with SMTP id k11mr3417709edv.47.1588261849430;
+ Thu, 30 Apr 2020 08:50:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAAOTY_86d-UryKQrLy8-zjTbrTRrHL4k3x=bx1KqvWxPL5jj2Q@mail.gmail.com>
+ <AOsApgASCAa7imxfuvZwXqq0.3.1588228291133.Hmail.bernard@vivo.com>
+In-Reply-To: <AOsApgASCAa7imxfuvZwXqq0.3.1588228291133.Hmail.bernard@vivo.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 30 Apr 2020 23:50:38 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8o239n_y4LJiyU5978e87knZmNRJwSHZbEDxLLasiJjw@mail.gmail.com>
+Message-ID: <CAAOTY_8o239n_y4LJiyU5978e87knZmNRJwSHZbEDxLLasiJjw@mail.gmail.com>
+Subject: Re: Re: [PATCH] drm/mediatek: cleanup coding style in mediatek a bit
+To:     Bernard <bernard@vivo.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        opensource.kernel@vivo.com, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Bernard:
 
-On 30/04/20 16:37, Benjamin GAIGNARD wrote:
-> On 4/30/20 4:33 PM, Valentin Schneider wrote:
->> On 30/04/20 14:46, Benjamin GAIGNARD wrote:
->>>> That's not what I meant.
->>>>
->>>> I suppose that the interrupt processing in question takes place in
->>>> process context and so you may set the lower clamp on the utilization
->>>> of the task carrying that out.
->>> I have try to add this code when starting streaming (before the first
->>> interrupt) the frames from the sensor:
->>> const struct sched_attr sched_attr = {
->>>     .sched_util_min = 10000, /* 100% of usage */
->> Unless you play with SCHED_CAPACITY_SHIFT, the max should be 1024 -
->> i.e. SCHED_CAPACITY_SCALE. That's a really big boost, but that's for you to
->> benchmark.
->>
->>>     .sched_flags = SCHED_FLAG_UTIL_CLAMP_MIN,
->>>    };
->>>
->>> sched_setattr(current, &sched_attr);
->>>
->>> I don't see any benefices maybe there is some configuration flags to set.
->>>
->>> How changing sched_util_min could impact cpufreq ondemand governor ?
->>> Does it change the value returned when the governor check the idle time ?
->>>
->> You'll have to use the schedutil governor for uclamp to have an effect. And
->> arguably that's what you should be using, unless something explicitly
->> prevents you from doing that.
-> Even with schedutil and SCHED_CAPACITY_SCALE that it doesn't work.
-> cpufreq/cpuinfo_cur_freq values are always on the max value even if the
-> stats show transitions between the available frequencies.
+Bernard <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8830=E6=97=A5 =E9=
+=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:32=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> I see two possibles reasons to explain that:
-> - sched_setattr() is called in userland process context, but the
-> threaded irq handler is running in another process.
-
-Ah yes, this only works if the task you boost is the one that will handle
-whatever work you care about (in this case handling the irq). That said, if
-you do use threaded IRQs, that should give you a SCHED_FIFO thread, which
-should drive the frequency to its max when using schedutil (unrelated to
-uclamp).
-
-> - because this use case is almost running all in hardware the process
-> isn't doing anything so the scheduler doesn't take care of it.
 >
->>
->>>> Alternatively, that task may be a deadline one.
+>
+> =E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=9AChun-Kuang Hu <chunkuang.hu@kernel.or=
+g>
+> =E5=8F=91=E9=80=81=E6=97=A5=E6=9C=9F=EF=BC=9A2020-04-29 22:22:50
+> =E6=94=B6=E4=BB=B6=E4=BA=BA=EF=BC=9ABernard Zhao <bernard@vivo.com>
+> =E6=8A=84=E9=80=81=E4=BA=BA=EF=BC=9AChun-Kuang Hu <chunkuang.hu@kernel.or=
+g>,Philipp Zabel <p.zabel@pengutronix.de>,David Airlie <airlied@linux.ie>,D=
+aniel Vetter <daniel@ffwll.ch>,Matthias Brugger <matthias.bgg@gmail.com>,DR=
+I Development <dri-devel@lists.freedesktop.org>,Linux ARM <linux-arm-kernel=
+@lists.infradead.org>,"moderated list:ARM/Mediatek SoC support" <linux-medi=
+atek@lists.infradead.org>,linux-kernel <linux-kernel@vger.kernel.org>,opens=
+ource.kernel@vivo.com
+> =E4=B8=BB=E9=A2=98=EF=BC=9ARe: [PATCH] drm/mediatek: cleanup coding style=
+ in mediatek a bit>Hi, Bernard:
+> >
+> >Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8827=E6=
+=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:53=E5=AF=AB=E9=81=93=EF=BC=9A
+> >>
+> >> This code change is to make code bit more readable.
+> >> Optimise array size align to HDMI macro define.
+> >> Add check if len is overange.
+> >
+> >One patch should just do one thing, but this do three things.
+> >So break this into three patches.
+> >
+> >Regards,
+> >Chun-Kuang.
+>
+> Hi
+> This optimization is mainly to make the code a bit readable.
+> These modifications are related, main in several related function calls i=
+n the same file.
+> I was a bit confused that if it is really necessary to change to three se=
+parate patch submissions?
+>
+> Regards
+> Bernard
+>
+> >>
+> >> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> >> ---
+> >>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 22 +++++++++++-----------
+> >>  1 file changed, 11 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/med=
+iatek/mtk_hdmi.c
+> >> index ff43a3d80410..40fb5154ed5d 100644
+> >> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> >> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> >> @@ -311,15 +311,15 @@ static void mtk_hdmi_hw_send_info_frame(struct m=
+tk_hdmi *hdmi, u8 *buffer,
+> >>         u8 checksum;
+> >>         int ctrl_frame_en =3D 0;
+> >>
+> >> -       frame_type =3D *buffer;
+> >> -       buffer +=3D 1;
+> >> -       frame_ver =3D *buffer;
+> >> -       buffer +=3D 1;
+> >> -       frame_len =3D *buffer;
+> >> -       buffer +=3D 1;
+> >> -       checksum =3D *buffer;
+> >> -       buffer +=3D 1;
+> >> +       frame_type =3D *buffer++;
+> >> +       frame_ver =3D *buffer++;
+> >> +       frame_len =3D *buffer++;
+> >> +       checksum =3D *buffer++;
+
+This part looks like cleanup, so keep in this patch.
+
+> >>         frame_data =3D buffer;
+> >> +       if ((frame_len + HDMI_INFOFRAME_HEADER_SIZE) > len) {
+> >> +               dev_err(hdmi->dev, "Wrong frame len: %d\n", frame_len;
+> >> +               return;
+
+This is error checking, not cleanup the coding style, so move this to
+another patch.
+
+> >> +       }
+> >>
+> >>         dev_dbg(hdmi->dev,
+> >>                 "frame_type:0x%x,frame_ver:0x%x,frame_len:0x%x,checksu=
+m:0x%x\n",
+> >> @@ -982,7 +982,7 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk=
+_hdmi *hdmi,
+> >>                                         struct drm_display_mode *mode)
+> >>  {
+> >>         struct hdmi_avi_infoframe frame;
+> >> -       u8 buffer[17];
+> >> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE=
+];
+
+This is to symbolize the number, symbolization is more than cleanup.
+
+Regards,
+Chun-Kuang.
+
+> >>         ssize_t err;
+> >>
+> >>         err =3D drm_hdmi_avi_infoframe_from_display_mode(&frame,
+> >> @@ -1008,7 +1008,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct m=
+tk_hdmi *hdmi,
+> >>                                         const char *product)
+> >>  {
+> >>         struct hdmi_spd_infoframe frame;
+> >> -       u8 buffer[29];
+> >> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE=
+];
+> >>         ssize_t err;
+> >>
+> >>         err =3D hdmi_spd_infoframe_init(&frame, vendor, product);
+> >> @@ -1031,7 +1031,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct m=
+tk_hdmi *hdmi,
+> >>  static int mtk_hdmi_setup_audio_infoframe(struct mtk_hdmi *hdmi)
+> >>  {
+> >>         struct hdmi_audio_infoframe frame;
+> >> -       u8 buffer[14];
+> >> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AUDIO_INFOFRAME_SI=
+ZE];
+> >>         ssize_t err;
+> >>
+> >>         err =3D hdmi_audio_infoframe_init(&frame);
+> >> --
+> >> 2.26.2
+> >>
+> >>
+> >> _______________________________________________
+> >> Linux-mediatek mailing list
+> >> Linux-mediatek@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
