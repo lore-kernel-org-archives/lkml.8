@@ -2,113 +2,105 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1337DC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC317C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E044D21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588281994;
-	bh=uWky6TNBymUqSLkL11ZzartRuKqUlPuvanXrysasMkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=067Bj3qBNgGEEmH4HmHN1C9QOsq/RNuSEPJaZEMgQs78Q9HAD9o2ewNtAuUwd+0ux
-	 io9N9j5RO78vMkO7v5M4paFDCqrWquAxDUnoGqie6eowqhdY5rWsCdIqAuRPlhpJ/F
-	 9w9UI5/bLOGsULcL9rABvwV7f0PB5Kzljzx37kFk=
+	by mail.kernel.org (Postfix) with ESMTP id AC59221775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgD3V0e (ORCPT
+        id S1727108AbgD3V1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgD3V0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:26:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0E112166E;
-        Thu, 30 Apr 2020 21:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588281991;
-        bh=uWky6TNBymUqSLkL11ZzartRuKqUlPuvanXrysasMkM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uerb66Arhg5vhl7hcybSXvksTonsCmKFdJefGcHkKMVr/lMrnQV3W1SU6xQoz+pI0
-         RE39P+64BgmzRvjs0ZSjXa8yV5+5WfUx7KSDiyjU+TsaTP7CBSjQ5f3B4Np6V13L2B
-         OaGgWhEyi+eZlWVYMSp1aRYwZqusI1Vbyq7Sa8fI=
-Date:   Thu, 30 Apr 2020 22:26:24 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
-Message-ID: <20200430212623.GA802@willie-the-truck>
-References: <20200316165055.31179-1-broonie@kernel.org>
- <20200422154436.GJ4898@sirena.org.uk>
- <20200422162954.GF3585@gaia>
- <20200428132804.GF6791@willie-the-truck>
- <20200428151205.GH5677@sirena.org.uk>
- <20200428151815.GB12697@willie-the-truck>
- <20200428155808.GJ5677@sirena.org.uk>
- <20200428160141.GD12697@willie-the-truck>
+        Thu, 30 Apr 2020 17:27:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726616AbgD3V1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:27:35 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UL24PW135712;
+        Thu, 30 Apr 2020 17:27:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30r5cma6u6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 17:27:33 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UL2FeX136877;
+        Thu, 30 Apr 2020 17:27:33 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30r5cma6tv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 17:27:33 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03ULN8bT012382;
+        Thu, 30 Apr 2020 21:27:33 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02dal.us.ibm.com with ESMTP id 30mcu7cr8a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 21:27:32 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03ULRUQA12452328
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 21:27:30 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52FE27805F;
+        Thu, 30 Apr 2020 21:27:31 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91E7578063;
+        Thu, 30 Apr 2020 21:27:30 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.180.191])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 21:27:30 +0000 (GMT)
+From:   Jared Rossi <jrossi@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Date:   Thu, 30 Apr 2020 17:29:58 -0400
+Message-Id: <20200430212959.13070-1-jrossi@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428160141.GD12697@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_12:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:01:43PM +0100, Will Deacon wrote:
-> On Tue, Apr 28, 2020 at 04:58:12PM +0100, Mark Brown wrote:
-> > On Tue, Apr 28, 2020 at 04:18:16PM +0100, Will Deacon wrote:
-> > > On Tue, Apr 28, 2020 at 04:12:05PM +0100, Mark Brown wrote:
-> > 
-> > > > It's probably easier for me if you just use the existing branch, I've
-> > > > already got a branch based on a merge down.
-> > 
-> > > Okey doke, I'll funnel that in the direction of linux-next then. It does
-> > > mean that any subsequent patches for 5.8 that depend on BTI will need to
-> > > be based on this branch, so as long as you're ok with that then it's fine
-> > > by me (since I won't be able to apply patches if they refer to changes
-> > > introduced in the recent merge window).
-> > 
-> > That's not a problem, that's what I've got already and if I try to send
-> > everything based off -rc3 directly the series would get unmanagably
-> > large.  Actually unless you think it's a bad idea I think what I'll do
-> > is go and send out a couple of the preparatory changes (the insn updates
-> > and the last bit of annotation conversions) separately for that branch
-> > while I finalize the revisions of the main BTI kernel bit, hopefully
-> > that'll make the review a bit more approachable.
-> 
-> Okey doke, sounds good to me. I'm queuing stuff atm, so as long you tell
-> me what I need to apply things against then we should be good.
+Remove the explicit prefetch check when using vfio-ccw devices.
+This check is not needed in practice as all Linux channel programs
+are intended to use prefetch.
 
-Just a heads up: I've renamed for-next/bti to for-next/bti-user, so it
-doesn't get confusing with the pending in-kernel BTI patches. All the commit
-SHAs remain unchanged.
+Version 2 improves logging by issuing a warning if a non-prefetch
+ORB is encountered. A kernel warning is printed when an ORB without
+the p-bit set is initialized.  The warning is limited to once per
+five seconds because, if encountered, non-prefetch ORBs tend to
+appear in bursts of hundreds per second.
 
-Will
+The commit message is expanded to highlight the potential for
+future risk if non-prefetch dependent channel programs become
+prevalent.  Furthermore, a note of prefetch only support is
+added to the limitations section of the vfio-ccw.rst.
+
+Jared Rossi (1):
+  vfio-ccw: Enable transparent CCW IPL from DASD
+
+ Documentation/s390/vfio-ccw.rst |  4 ++++
+ drivers/s390/cio/vfio_ccw_cp.c  | 16 +++++++---------
+ 2 files changed, 11 insertions(+), 9 deletions(-)
+
+-- 
+2.17.0
+
