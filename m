@@ -2,150 +2,131 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10157C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8D8C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E57752072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588274783;
-	bh=LnlRqLx5AcCnbbcetphuj1nYVoZplmdL7b3QBIupxNo=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=k126oxyW+4sh6rOs3UKEwi4l9YJDX0gPRxvISsk5yUaBAk9JK4X/ql8TYf18iUuU9
-	 VLHwhKK4HIMyNBIZO+MGf3Hna+9b8xUPPX7V5libqkwvzv47A4U2hqe0KD8mkIqw3Y
-	 /hORqoPwlC/sP8Bomsq1ghcm+TYTS1omPNK+qzMM=
+	by mail.kernel.org (Postfix) with ESMTP id 0080F20836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD3T0X (ORCPT
+        id S1726625AbgD3T2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD3T0W (ORCPT
+        Thu, 30 Apr 2020 15:28:03 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33957 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgD3T2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:26:22 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19CAC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:26:21 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id b18so2500256ilf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=tDimjc++p9z9/I8fVMD18UCvQaoCQ2HCiBnz8f0J4aA=;
-        b=UG4RSoXfZpftFk0K6ibrWrZLY3kuW5ZJK3sZmGB4TYGYgKXOMaNF4Wwoc0loPT4+ga
-         rsh4IZF/0mLKhSXMuJBeguRe0vq1J5Tti4rx1r8pX8ofZiZjU8k3i+2+rw9A+sqBPMjD
-         ACF62ZmRvKpB7NuaLjZa5OwpyBFE1qsyd4bMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=tDimjc++p9z9/I8fVMD18UCvQaoCQ2HCiBnz8f0J4aA=;
-        b=tLjZYA+t/MfH8Mwjb4sU7F+L1JFmX9aQkdcuv8BpENKX+LKTQBjhn6YAbQeFeAfjuE
-         wGLkMk4j+N2q5XA3vBpDEDsnHvehAw5erFsalRBjG1PoAdREwJLvFVcdOcTQl3VQoGM8
-         S7vOs/knUuBUDi4jClT5dHTi3BD2APvnznbiyJ4EFou5p67WtywdBVQ+pCnCoMqnbqR9
-         JGav1DO/P4JJyuN2UE4SkxW5HGFClidTfa3VnApz8EDixamJW+aBi/o6YmfIAPptvydr
-         qJ9Nzj93hF6LWNBinrLaqvK2dfQvnzbaayToyWz2uetAU5GWAK3A4gXTcyWMU+N+OWTj
-         LfBA==
-X-Gm-Message-State: AGi0PuYAtITX8/2eZpfwwPElO2Vn2pR2g744IqTM2YLAepLoJA/Lbjek
-        jWCKMlh3OFU7Wel6TNme4rIafw==
-X-Google-Smtp-Source: APiQypJTHulW4Ghd7hjLzHKd6NORfGAafoNGBlcfV6ly5LlCzrNsdReVQvv3oC0TjTfdkHSFm7l79g==
-X-Received: by 2002:a92:b710:: with SMTP id k16mr3551743ili.270.1588274780844;
-        Thu, 30 Apr 2020 12:26:20 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id g87sm252226ile.25.2020.04.30.12.26.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 12:26:19 -0700 (PDT)
-To:     torvalds@linux-foundation.org
-Cc:     skhan@linuxfoundation.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kunit update for Linux 5.7-rc4
-Message-ID: <c5edb7c4-c5ed-0209-3c7f-cace9d775d64@linuxfoundation.org>
-Date:   Thu, 30 Apr 2020 13:26:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 15:28:03 -0400
+X-Originating-IP: 93.29.109.196
+Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 779901C0007;
+        Thu, 30 Apr 2020 19:27:59 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v6 0/3] drm: LogiCVC display controller support
+Date:   Thu, 30 Apr 2020 21:27:43 +0200
+Message-Id: <20200430192746.1866325-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------10008E56FF95384B04969D10"
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------10008E56FF95384B04969D10
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+This series introduces support for the LogiCVC display controller.
+The controller is a bit unusual since it is usually loaded as
+programmable logic on Xilinx FPGAs or Zynq-7000 SoCs.
+More details are presented on the main commit for the driver.
 
-Hi Linus,
+More information about the controller is available on the dedicated
+web page: https://www.logicbricks.com/Products/logiCVC-ML.aspx
 
-Please pull the following Kunit update for Linux 5.7-rc4.
+Changes since v5:
+- Subclass DRM device and use devm_drm_dev_alloc for allocation;
+- Removed call to drm_mode_config_cleanup (done automatically with devm);
+- Some related code cleanups;
+- Bring back not-for-merge patch adding colorkey support.
 
-This Kunit update for Linux 5.7-rc4 consists of a single fix to flush
-the test summary to the console log without delay.
+Changes since v4:
+- Updated to internal DRM API changes (rebased on drm-misc-next);
+- Added Kconfig dependency on OF;
+- Added MAINTAINERS entry;
+- Used drm_err and dev_err instead of DRM_ERROR where possible;
+- Various cosmetic changes.
 
-diff is attached.
+Changes since v3:
+- Rebased on latest drm-misc;
+- Improved event lock wrapping;
+- Added collect tag;
+- Added color-key support patch (not for merge, for reference only).
 
-thanks,
--- Shuah
+Changes since v2:
+- Fixed and slightly improved dt schema.
 
-----------------------------------------------------------------
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Changes since v1:
+- Switched dt bindings documentation to dt schema;
+- Described more possible dt parameters;
+- Added support for the lvds-3bit interface;
+- Added support for grabbing syscon regmap from parent node;
+- Removed layers count property and count layers child nodes instead.
 
-   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Cheers!
 
-are available in the Git repository at:
+Paul Kocialkowski (3):
+  dt-bindings: display: Document the Xylon LogiCVC display controller
+  drm: Add support for the LogiCVC display controller
+  NOTFORMERGE: drm/logicvc: Add plane colorkey support
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-kunit-5.7-rc4
+ .../display/xylon,logicvc-display.yaml        | 313 ++++++++
+ MAINTAINERS                                   |   6 +
+ drivers/gpu/drm/Kconfig                       |   2 +
+ drivers/gpu/drm/Makefile                      |   1 +
+ drivers/gpu/drm/logicvc/Kconfig               |   9 +
+ drivers/gpu/drm/logicvc/Makefile              |   4 +
+ drivers/gpu/drm/logicvc/logicvc_crtc.c        | 270 +++++++
+ drivers/gpu/drm/logicvc/logicvc_crtc.h        |  21 +
+ drivers/gpu/drm/logicvc/logicvc_drm.c         | 470 +++++++++++
+ drivers/gpu/drm/logicvc/logicvc_drm.h         |  67 ++
+ drivers/gpu/drm/logicvc/logicvc_interface.c   | 238 ++++++
+ drivers/gpu/drm/logicvc/logicvc_interface.h   |  30 +
+ drivers/gpu/drm/logicvc/logicvc_layer.c       | 744 ++++++++++++++++++
+ drivers/gpu/drm/logicvc/logicvc_layer.h       |  71 ++
+ drivers/gpu/drm/logicvc/logicvc_mode.c        | 103 +++
+ drivers/gpu/drm/logicvc/logicvc_mode.h        |  15 +
+ drivers/gpu/drm/logicvc/logicvc_of.c          | 205 +++++
+ drivers/gpu/drm/logicvc/logicvc_of.h          |  28 +
+ drivers/gpu/drm/logicvc/logicvc_regs.h        |  88 +++
+ 19 files changed, 2685 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
+ create mode 100644 drivers/gpu/drm/logicvc/Kconfig
+ create mode 100644 drivers/gpu/drm/logicvc/Makefile
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_regs.h
 
-for you to fetch changes up to 6cb1818798812fe7e2c8fe3f489ad1c86adfd6c4:
+-- 
+2.26.0
 
-   kunit: Add missing newline in summary message (2020-04-23 15:42:00 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-kunit-5.7-rc4
-
-This Kunit update for Linux 5.7-rc4 consists of a single fix to flush
-the test summary to the console log without delay.
-
-----------------------------------------------------------------
-Marco Elver (1):
-       kunit: Add missing newline in summary message
-
-  lib/kunit/test.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
-
-----------------------------------------------------------------
-
---------------10008E56FF95384B04969D10
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-kselftest-kunit-5.7-rc4.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-kunit-5.7-rc4.diff"
-
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 7a6430a7fca0..ccb2ffad8dcf 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -93,7 +93,7 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
- 	 * representation.
- 	 */
- 	if (suite)
--		pr_info("%s %zd - %s",
-+		pr_info("%s %zd - %s\n",
- 			kunit_status_to_string(is_ok),
- 			test_number, description);
- 	else
-
---------------10008E56FF95384B04969D10--
