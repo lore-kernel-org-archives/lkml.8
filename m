@@ -2,127 +2,149 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78C3C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1393C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F37205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47C7205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:07:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qcZoL1BD"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="vLKm85Xe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgD3UGV (ORCPT
+        id S1726875AbgD3UHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57616 "EHLO
+        Thu, 30 Apr 2020 16:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgD3UGU (ORCPT
+        with ESMTP id S1726660AbgD3UHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:06:20 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CBA3C035494;
-        Thu, 30 Apr 2020 13:06:19 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so645367ljj.11;
-        Thu, 30 Apr 2020 13:06:19 -0700 (PDT)
+        Thu, 30 Apr 2020 16:07:14 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF79C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:07:13 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f15so2719210plr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:07:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oQkcVujmEAsC5qn/cDhjCOzcH+xokPrfvlyIJaZlQW8=;
-        b=qcZoL1BDK7eicvBfj4FWexs21jkeVeVk4GsIFCF/ihe9dy/bdOcAwrfvP/iZrLyUw+
-         vlQL6SOas05a8b4RIt6TvOf50qIhOlyf4eBzQFd5SI1w3iGvVCbP5uGxxmpAvjq6wmvE
-         khCNoXRUuT/EAn3irEjRjpnblElG9KH1lOrQJGCtc61ieqkTw22Lwb7HmVejmipICEkk
-         RYfHLbSR1lcU4EltTdu96s8KdhKUoe+YfL3hn4mBkxTHOEYq3WBaGIsNqcbiWHAdWsaT
-         i3Sj11PYC8xTgKl9/nS8Pj7KxwhfHLHsr/Sz8/lSmcRbC5o/NLP+rX1bYuBzyIAC21Jc
-         6XDQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=p3wUvEbSn9f+WPyEEsvBQpBZL7x1SSk0c7XRYZKC7go=;
+        b=vLKm85XeGVLBINOi+MNK7f63J8VzDtOC7kEqYCvUpC4YvbvTEJAYkMiBSGQX6J70Ha
+         maCBbN6Occzx6JzwsTyizH4bV5bF82J1N3xXZLGRQ6aVP1XmfstafoB5WPCGqRGsQwEK
+         fvEkC4NCRYQ5xnMtYPB0OAq8dlOZa9n33vdEJ0pRlrc7xXYyA+cVJn2gpcBJJoPdOSQ9
+         DH0j5fkW9bao+gLWoFUenYN07TOxS19vea2YvvDccg5FxBmAxAbHWtKy+i35RAaIsqGc
+         YYpb6EHY6WGpF1QO657rmcKInIALsnUwu7XXWfMHA4jWEOxpOTV9p4srfx3ugdTOALk1
+         Bn3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oQkcVujmEAsC5qn/cDhjCOzcH+xokPrfvlyIJaZlQW8=;
-        b=F5NPjnvLpJErJAyiFG171kIlo3Kb2yjh7pNhUauvjzfGb+WIbHN9EByyTtowwPEohz
-         X54OkgudnxK95RAbwuo6vCn6CzJVBctvn+2Zus1/xFetADk771YbRnSQc0EOIAGTAlTK
-         hVa7gtB3zgnP2k1ja+ZHEyR3UKMV22fKIyp5nzKDPUfAe50j/LCOCgVPzrbZTHBnxsQd
-         harFvEtdVXpQzlkU0p5mMATSxo7Ebs53watQQBwnjnMEda0zkXbxJJcf8JPSr34cqqjQ
-         LS6dxmWXH7ScqXqkT69SF8yp1p7cSc/M6DsMe/uqvCngbth0xk28BvTI73rtYKcb6RAV
-         JdZw==
-X-Gm-Message-State: AGi0PuY9JHdw/5ljdMN7Z9p6omwTG9QG2btccKqvy98tCnp5HnU1FBLS
-        3VkNxXdkXY7HNRjUXljMX4mckD5v
-X-Google-Smtp-Source: APiQypLTEqWQvJrpR4YyHH4cNEwyvkgNntPKXXeVenvaws12vwl12CQ3C+Tcm4tN/ggxRg9Y0qanRA==
-X-Received: by 2002:a2e:9818:: with SMTP id a24mr368146ljj.126.1588277177808;
-        Thu, 30 Apr 2020 13:06:17 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id z9sm663609lfd.9.2020.04.30.13.06.16
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=p3wUvEbSn9f+WPyEEsvBQpBZL7x1SSk0c7XRYZKC7go=;
+        b=Ypfa2XLv+8tfgpdvGyVumhBMfzh68ivHanlFrzUqA+atmNX91HeXbqz5/t/JNSknT/
+         wIM4p7WziEoy7/JdFrUKHONhnBwnH4y1NHHc/t0+f3mFK1dN+No0TMsNd5PhpfZfCzNP
+         FKwT3ZQCAeTfaS/zwhIblys8AUy5DyTKlMKwctORztCl8EurZVODDZ0SEOP450s57HPb
+         qA4bl5NdpDHdmyBnAa9rNqdPYBSgKRZXknIWG+apDsGSI6edlw16Yo9feRI96TQW3CeB
+         w5xyZREo9ZI6PUiu29nw/pUjg7x+xtxatrgpVfu+FgzVMXwBPYKeLoK7KsyTAJQ9pTyR
+         7m2Q==
+X-Gm-Message-State: AGi0PuZQh4EzX7zRRNzcsoSIXJHVx5SIFfMnNQlBaGGyWqB7WoBBzmog
+        E53RrTQ0MuuO53AbsV5KJDbYnQ==
+X-Google-Smtp-Source: APiQypIYAXUg7Biw0D2TBRkbkjLKeZ1YlBGAyuI6df4rKF0UYwZavIIpzVrPwSNRWmjAPJ3maXqqbw==
+X-Received: by 2002:a17:90a:1b26:: with SMTP id q35mr571681pjq.149.1588277232615;
+        Thu, 30 Apr 2020 13:07:12 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:fd86:293b:2791:eb06? ([2601:646:c200:1ef2:fd86:293b:2791:eb06])
+        by smtp.gmail.com with ESMTPSA id d203sm523177pfd.79.2020.04.30.13.07.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 13:06:17 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <eadf3a5a-f305-4561-10e1-1b9241b9c5c2@gmail.com>
-Date:   Thu, 30 Apr 2020 23:06:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+        Thu, 30 Apr 2020 13:07:11 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Date:   Thu, 30 Apr 2020 13:07:09 -0700
+Message-Id: <4819995F-4EAE-46EE-8311-9CF65CB8D08A@amacapital.net>
+References: <CAPcyv4g8rA2TRvoFHqEjs5Xn74gdZx8uF0PXFYCjTcx56yA=Jw@mail.gmail.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAPcyv4g8rA2TRvoFHqEjs5Xn74gdZx8uF0PXFYCjTcx56yA=Jw@mail.gmail.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.04.2020 01:00, Sowjanya Komatineni пишет:
-> +static int chan_capture_kthread_start(void *data)
-> +{
-> +	struct tegra_vi_channel *chan = data;
-> +	struct tegra_channel_buffer *buf;
-> +	int err = 0;
-> +
-> +	set_freezable();
-> +
-> +	while (1) {
-> +		try_to_freeze();
-> +
-> +		/*
-> +		 * Source is not streaming if error is non-zero.
-> +		 * So, do not dequeue buffers on error and let the thread sleep
-> +		 * till kthread stop signal is received.
-> +		 */
-> +		wait_event_interruptible(chan->start_wait,
-> +					 kthread_should_stop() ||
-> +					 (!list_empty(&chan->capture) &&
-> +					 !err));
 
-...
-> +static void tegra_channel_buffer_queue(struct vb2_buffer *vb)
-> +{
-> +	struct tegra_vi_channel *chan = vb2_get_drv_priv(vb->vb2_queue);
-> +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> +	struct tegra_channel_buffer *buf = to_tegra_channel_buffer(vbuf);
-> +
-> +	/* put buffer into the capture queue */
-> +	spin_lock(&chan->start_lock);
-> +	list_add_tail(&buf->queue, &chan->capture);
-> +	spin_unlock(&chan->start_lock);
-> +
-> +	/* wait up kthread for capture */
-> +	wake_up_interruptible(&chan->start_wait);
-> +}
+> On Apr 30, 2020, at 12:51 PM, Dan Williams <dan.j.williams@intel.com> wrot=
+e:
+>=20
+> =EF=BB=BFOn Thu, Apr 30, 2020 at 12:23 PM Luck, Tony <tony.luck@intel.com>=
+ wrote:
+>>=20
+>>> On Thu, Apr 30, 2020 at 11:42:20AM -0700, Andy Lutomirski wrote:
+>>> I suppose there could be a consistent naming like this:
+>>>=20
+>>> copy_from_user()
+>>> copy_to_user()
+>>>=20
+>>> copy_from_unchecked_kernel_address() [what probe_kernel_read() is]
+>>> copy_to_unchecked_kernel_address() [what probe_kernel_write() is]
+>>>=20
+>>> copy_from_fallible() [from a kernel address that can fail to a kernel
+>>> address that can't fail]
+>>> copy_to_fallible() [the opposite, but hopefully identical to memcpy() on=
+ x86]
+>>>=20
+>>> copy_from_fallible_to_user()
+>>> copy_from_user_to_fallible()
+>>>=20
+>>> These names are fairly verbose and could probably be improved.
+>>=20
+>> How about
+>>=20
+>>        try_copy_catch(void *dst, void *src, size_t count, int *fault)
+>>=20
+>> returns number of bytes not-copied (like copy_to_user etc).
+>>=20
+>> if return is not zero, "fault" tells you what type of fault
+>> cause the early stop (#PF, #MC).
+>=20
+> I do like try_copy_catch() for the case when neither of the buffers
+> are __user (like in the pmem driver) and _copy_to_iter_fallible()
+> (plus all the helpers it implies) for the other cases.
+>=20
+> copy_to_user_fallible
+> copy_fallible_to_page
+> copy_pipe_to_iter_fallible
+>=20
+> ...because the mmu-fault handling is an aspect of "_user" and fallible
+> implies other source fault reasons. It does leave a gap if an
+> architecture has a concept of a fallible write, but that seems like
+> something that will be handled asynchronously and not subject to this
+> interface.
 
-The V4L doc says that buffers could be enqueued before streaming is
-started. I guess it should be a trouble here, shouldn't it?
 
-https://elixir.bootlin.com/linux/v5.7-rc3/source/include/media/videobuf2-core.h#L379
+I=E2=80=99m suspicious that, as a practical matter, x86 does have a fallible=
+ write. In particular, if a page fails and the memory failure code is notifi=
+ed, the page will be unmapped. At that point, an attempt to write to the fai=
+led fallible page will get #PF, and code that writes to it needs to be prepa=
+red to handle #PF.  Perhaps copy_to_fallible(), etc can still return void, b=
+ut I=E2=80=99m unconvinced
+the implementation can be the same as memcpy.=
