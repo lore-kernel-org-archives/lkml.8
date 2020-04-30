@@ -2,93 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F33CC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BB9C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79211208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588263503;
-	bh=5R1P59XWFriRjxe5e4BwtfyFc/8B5tCSKlTVbm120WY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=09aguq7vqZEi2yYDeUcpmqsrHNtHjkodksVdb3GmneRQoG6i9jf5csdUILldPge/k
-	 TNsLKo/D3Srq9ViUs09MnDJggnnuIuVjReA34gCYYkqJiBPVSfHxYtIMOEKMUtZ+MK
-	 zrJR4YrhwkZDnaHOoU8Mb8GHSqDsrHztr2FwFR8U=
+	by mail.kernel.org (Postfix) with ESMTP id 7637D20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="a0h2NHQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgD3QSW (ORCPT
+        id S1728102AbgD3QS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgD3QSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:18:22 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE94220873;
-        Thu, 30 Apr 2020 16:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588263501;
-        bh=5R1P59XWFriRjxe5e4BwtfyFc/8B5tCSKlTVbm120WY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FWbHYicdfPDjjYeJPc0wx5uyaSBePyMtYHG2jq9/y3Rlj3rPkum04ZiSQO0BYAPhV
-         G23qhA6RGP/lsaiuQobgqfndHcI8FOhOFgn7t8uKNyIQHmNPGohnUTGMARV8YBFbd6
-         Cvzu10wcz3BXUOIM4uUTYofcgbV5A4wsexskA3rI=
-Date:   Thu, 30 Apr 2020 17:18:15 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marc Zyngier <maz@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>,
-        tglx@linutronix.de
-Subject: Re: [PATCH] arm64: perf_event: Fix time_offset for arch timer
-Message-ID: <20200430161815.GE25258@willie-the-truck>
-References: <20200320093545.28227-1-leo.yan@linaro.org>
- <20200430145823.GA25258@willie-the-truck>
- <4d924f705245c797a19d3a73eb0c1ba0@kernel.org>
- <20200430160436.GC13575@hirez.programming.kicks-ass.net>
+        Thu, 30 Apr 2020 12:18:28 -0400
+Received: from mail.efficios.com ([167.114.26.124]:38972 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgD3QSX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:18:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 1493A28FB39;
+        Thu, 30 Apr 2020 12:18:23 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id bzyRC6oWE99D; Thu, 30 Apr 2020 12:18:22 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id BC0A028F877;
+        Thu, 30 Apr 2020 12:18:22 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BC0A028F877
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588263502;
+        bh=L55kMAHWHtClXwT3AsAHrTu4aKopstWuDvA/OyUEXfw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=a0h2NHQD3T8P5WMYNRq/esttBzqmJ5x00gb7J/F1X1p6JpLeAsgsEjUh20DCv5pma
+         muv6+Y+WUACsdkjNSDLiDjqG5hvb6yHS6wC/GWDD2Qv4uXPq+X5GuKGUOeU8DYAU79
+         FeizHDpFWpLt7Eica3HjqwfMiPaqwuy5tDBXdfo2sYvAahVQ0yPLnPRiotbk6OgQQn
+         wCK0OGubt84svS5QivphLQZZnRkPTBLj4ZQfyFadgrMxG12mZ+idp88uglnv7LPBqK
+         nOBKkfqgqri7WE8fQALZX4/KWthxgXjAOK0+5vvtENlNMbcdJp3o5vXKaeSwSLEw5u
+         qnbLNdK4sCABA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id z-dubMsoJYa8; Thu, 30 Apr 2020 12:18:22 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id AAA3428F79F;
+        Thu, 30 Apr 2020 12:18:22 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 12:18:22 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Message-ID: <947455570.77870.1588263502669.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200430121627.682061e2@gandalf.local.home>
+References: <20200429054857.66e8e333@oasis.local.home> <20200429105941.GQ30814@suse.de> <20200429082854.6e1796b5@oasis.local.home> <20200429100731.201312a9@gandalf.local.home> <20200430141120.GA8135@suse.de> <20200430145057.GB8135@suse.de> <2026887875.77814.1588260015439.JavaMail.zimbra@efficios.com> <20200430121627.682061e2@gandalf.local.home>
+Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
+ text_poke()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430160436.GC13575@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
+Thread-Topic: x86/mm: Sync all vmalloc mappings before text_poke()
+Thread-Index: rw6BtFhk9xaOWvTrQYsbm6qr+yaRNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 06:04:36PM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 30, 2020 at 04:29:23PM +0100, Marc Zyngier wrote:
+----- On Apr 30, 2020, at 12:16 PM, rostedt rostedt@goodmis.org wrote:
+
+> On Thu, 30 Apr 2020 11:20:15 -0400 (EDT)
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> > I wonder if we could/should make __sched_clock_offset available even when
-> > CONFIG_HAVE_UNSTABLE_SCHED_CLOCK isn't defined. It feels like it would
-> > help with this particular can or worm...
+>> > The right fix is to call vmalloc_sync_mappings() right after allocating
+>> > tracing or perf buffers via v[zm]alloc().
+>> 
+>> Either right after allocation, or right before making the vmalloc'd data
+>> structure visible to the instrumentation. In the case of the pid filter,
+>> that would be the rcu_assign_pointer() which publishes the new pid filter
+>> table.
+>> 
+>> As long as vmalloc_sync_mappings() is performed somewhere *between* allocation
+>> and publishing the pointer for instrumentation, it's fine.
+>> 
+>> I'll let Steven decide on which approach works best for him.
 > 
-> Errrgh. __sched_clock_offset is only needed on x86 because we transition
-> from one clock device to another on boot. It really shouldn't exist on
-> anything sane.
+> As stated in the other email, I don't see it having anything to do with
+> vmalloc, but with the per_cpu() allocation. I'll test this theory out by
+> not even allocating the pid masks and touching the per cpu data at every
+> event to see if it crashes.
 
-I think we still transition from jiffies on arm64, because we don't register
-with sched_clock until the timer driver probes. Marc, is that right?
+As pointed out in my other email, per-cpu allocation uses vmalloc when
+size > PAGE_SIZE.
 
-> Let me try and understand your particular problem better.
+Thanks,
 
-I think the long and short of it is that userspace needs a way to convert
-the raw counter cycles into a ns value that can be compared against values
-coming out of sched_clock. To do this accurately, I think it needs the
-cycles value at the point when sched_clock was initialised.
+Mathieu
 
-Will
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
