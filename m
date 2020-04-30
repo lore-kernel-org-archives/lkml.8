@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7EBC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEEAC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD8C206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50554206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255745;
-	bh=zI9U96ifGGqZbsvmYhIvux+kaVFx/2j17snz9G3CqCo=;
+	s=default; t=1588255753;
+	bh=f468jlNFiX3YwGHl5K6KTJqr77ApgBi8NgVXofCvmGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DH8dGrA2b73/aOuQP8O10LPEb4gtrUfG948JQnJXDNOYDS1x+NNYo30maBhyd8fcu
-	 BUyptAem/AYBw+RS3J9aXzNn8aiXOjX6Hf8dZNcPxg7i6R42P8vMRk/IYl9p2lNTY/
-	 /SpTL+Ulh1aDAgXM5yhZhNeoNBx5AMxPAJHgGkVA=
+	b=Ikh7kXYWkJJLUY/zJqEbxM6JGaBrhWhKux+04YiQS2g9Xt21iK9mV0+22HWRi9Tup
+	 8id6kILL/ygUL/J47iuT3IPrFPLCY3Co92mLHcpJJPGv2iQxTRAdYwiI3/TWvtADb7
+	 Xa++6j4wC7/EhaGPA0F7/fshM5JpZMg7h/pRSxJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgD3OJA (ORCPT
+        id S1728257AbgD3NwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:09:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60940 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728271AbgD3NwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:02 -0400
+        id S1728184AbgD3Nvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395C221775;
-        Thu, 30 Apr 2020 13:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32F424955;
+        Thu, 30 Apr 2020 13:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254722;
-        bh=zI9U96ifGGqZbsvmYhIvux+kaVFx/2j17snz9G3CqCo=;
+        s=default; t=1588254705;
+        bh=f468jlNFiX3YwGHl5K6KTJqr77ApgBi8NgVXofCvmGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c+FUOpJmh/RgylIPDES5vJ7Rx+CTLWk5FfnVgQrSrLujmP66MOF0js2mPUQVVb0bc
-         vvRnPL9q/Dem0WGF9gyTXLW6TKuxKyYrCvNPN4CgtRVWIgtCDt60G/UmnKw6/YOdS6
-         CJ0tpxpzo9PLwPl1VqhY+R8hHKEgKspx1zrs9mk4=
+        b=w2hX2oFJ4ygCibk4w66ga2DcMsD6qY1Zgm89vyp2pvvSG22yxCrR2V8IV0di72siK
+         V6KfhHWamLS/BX/t1uydZ2Wi6fE+IN/tjstJj3kXKq+U1jjktZF3+PqSVl5Q5Px7+P
+         2LW4Hvwjfj9Q5tIs2EZpiciyurpDM8amrETxVPbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 69/79] mac80211: sta_info: Add lockdep condition for RCU list usage
-Date:   Thu, 30 Apr 2020 09:50:33 -0400
-Message-Id: <20200430135043.19851-69-sashal@kernel.org>
+Cc:     Luke Nelson <lukenels@cs.washington.edu>,
+        Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 54/79] bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
+Date:   Thu, 30 Apr 2020 09:50:18 -0400
+Message-Id: <20200430135043.19851-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -60,36 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit 8ca47eb9f9e4e10e7e7fa695731a88941732c38d ]
+[ Upstream commit aee194b14dd2b2bde6252b3acf57d36dccfc743a ]
 
-The function sta_info_get_by_idx() uses RCU list primitive.
-It is called with  local->sta_mtx held from mac80211/cfg.c.
-Add lockdep expression to avoid any false positive RCU list warnings.
+This patch fixes an encoding bug in emit_stx for BPF_B when the source
+register is BPF_REG_FP.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200409082906.27427-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The current implementation for BPF_STX BPF_B in emit_stx saves one REX
+byte when the operands can be encoded using Mod-R/M alone. The lower 8
+bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
+a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
+(e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
+equivalents (%sil, %dil, %bpl, %spl).
+
+The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
+or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
+required REX prefix. However, it misses the case when the source is
+BPF_REG_FP (mapped to %rbp).
+
+The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
+will read from register %ch instead of the correct %bpl. This patch fixes
+the problem by fixing and refactoring the check on which registers need
+the extra REX byte. Since no BPF registers map to %rsp, there is no need
+to handle %spl.
+
+Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200418232655.23870-1-luke.r.nels@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/sta_info.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/net/bpf_jit_comp.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/sta_info.c b/net/mac80211/sta_info.c
-index e3572be307d6c..149ed0510778d 100644
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -231,7 +231,8 @@ struct sta_info *sta_info_get_by_idx(struct ieee80211_sub_if_data *sdata,
- 	struct sta_info *sta;
- 	int i = 0;
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 9ba08e9abc094..6aa53c33b4712 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -158,6 +158,19 @@ static bool is_ereg(u32 reg)
+ 			     BIT(BPF_REG_AX));
+ }
  
--	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-+	list_for_each_entry_rcu(sta, &local->sta_list, list,
-+				lockdep_is_held(&local->sta_mtx)) {
- 		if (sdata != sta->sdata)
- 			continue;
- 		if (i < idx) {
++/*
++ * is_ereg_8l() == true if BPF register 'reg' is mapped to access x86-64
++ * lower 8-bit registers dil,sil,bpl,spl,r8b..r15b, which need extra byte
++ * of encoding. al,cl,dl,bl have simpler encoding.
++ */
++static bool is_ereg_8l(u32 reg)
++{
++	return is_ereg(reg) ||
++	    (1 << reg) & (BIT(BPF_REG_1) |
++			  BIT(BPF_REG_2) |
++			  BIT(BPF_REG_FP));
++}
++
+ static bool is_axreg(u32 reg)
+ {
+ 	return reg == BPF_REG_0;
+@@ -598,9 +611,8 @@ static void emit_stx(u8 **pprog, u32 size, u32 dst_reg, u32 src_reg, int off)
+ 	switch (size) {
+ 	case BPF_B:
+ 		/* Emit 'mov byte ptr [rax + off], al' */
+-		if (is_ereg(dst_reg) || is_ereg(src_reg) ||
+-		    /* We have to add extra byte for x86 SIL, DIL regs */
+-		    src_reg == BPF_REG_1 || src_reg == BPF_REG_2)
++		if (is_ereg(dst_reg) || is_ereg_8l(src_reg))
++			/* Add extra byte for eregs or SIL,DIL,BPL in src_reg */
+ 			EMIT2(add_2mod(0x40, dst_reg, src_reg), 0x88);
+ 		else
+ 			EMIT1(0x88);
 -- 
 2.20.1
 
