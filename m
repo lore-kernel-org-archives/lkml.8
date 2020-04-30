@@ -2,134 +2,190 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0062DC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A351C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC2CD2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+AJg1G4"
+	by mail.kernel.org (Postfix) with ESMTP id 51DA62192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgD3G5r (ORCPT
+        id S1726554AbgD3HDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726427AbgD3G5r (ORCPT
+        Thu, 30 Apr 2020 03:03:32 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:59058 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbgD3HDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:57:47 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 819ADC035495
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:57:46 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e25so5284655ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6F+XndsIru6duR0CCwlaQ2qNG4XUe6rojDGrs09hMvY=;
-        b=l+AJg1G4eg8RVQ0OCKtowUmC2BD9hVyGr0Ni76WpLrv3E7LCD7I6ykogl0HvbX7a/x
-         b2zUy+xTgOhx/HikhevbV90OoEjhnmU8zKZqxe02y9VqkI9AQqpOHYOwm6rDCFMS6SeK
-         yC7CAusyyxm2XVbAmbI6qYRplSc/PmaSm9gMEyyO0WxZvOpqjgQG1y34H2jeugd8UJL3
-         XCMJ2xbKhcUGx1yZYSiOHlv3MFlStYIJYE4uKsP9grfQmnGgPW1Ys7UCtT/XaCrt4AZo
-         1rCyNmLfoowCIvBONCjqM0xo+8C5Mb1DPmalBYNpA1fAagJc94NDFmzyo25PVMVQlsGo
-         c5RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6F+XndsIru6duR0CCwlaQ2qNG4XUe6rojDGrs09hMvY=;
-        b=r/VuaaGsLB3VF26UaIQyc2dYFy3AsGvVV73pQP22JKLfE7BW4cAOh4hR5HqH+7ReDx
-         ByKO2G1FFrVuwBFNO7+xLoQWJaHkyXULRuwGMddplRI0wBDxTNmyg44ayeghjm5fmj2F
-         Tn30lMS6ok65+JvRDCWVz7FlXicNoSkRd24kXWa2TLBwoNXCKbrDGYMb1WRQFh5Y8iLf
-         sM827n27OXba0nk13u6Wb6m1DQF5GNOJ/JruknEQp+f0X58GqF+/U76cbB213qOv3mpr
-         L2xrojMIch1zJPARcwmwdd/LNwif0m9yjdRTjacW6HewJEGsVQ1ZseOAGf3T+f/3jWKz
-         roow==
-X-Gm-Message-State: AGi0PubHTtzGNMPy36b1O6VKu9pzfrAkN5JOpHRhZi0s9nRVeGqHENu5
-        2R9rG85vawjgCB5AjyhDgS9aL5JAgcE=
-X-Google-Smtp-Source: APiQypIeFer/HL1t7w5DYHAubotVYeGojlmu3tPBDVbGwjXGJOqMQzNmvf/Is5cSyIwrW/tw9fE4Cg==
-X-Received: by 2002:a2e:81d5:: with SMTP id s21mr1200669ljg.258.1588229864883;
-        Wed, 29 Apr 2020 23:57:44 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-181-7.NA.cust.bahnhof.se. [98.128.181.7])
-        by smtp.gmail.com with ESMTPSA id q7sm3923866ljp.20.2020.04.29.23.57.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 23:57:44 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.7-rc4
-Date:   Thu, 30 Apr 2020 08:57:43 +0200
-Message-Id: <20200430065743.21952-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 30 Apr 2020 03:03:32 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 089F0804F6;
+        Thu, 30 Apr 2020 09:03:25 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 09:03:24 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v8 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Message-ID: <20200430070324.GA9545@ravnborg.org>
+References: <cover.1587880280.git.xji@analogixsemi.com>
+ <4d14400b6c19f17c28267f6ebdbce9673333c05c.1587880280.git.xji@analogixsemi.com>
+ <20200427200044.GC15880@ravnborg.org>
+ <20200430062416.GD6645@xin-VirtualBox>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430062416.GD6645@xin-VirtualBox>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=J-B6ajXd8xN2lFXSAU4A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Xin Ji.
 
-Here's a PR with a couple of MMC fixes intended for v5.7-rc4. Details about the
-highlights are as usual found in the signed tag.
+> > > +static void anx7625_power_on_init(struct anx7625_data *ctx)
+> > > +{
+> > > +	int retry_count, i;
+> > > +	int ret;
+> > > +	struct device *dev = &ctx->client->dev;
+> > > +
+> > > +	for (retry_count = 0; retry_count < 3; retry_count++) {
+> > > +		anx7625_power_on(ctx);
+> > > +		anx7625_config(ctx);
+> > > +
+> > > +		for (i = 0; i < OCM_LOADING_TIME; i++) {
+> > Code in this for loop is a candidate for a helper function.
+> I didn't find any helper function can be used, so I'll keep it.
+I was not very clear in my way to express this, sorry.
 
-Please pull this in!
+> > 
+> > > +			/* check interface workable */
+> > > +			ret = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
+> > > +					       FLASH_LOAD_STA);
+> > > +			if (ret < 0) {
+> > > +				DRM_ERROR("IO error : access flash load.\n");
+> > > +				return;
+> > > +			}
+> > > +			if ((ret & FLASH_LOAD_STA_CHK) == FLASH_LOAD_STA_CHK) {
+> > > +				anx7625_disable_pd_protocol(ctx);
+> > > +				DRM_DEV_DEBUG_DRIVER(dev,
+> > > +						     "Firmware ver %02x%02x,",
+> > > +					anx7625_reg_read(ctx,
+> > > +							 ctx->i2c.rx_p0_client,
+> > > +							 OCM_FW_VERSION),
+> > > +					anx7625_reg_read(ctx,
+> > > +							 ctx->i2c.rx_p0_client,
+> > > +							 OCM_FW_REVERSION));
+> > > +				DRM_DEV_DEBUG_DRIVER(dev, "Driver version %s\n",
+> > > +						     ANX7625_DRV_VERSION);
+> > > +
+> > > +				return;
+> > > +			}
+> > > +			usleep_range(1000, 1100);
+> > > +		}
+What I wanted to express is that the for loop is heavily indented.
+So create a small function like:
 
-Kind regards
-Ulf Hansson
+anx7625_power_on_interface(ctx)
+{
+	/* check interface workable */
+	ret = anx7625_reg_read(ctx, ctx->i2c.rx_p0_client, FLASH_LOAD_STA);
+	if (ret < 0) {
+	        DRM_ERROR("IO error : access flash load.\n");
+	        return;
+	}
+	if ((ret & FLASH_LOAD_STA_CHK) == FLASH_LOAD_STA_CHK) {
+	        anx7625_disable_pd_protocol(ctx);
+	        DRM_DEV_DEBUG_DRIVER(dev, "Firmware ver %02x%02x,",
+	                anx7625_reg_read(ctx, ctx->i2c.rx_p0_client,
+                                         OCM_FW_VERSION), anx7625_reg_read(ctx,
+	                                 ctx->i2c.rx_p0_client, OCM_FW_REVERSION));
+	        DRM_DEV_DEBUG_DRIVER(dev, "Driver version %s\n",
+	                             ANX7625_DRV_VERSION);
+		retunrn 1;
+	}
+	return 0;
+}
+
+and then
+
+	for (i = 0; i < OCM_LOADING_TIME; i++) {
+		if (anx7625_power_on_interface(ctx))
+			return;
+		else
+			usleep_range(1000, 1100);
+	}
+
+Or something like that. To make it more readable.
+I think you get the idea now.
 
 
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+> > > +		container_of(work, struct anx7625_data, extcon_wq);
+> > > +	int state = extcon_get_state(ctx->extcon, EXTCON_DISP_DP);
+> > > +
+> > > +	mutex_lock(&ctx->lock);
+> > > +	anx7625_chip_control(ctx, state);
+> > > +	mutex_unlock(&ctx->lock);
+> > I tried to follow the locking - but failed.
+> > Could you check that locking seems correct.
+> > 
+> > A standard bridge driver do not need locking,
+> > but this is no small bridge driver so I do not imply that
+> > locking is not needed. Only that I would like you
+> > to check it again as I could not follow it.
+> OK, it seems lock is not necessary, I'll remove itA
+It has a worker, so please be careful in you analysis.
 
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+> > 
+> > > +
+> > > +	if (pdata->panel_flags == 1)
+> > > +		pdata->internal_panel = 1;
+> > > +	else if (pdata->panel_flags == 2)
+> > > +		pdata->extcon_supported = 1;
+> > > +	DRM_DEV_DEBUG_DRIVER(dev, "%s support extcon, %s internal panel\n",
+> > > +			     pdata->extcon_supported ? "" : "not",
+> > > +			     pdata->internal_panel ? "has" : "no");
+> > > +
+> > The way the internal panel - versus external connector is modelled
+> > looks like it could use some of the abstractions used by other bridge
+> > drivers.
+> > 
+> > The connector_type shall for example for internal panels come
+> > form the panel.
+> > And use the panel bridge driver - see examples in patches I referenced
+> > before.
+> > 
+> > And external connectors may beneft from using the
+> > display-connector bridge driver.
+> I'm not familiar with it, the extcon interface is Google engineer give
+> to me, I just follow their sample driver. If you think it is not good,
+> I'll remove the extcon support.
+It would be better to start without, and then add it later
+so we end up with a clean design.
 
-are available in the Git repository at:
+I for one would have an easier time reviewing.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.7-rc2
+So please go ahead and remove it for now.
 
-for you to fetch changes up to 1a8eb6b373c2af6533c13d1ea11f504e5010ed9a:
 
-  mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers (2020-04-22 17:57:17 +0200)
-
-----------------------------------------------------------------
-MMC host:
- - meson-mx-sdio: Fix support for HW busy detection
- - sdhci-msm: Fix support for HW busy detection
- - cqhci: Fix polling loop by converting to readx_poll_timeout()
- - sdhci-xenon: Fix annoying 1.8V regulator warning
- - sdhci-pci: Fix eMMC driver strength for BYT-based controllers
-
-----------------------------------------------------------------
-Adrian Hunter (1):
-      mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers
-
-Douglas Anderson (1):
-      mmc: cqhci: Avoid false "cqhci: CQE stuck on" by not open-coding timeout loop
-
-Jason Yan (1):
-      mmc: core: make mmc_interrupt_hpi() static
-
-Marek Behún (1):
-      mmc: sdhci-xenon: fix annoying 1.8V regulator warning
-
-Martin Blumenstingl (2):
-      mmc: meson-mx-sdio: Set MMC_CAP_WAIT_WHILE_BUSY
-      mmc: meson-mx-sdio: remove the broken ->card_busy() op
-
-Veerabhadrarao Badiganti (1):
-      mmc: sdhci-msm: Enable host capabilities pertains to R1b response
-
- drivers/mmc/core/mmc_ops.c        |  2 +-
- drivers/mmc/host/cqhci.c          | 21 ++++++++++-----------
- drivers/mmc/host/meson-mx-sdio.c  | 11 +----------
- drivers/mmc/host/sdhci-msm.c      |  2 ++
- drivers/mmc/host/sdhci-pci-core.c |  3 +++
- drivers/mmc/host/sdhci-xenon.c    | 10 ++++++++++
- 6 files changed, 27 insertions(+), 22 deletions(-)
+	Sam
