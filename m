@@ -2,129 +2,147 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C9C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF7C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429B120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7DE12173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:02:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588233777;
+	bh=CUYYSoHe/SJ7OBaDeNT/SGKVo1AeXEXbzgXx9L8eOzA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SVsZS6ztjOFOKni8PYx/4WVnGlC2TJWp82eKLwyygzchfqCKPsilghpCyh2cL7Xz4
+	 lOPWc3eNCvj5YDulzoT2XKIZq3I5tzqSScWaYf+5a0qt8zGdAhJTYGUNnyu5jAlTzW
+	 ha9iun5vo4gfxV2+5jPSefK8yC54Bx2ikWRVZwHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgD3IA7 (ORCPT
+        id S1726598AbgD3IC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:00:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37041 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgD3IA7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:00:59 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jU47l-0007qu-Uk; Thu, 30 Apr 2020 08:00:50 +0000
-Date:   Thu, 30 Apr 2020 10:00:49 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jiri Slaby <jslaby@suse.cz>, Arseny Maslennikov <ar@cs.msu.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Landley <rob@landley.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
-Subject: Re: [PATCH v3 4/7] linux/signal.h: Ignore SIGINFO by default in new
- tasks
-Message-ID: <20200430080049.fvivgejg4xcbaw5r@wittgenstein>
-References: <20200430064301.1099452-1-ar@cs.msu.ru>
- <20200430064301.1099452-5-ar@cs.msu.ru>
- <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
- <20200430071437.x3ilwkh3lyf4iq6u@wittgenstein>
- <20200430073728.36zehjhqmcllglbu@yavin.dot.cyphar.com>
+        Thu, 30 Apr 2020 04:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgD3IC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:02:56 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16B820838;
+        Thu, 30 Apr 2020 08:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588233775;
+        bh=CUYYSoHe/SJ7OBaDeNT/SGKVo1AeXEXbzgXx9L8eOzA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dizua03G+LGrckPmeKgtKUFZU1P076tMsXhcAo8Hte0Bm0nyVg6cOKHlakWsfxjnd
+         Ll1mG7HptmW7+8VZ19PLS4AybRZTzhpK4CVNHPTlhQRHpcwxfLoIDvKDU+yA2EvbPs
+         lSkhlpNT0BIDYufx3/VGDDeyH0umhgIp8Uh3MvFA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jU49m-007xMt-22; Thu, 30 Apr 2020 09:02:54 +0100
+Date:   Thu, 30 Apr 2020 09:02:51 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: kvm: fix gcc-10 shift warning
+Message-ID: <20200430090251.715f6bf0@why>
+In-Reply-To: <20200429185657.4085975-1-arnd@arndb.de>
+References: <20200429185657.4085975-1-arnd@arndb.de>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430073728.36zehjhqmcllglbu@yavin.dot.cyphar.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: arnd@arndb.de, rppt@linux.ibm.com, akpm@linux-foundation.org, benh@kernel.crashing.org, bcain@codeaurora.org, catalin.marinas@arm.com, christophe.leroy@c-s.fr, fenghua.yu@intel.com, geert+renesas@glider.be, gxt@pku.edu.cn, james.morse@arm.com, jonas@southpole.se, julien.thierry.kdev@gmail.com, ley.foon.tan@intel.com, mpe@ellerman.id.au, paulus@samba.org, dalias@libc.org, linux@armlinux.org.uk, shorne@gmail.com, stefan.kristiansson@saunalahti.fi, suzuki.poulose@arm.com, tony.luck@intel.com, will@kernel.org, ysato@users.sourceforge.jp, sfr@canb.auug.org.au, pbonzini@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 05:37:28PM +1000, Aleksa Sarai wrote:
-> On 2020-04-30, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > On Thu, Apr 30, 2020 at 08:53:56AM +0200, Jiri Slaby wrote:
-> > > On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
-> > > > This matches the behaviour of other Unix-like systems that have SIGINFO
-> > > > and causes less harm to processes that do not install handlers for this
-> > > > signal, making the keyboard status character non-fatal for them.
-> > > > 
-> > > > This is implemented with the assumption that SIGINFO is defined
-> > > > to be equivalent to SIGPWR; still, there is no reason for PWR to
-> > > > result in termination of the signal recipient anyway — it does not
-> > > > indicate there is a fatal problem with the recipient's execution
-> > > > context (like e.g. FPE/ILL do), and we have TERM/KILL for explicit
-> > > > termination requests.
-> > > > 
-> > > > To put it another way:
-> > > > The only scenario where system behaviour actually changes is when the
-> > > > signal recipient has default disposition for SIGPWR. If a process
-> > > > chose to interpret a SIGPWR as an incentive to cleanly terminate, it
-> > > > would supply its own handler — and this commit does not affect processes
-> > > > with non-default handlers.
-> > > > 
-> > > > Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-> > > > ---
-> > > >  include/linux/signal.h | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/include/linux/signal.h b/include/linux/signal.h
-> > > > index 05bacd2ab..dc31da8fc 100644
-> > > > --- a/include/linux/signal.h
-> > > > +++ b/include/linux/signal.h
-> > > > @@ -369,7 +369,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
-> > > >   *	|  SIGSYS/SIGUNUSED  |	coredump 	|
-> > > >   *	|  SIGSTKFLT         |	terminate	|
-> > > >   *	|  SIGWINCH          |	ignore   	|
-> > > > - *	|  SIGPWR            |	terminate	|
-> > > > + *	|  SIGPWR            |	ignore   	|
-> > > 
-> > > You need to update signal.7 too:
-> > > https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man7/signal.7#n285
-> > 
-> > (I fail this whole thread via b4 and it appears that a bunch of messages
-> > are missing on lore. Might just be delay though.)
-> > 
-> > How this is this not going to break userspace? Just for a start,
-> > SIGPWR (for better or worse) was used for a long time by some
-> > sandboxing/container runtimes to shutdown a process and still is.
+On Wed, 29 Apr 2020 20:56:20 +0200
+Arnd Bergmann <arnd@arndb.de> wrote:
+
+> gcc-10 warns that the 32-bit zero cannot be shifted more than
+> 32 bits to the right:
 > 
-> To play Devil's advocate -- pid1 has also always had a default-ignore
-> signal mask (which included SIGPWR), so any pid1 that obeyed SIGPWR
-> already had a non-default signal mask (and thus wouldn't be affected by
-> this patch).
-
-Sure, my point wasn't specifically about init systems but rather generic
-processes. The reason that SIGPWR was originally used was because
-older init systems - apart from systemd - could be shutdown with it
-while other programs left it set to SIG_DFL and they would terminate
-too. I'm not saying this is a great idea. But changing SIGPWR - if I
-read this right - to go from "terminate" to "ignore" will mean that any
-program that left SIGPWR unhandled/SIG_DFL will potentially see altered
-behavior. Just looking at gvfsd and in debian.codesearch shows that they
-explicitly set signal(SIGPWR, SIG_DFL) and I'm sure there are more.
-
-(You also need to keep in mind that the default ignore mask applies to
-signals sent from _within_ the pid namespace to pid 1. They'll be
-delivered just fine from an ancestor pid namespace. Otherwise I'd be
-interested to know how you've ever shutdown one of your containers. ;))
-
+> arch/arm64/kvm/../../../virt/kvm/arm/mmu.c: In function 'clear_hyp_p4d_entry':
+> arch/arm64/include/asm/pgtable.h:630:35: error: right shift count >= width of type [-Werror=shift-count-overflow]
+>   630 | #define pud_index(addr)  (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+>       |                                   ^~
+> arch/arm64/include/asm/memory.h:271:45: note: in definition of macro '__phys_to_virt'
+>   271 | #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+>       |                                             ^
+> arch/arm64/include/asm/pgtable.h:633:42: note: in expansion of macro '__va'
+>   633 | #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>       |                                          ^~~~
+> arch/arm64/include/asm/pgtable.h:632:73: note: in expansion of macro 'pud_index'
+>   632 | #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir))) + pud_index(addr) * sizeof(pud_t))
+>       |                                                                         ^~~~~~~~~
+> arch/arm64/include/asm/pgtable.h:633:47: note: in expansion of macro 'pud_offset_phys'
+>   633 | #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>       |                                               ^~~~~~~~~~~~~~~
+> arch/arm64/kvm/../../../virt/kvm/arm/mmu.c:510:36: note: in expansion of macro 'pud_offset'
+>   510 |  pud_t *pud_table __maybe_unused = pud_offset(p4d, 0);
+>       |                                    ^~~~~~~~~~
 > 
-> But I do agree that this seems like a strange change to make (SIGPWR
-> seems like a signal you don't want to ignore by default). Unfortunately
-> the fact that it appears to always be equal to SIGINFO means that while
-> SIGINFO (to me at least) seems like it should be a no-op, the necessary
-> SIGPWR change makes it harder to justify IMHO.
+> This is harmless, and the warning is a little bit silly for
+> a zero constant, but it's trivial to fix by making it an
+> unsigned long, so do that.
+> 
+> Fixes: 22998131ab33 ("arm64: add support for folded p4d page tables")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  virt/kvm/arm/mmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 48d4288c5f1b..534d9798c3cb 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -507,7 +507,7 @@ static void clear_hyp_pgd_entry(pgd_t *pgd)
+>  
+>  static void clear_hyp_p4d_entry(p4d_t *p4d)
+>  {
+> -	pud_t *pud_table __maybe_unused = pud_offset(p4d, 0);
+> +	pud_t *pud_table __maybe_unused = pud_offset(p4d, 0UL);
+>  	VM_BUG_ON(p4d_huge(*p4d));
+>  	p4d_clear(p4d);
+>  	pud_free(NULL, pud_table);
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
