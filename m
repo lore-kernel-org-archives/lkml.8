@@ -2,149 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E21CC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2242C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5C92076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262752;
-	bh=HmyB3mSvSoBZPTU9c0iLb35gC8/ETJP1f64nm3K/i1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2LErJj6PYXPbcr2BLGltbr7hQ4O9r8/akI8p+OdBVfDfx5RfmZy1ObmL+MKicwhSC
-	 s3Ju05OPGU0qqUpHQ8mwCrBKgFObWKKGjVFeHPAC9wzhhvWkUBivHx5Oa4G3e9TEE6
-	 V96jKQ1gKyeX2/zlfXA6A9JHOfftSGXKJ5u47h/0=
+	by mail.kernel.org (Postfix) with ESMTP id A1F4620775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kP9ln9IF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgD3QFv (ORCPT
+        id S1728321AbgD3QGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgD3QEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:04:39 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841782498E;
-        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588262676;
-        bh=HmyB3mSvSoBZPTU9c0iLb35gC8/ETJP1f64nm3K/i1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vex0vRLfRaPVrDWeUZX5D7AZbuVYx+maDsfpkaQR2lYLrvz6Y/IEFw6KhhR4aTzUT
-         YZ5CMzEjin0mg2YFFcoKaYFttoivJ+bX/6XlfhS+2eyvb0OB4QTaMHC88/EYyKLktd
-         ZVV42aeM5mxj86iSlDx4aBMxMFdBj21z2/XxQi9U=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxGQ-P1; Thu, 30 Apr 2020 18:04:34 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 29/37] docs: networking: convert seg6-sysctl.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:24 +0200
-Message-Id: <3d8b7e996ad24578d9dcc72de4e0d4bc1479ddd2.1588261997.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
-References: <cover.1588261997.git.mchehab+huawei@kernel.org>
+        Thu, 30 Apr 2020 12:06:10 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10786 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbgD3QGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:06:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eaaf72c0002>; Thu, 30 Apr 2020 09:05:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 09:06:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 09:06:07 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 16:06:07 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 16:06:06 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+Date:   Thu, 30 Apr 2020 09:04:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588262700; bh=eWajUdI0iXeAXeqVD5ZpEmRaSpEhM1U8KfCosqzO194=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=kP9ln9IFyG1CyD2zYD6UBRJU+3nqtrfnnZ+cS/JlbzMx3B5faTPLBdCdqyTod9yo1
+         Z0Z2LBvNwQOpWFZIlo0fsv987r878bT2zeUtFfUToRuBf1Lh/HgCJgU7bLrKBMWn3Q
+         7EPPKclFWEMjk0R/r47l9T1m3+0SRS07OY7Pci/cE1nIgNUWDe6tk+Kayl8v2RJ0Rk
+         3nt0YCCT4XfBt1BFf++ZQhEXx6KRIn9v+noVua6ZqWw5Skg8oeWfj68av04Fza1i/d
+         F7E8EIRMAtO/MowkXFoanRyv6lWSbQx/oMz+9gxgwUq+u9RKO8pXG3cOzg4ztuNvIk
+         5iYSGa7WbeIhA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- add SPDX header;
-- mark code blocks and literals as such;
-- add a document title;
-- adjust chapters, adding proper markups;
-- mark lists as such;
-- add to networking/index.rst.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/networking/index.rst       |  1 +
- Documentation/networking/seg6-sysctl.rst | 26 ++++++++++++++++++++++++
- Documentation/networking/seg6-sysctl.txt | 18 ----------------
- 3 files changed, 27 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/networking/seg6-sysctl.rst
- delete mode 100644 Documentation/networking/seg6-sysctl.txt
+On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> +static int chan_capture_kthread_finish(void *data)
+>>>> +{
+>>>> +	struct tegra_vi_channel *chan =3D data;
+>>>> +	struct tegra_channel_buffer *buf;
+>>>> +
+>>>> +	set_freezable();
+>>>> +
+>>>> +	while (1) {
+>>>> +		try_to_freeze();
+>>> I guess it won't be great to freeze in the middle of a capture process,=
+ so:
+>>> 		if (list_empty(&chan->done))
+>>> 			try_to_freeze();
+>> And here should be some locking protection in order not race with the
+>> chan_capture_kthread_start because kthread_finish could freeze before
+>> kthread_start.
+> Or maybe both start / finish threads should simply be allowed to freeze
+> only when both capture and done lists are empty.
+>
+> if (list_empty(&chan->capture) &&
+>      list_empty(&chan->done))
+> 	try_to_freeze();
 
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 8b672f252f67..716744c568b7 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -102,6 +102,7 @@ Contents:
-    rxrpc
-    sctp
-    secid
-+   seg6-sysctl
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/networking/seg6-sysctl.rst b/Documentation/networking/seg6-sysctl.rst
-new file mode 100644
-index 000000000000..ec73e1445030
---- /dev/null
-+++ b/Documentation/networking/seg6-sysctl.rst
-@@ -0,0 +1,26 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+====================
-+Seg6 Sysfs variables
-+====================
-+
-+
-+/proc/sys/net/conf/<iface>/seg6_* variables:
-+============================================
-+
-+seg6_enabled - BOOL
-+	Accept or drop SR-enabled IPv6 packets on this interface.
-+
-+	Relevant packets are those with SRH present and DA = local.
-+
-+	* 0 - disabled (default)
-+	* not 0 - enabled
-+
-+seg6_require_hmac - INTEGER
-+	Define HMAC policy for ingress SR-enabled packets on this interface.
-+
-+	* -1 - Ignore HMAC field
-+	* 0 - Accept SR packets without HMAC, validate SR packets with HMAC
-+	* 1 - Drop SR packets without HMAC, validate SR packets with HMAC
-+
-+	Default is 0.
-diff --git a/Documentation/networking/seg6-sysctl.txt b/Documentation/networking/seg6-sysctl.txt
-deleted file mode 100644
-index bdbde23b19cb..000000000000
---- a/Documentation/networking/seg6-sysctl.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/proc/sys/net/conf/<iface>/seg6_* variables:
--
--seg6_enabled - BOOL
--	Accept or drop SR-enabled IPv6 packets on this interface.
--
--	Relevant packets are those with SRH present and DA = local.
--
--	0 - disabled (default)
--	not 0 - enabled
--
--seg6_require_hmac - INTEGER
--	Define HMAC policy for ingress SR-enabled packets on this interface.
--
--	-1 - Ignore HMAC field
--	0 - Accept SR packets without HMAC, validate SR packets with HMAC
--	1 - Drop SR packets without HMAC, validate SR packets with HMAC
--
--	Default is 0.
--- 
-2.25.4
+good to freeze when not in middle of the frame capture but why should we=20
+not allow freeze in between captures?
+
+Other drivers do allow freeze in between frame captures.
+
+I guess we can freeze before dequeue for capture and in finish thread we=20
+can freeze after capture done. This also don't need to check for=20
+list_empty with freeze to allow between frame captures.
+
 
