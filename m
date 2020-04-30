@@ -2,186 +2,196 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DE4C8300E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5ADC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B65520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="yLk39r6x"
+	by mail.kernel.org (Postfix) with ESMTP id 9F6A0214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgD3Il0 (ORCPT
+        id S1726867AbgD3IlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:41:26 -0400
-Received: from mail-dm6nam12on2047.outbound.protection.outlook.com ([40.107.243.47]:52736
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726842AbgD3IlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:41:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZdtL6/Z3+z8SLhgE3x/zNfXnpvUjpovup4mdy2KyIzra85xUTw/ix7OX9hYxxfthbioUfrEx7sKQSEJBesx2VhP5AI/2AeWt9m0gJkyEAZC0TDMdpL2pdQ0oBiQMhia06FMiKofTyrWjIJ4dm+KQqJXeySs5KdfbqcJTMjeg3+lgFvcnrHoqXNFgwaOhsoFhplyLlfFAbbhRjvAdNhXwPnL28TiqghE4oh6Q3nHftCRwJoj6iZUR61ILOSbiJRYtT3ydNai3wqiMnamQ+zOsdXTd6c9yLLWjYnOVKLpmWHmj9vFQQ4+HPr8048st6O+szsF4g2ohnISVnx9ImSLvFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7t1u0Odkf4Ry/swhE1/sGgWCpzmGYMaFxWHHKqwhBe8=;
- b=bpiRD7WK7CLLkEmferddpOxj8z+YnpJ4azVPf8Qr1mJwS/zNMEuaV/vGpUhQ+mo8A1LY8BZDy2KowoIFXPzF0rS7P6pvzWxlLECzaeJSDD0Gp7itGy8fIqm6eUrSzxtW7uVcz3FQhqzTvBcMFSS5m+ApQXYPWWfSaOKoyMPGWDkURiHhONmuaMjdgzXsDPeqxgr+EAME/FpjRgrB4QEIgr/1bnZspfNxZ2nY3DrXWHHO0TXGIC3Otdly0MU+YYmWVFxuL2dqDz0b0I50TpBhMGjbe6YfdxtDqjCqalNS2aQ5NWoSxEUlWQpjfSDg7J0Q5/0lT6AYyyYSgKcW5f1uTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7t1u0Odkf4Ry/swhE1/sGgWCpzmGYMaFxWHHKqwhBe8=;
- b=yLk39r6xoCNCwGB96QgtZM4gDiGkFNRWjCYMh/yYW/hCZEzjlEbno3Vg2SYq+17fd9NplErf+Icjg5C+YwWjZjyG44L3Y4e6mq9BuJo8AYjMJARbPgfsn4Kf03oJSqsaxRgZNx1PMLLopW2IA5GxO/NCLqJexcPXS4J+t5u+UN8=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1194.namprd12.prod.outlook.com (2603:10b6:3:6e::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Thu, 30 Apr 2020 08:41:17 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 08:41:17 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com, brijesh.singh@amd.com
-Subject: [PATCH v7 03/18] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-Date:   Thu, 30 Apr 2020 08:41:08 +0000
-Message-Id: <c0cd07661be8c0ce6f395a386401289a0f362765.1588234824.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM5PR19CA0034.namprd19.prod.outlook.com
- (2603:10b6:3:9a::20) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Thu, 30 Apr 2020 04:41:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:54455 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbgD3IlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:41:19 -0400
+IronPort-SDR: hb36l5Z+cGYv9PL+GRSimDGOfbp1kaVW9I8FoxizZIf1NtmrDD1M5XTpirfGI2YbS6PPE9UCUH
+ 7ZgiMacguH5g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 01:41:19 -0700
+IronPort-SDR: 9Q009KJtDX0U5mEh/Vb1gvGvryyqyuUiHJvnd4ywchno/7wp/uzjgf0gq2h1ROcgWMyeOHi73B
+ NA/EaQp265Rw==
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="282790726"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 01:41:18 -0700
+Subject: [PATCH v2 2/2] x86/copy_safe: Introduce copy_safe_fast()
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     x86@kernel.org, stable@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Erwin Tsaur <erwin.tsaur@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 30 Apr 2020 01:25:09 -0700
+Message-ID: <158823510897.2094061.8955960257425244970.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by DM5PR19CA0034.namprd19.prod.outlook.com (2603:10b6:3:9a::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:41:17 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ed154eca-ac80-4ba2-67bf-08d7ece23ff4
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1194:|DM5PR12MB1194:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB119455CB1A30BB9E8D6BE5B38EAA0@DM5PR12MB1194.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(4326008)(6486002)(6916009)(66574012)(66476007)(66946007)(52116002)(186003)(36756003)(7696005)(6666004)(316002)(5660300002)(26005)(86362001)(2906002)(8676002)(478600001)(66556008)(8936002)(956004)(2616005)(7416002)(16526019)(136400200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Qb8o12gaF4sLWBNilRvD/4t0H6ZCEQg9rXZL/C6mfp0PuNMbJforTcPsiuWpnqoUSGkEbjxQrLtSOia9etD9jGkjql9UbRPVEFjaGe7S7l9k5Qm48U2zk0XbemXLODViwpKIsX/0js0VkyZH3GFsYxAeyjBM6v0KvFB0GrEgoL8JrCFxZNoSAx3etO3wU5FJZEys0YQTTMjz2utuxf8ddySaJFhojH9xiISQOaQKp4D8WpxtdzHMPnnMEo3hTXj+wNmTKClGDcEzcu2Yvd5rjedjsvt64s+SHyktbICD6gTe2xKZr0AK4SGmChlXI5jXYx2oaWhlIovWwjdVzU9IPidvBgThS0Cq4jC9rEgLVM0yR4mvp+7BOvJl7IOm0lMS9t436JROu3gH6TV4HATvZhAtEKKl4uBRSy7Ty9P51vsL1To45oFMwJo+hIbV9yzb6tGA/U77tYJplPUSCEfpSiPHaHQrUmK8K9HFWFtSs6favOXnQILAUCJOIpln63lk
-X-MS-Exchange-AntiSpam-MessageData: 0ejhoAqzrONz+O7HRbNBgFCPhbX35cSpnVPZeVYaFMmezdzqb2IOEHaCkPZXTK1aA3OjdVJv2GA3cK1s8eCuZYeZejnn4FXrcppiblb1Psswep2ljMJk2winNF2gntJT4927ekCtb7VinnNx+aLoyhLo837OnttmM+3wmwHPoRaC9sZSVcYjvQmheZcl8OY8kJBLMxh6eGfkIa2yOn24SuEs34AyJQcT88w/+P0vbrk1I6zngYoThijSSH04Jg4C8JYq18WnyVEFGX8rw4rLJs7ztUHBCIMMr0vgzbl3jCk1e5koGea6V5rTxBI4+pUTmTDzp5oCMIM8If/oMXNZ2DoCkmCB4houht8/v9wRdUSKjgjHf9bZ3I/iptucKn6gjYlmQVeDoufWE5D3z9tSUtpvDkymJRnfU0PsQAZgbwaxU8IPqh8e7EbGPj6RSblFfHpi2aRG0TY+RM0F61cAg9Es1sYhRAK0gZYuM2qpEC7vR93COSXdenEFOVDSLHoo81ZWlv3gKKurx+TmtrnWuTBy6vkTzK3IBAA6O++YyK09SKmf6lC2r31OTfRAbVw7mXnR6WXd+oFNTC45pUgd58p+aSxz4q8aURPuYnNFL7/sZ8GXHnnb4w4Mx2Z/9HhQbIpKRAMMytwCor7h7v8wELNQYIZodzVnkXsB61sAWzMnvRzsxF2p9R9ZMIEjfICgQNWvFXI6ZAP0uk2LaXpWWU2BGHY43RoubueMUI0Tk9g6zOpaI8wrrCvv81oED6CHd2+Mg56zb3CwCPluH5WrAyMg1CTUufTwYPsSESOc0/4=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed154eca-ac80-4ba2-67bf-08d7ece23ff4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:41:17.8229
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wFRWFQNujn2TIA+OK45hEjNMrS2v6iz+PsrFSD4e6XKOIrzz4ZFNGv3rNKBXVCMXfauXQe58dZ/zHtaw76qXHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1194
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brijesh Singh <Brijesh.Singh@amd.com>
+The existing copy_safe() implementation satisfies two primary concerns.
+It provides a copy routine that avoids known unrecoverable scenarios
+(poison consumption via fast-string instructions / accesses across
+cacheline boundaries), and it provides a fallback to fast plain memcpy
+if the platform does not indicate recovery capability. The fallback is
+broken for two reasons. It fails the expected copy_safe() semantics that
+allow it to be used in scenarios where reads / writes trigger memory
+protection faults and it fails to enable machine check recovery on
+systems that do not need the careful semantics of copy_safe_slow().
 
-The command is used to finailize the encryption context created with
-KVM_SEV_SEND_START command.
+With copy_safe_fast() in place copy_safe() never falls back to plain
+memcpy(), and it is fast regardless in every other scenario outside of
+the copy_safe_slow() blacklist scenario.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: x86@kernel.org
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Steve Rutherford <srutherford@google.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Cc: <stable@vger.kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Erwin Tsaur <erwin.tsaur@intel.com>
+Tested-by: Erwin Tsaur <erwin.tsaur@intel.com>
+Fixes: 92b0729c34ca ("x86/mm, x86/mce: Add memcpy_mcsafe()")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
- arch/x86/kvm/svm/sev.c                        | 23 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ arch/x86/include/asm/copy_safe.h |    2 ++
+ arch/x86/lib/copy_safe.c         |    5 ++---
+ arch/x86/lib/copy_safe_64.S      |   40 ++++++++++++++++++++++++++++++++++++++
+ tools/objtool/check.c            |    1 +
+ 4 files changed, 45 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-index f46817ef7019..a45dcb5f8687 100644
---- a/Documentation/virt/kvm/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-@@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
-                 __u32 trans_len;
-         };
+diff --git a/arch/x86/include/asm/copy_safe.h b/arch/x86/include/asm/copy_safe.h
+index 1c130364dd61..306248ca819f 100644
+--- a/arch/x86/include/asm/copy_safe.h
++++ b/arch/x86/include/asm/copy_safe.h
+@@ -12,5 +12,7 @@ static inline void enable_copy_safe_slow(void)
  
-+12. KVM_SEV_SEND_FINISH
-+------------------------
-+
-+After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
-+issued by the hypervisor to delete the encryption context.
-+
-+Returns: 0 on success, -negative on error
-+
- References
- ==========
+ __must_check unsigned long
+ copy_safe_slow(void *dst, const void *src, size_t cnt);
++__must_check unsigned long
++copy_safe_fast(void *dst, const void *src, size_t cnt);
  
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 0c92c16505ab..81d661706d31 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -1153,6 +1153,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	return ret;
- }
- 
-+static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	struct sev_data_send_finish *data;
-+	int ret;
-+
-+	if (!sev_guest(kvm))
-+		return -ENOTTY;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->handle = sev->handle;
-+	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
-+
-+	kfree(data);
-+	return ret;
-+}
-+
- int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ #endif /* _COPY_SAFE_H_ */
+diff --git a/arch/x86/lib/copy_safe.c b/arch/x86/lib/copy_safe.c
+index 9dd3a831ff94..b8472e6a44d3 100644
+--- a/arch/x86/lib/copy_safe.c
++++ b/arch/x86/lib/copy_safe.c
+@@ -25,7 +25,7 @@ void enable_copy_safe_slow(void)
+  *
+  * We only call into the slow version on systems that have trouble
+  * actually do machine check recovery. Everyone else can just
+- * use memcpy().
++ * use copy_safe_fast().
+  *
+  * Return 0 for success, or number of bytes not copied if there was an
+  * exception.
+@@ -34,8 +34,7 @@ __must_check unsigned long copy_safe(void *dst, const void *src, size_t cnt)
  {
- 	struct kvm_sev_cmd sev_cmd;
-@@ -1203,6 +1223,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- 	case KVM_SEV_SEND_UPDATE_DATA:
- 		r = sev_send_update_data(kvm, &sev_cmd);
- 		break;
-+	case KVM_SEV_SEND_FINISH:
-+		r = sev_send_finish(kvm, &sev_cmd);
-+		break;
- 	default:
- 		r = -EINVAL;
- 		goto out;
--- 
-2.17.1
+ 	if (static_branch_unlikely(&copy_safe_slow_key))
+ 		return copy_safe_slow(dst, src, cnt);
+-	memcpy(dst, src, cnt);
+-	return 0;
++	return copy_safe_fast(dst, src, cnt);
+ }
+ EXPORT_SYMBOL_GPL(copy_safe);
+ 
+diff --git a/arch/x86/lib/copy_safe_64.S b/arch/x86/lib/copy_safe_64.S
+index 46dfdd832bde..551c781ae9fd 100644
+--- a/arch/x86/lib/copy_safe_64.S
++++ b/arch/x86/lib/copy_safe_64.S
+@@ -2,7 +2,9 @@
+ /* Copyright(c) 2016-2020 Intel Corporation. All rights reserved. */
+ 
+ #include <linux/linkage.h>
++#include <asm/alternative-asm.h>
+ #include <asm/copy_safe_test.h>
++#include <asm/cpufeatures.h>
+ #include <asm/export.h>
+ #include <asm/asm.h>
+ 
+@@ -120,4 +122,42 @@ EXPORT_SYMBOL_GPL(copy_safe_slow)
+ 	_ASM_EXTABLE(.L_write_leading_bytes, .E_leading_bytes)
+ 	_ASM_EXTABLE(.L_write_words, .E_write_words)
+ 	_ASM_EXTABLE(.L_write_trailing_bytes, .E_trailing_bytes)
++
++/*
++ * copy_safe_fast - memory copy with exception handling
++ *
++ * Fast string copy + fault / exception handling. If the CPU does
++ * support machine check exception recovery, but does not support
++ * recovering from fast-string exceptions then this CPU needs to be
++ * added to the copy_safe_slow_key set of quirks. Otherwise, absent any
++ * machine check recovery support this version should be no slower than
++ * standard memcpy.
++ */
++SYM_FUNC_START(copy_safe_fast)
++	ALTERNATIVE "jmp copy_safe_slow", "", X86_FEATURE_ERMS
++	movq %rdi, %rax
++	movq %rdx, %rcx
++.L_copy:
++	rep movsb
++	/* Copy successful. Return zero */
++	xorl %eax, %eax
++	ret
++SYM_FUNC_END(copy_safe_fast)
++EXPORT_SYMBOL_GPL(copy_safe_fast)
++
++	.section .fixup, "ax"
++.E_copy:
++	/*
++	 * On fault %rcx is updated such that the copy instruction could
++	 * optionally be restarted at the fault position, i.e. it
++	 * contains 'bytes remaining'. A non-zero return indicates error
++	 * to copy_safe() users, or indicate short transfers to
++	 * user-copy routines.
++	 */
++	movq %rcx, %rax
++	ret
++
++	.previous
++
++	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
+ #endif
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index be20eff8f358..e8b6e2438d31 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -533,6 +533,7 @@ static const char *uaccess_safe_builtin[] = {
+ 	"__ubsan_handle_shift_out_of_bounds",
+ 	/* misc */
+ 	"csum_partial_copy_generic",
++	"copy_safe_fast",
+ 	"copy_safe_slow",
+ 	"copy_safe_slow_handle_tail",
+ 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
 
