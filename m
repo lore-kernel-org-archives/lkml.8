@@ -2,122 +2,99 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CFAC83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAC3C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A5720787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588212987;
-	bh=gkBk/YMPSLRoi+Q1WAqyNhar++zkWGcgbT16f3cvt2I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O8rDeWYz8rcNjuSXkio6XCgM9+pWvWnRwmGaEsrZFu0EnnVhbf9sRnmfbzMzJ8Ja4
-	 E0kNOHBiSqa88i7n3pGGg09DfDdzbAFL7CBuub9QMLSy9bb/AYXMEdOrYCR6PKkzsz
-	 RCDIRemHlD9GQsHzNLqoq1mkCT9105XQRjb4iUe8=
+	by mail.kernel.org (Postfix) with ESMTP id 8911120787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TNXZp5bl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgD3CQ0 (ORCPT
+        id S1726745AbgD3CSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbgD3CQ0 (ORCPT
+        Wed, 29 Apr 2020 22:18:16 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43730 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgD3CSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:16:26 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF822C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 19:16:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a21so4762962ljb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 19:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wpg9VE9K+jtzYNIox6WSxB8PBx0KsFgkBN0bedM2MhE=;
-        b=bnIAbolVgYnIc1mXMvPCQT7QUlVDaRrcEeba+hNvMkY+vbZEm1P9/h50OiQ0QMuo1T
-         p2CSd/nm8DipGONcPImrQqXTjzU2byyTG4AuW6G1PsHOP5n3MuozXYinDUOf5fZ1vzT4
-         HL998XSc/5jlZtCSLbSx0DgUWNnwKQQQMJMRk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wpg9VE9K+jtzYNIox6WSxB8PBx0KsFgkBN0bedM2MhE=;
-        b=R3g1JQifMOS2Fo2LtmBH9dAB/yFbfZF6/cJ4sIWVKwY26g0SP7FkPKwqBHYHqPPLml
-         3ArXVmzuL8vEWZ6meIGlq8glQ30OaQ3U3G1/vOSWrpoDV5SQtVpYdsqr9P4SL41/i+y9
-         UrdFETSdXWLjr8esiN7zJbr2HmMHYj/WbYg+k+Val4HJqI5olQVfebv/+xpMMixSjyKo
-         EquvKhReVrwWVV9xISvTt9F/fxS5bb+AJABkLH2zr5jNW6/1afWQoKqOH30QCgDi2YcH
-         /oV+V1JBQL3FWfWlPmb2dguwpQ2jU3rBUUJ0wAGO01llcNILbzVQ9IzTDp2s0pAtMa9u
-         t4DQ==
-X-Gm-Message-State: AGi0PuYqrI+Ol+Fzk+b54nNnbkWmxahztbNrv/lfjVE7WixFRAjB1Mrx
-        SAC6szxIpPRVs3JlJY8fA7jWhvG1+kM=
-X-Google-Smtp-Source: APiQypJ0keEWDC3s9tjIvJ6/EnTOJvfOgeMXuVc3DGCGurAblAjREzQ+FNPZC/TDa8uYMbeKgsjtEw==
-X-Received: by 2002:a05:651c:118b:: with SMTP id w11mr683214ljo.76.1588212982949;
-        Wed, 29 Apr 2020 19:16:22 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id b9sm4101670lfp.27.2020.04.29.19.16.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 19:16:22 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id f11so4818800ljp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 19:16:21 -0700 (PDT)
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr685996ljj.265.1588212981665;
- Wed, 29 Apr 2020 19:16:21 -0700 (PDT)
+        Wed, 29 Apr 2020 22:18:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U2HnNR095384;
+        Thu, 30 Apr 2020 02:18:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=1EpdnCTaGeK6kaN+YXuEy0NQfId+N/eZu0x/n1++L24=;
+ b=TNXZp5blPFYqKb9u05Adt4NZDOoDfLcy+c2AYfdwzoTuZU2EAbYoywE22AFXEPrW8zVz
+ LIx79oeY+Yjq+SLv2QIaxRCBeQtL7hjC5WreRBeB7pyOinuVVqZHEEVdoSPu0wTxzOV/
+ /h7pBQEsG+BH3bG9YTmguNJa10BMOWyaEI1gQVaYObnMPQLQi1bWAZG9nkFcsjpMwLDT
+ 3I+96bZXMS1F/9JScURLkzQnQi46mnKZ/38znzJINYYD4SNjMm0ja9VHNpdWVrI3Zgm6
+ by5EX9mafkWxFeb+We75pKKThUaKoYyJGDABIZh0bfRrLu+PUiYWPqH2MQga6gFoFpJs +g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30p01nyf2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 02:18:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U2I8vL114392;
+        Thu, 30 Apr 2020 02:18:09 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30mxrwcya0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 02:18:08 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03U2I5be008456;
+        Thu, 30 Apr 2020 02:18:05 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Apr 2020 19:18:05 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Arun Easi <aeasi@marvell.com>, Nilesh Javali <njavali@marvell.com>,
+        linux-scsi@vger.kernel.org,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Colin King <colin.king@canonical.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: qla2xxx: make 1 bit bit-fields unsigned int
+Date:   Wed, 29 Apr 2020 22:18:01 -0400
+Message-Id: <158821297686.28621.17012076745454768383.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200428102013.1040598-1-colin.king@canonical.com>
+References: <20200428102013.1040598-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <20200411182043.GA3136@redhat.com> <CAHk-=wgwXpKepChGi4ZhQVxZxD0ic8s2CDXvUmqBTMaKGz-fjg@mail.gmail.com>
- <20200412195049.GA23824@redhat.com> <CAHk-=wiDwR+6ugYaKEGHfYteLF+NH5xu=T7uuUTkK9y-hr6zow@mail.gmail.com>
- <AM6PR03MB51708CF53D8A02086427DAC2E4AC0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
- <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
- <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
- <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
- <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
- <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
- <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
- <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
- <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
- <CAHk-=wjUZLybZBJgOtD2gng=FS7USrbQQ1-tn5M+UP5DbCWdzw@mail.gmail.com> <CAG48ez0FL3i4eGFYryOwG2nnS+JigfKYAVSV9ogVHjmjOWzsrA@mail.gmail.com>
-In-Reply-To: <CAG48ez0FL3i4eGFYryOwG2nnS+JigfKYAVSV9ogVHjmjOWzsrA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 29 Apr 2020 19:16:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgcvn1_1kCkyourNCKeH+KrzSMRvc-ai_NLU4RGZT_XBg@mail.gmail.com>
-Message-ID: <CAHk-=wgcvn1_1kCkyourNCKeH+KrzSMRvc-ai_NLU4RGZT_XBg@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Jann Horn <jannh@google.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=858 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004300015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1015
+ phishscore=0 mlxlogscore=913 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004300014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 5:00 PM Jann Horn <jannh@google.com> wrote:
->
-> Wouldn't you end up livelocked in the scenario that currently deadlocks?
+On Tue, 28 Apr 2020 11:20:13 +0100, Colin King wrote:
 
-The test case that we already know is broken, and any fix will have to
-change anyway?
+> The bitfields mpi_fw_dump_reading and mpi_fw_dumped are currently signed
+> which is not recommended as the representation is an implementation defined
+> behaviour.  Fix this by making the bit-fields unsigned ints.
 
-Let's just say that I don't care in the least.
+Applied to 5.8/scsi-queue, thanks!
 
-But Bernd's patch as-is breaks a test-case that currently *works*,
-namely something as simple as
+[1/1] scsi: qla2xxx: make 1-bit bit-fields unsigned int
+      https://git.kernel.org/mkp/scsi/c/78b874b7cbf0
 
-  echo xyz > /proc/<pid>/attr/something
-
-and honestly, breaking something that _works_ and may be used in
-reality, in orderf to make a known buggy user testcase work?
-
-Because no, "write()" returning -EAGAIN isn't ok.
-
-            Linus
+-- 
+Martin K. Petersen	Oracle Linux Engineering
