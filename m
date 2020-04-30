@@ -2,304 +2,134 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDE9C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546DBC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983BB20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3290320661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kPPieGvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgD3Ph2 (ORCPT
+        id S1727988AbgD3Php (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:37:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60826 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgD3Ph1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:37:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E7D48ABBE;
-        Thu, 30 Apr 2020 15:37:22 +0000 (UTC)
-Subject: Re: [PATCH v7 11/18] mm: x86: Invoke hypercall when page encryption
- status is changed
-To:     Brijesh Singh <brijesh.singh@amd.com>,
-        Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com
-References: <cover.1588234824.git.ashish.kalra@amd.com>
- <c167e7191cb8f9c7635f5d8cfecb1157cc96cf6b.1588234824.git.ashish.kalra@amd.com>
- <486fe740-0c2d-9d2b-d490-bdb3215a120c@suse.com>
- <c75af894-b216-d8c0-8863-7df1ccff5c9f@amd.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <56455051-055f-e50b-60cb-09d398916305@suse.com>
-Date:   Thu, 30 Apr 2020 17:37:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <c75af894-b216-d8c0-8863-7df1ccff5c9f@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 30 Apr 2020 11:37:45 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57199 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727898AbgD3Php (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:37:45 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UFaai5008132;
+        Thu, 30 Apr 2020 17:37:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=G2VY0D/ADCqWFsSs/1lED9meTOOFUKOIa2o5lzoA/nk=;
+ b=kPPieGvWN9J3RQDgY/ilmSbtM8HvbM9xVO/fffcXB8sOqV+dtm3MNaBiAtRDjoVHgejm
+ USEKX80/jfYQvpRG6cAjYh2nBJlcOIUxWxEgnxvslezzEPP3h7Vu0QIoK6QXxdjEYfvl
+ U4ZtsRBP5rt+tsPRDPEaz27sM8ceg9s9fAruGc2y75sHObTKeKt1JWzO20x/ZYxPgdEM
+ U0vENDiN29A+iTv08QzprbW8RPc0p8gZg2pRHMF+WTFVVz6UQxRAIDQzlpq6Rh4KR66I
+ JC6kM6RQhecXuQSRgi6uBKHr1WhZOIovxW7vgrLu1xMU9VtKxZvasLpgJ29p4luEBCdp JQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30qst0av5j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 17:37:19 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 999AF10002A;
+        Thu, 30 Apr 2020 17:37:18 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5BBDB209ABC;
+        Thu, 30 Apr 2020 17:37:18 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 17:37:17 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 30 Apr 2020 17:37:17 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
+Thread-Topic: [RFC 0/3] Introduce cpufreq minimum load QoS
+Thread-Index: AQHWGi06wBgeAQBseECYOK/U7Qvw76iQJdAAgAACCYCAAAQ3AIABBseAgAAT0wCAAE7QgIAADU2AgAARzIA=
+Date:   Thu, 30 Apr 2020 15:37:17 +0000
+Message-ID: <a20c5214-211b-1f70-1162-57b32e60549b@st.com>
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
+ <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
+ <70e743cf-b88e-346a-5114-939b8724c83d@arm.com>
+ <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
+ <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
+ <a234e123-6c15-8e58-8921-614b58ca24ca@st.com> <jhjtv11cabk.mognet@arm.com>
+In-Reply-To: <jhjtv11cabk.mognet@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B39838E7E962D44DBB59FACAB98F5DDD@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_10:2020-04-30,2020-04-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.04.20 17:21, Brijesh Singh wrote:
-> 
-> On 4/30/20 4:49 AM, Jürgen Groß wrote:
->> On 30.04.20 10:45, Ashish Kalra wrote:
->>> From: Brijesh Singh <Brijesh.Singh@amd.com>
->>>
->>> Invoke a hypercall when a memory region is changed from encrypted ->
->>> decrypted and vice versa. Hypervisor needs to know the page encryption
->>> status during the guest migration.
->>>
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>> Cc: Ingo Molnar <mingo@redhat.com>
->>> Cc: "H. Peter Anvin" <hpa@zytor.com>
->>> Cc: Paolo Bonzini <pbonzini@redhat.com>
->>> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
->>> Cc: Joerg Roedel <joro@8bytes.org>
->>> Cc: Borislav Petkov <bp@suse.de>
->>> Cc: Tom Lendacky <thomas.lendacky@amd.com>
->>> Cc: x86@kernel.org
->>> Cc: kvm@vger.kernel.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
->>> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
->>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
->>> ---
->>>    arch/x86/include/asm/paravirt.h       | 10 +++++
->>>    arch/x86/include/asm/paravirt_types.h |  2 +
->>>    arch/x86/kernel/paravirt.c            |  1 +
->>>    arch/x86/mm/mem_encrypt.c             | 58 ++++++++++++++++++++++++++-
->>>    arch/x86/mm/pat/set_memory.c          |  7 ++++
->>>    5 files changed, 77 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/include/asm/paravirt.h
->>> b/arch/x86/include/asm/paravirt.h
->>> index 694d8daf4983..8127b9c141bf 100644
->>> --- a/arch/x86/include/asm/paravirt.h
->>> +++ b/arch/x86/include/asm/paravirt.h
->>> @@ -78,6 +78,12 @@ static inline void paravirt_arch_exit_mmap(struct
->>> mm_struct *mm)
->>>        PVOP_VCALL1(mmu.exit_mmap, mm);
->>>    }
->>>    +static inline void page_encryption_changed(unsigned long vaddr,
->>> int npages,
->>> +                        bool enc)
->>> +{
->>> +    PVOP_VCALL3(mmu.page_encryption_changed, vaddr, npages, enc);
->>> +}
->>> +
->>>    #ifdef CONFIG_PARAVIRT_XXL
->>>    static inline void load_sp0(unsigned long sp0)
->>>    {
->>> @@ -946,6 +952,10 @@ static inline void paravirt_arch_dup_mmap(struct
->>> mm_struct *oldmm,
->>>    static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
->>>    {
->>>    }
->>> +
->>> +static inline void page_encryption_changed(unsigned long vaddr, int
->>> npages, bool enc)
->>> +{
->>> +}
->>>    #endif
->>>    #endif /* __ASSEMBLY__ */
->>>    #endif /* _ASM_X86_PARAVIRT_H */
->>> diff --git a/arch/x86/include/asm/paravirt_types.h
->>> b/arch/x86/include/asm/paravirt_types.h
->>> index 732f62e04ddb..03bfd515c59c 100644
->>> --- a/arch/x86/include/asm/paravirt_types.h
->>> +++ b/arch/x86/include/asm/paravirt_types.h
->>> @@ -215,6 +215,8 @@ struct pv_mmu_ops {
->>>          /* Hook for intercepting the destruction of an mm_struct. */
->>>        void (*exit_mmap)(struct mm_struct *mm);
->>> +    void (*page_encryption_changed)(unsigned long vaddr, int npages,
->>> +                    bool enc);
->>>      #ifdef CONFIG_PARAVIRT_XXL
->>>        struct paravirt_callee_save read_cr2;
->>> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
->>> index c131ba4e70ef..840c02b23aeb 100644
->>> --- a/arch/x86/kernel/paravirt.c
->>> +++ b/arch/x86/kernel/paravirt.c
->>> @@ -367,6 +367,7 @@ struct paravirt_patch_template pv_ops = {
->>>                (void (*)(struct mmu_gather *, void *))tlb_remove_page,
->>>          .mmu.exit_mmap        = paravirt_nop,
->>> +    .mmu.page_encryption_changed    = paravirt_nop,
->>>      #ifdef CONFIG_PARAVIRT_XXL
->>>        .mmu.read_cr2        = __PV_IS_CALLEE_SAVE(native_read_cr2),
->>> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->>> index f4bd4b431ba1..603f5abf8a78 100644
->>> --- a/arch/x86/mm/mem_encrypt.c
->>> +++ b/arch/x86/mm/mem_encrypt.c
->>> @@ -19,6 +19,7 @@
->>>    #include <linux/kernel.h>
->>>    #include <linux/bitops.h>
->>>    #include <linux/dma-mapping.h>
->>> +#include <linux/kvm_para.h>
->>>      #include <asm/tlbflush.h>
->>>    #include <asm/fixmap.h>
->>> @@ -29,6 +30,7 @@
->>>    #include <asm/processor-flags.h>
->>>    #include <asm/msr.h>
->>>    #include <asm/cmdline.h>
->>> +#include <asm/kvm_para.h>
->>>      #include "mm_internal.h"
->>>    @@ -196,6 +198,48 @@ void __init sme_early_init(void)
->>>            swiotlb_force = SWIOTLB_FORCE;
->>>    }
->>>    +static void set_memory_enc_dec_hypercall(unsigned long vaddr, int
->>> npages,
->>> +                    bool enc)
->>> +{
->>> +    unsigned long sz = npages << PAGE_SHIFT;
->>> +    unsigned long vaddr_end, vaddr_next;
->>> +
->>> +    vaddr_end = vaddr + sz;
->>> +
->>> +    for (; vaddr < vaddr_end; vaddr = vaddr_next) {
->>> +        int psize, pmask, level;
->>> +        unsigned long pfn;
->>> +        pte_t *kpte;
->>> +
->>> +        kpte = lookup_address(vaddr, &level);
->>> +        if (!kpte || pte_none(*kpte))
->>> +            return;
->>> +
->>> +        switch (level) {
->>> +        case PG_LEVEL_4K:
->>> +            pfn = pte_pfn(*kpte);
->>> +            break;
->>> +        case PG_LEVEL_2M:
->>> +            pfn = pmd_pfn(*(pmd_t *)kpte);
->>> +            break;
->>> +        case PG_LEVEL_1G:
->>> +            pfn = pud_pfn(*(pud_t *)kpte);
->>> +            break;
->>> +        default:
->>> +            return;
->>> +        }
->>> +
->>> +        psize = page_level_size(level);
->>> +        pmask = page_level_mask(level);
->>> +
->>> +        if (x86_platform.hyper.sev_migration_hcall)
->>> +            x86_platform.hyper.sev_migration_hcall(pfn << PAGE_SHIFT,
->>> +                                   psize >> PAGE_SHIFT,
->>> +                                   enc);
->>
->> Why do you need two indirections? One via pv.mmu_ops and then another
->> via x86_platform.hyper? Isn't one enough?
->>
-> Currently, there is no strong reason to have two indirections other than
-> building a flexibility for the future expansion, e.g when we add SEV
-> support for the Xen then hypercall invocation may be slightly different
-> but the code to walk the page table to find the GPA will be same for
-> both KVM and Xen. The pv.mmu_ops provides a generic indirection which
-> can be used by set_memory_{decrypted,encrypted}. I will look into
-> removing the extra indirection in next version. thanks.
-> 
-> 
->> And if x86_platform.hyper.sev_migration_hcall isn't set the whole loop
->> is basically a nop.
->>
-> Yes, this double indirection has a draw back that we will be executing
-> the unnecessary code  when x86_platform.hyper.sev_migration_hcall isn't
-> set. I will look into improving it.
-> 
-> 
->>> +        vaddr_next = (vaddr & pmask) + psize;
->>> +    }
->>> +}
->>> +
->>>    static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
->>>    {
->>>        pgprot_t old_prot, new_prot;
->>> @@ -253,12 +297,13 @@ static void __init __set_clr_pte_enc(pte_t
->>> *kpte, int level, bool enc)
->>>    static int __init early_set_memory_enc_dec(unsigned long vaddr,
->>>                           unsigned long size, bool enc)
->>>    {
->>> -    unsigned long vaddr_end, vaddr_next;
->>> +    unsigned long vaddr_end, vaddr_next, start;
->>>        unsigned long psize, pmask;
->>>        int split_page_size_mask;
->>>        int level, ret;
->>>        pte_t *kpte;
->>>    +    start = vaddr;
->>>        vaddr_next = vaddr;
->>>        vaddr_end = vaddr + size;
->>>    @@ -313,6 +358,8 @@ static int __init
->>> early_set_memory_enc_dec(unsigned long vaddr,
->>>          ret = 0;
->>>    +    set_memory_enc_dec_hypercall(start, PAGE_ALIGN(size) >>
->>> PAGE_SHIFT,
->>> +                    enc);
->>>    out:
->>>        __flush_tlb_all();
->>>        return ret;
->>> @@ -451,6 +498,15 @@ void __init mem_encrypt_init(void)
->>>        if (sev_active())
->>>            static_branch_enable(&sev_enable_key);
->>>    +#ifdef CONFIG_PARAVIRT
->>> +    /*
->>> +     * With SEV, we need to make a hypercall when page encryption
->>> state is
->>> +     * changed.
->>> +     */
->>> +    if (sev_active())
->>> +        pv_ops.mmu.page_encryption_changed =
->>> set_memory_enc_dec_hypercall;
->>> +#endif
->>> +
->>>        pr_info("AMD %s active\n",
->>>            sev_active() ? "Secure Encrypted Virtualization (SEV)"
->>>                     : "Secure Memory Encryption (SME)");
->>> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
->>> index 59eca6a94ce7..9aaf1b6f5a1b 100644
->>> --- a/arch/x86/mm/pat/set_memory.c
->>> +++ b/arch/x86/mm/pat/set_memory.c
->>> @@ -27,6 +27,7 @@
->>>    #include <asm/proto.h>
->>>    #include <asm/memtype.h>
->>>    #include <asm/set_memory.h>
->>> +#include <asm/paravirt.h>
->>>      #include "../mm_internal.h"
->>>    @@ -2003,6 +2004,12 @@ static int __set_memory_enc_dec(unsigned
->>> long addr, int numpages, bool enc)
->>>         */
->>>        cpa_flush(&cpa, 0);
->>>    +    /* Notify hypervisor that a given memory range is mapped
->>> encrypted
->>> +     * or decrypted. The hypervisor will use this information during
->>> the
->>> +     * VM migration.
->>> +     */
->>> +    page_encryption_changed(addr, numpages, enc);
->>
->> Is this operation really so performance critical that a pv-op is
->> needed? Wouldn't a static key be sufficient here?
->>
-> Well, in a typical Linux kernel boot it does not get called so many
-> times. We noticed that some drivers (mainly nvme) calls it more often
-> than others. I am open for the suggestions, we went with the pv-op path
-> based on the previous feedbacks. A static key maybe sufficient as well.
-> 
-
-I'm fine with a pv-op if this is seen to be the way to go. But I would
-skip the x86_platform.hyper indirection and call the kvm specific
-function directly. In case Xen gains SEV capability we can still either
-add the indirection again or just copy the KVM function and replace the
-hypercall with the Xen variant.
-
-
-Juergen
+DQoNCk9uIDQvMzAvMjAgNDozMyBQTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPiBPbiAz
+MC8wNC8yMCAxNDo0NiwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+Pj4gVGhhdCdzIG5vdCB3
+aGF0IEkgbWVhbnQuDQo+Pj4NCj4+PiBJIHN1cHBvc2UgdGhhdCB0aGUgaW50ZXJydXB0IHByb2Nl
+c3NpbmcgaW4gcXVlc3Rpb24gdGFrZXMgcGxhY2UgaW4NCj4+PiBwcm9jZXNzIGNvbnRleHQgYW5k
+IHNvIHlvdSBtYXkgc2V0IHRoZSBsb3dlciBjbGFtcCBvbiB0aGUgdXRpbGl6YXRpb24NCj4+PiBv
+ZiB0aGUgdGFzayBjYXJyeWluZyB0aGF0IG91dC4NCj4+IEkgaGF2ZSB0cnkgdG8gYWRkIHRoaXMg
+Y29kZSB3aGVuIHN0YXJ0aW5nIHN0cmVhbWluZyAoYmVmb3JlIHRoZSBmaXJzdA0KPj4gaW50ZXJy
+dXB0KSB0aGUgZnJhbWVzIGZyb20gdGhlIHNlbnNvcjoNCj4+IGNvbnN0IHN0cnVjdCBzY2hlZF9h
+dHRyIHNjaGVkX2F0dHIgPSB7DQo+PiAgICAgLnNjaGVkX3V0aWxfbWluID0gMTAwMDAsIC8qIDEw
+MCUgb2YgdXNhZ2UgKi8NCj4gVW5sZXNzIHlvdSBwbGF5IHdpdGggU0NIRURfQ0FQQUNJVFlfU0hJ
+RlQsIHRoZSBtYXggc2hvdWxkIGJlIDEwMjQgLQ0KPiBpLmUuIFNDSEVEX0NBUEFDSVRZX1NDQUxF
+LiBUaGF0J3MgYSByZWFsbHkgYmlnIGJvb3N0LCBidXQgdGhhdCdzIGZvciB5b3UgdG8NCj4gYmVu
+Y2htYXJrLg0KPg0KPj4gICAgIC5zY2hlZF9mbGFncyA9IFNDSEVEX0ZMQUdfVVRJTF9DTEFNUF9N
+SU4sDQo+PiAgICB9Ow0KPj4NCj4+IHNjaGVkX3NldGF0dHIoY3VycmVudCwgJnNjaGVkX2F0dHIp
+Ow0KPj4NCj4+IEkgZG9uJ3Qgc2VlIGFueSBiZW5lZmljZXMgbWF5YmUgdGhlcmUgaXMgc29tZSBj
+b25maWd1cmF0aW9uIGZsYWdzIHRvIHNldC4NCj4+DQo+PiBIb3cgY2hhbmdpbmcgc2NoZWRfdXRp
+bF9taW4gY291bGQgaW1wYWN0IGNwdWZyZXEgb25kZW1hbmQgZ292ZXJub3IgPw0KPj4gRG9lcyBp
+dCBjaGFuZ2UgdGhlIHZhbHVlIHJldHVybmVkIHdoZW4gdGhlIGdvdmVybm9yIGNoZWNrIHRoZSBp
+ZGxlIHRpbWUgPw0KPj4NCj4gWW91J2xsIGhhdmUgdG8gdXNlIHRoZSBzY2hlZHV0aWwgZ292ZXJu
+b3IgZm9yIHVjbGFtcCB0byBoYXZlIGFuIGVmZmVjdC4gQW5kDQo+IGFyZ3VhYmx5IHRoYXQncyB3
+aGF0IHlvdSBzaG91bGQgYmUgdXNpbmcsIHVubGVzcyBzb21ldGhpbmcgZXhwbGljaXRseQ0KPiBw
+cmV2ZW50cyB5b3UgZnJvbSBkb2luZyB0aGF0Lg0KRXZlbiB3aXRoIHNjaGVkdXRpbCBhbmQgU0NI
+RURfQ0FQQUNJVFlfU0NBTEUgdGhhdCBpdCBkb2Vzbid0IHdvcmsuDQpjcHVmcmVxL2NwdWluZm9f
+Y3VyX2ZyZXEgdmFsdWVzIGFyZSBhbHdheXMgb24gdGhlIG1heCB2YWx1ZSBldmVuIGlmIHRoZSAN
+CnN0YXRzIHNob3cgdHJhbnNpdGlvbnMgYmV0d2VlbiB0aGUgYXZhaWxhYmxlIGZyZXF1ZW5jaWVz
+Lg0KDQpJIHNlZSB0d28gcG9zc2libGVzIHJlYXNvbnMgdG8gZXhwbGFpbiB0aGF0Og0KLSBzY2hl
+ZF9zZXRhdHRyKCkgaXMgY2FsbGVkIGluIHVzZXJsYW5kIHByb2Nlc3MgY29udGV4dCwgYnV0IHRo
+ZSANCnRocmVhZGVkIGlycSBoYW5kbGVyIGlzIHJ1bm5pbmcgaW4gYW5vdGhlciBwcm9jZXNzLg0K
+LSBiZWNhdXNlIHRoaXMgdXNlIGNhc2UgaXMgYWxtb3N0IHJ1bm5pbmcgYWxsIGluIGhhcmR3YXJl
+IHRoZSBwcm9jZXNzIA0KaXNuJ3QgZG9pbmcgYW55dGhpbmcgc28gdGhlIHNjaGVkdWxlciBkb2Vz
+bid0IHRha2UgY2FyZSBvZiBpdC4NCg0KPg0KPj4+IEFsdGVybmF0aXZlbHksIHRoYXQgdGFzayBt
+YXkgYmUgYSBkZWFkbGluZSBvbmUuDQo=
