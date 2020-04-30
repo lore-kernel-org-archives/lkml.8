@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9142C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A5CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5AC4206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5094206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255766;
-	bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
+	s=default; t=1588255773;
+	bh=dOA8n0tJWKHGY0ZgO52Pl8gFZpj1lU4mNQIpj3C22lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eCC8Uhf27EL+z0bG6OSSTlnse9U1kvL8vw8X6JUGZTgjLGRlQxbeBCr2y8xknIM8G
-	 QXZg71vcv1Wf82hf7ESb92pktiaCJqOp6GZlHsBlc4LDzvdKwxDYjQzcj6o1fsHMnv
-	 ffAvdqe7ogNvGRKTgeccnuQaqsyUWfAhQVEwGUws=
+	b=0T0abpWJ/D8HynkFuAaWFUYVDj51qDikCfrAF/xB6P/WL3w6Zy0bjVYUlR4TCF4an
+	 7XY0SsWIahBCp8dwoynCi2569HScIpGRgD5GkNsSuaW5lOufEMZvXXIux0SgEV3pua
+	 TZ8PWIjkphrnj8mB9+np7F4BTEEG2d0tpmVIu13k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgD3OJ0 (ORCPT
+        id S1727079AbgD3OJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60562 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728206AbgD3Nvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:51 -0400
+        id S1727094AbgD3Nvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E7E62137B;
-        Thu, 30 Apr 2020 13:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5BE20873;
+        Thu, 30 Apr 2020 13:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254710;
-        bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
+        s=default; t=1588254708;
+        bh=dOA8n0tJWKHGY0ZgO52Pl8gFZpj1lU4mNQIpj3C22lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IY30U2oh9MrEZihzty+OrwogRcmoRZkLZZbMnPCctwIStG6MhnEq9U8n73kr1MXOT
-         4Wjq5UcsigCa0i2LIclqkeHrHVdeBKV/7Ac1mvw5EIaGVE9anC17HS2eW0Fi+HXYCe
-         ZJ8ENhDd79MniQtOxVjRoJ1666GADxsOmqKl0Rtg=
+        b=gmGcuZ/DZnf+4SY0nSggB1iB1UbMSgZ5B54Y4RedYgnsbbBrW3TKqNDgQb8oU/R1K
+         eKrf5vdhz6iSSE+0oiDlaRs2WCjLEEorltQI09MEildfoLqvfKImmMgdBGLnSQ31bV
+         X0rOS7uHZyflCk7BQoVh1CCcmo9v/OGwcZmhhKI8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 58/79] blk-iocost: Fix error on iocost_ioc_vrate_adj
-Date:   Thu, 30 Apr 2020 09:50:22 -0400
-Message-Id: <20200430135043.19851-58-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        patches@opensource.wolfsonmicro.com, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 56/79] ASoC: wm8960: Fix wrong clock after suspend & resume
+Date:   Thu, 30 Apr 2020 09:50:20 -0400
+Message-Id: <20200430135043.19851-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,80 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit d6c8e949a35d6906d6c03a50e9a9cdf4e494528a ]
+[ Upstream commit 1e060a453c8604311fb45ae2f84f67ed673329b4 ]
 
-Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
-argument of the iocost_ioc_vrate_adj trace entry defined in
-include/trace/events/iocost.h leading to the following error:
+After suspend & resume, wm8960_hw_params may be called when
+bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
+is not called. But if sample rate is changed at that time, then
+the output clock rate will be not correct.
 
-  /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
-  error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
-   , u32[]* __tracepoint_arg_missed_ppm
+So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
+is not necessary and it causes above issue.
 
-That argument type is indeed rather complex and hard to read. Looking
-at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
-the argument to a simple "u32 *missed_ppm" and adjusting the trace
-entry accordingly, the compilation error was gone.
-
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iocost.c            | 4 ++--
- include/trace/events/iocost.h | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ sound/soc/codecs/wm8960.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 9a599cc28c290..2dc5dc54e257f 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1594,7 +1594,7 @@ skip_surplus_transfers:
- 				      vrate_min, vrate_max);
- 		}
+diff --git a/sound/soc/codecs/wm8960.c b/sound/soc/codecs/wm8960.c
+index 55112c1bba5e7..6cf0f6612bdaf 100644
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+@@ -860,8 +860,7 @@ static int wm8960_hw_params(struct snd_pcm_substream *substream,
  
--		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
-+		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
- 					   nr_lagging, nr_shortages,
- 					   nr_surpluses);
+ 	wm8960->is_stream_in_use[tx] = true;
  
-@@ -1603,7 +1603,7 @@ skip_surplus_transfers:
- 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
- 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
- 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
--					   &missed_ppm, rq_wait_pct, nr_lagging,
-+					   missed_ppm, rq_wait_pct, nr_lagging,
- 					   nr_shortages, nr_surpluses);
- 	}
+-	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
+-	    !wm8960->is_stream_in_use[!tx])
++	if (!wm8960->is_stream_in_use[!tx])
+ 		return wm8960_configure_clocking(component);
  
-diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-index 7ecaa65b7106e..c2f580fd371b1 100644
---- a/include/trace/events/iocost.h
-+++ b/include/trace/events/iocost.h
-@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
- 
- TRACE_EVENT(iocost_ioc_vrate_adj,
- 
--	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
-+	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
- 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
- 		int nr_surpluses),
- 
-@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
- 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
- 		__entry->new_vrate = new_vrate;
- 		__entry->busy_level = ioc->busy_level;
--		__entry->read_missed_ppm = (*missed_ppm)[READ];
--		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
-+		__entry->read_missed_ppm = missed_ppm[READ];
-+		__entry->write_missed_ppm = missed_ppm[WRITE];
- 		__entry->rq_wait_pct = rq_wait_pct;
- 		__entry->nr_lagging = nr_lagging;
- 		__entry->nr_shortages = nr_shortages;
+ 	return 0;
 -- 
 2.20.1
 
