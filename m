@@ -2,95 +2,125 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2589BC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B180C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2AA320838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4541E20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QQHZAy1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD3Kxo (ORCPT
+        id S1726842AbgD3Kz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:53:44 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:50492 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgD3Kxn (ORCPT
+        Thu, 30 Apr 2020 06:55:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:50542 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726413AbgD3Kz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:53:43 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 03UAqvDf025142
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 30 Apr 2020 05:53:01 -0500
-Message-ID: <9b5fbaf29adccc5abb66c3d39ecc92a2d5f10d10.camel@kernel.crashing.org>
-Subject: Re: [PATCH v0 linux master] i2c/busses: Avoid i2c interrupt status
- clear race condition.
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     ryan_chen <ryan_chen@aspeedtech.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Thu, 30 Apr 2020 20:52:56 +1000
-In-Reply-To: <20200429033737.2781-1-ryan_chen@aspeedtech.com>
-References: <20200429033737.2781-1-ryan_chen@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Apr 2020 06:55:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588244125; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=OsZ/pNJ65qyQXurGQU11CbmokKkvoyDjj3d8TxgSEco=; b=QQHZAy1f/KkYSwBe8DVAgr+XBDgQt8MGRPzx4m0PmK13VFhP5A01uMeAIzLPbUEothlqSHPm
+ wFsUcC5PxLPlLBHCvYJnBQZ5A/JxicgU3vIOFu2e/RB5BgrRLn4FlFLCDQb6aB+hsFOrbus5
+ 0WzZ/sv0Ixxn2MZbdU/l5RHGBlo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaaae9d.7f090a701ae8-smtp-out-n05;
+ Thu, 30 Apr 2020 10:55:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 96644C4478F; Thu, 30 Apr 2020 10:55:23 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 269BEC433CB;
+        Thu, 30 Apr 2020 10:55:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 269BEC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Thu, 30 Apr 2020 16:25:15 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luca Abeni <luca.abeni@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
+        Alessio Balsini <balsini@google.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] sched/deadline: Optimize dl_bw_cpus()
+Message-ID: <20200430105514.GC19464@codeaurora.org>
+References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
+ <20200427083709.30262-3-dietmar.eggemann@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427083709.30262-3-dietmar.eggemann@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 11:37 +0800, ryan_chen wrote:
-> In AST2600 there have a slow peripheral bus between CPU
->  and i2c controller.
-> Therefore GIC i2c interrupt status clear have delay timing,
-> when CPU issue write clear i2c controller interrupt status.
-> To avoid this issue, the driver need have read after write
->  clear at i2c ISR.
+On Mon, Apr 27, 2020 at 10:37:05AM +0200, Dietmar Eggemann wrote:
+> Return the weight of the rd (root domain) span in case it is a subset
+> of the cpu_active_mask.
 > 
-> Signed-off-by: ryan_chen <ryan_chen@aspeedtech.com>
-
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
---
-
-
+> Continue to compute the number of CPUs over rd span and cpu_active_mask
+> when in hotplug.
+> 
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 > ---
->  drivers/i2c/busses/i2c-aspeed.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  kernel/sched/deadline.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/i2c/busses/i2c-aspeed.c
-> b/drivers/i2c/busses/i2c-aspeed.c
-> index 07c1993274c5..f51702d86a90 100644
-> --- a/drivers/i2c/busses/i2c-aspeed.c
-> +++ b/drivers/i2c/busses/i2c-aspeed.c
-> @@ -603,6 +603,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq,
-> void *dev_id)
->  	/* Ack all interrupts except for Rx done */
->  	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
->  	       bus->base + ASPEED_I2C_INTR_STS_REG);
-> +	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
->  	irq_remaining = irq_received;
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 504d2f51b0d6..4ae22bfc37ae 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -54,10 +54,16 @@ static inline struct dl_bw *dl_bw_of(int i)
+>  static inline int dl_bw_cpus(int i)
+>  {
+>  	struct root_domain *rd = cpu_rq(i)->rd;
+> -	int cpus = 0;
+> +	int cpus;
 >  
->  #if IS_ENABLED(CONFIG_I2C_SLAVE)
-> @@ -645,9 +646,11 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq,
-> void *dev_id)
->  			irq_received, irq_handled);
->  
->  	/* Ack Rx done */
-> -	if (irq_received & ASPEED_I2CD_INTR_RX_DONE)
-> +	if (irq_received & ASPEED_I2CD_INTR_RX_DONE) {
->  		writel(ASPEED_I2CD_INTR_RX_DONE,
->  		       bus->base + ASPEED_I2C_INTR_STS_REG);
-> +		readl(bus->base + ASPEED_I2C_INTR_STS_REG);
-> +	}
->  	spin_unlock(&bus->lock);
->  	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;
->  }
+>  	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
+>  			 "sched RCU must be held");
+> +
+> +	if (cpumask_subset(rd->span, cpu_active_mask))
+> +		return cpumask_weight(rd->span);
+> +
 
+Looks good to me. This is a nice optimization.
+
+> +	cpus = 0;
+> +
+>  	for_each_cpu_and(i, rd->span, cpu_active_mask)
+>  		cpus++;
+>  
+Do you know why this check is in place? Is it only to cover
+the case of cpuset_cpu_inactive()->dl_cpu_busy()?
+
+Thanks,
+Pavan
+> -- 
+> 2.17.1
+> 
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
