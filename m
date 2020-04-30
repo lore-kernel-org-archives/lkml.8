@@ -4,163 +4,196 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35711C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F19C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13E8E208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17723208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588263529;
-	bh=lW4zzFS0G9Wi4Z0P+nqG08m6PRjTTMBcjkMLSKAEx/k=;
+	s=default; t=1588263532;
+	bh=tkR3wAT0LBmvaZI9/1wP4hUMFYjfHl3vE2K0GoEx1LM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rTAhWPA6+1ZGdmlPsM7UCYhDgadwJGCmSrlQl3jzxAi9v33egqYpT30FgQcRgiUI
-	 OKlCZA7t6VVl9+XmrAi8S2huDf5AElxngDTxTE5GuasOwGBUBElznBsmAsmHjkETOY
-	 x1pGMNsgQxPzDy63DlwTSLZ2W9Zvgg0swIsHc4+M=
+	b=aXDnwfjDAf9IZYCyoX5CiMm9ZsH2a5hO4OutioCbW2nwMObKIrhpa3dDsFpX0in50
+	 kr+q4FwvnVQV0kAFGryPqlc8Fgt2GU1fRrmm4hrPnTFFNNwdW+/EKIzOwmoxGLRIjs
+	 vZeCXtHm7jd0JhBvgdH31o9OvA+/KESbISttZcuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgD3QSs (ORCPT
+        id S1728268AbgD3QSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58578 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgD3QSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:18:38 -0400
+        id S1727089AbgD3QSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:18:39 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A560320873;
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2CB24955;
         Thu, 30 Apr 2020 16:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588263517;
-        bh=lW4zzFS0G9Wi4Z0P+nqG08m6PRjTTMBcjkMLSKAEx/k=;
+        s=default; t=1588263518;
+        bh=tkR3wAT0LBmvaZI9/1wP4hUMFYjfHl3vE2K0GoEx1LM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t615eT3Q9pNpfUIrouBfac8mgll8VUS4jr3Ag7enyIc+LVo6TA9j3lMsuJE9cQQfz
-         sf9wlQhSNxFOavyUaeU7+062U1oEI3YBwpstTJ/7fZTx03yIZqvRcaMolvo/ohpyig
-         cmqXaXddzzJQ9zOGjwxL1N0Mwus6QNxjBg+E8ROc=
+        b=D6Djx5AJAN0TwrnZVbjAKbp7koalkpKSiHnBBAzdRIYlEFCzI8amprN6d/qh3JlSv
+         zaFOXLv7JPZdiGSMtUueeOe5h+2S/dJDr9jxwV4Dnba+xZIrOzn7DjwTKuy8uua3qy
+         pypGgyaAcQ/auq/XNZPMITb6H7qC0SntzfMiROL0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBtT-00Axge-S6; Thu, 30 Apr 2020 18:18:35 +0200
+        id 1jUBtU-00AxhN-4O; Thu, 30 Apr 2020 18:18:36 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH v4 01/19] docs: thermal: convert cpu-idle-cooling.rst to ReST
-Date:   Thu, 30 Apr 2020 18:18:15 +0200
-Message-Id: <617873f33407a764671be95d4ee15afa6027c924.1588263270.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v4 10/19] docs: misc-devices/bh1770glc.txt: convert to ReST
+Date:   Thu, 30 Apr 2020 18:18:24 +0200
+Message-Id: <1aaa71c0a287b53d8e77e535fa46bbc18f348b1a.1588263270.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588263270.git.mchehab+huawei@kernel.org>
 References: <cover.1588263270.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Despite being named with .rst extension, this file doesn't
-match the ReST standard. It actually causes a crash at
-Sphinx:
-
-	Sphinx parallel build error:
-	docutils.utils.SystemMessage: /devel/v4l/docs/Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
-
-Add needed markups for it to be properly parsed.
-
-While here, add it to the thermal index.rst.
+- Adjust document title markup;
+- use list markups;
+- Adjust identations to display properly at ReST output.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../driver-api/thermal/cpu-idle-cooling.rst    | 18 ++++++++++++------
- Documentation/driver-api/thermal/index.rst     |  1 +
- 2 files changed, 13 insertions(+), 6 deletions(-)
+ .../{bh1770glc.txt => bh1770glc.rst}          | 45 +++++++++++++------
+ Documentation/misc-devices/index.rst          |  1 +
+ 2 files changed, 33 insertions(+), 13 deletions(-)
+ rename Documentation/misc-devices/{bh1770glc.txt => bh1770glc.rst} (83%)
 
-diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-index a1c3edecae00..b5a4544af004 100644
---- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-+++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-@@ -1,3 +1,9 @@
+diff --git a/Documentation/misc-devices/bh1770glc.txt b/Documentation/misc-devices/bh1770glc.rst
+similarity index 83%
+rename from Documentation/misc-devices/bh1770glc.txt
+rename to Documentation/misc-devices/bh1770glc.rst
+index 7d64c014dc70..ea5ca58bb958 100644
+--- a/Documentation/misc-devices/bh1770glc.txt
++++ b/Documentation/misc-devices/bh1770glc.rst
+@@ -1,9 +1,13 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+================
-+CPU Idle Cooling
-+================
++=======================
+ Kernel driver bh1770glc
+ =======================
+ 
+ Supported chips:
+-ROHM BH1770GLC
+-OSRAM SFH7770
 +
++- ROHM BH1770GLC
++- OSRAM SFH7770
  
- Situation:
- ----------
-@@ -45,7 +51,7 @@ idle state target residency, we lead to dropping the static and the
- dynamic leakage for this period (modulo the energy needed to enter
- this state). So the sustainable power with idle cycles has a linear
- relation with the OPP’s sustainable power and can be computed with a
--coefficient similar to:
-+coefficient similar to::
+ Data sheet:
+ Not freely available
+@@ -48,12 +52,16 @@ chip_id
+ 	RO - shows detected chip type and version
  
- 	    Power(IdleCycle) = Coef x Power(OPP)
+ power_state
+-	RW - enable / disable chip. Uses counting logic
+-	     1 enables the chip
+-	     0 disables the chip
++	RW - enable / disable chip
++
++	Uses counting logic
++
++	     - 1 enables the chip
++	     - 0 disables the chip
  
-@@ -136,7 +142,7 @@ Power considerations
- --------------------
+ lux0_input
+ 	RO - measured lux value
++
+ 	     sysfs_notify called when threshold interrupt occurs
  
- When we reach the thermal trip point, we have to sustain a specified
--power for a specific temperature but at this time we consume:
-+power for a specific temperature but at this time we consume::
+ lux0_sensor_range
+@@ -66,16 +74,22 @@ lux0_rate_avail
+ 	RO - supported measurement rates
  
-  Power = Capacitance x Voltage^2 x Frequency x Utilisation
+ lux0_thresh_above_value
+-	RW - HI level threshold value. All results above the value
++	RW - HI level threshold value
++
++	     All results above the value
+ 	     trigs an interrupt. 65535 (i.e. sensor_range) disables the above
+ 	     interrupt.
  
-@@ -145,7 +151,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
- fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
- because we don’t want to change the OPP. We can group the
- ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
--‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
-+‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
+ lux0_thresh_below_value
+-	RW - LO level threshold value. All results below the value
++	RW - LO level threshold value
++
++	     All results below the value
+ 	     trigs an interrupt. 0 disables the below interrupt.
  
-  Pdyn = Cdyn x Voltage^2 x Frequency
+ lux0_calibscale
+-	RW - calibration value. Set to neutral value by default.
++	RW - calibration value
++
++	     Set to neutral value by default.
+ 	     Output results are multiplied with calibscale / calibscale_default
+ 	     value.
  
-@@ -154,7 +160,7 @@ in order to target the sustainable power defined in the device
- tree. So with the idle injection mechanism, we want an average power
- (Ptarget) resulting in an amount of time running at full power on a
- specific OPP and idle another amount of time. That could be put in a
--equation:
-+equation::
+@@ -84,32 +98,37 @@ lux0_calibscale_default
  
-  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
- 			(Trunning + Tidle)
-@@ -165,7 +171,7 @@ equation:
+ prox0_raw
+ 	RO - measured proximity value
++
+ 	     sysfs_notify called when threshold interrupt occurs
  
- At this point if we know the running period for the CPU, that gives us
- the idle injection we need. Alternatively if we have the idle
--injection duration, we can compute the running duration with:
-+injection duration, we can compute the running duration with::
+ prox0_sensor_range
+ 	RO - prox0_raw max value
  
-  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
+ prox0_raw_en
+-	RW - enable / disable proximity - uses counting logic
+-	     1 enables the proximity
+-	     0 disables the proximity
++	RW - enable / disable proximity
++
++	     Uses counting logic
++
++	     - 1 enables the proximity
++	     - 0 disables the proximity
  
-@@ -188,7 +194,7 @@ However, in this demonstration we ignore three aspects:
-    target residency, otherwise we end up consuming more energy and
-    potentially invert the mitigation effect
+ prox0_thresh_above_count
+ 	RW - number of proximity interrupts needed before triggering the event
  
--So the final equation is:
-+So the final equation is::
+ prox0_rate_above
+ 	RW - Measurement rate (in Hz) when the level is above threshold
+-	     i.e. when proximity on has been reported.
++	i.e. when proximity on has been reported.
  
-  Trunning = (Tidle - Twakeup ) x
- 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
-diff --git a/Documentation/driver-api/thermal/index.rst b/Documentation/driver-api/thermal/index.rst
-index 5ba61d19c6ae..4cb0b9b6bfb8 100644
---- a/Documentation/driver-api/thermal/index.rst
-+++ b/Documentation/driver-api/thermal/index.rst
-@@ -8,6 +8,7 @@ Thermal
-    :maxdepth: 1
+ prox0_rate_below
+ 	RW - Measurement rate (in Hz) when the level is below threshold
+-	     i.e. when proximity off has been reported.
++	i.e. when proximity off has been reported.
  
-    cpu-cooling-api
-+   cpu-idle-cooling
-    sysfs-api
-    power_allocator
+ prox0_rate_avail
+ 	RO - Supported proximity measurement rates in Hz
  
+ prox0_thresh_above0_value
+ 	RW - threshold level which trigs proximity events.
++
+ 	     Filtered by persistence filter (prox0_thresh_above_count)
+ 
+ prox0_thresh_above1_value
+diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
+index f4ecafad6678..d28e755a1595 100644
+--- a/Documentation/misc-devices/index.rst
++++ b/Documentation/misc-devices/index.rst
+@@ -15,6 +15,7 @@ fit into other categories.
+    :maxdepth: 2
+ 
+    ad525x_dpot
++   bh1770glc
+    eeprom
+    c2port
+    ibmvmc
 -- 
 2.25.4
 
