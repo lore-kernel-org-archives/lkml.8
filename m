@@ -2,143 +2,254 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DDBC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A91BC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA2E207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488B20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IU2tYRbN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fCDX2FSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgD3Teh (ORCPT
+        id S1726754AbgD3Tfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:34:37 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32574 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbgD3Teh (ORCPT
+        Thu, 30 Apr 2020 15:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgD3Tfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:34:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588275275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sS8AddF4WlY4FM3AJEU8Vr5dd3INR3Y9YVDuw7T/d9Y=;
-        b=IU2tYRbNEfNUOosyw3wmdSPJNp9EGIZRB2Iia4/DOVky3fV5TRPCa4Fs0yKvp5Yc2fr1tr
-        z7uGBQJTlt01Wjq0W3wjPRKm2l7c0GlHDLbiAHSarrxehz2rCKOwxysa4AkRyPjpkpqX0a
-        O9s016Er//LY18DwOH/bQonEAUNdfYw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-480-XhESpHWKOR293DbGNB32bQ-1; Thu, 30 Apr 2020 15:34:29 -0400
-X-MC-Unique: XhESpHWKOR293DbGNB32bQ-1
-Received: by mail-wr1-f72.google.com with SMTP id d17so4362961wrr.17
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:34:29 -0700 (PDT)
+        Thu, 30 Apr 2020 15:35:33 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6DBC035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:35:32 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l25so998800pgc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lzP4zsyL3G+ZA+zKIb8zsIyDO20yNMH6PqtntomA9xg=;
+        b=fCDX2FSYSHD6JwsDTIokxh79bkmofe+tsGFm74Iobii0E29IYHlVELmsNu1y3Zd9DX
+         3SiyzTAcxxfmEgukA74XFh9neFt8TE9YXbrVuw0Qu4QeLM1/bHQ371Imwq4rwgDxrRoV
+         MSKkO2yEiEyB9D3RaBCnLjWvj8xw6mFDgXpcbnDkMCBDrtWFun0JDa0x/PwC/YjNjIty
+         tNe4gCsh9j8dFZmEu2zm1zh3E/UMsEXs8VDS6Rd+RdyWcucpsf+89ToFPjkjNYwWzbwd
+         EbCyFqS0k5GccLlxf9of9GNVM3pAAf4AeKOutadC4y4zTq8aYkM/7clDPhhxgf9Pjvrv
+         pZMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=sS8AddF4WlY4FM3AJEU8Vr5dd3INR3Y9YVDuw7T/d9Y=;
-        b=h8djAeANTT1KDO1k6HjkGvprKFegn9P5yadSlo0VcZczKYXzQr/PsP1CaI2tsUsAjp
-         KnL7697FtVRCqOPXXVJOu8K6Mj4GTWe0tSVwZmEWX7MOFjG38RsfXWtM4Fe0Uuv5ohO6
-         1LQY2tqVZfo/JrsHQqUjnNRmMFFdo/VTCUWlV7N1MOPpQJnLAZErhIIX/jEJ4qvqdRZH
-         RIjqW/slgh4Ukjs27xT4oEsD9paAxOVqVxmoPbNRZpZG8wGbBOQ80MSIUe5T4x64BpyZ
-         QGjYSkkmJswg+/SUhDBzfA2abbJN52l6KSxYd1LsmjKSI6ToHyBCAIdyI1/sAiElls7B
-         BLvA==
-X-Gm-Message-State: AGi0PuZBnu5NbrpXVPUfRzbSDNSUWtYmVV7JhoSzLpZowP2Aq2E8Zo2t
-        2Gg9oWJgpSHq1HDijN0DDPImchCeCQsGolV71y50/h2ZqBZKe06FQ8M5B0YS8nfvqQTI9TBhdoA
-        9kS32VYqWwzvLXNq2/gk2Cq1J
-X-Received: by 2002:a1c:4d17:: with SMTP id o23mr147540wmh.47.1588275268396;
-        Thu, 30 Apr 2020 12:34:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIErEi2OKs7eqnsETBaKuMVCIu+8B3dc0io3m7kIhj79uNOeJtHgco9xaP2TdUr4Pnz00osWA==
-X-Received: by 2002:a1c:4d17:: with SMTP id o23mr147527wmh.47.1588275268199;
-        Thu, 30 Apr 2020 12:34:28 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id n6sm831929wmc.28.2020.04.30.12.34.26
+        bh=lzP4zsyL3G+ZA+zKIb8zsIyDO20yNMH6PqtntomA9xg=;
+        b=FgMbQaksnqgDJe3wIUXU5ye+B+/+EvtiOwzq8pXeYiSKu6RxN5LRoVaNkosq8tqnEe
+         MMCYBtrWpymxJUUZopiEQxTQGv4h94CXQayiBO9nSTdOz+6hbByXL5AgqU7B9bsduAq8
+         M23AdwFMpSmhzsitaBKVTMiQKqTN7uXH6OeruYrYPTg1p3WH98BYgsV4QapWvIX0bseo
+         LHX7Lnb6009kGQy0eiGr+A1VUOXxi5pcXR2+Wp4d4cgbAP8yQUGZTOYw9vsY6pNfS7eX
+         Eg8WIvPdrXx3K5XO/JxSym3Da7zQAJGsKYYhlVRktGatxCSCskEOY74y/eL4CgrbxqSo
+         vS0w==
+X-Gm-Message-State: AGi0PuYznT3qXrutDHMJJAQOYSzkXQkdPof6cQoiYoHVQ3MrG1fU2CSw
+        bZDxVo+ys9Rniv0XbydX77b50A==
+X-Google-Smtp-Source: APiQypKnzcM10vrRVAPVmDP8TVP4+76/N/zdw2lKPSevIaHjqqPQ2vVc0sUq80sl9glOTilQvDqG/w==
+X-Received: by 2002:a65:6083:: with SMTP id t3mr479523pgu.398.1588275332220;
+        Thu, 30 Apr 2020 12:35:32 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j23sm493396pjz.13.2020.04.30.12.35.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:34:27 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 15:34:24 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Srivatsa Vaddagiri <vatsa@codeaurora.org>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>, Will Deacon <will@kernel.org>,
-        konrad.wilk@oracle.com, jasowang@redhat.com,
-        stefano.stabellini@xilinx.com, iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH 1/1] virtio: Introduce MMIO ops
-Message-ID: <20200430152808-mutt-send-email-mst@kernel.org>
-References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
- <1588240976-10213-2-git-send-email-vatsa@codeaurora.org>
- <20200430101431.GD19932@willie-the-truck>
- <20200430103446.GH5097@quicinc.com>
- <20200430104149.GG19932@willie-the-truck>
- <20200430111156.GI5097@quicinc.com>
- <7bf8bffe-267b-6c66-86c9-40017d3ca4c2@siemens.com>
- <20200430133321.GC3204@quicinc.com>
+        Thu, 30 Apr 2020 12:35:31 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 12:36:09 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: soc: qcom: Add devicetree binding for
+ Qcom IPCC
+Message-ID: <20200430193609.GA20625@builder.lan>
+References: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430133321.GC3204@quicinc.com>
+In-Reply-To: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 07:03:21PM +0530, Srivatsa Vaddagiri wrote:
-> * Jan Kiszka <jan.kiszka@siemens.com> [2020-04-30 14:59:50]:
+On Wed 29 Apr 23:30 PDT 2020, Manivannan Sadhasivam wrote:
+
+> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
+> Controller (IPCC) block.
 > 
-> > >I believe ivshmem2_virtio requires hypervisor to support PCI device emulation
-> > >(for life-cycle management of VMs), which our hypervisor may not support.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../bindings/soc/qcom/qcom,ipcc.yaml          | 85 +++++++++++++++++++
 
-PCI is mostly just 2 registers. One sets the affected device, one the data to read/write.
+How about putting this in either interrupt-controller/ or mailbox/ instead?
 
-> A
-> > >simple shared memory and doorbell or message-queue based transport will work for
-> > >us.
-> > 
-> > As written in our private conversation, a mapping of the ivshmem2 device
-> > discovery to platform mechanism (device tree etc.) and maybe even the
-> > register access for doorbell and life-cycle management to something
-> > hypercall-like would be imaginable. What would count more from virtio
-> > perspective is a common mapping on a shared memory transport.
+>  include/dt-bindings/soc/qcom,ipcc.h           | 38 +++++++++
+>  2 files changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
+>  create mode 100644 include/dt-bindings/soc/qcom,ipcc.h
 > 
-> Yes that sounds simpler for us.
-> 
-> > That said, I also warned about all the features that PCI already defined
-> > (such as message-based interrupts) which you may have to add when going a
-> > different way for the shared memory device.
-> 
-> Is it really required to present this shared memory as belonging to a PCI
-> device?
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
+> new file mode 100644
+> index 000000000000..48b281181401
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/qcom/qcom,ipcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. Inter-Processor Communication Controller
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description:
+> +  The Inter-Processor Communication Controller (IPCC) is a centralized hardware
+> +  to route the interrupts across various subsystems. It involves a three-level
 
-But then you will go on and add MSI, and NUMA, and security, and and and ...
+s/the//
 
-> I would expect the device-tree to indicate the presence of this shared
-> memory region, which we should be able to present to ivshmem2 as shared memory
-> region to use (along with some handles for doorbell or message queue use).
-> 
-> I understand the usefulness of modeling the shared memory as part of device so
-> that hypervisor can send events related to peers going down or coming up. In our
-> case, there will be other means to discover those events and avoiding this
-> requirement on hypervisor (to emulate PCI) will simplify the solution for us.
-> 
-> Any idea when we can expect virtio over ivshmem2 to become available?!
+> +  addressing scheme called protocol, client and signal. For example, consider an
+> +  entity on the Application Processor Subsystem (APSS) that wants to listen to
+> +  Modem's interrupts via Shared Memory Point to Point (SMP2P) interface. In such
+> +  a case, the client would be Modem (client-id is 2) and the signal would be
+> +  SMP2P (signal-id is 2). The SMP2P itself falls under the Multiprocessor (MPROC)
+> +  protocol (protocol-id is 0). Refer include/dt-bindings/soc/qcom/qcom,ipcc.h
+> +  for the list of such IDs.
+> +
+> +  One of the duties of this interrupt controller driver is to forward the
+> +  interrupts to the correct entities on the APSS. The children inheriting the
 
-Check out the virtio spec. Right at the beginning it states:
+Clients using the...
 
-	These devices are
-	found in virtual environments, yet by design they look like physical devices to the guest within
-	the virtual machine - and this document treats them as such. This similarity allows the guest to
-	use standard drivers and discovery mechanisms
+> +  interrupt-controller would be mentioning the client-id and signal-id it's
 
+s/would be mentioning/should specify/
 
+> +  interested in.
+> +
+> +  On the other hand, sending an interrupt to a subsystem is done through the
+
+"In the other direction," and add clarify subsystem by making it "remote
+subsystem".
+
+> +  mailbox interface, which again requires client-id and signal-id.
+> +
+> +properties:
+> +  compatible:
+
+It's uncertain how new vers
+
+> +    const: "qcom,ipcc"
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 3
+> +    description:
+> +      The first cell is the client-id, the second cell is the signal-id and the
+> +      third cell is the interrupt type.
+> +
+> +  "#mbox-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the client-id, and the second cell is the signal-id.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - "#mbox-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        #include <dt-bindings/soc/qcom,ipcc.h>
+> +
+> +        ipcc_mproc: qcom,ipcc@408000 {
+
+interrupt-controller@
+
+Regards,
+Bjorn
+
+> +                compatible = "qcom,ipcc";
+> +                reg = <0x408000 0x1000>;
+> +                interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <3>;
+> +                #mbox-cells = <2>;
+> +        };
+> +
+> +        smp2p-modem {
+> +                compatible = "qcom,smp2p";
+> +                interrupts-extended = <&ipcc_mproc IPCC_CLIENT_MPSS
+> +                                IPCC_MPROC_SIGNAL_SMP2P IRQ_TYPE_EDGE_RISING>;
+> +                mboxes = <&ipcc_mproc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_SMP2P>;
+> +
+> +                /* Other SMP2P fields */
+> +        };
+> diff --git a/include/dt-bindings/soc/qcom,ipcc.h b/include/dt-bindings/soc/qcom,ipcc.h
+> new file mode 100644
+> index 000000000000..2926cdb4cb48
+> --- /dev/null
+> +++ b/include/dt-bindings/soc/qcom,ipcc.h
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_QCOM_IPCC_H
+> +#define __DT_BINDINGS_QCOM_IPCC_H
+> +
+> +/* Signal IDs for MPROC protocol */
+> +#define IPCC_MPROC_SIGNAL_GLINK_QMP	0
+> +#define IPCC_MPROC_SIGNAL_SMP2P		2
+> +#define IPCC_MPROC_SIGNAL_PING		3
+> +#define IPCC_MPROC_SIGNAL_MAX		4 /* Used by driver only */
+> +
+> +#define IPCC_COMPUTE_L0_SIGNAL_MAX	32 /* Used by driver only */
+> +#define IPCC_COMPUTE_L1_SIGNAL_MAX	32 /* Used by driver only */
+> +
+> +/* Client IDs */
+> +#define IPCC_CLIENT_AOP			0
+> +#define IPCC_CLIENT_TZ			1
+> +#define IPCC_CLIENT_MPSS		2
+> +#define IPCC_CLIENT_LPASS		3
+> +#define IPCC_CLIENT_SLPI		4
+> +#define IPCC_CLIENT_SDC			5
+> +#define IPCC_CLIENT_CDSP		6
+> +#define IPCC_CLIENT_NPU			7
+> +#define IPCC_CLIENT_APSS		8
+> +#define IPCC_CLIENT_GPU			9
+> +#define IPCC_CLIENT_CVP			10
+> +#define IPCC_CLIENT_CAM			11
+> +#define IPCC_CLIENT_VPU			12
+> +#define IPCC_CLIENT_PCIE0		13
+> +#define IPCC_CLIENT_PCIE1		14
+> +#define IPCC_CLIENT_PCIE2		15
+> +#define IPCC_CLIENT_SPSS		16
+> +#define IPCC_CLIENT_MAX			17 /* Used by driver only */
+> +
+> +#endif
 > -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-
+> 2.17.1
+> 
