@@ -2,124 +2,151 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AFCC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93537C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8308C2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255150;
-	bh=NjaUgs4ZaiThjKvIDR+GLSopQIjvJX6ZX4LDx59JXi0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A3ZU0uG76Zj9Ubc/6jW2YkvoWEJE867ITJQh50blbdFK2TCrAaBn614Ic7ds2q2lE
-	 fD/OrRCnaMSAdzIRnrWcPPsPFX6/JUVkOynuetoJeHINeCfCnFkhlLfXLHWTreGBYe
-	 Zl6YWWdmw9Xcw12B35aSizARbCvVEK4ay5Y0hQb8=
+	by mail.kernel.org (Postfix) with ESMTP id 742692076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="m0nCqzOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbgD3N7J (ORCPT
+        id S1726975AbgD3N7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 09:59:13 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37628 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729166AbgD3N7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 09:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbgD3Nya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A03F24953;
-        Thu, 30 Apr 2020 13:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254870;
-        bh=NjaUgs4ZaiThjKvIDR+GLSopQIjvJX6ZX4LDx59JXi0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PnTh6wMWuyhenk5VtqmJRYbYvHPsZlF5jSpS7dT4JX7PFyhLuDF5hZuMA+xHQwrMZ
-         6SXAHq6WqTmAmtgVhvPM0YAvAJK4jp5lcXQF6XiTOriMATi1ojkPyZhckzmkOGVScl
-         E6FFyO6f4a1UjqmYYEzcWd7rS519zaPht+X2snF0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 25/27] macsec: avoid to set wrong mtu
-Date:   Thu, 30 Apr 2020 09:54:00 -0400
-Message-Id: <20200430135402.20994-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
-References: <20200430135402.20994-1-sashal@kernel.org>
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E6246321;
+        Thu, 30 Apr 2020 15:59:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588255146;
+        bh=GhmU8YETMOVIz97f3awqWGN1baPnypD27desAmZxvnM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m0nCqzOK1A1eW641+wJC9vh12s4/oo687inR7KwWAJ0KfqiiA33qRsLDxYcMx6ii6
+         nLBqmMij+oZZhbjtiWkUkW2pvzh+f/SZwuwlfKT6O9T4OqGBt/h223EPPZfeexVlUe
+         6Cgq6VmXqw2elz+zFvEkTwg+mGUak8lKvy5fWD4o=
+Date:   Thu, 30 Apr 2020 16:59:04 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
+Message-ID: <20200430135904.GI5856@pendragon.ideasonboard.com>
+References: <20200414200151.80089-1-daniel@qtec.com>
+ <20200414200151.80089-2-daniel@qtec.com>
+ <20200430094233.GE867@valkosipuli.retiisi.org.uk>
+ <20200430111014.GD5856@pendragon.ideasonboard.com>
+ <20200430133125.GL867@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430133125.GL867@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+Hi Sakari,
 
-[ Upstream commit 7f327080364abccf923fa5a5b24e038eb0ba1407 ]
+On Thu, Apr 30, 2020 at 04:31:25PM +0300, Sakari Ailus wrote:
+> On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
+> > On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
+> >> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
+> >>> Add min and max structures to the v4l2-subdev callback in order to allow
+> >>> the subdev to return a range of valid frame intervals.
+> >>> 
+> >>> This would operate similar to the struct v4l2_subdev_frame_size_enum and
+> >>> its max and min values for the width and the height. In this case, the
+> >>> possibility to return a frame interval range is added to the v4l2-subdev level
+> >>> whenever the v4l2 device operates in step-wise or continuous mode.
+> >> 
+> >> The current API only allows providing a list of enumerated values. That is
+> >> limiting indeed, especially on register list based sensor drivers where
+> >> vertical blanking is configurable.
+> >> 
+> >> I guess this could be extended to cover what V4L2, more or less. If we tell
+> >> it's a range, is it assumed to be contiguous? We don't have try operation
+> >> for the frame interval, but I guess set is good enough. The fraction is
+> >> probably best for TV standards but it's not what camera sensors natively
+> >> use. (But for a register list based driver, the established practice
+> >> remains to use frame interval.)
+> >> 
+> >> I'm also wondering the effect on existing user space; if a driver gives a
+> >> range, how will the existing programs work with such a driver?
+> >> 
+> >> I'd add an anonymous union with the interval field, the other field being
+> >> min_interval. Then the current applications would get the minimum interval
+> >> and still continue to function. I guess compilers are modern enough these
+> >> days we can have an anonymous union in the uAPI?
+> > 
+> > We can discuss all this, but given patch 3/3 in this series, I think
+> > this isn't the right API :-) The sensor driver should not expose the
+> > frame interval enumeration API. It should instead expose control of the
+> > frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
+> > V4L2_CID_VBLANK.
+> > 
+> 
+> That would require also exposing the size of the pixel array (and the
+> analogue crop), in order to provide all the necessary information to
+> calculate the frame rate. No objections there; this is a new driver.
+> 
+> There are however existing drivers that implement s_frame_interval subdev
+> ioctl; those might benefit from this one. Or would you implement the pixel
+> rate based control as well, and effectively deprecate the s_frame_interval
+> on those?
 
-When a macsec interface is created, the mtu is calculated with the lower
-interface's mtu value.
-If the mtu of lower interface is lower than the length, which is needed
-by macsec interface, macsec's mtu value will be overflowed.
-So, if the lower interface's mtu is too low, macsec interface's mtu
-should be set to 0.
+That's what I would recommend, yes. I would only keep
+.s_frame_interval() for sensors that expose that concept at the hardware
+level (for instance with an integrated ISP whose firmware exposes a
+frame interval or frame rate control).
 
-Test commands:
-    ip link add dummy0 mtu 10 type dummy
-    ip link add macsec0 link dummy0 type macsec
-    ip link show macsec0
+> >>> Signed-off-by: Daniel Gomez <daniel@qtec.com>
+> >>> ---
+> >>>  include/uapi/linux/v4l2-subdev.h | 6 +++++-
+> >>>  1 file changed, 5 insertions(+), 1 deletion(-)
+> >>> 
+> >>> diff --git a/include/uapi/linux/v4l2-subdev.h b/include/uapi/linux/v4l2-subdev.h
+> >>> index 03970ce30741..ee15393c58cd 100644
+> >>> --- a/include/uapi/linux/v4l2-subdev.h
+> >>> +++ b/include/uapi/linux/v4l2-subdev.h
+> >>> @@ -117,6 +117,8 @@ struct v4l2_subdev_frame_interval {
+> >>>   * @code: format code (MEDIA_BUS_FMT_ definitions)
+> >>>   * @width: frame width in pixels
+> >>>   * @height: frame height in pixels
+> >>> + * @min_interval: min frame interval in seconds
+> >>> + * @max_interval: max frame interval in seconds
+> >>>   * @interval: frame interval in seconds
+> >>>   * @which: format type (from enum v4l2_subdev_format_whence)
+> >>>   */
+> >>> @@ -126,9 +128,11 @@ struct v4l2_subdev_frame_interval_enum {
+> >>>  	__u32 code;
+> >>>  	__u32 width;
+> >>>  	__u32 height;
+> >>> +	struct v4l2_fract min_interval;
+> >>> +	struct v4l2_fract max_interval;
+> >> 
+> >> This changes the memory layout of the struct and breaks the ABI. Any new
+> >> fields in the struct may only replace reserved fields while the rest must
+> >> stay unchanged.
+> >> 
+> >>>  	struct v4l2_fract interval;
+> >>>  	__u32 which;
+> >>> -	__u32 reserved[8];
+> >>> +	__u32 reserved[4];
+> >>>  };
+> >>>  
+> >>>  /**
 
-Before:
-    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 4294967274
-After:
-    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 0
-
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/macsec.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 5959e8817a1b8..926e2eb528fd4 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -3209,11 +3209,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 			  struct netlink_ext_ack *extack)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
-+	rx_handler_func_t *rx_handler;
-+	u8 icv_len = DEFAULT_ICV_LEN;
- 	struct net_device *real_dev;
--	int err;
-+	int err, mtu;
- 	sci_t sci;
--	u8 icv_len = DEFAULT_ICV_LEN;
--	rx_handler_func_t *rx_handler;
- 
- 	if (!tb[IFLA_LINK])
- 		return -EINVAL;
-@@ -3229,7 +3229,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 
- 	if (data && data[IFLA_MACSEC_ICV_LEN])
- 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
--	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
-+	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
-+	if (mtu < 0)
-+		dev->mtu = 0;
-+	else
-+		dev->mtu = mtu;
- 
- 	rx_handler = rtnl_dereference(real_dev->rx_handler);
- 	if (rx_handler && rx_handler != macsec_handle_frame)
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
