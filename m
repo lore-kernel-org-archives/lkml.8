@@ -2,182 +2,166 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9264C8300E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59276C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21FF20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB8A20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgD3KDU (ORCPT
+        id S1726808AbgD3KD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:03:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:51728 "EHLO foss.arm.com"
+        Thu, 30 Apr 2020 06:03:58 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45320 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgD3KDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:03:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A0311063;
-        Thu, 30 Apr 2020 03:03:18 -0700 (PDT)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B787D3F68F;
-        Thu, 30 Apr 2020 03:03:15 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 11:03:13 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Tao Zhou <ouwen210@hotmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] Documentation/sysctl: Document uclamp sysctl knobs
-Message-ID: <20200430100311.hcamfff363hl4bjk@e107158-lin>
-References: <20200428164134.5588-1-qais.yousef@arm.com>
- <20200428164134.5588-2-qais.yousef@arm.com>
- <BL0PR14MB377949FBF2B798EEC425EE719AAA0@BL0PR14MB3779.namprd14.prod.outlook.com>
+        id S1726378AbgD3KD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:03:58 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A76052007C5;
+        Thu, 30 Apr 2020 12:03:55 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A43D200769;
+        Thu, 30 Apr 2020 12:03:55 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7EB4520397;
+        Thu, 30 Apr 2020 12:03:55 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 13:03:55 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 01/13] mfd: Add i.MX generic mix support
+Message-ID: <20200430100355.zwl7wfbq64cikqxp@fsr-ub1664-175>
+References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+ <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
+ <20200417080747.GE2167633@dell>
+ <20200422091854.rhtkcfrdptwofngs@fsr-ub1664-175>
+ <AM6PR04MB4966B3527BF97918C1689A4580D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <20200424062727.GI3612@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BL0PR14MB377949FBF2B798EEC425EE719AAA0@BL0PR14MB3779.namprd14.prod.outlook.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200424062727.GI3612@dell>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/30/20 13:06, Tao Zhou wrote:
-> Hi,
+On 20-04-24 07:27:27, Lee Jones wrote:
+> On Thu, 23 Apr 2020, Aisheng Dong wrote:
 > 
-> On Tue, Apr 28, 2020 at 05:41:34PM +0100, Qais Yousef wrote:
-> > Uclamp exposes 3 sysctl knobs:
+> > > From: Abel Vesa <abel.vesa@nxp.com>
+> > > Sent: Wednesday, April 22, 2020 5:19 PM
+> > > On 20-04-17 09:07:47, Lee Jones wrote:
+> > > > On Wed, 15 Apr 2020, Abel Vesa wrote:
+> > > >
+> > > > > Some of the i.MX SoCs have a IP for interfacing the dedicated IPs
+> > > > > with clocks, resets and interrupts, plus some other specific control registers.
+> > > > > To allow the functionality to be split between drivers, this MFD
+> > > > > driver is added that has only two purposes: register the devices and
+> > > > > map the entire register addresses. Everything else is left to the
+> > > > > dedicated drivers that will bind to the registered devices.
+> > > > >
+> > > > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > > > ---
+> > > > >  drivers/mfd/Kconfig   | 11 +++++++++++
+> > > > >  drivers/mfd/Makefile  |  1 +
+> > > > >  drivers/mfd/imx-mix.c | 48
+> > > > > ++++++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  3 files changed, 60 insertions(+)
+> > > > >  create mode 100644 drivers/mfd/imx-mix.c
+> > > >
+> > > > For completeness - Arnd's reply to this patch:
+> > > >
+> > > 
+> > > I'm replying here to Arnd's reply.
+> > > 
+> > > I'm trying to give here a whole picture of the entire problem while the
+> > > documentation for i.MX8MP is _not yet_ public.
+> > > 
+> > > Historically, each IP would have its own enclosure for all the related GPRs.
+> > > Starting with i.MX8MP some GPRs (and some subparts) from the IP were placed
+> > > inside these mixes.
+> > > 
+> > > Audiomix for example, has multiple SAIs, a PLL, and some reset bits for EARC
+> > > and some GPRs for AudioDSP. This means that i.MX8MP has 7 SAIs, 1 EARC and
+> > > 1 AudioDSP.
+> > > Future platforms might have different numbers of SAIs, EARCs or AudioDSPs.
+> > > The PLL can't be placed in one of those SAIs and it was placed in audiomix.
+> > > The i.MX8MP has at least 4 of these mixes.
+> > > 
+> > > Now, the commonalities between all mixes are:
+> > >  - have their own power domains
+> > >  - driven by dedicated clock slice
+> > >  - contain clocks and resets
+> > >  - some very subsystem specific GPRs
+> > > 
+> > > Knowing that each mix has its own power domain, AFAICT, it needs to be
+> > > registered as a single device. Considering that it can have clocks (audiomix has
+> > > gates, muxes and plls), I believe that needs a clock driver, even more so since the
+> > > muxes need their parents from the platform clock driver. Same principle applies
+> > > to reset bits. The subsystem specific GPRs can be registered as syscon devices
+> > > and taken care of by its counterpart IP (e.g. the AudioDSP specific regs would be
+> > > taken care of by the DSP driver, if there is one).
+> > > 
+> > > Now based on all of the above, by using MFD we take care of the power domain
+> > > control for the entire mix, plus, the MFD doesn't have any kind of functionality
+> > > by its own, relying on its children devices that are populated based on what is in
+> > > the mix MFD devicetree node.
+> > > 
 > > 
-> > 	* sched_util_clamp_min
-> > 	* sched_util_clamp_max
-> > 	* sched_util_clamp_min_rt_default
->  
-> > Document them in sysctl/kernel.rst.
+> > How about doing like this which maybe can address Arnd's concerns?
+> > audiomix: audiomix@30e20000 {
+> >         compatible = "fsl,imx8mp-audiomix", "syscon";
+> >         reg = <0x30e20000 xxx>,
+> >               <0x30e20xxx xxx>;
+> >         reg-names = "audio", "reset", "...";
+> >         #clock-cells = <1>;
+> >         #reset-cells = <1>;
+> >         power-domains = <&audiomix_pd>;
+> > }
 > > 
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > CC: Jonathan Corbet <corbet@lwn.net>
-> > CC: Juri Lelli <juri.lelli@redhat.com>
-> > CC: Vincent Guittot <vincent.guittot@linaro.org>
-> > CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > CC: Steven Rostedt <rostedt@goodmis.org>
-> > CC: Ben Segall <bsegall@google.com>
-> > CC: Mel Gorman <mgorman@suse.de>
-> > CC: Luis Chamberlain <mcgrof@kernel.org>
-> > CC: Kees Cook <keescook@chromium.org>
-> > CC: Iurii Zaikin <yzaikin@google.com>
-> > CC: Quentin Perret <qperret@google.com>
-> > CC: Valentin Schneider <valentin.schneider@arm.com>
-> > CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-> > CC: Pavan Kondeti <pkondeti@codeaurora.org>
-> > CC: linux-doc@vger.kernel.org
-> > CC: linux-kernel@vger.kernel.org
-> > CC: linux-fsdevel@vger.kernel.org
-> > ---
-> >  Documentation/admin-guide/sysctl/kernel.rst | 48 +++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
+> > That means we have one combo driver registering two controllers (clk/reset), both use
+> > the same power domain as audiomix.
+> > And it can be easily extended to support more services provided by audiomix over syscon
+> > if needed.
+> > Then the 'dummy' MDF driver is not needed anymore.
 > > 
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> > index 0d427fd10941..e7255f71493c 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -940,6 +940,54 @@ Enables/disables scheduler statistics. Enabling this feature
-> >  incurs a small amount of overhead in the scheduler but is
-> >  useful for debugging and performance tuning.
-> >  
-> > +sched_util_clamp_min:
-> > +=====================
-> > +
-> > +Max allowed *minimum* utilization.
-> > +
-> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-> > +value.
-> > +
-> > +It means that any requested uclamp.min value cannot be greater than
->                                                           ^^^^^^^
+> > Jones & Arnd,
+> > How do you think?
 > 
-> Seems that 'greater' should be 'smaller'.
-> And the range is [sched_util_clamp_min:SCHED_CAPACITY_SCALE]
-> Uclamp request should not below this system value.
-> Or I am totally wrong for memory leak.
-
-No the range is [0:sched_util_clamp_min].
-
-It is what it is implemented by this condition:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/sched/core.c?h=v5.7-rc3#n913
-
-So if the requested uclamp.min value is greater than sched_util_clamp_min, we
-return sched_util_clamp_min.
-
-Thanks
-
---
-Qais Yousef
-
+> Sounds okay in principle.  Anything that prevents the existence of a
+> dummy (a.k.a. pointless) MFD must be seen as a positive move.
 > 
-> Thank you
-> 
-> > +sched_util_clamp_min, ie: it is restricted to the range
-> > +[0:sched_util_clamp_min].
-> > +
-> > +sched_util_clamp_max:
-> > +=====================
-> > +
-> > +Max allowed *maximum* utilization.
-> > +
-> > +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-> > +value.
-> > +
-> > +It means that any requested uclamp.max value cannot be greater than
-> > +sched_util_clamp_max, ie: it is restricted to the range
-> > +[0:sched_util_clamp_max].
-> > +
-> > +sched_util_clamp_min_rt_default:
-> > +================================
-> > +
-> > +By default Linux is tuned for performance. Which means that RT tasks always run
-> > +at the highest frequency and most capable (highest capacity) CPU (in
-> > +heterogeneous systems).
-> > +
-> > +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
-> > +SCHED_CAPACITY_SCALE (1024) by default. Which effectively boosts the tasks to
-> > +run at the highest frequency and bias them to run on the biggest CPU.
-> > +
-> > +This knob allows admins to change the default behavior when uclamp is being
-> > +used. In battery powered devices particularly, running at the maximum
-> > +capacity and frequency will increase energy consumption and shorten the battery
-> > +life.
-> > +
-> > +This knob is only effective for RT tasks which the user hasn't modified their
-> > +requested uclamp.min value via sched_setattr() syscall.
-> > +
-> > +This knob will not escape the constraint imposed by sched_util_clamp_min
-> > +defined above.
-> > +
-> > +Any modification is applied lazily on the next opportunity the scheduler needs
-> > +to calculate the effective value of uclamp.min of the task.
-> >  
-> >  seccomp
-> >  =======
-> > -- 
-> > 2.17.1
-> > 
+
+OK, I'll do it in a single driver and single dts node.
+
+But there might be an issue with the placement of this new driver.
+
+drivers/clk/imx/ could be an option, but the driver will use a lot
+of different APIs from different subsystems. Not the audiomix, but
+the future mixes.
+
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
