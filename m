@@ -2,325 +2,119 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE9DC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A36C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A588020870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520F02074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="efQJcaoa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xh5T5/zf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgD3WNj (ORCPT
+        id S1727986AbgD3WNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
+        Thu, 30 Apr 2020 18:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbgD3WNd (ORCPT
+        with ESMTP id S1726697AbgD3WNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:13:33 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EC6C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:33 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 23so7571231qkf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gN/TqDhg8bNL/QeGTI+szQXKqV9fUbqEbuIp2Eu9bQs=;
-        b=efQJcaoasuYbZGC9B1Cx8MFELGozCD/WNm7f4tVvAxGMZbLr5cQowkmZoWV8bT33aa
-         V+8vumksqodYEmlLzoPh9MvJBtSuJ19WPed3OYWZdoVaJtNF9ILpLbShTGjhiJurVbZS
-         ZFtGEMFF4bs4XMlq6hG2XanW6HJICjTYTkljQ/qI7dWwgeg09VTX7aJYS9qiaudiM0x0
-         +QUhsE1kg1TEdxICFtVFmprmr3gVjgjVvs9o0NHi3sKaUSsOpJSXDNhMGoHnALu3g33g
-         N7i0wHbn0whEjzqsVPtWA837n0VOU6AJWgwwxtrRvycCbaJgQCz8YaEMOP3Vl8OQ+Pfk
-         0Xxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gN/TqDhg8bNL/QeGTI+szQXKqV9fUbqEbuIp2Eu9bQs=;
-        b=t3uacbqC4jbVKyy9VnLWn62QE3maHTXntTRA0AySr1/OWuNjzJec+sCtCMF9Ld2nSf
-         v3ad3x8IxERqAWuN6nF8ke9E2yoZ4jRF8+4ByANJZVQuZxHV5f5rNQ8lOkNkTVVKmRK/
-         pXBdkbd+069sBEcTVMaZWlVv6YxmiAHU+KDXZ7vcrq9rVzr6vE86ASWiB31+yG8Gpjjt
-         qw366NdQCL8yriyDlPZDk3WH6E+e7kw08OjX4tsvH7M0OGbjgql+qGNoWWGPBJ6wCaIB
-         gQ8X9c64sY7CLIc7N//WSgqVeIrAX458+/kzdxXbt2+73lJ+5eSFAC2KjMnrBdBiwmMj
-         Qzkg==
-X-Gm-Message-State: AGi0PuZqPVC6oeTOE/wBXE71qoVM6+rAPK/L35NUEMh4Wwgq7Bvbn2j/
-        saXIX6p86iUaI6f4qoaN5lcfnE/1sn0=
-X-Google-Smtp-Source: APiQypIMKneW4EY2z2hCYzqlrFH8vXgyuwASAjiN2i/Dm7XHyah3kzMKKNW8h1QpwFM9PnSlvOcM0g==
-X-Received: by 2002:a37:bd81:: with SMTP id n123mr717459qkf.57.1588284812686;
-        Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
-Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id w42sm957028qtj.63.2020.04.30.15.13.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net
-Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/2] net: ipa: do not cache channel state
-Date:   Thu, 30 Apr 2020 17:13:23 -0500
-Message-Id: <20200430221323.5449-3-elder@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430221323.5449-1-elder@linaro.org>
-References: <20200430221323.5449-1-elder@linaro.org>
+        Thu, 30 Apr 2020 18:13:46 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC367C035494;
+        Thu, 30 Apr 2020 15:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bd0ZsvJx0qN41jGJdx6Q3uDOBTPr2hBuuON/tmj1OPE=; b=Xh5T5/zf36Iun9lfkNlEeXo/27
+        qpj6KB4345/Cc/m+7HWNU07yHSitTsHNxf43w29pLdFOLHOfVTYjI9tDCKGec6cEk83PJ5GqWyrFw
+        xCVrZDz49/b0wB7Yapm/GbhfIo0w0D60cKkNHaoxbLCv70va07R3hB3AxdrLrli8dB87fDS0Ndm9j
+        m+USiBB+G6dkvHAgLi3/Sy2qxmHFNVeKf9RAg+FPui7Hgtq0Ig17TaGN1/AGUg4WEKCDRMHpCrK7u
+        9rIqjC7QpANlp3+ie8aKQDzn2D4NAtlZhS85GUMY3G9CNKyyxd/3mIlLD0DRHnazAYqhFC6STfv7G
+        vA7SVRlQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUHR4-0007zt-IY; Thu, 30 Apr 2020 22:13:38 +0000
+Date:   Thu, 30 Apr 2020 15:13:38 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Yafang Shao <laoar.shao@gmail.com>, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        Anton Altaparmakov <anton@tuxera.com>,
+        linux-ntfs-dev@lists.sourceforge.net,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org, Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Roman Gushchin <guro@fb.com>,
+        Andreas Dilger <adilger@dilger.ca>
+Subject: Re: [RFC PATCH V2 1/9] include/linux/pagemap.h: introduce
+ attach/clear_page_private
+Message-ID: <20200430221338.GY29705@bombadil.infradead.org>
+References: <20200430214450.10662-1-guoqing.jiang@cloud.ionos.com>
+ <20200430214450.10662-2-guoqing.jiang@cloud.ionos.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430214450.10662-2-guoqing.jiang@cloud.ionos.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible for a GSI channel's state to be changed as a result
-of an action by a different execution environment.  Specifically,
-the modem is able to issue a GSI generic command that causes a state
-change on a GSI channel associated with the AP.
+On Thu, Apr 30, 2020 at 11:44:42PM +0200, Guoqing Jiang wrote:
+> +/**
+> + * attach_page_private - attach data to page's private field and set PG_private.
+> + * @page: page to be attached and set flag.
+> + * @data: data to attach to page's private field.
+> + *
+> + * Need to take reference as mm.h said "Setting PG_private should also increment
+> + * the refcount".
+> + */
 
-A channel's state only needs to be known when a channel is allocated
-or deallocaed, started or stopped, or reset.  So there is little
-value in caching the state anyway.
+I don't think this will read well when added to the API documentation.
+Try this:
 
-Stop recording a copy of the channel's last known state, and instead
-fetch the true state from hardware whenever it's needed.  In such
-cases, *do* record the state in a local variable, in case an error
-message reports it (so the value reported is the value seen).
+/**
+ * attach_page_private - Attach private data to a page.
+ * @page: Page to attach data to.
+ * @data: Data to attach to page.
+ *
+ * Attaching private data to a page increments the page's reference count.
+ * The data must be detached before the page will be freed.
+ */
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/gsi.c | 87 +++++++++++++++++++++++++++----------------
- drivers/net/ipa/gsi.h |  3 +-
- 2 files changed, 55 insertions(+), 35 deletions(-)
+> +/**
+> + * clear_page_private - clear page's private field and PG_private.
+> + * @page: page to be cleared.
+> + *
+> + * The counterpart function of attach_page_private.
+> + * Return: private data of page or NULL if page doesn't have private data.
+> + */
 
-diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
-index 6946c39b664a..8184d34124b7 100644
---- a/drivers/net/ipa/gsi.c
-+++ b/drivers/net/ipa/gsi.c
-@@ -415,7 +415,7 @@ static void gsi_evt_ring_de_alloc_command(struct gsi *gsi, u32 evt_ring_id)
- 			evt_ring->state);
- }
- 
--/* Return the hardware's notion of the current state of a channel */
-+/* Fetch the current state of a channel from hardware */
- static enum gsi_channel_state gsi_channel_state(struct gsi_channel *channel)
- {
- 	u32 channel_id = gsi_channel_id(channel);
-@@ -433,16 +433,18 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
- {
- 	struct completion *completion = &channel->completion;
- 	u32 channel_id = gsi_channel_id(channel);
-+	struct gsi *gsi = channel->gsi;
- 	u32 val;
- 
- 	val = u32_encode_bits(channel_id, CH_CHID_FMASK);
- 	val |= u32_encode_bits(opcode, CH_OPCODE_FMASK);
- 
--	if (gsi_command(channel->gsi, GSI_CH_CMD_OFFSET, val, completion))
-+	if (gsi_command(gsi, GSI_CH_CMD_OFFSET, val, completion))
- 		return 0;	/* Success! */
- 
--	dev_err(channel->gsi->dev, "GSI command %u to channel %u timed out "
--		"(state is %u)\n", opcode, channel_id, channel->state);
-+	dev_err(gsi->dev,
-+		"GSI command %u to channel %u timed out (state is %u)\n",
-+		opcode, channel_id, gsi_channel_state(channel));
- 
- 	return -ETIMEDOUT;
- }
-@@ -451,18 +453,21 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
- static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
- {
- 	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	enum gsi_channel_state state;
- 	int ret;
- 
- 	/* Get initial channel state */
--	channel->state = gsi_channel_state(channel);
--
--	if (channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
-+	state = gsi_channel_state(channel);
-+	if (state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
- 		return -EINVAL;
- 
- 	ret = gsi_channel_command(channel, GSI_CH_ALLOCATE);
--	if (!ret && channel->state != GSI_CHANNEL_STATE_ALLOCATED) {
-+
-+	/* Channel state will normally have been updated */
-+	state = gsi_channel_state(channel);
-+	if (!ret && state != GSI_CHANNEL_STATE_ALLOCATED) {
- 		dev_err(gsi->dev, "bad channel state (%u) after alloc\n",
--			channel->state);
-+			state);
- 		ret = -EIO;
- 	}
- 
-@@ -472,18 +477,21 @@ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
- /* Start an ALLOCATED channel */
- static int gsi_channel_start_command(struct gsi_channel *channel)
- {
--	enum gsi_channel_state state = channel->state;
-+	enum gsi_channel_state state;
- 	int ret;
- 
-+	state = gsi_channel_state(channel);
- 	if (state != GSI_CHANNEL_STATE_ALLOCATED &&
- 	    state != GSI_CHANNEL_STATE_STOPPED)
- 		return -EINVAL;
- 
- 	ret = gsi_channel_command(channel, GSI_CH_START);
--	if (!ret && channel->state != GSI_CHANNEL_STATE_STARTED) {
-+
-+	/* Channel state will normally have been updated */
-+	state = gsi_channel_state(channel);
-+	if (!ret && state != GSI_CHANNEL_STATE_STARTED) {
- 		dev_err(channel->gsi->dev,
--			"bad channel state (%u) after start\n",
--			channel->state);
-+			"bad channel state (%u) after start\n", state);
- 		ret = -EIO;
- 	}
- 
-@@ -493,23 +501,27 @@ static int gsi_channel_start_command(struct gsi_channel *channel)
- /* Stop a GSI channel in STARTED state */
- static int gsi_channel_stop_command(struct gsi_channel *channel)
- {
--	enum gsi_channel_state state = channel->state;
-+	enum gsi_channel_state state;
- 	int ret;
- 
-+	state = gsi_channel_state(channel);
- 	if (state != GSI_CHANNEL_STATE_STARTED &&
- 	    state != GSI_CHANNEL_STATE_STOP_IN_PROC)
- 		return -EINVAL;
- 
- 	ret = gsi_channel_command(channel, GSI_CH_STOP);
--	if (ret || channel->state == GSI_CHANNEL_STATE_STOPPED)
-+
-+	/* Channel state will normally have been updated */
-+	state = gsi_channel_state(channel);
-+	if (ret || state == GSI_CHANNEL_STATE_STOPPED)
- 		return ret;
- 
- 	/* We may have to try again if stop is in progress */
--	if (channel->state == GSI_CHANNEL_STATE_STOP_IN_PROC)
-+	if (state == GSI_CHANNEL_STATE_STOP_IN_PROC)
- 		return -EAGAIN;
- 
--	dev_err(channel->gsi->dev, "bad channel state (%u) after stop\n",
--		channel->state);
-+	dev_err(channel->gsi->dev,
-+		"bad channel state (%u) after stop\n", state);
- 
- 	return -EIO;
- }
-@@ -517,41 +529,49 @@ static int gsi_channel_stop_command(struct gsi_channel *channel)
- /* Reset a GSI channel in ALLOCATED or ERROR state. */
- static void gsi_channel_reset_command(struct gsi_channel *channel)
- {
-+	enum gsi_channel_state state;
- 	int ret;
- 
- 	msleep(1);	/* A short delay is required before a RESET command */
- 
--	if (channel->state != GSI_CHANNEL_STATE_STOPPED &&
--	    channel->state != GSI_CHANNEL_STATE_ERROR) {
-+	state = gsi_channel_state(channel);
-+	if (state != GSI_CHANNEL_STATE_STOPPED &&
-+	    state != GSI_CHANNEL_STATE_ERROR) {
- 		dev_err(channel->gsi->dev,
--			"bad channel state (%u) before reset\n",
--			channel->state);
-+			"bad channel state (%u) before reset\n", state);
- 		return;
- 	}
- 
- 	ret = gsi_channel_command(channel, GSI_CH_RESET);
--	if (!ret && channel->state != GSI_CHANNEL_STATE_ALLOCATED)
-+
-+	/* Channel state will normally have been updated */
-+	state = gsi_channel_state(channel);
-+	if (!ret && state != GSI_CHANNEL_STATE_ALLOCATED)
- 		dev_err(channel->gsi->dev,
--			"bad channel state (%u) after reset\n",
--			channel->state);
-+			"bad channel state (%u) after reset\n", state);
- }
- 
- /* Deallocate an ALLOCATED GSI channel */
- static void gsi_channel_de_alloc_command(struct gsi *gsi, u32 channel_id)
- {
- 	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	enum gsi_channel_state state;
- 	int ret;
- 
--	if (channel->state != GSI_CHANNEL_STATE_ALLOCATED) {
--		dev_err(gsi->dev, "bad channel state (%u) before dealloc\n",
--			channel->state);
-+	state = gsi_channel_state(channel);
-+	if (state != GSI_CHANNEL_STATE_ALLOCATED) {
-+		dev_err(gsi->dev,
-+			"bad channel state (%u) before dealloc\n", state);
- 		return;
- 	}
- 
- 	ret = gsi_channel_command(channel, GSI_CH_DE_ALLOC);
--	if (!ret && channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
--		dev_err(gsi->dev, "bad channel state (%u) after dealloc\n",
--			channel->state);
-+
-+	/* Channel state will normally have been updated */
-+	state = gsi_channel_state(channel);
-+	if (!ret && state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
-+		dev_err(gsi->dev,
-+			"bad channel state (%u) after dealloc\n", state);
- }
- 
- /* Ring an event ring doorbell, reporting the last entry processed by the AP.
-@@ -778,6 +798,7 @@ int gsi_channel_start(struct gsi *gsi, u32 channel_id)
- int gsi_channel_stop(struct gsi *gsi, u32 channel_id)
- {
- 	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	enum gsi_channel_state state;
- 	u32 retries;
- 	int ret;
- 
-@@ -787,7 +808,8 @@ int gsi_channel_stop(struct gsi *gsi, u32 channel_id)
- 	 * STOP command timed out.  We won't stop a channel if stopping it
- 	 * was successful previously (so we still want the freeze above).
- 	 */
--	if (channel->state == GSI_CHANNEL_STATE_STOPPED)
-+	state = gsi_channel_state(channel);
-+	if (state == GSI_CHANNEL_STATE_STOPPED)
- 		return 0;
- 
- 	/* RX channels might require a little time to enter STOPPED state */
-@@ -941,7 +963,6 @@ static void gsi_isr_chan_ctrl(struct gsi *gsi)
- 		channel_mask ^= BIT(channel_id);
- 
- 		channel = &gsi->channel[channel_id];
--		channel->state = gsi_channel_state(channel);
- 
- 		complete(&channel->completion);
- 	}
-diff --git a/drivers/net/ipa/gsi.h b/drivers/net/ipa/gsi.h
-index 0698ff1ae7a6..19471017fadf 100644
---- a/drivers/net/ipa/gsi.h
-+++ b/drivers/net/ipa/gsi.h
-@@ -113,8 +113,7 @@ struct gsi_channel {
- 	u16 tre_count;
- 	u16 event_count;
- 
--	struct completion completion;	/* signals channel state changes */
--	enum gsi_channel_state state;
-+	struct completion completion;	/* signals channel command completion */
- 
- 	struct gsi_ring tre_ring;
- 	u32 evt_ring_id;
--- 
-2.20.1
+Seems to me that the opposite of "attach" is "detach", not "clear".
 
+/**
+ * detach_page_private - Detach private data from a page.
+ * @page: Page to detach data from.
+ *
+ * Removes the data that was previously attached to the page and decrements
+ * the refcount on the page.
+ *
+ * Return: Data that was attached to the page.
+ */
