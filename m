@@ -2,144 +2,96 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0493C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351E0C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7EC2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:58:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6t4uqKh"
+	by mail.kernel.org (Postfix) with ESMTP id 108F22073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgD3D6u (ORCPT
+        id S1726754AbgD3D7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:58:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726453AbgD3D6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:58:50 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB40C035494;
-        Wed, 29 Apr 2020 20:58:48 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c18so31940ile.5;
-        Wed, 29 Apr 2020 20:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M+itFqMzz7ThWZKcLuQWzep+uBywhDgUdjtSyvWir0A=;
-        b=K6t4uqKhlLiVCOvHHnfn7uZCyC9NoNl1R56rKLl3c07k3kmUAiZwjvxwt4Qnq37WF7
-         VNgH3/oIiiHYRsbErGlPq2MX4f3T9V59jYn57yNqp3raQY8UYD93+7D9KP6xQjiklK+S
-         Qi4FAXQibliGyxBG9BvvYRntYZRoFOW7K+VFthODpKip1kWfFSAVDMiiHuOXR3dRb3lW
-         D/OxmFfMZg6PZ1xkFQX1ZmteVUKZO8Yt8C/jyoxPgaBv2ON4Qxg2j3apH6yVnjmhi7lP
-         dPH8MeSGv7QcWDP2b0vInXiS21WlWazeaJMniNVqQkhOG7GgWcvlC5Tlvbdw0a63gAF5
-         us9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M+itFqMzz7ThWZKcLuQWzep+uBywhDgUdjtSyvWir0A=;
-        b=F6pxMFf584FFuO8c3WhZcHUejF7Mle4rBZXNlG48ZuJ9bZdYXH8SwB8Ur7fXGhOO6p
-         mQXAWlCXTfNk13vom1W+G7FUBHF1B9rSSRvI4kJsCf+1NFHiqE3qSH5klA/AI+/75sl/
-         k2ijOJoy36DQZ0QyE8AlGHBFvWBAzSVrEryhZ05+FywBYt7PibuS30jexnByP4s5s+iI
-         ks6wvnlisKdYfhZH5y4r3S0XjIHDmA+xSZcktcez6lg/WwhuiFRJEQAyBeIb3pu1fl2O
-         cmVgO6tvH1/9XC2j+7COLNg3B8xnTWvSYJpZvJNb/ZFaivO9lzf1AP3bgp1pn0bIEC77
-         aLrg==
-X-Gm-Message-State: AGi0PuZoPjrQLcdhGDHdVKra7F4W2ovv81KbUIxsP+eVNequvEeYQxVB
-        RZCDHG5hMo3y0+IDGRg8s5qr6NraA42cqfyyQA8=
-X-Google-Smtp-Source: APiQypJfj+2iP12ImL8Uqdjbw9c8nGy6u7ienyamsjDBxjC1bY7xoUznZGmMTlOrrsIfe3VT2sIUeWH8r3og68HqXio=
-X-Received: by 2002:a92:cece:: with SMTP id z14mr36110ilq.147.1588219128264;
- Wed, 29 Apr 2020 20:58:48 -0700 (PDT)
+        Wed, 29 Apr 2020 23:59:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52651 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbgD3D7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 23:59:22 -0400
+IronPort-SDR: ZJhZhyHehvW/g29fNP4/8+w3qqlrmaEUq+zFfrn4MeCLpcq/Syf43iClscJoKJsC7JfeQrOxVy
+ 3gvxA9SUjQag==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 20:59:22 -0700
+IronPort-SDR: VOTVsbRJbD49pzQSkQdPM+6nI5c9fCzBN6AfdleYJKGnsaDNaYTIURnGp+qAn2J48BV80oxTue
+ xpdDqzPZtADw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="432812461"
+Received: from aanderso-mobl3.amr.corp.intel.com (HELO localhost) ([10.252.52.101])
+  by orsmga005.jf.intel.com with ESMTP; 29 Apr 2020 20:59:12 -0700
+Date:   Thu, 30 Apr 2020 06:59:11 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Dr. Greg" <greg@enjellic.com>, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200430035850.GC31820@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <20200426165753.GA11046@wind.enjellic.com>
+ <20200429052329.GD8452@linux.intel.com>
+ <20200429151459.GC15992@linux.intel.com>
 MIME-Version: 1.0
-References: <1588216490-60282-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1588216490-60282-1-git-send-email-zou_wei@huawei.com>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Thu, 30 Apr 2020 12:06:19 +0800
-Message-ID: <CAAhV-H4Zh60bLLVkhZ7fJTRkBvqxiCuogHyQv-S9rC_e0+HZNw@mail.gmail.com>
-Subject: Re: [PATCH -next] KVM: MIPS/VZ: Remove unneeded semicolon
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429151459.GC15992@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Huacai Chen <chenhc@lemote.com>
+On Wed, Apr 29, 2020 at 08:14:59AM -0700, Sean Christopherson wrote:
+> On Wed, Apr 29, 2020 at 08:23:29AM +0300, Jarkko Sakkinen wrote:
+> > On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
+> > > On Wed, Apr 22, 2020 at 12:52:56AM +0300, Jarkko Sakkinen wrote:
+> > > 
+> > > Good day, I hope the weekend is going well for everyone.
+> > > 
+> > > > Intel(R) SGX is a set of CPU instructions that can be used by applications
+> > > > to set aside private regions of code and data. The code outside the enclave
+> > > > is disallowed to access the memory inside the enclave by the CPU access
+> > > > control.
+> > > >
+> > > > ... [ elided ] ..
+> > > > 
+> > > > The current implementation requires that the firmware sets
+> > > > IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
+> > > > decide what enclaves it wants run. The implementation does not create
+> > > > any bottlenecks to support read-only MSRs later on.
+> > > 
+> > > It seems highly unlikely that a driver implementation with any type of
+> > > support for read-only launch control registers would ever get into the
+> > > kernel.  All one needs to do is review the conversations that Matthew
+> > > Garrett's lockdown patches engender to get a sense of that, ie:
+> > > 
+> > > https://lwn.net/Articles/818277/
+> > 
+> > We do not require read-only MSRs.
+> 
+> Greg is pointing out the opposite, that supporting read-only MSRs is highly
+> unlikely to ever be supported in the mainline kernel.
 
-On Thu, Apr 30, 2020 at 11:08 AM Zou Wei <zou_wei@huawei.com> wrote:
->
-> Fixes coccicheck warnings:
->
-> arch/mips/kvm/vz.c:1186:4-5: Unneeded semicolon
-> arch/mips/kvm/vz.c:1195:3-4: Unneeded semicolon
-> arch/mips/kvm/vz.c:1949:3-4: Unneeded semicolon
-> arch/mips/kvm/vz.c:1121:2-3: Unneeded semicolon
-> arch/mips/kvm/vz.c:2188:3-4: Unneeded semicolon
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> ---
->  arch/mips/kvm/vz.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
-> index dde2088..389dd0f 100644
-> --- a/arch/mips/kvm/vz.c
-> +++ b/arch/mips/kvm/vz.c
-> @@ -1118,7 +1118,7 @@ static enum emulation_result kvm_vz_gpsi_cache(union mips_instruction inst,
->                 break;
->         default:
->                 break;
-> -       };
-> +       }
->
->         kvm_err("@ %#lx/%#lx CACHE (cache: %#x, op: %#x, base[%d]: %#lx, offset: %#x\n",
->                 curr_pc, vcpu->arch.gprs[31], cache, op, base, arch->gprs[base],
-> @@ -1183,7 +1183,7 @@ static enum emulation_result kvm_trap_vz_handle_gpsi(u32 cause, u32 *opc,
->                                 trace_kvm_hwr(vcpu, KVM_TRACE_RDHWR,
->                                               KVM_TRACE_HWR(rd, sel), 0);
->                                 goto unknown;
-> -                       };
-> +                       }
->
->                         trace_kvm_hwr(vcpu, KVM_TRACE_RDHWR,
->                                       KVM_TRACE_HWR(rd, sel), arch->gprs[rt]);
-> @@ -1192,7 +1192,7 @@ static enum emulation_result kvm_trap_vz_handle_gpsi(u32 cause, u32 *opc,
->                         break;
->                 default:
->                         goto unknown;
-> -               };
-> +               }
->                 break;
->  unknown:
->
-> @@ -1946,7 +1946,7 @@ static int kvm_vz_get_one_reg(struct kvm_vcpu *vcpu,
->                 default:
->                         *v = (long)kvm_read_c0_guest_prid(cop0);
->                         break;
-> -               };
-> +               }
->                 break;
->         case KVM_REG_MIPS_CP0_EBASE:
->                 *v = kvm_vz_read_gc0_ebase();
-> @@ -2185,7 +2185,7 @@ static int kvm_vz_set_one_reg(struct kvm_vcpu *vcpu,
->                 default:
->                         kvm_write_c0_guest_prid(cop0, v);
->                         break;
-> -               };
-> +               }
->                 break;
->         case KVM_REG_MIPS_CP0_EBASE:
->                 kvm_vz_write_gc0_ebase(v);
-> --
-> 2.6.2
->
+In a nutshell, what is wrong in the current code changes and what
+*exactly* should we change? This is way too high level at the moment at
+least for my limited brain capacity.
+
+/Jarkko
