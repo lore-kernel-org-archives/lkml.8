@@ -2,151 +2,180 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93537C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525AFC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742692076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="m0nCqzOK"
+	by mail.kernel.org (Postfix) with ESMTP id 2FEE32063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255157;
+	bh=FUdsD2vebhAd1eNJ+Evte29+cETCgh/IN/PwJdEDKaM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jk2uG87fm2Q0PaoBC4HQ5AcB/k0HrEOVD0Ye59TNWB5xwss0mHZ26mdOkPc4KncfU
+	 WpMRAToJPARCvkc2dAv73ZePOStdFMQan9B1RZcDbWsjngjg8wL/BUM3lw09lbYPlL
+	 8ZIN5gl6PWLTw6WrbDyY5yxkyhpLLSXwUyDPYqI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgD3N7N (ORCPT
+        id S1729189AbgD3N7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:59:13 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37628 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729166AbgD3N7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:59:09 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E6246321;
-        Thu, 30 Apr 2020 15:59:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1588255146;
-        bh=GhmU8YETMOVIz97f3awqWGN1baPnypD27desAmZxvnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m0nCqzOK1A1eW641+wJC9vh12s4/oo687inR7KwWAJ0KfqiiA33qRsLDxYcMx6ii6
-         nLBqmMij+oZZhbjtiWkUkW2pvzh+f/SZwuwlfKT6O9T4OqGBt/h223EPPZfeexVlUe
-         6Cgq6VmXqw2elz+zFvEkTwg+mGUak8lKvy5fWD4o=
-Date:   Thu, 30 Apr 2020 16:59:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
-Message-ID: <20200430135904.GI5856@pendragon.ideasonboard.com>
-References: <20200414200151.80089-1-daniel@qtec.com>
- <20200414200151.80089-2-daniel@qtec.com>
- <20200430094233.GE867@valkosipuli.retiisi.org.uk>
- <20200430111014.GD5856@pendragon.ideasonboard.com>
- <20200430133125.GL867@valkosipuli.retiisi.org.uk>
+        Thu, 30 Apr 2020 09:59:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbgD3Nya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A2EE20873;
+        Thu, 30 Apr 2020 13:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254869;
+        bh=FUdsD2vebhAd1eNJ+Evte29+cETCgh/IN/PwJdEDKaM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UueseLLHhnpomGaBpxqETpwjFRReAnM6UWgsoLYgip2UehVIHb2i1phVfAQEALDJW
+         HQXzvfUB+Di9oYBMH+/VDV2KY+fKSDOBOa5Zh7lOLv/RPuZJAIvTYuAqgDb1ytaeJy
+         c28CrqoduAEYkgZerrm+q827XV7JIu0pRJplzplw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 24/27] lib/mpi: Fix building for powerpc with clang
+Date:   Thu, 30 Apr 2020 09:53:59 -0400
+Message-Id: <20200430135402.20994-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
+References: <20200430135402.20994-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200430133125.GL867@valkosipuli.retiisi.org.uk>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-On Thu, Apr 30, 2020 at 04:31:25PM +0300, Sakari Ailus wrote:
-> On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
-> > On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
-> >> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
-> >>> Add min and max structures to the v4l2-subdev callback in order to allow
-> >>> the subdev to return a range of valid frame intervals.
-> >>> 
-> >>> This would operate similar to the struct v4l2_subdev_frame_size_enum and
-> >>> its max and min values for the width and the height. In this case, the
-> >>> possibility to return a frame interval range is added to the v4l2-subdev level
-> >>> whenever the v4l2 device operates in step-wise or continuous mode.
-> >> 
-> >> The current API only allows providing a list of enumerated values. That is
-> >> limiting indeed, especially on register list based sensor drivers where
-> >> vertical blanking is configurable.
-> >> 
-> >> I guess this could be extended to cover what V4L2, more or less. If we tell
-> >> it's a range, is it assumed to be contiguous? We don't have try operation
-> >> for the frame interval, but I guess set is good enough. The fraction is
-> >> probably best for TV standards but it's not what camera sensors natively
-> >> use. (But for a register list based driver, the established practice
-> >> remains to use frame interval.)
-> >> 
-> >> I'm also wondering the effect on existing user space; if a driver gives a
-> >> range, how will the existing programs work with such a driver?
-> >> 
-> >> I'd add an anonymous union with the interval field, the other field being
-> >> min_interval. Then the current applications would get the minimum interval
-> >> and still continue to function. I guess compilers are modern enough these
-> >> days we can have an anonymous union in the uAPI?
-> > 
-> > We can discuss all this, but given patch 3/3 in this series, I think
-> > this isn't the right API :-) The sensor driver should not expose the
-> > frame interval enumeration API. It should instead expose control of the
-> > frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
-> > V4L2_CID_VBLANK.
-> > 
-> 
-> That would require also exposing the size of the pixel array (and the
-> analogue crop), in order to provide all the necessary information to
-> calculate the frame rate. No objections there; this is a new driver.
-> 
-> There are however existing drivers that implement s_frame_interval subdev
-> ioctl; those might benefit from this one. Or would you implement the pixel
-> rate based control as well, and effectively deprecate the s_frame_interval
-> on those?
+[ Upstream commit 5990cdee689c6885b27c6d969a3d58b09002b0bc ]
 
-That's what I would recommend, yes. I would only keep
-.s_frame_interval() for sensors that expose that concept at the hardware
-level (for instance with an integrated ISP whose firmware exposes a
-frame interval or frame rate control).
+0day reports over and over on an powerpc randconfig with clang:
 
-> >>> Signed-off-by: Daniel Gomez <daniel@qtec.com>
-> >>> ---
-> >>>  include/uapi/linux/v4l2-subdev.h | 6 +++++-
-> >>>  1 file changed, 5 insertions(+), 1 deletion(-)
-> >>> 
-> >>> diff --git a/include/uapi/linux/v4l2-subdev.h b/include/uapi/linux/v4l2-subdev.h
-> >>> index 03970ce30741..ee15393c58cd 100644
-> >>> --- a/include/uapi/linux/v4l2-subdev.h
-> >>> +++ b/include/uapi/linux/v4l2-subdev.h
-> >>> @@ -117,6 +117,8 @@ struct v4l2_subdev_frame_interval {
-> >>>   * @code: format code (MEDIA_BUS_FMT_ definitions)
-> >>>   * @width: frame width in pixels
-> >>>   * @height: frame height in pixels
-> >>> + * @min_interval: min frame interval in seconds
-> >>> + * @max_interval: max frame interval in seconds
-> >>>   * @interval: frame interval in seconds
-> >>>   * @which: format type (from enum v4l2_subdev_format_whence)
-> >>>   */
-> >>> @@ -126,9 +128,11 @@ struct v4l2_subdev_frame_interval_enum {
-> >>>  	__u32 code;
-> >>>  	__u32 width;
-> >>>  	__u32 height;
-> >>> +	struct v4l2_fract min_interval;
-> >>> +	struct v4l2_fract max_interval;
-> >> 
-> >> This changes the memory layout of the struct and breaks the ABI. Any new
-> >> fields in the struct may only replace reserved fields while the rest must
-> >> stay unchanged.
-> >> 
-> >>>  	struct v4l2_fract interval;
-> >>>  	__u32 which;
-> >>> -	__u32 reserved[8];
-> >>> +	__u32 reserved[4];
-> >>>  };
-> >>>  
-> >>>  /**
+lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a
+inline asm context requiring an l-value: remove the cast or build with
+-fheinous-gnu-extensions
 
+Remove the superfluous casts, which have been done previously for x86
+and arm32 in commit dea632cadd12 ("lib/mpi: fix build with clang") and
+commit 7b7c1df2883d ("lib/mpi/longlong.h: fix building with 32-bit
+x86").
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://github.com/ClangBuiltLinux/linux/issues/991
+Link: https://lore.kernel.org/r/20200413195041.24064-1-natechancellor@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ lib/mpi/longlong.h | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/lib/mpi/longlong.h b/lib/mpi/longlong.h
+index 08c60d10747fd..e01b705556aa6 100644
+--- a/lib/mpi/longlong.h
++++ b/lib/mpi/longlong.h
+@@ -756,22 +756,22 @@ do {									\
+ do { \
+ 	if (__builtin_constant_p(bh) && (bh) == 0) \
+ 		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "%r" ((USItype)(ah)), \
+ 		"%r" ((USItype)(al)), \
+ 		"rI" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
+ 		__asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "%r" ((USItype)(ah)), \
+ 		"%r" ((USItype)(al)), \
+ 		"rI" ((USItype)(bl))); \
+ 	else \
+ 		__asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "%r" ((USItype)(ah)), \
+ 		"r" ((USItype)(bh)), \
+ 		"%r" ((USItype)(al)), \
+@@ -781,36 +781,36 @@ do { \
+ do { \
+ 	if (__builtin_constant_p(ah) && (ah) == 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(bh)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(ah) && (ah) == ~(USItype) 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(bh)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(bh) && (bh) == 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(ah)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else if (__builtin_constant_p(bh) && (bh) == ~(USItype) 0) \
+ 		__asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(ah)), \
+ 		"rI" ((USItype)(al)), \
+ 		"r" ((USItype)(bl))); \
+ 	else \
+ 		__asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2" \
+-		: "=r" ((USItype)(sh)), \
+-		"=&r" ((USItype)(sl)) \
++		: "=r" (sh), \
++		"=&r" (sl) \
+ 		: "r" ((USItype)(ah)), \
+ 		"r" ((USItype)(bh)), \
+ 		"rI" ((USItype)(al)), \
+@@ -821,7 +821,7 @@ do { \
+ do { \
+ 	USItype __m0 = (m0), __m1 = (m1); \
+ 	__asm__ ("mulhwu %0,%1,%2" \
+-	: "=r" ((USItype) ph) \
++	: "=r" (ph) \
+ 	: "%r" (__m0), \
+ 	"r" (__m1)); \
+ 	(pl) = __m0 * __m1; \
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
