@@ -2,92 +2,144 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088E1C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA6BC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBB82206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1DC20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255266;
+	bh=Mb6CEoGitb2lEIgQ7hVXRgTVv0vpAHGZF1/Z+OeSdqs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i4hXi6nrOyeZGhlJFWLNvVo0JuKPvQC/md7nTvpcWei3fjzSbK1rrC4KWSRbaZxns
+	 0boXyESEaf4A6kCJLFa81wi/E2i5u+ZB/7cy2iZaXXLHF09tjdcsR508pLT8KzkugV
+	 aRLUo/ipJdeWoeImwR37HN8I2RWi1AKZ2OrZsLso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgD3OA6 (ORCPT
+        id S1729041AbgD3OBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:00:58 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40004 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728580AbgD3OAy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:00:54 -0400
-Received: by mail-ot1-f68.google.com with SMTP id i27so4960605ota.7;
-        Thu, 30 Apr 2020 07:00:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=56+hnJF7fvucpKqv2sY0gAy5FVHsLurCXmxr1aGtcTI=;
-        b=cturxDu5JIDIp5o6PGnU9/IzWxKh3SG1Vrn9xTJ36O1PR57ccgRdHGX9VSNxxXcf6N
-         IfEANJ6QMdLgpHFpP5ii7dlDqRAYhCofAxd/r6W9in++0ba4dVLEwALaj2q7GMh9u6XA
-         QGeegR+CPbfoGVQLJOlfK34nhbblkyRKS6vrivkYCpLe8tHe5kDihkW1h3h9++IuPDm5
-         v1DDUM0nC0pbWPQai6Sh+Z/weDYPa7xKOwH5fBiND1uQ8AbZbMiRNRBpBNUxMi6zZ3s2
-         c7xs0CQJvopjjJgPmqbe+TfRCREHpVWgT4mVIl2MmnP9ea4r6FWFJHLZaOM6s2bRR3MP
-         RkSw==
-X-Gm-Message-State: AGi0Pua1EDpOnM78uLp2Hp1YtmhIOahKlFlFU8iOM/SIbwRbH8kTHHE8
-        YPAZ6QON8LO888TOBSWYdrQNWpKuxEGyg1X2Ni0=
-X-Google-Smtp-Source: APiQypJ6KaeAGcTKjVOK3+7+brBeC98O0eTIIpFYmbi9JxFQKsEFhK22k9egoZvh71YGTW6h2ODRjWwTyt+WgWUnMsc=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr2561994otm.145.1588255253287;
- Thu, 30 Apr 2020 07:00:53 -0700 (PDT)
+        Thu, 30 Apr 2020 10:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728886AbgD3NyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53A582072A;
+        Thu, 30 Apr 2020 13:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254845;
+        bh=Mb6CEoGitb2lEIgQ7hVXRgTVv0vpAHGZF1/Z+OeSdqs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E0uDLeQ8wKoW5QOLA1kOxOgBQDn/fG6uI4jqRnZ7GEkvwPBGrcg1NzTaZPX5jAyA0
+         udKq9SBaKjErzCb7lqxEzeZL2/QEDJUaglqWFZYCE/adcJWX6b9Ce0hwYPMOVmkUb3
+         kUikAkpwpM1zjhEuu3fW66D7xV0hOX2PanjJX8UI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Olivier Moysan <olivier.moysan@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 02/27] iio: adc: stm32-adc: fix sleep in atomic context
+Date:   Thu, 30 Apr 2020 09:53:37 -0400
+Message-Id: <20200430135402.20994-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
+References: <20200430135402.20994-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:00:42 +0200
-Message-ID: <CAMuHMdVn0j8fKD_LH7gKBadjA-g+eNE1=Ld5M+8=NM2VKt-HCA@mail.gmail.com>
-Subject: Re: [PATCH 11/18] ARM: dts: r8a7742: Add SYS-DMAC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Describe SYS-DMAC0/1 in the R8A7742 device tree.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[ Upstream commit e2042d2936dfc84e9c600fe9b9d0039ca0e54b7d ]
 
-Gr{oetje,eeting}s,
+This commit fixes the following error:
+"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
 
-                        Geert
+In DMA mode suppress the trigger irq handler, and make the buffer
+transfers directly in DMA callback, instead.
 
+Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 258a4712167a2..3cfb2d4b24412 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -1311,8 +1311,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
+ static void stm32_adc_dma_buffer_done(void *data)
+ {
+ 	struct iio_dev *indio_dev = data;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	int residue = stm32_adc_dma_residue(adc);
++
++	/*
++	 * In DMA mode the trigger services of IIO are not used
++	 * (e.g. no call to iio_trigger_poll).
++	 * Calling irq handler associated to the hardware trigger is not
++	 * relevant as the conversions have already been done. Data
++	 * transfers are performed directly in DMA callback instead.
++	 * This implementation avoids to call trigger irq handler that
++	 * may sleep, in an atomic context (DMA irq handler context).
++	 */
++	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
+ 
+-	iio_trigger_poll_chained(indio_dev->trig);
++	while (residue >= indio_dev->scan_bytes) {
++		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
++
++		iio_push_to_buffers(indio_dev, buffer);
++
++		residue -= indio_dev->scan_bytes;
++		adc->bufi += indio_dev->scan_bytes;
++		if (adc->bufi >= adc->rx_buf_sz)
++			adc->bufi = 0;
++	}
+ }
+ 
+ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
+@@ -1648,6 +1670,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ {
+ 	struct iio_dev *indio_dev;
+ 	struct device *dev = &pdev->dev;
++	irqreturn_t (*handler)(int irq, void *p) = NULL;
+ 	struct stm32_adc *adc;
+ 	int ret;
+ 
+@@ -1730,9 +1753,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_clk_disable;
+ 
++	if (!adc->dma_chan)
++		handler = &stm32_adc_trigger_handler;
++
+ 	ret = iio_triggered_buffer_setup(indio_dev,
+-					 &iio_pollfunc_store_time,
+-					 &stm32_adc_trigger_handler,
++					 &iio_pollfunc_store_time, handler,
+ 					 &stm32_adc_buffer_setup_ops);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "buffer setup failed\n");
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
