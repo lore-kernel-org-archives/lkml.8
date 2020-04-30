@@ -2,136 +2,107 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20954C8300D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4E4C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BEC20757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C1920775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588248495;
+	bh=kWOGUQ0nG1s+NuJ1r/jm6uWAthHvmvis6ImwgfOZ0Oo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=BZoC2mVTi+9aF7EgS7JE2p3Mc3jv763N6O2NSAB1POC8cAMsceDVZMpXN1vutywW4
+	 ESBBil8Q1HkIjlAxN0oGV272Vo6Fg/r0D/CaEAhHcGgqaqdbfCwAF4c/QvVG1afW1q
+	 bdM5RLJbx1sXcQjU6+71H1qZvxYXeQg7qbewoJBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD3MHx (ORCPT
+        id S1726842AbgD3MIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3MHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:07:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCAFC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 05:07:52 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jU7yj-0004Mv-40; Thu, 30 Apr 2020 14:07:45 +0200
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jU7yf-00079d-1G; Thu, 30 Apr 2020 14:07:41 +0200
-Date:   Thu, 30 Apr 2020 14:07:41 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200430120740.GG2188@pengutronix.de>
-References: <20200429162437.2025699-1-robert.foss@linaro.org>
- <20200429162437.2025699-3-robert.foss@linaro.org>
- <20200430093524.GB2188@pengutronix.de>
- <20200430094549.GF867@valkosipuli.retiisi.org.uk>
- <20200430095332.GC2188@pengutronix.de>
- <20200430095907.GG867@valkosipuli.retiisi.org.uk>
- <20200430101157.GD2188@pengutronix.de>
- <20200430102018.GI867@valkosipuli.retiisi.org.uk>
+        Thu, 30 Apr 2020 08:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgD3MIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:08:13 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F5CC20757;
+        Thu, 30 Apr 2020 12:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588248493;
+        bh=kWOGUQ0nG1s+NuJ1r/jm6uWAthHvmvis6ImwgfOZ0Oo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=06ohClEHa8gjHByrmWUMex5YFbqSOgrWESvizUEiFusaI36u0Nz8yqPmycvRYkj2F
+         uuG+zHHb2jc3mnUuKv0w9CXM6HkXWumWoSFF7Wgik+23c7dEwSA665aMObscPnjP06
+         7z/6yGJLbkIkNiKkWMtWGdCY+AGEQNQgzDdM9r+Y=
+Message-ID: <c6e346d75a29d05057bdabd0007b71b55b7b3bb3.camel@kernel.org>
+Subject: Re: [PATCH V3] fs/ceph:fix double unlock in handle_cap_export()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Wu Bo <wubo40@huawei.com>, ukernel@gmail.com, sage@redhat.com,
+        idryomov@gmail.com
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liuzhiqiang26@huawei.com, linfeilong@huawei.com
+Date:   Thu, 30 Apr 2020 08:08:11 -0400
+In-Reply-To: <1588227169-83237-1-git-send-email-wubo40@huawei.com>
+References: <1588227169-83237-1-git-send-email-wubo40@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430102018.GI867@valkosipuli.retiisi.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:58:29 up 68 days, 23:15, 99 users,  load average: 0.11, 0.20,
- 0.29
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-04-30 13:20, Sakari Ailus wrote:
-> On Thu, Apr 30, 2020 at 12:11:57PM +0200, Marco Felsch wrote:
-> > On 20-04-30 12:59, Sakari Ailus wrote:
-> > > Hi Marco,
-> > > 
-> > > On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
-> > > > Hi Sakari,
-> > > > 
-> > > > On 20-04-30 12:45, Sakari Ailus wrote:
-> > > > > Hi Marco,
-> > > > > 
-> > > > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
-> > 
-> > ...
-> > 
-> > > > > > > -	if (mclk != OV8856_MCLK) {
-> > > > > > > -		dev_err(dev, "external clock %d is not supported", mclk);
-> > > > > > > -		return -EINVAL;
-> > > > > > > +	if (!is_acpi_node(fwnode)) {
-> > > > > > > +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > > > > > > +		if (IS_ERR(ov8856->xvclk)) {
-> > > > > > > +			dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > > > > > > +					ov8856->xvclk);
-> > > > > > > +			return PTR_ERR(ov8856->xvclk);
-> > > > > > > +		}
-> > > > > > > +
-> > > > > > > +		clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > > > > > > +		xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > > > > > >  	}
-> > > > > > 
-> > > > > > Why do we handle the clock only in DT case? Is there a problem with the
-> > > > > > clock handling and ACPI?
-> > > > > 
-> > > > > Not really, it's just that ACPI does not provide an interface to the clocks
-> > > > > as such.
-> > > > 
-> > > > But you will get a clk by devm_clk_get()?
-> > > 
-> > > No, because ACPI does not expose one to drivers. Effectively the entire
-> > > power sequences are implemented in ACPI, not in the driver.
-> > > 
-> > 
-> > Ah okay, thanks for the explanation. I'm really not into the ACPI
-> > stuff.. So this means the __power_off / power_on should only be done if
-> > we are using DT's?
+On Thu, 2020-04-30 at 14:12 +0800, Wu Bo wrote:
+> If the ceph_mdsc_open_export_target_session() return fails,
+> we should add mutex_lock(&session->s_mutex) on IS_ERR(tsession) block 
+> to avoid twice unlocking. because the session->s_mutex will be unlock
+> at the out_unlock lable.
 > 
-> Correct. That's why it bails out early. It could be yet earlier though,
-> without doing anything.
+> --
+> v2 -> v3:
+>   - Rewrite solution, adding a mutex_lock(&session->s_mutex) 
+>     to the IS_ERR(tsession) block.
+>   - Modify the comment more clearly.
+> v1 -> v2:
+>   - add spin_lock(&ci->i_ceph_lock) before goto out_unlock lable
+> 
 
-Yes I see. For easier and error less prone handling I would prefer:
+For future reference, notes like this should go a little lower...
 
-if (is_acpi_node())
-	return 0;
+>      
+> 
+> Signed-off-by: Wu Bo <wubo40@huawei.com>
+> ---
+>  fs/ceph/caps.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-as first instruction for __power_off/on().
+If you put the patch version notes here, they'll be stripped out when we
+go to merge the patch with git-am.
 
-Also I would refator the ov8856_check_hwcfg() so the common part can be
-used by this function and by a ov8856_parse_of() function. But thats
-only my opinion.
+> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> index 185db76..d27d778 100644
+> --- a/fs/ceph/caps.c
+> +++ b/fs/ceph/caps.c
+> @@ -3746,6 +3746,7 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+>  		WARN_ON(1);
+>  		tsession = NULL;
+>  		target = -1;
+> +		mutex_lock(&session->s_mutex);
+>  	}
+>  	goto retry;
+>  
 
-Regards,
-  Marco
+Looks good. Merged, but I did clean up the verbiage in the changelog a
+bit.
+
+Thanks!
+-- 
+Jeff Layton <jlayton@kernel.org>
+
