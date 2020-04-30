@@ -2,111 +2,241 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F468C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54F4C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0581E20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0432076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:14:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m+I2zk3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgD3UNw (ORCPT
+        id S1727878AbgD3UOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:13:52 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39037 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgD3UNu (ORCPT
+        Thu, 30 Apr 2020 16:14:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54962 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbgD3UOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:13:50 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9F8B7FF80A;
-        Thu, 30 Apr 2020 20:13:45 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 22:13:45 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        david@lechnology.com, felipe.balbi@linux.intel.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
+        Thu, 30 Apr 2020 16:14:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UKDWOM009406;
+        Thu, 30 Apr 2020 20:13:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=m72YR/nkrMDSIXspqjuUroii0+CofYy9l2S6f8qhUFQ=;
+ b=m+I2zk3NpPfpkFFc97LloLnclZOxcrApFODkdPrRxwRZoPNPkDnQHWRimbWTptFS5Vi6
+ baMhKWWgvcLSnAWAzUVAWjbjA1l/CdBAVkcgYlalt+C/RY8aYJPDvduA26lkfbcJDXlk
+ 7IR2Xw67kKidhNPd5o8BhKVR6WCtZKnvaxw/oCcoc/ZL70tacGG5uUabV+MwQp0fDck7
+ 7S5O8ju/IpVrnxnHJDUpzcwe/L3tq/2ifqLvoTPCWD3aJ7sfiEW/liQgXlQsdmCtiDHY
+ GdA/By95bKhNSXIHvfvECom/hwxjby6gPWtiH2JdJumN62b0H0+ABKzZUwVuevLB8t3l 6w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 30p2p0k2wx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 20:13:43 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UK6XkW140606;
+        Thu, 30 Apr 2020 20:11:42 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30qtkx5a75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 20:11:42 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03UKBfka024124;
+        Thu, 30 Apr 2020 20:11:41 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Apr 2020 13:11:41 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
-Message-ID: <20200430201345.GX51277@piout.net>
-References: <cover.1588176662.git.vilhelm.gray@gmail.com>
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 5/7] mm: move zone iterator outside of deferred_init_maxorder()
+Date:   Thu, 30 Apr 2020 16:11:23 -0400
+Message-Id: <20200430201125.532129-6-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588176662.git.vilhelm.gray@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2 mlxscore=0
+ phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004300150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 suspectscore=2 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004300151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+padata will soon divide up pfn ranges between threads when parallelizing
+deferred init, and deferred_init_maxorder() complicates that by using an
+opaque index in addition to start and end pfns.  Move the index outside
+the function to make splitting the job easier, and simplify the code
+while at it.
 
-On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:
-> Over the past couple years we have noticed some shortcomings with the
-> Counter sysfs interface. Although useful in the majority of situations,
-> there are certain use-cases where interacting through sysfs attributes
-> can become cumbersome and inefficient. A desire to support more advanced
-> functionality such as timestamps, multi-axis positioning tables, and
-> other such latency-sensitive applications, has motivated a reevaluation
-> of the Counter subsystem. I believe a character device interface will be
-> helpful for this more niche area of counter device use.
-> 
-> To quell any concerns from the offset: this patchset makes no changes to
-> the existing Counter sysfs userspace interface -- existing userspace
-> applications will continue to work with no modifications necessary. I
-> request that driver maintainers please test their applications to verify
-> that this is true, and report any discrepancies if they arise.
-> 
+deferred_init_maxorder() now always iterates within a single pfn range
+instead of potentially multiple ranges, and advances start_pfn to the
+end of that range instead of the max-order block so partial pfn ranges
+in the block aren't skipped in a later iteration.  The section alignment
+check in deferred_grow_zone() is removed as well since this alignment is
+no longer guaranteed.  It's not clear what value the alignment provided
+originally.
 
-On that topic, I'm wondering why the counter subsystem uses /sys/bus
-instead of /sys/class that would be more natural for a class of devices.
-I can't see how counters would be considered busses. I think you should
-consider moving it over to /sys/class (even if deprecating
-/sys/bus/counter will be long).
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+---
+ mm/page_alloc.c | 88 +++++++++++++++----------------------------------
+ 1 file changed, 27 insertions(+), 61 deletions(-)
 
-> Interaction with Counter character devices occurs via ioctl commands.
-> This allows userspace applications to access and set counter data using
-> native C datatypes rather than working through string translations.
-> 
-
-I agree with David that you should consider using read to retrieve the
-counter data as this will simplify interrupt handling/polling and
-blocking/non-blocking reads can be used by an application. ABI wise,
-this can also be a good move as you could always consider having an
-ioctl requesting a specific format when reading the device so you are
-not stuck with the initial format you are going to choose.
-
-> 2. Should device driver callbacks return int or long? I sometimes see
->    error values returned as long (e.g. PTR_ERR(), the file_operations
->    structure's ioctl callbacks, etc.); when is it necessary to return
->    long as opposed to int?
-> 
-
-You should use a long if you ever have to return a point as it is
-guaranteed to have the correct size. Else, just stick to an int if you
-are not going to overflow it.
-
-> 3. I only implemented the unlocked_ioctl callback. Should I implement a
->    compat_ioctl callback as well?
-> 
-
-The compat_ioctl is to handle 32bit userspace running on a 64bit kernel.
-If your structures have the same size in both cases, then you don't have
-to implement compat_ioctl.
-
-Have a look at Documentation/driver-api/ioctl.rst
-
-
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 68669d3a5a665..990514d8f0d94 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1708,55 +1708,23 @@ deferred_init_mem_pfn_range_in_zone(u64 *i, struct zone *zone,
+ }
+ 
+ /*
+- * Initialize and free pages. We do it in two loops: first we initialize
+- * struct page, then free to buddy allocator, because while we are
+- * freeing pages we can access pages that are ahead (computing buddy
+- * page in __free_one_page()).
+- *
+- * In order to try and keep some memory in the cache we have the loop
+- * broken along max page order boundaries. This way we will not cause
+- * any issues with the buddy page computation.
++ * Initialize the struct pages and then free them to the buddy allocator at
++ * most a max order block at a time because while we are freeing pages we can
++ * access pages that are ahead (computing buddy page in __free_one_page()).
++ * It's also cache friendly.
+  */
+ static unsigned long __init
+-deferred_init_maxorder(u64 *i, struct zone *zone, unsigned long *start_pfn,
+-		       unsigned long *end_pfn)
++deferred_init_maxorder(struct zone *zone, unsigned long *start_pfn,
++		       unsigned long end_pfn)
+ {
+-	unsigned long mo_pfn = ALIGN(*start_pfn + 1, MAX_ORDER_NR_PAGES);
+-	unsigned long spfn = *start_pfn, epfn = *end_pfn;
+-	unsigned long nr_pages = 0;
+-	u64 j = *i;
+-
+-	/* First we loop through and initialize the page values */
+-	for_each_free_mem_pfn_range_in_zone_from(j, zone, start_pfn, end_pfn) {
+-		unsigned long t;
+-
+-		if (mo_pfn <= *start_pfn)
+-			break;
+-
+-		t = min(mo_pfn, *end_pfn);
+-		nr_pages += deferred_init_pages(zone, *start_pfn, t);
+-
+-		if (mo_pfn < *end_pfn) {
+-			*start_pfn = mo_pfn;
+-			break;
+-		}
+-	}
+-
+-	/* Reset values and now loop through freeing pages as needed */
+-	swap(j, *i);
+-
+-	for_each_free_mem_pfn_range_in_zone_from(j, zone, &spfn, &epfn) {
+-		unsigned long t;
+-
+-		if (mo_pfn <= spfn)
+-			break;
++	unsigned long nr_pages, pfn;
+ 
+-		t = min(mo_pfn, epfn);
+-		deferred_free_pages(spfn, t);
++	pfn = ALIGN(*start_pfn + 1, MAX_ORDER_NR_PAGES);
++	pfn = min(pfn, end_pfn);
+ 
+-		if (mo_pfn <= epfn)
+-			break;
+-	}
++	nr_pages = deferred_init_pages(zone, *start_pfn, pfn);
++	deferred_free_pages(*start_pfn, pfn);
++	*start_pfn = pfn;
+ 
+ 	return nr_pages;
+ }
+@@ -1814,9 +1782,11 @@ static int __init deferred_init_memmap(void *data)
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
+ 	 */
+-	while (spfn < epfn) {
+-		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+-		cond_resched();
++	for_each_free_mem_pfn_range_in_zone_from(i, zone, &spfn, &epfn) {
++		while (spfn < epfn) {
++			nr_pages += deferred_init_maxorder(zone, &spfn, epfn);
++			cond_resched();
++		}
+ 	}
+ zone_empty:
+ 	/* Sanity check that the next zone really is unpopulated */
+@@ -1883,22 +1853,18 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
+ 	 */
+-	while (spfn < epfn) {
+-		/* update our first deferred PFN for this section */
+-		first_deferred_pfn = spfn;
+-
+-		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+-		touch_nmi_watchdog();
+-
+-		/* We should only stop along section boundaries */
+-		if ((first_deferred_pfn ^ spfn) < PAGES_PER_SECTION)
+-			continue;
+-
+-		/* If our quota has been met we can stop here */
+-		if (nr_pages >= nr_pages_needed)
+-			break;
++	for_each_free_mem_pfn_range_in_zone_from(i, zone, &spfn, &epfn) {
++		while (spfn < epfn) {
++			nr_pages += deferred_init_maxorder(zone, &spfn, epfn);
++			touch_nmi_watchdog();
++
++			/* If our quota has been met we can stop here */
++			if (nr_pages >= nr_pages_needed)
++				goto out;
++		}
+ 	}
+ 
++out:
+ 	pgdat->first_deferred_pfn = spfn;
+ 	pgdat_resize_unlock(pgdat, &flags);
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.26.2
+
