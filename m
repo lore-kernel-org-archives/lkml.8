@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F45AC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AF6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9B32063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D2B206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255758;
-	bh=ObJKmAMaZ90P/+jAoEDbax6JYZEb2gDqjGuVWUG7W7g=;
+	s=default; t=1588255761;
+	bh=z/SAI+WxyxCRvHGGrJbBNLw73UFuYbefK523W+/YLqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xD5pnO0ljXq2Qbbnvv7Dhfl3jaJgA9sUWompeIqYxZcEr2W14kyM5AM8cpOCKYZVE
-	 bYcpgLoX7gmPvrG7kgHhLNSn56yLrF5CwrKF7/aFGfkSg3Yq3fXIva+7rMwjlfbP9f
-	 CgJa6uRsKRrRYY8CZvkcEgv4naeQpzaGB8rxM3/k=
+	b=tOQoLiQSAT76tqlxBjTXYjLYnNtUKI4b51//Gt5NF9gXSyJyO2h8VoG5T2zWf4Ilf
+	 zcvEEOvWRashjn49xa5D2bcMTOBVQLmfTx/KwT998EzIhnfouH4SdcREbd9qsy4kxD
+	 LruTt5wy4+Hr0FVk/GBu/fV5P344Tp3S8CYGpmT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgD3Nvy (ORCPT
+        id S1728909AbgD3OJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbgD3Nvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:39 -0400
+        id S1728230AbgD3Nvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F319824961;
-        Thu, 30 Apr 2020 13:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1531208CA;
+        Thu, 30 Apr 2020 13:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254698;
-        bh=ObJKmAMaZ90P/+jAoEDbax6JYZEb2gDqjGuVWUG7W7g=;
+        s=default; t=1588254714;
+        bh=z/SAI+WxyxCRvHGGrJbBNLw73UFuYbefK523W+/YLqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hTUpHIfN/ew4mt2SDGfC/SJnZQK/Q6WYo2f4PRW3bOkkQCS/d3etn81CETJj3JUbR
-         8ChD9ci3B9WOG4My1Q6Jx/t3Z5TUcuS5aZpupUyS6QclLdNB0PO5TbfrW9GI7pWeIr
-         RyDzmcoEG4YVZTsTlwSgX4yBx1vIaulxn4IeWckw=
+        b=B+DqQVzJRh5PZRwPgAmq9/54yM3KLu28GNusBKTveA3Gd6i23UAvoQxy0cq6CRf1S
+         JtJbLwrjYT3HCiUbLE6oRtyrEoirpE5NiKM3Zhveycf/TNZ3f3LsuRuU+Iy4JVy9is
+         CGmyQUoyYU6IsTIyAAY+321qgocVE71XA17JzWp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 48/79] net/mlx5: Fix failing fw tracer allocation on s390
-Date:   Thu, 30 Apr 2020 09:50:12 -0400
-Message-Id: <20200430135043.19851-48-sashal@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, KP Singh <kpsingh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 62/79] perf/core: fix parent pid/tid in task exit events
+Date:   Thu, 30 Apr 2020 09:50:26 -0400
+Message-Id: <20200430135043.19851-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -60,58 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit a019b36123aec9700b21ae0724710f62928a8bc1 ]
+[ Upstream commit f3bed55e850926614b9898fe982f66d2541a36a5 ]
 
-On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
-allocation as done for the firmware tracer will always fail.
+Current logic yields the child task as the parent.
 
-Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
-that copies the debug data into the trace array and there is no need for
-the allocation to be contiguous in physical memory. We can therefor use
-kvzalloc() instead of kzalloc() and get rid of the large contiguous
-allcoation.
+Before:
+$ perf record bash -c "perf list > /dev/null"
+$ perf script -D |grep 'FORK\|EXIT'
+4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
+4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
+4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
+                                                   ^
+  Note the repeated values here -------------------/
 
-Fixes: f53aaa31cce7 ("net/mlx5: FW tracer, implement tracer logic")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+After:
+383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
+383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
+383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
+
+Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
+Reported-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/events/core.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-index 94d7b69a95c74..eb2e57ff08a60 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-@@ -935,7 +935,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_create(struct mlx5_core_dev *dev)
- 		return NULL;
- 	}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 533c193481899..29ace472f9168 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7278,10 +7278,17 @@ static void perf_event_task_output(struct perf_event *event,
+ 		goto out;
  
--	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
-+	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
- 	if (!tracer)
- 		return ERR_PTR(-ENOMEM);
+ 	task_event->event_id.pid = perf_event_pid(event, task);
+-	task_event->event_id.ppid = perf_event_pid(event, current);
+-
+ 	task_event->event_id.tid = perf_event_tid(event, task);
+-	task_event->event_id.ptid = perf_event_tid(event, current);
++
++	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
++		task_event->event_id.ppid = perf_event_pid(event,
++							task->real_parent);
++		task_event->event_id.ptid = perf_event_pid(event,
++							task->real_parent);
++	} else {  /* PERF_RECORD_FORK */
++		task_event->event_id.ppid = perf_event_pid(event, current);
++		task_event->event_id.ptid = perf_event_tid(event, current);
++	}
  
-@@ -982,7 +982,7 @@ destroy_workqueue:
- 	tracer->dev = NULL;
- 	destroy_workqueue(tracer->work_queue);
- free_tracer:
--	kfree(tracer);
-+	kvfree(tracer);
- 	return ERR_PTR(err);
- }
+ 	task_event->event_id.time = perf_event_clock(event);
  
-@@ -1061,7 +1061,7 @@ void mlx5_fw_tracer_destroy(struct mlx5_fw_tracer *tracer)
- 	mlx5_fw_tracer_destroy_log_buf(tracer);
- 	flush_workqueue(tracer->work_queue);
- 	destroy_workqueue(tracer->work_queue);
--	kfree(tracer);
-+	kvfree(tracer);
- }
- 
- static int fw_tracer_event(struct notifier_block *nb, unsigned long action, void *data)
 -- 
 2.20.1
 
