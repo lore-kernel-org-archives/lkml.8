@@ -2,95 +2,114 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A71C83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6675C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB702082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uU8jiMQx"
+	by mail.kernel.org (Postfix) with ESMTP id 822612082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588227546;
+	bh=y9TbkJUrojBNJvEqwCESs0VD7HKJ2s9fXo+sCrBvNz4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MgVNUe5z4zobKQQmrlMLGR268yT6HwdBAEHpcAc0n3WcPSDEPFLYbzwBLZ549cgbb
+	 iKtDKeRsoH5sPrrNMUaTxYCsk9jK9PYbWu7eGd5atdb2POBVNZ5uTiqQ8kxN2x6Q3z
+	 MxvggMhmPJOKMSdcAh/dLpN/hq82Y2zM0mW/f0qU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD3GPM (ORCPT
+        id S1726424AbgD3GTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726412AbgD3GPM (ORCPT
+        Thu, 30 Apr 2020 02:19:05 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:35227 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbgD3GTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:15:12 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF28BC035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:15:11 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so294226pjb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x7/KKFn8BCkAckmQr7phq+s/+BjeL7Rl1CFL6HKpG5M=;
-        b=uU8jiMQxr10bGxm1TozvntSNrpr/ofFVgKkcU+ecnvJtkVeym8FAECunFnlZFR0G2Y
-         WhyOkbEirdhHPcBYUu1pigRboOOZG2esfQr8eoOFw0OXW9HJcjtuuD3ZkNIP3RYguMoc
-         ScHCiHedlV342uWa5kG8ZeS/ITDKoWZ0ngJICR6hnpGdkHIF/NUUM2DDVbpSg9QMFUXM
-         BJI50pwbVHokPxJGuiWJRQo6No6yo1uEFAyUm5dvpgknd385NcgRv1vH3yjTYwsdkMw3
-         pcdV5B6DFjV8SeOz5ql+qKl53Rg1N+kVpXDFYoyKRBGViIvdCTSWC4YDxtK8r1IRce2j
-         VBAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x7/KKFn8BCkAckmQr7phq+s/+BjeL7Rl1CFL6HKpG5M=;
-        b=XttjDDGzkEvz7FeSvbPuxPwTaVwwwGh9Z2BJAPffUHuk+dZNk5BExwMUh3GmrHkCSN
-         T4/PZvn0ZWq0JqxxTvpTpm6GCirhbs/kBbZ8laWlP+n9NmwSXLWie8HBN6PKK9uJXOcY
-         U70IwvsP5CkFt9/w5AlFiEE0MwQkHRAF7IOdvCDchfiKrkiIXoHPTPy1QiuWVqX2lFEi
-         VGgtWec9PoXysUOFTpDKdGmKlmkwlbMAk771jU42qb7uvVNL9JKei8h78qkev9CX7uPj
-         iSA/Wey1RUrtVapS9blh180yc/ZEMqeoExl4b7V3KnKRQ4gAva1LaKOccU2fF7wjd4FZ
-         yRNQ==
-X-Gm-Message-State: AGi0Pua+qgVhXjttH1GwONaHDmDLzwy/cPpmVQPQKcNL42UhhzOUA1r/
-        xgEilkZ9lWZEPXkHwes0Z2scn/yiJ4U=
-X-Google-Smtp-Source: APiQypLAiOVZAO2gmBRBnYBAlX/vRL0D7u6b7kPT99EVAW2lZmw9h7hDYcoo39quYJ+JkeBMpT6Wrw==
-X-Received: by 2002:a17:90a:5287:: with SMTP id w7mr1254117pjh.66.1588227311459;
-        Wed, 29 Apr 2020 23:15:11 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id s76sm2283379pgc.85.2020.04.29.23.15.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 23:15:10 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 11:45:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 03/17] arm64: dts: sdm845: Add OPP table for all qup
- devices
-Message-ID: <20200430061508.6ktamklc4nslf5qp@vireshk-i7>
-References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
- <1588080785-6812-4-git-send-email-rnayak@codeaurora.org>
- <20200429000234.GK4525@google.com>
+        Thu, 30 Apr 2020 02:19:05 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 03U6IlOK012831;
+        Thu, 30 Apr 2020 15:18:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 03U6IlOK012831
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588227528;
+        bh=gaD1VqtiOrhems+zmteSxRH2XxSbswTqIOlpgqqgfXA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Thp0FZMEoh6/gGu5f+Rmp8AffXtOAhetOAihhiUIZDUimPVx1rWZ9UuAcKtTnK5Xj
+         pbBWnEjDmXAB307CAnwVmX+vu06+lTjhyEJJBFGwV/BmVCBNukotf3t/EUdYgwV5XM
+         XlIDW4VrB7Qku5syENHYemd8qQXEQ74A8Lyhr0qJAB27y8YCc/HPo2nbA2X3axzazE
+         Jibv9kL+s5513RfohHRDZwdzNcJfsnw5OXjErVCOLtkEuFI/rfSHk1in7S4ZjYflg8
+         XlptkZywIj3vwNqxLwDZBYFmVktjQom0mucSuPr0/WMHwxxD2FSsLxFecqP8n9HxPP
+         mr6QLBmIv8egg==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] kconfig: announce removal of 'kvmconfig' and 'xenconfig' shorthands
+Date:   Thu, 30 Apr 2020 15:18:45 +0900
+Message-Id: <20200430061845.775144-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429000234.GK4525@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-04-20, 17:02, Matthias Kaehlcke wrote:
-> Judging from SDM845 (which has more OPP tables) the convention seems to be
-> to add OPP tables to the nodes that use them, which seems reasonable and
+kvmconfig' is a shorthand for kvm_guest.config to save 7 character typing.
 
-I don't think that's right. The same DT opp tables are used for
-multiple CPUs and they are placed outside of any device's node.
+xenconfig' is a shorthand for xen.config to save 1 character typing.
 
-And that is the reason we have handled that specially in kernel (which
-Rajendra shared in another email), to not create a platform device for
-the opp table.
+There is nothing more than that.
 
+There are more files in kernel/configs/, so it is not maintainable
+to wire-up every config fragment to the Kconfig Makefile. Hence,
+we should not do this at all.
+
+These will be removed after Linux 5.10. Meanwhile, the following
+warning message will be displayed if they are used.
+
+WARNING: 'make kvmconfig' will be removed after Linux 5.10
+         Please use 'make kvm_guest.config' instead.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/kconfig/Makefile | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 1015abec9e58..30c69e83652b 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -96,11 +96,13 @@ configfiles=$(wildcard $(srctree)/kernel/configs/$@ $(srctree)/arch/$(SRCARCH)/c
+ 
+ PHONY += kvmconfig
+ kvmconfig: kvm_guest.config
+-	@:
++	@echo >&2 "WARNING: 'make $@' will be removed after Linux 5.10"
++	@echo >&2 "         Please use 'make $<' instead."
+ 
+ PHONY += xenconfig
+ xenconfig: xen.config
+-	@:
++	@echo >&2 "WARNING: 'make $@' will be removed after Linux 5.10"
++	@echo >&2 "         Please use 'make $<' instead."
+ 
+ PHONY += tinyconfig
+ tinyconfig:
+@@ -137,9 +139,6 @@ help:
+ 	@echo  '  helpnewconfig   - List new options and help text'
+ 	@echo  '  olddefconfig	  - Same as oldconfig but sets new symbols to their'
+ 	@echo  '                    default value without prompting'
+-	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
+-	@echo  '  xenconfig       - Enable additional options for xen dom0 and guest kernel'
+-	@echo  '                    support'
+ 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+ 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
+ 
 -- 
-viresh
+2.25.1
+
