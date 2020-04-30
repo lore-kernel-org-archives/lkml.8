@@ -2,77 +2,124 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6681C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B75C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEAC82070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7673C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:30:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sOWMM3UK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgD3Q3v (ORCPT
+        id S1726738AbgD3Qaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:29:51 -0400
-Received: from gentwo.org ([3.19.106.255]:55834 "EHLO gentwo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgD3Q3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:29:51 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 8B6B13EEE2; Thu, 30 Apr 2020 16:29:50 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 8A3B03E998;
-        Thu, 30 Apr 2020 16:29:50 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 16:29:50 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Roman Gushchin <guro@fb.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/19] mm: slub: implement SLUB version of
- obj_to_index()
-In-Reply-To: <20200427164638.GC114719@carbon.DHCP.thefacebook.com>
-Message-ID: <alpine.DEB.2.21.2004301625490.1693@www.lameter.com>
-References: <20200422204708.2176080-1-guro@fb.com> <20200422204708.2176080-5-guro@fb.com> <alpine.DEB.2.21.2004222349280.20021@www.lameter.com> <20200423000530.GA63356@carbon.lan> <alpine.DEB.2.21.2004250208500.7624@www.lameter.com> <20200425024625.GA107755@carbon.lan>
- <alpine.DEB.2.21.2004271618340.27701@www.lameter.com> <20200427164638.GC114719@carbon.DHCP.thefacebook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 30 Apr 2020 12:30:30 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13064 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgD3Qa2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:30:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eaafce10000>; Thu, 30 Apr 2020 09:29:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 09:30:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 09:30:28 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 16:30:28 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 16:30:26 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+Message-ID: <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+Date:   Thu, 30 Apr 2020 09:29:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588264161; bh=2DroO8GJPT0AtZeSQK8ueROEdYIu6Ovs1ect3MjQzPE=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=sOWMM3UKIfeFYgOV3uLGzs75tw9iBGuZFODCZwKiHiL0dCOJKwlbBZuiVacayju7e
+         27d2YHXn6JgrBPa+b3Hh61DgKBgkUmucxkOTNu8c+vgIAULPzB8dey7Yw/htsnhCCi
+         sgpgv5qzEi2Xjxe45K2l7wKPHL30bR76787qy9sYYntYjM1k3MGUtvwlC2oBaqb24e
+         T3cqJ8NssY3wetqt+VdP8KOmm25bnSyqK5rGV9hT8NdshtcuZqFpdbsfHCebZ31M2P
+         +9bqvOZCh/SYfCppuNEApgaVu0DmUSJyW0MHRm1PjX133UeOdd26rXX75kPw9uNcGz
+         6VU8iQUbmqIyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020, Roman Gushchin wrote:
 
-> > Why do you need this? Just slap a pointer to the cgroup as additional
-> > metadata onto the slab object. Is that not much simpler, safer and faster?
-> >
+On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
 >
-> So, the problem is that not all slab objects are accounted, and sometimes
-> we don't know if advance if they are accounted or not (with the current semantics
-> of __GFP_ACCOUNT and SLAB_ACCOUNT flags). So we either have to increase
-> the size of ALL slab objects, either create a pair of slab caches for each size.
-
+> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>> +{
+>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
+>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
+>>>> I guess it won't be great to freeze in the middle of a capture=20
+>>>> process, so:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(&chan->done)=
+)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try=
+_to_freeze();
+>>> And here should be some locking protection in order not race with the
+>>> chan_capture_kthread_start because kthread_finish could freeze before
+>>> kthread_start.
+>> Or maybe both start / finish threads should simply be allowed to freeze
+>> only when both capture and done lists are empty.
+>>
+>> if (list_empty(&chan->capture) &&
+>> =C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
+>> =C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
 >
-> The first option is not that cheap in terms of the memory overhead. Especially
-> for those who disable cgroups using a boot-time option.
-
-
-If the cgroups are disabled on boot time then you can switch back to the
-compact version. Otherwise just add a pointer to each object. It will make
-it consistent and there is not much memory wastage.
-
-The problem comes about with the power of 2 caches in the kmalloc array.
-If one keeps the "natural alignment" instead of going for the normal
-alignment of slab caches then the alignment will cause a lot of memory
-wastage and thus the scheme of off slab metadata is likely going to be
-unavoidable.
-
-But I think we are just stacking one bad idea onto another here making
-things much more complex than they could be. Well at least this justifies
-all our jobs .... (not mine I am out of work... hehehe)
-
+> good to freeze when not in middle of the frame capture but why should=20
+> we not allow freeze in between captures?
+>
+> Other drivers do allow freeze in between frame captures.
+>
+> I guess we can freeze before dequeue for capture and in finish thread=20
+> we can freeze after capture done. This also don't need to check for=20
+> list_empty with freeze to allow between frame captures.
+>
+Also if we add check for both lists empty, freeze is not allowed as long=20
+as streaming is going on and in case of continuous streaming freeze will=20
+never happen.
