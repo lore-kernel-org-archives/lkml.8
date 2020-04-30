@@ -2,97 +2,92 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B178C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088E1C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B29206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255255;
-	bh=7MDlnzUmyvtZuMwcmGG1rnivyMahY/GeuHpcLFENqYo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SNRz73FoIhdT/rVDZnyRONFXo439j+LrpMNbmhYJx361NXxK0u8OKPoY/yhRFuB73
-	 jqIN0D7Do46cANSYNjcqFf+CoY0PI9r9E7ErXtn4i/IHsmfESOfUJ5xcmAGg3c6JPu
-	 jbUnvXIGaTAr+H8GLNLWIaHvFAfoy3XOYfj8CGoI=
+	by mail.kernel.org (Postfix) with ESMTP id CBB82206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgD3OAy (ORCPT
+        id S1729403AbgD3OA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 10:00:58 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40004 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728580AbgD3OAy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 10:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728890AbgD3NyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:07 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C822495D;
-        Thu, 30 Apr 2020 13:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254847;
-        bh=7MDlnzUmyvtZuMwcmGG1rnivyMahY/GeuHpcLFENqYo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mcmTprrl4RmFS+nE85BV/WeniaG+4uDLTyk+LBNYCx5ebCB70kVdKB1qXIMqxqwCF
-         WssK89P2FCKcsic3CH2i7Vny60YUPOzpPcc12G0yJSqvEcJ84MXLtTrUVVtmwww2m4
-         pjKF8h1wbcKf9yzGgIG5E0mJnC7P1CFWjeKCagCE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/27] nfsd: memory corruption in nfsd4_lock()
-Date:   Thu, 30 Apr 2020 09:53:39 -0400
-Message-Id: <20200430135402.20994-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
-References: <20200430135402.20994-1-sashal@kernel.org>
+Received: by mail-ot1-f68.google.com with SMTP id i27so4960605ota.7;
+        Thu, 30 Apr 2020 07:00:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=56+hnJF7fvucpKqv2sY0gAy5FVHsLurCXmxr1aGtcTI=;
+        b=cturxDu5JIDIp5o6PGnU9/IzWxKh3SG1Vrn9xTJ36O1PR57ccgRdHGX9VSNxxXcf6N
+         IfEANJ6QMdLgpHFpP5ii7dlDqRAYhCofAxd/r6W9in++0ba4dVLEwALaj2q7GMh9u6XA
+         QGeegR+CPbfoGVQLJOlfK34nhbblkyRKS6vrivkYCpLe8tHe5kDihkW1h3h9++IuPDm5
+         v1DDUM0nC0pbWPQai6Sh+Z/weDYPa7xKOwH5fBiND1uQ8AbZbMiRNRBpBNUxMi6zZ3s2
+         c7xs0CQJvopjjJgPmqbe+TfRCREHpVWgT4mVIl2MmnP9ea4r6FWFJHLZaOM6s2bRR3MP
+         RkSw==
+X-Gm-Message-State: AGi0Pua1EDpOnM78uLp2Hp1YtmhIOahKlFlFU8iOM/SIbwRbH8kTHHE8
+        YPAZ6QON8LO888TOBSWYdrQNWpKuxEGyg1X2Ni0=
+X-Google-Smtp-Source: APiQypJ6KaeAGcTKjVOK3+7+brBeC98O0eTIIpFYmbi9JxFQKsEFhK22k9egoZvh71YGTW6h2ODRjWwTyt+WgWUnMsc=
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr2561994otm.145.1588255253287;
+ Thu, 30 Apr 2020 07:00:53 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 16:00:42 +0200
+Message-ID: <CAMuHMdVn0j8fKD_LH7gKBadjA-g+eNE1=Ld5M+8=NM2VKt-HCA@mail.gmail.com>
+Subject: Re: [PATCH 11/18] ARM: dts: r8a7742: Add SYS-DMAC support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Describe SYS-DMAC0/1 in the R8A7742 device tree.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-[ Upstream commit e1e8399eee72e9d5246d4d1bcacd793debe34dd3 ]
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
-does not initialized nbl_list and nbl_lru.
-If conflock allocation fails rollback can call list_del_init()
-access uninitialized fields and corrupt memory.
+Gr{oetje,eeting}s,
 
-v2: just initialize nbl_list and nbl_lru right after nbl allocation.
+                        Geert
 
-Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for v4.1+ lock")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfsd/nfs4state.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index fca8b2e7fbeb7..d5d1c70bb927b 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -246,6 +246,8 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
- 	if (!nbl) {
- 		nbl= kmalloc(sizeof(*nbl), GFP_KERNEL);
- 		if (nbl) {
-+			INIT_LIST_HEAD(&nbl->nbl_list);
-+			INIT_LIST_HEAD(&nbl->nbl_lru);
- 			fh_copy_shallow(&nbl->nbl_fh, fh);
- 			locks_init_lock(&nbl->nbl_lock);
- 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
