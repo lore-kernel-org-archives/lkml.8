@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850A6C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CFAC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFE321973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0188C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:52:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CfW2yPPq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gAbHg/+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgD3Hvz (ORCPT
+        id S1726743AbgD3Hv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:51:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54932 "EHLO
+        Thu, 30 Apr 2020 03:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgD3Hvw (ORCPT
+        with ESMTP id S1726658AbgD3Hvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:51:52 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EFBC08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:52 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id m138so6769716ybf.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:52 -0700 (PDT)
+        Thu, 30 Apr 2020 03:51:54 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D89C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:54 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id y7so6745924ybj.15
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=9wYxdKZj/jWS2uBsJWtPB4xs5KgCG01/7TEpkkXSh6Q=;
-        b=CfW2yPPqFlKlE8tNQ90LheC3WniA7GjbO3jppC94+w4rPqc16oL4A2w8u420I+TjTK
-         Pi2BOV9+/eY2pE2LaLc7iLOBbAH6MHG9qFyfQRetamPnGptpu655+nJclAkHU9SUUiyG
-         jJeld+kjNHAcmdSzlFd2tjeL2PqAAGBYFYeyUPx92z+zjVy+LAfbB5IYka6OL7ez7kMl
-         Ub9Ih5gfrsgyLmc/1XYWiQD3enYUXTC8foOkvA0qRUt29aoC3ogQQX0Q1oSgmrgvC3nP
-         U1tIKQ6tr90kLIAkuzpbk8+8XgXSMBawqos0lbgCctcDPRk3P/7mUkciVVYDz1I4/FRd
-         2FtQ==
+        bh=KS3wSxmliboWi2mGLeXKN68yB7KYaubNspKgAZOFCn0=;
+        b=gAbHg/+hXMvembBWevw2n1I1Ar+XyWkV2pup3syYAeV6s8fsm+QSJ/H1IBIlr/LLsz
+         ZB/EhXfpeb0QLEsZLXs7FlC+8sjLjz90bGThQ2WJXb/GwftZ7XG1gkvod7hW5+fe6Nql
+         Dxl7ePst9+Symlxtj3RmXpvA8PYCsU9GhBbz/ao5XEAlSK4HUUKSBkdP8T//39hcgcZV
+         HWYLNDS2wcZIHmnogaTWrSO8H3aFP2z+PXCKdkwubyykLYVKltAzHMbzhjkUkvjbPrd9
+         6NVrAOonwdbQp/2ctvSTxmZqB0CngKr6oe+JjdC89ABkbICuI9EF/ssqGOKAjOxrYRcW
+         PDLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=9wYxdKZj/jWS2uBsJWtPB4xs5KgCG01/7TEpkkXSh6Q=;
-        b=CIEtretcXjJk4CLx5y/Y8g1j/cJs5Eg0zVSP6Xn8kUj6+mOZ0hEo+okmLwvyc73v7J
-         NxM7skJMOFLYsaXmJJwIHRSwx5FDcomFl8deI5C3HIQx2z5tF4tMYmb0rt905HjPqXW4
-         6Lh0gGS64ZvXCyrO+vB7b9rwmDKh1Bs81eGXUPMddSLd2wyGl/B8mBgVv8jzjePwGM7T
-         1fgny/C597AxHPwa5pRRECGNu8ZN5ZmZ7sgkmmgFDFX0ehLP6QQdlbNWwU0PXnWi1HL6
-         Oiq/vIZvlj0mUUH/dvY8gomXhUlX1pSmj8Xav9Cw8ot+5kpvjGWTb50asXOfsdIoAMGX
-         TQOg==
-X-Gm-Message-State: AGi0Pua7xf6AqxmbNlhX9mhFM8qFTh0MZZTssAofeIdFFpL7Jm7M7/pF
-        7y77jDYIVLjAWtwmsvMb34pqWvlIcXPQ
-X-Google-Smtp-Source: APiQypJk0FPv6cPNuYtm2arTwq8BSJ0htCtxguNICztIwKep6/sEnBqU+ZpIl7KL740sTaYuJdFwTAPFdACv
-X-Received: by 2002:a5b:48f:: with SMTP id n15mr3706762ybp.507.1588233111163;
- Thu, 30 Apr 2020 00:51:51 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 00:51:34 -0700
+        bh=KS3wSxmliboWi2mGLeXKN68yB7KYaubNspKgAZOFCn0=;
+        b=Mq77IvUFzvglWY1Yc6w5d3xCvZW6AppOb7MgRmzR5kRcsxHfc/qKz3Z21MnHm4I3yP
+         7uLaMusAKyDoNqd8Ym3LaE6w5fBu0TukMIPePWLhhwxbcZ2inOFL6axTuRpc3/CXRR4a
+         qg5OwnC4nYaN/PvEJcRP8bRj5LIYd+w46hKfJGTMis6RPvIDZoMPIsH18CbXbe8EFT/Q
+         NjDQpEu5gTjLjFMSc2Px/lvK0diczWE8PFv/oSb4PI81PY66zW8svEwqxKEclyZq3+kg
+         3gsR8LNjo8OHJD241QTn40+Jl00WxCCIdlzEcLY/GhJpJZfewkX5A+xXztoPdIErhqak
+         hA0g==
+X-Gm-Message-State: AGi0PubSUKNfyYotxHzAKOENXXcDMRgAVpwpSZOoW99SYZhKUi6EIFoc
+        aKWUvPzUDAeMSPE8A+ni0FJT8AEr3VU0
+X-Google-Smtp-Source: APiQypJNb5QMzXJ2JcKrBZrSuc4XSsOfoe8+AZqWh3+5HF1UIUVVK7eGBFukKTWU8LVWNBt9peIW2cYO34Gu
+X-Received: by 2002:a25:b951:: with SMTP id s17mr3747425ybm.205.1588233113140;
+ Thu, 30 Apr 2020 00:51:53 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 00:51:35 -0700
 In-Reply-To: <20200430075144.132716-1-irogers@google.com>
-Message-Id: <20200430075144.132716-3-irogers@google.com>
+Message-Id: <20200430075144.132716-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20200430075144.132716-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v3 02/12] perf metrics: fix parse errors in cascade lake metrics
+Subject: [PATCH v3 03/12] perf metrics: fix parse errors in skylake metrics
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -90,19 +90,18 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Remove over escaping with \\.
-Remove extraneous if 1 if 0 == 1 else 0 else 0.
 
 Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index 7fde0d2943cd..d25eebce34c9 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -328,31 +328,31 @@
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+index b4f91137f40c..390bdab1be9d 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -328,13 +328,13 @@
      },
      {
          "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
@@ -117,27 +116,6 @@ index 7fde0d2943cd..d25eebce34c9 100644
 +        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
          "MetricGroup": "Memory_BW",
          "MetricName": "DRAM_Parallel_Reads"
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
--        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "MEM_PMM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Read_BW"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Write_BW"
      },
 -- 
 2.26.2.303.gf8c07b1a785-goog
