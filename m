@@ -2,98 +2,105 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EEFC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC85C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB77214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588227660;
-	bh=P5A/yyEaB775bJMULnMdqrbUeAoygzWyn5oJcdgrO+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sTT+RW0ipS8D1L9LMGCgraa150XZ4aK8Aen60CP2CNNqXheAMl8HeJymkyFvhvvZP
-	 hmqlXPEhpHC9YlxAtboxFhcQqgkHepE0Km8aOdLRXxIC8STMwEAUlTp2kv2EFx67x0
-	 avhGfaI/libF/ohJKAOG1Wk4nGrjdZPZYYVKycis=
+	by mail.kernel.org (Postfix) with ESMTP id 01DB3214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:21:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="PU41HCwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgD3GVA (ORCPT
+        id S1726539AbgD3GVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 02:21:41 -0400
+Received: from plaes.org ([188.166.43.21]:35836 "EHLO plaes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726337AbgD3GU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:20:59 -0400
-Received: from localhost (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75BF92082E;
-        Thu, 30 Apr 2020 06:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588227659;
-        bh=P5A/yyEaB775bJMULnMdqrbUeAoygzWyn5oJcdgrO+A=;
+        id S1726337AbgD3GVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:21:41 -0400
+Received: from plaes.org (localhost [127.0.0.1])
+        by plaes.org (Postfix) with ESMTPSA id C8C4640275;
+        Thu, 30 Apr 2020 06:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
+        t=1588227698; bh=5IaA8hDKqgMnJSHF6ro9Jo9eG0qGD7sBE3O2dZ7w10w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zgAbvgC/DfhqtqF/OLvLhG881gSIRSGvh91HtsH8uI4b93lOAWfb3qeVGJF/z9r2L
-         0jxwae/hJB/GimHy73oUA2X3PhMQjFlzd0UjPk2JAeXNtQhP+QgJKJOjtQWv5rJOzg
-         /d2DTab9H8fENraNmHNmpZ1mbZUC+rXsoCrFLxIY=
-Date:   Thu, 30 Apr 2020 11:50:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 3/5] usb: xhci: Add support for Renesas controller
- with memory
-Message-ID: <20200430062055.GE948789@vkoul-mobl.Dlink>
-References: <20200424101410.2364219-1-vkoul@kernel.org>
- <20200424101410.2364219-4-vkoul@kernel.org>
- <79023293-8ad8-751c-b4ca-8393cdbbf4a2@linux.intel.com>
- <20200429142850.GM56386@vkoul-mobl.Dlink>
+        b=PU41HCwMPoxYMSyP8fhrzD6juPZxEfBmdlc/PKMFtE1ZPwP2er0AY9lHYRfd5IOs3
+         ww3lPC5lv8vjJLPdcnVfIoJu7rNEJRr0Lv1Buhc0bYyLzlWARFRNANnl0nlVCDQEH+
+         Y7F12KOpQ9BlyxXFUabLCBAlIDMhR06t3f5crcpIZKeMscVaFpJAmB0Hd1Xtk36JV5
+         Ug7TbNUf/+Ji5WbqHB4maeCLgNeA2fMie78EH0EFtcL2SQsL4EH5GY3/X/pg8QHISy
+         SYRK3bC5DsGaqSbiZ5AmCmw+VLptLlpjL2rl/5gMOfj5zxvd8mZ2G8rPYanR9TdXIg
+         NlKmvcIWocIiA==
+Date:   Thu, 30 Apr 2020 06:21:37 +0000
+From:   Priit Laes <plaes@plaes.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: a10/a20: rewrite init code to a
+ platform driver
+Message-ID: <20200430062137.GA32281@plaes.org>
+References: <20200417221730.555954-1-plaes@plaes.org>
+ <20200417221730.555954-2-plaes@plaes.org>
+ <20200420124935.asfbgv7envb2af55@gilmour.lan>
+ <20200420203228.GA4734@plaes.org>
+ <20200429143510.ksi27lok2udtmfas@gilmour.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429142850.GM56386@vkoul-mobl.Dlink>
+In-Reply-To: <20200429143510.ksi27lok2udtmfas@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-04-20, 19:58, Vinod Koul wrote:
-> On 29-04-20, 16:53, Mathias Nyman wrote:
-> > On 24.4.2020 13.14, Vinod Koul wrote:
-
-> > >  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
-> > >  	pm_runtime_get_noresume(&dev->dev);
-> > > @@ -388,6 +401,9 @@ static void xhci_pci_remove(struct pci_dev *dev)
-> > >  {
-> > >  	struct xhci_hcd *xhci;
-> > >  
-> > > +	if (renesas_device)
-> > > +		renesas_xhci_pci_exit(dev);
-> > > +
-> > 
-> > Ah, I see, what we really should do is make sure the quirks in the driver data get
-> > added to xhci->quirks, and then just check for the correct quirk in xhci_pci_remove.
+On Wed, Apr 29, 2020 at 04:35:10PM +0200, Maxime Ripard wrote:
+> Hi,
 > 
-> Ah sure that does sound better, I will update this as well and send an
-> update with these changes
+> On Mon, Apr 20, 2020 at 08:32:28PM +0000, Priit Laes wrote:
+> > On Mon, Apr 20, 2020 at 02:49:35PM +0200, Maxime Ripard wrote:
+> > > On Sat, Apr 18, 2020 at 01:17:27AM +0300, Priit Laes wrote:
+> > > > In order to register regmap for sun7i CCU, there needs to be
+> > > > a device structure already bound to the CCU device node.
+> > > > 
+> > > > Convert the sun4i/sun7i CCU setup to platform driver to use
+> > > > it later as platform device.
+> > > > 
+> > > > Signed-off-by: Priit Laes <plaes@plaes.org>
+> > > 
+> > > You can't relly do that though. We have timers that need those clocks before the
+> > > device model is initialized.
+> > 
+> > Ok, I'm somewhat lost now... are these the affected timers on sun7i following:
+> > - allwinner,sun4i-a10-timer (timer@1c20c00)
+> > - allwinner,sun7i-a20-hstimer (hstimer@1c60000)
+> 
+> Yep
+> 
+> > Any ideas on what approach I could actually use?
+> 
+> I guess you could keep the CLK_OF_DECLARE registration, and then have a
+> platform_driver probe and register the regmap?
+> 
 
-This works for me.. But I have kept the code as in the xhci_pci_probe(),
-ofcourse removed bool renesas_device.
+Thanks this did the trick.
 
-the xhci is not valid before invoking renesas_xhci_check_request_fw().
-Is there another way to get xhci from dev without calling
-usb_hcd_pci_probe().
-xhci = hcd_to_xhci(hcd) doesn't seem to work before that!
+> > Also, similar timer dependency would affect then sun6i-a31 and sun9i-a80
+> > platforms too...
 
--- 
-~Vinod
+I didn't check this before, but sun9i-a80 CCU is initialized currently via
+platform device. Should it be converted first to clock driver (CLK_OF_DECLARE)?
+
+I have sent out the v2 which contains sun7i/sun6i changes.
+
+> 
+> Indeed.
+> 
+> Maxime
+
+
