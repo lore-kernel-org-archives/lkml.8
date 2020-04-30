@@ -2,397 +2,187 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9C4C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8E7C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F221720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064EE214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LbAX5IPl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="W6yxGwZX";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xkmePLoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgD3IaP (ORCPT
+        id S1726832AbgD3IaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 30 Apr 2020 04:30:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21498 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgD3IaP (ORCPT
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:21890 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbgD3IaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:30:15 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U8MVPW011011;
-        Thu, 30 Apr 2020 10:30:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=OE0tp6+X5tTQDJZQL0I8xkm+cC1qOOa0U5/6s5K6JSc=;
- b=LbAX5IPlMwEthnL1IMzKAwbxsekznfCygV9FG2jz+zj6MqCUWGZoTSl2iYao4NSWMXbI
- 3jMd0Lzy4cFCMptZCqA9K5QrzPRQq+65sLeuRNgxcPjI3zqByopW31dEBU/PA2ZjvHjh
- stzKbtiWhnXeDqh977pXtpZHOjusFBWuSQvICykzi5++xuK6umwEdzeo9ZUscVlL82UM
- buBddmrVhmkAG76Fjj6uvB9rf+wANywSG5TvBe5t8Z7nvv4FvOGQQY4TNb/XQF/6vx4U
- 4BCPkvDbc9+sIO7lqBBFybM7i9ONVrs4fJpxuN0K0xrnTGkoFPfx3k18d3zK/0yC4Rai SA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhq6ayw2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 10:30:07 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B1B2F10002A;
-        Thu, 30 Apr 2020 10:30:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 961AF2AD2DD;
-        Thu, 30 Apr 2020 10:30:05 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.49) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 10:30:04 +0200
-Subject: Re: [PATCH v3 1/2] remoteproc: Add remoteproc character device
- interface
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <bjorn.andersson@linaro.org>, <mathieu.poirier@linaro.org>,
-        <ohad@wizery.com>, <tsoni@codeaurora.org>,
-        <psodagud@codeaurora.org>, <sidgup@codeaurora.org>
-References: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
- <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <d72ead5a-b25a-d4e2-4bbf-1790d2a64fb8@st.com>
-Date:   Thu, 30 Apr 2020 10:30:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 Apr 2020 04:30:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1588235413; x=1619771413;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=oVpdg/wx+Nvu2QCAx9UYgdpiWP7Xc7XEdDIjCIlKXhQ=;
+  b=W6yxGwZXV/AAroRf3JVgYdJ3TPshn7YGScszwTYCZqSCzCbjBoJUh+J+
+   GpSljPvVgQMJGlQTL/gB7uObMS9htACi6AdZ9qdjtWKudtEGkl+F08nOs
+   kX1D2r4591X96O91xZgJjGd9A9LEM8PrHGRt7tEB+xS5xZHwnoqq9bzAi
+   2Awqv5GdVEEcOo6FkS4TBGLl8HhfefCzp5+NOj2DxZ900reJtBdzfdCUM
+   7Kc/ihnAevdU2U8vsyyq5puZyIyalL9gLoPRN9VsFVlqWjmFxL3m4u1eo
+   VoHIs/EZLmr3mMqFSeDyuXbt4J42To6uKSJNnkpwXIqg79rzMQ4yoOXMY
+   g==;
+IronPort-SDR: CLB6CoY1MejbSeSV255aIdD3BHyUH8IQZrmGBt+R1pKoBWhNRYuoSZ6hpQNGdug+y5CwvFEBaw
+ rpNCqJPPpTCzjCARhFmJAvJ15imyQckJV5H9pe7Ddk2q3vN8gWMukX+qtvD/9pppT9fN7+V/3u
+ u9k2MG8CsDgFR+3hlCaU6hAgcZVFTza6QQ9JWgGYPUp5ou+Z2RLp9WqFtkovLpInQeMp7ZYo45
+ wJC+xGL4fl5/UapSL3HkG7cHjylKGiUCEF/c2QpPHP8Zf4sFyBzYyA3OpVrgbJ/RUqacurXHPn
+ wb8=
+X-IronPort-AV: E=Sophos;i="5.73,334,1583164800"; 
+   d="scan'208";a="136549215"
+Received: from mail-mw2nam12lp2043.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.43])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2020 16:30:11 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AuaforvADCasWLh/ZgfxJ7V+wNAFl46JjyOy+XxFmpnIUGEmACM5d5412Zu7mI6ZHRCBoPt/S2BAWdVzfdU93dFLkDbOfAIKSzwfn6Yw7FAFBvXT+Pt9555rHqQ8cxc7cpIJ3TVsXFtkxPAxMGyfyDRYUxdlNbY6sHjnF+GWd9oo7wR/EU5rs72mIqbDIhU3/Z2NBTY+q62q5uY2D7xTqnJacQd20NvlXjvPyhtaxsxFBjCa7yq4HpTZGw5WQVehQsteULc0ueeeeW6ndoh+aZlumoUrlDXQECT2HizwHx82I/cuorgzLuw/tl2URoNU2srpHd+lFcYY8fNWhyg+qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WMJ5fGI/5e2a6Oc8yvBo0YAsguyDt/IJdxxElZUxaaU=;
+ b=XfbKHvlGIH/k4pTUtAW1b9MRwtVxpeWa77knKZSJP45oimOeyvbUF5NoHEKwNZYQ21LiDTbgjs3P9Ev/tuLxKoortvvuwYaoyhEln2NCLDKzmSxRo7j+JbDmQnEYLB9q/OfRHrw4XabwJmx+njgSFYlo0qz4wLwNeKMCMFoSlq4ffODllKlr50awFRgTeprhC2DjBLcl5RLCyHhLlMVWhKJrNpluhtOv0Uzdpe+4C0gBUKh7JJ8Ay536zNmV+kDlMQ3INFAmnGXkeExbZlhwq3803i+dOLViBwWZ/hb+pJgVTp4r4limujLOSWBDAE+08oea/FGZw51tPDHoKPBXlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WMJ5fGI/5e2a6Oc8yvBo0YAsguyDt/IJdxxElZUxaaU=;
+ b=xkmePLoCXW88+jNPEXZ0+NYgS1wEyIs7n810ZQV/XnCdtfPMZEYbIhD4GvzhGbs2dz34pUNnkaNIMTl1XCMykhGkT95MFXzF1h5DRYhCncRyxW0TKJfTdsN2xkfcEkRIRTv8NJN+T6y3E/oxsKMV7tMIFFV60A8uyclsXtD2+2Y=
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com (2603:10b6:a03:14::14)
+ by BYAPR04MB5479.namprd04.prod.outlook.com (2603:10b6:a03:e4::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
+ 2020 08:30:10 +0000
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1]) by BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1%6]) with mapi id 15.20.2958.019; Thu, 30 Apr 2020
+ 08:30:10 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v2 3/5] scsi: ufs: add LU Dedicated buffer mode support
+ for WriteBooster
+Thread-Topic: [PATCH v2 3/5] scsi: ufs: add LU Dedicated buffer mode support
+ for WriteBooster
+Thread-Index: AQHWHi4FlIkQZ2baIkef+pv5Sc/dHqiRVdPw
+Date:   Thu, 30 Apr 2020 08:30:08 +0000
+Message-ID: <BYAPR04MB462991CBE166B51BFAF2E6B3FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <20200429135610.23750-1-stanley.chu@mediatek.com>
+ <20200429135610.23750-4-stanley.chu@mediatek.com>
+In-Reply-To: <20200429135610.23750-4-stanley.chu@mediatek.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_03:2020-04-30,2020-04-30 signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a36fa33d-f75b-42be-5efa-08d7ece0b20d
+x-ms-traffictypediagnostic: BYAPR04MB5479:
+x-microsoft-antispam-prvs: <BYAPR04MB5479BA1FD0465E5B0493B4FEFCAA0@BYAPR04MB5479.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:298;
+x-forefront-prvs: 0389EDA07F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1cQLY+bET6fmeU7rF2MTLnJfiZc1bwmdqJ/NN79/esly29XD1k/yyyYc2hJGXOb+KLk47oIKfTL/vBXrrMTuLTkjsJoTUKZDEWEUR9bvEGxm+xYhILmt29J5fZnb4avF+jZS/cmFyTE9MiSU2gWaOzhawVr6Acv9O4VNqzBjrwozDEenpRT672BsUWdY2FEj4R6dA+Y4iduqXxjdL/yaeBFs/G8XZyGSGOeL2KZgZYwYaD+8Nn1suxtxTIB+XbGZUACK/YFaqhe2KDjzFKNg2WHX1mu91WHQBEC3VDp+Xpet2ny9axOpURImDUz4waSDTY22hckx5YHvefJe3CfH6sCnCckS0KdxQwjJ7nwRgnL6gp46/wKbLcMc4VgzMY92ADazSpaEO7WyEPfGNtSH95hHqWTQeOOic9XnAnGKi1Ul5VqoIRkzrG5yDKDYBxmZ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4629.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(346002)(39860400002)(396003)(7416002)(5660300002)(316002)(86362001)(478600001)(6506007)(71200400001)(54906003)(186003)(7696005)(26005)(110136005)(2906002)(4326008)(66946007)(8936002)(76116006)(66476007)(55016002)(64756008)(66446008)(66556008)(33656002)(8676002)(52536014)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: pArTEOo/dNlKWEYilW9jj/HOvn/jSLoxAC4ep61+3A2AHAWmd3Dpy4KpOthIGitz0vLHX76HWonfTt1ujf2K17PPrhuCHDy6E3lx1T3Pv9v1YJ3pIsCLpx7Js+edKw0XBswGTrm0R3KNyHLJB5tXpzeJGtu3uiD4N+/XHaucUZgq8/KoooUjzwZ7I6BTNE/DkElSk5tj5VqStLL3sl9Z8TyzgWZ5iuSi/d9SOeKg/20NY6fN4gq8Ndc0Qt4jekK356OJ2dCfJ+wQwRcLIH8r7m9sygDOpIwwEUF/6JvV++HwuQ6XS+MCjVnL+akpBO3xf7ca/8J6M6htNq041sD8VbKw0v0nt+Thu/kCBHQp3YJdOdSgI5UthF1m1OuBurdUjNv9f2ndB8qz5tj94CiGkniQsDFXzP/C184b482Kuj4PVe2BZbUFqos1rqNu85rYSiEtR7qHgLNaIXDHclfkhx5aeqPPpbuiB22HQ+87tvXLJQu/06Y9X7aSJuAM2bp/hXGBLfIudW1J5FFUmJu61qT0CV3dY5452UbUj8KZJHEcdk76SHeds67C9T1FdROghBd1x8c7NwRxmDXU0YsKiD9baihc1lZYYud5YHhmWcftT/DxUXx86+B9Y0ANEqKwiKGcRfNzO1WXuCSASIZSyE2V22OoebHWyIall4/N7wGAbGxwAfagUOVhIHS/7EK03nY8W/xZej9FWTXd4uUUgCXYWR3vDsb/DF07pj6+tL2R9umt1KRsYWaRQj+3KBroa5UY8CaOAhY5q+LbPjpK4tn9SWcxxO9uY8NIltazHp0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a36fa33d-f75b-42be-5efa-08d7ece0b20d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 08:30:09.8545
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g3hwngfnP7bpNhsRpqHLulqD52LygxPy51xdB45NQv0T9Y/F7+kaSFUpyfPLwML+v+188LA8NaDAP2Fj9BDc3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5479
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rishabh,
-
-
-On 4/21/20 8:10 PM, Rishabh Bhatnagar wrote:
-> Add the character device interface into remoteproc framework.
-> This interface can be used in order to boot/shutdown remote
-> subsystems and provides a basic ioctl based interface to implement
-> supplementary functionality. An ioctl call is implemented to enable
-> the shutdown on release feature which will allow remote processors to
-> be shutdown when the controlling userpsace application crashes or hangs.
-> 
-
-Thanks for intruducing Ioctl, this will help for future evolutions.
-
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->  Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
->  drivers/remoteproc/Kconfig                         |   9 ++
->  drivers/remoteproc/Makefile                        |   1 +
->  drivers/remoteproc/remoteproc_cdev.c               | 143 +++++++++++++++++++++
->  drivers/remoteproc/remoteproc_internal.h           |  21 +++
->  include/linux/remoteproc.h                         |   3 +
->  include/uapi/linux/remoteproc_cdev.h               |  20 +++
->  7 files changed, 198 insertions(+)
->  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
->  create mode 100644 include/uapi/linux/remoteproc_cdev.h
-> 
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index 2e91370..412b2a0 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -337,6 +337,7 @@ Code  Seq#    Include File                                           Comments
->  0xB4  00-0F  linux/gpio.h                                            <mailto:linux-gpio@vger.kernel.org>
->  0xB5  00-0F  uapi/linux/rpmsg.h                                      <mailto:linux-remoteproc@vger.kernel.org>
->  0xB6  all    linux/fpga-dfl.h
-> +0xB7  all    uapi/linux/remoteproc_cdev.h			     <mailto:linux-remoteproc@vger.kernel.org>
->  0xC0  00-0F  linux/usb/iowarrior.h
->  0xCA  00-0F  uapi/misc/cxl.h
->  0xCA  10-2F  uapi/misc/ocxl.h
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index de3862c..6374b79 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -14,6 +14,15 @@ config REMOTEPROC
->  
->  if REMOTEPROC
->  
-> +config REMOTEPROC_CDEV
-> +	bool "Remoteproc character device interface"
-> +	help
-> +	  Say y here to have a character device interface for Remoteproc
-> +	  framework. Userspace can boot/shutdown remote processors through
-> +	  this interface.
+>=20
+>  static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+>  {
+> +       int ret;
+> +       u8 lun;
+> +       u32 d_lu_wb_buf_alloc =3D 0;
 > +
-> +	  It's safe to say N if you don't want to use this interface.
-> +
->  config IMX_REMOTEPROC
->  	tristate "IMX6/7 remoteproc support"
->  	depends on ARCH_MXC
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index e30a1b1..b7d4f77 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
->  remoteproc-y				+= remoteproc_sysfs.o
->  remoteproc-y				+= remoteproc_virtio.o
->  remoteproc-y				+= remoteproc_elf_loader.o
-> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
->  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->  obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
->  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
-> diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
-> new file mode 100644
-> index 0000000..65142ec
-> --- /dev/null
-> +++ b/drivers/remoteproc/remoteproc_cdev.c
-> @@ -0,0 +1,143 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Character device interface driver for Remoteproc framework.
-> + *
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/fs.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/remoteproc.h>
-> +#include <uapi/linux/remoteproc_cdev.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "remoteproc_internal.h"
-> +
-> +#define NUM_RPROC_DEVICES	64
-> +static dev_t rproc_major;
-> +
-> +static ssize_t rproc_cdev_write(struct file *filp, const char __user *buf,
-> +				 size_t len, loff_t *pos)
-> +{
-> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
-> +					   struct rproc, char_dev);
-> +	int ret = 0;
-> +	char cmd[10];
-> +
-> +	if (!len || len > sizeof(cmd))
-> +		return -EINVAL;
-> +
-> +	ret = copy_from_user(cmd, buf, sizeof(cmd));
-> +	if (ret)
-> +		return -EFAULT;
-> +
-> +	if (sysfs_streq(cmd, "start")) {
-> +		if (rproc->state == RPROC_RUNNING)
-> +			return -EBUSY;
-> +
-> +		ret = rproc_boot(rproc);
-> +		if (ret)
-> +			dev_err(&rproc->dev, "Boot failed:%d\n", ret);
-> +	} else if (sysfs_streq(cmd, "stop")) {
-> +		if (rproc->state == RPROC_OFFLINE)
-> +			return -ENXIO;
-
-returning ENXIO in this case seems to me no appropriate , what about EPERM or
-EINVAL (rproc_sysfs) ?
-
-> +
-> +		rproc_shutdown(rproc);
-> +	} else {
-> +		dev_err(&rproc->dev, "Unrecognized option\n");
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret ? ret : len;
-> +}
-> +
-> +static long rproc_device_ioctl(struct file *filp, unsigned int ioctl,
-> +				unsigned long arg)
-> +{
-> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
-> +					   struct rproc, char_dev);
-> +	void __user *argp = (void __user *)arg;
-> +	int ret;
-> +	bool param;
-> +
-> +	switch (ioctl) {
-> +	case RPROC_SET_SHUTDOWN_ON_RELEASE:
-> +		ret = copy_from_user(&param, argp, sizeof(bool));
-> +		if (ret) {
-> +			dev_err(&rproc->dev, "Data copy from userspace failed\n");
-> +			return -EINVAL;
-> +		}
-> +		rproc->cdev_put_on_release = param;
-
-argp is an void value, where cdev_put_on_release is a bool a check or a conversion  seems
-missing
-
-> +		break;
-> +	case RPROC_GET_SHUTDOWN_ON_RELEASE:
-> +		ret = copy_to_user(argp, &rproc->cdev_put_on_release,
-> +				   sizeof(bool));
-> +		if (ret) {
-> +			dev_err(&rproc->dev, "Data copy to userspace failed\n");
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	default:
-> +		dev_err(&rproc->dev, "Unsupported ioctl\n");
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int rproc_cdev_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct rproc *rproc = container_of(inode->i_cdev, struct rproc,
-> +					   char_dev);
-> +
-> +	if (rproc->cdev_put_on_release && rproc->state != RPROC_OFFLINE)
-> +		rproc_shutdown(rproc);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +static const struct file_operations rproc_fops = {
-> +	.write = rproc_cdev_write,
-> +	.unlocked_ioctl = rproc_device_ioctl,
-> +	.release = rproc_cdev_release,
-> +};
-> +
-> +int rproc_char_device_add(struct rproc *rproc)
-> +{
-> +	int ret;
-> +	dev_t cdevt;
-> +
-> +	cdev_init(&rproc->char_dev, &rproc_fops);
-> +	rproc->char_dev.owner = THIS_MODULE;
-> +
-> +	cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
-> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	rproc->dev.devt = cdevt;
-> +out:
-> +	return ret;
-> +}
-> +
-> +void rproc_char_device_remove(struct rproc *rproc)
-> +{
-> +	__unregister_chrdev(MAJOR(rproc->dev.devt), rproc->index, 1, "rproc");
-> +}
-> +
-> +void __init rproc_init_cdev(void)
-> +{
-> +	int ret;
-> +
-> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "rproc");
-
-"remoteproc"instead of "rproc" (in line with sysfs and debugfs naming) .
-
-> +	if (ret < 0)
-> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
-> +}
-> +
-> +void __exit rproc_exit_cdev(void)
-> +{
-> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_major), 0),
-> +				 NUM_RPROC_DEVICES);
-> +}
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 493ef92..fb9d891 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char *name, struct rproc *rproc,
->  int rproc_init_sysfs(void);
->  void rproc_exit_sysfs(void);
->  
-> +#ifdef CONFIG_REMOTEPROC_CDEV
-> +void rproc_init_cdev(void);
-> +void rproc_exit_cdev(void);
-> +int rproc_char_device_add(struct rproc *rproc);
-> +void rproc_char_device_remove(struct rproc *rproc);
-> +#else
-> +static inline void rproc_init_cdev(void)
-> +{
-> +}
-> +static inline void rproc_exit_cdev(void)
-> +{
-> +}
-> +static inline int rproc_char_device_add(struct rproc *rproc)
-> +{
-> +	return 0;
-> +}
-> +static inline void  rproc_char_device_remove(struct rproc *rproc)
-> +{
-> +}
-> +#endif
-> +
->  void rproc_free_vring(struct rproc_vring *rvring);
->  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->  
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad666..9bd2ff5 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -40,6 +40,7 @@
->  #include <linux/virtio.h>
->  #include <linux/completion.h>
->  #include <linux/idr.h>
-> +#include <linux/cdev.h>
->  #include <linux/of.h>
->  
->  /**
-> @@ -514,6 +515,8 @@ struct rproc {
->  	bool auto_boot;
->  	struct list_head dump_segments;
->  	int nb_vdev;
-> +	struct cdev char_dev;
-> +	bool cdev_put_on_release;
->  };
-
-These parameters are local variables of rproc_cdev. Could be defined in a separate structure.
-with a pointer in rproc to this structure.
-
->  
->  /**
-> diff --git a/include/uapi/linux/remoteproc_cdev.h b/include/uapi/linux/remoteproc_cdev.h
-> new file mode 100644
-> index 0000000..3975120
-> --- /dev/null
-> +++ b/include/uapi/linux/remoteproc_cdev.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> +/*
-> + * IOCTLs for Remoteproc's character device interface.
-> + *
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +
-> +#ifndef _UAPI_REMOTEPROC_CDEV_H_
-> +#define _UAPI_REMOTEPROC_CDEV_H_
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +#define RPROC_MAGIC	0xB7
-> +
-> +#define RPROC_SET_SHUTDOWN_ON_RELEASE _IOW(RPROC_MAGIC, 1, int)
-> +#define RPROC_GET_SHUTDOWN_ON_RELEASE _IOR(RPROC_MAGIC, 2, int)
-> +
-> +#endif
-> 
-IOCTLs should probaly be documented.
-
-Thanks,
-Arnaud
+>         if (hba->desc_size.dev_desc <=3D
+> DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP)
+>                 goto wb_disabled;
+>=20
+> @@ -6821,15 +6842,35 @@ static void ufshcd_wb_probe(struct ufs_hba
+> *hba, u8 *desc_buf)
+>         hba->dev_info.b_wb_buffer_type =3D
+>                 desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
+>=20
+> -       hba->dev_info.d_wb_alloc_units =3D
+> -               get_unaligned_be32(desc_buf +
+> -                                  DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNIT=
+S);
+>         hba->dev_info.b_presrv_uspc_en =3D
+>                 desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
+>=20
+> -       if (!(hba->dev_info.b_wb_buffer_type &&
+> -             hba->dev_info.d_wb_alloc_units))
+> -               goto wb_disabled;
+> +       if (hba->dev_info.b_wb_buffer_type =3D=3D WB_BUF_MODE_SHARED) {
+> +               hba->dev_info.d_wb_alloc_units =3D
+> +               get_unaligned_be32(desc_buf +
+> +                                  DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNIT=
+S);
+> +               if (!hba->dev_info.d_wb_alloc_units)
+> +                       goto wb_disabled;
+> +       } else {
+> +               for (lun =3D 0; lun < hba->dev_info.max_lu_supported; lun=
+++) {
+> +                       ret =3D ufshcd_read_unit_desc_param(hba,
+> +                                       lun,
+> +                                       UNIT_DESC_PARAM_WB_BUF_ALLOC_UNIT=
+S,
+> +                                       (u8 *)&d_lu_wb_buf_alloc,
+> +                                       sizeof(d_lu_wb_buf_alloc));
+> +                       if (ret)
+> +                               goto wb_disabled;
+> +                       if (d_lu_wb_buf_alloc) {
+> +                               hba->dev_info.wb_dedicated_lu =3D lun;
+> +                               break;
+Why are you allowing only a single WB lun?
+You should allow those buffers for lun0..lun7
