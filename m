@@ -2,248 +2,101 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DDAC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6BEC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A80E20836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC5020774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NP2qv5b+"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="jnjRwyAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgD3Uvr (ORCPT
+        id S1726501AbgD3Uyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36478 "EHLO
+        Thu, 30 Apr 2020 16:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726338AbgD3Uvq (ORCPT
+        by vger.kernel.org with ESMTP id S1725844AbgD3Uyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:51:46 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F70C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:51:46 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x77so487835pfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:51:46 -0700 (PDT)
+        Thu, 30 Apr 2020 16:54:53 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A47C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:54:53 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id v10so3799345qvr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z/T+sqjzriwApQPNZZiP/b1FdETZszA1CYwNdpGLAcw=;
-        b=NP2qv5b+jPWNia/NbPWik2u7QNt3CPH39cpq5jmaPXD5hlUnZTgj946oxqA0XZBcmT
-         Dd5AvKrs76qyF6sQNkqlTqLgTAhO6QrUJ1ySM+wuzaHfowQhvrbJfBFzFffjcxiqJuAL
-         x0eDANLjWuPqo5cySfLNcjAdGzQ3Kesulvrin4uoFOBGvsR2xNHSGvncJiG70chn84pN
-         pXeFekkfkuCwIl30ZuWITGr0o36iYOWxw4ubIvmxdlTa2rD8yEhCyiVhD1XEZbUZkUMn
-         /8+P6IPrcg4piPhOlP52LxjVpOxq6fXRXhAr6sjXtQVtHmElAwhu/XDWqhAaKWGRBjCD
-         v+qw==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WYotVXEQ7QSaXZH0Cb6CySMSy1hNmT60Cfqey+kK7ik=;
+        b=jnjRwyAu+dul5Y4kKLE7Ghb/Vc5TscG+yAoDRRIloYrY59wrKC6a8XzxjHt8F1Dj0e
+         VFMLTpT+9U/DWo9TVhqTr+G/yhBPumcPucHbAZ8QiJUk51xU0Af6cSBZ48nzqPtCUL5e
+         bjeUwvSs9OL5V9YXvXwZ4I9NmO9UA5IG0n1ZCQnT7JOYuDdGUHxjTspOnSc5Ki4BNAiZ
+         bfU1A9oV4+HjOYT1mdjkiMR3EBDEOUP+Andpppt7WtwCwDQlPTXrdxhcv7r5a9SpgWbm
+         kMK46SIX/uy11edzTFrZ6yLt8PJjxua6QkvIyadi2JXfNnT0YwilHmtEMO/Ju5Ya24y7
+         +x4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z/T+sqjzriwApQPNZZiP/b1FdETZszA1CYwNdpGLAcw=;
-        b=fQ1jcdZUyqiAQ5zTQXrcAaip4KEBkHoM24mRt6ZJXn8xlX8T2pKZlqnrSYCQ/a/kKI
-         pbkNyZe7dzlzsqCOHEI8wMRKbWx+uE5coBjnY4R+wO9LT9QWU4/FEt3ufpTR0jVTvEJE
-         PaJV47rNpNZzfzcMc56kJAN1vmH0vykD/mNIzV+orHiNiQLR2BeLMygFuBjlrPy2I60U
-         6IXoApf0BveuRA7Uxx9TNIZFczv8z9MnXURT54Nhvug1LIF4vHTAbEQZ53K3rxsE1E1W
-         HVMSOJL+p0ejb4HccaWi88blEQ+WreVcciwyZ3IyPE7bNjRto+kEeoMq6zg16kv8Bbiy
-         PCnw==
-X-Gm-Message-State: AGi0PubiQBmlP027J4tCOjtaSgsY/qiwCQV2nluWTPCXK06tNDpSf1ks
-        ErsRvcUp0tX+s7idrFnZeyo7mw==
-X-Google-Smtp-Source: APiQypIt+nZ0EnewUCudryVsUwv9nKND70SWKh1DFcVyMYgdcQGYHTWepdgAJg+wXKWv/u59zo0Baw==
-X-Received: by 2002:a63:3d43:: with SMTP id k64mr825299pga.150.1588279905969;
-        Thu, 30 Apr 2020 13:51:45 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id fy21sm548254pjb.25.2020.04.30.13.51.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WYotVXEQ7QSaXZH0Cb6CySMSy1hNmT60Cfqey+kK7ik=;
+        b=ORX0Tp9vIJEvK9frucAAgxtEgu06MQsbewzqCkKni9gtt7Q/UHkTaJRHc5kx/pcmeW
+         MP/XKt29UuynvSksxR4HeMMN6oiRUm83u5kuHx/D1k7vSGEK0DTSdJbFl68WdQzXJ/dh
+         mbs/aTRsa4BeAJ/a+PeLdSm3BhqscKhlN9eHOjrHFZX7eDi5pgcFYevupgtuzePmSMa3
+         V5PiQPlsJptoDMULEd4IFs3bbkFWS2PDJwg8ELJZQQbDOzlEGTWQ1uMvcqYVMwFGDKg7
+         GVCyURbDWDWE6KiF1i/9qNlqt6ziYFCbZ6dC+MCgi731sHwYNUNNx8fssfRYdelzGbXr
+         iphw==
+X-Gm-Message-State: AGi0PuZXBcuNLJF/IjFP9hdrKVQHEHikW8VFvObrr5ejzGiTvDwR6WUF
+        mwBBIDsfHgO0MxWWZU6K0+oeYUsCQMeaFw==
+X-Google-Smtp-Source: APiQypK0h2W3QvMGCUPB12GV8ymVk7gxiCl0cTc0DUvsoGMLKTbfcrDwWZOkdVEW+vKkXVSFxmr5hg==
+X-Received: by 2002:a05:6214:cf:: with SMTP id f15mr816040qvs.59.1588280092358;
+        Thu, 30 Apr 2020 13:54:52 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id t7sm652804qtr.93.2020.04.30.13.54.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 13:51:45 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 14:51:43 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com, loic.pallardy@st.com,
-        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 12/14] remoteproc: Introducing function
- rproc_set_state_machine()
-Message-ID: <20200430205143.GC18004@xps15>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-13-mathieu.poirier@linaro.org>
- <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
- <1438e3f6-3d8a-7edd-f552-b01f84316ec7@st.com>
+        Thu, 30 Apr 2020 13:54:51 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     linux-doc@vger.kernel.org
+Cc:     pbonzini@redhat.com, corbet@lwn.net, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH] Documentation: fix `make htmldocs ` warning
+Date:   Thu, 30 Apr 2020 17:54:47 -0300
+Message-Id: <20200430205447.93458-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1438e3f6-3d8a-7edd-f552-b01f84316ec7@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:38:54PM +0200, Arnaud POULIQUEN wrote:
-> 
-> 
-> On 4/29/20 11:22 AM, Arnaud POULIQUEN wrote:
-> > 
-> > 
-> > On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> >> Introducting function rproc_set_state_machine() to add
-> >> operations and a set of flags to use when synchronising with
-> >> a remote processor.
-> >>
-> >> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >> ---
-> >>  drivers/remoteproc/remoteproc_core.c     | 54 ++++++++++++++++++++++++
-> >>  drivers/remoteproc/remoteproc_internal.h |  6 +++
-> >>  include/linux/remoteproc.h               |  3 ++
-> >>  3 files changed, 63 insertions(+)
-> >>
-> >> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> >> index 48afa1f80a8f..5c48714e8702 100644
-> >> --- a/drivers/remoteproc/remoteproc_core.c
-> >> +++ b/drivers/remoteproc/remoteproc_core.c
-> >> @@ -2065,6 +2065,59 @@ int devm_rproc_add(struct device *dev, struct rproc *rproc)
-> >>  }
-> >>  EXPORT_SYMBOL(devm_rproc_add);
-> >>  
-> >> +/**
-> >> + * rproc_set_state_machine() - Set a synchronisation ops and set of flags
-> >> + *			       to use with a remote processor
-> >> + * @rproc:	The remote processor to work with
-> >> + * @sync_ops:	The operations to use when synchronising with a remote
-> >> + *		processor
-> >> + * @sync_flags:	The flags to use when deciding if the remoteproc core
-> >> + *		should be synchronising with a remote processor
-> >> + *
-> >> + * Returns 0 on success, an error code otherwise.
-> >> + */
-> >> +int rproc_set_state_machine(struct rproc *rproc,
-> >> +			    const struct rproc_ops *sync_ops,
-> >> +			    struct rproc_sync_flags sync_flags)
-> > 
-> > So this API should be called by platform driver only in case of synchronization
-> > support, right?
-> > In this case i would rename it as there is also a state machine in "normal" boot
-> > proposal: rproc_set_sync_machine or rproc_set_sync_state_machine
-> > 
-> 
-> Reviewing the stm32 series, i wonder if sync_flags should be a pointer to a const structure
-> as the platform driver should not update it during the rproc live cycle.
-> Then IMO, using a pointer to the structure instead of the structure seems more 
-> in line with the rest of the remoteproc API.
+Fix 'make htmldocs' warning:
+Documentation/virt/kvm/amd-memory-encryption.rst:76: WARNING: Inline literal start-string without end-string.
 
-Humm... If we do make sync_flags constant then the platform drivers can't modify
-the values dynamically, as I did in the stm32 series.  This is something Loic
-had asked for.
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+ Documentation/virt/kvm/amd-memory-encryption.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Moreover function rproc_set_state_machine() can't be called twice so updating
-the sync_flags can't happen.
+diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+index c3129b9ba5cb..57c01f531e61 100644
+--- a/Documentation/virt/kvm/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+@@ -74,7 +74,7 @@ should point to a file descriptor that is opened on the ``/dev/sev``
+ device, if needed (see individual commands).
+ 
+ On output, ``error`` is zero on success, or an error code.  Error codes
+-are defined in ``<linux/psp-dev.h>`.
++are defined in ``<linux/psp-dev.h>``.
+ 
+ KVM implements the following commands to support common lifecycle events of SEV
+ guests, such as launching, running, snapshotting, migrating and decommissioning.
+-- 
+2.25.1
 
-> 
-> >> +{
-> >> +	if (!rproc || !sync_ops)
-> >> +		return -EINVAL;
-> >> +
-> >> +	/*
-> >> +	 * No point in going further if we never have to synchronise with
-> >> +	 * the remote processor.
-> >> +	 */
-> >> +	if (!sync_flags.on_init &&
-> >> +	    !sync_flags.after_stop && !sync_flags.after_crash)
-> >> +		return 0;
-> >> +
-> >> +	/*
-> >> +	 * Refuse to go further if remoteproc operations have been allocated
-> >> +	 * but they will never be used.
-> >> +	 */
-> >> +	if (rproc->ops && sync_flags.on_init &&
-> >> +	    sync_flags.after_stop && sync_flags.after_crash)
-> >> +		return -EINVAL;
-> >> +
-> >> +	/*
-> >> +	 * Don't allow users to set this more than once to avoid situations
-> >> +	 * where the remote processor can't be recovered.
-> >> +	 */
-> >> +	if (rproc->sync_ops)
-> >> +		return -EINVAL;
-> >> +
-> >> +	rproc->sync_ops = kmemdup(sync_ops, sizeof(*sync_ops), GFP_KERNEL);
-> >> +	if (!rproc->sync_ops)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	rproc->sync_flags = sync_flags;
-> >> +	/* Tell the core what to do when initialising */
-> >> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_INIT);
-> > 
-> > Is there a use case where sync_flags.on_init is false and other flags are true?
-> > 
-> > Look like on_init is useless and should not be exposed to the platform driver.
-> > Or comments are missing to explain the usage of it vs the other flags.
-> > 
-> > Regards,
-> > Arnaud
-> >  
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +EXPORT_SYMBOL(rproc_set_state_machine);
-> >> +
-> >>  /**
-> >>   * rproc_type_release() - release a remote processor instance
-> >>   * @dev: the rproc's device
-> >> @@ -2088,6 +2141,7 @@ static void rproc_type_release(struct device *dev)
-> >>  	kfree_const(rproc->firmware);
-> >>  	kfree_const(rproc->name);
-> >>  	kfree(rproc->ops);
-> >> +	kfree(rproc->sync_ops);
-> >>  	kfree(rproc);
-> >>  }
-> >>  
-> >> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> >> index 7dcc0a26892b..c1a293a37c78 100644
-> >> --- a/drivers/remoteproc/remoteproc_internal.h
-> >> +++ b/drivers/remoteproc/remoteproc_internal.h
-> >> @@ -27,6 +27,8 @@ struct rproc_debug_trace {
-> >>  /*
-> >>   * enum rproc_sync_states - remote processsor sync states
-> >>   *
-> >> + * @RPROC_SYNC_STATE_INIT	state to use when the remoteproc core
-> >> + *				is initialising.
-> >>   * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
-> >>   *				has shutdown (rproc_shutdown()) the
-> >>   *				remote processor.
-> >> @@ -39,6 +41,7 @@ struct rproc_debug_trace {
-> >>   * operation to use.
-> >>   */
-> >>  enum rproc_sync_states {
-> >> +	RPROC_SYNC_STATE_INIT,
-> >>  	RPROC_SYNC_STATE_SHUTDOWN,
-> >>  	RPROC_SYNC_STATE_CRASHED,
-> >>  };
-> >> @@ -47,6 +50,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
-> >>  				       enum rproc_sync_states state)
-> >>  {
-> >>  	switch (state) {
-> >> +	case RPROC_SYNC_STATE_INIT:
-> >> +		rproc->sync_with_rproc = rproc->sync_flags.on_init;
-> >> +		break;
-> >>  	case RPROC_SYNC_STATE_SHUTDOWN:
-> >>  		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
-> >>  		break;
-> >> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> >> index ceb3b2bba824..a75ed92b3de6 100644
-> >> --- a/include/linux/remoteproc.h
-> >> +++ b/include/linux/remoteproc.h
-> >> @@ -619,6 +619,9 @@ struct rproc *rproc_get_by_child(struct device *dev);
-> >>  struct rproc *rproc_alloc(struct device *dev, const char *name,
-> >>  			  const struct rproc_ops *ops,
-> >>  			  const char *firmware, int len);
-> >> +int rproc_set_state_machine(struct rproc *rproc,
-> >> +			    const struct rproc_ops *sync_ops,
-> >> +			    struct rproc_sync_flags sync_flags);
-> >>  void rproc_put(struct rproc *rproc);
-> >>  int rproc_add(struct rproc *rproc);
-> >>  int rproc_del(struct rproc *rproc);
-> >>
