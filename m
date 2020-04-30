@@ -2,243 +2,84 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92365C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A515C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740E02083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMRL5oZ9"
+	by mail.kernel.org (Postfix) with ESMTP id 1E8AC20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588224124;
+	bh=1p0oH7YrVSof02HvpE/Mwk52Jg02jQcL9hzueBwTQjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=etm6+R7n6vi8RDYvvo6Pax4VnqAhpoWbbQmUjhBRhGUCPREAbP5Uy3/glIuphyl5h
+	 YblnTOH2ZtT1VMyk9BWWbBnuAj0T6h54GeZ9MRsibl5WVoEhDuXRmFc2d/a6I5ai7L
+	 paIb+u4lOBiO87Al1bvlaWkId3mkJozWrI58L5FU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgD3FVn (ORCPT
+        id S1726499AbgD3FWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 01:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3FVn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 01:21:43 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31ADC035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:21:42 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ms17so256985pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:21:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3+Aje/v5jcj8L3yv0nBtSsoYFCrlpuzCMRL81ZSK7zQ=;
-        b=WMRL5oZ97WiITscnQMde+o232dXlIvgsliipcI180iJ8pVpzQN0tjjvBC8prpmNwNM
-         2Rl5hSog1LlVBwRMnDw08s+kAQTVOYXbKxVIh6LM1l0au6rr7zvfSaUX890zTF854Lod
-         lG/W2F5HzIQR+j2as9L9akXJ6oFHNRpnYb8bqLXkp3Oc6ryBgNKs1tG3jApEg5iSmEJ/
-         1MTKmlA7pz7sp0+vHHyawhYtqROiD6HBWhchth6/IH4Ff6T2ax5LN1D+rr6pE2Qwd3eq
-         Kc4uHEzakoAqU7o2rkrA9mrjdSFe16zL3IY9afOgw77rr7fnSBbVkG+Q0YZ7ejfQNKGX
-         y1Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3+Aje/v5jcj8L3yv0nBtSsoYFCrlpuzCMRL81ZSK7zQ=;
-        b=ULL8uRIwJL9KQ+5AvuS3+zHot1B/r4Km4410Mw09UwUdQvyTszWBbDeB/g2ZqPi0Mq
-         hCJ6FcNf11kzC0xQ9sDDTv2aP9KbJ0x37dXKUdsWmqGliNxp2VY8VIg94INcz4a5iLig
-         x5G8JlVpRyisfoY5kAHlrqOJIgpkgCFcMFDeBepdIHeLRZqz4hX6UKBQca3VBQPZPLSf
-         pF4hlwtMonGkMIczCXojKdMT8ruxOZIW8Ql7O3uoNk99rOBZLcexgBviae7bnKIYuEjo
-         uXTncO2zgvKrhu5SfMjDF2qh3MhdMVqDPwu2smJMCf/E58YNeJS4x/xAwsuNaZ+aPbAt
-         mUnA==
-X-Gm-Message-State: AGi0Pub8vnXBwAiQUYbfXPbjHB8IXS99NVAuehOPkpInJCMmTmRBhaSb
-        lvGdhFe9svNTJqQnYLu5UnA8zA==
-X-Google-Smtp-Source: APiQypJT2Qj4R3PjkMG/fujT78Utc+4rknpPqcNDAU5n5mvRk6nX1Ay33sH4ujimxFi3CdH3WArD0w==
-X-Received: by 2002:a17:902:47:: with SMTP id 65mr1842545pla.54.1588224102051;
-        Wed, 29 Apr 2020 22:21:42 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id x13sm2444143pfq.154.2020.04.29.22.21.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 22:21:41 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 10:51:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
-        nm@ti.com, sboyd@kernel.org, robh+dt@kernel.org, rjw@rjwysocki.net,
-        saravanak@google.com, sibis@codeaurora.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        Thu, 30 Apr 2020 01:22:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgD3FWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 01:22:03 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 095692082E;
+        Thu, 30 Apr 2020 05:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588224122;
+        bh=1p0oH7YrVSof02HvpE/Mwk52Jg02jQcL9hzueBwTQjs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wFETOcuSpA6cWjmhNxTlbehrldwW6BolQSq4gendapIEf47FUUT3raBVV6Ztkz1TJ
+         O3kFOAy5ZNvY6418jydrSdcFWq4Ocw7OudLM5xkyhq/ePOwuRAVcPNHztPGE/U4gaz
+         rqBPiRV+POM6K4DJSVmdZ0JKTpFJJBpxLodwckh4=
+Date:   Thu, 30 Apr 2020 08:21:57 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/7] OPP: Add helpers for reading the binding
- properties
-Message-ID: <20200430052138.zr6smv3wrtkt5e52@vireshk-i7>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-3-georgi.djakov@linaro.org>
- <20200424173052.GM199755@google.com>
+Subject: Re: [PATCH] net/mlx5: reduce stack usage in qp_read_field
+Message-ID: <20200430052157.GD432386@unreal>
+References: <20200428212357.2708786-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424173052.GM199755@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200428212357.2708786-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-04-20, 10:30, Matthias Kaehlcke wrote:
-> Hi Georgi,
-> 
-> On Fri, Apr 24, 2020 at 06:53:59PM +0300, Georgi Djakov wrote:
-> > From: Saravana Kannan <saravanak@google.com>
-> > 
-> > The opp-hz DT property is not mandatory and we may use another property
-> > as a key in the OPP table. Add helper functions to simplify the reading
-> > and comparing the keys.
-> > 
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> > v7:
-> > * Extracted just the helpers from patch v6, as Viresh advised to split it.
-> > 
-> > v6: https://lore.kernel.org/r/20191207002424.201796-3-saravanak@google.com
-> > 
-> >  drivers/opp/core.c | 15 +++++++++++++--
-> >  drivers/opp/of.c   | 42 ++++++++++++++++++++++++++----------------
-> >  drivers/opp/opp.h  |  1 +
-> >  3 files changed, 40 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index ba43e6a3dc0a..c9c1bbe6ae27 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -1272,11 +1272,21 @@ static bool _opp_supported_by_regulators(struct dev_pm_opp *opp,
-> >  	return true;
-> >  }
-> >  
-> > +int _opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
-> > +{
-> > +	if (opp1->rate != opp2->rate)
-> > +		return opp1->rate < opp2->rate ? -1 : 1;
-> > +	if (opp1->level != opp2->level)
-> > +		return opp1->level < opp2->level ? -1 : 1;
-> > +	return 0;
-> > +}
-> > +
-> >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
-> >  			     struct opp_table *opp_table,
-> >  			     struct list_head **head)
-> >  {
-> >  	struct dev_pm_opp *opp;
-> > +	int opp_cmp;
-> >  
-> >  	/*
-> >  	 * Insert new OPP in order of increasing frequency and discard if
-> > @@ -1287,12 +1297,13 @@ static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
-> >  	 * loop.
-> >  	 */
-> >  	list_for_each_entry(opp, &opp_table->opp_list, node) {
-> > -		if (new_opp->rate > opp->rate) {
-> > +		opp_cmp = _opp_compare_key(new_opp, opp);
-> > +		if (opp_cmp > 0) {
-> >  			*head = &opp->node;
-> >  			continue;
-> >  		}
-> >  
-> > -		if (new_opp->rate < opp->rate)
-> > +		if (opp_cmp < 0)
-> >  			return 0;
-> >  
-> >  		/* Duplicate OPPs */
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index 9cd8f0adacae..e33169c7e045 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -521,6 +521,28 @@ void dev_pm_opp_of_remove_table(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> >  
-> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
-> > +			 bool *rate_not_available)
-> > +{
-> > +	u64 rate;
-> > +	int ret;
-> > +
-> > +	ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +	if (!ret) {
-> > +		/*
-> > +		 * Rate is defined as an unsigned long in clk API, and so
-> > +		 * casting explicitly to its type. Must be fixed once rate is 64
-> > +		 * bit guaranteed in clk API.
-> > +		 */
-> > +		new_opp->rate = (unsigned long)rate;
-> > +	}
-> 
-> nit: curly braces are not needed
+On Tue, Apr 28, 2020 at 11:23:47PM +0200, Arnd Bergmann wrote:
+> Moving the mlx5_ifc_query_qp_out_bits structure on the stack was a bit
+> excessive and now causes the compiler to complain on 32-bit architectures:
+>
+> drivers/net/ethernet/mellanox/mlx5/core/debugfs.c: In function 'qp_read_field':
+> drivers/net/ethernet/mellanox/mlx5/core/debugfs.c:274:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+>
+> Revert the previous patch partially to use dynamically allocation as
+> the code did before. Unfortunately there is no good error handling
+> in case the allocation fails.
+>
+> Fixes: 57a6c5e992f5 ("net/mlx5: Replace hand written QP context struct with automatic getters")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/debugfs.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 
-In fact they are as the comment is present within the if block (which
-is the right thing to do). Yes the code will compile fine without
-braces, but coding guideline suggests it around multi-line-statements.
+Thanks Arnd, I'll pick it to mlx5-next.
 
-> > +	*rate_not_available = !!ret;
-> > +
-> > +	of_property_read_u32(np, "opp-level", &new_opp->level);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  /**
-> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> >   * @opp_table:	OPP table
-> > @@ -558,26 +580,14 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> >  	if (!new_opp)
-> >  		return ERR_PTR(-ENOMEM);
-> >  
-> > -	ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +	ret = _read_opp_key(new_opp, np, &rate_not_available);
-> >  	if (ret < 0) {
-> > -		/* "opp-hz" is optional for devices like power domains. */
-> > -		if (!opp_table->is_genpd) {
-> > -			dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > -			goto free_opp;
-> > -		}
-> > +		if (!opp_table->is_genpd)
-> > +			dev_err(dev, "%s: opp key field not found\n", __func__);
+I was under impression that the frame size was increased a long
+time ago. Is this 1K limit still effective for all archs?
+Or is it is 32-bit leftover?
 
-Looks like the logic got changed here ? We used to goto free_opp only
-if !is_genpd earlier..
-
-> >  
-> > -		rate_not_available = true;
-> > -	} else {
-> > -		/*
-> > -		 * Rate is defined as an unsigned long in clk API, and so
-> > -		 * casting explicitly to its type. Must be fixed once rate is 64
-> > -		 * bit guaranteed in clk API.
-> > -		 */
-> > -		new_opp->rate = (unsigned long)rate;
-> > +		goto free_opp;
-> >  	}
-> >  
-> > -	of_property_read_u32(np, "opp-level", &new_opp->level);
-> > -
-> >  	/* Check if the OPP supports hardware's hierarchy of versions or not */
-> >  	if (!_opp_is_supported(dev, opp_table, np)) {
-> >  		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-> > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> > index d14e27102730..bcadb1e328a4 100644
-> > --- a/drivers/opp/opp.h
-> > +++ b/drivers/opp/opp.h
-> > @@ -211,6 +211,7 @@ struct opp_device *_add_opp_dev(const struct device *dev, struct opp_table *opp_
-> >  void _dev_pm_opp_find_and_remove_table(struct device *dev);
-> >  struct dev_pm_opp *_opp_allocate(struct opp_table *opp_table);
-> >  void _opp_free(struct dev_pm_opp *opp);
-> > +int _opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2);
-> >  int _opp_add(struct device *dev, struct dev_pm_opp *new_opp, struct opp_table *opp_table, bool rate_not_available);
-> >  int _opp_add_v1(struct opp_table *opp_table, struct device *dev, unsigned long freq, long u_volt, bool dynamic);
-> >  void _dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask, int last_cpu);
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-
--- 
-viresh
+Thanks
