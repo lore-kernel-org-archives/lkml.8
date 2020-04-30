@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B15C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108FBC47255
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372762076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB0F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262819;
-	bh=+k2ZI+83OqAv8SgP/rHh8+y4ELKKcvrshRN7zFngHYY=;
+	s=default; t=1588262824;
+	bh=nFix0a/j/Cj5TviaDz5+T9+Ut0oC83oAgMWkoZOnEvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jVFNC3MvZVPuU6luTeflA4Xy0K0JQnKObmC4cqAj2swK2AjUcnKA3gNDk+cONSl4i
-	 hRH0CKwR6PzE/I5J1NQj4Z4oRb6jqBbi+7zaJmyoP3gMkXpsYPI3lFpMNLOW/5uGiO
-	 oiPh5lqGamaidocGtq2jttglXN1j5prtG7X8dhyA=
+	b=CXU7FD3s22Nxc6eFg/dnTY9aOSvau5Av/czOYValqKVNksx2NzCSn/DenTOEs+y2c
+	 zuUb0pRT8itR9HMpp++elYYoTi0oAqDb+If6c7xbiPfAPrmkyB4pOfIY/2ijPdicjO
+	 YYMmp4P0BqxdIDGcGRIYB/o0I3i8qttWg4PJl+Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgD3QG6 (ORCPT
+        id S1728502AbgD3QHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:06:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50886 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726960AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27BFD24963;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A49624970;
         Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=+k2ZI+83OqAv8SgP/rHh8+y4ELKKcvrshRN7zFngHYY=;
+        bh=nFix0a/j/Cj5TviaDz5+T9+Ut0oC83oAgMWkoZOnEvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/BEeEmpqRnOcvdGABiLIRLxrXFqnPlXXZG/MFY+kDtHENeg5rFQseDf8nDz9A1wX
-         inWAWNLAzBhizetP8QtoWMzNejg8HjlpRkfRj071V1NBVxIQnFHBX/fYTEC1w0v78I
-         LBCblgg48z61suaBtuHuuObh/6tYt9vhW9xClUm0=
+        b=IkzFj0pBnvQtFcGQpcY7mKuY7CwzkLdlE9w6FUv7aqrdOx4zaGMTkIpYV8ysll2T1
+         YWMwLz/uVefvLrz5q1HgKt9hKtsA6TpgTUSWhUnk7V6Ll+9UTUBJpAFWzWDgGHYEKr
+         kSTOF+2o8uoSimJ5RQtZMq8CkGNGhZnKfh58O9FU=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxFI-CT; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxFc-Fq; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 15/37] docs: networking: convert operstates.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:10 +0200
-Message-Id: <aca46c2bc16a33b9da2f1943edf520baf72c508b.1588261997.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 19/37] docs: networking: convert PLIP.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:14 +0200
+Message-Id: <3a25bd7bb5cda9f622d43584bd0d062034fa4fb6.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -62,161 +62,164 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- add a document title;
-- adjust chapters, adding proper markups;
-- mark lists as such;
+- mark code blocks and literals as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/networking/index.rst            |  1 +
- .../{operstates.txt => operstates.rst}        | 45 ++++++++++++++-----
- 2 files changed, 34 insertions(+), 12 deletions(-)
- rename Documentation/networking/{operstates.txt => operstates.rst} (87%)
+ .../networking/{PLIP.txt => plip.rst}         | 43 +++++++++++--------
+ drivers/net/plip/Kconfig                      |  2 +-
+ 3 files changed, 27 insertions(+), 19 deletions(-)
+ rename Documentation/networking/{PLIP.txt => plip.rst} (92%)
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index b7f558480aca..028a36821b9a 100644
+index 696181a96e3c..18bb10239cad 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -88,6 +88,7 @@ Contents:
-    nf_conntrack-sysctl
-    nf_flowtable
-    openvswitch
-+   operstates
+@@ -92,6 +92,7 @@ Contents:
+    packet_mmap
+    phonet
+    pktgen
++   plip
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/operstates.txt b/Documentation/networking/operstates.rst
-similarity index 87%
-rename from Documentation/networking/operstates.txt
-rename to Documentation/networking/operstates.rst
-index b203d1334822..9c918f7cb0e8 100644
---- a/Documentation/networking/operstates.txt
-+++ b/Documentation/networking/operstates.rst
-@@ -1,5 +1,12 @@
+diff --git a/Documentation/networking/PLIP.txt b/Documentation/networking/plip.rst
+similarity index 92%
+rename from Documentation/networking/PLIP.txt
+rename to Documentation/networking/plip.rst
+index ad7e3f7c3bbf..0eda745050ff 100644
+--- a/Documentation/networking/PLIP.txt
++++ b/Documentation/networking/plip.rst
+@@ -1,4 +1,8 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==================
-+Operational States
-+==================
++================================================
+ PLIP: The Parallel Line Internet Protocol Device
++================================================
+ 
+ Donald Becker (becker@super.org)
+ I.D.A. Supercomputing Research Center, Bowie MD 20715
+@@ -83,7 +87,7 @@ When the PLIP driver is used in IRQ mode, the timeout used for triggering a
+ data transfer (the maximal time the PLIP driver would allow the other side
+ before announcing a timeout, when trying to handshake a transfer of some
+ data) is, by default, 500usec. As IRQ delivery is more or less immediate,
+-this timeout is quite sufficient. 
++this timeout is quite sufficient.
+ 
+ When in IRQ-less mode, the PLIP driver polls the parallel port HZ times
+ per second (where HZ is typically 100 on most platforms, and 1024 on an
+@@ -115,7 +119,7 @@ printer "null" cable to transfer data four bits at a time using
+ data bit outputs connected to status bit inputs.
+ 
+ The second data transfer method relies on both machines having
+-bi-directional parallel ports, rather than output-only ``printer''
++bi-directional parallel ports, rather than output-only ``printer``
+ ports.  This allows byte-wide transfers and avoids reconstructing
+ nibbles into bytes, leading to much faster transfers.
+ 
+@@ -132,7 +136,7 @@ bits with standard status register implementation.
+ 
+ A cable that implements this protocol is available commercially as a
+ "Null Printer" or "Turbo Laplink" cable.  It can be constructed with
+-two DB-25 male connectors symmetrically connected as follows:
++two DB-25 male connectors symmetrically connected as follows::
+ 
+     STROBE output	1*
+     D0->ERROR	2 - 15		15 - 2
+@@ -146,7 +150,8 @@ two DB-25 male connectors symmetrically connected as follows:
+     SLCTIN	17 - 17
+     extra grounds are 18*,19*,20*,21*,22*,23*,24*
+     GROUND	25 - 25
+-* Do not connect these pins on either end
 +
++    * Do not connect these pins on either end
  
- 1. Introduction
-+===============
+ If the cable you are using has a metallic shield it should be
+ connected to the metallic DB-25 shell at one end only.
+@@ -155,14 +160,14 @@ Parallel Transfer Mode 1
+ ========================
  
- Linux distinguishes between administrative and operational state of an
- interface. Administrative state is the result of "ip link set dev
-@@ -20,6 +27,7 @@ and changeable from userspace under certain rules.
+ The second data transfer method relies on both machines having
+-bi-directional parallel ports, rather than output-only ``printer''
++bi-directional parallel ports, rather than output-only ``printer``
+ ports.  This allows byte-wide transfers, and avoids reconstructing
+ nibbles into bytes.  This cable should not be used on unidirectional
+-``printer'' (as opposed to ``parallel'') ports or when the machine
++``printer`` (as opposed to ``parallel``) ports or when the machine
+ isn't configured for PLIP, as it will result in output driver
+ conflicts and the (unlikely) possibility of damage.
  
+-The cable for this transfer mode should be constructed as follows:
++The cable for this transfer mode should be constructed as follows::
  
- 2. Querying from userspace
-+==========================
- 
- Both admin and operational state can be queried via the netlink
- operation RTM_GETLINK. It is also possible to subscribe to RTNLGRP_LINK
-@@ -30,16 +38,20 @@ These values contain interface state:
- 
- ifinfomsg::if_flags & IFF_UP:
-  Interface is admin up
+     STROBE->BUSY 1 - 11
+     D0->D0	2 - 2
+@@ -179,7 +184,8 @@ The cable for this transfer mode should be constructed as follows:
+     GND->ERROR	18 - 15
+     extra grounds are 19*,20*,21*,22*,23*,24*
+     GROUND	25 - 25
+-* Do not connect these pins on either end
 +
- ifinfomsg::if_flags & IFF_RUNNING:
-  Interface is in RFC2863 operational state UP or UNKNOWN. This is for
-  backward compatibility, routing daemons, dhcp clients can use this
-  flag to determine whether they should use the interface.
++    * Do not connect these pins on either end
+ 
+ Once again, if the cable you are using has a metallic shield it should
+ be connected to the metallic DB-25 shell at one end only.
+@@ -188,7 +194,7 @@ PLIP Mode 0 transfer protocol
+ =============================
+ 
+ The PLIP driver is compatible with the "Crynwr" parallel port transfer
+-standard in Mode 0.  That standard specifies the following protocol:
++standard in Mode 0.  That standard specifies the following protocol::
+ 
+    send header nibble '0x8'
+    count-low octet
+@@ -196,20 +202,21 @@ standard in Mode 0.  That standard specifies the following protocol:
+    ... data octets
+    checksum octet
+ 
+-Each octet is sent as
++Each octet is sent as::
 +
- ifinfomsg::if_flags & IFF_LOWER_UP:
-  Driver has signaled netif_carrier_on()
-+
- ifinfomsg::if_flags & IFF_DORMANT:
-  Driver has signaled netif_dormant_on()
+ 	<wait for rx. '0x1?'>	<send 0x10+(octet&0x0F)>
+ 	<wait for rx. '0x0?'>	<send 0x00+((octet>>4)&0x0F)>
  
- TLV IFLA_OPERSTATE
-+------------------
+ To start a transfer the transmitting machine outputs a nibble 0x08.
+ That raises the ACK line, triggering an interrupt in the receiving
+ machine.  The receiving machine disables interrupts and raises its own ACK
+-line. 
++line.
  
- contains RFC2863 state of the interface in numeric representation:
+-Restated:
++Restated::
  
-@@ -47,26 +59,33 @@ IF_OPER_UNKNOWN (0):
-  Interface is in unknown state, neither driver nor userspace has set
-  operational state. Interface must be considered for user data as
-  setting operational state has not been implemented in every driver.
-+
- IF_OPER_NOTPRESENT (1):
-  Unused in current kernel (notpresent interfaces normally disappear),
-  just a numerical placeholder.
-+
- IF_OPER_DOWN (2):
-  Interface is unable to transfer data on L1, f.e. ethernet is not
-  plugged or interface is ADMIN down.
-+
- IF_OPER_LOWERLAYERDOWN (3):
-  Interfaces stacked on an interface that is IF_OPER_DOWN show this
-  state (f.e. VLAN).
-+
- IF_OPER_TESTING (4):
-  Unused in current kernel.
-+
- IF_OPER_DORMANT (5):
-  Interface is L1 up, but waiting for an external event, f.e. for a
-  protocol to establish. (802.1X)
-+
- IF_OPER_UP (6):
-  Interface is operational up and can be used.
- 
- This TLV can also be queried via sysfs.
- 
- TLV IFLA_LINKMODE
-+-----------------
- 
- contains link policy. This is needed for userspace interaction
- described below.
-@@ -75,6 +94,7 @@ This TLV can also be queried via sysfs.
- 
- 
- 3. Kernel driver API
-+====================
- 
- Kernel drivers have access to two flags that map to IFF_LOWER_UP and
- IFF_DORMANT. These flags can be set from everywhere, even from
-@@ -126,6 +146,7 @@ netif_carrier_ok() && !netif_dormant():
- 
- 
- 4. Setting from userspace
-+=========================
- 
- Applications have to use the netlink interface to influence the
- RFC2863 operational state of an interface. Setting IFLA_LINKMODE to 1
-@@ -139,18 +160,18 @@ are multicasted on the netlink group RTNLGRP_LINK.
- 
- So basically a 802.1X supplicant interacts with the kernel like this:
- 
---subscribe to RTNLGRP_LINK
---set IFLA_LINKMODE to 1 via RTM_SETLINK
---query RTM_GETLINK once to get initial state
---if initial flags are not (IFF_LOWER_UP && !IFF_DORMANT), wait until
-- netlink multicast signals this state
---do 802.1X, eventually abort if flags go down again
---send RTM_SETLINK to set operstate to IF_OPER_UP if authentication
-- succeeds, IF_OPER_DORMANT otherwise
---see how operstate and IFF_RUNNING is echoed via netlink multicast
---set interface back to IF_OPER_DORMANT if 802.1X reauthentication
-- fails
---restart if kernel changes IFF_LOWER_UP or IFF_DORMANT flag
-+- subscribe to RTNLGRP_LINK
-+- set IFLA_LINKMODE to 1 via RTM_SETLINK
-+- query RTM_GETLINK once to get initial state
-+- if initial flags are not (IFF_LOWER_UP && !IFF_DORMANT), wait until
-+  netlink multicast signals this state
-+- do 802.1X, eventually abort if flags go down again
-+- send RTM_SETLINK to set operstate to IF_OPER_UP if authentication
-+  succeeds, IF_OPER_DORMANT otherwise
-+- see how operstate and IFF_RUNNING is echoed via netlink multicast
-+- set interface back to IF_OPER_DORMANT if 802.1X reauthentication
-+  fails
-+- restart if kernel changes IFF_LOWER_UP or IFF_DORMANT flag
- 
- if supplicant goes down, bring back IFLA_LINKMODE to 0 and
- IFLA_OPERSTATE to a sane value.
+-(OUT is bit 0-4, OUT.j is bit j from OUT. IN likewise)
+-Send_Byte:
+-   OUT := low nibble, OUT.4 := 1
+-   WAIT FOR IN.4 = 1
+-   OUT := high nibble, OUT.4 := 0
+-   WAIT FOR IN.4 = 0
++  (OUT is bit 0-4, OUT.j is bit j from OUT. IN likewise)
++  Send_Byte:
++     OUT := low nibble, OUT.4 := 1
++     WAIT FOR IN.4 = 1
++     OUT := high nibble, OUT.4 := 0
++     WAIT FOR IN.4 = 0
+diff --git a/drivers/net/plip/Kconfig b/drivers/net/plip/Kconfig
+index b41035be2d51..e03556d1d0c2 100644
+--- a/drivers/net/plip/Kconfig
++++ b/drivers/net/plip/Kconfig
+@@ -21,7 +21,7 @@ config PLIP
+ 	  bits at a time (mode 0) or with special PLIP cables, to be used on
+ 	  bidirectional parallel ports only, which can transmit 8 bits at a
+ 	  time (mode 1); you can find the wiring of these cables in
+-	  <file:Documentation/networking/PLIP.txt>.  The cables can be up to
++	  <file:Documentation/networking/plip.rst>.  The cables can be up to
+ 	  15m long.  Mode 0 works also if one of the machines runs DOS/Windows
+ 	  and has some PLIP software installed, e.g. the Crynwr PLIP packet
+ 	  driver (<http://oak.oakland.edu/simtel.net/msdos/pktdrvr-pre.html>)
 -- 
 2.25.4
 
