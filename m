@@ -2,151 +2,123 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C5FC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E90C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84DE9206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wxsmkjon"
+	by mail.kernel.org (Postfix) with ESMTP id 36C142076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255237;
+	bh=dUI/gqqz5X+jR1udD0N8RtQtkFl5ejhA8YncUXES4cY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2psTlYAgvhK1Mex0XHZa2gMdLvunxRsYVAQd3yTbUaxlWVUOoxaPC5hxq8cywNTJL
+	 z/RnMnlvc/UlIPQQPLIFKTzzXZw2FhmaQOFHRJQv9IYKnS2JA+172f4E2Rg7Vm3nzS
+	 BtTs3z16As9fZQoB9bZ7kCKeH7hU9OIOquWcMCWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgD3OAa (ORCPT
+        id S1728109AbgD3NyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728169AbgD3OA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:00:26 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2413CC035494;
-        Thu, 30 Apr 2020 07:00:26 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id u11so1553494iow.4;
-        Thu, 30 Apr 2020 07:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nz4EYudAGnRAka2sLpxAUHkI/tIzbc4FpKMb2iD2HGI=;
-        b=WxsmkjonITcLJ97YhEvjgmBobJxYhdcS0FMYbI0ha9eAYIbOvVa++0B/N61OFuA+vq
-         TZYJoOOK1ZCNtDRuUb0+F6GjgICAVNM5rw4vEuVnM80xd3VkxSFGCpu0bX2tf4mdswgH
-         D8T/Hct4kccVa1z5uGmKgC3cbV8W5/BGPIlISHzo6yjyI6Yd84kp1sl1eFHyPTD6GGmH
-         0Q1F1IZODwzZhcHFUAcQpScBz+tK/gV6IwRa2pAu8aiuKxSgJ9XM9CrOeEgOUpJR6Mg0
-         6oYATFOQutPCYugnCrV+5/HZ8KiRd7lgTda3lkj13rjmdcAeGR16UBPZIBdRZZnJts6f
-         Vuww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nz4EYudAGnRAka2sLpxAUHkI/tIzbc4FpKMb2iD2HGI=;
-        b=CiwWFwshQdvP92w7Gq4UFxS8dWY/QB4VLzrv/Fv5WzUuF1H2+udlUzzN0oNB5PrCp5
-         JDfW7qpXlB1CfLHp3qNnE4cvwmmsuBlkxpaQVoO8+yZRBwn06HweZtXwQqgFq9wn+BAw
-         OhlJrMN9hF7/l6YD7tafQx4xByBQiOIoMRE6cjfAS/r1pvKjWSINoPOxc6oQDceCvuWR
-         mzcLvzCjGCZiIARbyWCnPwKK9atKLl/idujJjghzNVZCL8hRNNt6Omnqr52iP9zwSK/K
-         XOKHuBDj+D/1LFSFE6rGaoGYK0Ffhf2HLrwX0zc5KLKIYjOwtnCbmhDbmSgKltqJmQMm
-         slBw==
-X-Gm-Message-State: AGi0Pub3N2Cxo4L39iufmf9A8KhU1QiVU9tQA3+2VW80YrTnnsM9sWK7
-        +RvhIB1Z0Vo2Rng1TbwF4efWg3ph+A6IJRbcZk4=
-X-Google-Smtp-Source: APiQypL/hGXbUxNw4AVM3ITxY+bWgZQNGgI8BdvnXtQMrcBmjvMtXdgrG7Lhm8mMQi0TVyWgoYz+zdbaXKGpRu9prEA=
-X-Received: by 2002:a6b:b8d6:: with SMTP id i205mr2058871iof.123.1588255225316;
- Thu, 30 Apr 2020 07:00:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-4-peron.clem@gmail.com>
- <20200428081321.ht3el26yqhsnyfm4@gilmour.lan> <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
- <20200429123529.y24dpy63wxq7uvkt@gilmour.lan> <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
- <20200430084600.samghw4zxb5zdbez@gilmour.lan>
-In-Reply-To: <20200430084600.samghw4zxb5zdbez@gilmour.lan>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 30 Apr 2020 16:00:14 +0200
-Message-ID: <CAJiuCcf_LHrJ6QdZgH8HyN6TRiT+GiD+t4UggFCrz-VwVHXV6w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Thu, 30 Apr 2020 09:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728755AbgD3Nxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7EC2063A;
+        Thu, 30 Apr 2020 13:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254816;
+        bh=dUI/gqqz5X+jR1udD0N8RtQtkFl5ejhA8YncUXES4cY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NmEyc8SH2CgiJ3SV+7jR0XsSbsPQXiRG8aYOMgKf9CbYoTdz+gSLEYXWzoVX5D0eA
+         E1v/xmgMRDF+KWNCwSr3BCwshSyMMqs2ozXTPku4nKQZfcUwRDfWkB33rl5IzqB1PV
+         bs3VtzMUJDrrqImmtSek0iZxzpnBj0t9yc5XydQ8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 09/30] ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+Date:   Thu, 30 Apr 2020 09:53:04 -0400
+Message-Id: <20200430135325.20762-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+From: Matthias Blankertz <matthias.blankertz@cetitec.com>
 
-On Thu, 30 Apr 2020 at 10:46, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Wed, Apr 29, 2020 at 06:33:00PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > On Wed, 29 Apr 2020 at 14:35, Maxime Ripard <maxime@cerno.tech> wrote:
-> > >
-> > > On Tue, Apr 28, 2020 at 10:55:47AM +0200, Cl=C3=A9ment P=C3=A9ron wro=
-te:
-> > > > > > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
-> > > > > > +                              unsigned int fmt)
-> > > > >
-> > > > > The alignment is off here
-> > > > >
-> > > > > > +{
-> > > > > > +     u32 mode, val;
-> > > > > > +     u8 offset;
-> > > > > > +
-> > > > > > +     /*
-> > > > > > +      * DAI clock polarity
-> > > > > > +      *
-> > > > > > +      * The setup for LRCK contradicts the datasheet, but unde=
-r a
-> > > > > > +      * scope it's clear that the LRCK polarity is reversed
-> > > > > > +      * compared to the expected polarity on the bus.
-> > > > > > +      */
-> > > > >
-> > > > > Did you check this or has it been copy-pasted?
-> > > >
-> > > > copy-pasted, I will check this.
-> > >
-> > > It's not going to be easy to do this if you only have a board with HD=
-MI. If you
-> > > can't test that easily, just remove the comment (or make it explicit =
-that you
-> > > copy pasted it?), no comment is better than a wrong one.
-> >
-> > I have talked with Marcus Cooper it may be able to test this this week-=
-end.
-> > Also this can explain why we need the "
-> > simple-audio-card,frame-inversion;" in the device-tree.
-> >
-> > If think this fix has been introduced by you, correct? Could you say
-> > on which SoC did you see this issue?
->
-> This was seen on an H3
+[ Upstream commit a09fb3f28a60ba3e928a1fa94b0456780800299d ]
 
-Just two more questions:
-- Did you observe this issue on both TDM and I2S mode?
-- On which DAI node?
+The parent SSI of a multi-SSI setup must be fully setup, started and
+stopped since it is also part of the playback/capture setup. So only
+skip the SSI (as per commit 203cdf51f288 ("ASoC: rsnd: SSI parent cares
+SWSP bit") and commit 597b046f0d99 ("ASoC: rsnd: control SSICR::EN
+correctly")) if the SSI is parent outside of a multi-SSI setup.
 
-Since recent change in sun4i-i2s.c, we had to introduce the
-"simple-audio-card,frame-inversion" in LibreElec tree.
-H3 boards are quite common in LibreElec community so I think:
- - This fix is only needed in TDM mode
- - Or this fix is not required for the HDMI DAI node (HDMI DAI is a
-little bit different compare to other DAI but I think the first guess
-is more likely)
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200415141017.384017-2-matthias.blankertz@cetitec.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/sh/rcar/ssi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Regards,
-Clement
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 33dc8d6ad35b2..3fe88f7743824 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -375,7 +375,7 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 	 * We shouldn't exchange SWSP after running.
+ 	 * This means, parent needs to care it.
+ 	 */
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		goto init_end;
+ 
+ 	if (rsnd_io_is_play(io))
+@@ -531,7 +531,7 @@ static int rsnd_ssi_start(struct rsnd_mod *mod,
+ 	 * EN is for data output.
+ 	 * SSI parent EN is not needed.
+ 	 */
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		return 0;
+ 
+ 	ssi->cr_en = EN;
+@@ -554,7 +554,7 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+ 		return 0;
+ 
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		return 0;
+ 
+ 	cr  =	ssi->cr_own	|
+@@ -592,7 +592,7 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 	if (rsnd_is_gen1(priv))
+ 		return 0;
+ 
+-	if (rsnd_ssi_is_parent(mod, io))
++	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
+ 		return 0;
+ 
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+-- 
+2.20.1
 
->
-> Maxime
