@@ -2,71 +2,95 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BDEC47256
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05891C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8037920661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E002720661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgD3PLi (ORCPT
+        id S1726935AbgD3PL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:11:38 -0400
-Received: from elvis.franken.de ([193.175.24.41]:33630 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgD3PLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:11:38 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jUAqa-0005Uk-00; Thu, 30 Apr 2020 17:11:32 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 30965C0358; Thu, 30 Apr 2020 17:05:45 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 17:05:45 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: tools: Show result for loongson3-llsc-check
-Message-ID: <20200430150545.GA17822@alpha.franken.de>
-References: <1588250184-18730-1-git-send-email-yangtiezhu@loongson.cn>
+        Thu, 30 Apr 2020 11:11:57 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:34861 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726620AbgD3PL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:11:56 -0400
+Received: (qmail 1363 invoked by uid 500); 30 Apr 2020 11:11:55 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 30 Apr 2020 11:11:55 -0400
+Date:   Thu, 30 Apr 2020 11:11:55 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Oliver Neukum <oneukum@suse.com>
+cc:     syzbot <syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com>,
+        <andreyknvl@google.com>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <zaitcev@redhat.com>
+Subject: Re: KASAN: use-after-free Read in usblp_bulk_read
+In-Reply-To: <1588238283.16510.11.camel@suse.com>
+Message-ID: <Pine.LNX.4.44L0.2004301103500.27217-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588250184-18730-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 08:36:24PM +0800, Tiezhu Yang wrote:
-> It is better to show the result before loongson3-llsc-check exit,
-> otherwise we can see nothing if the return status is EXIT_SUCCESS,
-> it seems confusing.
-> 
-> E.g. without this patch:
-> 
-> [loongson@localhost tools]$ ./loongson3-llsc-check ../../../vmlinux
-> [loongson@localhost tools]$
-> 
-> With this patch:
-> 
-> [loongson@localhost tools]$ ./loongson3-llsc-check ../../../vmlinux
-> loongson3-llsc-check returns success
-> [loongson@localhost tools]$
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/mips/tools/loongson3-llsc-check.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Thu, 30 Apr 2020, Oliver Neukum wrote:
 
-applied to mips-next.
+> Am Dienstag, den 21.04.2020, 08:35 -0700 schrieb syzbot:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=126f75d7e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=be5b5f86a162a6c281e6
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > 
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+> > 
+> > usblp0: nonzero read bulk status received: -71
+> 
+> OK, we have this report and nobody understands it. If I may summarize:
+> 
+> 1. We do not conclusively know how the URB was submitted
+> 2. We are clear about which memory was freed and accessed
+> 3. We agree that the URB should have been unlinked
 
-Thomas.
+Or should not have been submitted.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> Do we agree on what we agree on?
+> 
+> Theories:
+> 
+> A. There is a race that would allow disconnect() and resume() to run
+> concurrently
+> 
+> B. There is a race in usblp which affects 'used'
+> 
+> C. There is a bug in the virtual driver that can make unlinking an URB
+> fail
+> 
+> What do you think? How to investigate this further and is it worth it?
+> Do we have documentation on what KASAN does?
+
+KASAN is documented.  The difficulty is that this race is obviously 
+hard to trigger, and without the ability to reproduce it we can't run 
+diagnostics to find the underlying cause.
+
+We can't even ask syzbot to try running tests for us; without a valid 
+reproducer it won't agree to rerun the original test program.
+
+Alan Stern
+
