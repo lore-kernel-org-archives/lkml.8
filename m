@@ -2,281 +2,125 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AF7C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F56C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD0AE20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F002054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588286423;
-	bh=IW//kslVhjbU5AOLThyrSGs7wZ30HZZnzDtcIFaqgzY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1n5BIMKEDNtoRjq/gI1mJzXnA2b9+dTS/k3GtPEPq2aP6Qr7iU4HiPbdvGxZB1xQK
-	 3yHO2sxtl1R6opoWQnxxWnykBzf5hQdsSdLvNkNbQrXpU71JUxjLF7jtjULJJZGeXb
-	 bWDpU2hvxeuuoAyZEdWthm1KxrBmeXKzUeh+icAE=
+	s=default; t=1588286614;
+	bh=4opDyevPEQA05BIebhqthwKvc88Qikpbmp5ElQzkcvA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dZYbybRyDheurYTyWI3TmhFZrn3hRQO2NJTDd+k6p8dOQO/CuWfWdB+VskSRGpzSS
+	 AI8u9rvmGY7Kieb4z/kYNSeA9d0UitMRwlSg5EMye7lIm4ukmMHiS599qsurkMiGp3
+	 0nS2CiGsWGr/CJSKSF6p94GGaxtFl197WCBD+6BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgD3WkX (ORCPT
+        id S1727808AbgD3Wnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:40:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36764 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 18:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbgD3WkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:40:22 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726697AbgD3Wnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 18:43:33 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BF8420731;
-        Thu, 30 Apr 2020 22:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6243207DD;
+        Thu, 30 Apr 2020 22:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588286421;
-        bh=IW//kslVhjbU5AOLThyrSGs7wZ30HZZnzDtcIFaqgzY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=S1hjKN9vgvacqe5bKeCab67HgXLud45GQFQKNEvG78mD5GZMp8JxMz4YSo4KTNUCF
-         JLBAtuBoGkkeTkmHDi+U8t6gOvvW1RXejV9B8yPhGzhbTZN7XRvNc4qqPX+SH5Y/Na
-         /N8W24vRfLo5Nva3Spdsyc2JBEdgyQr2yJ/ZCjCw=
-Date:   Thu, 30 Apr 2020 17:40:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Austin Bolen <Austin.Bolen@dell.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Keith Busch <kbusch@kernel.org>, Sinan Kaya <okaya@kernel.org>,
-        Tyler Baicar <tbaicar@codeaurora.org>
-Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Message-ID: <20200430224019.GA71117@bjorn-Precision-5520>
+        s=default; t=1588286612;
+        bh=4opDyevPEQA05BIebhqthwKvc88Qikpbmp5ElQzkcvA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eixKTQabEP6pogD65jtw5/ajbPgaParFaH6H9RUuJW4MSrqfI1f03tMssC6lQDtSj
+         ZknH5IO8MTGkV+M1BoMH2lU40rPTlli+9oBLoWTDtKn6dL32+M+agtd8KoCTi28Zlm
+         amLq2YYIiqqr7FzewHA7V+5j9oHWhUKSdp0YrvjY=
+Received: by mail-vs1-f52.google.com with SMTP id m24so5292692vsq.10;
+        Thu, 30 Apr 2020 15:43:32 -0700 (PDT)
+X-Gm-Message-State: AGi0PuarVnSNi9YBHZC11YLBDwxWjcyamY4mDQ2jeGfqbht4GTAQbgLz
+        VV0dHij8vB8gzGN6BvTUZ4S1s7tGk3mDzt2poPA=
+X-Google-Smtp-Source: APiQypKBvZqPY2A+rSMgvxUX9ofrT5ebA1P6k8+agvgFeAtoWekv+bjI69FEf/NDx52Odx1ftd7hMnl0LV9xyAf4eSo=
+X-Received: by 2002:a67:407:: with SMTP id 7mr1023429vse.95.1588286611719;
+ Thu, 30 Apr 2020 15:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67af2931705bed9a588b5a39d369cb70b9942190.1587925636.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20200430164356.15543-1-fdmanana@kernel.org> <20200430144018.c855f031b321d68e5c89b30c@linux-foundation.org>
+ <20200430222347.GA164259@google.com>
+In-Reply-To: <20200430222347.GA164259@google.com>
+From:   Filipe Manana <fdmanana@kernel.org>
+Date:   Thu, 30 Apr 2020 23:43:20 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H4MU+_Niwg63RzHu6+orXZsQt26eEXLOODfmpgTwUuacw@mail.gmail.com>
+Message-ID: <CAL3q7H4MU+_Niwg63RzHu6+orXZsQt26eEXLOODfmpgTwUuacw@mail.gmail.com>
+Subject: Re: [PATCH] percpu: make pcpu_alloc() aware of current gfp context
+To:     Dennis Zhou <dennis@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        cl@linux.com, linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Filipe Manana <fdmanana@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Austin, Mario, Jon, Alex, Rafael, Keith, Sinan, Tyler]
+On Thu, Apr 30, 2020 at 11:23 PM Dennis Zhou <dennis@kernel.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 02:40:18PM -0700, Andrew Morton wrote:
+> > On Thu, 30 Apr 2020 17:43:56 +0100 fdmanana@kernel.org wrote:
+> >
+> > > From: Filipe Manana <fdmanana@suse.com>
+> > >
+> > > Since 5.7-rc1, on btrfs we have a percpu counter initialization for which
+> > > we always pass a GFP_KERNEL gfp_t argument (this happens since commit
+> > > 2992df73268f78 ("btrfs: Implement DREW lock")).  That is safe in some
+> > > contextes but not on others where allowing fs reclaim could lead to a
+> > > deadlock because we are either holding some btrfs lock needed for a
+> > > transaction commit or holding a btrfs transaction handle open.  Because
+> > > of that we surround the call to the function that initializes the percpu
+> > > counter with a NOFS context using memalloc_nofs_save() (this is done at
+> > > btrfs_init_fs_root()).
+> > >
+> > > However it turns out that this is not enough to prevent a possible
+> > > deadlock because percpu_alloc() determines if it is in an atomic context
+> > > by looking exclusively at the gfp flags passed to it (GFP_KERNEL in this
+> > > case) and it is not aware that a NOFS context is set.  Because it thinks
+> > > it is in a non atomic context it locks the pcpu_alloc_mutex, which can
+> > > result in a btrfs deadlock when pcpu_balance_workfn() is running, has
+> > > acquired that mutex and is waiting for reclaim, while the btrfs task that
+> > > called percpu_counter_init() (and therefore percpu_alloc()) is holding
+> > > either the btrfs commit_root semaphore or a transaction handle (done at
+> > > fs/btrfs/backref.c:iterate_extent_inodes()), which prevents reclaim from
+> > > finishing as an attempt to commit the current btrfs transaction will
+> > > deadlock.
+> > >
+> >
+> > Patch looks good and seems sensible, thanks.
+> >
+>
+> Acked-by: Dennis Zhou <dennis@kernel.org>
+>
+> > But why did btrfs use memalloc_nofs_save()/restore() rather than
+> > s/GFP_KERNEL/GFP_NOFS/?
+>
+> I would also like to know.
 
-On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
-> determine the PCIe AER Capability ownership between OS and
-> firmware. This support is added based on following spec
-> reference.
-> 
-> Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
-> flags field BIT-0 and BIT-1 can be used to expose the
-> ownership of error source between firmware and OSPM.
-> 
-> Bit [0] - FIRMWARE_FIRST: If set, indicates that system
->           firmware will handle errors from this source
->           first.
-> Bit [1] – GLOBAL: If set, indicates that the settings
->           contained in this structure apply globally to all
->           PCI Express Bridges.
-> 
-> Although above spec reference states that setting
-> FIRMWARE_FIRST bit means firmware will handle the error source
-> first, it does not explicitly state anything about AER
-> ownership. So using HEST to determine AER ownership is
-> incorrect.
-> 
-> Also, as per following specification references, _OSC can be
-> used to negotiate the AER ownership between firmware and OS.
-> Details are,
-> 
-> Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
-> of _OSC Control Field” and as per PCI firmware specification r3.2,
-> sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
-> to request control over PCI Express AER. If the OS successfully
-> receives control of this feature, it must handle error reporting
-> through the AER Capability as described in the PCI Express Base
-> Specification.
-> 
-> Since above spec references clearly states _OSC can be used to
-> determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
+For 2 reasons:
 
-I pulled out the _OSC part of this to a separate patch.  What's left
-is below, and is essentially equivalent to Alex's patch:
+1) It's the preferred way to do it since
+memalloc_nofs_save()/restore() was added (according to
+Documentation/core-api/gfp_mask-from-fs-io.rst);
 
-  https://lore.kernel.org/r/20190326172343.28946-3-mr.nuke.me@gmail.com/
+2) According to Documentation/core-api/gfp_mask-from-fs-io.rst,
+passing GFP_NOFS to __vmalloc() doesn't work, so one has to use the
+memalloc_nofs_save()/restore() API for that. And pcpu_alloc() calls
+helpers that end up calling __vmalloc() (through pcpu_mem_zalloc()).
 
-I like what this does, but what I don't like is the fact that we now
-have this thing called pcie_aer_get_firmware_first() that is not
-connected with the ACPI FIRMWARE_FIRST bit at all.
+And that's it.
 
-I think the end result will be more readable if we get rid of the
-"firmware_first" completely.  I don't know if we need a wrapper for it
-at all, or if we should just open-code:
+Thanks.
 
-  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
-  {
-    struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-
-    if (!host->native_aer)
-      return -EIO;
-
-It's of nice to minimize the number of things you have look at.
-We already have native_aer, aer_cap, pcie_ports_native,
-pci_aer_available(), ..., so maybe we can live with seeing
-pci_find_host_bridge() a few times.
-
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f4274d301235..85d73d28ec26 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -217,133 +217,19 @@ void pcie_ecrc_get_policy(char *str)
->  }
->  #endif	/* CONFIG_PCIE_ECRC */
->  
-> -#ifdef CONFIG_ACPI_APEI
-> -static inline int hest_match_pci(struct acpi_hest_aer_common *p,
-> -				 struct pci_dev *pci)
-> -{
-> -	return   ACPI_HEST_SEGMENT(p->bus) == pci_domain_nr(pci->bus) &&
-> -		 ACPI_HEST_BUS(p->bus)     == pci->bus->number &&
-> -		 p->device                 == PCI_SLOT(pci->devfn) &&
-> -		 p->function               == PCI_FUNC(pci->devfn);
-> -}
-> -
-> -static inline bool hest_match_type(struct acpi_hest_header *hest_hdr,
-> -				struct pci_dev *dev)
-> -{
-> -	u16 hest_type = hest_hdr->type;
-> -	u8 pcie_type = pci_pcie_type(dev);
-> -
-> -	if ((hest_type == ACPI_HEST_TYPE_AER_ROOT_PORT &&
-> -		pcie_type == PCI_EXP_TYPE_ROOT_PORT) ||
-> -	    (hest_type == ACPI_HEST_TYPE_AER_ENDPOINT &&
-> -		pcie_type == PCI_EXP_TYPE_ENDPOINT) ||
-> -	    (hest_type == ACPI_HEST_TYPE_AER_BRIDGE &&
-> -		(dev->class >> 16) == PCI_BASE_CLASS_BRIDGE))
-> -		return true;
-> -	return false;
-> -}
-> -
-> -struct aer_hest_parse_info {
-> -	struct pci_dev *pci_dev;
-> -	int firmware_first;
-> -};
-> -
-> -static int hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr)
-> -{
-> -	if (hest_hdr->type == ACPI_HEST_TYPE_AER_ROOT_PORT ||
-> -	    hest_hdr->type == ACPI_HEST_TYPE_AER_ENDPOINT ||
-> -	    hest_hdr->type == ACPI_HEST_TYPE_AER_BRIDGE)
-> -		return 1;
-> -	return 0;
-> -}
-> -
-> -static int aer_hest_parse(struct acpi_hest_header *hest_hdr, void *data)
-> -{
-> -	struct aer_hest_parse_info *info = data;
-> -	struct acpi_hest_aer_common *p;
-> -	int ff;
-> -
-> -	if (!hest_source_is_pcie_aer(hest_hdr))
-> -		return 0;
-> -
-> -	p = (struct acpi_hest_aer_common *)(hest_hdr + 1);
-> -	ff = !!(p->flags & ACPI_HEST_FIRMWARE_FIRST);
-> -
-> -	/*
-> -	 * If no specific device is supplied, determine whether
-> -	 * FIRMWARE_FIRST is set for *any* PCIe device.
-> -	 */
-> -	if (!info->pci_dev) {
-> -		info->firmware_first |= ff;
-> -		return 0;
-> -	}
-> -
-> -	/* Otherwise, check the specific device */
-> -	if (p->flags & ACPI_HEST_GLOBAL) {
-> -		if (hest_match_type(hest_hdr, info->pci_dev))
-> -			info->firmware_first = ff;
-> -	} else
-> -		if (hest_match_pci(p, info->pci_dev))
-> -			info->firmware_first = ff;
-> -
-> -	return 0;
-> -}
-> -
-> -static void aer_set_firmware_first(struct pci_dev *pci_dev)
-> -{
-> -	int rc;
-> -	struct aer_hest_parse_info info = {
-> -		.pci_dev	= pci_dev,
-> -		.firmware_first	= 0,
-> -	};
-> -
-> -	rc = apei_hest_parse(aer_hest_parse, &info);
-> -
-> -	if (rc)
-> -		pci_dev->__aer_firmware_first = 0;
-> -	else
-> -		pci_dev->__aer_firmware_first = info.firmware_first;
-> -	pci_dev->__aer_firmware_first_valid = 1;
-> -}
-> -
->  int pcie_aer_get_firmware_first(struct pci_dev *dev)
->  {
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +
->  	if (!pci_is_pcie(dev))
->  		return 0;
->  
->  	if (pcie_ports_native)
->  		return 0;
->  
-> -	if (!dev->__aer_firmware_first_valid)
-> -		aer_set_firmware_first(dev);
-> -	return dev->__aer_firmware_first;
-> +	return !host->native_aer;
->  }
-
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 64b5e081cdb2..c05b49d740f4 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -147,16 +147,7 @@ static inline bool pcie_pme_no_msi(void) { return false; }
->  static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
->  #endif /* !CONFIG_PCIE_PME */
->  
-> -#ifdef CONFIG_ACPI_APEI
->  int pcie_aer_get_firmware_first(struct pci_dev *pci_dev);
-> -#else
-> -static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
-> -{
-> -	if (pci_dev->__aer_firmware_first_valid)
-> -		return pci_dev->__aer_firmware_first;
-> -	return 0;
-> -}
-> -#endif
->  
->  struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
->  #endif /* _PORTDRV_H_ */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 83ce1cdf5676..43f265830eca 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -420,8 +420,6 @@ struct pci_dev {
->  	 * mappings to make sure they cannot access arbitrary memory.
->  	 */
->  	unsigned int	untrusted:1;
-> -	unsigned int	__aer_firmware_first_valid:1;
-> -	unsigned int	__aer_firmware_first:1;
->  	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
->  	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
->  	unsigned int	irq_managed:1;
-> -- 
-> 2.17.1
-> 
+>
+> Thanks,
+> Dennis
