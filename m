@@ -2,291 +2,248 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F24C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CB7C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C36020784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="J5h/8HVD"
+	by mail.kernel.org (Postfix) with ESMTP id 98D8721775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgD3GaY (ORCPT
+        id S1726631AbgD3Gad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:30:24 -0400
-Received: from mail-dm6nam10on2114.outbound.protection.outlook.com ([40.107.93.114]:25879
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Thu, 30 Apr 2020 02:30:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40118 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbgD3GaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:30:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DZYjOMvpkq9+8B/kxyL/A58MXIUeoMAZu5ltqiUSYZZpRN/gtFlY7VWwLXSc+GjveyNso1JtEQcIw0I2Mk2+qpp7b/4V/qWdnj69yFgfvXfquRT1fVxbdmNhDKr+l1seGCb0nOuh6NbxjBfYcIKqnXg/NBT5p8R/yN4qqqrJF9wLm8RPSISyerbzz6JT3d9+KDczOvkBiZQmhDoVvPoQdZc3FhK0vHza70JpEV7yK0FLdMMuqj78Y26H5aDlT95ghIpv2VVCbVdHlEQ7jxKkFQ0szIma+3S0oqHRibYYKGyB1Jlblw1wCQzkflTfd7zjJ51dJNKr/JjJhtjuP0pCMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n4CKdKTaHkawzkG8/J6NtHtPBaJqgw3IFr+wP29/e1Y=;
- b=EyBpJNW7RHOhmqm+FTWRF6hEVWiYArntZs54L8+b1vQhWNA1LmZBC2ABUJVFaMiHvFLEgbarteJprmmB+syO7drbDxpsS/HFaBeFuMXmUpdwA0k4eb0k7IWm3GRHdvl6H7sNbUDPUBZvca2RElFagY4/dVsNfcseLfswgfuSHRpSwklyqi5iDkot0MJ4oQ7wzcH1ATqwPToeIc1hCJea5xnQY3NYDWte1aZZ+0FrqnuJxfJCjX+XIoqupzQMjPdmNE80AHTY/R8CM/L5XHE7lPkOr76/7RTBBW2NDGa+VskKfbntQaGUfy3JppjYdQaHGcHw2wLj7+FMNgffUJQVsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n4CKdKTaHkawzkG8/J6NtHtPBaJqgw3IFr+wP29/e1Y=;
- b=J5h/8HVD7brn6xSCv0jcIBbcspDvAudXdxmtjtkZ0VI1LjxMegPQMkrVD3ZtCfgXJKyK1eOzA0UpTYlkJChgio8RFqmeW1s1Qgb0i6I3s6wlVDMv6L7aLVFgxNwS2j3uFrFEF3OeUKD6g+8/O0btoGEOIS0pdZ0GV/mDlZNFhAY=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB7105.namprd04.prod.outlook.com (2603:10b6:a03:222::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 30 Apr
- 2020 06:30:19 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
- 06:30:19 +0000
-Date:   Thu, 30 Apr 2020 14:30:12 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     devel@driverdev.osuosl.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v8 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP bridge driver
-Message-ID: <20200430063012.GE6645@xin-VirtualBox>
-References: <cover.1587880280.git.xji@analogixsemi.com>
- <4d14400b6c19f17c28267f6ebdbce9673333c05c.1587880280.git.xji@analogixsemi.com>
- <CANMq1KC2EUPMDqTcaU-HLqfFivR4=7wxrmiSk-VzF0bjjLgNHA@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANMq1KC2EUPMDqTcaU-HLqfFivR4=7wxrmiSk-VzF0bjjLgNHA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK2PR06CA0006.apcprd06.prod.outlook.com
- (2603:1096:202:2e::18) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
+        id S1726358AbgD3Gad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:30:33 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7246AD2AB6546329FFF5;
+        Thu, 30 Apr 2020 14:30:30 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
+ 14:30:28 +0800
+Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+References: <20200421143149.45108-1-yuehaibing@huawei.com>
+ <20200422093344.GY13121@gauss3.secunet.de>
+ <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
+ <CADvbK_cEgKCEGRJU1v=FAdFNoh3TzD+cZLiKUtsMLHJh3JqOfg@mail.gmail.com>
+ <02a56d2c-8d27-f53a-d9e3-c25bd03677c8@huawei.com>
+ <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
+ <b392a477-2ab5-1045-a18c-4df915f78001@huawei.com>
+ <CADvbK_dAjP-Qa1L0zDyzG_25bwr-3xtiPLzY4_CeimKcarp9Tg@mail.gmail.com>
+ <cb82c789-8eb5-e7bf-4f5a-4a8ec0672648@huawei.com>
+CC:     Xin Long <lucien.xin@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        davem <davem@davemloft.net>, <kuba@kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Jamal Hadi Salim" <hadi@cyberus.ca>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <895e1510-6946-3580-fb90-7da328432f07@huawei.com>
+Date:   Thu, 30 Apr 2020 14:30:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HK2PR06CA0006.apcprd06.prod.outlook.com (2603:1096:202:2e::18) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 06:30:18 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 89705d86-d65a-477f-ea3f-08d7eccff3ff
-X-MS-TrafficTypeDiagnostic: BY5PR04MB7105:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB7105815EEE1A3F97E76B9746C7AA0@BY5PR04MB7105.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(39840400004)(136003)(346002)(376002)(7416002)(5660300002)(4326008)(6666004)(478600001)(107886003)(66946007)(9686003)(66476007)(55016002)(66556008)(6496006)(33656002)(54906003)(8936002)(16526019)(26005)(33716001)(316002)(110136005)(8676002)(1076003)(2906002)(186003)(53546011)(956004)(86362001)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5wG7x1kZyH75kfW+qqEpJEWY7Ah00RUkK/10M+y/aHGmWpT8JMjJ313b/NoPXvxpPRj9PKozGW7cOUf90IdR2ehkLZWTiraoffG9vvOLy7+NNXUNDGT51mlFdSxEOLWQOwgSQAZOm7THrOHsGq/v5ljIZSZqLAJiRukheZQm5neArCs8sjup0imnaQ+os8g5GUtzroRYkaPldgbWbvmZNTnOinGFV4fP96+cH0WHu/esqUwEly3BtX+i5Y0sS1ur48ahy96qhYb5kf53MNsLSoFkCKB+s6IOutPDxsC9jFt81AwhcY0dfYMy246fdkP9GTwwWu4HwuQyaqeOfHEBJXV3D7owQNpLO2aq3A3pblsOrfScrVCKaAJ6fmclkkhGD2ODAJx/c7M4EXB55b6QxR85ET05ffig4tY0mTsK4txX7y8nq+DBwUGM3RvGbivN
-X-MS-Exchange-AntiSpam-MessageData: A0aeEHp4iejX/sqyIXaf+/xXw7ph4sSp+zGkz2iXJ6Wwh5SRoyq9e25Bg/NutT3ifdwiQOP04hbBET1RcYpo6eNT+4UQ6G96r5OSy0M80n2rgBw13C+yVpEodepTF1YFvrq/9PLAPJcxu8Y6SKesTbV4LqK9HETswOpz/uZQ+vPbsdRpHG9n3VGcQrW8vrgdfiWGlXhaNqvjkVo6FIDDbCELqH/Fa+P6bmLfDj9XUEGDEtl+qOc+9k4GquD/Tiz7egXaGFENDdO79QVPLLkcHq76X/BCJLIb8Rc/owMkCk8t0IOAN6mU9K4vlZLugaDXVniEK4Z4sa/+WjvvQ1pEto3v64ovpoR11GiS7Ga8n0NWTHoCxoJc4jiUUY02gOQMtP74QXBi354Nip9giTHxC9ZjJ/KkAfRt81habE29YMWLZt0T5JbyS8jhbgbVozK8Kyx06szi+tFhxebWDrgAMHsS53KhUEo9DZ0zZNb8oohZHU/sTYGaGLger9Hk05hyHc/ZFUwcvMChWgu0rhk/0Z91Z4RUFFGLs6LkQqE9kEIAs5fxEhc1JEqeA7hC3ftq4hcTG7RDaIVcaaHnPTS+VoPhxEMkncIcQFZMG+BdltzWy2gr3xIrRqkdln7bU/neeAlSUnOwPBSsYqoBwtpFMRoSnGdLBRsu80GE3aEen3wfRzb5xs45QW73d7Or1w8EAZvWxiZp4LP/INYrmsL32it8u00ybLx2/0FMGI/092UL40/1HcrVELP2/LTjRHg3TFF5v3abNNa8mNYYCVEH0wMJX7WEM1GyGu1rYMMeTu4O9tRiu8ymfis9l4D2EaSV
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89705d86-d65a-477f-ea3f-08d7eccff3ff
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 06:30:19.5580
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GnMEgivEtunC3mB1Hl2p7gOTt8MHoo7lpvnvtWj64W0h23Pv/8C2K1tm4piSzEXFfAKHCA5rSicU6nsudPStVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7105
+In-Reply-To: <cb82c789-8eb5-e7bf-4f5a-4a8ec0672648@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:10:05AM +0800, Nicolas Boichat wrote:
-> On Mon, Apr 27, 2020 at 2:18 PM Xin Ji <xji@analogixsemi.com> wrote:
-> >
-> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
-> > for portable device. It converts MIPI DSI/DPI to DisplayPort 1.3 4K.
-> >
-> > The ANX7625 can support both USB Type-C PD feature and MIPI DSI/DPI
-> > to DP feature. This driver only enabled MIPI DSI/DPI to DP feature.
-> >
-> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> > ---
-> >  drivers/gpu/drm/bridge/Makefile           |    2 +-
-> >  drivers/gpu/drm/bridge/analogix/Kconfig   |    6 +
-> >  drivers/gpu/drm/bridge/analogix/Makefile  |    1 +
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c | 2158 +++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/analogix/anx7625.h |  410 ++++++
-> >  5 files changed, 2576 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.c
-> >  create mode 100644 drivers/gpu/drm/bridge/analogix/anx7625.h
-> >
-> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> > index 4934fcf..bcd388a 100644
-> > --- a/drivers/gpu/drm/bridge/Makefile
-> > +++ b/drivers/gpu/drm/bridge/Makefile
-> > @@ -12,8 +12,8 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
-> >  obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
-> >  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
-> >  obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
-> > -obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
-> >  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
-> >  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
-> >  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
-> > +obj-y += analogix/
-> >  obj-y += synopsys/
-> > diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
-> > index e930ff9..b2f127e 100644
-> > --- a/drivers/gpu/drm/bridge/analogix/Kconfig
-> > +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
-> > @@ -2,3 +2,9 @@
-> >  config DRM_ANALOGIX_DP
-> >         tristate
-> >         depends on DRM
-> > +
-> > +config ANALOGIX_ANX7625
-> > +       tristate "Analogix MIPI to DP interface support"
-> > +       help
-> > +               ANX7625 is an ultra-low power 4K mobile HD transmitter designed
-> > +               for portable devices. It converts MIPI/DPI to DisplayPort1.3 4K.
-> > diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
-> > index fdbf3fd..8a52867 100644
-> > --- a/drivers/gpu/drm/bridge/analogix/Makefile
-> > +++ b/drivers/gpu/drm/bridge/analogix/Makefile
-> > @@ -1,3 +1,4 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> > +obj-$(CONFIG_ANALOGIX_ANX7625) += anx7625.o
-> >  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
-> >  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
-> > diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> > new file mode 100644
-> > index 0000000..fff7a49
-> > [snip]
-> > +static int anx7625_attach_dsi(struct anx7625_data *ctx)
-> > +{
-> > +       struct mipi_dsi_host *host;
-> > +       struct mipi_dsi_device *dsi;
-> > +       struct device_node *mipi_host_node;
-> > +       struct device *dev = &ctx->client->dev;
-> > +       const struct mipi_dsi_device_info info = {
-> > +               .type = "anx7625",
-> > +               .channel = 0,
-> > +               .node = NULL,
-> > +       };
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "attach dsi\n");
-> > +
-> > +       if (ctx->pdata.dsi_supported)
-> > +               mipi_host_node = ctx->pdata.node.mipi_dsi_host_node;
-> > +       else
-> > +               mipi_host_node = ctx->pdata.node.mipi_dpi_host_node;
-> > +
-> > +       if (!mipi_host_node) {
-> > +               DRM_ERROR("dsi host is not configured.\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       host = of_find_mipi_dsi_host_by_node(mipi_host_node);
+On 2020/4/24 11:48, Yuehaibing wrote:
+> On 2020/4/23 17:43, Xin Long wrote:
+>> On Thu, Apr 23, 2020 at 4:41 PM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>>
+>>> On 2020/4/23 14:37, Xin Long wrote:
+>>>> On Thu, Apr 23, 2020 at 10:26 AM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>>>>
+>>>>> On 2020/4/22 23:41, Xin Long wrote:
+>>>>>> On Wed, Apr 22, 2020 at 8:18 PM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>>>>>>
+>>>>>>> On 2020/4/22 17:33, Steffen Klassert wrote:
+>>>>>>>> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
+>>>>>>>>> While update xfrm policy as follow:
+>>>>>>>>>
+>>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>>>>  priority 1 mark 0 mask 0x10
+>>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>>>>  priority 2 mark 0 mask 0x00
+>>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>>>>  priority 2 mark 0 mask 0x10
+>>>>>>>>>
+>>>>>>>>> We get this warning:
+>>>>>>>>>
+>>>>>>>>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
+>>>>>>>>> Kernel panic - not syncing: panic_on_warn set ...
+>>>>>>>>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
+>>>>>>>>> Call Trace:
+>>>>>>>>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
+>>>>>>>>>  xfrm_policy_inexact_insert+0x70/0x330
+>>>>>>>>>  xfrm_policy_insert+0x1df/0x250
+>>>>>>>>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
+>>>>>>>>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
+>>>>>>>>>  netlink_rcv_skb+0x4c/0x120
+>>>>>>>>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
+>>>>>>>>>  netlink_unicast+0x1b3/0x270
+>>>>>>>>>  netlink_sendmsg+0x350/0x470
+>>>>>>>>>  sock_sendmsg+0x4f/0x60
+>>>>>>>>>
+>>>>>>>>> Policy C and policy A has the same mark.v and mark.m, so policy A is
+>>>>>>>>> matched in first round lookup while updating C. However policy C and
+>>>>>>>>> policy B has same mark and priority, which also leads to matched. So
+>>>>>>>>> the WARN_ON is triggered.
+>>>>>>>>>
+>>>>>>>>> xfrm policy lookup should only be matched when the found policy has the
+>>>>>>>>> same lookup keys (mark.v & mark.m) no matter priority.
+>>>>>>>>>
+>>>>>>>>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
+>>>>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>>>>> ---
+>>>>>>>>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
+>>>>>>>>>  1 file changed, 5 insertions(+), 11 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+>>>>>>>>> index 297b2fd..67d0469 100644
+>>>>>>>>> --- a/net/xfrm/xfrm_policy.c
+>>>>>>>>> +++ b/net/xfrm/xfrm_policy.c
+>>>>>>>>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
+>>>>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>>>>>>>                                 struct xfrm_policy *pol)
+>>>>>>>>>  {
+>>>>>>>>> -    u32 mark = policy->mark.v & policy->mark.m;
+>>>>>>>>> -
+>>>>>>>>> -    if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>>>>>>>> -            return true;
+>>>>>>>>> -
+>>>>>>>>> -    if ((mark & pol->mark.m) == pol->mark.v &&
+>>>>>>>>> -        policy->priority == pol->priority)
+>>>>>>>>
+>>>>>>>> If you remove the priority check, you can't insert policies with matching
+>>>>>>>> mark and different priorities anymore. This brings us back the old bug.
+>>>>>>>
+>>>>>>> Yes, this is true.
+>>>>>>>
+>>>>>>>>
+>>>>>>>> I plan to apply the patch from Xin Long, this seems to be the right way
+>>>>>>>> to address this problem.
+>>>>>>>
+>>>>>>> That still brings an issue, update like this:
+>>>>>>>
+>>>>>>> policy A (mark.v = 1, mark.m = 0, priority = 1)
+>>>>>>> policy B (mark.v = 1, mark.m = 0, priority = 1)
+>>>>>>>
+>>>>>>> A and B will all in the list.
+>>>>>> I think this is another issue even before:
+>>>>>> 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and
+>>>>>> different priorities")
+>>>>>>
+>>>>>>>
+>>>>>>> So should do this:
+>>>>>>>
+>>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>>>>>                                    struct xfrm_policy *pol)
+>>>>>>>  {
+>>>>>>> -       u32 mark = policy->mark.v & policy->mark.m;
+>>>>>>> -
+>>>>>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>>>>>> -               return true;
+>>>>>>> -
+>>>>>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
+>>>>>>> +       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
+>>>>>>>             policy->priority == pol->priority)
+>>>>>>>                 return true;
+>>>>>> "mark.v & mark.m" looks weird to me, it should be:
+>>>>>> ((something & mark.m) == mark.v)
+>>>>>>
+>>>>>> So why should we just do this here?:
+>>>>>> (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m &&
+>>>>>>  policy->priority == pol->priority)
+>>>>>
+>>>>>
+>>>>> This leads to this issue:
+>>>>>
+>>>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000005
+>>>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000003
+>>>>>
+>>>>> the two policies will be in list, which should not be allowed.
+>>>> I think these are two different policies.
+>>>> For instance:
+>>>> mark = 0x1234567b will match the 1st one only.
+>>>> mark = 0x1234567d will match the 2st one only
+>>>>
+>>>> So these should have been allowed, no?
+>>>
+>>> If mark = 0x12345671, it may match different policy depends on the order of inserting,
+>>>
+>>> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
+>>> tmpl src 192.168.2.10 dst 192.168.1.20 proto esp mode tunnel mark 0x00000001 mask 0x00000005
+>>>
+>>> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
+>>> tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode beet mark 0x00000001 mask 0x00000003
+>>>
+>>> In fact, your case should use different priority to match.
+>> Sorry, but it does match your above policies now, like in xfrm_policy_match(),
+>> when fl->flowi_mark == 0x1234567b:
+>>
+>> (fl->flowi_mark & pol->mark.m) != pol->mark.v
+>> 0x1234567b & 0x00000005 == 0x00000001
+>>
+>> and when fl->flowi_mark ==  0x1234567d:
+>> 0x1234567d & 0x00000003 ==  0x00000001
+>>
+>> am I missing something?
 > 
-> I tried this driver when connected to a dpi interface, and this fails,
-> as of_find_mipi_dsi_host_by_node is not able to find the dpi interface
-> from the SoC.
+> when fl->flowi_mark == 0x12345671
 > 
-> I'm not too familiar with how dpi bridges are supposed to work in the
-> kernel, but should we even call "anx7625_attach_dsi" for DPI
-> interface?
-DPI needs hardware support, and I don't know how to register DPI interface
-in the driver too, I'll remove the DPI support in the next serial.
+> 0x12345671 & 0x00000005 == 0x00000001
+> 0x12345671 & 0x00000003 == 0x00000001
 > 
-> > +       if (!host) {
-> > +               DRM_ERROR("failed to find dsi host.\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       dsi = mipi_dsi_device_register_full(host, &info);
-> > +       if (IS_ERR(dsi)) {
-> > +               DRM_ERROR("failed to create dsi device.\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       dsi->lanes = 4;
-> > +       dsi->format = MIPI_DSI_FMT_RGB888;
-> > +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO   |
-> > +               MIPI_DSI_MODE_VIDEO_SYNC_PULSE  |
-> > +               MIPI_DSI_MODE_EOT_PACKET        |
-> > +               MIPI_DSI_MODE_VIDEO_HSE;
-> > +
-> > +       if (mipi_dsi_attach(dsi) < 0) {
-> > +               DRM_ERROR("failed to attach dsi to host.\n");
-> > +               mipi_dsi_device_unregister(dsi);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       ctx->dsi = dsi;
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "attach dsi succeeded.\n");
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > [snip]
-> > +static int anx7625_bridge_attach(struct drm_bridge *bridge)
-> > +{
-> > +       struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-> > +       int err;
-> > +       struct device *dev = &ctx->client->dev;
-> > +
-> > +       DRM_DEV_DEBUG_DRIVER(dev, "drm attach\n");
-> > +       if (!bridge->encoder) {
-> > +               DRM_ERROR("Parent encoder object not found");
-> > +               return -ENODEV;
-> > +       }
-> > +
-> > +       err = drm_connector_init(bridge->dev, &ctx->connector,
-> > +                                &anx7625_connector_funcs,
-> > +                                ctx->pdata.internal_panel ?
-> > +                                       DRM_MODE_CONNECTOR_eDP :
-> > +                                       DRM_MODE_CONNECTOR_DisplayPort);
-> > +       if (err) {
-> > +               DRM_ERROR("Failed to initialize connector: %d\n", err);
-> > +               return err;
-> > +       }
-> > +
-> > +       drm_connector_helper_add(&ctx->connector,
-> > +                                &anx7625_connector_helper_funcs);
-> > +
-> > +       err = drm_connector_register(&ctx->connector);
-> > +       if (err) {
-> > +               DRM_ERROR("Failed to register connector: %d\n", err);
-> > +               return err;
-> > +       }
-> > +
-> > +       ctx->connector.polled = DRM_CONNECTOR_POLL_HPD;
-> > +
-> > +       err = drm_connector_attach_encoder(&ctx->connector, bridge->encoder);
-> > +       if (err) {
-> > +               DRM_ERROR("Failed to link up connector to encoder: %d\n", err);
-> > +               drm_connector_unregister(&ctx->connector);
-> > +               return err;
-> > +       }
-> > +
-> > +       err = anx7625_attach_dsi(ctx);
-> > +       if (err) {
-> > +               DRM_ERROR("Failed to attach to dsi : %d\n", err);
-> > +               drm_connector_unregister(&ctx->connector);
-> > +               return err;
-> > +       }
-> > +
-> > +       ctx->bridge_attached = 1;
-> > +
-> > +       return 0;
-> > +}
-> > +
+> This will match different policy depends on the order of policy inserting, it is not expected.
+> 
+
+Steffen, any futher comment ?
+
+>>
+>>
+>>>
+>>>>
+>>>> I'm actually confused now.
+>>>> does the mask work against its own value, or the other value?
+>>>> as 'A == (mark.v&mark.m)' and '(A & mark.m) == mark.v' are different things.
+>>>>
+>>>> This can date back to Jamal's xfrm by MARK:
+>>>>
+>>>> https://lwn.net/Articles/375829/
+>>>>
+>>>> where it does 'm->v & m->m' in xfrm_mark_get() and
+>>>> 'policy->mark.v & policy->mark.m' in xfrm_policy_insert() while
+>>>> it does '(A & pol->mark.m) == pol->mark.v' in other places.
+>>>>
+>>>> Now I'm thinking 'm->v & m->m' is meaningless, by which if we get
+>>>> a value != m->v, it means this mark can never be matched by any.
+>>>>
+>>>>   policy A (mark.v = 1, mark.m = 0, priority = 1)
+>>>>   policy B (mark.v = 1, mark.m = 0, priority = 1)
+>>>>
+>>>> So probably we should avoid this case by check m->v == (m->v & m->m)
+>>>> when adding a new policy.
+>>>>
+>>>> wdyt?
+>>>>
+>>>
+>>
+>> .
+>>
+> 
+> 
+> .
+> 
+
