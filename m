@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98B1C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41003C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88AF206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1543A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255911;
-	bh=0wE71sPp4p2eGoQKKwXnvzrVFa+Cv7DXFFOLa6n2n6U=;
+	s=default; t=1588255919;
+	bh=usM7Jccak5exTEtTBEd6z2nFf26bUS/b4ELKv0lkYeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGORCDnHfrbUyXDQMB7il5vk0PmOi72b8ALzuSmT4xiwF+72E/zCmhqPF/sSB9Ul9
-	 ecO40qoP7en6QHxkC8ui7wFNV/oxMiYu9Yaoi1Pp5xIXDJU5UF6oT+yigpAdSvBHb/
-	 dpGB6WrMbmluLRVN+GUngq5muaYVABq9sqBbCAQg=
+	b=OoM1ENvJuL9JqFugC2O7FD8qPRUm3vJStMjgdgkAR3kjhI14OWmiN83naVTPbzkn7
+	 ToWDDYBPQ3DDJDiLrnVnDINbOaefrrKEJyKnE+NEjGT3BGdp98pjbR4uDk2rvKXjWx
+	 hATYVQ1N4rgsB5dtKgTb2m1oBIQSduqogsDrH7Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgD3OLq (ORCPT
+        id S1729574AbgD3OL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59540 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbgD3NvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:21 -0400
+        id S1727982AbgD3NvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4349F217BA;
-        Thu, 30 Apr 2020 13:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEDF20774;
+        Thu, 30 Apr 2020 13:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254681;
-        bh=0wE71sPp4p2eGoQKKwXnvzrVFa+Cv7DXFFOLa6n2n6U=;
+        s=default; t=1588254676;
+        bh=usM7Jccak5exTEtTBEd6z2nFf26bUS/b4ELKv0lkYeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVn9m+T6DuysXyWYKE0psF4hYHB8ql7z5dbmtgHa5YN9gy9EsAe04B6yMeGQFqRFC
-         XjP9WV1toLyDzMNbkJN17gCrIRYAG6DJX8uWnbHAWRey3klRdXP2Jsoos799n2Iwe5
-         Sr8L4Db2BBItKZADiOwXCIsAztLZWj3Whz3OYCWs=
+        b=MnDmBZPU7KOlVzJgz3bw4vJ2WlygTypmRj2TWLAxY6aaXXsMLrJfPmDFBTXCoJzGu
+         lorX7F3pSF2vI3GOQ9hyuv9dXDsY0chqPkAjCptx8G9/TxZE+78Mzy9DYmVq28bsC+
+         q05+UK5+3t5kqzr49n3LG3jjx4d7mJ2dM3rwNNSs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 32/79] ARM: dts: bcm283x: Disable dsi0 node
-Date:   Thu, 30 Apr 2020 09:49:56 -0400
-Message-Id: <20200430135043.19851-32-sashal@kernel.org>
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 28/79] usb: dwc3: gadget: Do link recovery for SS and SSP
+Date:   Thu, 30 Apr 2020 09:49:52 -0400
+Message-Id: <20200430135043.19851-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -61,34 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 ]
+[ Upstream commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 ]
 
-Since its inception the module was meant to be disabled by default, but
-the original commit failed to add the relevant property.
+The controller always supports link recovery for device in SS and SSP.
+Remove the speed limit check. Also, when the device is in RESUME or
+RESET state, it means the controller received the resume/reset request.
+The driver must send the link recovery to acknowledge the request. They
+are valid states for the driver to send link recovery.
 
-Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm283x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/dwc3/gadget.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index e1abe8c730cef..b83a864e2e8ba 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -372,6 +372,7 @@
- 					     "dsi0_ddr2",
- 					     "dsi0_ddr";
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 1e68c90a83781..bc1cf6d0412a3 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1728,7 +1728,6 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
+ 	u32			reg;
  
-+			status = "disabled";
- 		};
+ 	u8			link_state;
+-	u8			speed;
  
- 		aux: aux@7e215000 {
+ 	/*
+ 	 * According to the Databook Remote wakeup request should
+@@ -1738,16 +1737,13 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
+ 	 */
+ 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
+ 
+-	speed = reg & DWC3_DSTS_CONNECTSPD;
+-	if ((speed == DWC3_DSTS_SUPERSPEED) ||
+-	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
+-		return 0;
+-
+ 	link_state = DWC3_DSTS_USBLNKST(reg);
+ 
+ 	switch (link_state) {
++	case DWC3_LINK_STATE_RESET:
+ 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
+ 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
++	case DWC3_LINK_STATE_RESUME:
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
