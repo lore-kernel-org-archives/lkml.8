@@ -2,83 +2,132 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A96C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD3CC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22CC9206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC86B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="a5wr02Lb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgD3OUA (ORCPT
+        id S1727891AbgD3OU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:20:00 -0400
-Received: from sauhun.de ([88.99.104.3]:40442 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgD3OUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:20:00 -0400
-Received: from localhost (p5486CDDB.dip0.t-ipconnect.de [84.134.205.219])
-        by pokefinder.org (Postfix) with ESMTPSA id 7109E2C08FC;
-        Thu, 30 Apr 2020 16:19:58 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 16:19:58 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Thu, 30 Apr 2020 10:20:29 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37880 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD3OU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:20:28 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0DE45321;
+        Thu, 30 Apr 2020 16:20:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588256426;
+        bh=y2PsAauFIXGCIqWqheeij6vlSTYDffjTnW42XNRYk9c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a5wr02LbeaRy801vibzYJaPl7k7MplN6oN/MwAdSu1+l3dpGCEvT7kBl3kldBQjCA
+         mpw8mzlOWMMig8slWa9n9M0VPL5kM/JumATTQQZLRQCQb81sVzTmm3LDU5E33DMm1R
+         ylhpKSPrevZzm6RVI5FhCi0c4ERchuitzU93bXcs=
+Date:   Thu, 30 Apr 2020 17:20:24 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: powermac: use true,false for bool variable
-Message-ID: <20200430141958.GD3355@ninjato>
-References: <20200426094228.23829-1-yanaijie@huawei.com>
+Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
+Message-ID: <20200430142024.GK5856@pendragon.ideasonboard.com>
+References: <20200414200151.80089-1-daniel@qtec.com>
+ <20200414200151.80089-2-daniel@qtec.com>
+ <20200430094233.GE867@valkosipuli.retiisi.org.uk>
+ <20200430111014.GD5856@pendragon.ideasonboard.com>
+ <20200430133125.GL867@valkosipuli.retiisi.org.uk>
+ <20200430135904.GI5856@pendragon.ideasonboard.com>
+ <20200430141552.GO867@valkosipuli.retiisi.org.uk>
+ <20200430141753.GJ5856@pendragon.ideasonboard.com>
+ <20200430141849.GP867@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VV4b6MQE+OnNyhkM"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200426094228.23829-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200430141849.GP867@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sakari,
 
---VV4b6MQE+OnNyhkM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 30, 2020 at 05:18:49PM +0300, Sakari Ailus wrote:
+> On Thu, Apr 30, 2020 at 05:17:53PM +0300, Laurent Pinchart wrote:
+> > On Thu, Apr 30, 2020 at 05:15:52PM +0300, Sakari Ailus wrote:
+> >> On Thu, Apr 30, 2020 at 04:59:04PM +0300, Laurent Pinchart wrote:
+> >>> On Thu, Apr 30, 2020 at 04:31:25PM +0300, Sakari Ailus wrote:
+> >>>> On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
+> >>>>> On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
+> >>>>>> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
+> >>>>>>> Add min and max structures to the v4l2-subdev callback in order to allow
+> >>>>>>> the subdev to return a range of valid frame intervals.
+> >>>>>>> 
+> >>>>>>> This would operate similar to the struct v4l2_subdev_frame_size_enum and
+> >>>>>>> its max and min values for the width and the height. In this case, the
+> >>>>>>> possibility to return a frame interval range is added to the v4l2-subdev level
+> >>>>>>> whenever the v4l2 device operates in step-wise or continuous mode.
+> >>>>>> 
+> >>>>>> The current API only allows providing a list of enumerated values. That is
+> >>>>>> limiting indeed, especially on register list based sensor drivers where
+> >>>>>> vertical blanking is configurable.
+> >>>>>> 
+> >>>>>> I guess this could be extended to cover what V4L2, more or less. If we tell
+> >>>>>> it's a range, is it assumed to be contiguous? We don't have try operation
+> >>>>>> for the frame interval, but I guess set is good enough. The fraction is
+> >>>>>> probably best for TV standards but it's not what camera sensors natively
+> >>>>>> use. (But for a register list based driver, the established practice
+> >>>>>> remains to use frame interval.)
+> >>>>>> 
+> >>>>>> I'm also wondering the effect on existing user space; if a driver gives a
+> >>>>>> range, how will the existing programs work with such a driver?
+> >>>>>> 
+> >>>>>> I'd add an anonymous union with the interval field, the other field being
+> >>>>>> min_interval. Then the current applications would get the minimum interval
+> >>>>>> and still continue to function. I guess compilers are modern enough these
+> >>>>>> days we can have an anonymous union in the uAPI?
+> >>>>> 
+> >>>>> We can discuss all this, but given patch 3/3 in this series, I think
+> >>>>> this isn't the right API :-) The sensor driver should not expose the
+> >>>>> frame interval enumeration API. It should instead expose control of the
+> >>>>> frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
+> >>>>> V4L2_CID_VBLANK.
+> >>>>> 
+> >>>> 
+> >>>> That would require also exposing the size of the pixel array (and the
+> >>>> analogue crop), in order to provide all the necessary information to
+> >>>> calculate the frame rate. No objections there; this is a new driver.
+> >>>> 
+> >>>> There are however existing drivers that implement s_frame_interval subdev
+> >>>> ioctl; those might benefit from this one. Or would you implement the pixel
+> >>>> rate based control as well, and effectively deprecate the s_frame_interval
+> >>>> on those?
+> >>> 
+> >>> That's what I would recommend, yes. I would only keep
+> >>> .s_frame_interval() for sensors that expose that concept at the hardware
+> >>> level (for instance with an integrated ISP whose firmware exposes a
+> >>> frame interval or frame rate control).
+> >> 
+> >> Sounds good to me.
+> >> 
+> >> Jacopo's set exposing read-only subdevs completes the puzzle so the user
+> >> space should have all it needs, right?
+> > 
+> > Until we run into the next missing piece :-)
+> 
+> I was thinking of the frame rate configuration. Can you confirm that?
 
-On Sun, Apr 26, 2020 at 05:42:28PM +0800, Jason Yan wrote:
-> In i2c_powermac_register_devices(), variable 'found_onyx' is bool and
-> assigned '0' and 'true' in different places. Use 'false' instead of '0'.
-> This fixes the following coccicheck warning:
->=20
-> drivers/i2c/busses/i2c-powermac.c:318:6-16: WARNING: Assignment of 0/1
-> to bool variable
->=20
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+I believe so, yes.
 
-Applied to for-next, thanks!
+-- 
+Regards,
 
-
---VV4b6MQE+OnNyhkM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6q3o0ACgkQFA3kzBSg
-KbZL7g/+Jx3DwuNXMIDZziy2bjDNXsNXe3zRIKEzNCL2nx1rvSJb8H4V+TeBXxvZ
-CFVMrIqx0ZBSnhCPZiIJnQFdWp6EG7ai83+3e2JkJEE7decC3OT0ccwYPc/zb0VK
-6/DSHsduSnybuID3uEAh4URl9rMo1R3pAW+BH4s9VKd3mFHiX/ut7YBXtp8WNF+u
-QTrl17pTLJkUKZGziIVK20zcp38lmKXDpdlJuNqDFH8NLNofjujvCn9809T1MOgS
-u6yr0hAUTeN6jEGwEMKM4mwyiImescsj6ZGCY7gUK38s0Cq4Cm4/T3nTMSyqscfP
-GAmOJbqZ5uuwFaj0XClO+kNscv0cCrnK0wSGZDhrqI6pxyxpUGd6atz6HTCMCkB6
-/tlsX+JiOIRPgetDoWBRvp6hAUPW7Fgu/SHMR/yw36q8vr4oJbLqq/CIv34tp340
-tFrD4L0B0gynE+/wK1qTGS2kWhvuIU3m6ckO9hE/2Iz/S57UUJKt0aFq91uuWDOV
-Jf0KsWTtJLHlKRPp9HlQDhQT1dIWIk9kaqqjgQU3oa6oCq3TvdvC5DfUPl1xzgxT
-h9VIXW0Hy7x4JMGdmrqbHL5Wo0WPN/FzEp/7HYOrFlLKnLCncIujv/7oJSdQ43at
-cQcR2BqBcwYKYyS0SQuhm66GIeYmZ4xO5fQ5dL3RTE0wCPP/WPQ=
-=Hy2w
------END PGP SIGNATURE-----
-
---VV4b6MQE+OnNyhkM--
+Laurent Pinchart
