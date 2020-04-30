@@ -2,192 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C3C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2339AC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7996A2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049072073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:25:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nlfgv/lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgD3IZB (ORCPT
+        id S1726830AbgD3IZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:25:01 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:56596 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726412AbgD3IZA (ORCPT
+        Thu, 30 Apr 2020 04:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgD3IZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:25:00 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U8FOox015336;
-        Thu, 30 Apr 2020 04:24:46 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2ga6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 04:24:46 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03U8Oiaj034150
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 30 Apr 2020 04:24:45 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 30 Apr
- 2020 01:24:43 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 30 Apr 2020 01:24:43 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03U8OeVK032631;
-        Thu, 30 Apr 2020 04:24:40 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        <Eugen.Hristev@microchip.com>, <Ludovic.Desroches@microchip.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [RFC PATCH] iio: __iio_update_buffers: Update mode before preenable/after postdisable
-Date:   Thu, 30 Apr 2020 11:24:55 +0300
-Message-ID: <20200430082455.1628-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 04:25:07 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C5DEC035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:25:07 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u16so857489wmc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=X6kBmgjWNGdoNWM+7HP6Cv8RL/gtxXSH0Zcy+2SUkTg=;
+        b=nlfgv/lwGO9u4M/cSd8s6bWYEd60n1HD9hX4RDYFeI6OM5b5/NS+Th7J2Udh6Fer0k
+         DgjCL6hq1Oe0dnPWSx2KED3KQCkEicF3F5fi4lbzX9RmkUUJ87uaGgCm0d3AMzH3WoIi
+         RJCIpL5QPBeAVE+HBDQEd1DUJFUotoDiX/5diJOFhvDrFX1xaXwYusiT4xUiclcepUHk
+         DY8FIUfbfAQReWU0N0sy92dKJXOjkifLiGUuD8U3CbGdljXWWevYVVfdvlMQhO9zlirS
+         yZ9TOFMBupFXFOzWg9N3ZCMfzM2AKi3GawTxnx1UEzRPRtAHEZ2lCSj+XFa3L/GlJj1K
+         gF5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=X6kBmgjWNGdoNWM+7HP6Cv8RL/gtxXSH0Zcy+2SUkTg=;
+        b=g97Wdi588rUcslq3QIMest2FaymHeHF/btVKmG54BjY75YwhHjSnWnMGhgIMdgajAQ
+         moGYz/ZSsLtLB5CAFIvf2A/u025BLfUx78rlQ80AE14RR7njgeTqq+yImaLxXw2LNchO
+         g6D7GikcE1BQBaFCTvJng6W106WITg7AL3MA0GtGvk0G6AK6tCOc1I78FsHe4BmLWi7+
+         B0vrMIgDHrbjdRLs7coSXO0jKEN6D+yhDVQyi91PpCaYPlyCuQDf7kKMSYp9sPutfMZ+
+         O0kI9C+cDl7mOJUSyqvr/SxinH+FUZUCy51tAtlA4Gg/XEXmjqAJwhUURNlC1M9cEoY5
+         fSWQ==
+X-Gm-Message-State: AGi0PuYMAsR60NamdrMzIyEDyrduP8mpS4UNyxmJq/jv4aTPIG1GOzoW
+        iRiWz8oVcDH3rbyFC4XnGnqo2A==
+X-Google-Smtp-Source: APiQypKS6rkdhsHbc2UUSlH3zD912MOA6ZFRvxtjDMHneZ8QIX90PvJVdV6AmPOLALep6jeYDNbP1Q==
+X-Received: by 2002:a1c:4e12:: with SMTP id g18mr1649275wmh.11.1588235106039;
+        Thu, 30 Apr 2020 01:25:06 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id u7sm12108468wmg.41.2020.04.30.01.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 01:25:05 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 09:25:03 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
+        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [PATCH v7 0/3] Add Intel ComboPhy driver
+Message-ID: <20200430082503.GA3118@dell>
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_03:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300067
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1588230494.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+On Thu, 30 Apr 2020, Dilip Kota wrote:
 
-It is clear that we transition to INDIO_DIRECT_MODE when disabling the
-buffer(s) and it is also clear that we transition from INDIO_DIRECT_MODE
-when enabling the buffer(s). So leaving the currentmode field
-INDIO_DIRECT_MODE until after the preenable() callback and updating it to
-INDIO_DIRECT_MODE before the postdisable() callback doesn't add additional
-value. On the other hand some drivers will need to perform different
-actions depending on which mode the device is going to operate in/was
-operating in.
+> This patch series adds Intel ComboPhy driver, respective yaml schemas
+> 
+> Changes on v7:
+>   As per System control driver maintainer's inputs remove
+>     fwnode_to_regmap() definition and use device_node_get_regmap()
+>     
+> Changes on v6:
+>   Rebase patches on the latest maintainer's branch
+>   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
+> Dilip Kota (3):
+>   dt-bindings: phy: Add PHY_TYPE_XPCS definition
+>   dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+>   phy: intel: Add driver support for ComboPhy
+> 
+>  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+>  drivers/phy/intel/Kconfig                          |  14 +
+>  drivers/phy/intel/Makefile                         |   1 +
+>  drivers/phy/intel/phy-intel-combo.c                | 627 +++++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                      |   1 +
 
-Moving the update of currentmode before preenable() and after postdisable()
-enables us to have drivers which perform mode dependent actions in those
-callbacks.
+Why have you sent this to me?
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+>  5 files changed, 744 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>  create mode 100644 drivers/phy/intel/phy-intel-combo.c
+> 
 
-This patch is also a V2 of this older patch from a while ago:
- https://lore.kernel.org/linux-iio/1431525891-19285-5-git-send-email-lars@metafoo.de/
-
-However, in this recent context, it comes to fix this:
- https://lore.kernel.org/linux-iio/b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com/T/#mc09284c8f79250b92a52fd5b8d1f541d1c02c0c0
-
-At this point, I don't have a clear idea if this approach is good or
-not; since the motivation is to fix the at91 adc.
-Hence the RFC.
-
-Some excerpt from the AT91 discussion:
--------------------------------------------------------------------
-I decided to do a bit of shell magic for this:
-
-get_files() {
-git grep -w iio_buffer_setup_ops  | grep drivers | cut -d: -f1 | sort | uniq
-}
-
-for file in $(get_files) ; do
-    if grep -q currentmode $file ; then
-        echo $file
-    fi
-done
-
-It finds 4 drivers.
-Though, `get_files()` will return 56 files.
-
-drivers/iio/accel/bmc150-accel-core.c
-drivers/iio/adc/at91-sama5d2_adc.c
-drivers/iio/adc/stm32-dfsdm-adc.c
-drivers/iio/magnetometer/rm3100-core.c
-
-The rm3100 driver doesn't do any checks in the setup_ops for 'currentmode' as
-far as I could see.
-
-So, Lars' patch could work nicely to fix this current case and not break others.
-
-Semantically though, it would sound nicer to have a 'nextmode' parameter
-somewhere; maybe on the setup_ops(indio_dev, nextmode)?
-Though, only those 3 drivers would really ever use it; so doing it like that
-sounds like overkill.
-
-So, we're left with Lars' patch or we could add an 'indio_dev->nextmode' field,
-that may be used in just these 3 drivers [which again: sounds overkill at this
-point in time].
-
-Alternatively, this 'indio_dev->currentmode' could be removed from all these 3
-drivers somehow. But that needs testing and a thorough understanding of all 3
-drivers and what they're doing, to do properly.
--------------------------------------------------------------------
-
- drivers/iio/industrialio-buffer.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 30af8af8f312..efcc44b62946 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -989,6 +989,7 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
- 	indio_dev->active_scan_mask = config->scan_mask;
- 	indio_dev->scan_timestamp = config->scan_timestamp;
- 	indio_dev->scan_bytes = config->scan_bytes;
-+	indio_dev->currentmode = config->mode;
- 
- 	iio_update_demux(indio_dev);
- 
-@@ -1024,8 +1025,6 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
- 			goto err_disable_buffers;
- 	}
- 
--	indio_dev->currentmode = config->mode;
--
- 	if (indio_dev->setup_ops->postenable) {
- 		ret = indio_dev->setup_ops->postenable(indio_dev);
- 		if (ret) {
-@@ -1042,10 +1041,10 @@ static int iio_enable_buffers(struct iio_dev *indio_dev,
- 					     buffer_list)
- 		iio_buffer_disable(buffer, indio_dev);
- err_run_postdisable:
--	indio_dev->currentmode = INDIO_DIRECT_MODE;
- 	if (indio_dev->setup_ops->postdisable)
- 		indio_dev->setup_ops->postdisable(indio_dev);
- err_undo_config:
-+	indio_dev->currentmode = INDIO_DIRECT_MODE;
- 	indio_dev->active_scan_mask = NULL;
- 
- 	return ret;
-@@ -1080,8 +1079,6 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
- 			ret = ret2;
- 	}
- 
--	indio_dev->currentmode = INDIO_DIRECT_MODE;
--
- 	if (indio_dev->setup_ops->postdisable) {
- 		ret2 = indio_dev->setup_ops->postdisable(indio_dev);
- 		if (ret2 && !ret)
-@@ -1090,6 +1087,7 @@ static int iio_disable_buffers(struct iio_dev *indio_dev)
- 
- 	iio_free_scan_mask(indio_dev, indio_dev->active_scan_mask);
- 	indio_dev->active_scan_mask = NULL;
-+	indio_dev->currentmode = INDIO_DIRECT_MODE;
- 
- 	return ret;
- }
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
