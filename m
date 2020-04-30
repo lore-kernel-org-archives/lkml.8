@@ -2,121 +2,137 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C83C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A2C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248552076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:21:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="hPb9Ooum";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i5z5kzwS"
+	by mail.kernel.org (Postfix) with ESMTP id 751132072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgD3LVh (ORCPT
+        id S1726974AbgD3LXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:21:37 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47695 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727781AbgD3LVg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:21:36 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7A8E65C0078;
-        Thu, 30 Apr 2020 07:21:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 30 Apr 2020 07:21:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=I
-        re/HJwAwgSTKygoV1QG1FpU4KijXw7qqx+Dyl1oVg0=; b=hPb9OoumKOfBNRKoZ
-        mDAylm3QuVAD54VmRtRQ4JhuaUCO5pKDVDHrEVjA6KR8uS6xW1kq43lng8nhoiv9
-        53VOt78WVDhmfi7A+YnUEc1hAvvzuimm+WUKg8YxcpchCorUnCOZS7ugvqjELAtv
-        PskLb1UxvrfhOnenCHdh6qCwO7p4d9QawV/fYr3stY4vU79McYkbaxDkfSGvnCLv
-        RPwTNNyizQ8nNqGGRt40P4jjwvxHEfH2xtvYJt2LppDx1wQknGvfbrL6mL/jvwJp
-        VRcvHgV5RoJ7P/dRzxUpNv0hZjP3Bj0jpF45w1cwnQ+QJqqhoIiXfNaLiE6LJZuN
-        Rw4vA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=Ire/HJwAwgSTKygoV1QG1FpU4KijXw7qqx+Dyl1oV
-        g0=; b=i5z5kzwSx5WXlvhTbesDmQJ1xds21lhA7cjHSLXYQe8g4GGRiJOKUf5qo
-        xGet1Ypri8gg3kKA/vtmdKdVypkK9UWJlkODgSdtLD+wfo8Thr0I4rHd1itpcadm
-        GkvpZ1p2rS4SXNx7p/CFq9+9+TLHEeSfrdcmuUOAYDqtnoAMrbswXtLnsGVAuvZM
-        prHSCFCaHyEyEZ6KKYilFKlqbnrxtqa4hXkpZvk2NYXDeCAedB3hXF03GwfCU8nN
-        nAmJFP1hTkMt3ZKSQ7tIhix52nny+gTMDD99X6LmXXYQ99+BjhVl8bBPH40INHfO
-        mxR/TzNcWtH7Udk55qqYjtqKqcP9A==
-X-ME-Sender: <xms:v7SqXjPIdjLf5ykK2s__DmzIIc8szHlevnRmRcHWQNbgPHJrBvGsIQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtugfgjgesthekre
-    dttddtudenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necuggftrfgrthhtvghrnhepvedtieelueetgeeggfeufefhvefgtdetgfetgfdtvdegje
-    ehieduvddtkeffheffnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
-    homh
-X-ME-Proxy: <xmx:v7SqXoIOW-1PAZCC1GhJ-6TQE_Ezzdc0zWabuC7xqC9eKB9yI-PrIA>
-    <xmx:v7SqXm4XiINvzaU00P9hr2ArkBktVNJoUWX3Ydvr-oOdAIv7enut1Q>
-    <xmx:v7SqXoRWxEgHHNK-jR4yQMkOjRCdi3VZdD60IOEIe3LobRiUdCyYjw>
-    <xmx:v7SqXhWmpb3H0kVaZyIkHMqIRP_dfg15mV8r2GF6V31DgavIeU9ruQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C2B64328005A;
-        Thu, 30 Apr 2020 07:21:34 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 13:21:31 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Akira shimahara <akira215corp@gmail.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/5] w1_therm: adding sysfs entry to check device power
-Message-ID: <20200430112131.GA2945965@kroah.com>
-References: <20200429133204.140081-1-akira215corp@gmail.com>
- <20200429134655.GB2132814@kroah.com>
- <330221588173223@mail.yandex.ru>
- <2602d65b534fc0e9d6738d3c670bdb07fd287e5b.camel@gmail.com>
+        Thu, 30 Apr 2020 07:23:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24474 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726413AbgD3LXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:23:47 -0400
+IronPort-SDR: hjHRGopFv8Hv0xQ1I90auL8CBw7fsSrTPsuLe6EFkccpbfpFwgtAslOiGu8GOsPhdN8rhs+Ubo
+ xX2T40bPna/Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 04:23:46 -0700
+IronPort-SDR: SHV7wT4BPVHKAo0WmoTz8aq1kRHCx/RdPvBe0nAp3qbMO/SAPWXKmXN7i75QlP4e04SgRh2wTx
+ AK59XRR1ll/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="261745559"
+Received: from isdasana-mobl1.amr.corp.intel.com (HELO [10.254.74.214]) ([10.254.74.214])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 04:23:46 -0700
+Subject: Re: [PATCH v2 3/3] device-dax: Add system ram (add_memory()) with
+ MHP_NO_FIRMWARE_MEMMAP
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200430102908.10107-1-david@redhat.com>
+ <20200430102908.10107-4-david@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <20b86ced-7c47-02ca-0e0e-1bd5d6cc95c1@intel.com>
+Date:   Thu, 30 Apr 2020 04:23:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200430102908.10107-4-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2602d65b534fc0e9d6738d3c670bdb07fd287e5b.camel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:34:03PM +0200, Akira shimahara wrote:
-> Hello,
+On 4/30/20 3:29 AM, David Hildenbrand wrote:
+> Currently, when adding memory, we create entries in /sys/firmware/memmap/
+> as "System RAM". This does not reflect the reality and will lead to
+> kexec-tools to add that memory to the fixed-up initial memmap for a
+> kexec kernel (loaded via kexec_load()). The memory will be considered
+> initial System RAM by the kexec kernel.
 > 
-> Le mercredi 29 avril 2020 à 18:18 +0300, Evgeniy Polyakov a écrit :
-> > Hi
-> > 
-> > 
-> > 
-> > 29.04.2020, 16:47, "Greg KH" <greg@kroah.com>:
-> > 
-> > 
-> > 
-> > > >  +What: /sys/bus/w1/devices/.../w1_slave
-> > > >  +Date: Apr 2020
-> > > >  +Contact: Akira Shimahara <akira215corp@gmail.com>
-> > > >  +Description:
-> > > >  + (RW) return the temperature in 1/1000 degC.
-> > > >  + *read*: return 2 lines with the hexa output data sent on the
-> > > >  + bus, return the CRC check and temperature in 1/1000 degC
-> > > the w1_slave file returns a temperature???
-> > > And sysfs is 1 value-per-file, not multiple lines.
-> > 
-> > 
-> > It was 'content crc' previously, and probably a good idea would be to
-> > add just one file with 'content'
->  
-> That's the purpose of the new sysfs entry 'temperature'. It only
-> content temperature. As already mentionned we have to keep the w1_slave
-> entry for compatibility purpose, all existing user application parse
-> this file.
+> We should let the kexec kernel decide how to use that memory - just as
+> we do during an ordinary reboot.
+...
+> -	rc = add_memory(numa_node, new_res->start, resource_size(new_res), 0);
+> +	rc = add_memory(numa_node, new_res->start, resource_size(new_res),
+> +			MHP_NO_FIRMWARE_MEMMAP);
 
-That's fine, but the document you wrote here says the file is called
-"w1_slave", not "temperature" :)
+Looks fine.  But, if you send another revision, could you add a comment
+about the actual goal of MHP_NO_FIRMWARE_MEMMAP?  Maybe:
 
+	/*
+	 * MHP_NO_FIRMWARE_MEMMAP ensures that future
+	 * kexec'd kernels will not treat this as RAM.
+	 */
+
+Not a biggie, though.
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
