@@ -2,229 +2,98 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDE1C83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9F7C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA26D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="pYE/2oRF"
+	by mail.kernel.org (Postfix) with ESMTP id EC5A420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588230703;
+	bh=pNOXaPYGfwN5YuaFisXoPHWYOkR2bfP+m8TNT7K869U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GRZIi2GL39Qbyap/7HgpwwjUehLhJ2Cjp3y6CjjQ33vY3BUUdqMGT+NBTRXVqgwia
+	 IqDfMd4FPwrmOuZnhEARXZDhPAXB2M+n6B6crVU87TnfAQ029y2M7OreJv/n6W0z15
+	 axCqcu7A89OZxC46bcgEmnL4Ns1IWDO0oqES4Yas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgD3HLg (ORCPT
+        id S1726546AbgD3HLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:11:36 -0400
-Received: from mail-co1nam11on2054.outbound.protection.outlook.com ([40.107.220.54]:15705
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726337AbgD3HLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:11:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U/n4xTaGFIJQV/meUUD5gHISLJ7SmlIJpUyDKCd4uyUIh4zpbquSQ6xdblW9q0Lap5ODpKMvGSsZ9THI8npPoZrxXzGpe4l8VwfWLo0wS8t9gMUUFb3QhPt9+M0U6ZUyHjAjCKvDE5feM9VLED6FqKgqk6C7nGoljR6m8IWrhP1aVrCh1+Sdbj7bDBZ7k6kXkHMaezRVM8JRpxfumtRAaljDCLWTUn60aCD6AxiLe2mpukZ3N/F73DUx170y8jD73qw+TH/2kwG59KCMKoidUJ3pgHy8A1Vvq9wHVID3oiHYJvdGGGY+l3jLTJuWXfaqLXVCP2Lkdn54AKbnXaC9MQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g37YLx/Tm5SRHdI3aOdu3lkfOVC+LX9a5RseocchgXk=;
- b=Yc1ud2IbDX/Y3mW5FKWtsvj33sXLAO668Qdg0JrsXlmZe8vvNyViT1pghKM8GHHpq31BGJT7d6x/Qgai4/C2Ymm1YQvAlZq/ozW+d5KzbRulLvD/fOjOVqwKcdXLRVm/Pc6SpjxjT2lNuLvJgmItEg0u8Yqo4KR8lyzHKaCjPptTEnurz16+8hu3HsgPtU41mbuQrcn5Tjy9f+YYtP8hQyBlklTP2999+q/rd0ZtBsGdo2bw2txDzjakTCIufh1CREpVK+PN4bN6oXlxz5Q0Cqm5f7A1nEEjL3QMnkRzRKjCdditaw560eZW8R/Fud/huWUke/5v3+NWv/cnFm57GA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g37YLx/Tm5SRHdI3aOdu3lkfOVC+LX9a5RseocchgXk=;
- b=pYE/2oRF3xyJ8bZHi/EiFqdKWpCp+iNOGxfady9tbtscmxXeTzPuXQS9Z0rxv8wHjrGNOH084ZcXwdHIp20Gs8E78GQZ+YYNEEHy/VMnuMgHoGTLPrGlkt/CesGSfKLKe9sUsw2LMhs3cS+yagKB+eNVZfBhQUXN0O8IotSUTAE=
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
- by BYAPR02MB4631.namprd02.prod.outlook.com (2603:10b6:a03:12::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
- 2020 07:11:33 +0000
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::a1bc:4672:d6ab:d98b]) by BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::a1bc:4672:d6ab:d98b%6]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 07:11:32 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: RE: [PATCH v6 1/2] PCI: xilinx-cpm: Add device tree binding for
- Versal CPM Root Port
-Thread-Topic: [PATCH v6 1/2] PCI: xilinx-cpm: Add device tree binding for
- Versal CPM Root Port
-Thread-Index: AQHWGjB+ikn3pdln6kq5oTCz9BkyqaiQey2AgADLnxA=
-Date:   Thu, 30 Apr 2020 07:11:32 +0000
-Message-ID: <BYAPR02MB555903ED7FECE191179EEE75A5AA0@BYAPR02MB5559.namprd02.prod.outlook.com>
-References: <1587729844-20798-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1587729844-20798-2-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200429185541.atk5k4j7rgh7ipmr@bogus>
-In-Reply-To: <20200429185541.atk5k4j7rgh7ipmr@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7a2d49ff-908c-4e1a-4756-08d7ecd5b678
-x-ms-traffictypediagnostic: BYAPR02MB4631:|BYAPR02MB4631:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB463186D929901F585AF9DD35A5AA0@BYAPR02MB4631.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0389EDA07F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: l8CPBlk5OmtBNlk70xbYp69m5dieOwGxsVtsfQ5Z4vnUqJTk6ucMDHREm88OICUC4rqcvR0qHYAlkkvYX01LlJoLdeT+r1w6NX4tnPpuujmbcEp/5YdTivYqw8U89fkzJF6HbgkiKhB5ooO/6WAzpruCbI3lkVhWJoZDijystc9rz3nNyHQhJr9Ue5HuEQxxpMdYoZgkJRZ2uCNVShRCoUmMTJxCNL8plAG4wKfsd4gNWViasUKDwqSfSsZWCnL/7y0QPFNPsWPMToxCvsRZAc5wGCYSwnIh9mX1GRHwFPcd8pICEtHYfIr6udbvieAST1FF2dmWLIhnbvTC+EV1gOGzl2cPU40l9ZHsi41KCqkH/rOlJ7nBuTT+B9A/txCjqdugCtkivjoAzG8HB4ZFs9NlsqLL+u0pcX5R4A/b0u4jriWRIWLvbVVTTZTm40EW
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(186003)(71200400001)(86362001)(2906002)(33656002)(54906003)(52536014)(478600001)(76116006)(66476007)(66556008)(64756008)(66946007)(66446008)(8676002)(7696005)(6506007)(55016002)(26005)(5660300002)(8936002)(316002)(9686003)(6916009)(107886003)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: JmieLXetybiyL3A3o03AKDQmrnKXYlybKgD7/+KQ7Y5al3SZttv0+bgQnzpFVAswPJ7hxpgdt/CHfenVRd/ExxJWUNBp+sd8s7xET/DT8d0V08agK14P1seNeYzUgZm6sqQmeKjzJgfXZa+XgquUs251h6d6Qyt/yVoBnlFzg589skSX0JTz9TNJkwf06RLWjw1RBOyQxeBTY9IUJEMIHvbHeAWIjjF8RBKW5nDDTbHZTlwmIL4AzY7g8Zj10k9TCmZaMb9cBMZRbFqn+KzrXUajh+1NGtBo232ZsY0CaEwaYffVpgDczJ9oLXkEMkTGpzw6Jadb6oPKZG0RTqPaVdIDXET0cCqbQz4toioHpn7RCGHuVumtwOq2+Nw2GCsjWCUpZx2FPMWJMIJCeNOAKf747kXtr5cb6ExwF14w4IkaQqKFUT5xB2wIqIJeYq8UthLL7JJphU0kUw7dwrDR+GBN58fzzLf03aYiVO9bZZ8Sr4RtY5oFhQ6H94d4nxIOb4hVAgxukl0H3RlHlgm1M2DanQaTmCeAudVHmIyyzfRtHjw7LzgoA1uTuTVadbk4kaFvOSHROETc1x8xx9RVcRyaTzK4gBJzvYXwC9kVMul/hzzOWE1GqPKMBIBhxSs2xpjbumIMUsQ6xL8XSYiSuZPRDJ4yEkhRfLq2Dp8vBXfIVbtWsUVSoDTfUbFHNoS7flfmTAnKzxym+j65GP37YwSHx+ZkppSREGcb3TwlxKNA7pqkCY+kBr5TpktzMVspz8vt6B3tWxJOijalJE5gOF1qWtqVUQyIJkShQFsxSpg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 Apr 2020 03:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726337AbgD3HLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:11:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B382082E;
+        Thu, 30 Apr 2020 07:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588230699;
+        bh=pNOXaPYGfwN5YuaFisXoPHWYOkR2bfP+m8TNT7K869U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P1/J+ume/5ZXMAGcDwEIy9ayllS5B9qL0YownC6vFIxEfPOVIMQVK+YPOxyPjTH4L
+         d0uVBHsa/3iVVcezj8FlasHzXZT82zghDjTO+//lXi61Wz3fjEOQmo8mtaigK4cSG1
+         17E0XQLBL1P/POfn4Rd0g3La+Vwl/08rx1RQYWPI=
+Date:   Thu, 30 Apr 2020 09:11:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     stable <stable@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: Please queue ubifs: Fix ubifs_tnc_lookup() usage in
+ do_kill_orphans() for stable (was: Re: [PATCH] ubifs: Fix ubifs_tnc_lookup()
+ usage in do_kill_orphans())
+Message-ID: <20200430071137.GA2382543@kroah.com>
+References: <20200119215233.7292-1-richard@nod.at>
+ <875zdibasg.fsf@vostro.fn.ogness.net>
+ <1537701093.171645.1588186266734.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a2d49ff-908c-4e1a-4756-08d7ecd5b678
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 07:11:32.8610
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5rfTcJoDxyL0Zv7w7NNHw/W4wWcSu2WG88yNC+yLFc62TtKvyPU1vT9Fuvb6yPqthE4GcGTdif8JK4DIE07JNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4631
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1537701093.171645.1588186266734.JavaMail.zimbra@nod.at>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Fri, Apr 24, 2020 at 05:34:03PM +0530, Bharat Kumar Gogada wrote:
-> > Add device tree binding documentation for Versal CPM Root Port driver.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/pci/xilinx-versal-cpm.txt  | 68
-> > ++++++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
->=20
-> DT bindings need to Cc DT list to be reviewed. Bindings are now in DT sch=
-ema
-> format. See Documentation/devicetree/writing-schema.rst.
->=20
-> Sorry to tell you this on v6, but first I'm seeing it.
+On Wed, Apr 29, 2020 at 08:51:06PM +0200, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+> > Von: "John Ogness" <john.ogness@linutronix.de>
+> > An: "richard" <richard@nod.at>
+> > CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>
+> > Gesendet: Mittwoch, 29. April 2020 16:56:31
+> > Betreff: Re: [PATCH] ubifs: Fix ubifs_tnc_lookup() usage in do_kill_orphans()
+> 
+> > Hi Richard,
+> > 
+> > Could you CC this patch to stable? It fixes a serious problem that I am
+> > seeing on real devices (i.e. Linux not being able to mount its root
+> > filesystem after a power cut). Thanks.
+> 
+> Just checked again, better ask stable maintainers. :-)
+> 
+> Stable maintainers, can you please make sure this patch will make it
+> into stable?
+> The upstream commit is:
+> 4ab25ac8b2b5 ("ubifs: Fix ubifs_tnc_lookup() usage in do_kill_orphans()")
+> 
+> I always thought havings a Fixes-Tag is enough to make sure it will
+> get picked up. Isn't this the case?
 
+No it is not, please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-Hi Rob,
+Our scripts are doing better to dig out stuff where maintainers mess up
+and forget to put the cc: stable tag, but you can never rely on it.
+Please stick with the above rules that have been there for 15+ years :)
 
-Thanks for the inputs, will fix this and send with schema format.
+thanks,
 
-Regards,
-Bharat
-
->=20
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> > b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> > new file mode 100644
-> > index 0000000..eac6144
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
-> > @@ -0,0 +1,68 @@
-> > +* Xilinx Versal CPM DMA Root Port Bridge DT description
-> > +
-> > +Required properties:
-> > +- #address-cells: Address representation for root ports, set to <3>
-> > +- #size-cells: Size representation for root ports, set to <2>
-> > +- #interrupt-cells: specifies the number of cells needed to encode an
-> > +	interrupt source. The value must be 1.
-> > +- compatible: Should contain "xlnx,versal-cpm-host-1.00"
-> > +- reg: Should contain configuration space (includes bridge registers) =
-and
-> > +	CPM system level control and status registers, and length
-> > +- reg-names: Must include the following entries:
-> > +	"cfg": configuration space region and bridge registers
-> > +	"cpm_slcr": CPM system level control and status registers
-> > +- interrupts: Should contain AXI PCIe interrupt
-> > +- interrupt-map-mask,
-> > +  interrupt-map: standard PCI properties to define the mapping of the
-> > +	PCI interface to interrupt numbers.
-> > +- bus-range: Range of bus numbers associated with this controller
-> > +- ranges: ranges for the PCI memory regions (I/O space region is not
-> > +	supported by hardware)
-> > +	Please refer to the standard PCI bus binding document for a more
-> > +	detailed explanation
-> > +- msi-map: Maps a Requester ID to an MSI controller and associated MSI
-> > +	sideband data
-> > +- interrupt-names: Must include the following entries:
-> > +	"misc": interrupt asserted when legacy or error interrupt is
-> > +received
->=20
-> Don't really need a name when only 1.
->=20
-> > +
-> > +Interrupt controller child node
-> > ++++++++++++++++++++++++++++++++
-> > +Required properties:
-> > +- interrupt-controller: identifies the node as an interrupt
-> > +controller
-> > +- #address-cells: specifies the number of cells needed to encode an
-> > +	address. The value must be 0.
-> > +- #interrupt-cells: specifies the number of cells needed to encode an
-> > +	interrupt source. The value must be 1.
-> > +
-> > +
-> > +Refer to the following binding document for more detailed description
-> > +on the use of 'msi-map':
-> > +	 Documentation/devicetree/bindings/pci/pci-msi.txt
-> > +
-> > +Example:
-> > +	pci@fca10000 {
->=20
-> Unit address is normally the first entry.
->=20
-> > +		#address-cells =3D <3>;
-> > +		#interrupt-cells =3D <1>;
-> > +		#size-cells =3D <2>;
-> > +		compatible =3D "xlnx,versal-cpm-host-1.00";
-> > +		interrupt-map =3D <0 0 0 1 &pcie_intc_0 0>,
-> > +				<0 0 0 2 &pcie_intc_0 1>,
-> > +				<0 0 0 3 &pcie_intc_0 2>,
-> > +				<0 0 0 4 &pcie_intc_0 3>;
-> > +		interrupt-map-mask =3D <0 0 0 7>;
-> > +		interrupt-parent =3D <&gic>;
-> > +		interrupt-names =3D "misc";
-> > +		interrupts =3D <0 72 4>;
-> > +		bus-range =3D <0x00 0xff>;
-> > +		ranges =3D <0x02000000 0x00000000 0xE0000000 0x0
-> 0xE0000000
-> > +0x00000000 0x10000000>,
->=20
-> lowercase hex please.
->=20
-> > +			 <0x43000000 0x00000080 0x00000000 0x00000080
-> 0x00000000 0x00000000 0x80000000>;
-> > +		msi-map =3D <0x0 &its_gic 0x0 0x10000>;
-> > +		reg =3D <0x6 0x00000000 0x0 0x10000000>,
-> > +		      <0x0 0xFCA10000 0x0 0x1000>;
-> > +		reg-names =3D "cfg", "cpm_slcr";
-> > +		pcie_intc_0: pci-interrupt-controller {
->=20
-> interrupt-controller {
->=20
-> > +			#address-cells =3D <0>;
-> > +			#interrupt-cells =3D <1>;
-> > +			interrupt-controller ;
-> > +		};
-> > +	};
-> > --
-> > 2.7.4
-> >
-
+greg k-h
