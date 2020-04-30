@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28268C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB887C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 044A220873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3422495E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254699;
-	bh=GSDdMgKvKAegsAAYwcuRTGDxeY5MwNfhBUBJ4xW6S8k=;
+	s=default; t=1588254703;
+	bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOIQ0NLQ8Q2+tb3BABh3b/uVpVuZkBHJlb5rCtDZFsAx5Wzgu32f3V35diTOuOhGd
-	 /AGgx9kesiXvTzpN6USDiFQQ1RQdHLmQkTzRVA016w3si9HXM+xT87glJod8yu4YSu
-	 MWQv88LCLm17c+15HBL+SB21Smcd8WT9haU8k0XA=
+	b=jl3fiBReOME/M7oTJtycRuaEp05+OJcXq1tHIMX+FQnhhN3V/4RU7xHG4fDauT+n+
+	 lvchWfR/KywPspnnCrecC6v+Wcy6IpHuMupvRr7eW3Kl/a3rD9TSt9y1JBm/yjr0rV
+	 fGLuJgZAHT2I7254uX29G7Y2Q214AgflRAkAo3fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgD3Nvi (ORCPT
+        id S1728165AbgD3Nvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgD3NvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:23 -0400
+        id S1728090AbgD3Nvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62BEC2137B;
-        Thu, 30 Apr 2020 13:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D67B208D5;
+        Thu, 30 Apr 2020 13:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254683;
-        bh=GSDdMgKvKAegsAAYwcuRTGDxeY5MwNfhBUBJ4xW6S8k=;
+        s=default; t=1588254691;
+        bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHHhSXW5JAqIjUOIA9pAj6G+0PRTC1pB1t140YdaMer85wTzpL2On56X3AtrChxW7
-         0RizoaZMjZY4JVwUKYQw59T7d01WZ0gt2KRbxMwk053wUKkN6/l7QPwTKPYDa3NPds
-         urnbScHKNETK3Al2EwGdGm9HdHR6m1dHbtg0usM0=
+        b=B4qRjVFYPCIXGUPqfAOdhKzQiQx/fRMm6dVAC8oHb9rlmP/KVIddd1TdRhuSB3niv
+         fPYfeeapfupSQVkmRAUh5YXbG4yn7n4jR3pBcOizO8fc3WQnG0s219FKJkYknetpUc
+         Og3LEVrZkrO8FNi0ZaOFNfb9PiTp3V8VzlbOtPp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 34/79] usb: gadget: udc: atmel: Fix vbus disconnect handling
-Date:   Thu, 30 Apr 2020 09:49:58 -0400
-Message-Id: <20200430135043.19851-34-sashal@kernel.org>
+Cc:     Julien Beraud <julien.beraud@orolia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 42/79] net: stmmac: Fix sub-second increment
+Date:   Thu, 30 Apr 2020 09:50:06 -0400
+Message-Id: <20200430135043.19851-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -60,40 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+From: Julien Beraud <julien.beraud@orolia.com>
 
-[ Upstream commit 12b94da411f9c6d950beb067d913024fd5617a61 ]
+[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
 
-A DMA transfer can be in progress while vbus is lost due to a cable
-disconnect. For endpoints that use DMA, this condition can lead to
-peripheral hang. The patch ensures that endpoints are disabled before
-the clocks are stopped to prevent this issue.
+In fine adjustement mode, which is the current default, the sub-second
+    increment register is the number of nanoseconds that will be added to
+    the clock when the accumulator overflows. At each clock cycle, the
+    value of the addend register is added to the accumulator.
+    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
+    frequency of the ptp clock actually is.
+    The adjustment is then done on the addend register, only incrementing
+    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
+    (addend = 2^32 * 50MHz/ptp_clock_rate).
+    This causes the following issues :
+    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
+      the addend value calculation will overflow and the default
+      addend value will be set to 0, causing the clock to not work at
+      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
+    - The resolution of the timestamping clock is limited to 20ns while it
+      is not needed, thus limiting the accuracy of the timestamping to
+      20ns.
 
-Fixes: a64ef71ddc13 ("usb: gadget: atmel_usba_udc: condition clocks to vbus state")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
+    It will allow to reach the minimum possible frequency for
+    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
+    sub-second-increment to a higher value. For instance, for 25MHz, it
+    gives ssinc = 80ns and default_addend = 2^31.
+    It will also allow to use a lower value for sub-second-increment, thus
+    improving the timestamping accuracy with frequencies higher than
+    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
+    2^31.
+
+v1->v2:
+ - Remove modifications to the calculation of default addend, which broke
+ compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
+ is not an integer.
+ - Modify description according to discussions.
+
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 6e0432141c409..22200341c8ec3 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1951,10 +1951,10 @@ static irqreturn_t usba_vbus_irq_thread(int irq, void *devid)
- 			usba_start(udc);
- 		} else {
- 			udc->suspended = false;
--			usba_stop(udc);
--
- 			if (udc->driver->disconnect)
- 				udc->driver->disconnect(&udc->gadget);
-+
-+			usba_stop(udc);
- 		}
- 		udc->vbus_prev = vbus;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 0201596225592..e5d9007c8090b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -26,12 +26,16 @@ static void config_sub_second_increment(void __iomem *ioaddr,
+ 	unsigned long data;
+ 	u32 reg_value;
+ 
+-	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
+-	 *	formula = (1/ptp_clock) * 1000000000
+-	 * where ptp_clock is 50MHz if fine method is used to update system
++	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
++	 * increment to twice the number of nanoseconds of a clock cycle.
++	 * The calculation of the default_addend value by the caller will set it
++	 * to mid-range = 2^31 when the remainder of this division is zero,
++	 * which will make the accumulator overflow once every 2 ptp_clock
++	 * cycles, adding twice the number of nanoseconds of a clock cycle :
++	 * 2000000000ULL / ptp_clock.
+ 	 */
+ 	if (value & PTP_TCR_TSCFUPDT)
+-		data = (1000000000ULL / 50000000);
++		data = (2000000000ULL / ptp_clock);
+ 	else
+ 		data = (1000000000ULL / ptp_clock);
+ 
 -- 
 2.20.1
 
