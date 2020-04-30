@@ -2,117 +2,115 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EA6C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE10EC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCA0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6B1208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQBB70FT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZzX7LHCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgD3Q2I (ORCPT
+        id S1727837AbgD3Q2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        Thu, 30 Apr 2020 12:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726415AbgD3Q2H (ORCPT
+        by vger.kernel.org with ESMTP id S1726130AbgD3Q2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:28:07 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED40C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:28:07 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id b11so7729855wrs.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+fLMnUMUsPkmSvT0kvVOGp9BzEZPMOJ5XFQJkVIA9QM=;
-        b=RQBB70FTKz8X+ddbM5dnt6rrKCg+XxEhIWD6MQTLU1Wjoh1d7cGWWdULt0ij0F3g2j
-         IPrvKRoeYr7220Odl14eUY0lLlHFNY2H/rjh5iCRudWkAJnVJeX/vFccPhbwj8IcedC7
-         3mK2PQVqVzDMMlWoiE/i2fzFeqmxxVMOOYX5ErV84Rkg4TGw97wc2AnQFgVs/dU7N0Ks
-         VIPDezFVm7flWw90msCt4Y9+8UBkSs0H7RIFdoW7kFwczZV9Y95Ztq7rznwNUjEaKKOD
-         KDfGLoRifyL4AcUJmya/CsPyn+3Q4oO4PR0qh2seoKJhtHm0JSJus0+xYx3+r3tGrd4Z
-         CM5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+fLMnUMUsPkmSvT0kvVOGp9BzEZPMOJ5XFQJkVIA9QM=;
-        b=TSiZr0BWSH62jYuzik6vt6ObzoOkLhDCbN9E88cRDJ5Waef7yHyheRjAdyIG3MaAnc
-         DIEJhu/rjnZNU1LzM9bpnHOIURRiocspZGOBz2l11zMQ6oSD0gxRFbg7t98ovhgoXWFg
-         dCbcR81s4trQVlytCbQ9+30QqNbVc+4KjO08hqnKs17ytBgsxOfQ57hHIRWKbiEmyJPG
-         2yam3kSN92IVwv20D9I6DefiLwpLLb0Wt0zrkirW7zuk+lVvCg79qNGKgwyPUirWfiRW
-         /I/T7tRaGY61ARNwmMgjMOIHzSkXuyOhlOSuJdfpGT+7qj44Sr3W7rFexzWjZQeY8iI0
-         194Q==
-X-Gm-Message-State: AGi0Pub/A+X31DuXj4rQ8vs3O+ykzmFZ7cBW/ChQUdssTFFy86Ud132w
-        28Lq+l4IM56WAFM0dcXHpHRKA5AMJgwcN0ucvsj73g==
-X-Google-Smtp-Source: APiQypKxdWq6TcQWUfjQVg93ONjnBTqIqmPXLEeVuKpLfk+kVhslqEuWc1M9uiC4aVm3X61WiacMj7qfJdjcyGOhI4Y=
-X-Received: by 2002:adf:cd8c:: with SMTP id q12mr5048810wrj.419.1588264086292;
- Thu, 30 Apr 2020 09:28:06 -0700 (PDT)
+        Thu, 30 Apr 2020 12:28:18 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35237C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1Vw+wahdjvF1L9WwGFComL+FFo9pmOmCPd10LrNq9mc=; b=ZzX7LHCyyRLB8grDlh2YaL6iZX
+        YDBbj8zLivla/97BDbCy04qYZQnWj1cmxAEC3C5X9RX0hawZAD1nFHaPqizwf3Cwoq3pC0JDd3SLt
+        5D3pS2RmdrUP55DKtBpPl05B2W31iTk2zcWq2V0FD8vVnlSsosluA0M1X8Xj4+qOydqUvz/Brcq/b
+        5uoPSbIhO/MqXH7xVtjD2Lcr2rmqjxjU9SOAnYAzFardJnARybbMe83TuMaohsOYjO7UkUMBejJ+P
+        2DFITMArkRnJUGx/0qV5FsUxAH0wqLa0GDk/aM5ywB3twmCQk2BdS78P10dCMX8N2WYbtnIGwTRah
+        7KcUMFxA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUC2S-0005Av-Dh; Thu, 30 Apr 2020 16:27:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 960AF30275A;
+        Thu, 30 Apr 2020 18:27:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5C55D203B5613; Thu, 30 Apr 2020 18:27:50 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 18:27:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>,
+        maz@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH] arm64: perf_event: Fix time_offset for arch timer
+Message-ID: <20200430162750.GD13575@hirez.programming.kicks-ass.net>
+References: <20200320093545.28227-1-leo.yan@linaro.org>
+ <20200430145823.GA25258@willie-the-truck>
 MIME-Version: 1.0
-References: <1588228709-13512-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1588228709-13512-1-git-send-email-zou_wei@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 30 Apr 2020 12:27:55 -0400
-Message-ID: <CADnq5_NcOeCaBY7exuepMC+vtqmdrDbptUxmoq3Xzf3R-g1=_w@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amdgpu: Fix warning Comparison to bool
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430145823.GA25258@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 3:32 AM Zou Wei <zou_wei@huawei.com> wrote:
->
-> fix below warnings reported by coccicheck
->
-> drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c:630:5-11: WARNING: Comparison to bool
+On Thu, Apr 30, 2020 at 03:58:24PM +0100, Will Deacon wrote:
+> On Fri, Mar 20, 2020 at 05:35:45PM +0800, Leo Yan wrote:
 
-This seems incorrect.  enable is a bool.
+> > @@ -1164,5 +1165,21 @@ void arch_perf_update_userpage(struct perf_event *event,
+> >  		userpg->time_mult >>= 1;
+> >  	}
+> >  	userpg->time_shift = (u16)shift;
+> > -	userpg->time_offset = -now;
+> > +
+> > +	/*
+> > +	 * Since arch timer is enabled ealier than sched clock registration,
+> > +	 * compuate the delta (in nanosecond unit) between the arch timer
+> > +	 * counter and sched clock, assign the delta to time_offset and
+> > +	 * perf tool can use it for timestamp calculation.
+> > +	 *
+> > +	 * The formula for conversion arch timer cycle to ns is:
+> > +	 *   quot = (cyc >> time_shift);
+> > +	 *   rem  = cyc & ((1 << time_shift) - 1);
+> > +	 *   ns   = quot * time_mult + ((rem * time_mult) >> time_shift);
+> > +	 */
+> > +	count = arch_timer_read_counter();
+> > +	quot = count >> shift;
+> > +	rem = count & ((1 << shift) - 1);
+> > +	ns = quot * userpg->time_mult + ((rem * userpg->time_mult) >> shift);
+> > +	userpg->time_offset = now - ns;
+> 
+> Hmm, reading the counter and calculating the delta feels horribly
+> approximate to me. It would be much better if we could get hold of the
+> initial epoch cycles from the point at which sched_clock was initialised
+> using the counter. This represents the true cycle delta between the counter
+> and what sched_clock uses for 0 ns.
+> 
+> Unfortunately, I can't see a straightforward way to grab that information.
+> It looks like x86 pulls this directly from the TSC driver.
 
-Alex
+Yeah, and I'm thinking you should do the same. IIRC ARM uses this
+kernel/time/sched_clock.c thing, and if I read that right, the struct
+clock_data there has all the bits you need here.
 
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-> index b544baf..10080e4 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-> @@ -627,7 +627,7 @@ static void sdma_v5_0_enable(struct amdgpu_device *adev, bool enable)
->         u32 f32_cntl;
->         int i;
->
-> -       if (enable == false) {
-> +       if (!enable) {
->                 sdma_v5_0_gfx_stop(adev);
->                 sdma_v5_0_rlc_stop(adev);
->         }
-> --
-> 2.6.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+So I'm thinking that you might want to add a helper function here to get
+you the good stuff.
