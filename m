@@ -2,128 +2,167 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE83C83007
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC640C83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15128208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9149B20757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:40:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i2TyRdk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD3Ajx (ORCPT
+        id S1726550AbgD3AkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:39:53 -0400
-Received: from pbmsgap01.intersil.com ([192.157.179.201]:48536 "EHLO
-        pbmsgap01.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgD3Ajx (ORCPT
+        Wed, 29 Apr 2020 20:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726329AbgD3AkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:39:53 -0400
-Received: from pps.filterd (pbmsgap01.intersil.com [127.0.0.1])
-        by pbmsgap01.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 03U0Sq6j007279;
-        Wed, 29 Apr 2020 20:28:52 -0400
-Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
-        by pbmsgap01.intersil.com with ESMTP id 30mgqytds7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 20:28:52 -0400
-Received: from pbmxdp03.intersil.corp (132.158.200.224) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Wed, 29 Apr 2020 20:28:50 -0400
-Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
- (132.158.200.224) with Microsoft SMTP Server id 15.1.1531.3 via Frontend
- Transport; Wed, 29 Apr 2020 20:28:50 -0400
-From:   <vincent.cheng.xh@renesas.com>
-To:     <richardcochran@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: [PATCH net-next 2/3] ptp: Add adjust_phase to ptp_clock_caps capability.
-Date:   Wed, 29 Apr 2020 20:28:24 -0400
-Message-ID: <1588206505-21773-3-git-send-email-vincent.cheng.xh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
-References: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
-X-TM-AS-MML: disable
+        Wed, 29 Apr 2020 20:40:25 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA787C035495
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 17:40:24 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g35so1723481uad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 17:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=49/GUq/fltLJWqVhbL7UqtJO8rowbFsOO5SNzjwHTOY=;
+        b=i2TyRdk3Tqw4h5DLb1A3tKoVpg6kPPWMN84oMR/sl9QzBxxG57S94enQkwZ8kWGyDV
+         tzwy8lrWGZ5glKqDug98HzSRlI/YWxPBTgkGtapyACJT9Q7CD0mJ1M+mRSABCl9EdY8i
+         qce3QsW8VvVCYeQp7Cbb/dZQ7uMdN1f7TZLaE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=49/GUq/fltLJWqVhbL7UqtJO8rowbFsOO5SNzjwHTOY=;
+        b=Kr46GsOTXIFp8xQrlInEeiZXSEZ1Y6CVTsLo8m2cn4jtPhRykKggKVaR7HvyKZzbT4
+         X+otK9JeGQbz6qhaurViPa0SBMKOsgqr6C9VeU7StuPz9xoEXSJBOO++tgLVKwwM+b7y
+         tSIREzY8UREkaepJlInp3V0e5MoKtrc1YH5iAr2xFO5Zg3n315LnvZuL2jm5/wz7e7Z6
+         pdL4p+JEAntkTawrZONYk8M8XKaBRo22OvWj3ujhomhARIwqBPfwqSXJS4iSAdX7w6BS
+         a2AJFO8ZxQvmPaaAcCapfem7JixRRDufFMG5it2FQp6sTIFxa/IS/Uf47A3XKQ60AFbW
+         pE8Q==
+X-Gm-Message-State: AGi0PubIvGnu30uETdDwYeS+bzRlAA7/jliT1eIN0ysXJqvYEAMbjwwt
+        9V6nD+0SXrQ0uQYSfes/WVLIhmtJvKE=
+X-Google-Smtp-Source: APiQypJFFzyS184s7ICepB3Yt02eO2hRo0mAgCmYiNUMaRIIeNsjY/Q+9nZGPMS9WRACcLHM1Jirwg==
+X-Received: by 2002:ab0:328:: with SMTP id 37mr496236uat.112.1588207223762;
+        Wed, 29 Apr 2020 17:40:23 -0700 (PDT)
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
+        by smtp.gmail.com with ESMTPSA id x23sm399067uan.15.2020.04.29.17.40.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 17:40:22 -0700 (PDT)
+Received: by mail-vk1-f169.google.com with SMTP id u203so1239221vkb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 17:40:22 -0700 (PDT)
+X-Received: by 2002:a1f:9645:: with SMTP id y66mr643020vkd.40.1588207222154;
+ Wed, 29 Apr 2020 17:40:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_11:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2002250000 definitions=main-2004300000
-X-Proofpoint-Spam-Reason: mlx
+References: <20200428162227.687978-1-daniel.thompson@linaro.org>
+In-Reply-To: <20200428162227.687978-1-daniel.thompson@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 29 Apr 2020 17:40:10 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VTkO5AULJe1ksyhKLLxpywqX-RLC_T4ENyDf3ONJNMKg@mail.gmail.com>
+Message-ID: <CAD=FV=VTkO5AULJe1ksyhKLLxpywqX-RLC_T4ENyDf3ONJNMKg@mail.gmail.com>
+Subject: Re: [PATCH] serial: earlycon: Allow earlier DT scan is acpi=off
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+Hi,
 
-Add adjust_phase to ptp_clock_caps capability to allow
-user to query if a PHC driver supports adjust phase with
-ioctl PTP_CLOCK_GETCAPS command.
+On Tue, Apr 28, 2020 at 9:22 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> Currently if the kernel has support for ACPI SPCR parsing then earlycon
+> without arguments is processed later than the full earlycon=...
+> alternative.
+>
+> If ACPI has been explicitly disabled on the kernel command line then
+> there is not need to defer since the ACPI code (both x86 and arm64)
+> will never actually run.
+>
+> Or, put another way it allows lazy people to throw "acpi=off earlycon"
+> onto the command line of a DT systems and be confident the console will
+> start as early as possible without them having to lookup the driver
+> and address needed for a specific platform.
+>
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  drivers/tty/serial/earlycon.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
 
-Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
----
- drivers/ptp/ptp_chardev.c             | 1 +
- include/uapi/linux/ptp_clock.h        | 4 +++-
- tools/testing/selftests/ptp/testptp.c | 6 ++++--
- 3 files changed, 8 insertions(+), 3 deletions(-)
+I wonder if a cleaner option is to just add a special "earlycon" value
+like "earlycon=not_acpi".  This wouldn't require any special peeking
+and would just be a sentinel that just says "you should autodetect the
+earlycon, but don't worry about waiting for ACPI".  ...that in itself
+is a bit of a hack, but at least it's more self contained in the
+earlycon driver and maybe more discoverable when someone is figuring
+out how to setup earlycon?
 
-diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
-index 93d574f..375cd6e 100644
---- a/drivers/ptp/ptp_chardev.c
-+++ b/drivers/ptp/ptp_chardev.c
-@@ -136,6 +136,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
- 		caps.pps = ptp->info->pps;
- 		caps.n_pins = ptp->info->n_pins;
- 		caps.cross_timestamping = ptp->info->getcrosststamp != NULL;
-+		caps.adjust_phase = ptp->info->adjphase != NULL;
- 		if (copy_to_user((void __user *)arg, &caps, sizeof(caps)))
- 			err = -EFAULT;
- 		break;
-diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
-index 9dc9d00..ff070aa 100644
---- a/include/uapi/linux/ptp_clock.h
-+++ b/include/uapi/linux/ptp_clock.h
-@@ -89,7 +89,9 @@ struct ptp_clock_caps {
- 	int n_pins;    /* Number of input/output pins. */
- 	/* Whether the clock supports precise system-device cross timestamps */
- 	int cross_timestamping;
--	int rsv[13];   /* Reserved for future use. */
-+	/* Whether the clock supports adjust phase */
-+	int adjust_phase;
-+	int rsv[12];   /* Reserved for future use. */
- };
- 
- struct ptp_extts_request {
-diff --git a/tools/testing/selftests/ptp/testptp.c b/tools/testing/selftests/ptp/testptp.c
-index c0dd102..da7a9dd 100644
---- a/tools/testing/selftests/ptp/testptp.c
-+++ b/tools/testing/selftests/ptp/testptp.c
-@@ -269,14 +269,16 @@ int main(int argc, char *argv[])
- 			       "  %d programmable periodic signals\n"
- 			       "  %d pulse per second\n"
- 			       "  %d programmable pins\n"
--			       "  %d cross timestamping\n",
-+			       "  %d cross timestamping\n"
-+			       "  %d adjust_phase\n",
- 			       caps.max_adj,
- 			       caps.n_alarm,
- 			       caps.n_ext_ts,
- 			       caps.n_per_out,
- 			       caps.pps,
- 			       caps.n_pins,
--			       caps.cross_timestamping);
-+			       caps.cross_timestamping,
-+			       caps.adjust_phase);
- 		}
- 	}
- 
--- 
-2.7.4
+-Doug
 
+
+
+>
+> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+> index 2ae9190b64bb..ebb648aacb47 100644
+> --- a/drivers/tty/serial/earlycon.c
+> +++ b/drivers/tty/serial/earlycon.c
+> @@ -215,6 +215,31 @@ int __init setup_earlycon(char *buf)
+>   */
+>  bool earlycon_acpi_spcr_enable __initdata;
+>
+> +/*
+> + * This takes a sneaky peek at other boot arguments (which may not have
+> + * been parsed at this point in the boot) to check whether ACPI has
+> + * been explicitly disabled. If it is explicitly disabled then there is
+> + * no reason to defer initialization of the early console.
+> + */
+> +static bool earlycon_check_for_acpi_off(void)
+> +{
+> +       static const char token[] = "acpi=off";
+> +       const char *arg;
+> +       char before, after;
+> +
+> +       arg = strstr(boot_command_line, token);
+> +       while (arg) {
+> +               before = arg == boot_command_line ? ' ' : arg[-1];
+> +               after = arg[sizeof(token)-1];
+> +               if (isspace(before) && (isspace(after) || after == '\0'))
+> +                       return true;
+> +
+> +               arg = strstr(arg+1, token);
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  /* early_param wrapper for setup_earlycon() */
+>  static int __init param_setup_earlycon(char *buf)
+>  {
+> @@ -222,7 +247,8 @@ static int __init param_setup_earlycon(char *buf)
+>
+>         /* Just 'earlycon' is a valid param for devicetree and ACPI SPCR. */
+>         if (!buf || !buf[0]) {
+> -               if (IS_ENABLED(CONFIG_ACPI_SPCR_TABLE)) {
+> +               if (IS_ENABLED(CONFIG_ACPI_SPCR_TABLE) &&
+> +                   !earlycon_check_for_acpi_off()) {
+>                         earlycon_acpi_spcr_enable = true;
+>                         return 0;
+>                 } else if (!buf) {
+> --
+> 2.25.1
+>
