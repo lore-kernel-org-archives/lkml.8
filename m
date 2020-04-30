@@ -2,111 +2,95 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CF5C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9E1C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A0520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lx1tODra"
+	by mail.kernel.org (Postfix) with ESMTP id 93ACE2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588242938;
+	bh=L8QqziWQ9h7WeebjkgKpp4eKtoL5iK1ZJnBVu8WfcFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t+aaqfKZEViA2FXEjlyLNK5R6tfz8DDs1g2z+1DMftnul3h6LswcDdlg4ZeRQI++l
+	 Q8YVGKPReH8cwyaRCBjkB9upPfIL0RYrOkXBQxhlLwFz301atC6S/JWJsS4m8I/64g
+	 KeliJLPOAKFOkNBy5wCNWGliryeAMS9gwW8TB5A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgD3Kez (ORCPT
+        id S1726844AbgD3Kfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:34:55 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:12248 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726309AbgD3Kez (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:34:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588242894; h=In-Reply-To: Content-Type: MIME-Version:
- References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=FacaeX+QW3gZe3CsWw46u78war6rqHZGj6J6LKrNjcs=; b=Lx1tODratd2FPN/DnDoLP6n+swOCkWbIEz/z/q+bg1Yy5CvxyoiTgObDBHoE/4OQxgv++uU2
- GB6NSZo9NS8sB+BowTugIt+gsV3/WTCdcRXtc5CTrR/gBMGlEm9+7EmmJI6kuj//mkWd5QX7
- jFXkHUsO2ev7C+Dt39nj1ENb/4U=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaaa9ce.7f386b0530a0-smtp-out-n01;
- Thu, 30 Apr 2020 10:34:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 29249C432C2; Thu, 30 Apr 2020 10:34:54 +0000 (UTC)
-Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 30 Apr 2020 06:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbgD3Kfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:35:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: svaddagi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 73383C433CB;
-        Thu, 30 Apr 2020 10:34:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 73383C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
-Date:   Thu, 30 Apr 2020 16:04:46 +0530
-From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH 1/1] virtio: Introduce MMIO ops
-Message-ID: <20200430103446.GH5097@quicinc.com>
-Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
-References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
- <1588240976-10213-2-git-send-email-vatsa@codeaurora.org>
- <20200430101431.GD19932@willie-the-truck>
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A7F20838;
+        Thu, 30 Apr 2020 10:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588242937;
+        bh=L8QqziWQ9h7WeebjkgKpp4eKtoL5iK1ZJnBVu8WfcFo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bqMAJNVeQMD/5NkPOqWvlor4qXznpXKcAukYXSOyriNGdcA5irT1ASbwbNljdScUo
+         5ouwfFgYNh87lpGTVc8HFy93WdA7aR+yd7jPUsOgnv7CkwMgjgy7693U1REDvdMZ6n
+         7Bs5gSMjC7eNLfqsOmKcss+bDLtRp0ZrayfinjeE=
+Date:   Thu, 30 Apr 2020 11:35:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     dillon.minfei@gmail.com
+Cc:     alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
+        p.zabel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] add SPI_SIMPLEX_RX/SPI_3WIRE_RX support for
+ spi-stm32f4
+Message-ID: <20200430103534.GA4633@sirena.org.uk>
+References: <1588239840-11582-1-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Content-Disposition: inline
-In-Reply-To: <20200430101431.GD19932@willie-the-truck>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1588239840-11582-1-git-send-email-dillon.minfei@gmail.com>
+X-Cookie: Sign here without admitting guilt.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Will Deacon <will@kernel.org> [2020-04-30 11:14:32]:
 
-> > +#ifdef CONFIG_VIRTIO_MMIO_OPS
-> >  
-> > +static struct virtio_mmio_ops *mmio_ops;
-> > +
-> > +#define virtio_readb(a)		mmio_ops->mmio_readl((a))
-> > +#define virtio_readw(a)		mmio_ops->mmio_readl((a))
-> > +#define virtio_readl(a)		mmio_ops->mmio_readl((a))
-> > +#define virtio_writeb(val, a)	mmio_ops->mmio_writeb((val), (a))
-> > +#define virtio_writew(val, a)	mmio_ops->mmio_writew((val), (a))
-> > +#define virtio_writel(val, a)	mmio_ops->mmio_writel((val), (a))
-> 
-> How exactly are these ops hooked up? I'm envisaging something like:
-> 
-> 	ops = spec_compliant_ops;
-> 	[...]
-> 	if (firmware_says_hypervisor_is_buggy())
-> 		ops = magic_qcom_ops;
-> 
-> am I wrong?
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If CONFIG_VIRTIO_MMIO_OPS is defined, then I expect this to be unconditionally
-set to 'magic_qcom_ops' that uses hypervisor-supported interface for IO (for
-example: message_queue_send() and message_queue_recevie() hypercalls).
+On Thu, Apr 30, 2020 at 05:44:00PM +0800, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> add SPI_SIMPLEX_RX/SPI_3WIRE_RX in spi-stm32f4.c
+> for SPI_SIMPLEX_RX , as we running kernel in sdram, so
+> that the performance is not as good as internal flash,
+> need add send dummy data out while in rx,
+> otherwise will get many overrun errors.
 
-> > +int register_virtio_mmio_ops(struct virtio_mmio_ops *ops)
-> > +{
-> > +	pr_info("Registered %s as mmio ops\n", ops->name);
-> > +	mmio_ops = ops;
-> 
-> Not looking good, and really defeats the point of standardising this stuff
-> imo.
+I only have patch 4 here, what's going on with dependencies?
 
-Ok. I guess the other option is to standardize on a new virtio transport (like
-ivshmem2-virtio)?
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6qqfMACgkQJNaLcl1U
+h9AMyQf7Bb85zBnGwJCAzPQNAwLw/QzSq+VE7JtXHycImjg0XeyDqyfqdjx5ATdZ
+Cv0cL9opaIRgNlkKYP5Pht4BnWLbdIJRGMfSyKL8G+4GvrtqxGqG1rfYDrXt/KgK
+2lsB45S1YQ95TCPivpAT23RsYaP228a+xuSQLFGfD+1y/vgxlzPz9CrmKOoAccY7
+ZVj1I1f/tzgBh/OPMa363EEs+w3EB4GxIHEjwEb2kJulioCLjllV3MiVK+RQdWC9
+k8SNdtE16QX7FWk34V6DXls9wFnmncODf6tzUx/gBblRHjRC/zETeDiVatBdQBDy
+yaav0TQppa0lz8MY8vwMfj/kQtY4iw==
+=piIt
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
