@@ -2,105 +2,253 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD453C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4EEC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08A62137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E38D20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:23:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q7syOuiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgD3KWZ (ORCPT
+        id S1726774AbgD3KXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:22:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32622 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgD3KWY (ORCPT
+        Thu, 30 Apr 2020 06:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725280AbgD3KXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:22:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UA2qQq049772;
-        Thu, 30 Apr 2020 06:22:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqaph5f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 06:22:22 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UA4XsU058309;
-        Thu, 30 Apr 2020 06:22:22 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqaph48-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 06:22:21 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UAKLFG009374;
-        Thu, 30 Apr 2020 10:22:19 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 30mcu5ajgq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 10:22:19 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UAL7Gu60031290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 10:21:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85D7F4204B;
-        Thu, 30 Apr 2020 10:22:16 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9D2242047;
-        Thu, 30 Apr 2020 10:22:15 +0000 (GMT)
-Received: from localhost (unknown [9.145.144.181])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 30 Apr 2020 10:22:15 +0000 (GMT)
-Date:   Thu, 30 Apr 2020 12:22:14 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: ptrace: hard-code "s390x" instead of UTS_MACHINE
-Message-ID: <your-ad-here.call-01588242134-ext-2784@work.hours>
-References: <20200413013113.8529-1-masahiroy@kernel.org>
+        Thu, 30 Apr 2020 06:23:39 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9ECAC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:23:38 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j1so6228990wrt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6xktt5P5u0NAYWQUqgkagzxErGUiYtbbOHd4C7ocDwU=;
+        b=q7syOuiDaJye/Tlh74i5/Q/+CUSfNs10UstxUepBQ8o+1kxtVWXkeXa/IDVyPIKsIK
+         i0X619XXZudkcvb4n+2glGp5cNEMyL3jBA5w9eZC0t/U62O5XSTV5Spt/Amov/vPJd9p
+         0Jl5+USsGF8hpJZgo4vI90jL7LOgmUxAfN7lGLYCRdLL8Uz1PrySk+mNAKlZsVTHEkIt
+         +SxcNCl1f9z/ekn45w+AR755sqBYVeAOQd5pM4wPPmHIZfnO/54V4YbVGef+JlNVd4qg
+         IQ/OZdJERvEWMJ3nxHMX/1Ukn/sXCDARlo2zUj0CWvHw+UqCYPMZaAchiRMKAnoujpzC
+         KbFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6xktt5P5u0NAYWQUqgkagzxErGUiYtbbOHd4C7ocDwU=;
+        b=HwTQCV4CeuWvDre73EvblVpple1iKuzSUkfEWuXFOy2mj0p+HdUrBLzbwQC+CTgXH8
+         ZqiJPzK35Q2+pxTFojUGUYpAbAqysuf4XUwWLjIMyI+i1+LRl6DlD3EhxiXrxjaq05Tj
+         q4C/mSuwqu9u4rVFu18eUALqlY/pLa7u1J/uMsvZfgHhQRyspHcbj+EKTktDzwV8WlY5
+         VPaxS/vdL2sRyhdjznXLI/r0oZH0i/zWo5q8OZmnDLY8CREVwutBa5L/ARaP3BB7mEuX
+         +KSduX3DRafoOWl2Q9S6DGH41pZG44C9FySqJ5YmJq1l+m5oaJUtlNQ+Nqz9DYtta1Ix
+         AqfA==
+X-Gm-Message-State: AGi0PuYvG04SmWJsCCjKgjgsVaUQQC89HBu2f1Dy7qWYn86Ys3w8R/Vs
+        o9LIoW3cAfMMix834XEfY97L/w==
+X-Google-Smtp-Source: APiQypK5gy7Wyv7ctT8UUbjQzI5nBdRyWE938/wjc15iBu08lS1jivEbgfEP/XpqXxXbSMlu36h9fg==
+X-Received: by 2002:a5d:6946:: with SMTP id r6mr2876869wrw.291.1588242217315;
+        Thu, 30 Apr 2020 03:23:37 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id t2sm11689230wmt.15.2020.04.30.03.23.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 03:23:36 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 11:23:35 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, linux-serial@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
+Subject: Re: [PATCH] serial: kgdboc: Allow earlycon initialization to be
+ deferred
+Message-ID: <20200430102335.udgou23vyrbet3i2@holly.lan>
+References: <20200429170804.880720-1-daniel.thompson@linaro.org>
+ <CAD=FV=UaABk9uejyDR73fW7DDsYvPHaWBD+DpJBGFftJ78UJLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200413013113.8529-1-masahiroy@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_05:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 adultscore=0 suspectscore=1
- spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300077
+In-Reply-To: <CAD=FV=UaABk9uejyDR73fW7DDsYvPHaWBD+DpJBGFftJ78UJLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:31:13AM +0900, Masahiro Yamada wrote:
-> s390 uses the UTS_MACHINE defined arch/s390/Makefile as follows:
+On Wed, Apr 29, 2020 at 05:32:01PM -0700, Doug Anderson wrote:
+> Hi,
 > 
->   UTS_MACHINE     := s390x
+> On Wed, Apr 29, 2020 at 10:08 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > As described in the big comment in the patch, earlycon initialization
+> > can be deferred if, a) earlycon was supplied without arguments and, b)
+> > the ACPI SPCR table hasn't yet been parsed.
+> >
+> > Unfortunately, if deferred, then the earlycon is not ready during early
+> > parameter parsing so kgdboc cannot use it. This patch mitigates the
+> > problem by giving kgdboc_earlycon a second chance during
+> > dbg_late_init(). Adding a special purpose interface slightly increase
+> > the intimacy between kgdboc and debug-core but this seems better than
+> > adding kgdb specific hooks into the arch code (and much, much better
+> > than faking non-intimacy with function pointers).
+> >
+> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > ---
+> >
+> > Notes:
+> >     Hi Doug,
+> >
+> >     This patch extends your patch set to make it easier to deploy on ACPI
+> >     systems[1]:
+> >       earlycon kgdboc_earlycon kgdboc=ttyAMA0
+> >
+> >     I have mixed feeling about it because it adds calls from debug-core
+> >     into kgdboc and I don't think there are other examples of this.
+> >     However earlycon auto-configuration is so awesome I'd like to
+> >     be able to keep using it and this is the best I have come up with
+> >     so far ;-).
 > 
-> We do not need to pass the fixed string from the command line.
-> Hard-code user_regset_view::name, like many other architectures do.
+> It's a little gross, but it's OK with me.  I guess the other option
+> would be to have "kgdboc_earlycon" try again at various different
+> initcall levels...
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+> Speaking of which, I wonder if you could just make kgdboc register to
+> run at "console_initcall" level.  If I'm reading it properly:
 > 
->  arch/s390/kernel/Makefile | 5 -----
->  arch/s390/kernel/ptrace.c | 2 +-
->  2 files changed, 1 insertion(+), 6 deletions(-)
+> start_kernel()
+> - setup_arch(): ACPI stuff is done by the end of this, right?
+> - console_init(): It would be easy to get called here, I think.
+> - dbg_late_init(): Where you're hooking in now.
+> 
+> I didn't put printouts in any code and test it out, but if the above
+> is right then you'll actually get called _earlier_ and with less
+> hackiness if you just have kgdboc try again at console initlevel.
 
-Yes, since we don't have 31-bit kernel build support for s390 anymore
-this makes sense.
-Applied, thanks.
+Thanks, I'll take a look at this. I had a nagging feeling I must be
+missing something when I gave up and wrote the hack found in this
+patch. Sounds like I should have paid that feeling closer attention!
+
+
+> > @@ -529,7 +531,23 @@ static int __init kgdboc_earlycon_init(char *opt)
+> >         console_unlock();
+> >
+> >         if (!con) {
+> > -               pr_info("Couldn't find kgdb earlycon\n");
+> > +               /*
+> > +                * If earlycon deferred its initialization then we also need to
+> > +                * do that since there is no console at this point. We will
+> > +                * only defer ourselves when kgdboc_earlycon has no arguments.
+> > +                * This is because earlycon init is only deferred if there are
+> > +                * no arguments to earlycon (we assume that a user who doesn't
+> > +                * specify an earlycon driver won't know the right console name
+> > +                * to put into kgdboc_earlycon and will let that auto-configure
+> > +                * too).
+> > +                */
+> > +               if (!kgdboc_earlycon_late_enable &&
+> > +                   earlycon_acpi_spcr_enable && (!opt || !opt[0])) {
+> > +                       earlycon_kgdboc_late_enable = true;
+> > +                       pr_info("No suitable earlycon yet, will try later\n");
+> > +               } else {
+> > +                       pr_info("Couldn't find kgdb earlycon\n");
+> > +               }
+> 
+> Personally I'd rather take all the caveats out and just make it
+> generic.  Stash the name of the console in a string (you can make it
+> initdata so it doesn't waste any space) and just always retry later if
+> we didn't find the console.  Then you don't need to be quite so
+> fragile and if someone else finds another reason to delay earlycon
+> we'll still work.
+
+Will do.
+
+
+> Speaking of which, if we build kgdboc as a module won't you get an
+> error accessing "earlycon_acpi_spcr_enable"?
+
+Very likely. I have a note to test this as a module but was curious
+whether having kgdb_earlycon_late_init() was the right approach
+anyway.
+
+
+> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> > index 77a3c519478a..02867a2f0eb4 100644
+> > --- a/include/linux/kgdb.h
+> > +++ b/include/linux/kgdb.h
+> > @@ -227,6 +227,8 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+> >  extern void kgdb_arch_late(void);
+> >
+> >
+> > +extern void __init kgdb_earlycon_late_init(void);
+> > +
+> 
+> It's not required to add "__init" for declarations, is it?
+
+This is just matching styles with the rest of the file (like the
+extern). Maybe I'll put polishing the header a little on my TODO
+list.
+
+
+> >   * struct kgdb_arch - Describe architecture specific values.
+> >   * @gdb_bpt_instr: The instruction to trigger a breakpoint.
+> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+> > index 2d74dcbca477..f066ef2bc615 100644
+> > --- a/kernel/debug/debug_core.c
+> > +++ b/kernel/debug/debug_core.c
+> > @@ -963,11 +963,15 @@ void __weak kgdb_arch_late(void)
+> >  {
+> >  }
+> >
+> > +void __init __weak kgdb_earlycon_late_init(void)
+> > +
+> 
+> I assume the above is because "kgdboc" can be compiled as a module and
+> you need to essentially no-op your call in that case?  If so, could
+> you add a comment about it?  I also would have thought you'd actually
+> need to define the weak function implementation, not just declare it.
+> Maybe I'm confused, though.
+
+Ah...
+
+When I rebased this patch on your most recent patchset I did most of the
+fix ups during the merge. The final few problems I caught *after* the
+merge and it looks like I neglected to commit them. Sorry... and I'm
+just relieved you didn't try and compile test this patch!
+
+
+> >  void __init dbg_late_init(void)
+> >  {
+> >         dbg_is_early = false;
+> >         if (kgdb_io_module_registered)
+> >                 kgdb_arch_late();
+> > +       else
+> > +               kgdb_earlycon_late_init();
+> >         kdb_init(KDB_INIT_FULL);
+> 
+> It feels like it'd be better not to make yourself an "else" but rather
+> to add a 2nd "if" test either at the beginning or the end of this
+> function.  I'm 99% sure it makes no difference, but it makes my brain
+> hurt a little trying to prove it because you've added another flow of
+> control to analyze / keep working.  Specifically you've now got a case
+> where you're running a bunch of the "debug_core" code where
+> "dbg_is_early = false" but you haven't yet run "KDB_INIT_FULL".
+> 
+> Anyway, I don't feel that strongly about it, so if you really like it
+> the way it is that's fine...
+
+It is done this way to prevent kgdb_arch_late() being called twice
+(because I don't want to have to mandate that kgdb_arch_late() is
+idempotent on every architecture).
+
+However I guess a simple alternative would be to call
+kgdb_earlycon_late_init() *before* setting dbg_is_early to false.
+
+Anyhow, I hope you early review comments mean this issue can become
+irrelevant anyway!
+
+
+Daniel.
