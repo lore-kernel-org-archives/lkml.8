@@ -4,409 +4,195 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F106CC47257
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A254C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E522173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E4420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588263521;
-	bh=ORjljVOjhf/2+iwPRot8U36ehoPt3y93WEknPAl6A+o=;
+	s=default; t=1588263525;
+	bh=fDDw8CUiWiLSO3QdJj2xM8TflOXwJKfxuSuTRCHZmLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I0hdWpFq1oDEwwjC2Qmjk8LLJVp940YDlP2bOBgdPCEt179qDTfe81HKp4yVObOBo
-	 zmBWs4eMqQy9jPy00bBz3udcf5gqbR3ZQfRNTYBBSzPB4CwZiLI1+c6N8pbemDaZUM
-	 Z9F3K2nbQPT2cyDgyEK/UZ8CFVIN8PHyk3v+/QV0=
+	b=zyCdjaoxBhr0Y0q+414PmYjljnZI2KQpwFp+zJTg8Emdi4YEfqQHBhdi+bdBdm82w
+	 qJTCnoG5qsd0E12ITeFChCiIl57yY+SUl3SxihByh3S/T2eIE/uVVykGAezAdYBLdW
+	 Vc7GmDTHLjgGqFD1Tq0D+cquWRZP2/f79c9qc6x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgD3QSl (ORCPT
+        id S1728220AbgD3QSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgD3QSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726790AbgD3QSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:18:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6EE3208C3;
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E4424953;
         Thu, 30 Apr 2020 16:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588263517;
-        bh=ORjljVOjhf/2+iwPRot8U36ehoPt3y93WEknPAl6A+o=;
+        bh=fDDw8CUiWiLSO3QdJj2xM8TflOXwJKfxuSuTRCHZmLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8HOAePBXi6WI+jzMe8alh7NPftqSNmZllGrIna0V9+8gVsCkxSEctza4NQfjYFrg
-         PDc92ajWS6VHX3K0N7wiY/mDUQxz68+dHpsPWN3xy4mlhU/tKzi/370OrediB6aX/a
-         fv51/qsAaKLzJhFChZ7+yl+EXRhaRhPPYkU7l5bo=
+        b=hW8jITZN6VrKvdZ+oI070r43Rh2yWj68X3GMYffFDZBZmwMAlQai98wgclos6ywbQ
+         9ghSwzy/4xHcRjW7lx5njvgv6A77g/U3AIon97i0GwYHouULVO29XrYMhig1KYzFr7
+         OgSFVoRYnYdi55HGEqbUVSruL1+MqgfJ4vmUQsz0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBtT-00Axgm-U6; Thu, 30 Apr 2020 18:18:35 +0200
+        id 1jUBtU-00AxhD-2Z; Thu, 30 Apr 2020 18:18:36 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH v4 03/19] docs: crypto: convert api-intro.txt to ReST format
-Date:   Thu, 30 Apr 2020 18:18:17 +0200
-Message-Id: <112b12acb7b6c7ea339171c88c3cf93a183b11ac.1588263270.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v4 08/19] docs: misc-devices/pci-endpoint-test.txt: convert to ReST
+Date:   Thu, 30 Apr 2020 18:18:22 +0200
+Message-Id: <6e0cbd6f37cfb6a21afdd1dcb0ed3ec3f14e64f9.1588263270.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588263270.git.mchehab+huawei@kernel.org>
 References: <cover.1588263270.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Change title markups;
-- Mark literal blocks;
-- Use list markups at authors/credits;
-- Add blank lines when needed;
-- Remove trailing whitespaces.
+- Use titles markups;
+- Adjust identation;
+- use literal markup;
+- Use the proper notation for footnotes.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../crypto/{api-intro.txt => api-intro.rst}   | 186 ++++++++++--------
- Documentation/crypto/index.rst                |   1 +
- 2 files changed, 100 insertions(+), 87 deletions(-)
- rename Documentation/crypto/{api-intro.txt => api-intro.rst} (70%)
+ Documentation/misc-devices/index.rst          |  1 +
+ .../misc-devices/pci-endpoint-test.rst        | 56 +++++++++++++++++++
+ .../misc-devices/pci-endpoint-test.txt        | 41 --------------
+ 3 files changed, 57 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/misc-devices/pci-endpoint-test.rst
+ delete mode 100644 Documentation/misc-devices/pci-endpoint-test.txt
 
-diff --git a/Documentation/crypto/api-intro.txt b/Documentation/crypto/api-intro.rst
-similarity index 70%
-rename from Documentation/crypto/api-intro.txt
-rename to Documentation/crypto/api-intro.rst
-index 45d943fcae5b..bcff47d42189 100644
---- a/Documentation/crypto/api-intro.txt
-+++ b/Documentation/crypto/api-intro.rst
-@@ -1,7 +1,11 @@
+diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
+index a72ab89e7d1a..17e77b6aa27c 100644
+--- a/Documentation/misc-devices/index.rst
++++ b/Documentation/misc-devices/index.rst
+@@ -22,5 +22,6 @@ fit into other categories.
+    lis3lv02d
+    max6875
+    mic/index
++   pci-endpoint-test
+    spear-pcie-gadget
+    xilinx_sdfec
+diff --git a/Documentation/misc-devices/pci-endpoint-test.rst b/Documentation/misc-devices/pci-endpoint-test.rst
+new file mode 100644
+index 000000000000..26e5d9ba146b
+--- /dev/null
++++ b/Documentation/misc-devices/pci-endpoint-test.rst
+@@ -0,0 +1,56 @@
 +.. SPDX-License-Identifier: GPL-2.0
- 
--                    Scatterlist Cryptographic API
--                   
--INTRODUCTION
-+=============================
-+Scatterlist Cryptographic API
-+=============================
 +
-+Introduction
-+============
- 
- The Scatterlist Crypto API takes page vectors (scatterlists) as
- arguments, and works directly on pages.  In some cases (e.g. ECB
-@@ -13,22 +17,23 @@ so that processing can be applied to paged skb's without the need
- for linearization.
- 
- 
--DETAILS
-+Details
-+=======
- 
- At the lowest level are algorithms, which register dynamically with the
- API.
- 
- 'Transforms' are user-instantiated objects, which maintain state, handle all
--of the implementation logic (e.g. manipulating page vectors) and provide an 
--abstraction to the underlying algorithms.  However, at the user 
-+of the implementation logic (e.g. manipulating page vectors) and provide an
-+abstraction to the underlying algorithms.  However, at the user
- level they are very simple.
- 
--Conceptually, the API layering looks like this:
-+Conceptually, the API layering looks like this::
- 
-   [transform api]  (user interface)
-   [transform ops]  (per-type logic glue e.g. cipher.c, compress.c)
-   [algorithm api]  (for registering algorithms)
--  
++=====================================
++Driver for PCI Endpoint Test Function
++=====================================
 +
- The idea is to make the user interface and algorithm registration API
- very simple, while hiding the core logic from both.  Many good ideas
- from existing APIs such as Cryptoapi and Nettle have been adapted for this.
-@@ -44,21 +49,21 @@ one block while the former can operate on an arbitrary amount of data,
- subject to block size requirements (i.e., non-stream ciphers can only
- process multiples of blocks).
- 
--Here's an example of how to use the API:
-+Here's an example of how to use the API::
- 
- 	#include <crypto/hash.h>
- 	#include <linux/err.h>
- 	#include <linux/scatterlist.h>
--	
++This driver should be used as a host side driver if the root complex is
++connected to a configurable PCI endpoint running ``pci_epf_test`` function
++driver configured according to [1]_.
 +
- 	struct scatterlist sg[2];
- 	char result[128];
- 	struct crypto_ahash *tfm;
- 	struct ahash_request *req;
--	
++The "pci_endpoint_test" driver can be used to perform the following tests.
 +
- 	tfm = crypto_alloc_ahash("md5", 0, CRYPTO_ALG_ASYNC);
- 	if (IS_ERR(tfm))
- 		fail();
--		
++The PCI driver for the test device performs the following tests:
 +
- 	/* ... set up the scatterlists ... */
- 
- 	req = ahash_request_alloc(tfm, GFP_ATOMIC);
-@@ -67,18 +72,19 @@ Here's an example of how to use the API:
- 
- 	ahash_request_set_callback(req, 0, NULL, NULL);
- 	ahash_request_set_crypt(req, sg, result, 2);
--	
++	#) verifying addresses programmed in BAR
++	#) raise legacy IRQ
++	#) raise MSI IRQ
++	#) raise MSI-X IRQ
++	#) read data
++	#) write data
++	#) copy data
 +
- 	if (crypto_ahash_digest(req))
- 		fail();
- 
- 	ahash_request_free(req);
- 	crypto_free_ahash(tfm);
- 
--    
++This misc driver creates /dev/pci-endpoint-test.<num> for every
++``pci_epf_test`` function connected to the root complex and "ioctls"
++should be used to perform the above tests.
 +
- Many real examples are available in the regression test module (tcrypt.c).
- 
- 
--DEVELOPER NOTES
-+Developer Notes
-+===============
- 
- Transforms may only be allocated in user context, and cryptographic
- methods may only be called from softirq and user contexts.  For
-@@ -91,7 +97,8 @@ size (typically 8 bytes).  This prevents having to do any copying
- across non-aligned page fragment boundaries.
- 
- 
--ADDING NEW ALGORITHMS
-+Adding New Algorithms
-+=====================
- 
- When submitting a new algorithm for inclusion, a mandatory requirement
- is that at least a few test vectors from known sources (preferably
-@@ -119,132 +126,137 @@ Also check the TODO list at the web site listed below to see what people
- might already be working on.
- 
- 
--BUGS
-+Bugs
-+====
- 
- Send bug reports to:
--linux-crypto@vger.kernel.org
--Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-+    linux-crypto@vger.kernel.org
++ioctl
++-----
 +
-+Cc:
-+    Herbert Xu <herbert@gondor.apana.org.au>,
-     David S. Miller <davem@redhat.com>
- 
- 
--FURTHER INFORMATION
-+Further Information
-+===================
- 
- For further patches and various updates, including the current TODO
- list, see:
- http://gondor.apana.org.au/~herbert/crypto/
- 
- 
--AUTHORS
-+Authors
-+=======
- 
--James Morris
--David S. Miller
--Herbert Xu
-+- James Morris
-+- David S. Miller
-+- Herbert Xu
- 
- 
--CREDITS
-+Credits
-+=======
- 
- The following people provided invaluable feedback during the development
- of the API:
- 
--  Alexey Kuznetzov
--  Rusty Russell
--  Herbert Valerio Riedel
--  Jeff Garzik
--  Michael Richardson
--  Andrew Morton
--  Ingo Oeser
--  Christoph Hellwig
-+  - Alexey Kuznetzov
-+  - Rusty Russell
-+  - Herbert Valerio Riedel
-+  - Jeff Garzik
-+  - Michael Richardson
-+  - Andrew Morton
-+  - Ingo Oeser
-+  - Christoph Hellwig
- 
- Portions of this API were derived from the following projects:
--  
++ PCITEST_BAR:
++	      Tests the BAR. The number of the BAR to be tested
++	      should be passed as argument.
++ PCITEST_LEGACY_IRQ:
++	      Tests legacy IRQ
++ PCITEST_MSI:
++	      Tests message signalled interrupts. The MSI number
++	      to be tested should be passed as argument.
++ PCITEST_MSIX:
++	      Tests message signalled interrupts. The MSI-X number
++	      to be tested should be passed as argument.
++ PCITEST_SET_IRQTYPE:
++	      Changes driver IRQ type configuration. The IRQ type
++	      should be passed as argument (0: Legacy, 1:MSI, 2:MSI-X).
++ PCITEST_GET_IRQTYPE:
++	      Gets driver IRQ type configuration.
++ PCITEST_WRITE:
++	      Perform write tests. The size of the buffer should be passed
++	      as argument.
++ PCITEST_READ:
++	      Perform read tests. The size of the buffer should be passed
++	      as argument.
++ PCITEST_COPY:
++	      Perform read tests. The size of the buffer should be passed
++	      as argument.
 +
-   Kerneli Cryptoapi (http://www.kerneli.org/)
--    Alexander Kjeldaas
--    Herbert Valerio Riedel
--    Kyle McMartin
--    Jean-Luc Cooke
--    David Bryson
--    Clemens Fruhwirth
--    Tobias Ringstrom
--    Harald Welte
-+   - Alexander Kjeldaas
-+   - Herbert Valerio Riedel
-+   - Kyle McMartin
-+   - Jean-Luc Cooke
-+   - David Bryson
-+   - Clemens Fruhwirth
-+   - Tobias Ringstrom
-+   - Harald Welte
- 
- and;
--  
-+
-   Nettle (http://www.lysator.liu.se/~nisse/nettle/)
--    Niels Möller
-+   - Niels Möller
- 
- Original developers of the crypto algorithms:
- 
--  Dana L. How (DES)
--  Andrew Tridgell and Steve French (MD4)
--  Colin Plumb (MD5)
--  Steve Reid (SHA1)
--  Jean-Luc Cooke (SHA256, SHA384, SHA512)
--  Kazunori Miyazawa / USAGI (HMAC)
--  Matthew Skala (Twofish)
--  Dag Arne Osvik (Serpent)
--  Brian Gladman (AES)
--  Kartikey Mahendra Bhatt (CAST6)
--  Jon Oberheide (ARC4)
--  Jouni Malinen (Michael MIC)
--  NTT(Nippon Telegraph and Telephone Corporation) (Camellia)
-+  - Dana L. How (DES)
-+  - Andrew Tridgell and Steve French (MD4)
-+  - Colin Plumb (MD5)
-+  - Steve Reid (SHA1)
-+  - Jean-Luc Cooke (SHA256, SHA384, SHA512)
-+  - Kazunori Miyazawa / USAGI (HMAC)
-+  - Matthew Skala (Twofish)
-+  - Dag Arne Osvik (Serpent)
-+  - Brian Gladman (AES)
-+  - Kartikey Mahendra Bhatt (CAST6)
-+  - Jon Oberheide (ARC4)
-+  - Jouni Malinen (Michael MIC)
-+  - NTT(Nippon Telegraph and Telephone Corporation) (Camellia)
- 
- SHA1 algorithm contributors:
--  Jean-Francois Dive
--  
-+  - Jean-Francois Dive
-+
- DES algorithm contributors:
--  Raimar Falke
--  Gisle Sælensminde
--  Niels Möller
-+  - Raimar Falke
-+  - Gisle Sælensminde
-+  - Niels Möller
- 
- Blowfish algorithm contributors:
--  Herbert Valerio Riedel
--  Kyle McMartin
-+  - Herbert Valerio Riedel
-+  - Kyle McMartin
- 
- Twofish algorithm contributors:
--  Werner Koch
--  Marc Mutz
-+  - Werner Koch
-+  - Marc Mutz
- 
- SHA256/384/512 algorithm contributors:
--  Andrew McDonald
--  Kyle McMartin
--  Herbert Valerio Riedel
--  
-+  - Andrew McDonald
-+  - Kyle McMartin
-+  - Herbert Valerio Riedel
-+
- AES algorithm contributors:
--  Alexander Kjeldaas
--  Herbert Valerio Riedel
--  Kyle McMartin
--  Adam J. Richter
--  Fruhwirth Clemens (i586)
--  Linus Torvalds (i586)
-+  - Alexander Kjeldaas
-+  - Herbert Valerio Riedel
-+  - Kyle McMartin
-+  - Adam J. Richter
-+  - Fruhwirth Clemens (i586)
-+  - Linus Torvalds (i586)
- 
- CAST5 algorithm contributors:
--  Kartikey Mahendra Bhatt (original developers unknown, FSF copyright).
-+  - Kartikey Mahendra Bhatt (original developers unknown, FSF copyright).
- 
- TEA/XTEA algorithm contributors:
--  Aaron Grothe
--  Michael Ringe
-+  - Aaron Grothe
-+  - Michael Ringe
- 
- Khazad algorithm contributors:
--  Aaron Grothe
-+  - Aaron Grothe
- 
- Whirlpool algorithm contributors:
--  Aaron Grothe
--  Jean-Luc Cooke
-+  - Aaron Grothe
-+  - Jean-Luc Cooke
- 
- Anubis algorithm contributors:
--  Aaron Grothe
-+  - Aaron Grothe
- 
- Tiger algorithm contributors:
--  Aaron Grothe
-+  - Aaron Grothe
- 
- VIA PadLock contributors:
--  Michal Ludvig
-+  - Michal Ludvig
- 
- Camellia algorithm contributors:
--  NTT(Nippon Telegraph and Telephone Corporation) (Camellia)
-+  - NTT(Nippon Telegraph and Telephone Corporation) (Camellia)
- 
- Generic scatterwalk code by Adam J. Richter <adam@yggdrasil.com>
- 
- Please send any credits updates or corrections to:
- Herbert Xu <herbert@gondor.apana.org.au>
++.. [1] Documentation/PCI/endpoint/function/binding/pci-test.txt
+diff --git a/Documentation/misc-devices/pci-endpoint-test.txt b/Documentation/misc-devices/pci-endpoint-test.txt
+deleted file mode 100644
+index 58ccca4416b1..000000000000
+--- a/Documentation/misc-devices/pci-endpoint-test.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-Driver for PCI Endpoint Test Function
 -
-diff --git a/Documentation/crypto/index.rst b/Documentation/crypto/index.rst
-index 2bcaf422731e..b2eeab3c8631 100644
---- a/Documentation/crypto/index.rst
-+++ b/Documentation/crypto/index.rst
-@@ -17,6 +17,7 @@ for cryptographic use cases, as well as programming examples.
-    :maxdepth: 2
- 
-    intro
-+   api-intro
-    architecture
-    asymmetric-keys
-    devel-algos
+-This driver should be used as a host side driver if the root complex is
+-connected to a configurable PCI endpoint running *pci_epf_test* function
+-driver configured according to [1].
+-
+-The "pci_endpoint_test" driver can be used to perform the following tests.
+-
+-The PCI driver for the test device performs the following tests
+-	*) verifying addresses programmed in BAR
+-	*) raise legacy IRQ
+-	*) raise MSI IRQ
+-	*) raise MSI-X IRQ
+-	*) read data
+-	*) write data
+-	*) copy data
+-
+-This misc driver creates /dev/pci-endpoint-test.<num> for every
+-*pci_epf_test* function connected to the root complex and "ioctls"
+-should be used to perform the above tests.
+-
+-ioctl
+------
+- PCITEST_BAR: Tests the BAR. The number of the BAR to be tested
+-	      should be passed as argument.
+- PCITEST_LEGACY_IRQ: Tests legacy IRQ
+- PCITEST_MSI: Tests message signalled interrupts. The MSI number
+-	      to be tested should be passed as argument.
+- PCITEST_MSIX: Tests message signalled interrupts. The MSI-X number
+-	      to be tested should be passed as argument.
+- PCITEST_SET_IRQTYPE: Changes driver IRQ type configuration. The IRQ type
+-	      should be passed as argument (0: Legacy, 1:MSI, 2:MSI-X).
+- PCITEST_GET_IRQTYPE: Gets driver IRQ type configuration.
+- PCITEST_WRITE: Perform write tests. The size of the buffer should be passed
+-		as argument.
+- PCITEST_READ: Perform read tests. The size of the buffer should be passed
+-	       as argument.
+- PCITEST_COPY: Perform read tests. The size of the buffer should be passed
+-	       as argument.
+-
+-[1] -> Documentation/PCI/endpoint/function/binding/pci-test.txt
 -- 
 2.25.4
 
