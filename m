@@ -2,114 +2,103 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB37C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A4BC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25CE82072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvIhEeo6"
+	by mail.kernel.org (Postfix) with ESMTP id 91FE22072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588274717;
+	bh=+7YJ0F1f3t1J9sJB435G2DWcTRqHj08byBs/EBxxpUE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bFgVbJdge8B9S0KtD8fxlQUJLT8xh4+ycpuhhlleEzOU5OZ+WkRRp/8tkHVXMSkBf
+	 LjgQ20wNP3NUK7FOvru0oaYao3F+MvaK/quOgYT+HpVjMtNrp6MhuTGyLZqJEOhj6N
+	 IxI2hmygOqrMzOUw7dWL4NKiKj8o2vdi2zCqthhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgD3TZF (ORCPT
+        id S1726817AbgD3TZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD3TZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:25:04 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C9EC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:25:04 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z1so342528pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LWzoBfWYBplb188JYPfec8yiO1FAiglsQQs7ha7y6zc=;
-        b=zvIhEeo6o5Oci/1eDGxIxa70cqZyoYJPXylX1Jz8dm4uPN+VdUMi5dd63F1duzrKjf
-         RbDbL4orJsgYwq7Nj0UTh3yQbN4K0xHm3MIzvy5ZD3vZU2dEZ4WTK5ZSvBz/KhNhDNRi
-         iq4ZR0E2/FCU5UX9o2YRqOluF3k9408xQAXoHNf8e9LxoECnH5HXqwOJ0rv7LjXnhyyW
-         yS/J0pcItyBpgwidW4/F9usyFm2BZPVgghgNjxRdQThOIQoH0bSYmBNCHOuxLIXuzZaE
-         8kNRwr8BxYU8I87WPqhv6VIAhcrOvoocf9qPGC8gtHNJf58mlCE62qWRAmVLrpUHxnod
-         A6ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LWzoBfWYBplb188JYPfec8yiO1FAiglsQQs7ha7y6zc=;
-        b=ZYh36Gqtnce6+4By/45rkJJo50e9ulpj+/DY667ydsYRqIEcTroya/G5qGdhEi0vHi
-         1Y7+ZxrhS4oYv6IcpvTR2AqkeZ5EutPhp6GIy3qK25D7Mtv+KqgTIm2Wyz1K+6IpVR7h
-         FsPsQtI9JDMzecK3XRIWHNU8jvyNKvQnkLxuEkkJVGUFJl1JHnjUL7jJXf1dwt8EFOtP
-         Mw4PblJYL1P33nmcmeyS1E2jpE6faCgPu1i4dQT8iG9yTgHiaVHKyTSyD4UOD0gNEep3
-         comhDP+bG9iiWF8h+zCGqKOPOd3mqFr3kfpw3NUTfiGktOarc/yiM2ZHlAb8bsu3w2no
-         XDMw==
-X-Gm-Message-State: AGi0PuaGTemGRV4wSemo9MHgaT/P12yu5ytS5FFIxYpUzBoUsFxTJAG/
-        JO5bS5breEznGpjV3ZwrYh+s8g==
-X-Google-Smtp-Source: APiQypLCsVX9Nh3B0wNo8iNCW3Dh7d+/91P/QFHKJM1aSTI3VdeXI7wM5INe9jYGfLmdFCvuIRM2Ow==
-X-Received: by 2002:aa7:8b12:: with SMTP id f18mr271949pfd.81.1588274704103;
-        Thu, 30 Apr 2020 12:25:04 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v26sm463594pfe.121.2020.04.30.12.25.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:25:03 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] drm/msm: Fix undefined "rd_full" link error
-Date:   Thu, 30 Apr 2020 12:24:27 -0700
-Message-Id: <20200430192427.4104899-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 30 Apr 2020 15:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgD3TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:25:16 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D8F52072A;
+        Thu, 30 Apr 2020 19:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588274715;
+        bh=+7YJ0F1f3t1J9sJB435G2DWcTRqHj08byBs/EBxxpUE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eLexogwtOcM4N+0UYjECMimdHQ1opWtbze6Dopj5VT/8YNtXib+uDpzQ+/j7L1wM7
+         gO7qJfjWBGp/EUqclA9T2dFbzn7epFKMoqif+CwAY1rvNnNdS9GaFG/7gci0ZG5mEH
+         gP89jPiJs/LD6qCbcNj9srmmHA07LUSjwbSMf6aM=
+Date:   Thu, 30 Apr 2020 21:25:11 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: [PATCH RFC] Kbuild: Makefile: warn if auto.conf is obsolete
+Message-ID: <20200430212511.2115ed98@coco.lan>
+In-Reply-To: <20200430211009.3fef03f3@coco.lan>
+References: <20200430131715.32c1a1f6@coco.lan>
+        <CAK7LNASmVoZequqaj6MTimeZ0MG0fk7Wb5-9haFhgG03kDBpxg@mail.gmail.com>
+        <20200430184948.27191975@coco.lan>
+        <CAK7LNASx5qfV_6Wow-MVKsHXUX96m8yYvpeK1QVt+2i46FTMNg@mail.gmail.com>
+        <20200430211009.3fef03f3@coco.lan>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rd_full should be defined outside the CONFIG_DEBUG_FS region, in order
-to be able to link the msm driver even when CONFIG_DEBUG_FS is disabled.
+A new behavior on more recent kernels require to always call
+"make modules_prepare" after *any* Kconfig changes.
 
-Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This is not what a poor mortal would be expecting on a building
+system, as it should, IMHO, be able to detect and auto-run
+whatever is needed to use the newer setup.
+
+Yet, while this is not solved, let's at least stop the build
+and produce a warning, to notify the user about that.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_rd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
-index 732f65df5c4f..fea30e7aa9e8 100644
---- a/drivers/gpu/drm/msm/msm_rd.c
-+++ b/drivers/gpu/drm/msm/msm_rd.c
-@@ -29,8 +29,6 @@
-  * or shader programs (if not emitted inline in cmdstream).
-  */
+I would still prefer to call "make modules_prepare" directly,
+on such cases, but just calling "make -C . modules_prepare" doesn't
+work. So, the next best thing would be to at least print a message
+and don't try to do a build with a broken auto.conf file.
+
+ Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index 70def4907036..492ee2396ab9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1632,6 +1632,11 @@ $(objtree)/Module.symvers:
+ build-dirs := $(KBUILD_EXTMOD)
+ PHONY += modules
+ modules: descend $(objtree)/Module.symvers
++	@if [ $(KCONFIG_CONFIG) -nt include/config/auto.conf ]; then \
++		echo "  WARNING: $(KCONFIG_CONFIG) was modified. Need to run:"; \
++		echo "           $(MAKE) modules_prepare"; \
++		exit -1; \
++	fi
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
  
--#ifdef CONFIG_DEBUG_FS
--
- #include <linux/circ_buf.h>
- #include <linux/debugfs.h>
- #include <linux/kfifo.h>
-@@ -47,6 +45,8 @@ bool rd_full = false;
- MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
- module_param_named(rd_full, rd_full, bool, 0600);
- 
-+#ifdef CONFIG_DEBUG_FS
-+
- enum rd_sect_type {
- 	RD_NONE,
- 	RD_TEST,       /* ascii text */
+ PHONY += modules_install
 -- 
-2.24.0
+2.25.4
 
