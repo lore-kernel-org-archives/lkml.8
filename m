@@ -2,238 +2,93 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB01C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB2DC8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8320320870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46FC20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgD3NDk (ORCPT
+        id S1727085AbgD3NES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:03:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49726 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgD3NDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:03:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5C677ACA1;
-        Thu, 30 Apr 2020 13:03:35 +0000 (UTC)
-From:   Roman Penyaev <rpenyaev@suse.de>
-Cc:     Roman Penyaev <rpenyaev@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Jason Baron <jbaron@akamai.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] kselftests: introduce new epoll60 testcase for catching lost wakeups
-Date:   Thu, 30 Apr 2020 15:03:25 +0200
-Message-Id: <20200430130326.1368509-1-rpenyaev@suse.de>
-X-Mailer: git-send-email 2.24.1
+        Thu, 30 Apr 2020 09:04:18 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42487 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgD3NER (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:04:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m18so4786277otq.9;
+        Thu, 30 Apr 2020 06:04:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p8uSpmhwBDQ1U9t+PlYqOYkuJzr7dXp1+naCrrRJGfY=;
+        b=slOtTPldluIQvsCBZyrXip9p3qdoe/Qe6+WmHWW+5XCDnXAIatIHcrSjh/w/2DMF4s
+         HUyS/y8TR3GlnTJcy5m7z7m9UnxNz+st7KYGoN2x86fDNE+5uZdTnJf0T+VWWZff/Au0
+         vEBmr9nxd9emLIKPil7TqVYap1rwMFMPMcefelm6jdrz52zy/ZLT6bQxWebdblAo9L5i
+         GNG2Wyh/oYzab3lfdSb3jPhpNLjMOk6h1YtTLXdaa3Jg9BJ2QxFHDlG35Okr32FHY1sc
+         x4jkm15WxCkZvwNJO4y9FyfVTx+xyCDiV4Q7VrHYaXFBF3o6+G0kWbznH1MGzai2I5PY
+         0Zpw==
+X-Gm-Message-State: AGi0PuYWk4x5oc8GPgH+u77ECUzIV7MrnpEoSfOE5b0hzxwo0h4zSl2r
+        7Dd4GZ47ZZU5uGIDUVk14Q3CQXcs/mQk1w88tv0=
+X-Google-Smtp-Source: APiQypJM8NPdDbTWm6Iu7eFmwUmgJfrZdKrQ+XkEkbx+p2+b3lqy3IQKLn2ouBNMfjTTCkDtqDWWS/OEgjBAfo04W0E=
+X-Received: by 2002:a9d:564:: with SMTP id 91mr2433669otw.250.1588251856441;
+ Thu, 30 Apr 2020 06:04:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 15:04:05 +0200
+Message-ID: <CAMuHMdWDFDEYtD6kW5x96j-fwpkxXeaoOvXZdF1Ex-zaT+zANw@mail.gmail.com>
+Subject: Re: [PATCH 05/18] dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This test case catches lost wake up introduced by:
-  339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document PFC support for the RZ/G1H (R8A7742) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-The test is simple: we have 10 threads and 10 event fds. Each thread
-can harvest only 1 event. 1 producer fires all 10 events at once and
-waits that all 10 events will be observed by 10 threads.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v5.8.
 
-In case of lost wakeup epoll_wait() will timeout and 0 will be
-returned.
+Gr{oetje,eeting}s,
 
-Test case catches two sort of problems: forgotten wakeup on event,
-which hits the ->ovflist list, this problem was fixed by:
-  5a2513239750 ("eventpoll: fix missing wakeup for ovflist in ep_poll_callback")
+                        Geert
 
-the other problem is when several sequential events hit the same
-waiting thread, thus other waiters get no wakeups. Problem is
-fixed in the following patch.
-
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Khazhismel Kumykov <khazhy@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Heiher <r@hev.cc>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../filesystems/epoll/epoll_wakeup_test.c     | 146 ++++++++++++++++++
- 1 file changed, 146 insertions(+)
-
-diff --git a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-index 11eee0b60040..d979ff14775a 100644
---- a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-+++ b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-@@ -3,6 +3,7 @@
- #define _GNU_SOURCE
- #include <poll.h>
- #include <unistd.h>
-+#include <assert.h>
- #include <signal.h>
- #include <pthread.h>
- #include <sys/epoll.h>
-@@ -3136,4 +3137,149 @@ TEST(epoll59)
- 	close(ctx.sfd[0]);
- }
- 
-+enum {
-+	EPOLL60_EVENTS_NR = 10,
-+};
-+
-+struct epoll60_ctx {
-+	volatile int stopped;
-+	int ready;
-+	int waiters;
-+	int epfd;
-+	int evfd[EPOLL60_EVENTS_NR];
-+};
-+
-+static void *epoll60_wait_thread(void *ctx_)
-+{
-+	struct epoll60_ctx *ctx = ctx_;
-+	struct epoll_event e;
-+	sigset_t sigmask;
-+	uint64_t v;
-+	int ret;
-+
-+	/* Block SIGUSR1 */
-+	sigemptyset(&sigmask);
-+	sigaddset(&sigmask, SIGUSR1);
-+	sigprocmask(SIG_SETMASK, &sigmask, NULL);
-+
-+	/* Prepare empty mask for epoll_pwait() */
-+	sigemptyset(&sigmask);
-+
-+	while (!ctx->stopped) {
-+		/* Mark we are ready */
-+		__atomic_fetch_add(&ctx->ready, 1, __ATOMIC_ACQUIRE);
-+
-+		/* Start when all are ready */
-+		while (__atomic_load_n(&ctx->ready, __ATOMIC_ACQUIRE) &&
-+		       !ctx->stopped);
-+
-+		/* Account this waiter */
-+		__atomic_fetch_add(&ctx->waiters, 1, __ATOMIC_ACQUIRE);
-+
-+		ret = epoll_pwait(ctx->epfd, &e, 1, 2000, &sigmask);
-+		if (ret != 1) {
-+			/* We expect only signal delivery on stop */
-+			assert(ret < 0 && errno == EINTR && "Lost wakeup!\n");
-+			assert(ctx->stopped);
-+			break;
-+		}
-+
-+		ret = read(e.data.fd, &v, sizeof(v));
-+		/* Since we are on ET mode, thus each thread gets its own fd. */
-+		assert(ret == sizeof(v));
-+
-+		__atomic_fetch_sub(&ctx->waiters, 1, __ATOMIC_RELEASE);
-+	}
-+
-+	return NULL;
-+}
-+
-+static inline unsigned long long msecs(void)
-+{
-+	struct timespec ts;
-+	unsigned long long msecs;
-+
-+	clock_gettime(CLOCK_REALTIME, &ts);
-+	msecs = ts.tv_sec * 1000ull;
-+	msecs += ts.tv_nsec / 1000000ull;
-+
-+	return msecs;
-+}
-+
-+static inline int count_waiters(struct epoll60_ctx *ctx)
-+{
-+	return __atomic_load_n(&ctx->waiters, __ATOMIC_ACQUIRE);
-+}
-+
-+TEST(epoll60)
-+{
-+	struct epoll60_ctx ctx = { 0 };
-+	pthread_t waiters[ARRAY_SIZE(ctx.evfd)];
-+	struct epoll_event e;
-+	int i, n, ret;
-+
-+	signal(SIGUSR1, signal_handler);
-+
-+	ctx.epfd = epoll_create1(0);
-+	ASSERT_GE(ctx.epfd, 0);
-+
-+	/* Create event fds */
-+	for (i = 0; i < ARRAY_SIZE(ctx.evfd); i++) {
-+		ctx.evfd[i] = eventfd(0, EFD_NONBLOCK);
-+		ASSERT_GE(ctx.evfd[i], 0);
-+
-+		e.events = EPOLLIN | EPOLLET;
-+		e.data.fd = ctx.evfd[i];
-+		ASSERT_EQ(epoll_ctl(ctx.epfd, EPOLL_CTL_ADD, ctx.evfd[i], &e), 0);
-+	}
-+
-+	/* Create waiter threads */
-+	for (i = 0; i < ARRAY_SIZE(waiters); i++)
-+		ASSERT_EQ(pthread_create(&waiters[i], NULL,
-+					 epoll60_wait_thread, &ctx), 0);
-+
-+	for (i = 0; i < 300; i++) {
-+		uint64_t v = 1, ms;
-+
-+		/* Wait for all to be ready */
-+		while (__atomic_load_n(&ctx.ready, __ATOMIC_ACQUIRE) !=
-+		       ARRAY_SIZE(ctx.evfd))
-+			;
-+
-+		/* Steady, go */
-+		__atomic_fetch_sub(&ctx.ready, ARRAY_SIZE(ctx.evfd),
-+				   __ATOMIC_ACQUIRE);
-+
-+		/* Wait all have gone to kernel */
-+		while (count_waiters(&ctx) != ARRAY_SIZE(ctx.evfd))
-+			;
-+
-+		/* 1ms should be enough to schedule away */
-+		usleep(1000);
-+
-+		/* Quickly signal all handles at once */
-+		for (n = 0; n < ARRAY_SIZE(ctx.evfd); n++) {
-+			ret = write(ctx.evfd[n], &v, sizeof(v));
-+			ASSERT_EQ(ret, sizeof(v));
-+		}
-+
-+		/* Busy loop for 1s and wait for all waiters to wake up */
-+		ms = msecs();
-+		while (count_waiters(&ctx) && msecs() < ms + 1000)
-+			;
-+
-+		ASSERT_EQ(count_waiters(&ctx), 0);
-+	}
-+	ctx.stopped = 1;
-+	/* Stop waiters */
-+	for (i = 0; i < ARRAY_SIZE(waiters); i++)
-+		ret = pthread_kill(waiters[i], SIGUSR1);
-+	for (i = 0; i < ARRAY_SIZE(waiters); i++)
-+		pthread_join(waiters[i], NULL);
-+
-+	for (i = 0; i < ARRAY_SIZE(waiters); i++)
-+		close(ctx.evfd[i]);
-+	close(ctx.epfd);
-+}
-+
- TEST_HARNESS_MAIN
 -- 
-2.24.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
