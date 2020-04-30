@@ -2,83 +2,118 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18FEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1F6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A013920870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370582063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDiRg0co"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgD3N4k (ORCPT
+        id S1728767AbgD3N4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:56:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:55172 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbgD3N4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:56:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F4691063;
-        Thu, 30 Apr 2020 06:56:36 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DC263F68F;
-        Thu, 30 Apr 2020 06:56:35 -0700 (PDT)
-References: <20200428050242.17717-1-swood@redhat.com> <jhjzhatdgxh.mognet@arm.com> <CAKfTPtDktpTB7d6qhmcX0HtryezzFygk4kOC22Qf=OM77QpLYg@mail.gmail.com> <jhjy2qdcmc2.mognet@arm.com> <CAKfTPtA_duZpnvMx+czAosCikVL=cESKhPQcRrQUdKWKobZBaA@mail.gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Scott Wood <swood@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/3] newidle_balance() latency mitigation
-In-reply-to: <CAKfTPtA_duZpnvMx+czAosCikVL=cESKhPQcRrQUdKWKobZBaA@mail.gmail.com>
-Date:   Thu, 30 Apr 2020 14:56:29 +0100
-Message-ID: <jhjwo5xcc1e.mognet@arm.com>
+        Thu, 30 Apr 2020 09:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbgD3N4s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:56:48 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966A7C035494;
+        Thu, 30 Apr 2020 06:56:47 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 188so1281687lfa.10;
+        Thu, 30 Apr 2020 06:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3gswp6hcYzQc3s447UZL4JEqcj83pPEFgQbY9aLBIPE=;
+        b=XDiRg0coz1JSo501wpD7JZHgkWVAmnY6dM/sDPCrf1o6il2EB8ZMP4RQ7pUXLVURMp
+         POM8/vHxH8TuIX2sLXN+r09H+e+kg7n5VQDlTdYfWlmJ/qQW3sioaud0ngdkWeeW8cCW
+         TAqwfDk2mKWpU2+UkHrwr/uSs7fZP+eUpX28wZyEnbRrKV1q8xuU9Zs2wzIjfaDwQpRN
+         eLUNu3KB30UDufqPl8kx8K8z0Iis9OcpJQSA5TYrWQ+dl/3u5fSFsyTAKtAdzg4nsaLZ
+         XuiZiKQIxtg55yPfKOl6w3YP8/1TLD0wtgl8L6WqG5PU8OD8yyk/XYFWRtCijy8Z95rE
+         BZKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3gswp6hcYzQc3s447UZL4JEqcj83pPEFgQbY9aLBIPE=;
+        b=pXb/qLLw3V9MXdgAhvGR0+5kZ9guLtNYmAl2UUanL6dRJDB6/RaPAfa4Gy7nHfjGkz
+         NiO4ieNQANA1VhbccZ7OXLFuwgUEhkXr1dH0F8UQUT3nPrRXPkHd+pkSsEmXJWNr357C
+         WND+AmmJZI8W0bLV+aFsOW4cLH7V8RCKJyKNTVwbtYlOY5zfFtYfzygzFxn9rCIAi1Ce
+         04KqP73RL7nUOHzCKPvd4LZZtGMevC9aP4pe1FN3mnmiUEFVcOngyVajyENpWG+FZJ9U
+         zKHJXkQk/2w3KqmVTdDuN9FzuMLAHKMuOVb9+AQq58MLxs6KVLi9/4NGe4uayYyyy8OX
+         U5Dg==
+X-Gm-Message-State: AGi0PuaS9+g0pG1VQAkNFAZLywmlybmLxaIU0RdqP8qY+LsQsDFu11tS
+        hsPVkazMFIPEb+HPpWdqqxaOJz8Q
+X-Google-Smtp-Source: APiQypK46PRL3v3DYR8dl4DeEVpliW6UGYANs3SGyaSLfacl+8hLEH5qKMGOTotKyFCr+Sq00HlE2Q==
+X-Received: by 2002:ac2:489b:: with SMTP id x27mr2308645lfc.60.1588255005883;
+        Thu, 30 Apr 2020 06:56:45 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j23sm548483lfh.65.2020.04.30.06.56.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 06:56:45 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+Date:   Thu, 30 Apr 2020 16:56:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+30.04.2020 01:00, Sowjanya Komatineni пишет:
+> +static int chan_capture_kthread_finish(void *data)
+> +{
+> +	struct tegra_vi_channel *chan = data;
+> +	struct tegra_channel_buffer *buf;
+> +
+> +	set_freezable();
+> +
+> +	while (1) {
+> +		try_to_freeze();
 
-On 30/04/20 13:42, Vincent Guittot wrote:
->> >> Random thought that just occurred to me; in the grand scheme of things,
->> >> with something in the same spirit as task-stealing (i.e. don't bother with
->> >> a full fledged balance at newidle, just pick one spare task somewhere),
->> >> none of this would be required.
->> >
->> > newly idle load balance already stops after picking 1 task
->>
->> Mph, I had already forgotten your changes there. Is that really always the
->> case for newidle? In e.g. the busiest->group_type == group_fully_busy case,
->> I think we can pull more than one task.
->
-> for newly_idle load balance, detach_tasks stops after finding 1 suitable task
->
+I guess it won't be great to freeze in the middle of a capture process, so:
+		if (list_empty(&chan->done))
+			try_to_freeze();
 
-Right, I hadn't noticed
+> +		wait_event_interruptible(chan->done_wait,
+> +					 !list_empty(&chan->done) ||
+> +					 kthread_should_stop());
+> +
+> +		/* dequeue buffers and finish capture */
+> +		buf = dequeue_buf_done(chan);
+> +		while (buf) {
+> +			tegra_channel_capture_done(chan, buf);
+> +			buf = dequeue_buf_done(chan);
+> +		}
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +	}
+> +
+> +	return 0;
+> +}
 
-  7e96fa5875d4 ("sched: pull only one task during NEWIDLE balancing to limit critical section")
-
->>
->> > Now if your proposal is to pick one random task on one random cpu, I'm
->> > clearly not sure that's a good idea
->> >
->>
->> IIRC Steve's implementation was to "simply" pull one task from any CPU
->> within the LLC domain that had > 1 runnable tasks. I quite like this since
->> picking any one task is almost always better than switching to the idle
->> task, but it wasn't a complete newidle_balance() replacement just yet.
->>
->> >
->> >>
->> >> Sadly I don't think anyone has been looking at it any recently.
