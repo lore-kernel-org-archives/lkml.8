@@ -2,71 +2,74 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C145EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9434DC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9508C20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735D32074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OYotSsTt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ks5peESQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgD3WNb (ORCPT
+        id S1727916AbgD3WNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49320 "EHLO
+        Thu, 30 Apr 2020 18:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3WNa (ORCPT
+        with ESMTP id S1726336AbgD3WNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:13:30 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE7AC035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:30 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id m67so7510722qke.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:29 -0700 (PDT)
+        Thu, 30 Apr 2020 18:13:32 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E4AC035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id s9so4831922qkm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ttGbMYEidP9RHX/uRxBhRpBjy6W2hzcyfjV0O4d9WKE=;
-        b=OYotSsTtHP+CBwwxAdzanXjajY7QgCa6QOqGYZPriul6ZVPJK5U5/E0VwCnhG7cQdH
-         SdalMlBPs9omH4/Tor3sCeR1u2sR/KHFz/Holj3bcb4FXKawcwa/YjB+DAQeth022G52
-         BuXNuqecz43dY+ArXWMoswU9u6rR0liAkTlsKwyzVA3TGJxRPxiO4XvcpfNCx6J//iVu
-         ydG1il5bpb5dVme8BoROP1AULIJqOrj/e911s4L0RsyaRJDCG9YXoM7mKv2JaIW9INrd
-         lk/H4sSjvK8nvpiVIwospoSac8TFUbNPNoLFqfRsolnxOJOFbBh01oh5Ow0QVZFXQGDd
-         pzyg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1eX7WSK+5t5gndojFUhLnWThbbKlBFG3tYGdIpF55Xw=;
+        b=ks5peESQSMAP6mY2kYfPMOd79E2Eo9HhU4hymwuP408laGbs3/CSQho1C9UKZzUJes
+         Xs8/wUEc+G9aBGnCSbiqbZoESQNDCLqPLTja+Hu3cGlcX+hku+LAUUltTeC6NbbpWPum
+         EAYB541Wf5S0wAd/yy1xuCAqH04URkMgJYpvUTkeT8AYzYTifFCwEiYPtAKL7okAgT3O
+         EBJMFjVOlXTPfuF9yFFXYXa0U5Az+idqTbj0CbyPYkOWrQ3TRmMpeveUDFkmKS1cG4Nb
+         3tBr4zb6muxFs8j2yI6yuJNH50PjfkDVWpSYzf9J9WtICxJgJcuuAvCErYB6mO/kLE+1
+         zD2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ttGbMYEidP9RHX/uRxBhRpBjy6W2hzcyfjV0O4d9WKE=;
-        b=Px6VONsdXOaU4vRQFo5Do/lPoXlDGLiHkhNSaKzT0pevFryG9NwsRHSqJKsrT2D8pc
-         FFc1IydqSgFG6+4VrFzXy9LDWwHUrRSmVWCX6+z1bNjhM/yh67WH83Jv+ayDLBFk4WyJ
-         1zsULJbvBrM75e2cdJHCXUjgtrXxhccmG4A1rGC0M2Ua6CMzLK03yyu6ky+KpBxD97dg
-         LAjrY3/TJCXz//vAtO+vFLiIwt+3gVXVcSHPCgt6crGi69Tn5zC16uqCn6HtShAwD2Ou
-         f4JSBJJut1XnavDl/hT2Mh/KB2WDa4KGBr7TEcZFtQQKBSYhxTHvTrp9vnveySejWNkR
-         exuQ==
-X-Gm-Message-State: AGi0PuYn4YmJZnuoC0XDLmdDp0yey/vGaXaAlkufkKX/WV6ilgnuXrmW
-        g4189jDd3Mmo1vOpqY85BCC73g==
-X-Google-Smtp-Source: APiQypLS3j9JDzaf4aBXWYPqgZVhNCxPiqrapIFT2F2Ddh6UfXilZ4yDsHgp3H2ARYLBhTiKWS7ISg==
-X-Received: by 2002:a05:620a:13b9:: with SMTP id m25mr741199qki.456.1588284809197;
-        Thu, 30 Apr 2020 15:13:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1eX7WSK+5t5gndojFUhLnWThbbKlBFG3tYGdIpF55Xw=;
+        b=Y/jCrfeftRKC0MAc9RW5vdI2+PeLu8iwxKtmdNgbICF64Gdvi2UJAhDP1YI9F3ZNNc
+         Axoz97IjmfQg67i033ecsZIVwrSCBvyGtj2RVeBbJKaQtZKU19+TGdmkiIyKU+niAER7
+         xD4wO9xDXuJCUF38V/qQ98FHQl7tsMe9T7j7iliVZtAXnr6mKtv6lBHphy+yeUMSVD2D
+         4LP0GC8HJY44QLpGXuoDuMBwnNyg+UCXFeODvC3W8gAz9qi0AD/2+yYBnastm+8zm3Co
+         nnl40o06lzyMVWv6aNvzNr3oKF925LAL2t7MF9ZZLJqWMHMf45hRV4/jWu1qUL2CaKfb
+         G+3w==
+X-Gm-Message-State: AGi0PuYI5iHtNt4K3hbEtMdqCfX+YITeNYmSGEaNDnlrYfNlrFyROoL7
+        sz4GKdr+9pfq37cJgTJQ6CpWqFVEsXM=
+X-Google-Smtp-Source: APiQypI8kggB1A0qQmfq8hwvIIINcSUXJaqfoU3LwqJLGrR9yx3XKlkQsTZfYm2YLsiturKSmp7T2Q==
+X-Received: by 2002:a05:620a:c8c:: with SMTP id q12mr781886qki.74.1588284811293;
+        Thu, 30 Apr 2020 15:13:31 -0700 (PDT)
 Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id w42sm957028qtj.63.2020.04.30.15.13.26
+        by smtp.gmail.com with ESMTPSA id w42sm957028qtj.63.2020.04.30.15.13.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 15:13:27 -0700 (PDT)
+        Thu, 30 Apr 2020 15:13:30 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net
 Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/2] net: ipa: don't cache channel state
-Date:   Thu, 30 Apr 2020 17:13:21 -0500
-Message-Id: <20200430221323.5449-1-elder@linaro.org>
+Subject: [PATCH net-next 1/2] net: ipa: pass channel pointer to gsi_channel_state()
+Date:   Thu, 30 Apr 2020 17:13:22 -0500
+Message-Id: <20200430221323.5449-2-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430221323.5449-1-elder@linaro.org>
+References: <20200430221323.5449-1-elder@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,22 +77,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series removes a field that holds a copy of a channel's state
-at the time it was last fetched.  In principle the state can change
-at any time, so it's better to just fetch it whenever needed.  The
-first patch is just preparatory, simplifying the arguments to 
+Pass a channel pointer rather than a GSI pointer and channel ID to
 gsi_channel_state().
 
-					-Alex
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+ drivers/net/ipa/gsi.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Alex Elder (2):
-  net: ipa: pass channel pointer to gsi_channel_state()
-  net: ipa: do not cache channel state
-
- drivers/net/ipa/gsi.c | 94 ++++++++++++++++++++++++++-----------------
- drivers/net/ipa/gsi.h |  3 +-
- 2 files changed, 59 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
+index 845478a19a4f..6946c39b664a 100644
+--- a/drivers/net/ipa/gsi.c
++++ b/drivers/net/ipa/gsi.c
+@@ -416,12 +416,13 @@ static void gsi_evt_ring_de_alloc_command(struct gsi *gsi, u32 evt_ring_id)
+ }
+ 
+ /* Return the hardware's notion of the current state of a channel */
+-static enum gsi_channel_state
+-gsi_channel_state(struct gsi *gsi, u32 channel_id)
++static enum gsi_channel_state gsi_channel_state(struct gsi_channel *channel)
+ {
++	u32 channel_id = gsi_channel_id(channel);
++	void *virt = channel->gsi->virt;
+ 	u32 val;
+ 
+-	val = ioread32(gsi->virt + GSI_CH_C_CNTXT_0_OFFSET(channel_id));
++	val = ioread32(virt + GSI_CH_C_CNTXT_0_OFFSET(channel_id));
+ 
+ 	return u32_get_bits(val, CHSTATE_FMASK);
+ }
+@@ -453,7 +454,7 @@ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
+ 	int ret;
+ 
+ 	/* Get initial channel state */
+-	channel->state = gsi_channel_state(gsi, channel_id);
++	channel->state = gsi_channel_state(channel);
+ 
+ 	if (channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
+ 		return -EINVAL;
+@@ -940,7 +941,7 @@ static void gsi_isr_chan_ctrl(struct gsi *gsi)
+ 		channel_mask ^= BIT(channel_id);
+ 
+ 		channel = &gsi->channel[channel_id];
+-		channel->state = gsi_channel_state(gsi, channel_id);
++		channel->state = gsi_channel_state(channel);
+ 
+ 		complete(&channel->completion);
+ 	}
 -- 
 2.20.1
 
