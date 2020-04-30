@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6951DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D280C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402D72072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A78520873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254926;
-	bh=iKLOjbISfSmx+ATUFlxMQc5jsMELnFldoSD6Jp2nEvM=;
+	s=default; t=1588254928;
+	bh=Le0zW1plhrNPBG0p2P7erK3rKc1E/Ehf/4uht5qiCYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/Oc/KiSLZPmF8rCIRi9NdUn10+qGWNy++VzYzuBg2l/2ihMXT/6iU7Bl/IfBENG9
-	 bcfTYB28ECItv2bYZwOdfAIqie+Wn0rsQAY+ZNERMUcb5rvNau+GsMCystbxNe+qqQ
-	 FknQqM2jbondyA3oqOe3U+VJVbnXVEQWjIbdD84o=
+	b=zwDWa5qt4/ryYL38/5W0m9fd7R65Y25RSEnvCf+QC76vqqWJwC8+I1OWXkrzgPzx7
+	 tBqnsTyQNkrdBGRTvFtA5JpfVfVGFSU0bxVUKAlYbpV1/rMdqG1ZnROOgteYuf3mV1
+	 8kpCbQyvOTAVTYaDXorXyxmyILPM03IfvW/BNP2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgD3NzZ (ORCPT
+        id S1729163AbgD3Nz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbgD3Nyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:38 -0400
+        id S1729050AbgD3Nys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2D224964;
-        Thu, 30 Apr 2020 13:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA722208DB;
+        Thu, 30 Apr 2020 13:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254877;
-        bh=iKLOjbISfSmx+ATUFlxMQc5jsMELnFldoSD6Jp2nEvM=;
+        s=default; t=1588254887;
+        bh=Le0zW1plhrNPBG0p2P7erK3rKc1E/Ehf/4uht5qiCYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qf7DptpWAODbzvgR8l1ytDk6AjcNWQWWEdueKHJTuPVfwLC3ZBOkul8jlFBnsjPEc
-         LGssX/PocdYfORRWYnYrNsqMhO2gF8GG6MyAZL6vryauT5agbaU0ZRlwFXp9HpkYZG
-         aCWemsSlWcb2aH8yVrEYJk0n7SmbbrqefkYCywAg=
+        b=JjSqxigdev1hCGsh1ScwS9HpxHD5GIK/JlWupYEWUjTkx/EvrbWZx3cjfrx7rePDO
+         ttxB4aEFnnxq1b0cCpF7N7NhM66J44mfqALnDYddOHb9LWTb3GRXEoq5aE11NUg9H/
+         c3eRD60JQ0bGks43G5rIwcT9GbvtEtsqY+12w2Pg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/17] selftests/ipc: Fix test failure seen after initial test run
-Date:   Thu, 30 Apr 2020 09:54:19 -0400
-Message-Id: <20200430135433.21204-3-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/17] net: dsa: b53: Rework ARL bin logic
+Date:   Thu, 30 Apr 2020 09:54:28 -0400
+Message-Id: <20200430135433.21204-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135433.21204-1-sashal@kernel.org>
 References: <20200430135433.21204-1-sashal@kernel.org>
@@ -59,59 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
+[ Upstream commit 6344dbde6a27d10d16246d734b968f84887841e2 ]
 
-After successfully running the IPC msgque test once, subsequent runs
-result in a test failure:
+When asking the ARL to read a MAC address, we will get a number of bins
+returned in a single read. Out of those bins, there can essentially be 3
+states:
 
-  $ sudo ./run_kselftest.sh
-  TAP version 13
-  1..1
-  # selftests: ipc: msgque
-  # Failed to get stats for IPC queue with id 0
-  # Failed to dump queue: -22
-  # Bail out!
-  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-  not ok 1 selftests: ipc: msgque # exit=1
+- all bins are full, we have no space left, and we can either replace an
+  existing address or return that full condition
 
-The dump_queue() function loops through the possible message queue index
-values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
-represents the index value. The first time the test is ran, the initial
-index value of 0 is valid and the test is able to complete. The index
-value of 0 is not valid in subsequent test runs and the loop attempts to
-try index values of 1, 2, 3, and so on until a valid index value is
-found that corresponds to the message queue created earlier in the test.
+- the MAC address was found, then we need to return its bin index and
+  modify that one, and only that one
 
-The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
-index values are used. The test failure is caused by incorrectly
-comparing errno to -EINVAL when cycling through possible index values.
+- the MAC address was not found and we have a least one bin free, we use
+  that bin index location then
 
-Fix invalid test failures on subsequent runs of the msgque test by
-correctly comparing errno values to a non-negated EINVAL.
+The code would unfortunately fail on all counts.
 
-Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ipc/msgque.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/b53/b53_common.c | 30 ++++++++++++++++++++++++++----
+ drivers/net/dsa/b53/b53_regs.h   |  3 +++
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index 1b2ce334bb3f0..47c074d73e610 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -135,7 +135,7 @@ int dump_queue(struct msgque_data *msgque)
- 	for (kern_id = 0; kern_id < 256; kern_id++) {
- 		ret = msgctl(kern_id, MSG_STAT, &ds);
- 		if (ret < 0) {
--			if (errno == -EINVAL)
-+			if (errno == EINVAL)
- 				continue;
- 			printf("Failed to get stats for IPC queue with id %d\n",
- 					kern_id);
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 71525950c641d..060f9b1769298 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1109,6 +1109,7 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
+ 			u16 vid, struct b53_arl_entry *ent, u8 *idx,
+ 			bool is_valid)
+ {
++	DECLARE_BITMAP(free_bins, B53_ARLTBL_MAX_BIN_ENTRIES);
+ 	unsigned int i;
+ 	int ret;
+ 
+@@ -1116,6 +1117,8 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
+ 	if (ret)
+ 		return ret;
+ 
++	bitmap_zero(free_bins, dev->num_arl_entries);
++
+ 	/* Read the bins */
+ 	for (i = 0; i < dev->num_arl_entries; i++) {
+ 		u64 mac_vid;
+@@ -1127,13 +1130,21 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
+ 			   B53_ARLTBL_DATA_ENTRY(i), &fwd_entry);
+ 		b53_arl_to_entry(ent, mac_vid, fwd_entry);
+ 
+-		if (!(fwd_entry & ARLTBL_VALID))
++		if (!(fwd_entry & ARLTBL_VALID)) {
++			set_bit(i, free_bins);
+ 			continue;
++		}
+ 		if ((mac_vid & ARLTBL_MAC_MASK) != mac)
+ 			continue;
+ 		*idx = i;
++		return 0;
+ 	}
+ 
++	if (bitmap_weight(free_bins, dev->num_arl_entries) == 0)
++		return -ENOSPC;
++
++	*idx = find_first_bit(free_bins, dev->num_arl_entries);
++
+ 	return -ENOENT;
+ }
+ 
+@@ -1163,10 +1174,21 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+ 	if (op)
+ 		return ret;
+ 
+-	/* We could not find a matching MAC, so reset to a new entry */
+-	if (ret) {
++	switch (ret) {
++	case -ENOSPC:
++		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
++			addr, vid);
++		return is_valid ? ret : 0;
++	case -ENOENT:
++		/* We could not find a matching MAC, so reset to a new entry */
++		dev_dbg(dev->dev, "{%pM,%.4d} not found, using idx: %d\n",
++			addr, vid, idx);
+ 		fwd_entry = 0;
+-		idx = 1;
++		break;
++	default:
++		dev_dbg(dev->dev, "{%pM,%.4d} found, using idx: %d\n",
++			addr, vid, idx);
++		break;
+ 	}
+ 
+ 	memset(&ent, 0, sizeof(ent));
+diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
+index 85c44bfba55a2..3cf246c6bdcc4 100644
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -280,6 +280,9 @@
+ #define   ARLTBL_STATIC			BIT(15)
+ #define   ARLTBL_VALID			BIT(16)
+ 
++/* Maximum number of bin entries in the ARL for all switches */
++#define B53_ARLTBL_MAX_BIN_ENTRIES	4
++
+ /* ARL Search Control Register (8 bit) */
+ #define B53_ARL_SRCH_CTL		0x50
+ #define B53_ARL_SRCH_CTL_25		0x20
 -- 
 2.20.1
 
