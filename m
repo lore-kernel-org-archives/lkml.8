@@ -2,216 +2,103 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F37C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E546C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB107207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFA52054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LmahK+cz";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="IJemA5xF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LLV3k+K1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgD3TG1 (ORCPT
+        id S1726875AbgD3TGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:06:27 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:13332 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726781AbgD3TGZ (ORCPT
+        Thu, 30 Apr 2020 15:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgD3TG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:06:25 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UIk7Zw021042;
-        Thu, 30 Apr 2020 12:06:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=izMAJz8DJVs85exNsDSF0g00gieebqbhFq/VLhscdPk=;
- b=LmahK+czBUQ9NHDakW0O/IPvAmo9wvBjbXymAtqv1ePSD7ttgke32LAMZKguOm1Drfdg
- 7RxheLnQUY/HGP3YJJEO3rqZ0fp7rfmiwmuakTrfXbuf8Qwm1W2XHVng+nmRBQiwXcEz
- WRp6u6m/8SzZ8I1lnemZ1pMtPr7SNjFWZRA= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 30qu5mbag6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 30 Apr 2020 12:06:16 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 30 Apr 2020 12:06:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WUt0ANLxbZTYwrTIN1FXJ0wO0YMjKoBVe/jx0visHv1fNuZ4pCSNVkxL3QyzlaU+ehfolnST0Fb+5Z1T8lDvBJ7tVgsP67wnsi2Zg86ytbUE7dFmZrlRQafFh7n2HGhK3CE//N0fW6t90J6twfCs2/WG8Y/gMP6ZQIvR+yqYCJAmLP9fwGSacX01GTfY2Piw+Lmmxh9SVMfpLYPJY2XxUu6qkz1CqR0b34firDpIzl4LDh/i3cHEETwPonMQywyoHZqOf8QadnVHuJ7Uk4WYfexynDzV8CLCNfC4Ry4ihFQGXMzqP5tuSDDVhTWxAx4XKyEnQaoTp4VOlvcIlVL3Fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=izMAJz8DJVs85exNsDSF0g00gieebqbhFq/VLhscdPk=;
- b=YLuXx7Z4dGAuhHHfKQSQ3Mjd0iD3ZfR+27Xtz+irsV53ctEmdFbRGztYD0h1uwreGB5RnEKhjuiRsyScCYjVcwCWcIW/P/lJWVIl+XnYmG2ErmeZWZgxmnXKI6RGRZy0AUiZgGPX92zrHz5yjzZce+zi8WLxIeelQEZBs+YpVLLEh6+uasCMMDSnZTXp6AibL31kXOBjcoj4CyS1BHudnVYGD4BfFtRekXADK5dFUGorY10BaEJnVyIun8AfozZkLyzMuKT0zDoD82LWd92N3bZ7HQySi1zwLvRagl2F6Bh7CoJqZInVi6PJhSQ95Chs7G5EN+IMmWzvCEUFdF4vQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=izMAJz8DJVs85exNsDSF0g00gieebqbhFq/VLhscdPk=;
- b=IJemA5xFGWGxib2c3wopxExH+ydDTC6i+wn8i0iQ01Yi4FE6pzgczw93J6Fm8a6yPo51Fqn4R1scfX8/uSzZHxlcGpyiS90qau1/HEAMd8tG972J42kHw9eK9n27gYD3W9IqCQYgot5T2cRrn2mixR4l+rFjonQ/EVXyp5dK51U=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2389.namprd15.prod.outlook.com (2603:10b6:a02:86::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Thu, 30 Apr
- 2020 19:06:14 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 19:06:14 +0000
-Date:   Thu, 30 Apr 2020 12:06:10 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <cgroups@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-Message-ID: <20200430190610.GD339283@carbon.dhcp.thefacebook.com>
-References: <20200430182712.237526-1-shakeelb@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430182712.237526-1-shakeelb@google.com>
-X-ClientProxiedBy: MWHPR2001CA0006.namprd20.prod.outlook.com
- (2603:10b6:301:15::16) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:6bb9) by MWHPR2001CA0006.namprd20.prod.outlook.com (2603:10b6:301:15::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 19:06:13 +0000
-X-Originating-IP: [2620:10d:c090:400::5:6bb9]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 32467cec-af2a-40c3-d046-08d7ed398daf
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2389:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2389D76F09A56FF8293E506EBEAA0@BYAPR15MB2389.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0389EDA07F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R7v2dGTb+RMqcKT2+kKphjClvpDGx9eaa2PH8XzgTunPXy6sua9I4IsLEFk4Sn8fHrWMQM93vsFqOQwL8fIpNXwymoMVgFoHo3uUVzm8xf46mx3w3TDO2x1cPKaqLTcGLq/6OFeJLhBA60uh52DdJ0P6kMT2LdHPedDlptsAVOgCeCaTV8qxu8mLGzC2HJX3hl2EBiOHol0/vRKZcTTF7J+BORlcWNf6A9NH6q/E2902hsZ41j1G1oepQHzAs5aY6HVq5Ei0Jx3xZ0px1fHz+LDzKEdRFDJ+oIqfxBVn6Bl8Mpq0CIlriTYmNK2/K/6aPp5j/8VIkyf6CXsTv52hTajK+uRzcjF8aH5/6x+37/K6Wd+Ar9h0owhRs16TkCVm/KbcA80/BOK6RZQTDJZVupDeAhR5oP+6L0sQoze1PtdFEoLOMeae7lanxhNFQ9ve
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(136003)(376002)(39860400002)(346002)(16526019)(6916009)(5660300002)(54906003)(1076003)(6506007)(52116002)(7696005)(186003)(4326008)(316002)(2906002)(66556008)(66476007)(66946007)(8936002)(8676002)(86362001)(9686003)(478600001)(55016002)(33656002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: mcgRZXS/Il/+qrj0AASXSql4oWJF8tri4YW92oPAxRarUtIA64kACv7udp1Blu1FR8l+rlPKZUdm8ybzV2TMOa0+c/svH5Cd/gvqNPOqVwmxE0y30d4dMz//w7tf3sECDHGAwGg6yrysp3XNs2YujhHkYkKkozSmIr5nxducut54NIWO5S1lyosDyPSwpc1ktwPbhA+jz3yuW6q2tnf8ED7BUIBwafjl48Zt5y2N631w+9J+tq2GQvCTZhTQjh0+rQ4kAJm6lkXvWzSjji3niTBBC6TR/LXq26b5tYcwmydcayiktsCEEwqkp3Qv1wVVxHQ8sgkdpxvWevWDwf8EOoWVK8f6OD+p4n9qQyCNlABB2AdaZwcLAzKTgCMJ0iRi4aeMDKFu/VzAklMkRTctb6AcSdQn9xtEThaGbDz3uNNA7x/odid+/r9Sa4PgB10I2kZrD+UwKXgC+uczqkN9yiGiwib5kDJCVi0Ki4RHKiq2pjCpBdyOyo3RhC3D5xyQ4JKX+ojXbvIRBIUmjvNj6hc89sQqkWADPISi2Ek9Nrda5Q7twCDE9E1W6F+XgvsfwKih4jRJAIk2jnlPDW9pxeb5TMCumpW7d9//b7lCekrsDmfaYV+8wUiOd/5WlW6VaIJbkd2c6i+2Ch5f+CK4Kqs4PFWlNlCEyY1oeLtxY70W7+7BMhbYOsgmKGyaKJY0chWBKeN2znchBQMZP8Ekb33pwMSv9/gDTssIfVkSeCacfctfs4+YW73xeDI7zqeptOaYX1ODwyGSHAp2Hi/31PVkx13eOj5VC5iUsqjERzrXFl+QaSAcFzeyuMaoEdwwltfkKQ//d4IRW1eGudKwNg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32467cec-af2a-40c3-d046-08d7ed398daf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 19:06:14.4461
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uywNr/QS7i6XSv1XFlnGos/zRok4knM9lvqOeSh9iGeow+ybIht3sbqhVj5uxabs
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2389
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_12:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0
- suspectscore=1 clxscore=1011 phishscore=0 mlxlogscore=999 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300145
-X-FB-Internal: deliver
+        Thu, 30 Apr 2020 15:06:29 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2DBC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:06:28 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id h11so2612459plr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=w/e0sFCiHkWZ/pUleIEQQ5eNFFg5ce0+O2BEm35hI8k=;
+        b=LLV3k+K1eDs0cMEs1NnGL6zPog74yxpY0C4JeWKzjsCoNXNxulXybWhvjyN55chFUo
+         wi3sCflCYn3OhE4vXu3EB8fyCwNc4p52wmk1C6lEA8zVhYcrHoi3We7yaauVs1vEbsIi
+         kOpZQ2nnQ+yynjxwp/khhaS7E5cSzN40/wHVFqEQ4n6zIKBmZVhh3ErfdvD1DML71Yzp
+         219K5we5WrlFEcPl5pWWkNxCWeHmd0SV33UfSXD/9DRO4VDgIP/M3PLFB1rlxU6V8R0S
+         5pE1t1MqxTqVcdBZ20UZdusc6kg6Gbe+Ix+bPdbUP/4RmdVqmchuTmmiNCULQBP7uMqw
+         q7Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=w/e0sFCiHkWZ/pUleIEQQ5eNFFg5ce0+O2BEm35hI8k=;
+        b=kyT86Gn56nQlIwmPub/GYP3ivMNI7EjUu45pJX48CNmMaL5spokI5azI5zLZQlKGxO
+         JBS6IxMgzryMUGG2z/YNyywiIrJ3Vslg4aU+ZKKIR9uWDP1oklcE9bQa40YFpwdrwbL1
+         clzA6OX8qmIokEw3mZR4oDQ9+VQyDLdGVBR1xpLql8w5X74/VsuvBXkVfy5iCJkchKdR
+         ibchPvrxeasy/PLxQpwxHwEoDOE6BeROF2ojuYyFSky4Z2V6rWhdDFmSKjmotNpTJpF2
+         i1odaS8FMO4ldfI7SClIihGIvS1aMeX/ERM7ZzV2c0jpMLtiLhhgvNNCeWTGhjfDOdBa
+         /KJg==
+X-Gm-Message-State: AGi0PuZhUyNohJBq8mwIMSg4EwP0qlZu3cg3Oa0a5M1eIS64jHwpAz30
+        JWEteP7RBd2LhVijLtyxnAic
+X-Google-Smtp-Source: APiQypJJVO0xLYp3ha4tq6wbudCY/3MtMc9vE/hG79BqTGCNQMI2rJf4+vTlq9vmCx3imNXrw26+fw==
+X-Received: by 2002:a17:90a:37c4:: with SMTP id v62mr233665pjb.177.1588273587530;
+        Thu, 30 Apr 2020 12:06:27 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6081:946c:419e:a71:7237:1613])
+        by smtp.gmail.com with ESMTPSA id l37sm467863pje.12.2020.04.30.12.06.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 12:06:26 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     hemantk@codeaurora.org, jhugo@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 5/6] bus: mhi: core: Fix typo in comment
+Date:   Fri,  1 May 2020 00:35:54 +0530
+Message-Id: <20200430190555.32741-6-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200430190555.32741-1-manivannan.sadhasivam@linaro.org>
+References: <20200430190555.32741-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Shakeel!
+From: Jeffrey Hugo <jhugo@codeaurora.org>
 
-On Thu, Apr 30, 2020 at 11:27:12AM -0700, Shakeel Butt wrote:
-> Lowering memory.max can trigger an oom-kill if the reclaim does not
-> succeed. However if oom-killer does not find a process for killing, it
-> dumps a lot of warnings.
+There is a typo - "runtimet" should be "runtime".  Fix it.
 
-Makes total sense to me.
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ include/linux/mhi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Deleting a memcg does not reclaim memory from it and the memory can
-> linger till there is a memory pressure. One normal way to proactively
-> reclaim such memory is to set memory.max to 0 just before deleting the
-> memcg. However if some of the memcg's memory is pinned by others, this
-> operation can trigger an oom-kill without any process and thus can log a
-> lot un-needed warnings. So, ignore all such warnings from memory.max.
-> 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
->  include/linux/oom.h | 3 +++
->  mm/memcontrol.c     | 9 +++++----
->  mm/oom_kill.c       | 2 +-
->  3 files changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/oom.h b/include/linux/oom.h
-> index c696c265f019..6345dc55df64 100644
-> --- a/include/linux/oom.h
-> +++ b/include/linux/oom.h
-> @@ -52,6 +52,9 @@ struct oom_control {
->  
->  	/* Used to print the constraint info. */
->  	enum oom_constraint constraint;
-> +
-> +	/* Do not warn even if there is no process to be killed. */
-> +	bool no_warn;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index ab737821ab89..b0739ad1bae4 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -339,7 +339,7 @@ struct mhi_controller_config {
+  * @wake_put: CB function to de-assert device wake (optional)
+  * @wake_toggle: CB function to assert and de-assert device wake (optional)
+  * @runtime_get: CB function to controller runtime resume (required)
+- * @runtimet_put: CB function to decrement pm usage (required)
++ * @runtime_put: CB function to decrement pm usage (required)
+  * @map_single: CB function to create TRE buffer
+  * @unmap_single: CB function to destroy TRE buffer
+  * @read_reg: Read a MHI register via the physical link (required)
+-- 
+2.17.1
 
-I'd invert it to warn. Or maybe even warn_on_no_proc?
-
->  };
->  
->  extern struct mutex oom_lock;
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 317dbbaac603..a1f00d9b9bb0 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1571,7 +1571,7 @@ unsigned long mem_cgroup_size(struct mem_cgroup *memcg)
->  }
->  
->  static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> -				     int order)
-> +				     int order, bool no_warn)
->  {
->  	struct oom_control oc = {
->  		.zonelist = NULL,
-> @@ -1579,6 +1579,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  		.memcg = memcg,
->  		.gfp_mask = gfp_mask,
->  		.order = order,
-> +		.no_warn = no_warn,
->  	};
->  	bool ret;
->  
-> @@ -1821,7 +1822,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
->  		mem_cgroup_oom_notify(memcg);
->  
->  	mem_cgroup_unmark_under_oom(memcg);
-> -	if (mem_cgroup_out_of_memory(memcg, mask, order))
-> +	if (mem_cgroup_out_of_memory(memcg, mask, order, false))
->  		ret = OOM_SUCCESS;
->  	else
->  		ret = OOM_FAILED;
-> @@ -1880,7 +1881,7 @@ bool mem_cgroup_oom_synchronize(bool handle)
->  		mem_cgroup_unmark_under_oom(memcg);
->  		finish_wait(&memcg_oom_waitq, &owait.wait);
->  		mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
-> -					 current->memcg_oom_order);
-> +					 current->memcg_oom_order, false);
->  	} else {
->  		schedule();
->  		mem_cgroup_unmark_under_oom(memcg);
-> @@ -6106,7 +6107,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  		}
->  
->  		memcg_memory_event(memcg, MEMCG_OOM);
-> -		if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
-> +		if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0, true))
-
-I wonder if we can handle it automatically from the oom_killer side?
-We can suppress warnings if oc->memcg is set and the cgroup scanning
-showed that there are no belonging processes?
-
-Thanks!
