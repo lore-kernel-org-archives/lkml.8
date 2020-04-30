@@ -2,131 +2,124 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0064C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1429DC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B7520731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE92E20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vVUQtbBB"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ABZfSEws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgD3Tvw (ORCPT
+        id S1726835AbgD3TwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
+        Thu, 30 Apr 2020 15:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgD3Tvu (ORCPT
+        with ESMTP id S1726782AbgD3TwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:51:50 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C43C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:51:50 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d16so5553393edv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:51:50 -0700 (PDT)
+        Thu, 30 Apr 2020 15:52:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342ECC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:52:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mq3so1299193pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D+FwAVJSyrEXzkxSrmCS02v7oMdKUwO+F0o4wshx4Ek=;
-        b=vVUQtbBBW2Z6/5fnVMc/CHaP+nmdWUZ9QxTg9U+zXdocuJvECmz2ZYNIGKPPz6wnQ8
-         Y/blY8yPzeccGFk3m1sEppcnDb2DSh0FgHkCsa362EpoiStkcCEFl/jvgV3GTQCJGqIR
-         1F5ZNP+5RAyCH89lA/zS+VK58cK0uw0HhqVN63Enq4YTlK6yQyXV4DIfnL10P+OqgGw/
-         HCg5266Eh5MmmWWOvAC6lE6/rve3bHhcEcgVc+Td4DD9a+Td1zEyKuOO0czcYWrzhCcT
-         tvoeMJf89WE0O/M4IxIXqvfJwcRgTiFBEmYdGzxdktpJKukTKOFi25Kns4jm5Sm2dyAU
-         yc4w==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yFism+I4O6MfQ6MRmwj94cYLydvQt2/w8BD993n5VWo=;
+        b=ABZfSEwsV1VLYG59/UynFuYlWMWy4kR/W09o37ftty40EYSGB5Wmrp7yHOvw6/bpDp
+         BJLWGLkoZjHshNVmGGvItGPyUFhvts1E90bh+9lEvV059qLRmX/8/uvqvdEndz7SE7t1
+         O3JyGKLMVO7g16zE7nmmi95FrbeGt58RhbtQ614B5/zdtFjk5RJvDes3XZsz2/5mYc8c
+         TJf37qd3gIC1FZvWmBVnmrgu5yzFnktUFjSmk2gdxzjvPsNKvWf/WrmLXmfTK4MZzyIY
+         ob+RLIV8KFA8RznQYHEBEvlgL8dJOEoCzvufWHIJwkYSajlBW6Rqr+tS2nfTo1Elg07x
+         Bccw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D+FwAVJSyrEXzkxSrmCS02v7oMdKUwO+F0o4wshx4Ek=;
-        b=aft6zDHMVdvBd6O1LqIudGiZGL+1XQzm8SAt1Er6PPPYqKjq7dRACvf51j03ZDuQWN
-         NKAcm2fLsYaq5uJE5b+F500rFUO7pzwo4dkmoxXysH6JvvLqzt4zp2uFZcqZNm9TP15e
-         /sgQ5MblkCpo+v7GrCxzQ0BNpAg2n/bnsmMzcxfByu5SRYAHgtemnPem2aLS+Ms5k2tA
-         I9IO5SyK3JuQUU5yHeqZPZ22++UpocgTd598OMysDZA0GyyhwwB+e13A+iC25gAIEASg
-         asdG5LGo0nbPQsyGFBAfGOlFIZdANTnNk+iQmFzXiPaq7EDLGQxzuoH7SZEMzdN06NGq
-         zysg==
-X-Gm-Message-State: AGi0PuZR+N02a4rqQSl4G8B2NHCq8UbQOtqcMSbxSO+l2kb0h4Ege/ZM
-        YszTCIqXftEgowPEjiJ2LP6Dl0/98cmrEuYXdKeS4w==
-X-Google-Smtp-Source: APiQypKSjYZOD7xk1KJYIgeWWnr+Sy7zH5f3yAinfHlnQz1vSgERtk1La4XpoWwZWcsoyFjvzfAAP5KPRwAA/g7JUtg=
-X-Received: by 2002:aa7:c643:: with SMTP id z3mr620607edr.154.1588276309142;
- Thu, 30 Apr 2020 12:51:49 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yFism+I4O6MfQ6MRmwj94cYLydvQt2/w8BD993n5VWo=;
+        b=GyazwgKnCkw56nQABmHWTZy5PFeKmgKGGsqb3DJRXP8nA3dpmNlwy7o0ad3kI5gh6y
+         WW1xQGPZuFsXX34MK3UjhLd95TmdTc4Q/xgUZhbaOUb6JqmE9v+o5qhdV5EmeYHdOcfn
+         +mzgfkQ6K5rx/8N00IiSAozNwT8Rld90Fb/thuuKBe1BtXWu1aGGZOK2ZOzKSC7zaD8l
+         pkWehCuU9/1wusVEbrVP5pepWxTlNrwWnwazxS8FV1q+HGDZwSRTQ8sy7NWlVUbASINg
+         bmCODvYjL8+il1TGLF4Fkr4TImqry+MXh+xq7DNy4RfGNEIsv3B+FXlWLHdcGMZNv1yJ
+         zAxg==
+X-Gm-Message-State: AGi0PuaiAUKCS292lQBJ87LZpleBlcbqzR+LBvCHUdh9PGYtietZF5UV
+        LQb3p3aGsZCELWbOiZM07Dz7447zjW8+SQ==
+X-Google-Smtp-Source: APiQypK03eqVAGWd1E3h/uqkrtARYMFce4LorMdCoKF2HtB35eZrfEvlrECjRcrU2Y1NL9LjR+XJrw==
+X-Received: by 2002:a17:90a:3726:: with SMTP id u35mr514438pjb.162.1588276320260;
+        Thu, 30 Apr 2020 12:52:00 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id k63sm478083pge.42.2020.04.30.12.51.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:51:59 -0700 (PDT)
+Subject: Re: [PATCH] pipe: read/write_iter() handler should check for
+ IOCB_NOWAIT
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <273d8294-2508-a4c2-f96e-a6a394f94166@kernel.dk>
+ <20200430175856.GX29705@bombadil.infradead.org>
+ <d00f0ead-2782-06b3-6e21-559d8c86c461@kernel.dk>
+Message-ID: <bb78a400-8af5-aae8-8049-fd37e1a4db07@kernel.dk>
+Date:   Thu, 30 Apr 2020 13:51:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
- <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
- <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
- <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com> <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
-In-Reply-To: <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 30 Apr 2020 12:51:38 -0700
-Message-ID: <CAPcyv4g8rA2TRvoFHqEjs5Xn74gdZx8uF0PXFYCjTcx56yA=Jw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        stable <stable@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d00f0ead-2782-06b3-6e21-559d8c86c461@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:23 PM Luck, Tony <tony.luck@intel.com> wrote:
->
-> On Thu, Apr 30, 2020 at 11:42:20AM -0700, Andy Lutomirski wrote:
-> > I suppose there could be a consistent naming like this:
-> >
-> > copy_from_user()
-> > copy_to_user()
-> >
-> > copy_from_unchecked_kernel_address() [what probe_kernel_read() is]
-> > copy_to_unchecked_kernel_address() [what probe_kernel_write() is]
-> >
-> > copy_from_fallible() [from a kernel address that can fail to a kernel
-> > address that can't fail]
-> > copy_to_fallible() [the opposite, but hopefully identical to memcpy() on x86]
-> >
-> > copy_from_fallible_to_user()
-> > copy_from_user_to_fallible()
-> >
-> > These names are fairly verbose and could probably be improved.
->
-> How about
->
->         try_copy_catch(void *dst, void *src, size_t count, int *fault)
->
-> returns number of bytes not-copied (like copy_to_user etc).
->
-> if return is not zero, "fault" tells you what type of fault
-> cause the early stop (#PF, #MC).
+On 4/30/20 12:47 PM, Jens Axboe wrote:
+> On 4/30/20 11:58 AM, Matthew Wilcox wrote:
+>> On Thu, Apr 30, 2020 at 10:24:46AM -0600, Jens Axboe wrote:
+>>> Pipe read/write only checks for the file O_NONBLOCK flag, but we should
+>>> also check for IOCB_NOWAIT for whether or not we should handle this read
+>>> or write in a non-blocking fashion. If we don't, then we will block on
+>>> data or space for iocbs that explicitly asked for non-blocking
+>>> operation. This messes up callers that explicitly ask for non-blocking
+>>> operations.
+>>>
+>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>
+>> Wouldn't this be better?
+> 
+> Yeah, that's probably a better idea. Care to send a "proper" patch?
 
-I do like try_copy_catch() for the case when neither of the buffers
-are __user (like in the pmem driver) and _copy_to_iter_fallible()
-(plus all the helpers it implies) for the other cases.
+I take that back, running into issues going with a whole-sale conversion
+like that:
 
-copy_to_user_fallible
-copy_fallible_to_page
-copy_pipe_to_iter_fallible
+mkdir("/run/dhcpcd", 0755)              = -1 EEXIST (File exists)
+openat(AT_FDCWD, "/run/dhcpcd/ens7.pid", O_WRONLY|O_CREAT|O_NONBLOCK|O_CLOEXEC, 0644) = 4
+flock(4, LOCK_EX|LOCK_NB)               = 0
+getpid()                                = 214
+ftruncate(4, 0)                         = 0
+lseek(4, 0, SEEK_SET)                   = 0
+fstat(4, {st_mode=S_IFREG|0644, st_size=0, ...}) = 0
+lseek(4, 0, SEEK_CUR)                   = 0
+write(4, "214\n", 4)                    = -1 EINVAL (Invalid argument)
 
-...because the mmu-fault handling is an aspect of "_user" and fallible
-implies other source fault reasons. It does leave a gap if an
-architecture has a concept of a fallible write, but that seems like
-something that will be handled asynchronously and not subject to this
-interface.
+which I don't know where is coming from yet, but it's definitely
+breakage by auto setting IOCB_NOWAIT if O_NONBLOCK is set.
+
+I'd prefer to go your route, but I also would like this fixed for pipes
+for 5.7. So I'd suggest we go with mine, and then investigate why this
+is breaking stuff and go with the all-in approach for 5.8 if feasible.
+
+-- 
+Jens Axboe
+
