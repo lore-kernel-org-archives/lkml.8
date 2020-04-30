@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9A3C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB57C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EADF2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46A32063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255553;
-	bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+	s=default; t=1588255558;
+	bh=Kl08CSxK9cTZLizw5W56/tm53VbSYubwztTv1wcNJCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kFzZyQEP1pSV2T+Xo+aKscZAHiYqNwV96mZc4oYNn9sDGyKZ24xcKc5Hl4Uv7q9lB
-	 3v23lyP7w8anZcsy9a5htVWls25/+DWp+kahXC904We/9OQHRbfDlLDKqMfiA6kMZw
-	 eaIZ/m7pvLjNVC+N5mXRkaXRPFDiTWqBuZLlXocI=
+	b=rTpPTBjBvn2A6SsVbmFR2U7ft53SK852bF2YFeKNmgphZa2Kf80Yjj/XLPWaAyuP5
+	 ZyGaxPG+da+9JKAkrNbFisMVm2wq8XH5pv1rmHSqfvgM6yROaPBWdmZVHyObaiLzdU
+	 ELPbuHXBctuCUmqYoc9+EWZ30jGdhjOdGP3u1dGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgD3Nw6 (ORCPT
+        id S1729194AbgD3OF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33616 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbgD3Nwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:30 -0400
+        id S1728551AbgD3Nw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 562A220870;
-        Thu, 30 Apr 2020 13:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0E424954;
+        Thu, 30 Apr 2020 13:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254750;
-        bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
+        s=default; t=1588254776;
+        bh=Kl08CSxK9cTZLizw5W56/tm53VbSYubwztTv1wcNJCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2qOmiAfF3VSRcp5kx3imh3IDyQbnS80tq/U1sKk1cTkuv75yhYeMdqyEF/mpKSIy
-         tC9VHop6TruWVvHXhl4KMxECEHTYLYKctL52LK9FiS9Jj697TZZVlYJBGOBJXQRRng
-         6cp5imhMWAPR5LcaeWei4QnZDFcO/y2oWCZ2+C5E=
+        b=PQDe6tM8lUqR44W+S5zy0jgkYyk0DfAnSReYsYOqvJEEUbw/2CQdDWSnNRLgpPsu5
+         gRxPIK1ytRK7eex7ZImuy/vfqBIft3d67bLhXg6d/XKL0BRmeXFWn7GbwcXOF1Uhgi
+         qF++SeqsuSNoBiuUURVz3p0loQKX9GgXqIIdYZ5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/57] selftests/ipc: Fix test failure seen after initial test run
-Date:   Thu, 30 Apr 2020 09:51:30 -0400
-Message-Id: <20200430135218.20372-9-sashal@kernel.org>
+Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 33/57] ASoC: rsnd: Fix "status check failed" spam for multi-SSI
+Date:   Thu, 30 Apr 2020 09:51:54 -0400
+Message-Id: <20200430135218.20372-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -59,59 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Matthias Blankertz <matthias.blankertz@cetitec.com>
 
-[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
+[ Upstream commit 54cb6221688660670a2e430892d7f4e6370263b8 ]
 
-After successfully running the IPC msgque test once, subsequent runs
-result in a test failure:
+Fix the rsnd_ssi_stop function to skip disabling the individual SSIs of
+a multi-SSI setup, as the actual stop is performed by rsnd_ssiu_stop_gen2
+- the same logic as in rsnd_ssi_start. The attempt to disable these SSIs
+was harmless, but caused a "status check failed" message to be printed
+for every SSI in the multi-SSI setup.
+The disabling of interrupts is still performed, as they are enabled for
+all SSIs in rsnd_ssi_init, but care is taken to not accidentally set the
+EN bit for an SSI where it was not set by rsnd_ssi_start.
 
-  $ sudo ./run_kselftest.sh
-  TAP version 13
-  1..1
-  # selftests: ipc: msgque
-  # Failed to get stats for IPC queue with id 0
-  # Failed to dump queue: -22
-  # Bail out!
-  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-  not ok 1 selftests: ipc: msgque # exit=1
-
-The dump_queue() function loops through the possible message queue index
-values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
-represents the index value. The first time the test is ran, the initial
-index value of 0 is valid and the test is able to complete. The index
-value of 0 is not valid in subsequent test runs and the loop attempts to
-try index values of 1, 2, 3, and so on until a valid index value is
-found that corresponds to the message queue created earlier in the test.
-
-The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
-index values are used. The test failure is caused by incorrectly
-comparing errno to -EINVAL when cycling through possible index values.
-
-Fix invalid test failures on subsequent runs of the msgque test by
-correctly comparing errno values to a non-negated EINVAL.
-
-Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200417153017.1744454-3-matthias.blankertz@cetitec.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ipc/msgque.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sh/rcar/ssi.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index 4c156aeab6b80..5ec4d9e18806c 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
- 	for (kern_id = 0; kern_id < 256; kern_id++) {
- 		ret = msgctl(kern_id, MSG_STAT, &ds);
- 		if (ret < 0) {
--			if (errno == -EINVAL)
-+			if (errno == EINVAL)
- 				continue;
- 			printf("Failed to get stats for IPC queue with id %d\n",
- 					kern_id);
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 9900a4f6f4e53..4a7d3413917fc 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -594,10 +594,16 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
+ 	 * Capture:  It might not receave data. Do nothing
+ 	 */
+ 	if (rsnd_io_is_play(io)) {
+-		rsnd_mod_write(mod, SSICR, cr | EN);
++		rsnd_mod_write(mod, SSICR, cr | ssi->cr_en);
+ 		rsnd_ssi_status_check(mod, DIRQ);
+ 	}
+ 
++	/* In multi-SSI mode, stop is performed by setting ssi0129 in
++	 * SSI_CONTROL to 0 (in rsnd_ssio_stop_gen2). Do nothing here.
++	 */
++	if (rsnd_ssi_multi_slaves_runtime(io))
++		return 0;
++
+ 	/*
+ 	 * disable SSI,
+ 	 * and, wait idle state
 -- 
 2.20.1
 
