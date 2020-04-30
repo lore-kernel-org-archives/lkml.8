@@ -2,92 +2,166 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854F6C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8C1C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57E792137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588243166;
-	bh=6+7qBBamWTT9w7zClGZROm5AeCOL7MN9qOqe5yevm90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UkfjEkAIeUlrzKblw0KVsRNVYYj62g6Zay6s/8cgqn36BxD2NFZ2B6mrXsqrx6NWQ
-	 a/Qo2KEKLrS82Sr2Pe2ZGao4qmw3GhM2ggFdMAQ412EiInUFauV7+IljkodlvvvAe5
-	 MfeTMdt+0Tl6tgxpECE3tLBMIaTRKN/QLRzLm8rw=
+	by mail.kernel.org (Postfix) with ESMTP id AAB0220838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEO30DXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgD3KjZ (ORCPT
+        id S1726859AbgD3Kjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbgD3KjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:39:25 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3CF920838;
-        Thu, 30 Apr 2020 10:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588243164;
-        bh=6+7qBBamWTT9w7zClGZROm5AeCOL7MN9qOqe5yevm90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j4ZaDYWlFfnjJ0Kk6dtybxWMdijfCyiwyxZsPRioDIEIjW2Pq/Kffjmqjr3+J0Ejl
-         JR4YgwOGru7gDKzTHRc+/mOOsVLTS5ejWCp0tS62mKzaXXuC93LMhd13Rxno4+GTvA
-         qmCLkIDor0yLvS+hxfn7Nw42bPZSZSdBu25gx7Rk=
-Date:   Thu, 30 Apr 2020 11:39:19 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Srivatsa Vaddagiri <vatsa@codeaurora.org>
-Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH 0/1] virtio_mmio: hypervisor specific interfaces for
- MMIO
-Message-ID: <20200430103919.GF19932@willie-the-truck>
-References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
- <20200430100821.GC19932@willie-the-truck>
- <20200430102939.GG5097@quicinc.com>
+        Thu, 30 Apr 2020 06:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726413AbgD3Kjy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:39:54 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E294C035494;
+        Thu, 30 Apr 2020 03:39:54 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id d15so6276229wrx.3;
+        Thu, 30 Apr 2020 03:39:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=m+chlPrQMdP5dXdx8tvxwWBw9YtWA0u5+Y75TJ+sgjc=;
+        b=DEO30DXRjI9qe7OqYYAiRNHtlG5zLfzm7Y1JyOvMdwEQzGht2paggKoPuCmJjyKgJV
+         e+jPeRtbuZrY/XJfqb9y+2zpvX9TmgLrUuES2zrcM4I8i7MAPEtf+W/l4cs8VE4xhA9o
+         QlpROHnGv2QimMSkqYpQdOoJUl8qzE8DTcMydvi0QGn9GTU4p6rIjohZirkl9uQ+3whf
+         r1xn3SAf6NqdhKQdX2a3ZdlpxhTtWwG3N2wbSA6ZykbizdiWlYOlSOKmt7c32HNYnytZ
+         SFxWzd3ZKVr4fvn9obczDkGcSHmAikNFlhbsbHdfpfjzdj6CquRr6cXfoBOQvfmQYoS6
+         AAdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=m+chlPrQMdP5dXdx8tvxwWBw9YtWA0u5+Y75TJ+sgjc=;
+        b=eXuZv8jOUnzaS4iVY+mkezcmXLVvSHjbbmJpsS4rWsaBDGK+fCDcHjK2XnNzh5Eq6d
+         LeVMdZJsX/yja9fu6jBrpCtJYoSO4gBxIWkFltwl+N/YhPTbn16A/IbfyyyIcHhKr59Y
+         2fuOaKOsPyHaWZOsbfs/HA9rwBFyj5a/xokwkIBqcy5lI+Za++UZL2t2bt3ETrzozEQg
+         LZH8ThvxTfIbuXbLMRsCMm37MwNT9p0cEYbNPbdLddL9cfp0+T3j90iv7ZJpTstXOoHk
+         1Bg+TDwuCsiaEzXPAIurePiyj9J4MVLc0UiPVq7v6eFnWFIs+NUHWKWzk7hnOG/2dygs
+         ZCGQ==
+X-Gm-Message-State: AGi0PuYcEdXz5G/KqX9IWgrvb7wjPhaOhWqh3ZxpxuMEQ0qBc+I7TVHF
+        YBpmg59EEhZFpq/DzILiRGJE9tZ8
+X-Google-Smtp-Source: APiQypLiSTqx0KQcnVM1ygQKcXZCjKbEZfa1vp0p40OC82kF6U5oyh0OQ+sb7bPOvGgT+TOg2khd1g==
+X-Received: by 2002:a05:6000:1287:: with SMTP id f7mr3253924wrx.345.1588243192502;
+        Thu, 30 Apr 2020 03:39:52 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F6E9D.dip0.t-ipconnect.de. [91.63.110.157])
+        by smtp.gmail.com with ESMTPSA id c20sm12353770wmd.36.2020.04.30.03.39.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 03:39:50 -0700 (PDT)
+Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
+From:   saravanan sekar <sravanhome@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <20200415162030.16414-3-sravanhome@gmail.com> <20200424071822.GM3612@dell>
+ <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com> <20200424093720.GA3542@dell>
+ <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com> <20200424105319.GD8414@dell>
+ <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com> <20200427085149.GF3559@dell>
+ <6063ad6e-444c-b905-b858-d8f94d700748@gmail.com>
+Message-ID: <4585179d-826b-6240-38a2-18fe757bc810@gmail.com>
+Date:   Thu, 30 Apr 2020 12:39:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430102939.GG5097@quicinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6063ad6e-444c-b905-b858-d8f94d700748@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vatsa,
+Hi Lee,
 
-On Thu, Apr 30, 2020 at 03:59:39PM +0530, Srivatsa Vaddagiri wrote:
-> * Will Deacon <will@kernel.org> [2020-04-30 11:08:22]:
-> 
-> > > This patch is meant to seek comments. If its considered to be in right
-> > > direction, will work on making it more complete and send the next version!
-> > 
-> > What's stopping you from implementing the trapping support in the
-> > hypervisor? Unlike the other patches you sent out, where the guest memory
-> > is not accessible to the host, there doesn't seem to be any advantage to
-> > not having trapping support, or am I missing something here?
-> 
-> 	I have had this discussion with hypervisor folks. They seem to be
-> concerned about complexity of having a VM's fault be handled in another
-> untrusted VM. They are not keen to add MMIO support.
+On 27/04/20 11:30 am, saravanan sekar wrote:
+> Hi Lee,
+>
+> On 27/04/20 10:51 am, Lee Jones wrote:
+>> On Fri, 24 Apr 2020, saravanan sekar wrote:
+>>
+>>> On 24/04/20 12:53 pm, Lee Jones wrote:
+>>>> On Fri, 24 Apr 2020, saravanan sekar wrote:
+>>>>
+>>>>> Hi Lee,
+>>>>>
+>>>>> On 24/04/20 11:37 am, Lee Jones wrote:
+>>>>>> On Fri, 24 Apr 2020, saravanan sekar wrote:
+>>>>>>
+>>>>>>> Hi Lee,
+>>>>>>>
+>>>>>>> On 24/04/20 9:18 am, Lee Jones wrote:
+>>>>>>>> On Wed, 15 Apr 2020, Saravanan Sekar wrote:
+>>>>>>>>
+>>>>>>>>> mp2629 is a highly-integrated switching-mode battery charge 
+>>>>>>>>> management
+>>>>>>>>> device for single-cell Li-ion or Li-polymer battery.
+>>>>>>>>>
+>>>>>>>>> Add MFD core enables chip access for ADC driver for battery 
+>>>>>>>>> readings,
+>>>>>>>>> and a power supply battery-charger driver
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>>>>>>>>> ---
+>>>>>>>>>      drivers/mfd/Kconfig        |  9 ++++
+>>>>>>>>>      drivers/mfd/Makefile       |  2 +
+>>>>>>>>>      drivers/mfd/mp2629.c       | 86 
+>>>>>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>>>>>      include/linux/mfd/mp2629.h | 19 +++++++++
+>>>>>>>>>      4 files changed, 116 insertions(+)
+>>>>>>>>>      create mode 100644 drivers/mfd/mp2629.c
+>>>>>>>>>      create mode 100644 include/linux/mfd/mp2629.h
+>>>>>>>> How is this driver registered?
+>>>>>>>>
+>>>>>>>> Looks like it has device tree support.  Is there another way?
+>>>>>>> Yes, only using device tree
+>>>>>> Then how about using 'simple-mfd' and 'syscon'?
+>>>>>>
+>>>>>> Then you can omit this driver completely.
+>>>>> The exception is to support for non device tree platform as well, 
+>>>>> but I have
+>>>>> tested only for ARM device tree platform.
+>>>> Is that a reality though?
+>>>>
+>>>> How else do you see this realistically being registered?
+>>>>
+>>> I understand that acpi related device table are not covered here, 
+>>> well I
+>>> don't have to platform to test so.
+>>> If you ask me to cover acpi related table, I can do but hard to test.
+>> I don't know of any reasons why syscon can't be used by ACPI.
+>>
+>> Please try to solve this issue using 'simple-mfd' and 'syscon'.
+> Well the simple-mfd and syscon topic recommended by you when Device 
+> tree alone is used.
+> I wounder still I receive review/improvements comments for this mfd 
+> patch and also another
+> to omit this driver using simple-mfd (rework the series).
+> Confused, not sure which is valid and will be accepted at the end.
 
-Right, but I'm concerned about forking the implementation from the spec
-and I'm not keen to add these hooks ;)
+I had look into syscon, as far my understanding syscon is supported only 
+for memory mapped IO. MP2629
+device is over I2C bus, could you share your thought about syscon for 
+this device?
 
-What does your hook actually do? I'm assuming an HVC? If so, then where the
-fault is handled seems to be unrelated and whether the guest exit is due to
-an HVC or a stage-2 fault should be immaterial. In other words, I don't
-follow why the trapping mechanism necessitates the way in which the fault is
-handled.
+Thanks,
+Saravanan
 
-Will
+
