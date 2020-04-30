@@ -2,122 +2,163 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED552C8300D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADE4C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA72C2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894B220775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RxVCouHG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nkeJRNcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgD3Ldy (ORCPT
+        id S1726906AbgD3LeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:33:54 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27310 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726511AbgD3Ldx (ORCPT
+        Thu, 30 Apr 2020 07:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726130AbgD3LeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:33:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588246431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nYHjyQZB66u0Ewnyj3ClGluuIthhdPA1Z2vZ3odLsss=;
-        b=RxVCouHGijFCONd0sGEZBSVY/EhgRnrOHjsQjL1Q2sprnC3L2j1fNNLmZ6G4DbVv5fTNrD
-        cyhOg17+XXBe3nTLxDvSeeqJ85VgXugBr/HS0jMVjX3i56+dW6bXoJUdpHloYvdsarvUaJ
-        IzGxAcCcEilYPjY8DzxOGU5rFpk6dto=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-y2yYGJomOyWXwIHw2eIuzA-1; Thu, 30 Apr 2020 07:33:49 -0400
-X-MC-Unique: y2yYGJomOyWXwIHw2eIuzA-1
-Received: by mail-wm1-f69.google.com with SMTP id n127so465776wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 04:33:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=nYHjyQZB66u0Ewnyj3ClGluuIthhdPA1Z2vZ3odLsss=;
-        b=aP/cyndZlNSW0EU/e9GhEziNqv3IkxqD9vJI4YJTgzU4eiqf27tPNEXvdxgf4Of1oc
-         NPspqsWmmVZW6xUws+rukjBXDyEQ/DKKxmj3CKAA/zxPMBG0BhKRLMtiVyDDd9LpSF8O
-         TwQBydP0y9P9HkOqrxKNonxhiTcZtlb/YG9ghlZQwSRiNQjTUpWGgDbpCdTpIJC2rBbO
-         MHJz2NansH6KDTOyVrAeAMsKeAqOtUGTS9MveSv8gLdD5GGY6Ff0IkytODoBpwWC8I0M
-         X/BEm1bkmz4/zQ25+SrzdrNCko0KAbAQnHbhEH7Ys3BniJhvdKEn8t9adB7djTfdECyL
-         E4TA==
-X-Gm-Message-State: AGi0PuajyivBjGxzbsBTyE6lY/u2AU4h46J5U2fvLAjZvl5jkRS+zMzf
-        6lszQcYVA+lkLuOSIZayyljEJObHvWkeXGKZABzLx3TMlhV8mzatZHKxrd1PZLSmLoDnKqR9fTv
-        eHWCUJ7Tyk/ORj9DUfzK8aT+U
-X-Received: by 2002:adf:f10c:: with SMTP id r12mr3433689wro.409.1588246428709;
-        Thu, 30 Apr 2020 04:33:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJoZaH2lPDWe0GJpyQePdThFimTFd28mPxMCRnVLbCUn/3Kpq62ADMYononpBhZV+7wN64Dbw==
-X-Received: by 2002:adf:f10c:: with SMTP id r12mr3432706wro.409.1588246416469;
-        Thu, 30 Apr 2020 04:33:36 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id f2sm3762196wro.59.2020.04.30.04.33.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 04:33:35 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf page ready notifications
-In-Reply-To: <18b66e2e-9256-0ef0-4783-f89211eeda88@redhat.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com> <20200429093634.1514902-5-vkuznets@redhat.com> <b1297936-cf69-227b-d758-c3f3ca09ae5d@redhat.com> <87sgglfjt9.fsf@vitty.brq.redhat.com> <18b66e2e-9256-0ef0-4783-f89211eeda88@redhat.com>
-Date:   Thu, 30 Apr 2020 13:33:34 +0200
-Message-ID: <87k11xfbsh.fsf@vitty.brq.redhat.com>
+        Thu, 30 Apr 2020 07:34:18 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232D9C035494;
+        Thu, 30 Apr 2020 04:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dyL6CCvk+6z2bvZF+me9CZLQe+A3yK/IUAfcG9BA9aA=; b=nkeJRNcZDFtWI/Wyf48nt+KWKw
+        z/HOtayvUc3ToTXSmrm0t6WugyUzCnabW9uu8iM3q90NThDLJaQbqs4SkXrPAHb4fLlYucPremGru
+        i8OiVdFxkbSp0dAyTMBd/AZRAE0cllim3Iu0W4E5RrvJODzyoy1WLm8T+hSq20O6GKQ8ZV/Wxi2pW
+        SzDrnd8P5eFJS6lktSTRW37rKgaXeWyplJi8yHmCqtdKbdo6j4fR2FzmsqQ49xRLd8TegDbE95bDm
+        E3WLE8lWEs4U4c7rTSGJ7USbaHjprELm5gSr5M5RcM7zhRcwqrjKZmlsu5hCbimV71Wb2ZsIkIR3A
+        gGE8pwlA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jU7SJ-0004av-FS; Thu, 30 Apr 2020 11:34:15 +0000
+Date:   Thu, 30 Apr 2020 04:34:15 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/25] Large pages in the page cache
+Message-ID: <20200430113415.GW29705@bombadil.infradead.org>
+References: <20200429133657.22632-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On Wed, Apr 29, 2020 at 06:36:32AM -0700, Matthew Wilcox wrote:
+> This patch set does not pass xfstests.  Test at your own risk.  It is
+> based on the readahead rewrite which is in Andrew's tree.  The large
+> pages somehow manage to fall off the LRU, so the test VM quickly runs
+> out of memory and freezes.
 
-> On 30/04/20 10:40, Vitaly Kuznetsov wrote:
->>>  I think in that case
->>> kvm_check_async_pf_completion will refuse to make progress.
->>> You need to make this bit stateful (e.g. 1 = async PF in progress, 0 =
->>> not in progress), and check that for page ready notifications instead of
->>> EFLAGS.IF.  
->>> This probably means that;
->>>
->>> - it might be simpler to move it to the vector MSR
->> I didn't want to merge 'ACK' with the vector MSR as it forces the guest
->> to remember the setting. It doesn't matter at all for Linux as we
->> hardcode the interrupt number but I can imaging an OS assigning IRQ
->> numbers dynamically, it'll need to keep record to avoid doing rdmsr.
->
-> I would expect that it needs to keep it in a global variable anyway, but
-> yes this is a good point.  You can also keep the ACK MSR and store the
-> pending bit in the other MSR, kind of like you have separate ISR and EOI
-> registers in the LAPIC.
->
+Kirill was right; that was not exactly the bug.  It did lead to the
+realisation that this could be avoided by simply not splitting the page
+if the filesystem knows how to write back large pages.  So this is
+the current diff.
 
-Honestly I was inspired by Hyper-V's HV_X64_MSR_EOM MSR as the protocol
-we're trying to come up with here is very similar to HV messaging)
+I just hit the bug in clear_inode() that i_data.nrpages is not 0, so
+there's clearly at least one remaining problem to fix (and I suspect
+about half a dozen).
 
-I'm not exactly sure why we need the pending bit after we drop #PF. When
-we call kvm_check_async_pf_completion() from MSR_KVM_ASYNC_PF_ACK write
-it will (in case there are page ready events in the queue) check if the
-slot is empty, put one there and raise IRQ regardless of guest's current
-state. It may or may not get injected immediately but we don't care.
-The second invocation of kvm_check_async_pf_completion() from vcpu_run()
-will just go away.
-
-I'm probably just missing something, will think of it again while
-working on v1, it seems nobody is against the idea in general. Thanks!
-
--- 
-Vitaly
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 184c8b516543..d511504d07af 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -235,7 +235,7 @@ static int pmem_rw_page(struct block_device *bdev, sector_t sector,
+ 	blk_status_t rc;
+ 
+ 	if (op_is_write(op))
+-		rc = pmem_do_write(pmem, page, 0, sector, tmp_size(page));
++		rc = pmem_do_write(pmem, page, 0, sector, thp_size(page));
+ 	else
+ 		rc = pmem_do_read(pmem, page, 0, sector, thp_size(page));
+ 	/*
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 7eb54f5c403b..ce978ed4f0cd 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -116,6 +116,11 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
+ 	m->gfp_mask = mask;
+ }
+ 
++static inline bool mapping_large_pages(struct address_space *mapping)
++{
++	return mapping->host->i_sb->s_type->fs_flags & FS_LARGE_PAGES;
++}
++
+ void release_pages(struct page **pages, int nr);
+ 
+ /*
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index ebaf649aa28d..e78686b628ae 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2654,7 +2654,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 
+ int total_mapcount(struct page *page)
+ {
+-	int i, compound, ret;
++	int i, compound, nr, ret;
+ 
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
+ 
+@@ -2662,16 +2662,17 @@ int total_mapcount(struct page *page)
+ 		return atomic_read(&page->_mapcount) + 1;
+ 
+ 	compound = compound_mapcount(page);
++	nr = compound_nr(page);
+ 	if (PageHuge(page))
+ 		return compound;
+ 	ret = compound;
+-	for (i = 0; i < HPAGE_PMD_NR; i++)
++	for (i = 0; i < nr; i++)
+ 		ret += atomic_read(&page[i]._mapcount) + 1;
+ 	/* File pages has compound_mapcount included in _mapcount */
+ 	if (!PageAnon(page))
+-		return ret - compound * HPAGE_PMD_NR;
++		return ret - compound * nr;
+ 	if (PageDoubleMap(page))
+-		ret -= HPAGE_PMD_NR;
++		ret -= nr;
+ 	return ret;
+ }
+ 
+diff --git a/mm/readahead.c b/mm/readahead.c
+index e2493189e832..ac16e96a8828 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -458,7 +458,7 @@ static bool page_cache_readahead_order(struct readahead_control *rac,
+ 	int err = 0;
+ 	gfp_t gfp = readahead_gfp_mask(mapping);
+ 
+-	if (!(mapping->host->i_sb->s_type->fs_flags & FS_LARGE_PAGES))
++	if (!mapping_large_pages(mapping))
+ 		return false;
+ 
+ 	limit = min(limit, index + ra->size - 1);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b06868fc4926..51e6c135575d 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1271,9 +1271,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 				/* Adding to swap updated mapping */
+ 				mapping = page_mapping(page);
+ 			}
+-		} else if (unlikely(PageTransHuge(page))) {
++		} else if (PageTransHuge(page)) {
+ 			/* Split file THP */
+-			if (split_huge_page_to_list(page, page_list))
++			if (!mapping_large_pages(mapping) &&
++			    split_huge_page_to_list(page, page_list))
+ 				goto keep_locked;
+ 		}
+ 
 
