@@ -2,154 +2,158 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB344C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D756C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9CC0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588263946;
-	bh=os4gyJyASyV9Bl1//dDXxv3YvH/j3vKkp6g69zvRTVo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=pHYabL8EV4oL9BTzIf4j7v4zFSQ/h0rxtU64Y2M9eKcRLHY6koca9/NMoJRaCWQG8
-	 FufCenUyWtWBMeYrVeE46mGEXfwlCtICFqDWcGp8djRtcIZg9ikiCMxWJ2QNdhISEM
-	 KQAomhBlqOb+8oDC2S1aqjDAsXvrlkeYdstUQbZI=
+	by mail.kernel.org (Postfix) with ESMTP id 64091208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgD3QZq (ORCPT
+        id S1727047AbgD3Q0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35398 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgD3QZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:25:45 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726515AbgD3Q0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:26:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A321F20873;
-        Thu, 30 Apr 2020 16:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588263944;
-        bh=os4gyJyASyV9Bl1//dDXxv3YvH/j3vKkp6g69zvRTVo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Uen/x7p2E9/c4pH6LftTDc+ScUsz4cz5/91wrw5F60WJFHX50qQ28cakvaCcleFhM
-         n08l65mcjivWWuYcsiAq3uV5koXl25ln+h9e6b44Zk+6OPGTNrqg5IxHKIhc7ZLMRr
-         Z2AuDpKbTXd8hBUBx2DVQwION0auHo23cLEwNePY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7C1403522697; Thu, 30 Apr 2020 09:25:44 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 09:25:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] integrity: evm: Fix RCU list related warnings.
-Message-ID: <20200430162544.GT7560@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200430160205.17798-1-madhuparnabhowmik10@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C13E20873;
+        Thu, 30 Apr 2020 16:26:00 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 12:25:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
+ text_poke()
+Message-ID: <20200430122558.406c9755@gandalf.local.home>
+In-Reply-To: <505666080.77869.1588263380070.JavaMail.zimbra@efficios.com>
+References: <20200429054857.66e8e333@oasis.local.home>
+        <20200429105941.GQ30814@suse.de>
+        <20200429082854.6e1796b5@oasis.local.home>
+        <20200429100731.201312a9@gandalf.local.home>
+        <20200430141120.GA8135@suse.de>
+        <20200430121136.6d7aeb22@gandalf.local.home>
+        <505666080.77869.1588263380070.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430160205.17798-1-madhuparnabhowmik10@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:32:05PM +0530, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> This patch fixes the following warning and few other
-> instances of traversal of evm_config_xattrnames list:
-> 
-> [   32.848432] =============================
-> [   32.848707] WARNING: suspicious RCU usage
-> [   32.848966] 5.7.0-rc1-00006-ga8d5875ce5f0b #1 Not tainted
-> [   32.849308] -----------------------------
-> [   32.849567] security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
-> 
-> Since entries are only added to the list and never deleted,
-> use list_For_each_entry_lockless() instead of
-> list_for_each_entry_rcu() for traversing the list.
-> Also, add a relevant comment in evm_secfs.c to indicate this fact.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-From an RCU viewpoint:
-
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-
-> ---
->  security/integrity/evm/evm_crypto.c | 2 +-
->  security/integrity/evm/evm_main.c   | 4 ++--
->  security/integrity/evm/evm_secfs.c  | 9 ++++++++-
->  3 files changed, 11 insertions(+), 4 deletions(-)
+> ----- On Apr 30, 2020, at 12:11 PM, rostedt rostedt@goodmis.org wrote:
 > 
-> diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-> index 35682852ddea..b2dc87da5f50 100644
-> --- a/security/integrity/evm/evm_crypto.c
-> +++ b/security/integrity/evm/evm_crypto.c
-> @@ -207,7 +207,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
->  	data->hdr.length = crypto_shash_digestsize(desc->tfm);
->  
->  	error = -ENODATA;
-> -	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-> +	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
->  		bool is_ima = false;
->  
->  		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-> index d361d7fdafc4..0d36259b690d 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -97,7 +97,7 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
->  	if (!(inode->i_opflags & IOP_XATTR))
->  		return -EOPNOTSUPP;
->  
-> -	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-> +	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
->  		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
->  		if (error < 0) {
->  			if (error == -ENODATA)
-> @@ -228,7 +228,7 @@ static int evm_protected_xattr(const char *req_xattr_name)
->  	struct xattr_list *xattr;
->  
->  	namelen = strlen(req_xattr_name);
-> -	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-> +	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
->  		if ((strlen(xattr->name) == namelen)
->  		    && (strncmp(req_xattr_name, xattr->name, namelen) == 0)) {
->  			found = 1;
-> diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-> index 39ad1038d45d..cfc3075769bb 100644
-> --- a/security/integrity/evm/evm_secfs.c
-> +++ b/security/integrity/evm/evm_secfs.c
-> @@ -232,7 +232,14 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
->  		goto out;
->  	}
->  
-> -	/* Guard against races in evm_read_xattrs */
-> +	/*
-> +	 * xattr_list_mutex guards against races in evm_read_xattrs().
-> +	 * Entries are only added to the evm_config_xattrnames list
-> +	 * and never deleted. Therefore, the list is traversed
-> +	 * using list_for_each_entry_lockless() without holding
-> +	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
-> +	 * and evm_protected_xattr().
-> +	 */
->  	mutex_lock(&xattr_list_mutex);
->  	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
->  		if (strcmp(xattr->name, tmp->name) == 0) {
-> -- 
-> 2.17.1
+> > On Thu, 30 Apr 2020 16:11:21 +0200
+> > Joerg Roedel <jroedel@suse.de> wrote:
+> >   
+> >> Hi,
+> >> 
+> >> On Wed, Apr 29, 2020 at 10:07:31AM -0400, Steven Rostedt wrote:  
+> >> > Talking with Mathieu about this on IRC, he pointed out that my code does
+> >> > have a vzalloc() that is called:
+> >> > 
+> >> > in trace_pid_write()
+> >> > 
+> >> > 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
+> >> > 
+> >> > This is done when -P1,2 is on the trace-cmd command line.  
+> >> 
+> >> Okay, tracked it down, some instrumentation in the page-fault and
+> >> double-fault handler gave me the stack-traces. Here is what happens:
+> >> 
+> >> As already pointed out, it all happens because of page-faults on the
+> >> vzalloc'ed pid bitmap. It starts with this stack-trace:
+> >> 
+> >>  RIP: 0010:trace_event_ignore_this_pid+0x23/0x30  
+> > 
+> > Interesting. Because that function is this:
+> > 
+> > bool trace_event_ignore_this_pid(struct trace_event_file *trace_file)
+> > {
+> >	struct trace_array *tr = trace_file->tr;
+> >	struct trace_array_cpu *data;
+> >	struct trace_pid_list *no_pid_list;
+> >	struct trace_pid_list *pid_list;
+> > 
+> >	pid_list = rcu_dereference_raw(tr->filtered_pids);
+> >	no_pid_list = rcu_dereference_raw(tr->filtered_no_pids);
+> > 
+> >	if (!pid_list && !no_pid_list)
+> >		return false;
+> > 
+> >	data = this_cpu_ptr(tr->array_buffer.data);
+> > 
+> >	return data->ignore_pid;
+> > }
+> > 
+> > Where it only sees if the pid masks exist. That is, it looks to see if
+> > there's pointers to them, it doesn't actually touch the vmalloc'd area.
+> > This check is to handle a race between allocating and deallocating the
+> > buffers and setting the ignore_pid bit. The reading of these arrays is done
+> > at sched_switch time, which sets or clears the ignore_pid field.
+> > 
+> > That said, since this only happens on buffer instances (it does not trigger
+> > on the top level instance, which uses the same code for the pid masks)
+> > 
+> > Could this possibly be for the tr->array_buffer.data, which is allocated
+> > with:
+> > 
+> > allocate_trace_buffer() {
+> >	[..]
+> >	buf->data = alloc_percpu(struct trace_array_cpu);
+> > 
+> > That is, the bug isn't the vmalloc being a problem, but perhaps the per_cpu
+> > allocation. This would explain why this crashes with the buffer instance
+> > and not with the top level instance. If it was related to the pid masks,
+> > then it would trigger for either (because they act the same in allocating
+> > at time of use). But when an instance is made, the tr->array_buffer.data is
+> > created. Which for the top level happens at boot up and the pages would
+> > have been synced long ago. But for a newly created instance, this happens
+> > just before its used. This could possibly explain why it's not a problem
+> > when doing it manually by hand, because the time between creating the
+> > instance, and the time to start and stop the tracing, is long enough for
+> > something to sync them page tables.
+> > 
+> > tl;dr; It's not an issue with the vmalloc, it's an issue with per_cpu
+> > allocations!  
 > 
+> Did I mention that alloc_percpu uses:
+> 
+> static void *pcpu_mem_zalloc(size_t size, gfp_t gfp)
+> {
+>         if (WARN_ON_ONCE(!slab_is_available()))
+>                 return NULL;
+> 
+>         if (size <= PAGE_SIZE)
+>                 return kzalloc(size, gfp);
+>         else
+>                 return __vmalloc(size, gfp | __GFP_ZERO, PAGE_KERNEL);
+> }
+> 
+> So yeah, it's vmalloc'd memory when size > PAGE_SIZE.
+> 
+
+I certainly hope that struct trace_array_cpu is not bigger than PAGE_SIZE!
+
+-- Steve
