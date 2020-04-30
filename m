@@ -2,126 +2,64 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA47C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8170FC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D281D20757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6916A2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgD3CBb (ORCPT
+        id S1726431AbgD3CEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:01:31 -0400
-Received: from mx22.baidu.com ([220.181.50.185]:38918 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726282AbgD3CBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:01:30 -0400
-Received: from BC-Mail-Ex16.internal.baidu.com (unknown [172.31.51.56])
-        by Forcepoint Email with ESMTPS id 7AD7E984D2F571FACB69;
-        Thu, 30 Apr 2020 09:45:30 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BC-Mail-Ex16.internal.baidu.com (172.31.51.56) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1531.3; Thu, 30 Apr 2020 09:45:30 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Thu, 30 Apr 2020 09:45:30 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3YyXSBrdm06IHg4NjogZW11bGF0ZSBBUEVSRi9N?=
- =?utf-8?Q?PERF_registers?=
-Thread-Topic: [PATCH][v2] kvm: x86: emulate APERF/MPERF registers
-Thread-Index: AQHWHgPRaxq7VoyE2kqvmC7wjQtzhaiPXbuAgAGG2mA=
-Date:   Thu, 30 Apr 2020 01:45:30 +0000
-Message-ID: <bea20279850d48848e0b21f7cbb39bdb@baidu.com>
-References: <1588139196-23802-1-git-send-email-lirongqing@baidu.com>
- <20200429085440.GG13592@hirez.programming.kicks-ass.net>
- <201824a4-6b0f-9061-ec21-26d71fa11bc4@redhat.com>
-In-Reply-To: <201824a4-6b0f-9061-ec21-26d71fa11bc4@redhat.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.198.11]
-x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex16_2020-04-30 09:45:30:295
-x-baidu-bdmsfe-viruscheck: BC-Mail-Ex16_GRAY_Inside_WithoutAtta_2020-04-30
- 09:45:30:186
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 Apr 2020 22:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgD3CEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:04:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 097D920757;
+        Thu, 30 Apr 2020 02:04:39 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 22:04:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Po-Hsu Lin <po-hsu.lin@canonical.com>
+Cc:     linux-kselftest@vger.kernel.org, mingo@redhat.com,
+        shuah <shuah@kernel.org>, Colin King <colin.king@canonical.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] selftests/ftrace: treat module requirement unmet
+ situation as unsupported
+Message-ID: <20200429220438.3a7bbc17@gandalf.local.home>
+In-Reply-To: <CAMy_GT88BD6Ty9=gtqhsm2UPf8aX-=SHZrWj_-UZJONnk73+nQ@mail.gmail.com>
+References: <20200429095044.24625-1-po-hsu.lin@canonical.com>
+        <20200429122855.02594f33@gandalf.local.home>
+        <CAMy_GT88BD6Ty9=gtqhsm2UPf8aX-=SHZrWj_-UZJONnk73+nQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFBhb2xvIEJvbnppbmkg
-W21haWx0bzpwYm9uemluaUByZWRoYXQuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ05pyI
-Mjnml6UgMTg6MjENCj4g5pS25Lu25Lq6OiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVh
-ZC5vcmc+OyBMaSxSb25ncWluZw0KPiA8bGlyb25ncWluZ0BiYWlkdS5jb20+DQo+IOaKhOmAgTog
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsga3ZtQHZnZXIua2VybmVsLm9yZzsgeDg2QGtl
-cm5lbC5vcmc7DQo+IGhwYUB6eXRvci5jb207IGJwQGFsaWVuOC5kZTsgbWluZ29AcmVkaGF0LmNv
-bTsgdGdseEBsaW51dHJvbml4LmRlOw0KPiBqb3JvQDhieXRlcy5vcmc7IGptYXR0c29uQGdvb2ds
-ZS5jb207IHdhbnBlbmdsaUB0ZW5jZW50LmNvbTsNCj4gdmt1em5ldHNAcmVkaGF0LmNvbTsgc2Vh
-bi5qLmNocmlzdG9waGVyc29uQGludGVsLmNvbQ0KPiDkuLvpopg6IFJlOiBbUEFUQ0hdW3YyXSBr
-dm06IHg4NjogZW11bGF0ZSBBUEVSRi9NUEVSRiByZWdpc3RlcnMNCj4gDQo+IE9uIDI5LzA0LzIw
-IDEwOjU0LCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gPiBPbiBXZWQsIEFwciAyOSwgMjAyMCBh
-dCAwMTo0NjozNlBNICswODAwLCBMaSBSb25nUWluZyB3cm90ZToNCj4gPj4gR3Vlc3Qga2VybmVs
-IHJlcG9ydHMgYSBmaXhlZCBjcHUgZnJlcXVlbmN5IGluIC9wcm9jL2NwdWluZm8sIHRoaXMgaXMN
-Cj4gPj4gY29uZnVzZWQgdG8gdXNlciB3aGVuIHR1cmJvIGlzIGVuYWJsZSwgYW5kIGFwZXJmL21w
-ZXJmIGNhbiBiZSB1c2VkIHRvDQo+ID4+IHNob3cgY3VycmVudCBjcHUgZnJlcXVlbmN5IGFmdGVy
-IDdkNTkwNWRjMTRhDQo+ID4+ICIoeDg2IC8gQ1BVOiBBbHdheXMgc2hvdyBjdXJyZW50IENQVSBm
-cmVxdWVuY3kgaW4gL3Byb2MvY3B1aW5mbykiDQo+ID4+IHNvIHdlIHNob3VsZCBlbXVsYXRlIGFw
-ZXJmIG1wZXJmIHRvIGFjaGlldmUgaXQNCj4gPj4NCj4gPj4gdGhlIHBlcmlvZCBvZiBhcGVyZi9t
-cGVyZiBpbiBndWVzdCBtb2RlIGFyZSBhY2N1bXVsYXRlZCBhcyBlbXVsYXRlZA0KPiA+PiB2YWx1
-ZSwgYW5kIGFkZCBwZXItVk0ga25vZCB0byBlbmFibGUgZW11bGF0ZSBtcGVyZmFwZXJmDQo+ID4+
-DQo+ID4+IGRpZmYgdjE6DQo+ID4+IDEuIHN1cHBvcnQgQU1EDQo+ID4+IDIuIHN1cHBvcnQgcGVy
-LXZtIGNhcGFiaWxpdHkgdG8gZW5hYmxlDQo+ID4gV291bGQgaXQgbWFrZSBzZW5zZSB0byBwcm92
-aWRlIGEgcGFzcy10aHJvdWdoIEFQRVJGL01QRVJGIGZvcg0KPiA+IEtWTV9ISU5UU19SRUFMVElN
-RSA/IEJlY2F1c2UgdGhhdCBoaW50IGd1YXJhbnRlZXMgd2UgaGF2ZSBhIDE6MQ0KPiA+IHZDUFU6
-Q1BVIGJpbmRpbmcgYW5kIGd1YXJhbnRlZWQgbm8gb3Zlci1jb21taXQuDQo+ID4NCj4gDQo+IFll
-cyBidXQgdGhhdCdzIHVwIHRvIHVzZXJzcGFjZS4NCj4gDQo+IFBhb2xvDQoNClNlZW0ga2VybmVs
-IHNob3VsZCBnaXZlIHRoZSBjYXBhYmlsaXR5IHRvIHVzZXJzcGFjZSB0byBkaXNhYmxlIHRoZSBp
-bnRlcmNlcHQgbXBlcmYvYXBlcmYgZm9yIEtWTV9ISU5UU19SRUFMVElNRQ0KDQpTbyBJIHdpbGwg
-Y2hhbmdlIHRoaXMgcGF0Y2ggdG8gc3VwcG9ydCB0aHJlZSBtb2RlIG1wZXJmYXBlcmY6ICBub25l
-LCBzb2Z0d2FyZSBlbXVsYXRlLCBhbmQgcHQNCg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3Zt
-L3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQppbmRleCAxZDE1N2E4ZGJhNDYuLjZiMDVmNzhi
-ZGU3OCAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2t2bS9zdm0uYw0KKysrIGIvYXJjaC94ODYva3Zt
-L3N2bS5jDQpAQCAtMTY1Nyw5ICsxNjU3LDExIEBAIHN0YXRpYyB2b2lkIGluaXRfdm1jYihzdHJ1
-Y3QgdmNwdV9zdm0gKnN2bSkNCiAgICAgICAgc2V0X2ludGVyY2VwdChzdm0sIElOVEVSQ0VQVF9T
-S0lOSVQpOw0KICAgICAgICBzZXRfaW50ZXJjZXB0KHN2bSwgSU5URVJDRVBUX1dCSU5WRCk7DQog
-ICAgICAgIHNldF9pbnRlcmNlcHQoc3ZtLCBJTlRFUkNFUFRfWFNFVEJWKTsNCi0gICAgICAgc2V0
-X2ludGVyY2VwdChzdm0sIElOVEVSQ0VQVF9SRFBSVSk7DQogICAgICAgIHNldF9pbnRlcmNlcHQo
-c3ZtLCBJTlRFUkNFUFRfUlNNKTsNCiANCisgICAgICAgaWYgKCFndWVzdF9tcGVyZmFwZXJmX3B0
-KHN2bS0+dmNwdS5rdm0pKQ0KKyAgICAgICAgICAgICAgIHNldF9pbnRlcmNlcHQoc3ZtLCBJTlRF
-UkNFUFRfUkRQUlUpOw0KKw0KICAgICAgICBpZiAoIWt2bV9td2FpdF9pbl9ndWVzdChzdm0tPnZj
-cHUua3ZtKSkgew0KICAgICAgICAgICAgICAgIHNldF9pbnRlcmNlcHQoc3ZtLCBJTlRFUkNFUFRf
-TU9OSVRPUik7DQogICAgICAgICAgICAgICAgc2V0X2ludGVyY2VwdChzdm0sIElOVEVSQ0VQVF9N
-V0FJVCk7DQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3ZteC92bXguYyBiL2FyY2gveDg2L2t2
-bS92bXgvdm14LmMNCmluZGV4IGIwNWUyNzZlMjYyYi4uMjMxNzMyOTI0YzUwIDEwMDY0NA0KLS0t
-IGEvYXJjaC94ODYva3ZtL3ZteC92bXguYw0KKysrIGIvYXJjaC94ODYva3ZtL3ZteC92bXguYw0K
-QEAgLTY3NjUsNiArNjc2NSwxMiBAQCBzdGF0aWMgaW50IHZteF9jcmVhdGVfdmNwdShzdHJ1Y3Qg
-a3ZtX3ZjcHUgKnZjcHUpDQogICAgICAgICAgICAgICAgdm14X2Rpc2FibGVfaW50ZXJjZXB0X2Zv
-cl9tc3IobXNyX2JpdG1hcCwgTVNSX0NPUkVfQzZfUkVTSURFTkNZLCBNU1JfVFlQRV9SKTsNCiAg
-ICAgICAgICAgICAgICB2bXhfZGlzYWJsZV9pbnRlcmNlcHRfZm9yX21zcihtc3JfYml0bWFwLCBN
-U1JfQ09SRV9DN19SRVNJREVOQ1ksIE1TUl9UWVBFX1IpOw0KICAgICAgICB9DQorDQorICAgICAg
-IGlmIChndWVzdF9tcGVyZmFwZXJmX3B0KHZjcHUtPmt2bSkpIHsNCisgICAgICAgICAgICAgICB2
-bXhfZGlzYWJsZV9pbnRlcmNlcHRfZm9yX21zcihtc3JfYml0bWFwLCBNU1JfSUEzMl9NUEVSRiwg
-TVNSX1RZUEVfUik7DQorICAgICAgICAgICAgICAgdm14X2Rpc2FibGVfaW50ZXJjZXB0X2Zvcl9t
-c3IobXNyX2JpdG1hcCwgTVNSX0lBMzJfQVBFUkYsIE1TUl9UWVBFX1IpOw0KKyAgICAgICB9DQor
-DQogICAgICAgIHZteC0+bXNyX2JpdG1hcF9tb2RlID0gMDsNCiANCiAgICAgICAgdm14LT5sb2Fk
-ZWRfdm1jcyA9ICZ2bXgtPnZtY3MwMTsNCg0KDQotTGkNCg==
+On Thu, 30 Apr 2020 09:46:36 +0800
+Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
+
+> > I'm fine with these changes if Masami is. But it is Masami's call as his
+> > infrastructure is more sensitive to the return calls than mine. I just run
+> > the test and see what passes. I don't actually look at the return codes.  
+> Another thing to note is that this will also change the "# of
+> unresolved" and "# of unsupported" in the summary at the end of the
+> test report.
+
+Understood. In my testing, I have all the modules enabled so I don't worry
+about it ;-)
+
+-- Steve
