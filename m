@@ -2,150 +2,119 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0258EC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86407C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06D420787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588266006;
-	bh=cBBOkr8Xv31S9xr1BvALBUdHSj8emmus8DnnBktbEAA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cdqw/UPXyzYj4eSanmSv7arn7EsV3zPcP0YLg5AqllyuCgagn8buU9/lYAQ61TLA
-	 h1Q2Y43tvkP7/SxftO73Tb2s94heInYVI5hCmTWn5dGC2rj1+tu9UPYA2MPShGIu9C
-	 EOzOVnaZVaoWEHfIx+WJ7/kam+6akKk9DA5NmBCE=
+	by mail.kernel.org (Postfix) with ESMTP id 6C6C920787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgD3RAF (ORCPT
+        id S1726618AbgD3RBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:00:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 13:01:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47252 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgD3RAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:00:03 -0400
-Received: from localhost.localdomain (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE87920873;
-        Thu, 30 Apr 2020 16:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588266003;
-        bh=cBBOkr8Xv31S9xr1BvALBUdHSj8emmus8DnnBktbEAA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N/lfoA4RnwmEtSxFTRyTSD/TOMfRo6Si/gqyy79KnNOMV/QZm7f9AseH0W9Ja1qYf
-         nxH8oPXwz7Hs/NzlWwDZ9uXcc6WkPaxdl5BSz1GZvN/sAOWOss8l2t2pis4lWS4Q8L
-         5bLxeSWVsA4NMd1EFEZiZQZeUnYFlrXKUJzFx8Zw=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v12 5/5] usb: xhci: provide a debugfs hook for erasing rom
-Date:   Thu, 30 Apr 2020 22:29:20 +0530
-Message-Id: <20200430165920.1345409-6-vkoul@kernel.org>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200430165920.1345409-1-vkoul@kernel.org>
-References: <20200430165920.1345409-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726333AbgD3RBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 13:01:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CC24DABC7;
+        Thu, 30 Apr 2020 17:01:08 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 19:01:08 +0200
+Message-ID: <s5hh7x0kiwb.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <PSXP216MB0438FE3E1CA577805BEC23C880AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <s5h4kt4ojrf.wl-tiwai@suse.de>
+        <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+        <s5hv9lkm49n.wl-tiwai@suse.de>
+        <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5ha72ulp2y.wl-tiwai@suse.de>
+        <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+        <s5h1ro6jn0v.wl-tiwai@suse.de>
+        <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+        <s5hwo5xj98v.wl-tiwai@suse.de>
+        <PSXP216MB0438FE3E1CA577805BEC23C880AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-run "echo 1 > /sys/kernel/debug/renesas-usb/rom_erase" to erase firmware
-when driver is loaded.
+On Thu, 30 Apr 2020 18:52:20 +0200,
+Nicholas Johnson wrote:
+> 
+> On Thu, Apr 30, 2020 at 05:14:56PM +0200, Takashi Iwai wrote:
+> > On Wed, 29 Apr 2020 18:19:57 +0200,
+> > Alex Deucher wrote:
+> > > 
+> > > On Wed, Apr 29, 2020 at 12:05 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > > Well, but the code path there is the runtime PM resume of the audio
+> > > > device and it means that GPU must have been runtime-resumed again
+> > > > beforehand via the device link.  So, it should have worked from the
+> > > > beginning but in reality not -- that is, apparently some inconsistency
+> > > > is found in the initial attempt of the runtime resume...
+> > > 
+> > > Yeah, it should be covered, but I wonder if there is something in the
+> > > ELD update sequence that needs to call pm_runtime_get_sync()?  The ELD
+> > > sequence on AMD GPUs doesn't work the same as on other vendors.  The
+> > > GPU driver has a backdoor into the HDA device's verbs to set update
+> > > the audio state rather than doing it via an ELD buffer update.  We
+> > > still update the ELD buffer for consistency.  Maybe when the GPU
+> > > driver sets the audio state at monitor detection time that triggers an
+> > > interrupt or something on the HDA side which races with the CPU and
+> > > the power down of the GPU.  That still seems unlikely though since the
+> > > runtime pm on the GPU side defaults to a 5 second suspend timer.
+> > 
+> > I'm not sure whether it's the race between runtime suspend of GPU vs
+> > runtime resume of audio.  My wild guess is rather that it's the timing
+> > GPU notifies to the audio; then the audio driver notifies to
+> > user-space and user-space opens the stream, which in turn invokes the
+> > runtime resume of GPU. But in GPU side, it's still under processing,
+> > so it proceeds before the GPU finishes its initialization job.
+> > 
+> > Nicholas, could you try the patch below and see whether the problem
+> > still appears?  The patch artificially delays the notification and ELD
+> > update for 300msec.  If this works, it means the timing problem.
+> The bug still occurred after applying the patch.
+> 
+> But you were absolutely correct - it just needed to be increased to 
+> 3000ms - then the bug stopped.
 
-Subsequent init of driver shall reload the firmware
+Interesting.  3 seconds are too long, but I guess 1 second would work
+as well?
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/usb/host/xhci-pci-renesas.c | 33 +++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+In anyway, the success with a long delay means that the sound setup
+after the full runtime resume of GPU seems working.
 
-diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-index f7d2445d30ec..fa32ec352dc8 100644
---- a/drivers/usb/host/xhci-pci-renesas.c
-+++ b/drivers/usb/host/xhci-pci-renesas.c
-@@ -2,6 +2,7 @@
- /* Copyright (C) 2019-2020 Linaro Limited */
- 
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -170,6 +171,8 @@ static int renesas_fw_verify(const void *fw_data,
- 	return 0;
- }
- 
-+static void debugfs_init(struct pci_dev *pdev);
-+
- static bool renesas_check_rom(struct pci_dev *pdev)
- {
- 	u16 rom_status;
-@@ -183,6 +186,7 @@ static bool renesas_check_rom(struct pci_dev *pdev)
- 	rom_status &= RENESAS_ROM_STATUS_ROM_EXISTS;
- 	if (rom_status) {
- 		dev_dbg(&pdev->dev, "External ROM exists\n");
-+		debugfs_init(pdev);
- 		return true; /* External ROM exists */
- 	}
- 
-@@ -449,6 +453,34 @@ static void renesas_rom_erase(struct pci_dev *pdev)
- 	dev_dbg(&pdev->dev, "ROM Erase... Done success\n");
- }
- 
-+static int debugfs_rom_erase(void *data, u64 value)
-+{
-+	struct pci_dev *pdev = data;
-+
-+	if (value == 1) {
-+		dev_dbg(&pdev->dev, "Userspace requested ROM erase\n");
-+		renesas_rom_erase(pdev);
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(rom_erase_ops, NULL, debugfs_rom_erase, "%llu\n");
-+
-+static struct dentry *debugfs_root;
-+
-+static void debugfs_init(struct pci_dev *pdev)
-+{
-+	debugfs_root = debugfs_create_dir("renesas_usb", NULL);
-+
-+	debugfs_create_file("rom_erase", 0200, debugfs_root,
-+			    pdev, &rom_erase_ops);
-+}
-+
-+static void debugfs_exit(void)
-+{
-+	debugfs_remove_recursive(debugfs_root);
-+}
-+
- static bool renesas_setup_rom(struct pci_dev *pdev, const struct firmware *fw)
- {
- 	const u32 *fw_data = (const u32 *)fw->data;
-@@ -639,6 +671,7 @@ EXPORT_SYMBOL_GPL(renesas_xhci_check_request_fw);
- 
- void renesas_xhci_pci_exit(struct pci_dev *dev)
- {
-+	debugfs_exit();
- }
- EXPORT_SYMBOL_GPL(renesas_xhci_pci_exit);
- 
--- 
-2.25.3
+> Now the question is, what do we do now that we know this?
+> 
+> Also, are you still interested in the contents of the ELD# files? I can 
+> dump them all into a file at some specific moment in time which you 
+> request, if needed.
 
+Yes, please take the snapshot before plugging, right after plugging
+and right after enabling.  I'm not sure whether your monitor supports
+the audio, and ELD contents should show that, at least.
+
+
+thanks,
+
+Takashi
