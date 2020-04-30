@@ -2,145 +2,195 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69358C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A14C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC1D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:29:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="M4qYO1Mf"
+	by mail.kernel.org (Postfix) with ESMTP id 43EB720873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:29:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588260567;
+	bh=dgQA/4On+n7VHC1DGfgnLp05UUwbTrTUYS65MyEuRns=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HhgfeZFZxNtnfFsr+7bJgS979BNHOgtFp0zDUpJy3XQHhWBEovA3RPwfQlid3V3ef
+	 HfNoGQKvwZJMGrQh3gNEa8u8tNzbKP+t8AAmL2mh8ObzjWk3cJSfvF5Ab5YcYHtcLa
+	 lTPsjoX/J3sDL8eK0nQMyZVQB+dcKDF5OZs5y7EM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgD3P3H (ORCPT
+        id S1727859AbgD3P30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:29:07 -0400
-Received: from mail-bn8nam12on2088.outbound.protection.outlook.com ([40.107.237.88]:6266
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726545AbgD3P3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:29:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dbyB40fVSV9pFUsWvisrl3P3+n8mnpx0GWnMwl5tiSEU2Lorne8xve1DLfQWdYKc9ZTa8v27m32tvAuJlvdrixiroKnnEy13efxdFNequ2HSkrTUKYFzpm7ni2Z9g+a/PF0NsmGgjjwb1dYhcN1T8fW8OWRBhzsNOe5k9P8tUwB9xz9plKo/dX3Y1bQzRkYbMq4Sr1AzzRk0ofBs9aJ7/tHGz4F2BDC9W73jHhd5Q5FM3vwmbejaJMxDV4sk5oNDByxzhzpAnClw+4rzs0wq8l+W/bV+/64Om0Qnx0G0oPbP3yg8xdJbWD/X67XcnEJpTsJ7m74w50KZg0zohY6HMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WbH2YEmi8jbC5qBJqBEOxUCRWGrLCb0i6cAhYbokmOs=;
- b=cZqqJkpHutas3HZ/lsOjC5hmrHuUpQkFlU3/QLQWO0g9iKMPU9sl6GBT95vT3oQGu095Z0Q0VPTRiUyHLmM3mV8pwLydw04Oav+BrmVLLNlu39wWTPEfuhUqiGyj68UiGXs0D0k2KVkYL754W7WWfhy/k9yVx+nJjF+kdxFUMngT9J4ptZIGGGyAxkHPhUgnms1exeBUQff8/KD7S+jx7B6Y4LplAn63Wv8zA2Hcmmo/SNypYUsJhoUcyAMQZzuYwBwDj/cWTz42PjkxmtvxFD1vcPPcd/DK3PtQdxrFrDIFw8SXSh/aHKrOPAY4KGU6TevL50iUo9AGPRCvm/cyuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WbH2YEmi8jbC5qBJqBEOxUCRWGrLCb0i6cAhYbokmOs=;
- b=M4qYO1MfzdeIAnApvBhqjoqLpH8eBomPOGNtoU7+SUtHFw2X93QbWwpnRt5YkV+ihAa8T1vx3kZgK4iSQsOi+QZ33EvCzDTOcKeY8qtE2eCbrVX1w9CoxMPxXYYpmHwM2NTMMWD8OKs1qfJdiw1+oPSK52lYUoUkMTaWXLcSgNI=
-Authentication-Results: bstnet.org; dkim=none (message not signed)
- header.d=none;bstnet.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB1579.namprd12.prod.outlook.com (2603:10b6:4:c::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Thu, 30 Apr 2020 15:29:04 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2937.023; Thu, 30 Apr 2020
- 15:29:04 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH] kvm: ioapic: Introduce arch-specific check for lazy
- update EOI mechanism
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     rkrcmar@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        borisvk@bstnet.org
-References: <1587704910-78437-1-git-send-email-suravee.suthikulpanit@amd.com>
- <b051913a-10f4-81d4-6ef8-19d586db61da@redhat.com>
-Message-ID: <445bea5b-a268-2a62-539c-235c0fe0eefa@amd.com>
-Date:   Thu, 30 Apr 2020 22:28:52 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-In-Reply-To: <b051913a-10f4-81d4-6ef8-19d586db61da@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KL1PR0401CA0009.apcprd04.prod.outlook.com
- (2603:1096:820:f::14) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
+        Thu, 30 Apr 2020 11:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgD3P30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:29:26 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B842076D;
+        Thu, 30 Apr 2020 15:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588260565;
+        bh=dgQA/4On+n7VHC1DGfgnLp05UUwbTrTUYS65MyEuRns=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=u8+pQxBqZB9tBYafiEXKENzsUMN/05IUeilOMCwXlBIvnMiDBeMDwO0o9zWaJFZL1
+         Z3C2o0pVPeIe+gei6XloGdqKyMtmgezSxLk8HyTVv/bcIdJ6xTsK6tkdLZCTzmc8AT
+         1rvwSojiSdXVRVtDJmzhgp3N7wgRjQqm5CXKhtYI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jUB7r-0085xF-RK; Thu, 30 Apr 2020 16:29:23 +0100
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Suravees-MacBook-Pro.local (2403:6200:8862:99e1:28a3:aa38:c6d8:dc69) by KL1PR0401CA0009.apcprd04.prod.outlook.com (2603:1096:820:f::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 15:29:01 +0000
-X-Originating-IP: [2403:6200:8862:99e1:28a3:aa38:c6d8:dc69]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eaaba941-072b-44f4-ce01-08d7ed1b36ee
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1579:|DM5PR12MB1579:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1579047514804A68ECCE1581F3AA0@DM5PR12MB1579.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(136003)(366004)(39860400002)(66556008)(6486002)(66946007)(186003)(2906002)(6666004)(86362001)(53546011)(36756003)(52116002)(5660300002)(316002)(6506007)(8936002)(15650500001)(16526019)(31696002)(31686004)(66476007)(2616005)(44832011)(478600001)(4326008)(6512007)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 91gPwu01dkboORxt+T2eT9yVYVOkBf9bN+TW/tIUS+b9vaYuBZjt69lgIuwC+mAcicfq2Pm+X1OYPoZ1rnrdcY9+/2ATkYoLoSDktoie8J55sQ0MPIqOF8BGEIkLObl94hnAkq6W//YvGvUD53i6Q0/twnFgm549AAGIHkjP8E70GA+o4mUNGkoAhrotadSsrAZEXHExHgb1dJ1u7OE/7YCLiTRqfJtDRyIWK5eOCzdsm6chD0VMkXvJRAbKxhWT54wUYAMVDhOVcamLTcrMMHc04vkNFVEMjIkp0j2kC/uCc+6MgPzxQ1ARBiB7IsfFZ0Ur1Vh1ceMANttrPEibXcwGB/o/rfFeUqwX+tHcfuvTPZ7KAIo6DX1wXXu2Ya7FdMe8fWaUWMlVTSwHDeEi8c04epO+aEB2io8ZXi7jmphQJHFST/w8dGt8o10uaNjZ
-X-MS-Exchange-AntiSpam-MessageData: SRVMN7nXX/j2P9AAUspDGDbRDu8VQobO7jbnmwlpD7w5hPx+pX0Z/+1sFdBHYgdZUruucSKH+Wup71CQtDz+BpxblAhO6J55Zlsc89i2y3pTIRLEq+iizT57YIwCSelWsy0y3VtYqm6oJLvUre80aaUHiYL0DWKKwMWThXQqaJ+RuugKRGpTcTT8vqoFulx7AB9+5/RIdqf0boagEwuwaId3oqvH6VAzgPl8OJ4L+MhlaxzsaDtqCAKrLXjvs/bQSye/GS+47uCqHBvcIcGxGfu5DjZUcrwfJ/sXjGC3RcO0R7hQhMzRFTAEyh9HmNGBUz7xWx5oWNiqjDrVhl30rbhSk/3rlmA+bv25dl1pltpfpZhNMQGdlAA1KmIv10TR7Nsl22vegGOMolO9McMmgxJ+swKfa6P0pESmOz7Dyk4qy/RTz6vlxO5Ihx7mUVNENaZRYWe+AfgubeyQ/cRMEYUzT/6emxS+/BWH4QbaKDzgddgBAiObMScW03j/PlwrNiiIIN6ZF8YyQe7UoWaP3XMXt+lgQbk2Y56L0vMaJtz7HSKvXv6yuMRd7sYGZwMyenTXsUvhOT9CxNgUACPm2wktI1E8MMH9tNF999wDPlyloSsqRGhYbeJJAmxRPXkNJDNLS5wN782CLLmrJ06z7qJOML0OCUYi+xSfvkyXJAYKK9puyqD+S5GwwH9uI4S+g2ANIbp1g5ZrO1Q3xpuJYYz/GtRoI3OVCC0LvVn8WabaW6W39llmPgkUcgzkFnIMteQg7LYlt1ZEq7ix8jIbV7uCREnceIvPs2WnNrwGanMfXJEwSis6vNza7Nxy0VhTFnU8wSBSzkurCo9q0ev7M3crpmHYtV+jIpx33gDQeyIScOoJc+8TfgFJo+Yr7Ne7
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaaba941-072b-44f4-ce01-08d7ed1b36ee
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 15:29:03.9853
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rkLQ76+u1weN93p9tGP5sXafft3Mhdbf2lXlgzkGLRTSDb0CErgnZzoop/fHtyf4tVe1nZ7/YKqh3mRmWx3PIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1579
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Apr 2020 16:29:23 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>,
+        tglx@linutronix.de
+Subject: Re: [PATCH] arm64: perf_event: Fix time_offset for arch timer
+In-Reply-To: <20200430145823.GA25258@willie-the-truck>
+References: <20200320093545.28227-1-leo.yan@linaro.org>
+ <20200430145823.GA25258@willie-the-truck>
+User-Agent: Roundcube Webmail/1.4.3
+Message-ID: <4d924f705245c797a19d3a73eb0c1ba0@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: will@kernel.org, leo.yan@linaro.org, mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, Al.Grant@arm.com, James.Clark@arm.com, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo,
-
-On 4/25/20 4:52 PM, Paolo Bonzini wrote:
-> On 24/04/20 07:08, Suravee Suthikulpanit wrote:
->> commit f458d039db7e ("kvm: ioapic: Lazy update IOAPIC EOI") introduces
->> the following regression on Intel VMX APICv.
->>
->> BUG: stack guard page was hit at 000000008f595917 \
->> (stack is 00000000bdefe5a4..00000000ae2b06f5)
->> kernel stack overflow (double-fault): 0000 [#1] SMP NOPTI
->> RIP: 0010:kvm_set_irq+0x51/0x160 [kvm]
->> Call Trace:
->>   irqfd_resampler_ack+0x32/0x90 [kvm]
->>   kvm_notify_acked_irq+0x62/0xd0 [kvm]
->>   kvm_ioapic_update_eoi_one.isra.0+0x30/0x120 [kvm]
->>   ioapic_set_irq+0x20e/0x240 [kvm]
->>   kvm_ioapic_set_irq+0x5c/0x80 [kvm]
->>   kvm_set_irq+0xbb/0x160 [kvm]
->>   ? kvm_hv_set_sint+0x20/0x20 [kvm]
->>   irqfd_resampler_ack+0x32/0x90 [kvm]
->>   kvm_notify_acked_irq+0x62/0xd0 [kvm]
->>   kvm_ioapic_update_eoi_one.isra.0+0x30/0x120 [kvm]
->>   ioapic_set_irq+0x20e/0x240 [kvm]
->>   kvm_ioapic_set_irq+0x5c/0x80 [kvm]
->>   kvm_set_irq+0xbb/0x160 [kvm]
->>   ? kvm_hv_set_sint+0x20/0x20 [kvm]
->> ....
->>
->> This is due to the logic always force IOAPIC lazy update EOI mechanism
->> when APICv is activated, which is only needed by AMD SVM AVIC.
->>
->> Fixes by introducing struct kvm_arch.use_lazy_eoi variable to specify
->> whether the architecture needs lazy update EOI support.
+On 2020-04-30 15:58, Will Deacon wrote:
+> Hi Leo,
 > 
-> You are not explaining why the same infinite loop cannot happen on AMD.
->   It seems to me that it is also fixed by adding a check for re-entrancy
-> in ioapic_lazy_update_eoi.  It's easy to add one since
-> ioapic_lazy_update_eoi is called with the ioapic->lock taken.
+> [+Maz and tglx in case I'm barking up the wrong tree]
 > 
-> Paolo
+> On Fri, Mar 20, 2020 at 05:35:45PM +0800, Leo Yan wrote:
+>> Between the system powering on and kernel's sched clock registration,
+>> the arch timer usually has been enabled at the early time and its
+>> counter is incremented during the period of the booting up.  Thus the
+>> arch timer's counter is not completely accounted into the sched clock,
+>> and has a delta between the arch timer's counter and sched clock.  
+>> This
+>> delta value should be stored into userpg->time_offset, which later can
+>> be retrieved by Perf tool in the user space for sample timestamp
+>> calculation.
+>> 
+>> Now userpg->time_offset is assigned to the negative sched clock with
+>> '-now', this value cannot reflect the delta between arch timer's 
+>> counter
+>> and sched clock, so Perf cannot use it to calculate the sample time.
+>> 
+>> To fix this issue, this patch calculate the delta between the arch
+>> timer's and sched clock and assign the delta to userpg->time_offset.
+>> The detailed steps are firstly to convert counter to nanoseconds 'ns',
+>> then the offset is calculated as 'now' minus 'ns'.
+>> 
+>>         |<------------------- 'ns' ---------------------->|
+>>                                 |<-------- 'now' -------->|
+>>         |<---- time_offset ---->|
+>>         |-----------------------|-------------------------|
+>>         ^                       ^                         ^
+>>   Power on system     sched clock registration      Perf starts
 > 
+> FWIW, I'm /really/ struggling to understand the problem here.
+> 
+> If I've grokked it correctly (big 'if'), then you can't just factor in
+> what you call "time_offset" in the diagram above, because there isn't
+> a guarantee that the counter is zero-initialised at the start.
 
-I finally reproduced on AMD system as well. I'll send out a new patch for this based on your suggestion.
+Even if it was, we have no idea of *when* that was. Think kexec, for a
+start. Or spending some variable in firmware because of $REASON.
 
-Suravee
+> 
+>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>> ---
+>>  arch/arm64/kernel/perf_event.c | 19 ++++++++++++++++++-
+>>  1 file changed, 18 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/arm64/kernel/perf_event.c 
+>> b/arch/arm64/kernel/perf_event.c
+>> index e40b65645c86..226d25d77072 100644
+>> --- a/arch/arm64/kernel/perf_event.c
+>> +++ b/arch/arm64/kernel/perf_event.c
+>> @@ -1143,6 +1143,7 @@ void arch_perf_update_userpage(struct perf_event 
+>> *event,
+>>  {
+>>  	u32 freq;
+>>  	u32 shift;
+>> +	u64 count, ns, quot, rem;
+>> 
+>>  	/*
+>>  	 * Internal timekeeping for enabled/running/stopped times
+>> @@ -1164,5 +1165,21 @@ void arch_perf_update_userpage(struct 
+>> perf_event *event,
+>>  		userpg->time_mult >>= 1;
+>>  	}
+>>  	userpg->time_shift = (u16)shift;
+>> -	userpg->time_offset = -now;
+>> +
+>> +	/*
+>> +	 * Since arch timer is enabled ealier than sched clock registration,
+>> +	 * compuate the delta (in nanosecond unit) between the arch timer
+>> +	 * counter and sched clock, assign the delta to time_offset and
+>> +	 * perf tool can use it for timestamp calculation.
+>> +	 *
+>> +	 * The formula for conversion arch timer cycle to ns is:
+>> +	 *   quot = (cyc >> time_shift);
+>> +	 *   rem  = cyc & ((1 << time_shift) - 1);
+>> +	 *   ns   = quot * time_mult + ((rem * time_mult) >> time_shift);
+>> +	 */
+>> +	count = arch_timer_read_counter();
+>> +	quot = count >> shift;
+>> +	rem = count & ((1 << shift) - 1);
+>> +	ns = quot * userpg->time_mult + ((rem * userpg->time_mult) >> 
+>> shift);
+>> +	userpg->time_offset = now - ns;
+> 
+> Hmm, reading the counter and calculating the delta feels horribly
+> approximate to me. It would be much better if we could get hold of the
+> initial epoch cycles from the point at which sched_clock was 
+> initialised
+> using the counter. This represents the true cycle delta between the 
+> counter
+> and what sched_clock uses for 0 ns.
+
+I think this is a sensible solution if you want an epoch that starts at 
+0 with
+sched_clock being initialized. The other question is whether it is 
+possible to
+use a different timestamping source for perf that wouldn't need to be 
+offset.
+
+> Unfortunately, I can't see a straightforward way to grab that 
+> information.
+> It looks like x86 pulls this directly from the TSC driver.
+
+I wonder if we could/should make __sched_clock_offset available even 
+when
+CONFIG_HAVE_UNSTABLE_SCHED_CLOCK isn't defined. It feels like it would
+help with this particular can or worm...
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
