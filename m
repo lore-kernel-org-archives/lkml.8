@@ -2,193 +2,124 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7862C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA616C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5752083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588212814;
-	bh=dzZ31V6EEB/CWj1THYM8Yre8ShwzePM0rxShMvYQe50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KzDLSlwgNEuJt8ACqBhCEcBGAEk5KCDsp6oRISoVT2h7Z+cek0bd1xhqeby7y/w1D
-	 U0Kzy3GZsgzbhpttHzomlSFjx14I7FFe9jmZY+7mdOxxlskEvoiFOJVxSYJL7/w95x
-	 w+GVziL/Q6nPE4FINpJ38x6t8H4biKG8EFOC7gM8=
+	by mail.kernel.org (Postfix) with ESMTP id C6A7B20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:15:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sy2EVLT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgD3CNd (ORCPT
+        id S1726849AbgD3CP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:13:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46319 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgD3CNb (ORCPT
+        Wed, 29 Apr 2020 22:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbgD3CP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:13:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z25so3589407otq.13;
-        Wed, 29 Apr 2020 19:13:30 -0700 (PDT)
+        Wed, 29 Apr 2020 22:15:27 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2CDC035494;
+        Wed, 29 Apr 2020 19:15:27 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n17so3342694ejh.7;
+        Wed, 29 Apr 2020 19:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ir92wbANJ/6o1M0DWfLzJyw4ihwe64y3qEPUHFY6lx0=;
+        b=Sy2EVLT5LzXV8LjxgSJ9G8NxTKngGnW6k+QwFS05l7YTRiqHaKiFHIjRv8pN9ryXFe
+         QivSXcLAZLapkBynoOHkxMTUHmd7WXN6Z0QPVzbfxbAtuBNkQaNS+aV98DDRTjyhXQYg
+         iG3ultEzl6rv0+APtBW8V9S5v8kc4bakTLgT2I9DtQMJO1Z9GTMGZ1aJwjVF0XrLtzpl
+         xJh3hopzCBgIu3C+z74wLopSPRd0C1m8IQd1kUUc4U/h7fstEuEsVeEnEgN1W9Pa3+hH
+         U18H78hGtzuQTvYtvUHorogjnpNQIAwM0xMJmqisqANZ5O7gvQVZdiH1TdYTT8vOxRj/
+         ktig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kv25T34DmFJSTkCcpG3EkQ4F91aBPygfe37SiYRfZ1w=;
-        b=fVDH2Oo059qF65Wx8It7HCH3TQwtsSrirCcCVWA52hsi+9bNOAQ247eVnHPFMokcDs
-         wXyzZwlM3s0OyB30ALKLU19jReo+2NU81ghZkyvUe32RiwpUpxIRBbHNk0lH0hZm8h6E
-         D0703fA7TXbYrtXTDGQNcK4o8B/qJ/fHG/zJ0Gk+PAeiGTONC/wDIWHJcI7AJ1TQmh0t
-         upg0dH0kq0zauEchL99MuVxgKls5JFMLrPhc0pCsDDcR1WJkKY0Gcw49Jxbhz3cROeLe
-         EcZl3QgExCyGzv0sDx2gWEy11QJnaEy9orxQNOCLIhIBM+MMb8g/XUukFcfNaibvy3f1
-         Q0QA==
-X-Gm-Message-State: AGi0PuaBkP/4k/mRgTmQiQiPhYbty0J+Vhvsd6zkfA4fEAiFgjiz5lOq
-        D/Up0auzUaRs10KgS3kLDQ==
-X-Google-Smtp-Source: APiQypKCVHjHs9J7+JAq/qDUcEL9ABy6N/M3B+18ySskwV1Nxa/XGc71ZP1EJkAjD4Yq5SIhFutpbA==
-X-Received: by 2002:a9d:810:: with SMTP id 16mr772676oty.56.1588212810207;
-        Wed, 29 Apr 2020 19:13:30 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z13sm884559oth.10.2020.04.29.19.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 19:13:29 -0700 (PDT)
-Received: (nullmailer pid 21985 invoked by uid 1000);
-        Thu, 30 Apr 2020 02:13:28 -0000
-Date:   Wed, 29 Apr 2020 21:13:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 11/14] dt-bindings: PCI: Add EP mode dt-bindings for
- TI's J721E SoC
-Message-ID: <20200430021327.GA18326@bogus>
-References: <20200417125753.13021-1-kishon@ti.com>
- <20200417125753.13021-12-kishon@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ir92wbANJ/6o1M0DWfLzJyw4ihwe64y3qEPUHFY6lx0=;
+        b=kZF4B33ZzEWrjo4I+67l/qxLlsFCedSB69iCyO2eJueszItk3WWNnxDd7+aYDQ6AB+
+         XNhfWH8o0b98eQe0o8z+FpkUhdOcg763JKW9QGWNpCxEIfxnhkfKstQeKOYcQaEc9FYs
+         excZEzFX3qTHXrOCaqmM8xy0w1NvUEl9emY0LyibB4wjwxNkkY2GTz+6Y77E5E7FgN9A
+         cHD7+hwDX7B1Q5auRCracPYwHqxGM8wI18bBNJlrUk6PqKzWxt2YG2jMXHQlykFHEUuV
+         GaLUYbN2P9RMYBpDDL/fbcJHey9wIo09fEyXBs/UfeDRiDzNq9H52HXDLTR9LOFizvfQ
+         virw==
+X-Gm-Message-State: AGi0PuZE5UWMLD5EliA6bmhZc8dCWDW6u0ZROiSaythDy6ua0uHVYcLZ
+        8JglG0aZ3QS/MbKN/VClm5cWM5t5hXMEKXj4eZA=
+X-Google-Smtp-Source: APiQypI11+jX0S3ayO0TfdWyeZ78O5iC/q+eFCrIdKkni4792l/Bh4dBCcV1svLlgxcn4oRSrfXzbY8f15mdCbFl2qw=
+X-Received: by 2002:a17:906:2604:: with SMTP id h4mr581932ejc.307.1588212925821;
+ Wed, 29 Apr 2020 19:15:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417125753.13021-12-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200430005127.2205-1-luke.r.nels@gmail.com>
+In-Reply-To: <20200430005127.2205-1-luke.r.nels@gmail.com>
+From:   Xi Wang <xi.wang@gmail.com>
+Date:   Wed, 29 Apr 2020 19:14:49 -0700
+Message-ID: <CAKU6vybAuF-oziH8oOu1oCv+j8SLOMWq2UdM6_kVCbeggLvxSA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf, riscv: Fix stack layout of JITed code on RV32
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, netdev@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 06:27:50PM +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe EP mode dt-bindings for TI's J721E SoC.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../bindings/pci/ti,j721e-pci-ep.yaml         | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..cb25c45d5a96
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI J721E PCI EP (PCIe Wrapper)
-> +
-> +maintainers:
-> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +allOf:
-> +  - $ref: "cdns-pcie-ep.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +      enum:
-> +          - ti,j721e-pcie-ep
+On Wed, Apr 29, 2020 at 5:51 PM Luke Nelson <lukenels@cs.washington.edu> wrote:
+>
+> This patch fixes issues with stackframe unwinding and alignment in the
+> current stack layout for BPF programs on RV32.
+>
+> In the current layout, RV32 fp points to the JIT scratch registers, rather
+> than to the callee-saved registers. This breaks stackframe unwinding,
+> which expects fp to point just above the saved ra and fp registers.
+>
+> This patch fixes the issue by moving the callee-saved registers to be
+> stored on the top of the stack, pointed to by fp. This satisfies the
+> assumptions of stackframe unwinding.
+>
+> This patch also fixes an issue with the old layout that the stack was
+> not aligned to 16 bytes.
+>
+> Stacktrace from JITed code using the old stack layout:
+>
+>   [   12.196249 ] [<c0402200>] walk_stackframe+0x0/0x96
+>
+> Stacktrace using the new stack layout:
+>
+>   [   13.062888 ] [<c0402200>] walk_stackframe+0x0/0x96
+>   [   13.063028 ] [<c04023c6>] show_stack+0x28/0x32
+>   [   13.063253 ] [<a403e778>] bpf_prog_82b916b2dfa00464+0x80/0x908
+>   [   13.063417 ] [<c09270b2>] bpf_test_run+0x124/0x39a
+>   [   13.063553 ] [<c09276c0>] bpf_prog_test_run_skb+0x234/0x448
+>   [   13.063704 ] [<c048510e>] __do_sys_bpf+0x766/0x13b4
+>   [   13.063840 ] [<c0485d82>] sys_bpf+0xc/0x14
+>   [   13.063961 ] [<c04010f0>] ret_from_syscall+0x0/0x2
+>
+> The new code is also simpler to understand and includes an ASCII diagram
+> of the stack layout.
+>
+> Tested on riscv32 QEMU virt machine.
+>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 
-Wrong indentation.
+Thanks for the fix!
 
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +
-> +  reg:
-> +    maxItems: 4
-> +
-> +  reg-names:
-> +    items:
-> +      - const: intd_cfg
-> +      - const: user_cfg
-> +      - const: reg
-> +      - const: mem
-> +
-> +  ti,syscon-pcie-ctrl:
-> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
-> +                 and link speed.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: clock-specifier to represent input to the PCIe
-> +
-> +  clock-names:
-> +    items:
-> +      - const: fck
-> +
-> +  dma-coherent:
-> +    description: Indicates that the PCIe IP block can ensure the coherency
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - ti,syscon-pcie-ctrl
-> +  - max-link-speed
-> +  - num-lanes
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - cdns,max-outbound-regions
-> +  - dma-coherent
-> +  - max-functions
-> +  - phys
-> +  - phy-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +     pcie0_ep: pcie-ep@d000000 {
-> +            compatible = "ti,j721e-pcie-ep";
-> +            reg = <0x00 0x02900000 0x00 0x1000>,
-> +                  <0x00 0x02907000 0x00 0x400>,
-> +                  <0x00 0x0d000000 0x00 0x00800000>,
-> +                  <0x00 0x10000000 0x00 0x08000000>;
-> +            reg-names = "intd_cfg", "user_cfg", "reg", "mem";
-> +            ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
-> +            max-link-speed = <3>;
-> +            num-lanes = <2>;
-> +            power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
-> +            clocks = <&k3_clks 239 1>;
-> +            clock-names = "fck";
-> +            cdns,max-outbound-regions = <16>;
-> +            max-functions = /bits/ 8 <6>;
-> +            dma-coherent;
-> +            phys = <&serdes0_pcie_link>;
-> +            phy-names = "pcie-phy";
-> +    };
-> -- 
-> 2.17.1
-> 
+Acked-by: Xi Wang <xi.wang@gmail.com>
