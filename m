@@ -2,166 +2,145 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D252C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B490FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DDC2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823082070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:37:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DKOnI1/+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KFDY+ase"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgD3Qfx (ORCPT
+        id S1726655AbgD3QhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726336AbgD3Qfw (ORCPT
+        Thu, 30 Apr 2020 12:37:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55442 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726377AbgD3QhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:35:52 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF7FC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:35:52 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id b12so2134493ion.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JHOM9ScIACBAlj+EOQQZskvxADzU4dEs6BpxOZoTWCg=;
-        b=DKOnI1/+M5kE4JIw2Yp+nF/RAd2KxfFdck3bIvzB9AlctHyy+RL1/A4oFRifDlFDEi
-         0HGkvP4KvdCdEiWI0FOxU1i/5oaMPU9AQ604Ft4OEZSfP6sSdZMBMFR3ppk0v8YSwefO
-         lOIJjZR+alCUq3QcUCj+hoKzU3y8Oq/vJ6riI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JHOM9ScIACBAlj+EOQQZskvxADzU4dEs6BpxOZoTWCg=;
-        b=AC32CITGmgsGN7Wv/DDJ2K4I9k+Xjm1tEVfrr+6U/pQ+82BsF1DYRA5Pa/fgBR4feD
-         Wts4IyQkDjDhIK1oKTMELcBpEV7jl1gWAsXeiM/mp6pc451KgZhWiybV2EyBCS1uf7AM
-         13MyHRDW4K8qqQl/roQe/7RJx4XqDKZG1uN0bFvT3wAOtKDAyZ1XaZyAw366fvUSwdtj
-         hLpQ6OdxXzCUM47zWjf8IGdGuBPej3TGiQltPpuBApKZsXzxRb5MozfZtqp9BfJkab06
-         /QhcRYQaA3w6aVWrSHYVG4rHLq2hUAfPuu7i5Ph7Hma2Ov3fIlHt4kSPG7x3UjkShn0F
-         XlWg==
-X-Gm-Message-State: AGi0PuZsxCJjraQID1UAj6TPSQkxu9vnfJmXZpBXqv2ItrvdvOpK27Km
-        ZsEXZ1A3oH+wzy1bBGLAbYgLNjOn2Tw=
-X-Google-Smtp-Source: APiQypIpS6n3oxNtmpOMu5Ddm4IVYYVOfiXKKuagiYYK4/u8tsASTQTTbQk3A55jjgGFgcvTcTJMKg==
-X-Received: by 2002:a6b:6c0a:: with SMTP id a10mr2820947ioh.140.1588264551712;
-        Thu, 30 Apr 2020 09:35:51 -0700 (PDT)
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com. [209.85.166.169])
-        by smtp.gmail.com with ESMTPSA id q29sm108171ill.65.2020.04.30.09.35.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 09:35:50 -0700 (PDT)
-Received: by mail-il1-f169.google.com with SMTP id x2so1930465ilp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:35:50 -0700 (PDT)
-X-Received: by 2002:a92:ca81:: with SMTP id t1mr2769977ilo.187.1588264549492;
- Thu, 30 Apr 2020 09:35:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200428211351.85055-1-dianders@chromium.org> <20200428141218.v3.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
- <20200430154927.vhkhoffqwirb2fmm@holly.lan>
-In-Reply-To: <20200430154927.vhkhoffqwirb2fmm@holly.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 30 Apr 2020 09:35:30 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Ut7kHr+V_+Yyk=+NC5qBrKEQ+O6Ra4HRHs5XoAHFcWeA@mail.gmail.com>
-Message-ID: <CAD=FV=Ut7kHr+V_+Yyk=+NC5qBrKEQ+O6Ra4HRHs5XoAHFcWeA@mail.gmail.com>
-Subject: Re: [PATCH v3 04/11] kgdb: Delay "kgdbwait" to dbg_late_init() by default
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-serial@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Thu, 30 Apr 2020 12:37:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588264619;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=N1kujXhR0DAj22ohzNF4EmVUFABeAdXNfPVcnWuHRxo=;
+        b=KFDY+ase3naK51WgBRbCjBlmNZYfCdBzYBm51jEk3Rxhk9vEoLZd7w1vJ4cSE8jORDWT+O
+        /OotW0baUaJFps68dGevuP2MU1buGHRZY0X9x2O736t3sbLISiq6+aUhN7PIES1BCLhQtA
+        +slKPjdGIVTO2d6QMLvRpbM1nNVCb0M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-629V3yTBP9erMAd_WkCRDQ-1; Thu, 30 Apr 2020 12:36:55 -0400
+X-MC-Unique: 629V3yTBP9erMAd_WkCRDQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BEDC107ACF9;
+        Thu, 30 Apr 2020 16:36:53 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-72.ams2.redhat.com [10.36.113.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B6F76061B;
+        Thu, 30 Apr 2020 16:36:46 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Frank Rowand <frowand.list@gmail.com>, bp@alien8.de,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C startup and thread creation (v18)
+References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com>
+        <875zdhmaft.fsf@oldenburg2.str.redhat.com>
+        <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com>
+Date:   Thu, 30 Apr 2020 18:36:44 +0200
+In-Reply-To: <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Thu, 30 Apr 2020 12:11:39 -0400
+        (EDT)")
+Message-ID: <878sidkk0z.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+* Mathieu Desnoyers:
 
-On Thu, Apr 30, 2020 at 8:49 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Tue, Apr 28, 2020 at 02:13:44PM -0700, Douglas Anderson wrote:
-> > Using kgdb requires at least some level of architecture-level
-> > initialization.  If nothing else, it relies on the architecture to
-> > pass breakpoints / crashes onto kgdb.
-> >
-> > On some architectures this all works super early, specifically it
-> > starts working at some point in time before Linux parses
-> > early_params's.  On other architectures it doesn't.  A survey of a few
-> > platforms:
-> >
-> > a) x86: Presumably it all works early since "ekgdboc" is documented to
-> >    work here.
-> > b) arm64: Catching crashes works; with a simple patch breakpoints can
-> >    also be made to work.
-> > c) arm: Nothing in kgdb works until
-> >    paging_init() -> devicemaps_init() -> early_trap_init()
-> >
-> > Let's be conservative and, by default, process "kgdbwait" (which tells
-> > the kernel to drop into the debugger ASAP at boot) a bit later at
-> > dbg_late_init() time.  If an architecture has tested it and wants to
-> > re-enable super early debugging, they can select the
-> > ARCH_HAS_EARLY_DEBUG KConfig option.  We'll do this for x86 to start.
-> > It should be noted that dbg_late_init() is still called quite early in
-> > the system.
-> >
-> > Note that this patch doesn't affect when kgdb runs its init.  If kgdb
-> > is set to initialize early it will still initialize when parsing
-> > early_param's.  This patch _only_ inhibits the initial breakpoint from
-> > "kgdbwait".  This means:
-> >
-> > * Without any extra patches arm64 platforms will at least catch
-> >   crashes after kgdb inits.
-> > * arm platforms will catch crashes (and could handle a hardcoded
-> >   kgdb_breakpoint()) any time after early_trap_init() runs, even
-> >   before dbg_late_init().
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> It looks like this patch is triggering some warnings from the existing
-> defconfigs (both x86 and arm64). It looks like this:
->
-> ---
-> wychelm$ make defconfig
->   GEN     Makefile
-> *** Default configuration is based on 'x86_64_defconfig'
->
-> WARNING: unmet direct dependencies detected for ARCH_HAS_EARLY_DEBUG
->   Depends on [n]: KGDB [=n]
->   Selected by [y]:
->   - X86 [=y]
->
-> WARNING: unmet direct dependencies detected for ARCH_HAS_EARLY_DEBUG
->   Depends on [n]: KGDB [=n]
->   Selected by [y]:
->   - X86 [=y]
+> @deftypevar {struct rseq} __rseq_abi
+> @standards{Linux, sys/rseq.h}
+> @Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with the
+> Restartable Sequences system call (Linux-specific).  The layout of this
+> structure is defined by the @file{sys/rseq.h} header.  Registration of each
+> thread's @code{__rseq_abi} is performed by @theglibc{} at libc library
+> initialization and thread creation.
 
-Ah, thanks!  I hadn't noticed those.  I think it'd be easy to just
-change the relevant patches to just "select ARCH_HAS_EARLY_DEBUG if
-KGDB".  If you agree that's a good fix and are willing, I'd be happy
-if you just added it to the relevant patches when applying.  If not, I
-can post a v4.
+s/libc library/library/
 
--Doug
+> The main executable and shared libraries may either have an undefined
+> @code{__rseq_abi} TLS symbol, or define their own, with the same
+> declaration as the one present in @file{sys/rseq.h}.  The dynamic linker
+> will ensure that only one of those available symbols will be used at
+> runtime across the process.
+>
+> If the main executable or shared libraries observe an uninitialized
+> @code{__rseq_abi.cpu_id} field (value @code{RSEQ_CPU_ID_UNINITIALIZED}), they
+> may perform rseq registration to the kernel: this means either glibc was
+> prevented from doing the registration, or an older glibc version, which does
+> not include rseq support, is in use.  When the main executable or a library
+> thus takes ownership of the registration, the memory used to hold the
+> @code{__rseq_abi} TLS variable must stay allocated, and is not re-used, until
+> the very end of the thread lifetime or until an explicit rseq unregistration
+> for that thread is performed.  It is not recommended to dlclose() libraries
+> owning the @code{__rseq_abi} TLS variable.
+
+s/dlclose()/@code{dlclose}/ (no parentheses)
+
+Rest looks okay.
+
+>>> +  if (__rseq_abi.cpu_id == RSEQ_CPU_ID_REGISTRATION_FAILED)
+>>> +    return;
+>>> +  ret = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
+>>> +                              0, RSEQ_SIG);
+>>> +  if (INTERNAL_SYSCALL_ERROR_P (ret) &&
+>>> +      INTERNAL_SYSCALL_ERRNO (ret) != EBUSY)
+>>> +    __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
+>> 
+>> Sorry, I forgot: Please add a comment that the EBUSY error is ignored
+>> because registration may have already happened in a legacy library.
+>
+> Considering that we now disable signals across thread creation, and that
+> glibc's initialization happens before other libraries' constructors
+> (as far as I remember even before LD_PRELOADed library constructors),
+> in which scenario can we expect to have EBUSY here ?
+
+That's a good point.
+
+> Not setting __rseq_abi.cpu_id to RSEQ_CPU_ID_REGISTRATION_FAILED in case
+> of EBUSY is more a way to handle "unforeseen" scenarios where somehow the
+> registration would already be done. But I cannot find an "expected"
+> scenario which would lead to this now.
+>
+> So if EBUSY really is unexpected, how should we treat that ? I don't think
+> setting REGISTRATION_FAILED would be appropriate, because then it would
+> break assumption of the prior successful registration that have already
+> been done by this thread.
+
+You could call __libc_fatal with an error message.  ENOSYS is definitely
+an expected error code here, and EPERM (and perhaps EACCES) can happen
+with seccomp filters.
+
+Thanks,
+Florian
+
