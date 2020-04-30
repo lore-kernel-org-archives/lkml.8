@@ -2,145 +2,97 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1A5C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B178C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A95DD2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B29206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255248;
-	bh=YlQS0JWm1kZ1bcJMVHBPFuI7i/sHKcm81FIe/NwSwj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FZwjC51ZFTelI/13VaWE1Cy1r4ACsv8fZcE5mqqKPiGrMsBBfFibzsWECizDY6ZOQ
-	 yzX6sAUTQzi6oM9fhU/pOE6B4ekWgBiDhOr/caTtPdzx9WErTmtFar15Kk5ldpFh+k
-	 xP0+AslarW+Kj7YlLhMFnIqnZGYpNmrY5aD054hI=
+	s=default; t=1588255255;
+	bh=7MDlnzUmyvtZuMwcmGG1rnivyMahY/GeuHpcLFENqYo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SNRz73FoIhdT/rVDZnyRONFXo439j+LrpMNbmhYJx361NXxK0u8OKPoY/yhRFuB73
+	 jqIN0D7Do46cANSYNjcqFf+CoY0PI9r9E7ErXtn4i/IHsmfESOfUJ5xcmAGg3c6JPu
+	 jbUnvXIGaTAr+H8GLNLWIaHvFAfoy3XOYfj8CGoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbgD3OAr (ORCPT
+        id S1727925AbgD3OAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:00:47 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35035 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729397AbgD3OAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:00:43 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o7so5292733oif.2;
-        Thu, 30 Apr 2020 07:00:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4SqKDcgFBHx1L7Er/7o6lUHlh3wWzthDwvJZwo5hrJU=;
-        b=QyHss8qcgQyLccmUxMGK7EApLeAiW3/3iykKdJiIOU3pytBtLQreG1zD8jJ/osRaD1
-         OWi7ggHOWxUnCKRUStcWiCp3YU2h4RLn+K/afjcbEAwT0BoPDqfXOI/GqIfeC542vLS4
-         hFNDlBn2oe/4WqL9tEk8xWMn1qMxKYECNJMjIHPmKsj9l7JnLiHJ/8DEdZOPxYHctfjh
-         NW1jlrZzQJAmt5XHzD6WXnICdzRdU+XU8uCdXJju0eQgZNJGbNxRJiZjLozars3rVELi
-         Hr1qn+7431iZ5bRbzjdaZVrFoE9uROl4/S2hzHbzjllvm4lfb7veQyczd+Shv9MmnrY9
-         XTgQ==
-X-Gm-Message-State: AGi0PuaPA9FSTj3JLI/HqpvsxzbRoFDsDSrtYwsxW3pw74BYgtOH6h+F
-        UV+4l2aVqGYNdyrkKtBJlg==
-X-Google-Smtp-Source: APiQypK+NEro6nmq5Ju0kr11u0dYdZk562OwLmfEc6Rdsg37blDy9Pox4kBxZ7K1FWgojRgFDGj0HA==
-X-Received: by 2002:aca:d684:: with SMTP id n126mr1810974oig.173.1588255242401;
-        Thu, 30 Apr 2020 07:00:42 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h137sm2698oib.33.2020.04.30.07.00.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:00:41 -0700 (PDT)
-Received: (nullmailer pid 20979 invoked by uid 1000);
-        Thu, 30 Apr 2020 14:00:40 -0000
-Date:   Thu, 30 Apr 2020 09:00:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
- and clocksource support
-Message-ID: <20200430140040.GA8363@bogus>
-References: <20200417165519.4979-1-tony@atomide.com>
- <20200417165519.4979-3-tony@atomide.com>
- <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
- <20200427143144.GQ37466@atomide.com>
- <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
- <20200427152329.GR37466@atomide.com>
+        Thu, 30 Apr 2020 10:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728890AbgD3NyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C822495D;
+        Thu, 30 Apr 2020 13:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254847;
+        bh=7MDlnzUmyvtZuMwcmGG1rnivyMahY/GeuHpcLFENqYo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mcmTprrl4RmFS+nE85BV/WeniaG+4uDLTyk+LBNYCx5ebCB70kVdKB1qXIMqxqwCF
+         WssK89P2FCKcsic3CH2i7Vny60YUPOzpPcc12G0yJSqvEcJ84MXLtTrUVVtmwww2m4
+         pjKF8h1wbcKf9yzGgIG5E0mJnC7P1CFWjeKCagCE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/27] nfsd: memory corruption in nfsd4_lock()
+Date:   Thu, 30 Apr 2020 09:53:39 -0400
+Message-Id: <20200430135402.20994-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
+References: <20200430135402.20994-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427152329.GR37466@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 08:23:29AM -0700, Tony Lindgren wrote:
-> * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 15:03]:
-> > On 27/04/2020 16:31, Tony Lindgren wrote:
-> > > Hi,
-> > > 
-> > > * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
-> > >> On 17/04/2020 18:55, Tony Lindgren wrote:
-> > >>> --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
-> > >>> +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
-> > >>> @@ -14,6 +14,8 @@ Required properties:
-> > >>>  			ti,omap5430-timer (applicable to OMAP543x devices)
-> > >>>  			ti,am335x-timer	(applicable to AM335x devices)
-> > >>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
-> > >>> +			ti,dmtimer-clockevent (when used as for clockevent)
-> > >>> +			ti,dmtimer-clocksource (when used as for clocksource)
-> > >>
-> > >> Please, submit a separate patch for this.
-> > >>
-> > >> Before you resend as is, this will be nacked as clocksource / clockevent
-> > >> is not a hardware description but a Linux thing.
-> > >>
-> > >> Finding a way to characterize that from the DT is an endless discussion
-> > >> since years, so I suggest to use a single property for the timer eg
-> > >> <ti,dmtimer> and initialize the clocksource and the clockevent in the
-> > >> driver.
-> > > 
-> > > Hmm good point. We still need to specify which timer is a clocksource
-> > > and which one a clockevent somehow.
-> > > 
-> > > Maybe we could have a generic properties like the clock framework such as:
-> > > 
-> > > assigned-system-clocksource
-> > > assigned-system-clockevent
-> > 
-> > I think that will be the same problem :/
-> 
-> Seems like other SoCs have the same issue too with multiple timers
-> to configure.
-> 
-> > Is it possible to check the interrupt for the clockevent ? A timer node
-> > with the interrrupt is the clockevent, without it is a clocksource.
-> 
-> OK let's try that. So the configuration would become then:
-> 
-> compatible = "ti,dmtimer;	/* reserved for system timers */
-> /delete-property/interrupts;	/* ok so it's a clocksource */
-> /delete-property/interrupts-extended;
+From: Vasily Averin <vvs@virtuozzo.com>
 
-That's not really what was meant.
+[ Upstream commit e1e8399eee72e9d5246d4d1bcacd793debe34dd3 ]
 
-Let's say you have N timers. Either every timer is exactly the same and 
-the OS can just assign them however it wants or there is some difference 
-in the h/w making certain timer better for certain functions. Describe 
-that difference. It could be clock rate, number of counter bits, always 
-on, secure mode access only, has or doesn't have output compare or input 
-capture, etc.
+New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
+does not initialized nbl_list and nbl_lru.
+If conflock allocation fails rollback can call list_del_init()
+access uninitialized fields and corrupt memory.
 
-Rob
+v2: just initialize nbl_list and nbl_lru right after nbl allocation.
+
+Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for v4.1+ lock")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index fca8b2e7fbeb7..d5d1c70bb927b 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -246,6 +246,8 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
+ 	if (!nbl) {
+ 		nbl= kmalloc(sizeof(*nbl), GFP_KERNEL);
+ 		if (nbl) {
++			INIT_LIST_HEAD(&nbl->nbl_list);
++			INIT_LIST_HEAD(&nbl->nbl_lru);
+ 			fh_copy_shallow(&nbl->nbl_fh, fh);
+ 			locks_init_lock(&nbl->nbl_lock);
+ 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
+-- 
+2.20.1
+
