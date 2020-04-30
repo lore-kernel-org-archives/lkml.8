@@ -2,170 +2,138 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47848C83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD8C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27094208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C242083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ougCJz6n"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cUhM7ATN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgD3EYF (ORCPT
+        id S1726491AbgD3EZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3EYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:24:05 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F92C035494;
-        Wed, 29 Apr 2020 21:24:04 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x15so2295711pfa.1;
-        Wed, 29 Apr 2020 21:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KhvM5Pbwqp4GHCCKH1JQ77gi57Z5QMqOiW7fGw8B1mk=;
-        b=ougCJz6naTbrpT5mDHZs3oj9O89lX1RVKtVzjutjexVrgQFKbXfrr3g7/aG2ZhQg9P
-         8HLm1eP/clniAjyoanFTKE1ucc+f16h2oe2g0bHr8UrhTJlyUX3jkrjITRFef3foN45z
-         EeNdIeApf5gtXGvcR2jPNPJgegRYTrCdDbD22zLGTyFL/KnCsJ6Q17GIrESmFl1i5Bpf
-         bRB6RRTNfVcAdNdsIN6RO3F/sPmGbfVxlfW3AakD7MXJlA0xNFVk1wvV0OOJbsJLafih
-         wzB3xpV0cnyn7HxZ+MwkLk1TT1xw4Y1LUZOI4vxBuliIaCYcs+U2mTkF9HeWw8pkTUmr
-         4uMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KhvM5Pbwqp4GHCCKH1JQ77gi57Z5QMqOiW7fGw8B1mk=;
-        b=LLmZ/6NQlOq+OBundSmZ6wFvMl5IAT6l3rMEP9sVgaLFXlGjnheKFdHVRuYZqJvJkY
-         JDUJs+5jyvUcoVZNGgy+UmE1WdlW8o8vjalK6/vOfAKu/R+0GDJeZIBnqGhBPgVuwjaz
-         sK4c2h4k5caID7cDCOWkh5f6/6qyBUWC06kI4oQ8cWAXqXymi5HrusALqR0HGh4EHmWq
-         u1s/DUGZgeJBlZUKMrYKL71VAdf+BibKWvq+5S+TR/gRGQOk61xhbU98Hy0HqapZxAkL
-         bHGOrTXKhd5Oe1VxNbArsRYch0oqE//eF9oJJP3tVfEd0/UO0HLWl0C/vO6nuFXhxZcC
-         j18w==
-X-Gm-Message-State: AGi0PubkO+1N3oPRqZEHfmBmic2IdcoJpqvPKKP0eKNj/1Oap0+qGof4
-        dvGrNXmR00gkzC7D19+AFeQ=
-X-Google-Smtp-Source: APiQypKlNI45ZENLkeN/qowZIMetyD/iTF9kI3byHgLbMxnedtufJ3lV/pnskfqTkAx9mA76FUvslg==
-X-Received: by 2002:a62:aa04:: with SMTP id e4mr219156pff.317.1588220644254;
-        Wed, 29 Apr 2020 21:24:04 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:c108])
-        by smtp.gmail.com with ESMTPSA id j23sm614197pjz.13.2020.04.29.21.24.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 21:24:03 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 21:24:00 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
-        peterz@infradead.org, rdunlap@infradead.org,
-        Arnd Bergmann <arnd@arndb.de>, bpf@vger.kernel.org,
-        daniel@iogearbox.net
-Subject: Re: BPF vs objtool again
-Message-ID: <20200430042400.45vvqx4ocwwogp3j@ast-mbp.dhcp.thefacebook.com>
-References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
- <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
- <20200429215159.eah6ksnxq6g5adpx@treble>
- <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
- <20200430001300.k3pgq2minrowstbs@treble>
- <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
- <20200430035315.tc74v5twfdxv2goh@treble>
+        Thu, 30 Apr 2020 00:25:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33971 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgD3EZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 00:25:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CMjw1yWWz9sPF;
+        Thu, 30 Apr 2020 14:25:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588220710;
+        bh=P5nfkovu1/OBAkOk/3QI+yZz3CFitkClgI4jvHlVaO8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cUhM7ATNYD3BbhYxTgNHMfWooPVRc5BR1LAmqrbU1S9x8rJK9unvfCOCdGetIGxyx
+         xqNPoc4Pky7eOwID8SxlFGbSyu3qWLuzpHGj575/CoCzZ9EDb5k7u6hHHUAp8FzAZE
+         ReoenjEP/dwJ2yNsoP5vd6wkPUrcZ8EhHBmwKoZA/9XUh8VR8UtGbFas1vHMZN5KCg
+         gIJhem5e3D+oocbSrdJGR/DFce4JcU71/14owjH4ne3Z9y7QvX73dMTB5Sqwf3oe72
+         2TYAL8wLBPG875envFHtOqrvCQPnblVfuGmUSSeqW4X7NjQyaVw5HQWR+fvmAOs5aw
+         fzViEzT5/8tFg==
+Date:   Thu, 30 Apr 2020 14:25:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        John Stultz <john.stultz@linaro.org>
+Subject: linux-next: manual merge of the driver-core tree with the
+ driver-core.current tree
+Message-ID: <20200430142506.0626f8c4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430035315.tc74v5twfdxv2goh@treble>
+Content-Type: multipart/signed; boundary="Sig_/ti+4=desnQ7P74nY=HmpiRo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:53:15PM -0500, Josh Poimboeuf wrote:
-> On Wed, Apr 29, 2020 at 07:10:52PM -0700, Alexei Starovoitov wrote:
-> > > For example:
-> > > 
-> > > #define GOTO    ({ goto *jumptable[insn->code]; })
-> > > 
-> > > and then replace all 'goto select_insn' with 'GOTO;'
-> > > 
-> > > The problem is that with RETPOLINE=y, the function text size grows from
-> > > 5k to 7k, because for each of the 160+ retpoline JMPs, GCC (stupidly)
-> > > reloads the jump table register into a scratch register.
-> > 
-> > that would be a tiny change, right?
-> > I'd rather go with that and gate it with 'ifdef CONFIG_FRAME_POINTER'
-> > Like:
-> > #ifndef CONFIG_FRAME_POINTER
-> > #define CONT     ({ insn++; goto select_insn; })
-> > #define CONT_JMP ({ insn++; goto select_insn; })
-> > #else
-> > #define CONT     ({ insn++; goto *jumptable[insn->code]; })
-> > #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-> > #endif
-> > 
-> > The reason this CONT and CONT_JMP macros are there because a combination
-> > of different gcc versions together with different cpus make branch predictor
-> > behave 'unpredictably'.
-> > 
-> > I've played with CONT and CONT_JMP either both doing direct goto or
-> > indirect goto and observed quite different performance characteristics
-> > from the interpreter.
-> > What you see right now was the best tune I could get from a set of cpus
-> > I had to play with and compilers. If I did the same tuning today the outcome
-> > could have been different.
-> > So I think it's totally fine to use above code. I think some cpus may actually
-> > see performance gains with certain versions of gcc.
-> > The retpoline text increase is unfortunate but when retpoline is on
-> > other security knobs should be on too. In particular CONFIG_BPF_JIT_ALWAYS_ON
-> > should be on as well. Which will remove interpreter from .text completely.
-> 
-> This would actually be contingent on RETPOLINE, not FRAME_POINTER.
-> 
-> (FRAME_POINTER was the other issue with the "optimize" attribute, which
-> we're reverting so it'll no longer be a problem.)
-> 
-> So if you're not concerned about the retpoline text growth, it could be
-> as simple as:
-> 
-> #define CONT     ({ insn++; goto *jumptable[insn->code]; })
-> #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-> 
-> 
-> Or, if you wanted to avoid the text growth, it could be:
-> 
-> #ifdef CONFIG_RETPOLINE
+--Sig_/ti+4=desnQ7P74nY=HmpiRo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm a bit lost. So objtool is fine with the asm when retpoline is on?
-Then pls do:
-#if defined(CONFIG_RETPOLINE) || !defined(CONFIG_X86)
+Hi all,
 
-since there is no need to mess with other archs.
+Today's linux-next merge of the driver-core tree got a conflict in:
 
-> /*
->  * Avoid a 40% increase in function text size by getting GCC to generate a
->  * single retpoline jump instead of 160+.
->  */
-> #define CONT	 ({ insn++; goto select_insn; })
-> #define CONT_JMP ({ insn++; goto select_insn; })
-> 
-> select_insn:
-> 	goto *jumptable[insn->code];
-> 
-> #else /* !CONFIG_RETPOLINE */
-> #define CONT	 ({ insn++; goto *jumptable[insn->code]; })
-> #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-> #endif /* CONFIG_RETPOLINE */
-> 
-> 
-> But since this is legacy path, I think the first one is much nicer.
-> 
-> 
-> Also, JMP_TAIL_CALL has a "goto select_insn", is it ok to convert that
-> to CONT?
+  drivers/base/dd.c
 
-yep
+between commits:
+
+  ce68929f07de ("driver core: Revert default driver_deferred_probe_timeout =
+value to 0")
+  4ccc03e28ec3 ("driver core: Use dev_warn() instead of dev_WARN() for defe=
+rred_probe_timeout warnings")
+  35a672363ab3 ("driver core: Ensure wait_for_device_probe() waits until th=
+e deferred_probe_timeout fires")
+
+from the driver-core.current tree and commit:
+
+  eb7fbc9fb118 ("driver core: Add missing '\n' in log messages")
+
+from the driver-core tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/base/dd.c
+index 94037be7f5d7,efe6df5bff26..000000000000
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@@ -258,8 -266,8 +258,8 @@@ int driver_deferred_probe_check_state(s
+  		return -ENODEV;
+  	}
+ =20
+ -	if (!driver_deferred_probe_timeout) {
+ -		dev_WARN(dev, "deferred probe timeout, ignoring dependency\n");
+ +	if (!driver_deferred_probe_timeout && initcalls_done) {
+- 		dev_warn(dev, "deferred probe timeout, ignoring dependency");
+++		dev_warn(dev, "deferred probe timeout, ignoring dependency\n");
+  		return -ETIMEDOUT;
+  	}
+ =20
+@@@ -275,8 -283,7 +275,8 @@@ static void deferred_probe_timeout_work
+  	flush_work(&deferred_probe_work);
+ =20
+  	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, defer=
+red_probe)
+- 		dev_info(private->device, "deferred probe pending");
++ 		dev_info(private->device, "deferred probe pending\n");
+ +	wake_up(&probe_timeout_waitqueue);
+  }
+  static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_t=
+imeout_work_func);
+ =20
+
+--Sig_/ti+4=desnQ7P74nY=HmpiRo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6qUyIACgkQAVBC80lX
+0GwsEwf9H2Z4fiZ1Ut98UB/ogxCjL0w5BEHPZ8t8OQYsp1v+62iqHqMW3CsjF2hS
+AqdZRWl0bfoYRfdTCvD43o9Ic89Cw6sKpZQ1P75oHqkWVujH+CqcQUKQ33IoTpMK
+wLiapzjC1tNbZ81AVbYYdM7sjfFfX+AqEsUdKulXBPNDqhNR1s2P9DsjsFmaLQIu
+HlEWV7Eq+TanJxTLaRvM116FtlvaVb1ERHx2gl/3FtkOEeJWrGb7fBVJOVG58WE9
+htWBE9L0Aed7hY3MBJTA43itH2TGzGs1UnflSmWcKjnZ7b8qKNgnGO611mr6hoQM
+Wz5TJPdiCthhGBo1NWV8sLbQX+AiBw==
+=XI/t
+-----END PGP SIGNATURE-----
+
+--Sig_/ti+4=desnQ7P74nY=HmpiRo--
