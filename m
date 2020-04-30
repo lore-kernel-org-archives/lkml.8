@@ -2,114 +2,144 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618C1C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71B5C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD4B2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NlMK9W5m"
+	by mail.kernel.org (Postfix) with ESMTP id AA2DF20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgD3NnO (ORCPT
+        id S1726836AbgD3NpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgD3NnO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:43:14 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91729C035494;
-        Thu, 30 Apr 2020 06:43:13 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l19so6508358lje.10;
-        Thu, 30 Apr 2020 06:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A6YpIeXRQ3oa6pHUnqjGa6cFyQysn0a0+/4OldnV7wc=;
-        b=NlMK9W5m4IrjAVP/UBA9HRX7+gBleYHX+FLGYqR8aidm2COx+iIfMluQMCW7CTLV3F
-         JFHRrUlJjgrBclgNWmLhXuRws8+pVHitwE/W1J67DLM1ZqFhSoWfBpedb47/RBpPPZX0
-         SVZws+ERwzguHh2vdhonfG0YQUCvlEqrlUbsXFcsPhDd4C5ixp8KeJnvesj82o2kEVLg
-         6wuVc/QKj0mHwxp2J2tD+MprigE4iFM3S0xA/uqYV0bsJj0tA7a1cxV/vC0z77+sTpFK
-         WhFodDLaFR5ePQ6uumzITOrPCFjHucmvUJIEHYnWi9kAK2iizMTHQrE9Kg5uAodq4gja
-         SmcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A6YpIeXRQ3oa6pHUnqjGa6cFyQysn0a0+/4OldnV7wc=;
-        b=omRTGxERbeN8Z4zNXQQKwbbfucV0C0ICT9jmCrRP2tyQE0K2hLqQaS1HsvkBx3BvJ3
-         56GOVudwY7Jj9XEG2NT/jb5aMNnN60yIrwadN956OykbSIjBS57NpELr3p6n/EmD7uIx
-         q6Qxh0HDGR31W5dhfLXw1QljyDI6EZ/hOP4dpGzIQeVfOS0RZYw4kqADXU2Pcn78F/8N
-         WV4EKkjPirNuWkiIVdzD9ICyOyV6SbjI1IYHKo93Y3+lv3aHUx4GAtFThFV8O/p9RNpT
-         2YhpF2dTP9yUDpCjlR7HfvFFZoRMJiFS3zA94D3gb8m4eifA5GrPhMJGYYGyb5NH0Ex8
-         hmlQ==
-X-Gm-Message-State: AGi0Pub2NdRoeqWdOqDCBfYgImD6xtXy68wL9v1zhE6TpT2turDGoIbj
-        u3NnFtjzGzfVD+PEeHXAP44PLnXZ
-X-Google-Smtp-Source: APiQypLu4E1H7UuvzOwc6X6QOCGTmpm6Y0rl0EDyrOXLiRl67uwW+l1xjxt9ugjM78meqa0X0aNI8A==
-X-Received: by 2002:a2e:9d8c:: with SMTP id c12mr2409610ljj.67.1588254191854;
-        Thu, 30 Apr 2020 06:43:11 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j24sm4389258ljg.60.2020.04.30.06.43.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 06:43:11 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5d559a5a-ac84-f128-ccea-270974560b58@gmail.com>
-Date:   Thu, 30 Apr 2020 16:43:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 30 Apr 2020 09:45:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18087 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726577AbgD3NpU (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:45:20 -0400
+IronPort-SDR: 6fLJFrYba3cvQPPlDPfoKCvi8A9PVz2FAlY7xthdsBZbqPzM2S36Y3UX+jL3KuWNW0/MEwkbVO
+ 5NTm1EfdmdRg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 06:45:19 -0700
+IronPort-SDR: Y1mMGgekiC14nOYj8Q+IaQofXgqMR49XA8Na1HQ98tMAvMDzdYOqP/asHOreFT9cQ//HFt5kC9
+ PcGNTSwPzrrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="368148168"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.213.153]) ([10.254.213.153])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Apr 2020 06:45:15 -0700
+Subject: Re: [PATCH] perf parse-events: Use strcmp to compare the PMU name
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        John Garry <john.garry@huawei.com>
+References: <20200430003618.17002-1-yao.jin@linux.intel.com>
+ <20200430084529.GC1681583@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <fc51012d-66c7-3e93-07df-22411b23fa8f@linux.intel.com>
+Date:   Thu, 30 Apr 2020 21:45:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200430084529.GC1681583@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.04.2020 01:00, Sowjanya Komatineni пишет:
-> +void tegra_channel_release_buffers(struct tegra_vi_channel *chan,
-> +				   enum vb2_buffer_state state)
-> +{
-> +	struct tegra_channel_buffer *buf, *nbuf;
-> +
-> +	spin_lock(&chan->start_lock);
-> +	list_for_each_entry_safe(buf, nbuf, &chan->capture, queue) {
-> +		vb2_buffer_done(&buf->buf.vb2_buf, state);
-> +		list_del(&buf->queue);
-> +	}
-> +
+Hi Jiri,
 
-I'd remove this blank line to make lock/unlock block more human-readable.
+On 4/30/2020 4:45 PM, Jiri Olsa wrote:
+> On Thu, Apr 30, 2020 at 08:36:18AM +0800, Jin Yao wrote:
+>> A big uncore event group is split into multiple small groups which
+>> only include the uncore events from the same PMU. This has been
+>> supported in the commit 3cdc5c2cb924a ("perf parse-events: Handle
+>> uncore event aliases in small groups properly").
+>>
+>> If the event's PMU name starts to repeat, it must be a new event.
+>> That can be used to distinguish the leader from other members.
+>> But now it only compares the pointer of pmu_name
+>> (leader->pmu_name == evsel->pmu_name).
+>>
+>> If we use "perf stat -M LLC_MISSES.PCIE_WRITE -a" on cascadelakex,
+>> the event list is:
+>>
+>> evsel->name					evsel->pmu_name
+>> ---------------------------------------------------------------
+>> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_4 (as leader)
+>> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_2
+>> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_0
+>> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_5
+>> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_3
+>> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_1
+>> unc_iio_data_req_of_cpu.mem_write.part1		uncore_iio_4
+>> ......
+>>
+>> For the event "unc_iio_data_req_of_cpu.mem_write.part1" with
+>> "uncore_iio_4", it should be the event from PMU "uncore_iio_4".
+>> It's not a new leader for this PMU.
+>>
+>> But if we use "(leader->pmu_name == evsel->pmu_name)", the check
+>> would be failed and the event is stored to leaders[] as a new
+>> PMU leader.
+>>
+>> So this patch uses strcmp to compare the PMU name between events.
+>>
+>> Fixes: 3cdc5c2cb924a ("perf parse-events: Handle uncore event aliases in small groups properly")
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> 
+> looks good, any chance we could have automated test
+> for this uncore leader setup logic? like maybe the way
+> John did the pmu-events tests? like test will trigger
+> only when there's the pmu/events in the system
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> thanks,
+> jirka
+> 
+> 
 
-> +	spin_unlock(&chan->start_lock);
-> +
-> +	spin_lock(&chan->done_lock);
-> +	list_for_each_entry_safe(buf, nbuf, &chan->done, queue) {
-> +		vb2_buffer_done(&buf->buf.vb2_buf, state);
-> +		list_del(&buf->queue);
-> +	}
-> +
+I'm considering to use LKP to do the sanity tests for all perf events 
+(core/uncore) and perf metrics periodically. It may help us to find the 
+regressions on time.
 
-And thins line too.
+Thanks
+Jin Yao
 
-> +	spin_unlock(&chan->done_lock);
-> +}
-
+>> ---
+>>   tools/perf/util/parse-events.c | 5 ++---
+>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>> index 10107747b361..786eddb6a097 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -1629,12 +1629,11 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+>>   		 * event. That can be used to distinguish the leader from
+>>   		 * other members, even they have the same event name.
+>>   		 */
+>> -		if ((leader != evsel) && (leader->pmu_name == evsel->pmu_name)) {
+>> +		if ((leader != evsel) &&
+>> +		    !strcmp(leader->pmu_name, evsel->pmu_name)) {
+>>   			is_leader = false;
+>>   			continue;
+>>   		}
+>> -		/* The name is always alias name */
+>> -		WARN_ON(strcmp(leader->name, evsel->name));
+>>   
+>>   		/* Store the leader event for each PMU */
+>>   		leaders[nr_pmu++] = (uintptr_t) evsel;
+>> -- 
+>> 2.17.1
+>>
+> 
