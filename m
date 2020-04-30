@@ -2,117 +2,153 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBCC47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1896C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4DC2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rRg2l8P1"
+	by mail.kernel.org (Postfix) with ESMTP id BB5B220731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgD3Qz7 (ORCPT
+        id S1726477AbgD3Q5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726746AbgD3Qz5 (ORCPT
+        Thu, 30 Apr 2020 12:57:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54552 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgD3Q5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:55:57 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507E3C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:55:56 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so49458pfw.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IkRC+FQqxQAModbwkeMMyhs5RSaTy9rWO/DCP0foYTE=;
-        b=rRg2l8P1/u3mc8/lpCDvRoC7tiQm7zvhfMdHXk4E9lVs+36fbJw2rrgqdexVLR6VTL
-         7/YZZfpJF0hAf9Cr4ZJUFCANK0QU2EymYkq9wuHwkAaBACbOOXsg0+Sw6bzVfBcLkuaW
-         FpKDqmFT5gHvIETNtpNOnMkvk0LiT/wEAQHUYQS0N5nqD/mWbjXxLk4H+5GqZ8Uv/2nO
-         gDmWh/XQtyVLKVmTQN/TpxkgNMUTl6ZfWnq73ssmfJsHiphj3qvQjSvT31frUB84S2LI
-         SUKF1EMw8HFcVekxPOU+N37rC6eN8CsNUYGJmaeQkTViIfFwnE+TGE0pLQbA3e8rzHO+
-         zIRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IkRC+FQqxQAModbwkeMMyhs5RSaTy9rWO/DCP0foYTE=;
-        b=W/6wxX8CP4/6ism1N2faqKGQQp5/CpEozUsDrdEwoQFFpC/P3vWZ0FpwfOPVjl71pQ
-         fySj51suor3rEe7h08Pz8QXwaIj9n/08BTBn2IBpkvbpGlN9YYL5MeOW70vr+YWQT737
-         75ai7mebkotHTT9VMPCMZxQEAmfOoOWWCSPHTG7/Pm78hS+xlrpraWEFZitKOg1yz//5
-         Bk7IFCQUFnA8RWep+yOPU/ZI3kstrQxf+QLvLLbgaWxEP4bF+o+YCH1Wol2YIcUW3tOR
-         D6b0uyu4PAHxPi19s2qODnO7ZgjRfzAdmPrEO7VDFGzLqvpNAPzX+Q2jRhKoZiQ/jazd
-         Zc/A==
-X-Gm-Message-State: AGi0PuaCJ0tx4LMT5XmbG4umBF2zswpTU8ESkUqP8LwERVofA8fd+6Zv
-        UY4Hi7RSrWkaSCBEsb7lspEj
-X-Google-Smtp-Source: APiQypImaqWpQO0pPoEzrFvNS29Qt/uPSBc5P7AZyu76+6F7gYdErHMZWXJRSXTWPQwXwWL3+d1lIg==
-X-Received: by 2002:a62:24a:: with SMTP id 71mr249508pfc.98.1588265755643;
-        Thu, 30 Apr 2020 09:55:55 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6081:946c:419e:a71:7237:1613])
-        by smtp.gmail.com with ESMTPSA id m6sm275649pgm.67.2020.04.30.09.55.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Apr 2020 09:55:54 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 22:25:48 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     hemantk@codeaurora.org, bbhatt@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] bus: mhi: core: Make sure to powerdown if
- mhi_sync_power_up fails
-Message-ID: <20200430165548.GE9449@Mani-XPS-13-9360>
-References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
- <1588003153-13139-2-git-send-email-jhugo@codeaurora.org>
+        Thu, 30 Apr 2020 12:57:32 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jUCV6-0005V3-OC; Thu, 30 Apr 2020 16:57:28 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 1/4] capability: add ns_capable_cred()
+Date:   Thu, 30 Apr 2020 18:57:14 +0200
+Message-Id: <20200430165717.1001605-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588003153-13139-2-git-send-email-jhugo@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 09:59:08AM -0600, Jeffrey Hugo wrote:
-> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
-> clean up the resources.  Otherwise a BUG could be triggered when
-> attempting to clean up MSIs because the IRQ is still active from a
-> request_irq().
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Add a simple capability helper which makes it possible to determine
+whether a set of creds is ns capable wrt to the passed in credentials.
+This is not something exciting it's just a more pleasant wrapper around
+security_capable() by allowing ns_capable_common() to ake a const struct
+cred argument. In ptrace_has_cap() for example, we're using
+security_capable() directly. ns_capable_cred() will be used in the next
+patch to check against the target credentials the caller is going to
+switch to.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Serge Hallyn <serge@hallyn.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+patch introduced
+---
+ include/linux/capability.h |  3 +++
+ kernel/capability.c        | 17 +++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-Thanks,
-Mani
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index ecce0f43c73a..743a08d936fb 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -40,6 +40,7 @@ struct cpu_vfs_cap_data {
+ struct file;
+ struct inode;
+ struct dentry;
++struct cred;
+ struct task_struct;
+ struct user_namespace;
+ 
+@@ -209,6 +210,8 @@ extern bool has_ns_capability_noaudit(struct task_struct *t,
+ 				      struct user_namespace *ns, int cap);
+ extern bool capable(int cap);
+ extern bool ns_capable(struct user_namespace *ns, int cap);
++extern bool ns_capable_cred(const struct cred *cred,
++			    struct user_namespace *ns, int cap);
+ extern bool ns_capable_noaudit(struct user_namespace *ns, int cap);
+ extern bool ns_capable_setid(struct user_namespace *ns, int cap);
+ #else
+diff --git a/kernel/capability.c b/kernel/capability.c
+index 1444f3954d75..84425781917e 100644
+--- a/kernel/capability.c
++++ b/kernel/capability.c
+@@ -361,8 +361,8 @@ bool has_capability_noaudit(struct task_struct *t, int cap)
+ 	return has_ns_capability_noaudit(t, &init_user_ns, cap);
+ }
+ 
+-static bool ns_capable_common(struct user_namespace *ns,
+-			      int cap,
++static bool ns_capable_common(const struct cred *cred,
++			      struct user_namespace *ns, int cap,
+ 			      unsigned int opts)
+ {
+ 	int capable;
+@@ -372,7 +372,7 @@ static bool ns_capable_common(struct user_namespace *ns,
+ 		BUG();
+ 	}
+ 
+-	capable = security_capable(current_cred(), ns, cap, opts);
++	capable = security_capable(cred, ns, cap, opts);
+ 	if (capable == 0) {
+ 		current->flags |= PF_SUPERPRIV;
+ 		return true;
+@@ -393,10 +393,15 @@ static bool ns_capable_common(struct user_namespace *ns,
+  */
+ bool ns_capable(struct user_namespace *ns, int cap)
+ {
+-	return ns_capable_common(ns, cap, CAP_OPT_NONE);
++	return ns_capable_common(current_cred(), ns, cap, CAP_OPT_NONE);
+ }
+ EXPORT_SYMBOL(ns_capable);
+ 
++bool ns_capable_cred(const struct cred *cred, struct user_namespace *ns, int cap)
++{
++	return ns_capable_common(cred, ns, cap, CAP_OPT_NONE);
++}
++
+ /**
+  * ns_capable_noaudit - Determine if the current task has a superior capability
+  * (unaudited) in effect
+@@ -411,7 +416,7 @@ EXPORT_SYMBOL(ns_capable);
+  */
+ bool ns_capable_noaudit(struct user_namespace *ns, int cap)
+ {
+-	return ns_capable_common(ns, cap, CAP_OPT_NOAUDIT);
++	return ns_capable_common(current_cred(), ns, cap, CAP_OPT_NOAUDIT);
+ }
+ EXPORT_SYMBOL(ns_capable_noaudit);
+ 
+@@ -430,7 +435,7 @@ EXPORT_SYMBOL(ns_capable_noaudit);
+  */
+ bool ns_capable_setid(struct user_namespace *ns, int cap)
+ {
+-	return ns_capable_common(ns, cap, CAP_OPT_INSETID);
++	return ns_capable_common(current_cred(), ns, cap, CAP_OPT_INSETID);
+ }
+ EXPORT_SYMBOL(ns_capable_setid);
+ 
 
-> ---
->  drivers/bus/mhi/core/pm.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-> index 52690cb..dc83d65 100644
-> --- a/drivers/bus/mhi/core/pm.c
-> +++ b/drivers/bus/mhi/core/pm.c
-> @@ -902,7 +902,11 @@ int mhi_sync_power_up(struct mhi_controller *mhi_cntrl)
->  			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
->  			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
->  
-> -	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
-> +	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -ETIMEDOUT;
-> +	if (ret)
-> +		mhi_power_down(mhi_cntrl, false);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL(mhi_sync_power_up);
->  
-> -- 
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+-- 
+2.26.2
+
