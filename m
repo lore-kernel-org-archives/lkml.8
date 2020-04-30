@@ -2,75 +2,106 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E05C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC195C83009
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E40214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB44214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgD3HEV (ORCPT
+        id S1726678AbgD3HGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:04:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3347 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726337AbgD3HEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:04:21 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 75443E6259D20B6A35F4;
-        Thu, 30 Apr 2020 15:04:19 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 30 Apr 2020 15:04:13 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] drm/vboxvideo: Fix a NULL vs IS_ERR() check in vbox_hw_init()
-Date:   Thu, 30 Apr 2020 07:05:23 +0000
-Message-ID: <20200430070523.185584-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 30 Apr 2020 03:06:15 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61847 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726337AbgD3HGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:06:15 -0400
+IronPort-SDR: 0lLxilEP3MBfG6/ju6yRMgN7XfxuxR7Ij77Zvas51LFL/g+rQdlgVHKqD7iR9QmDKglOEvxYIt
+ 01G48krbpJlw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 00:06:14 -0700
+IronPort-SDR: djF39Bs3TB+mKFqavxnijNCI33yhlWYCDroujdcd3oTEbXyDLnhavuiHjelHtcf7sIyLtlPr6p
+ oD1NJEERE8fA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="248196369"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Apr 2020 00:06:13 -0700
+Received: from [10.249.229.126] (bababaya-mobl.ccr.corp.intel.com [10.249.229.126])
+        by linux.intel.com (Postfix) with ESMTP id 1C8035805EB;
+        Thu, 30 Apr 2020 00:06:10 -0700 (PDT)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v3 0/3] perf: make Perf tool aware of SELinux access control
+Organization: Intel Corp.
+Message-ID: <0fffd9e2-1f22-a0c2-c2e3-cb7f4bb89d66@linux.intel.com>
+Date:   Thu, 30 Apr 2020 10:06:09 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The devm_gen_pool_create() function returns ERR_PTR() on error, it
-doesn't return NULL so this check doesn't work.
 
-Fixes: 4cc9b565454b ("drm/vboxvideo: Use devm_gen_pool_create")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Changes in v3:
+- mention "CAP_PERFMON or CAP_SYS_ADMIN" instead of sole CAP_PERFMON or 
+  CAP_SYS_ADMIN capability in the docs and messages to support use case
+  of newer Perf tool on kernel w/o CAP_PERFMON
+- reverted double new line in "No permission to enable %s event.\n\n"
+- updated security.txt content with new messages wording
+
+v2: https://lore.kernel.org/lkml/66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com/
+
+Changes in v2:
+- implemented minor doc and code changes to substitute CAP_SYS_ADMIN
+  with CAP_PERFMON capability;
+- introduced Perf doc file with instructions on how to enable and use
+  perf_event LSM hooks for mandatory access control to perf_event_open()
+  syscall;
+
+v1: https://lore.kernel.org/lkml/b8a0669e-36e4-a0e8-fd35-3dbd890d2170@linux.intel.com/
+
+repo: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+sha1: ee097e8ee56f8867cbbf45fe2a06f6b9e660c39c
+
+
+Extend Perf tool with the check of /sys/fs/selinux/enforce value and notify 
+in case access to perf_event_open() syscall is restricted by the enforced 
+SELinux policy settings. See new added security.txt file for exact steps
+how the changes look like and how to test the patch set.
+
 ---
- drivers/gpu/drm/vboxvideo/vbox_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Alexey Budankov (3):
+  perf docs: extend CAP_SYS_ADMIN with CAP_PERFMON where needed
+  perf tool: make Perf tool aware of SELinux access control
+  perf docs: introduce security.txt file to document related issues
 
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index d68d9bad7674..c5ea880d17b2 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -123,8 +123,8 @@ int vbox_hw_init(struct vbox_private *vbox)
- 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
- 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
- 						"vboxvideo-accel");
--	if (!vbox->guest_pool)
--		return -ENOMEM;
-+	if (IS_ERR(vbox->guest_pool))
-+		return PTR_ERR(vbox->guest_pool);
- 
- 	ret = gen_pool_add_virt(vbox->guest_pool,
- 				(unsigned long)vbox->guest_heap,
+ tools/perf/Documentation/perf-intel-pt.txt |   2 +-
+ tools/perf/Documentation/security.txt      | 237 +++++++++++++++++++++
+ tools/perf/util/cloexec.c                  |   4 +-
+ tools/perf/util/evsel.c                    |  39 ++--
+ 4 files changed, 264 insertions(+), 18 deletions(-)
+ create mode 100644 tools/perf/Documentation/security.txt
 
-
+-- 
+2.24.1
 
