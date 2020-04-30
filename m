@@ -2,125 +2,277 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76A6C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E50C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73032063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPLsH1OV"
+	by mail.kernel.org (Postfix) with ESMTP id 7D53A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255362;
+	bh=1Oh3xPMOfPQqPMxE+LU10jFahdIXB/IA9MARC8qt+cE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jbe0VWgqxE1IpNAmwiGpmEvneQbcnUdw2K90aFL+oQwfEmbqpVC7fdTuh65AAdU7c
+	 uGFXyaWb5K8g/fKqLTweiItixMGNGJJSmJjUbgliOceQgpoGN0u45U/xe5ZGqXxmqK
+	 oRMzooTjQd05uErF98Pg79Ilbfzs3y4Cx9cDjua4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbgD3OCa (ORCPT
+        id S1729449AbgD3OCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgD3OCX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:02:23 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37561C035494;
-        Thu, 30 Apr 2020 07:02:23 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so6594391ljb.9;
-        Thu, 30 Apr 2020 07:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N+Ht0CmfDxJVUU6J4yFlhD6kd2eTTrdGjBG9WTx/UyQ=;
-        b=XPLsH1OV1IK/7IHKpVHzrXqje08ez4AfmDTnVvgYOvBOy0FfpRqK+D9XYPlaE05rNQ
-         tbWt8gHkoewEz1ZUIHtmfsi6katLHTeLsDVuZdrrb/9kmBnnr7Nqg4uaZMHik+Lfx6bT
-         CnqceWSKVJEUN9qF/EyddjcmjwKe2GCmxEKpOxxTndVb9qiTjOzT0MYSxJFK+kGc+B1U
-         ss1n7PFEVRDR/o9znXtZsEQYylgNtoHQJBLwCePduH/UfxVLEX40B8VRVdyP8pEunGTV
-         kZTPfxQ4HNrinx9RBPk88XHaX88dN3YSuwQOdCnup6aHtdw0gsWv+BchoKbWH6xQEaEw
-         K0mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N+Ht0CmfDxJVUU6J4yFlhD6kd2eTTrdGjBG9WTx/UyQ=;
-        b=s57I4YQgB+D0UXAnhqsItvyDVqjJNqarQ00pQ/nIAnEcQUg+rjc9mJVF93UqcRDv+9
-         BJ87PNUr0/ZI4c83Ey5jbxBj2bGsIVMNyhgaE6y+hK+iP/Rgdl8mi45QH1ifOfqMHM/e
-         8LA05IGc6tnnWLMKTksdCBgCrV0lZbTIKk615KkLmHnZA3p7NzgD7wwNss5AGMNC9aBr
-         ipGI3mPTSzrUjqgqnTI1atvcwF4OX2zHt9RPyIr6cfvr8jlMneUdXp5rOWtll0WfnJ0R
-         7R1pXHW4ODbWl9Jj4gayufqn+n+ojVz7fBATu53t+ARa27L5engxI6uLxZZ02rC5CCoh
-         g9cQ==
-X-Gm-Message-State: AGi0PubsdP8A1WQGp7T6pGEU46IiNbmVW5kRWUoRoj/KegF+QT8CReSj
-        a6/i9R+F0bzyEbMoozGwfXC8yt19
-X-Google-Smtp-Source: APiQypInaM7ORzF/CVsxNxUc0J9Cyf/Q6St4WH9tVfb2A8VygbMaxJllBH4AhcGid0vObbUWazuWjQ==
-X-Received: by 2002:a2e:87d9:: with SMTP id v25mr2275164ljj.241.1588255341268;
-        Thu, 30 Apr 2020 07:02:21 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v8sm4886684lfp.85.2020.04.30.07.02.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 07:02:20 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
-Message-ID: <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
-Date:   Thu, 30 Apr 2020 17:02:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 10:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727911AbgD3Nxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506FC2063A;
+        Thu, 30 Apr 2020 13:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254821;
+        bh=1Oh3xPMOfPQqPMxE+LU10jFahdIXB/IA9MARC8qt+cE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YjW07hAshZhENSnfI+Atm1VH7KTmuvEGlYYfJbHWM2X+WtUITEYsu5G4+fLBwqd0D
+         16mTYJ1ZmZlNVffhGuYGyaLhAZXTsOjJcP4621syk7/X20zj0koy2fIHuYSiB/L8I/
+         eN6eZpGHABijQpMPLhuwLZrZLx892PH/rh0HRNWs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/30] svcrdma: Fix trace point use-after-free race
+Date:   Thu, 30 Apr 2020 09:53:08 -0400
+Message-Id: <20200430135325.20762-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.04.2020 16:56, Dmitry Osipenko пишет:
-> 30.04.2020 01:00, Sowjanya Komatineni пишет:
->> +static int chan_capture_kthread_finish(void *data)
->> +{
->> +	struct tegra_vi_channel *chan = data;
->> +	struct tegra_channel_buffer *buf;
->> +
->> +	set_freezable();
->> +
->> +	while (1) {
->> +		try_to_freeze();
-> 
-> I guess it won't be great to freeze in the middle of a capture process, so:
-> 		if (list_empty(&chan->done))
-> 			try_to_freeze();
+From: Chuck Lever <chuck.lever@oracle.com>
 
-And here should be some locking protection in order not race with the
-chan_capture_kthread_start because kthread_finish could freeze before
-kthread_start.
+[ Upstream commit e28b4fc652c1830796a4d3e09565f30c20f9a2cf ]
 
->> +		wait_event_interruptible(chan->done_wait,
->> +					 !list_empty(&chan->done) ||
->> +					 kthread_should_stop());
->> +
->> +		/* dequeue buffers and finish capture */
->> +		buf = dequeue_buf_done(chan);
->> +		while (buf) {
->> +			tegra_channel_capture_done(chan, buf);
->> +			buf = dequeue_buf_done(chan);
->> +		}
->> +
->> +		if (kthread_should_stop())
->> +			break;
->> +	}
->> +
->> +	return 0;
->> +}
-> 
+I hit this while testing nfsd-5.7 with kernel memory debugging
+enabled on my server:
+
+Mar 30 13:21:45 klimt kernel: BUG: unable to handle page fault for address: ffff8887e6c279a8
+Mar 30 13:21:45 klimt kernel: #PF: supervisor read access in kernel mode
+Mar 30 13:21:45 klimt kernel: #PF: error_code(0x0000) - not-present page
+Mar 30 13:21:45 klimt kernel: PGD 3601067 P4D 3601067 PUD 87c519067 PMD 87c3e2067 PTE 800ffff8193d8060
+Mar 30 13:21:45 klimt kernel: Oops: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+Mar 30 13:21:45 klimt kernel: CPU: 2 PID: 1933 Comm: nfsd Not tainted 5.6.0-rc6-00040-g881e87a3c6f9 #1591
+Mar 30 13:21:45 klimt kernel: Hardware name: Supermicro Super Server/X10SRL-F, BIOS 1.0c 09/09/2015
+Mar 30 13:21:45 klimt kernel: RIP: 0010:svc_rdma_post_chunk_ctxt+0xab/0x284 [rpcrdma]
+Mar 30 13:21:45 klimt kernel: Code: c1 83 34 02 00 00 29 d0 85 c0 7e 72 48 8b bb a0 02 00 00 48 8d 54 24 08 4c 89 e6 48 8b 07 48 8b 40 20 e8 5a 5c 2b e1 41 89 c6 <8b> 45 20 89 44 24 04 8b 05 02 e9 01 00 85 c0 7e 33 e9 5e 01 00 00
+Mar 30 13:21:45 klimt kernel: RSP: 0018:ffffc90000dfbdd8 EFLAGS: 00010286
+Mar 30 13:21:45 klimt kernel: RAX: 0000000000000000 RBX: ffff8887db8db400 RCX: 0000000000000030
+Mar 30 13:21:45 klimt kernel: RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000246
+Mar 30 13:21:45 klimt kernel: RBP: ffff8887e6c27988 R08: 0000000000000000 R09: 0000000000000004
+Mar 30 13:21:45 klimt kernel: R10: ffffc90000dfbdd8 R11: 00c068ef00000000 R12: ffff8887eb4e4a80
+Mar 30 13:21:45 klimt kernel: R13: ffff8887db8db634 R14: 0000000000000000 R15: ffff8887fc931000
+Mar 30 13:21:45 klimt kernel: FS:  0000000000000000(0000) GS:ffff88885bd00000(0000) knlGS:0000000000000000
+Mar 30 13:21:45 klimt kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Mar 30 13:21:45 klimt kernel: CR2: ffff8887e6c279a8 CR3: 000000081b72e002 CR4: 00000000001606e0
+Mar 30 13:21:45 klimt kernel: Call Trace:
+Mar 30 13:21:45 klimt kernel: ? svc_rdma_vec_to_sg+0x7f/0x7f [rpcrdma]
+Mar 30 13:21:45 klimt kernel: svc_rdma_send_write_chunk+0x59/0xce [rpcrdma]
+Mar 30 13:21:45 klimt kernel: svc_rdma_sendto+0xf9/0x3ae [rpcrdma]
+Mar 30 13:21:45 klimt kernel: ? nfsd_destroy+0x51/0x51 [nfsd]
+Mar 30 13:21:45 klimt kernel: svc_send+0x105/0x1e3 [sunrpc]
+Mar 30 13:21:45 klimt kernel: nfsd+0xf2/0x149 [nfsd]
+Mar 30 13:21:45 klimt kernel: kthread+0xf6/0xfb
+Mar 30 13:21:45 klimt kernel: ? kthread_queue_delayed_work+0x74/0x74
+Mar 30 13:21:45 klimt kernel: ret_from_fork+0x3a/0x50
+Mar 30 13:21:45 klimt kernel: Modules linked in: ocfs2_dlmfs ocfs2_stack_o2cb ocfs2_dlm ocfs2_nodemanager ocfs2_stackglue ib_umad ib_ipoib mlx4_ib sb_edac x86_pkg_temp_thermal iTCO_wdt iTCO_vendor_support coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel glue_helper crypto_simd cryptd pcspkr rpcrdma i2c_i801 rdma_ucm lpc_ich mfd_core ib_iser rdma_cm iw_cm ib_cm mei_me raid0 libiscsi mei sg scsi_transport_iscsi ioatdma wmi ipmi_si ipmi_devintf ipmi_msghandler acpi_power_meter nfsd nfs_acl lockd auth_rpcgss grace sunrpc ip_tables xfs libcrc32c mlx4_en sd_mod sr_mod cdrom mlx4_core crc32c_intel igb nvme i2c_algo_bit ahci i2c_core libahci nvme_core dca libata t10_pi qedr dm_mirror dm_region_hash dm_log dm_mod dax qede qed crc8 ib_uverbs ib_core
+Mar 30 13:21:45 klimt kernel: CR2: ffff8887e6c279a8
+Mar 30 13:21:45 klimt kernel: ---[ end trace 87971d2ad3429424 ]---
+
+It's absolutely not safe to use resources pointed to by the @send_wr
+argument of ib_post_send() _after_ that function returns. Those
+resources are typically freed by the Send completion handler, which
+can run before ib_post_send() returns.
+
+Thus the trace points currently around ib_post_send() in the
+server's RPC/RDMA transport are a hazard, even when they are
+disabled. Rearrange them so that they touch the Work Request only
+_before_ ib_post_send() is invoked.
+
+Fixes: bd2abef33394 ("svcrdma: Trace key RDMA API events")
+Fixes: 4201c7464753 ("svcrdma: Introduce svc_rdma_send_ctxt")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/trace/events/rpcrdma.h        | 50 +++++++++++++++++++--------
+ net/sunrpc/xprtrdma/svc_rdma_rw.c     |  3 +-
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c | 16 +++++----
+ 3 files changed, 46 insertions(+), 23 deletions(-)
+
+diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
+index 4c91cadd1871d..4a0b18921e06a 100644
+--- a/include/trace/events/rpcrdma.h
++++ b/include/trace/events/rpcrdma.h
+@@ -1322,17 +1322,15 @@ DECLARE_EVENT_CLASS(svcrdma_sendcomp_event,
+ 
+ TRACE_EVENT(svcrdma_post_send,
+ 	TP_PROTO(
+-		const struct ib_send_wr *wr,
+-		int status
++		const struct ib_send_wr *wr
+ 	),
+ 
+-	TP_ARGS(wr, status),
++	TP_ARGS(wr),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(const void *, cqe)
+ 		__field(unsigned int, num_sge)
+ 		__field(u32, inv_rkey)
+-		__field(int, status)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -1340,12 +1338,11 @@ TRACE_EVENT(svcrdma_post_send,
+ 		__entry->num_sge = wr->num_sge;
+ 		__entry->inv_rkey = (wr->opcode == IB_WR_SEND_WITH_INV) ?
+ 					wr->ex.invalidate_rkey : 0;
+-		__entry->status = status;
+ 	),
+ 
+-	TP_printk("cqe=%p num_sge=%u inv_rkey=0x%08x status=%d",
++	TP_printk("cqe=%p num_sge=%u inv_rkey=0x%08x",
+ 		__entry->cqe, __entry->num_sge,
+-		__entry->inv_rkey, __entry->status
++		__entry->inv_rkey
+ 	)
+ );
+ 
+@@ -1410,26 +1407,23 @@ TRACE_EVENT(svcrdma_wc_receive,
+ TRACE_EVENT(svcrdma_post_rw,
+ 	TP_PROTO(
+ 		const void *cqe,
+-		int sqecount,
+-		int status
++		int sqecount
+ 	),
+ 
+-	TP_ARGS(cqe, sqecount, status),
++	TP_ARGS(cqe, sqecount),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(const void *, cqe)
+ 		__field(int, sqecount)
+-		__field(int, status)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->cqe = cqe;
+ 		__entry->sqecount = sqecount;
+-		__entry->status = status;
+ 	),
+ 
+-	TP_printk("cqe=%p sqecount=%d status=%d",
+-		__entry->cqe, __entry->sqecount, __entry->status
++	TP_printk("cqe=%p sqecount=%d",
++		__entry->cqe, __entry->sqecount
+ 	)
+ );
+ 
+@@ -1525,6 +1519,34 @@ DECLARE_EVENT_CLASS(svcrdma_sendqueue_event,
+ DEFINE_SQ_EVENT(full);
+ DEFINE_SQ_EVENT(retry);
+ 
++TRACE_EVENT(svcrdma_sq_post_err,
++	TP_PROTO(
++		const struct svcxprt_rdma *rdma,
++		int status
++	),
++
++	TP_ARGS(rdma, status),
++
++	TP_STRUCT__entry(
++		__field(int, avail)
++		__field(int, depth)
++		__field(int, status)
++		__string(addr, rdma->sc_xprt.xpt_remotebuf)
++	),
++
++	TP_fast_assign(
++		__entry->avail = atomic_read(&rdma->sc_sq_avail);
++		__entry->depth = rdma->sc_sq_depth;
++		__entry->status = status;
++		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
++	),
++
++	TP_printk("addr=%s sc_sq_avail=%d/%d status=%d",
++		__get_str(addr), __entry->avail, __entry->depth,
++		__entry->status
++	)
++);
++
+ #endif /* _TRACE_RPCRDMA_H */
+ 
+ #include <trace/define_trace.h>
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index dc1951759a8ef..4fc0ce1270894 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -331,8 +331,6 @@ static int svc_rdma_post_chunk_ctxt(struct svc_rdma_chunk_ctxt *cc)
+ 		if (atomic_sub_return(cc->cc_sqecount,
+ 				      &rdma->sc_sq_avail) > 0) {
+ 			ret = ib_post_send(rdma->sc_qp, first_wr, &bad_wr);
+-			trace_svcrdma_post_rw(&cc->cc_cqe,
+-					      cc->cc_sqecount, ret);
+ 			if (ret)
+ 				break;
+ 			return 0;
+@@ -345,6 +343,7 @@ static int svc_rdma_post_chunk_ctxt(struct svc_rdma_chunk_ctxt *cc)
+ 		trace_svcrdma_sq_retry(rdma);
+ 	} while (1);
+ 
++	trace_svcrdma_sq_post_err(rdma, ret);
+ 	set_bit(XPT_CLOSE, &xprt->xpt_flags);
+ 
+ 	/* If even one was posted, there will be a completion. */
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index e8ad7ddf347ad..840bd352ef6ec 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -310,15 +310,17 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct ib_send_wr *wr)
+ 		}
+ 
+ 		svc_xprt_get(&rdma->sc_xprt);
++		trace_svcrdma_post_send(wr);
+ 		ret = ib_post_send(rdma->sc_qp, wr, NULL);
+-		trace_svcrdma_post_send(wr, ret);
+-		if (ret) {
+-			set_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags);
+-			svc_xprt_put(&rdma->sc_xprt);
+-			wake_up(&rdma->sc_send_wait);
+-		}
+-		break;
++		if (ret)
++			break;
++		return 0;
+ 	}
++
++	trace_svcrdma_sq_post_err(rdma, ret);
++	set_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags);
++	svc_xprt_put(&rdma->sc_xprt);
++	wake_up(&rdma->sc_send_wait);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
 
