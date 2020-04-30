@@ -2,127 +2,90 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F76C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B61C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8E7206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0A32074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588256380;
+	bh=hzSSexDW86oMOkOlWRBOrrNeDAP2YNg01Nwyvsplym8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CWld3tO3l20ofjNQXw8YRotvRDMb2B1eFnx7KgT+I1kzgrXvnyyFzdQsxsLUULe77
+	 GUL0DQKLpxijq+Wm732TLVFgNRWRBs2a8f2GsRSV1yk1XuogTwxl3JfbtOEBdzlPj+
+	 fe9vD2eGjhuC+xEKFKywVYYOYMXuZtTO22GhJxXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgD3OS7 (ORCPT
+        id S1727103AbgD3OTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgD3OS6 (ORCPT
+        Thu, 30 Apr 2020 10:19:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40717 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD3OTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:18:58 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69013C035494;
-        Thu, 30 Apr 2020 07:18:58 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 2A84D634C90;
-        Thu, 30 Apr 2020 17:18:50 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jUA1a-0000Ss-0D; Thu, 30 Apr 2020 17:18:50 +0300
-Date:   Thu, 30 Apr 2020 17:18:49 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
-Message-ID: <20200430141849.GP867@valkosipuli.retiisi.org.uk>
-References: <20200414200151.80089-1-daniel@qtec.com>
- <20200414200151.80089-2-daniel@qtec.com>
- <20200430094233.GE867@valkosipuli.retiisi.org.uk>
- <20200430111014.GD5856@pendragon.ideasonboard.com>
- <20200430133125.GL867@valkosipuli.retiisi.org.uk>
- <20200430135904.GI5856@pendragon.ideasonboard.com>
- <20200430141552.GO867@valkosipuli.retiisi.org.uk>
- <20200430141753.GJ5856@pendragon.ideasonboard.com>
+        Thu, 30 Apr 2020 10:19:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i27so5014958ota.7;
+        Thu, 30 Apr 2020 07:19:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DENVQBsUvtOTi5SjhKWIVkv3BHJdyUdGGFEYj8GGi+g=;
+        b=kfv5bGywgdm9yw3D9E7YrZ9sCvCrSR0FqdL0YbwAmTGGPahK6Cs2xLLuJ92+J0sff6
+         Ob72ztGjvIYPPPY2VgQakJ6N+dn8CTYax7Ynt9xK4zdQyzGDh03aztk/J9q++qPurTH7
+         c4zb19unKWQ+dhYksw0iP6iidRrG9A76qlngQ41og70JP7uVtQDSJzqqs7OBWG28oP0W
+         WW4wpyuUmxuHocqYKX1hlni1Tz3PVgXd4JPvQVc1U8FYGwaWMN+GFD+x7dLqduVs1CkW
+         4lsi8YfrLYazKLIoTB94fTBzbxNuCRlPYC4jbP/TiQzzLNYbbxh5NbMRULsfv0CR+1b0
+         jXAg==
+X-Gm-Message-State: AGi0PuYgdYMY5iO7J8atBvc3stZt9wGdarCv8feiQpnjSwM85VSS6wW1
+        A21FvEMQ4El6nBt+dQWLSgZsT8g=
+X-Google-Smtp-Source: APiQypIw6MDuh8Q2e485ee7Y7XEXFKcld99PiXzHbwdDh4z3okrKqE1I96blaiAxWEKf482ANOOEww==
+X-Received: by 2002:a9d:6e3:: with SMTP id 90mr2747810otx.261.1588256378256;
+        Thu, 30 Apr 2020 07:19:38 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l21sm1365605ooq.18.2020.04.30.07.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:19:37 -0700 (PDT)
+Received: (nullmailer pid 21255 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:19:36 -0000
+Date:   Thu, 30 Apr 2020 09:19:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v2 1/2] dt-bindings: serial: Move Marvell compatible
+ string to 8250 binding doc
+Message-ID: <20200430141936.GA21096@bogus>
+References: <20200419201716.679090-1-lkundrak@v3.sk>
+ <20200419201716.679090-2-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430141753.GJ5856@pendragon.ideasonboard.com>
+In-Reply-To: <20200419201716.679090-2-lkundrak@v3.sk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 05:17:53PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
+On Sun, 19 Apr 2020 22:17:15 +0200, Lubomir Rintel wrote:
+> These ports are compatible with NS8250 and handled by the same driver.
+> Get rid of the extra document that fails to document the properties that
+> are actually supported.
 > 
-> On Thu, Apr 30, 2020 at 05:15:52PM +0300, Sakari Ailus wrote:
-> > On Thu, Apr 30, 2020 at 04:59:04PM +0300, Laurent Pinchart wrote:
-> > > On Thu, Apr 30, 2020 at 04:31:25PM +0300, Sakari Ailus wrote:
-> > > > On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
-> > > > > On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
-> > > > >> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
-> > > > >>> Add min and max structures to the v4l2-subdev callback in order to allow
-> > > > >>> the subdev to return a range of valid frame intervals.
-> > > > >>> 
-> > > > >>> This would operate similar to the struct v4l2_subdev_frame_size_enum and
-> > > > >>> its max and min values for the width and the height. In this case, the
-> > > > >>> possibility to return a frame interval range is added to the v4l2-subdev level
-> > > > >>> whenever the v4l2 device operates in step-wise or continuous mode.
-> > > > >> 
-> > > > >> The current API only allows providing a list of enumerated values. That is
-> > > > >> limiting indeed, especially on register list based sensor drivers where
-> > > > >> vertical blanking is configurable.
-> > > > >> 
-> > > > >> I guess this could be extended to cover what V4L2, more or less. If we tell
-> > > > >> it's a range, is it assumed to be contiguous? We don't have try operation
-> > > > >> for the frame interval, but I guess set is good enough. The fraction is
-> > > > >> probably best for TV standards but it's not what camera sensors natively
-> > > > >> use. (But for a register list based driver, the established practice
-> > > > >> remains to use frame interval.)
-> > > > >> 
-> > > > >> I'm also wondering the effect on existing user space; if a driver gives a
-> > > > >> range, how will the existing programs work with such a driver?
-> > > > >> 
-> > > > >> I'd add an anonymous union with the interval field, the other field being
-> > > > >> min_interval. Then the current applications would get the minimum interval
-> > > > >> and still continue to function. I guess compilers are modern enough these
-> > > > >> days we can have an anonymous union in the uAPI?
-> > > > > 
-> > > > > We can discuss all this, but given patch 3/3 in this series, I think
-> > > > > this isn't the right API :-) The sensor driver should not expose the
-> > > > > frame interval enumeration API. It should instead expose control of the
-> > > > > frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
-> > > > > V4L2_CID_VBLANK.
-> > > > > 
-> > > > 
-> > > > That would require also exposing the size of the pixel array (and the
-> > > > analogue crop), in order to provide all the necessary information to
-> > > > calculate the frame rate. No objections there; this is a new driver.
-> > > > 
-> > > > There are however existing drivers that implement s_frame_interval subdev
-> > > > ioctl; those might benefit from this one. Or would you implement the pixel
-> > > > rate based control as well, and effectively deprecate the s_frame_interval
-> > > > on those?
-> > > 
-> > > That's what I would recommend, yes. I would only keep
-> > > .s_frame_interval() for sensors that expose that concept at the hardware
-> > > level (for instance with an integrated ISP whose firmware exposes a
-> > > frame interval or frame rate control).
-> > 
-> > Sounds good to me.
-> > 
-> > Jacopo's set exposing read-only subdevs completes the puzzle so the user
-> > space should have all it needs, right?
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  Documentation/devicetree/bindings/serial/8250.txt        | 2 ++
+>  Documentation/devicetree/bindings/serial/mrvl-serial.txt | 4 ----
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/mrvl-serial.txt
 > 
-> Until we run into the next missing piece :-)
 
-I was thinking of the frame rate configuration. Can you confirm that?
+Applied, thanks.
 
--- 
-Sakari Ailus
+Rob
