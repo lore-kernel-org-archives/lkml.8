@@ -2,204 +2,109 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD9C83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B72C83007
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC38208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4438620787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:10:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqZlXLKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgD3AIG (ORCPT
+        id S1726405AbgD3AKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:08:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17685 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgD3AIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:08:05 -0400
-IronPort-SDR: KU1Qunb1WCpIcnlTAE1gLOI4I13E1n7z6uHXCpA3QZjcgX2p2rCsK/Aa7odvIWmuHbV3QkjlDt
- BPIyscpbftow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 17:08:04 -0700
-IronPort-SDR: 8lZrsl0wLt7oFUoHi7W//Bntkm29bKrQORzcH1MPPrhb7F9mbLEACH08RrTi8X5hI+ByAQQnM5
- BwXN4hf/V26g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="293378354"
-Received: from chenw5-mobl1.ccr.corp.intel.com (HELO [10.254.209.112]) ([10.254.209.112])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Apr 2020 17:07:58 -0700
-Cc:     baolu.lu@linux.intel.com, Daniel Drake <drake@endlessm.com>,
-        jonathan.derrick@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 16/34] iommu/vt-d: Convert to probe/release_device()
- call-backs
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
- <20200429133712.31431-17-joro@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7ceca31f-cf24-d4f8-04fd-74691dd3c11a@linux.intel.com>
-Date:   Thu, 30 Apr 2020 08:07:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 20:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726282AbgD3AKF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 20:10:05 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2656AC03C1AE;
+        Wed, 29 Apr 2020 17:10:05 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id w65so1951267pfc.12;
+        Wed, 29 Apr 2020 17:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X0Uv2a8SpWt1dTnmxZxhtVMKOvjS4ym5W5xsfvNLKFk=;
+        b=cqZlXLKlr6kvQbC0dL7m42EaWEosWMCnT7t7YFh0HujWAh492foEsN/2JJdJimAx8K
+         LxZnPhu35w27UkiJt9ED7pUXUn/0g1kU+yfHaKM9xmMM5+dRu9eJnuAyLKWUilRUZq9z
+         YI9LEhBrx++jmdHpvoAtuqS5kzvCKtcXaJIUwxiiTvlQvXN7xR0haNkjar7AaS9xIWNz
+         fXq0lyWucBs4aaToG16hy0cII4NBeMDuFXuMvadKDI3M9LXbgTby23hUpN5ZupHs3lML
+         dtHI2yMxi9K9QnP34MaE9OBy2zk5JuoTTE20Yu8Xi1PPCFEB7nObb2eAd6LxvNdvArjX
+         dJfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=X0Uv2a8SpWt1dTnmxZxhtVMKOvjS4ym5W5xsfvNLKFk=;
+        b=UbHswpBIlvw+SXm7zYCDquPWknQD0rakW+UqPiDJyCkzCIXgV0ayd2yb+5I4g1btx7
+         yC1V59BtK7jt2kSA8wyQv0wYuATR1qUapvFI9ao5awCpgFAJGV19YDf8uOOiiI4kuHn5
+         k9qK2mX4VZABlm6WVc2GwLOGVEveC/Er5S2MGDohbxHWsGONlMTmMJjvUICETOLfxbg2
+         XKdxUzp2BV9EN454zMehPVF8ocWzEDmZ1FphDv9KuoJyA0j5a2aOdeeymfHmoFhLl+fO
+         fyTj6YYkNCKNDKnAJycf21L3hTpASsQup/SYkSSHWgg0JzI23bz9IzKIs/D4PZ51A9xd
+         U4wQ==
+X-Gm-Message-State: AGi0PuZIdsS5kS616/7t9v0LHSxcno1aaoplRffHvV1ADvNPbS74z+un
+        wh9XiYdqObxTMjVQ/MPcymahZ2TlFW8=
+X-Google-Smtp-Source: APiQypJYC8zD0qmO6c5Eh+Bv6Kzb/PYjHbxkvWbKcN7HSvcRqN/lpkh1qWyU7W2Dk48DP3vixKD1yw==
+X-Received: by 2002:a63:c443:: with SMTP id m3mr803622pgg.262.1588205404045;
+        Wed, 29 Apr 2020 17:10:04 -0700 (PDT)
+Received: from sol.lan (220-235-85-217.dyn.iinet.net.au. [220.235.85.217])
+        by smtp.gmail.com with ESMTPSA id 207sm1840592pgh.34.2020.04.29.17.10.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 17:10:03 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] tools/gpio: add bias flags to lsgpio
+Date:   Thu, 30 Apr 2020 08:09:16 +0800
+Message-Id: <20200430000916.8880-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200429133712.31431-17-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/29 21:36, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Convert the Intel IOMMU driver to use the probe_device() and
-> release_device() call-backs of iommu_ops, so that the iommu core code
-> does the group and sysfs setup.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Add display of the bias flags.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ tools/gpio/lsgpio.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Best regards,
-baolu
+diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
+index e1430f504c13..8a71ad36f83b 100644
+--- a/tools/gpio/lsgpio.c
++++ b/tools/gpio/lsgpio.c
+@@ -49,6 +49,18 @@ struct gpio_flag flagnames[] = {
+ 		.name = "open-source",
+ 		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
+ 	},
++	{
++		.name = "pull-up",
++		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
++	},
++	{
++		.name = "pull-down",
++		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
++	},
++	{
++		.name = "bias-disabled",
++		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
++	},
+ };
+ 
+ void print_flags(unsigned long flags)
+-- 
+2.26.2
 
-> ---
->   drivers/iommu/intel-iommu.c | 67 ++++---------------------------------
->   1 file changed, 6 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index b9f905a55dda..b906727f5b85 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5781,78 +5781,27 @@ static bool intel_iommu_capable(enum iommu_cap cap)
->   	return false;
->   }
->   
-> -static int intel_iommu_add_device(struct device *dev)
-> +static struct iommu_device *intel_iommu_probe_device(struct device *dev)
->   {
-> -	struct dmar_domain *dmar_domain;
-> -	struct iommu_domain *domain;
->   	struct intel_iommu *iommu;
-> -	struct iommu_group *group;
->   	u8 bus, devfn;
-> -	int ret;
->   
->   	iommu = device_to_iommu(dev, &bus, &devfn);
->   	if (!iommu)
-> -		return -ENODEV;
-> -
-> -	iommu_device_link(&iommu->iommu, dev);
-> +		return ERR_PTR(-ENODEV);
->   
->   	if (translation_pre_enabled(iommu))
->   		dev->archdata.iommu = DEFER_DEVICE_DOMAIN_INFO;
->   
-> -	group = iommu_group_get_for_dev(dev);
-> -
-> -	if (IS_ERR(group)) {
-> -		ret = PTR_ERR(group);
-> -		goto unlink;
-> -	}
-> -
-> -	iommu_group_put(group);
-> -
-> -	domain = iommu_get_domain_for_dev(dev);
-> -	dmar_domain = to_dmar_domain(domain);
-> -	if (domain->type == IOMMU_DOMAIN_DMA) {
-> -		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY) {
-> -			ret = iommu_request_dm_for_dev(dev);
-> -			if (ret) {
-> -				dmar_remove_one_dev_info(dev);
-> -				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
-> -				domain_add_dev_info(si_domain, dev);
-> -				dev_info(dev,
-> -					 "Device uses a private identity domain.\n");
-> -			}
-> -		}
-> -	} else {
-> -		if (device_def_domain_type(dev) == IOMMU_DOMAIN_DMA) {
-> -			ret = iommu_request_dma_domain_for_dev(dev);
-> -			if (ret) {
-> -				dmar_remove_one_dev_info(dev);
-> -				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
-> -				if (!get_private_domain_for_dev(dev)) {
-> -					dev_warn(dev,
-> -						 "Failed to get a private domain.\n");
-> -					ret = -ENOMEM;
-> -					goto unlink;
-> -				}
-> -
-> -				dev_info(dev,
-> -					 "Device uses a private dma domain.\n");
-> -			}
-> -		}
-> -	}
-> -
->   	if (device_needs_bounce(dev)) {
->   		dev_info(dev, "Use Intel IOMMU bounce page dma_ops\n");
->   		set_dma_ops(dev, &bounce_dma_ops);
->   	}
->   
-> -	return 0;
-> -
-> -unlink:
-> -	iommu_device_unlink(&iommu->iommu, dev);
-> -	return ret;
-> +	return &iommu->iommu;
->   }
->   
-> -static void intel_iommu_remove_device(struct device *dev)
-> +static void intel_iommu_release_device(struct device *dev)
->   {
->   	struct intel_iommu *iommu;
->   	u8 bus, devfn;
-> @@ -5863,10 +5812,6 @@ static void intel_iommu_remove_device(struct device *dev)
->   
->   	dmar_remove_one_dev_info(dev);
->   
-> -	iommu_group_remove_device(dev);
-> -
-> -	iommu_device_unlink(&iommu->iommu, dev);
-> -
->   	if (device_needs_bounce(dev))
->   		set_dma_ops(dev, NULL);
->   }
-> @@ -6198,8 +6143,8 @@ const struct iommu_ops intel_iommu_ops = {
->   	.map			= intel_iommu_map,
->   	.unmap			= intel_iommu_unmap,
->   	.iova_to_phys		= intel_iommu_iova_to_phys,
-> -	.add_device		= intel_iommu_add_device,
-> -	.remove_device		= intel_iommu_remove_device,
-> +	.probe_device		= intel_iommu_probe_device,
-> +	.release_device		= intel_iommu_release_device,
->   	.get_resv_regions	= intel_iommu_get_resv_regions,
->   	.put_resv_regions	= generic_iommu_put_resv_regions,
->   	.apply_resv_region	= intel_iommu_apply_resv_region,
-> 
