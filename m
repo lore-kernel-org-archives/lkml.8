@@ -2,110 +2,232 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C77C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85F6C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FCF2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2DB2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:12:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="OU5l9pzj"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aRdqN+ob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgD3IL1 (ORCPT
+        id S1726765AbgD3IMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
+        Thu, 30 Apr 2020 04:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbgD3IL0 (ORCPT
+        with ESMTP id S1726424AbgD3IMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:11:26 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3087C08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:11:24 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so5701128wrx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:11:24 -0700 (PDT)
+        Thu, 30 Apr 2020 04:12:07 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ADDC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:12:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n17so3940238ejh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2o2Fztfk5W//D3bO+bVikVHBouyFoiJ2j9CyC6fkXWQ=;
-        b=OU5l9pzjK2RQxM/eLRsv2chYFmymKQ5mxvF6GfOCys0Xtnj05P4pcSm6uR6bGUDa5P
-         UTBh9te0UCO3ieR/1G4plJHfDbekvivY22NAHTT4GQGdU5yIZg+Qrfr1ZsZ7iwEyzFyI
-         bfsPbs+2NFYLl/hgTX7ixpfR5v1314z90YVHVHBwhAIbk+sEaCbCERIuzQGY+7iMlNRL
-         wWH+u4FfSBG6j7/NmbmpJni6XO3kmQlTF1c3kE6lnfVAl9WhWfDj0CaVx8+GeL9Hq/O6
-         2owMONvh/MqWiGdeWn/U5Pq+pCVpwFB93zlr3xOg39sX0xVvx8yAAwpeNgMy6x1v/aGv
-         MbWw==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aPyH7cBulXkr69UeTYsLw8J8jsMaQ8KU1AV45QxO0GM=;
+        b=aRdqN+obvpVV2A+fgMLJy4RekybxRVDiG7lp8OF4bnZx2Ywvd3iCU/W+kNS4ZeZMFO
+         s2KHcqmsaIITIji0juOY7H6rW7Fc6dWrzMOI3EIosswh9jq3YYccKaX2xhcXTvz1nd5V
+         aBV+pihhUiUdyrUO5BWYQElkaX6/osTUoFcDUd3gIMpaDgbgaWZ7XiKQfHXqUsjsTevr
+         xcbBoOAzO8ZeJrHgjs2FlN5xkisQM2/NaUdROIGlFFS2pMP9xFv8klIZrmKxkYMDnngC
+         ZkScurbP2qpL3FH2QS0j799ldY6mMF4VeS1bCDMrE9KedwDuMF2flKOw3iR6FucwjAe8
+         uO/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=2o2Fztfk5W//D3bO+bVikVHBouyFoiJ2j9CyC6fkXWQ=;
-        b=P0uqZE/CjNy0sVvu6MRf5C7R1cwELW0xL4PlYDuzDVzx2Fm/ufrtxuq8dO2t7j1wQA
-         1Gx0JWWrkcmYt6fJVewPejhWZaNZER1hTWyMB85b5P62gnNcg55M8T0S63RQrHNcZWkx
-         ALXFIhqTsqGVxOzi6FLqkqppTgpY+ohT1/ZrAg5s5sWRPxnLilg8ahC/HvRJ2XoQLyEI
-         UmjmqTagvkiQYEnKmi4mFyKcXFvs472yLuSwm4zfyCAJ16LBYNn+bnHGRYZbewwaVS43
-         prvGsjkxSVftc5vFBqj1caA9ZNy+fXwaIm6cP+5I3y5XK/w0RL93uUFBvRUk0k2BU5Cw
-         Q6xg==
-X-Gm-Message-State: AGi0PuYdaYy8ZO33mspR8PNB51/Jja+bLrJTNDnVT2eI8zjvn/wBsrMQ
-        +Cq7emSVah9psIczvkYbPldmMIJpSrAPKjj8
-X-Google-Smtp-Source: APiQypILYB6i3OfitZOpjN+VgEPWdREhEKMt8Kth4moHZ+k3RT3PZah4rsctCqNQ9LdsMEwFt0izSw==
-X-Received: by 2002:adf:b310:: with SMTP id j16mr2555234wrd.95.1588234282987;
-        Thu, 30 Apr 2020 01:11:22 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id 74sm2992078wrk.30.2020.04.30.01.11.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Apr 2020 01:11:22 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com, stable@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
-Subject: [PATCH] tty: xilinx_uartps: Add the id to the console
-Date:   Thu, 30 Apr 2020 10:11:21 +0200
-Message-Id: <06195dc0effe2fb82e264e4faefcfdd6ebc00516.1588234277.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aPyH7cBulXkr69UeTYsLw8J8jsMaQ8KU1AV45QxO0GM=;
+        b=L1wFs6WI/pZ7BJij975owyApQcsfQzK3cSPm+7CUrDmgh04Em4kVvUKN/SOsOU8qMO
+         wJSSN7IwUCtDIng/Oi4nyFfQKZYtzAHQ7Noe7JHFycKW9JznQmI14+2H1XtZrijHAi5R
+         by/bV/rapkPp9/gPIJO2wdCBQx73L9h/A7bbmm1pkfEOjliYrwY7vE3Yk1YTwIJOgOmx
+         OdSjww2mWm5zS64g3rq9rKiQiaAUJ/r8BdNES9a/nuF3cdPbic1mIiD3JlJqTPaf9NmJ
+         kZn1a+OXqEZ/I8hSEVN6o1Goqz9HF3dJlHVXRN2EPvoRwV+NLd+3DwXoZCQ56HOeb1r/
+         JcFw==
+X-Gm-Message-State: AGi0PuYyCPm3h9mPVOQaO6gK6aLy+0io3cB/qZrlkU6Fm9to99kf2AIc
+        uxMIZ6VtCRrPBWWfdNcJEUxxPJcbMMDOJNycJ1/URQ==
+X-Google-Smtp-Source: APiQypKwCBG4S6M4oBR8TWLxl5ZHi3zkP+L9vXXaCbuE040rlsosdGPooBbFU8EQOuJGeo1PTMYPgjG4Ewt4MDGe5kI=
+X-Received: by 2002:a17:906:7750:: with SMTP id o16mr1646531ejn.12.1588234325407;
+ Thu, 30 Apr 2020 01:12:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200429160803.109056-1-david@redhat.com> <20200429160803.109056-3-david@redhat.com>
+ <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
+In-Reply-To: <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 30 Apr 2020 01:11:54 -0700
+Message-ID: <CAPcyv4i04+QLxiOyz04_eef2DFetEFKBUmi2A4xxw9abQD8hNQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Thu, Apr 30, 2020 at 12:20 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 29.04.20 18:08, David Hildenbrand wrote:
+> > Some paravirtualized devices that add memory via add_memory() and
+> > friends (esp. virtio-mem) don't want to create entries in
+> > /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+> > memory to the boot memmap of the kexec kernel.
+> >
+> > In fact, such memory is never exposed via the firmware (e.g., e820), but
+> > only via the device, so exposing this memory via /sys/firmware/memmap/ is
+> > wrong:
+> >  "kexec needs the raw firmware-provided memory map to setup the
+> >   parameter segment of the kernel that should be booted with
+> >   kexec. Also, the raw memory map is useful for debugging. For
+> >   that reason, /sys/firmware/memmap is an interface that provides
+> >   the raw memory map to userspace." [1]
+> >
+> > We want to let user space know that memory which is always detected,
+> > added, and managed via a (device) driver - like memory managed by
+> > virtio-mem - is special. It cannot be used for placing kexec segments
+> > and the (device) driver is responsible for re-adding memory that
+> > (eventually shrunk/grown/defragmented) memory after a reboot/kexec. It
+> > should e.g., not be added to a fixed up firmware memmap. However, it should
+> > be dumped by kdump.
+> >
+> > Also, such memory could behave differently than an ordinary DIMM - e.g.,
+> > memory managed by virtio-mem can have holes inside added memory resource,
+> > which should not be touched, especially for writing.
+> >
+> > Let's expose that memory as "System RAM (driver managed)" e.g., via
+> > /pro/iomem.
+> >
+> > We don't have to worry about firmware_map_remove() on the removal path.
+> > If there is no entry, it will simply return with -EINVAL.
+> >
+> > [1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-memmap
+> >
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> > Cc: Wei Yang <richard.weiyang@gmail.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Eric Biederman <ebiederm@xmission.com>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > ---
+> >  include/linux/memory_hotplug.h |  8 ++++++++
+> >  mm/memory_hotplug.c            | 20 ++++++++++++++++----
+> >  2 files changed, 24 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> > index bf0e3edb8688..cc538584b39e 100644
+> > --- a/include/linux/memory_hotplug.h
+> > +++ b/include/linux/memory_hotplug.h
+> > @@ -68,6 +68,14 @@ struct mhp_params {
+> >       pgprot_t pgprot;
+> >  };
+> >
+> > +/* Flags used for add_memory() and friends. */
+> > +
+> > +/*
+> > + * Don't create entries in /sys/firmware/memmap/ and expose memory as
+> > + * "System RAM (driver managed)" in e.g., /proc/iomem
+> > + */
+> > +#define MHP_DRIVER_MANAGED           1
+> > +
+> >  /*
+> >   * Zone resizing functions
+> >   *
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index ebdf6541d074..cfa0721280aa 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -98,11 +98,11 @@ void mem_hotplug_done(void)
+> >  u64 max_mem_size = U64_MAX;
+> >
+> >  /* add this memory to iomem resource */
+> > -static struct resource *register_memory_resource(u64 start, u64 size)
+> > +static struct resource *register_memory_resource(u64 start, u64 size,
+> > +                                              const char *resource_name)
+> >  {
+> >       struct resource *res;
+> >       unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> > -     char *resource_name = "System RAM";
+> >
+> >       /*
+> >        * Make sure value parsed from 'mem=' only restricts memory adding
+> > @@ -1058,7 +1058,8 @@ int __ref add_memory_resource(int nid, struct resource *res,
+> >       BUG_ON(ret);
+> >
+> >       /* create new memmap entry */
+> > -     firmware_map_add_hotplug(start, start + size, "System RAM");
+> > +     if (!(flags & MHP_DRIVER_MANAGED))
+> > +             firmware_map_add_hotplug(start, start + size, "System RAM");
+> >
+> >       /* device_online() will take the lock when calling online_pages() */
+> >       mem_hotplug_done();
+> > @@ -1081,10 +1082,21 @@ int __ref add_memory_resource(int nid, struct resource *res,
+> >  /* requires device_hotplug_lock, see add_memory_resource() */
+> >  int __ref __add_memory(int nid, u64 start, u64 size, unsigned long flags)
+> >  {
+> > +     const char *resource_name = "System RAM";
+> >       struct resource *res;
+> >       int ret;
+> >
+> > -     res = register_memory_resource(start, size);
+> > +     /*
+> > +      * Indicate that memory managed by a driver is special. It's always
+> > +      * detected and added via a driver, should not be given to the kexec
+> > +      * kernel for booting when manually crafting the firmware memmap, and
+> > +      * no kexec segments should be placed on it. However, kdump should
+> > +      * dump this memory.
+> > +      */
+> > +     if (flags & MHP_DRIVER_MANAGED)
+> > +             resource_name = "System RAM (driver managed)";
+> > +
+> > +     res = register_memory_resource(start, size, resource_name);
+> >       if (IS_ERR(res))
+> >               return PTR_ERR(res);
+> >
+> >
+>
+> BTW, I was wondering if this is actually also something that
+> drivers/dax/kmem.c wants to use for adding memory.
+>
+> Just because we decided to use some DAX memory in the current kernel as
+> system ram, doesn't mean we should make that decision for the kexec
+> kernel (e.g., using it as initial memory, placing kexec binaries onto
+> it, etc.). This is also not what we would observe during a real reboot.
 
-Update the console index. Once the serial node is found update it to the
-console index.
+Agree.
 
-Fixes: 18cc7ac8a28e ("Revert "serial: uartps: Register own uart console and driver structures"")
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+> I can see that the "System RAM" resource will show up as child resource
+> under the device e.g., in /proc/iomem.
+>
+> However, entries in /sys/firmware/memmap/ are created as "System RAM".
 
-Greg: Would be good if you can take this patch to 5.7 and also to stable
-trees.
----
- drivers/tty/serial/xilinx_uartps.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 672cfa075e28..b9d672af8b65 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1465,6 +1465,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		cdns_uart_uart_driver.nr = CDNS_UART_NR_PORTS;
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- 		cdns_uart_uart_driver.cons = &cdns_uart_console;
-+		cdns_uart_console.index = id;
- #endif
- 
- 		rc = uart_register_driver(&cdns_uart_uart_driver);
--- 
-2.26.2
-
+True. Do you think this rename should just be limited to what type
+/sys/firmware/memmap/ emits? I have the concern, but no proof
+currently, that there are /proc/iomem walkers that explicitly look for
+"System RAM", but might be thrown off by "System RAM (driver
+managed)". I was not aware of /sys/firmware/memmap until about 5
+minutes ago.
