@@ -2,88 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A30C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8E0C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F172072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22842078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD3MhC (ORCPT
+        id S1726819AbgD3Mh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:37:02 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:39842 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726053AbgD3MhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:37:02 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx395Ixqpeb0kuAA--.29S2;
-        Thu, 30 Apr 2020 20:36:25 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] MIPS: tools: Show result for loongson3-llsc-check
-Date:   Thu, 30 Apr 2020 20:36:24 +0800
-Message-Id: <1588250184-18730-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx395Ixqpeb0kuAA--.29S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZryxKw4kAw17Kw48Xr43ZFb_yoWDtFX_J3
-        s2g348GryfXrW2kaykury8XFZ7Wa4xZ3W7uanrZr17Wa4Yyr13XFW0yrZ8KF17Cw1jyF4f
-        Ar48ur1xAr4I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xr1l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjVOJ5UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Thu, 30 Apr 2020 08:37:27 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:46709 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgD3Mh1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:37:27 -0400
+IronPort-SDR: JC1LwE3cJwpU6xP9VrNk1kP5CTP+pP+eCCEY5S7xOLATcakplyjkbc9by7EjKUYA9pFc6eoG43
+ L1i6ZbakbzpTxAt6UqnILATpiwUFNWcjMCPMXYF2++Mw5xecXJe5OQIW0hlqkm67GCSJHg7pgl
+ Oi4ill4athke/C4Ying52PV07s+ZIbY2NMGJ78klKph1XaKlNMw4qyU6kCDuhjEvHM1ptm+PA7
+ VA0IAo5+HZwNouAfpemVqnTZ7U583qoL67Wv8Mwl5vy1NQdJIC9MdozOw+umeCzmwy1SJu1Q0Z
+ chs=
+X-IronPort-AV: E=Sophos;i="5.73,334,1583186400"; 
+   d="scan'208";a="278151906"
+From:   =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
+        <vesa.jaaskelainen@vaisala.com>
+To:     op-tee@lists.trustedfirmware.org,
+        Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
+        <vesa.jaaskelainen@vaisala.com>
+Subject: [PATCH v2 0/3] tee: add support for session's client UUID generation
+Date:   Thu, 30 Apr 2020 15:37:08 +0300
+Message-Id: <20200430123711.20083-1-vesa.jaaskelainen@vaisala.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 30 Apr 2020 12:37:21.0114 (UTC) FILETIME=[179ABBA0:01D61EEC]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is better to show the result before loongson3-llsc-check exit,
-otherwise we can see nothing if the return status is EXIT_SUCCESS,
-it seems confusing.
+TEE Client API defines that from user space only information needed for
+specified login operations is group identifier for group based logins.
 
-E.g. without this patch:
+REE kernel is expected to formulate trustworthy client UUID and pass that
+to TEE environment. REE kernel is required to verify that provided group
+identifier for group based logins matches calling processes group
+memberships.
 
-[loongson@localhost tools]$ ./loongson3-llsc-check ../../../vmlinux
-[loongson@localhost tools]$
+TEE specification only defines that the information passed from REE
+environment to TEE environment is encoded into on UUID.
 
-With this patch:
+In order to guarantee trustworthiness of client UUID user space is not
+allowed to freely pass client UUID.
 
-[loongson@localhost tools]$ ./loongson3-llsc-check ../../../vmlinux
-loongson3-llsc-check returns success
-[loongson@localhost tools]$
+Vesa Jääskeläinen (3):
+  tee: add support for session's client UUID generation
+  tee: optee: Add support for session login client UUID generation
+  [RFC] tee: add support for app id for client UUID generation
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/tools/loongson3-llsc-check.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tee/Kconfig      |   1 +
+ drivers/tee/optee/call.c |   6 +-
+ drivers/tee/tee_core.c   | 211 +++++++++++++++++++++++++++++++++++++++
+ include/linux/tee_drv.h  |  16 +++
+ 4 files changed, 233 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/tools/loongson3-llsc-check.c b/arch/mips/tools/loongson3-llsc-check.c
-index 0ebddd0..facd016 100644
---- a/arch/mips/tools/loongson3-llsc-check.c
-+++ b/arch/mips/tools/loongson3-llsc-check.c
-@@ -303,5 +303,7 @@ int main(int argc, char *argv[])
- out_close:
- 	close(vmlinux_fd);
- out_ret:
-+	fprintf(stdout, "loongson3-llsc-check %s\n",
-+		status ? "returns failure" : "returns success");
- 	return status;
- }
 -- 
-2.1.0
+2.17.1
 
+Changes v1->v2:
+
+* Changed goto labels to be more logical
+* Capture error if formatted string for UUIDv5 does not fit into buffer
+
+Notes:
+
+This patcheset has been designed so that it can be iteratively intergrated
+meaning that the application ID (RFC patch) part can be left for later when
+there is agreed solution for that.
+
+TEE specification leaves Linux behavior undefined. It does not define any
+UUID value for name space. UUID in here is randomly generated with uuidgen
+tool.
+
+I have also include amdtee people as this method probably should also be
+applied in there.
+
+Using op-tee@lists.trustedfirmware.org instead of tee-dev@lists.linaro.org as
+latter is deprecated old list.
+
+Original issue in OP-TEE OS tracker:
+https://github.com/OP-TEE/optee_os/issues/3642
+
+Related reviews and demonstration for the concept:
+https://github.com/linaro-swg/linux/pull/74
+https://github.com/OP-TEE/optee_client/pull/195
+https://github.com/OP-TEE/optee_test/pull/406
