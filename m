@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F566C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D602C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB9D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEDD20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255193;
-	bh=Z/2kThsrIUdaBeMiovI4HEPKPp2VcWA9SpoOHsJnMiI=;
+	s=default; t=1588255196;
+	bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnygpY2bsDRbXXjSKZ6UzM+p1dsziBsfybvlGYr1No5aogPeTnm914FrIHbsIVfzz
-	 9Kv/PuONq98CbNDpCJoP8inkTeSOlYu+gtQwEEE705qULxF78EzgCSbvhn0MiP/pTY
-	 N/UAOqJAGO0/gg+VTTqU5pn0AEAc1rDRZ2Fgp9I4=
+	b=wP8RfLT5gtrz2dtVR4Hx0EoA4N4Og0Y+qUSz7lbvt1jqBr9HRvmAovt55oRykirfB
+	 Y4IIX6eOkypNpivi05vl9E4Fv9ysuMDI08qdTqZikWz9sOaL96wdnH1oWTxgHlgAXe
+	 P81B9c1PioYIvOOrp5Xr9pedm9DQv9ChmVciz044=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgD3N7v (ORCPT
+        id S1729378AbgD3N7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbgD3NyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:25 -0400
+        id S1728963AbgD3NyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24B4624959;
-        Thu, 30 Apr 2020 13:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3736920873;
+        Thu, 30 Apr 2020 13:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254864;
-        bh=Z/2kThsrIUdaBeMiovI4HEPKPp2VcWA9SpoOHsJnMiI=;
+        s=default; t=1588254863;
+        bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwcOqPeInug2PzDN4qHDpBjRLUtSu6jNaIlr6xvwoVNTcA6JzGA4mAx0m/3VCHEMv
-         jVlDVMKcgogfhrpdBQb28K7DhIWGz+Gm1eg9duFeJ9TuFevGHLasTSizcayiQ8EPvD
-         l8CKKFfVEsJW7SY2Vwr1X5GdphhsxHWaty0wbFE4=
+        b=ktBJLdVjldsH3EcZvml6n+eIKusPug/r2qhb+/jcVNAm/5EgFLzA5OBItAZRL6Pn9
+         yoJ7iP15xLFqdDBxmj+vsP/zsCqbv4+FKI02G+FWTyZzzuBiAhG1JmGo1VaoxLQIG2
+         /Nx/55MeqdJPaYH7C3zb/IWmSb4Zj4S/xyf8iEkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 20/27] net: dsa: b53: Fix ARL register definitions
-Date:   Thu, 30 Apr 2020 09:53:55 -0400
-Message-Id: <20200430135402.20994-20-sashal@kernel.org>
+Cc:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/27] scripts/config: allow colons in option strings for sed
+Date:   Thu, 30 Apr 2020 09:53:54 -0400
+Message-Id: <20200430135402.20994-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
 References: <20200430135402.20994-1-sashal@kernel.org>
@@ -60,45 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
 
-[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
-which means that when we read/wrote from/to ARL bin index 0, we were
-actually accessing the ARLA_RWCTRL register.
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
+
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index e5c86d44667af..1b2a337d673dd 100644
---- a/drivers/net/dsa/b53/b53_regs.h
-+++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -294,7 +294,7 @@
-  *
-  * BCM5325 and BCM5365 share most definitions below
-  */
--#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
-+#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
- #define   ARLTBL_MAC_MASK		0xffffffffffffULL
- #define   ARLTBL_VID_S			48
- #define   ARLTBL_VID_MASK_25		0xff
-@@ -306,7 +306,7 @@
- #define   ARLTBL_VALID_25		BIT(63)
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
  
- /* ARL Table Data Entry N Registers (32 bit) */
--#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
-+#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
- #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
- #define   ARLTBL_TC(tc)			((3 & tc) << 11)
- #define   ARLTBL_AGE			BIT(14)
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
+ 
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
 -- 
 2.20.1
 
