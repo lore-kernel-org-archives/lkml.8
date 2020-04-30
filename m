@@ -2,153 +2,195 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFF9C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472F1C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7525520836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2664820836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dXBT/Feb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayuUj7W5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgD3SMz (ORCPT
+        id S1726524AbgD3SRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:12:55 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53326 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726609AbgD3SMz (ORCPT
+        Thu, 30 Apr 2020 14:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725844AbgD3SRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:12:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588270374; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=pPcbnLkLayy2Rm6j200c+uFP70JSkmmB+Gfck54oXYM=; b=dXBT/FeblLgKXrIN51v0M/5a+7hTF2Wk1URWoKX6Leaiv/h3b3HVvVVOjMRx3i0nTkkO3yx3
- qrOyvLrtoQcH5+eJtujqhxqCF3B3azqdvCM1CMYIIIn35amDakPLwiZbvqt2RqyeE38pEO8T
- ALHQbbhZitcmtF3SSUOl5ig8a1w=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eab1516.7f27703a0650-smtp-out-n04;
- Thu, 30 Apr 2020 18:12:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 31282C433F2; Thu, 30 Apr 2020 18:12:37 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4822C433D2;
-        Thu, 30 Apr 2020 18:12:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A4822C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 30 Apr 2020 12:12:33 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
-        saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string
- and mem_iface clock
-Message-ID: <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
-        saiprakash.ranjan@codeaurora.org
-References: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
+        Thu, 30 Apr 2020 14:17:05 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6188EC035494;
+        Thu, 30 Apr 2020 11:17:04 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n143so6721150qkn.8;
+        Thu, 30 Apr 2020 11:17:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yZrKhc9dDBRwqB8I37WnRLZepK2tKLx0T5FQSB8wP0w=;
+        b=ayuUj7W5/4QbQ8iSRkEyEbcGsdDQQO1V0TG8CliZJOKEcORyj0P3G2Y3+DsPT+81ir
+         9Soj9PaMJV2FIDMGadUtObCplfgS6ibiXKC8PsW6LiHVg6406gK8/5DPnkVdotOdRT5V
+         YmcTtwa8AZptBcDOweBesBi6l/uX9V9sHOoVUuxta4kl8avSP3B0yEdETLftruBh70Ma
+         NVWGiCiahHehCXnHvx1mluuOH9l72xGxC5Ft+xtRGpW+iyxKMGiEHMLIOUxiH6D5EnXF
+         7ezC9jqXqWnRd2tkBrOEVDsT+2izZjOactJ+zCIrGu54Rp5NMM+6IzcyThCTQ1D5vhip
+         jGNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yZrKhc9dDBRwqB8I37WnRLZepK2tKLx0T5FQSB8wP0w=;
+        b=PZjSsvFf4PW+wf60BxAFlXrR/U7o17gqP4Y+Ll7RB86Ty4FBwzDPsK324pdF+nxCF7
+         abjdk3lhi92xeNM4dk0m0c7esYFYYBeRRyBqRhGuZk2zRZdp2+2gtQiKeuwrTMhtj17i
+         OpfCwcFn42MWtNtjqNMmZM4zGj5Ipyo2aZwiBp33S/Vgmb27IqTTY38d3iZtiftCAlrg
+         QS0h2lyTvwKVQ+lJ2QTCOuB/XOs5vnf5fA61gKnp/Zndeg/wEf+gNo9B63QcNZSLHYB0
+         eVjIOpRUj8AoPRYD4Z6ZyQC92b9KoIh3hF8IA+aR9YXRhnGcIBHpaJcZlNP2qM0GrTiV
+         +gwg==
+X-Gm-Message-State: AGi0Pub1yDjSR5iNzlmw5RofsnZ3/1iCTQ/g7d9/zV7rV4MQZy8RyM57
+        HDW95Ik/KpECpJK+0F1+4pUNTOSbRyLClUrfLtM=
+X-Google-Smtp-Source: APiQypKonPFhwRgU4/UIKRVBFEGHIOnqS8FRKfkMmy0dzmV76hOno2jzYwpMeIHe3A6Gc5nXC3zcCoyki3aBVkHhcuI=
+X-Received: by 2002:ae9:eb8c:: with SMTP id b134mr4941172qkg.39.1588270623433;
+ Thu, 30 Apr 2020 11:17:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <0000000000006780dc05a47ed632@google.com> <2ae442cb-b6ab-0624-a2a0-0f98a5c217bf@iogearbox.net>
+In-Reply-To: <2ae442cb-b6ab-0624-a2a0-0f98a5c217bf@iogearbox.net>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 30 Apr 2020 11:16:52 -0700
+Message-ID: <CAEf4BzZnW2E3e1W77aChM_HyXKAX7Ty6TLJLaNAtVugYumsytA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in bpf_link_put
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     syzbot <syzbot+39b64425f91b5aab714d@syzkaller.appspotmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        Martin Lau <kafai@fb.com>, KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:29:47AM +0530, Sharat Masetty wrote:
-> This patch adds a new compatible string for sc7180 and also an
-> additional clock listing needed to power the TBUs and the TCU.
-> 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
-> v2: Addressed review comments from Doug
-> 
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index 6515dbe..ba5dba4 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -28,6 +28,7 @@ properties:
->            - enum:
->                - qcom,msm8996-smmu-v2
->                - qcom,msm8998-smmu-v2
-> +              - qcom,sc7180-smmu-v2
->                - qcom,sdm845-smmu-v2
->            - const: qcom,smmu-v2
-> 
-> @@ -113,16 +114,23 @@ properties:
->        present in such cases.
-> 
->    clock-names:
-> +    minItems: 2
-> +    maxItems: 3
->      items:
->        - const: bus
->        - const: iface
-> +      - const: mem_iface
+On Thu, Apr 30, 2020 at 7:36 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>
+> On 4/30/20 11:39 AM, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    449e14bf bpf: Fix unused variable warning
+> > git tree:       bpf-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=109eb5f8100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=16d87c420507d444
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=39b64425f91b5aab714d
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+39b64425f91b5aab714d@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in atomic64_dec_and_test include/asm-generic/atomic-instrumented.h:1557 [inline]
+> > BUG: KASAN: use-after-free in bpf_link_put+0x19/0x1b0 kernel/bpf/syscall.c:2255
+> > Write of size 8 at addr ffff8880a7248800 by task syz-executor.0/28011
+>
+> Andrii, ptal, thanks!
+>
 
-Hi Sharat -
+yep, looking...
 
-I think there was a bit of confusion due to renaming between downstream and
-upstream.  Currently for the sdm845 and friends we have:
-
-  clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-     <&gcc GCC_GPU_CFG_AHB_CLK>;
-  clock-names = "bus", "iface";
-
-Confusingly these same clocks downstream are "mem_iface_clk" and "iface_clk"
-respectively.
-
-It looks like you are trying to add GCC_DDRSS_GPU_AXI_CLK as "mem_iface" which
-was formerly "mem_clk" downstream. I'm not sure if the naming change is
-intentional or you were trying to make upstream and downstream match and didn't
-realize that they were renamed.
-
-I'm not sure if we need DDRSS_GPU_AXI_CLK or not. Empirically it works without
-it for sdm845 (I don't have a sc7180 to test) but we should probably loop back
-with either the clock team or the hardware designers to be sure there isn't a
-corner case that is missing. I agree with Doug that its always best if we don't
-need to add a clock.
-
-Jordan
-> 
->    clocks:
-> +    minItems: 2
-> +    maxItems: 3
->      items:
->        - description: bus clock required for downstream bus access and for the
->            smmu ptw
->        - description: interface clock required to access smmu's registers
->            through the TCU's programming interface.
-> +      - description: clock required for the inner working of SMMU TBUs and the
-> +          TCU like the pagetable walks and the TLB flushes.
-> 
->    power-domains:
->      maxItems: 1
-> --
-> 1.9.1
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > CPU: 0 PID: 28011 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0x188/0x20d lib/dump_stack.c:118
+> >   print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+> >   __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+> >   kasan_report+0x33/0x50 mm/kasan/common.c:625
+> >   check_memory_region_inline mm/kasan/generic.c:187 [inline]
+> >   check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+> >   atomic64_dec_and_test include/asm-generic/atomic-instrumented.h:1557 [inline]
+> >   bpf_link_put+0x19/0x1b0 kernel/bpf/syscall.c:2255
+> >   bpf_link_release+0x33/0x40 kernel/bpf/syscall.c:2270
+> >   __fput+0x33e/0x880 fs/file_table.c:280
+> >   task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+> >   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+> >   exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
+> >   prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+> >   syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+> >   do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> > RIP: 0033:0x7fc891a66469
+> > Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ff 49 2b 00 f7 d8 64 89 01 48
+> > RSP: 002b:00007fc892156db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> > RAX: fffffffffffffff4 RBX: 000000000042c4e0 RCX: 00007fc891a66469
+> > RDX: 0000000000000010 RSI: 0000000020000040 RDI: 000000000000001c
+> > RBP: 00000000006abf00 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000005
+> > R13: 000000000000004f R14: 0000000000415473 R15: 00007fc8921575c0
+> >
+> > Allocated by task 28011:
+> >   save_stack+0x1b/0x40 mm/kasan/common.c:49
+> >   set_track mm/kasan/common.c:57 [inline]
+> >   __kasan_kmalloc mm/kasan/common.c:495 [inline]
+> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+> >   kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+> >   kmalloc include/linux/slab.h:555 [inline]
+> >   kzalloc include/linux/slab.h:669 [inline]
+> >   cgroup_bpf_link_attach+0x13d/0x5b0 kernel/bpf/cgroup.c:894
+> >   link_create kernel/bpf/syscall.c:3765 [inline]
+> >   __do_sys_bpf+0x238c/0x46d0 kernel/bpf/syscall.c:3987
+> >   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> >
+> > Freed by task 28011:
+> >   save_stack+0x1b/0x40 mm/kasan/common.c:49
+> >   set_track mm/kasan/common.c:57 [inline]
+> >   kasan_set_free_info mm/kasan/common.c:317 [inline]
+> >   __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+> >   __cache_free mm/slab.c:3426 [inline]
+> >   kfree+0x109/0x2b0 mm/slab.c:3757
+> >   cgroup_bpf_link_attach+0x2bc/0x5b0 kernel/bpf/cgroup.c:906
+> >   link_create kernel/bpf/syscall.c:3765 [inline]
+> >   __do_sys_bpf+0x238c/0x46d0 kernel/bpf/syscall.c:3987
+> >   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> >
+> > The buggy address belongs to the object at ffff8880a7248800
+> >   which belongs to the cache kmalloc-128 of size 128
+> > The buggy address is located 0 bytes inside of
+> >   128-byte region [ffff8880a7248800, ffff8880a7248880)
+> > The buggy address belongs to the page:
+> > page:ffffea00029c9200 refcount:1 mapcount:0 mapping:00000000a3d4ec31 index:0xffff8880a7248700
+> > flags: 0xfffe0000000200(slab)
+> > raw: 00fffe0000000200 ffffea00024ceac8 ffffea000251d3c8 ffff8880aa000700
+> > raw: ffff8880a7248700 ffff8880a7248000 000000010000000f 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >   ffff8880a7248700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >   ffff8880a7248780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >> ffff8880a7248800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >                     ^
+> >   ffff8880a7248880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >   ffff8880a7248900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > ==================================================================
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >
+>
