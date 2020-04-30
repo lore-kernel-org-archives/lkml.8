@@ -2,128 +2,144 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B127C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA17C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E545220787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003C420787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="StkOBco2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U/3U3Omg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgD3Iqj (ORCPT
+        id S1727809AbgD3Iqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:46:39 -0400
-Received: from mail-co1nam11on2054.outbound.protection.outlook.com ([40.107.220.54]:38369
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726871AbgD3Iqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:46:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UFh/rjaUknIpy4DSETGUzzBylo0Ong9jf5eRnuv9ogF844Okfs13X4APPo4Pl9trMurhbFY6Fx4MJw739p+E/dtOcgoYB6L1fjMoAog2oqmmPwzwJd3T4rJ+U+pLXriVECZzpZ5iRxuzzSP/BBs+o0JOWOLwHgIYJTMnBEQh0xMN2H186+HjAG6grmHX7PfM84KoibaS2zO2PDs8u1m6NSR7Z5cr4AMX/siyqfT/pxX23uIJUY7IItf63IC8f34fRwaCVFQCA7fzlBBnresmP5Ri5v4s7BG6/mXCLA67kBJ1DSq4iZThleGIFjYgJOHD/Sy4VQbuFi4vpd7lk6WLvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3D/kK5cQCLuGeO7hC945SONJQJPxE71P6AsK3LWgYTk=;
- b=oWNu+5zIIG1ofDbEyAsopPnx9h5ubCLMZRRKuO6AMTKH3e3OElFlnoID2CFJVj0RmpDrDNFCf++0qBIcEcCWkYj32qlA5GXpSoG3LoawX55RvGk+iZqB0bczNsDlwHe7sjP3C6JM6ttFdX0Jq/v72eWYXDRIv8xd9j72apEZ/iTN8kF8KWj/PGqQz0WMopJFj7pPxycXVmJn35PFiy1KsVvriQMaVUGyPr2kKxHI/gKLty6B6bUPLuCurZRDNkKNacTcXzqF1POn5bWlq1BwjBBPfiGby7CRr8VI/3AYtsHlI4SBtvjsGBsBFVPppQn2US8DLep94AzdvAegQIMyAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3D/kK5cQCLuGeO7hC945SONJQJPxE71P6AsK3LWgYTk=;
- b=StkOBco2JpN1RvR50gilkdXwwiN+jLyQJmCRLtTFka97Ir2ZuCxjg3i3MajBzRi5nELdwPo+itChvNvAccalH07LxJe05fX+KF5w16Kon30ITKjzE9CDF5kK3umP9Oc5I0KRQRnfNC9Emj5NFicFITIW8g8I+BiDl+hnOH6xLBM=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1465.namprd12.prod.outlook.com (2603:10b6:4:7::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.22; Thu, 30 Apr 2020 08:46:36 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 08:46:36 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com, brijesh.singh@amd.com
-Subject: [PATCH v7 15/18] EFI: Introduce the new AMD Memory Encryption GUID.
-Date:   Thu, 30 Apr 2020 08:46:26 +0000
-Message-Id: <f9cb729a2df1ffc06eaf78e9015d23cc1682973b.1588234824.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SN6PR16CA0065.namprd16.prod.outlook.com
- (2603:10b6:805:ca::42) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Thu, 30 Apr 2020 04:46:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727797AbgD3Iqp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:46:45 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B8ACC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dJibi8+9gpWgPsI5bkF0DP5RYKeyq8ferFIx7QxKLW4=; b=U/3U3Omg0pqfzoiow9jRIKGb7a
+        AtjRvjxjP4aL5yIszZQyuH37VD8/vONbuTi+GOl7rnGLllTYZR9FGljCZFw6u57WvSoj1mUxZm1Si
+        eWZCJWj4vimJp0Ly94Tyccm0HAqynZacSxnK8yebQGa3JHSwO1UKa5+RXchfdFWbCBHO5oHkQYV/0
+        9WMEGsNpKx+PI645x1jn1mwm3ztDZEyCCdgclHIRYtqn4FGe7Q6bRHlvdfiXQkSdDHt9JddAjvXgH
+        H8gjBDRu6+E9+kpykwFZ6xpLb0OAnfO3/mDoiHW3NXXeXiEj2WCVVDfnBfjZ2tFZeOQ3/ZPs1zHmJ
+        2OTrVlfQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jU4pn-0000wj-VB; Thu, 30 Apr 2020 08:46:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8F430307487;
+        Thu, 30 Apr 2020 10:46:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 727B720BD9001; Thu, 30 Apr 2020 10:46:17 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 10:46:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net, mingo@kernel.org,
+        tglx@linutronix.de, oleg@redhat.com, irogers@google.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org
+Subject: Re: [RFC][PATCH 1/7] rbtree: Add generic add and find helpers
+Message-ID: <20200430084617.GQ13592@hirez.programming.kicks-ass.net>
+References: <20200429153258.563269446@infradead.org>
+ <20200429153549.006661686@infradead.org>
+ <20200430010405.GA237715@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN6PR16CA0065.namprd16.prod.outlook.com (2603:10b6:805:ca::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:46:35 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b2aa1ecf-633c-4fab-6589-08d7ece2fdd0
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1465:|DM5PR12MB1465:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB14655095104B0F997D4D8D6A8EAA0@DM5PR12MB1465.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(7416002)(66946007)(26005)(36756003)(86362001)(66556008)(66476007)(5660300002)(478600001)(186003)(8936002)(2906002)(8676002)(16526019)(6916009)(7696005)(956004)(2616005)(52116002)(316002)(4326008)(6666004)(6486002)(136400200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0UQM1RbbLv3IQ+ShWeoVLWWvuw7E5OS1iF2Ic8EJe2f4G+Tf5g01nzsVgRRUy2TOLkQ2gvC4dLS5v3ePLIQkfmgiaL4dvPz1iFIoeVrMGTeAk3xvF9y8MzVc7vfaKv8b1VAYeOuSk7KJdgvWjcjcEUTUFzZB4nLFTxEaE/sq6hscDTVSmd1ykYx6rS26VChnWzjv5hjNJLwY8oXGnvo0odr0r5uC2iNxabXgbE0u4gwedvhZ+yxCg4O3t6U5niBX633U7AxODBYL6CFHHcybH/c1bd90Dt4RCweNabqo69/CSmjdA21r4TvdGJGvThe/6fSyamOBZSE1SspEm8bhb9q1zkvOdbeDORNxvtOurynFR2ytI5wDJvIR4VFvRe8Q0YPrB2JTr8WeithFt58Tjlekb95qC0wtHn28HFQ79mLaobmZ91OY9PDKylGvdiwtqE5yTDnIOqJQwkqPX4gFuEDCX2b6J8wKfzXgFKBAShP2irY3gRAn3xIpuTtXKU5X
-X-MS-Exchange-AntiSpam-MessageData: yHJw1RXYMpTvqC1OtEaDSwbKxLp7RJLLN2CiMAmO7IA5mDOT6O94er7mFu/HPAm0FYsBiXBTSswPjfQYaNhdhAM/S+j/IazLUWfSYneMBW/cQzMgSE3gGyI9VN/YsIQROqE1kJzux/yDb79+pBl8PJ+RDqVB2ZXVMfl1jDceCbw+PJR0AS52PtNYBLYXnUSULqAAL4MstZtEIz5Xhl41BRmepYJBKySQGXs6mgLbB7FPIxtIreMRmwsKbooM9Fu84hILAo05Pznul2WlQbbxyvgoqmNcrDB9mC9PcSFJguWeTy1ixAsMVIXIZFnAx9qJTnP5jbv+5EfU1kwtqZl1K/l9Od1DLShTj0x0hyNZq6hjGDQe4xCC2v6b+9oxSHWJVQITsAI4WUfw60sukzxSiuKKqdZ00KhrXNvPx1i7JYcYi58bvPkf4EvJegcg7YeTWUrNlfXV6Rh2uUMLV+ThF+wqOWDMNRsKFrRWKCvxNaHEhKHmWf7Z8YCm9nxTpokNN8+5BNeSWLw6HHXcFY3QK+DF/jTs9h3wGZOVGMKta3UBnirVObCgUFgRiGSSSXAg4PurE75ZkB9k2KWnzYH0UJ8P8NIKEkgUry/JvqLpeJo52bF5Ar9hJI4HhmUc6Oy7gVD7M3/dJEz7Uu5YA3JA4gje2lQX4YXbY357OorWNGPtO/+/wEgwuZ+coMw9u+HVnRKe4fYbL1eaMsGRE9oAiIydGSlCWBEk9oqN6inUj1SsFmuALXrtiXLVemlHs3/zjROSmqjktffcJsTGIR62qWuiNMxPs5HeRAZbPz6FlJk=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2aa1ecf-633c-4fab-6589-08d7ece2fdd0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:46:36.3440
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bjLlf8O41nco/qRdO7emg9xu5a7uxAvhf62FqktfiQlxYXWkExlV2KOTAsJL6F00fuQx8sjR44iuvxet5v1W6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1465
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430010405.GA237715@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Wed, Apr 29, 2020 at 06:04:05PM -0700, Michel Lespinasse wrote:
+> Hi Peter,
+> 
+> On Wed, Apr 29, 2020 at 05:32:59PM +0200, Peter Zijlstra wrote:
+> > I've always been bothered by the endless (fragile) boilerplate for
+> > rbtree, and I recently wrote some rbtree helpers for objtool and
+> > figured I should lift them into the kernel and use them more widely.
+> > 
+> > Provide:
+> > 
+> > partial-order; less() based:
+> >  - rb_add(): add a new entry to the rbtree
+> >  - rb_add_cached(): like rb_add(), but for a rb_root_cached
+> > 
+> > total-order; cmp() based:
+> >  - rb_find(): find an entry in an rbtree
+> >  - rb_find_first(): find the first (leftmost) matching entry
+> >  - rb_next_match(): continue from rb_find_first()
+> >  - rb_for_each(): for loop with rb_find_first() / rb_next_match()
 
-Introduce a new AMD Memory Encryption GUID which is currently
-used for defining a new UEFI enviroment variable which indicates
-UEFI/OVMF support for the SEV live migration feature. This variable
-is setup when UEFI/OVMF detects host/hypervisor support for SEV
-live migration and later this variable is read by the kernel using
-EFI runtime services to verify if OVMF supports the live migration
-feature.
+I appear to have failed to mention rb_find_add(), which is a bit of a
+specialty, but I could imagine there being more like it the many rbtree
+users out there (I count 300+ rb_link_node occurences).
 
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- include/linux/efi.h | 1 +
- 1 file changed, 1 insertion(+)
+> > 
+> > Also make rb_add_cached() / rb_erase_cached() return true when
+> > leftmost.
+> > 
+> > Inlining and constant propagation should see the compiler inline the
+> > whole thing, including the various compare functions.
+> 
+> I really like the idea of this change. Also,I think it opens avenues
+> for converting some users which had previously been avoiding raw rbtrees
+> seemingly only because they didn't want to write this boilerplate.
 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 251f1f783cdf..2efb42ccf3a8 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -358,6 +358,7 @@ void efi_native_runtime_setup(void);
- 
- /* OEM GUIDs */
- #define DELLEMC_EFI_RCI2_TABLE_GUID		EFI_GUID(0x2d9f28a2, 0xa886, 0x456a,  0x97, 0xa8, 0xf1, 0x1e, 0xf2, 0x4f, 0xf4, 0x55)
-+#define MEM_ENCRYPT_GUID			EFI_GUID(0x0cf29b71, 0x9e51, 0x433a,  0xa3, 0xb7, 0x81, 0xf3, 0xab, 0x16, 0xb8, 0x75)
- 
- typedef struct {
- 	efi_guid_t guid;
--- 
-2.17.1
+Yeah; our current interface mandates you _understand_ binary trees, I
+can imagine that's a step too far for some (sadly).
 
+> Few questions:
+> 
+> - Adding the rb_add_cached() / rb_erase_cached() return value looks
+>   like it almost belongs to a separate patch. Is this only used in
+>   patch 3/7 (sched/deadline) or did I miss other uses ? Not objecting
+>   to it, but it wasn't obvious to me when reading the patch what the
+>   return value was for.
+
+I can certainly add it in a separate patch; as might be evident from the
+(lack) of changelogs on the whole, I basically split and posted the
+thing the moment it booted. I figured I shouldn't sink more time into it
+if people were going to hate it ;-)
+
+> - Have you considered passing a cmp() function to rb_add() and
+>   rb_add_cached(), and having these test cmp() < 0 rather than less() ?
+>   I figure every user will need to have a cmp() function, so it'd be
+>   nicer if they didn't also need a less() function, if the generated
+>   code is similar (if you checked and rejected it because of bad code,
+>   please just say so).
+
+I did consider it; in fact I my original helpers had that.
+
+The reaosn I went with less() over cmp() is that the add() vs find()
+function signatures:
+
+  bool (*less)(struct rb_node *, const struct rb_node *);
+  int (*cmp)(const void *, const struct rb_node *);
+
+differ anyway in the left-hand argument; this is 'fixable' when you
+use an (on-stack) dummy object for find (as uprobes does), but that
+doesn't always work, esp. when the object is big. And given you need two
+functions anyway, I figured it was useful to name them differently.
+
+If you've looked at the other patches a bit, you'll see I've implemented
+both functions as 'trivial' wrappers around a single compare function in
+many cases.
+
+> Reviewed-by: Michel Lespinasse <walken@google.com>
+
+Thanks, I suppose I'll go brush this up a bit more then.
