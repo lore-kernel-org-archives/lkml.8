@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D25C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141B0C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD14D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DB920870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255389;
-	bh=ObJKmAMaZ90P/+jAoEDbax6JYZEb2gDqjGuVWUG7W7g=;
+	s=default; t=1588255393;
+	bh=hdhau5x237LBx7BVJYuRDozB3xA1U7LTwu5kqngl8TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkHRD+r0CxAiHVjSyWsmKfZjz4jm3fLzUUzV9M5kPFv6YK4gbQtS6d/wHx8L3uyT8
-	 14zSGgz6DVnUWIw7xhJ5qDGTMxAqXOZDnLqP+RPeRN+F3PT6vbLtKEkeG/xfQ02wHh
-	 fU2BVsFc9oAvyyFvXgqFs5FtEq8EStfo8GBUXkO8=
+	b=b4evruV9vc56HzhKhRCfqE+0J80OjuL+jNJ8fHqx6eu/YB1vGfc85EZi2bonZG9QI
+	 LV2ryjD1mxz44N88mgp/l7dnIH44N4PBSXjrj6tEpgUNtim4DmGbd9khWpDi9UfvSh
+	 Xwjy+r2JjiXeEOZBIHeacG+cOAJbpE23XvsqDdeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgD3Nxd (ORCPT
+        id S1729097AbgD3ODN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:53:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728555AbgD3Nw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:57 -0400
+        id S1728730AbgD3Nxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7573920774;
-        Thu, 30 Apr 2020 13:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5302024953;
+        Thu, 30 Apr 2020 13:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254777;
-        bh=ObJKmAMaZ90P/+jAoEDbax6JYZEb2gDqjGuVWUG7W7g=;
+        s=default; t=1588254812;
+        bh=hdhau5x237LBx7BVJYuRDozB3xA1U7LTwu5kqngl8TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqAYUpWh8qs5dQFrrPEhQfhjcSbSzsGCcHhUO5Q9gpm69rk9opflkBlEu/U20/aFS
-         r0SErjWNtpkZmwV5nqXtuHgZ92fq/4FSn429gMtZmDU7ZDK+ncULi+DdrH9eqy+luH
-         K5GrbY1rKwcg1VDPL8r2DqZq9buS315W2Cc5feL4=
+        b=xYcEI7v0i1SZUk6yKOosiJiBX9qxIJ07Ke0F+1FXnuyZ7PyzyAJcKK4Ge8llBtbU+
+         txqM1aQRlp0x03mFhX51cNT3bznsg5ppdu8ui938kDztpp/i6xaMAXP6OdGe5CmEHl
+         ZwayrALOuW391lL6vCDN3jhXwn4bLeYOU3YLNgpE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 34/57] net/mlx5: Fix failing fw tracer allocation on s390
-Date:   Thu, 30 Apr 2020 09:51:55 -0400
-Message-Id: <20200430135218.20372-34-sashal@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Fabio Estevam <festivem@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 05/30] ASoC: sgtl5000: Fix VAG power-on handling
+Date:   Thu, 30 Apr 2020 09:53:00 -0400
+Message-Id: <20200430135325.20762-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,58 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit a019b36123aec9700b21ae0724710f62928a8bc1 ]
+[ Upstream commit aa7812737f2877e192d57626cbe8825cc7cf6de9 ]
 
-On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
-allocation as done for the firmware tracer will always fail.
+As mentioned slightly out of patch context in the code, there
+is no reset routine for the chip. On boards where the chip is
+supplied by a fixed regulator, it might not even be resetted
+during (e.g. watchdog) reboot and can be in any state.
 
-Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
-that copies the debug data into the trace array and there is no need for
-the allocation to be contiguous in physical memory. We can therefor use
-kvzalloc() instead of kzalloc() and get rid of the large contiguous
-allcoation.
+If the device is probed with VAG enabled, the driver's probe
+routine will generate a loud pop sound when ANA_POWER is
+being programmed. Avoid this by properly disabling just the
+VAG bit and waiting the required power down time.
 
-Fixes: f53aaa31cce7 ("net/mlx5: FW tracer, implement tracer logic")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reviewed-by: Fabio Estevam <festivem@gmail.com>
+Link: https://lore.kernel.org/r/20200414181140.145825-1-sebastian.reichel@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/codecs/sgtl5000.c | 34 ++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/sgtl5000.h |  1 +
+ 2 files changed, 35 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-index 94d7b69a95c74..eb2e57ff08a60 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-@@ -935,7 +935,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_create(struct mlx5_core_dev *dev)
- 		return NULL;
- 	}
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 896412d11a31c..7c0a06b487f74 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1633,6 +1633,40 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
+ 		dev_err(&client->dev,
+ 			"Error %d initializing CHIP_CLK_CTRL\n", ret);
  
--	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
-+	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
- 	if (!tracer)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -982,7 +982,7 @@ destroy_workqueue:
- 	tracer->dev = NULL;
- 	destroy_workqueue(tracer->work_queue);
- free_tracer:
--	kfree(tracer);
-+	kvfree(tracer);
- 	return ERR_PTR(err);
- }
- 
-@@ -1061,7 +1061,7 @@ void mlx5_fw_tracer_destroy(struct mlx5_fw_tracer *tracer)
- 	mlx5_fw_tracer_destroy_log_buf(tracer);
- 	flush_workqueue(tracer->work_queue);
- 	destroy_workqueue(tracer->work_queue);
--	kfree(tracer);
-+	kvfree(tracer);
- }
- 
- static int fw_tracer_event(struct notifier_block *nb, unsigned long action, void *data)
++	/* Mute everything to avoid pop from the following power-up */
++	ret = regmap_write(sgtl5000->regmap, SGTL5000_CHIP_ANA_CTRL,
++			   SGTL5000_CHIP_ANA_CTRL_DEFAULT);
++	if (ret) {
++		dev_err(&client->dev,
++			"Error %d muting outputs via CHIP_ANA_CTRL\n", ret);
++		goto disable_clk;
++	}
++
++	/*
++	 * If VAG is powered-on (e.g. from previous boot), it would be disabled
++	 * by the write to ANA_POWER in later steps of the probe code. This
++	 * may create a loud pop even with all outputs muted. The proper way
++	 * to circumvent this is disabling the bit first and waiting the proper
++	 * cool-down time.
++	 */
++	ret = regmap_read(sgtl5000->regmap, SGTL5000_CHIP_ANA_POWER, &value);
++	if (ret) {
++		dev_err(&client->dev, "Failed to read ANA_POWER: %d\n", ret);
++		goto disable_clk;
++	}
++	if (value & SGTL5000_VAG_POWERUP) {
++		ret = regmap_update_bits(sgtl5000->regmap,
++					 SGTL5000_CHIP_ANA_POWER,
++					 SGTL5000_VAG_POWERUP,
++					 0);
++		if (ret) {
++			dev_err(&client->dev, "Error %d disabling VAG\n", ret);
++			goto disable_clk;
++		}
++
++		msleep(SGTL5000_VAG_POWERDOWN_DELAY);
++	}
++
+ 	/* Follow section 2.2.1.1 of AN3663 */
+ 	ana_pwr = SGTL5000_ANA_POWER_DEFAULT;
+ 	if (sgtl5000->num_supplies <= VDDD) {
+diff --git a/sound/soc/codecs/sgtl5000.h b/sound/soc/codecs/sgtl5000.h
+index 18cae08bbd3a6..066517e352a70 100644
+--- a/sound/soc/codecs/sgtl5000.h
++++ b/sound/soc/codecs/sgtl5000.h
+@@ -233,6 +233,7 @@
+ /*
+  * SGTL5000_CHIP_ANA_CTRL
+  */
++#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
+ #define SGTL5000_LINE_OUT_MUTE			0x0100
+ #define SGTL5000_HP_SEL_MASK			0x0040
+ #define SGTL5000_HP_SEL_SHIFT			6
 -- 
 2.20.1
 
