@@ -2,99 +2,108 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87056C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB106C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BCA20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588236669;
-	bh=B25IdFkSF/Xe5nfhCVFQRFDEhKUayIXoiR5sj0+5jMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RlIyG6mXl7XTJxuooirBcqZbpdC1raI6ddxCBPbvwqM/pEOx8ylhoEtdKtfLLOLwo
-	 kl3T/e5ERfGsn1Y/OnXsmIWh379zQFBb3ehQqgLFIwVrPYHcI1WLp6zTqIVedqSeHE
-	 vE0BEqYOxw3A4joqKvqtRlLRBHQtYIv0MClnlujY=
+	by mail.kernel.org (Postfix) with ESMTP id 9C20D20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgD3IvI (ORCPT
+        id S1726752AbgD3Iwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD3IvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:51:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E54920787;
-        Thu, 30 Apr 2020 08:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588236667;
-        bh=B25IdFkSF/Xe5nfhCVFQRFDEhKUayIXoiR5sj0+5jMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CQpj6MdPRT8b93Oyrn50O5QctFKfv7EG0MoIOkqp4mdOlo8hcVYXd65sWdV1zHoQt
-         Os3vgxS45zA62gjVSPdyQVLKG9ePdxlAr9m9/oAGrrJKjpRWBilACWjfAhQ6z+pXO8
-         4Cnih2x/4oppwN83J/SciohdcrFoxsblbuWuope8=
-Date:   Thu, 30 Apr 2020 10:51:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Frankie Chang <Frankie.Chang@mediatek.com>
-Cc:     Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
-Subject: Re: [PATCH v3 1/1] binder: transaction latency tracking for user
- build
-Message-ID: <20200430085105.GF2496467@kroah.com>
-References: <1586929044-12708-2-git-send-email-Frankie.Chang@mediatek.com>
- <1588234439-7959-1-git-send-email-Frankie.Chang@mediatek.com>
- <1588234439-7959-2-git-send-email-Frankie.Chang@mediatek.com>
+        Thu, 30 Apr 2020 04:52:50 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:49670 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726412AbgD3Iwt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:52:49 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U8nTxk003275;
+        Thu, 30 Apr 2020 04:52:48 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30pes2gct2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 04:52:48 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03U8qkZL039832
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 30 Apr 2020 04:52:47 -0400
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 30 Apr 2020 01:52:45 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 30 Apr 2020 01:52:14 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 30 Apr 2020 01:52:45 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03U8qgrv001396;
+        Thu, 30 Apr 2020 04:52:43 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: remove iio_get_debugfs_dentry() helper
+Date:   Thu, 30 Apr 2020 11:52:59 +0300
+Message-ID: <20200430085259.2829-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588234439-7959-2-git-send-email-Frankie.Chang@mediatek.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_03:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=995 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 04:13:59PM +0800, Frankie Chang wrote:
-> Record start/end timestamp for binder transaction.
-> When transaction is completed or transaction is free,
-> it would be checked if transaction latency over threshold (2 sec),
-> if yes, printing related information for tracing.
-> 
-> /* Implement details */
-> - Add tracepoint/trace at free transaction.
->   Since the original trace_binder_transaction_received cannot
->   precisely present the real finished time of transaction, adding a
->   trace_binder_free_transaction at the point of free transaction
->   may be more close to it.
-> 
-> - Add latency tracer module to monitor slow transaction.
->   The trace_binder_free_transaction would not be enabled
->   by default. Monitoring which transaction is too slow to
->   cause some of exceptions is important. So we hook the
->   tracepoint to call the monitor function.
-> 
-> - Move some struct from core file to header file.
->   Need some struct defined in core file in latency trace module
->   In addition, moving all structs to header file makes module
->   more extendable, and make all these strcuts to be defined
->   in the same file.
+Not used anywhere.
+Looks like it was forgotten in iio.h
 
-Also, this should be split up into a patch series, the first moving
-things around, and the rest of the patches each adding a single feature.
-As it is, this patch is almost impossible to review.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/linux/iio/iio.h | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-thanks,
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 38c4ea505394..1a1da52c55cf 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -696,22 +696,6 @@ static inline bool iio_buffer_enabled(struct iio_dev *indio_dev)
+ 		   INDIO_BUFFER_SOFTWARE);
+ }
+ 
+-/**
+- * iio_get_debugfs_dentry() - helper function to get the debugfs_dentry
+- * @indio_dev:		IIO device structure for device
+- **/
+-#if defined(CONFIG_DEBUG_FS)
+-static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+-{
+-	return indio_dev->debugfs_dentry;
+-}
+-#else
+-static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+-{
+-	return NULL;
+-}
+-#endif
+-
+ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals);
+ 
+ int iio_str_to_fixpoint(const char *str, int fract_mult, int *integer,
+-- 
+2.17.1
 
-greg k-h
