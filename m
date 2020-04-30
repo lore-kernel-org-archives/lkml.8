@@ -2,95 +2,114 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4162BC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB37C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 281502072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CE82072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvIhEeo6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgD3TXB (ORCPT
+        id S1726574AbgD3TZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:23:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:33371 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgD3TXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:23:01 -0400
-IronPort-SDR: LoaaIktz2lRW3Hn7VVfUExgC2h1F1UWWwYb0gIoewBD6zPuCENUSn/iS6SYU+TyQj7e1EagXlv
- 0Kt02CZp70PQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 12:23:00 -0700
-IronPort-SDR: mmOO9TeGehW6ZKsO2AabJSyPfx1On12iSR7UbQV26uvMH5iIZWkP61nrPG6nfcG9OdZdtKTjq6
- DEfOJCg3MGgg==
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="459685832"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 12:22:59 -0700
-Date:   Thu, 30 Apr 2020 12:22:58 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        stable <stable@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
-Message-ID: <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
-References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
- <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
- <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
- <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+        Thu, 30 Apr 2020 15:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgD3TZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:25:04 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C9EC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:25:04 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z1so342528pfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LWzoBfWYBplb188JYPfec8yiO1FAiglsQQs7ha7y6zc=;
+        b=zvIhEeo6o5Oci/1eDGxIxa70cqZyoYJPXylX1Jz8dm4uPN+VdUMi5dd63F1duzrKjf
+         RbDbL4orJsgYwq7Nj0UTh3yQbN4K0xHm3MIzvy5ZD3vZU2dEZ4WTK5ZSvBz/KhNhDNRi
+         iq4ZR0E2/FCU5UX9o2YRqOluF3k9408xQAXoHNf8e9LxoECnH5HXqwOJ0rv7LjXnhyyW
+         yS/J0pcItyBpgwidW4/F9usyFm2BZPVgghgNjxRdQThOIQoH0bSYmBNCHOuxLIXuzZaE
+         8kNRwr8BxYU8I87WPqhv6VIAhcrOvoocf9qPGC8gtHNJf58mlCE62qWRAmVLrpUHxnod
+         A6ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LWzoBfWYBplb188JYPfec8yiO1FAiglsQQs7ha7y6zc=;
+        b=ZYh36Gqtnce6+4By/45rkJJo50e9ulpj+/DY667ydsYRqIEcTroya/G5qGdhEi0vHi
+         1Y7+ZxrhS4oYv6IcpvTR2AqkeZ5EutPhp6GIy3qK25D7Mtv+KqgTIm2Wyz1K+6IpVR7h
+         FsPsQtI9JDMzecK3XRIWHNU8jvyNKvQnkLxuEkkJVGUFJl1JHnjUL7jJXf1dwt8EFOtP
+         Mw4PblJYL1P33nmcmeyS1E2jpE6faCgPu1i4dQT8iG9yTgHiaVHKyTSyD4UOD0gNEep3
+         comhDP+bG9iiWF8h+zCGqKOPOd3mqFr3kfpw3NUTfiGktOarc/yiM2ZHlAb8bsu3w2no
+         XDMw==
+X-Gm-Message-State: AGi0PuaGTemGRV4wSemo9MHgaT/P12yu5ytS5FFIxYpUzBoUsFxTJAG/
+        JO5bS5breEznGpjV3ZwrYh+s8g==
+X-Google-Smtp-Source: APiQypLCsVX9Nh3B0wNo8iNCW3Dh7d+/91P/QFHKJM1aSTI3VdeXI7wM5INe9jYGfLmdFCvuIRM2Ow==
+X-Received: by 2002:aa7:8b12:: with SMTP id f18mr271949pfd.81.1588274704103;
+        Thu, 30 Apr 2020 12:25:04 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v26sm463594pfe.121.2020.04.30.12.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 12:25:03 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] drm/msm: Fix undefined "rd_full" link error
+Date:   Thu, 30 Apr 2020 12:24:27 -0700
+Message-Id: <20200430192427.4104899-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:42:20AM -0700, Andy Lutomirski wrote:
-> I suppose there could be a consistent naming like this:
-> 
-> copy_from_user()
-> copy_to_user()
-> 
-> copy_from_unchecked_kernel_address() [what probe_kernel_read() is]
-> copy_to_unchecked_kernel_address() [what probe_kernel_write() is]
-> 
-> copy_from_fallible() [from a kernel address that can fail to a kernel
-> address that can't fail]
-> copy_to_fallible() [the opposite, but hopefully identical to memcpy() on x86]
-> 
-> copy_from_fallible_to_user()
-> copy_from_user_to_fallible()
-> 
-> These names are fairly verbose and could probably be improved.
+rd_full should be defined outside the CONFIG_DEBUG_FS region, in order
+to be able to link the msm driver even when CONFIG_DEBUG_FS is disabled.
 
-How about
+Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/gpu/drm/msm/msm_rd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	try_copy_catch(void *dst, void *src, size_t count, int *fault)
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index 732f65df5c4f..fea30e7aa9e8 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -29,8 +29,6 @@
+  * or shader programs (if not emitted inline in cmdstream).
+  */
+ 
+-#ifdef CONFIG_DEBUG_FS
+-
+ #include <linux/circ_buf.h>
+ #include <linux/debugfs.h>
+ #include <linux/kfifo.h>
+@@ -47,6 +45,8 @@ bool rd_full = false;
+ MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
+ module_param_named(rd_full, rd_full, bool, 0600);
+ 
++#ifdef CONFIG_DEBUG_FS
++
+ enum rd_sect_type {
+ 	RD_NONE,
+ 	RD_TEST,       /* ascii text */
+-- 
+2.24.0
 
-returns number of bytes not-copied (like copy_to_user etc).
-
-if return is not zero, "fault" tells you what type of fault
-cause the early stop (#PF, #MC).
-
--Tony
