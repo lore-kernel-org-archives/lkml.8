@@ -2,204 +2,166 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ABFC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECCCC8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BB220757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796F120757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a6xd7hgp"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="mJ0aSnDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgD3Lt5 (ORCPT
+        id S1726677AbgD3LxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:49:57 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52313 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgD3Lt5 (ORCPT
+        Thu, 30 Apr 2020 07:53:12 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55782 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgD3LxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:49:57 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200430114954euoutp028e55f6d362e7b279f648b81d812e8a30~Klpc8yow11769717697euoutp02t;
-        Thu, 30 Apr 2020 11:49:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200430114954euoutp028e55f6d362e7b279f648b81d812e8a30~Klpc8yow11769717697euoutp02t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588247394;
-        bh=FgAZPBlreq72LKpIUsT6wipUhPu/8+hOE2yX72Yote4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6xd7hgp/m/RlHBHpN09ByyUWvwZ6mi3l/z34cLSxkfKhOLg7craBNP9VQqs5hH3Z
-         /bp91JJzlxAzFMIa/FJF1Wbt4QL2t1cZK0cY8mn5TlbFqbj3xrPjtv/Zx37sIsWEzr
-         8WZlurwZk6heqzIuSXaeAmN8OKIyiJWk/AkdfWiw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200430114954eucas1p10a4da7a8e091fe3ff0a803e8e5a27176~KlpcxIdSB2618726187eucas1p1u;
-        Thu, 30 Apr 2020 11:49:54 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3D.03.60698.26BBAAE5; Thu, 30
-        Apr 2020 12:49:54 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200430114954eucas1p22f46edec60e20dd45f7d9797ca8373d3~KlpcdG6xL1889018890eucas1p2K;
-        Thu, 30 Apr 2020 11:49:54 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200430114954eusmtrp1abbd6269b27f76fa1261b7aa725f10e0~KlpcchOHe3186331863eusmtrp1P;
-        Thu, 30 Apr 2020 11:49:54 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-35-5eaabb62528c
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7D.06.07950.26BBAAE5; Thu, 30
-        Apr 2020 12:49:54 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200430114954eusmtip22822e07fa1b9f179915b30973b6a8fea~KlpcPGRYX3163631636eusmtip2P;
-        Thu, 30 Apr 2020 11:49:54 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH] arm64: kexec_file: print appropriate variable
-Date:   Thu, 30 Apr 2020 13:49:40 +0200
-In-Reply-To: <20200430111923.GB40114@C02TD0UTHF1T.local> (Mark Rutland's
-        message of "Thu, 30 Apr 2020 12:19:39 +0100")
-Message-ID: <dleftjwo5xfb1n.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 Apr 2020 07:53:12 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UBq6Oo014322;
+        Thu, 30 Apr 2020 07:53:10 -0400
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2058.outbound.protection.outlook.com [104.47.37.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30mj45kceh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 07:53:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NndaVZl3X7JSks7/d0VbNAZslQ8v3lJ2PvOtJc+n6uLsY7jMB7NDyAc6x3ZusVGsNMQZLVY82AGoDOIuBWB0nGn4XY+WCg2oHsnLL+dkrbn816SBBU1c2aDp4c0RxmYCn00AmTkIAN7fToX8LyWf/HbV1NQPUmoezSW37XLjAM7+gd1AwIkM9vIS1vK5qDnAOxyTRSsGOXIhW2Fa+N7k8bkJEFJUMhDroM9qmEvpfn06LiEQJ69qYs36BThM7M9UeIKSSfmtiJ9BK07ZM821J5xNnSjrkEeCPrGzCs/7pPpITC8zQsx89u53dPXCYqUkUr3Klq6iEapFarQpFptaLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6T5bMBHe0hS7QKSl/fN6yd/jt9WnqMmaK1Edj8VVc48=;
+ b=LS2VfGRm2SBRYZjSNfgXBUFKQNhKVtqDnNP3U4m6p0wRVmX98b1hLgYMF8Jn2+T/tkXWb4l9qfgHcO+NwzdlwlYCQRny71dcmIxlGtnNbGJrFsOLBOoYravVpTTP8eDFEwR6uh+FHw7ISqNKAXLL2j4JaLBVFRKSlnnwPj/5cYlqCni9FHcG2aB4XQJsqZXN7PzIiwUcSkoBlymsNa/wIFiFASAWiVHjOSUbKXMebuWhfhAtwtIKCVuRkfnSFbQgha0THp1AUJYydoyFDBLYMPclPB0TVCI8P8U54jWZIZNus8yDkgm942C12yfjB9NXrqOgqqbWoroNZAnCy2QHgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6T5bMBHe0hS7QKSl/fN6yd/jt9WnqMmaK1Edj8VVc48=;
+ b=mJ0aSnDBAyd6AeFaoUzERsyur6RUmC9G3voIXmQYO+mepoDkZRgLoAUhK7SPhzt1NkEDXh0J8S+7kQatqqkrQQhMho0c9PuGDmM9AblRVRqi7qlq71AWqU6oeX49l8SU+RN0kmjxtywTTElUSn9ZVjK3m9M6YE7dncWBGZqhVp8=
+Received: from BN6PR03MB3347.namprd03.prod.outlook.com (2603:10b6:405:3d::35)
+ by BN6PR03MB3202.namprd03.prod.outlook.com (2603:10b6:405:42::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
+ 2020 11:53:08 +0000
+Received: from BN6PR03MB3347.namprd03.prod.outlook.com
+ ([fe80::21b1:c085:e156:cfe7]) by BN6PR03MB3347.namprd03.prod.outlook.com
+ ([fe80::21b1:c085:e156:cfe7%4]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 11:53:08 +0000
+From:   "Sa, Nuno" <Nuno.Sa@analog.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: RE: [PATCH] iio: imu: adis16xxx: use helper to access iio core
+ debugfs dir
+Thread-Topic: [PATCH] iio: imu: adis16xxx: use helper to access iio core
+ debugfs dir
+Thread-Index: AQHWHt8WygP08mSDgE+lJ8nVfIqj1qiRjaSQ
+Date:   Thu, 30 Apr 2020 11:53:08 +0000
+Message-ID: <BN6PR03MB3347761C636F1406DCA6F23199AA0@BN6PR03MB3347.namprd03.prod.outlook.com>
+References: <20200430110422.7472-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200430110422.7472-1-alexandru.ardelean@analog.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?iso-8859-1?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcbnNhXGFwcG?=
+ =?iso-8859-1?Q?RhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
+ =?iso-8859-1?Q?OWUzNWJcbXNnc1xtc2ctMjgzOTEzOTMtOGFkOS0xMWVhLThhNTYtZmM3Nz?=
+ =?iso-8859-1?Q?c0MjFmY2FlXGFtZS10ZXN0XDI4MzkxMzk1LThhZDktMTFlYS04YTU2LWZj?=
+ =?iso-8859-1?Q?Nzc3NDIxZmNhZWJvZHkudHh0IiBzej0iMTE1MiIgdD0iMTMyMzI3MjExOD?=
+ =?iso-8859-1?Q?g1NzgxMDExIiBoPSJFRVRWQnd1VmZzWUh4cDZPZHdMbWhpeXhicmM9IiBp?=
+ =?iso-8859-1?Q?ZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQU?=
+ =?iso-8859-1?Q?FFb0NBQUFUNEpIcTVSN1dBWGplK21JdkYyNXdlTjc2WWk4WGJuQURBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBSEFBQUFEYUFRQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBRUFBUUFCQUFBQTV1R0RXQUFBQUFBQUFBQUFBQUFBQUo0?=
+ =?iso-8859-1?Q?QUFBQmhBR1FBYVFCZkFITUFaUUJqQUhVQWNnQmxBRjhBY0FCeUFHOEFhZ0?=
+ =?iso-8859-1?Q?JsQUdNQWRBQnpBRjhBWmdCaEFHd0Fjd0JsQUY4QVpnQnZBSE1BYVFCMEFH?=
+ =?iso-8859-1?Q?a0FkZ0JsQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdFQV?=
+ =?iso-8859-1?Q?pBQnBBRjhBY3dCbEFHTUFkUUJ5QUdVQVh3QndBSElBYndCcUFHVUFZd0Iw?=
+ =?iso-8859-1?Q?QUhNQVh3QjBBR2tBWlFCeUFERUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFBQUFDZUFBQUFZUUJrQUdrQVh3?=
+ =?iso-8859-1?Q?QnpBR1VBWXdCMUFISUFaUUJmQUhBQWNnQnZBR29BWlFCakFIUUFjd0JmQU?=
+ =?iso-8859-1?Q?hRQWFRQmxBSElBTWdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
+ =?iso-8859-1?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?iso-8859-1?Q?QUFBQkFBQUFBQUFBQUFJQUFBQUFBQT09Ii8+PC9tZXRhPg=3D=3D?=
+x-dg-rorf: true
+authentication-results: analog.com; dkim=none (message not signed)
+ header.d=none;analog.com; dmarc=none action=none header.from=analog.com;
+x-originating-ip: [2001:a61:25e3:eb01:8485:f8a6:dea4:3871]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d39af665-023f-48f0-b752-08d7ecfd0cee
+x-ms-traffictypediagnostic: BN6PR03MB3202:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR03MB3202AB65E9679895809F95A299AA0@BN6PR03MB3202.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1107;
+x-forefront-prvs: 0389EDA07F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR03MB3347.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(136003)(396003)(366004)(346002)(8676002)(6506007)(4326008)(71200400001)(478600001)(53546011)(5660300002)(9686003)(110136005)(316002)(54906003)(55016002)(33656002)(8936002)(2906002)(66476007)(66556008)(66446008)(64756008)(7696005)(4744005)(52536014)(66946007)(186003)(76116006)(107886003)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wQz2sFehwQn5iXS8lSCEiTPmST6lTX913/m6RI2k7ukVeEadYZi8myU/W73Ok238Qy5538Qgptv18LuM6fGGwzmIMc4z/BdUVzXINefQzfXVF0uA7fbj6zJni1XAyuy52jredaSyFVzlI+Wlz5Y/9urVsYwJY+VUXWVSc2C163Sy6zgrBbUlUKfiKHnzY1WbS0zru6AieDwi/llsTx1V7UeboCDC1vTbc/aS4/wfo5i5OGLVpv8MV1hFDQLScnl5JZpvNJnwD8GaYGoIf5bG9aGIkUgdL9n7Ui8OMQMeDuks/DXOXP2fvw/nmlRpM3PurEpZgGlCfYjRQmogRdLPC5GiRAumYjbS3kouHeYr1djWncmzf5XaIkdGs3IaplYkKIL/CeFFVXvw27E2ECZ8tj3JT7k0O+tEKN5KAgVCyANv+UCeaEiTCK7jkTFaaija
+x-ms-exchange-antispam-messagedata: a+1DOGWn+P5ahR1oLG8bOxIA0FEHLs7AuknnDkrMKCEx9de81MUMMpDhlixFWy/nEs5gwzKwqNHiErHLnZGRALFnVXn/VxE+EOcI61oyblHx6a66whByyvt2sHvw8LmnxZLZpyWbbvDz92lJsggc4JUIAnMoJ/YfAgARK4rYwA0XVODFCPd6W5TrrG/3X0/9nDqE60EpkA66kuCcjvvvXWiFwBgV+fQbTzB9e4fIHnbisq7QAmidG3YIAV4Yrl8f4XMI/xr00tiNZS3g7PWLOADVkc4fk3vUGNc5BjyAzGmGR30vXA/mLielS2ouPS8Bf+y1LC9ISM/m4tIL0S+2Uhk/Gnygzfsaw5MDWF8PC71lnYoDi7l4pGfYw5Bh7zhd8BQwQ6UR5bxSAqrLskgaUhag3fp1NFUoSCmR+x7dbFiqDi8o9xTQqlUuQcHKm5vZyt5zgKpklNrxbN03Rt0bmSG9jeFrzmXG5yDtaKPOgG7e7NKpYNbQXI2GBy5zcGIrhjIo++zjqJSGxuocahsl5BbPstEAFlAqMUsVJrAnebdyzLscczbpZNbKQvH7krX15WwUREEi2jJV2iUVPiKqnJoT0d2yN9YhSJp+/ihLHiiF+REHyTL2QXxwoEZEetLzNJhfFXBB159MQHDQ/AcGQt6+AdPb3XfYycscRjJxUfJaB5gaJ6NU0/jnKCsSU1VnlHHHx9IyyM+3Ws8/AXhe/5stUGFufAuuJ5R27hE7g8LpF/4J5r4oO+eoBwSlx0D/BTv+F8FqQGeVDrnZ8iQ829Nd40Wd4BrTQUptBHKOEvyFXleBkHkJc3744/2BhXsUkff/mSD5PDkxpATgnuk7QxHoD7MIgoxR1FNqxqaodXA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SayxbYRjH8/ac0x7NylEWT5BlGjK7uCzEKrbZTLZ+8EF82TJxKU7UpiUt
-        hm3hw1ILZSsT0ZhdGNIpVpdYXdcYNjLbZNhiYy7ZMGvmNhZhrUPi2+95/s/l/7x5SYzfQTiS
-        CbIUWi4TJwrYXLyld2PII6ZNG+m9sOYuNFWpkHCis5ol1E+PEMJhQxlb+Gz0A0u42bWBC+f+
-        9OPnOKLa8lokGh9pZ4saK7NEy/pDofhV7uk4OjEhjZZ7nY3mSqZqH6LkEYf09Vk1kY227XKR
-        FQmUL+QPKvFcxCX5VA2C5hwlhwlWEKgqtxATLCPY6P/C3mtpvfORzQjVCLLXhgkm+IGgsqnN
-        3EKSbMoTdLorlgZ76gioDCs7OzDKhMBQ8Ru3CHZUEPT0KVkWxik3mGns2WErKh2KNJ93mEed
-        gq/DWsLCByl/aPo5wWHytvCmdGZnDkZJoXToF2LcdXKgaNqZ4WBQd08SDNvBfF8Th2FnGChS
-        4RafQGVBUaGfxRtQKgQtZes4UxMA4+/+7V58Hiof5RFMvTWMLdoya62hsKUEY9I8uKvkM9Wu
-        UHevfXeKI+TP1+w6E0Hr0uLuU+cheL1UwbqPDmv2XaPZd43GPBajjkK9wYtJH4eqJwsYw2eg
-        rs6EP0aEFjnQqQppPK3wkdE3PBViqSJVFu8ZmyTVI/NHGtjqW21FnZsxRkSRSHCAR+q1kXxC
-        nKbIkBqRq3nSVMPz98gRlyXJaIE973uEWebFiTMyaXlSlDw1kVYYkROJCxx4Pk/nIvhUvDiF
-        vk7TybR8T2WRVo7Z6JL/xotElUnnFpxywSYkjP7L43cX2w5exotpo8dFlxP1Xps5ylnJ9mSX
-        ZkmSGVWuflBRmoTdfDX2TScJH1ZFrjWL9R0vnbTeahd3rCRmtCLWt6FmdfBtgTGeLA206Q/6
-        FGoKC7ld5hrIvabJx3mq8Gj1YHLBrd5Qv7GAGA++AFdIxCePYXKF+D8LBuP/UAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xe7pJu1fFGax8zW/xflkPo8X9fcuZ
-        LDY9vsZqcXnXHDaLpdcvMln82f+TxeLlxxMsDuwea+atYfS4c20Pm8fmJfUenzfJBbBE6dkU
-        5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GU8WjOXseCa
-        eMWPpxNZGxj/C3cxcnJICJhI7Gi5xNbFyMUhJLCUUeLNiZ/MXYwcQAkpiZVz0yFqhCX+XOuC
-        qnnKKLHt5WV2kBo2AT2JtWsjQGpEBNQlenZ9YQGxmQVeAdV8KgGxhQWcJI4cb2MCKRcSMJd4
-        dEIDJMwioCrxZPMRJhCbU6BCYvKsm2A2L1DJ3curWEFsUQFLiS0v7rNDxAUlTs58AjU+W+Lr
-        6ufMExgFZiFJzUKSmgW0jVlAU2L9Ln2IsLbEsoWvmSFsW4l1696zLGBkXcUoklpanJueW2yk
-        V5yYW1yal66XnJ+7iREYSduO/dyyg7HrXfAhRgEORiUeXo5Nq+KEWBPLiitzDzGqAI15tGH1
-        BUYplrz8vFQlEd6HsUBp3pTEyqrUovz4otKc1OJDjKZAf05klhJNzgdGf15JvKGpobmFpaG5
-        sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsbMux++FPntarx54MWCotltG7IWb67Z
-        ueOWuf289d+qy/Yf6GaxXjk/2WunQ/f5Qz3PJk6YEHUwm33i+sZjR+/3Wy497BaasOjjjuS/
-        jEuY7p3sWv2ih/vZhS85Pw1Ez7Hlvb58N/RwZNejJ5GHOTfof6/ykPjSH2T7bdkBk29by3h2
-        xV7Pnz79ohJLcUaioRZzUXEiAEZEKHzGAgAA
-X-CMS-MailID: 20200430114954eucas1p22f46edec60e20dd45f7d9797ca8373d3
-X-Msg-Generator: CA
-X-RootMTR: 20200430114954eucas1p22f46edec60e20dd45f7d9797ca8373d3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200430114954eucas1p22f46edec60e20dd45f7d9797ca8373d3
-References: <20200430111923.GB40114@C02TD0UTHF1T.local>
-        <CGME20200430114954eucas1p22f46edec60e20dd45f7d9797ca8373d3@eucas1p2.samsung.com>
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d39af665-023f-48f0-b752-08d7ecfd0cee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 11:53:08.2957
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1UjL8jLYfSvM1+PcVdLwjwQ6ZXm0BFzZb637QdGwWXfxWb4L6SzhX+eAYeOFl3fgP37tOa7+U8tW9uEYxIWmGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB3202
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_07:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=951 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-It was <2020-04-30 czw 12:19>, when Mark Rutland wrote:
-> On Thu, Apr 30, 2020 at 12:50:34PM +0200, =C5=81ukasz Stelmach wrote:
->> Fixes: 4312057681929 ("arm64: kexec_file: load initrd and device-tree")
->
-> This commit ID is bogus (doesn't exist in mainline or the arm64 tree).
->
-> The upstream commit ID seems to be: 52b2a8af7436044cfcb27e4b0f72c2ce1f389=
-0da
+> From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Sent: Donnerstag, 30. April 2020 13:04
+> To: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org
+> Cc: Bogdan, Dragos <Dragos.Bogdan@analog.com>; Sa, Nuno
+> <Nuno.Sa@analog.com>; jic23@kernel.org; Ardelean, Alexandru
+> <alexandru.Ardelean@analog.com>
+> Subject: [PATCH] iio: imu: adis16xxx: use helper to access iio core debug=
+fs dir
+>=20
+> The IIO core provides a iio_get_debugfs_dentry() helper.
+> It seems that the ADIS IMU drivers access that field directly.
+>=20
+> This change converts them to use iio_get_debugfs_dentry() instead.
+>=20
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/gyro/adis16136.c | 10 ++++------
+>  drivers/iio/imu/adis16400.c  | 10 ++++------
+>  drivers/iio/imu/adis16460.c  | 10 ++++------
+>  drivers/iio/imu/adis16475.c  | 15 ++++++---------
+>  drivers/iio/imu/adis16480.c  | 16 ++++++----------
+>  5 files changed, 24 insertions(+), 37 deletions(-)
+>=20
 
-Fixing.
-
-> As will said, this needs a commit message. Please explain what you think
-> is wrong here.
-
-Fixing.
-
-> Also, when sending a fix, *please* Cc the author of the original patch.
->
-> I've added parties relevant to the original patch (Takahiro and James).
-
-Thank you.
-
->> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
->> ---
->>  arch/arm64/kernel/machine_kexec_file.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/=
-machine_kexec_file.c
->> index b40c3b0def92..2776bdaa83a5 100644
->> --- a/arch/arm64/kernel/machine_kexec_file.c
->> +++ b/arch/arm64/kernel/machine_kexec_file.c
->> @@ -332,7 +332,7 @@ int load_other_segments(struct kimage *image,
->>  	image->arch.dtb_mem =3D kbuf.mem;
->>=20=20
->>  	pr_debug("Loaded dtb at 0x%lx bufsz=3D0x%lx memsz=3D0x%lx\n",
->> -			kbuf.mem, dtb_len, dtb_len);
->> +			kbuf.mem, dtb_len, kbuf.memsz);
->
-> It's worth noting that we follow the same pattern repeatedly in this
-> file, so if you think this instance is wrong you should consider whether
-> the others are correct.
->
-> Earlier in this file we have:
->
-> |	pr_debug("Loaded elf core header at 0x%lx bufsz=3D0x%lx memsz=3D0x%lx\n=
-",
-> |		 image->arch.elf_headers_mem, headers_sz, headers_sz)
->
-> |	pr_debug("Loaded initrd at 0x%lx bufsz=3D0x%lx memsz=3D0x%lx\n",
-> |		 initrd_load_addr, initrd_len, initrd_len);
-
-Fixing.
-
-> ... and it looks like x86 does similar in kexec-bzimage64.c, for some
-> sort of consistency with the old kexec logging.
-
-When I fix it for x86, should I combine changes in one patch or prepare
-two separate patches?
-
-> If <foo>_len and kbuf.memsz can differ, we should log that in all cases.
-> If not, we should remove the redundant logging.
-
-Yes, memsz is page-aligned in kexec_add_buffer();
-
-Kind regards,
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl6qu1UACgkQsK4enJil
-gBCN+Af+OKcovFV8R0frOmKpOoA8SH64oXvYRY/UAzggb8dpqSuQb0sYVEgNygvh
-zJEYpXzf/iR1eCqcrE7YLbFVue3KllwML6sOkEsv0QEYEHbLJ6OZDu2VDdxt8y26
-DMfoMeum7BC+HaNtdYxhsTcrqLFtf6E36HxwrGoMGyept/ZiRZdxdfJjjY+mDub5
-9TQyiVDSbU0Aa6zP7QzqVmocZH8rMyb3JCMElq4fUbsSe1VIVIIMwbslNv3dVpsS
-qe2BYlbFHlPc/vVoxmxN41zX3/pwZAIIkEJVNvV7EdSoUAHRYy2n59wg7qBKJ+VJ
-TlJXuQZ7xVQLGN59N4InNQOKDQENvg==
-=9fnd
------END PGP SIGNATURE-----
---=-=-=--
+Acked-by: Nuno S=E1 <nuno.sa@analog.com>
