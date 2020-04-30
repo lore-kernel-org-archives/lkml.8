@@ -2,144 +2,131 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A18BC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C7C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA90E21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="ksdrqkjg"
+	by mail.kernel.org (Postfix) with ESMTP id 8474820784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgD3I4E (ORCPT
+        id S1726782AbgD3I7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726611AbgD3I4E (ORCPT
+        Thu, 30 Apr 2020 04:59:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44468 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726453AbgD3I7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:56:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 550B5C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:56:04 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s8so2465115pgq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LuFSML6Qs1jNQuh9f7FSxevmV01WKXUBt/xqATWhD2Y=;
-        b=ksdrqkjg7/bPOyrlGVVf5QUEd5k1BXZ7bCgdmtHeYMIpFDf3Jwi86zlBfnZ6G3eGFf
-         LjWDtJd1vQdHqlaiLjGGzrDiDeZunzNT9EZuzxEKG+XvlqlYRXstu/pFE85897AfscDN
-         cdvyqJux8jQb2/CbeMwu4HqV5OW4SuxYJe+T4wNF3A6Av7o3axQUEJfZxOQzwMzm8/Jg
-         MWfCDjZqBpH1VUis4SI0tuLnbul1+ql36EAFLt+4kHhoeKtaTsLLPv/fYAZc8yL/1/V5
-         v2Jyc2hwtlG/8NlLhlIWkQ0Ql9LBguqNuCEvpxC3Y8JmemOdTlDhZM7wlLGEmPN7B1cX
-         ABrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LuFSML6Qs1jNQuh9f7FSxevmV01WKXUBt/xqATWhD2Y=;
-        b=T1cpk33z5616/v4xxq0eQr8waE4p9YBVnZ4V2VnPf+jcdcMTIwYvJ4eY+O9U1ZAoQ/
-         +oUscxHdNgu3A36ZAartb2zx1uLIIPGCGO0m2UhLDNyhxfbl87CuXPdFvLcqNIyRDBnn
-         YtlOr9iHXf5rKz9rljqPhRDkRI3PXVkR5AWK6iaTXhCxuqeCXqGT+pQfyOOF9nuWfcxk
-         QxBtt0SHQFsY1RF3mKMA7jw2CNp3UNzbw9qDKzoqkZh5DwI0Q2sadc+8Q3W3RwNK0Vve
-         9v8OTg6l+LCKdEsew2RHDly2FPEh1Jb4hoJWqftoCJq9ou2uA5YYfPd1IZ0YErWjq0hK
-         bxVg==
-X-Gm-Message-State: AGi0PuZp6Wlz4ymg+AO8oTD88k3Vk+oJ0mH9MZCYKE+W9tF00/6BcAw9
-        ywZGUN9Orzm2kqPfvZ0564kn3A==
-X-Google-Smtp-Source: APiQypLoq0/7IkBcTUdghxEn6PlqSyQyh8qIGbADqzsQq+98Hiyrqq/DxAocwK3AWb7h9Fm8F5nYxQ==
-X-Received: by 2002:a63:cf0d:: with SMTP id j13mr2186045pgg.379.1588236963542;
-        Thu, 30 Apr 2020 01:56:03 -0700 (PDT)
-Received: from starnight.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.googlemail.com with ESMTPSA id 23sm1189356pjb.11.2020.04.30.01.56.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 01:56:03 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Tianci . Yin" <tianci.yin@amd.com>,
-        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux@endlessm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] drm/radeon: drm/amdgpu: Disable [1002:6611] in radeon
-Date:   Thu, 30 Apr 2020 16:53:19 +0800
-Message-Id: <20200430085318.114894-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 30 Apr 2020 04:59:09 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U81lLM143892;
+        Thu, 30 Apr 2020 04:58:41 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mfhgdwx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 04:58:41 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U8tf2h005040;
+        Thu, 30 Apr 2020 08:58:39 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5t5xu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 08:58:38 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U8waux35061774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 08:58:36 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C623011C050;
+        Thu, 30 Apr 2020 08:58:36 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F4CE11C058;
+        Thu, 30 Apr 2020 08:58:35 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.201.165])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Apr 2020 08:58:35 +0000 (GMT)
+Date:   Thu, 30 Apr 2020 11:58:33 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] initramfs: fix another section mismatch
+Message-ID: <20200430085833.GB342687@linux.ibm.com>
+References: <20200429190135.66411-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429190135.66411-1-arnd@arndb.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_02:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=5
+ phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AMD/ATI Oland [1002:6611]'s HDMI output status is not synchronous
-as shown on UI after hot re-plug the HDMI cable, if it is radeon in
-used. The amdgpu module does not hit this issue.
+On Wed, Apr 29, 2020 at 09:01:29PM +0200, Arnd Bergmann wrote:
+> Building with gcc-10 causes a harmless warning, similar to the
+> gcc-4.6 warning that Geert fixed last year:
+> 
+> WARNING: modpost: vmlinux.o(.text.unlikely+0xe69): Section mismatch in reference from the function kexec_free_initrd() to the function .init.text:free_initrd_mem()
+> The function kexec_free_initrd() references
+> the function __init free_initrd_mem().
+> This is often because kexec_free_initrd lacks a __init
+> annotation or the annotation of free_initrd_mem is wrong.
+> 
+> Add the missing __init annotations.
+> 
+> Fixes: 4ada1e810038 ("initramfs: fix populate_initrd_image() section mismatch")
+> Fixes: 23091e287355 ("initramfs: cleanup initrd freeing")
+>  Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This patch disables [1002:6611] in radeon and enables it in amdgpu.
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Fixes: https://gitlab.freedesktop.org/drm/amd/-/issues/1117
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 11 +++++++++++
- include/drm/drm_pciids.h                |  1 -
- 2 files changed, 11 insertions(+), 1 deletion(-)
+> ---
+>  init/initramfs.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/init/initramfs.c b/init/initramfs.c
+> index 8ec1be4d7d51..bda77a6c8e50 100644
+> --- a/init/initramfs.c
+> +++ b/init/initramfs.c
+> @@ -542,7 +542,7 @@ void __weak free_initrd_mem(unsigned long start, unsigned long end)
+>  }
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+> -static bool kexec_free_initrd(void)
+> +static bool __init kexec_free_initrd(void)
+>  {
+>  	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
+>  	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
+> @@ -565,7 +565,7 @@ static bool kexec_free_initrd(void)
+>  	return true;
+>  }
+>  #else
+> -static inline bool kexec_free_initrd(void)
+> +static inline bool __init kexec_free_initrd(void)
+>  {
+>  	return false;
+>  }
+> -- 
+> 2.26.0
+> 
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index 8ea86ffdea0d..1ad6f13a5bc0 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -1017,6 +1017,15 @@ MODULE_DEVICE_TABLE(pci, pciidlist);
- 
- static struct drm_driver kms_driver;
- 
-+static void amdgpu_pci_fixup(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_DRM_AMDGPU_SI
-+	/* [1002:6611] is disabled in radeon, so enable si_support in amdgpu. */
-+	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x6611)
-+		amdgpu_si_support = 1;
-+#endif
-+}
-+
- static int amdgpu_pci_probe(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
-@@ -1036,6 +1045,8 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
- 		return -ENODEV;
- 	}
- 
-+	amdgpu_pci_fixup(pdev);
-+
- #ifdef CONFIG_DRM_AMDGPU_SI
- 	if (!amdgpu_si_support) {
- 		switch (flags & AMD_ASIC_MASK) {
-diff --git a/include/drm/drm_pciids.h b/include/drm/drm_pciids.h
-index b7e899ce44f0..57368a0f5b82 100644
---- a/include/drm/drm_pciids.h
-+++ b/include/drm/drm_pciids.h
-@@ -171,7 +171,6 @@
- 	{0x1002, 0x6607, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_IS_MOBILITY|RADEON_NEW_MEMMAP}, \
- 	{0x1002, 0x6608, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
- 	{0x1002, 0x6610, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
--	{0x1002, 0x6611, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
- 	{0x1002, 0x6613, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
- 	{0x1002, 0x6617, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_IS_MOBILITY|RADEON_NEW_MEMMAP}, \
- 	{0x1002, 0x6620, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_IS_MOBILITY|RADEON_NEW_MEMMAP}, \
 -- 
-2.26.2
-
+Sincerely yours,
+Mike.
