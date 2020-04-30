@@ -2,235 +2,150 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D8DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10157C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B66A2072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57752072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588274783;
+	bh=LnlRqLx5AcCnbbcetphuj1nYVoZplmdL7b3QBIupxNo=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=k126oxyW+4sh6rOs3UKEwi4l9YJDX0gPRxvISsk5yUaBAk9JK4X/ql8TYf18iUuU9
+	 VLHwhKK4HIMyNBIZO+MGf3Hna+9b8xUPPX7V5libqkwvzv47A4U2hqe0KD8mkIqw3Y
+	 /hORqoPwlC/sP8Bomsq1ghcm+TYTS1omPNK+qzMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgD3TZ2 (ORCPT
+        id S1726762AbgD3T0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:25:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:19563 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgD3TZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:25:27 -0400
-IronPort-SDR: CVzB62afJ40YoX5WPhmD0FU91BYPRf9zIOFp5RksPOSzjLJjHT9rer4Q+N+63+bFRtQuZl5XKP
- hcxHBcPtPfrw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 12:25:26 -0700
-IronPort-SDR: VMIDw5bhgMZu9HMGXsoHdWnP7hI9ZIj4sQ8M9BBzlklQTLp7TqcH8pj8KxCaNBGvG4/1MDuaIY
- WZjFhIPK5GMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="293667193"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Apr 2020 12:25:25 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jUEoG-0006lp-CD; Fri, 01 May 2020 03:25:24 +0800
-Date:   Fri, 01 May 2020 03:25:01 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- c4643edf3ea8353dfbab5ab397789c87b40da810
-Message-ID: <5eab260d.pCLF6TKC2yTj57Vg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 30 Apr 2020 15:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgD3T0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:26:22 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19CAC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:26:21 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id b18so2500256ilf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=tDimjc++p9z9/I8fVMD18UCvQaoCQ2HCiBnz8f0J4aA=;
+        b=UG4RSoXfZpftFk0K6ibrWrZLY3kuW5ZJK3sZmGB4TYGYgKXOMaNF4Wwoc0loPT4+ga
+         rsh4IZF/0mLKhSXMuJBeguRe0vq1J5Tti4rx1r8pX8ofZiZjU8k3i+2+rw9A+sqBPMjD
+         ACF62ZmRvKpB7NuaLjZa5OwpyBFE1qsyd4bMs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=tDimjc++p9z9/I8fVMD18UCvQaoCQ2HCiBnz8f0J4aA=;
+        b=tLjZYA+t/MfH8Mwjb4sU7F+L1JFmX9aQkdcuv8BpENKX+LKTQBjhn6YAbQeFeAfjuE
+         wGLkMk4j+N2q5XA3vBpDEDsnHvehAw5erFsalRBjG1PoAdREwJLvFVcdOcTQl3VQoGM8
+         S7vOs/knUuBUDi4jClT5dHTi3BD2APvnznbiyJ4EFou5p67WtywdBVQ+pCnCoMqnbqR9
+         JGav1DO/P4JJyuN2UE4SkxW5HGFClidTfa3VnApz8EDixamJW+aBi/o6YmfIAPptvydr
+         qJ9Nzj93hF6LWNBinrLaqvK2dfQvnzbaayToyWz2uetAU5GWAK3A4gXTcyWMU+N+OWTj
+         LfBA==
+X-Gm-Message-State: AGi0PuYAtITX8/2eZpfwwPElO2Vn2pR2g744IqTM2YLAepLoJA/Lbjek
+        jWCKMlh3OFU7Wel6TNme4rIafw==
+X-Google-Smtp-Source: APiQypJTHulW4Ghd7hjLzHKd6NORfGAafoNGBlcfV6ly5LlCzrNsdReVQvv3oC0TjTfdkHSFm7l79g==
+X-Received: by 2002:a92:b710:: with SMTP id k16mr3551743ili.270.1588274780844;
+        Thu, 30 Apr 2020 12:26:20 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g87sm252226ile.25.2020.04.30.12.26.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:26:19 -0700 (PDT)
+To:     torvalds@linux-foundation.org
+Cc:     skhan@linuxfoundation.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kunit update for Linux 5.7-rc4
+Message-ID: <c5edb7c4-c5ed-0209-3c7f-cace9d775d64@linuxfoundation.org>
+Date:   Thu, 30 Apr 2020 13:26:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="------------10008E56FF95384B04969D10"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: c4643edf3ea8353dfbab5ab397789c87b40da810  Merge branch 'linus'
+This is a multi-part message in MIME format.
+--------------10008E56FF95384B04969D10
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-elapsed time: 698m
+Hi Linus,
 
-configs tested: 168
-configs skipped: 0
+Please pull the following Kunit update for Linux 5.7-rc4.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This Kunit update for Linux 5.7-rc4 consists of a single fix to flush
+the test summary to the console log without delay.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-sh                               allmodconfig
-ia64                             allyesconfig
-powerpc                      chrp32_defconfig
-c6x                        evmc6678_defconfig
-xtensa                       common_defconfig
-ia64                             alldefconfig
-nds32                             allnoconfig
-mips                      fuloong2e_defconfig
-mips                          ath79_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                       bvme6000_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-xtensa                          iss_defconfig
-h8300                    h8300h-sim_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                        bcm63xx_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                       holly_defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                    amigaone_defconfig
-powerpc                    adder875_defconfig
-powerpc                     ep8248e_defconfig
-powerpc                          g5_defconfig
-powerpc                     mpc512x_defconfig
-parisc               randconfig-a001-20200430
-mips                 randconfig-a001-20200430
-m68k                 randconfig-a001-20200430
-riscv                randconfig-a001-20200430
-alpha                randconfig-a001-20200430
-nds32                randconfig-a001-20200430
-microblaze           randconfig-a001-20200430
-nios2                randconfig-a001-20200430
-h8300                randconfig-a001-20200430
-c6x                  randconfig-a001-20200430
-sparc64              randconfig-a001-20200430
-s390                 randconfig-a001-20200430
-xtensa               randconfig-a001-20200430
-csky                 randconfig-a001-20200430
-openrisc             randconfig-a001-20200430
-sh                   randconfig-a001-20200430
-i386                 randconfig-b001-20200430
-i386                 randconfig-b002-20200430
-x86_64               randconfig-b001-20200430
-i386                 randconfig-b003-20200430
-x86_64               randconfig-b002-20200430
-x86_64               randconfig-b003-20200430
-x86_64               randconfig-c001-20200430
-i386                 randconfig-c001-20200430
-i386                 randconfig-c002-20200430
-x86_64               randconfig-c002-20200430
-x86_64               randconfig-c003-20200430
-i386                 randconfig-c003-20200430
-x86_64               randconfig-d002-20200430
-x86_64               randconfig-d001-20200430
-i386                 randconfig-d001-20200430
-i386                 randconfig-d003-20200430
-i386                 randconfig-d002-20200430
-x86_64               randconfig-d003-20200430
-x86_64               randconfig-e002-20200430
-i386                 randconfig-e003-20200430
-x86_64               randconfig-e003-20200430
-i386                 randconfig-e002-20200430
-x86_64               randconfig-e001-20200430
-i386                 randconfig-e001-20200430
-i386                 randconfig-h002-20200430
-i386                 randconfig-h003-20200430
-x86_64               randconfig-h001-20200430
-x86_64               randconfig-h003-20200430
-i386                 randconfig-h001-20200430
-sparc                randconfig-a001-20200430
-arc                  randconfig-a001-20200430
-ia64                 randconfig-a001-20200430
-powerpc              randconfig-a001-20200430
-arm                  randconfig-a001-20200430
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+diff is attached.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-kunit-5.7-rc4
+
+for you to fetch changes up to 6cb1818798812fe7e2c8fe3f489ad1c86adfd6c4:
+
+   kunit: Add missing newline in summary message (2020-04-23 15:42:00 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-kunit-5.7-rc4
+
+This Kunit update for Linux 5.7-rc4 consists of a single fix to flush
+the test summary to the console log without delay.
+
+----------------------------------------------------------------
+Marco Elver (1):
+       kunit: Add missing newline in summary message
+
+  lib/kunit/test.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
+
+----------------------------------------------------------------
+
+--------------10008E56FF95384B04969D10
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-kunit-5.7-rc4.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-kunit-5.7-rc4.diff"
+
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index 7a6430a7fca0..ccb2ffad8dcf 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -93,7 +93,7 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
+ 	 * representation.
+ 	 */
+ 	if (suite)
+-		pr_info("%s %zd - %s",
++		pr_info("%s %zd - %s\n",
+ 			kunit_status_to_string(is_ok),
+ 			test_number, description);
+ 	else
+
+--------------10008E56FF95384B04969D10--
