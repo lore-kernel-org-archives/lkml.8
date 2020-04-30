@@ -2,139 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DB5C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CC8C83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B981D20731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UG5LtxTD"
+	by mail.kernel.org (Postfix) with ESMTP id 11D4120731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgD3AiO (ORCPT
+        id S1726486AbgD3AiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726279AbgD3AiO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:38:14 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5A1C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 17:38:14 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id v192so1249459vkd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 17:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ue/rz4Fn+04hr+n+K+kjQp326QaO0CAjZ9NJZaZx2cM=;
-        b=UG5LtxTD2tA4eaZff5YUWopXsU5j3/4yLdHOhbh8CkdQ6Reesn4zDCGdJL5BwPc5vS
-         omwCMU384Jgg7XnfXoBRLqeofDGUVwVJwdIMRrAQgJpoJ1jweKli79KF6f27onMgz+Yg
-         eyIQmYI9+I/GFGLbiJnJI+HUaiCF8SP/aF3S8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ue/rz4Fn+04hr+n+K+kjQp326QaO0CAjZ9NJZaZx2cM=;
-        b=mloAlCQdb/XAOooR3TdLASb4rd6oqKPSEPJ/1s3UbvQRaVjA3KgzdnU5bdl8KkWWlP
-         vFyX0bnNBPqWR21PQSdoXaBhhLch/giPa7g/pvhZv+eHpe7SZq9LNqWNxXkUo31v6RvL
-         Q1kJqWnM+FybBHn7FUcr9URf7sTYebF2ZTY5+WIjpDwB1r0dL5VbXq1DDoyrweOdLG6h
-         U3bRtqwxtHbIDk3IM0aK4VQ21IcMBqn8X+K+cHY76L2JnTlbP+eGJKebUkDhwhwUyD5/
-         A0EwkILkK8VWCP75Gfg+j5m041OttgJLBKNs1d7V8konojEfo00QtAawzEXVHa5GCQU7
-         c6fg==
-X-Gm-Message-State: AGi0PuY+0ghWfcZl9cexFEel6beJ9P4yjTxtDdkd+fO1U9IZDFcmmSOW
-        1ijFXwEBSR56DcZG5BJpdyzQ5X3ATvcrg4kr59J3TQ==
-X-Google-Smtp-Source: APiQypJXmOqw5s0QzOld2YZjGvp8sje8rIw7BJQKF+Wj89Od8Uxn2IC/RFlWm/0x9jPrveYxHiBIG1O1xKYdg7WZQDY=
-X-Received: by 2002:a1f:5ec7:: with SMTP id s190mr695642vkb.58.1588207093257;
- Wed, 29 Apr 2020 17:38:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200428110253.1.I926f6741079cafb04ecb592130aef75b24ad31ae@changeid>
- <c57b0892-d68d-f0f2-3cc1-b8549983227e@collabora.com> <CAONX=-dLVBpz+p1si4cWGHEmQ_toO8kW=fCPcdUuX2KLc-o=2A@mail.gmail.com>
-In-Reply-To: <CAONX=-dLVBpz+p1si4cWGHEmQ_toO8kW=fCPcdUuX2KLc-o=2A@mail.gmail.com>
-From:   Daniil Lunev <dlunev@chromium.org>
-Date:   Thu, 30 Apr 2020 10:38:02 +1000
-Message-ID: <CAONX=-dDWjMQDGncSgXNf86Bt3C5OUtFqh=Pe2HToGPSv5qa4A@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Handle NULL EC pointer
- during probe.
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 Apr 2020 20:38:22 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27133 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgD3AiV (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 20:38:21 -0400
+IronPort-SDR: gn3yI0ba676kKI4IIqVnInNpvey8Tq5RCvUSoY1RKw7Ezn/Egl3fDK2G7j8Ts4U25BkvexZHoX
+ FU/Z3lugZInQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 17:38:21 -0700
+IronPort-SDR: kCupO7Ez+fFu875Tr5wGjEN8LXzgJTL08uPs9G/JLF8I6fnqLbzyxF9Rronaf6prmRNyBbESNJ
+ gf65kJJoSp1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="282678294"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Apr 2020 17:38:19 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH] perf parse-events: Use strcmp to compare the PMU name
+Date:   Thu, 30 Apr 2020 08:36:18 +0800
+Message-Id: <20200430003618.17002-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[to make it appear on the mailing list as I didn't realize I was in
-hypertext sending mode]
+A big uncore event group is split into multiple small groups which
+only include the uncore events from the same PMU. This has been
+supported in the commit 3cdc5c2cb924a ("perf parse-events: Handle
+uncore event aliases in small groups properly").
 
-On Thu, Apr 30, 2020 at 10:11 AM Daniil Lunev <dlunev@chromium.org> wrote:
->
-> Hi Enric.
-> I encountered the issue on a Hatch device when trying running 5.4 kernel =
-on that. After talking to Prashant it seems that any device with coreboot b=
-uilt before a certain point (a particular fix for device hierarchy in ACPI =
-tables of Chrome devices which happened in mid-April) will not be able to c=
-orrectly initialize the driver and will get a kernel panic trying to do so.
-> Thanks,
-> Daniil
->
-> On Thu, Apr 30, 2020 at 7:58 AM Enric Balletbo i Serra <enric.balletbo@co=
-llabora.com> wrote:
->>
->> Hi Daniil,
->>
->> Thank you for the patch.
->>
->> On 28/4/20 3:02, Daniil Lunev wrote:
->> > Missing EC in device hierarchy causes NULL pointer to be returned to t=
-he
->> > probe function which leads to NULL pointer dereference when trying to
->> > send a command to the EC. This can be the case if the device is missin=
-g
->> > or incorrectly configured in the firmware blob. Even if the situation
->>
->> There is any production device with a buggy firmware outside? Or this is=
- just
->> for defensive programming while developing the firmware? Which device is
->> affected for this issue?
->>
->> Thanks,
->>  Enric
->>
->> > occures, the driver shall not cause a kernel panic as the condition is
->> > not critical for the system functions.
->> >
->> > Signed-off-by: Daniil Lunev <dlunev@chromium.org>
->> > ---
->> >
->> >  drivers/platform/chrome/cros_ec_typec.c | 5 +++++
->> >  1 file changed, 5 insertions(+)
->> >
->> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platfor=
-m/chrome/cros_ec_typec.c
->> > index 874269c07073..30d99c930445 100644
->> > --- a/drivers/platform/chrome/cros_ec_typec.c
->> > +++ b/drivers/platform/chrome/cros_ec_typec.c
->> > @@ -301,6 +301,11 @@ static int cros_typec_probe(struct platform_devic=
-e *pdev)
->> >
->> >       typec->dev =3D dev;
->> >       typec->ec =3D dev_get_drvdata(pdev->dev.parent);
->> > +     if (!typec->ec) {
->> > +             dev_err(dev, "Failed to get Cros EC data\n");
->> > +             return -EINVAL;
->> > +     }
->> > +
->> >       platform_set_drvdata(pdev, typec);
->> >
->> >       ret =3D cros_typec_get_cmd_version(typec);
->> >
+If the event's PMU name starts to repeat, it must be a new event.
+That can be used to distinguish the leader from other members.
+But now it only compares the pointer of pmu_name
+(leader->pmu_name == evsel->pmu_name).
+
+If we use "perf stat -M LLC_MISSES.PCIE_WRITE -a" on cascadelakex,
+the event list is:
+
+evsel->name					evsel->pmu_name
+---------------------------------------------------------------
+unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_4 (as leader)
+unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_2
+unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_0
+unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_5
+unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_3
+unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_1
+unc_iio_data_req_of_cpu.mem_write.part1		uncore_iio_4
+......
+
+For the event "unc_iio_data_req_of_cpu.mem_write.part1" with
+"uncore_iio_4", it should be the event from PMU "uncore_iio_4".
+It's not a new leader for this PMU.
+
+But if we use "(leader->pmu_name == evsel->pmu_name)", the check
+would be failed and the event is stored to leaders[] as a new
+PMU leader.
+
+So this patch uses strcmp to compare the PMU name between events.
+
+Fixes: 3cdc5c2cb924a ("perf parse-events: Handle uncore event aliases in small groups properly")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/util/parse-events.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 10107747b361..786eddb6a097 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1629,12 +1629,11 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+ 		 * event. That can be used to distinguish the leader from
+ 		 * other members, even they have the same event name.
+ 		 */
+-		if ((leader != evsel) && (leader->pmu_name == evsel->pmu_name)) {
++		if ((leader != evsel) &&
++		    !strcmp(leader->pmu_name, evsel->pmu_name)) {
+ 			is_leader = false;
+ 			continue;
+ 		}
+-		/* The name is always alias name */
+-		WARN_ON(strcmp(leader->name, evsel->name));
+ 
+ 		/* Store the leader event for each PMU */
+ 		leaders[nr_pmu++] = (uintptr_t) evsel;
+-- 
+2.17.1
+
