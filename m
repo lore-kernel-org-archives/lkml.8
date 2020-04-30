@@ -2,254 +2,96 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A91BC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EB5C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2488B20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B2720656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fCDX2FSY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EwP+xsYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgD3Tfd (ORCPT
+        id S1726837AbgD3TgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:35:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
+        Thu, 30 Apr 2020 15:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgD3Tfd (ORCPT
+        with ESMTP id S1726366AbgD3TgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:35:33 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6DBC035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:35:32 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l25so998800pgc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:35:32 -0700 (PDT)
+        Thu, 30 Apr 2020 15:36:01 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F0FC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:36:01 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id h129so9033252ybc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:36:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lzP4zsyL3G+ZA+zKIb8zsIyDO20yNMH6PqtntomA9xg=;
-        b=fCDX2FSYSHD6JwsDTIokxh79bkmofe+tsGFm74Iobii0E29IYHlVELmsNu1y3Zd9DX
-         3SiyzTAcxxfmEgukA74XFh9neFt8TE9YXbrVuw0Qu4QeLM1/bHQ371Imwq4rwgDxrRoV
-         MSKkO2yEiEyB9D3RaBCnLjWvj8xw6mFDgXpcbnDkMCBDrtWFun0JDa0x/PwC/YjNjIty
-         tNe4gCsh9j8dFZmEu2zm1zh3E/UMsEXs8VDS6Rd+RdyWcucpsf+89ToFPjkjNYwWzbwd
-         EbCyFqS0k5GccLlxf9of9GNVM3pAAf4AeKOutadC4y4zTq8aYkM/7clDPhhxgf9Pjvrv
-         pZMw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Jb1R8N3ENteLMOcD0l0fsxxjCS12Nc1+p9531pxGvvE=;
+        b=EwP+xsYRD4KvbCGj3Ucg3cyOUz6mA+R3zW28l/PNeKkHNb6Hj8av1qO1NccLNlw2GF
+         ky8rrgiWeEpllChJd59NONJYC2a2Noi0G+tO/TYMU/s262CVj04VjrLtaWi7rZ/giMAi
+         +OVbzf3hPlWpEbYrPhqz80g2oOc+dJ+aweAmbwntwLTHPrShTl+Ip/p6OWb09+0ylM4o
+         HUkgLLP1jigBuTMxpa3GQxrBonviucvI9ZplrVpmdVjUklyVhZiuH9NqO9P+4Os6Czy5
+         UGZIRO1yCNs7LwDtqg9nC7G/7odpm0iWfWq2rMJsuaRuH1H06os5ValYTFKpBqRNtAMR
+         eq/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lzP4zsyL3G+ZA+zKIb8zsIyDO20yNMH6PqtntomA9xg=;
-        b=FgMbQaksnqgDJe3wIUXU5ye+B+/+EvtiOwzq8pXeYiSKu6RxN5LRoVaNkosq8tqnEe
-         MMCYBtrWpymxJUUZopiEQxTQGv4h94CXQayiBO9nSTdOz+6hbByXL5AgqU7B9bsduAq8
-         M23AdwFMpSmhzsitaBKVTMiQKqTN7uXH6OeruYrYPTg1p3WH98BYgsV4QapWvIX0bseo
-         LHX7Lnb6009kGQy0eiGr+A1VUOXxi5pcXR2+Wp4d4cgbAP8yQUGZTOYw9vsY6pNfS7eX
-         Eg8WIvPdrXx3K5XO/JxSym3Da7zQAJGsKYYhlVRktGatxCSCskEOY74y/eL4CgrbxqSo
-         vS0w==
-X-Gm-Message-State: AGi0PuYznT3qXrutDHMJJAQOYSzkXQkdPof6cQoiYoHVQ3MrG1fU2CSw
-        bZDxVo+ys9Rniv0XbydX77b50A==
-X-Google-Smtp-Source: APiQypKnzcM10vrRVAPVmDP8TVP4+76/N/zdw2lKPSevIaHjqqPQ2vVc0sUq80sl9glOTilQvDqG/w==
-X-Received: by 2002:a65:6083:: with SMTP id t3mr479523pgu.398.1588275332220;
-        Thu, 30 Apr 2020 12:35:32 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j23sm493396pjz.13.2020.04.30.12.35.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:35:31 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 12:36:09 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: soc: qcom: Add devicetree binding for
- Qcom IPCC
-Message-ID: <20200430193609.GA20625@builder.lan>
-References: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Jb1R8N3ENteLMOcD0l0fsxxjCS12Nc1+p9531pxGvvE=;
+        b=WRcN1Uoz0hx9zjREhoROrwTjPPii8cD0axxtzizGrGA94nCBBek4m0PPHPRhBsSQ+y
+         bM3Op1ZAEJOJ94C4hHIfafjMp7vIiUhcINzAKCvV1pB78e8CuCMK40KesCkYwiouZkZz
+         90AOrxBrUWBYKdNd0FnUZNp4nj7X5bN4Qep7XcsmWIjAq7Kv0xF6hfW3g9gq/tTCI8bM
+         xMRN9j2tdFGW2/me3I20YQRNrMk+1ukINexgDAc+4Oxc3QRecUAGQVEgTAzFR7MW7t/R
+         LMyFtuoeyYaWORuF2Da+sqtMjt/WbWrc9iGrZKbBiB5pkcrFIoxEAZ7BbEkRTx5ssBaP
+         0phw==
+X-Gm-Message-State: AGi0PuYVsj9nQxG8GMncVNaiOPZLxBBkrYwqQRSFIpZ52USrxVXc1a2w
+        tvwvKxTlxW52kNIlFUJDNQVqNZZqOKwv
+X-Google-Smtp-Source: APiQypKgfF/HPicUawJAXPaTAu9jit8eqSUQaqBGMNSK10CyF1qeqXkaVUALdbR5iIEqrlG5mtNvGutlpdbx
+X-Received: by 2002:a25:20c:: with SMTP id 12mr505271ybc.452.1588275360923;
+ Thu, 30 Apr 2020 12:36:00 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 12:35:55 -0700
+Message-Id: <20200430193557.101831-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [PATCH 0/2] Improvements for kallsyms__parse
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29 Apr 23:30 PDT 2020, Manivannan Sadhasivam wrote:
+kallsyms__parse is called 4 times during perf record startup. Add a
+benchmark to measure its performance. Transition it to using the api
+io.h buffered reading, improving performance by ~8% or saving ~5% from
+perf record start up time.
 
-> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
-> Controller (IPCC) block.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../bindings/soc/qcom/qcom,ipcc.yaml          | 85 +++++++++++++++++++
+Ian Rogers (2):
+  perf bench: add kallsyms parsing
+  lib kallsyms: parse using io api
 
-How about putting this in either interrupt-controller/ or mailbox/ instead?
+ tools/lib/api/io.h          |  3 ++
+ tools/lib/symbol/kallsyms.c | 81 +++++++++++++++++++------------------
+ tools/perf/bench/Build      |  1 +
+ tools/perf/bench/bench.h    |  1 +
+ tools/perf/builtin-bench.c  |  1 +
+ 5 files changed, 47 insertions(+), 40 deletions(-)
 
->  include/dt-bindings/soc/qcom,ipcc.h           | 38 +++++++++
->  2 files changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
->  create mode 100644 include/dt-bindings/soc/qcom,ipcc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
-> new file mode 100644
-> index 000000000000..48b281181401
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/qcom/qcom,ipcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. Inter-Processor Communication Controller
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +description:
-> +  The Inter-Processor Communication Controller (IPCC) is a centralized hardware
-> +  to route the interrupts across various subsystems. It involves a three-level
+-- 
+2.26.2.526.g744177e7f7-goog
 
-s/the//
-
-> +  addressing scheme called protocol, client and signal. For example, consider an
-> +  entity on the Application Processor Subsystem (APSS) that wants to listen to
-> +  Modem's interrupts via Shared Memory Point to Point (SMP2P) interface. In such
-> +  a case, the client would be Modem (client-id is 2) and the signal would be
-> +  SMP2P (signal-id is 2). The SMP2P itself falls under the Multiprocessor (MPROC)
-> +  protocol (protocol-id is 0). Refer include/dt-bindings/soc/qcom/qcom,ipcc.h
-> +  for the list of such IDs.
-> +
-> +  One of the duties of this interrupt controller driver is to forward the
-> +  interrupts to the correct entities on the APSS. The children inheriting the
-
-Clients using the...
-
-> +  interrupt-controller would be mentioning the client-id and signal-id it's
-
-s/would be mentioning/should specify/
-
-> +  interested in.
-> +
-> +  On the other hand, sending an interrupt to a subsystem is done through the
-
-"In the other direction," and add clarify subsystem by making it "remote
-subsystem".
-
-> +  mailbox interface, which again requires client-id and signal-id.
-> +
-> +properties:
-> +  compatible:
-
-It's uncertain how new vers
-
-> +    const: "qcom,ipcc"
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 3
-> +    description:
-> +      The first cell is the client-id, the second cell is the signal-id and the
-> +      third cell is the interrupt type.
-> +
-> +  "#mbox-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the client-id, and the second cell is the signal-id.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - "#mbox-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        #include <dt-bindings/soc/qcom,ipcc.h>
-> +
-> +        ipcc_mproc: qcom,ipcc@408000 {
-
-interrupt-controller@
-
-Regards,
-Bjorn
-
-> +                compatible = "qcom,ipcc";
-> +                reg = <0x408000 0x1000>;
-> +                interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
-> +                interrupt-controller;
-> +                #interrupt-cells = <3>;
-> +                #mbox-cells = <2>;
-> +        };
-> +
-> +        smp2p-modem {
-> +                compatible = "qcom,smp2p";
-> +                interrupts-extended = <&ipcc_mproc IPCC_CLIENT_MPSS
-> +                                IPCC_MPROC_SIGNAL_SMP2P IRQ_TYPE_EDGE_RISING>;
-> +                mboxes = <&ipcc_mproc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_SMP2P>;
-> +
-> +                /* Other SMP2P fields */
-> +        };
-> diff --git a/include/dt-bindings/soc/qcom,ipcc.h b/include/dt-bindings/soc/qcom,ipcc.h
-> new file mode 100644
-> index 000000000000..2926cdb4cb48
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/qcom,ipcc.h
-> @@ -0,0 +1,38 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_QCOM_IPCC_H
-> +#define __DT_BINDINGS_QCOM_IPCC_H
-> +
-> +/* Signal IDs for MPROC protocol */
-> +#define IPCC_MPROC_SIGNAL_GLINK_QMP	0
-> +#define IPCC_MPROC_SIGNAL_SMP2P		2
-> +#define IPCC_MPROC_SIGNAL_PING		3
-> +#define IPCC_MPROC_SIGNAL_MAX		4 /* Used by driver only */
-> +
-> +#define IPCC_COMPUTE_L0_SIGNAL_MAX	32 /* Used by driver only */
-> +#define IPCC_COMPUTE_L1_SIGNAL_MAX	32 /* Used by driver only */
-> +
-> +/* Client IDs */
-> +#define IPCC_CLIENT_AOP			0
-> +#define IPCC_CLIENT_TZ			1
-> +#define IPCC_CLIENT_MPSS		2
-> +#define IPCC_CLIENT_LPASS		3
-> +#define IPCC_CLIENT_SLPI		4
-> +#define IPCC_CLIENT_SDC			5
-> +#define IPCC_CLIENT_CDSP		6
-> +#define IPCC_CLIENT_NPU			7
-> +#define IPCC_CLIENT_APSS		8
-> +#define IPCC_CLIENT_GPU			9
-> +#define IPCC_CLIENT_CVP			10
-> +#define IPCC_CLIENT_CAM			11
-> +#define IPCC_CLIENT_VPU			12
-> +#define IPCC_CLIENT_PCIE0		13
-> +#define IPCC_CLIENT_PCIE1		14
-> +#define IPCC_CLIENT_PCIE2		15
-> +#define IPCC_CLIENT_SPSS		16
-> +#define IPCC_CLIENT_MAX			17 /* Used by driver only */
-> +
-> +#endif
-> -- 
-> 2.17.1
-> 
