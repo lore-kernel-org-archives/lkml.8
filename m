@@ -2,261 +2,124 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11E1C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CA7C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F4720787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:36:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="DqtFJjy/"
+	by mail.kernel.org (Postfix) with ESMTP id 1D4BC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588272156;
+	bh=R81KA1exG6QyWEvvM1/QecUU8WMGFHG/k/cxKcdkfnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wSmRqYdixh81TU6SCUB+cqeFY3rlEbQ1YTQsYnlxSWA6RmnStl43i5k98gsfWG8t7
+	 LJMYGQ8GospMmWso8v7Hkg2cvgTf49FcxNcyQRPHFWVg5LJXGB7CsF305kwv5dpJ2I
+	 2flu+iWNkMK89J9Os13JT56BE4l9hosAOkVbsedU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgD3SgX (ORCPT
+        id S1726451AbgD3Smf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:36:23 -0400
-Received: from mail-dm6nam11on2076.outbound.protection.outlook.com ([40.107.223.76]:5101
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726272AbgD3SgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:36:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RJ3xJA1ksT9AHRv1LgsrgnBnDogagHy/lYonPHrH+O60VbecLP9IeAKkIoo1a6jKSTErSF83Nc3e62oFvSf66jfTTOVQ6ZhjogtRkt42PmsaAszQR1UQDfv/iBS1YUTTZH48xNKN8YHWVui93SM+q/FxTGic/MEbc6ZYXsroC/l01wdlGfnix0YjvvUls53S9kGeVkFBiSMZrQ9IQiswowYwab9dnnSZvuZAhWSMHTN8UfjafTIQ/Rkv65uBZiQUQ8XyZlehNc84DQDuZGB2ytfA30eQaecZMEErFJ6yyZpqrls80rbXoB29t9Ch2HRtckkmaPlOwb1ZUmeKT1rc9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eQz3SfXC8xH58cTMs4KgzBAXAPd1br7IYY09P4+z4pY=;
- b=OEFt1j6gmooMrAlEVJS+iOehsEzb+7lpkQX1mlgJtuks7u/0SEXJkJYEod5hRj8vepZTAcJ6aX+FEY/0xKOlmYPebMjwYIG28EZajKruShu8WB9KHwbUquZ5VLKZIUdvoSIZAgpxvlvHOnZAH0rk0B5SixgjPIutQZ0V9McvMupqzeBpZPdrsWPzDc0b/1GC//NCeGpFda99QVw2B8eJ8eCZ0X5SutlWGl+WLBWBiSulo0s56uSg1LLT16s6t/sn4H8snLThWEn0h+aXs2H6qiMq9tiGrSgDuBe6z/YQ75nyPAX2s0Eic8gRF2t6iaUJFHV3XoF31TmysJmzVyoA9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eQz3SfXC8xH58cTMs4KgzBAXAPd1br7IYY09P4+z4pY=;
- b=DqtFJjy/Jl8KsXq3AFBZYYe6zjTopQLIwABa4PJx7aeMsRCaUE/L24HdD9L0fmfcxrcula0THHR9yJMPYeGxQD03U0bHSrQ7bMSfOYTIKXKC890PQF43v6oGKfH0yADnEUq3NMhTC47vasFACuFr9tPAiP5zQc33p6mu/JghuTg=
-Received: from CH2PR02MB6871.namprd02.prod.outlook.com (2603:10b6:610:8e::22)
- by CH2PR02MB6053.namprd02.prod.outlook.com (2603:10b6:610:1::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
- 2020 18:36:16 +0000
-Received: from CH2PR02MB6871.namprd02.prod.outlook.com
- ([fe80::d8a1:61f0:62fa:6afb]) by CH2PR02MB6871.namprd02.prod.outlook.com
- ([fe80::d8a1:61f0:62fa:6afb%4]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 18:36:16 +0000
-From:   Venkateshwar Rao Gannavarapu <VGANNAVA@xilinx.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/2] dt-bindings: display: xlnx: Add Xilinx DSI TX
- subsystem bindings
-Thread-Topic: [RFC PATCH 1/2] dt-bindings: display: xlnx: Add Xilinx DSI TX
- subsystem bindings
-Thread-Index: AQHWF1mgtcGXqNzhbUWuhXXWg2URMqiKUbGAgAe4HxA=
-Date:   Thu, 30 Apr 2020 18:36:16 +0000
-Message-ID: <CH2PR02MB6871C64BB88CC9E00736C2E7B1AA0@CH2PR02MB6871.namprd02.prod.outlook.com>
-References: <1587417656-48078-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
- <1587417656-48078-2-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
- <20200425202919.GA18024@ravnborg.org>
-In-Reply-To: <20200425202919.GA18024@ravnborg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: ravnborg.org; dkim=none (message not signed)
- header.d=none;ravnborg.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [117.98.214.17]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e50e9408-0769-4656-4296-08d7ed355e4a
-x-ms-traffictypediagnostic: CH2PR02MB6053:|CH2PR02MB6053:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6053E14CB9039C1193EFF1FBB1AA0@CH2PR02MB6053.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 0389EDA07F
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR02MB6871.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(7696005)(186003)(26005)(4326008)(55016002)(9686003)(5660300002)(6506007)(478600001)(33656002)(54906003)(966005)(2906002)(66446008)(64756008)(52536014)(316002)(8936002)(8676002)(66476007)(66556008)(76116006)(6916009)(66946007)(71200400001)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CKnPpPig+z7Twvru9KXtcKD+F6nolcJr7AgdRVI80IXX5hkP/05wFHaD0hwANy30SFNNXvc/+s/rA2f0dMyaRSw8NPBu5W49e8CcZyZBTnPdch4IHjI7dfqcFA1fBv0T36ytnUXlLnBjiYfnbcA2uYh9qBdoU7DdOKBuKH2wKnINQCDNrp0sMBQsRSN4JFlJ27htpwdKFi0K8cUs5kAPZK8WMMRXm+31gD65DYUXFl0PPfkNJkkqYpVsX++bap3oe+3ibDEVdHl5+dWgteJNlumMeAA9uMCWCtRaXYYPBvsaMpu6iJbBqsRgIVlovprk9SUkAtc8qk4jRC4t9ffQ72ryyio+v75ITmu4YTMFyEe1k95DNDcGqrfsVt5IQGhLaTJoBFkmCIb33x24x+kUlaB+aM8HouazDqN0Jpn4qLh0rqfl/PKO+JqVdBC/QPLrGvyxWQcPucKp0rPdTEILv/TWeN/Kh/8dJlVHOf7mhj8=
-x-ms-exchange-antispam-messagedata: iADqQYkdTdgzb5oX/xCPyTrSZ/45jgxIPl0pg/gLMr4jIWpyYczdf8S1j/+/RV1uUSE4OJNTBAdUgXev1oNke9CpyXW+tsMQLezJORpsHvSWnXHLN8KkZgZLolF+PTmHOIBmLLsVmnkAnGeHCAzg0HrGW9vFKmC5L6zB0EQ8jNjSlbT72GATedxZ6WxhBvMVm7KrzTa4VXJIBNvhEfRf5ijkLZvfkuswmczBYzgFBSzHjRUUNMf4jsr5vkqqOs7VTyYZLk0OB2MgCHnS4WGY1g0MWTE2aoCh2C8ODwgx79YZKCVQIkzRlwCoZ3TQ2gcGOqKEA7EAUeM4fMbbD/9rvXIFmzUtYbCfmdqqVTX788OWJTqG1zjUqO1vyRmD5eiiawCWH49lfWDRc/ekHPdtAtQocKSt97JkUUe08hBciJQkf6htAbITFma7WkamVU0DN2v+zUXov5gaYwgtXZ+M2HkALM63SB3IpLLly6MIcHFPoTDOOTyIJtYY2h1W2YoWT/eaQEf6/Raq4ByNs89wp0FOR5Hl3vF+/Alrq4ovhoHnZGhiJFapoyzWSpVT6lYPDB4xAVxGqf6/j5c2AR3eIRdVEHX3Cdox31NUdFxqcmHpQAFTpOz2KAsTAYHlrYh3UDDNr7+gqd6Fhs1N2huOiiwjXWwhppyxQ/YYWm44VHbzKAkhc8YVlSoIW5IqDzUbAhjNOgpmMucfPfbyaSKCllUyAr069refrroOKpCrJ8i9wxf2aMW2/To1Omeg0LYo68nUB7mQpoqoDf7mxlRHt8W1R9U4XYp5LYqW1oopUW0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 Apr 2020 14:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgD3Sme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:42:34 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 197E124955
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588272154;
+        bh=R81KA1exG6QyWEvvM1/QecUU8WMGFHG/k/cxKcdkfnc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SKIj3ofhpyqALEnbxq/Qwt9I+q8xqgFA+l6wnFR3a2eTeE5nVt5QfYHFAwjC/y+Ja
+         s8uytIm5fXDttDTtpNCgxSD0+3yT34ulwtIpiC/VwDctbm4BV5uOySFOyHPHNganWE
+         ftAE+TPkYBb4X9BD4lyjCgOpqW23VPFKogllHC+c=
+Received: by mail-wr1-f45.google.com with SMTP id b11so8325185wrs.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:42:34 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaIfWq+adl0MoIjX21DhQ/3FXnW67N+C1zJWKoVnkYmEo7mMZJz
+        kQASHwFMxHFTKaf0h8EcekpOMkzj5atc1aHCU4zFDQ==
+X-Google-Smtp-Source: APiQypJgn2E33Ju/7FojR2A+zMnprCF7LbVkAmb0PlfhPmDEYEV5k/ga1+sfxFBZugZk5p4MRnQtkD5+A+c7WwtOQ+E=
+X-Received: by 2002:a5d:42c8:: with SMTP id t8mr3902056wrr.70.1588272152368;
+ Thu, 30 Apr 2020 11:42:32 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e50e9408-0769-4656-4296-08d7ed355e4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 18:36:16.6153
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lL/XSd53dUcwFOP0bDYmU7VURbe23QtVzM1N/Y9sBtF+xisSmYOmVuJHL3qplY2Xjaa8J/a/UKkUh8SWeJktzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6053
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com> <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+In-Reply-To: <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 30 Apr 2020 11:42:20 -0700
+X-Gmail-Original-Message-ID: <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+Message-ID: <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam, thanks for your comments.
+On Thu, Apr 30, 2020 at 10:17 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 9:52 AM Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> > If I'm going to copy from memory that might be bad but is at least a
+> > valid pointer, I want a function to do this.  If I'm going to copy
+> > from memory that might be entirely bogus, that's a different
+> > operation.  In other words, if I'm writing e.g. filesystem that is
+> > touching get_user_pages()'d persistent memory, I don't want to panic
+> > if the memory fails, but I do want at least a very loud warning if I
+> > follow a wild pointer.
+> >
+> > So I think that probe_kernel_copy() is not a valid replacement for
+> > memcpy_mcsafe().
+>
+> Fair enough.
+>
+> That said, the part I do like about probe_kernel_read/write() is that
+> it does indicate which part we think is possibly the one that needs
+> more care.
+>
+> Sure, it _might_ be both sides, but honestly, that's likely the much
+> less common case. Kind of like "copy_{to,from}_user()" vs
+> "copy_in_user()".
+>
+> Yes, the "copy_in_user()" case exists, but it's the odd and unusual case.
 
->-----Original Message-----
->From: Sam Ravnborg <sam@ravnborg.org>
->Sent: Sunday, April 26, 2020 1:59 AM
->To: Venkateshwar Rao Gannavarapu <VGANNAVA@xilinx.com>
->Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com; dri-
->devel@lists.freedesktop.org; Sandip Kothari <sandipk@xilinx.com>;
->airlied@linux.ie; linux-kernel@vger.kernel.org; Venkateshwar Rao Gannavara=
-pu
-><VGANNAVA@xilinx.com>
->Subject: Re: [RFC PATCH 1/2] dt-bindings: display: xlnx: Add Xilinx DSI TX
->subsystem bindings
->
->Hi Venkateshwar
->
->On Tue, Apr 21, 2020 at 02:50:55AM +0530, Venkateshwar Rao Gannavarapu
->wrote:
->> This add a dt binding for Xilinx DSI TX subsystem.
->>
->> The Xilinx MIPI DSI (Display serial interface) Transmitter Subsystem
->> implements the Mobile Industry Processor Interface (MIPI) based
->> display interface. It supports the interface with the programmable logic
->(FPGA).
->>
->> Signed-off-by: Venkateshwar Rao Gannavarapu
->> <venkateshwar.rao.gannavarapu@xilinx.com>
->> ---
->>  .../devicetree/bindings/display/xlnx/xlnx,dsi.txt  | 68
->> ++++++++++++++++++++++
->
->Sorry, but new bindings in DT Schema format (.yaml) please.
->We are working on migrating all bindings to DT Schema and do not want to a=
-dd
->new bindings in the old format.
->
-I will address bindings in YAML format in V2 patch.
->
->>  1 file changed, 68 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt
->> b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt
->> new file mode 100644
->> index 0000000..ef69729
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,dsi.txt
->> @@ -0,0 +1,68 @@
->> +Device-Tree bindings for Xilinx MIPI DSI Tx IP core
->> +
->> +The IP core supports transmission of video data in MIPI DSI protocol.
->> +
->> +Required properties:
->> + - compatible: Should be "xlnx-dsi".
->> + - reg: physical base address and length of the registers set for the d=
-evice.
->> + - xlnx,dsi-num-lanes: Possible number of DSI lanes for the Tx controll=
-er.
->> +   The values should be 1, 2, 3 or 4. Based on xlnx,dsi-num-lanes and
->> +   line rate for the MIPI D-PHY core in Mbps, the AXI4-stream received =
-by
->> +   Xilinx MIPI DSI Tx IP core adds markers as per DSI protocol and the =
-packet
->> +   thus framed is convered to serial data by MIPI D-PHY core. Please re=
-fer
->> +   Xilinx pg238 for more details. This value should be equal to the num=
-ber
->> +   of lanes supported by the connected DSI panel. Panel has to support =
-this
->> +   value or has to be programmed to the same value that DSI Tx controll=
-er is
->> +   configured to.
->> + - xlnx,dsi-datatype: Color format. The value should be one of
->> +"MIPI_DSI_FMT_RGB888",
->> +  "MIPI_DSI_FMT_RGB666", "MIPI_DSI_FMT_RGB666_PACKED" or
->"MIPI_DSI_FMT_RGB565".
->> + - #address-cells, #size-cells: should be set respectively to <1> and <=
-0>
->> +   according to DSI host bindings (see MIPI DSI bindings [1])
->> + - clock-names: Must contain "s_axis_aclk" and "dphy_clk_200M" in same
->order as
->> +   clocks listed in clocks property.
->> + - clocks: List of phandles to Video and 200Mhz DPHY clocks.
->> + - port: Logical block can be used / connected independently with
->> +   external device. In the display controller port nodes, topology
->> +   for entire pipeline should be described using the DT bindings define=
-d in
->> +   Documentation/devicetree/bindings/graph.txt.
->
->> + - simple_panel: The subnode for connected panel. This represents the
->> +   DSI peripheral connected to the DSI host node. Please refer to
->> +   Documentation/devicetree/bindings/display/mipi-dsi-bus.txt. The
->> +   simple-panel driver has auo,b101uan01 panel timing parameters added
->along
->> +   with other existing panels. DSI driver derive the required Tx IP con=
-troller
->> +   timing values from the panel timing parameters.A
->Please always use either a port or a ports node.
->
-OK.
->	Sam
->
->> +
->> +Required simple_panel properties:
->> + - compatible: Value should be one of the panel names in
->> +   Documentation/devicetree/bindings/display/panel/. e.g. "auo,b101uan0=
-1".
->> +   For available panel compatible strings, please refer to bindings in
->> +   Documentation/devicetree/bindings/display/panel/
->> +
->> +Optional properties:
->> + - xlnx,dsi-cmd-mode: denotes command mode enable.
->> +
->> +[1]: Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
->> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +
->> +       mipi_dsi_tx_subsystem@80000000 {
->> +               compatible =3D "xlnx,dsi";
->> +               reg =3D <0x0 0x80000000 0x0 0x10000>;
->> +               xlnx,dsi-num-lanes =3D <4>;
->> +               xlnx,dsi-data-type =3D <MIPI_DSI_FMT_RGB888>;
->> +               #address-cells =3D <1>;
->> +               #size-cells =3D <0>;
->> +               clock-names =3D "dphy_clk_200M", "s_axis_aclk";
->> +               clocks =3D <&misc_clk_0>, <&misc_clk_1>;
->> +               encoder_dsi_port: port@0 {
->> +                       reg =3D <0>;
->> +                       dsi_encoder: endpoint {
->> +                               remote-endpoint =3D <&xdsi_ep>;
->> +                       };
->> +               };
->> +               simple_panel: simple-panel@0 {
->> +                       compatible =3D "auo,b101uan01";
->> +                       reg =3D <0>;
->> +                       };
->> +               };
->> --
->> 2.7.4
->>
->> This email and any attachments are intended for the sole use of the name=
-d
->recipient(s) and contain(s) confidential information that may be proprieta=
-ry,
->privileged or copyrighted under applicable law. If you are not the intende=
-d
->recipient, do not read, copy, or forward this email message or any attachm=
-ents.
->Delete this email message and any attachments immediately.
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I suppose there could be a consistent naming like this:
+
+copy_from_user()
+copy_to_user()
+
+copy_from_unchecked_kernel_address() [what probe_kernel_read() is]
+copy_to_unchecked_kernel_address() [what probe_kernel_write() is]
+
+copy_from_fallible() [from a kernel address that can fail to a kernel
+address that can't fail]
+copy_to_fallible() [the opposite, but hopefully identical to memcpy() on x86]
+
+copy_from_fallible_to_user()
+copy_from_user_to_fallible()
+
+These names are fairly verbose and could probably be improved.
