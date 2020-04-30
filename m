@@ -2,100 +2,129 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61B1C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96408C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93117207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BE720774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="q6Caj39q"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HyHQiCKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgD3UIH (ORCPT
+        id S1726808AbgD3UKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgD3UIG (ORCPT
+        Thu, 30 Apr 2020 16:10:09 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14149 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgD3UKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:08:06 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E804C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:08:06 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id k81so4430930qke.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=Ok16EsO/ISAsEJIxQSbChy5pO1QqgpEPtp1JMK5qicY=;
-        b=q6Caj39qklQ+cMsmLSSD8BCgquSyU51XfuP2wwrqiVW6b36fQcsg0ufYNBYoggqogy
-         YwZ+GVhOioys/L4NHy20h7Dr1yqFyImrq0+d5ifynClSfFHra+UosMjEMZ6C1nNcVbEb
-         nyAMYCbrZv2nEjrYhZzYCuPmAW2kNMvpQXZp2UmKoJRWRdmWwsCdAplNQS3reKCocxz8
-         q8jknBR33fIvnEqQRSOPlTAF7t18vMbHMRsgBfKOcz8AViAsn7YJlVk2EGX3Ouurzezd
-         mwr7QLY5OHN1MmTIs4pSRDlozgTyBbt1BL2J4W4Mbo8COXC5TT1R5fjSX3FNsgaSayMz
-         w2fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Ok16EsO/ISAsEJIxQSbChy5pO1QqgpEPtp1JMK5qicY=;
-        b=ihpqiwQXVBb6lXCkSdY9dl8US394485HcsWTLsOjgTLEzMjm3LJSskWBqxDwG+px0F
-         oXfCsliawYtzmWT3aGBmYjoOGDlv8LeR3T99eJPZVOJmY5nHmrUrRU+Y8Jj6oG0cTJmT
-         tWr61oY30F8mCA2GGBWCxa81o1i43mFCaKMckqmhFswJ25nxZ5i/IUULQPORJ599rgoL
-         uncWaUE4vqKF78+sLMSj4dZpnQw9R7hNOfPajDCp+NpbrSi1m4jLJiMzb/t+PzZXpZY9
-         m+uE3SdjE6N+05CNW2i4DuJBTDLy6klky5GQGYFYR4YHNq1iK1u1a4WGLSN62+zRpid7
-         MHxw==
-X-Gm-Message-State: AGi0PuYVIcErlRCLzUjCFhO6al4IbPQHalu0ZteCqQJ1WDm+mu9e0GEp
-        QjFNm34GFso+5yK2xmYYH+6zUA==
-X-Google-Smtp-Source: APiQypIYsFkIRlq5IN9jj4U8w9Kol8rc9/N9rWY/GS/z5sFI9as51Gma038GxqW1OegRDrgR4FfTFw==
-X-Received: by 2002:a05:620a:16cf:: with SMTP id a15mr241173qkn.156.1588277285654;
-        Thu, 30 Apr 2020 13:08:05 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id b11sm638844qti.50.2020.04.30.13.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 13:08:04 -0700 (PDT)
-Message-ID: <8e52829575f430721113c646f07f9dca280a025b.camel@massaru.org>
-Subject: Re: [PATCH] docs: filesystems: fix `make htmldocs` warning
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, hubcap@omnibond.com,
-        martin@omnibond.com, devel@lists.orangefs.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Thu, 30 Apr 2020 17:08:01 -0300
-In-Reply-To: <20200430140412.7d4c692d@lwn.net>
-References: <20200430190737.80950-1-vitor@massaru.org>
-         <20200430134704.236c612b@lwn.net>
-         <07d33cf9937c89519bafc9210a98dab42579e681.camel@massaru.org>
-         <20200430140412.7d4c692d@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 30 Apr 2020 16:10:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eab30240001>; Thu, 30 Apr 2020 13:08:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 13:10:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 13:10:08 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 20:10:08 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 20:10:07 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <eadf3a5a-f305-4561-10e1-1b9241b9c5c2@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <bfd82642-9648-96f1-737d-4b9a869d34a3@nvidia.com>
+Date:   Thu, 30 Apr 2020 13:08:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <eadf3a5a-f305-4561-10e1-1b9241b9c5c2@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588277285; bh=bU+Gy6O+uYdQwdtawNbqdmqoPb5HNcT3EKUwg12HVTg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=HyHQiCKccOmKDCyjff09+lV+ozUKZQWBN6MvpgIuXiK3zzsPD+iaHW31AJVM9WEf8
+         3MhEAYDuFgWjAmTiA2nyp5hm2cWXDXRr9huwo4ka9jmDEav+j+9KjV1OrWK9rMtHxf
+         E13nWbrEMddT8yfbF1Zr+3D7YdUemyLDzPNp2b4282gI3lKPWS5GuoLeJX2RnhV5/H
+         IYXVJakraLOdk5gznQvw3PPuV5QkXip+u7ASm/aNrOIijgkG1NIZfujf5QR4dZxlBX
+         zYBFFYvAZNw0VBi/9VeVTx+5vkDlhVSRa1WiX549lhJhvQ9RL/SVRQhMFsg4yWqdPy
+         AKedr1Sv/TXKA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-30 at 14:04 -0600, Jonathan Corbet wrote:
-> On Thu, 30 Apr 2020 16:57:24 -0300
-> Vitor Massaru Iha <vitor@massaru.org> wrote:
-> 
-> > Sorry about that. I searched but I didn't find the documentation
-> > tree.
-> > Could you point me to the git url?
-> 
-> The MAINTAINERS file is always the place to look for such things:
-> 
-> > T:	git git://git.lwn.net/linux.git docs-next
-> 
-> jon
 
-Thanks Jon!
+On 4/30/20 1:06 PM, Dmitry Osipenko wrote:
+> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> +static int chan_capture_kthread_start(void *data)
+>> +{
+>> +	struct tegra_vi_channel *chan =3D data;
+>> +	struct tegra_channel_buffer *buf;
+>> +	int err =3D 0;
+>> +
+>> +	set_freezable();
+>> +
+>> +	while (1) {
+>> +		try_to_freeze();
+>> +
+>> +		/*
+>> +		 * Source is not streaming if error is non-zero.
+>> +		 * So, do not dequeue buffers on error and let the thread sleep
+>> +		 * till kthread stop signal is received.
+>> +		 */
+>> +		wait_event_interruptible(chan->start_wait,
+>> +					 kthread_should_stop() ||
+>> +					 (!list_empty(&chan->capture) &&
+>> +					 !err));
+> ...
+>> +static void tegra_channel_buffer_queue(struct vb2_buffer *vb)
+>> +{
+>> +	struct tegra_vi_channel *chan =3D vb2_get_drv_priv(vb->vb2_queue);
+>> +	struct vb2_v4l2_buffer *vbuf =3D to_vb2_v4l2_buffer(vb);
+>> +	struct tegra_channel_buffer *buf =3D to_tegra_channel_buffer(vbuf);
+>> +
+>> +	/* put buffer into the capture queue */
+>> +	spin_lock(&chan->start_lock);
+>> +	list_add_tail(&buf->queue, &chan->capture);
+>> +	spin_unlock(&chan->start_lock);
+>> +
+>> +	/* wait up kthread for capture */
+>> +	wake_up_interruptible(&chan->start_wait);
+>> +}
+> The V4L doc says that buffers could be enqueued before streaming is
+> started. I guess it should be a trouble here, shouldn't it?
+>
+> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/media/videobuf2-=
+core.h#L379
+
+what trouble are you referring here?
+
+I dont think so as we set min buffers needed as 2 always there will be 2=20
+per-queued buffers.
+
+But buffers from this queue will be dequeued only when ready to=20
+processes in the capture thread
 
