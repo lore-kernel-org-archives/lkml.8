@@ -2,183 +2,131 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABADC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0064C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3746920731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B7520731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/LUbAAM"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vVUQtbBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgD3Ttf (ORCPT
+        id S1726738AbgD3Tvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
+        Thu, 30 Apr 2020 15:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgD3Ttf (ORCPT
+        with ESMTP id S1726455AbgD3Tvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:49:35 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E245CC035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:49:34 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s18so3353082pgl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:49:34 -0700 (PDT)
+        Thu, 30 Apr 2020 15:51:50 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C43C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:51:50 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d16so5553393edv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:51:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eVgbuol89Iq0veE3I85Gk84NyFRa8gOBSOw6m+GRCSg=;
-        b=x/LUbAAMBI9EjfhEunVYObFNi0ilObBdHfFK9/9Y5x8kQ72e+7rk4hmGcWo23uxalQ
-         oR+hheCz7Y9fkffCw8PJeHEjjQknHmVO0oeQlyBcP0esveORtxk/8mlHR5f9WUh+9dfH
-         wl0CWP60y7fvrr5frOrebzPRYj8vOrbw85QPcl4mYo6l7Lp2ucpGmNVuPAqzotP8FZ4J
-         MUpoIva+US8Kpxx3SNED8vA9DHbg8o4/JpjjD1wXT5x9MLzYfrEer/m3wC/ajwJXQIrU
-         ocFIMjfD+eDvyvTdKsjCkAuUCLQgjgMJkCS8tUPC7vh5bI6kPnSLgkuXUx3FQTnyEJ8/
-         TZvQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D+FwAVJSyrEXzkxSrmCS02v7oMdKUwO+F0o4wshx4Ek=;
+        b=vVUQtbBBW2Z6/5fnVMc/CHaP+nmdWUZ9QxTg9U+zXdocuJvECmz2ZYNIGKPPz6wnQ8
+         Y/blY8yPzeccGFk3m1sEppcnDb2DSh0FgHkCsa362EpoiStkcCEFl/jvgV3GTQCJGqIR
+         1F5ZNP+5RAyCH89lA/zS+VK58cK0uw0HhqVN63Enq4YTlK6yQyXV4DIfnL10P+OqgGw/
+         HCg5266Eh5MmmWWOvAC6lE6/rve3bHhcEcgVc+Td4DD9a+Td1zEyKuOO0czcYWrzhCcT
+         tvoeMJf89WE0O/M4IxIXqvfJwcRgTiFBEmYdGzxdktpJKukTKOFi25Kns4jm5Sm2dyAU
+         yc4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eVgbuol89Iq0veE3I85Gk84NyFRa8gOBSOw6m+GRCSg=;
-        b=Czv8j6XvdC2yhd55iWNge4vswDGuCsmLnfDOKKkJ+dj3S4Ad7OSf250wHCRQP5FMcc
-         Zilvh+v4eDxEiXQYtJX2Mqms1r6mhcH13acQQXKgZQTR0kzBjVlLLNoIhFDeA8jgX1Ka
-         5EaDsrRU821cY9PuQQU+UCHWlRtjDwPF8kSfy6PJispFy2UD+qH3Y4KeAlNwCR5WoqrK
-         JdO+lS1a/TFIztxptr1ISbY29SwcpddkHszaCraB5x6nQHGlSJWM39xFf5bqgEfTr/BT
-         97ArpwkDO7Um/NbRk+3SKtiIts0fihvZYKuwQThgIaX/kuumUxHtA2TS4sJr7m2NfdQd
-         1Mfg==
-X-Gm-Message-State: AGi0Pua/OLK9P1OrcpieIvqL6FV4/mXlKgqvb0KVe4wJXDCBr/foKfeD
-        y1OaGiPkU3gR3jJuJECux2q6Qg==
-X-Google-Smtp-Source: APiQypI9zanAp40tlGa9iIJ5KTbKbr2YTHaLxGZRYxFJQ1lE4/d/8jwLCZytJiPDVXLWJjC8Nhu0tA==
-X-Received: by 2002:a63:1d46:: with SMTP id d6mr624552pgm.236.1588276174377;
-        Thu, 30 Apr 2020 12:49:34 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id a15sm517061pju.3.2020.04.30.12.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:49:33 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 13:49:31 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com, loic.pallardy@st.com,
-        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] remoteproc: Add new operation and flags for
- synchronistation
-Message-ID: <20200430194931.GB17031@xps15>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-4-mathieu.poirier@linaro.org>
- <7c5c8d5e-feb7-74ad-a2eb-1ccb8192b0ae@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D+FwAVJSyrEXzkxSrmCS02v7oMdKUwO+F0o4wshx4Ek=;
+        b=aft6zDHMVdvBd6O1LqIudGiZGL+1XQzm8SAt1Er6PPPYqKjq7dRACvf51j03ZDuQWN
+         NKAcm2fLsYaq5uJE5b+F500rFUO7pzwo4dkmoxXysH6JvvLqzt4zp2uFZcqZNm9TP15e
+         /sgQ5MblkCpo+v7GrCxzQ0BNpAg2n/bnsmMzcxfByu5SRYAHgtemnPem2aLS+Ms5k2tA
+         I9IO5SyK3JuQUU5yHeqZPZ22++UpocgTd598OMysDZA0GyyhwwB+e13A+iC25gAIEASg
+         asdG5LGo0nbPQsyGFBAfGOlFIZdANTnNk+iQmFzXiPaq7EDLGQxzuoH7SZEMzdN06NGq
+         zysg==
+X-Gm-Message-State: AGi0PuZR+N02a4rqQSl4G8B2NHCq8UbQOtqcMSbxSO+l2kb0h4Ege/ZM
+        YszTCIqXftEgowPEjiJ2LP6Dl0/98cmrEuYXdKeS4w==
+X-Google-Smtp-Source: APiQypKSjYZOD7xk1KJYIgeWWnr+Sy7zH5f3yAinfHlnQz1vSgERtk1La4XpoWwZWcsoyFjvzfAAP5KPRwAA/g7JUtg=
+X-Received: by 2002:aa7:c643:: with SMTP id z3mr620607edr.154.1588276309142;
+ Thu, 30 Apr 2020 12:51:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c5c8d5e-feb7-74ad-a2eb-1ccb8192b0ae@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com> <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 30 Apr 2020 12:51:38 -0700
+Message-ID: <CAPcyv4g8rA2TRvoFHqEjs5Xn74gdZx8uF0PXFYCjTcx56yA=Jw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 06:38:41PM +0200, Arnaud POULIQUEN wrote:
-> 
-> 
-> On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> > Add a new sync_ops to support use cases where the remoteproc
-> > core is synchronising with the remote processor.  Exactly when to use
-> > the synchronisation operations is directed by the flags in structure
-> > rproc_sync_flags.
-> > 
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > ---
-> >  include/linux/remoteproc.h | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> > index ac4082f12e8b..ceb3b2bba824 100644
-> > --- a/include/linux/remoteproc.h
-> > +++ b/include/linux/remoteproc.h
-> > @@ -353,6 +353,23 @@ enum rsc_handling_status {
-> >  	RSC_IGNORED	= 1,
-> >  };
-> >  
-> > +/**
-> > + * struct rproc_sync_flags - platform specific flags indicating which
-> > + *			      rproc_ops to use at specific times during
-> > + *			      the rproc lifecycle.
-> > + * @on_init: true if synchronising with the remote processor at
-> > + *	     initialisation time
-> > + * @after_stop: true if synchronising with the remote processor after it was
-> > + *		stopped from the cmmand line
-> typo command
-> > + * @after_crash: true if synchronising with the remote processor after
-> > + *		 it has crashed
-> > + */
-> > +struct rproc_sync_flags {
-> > +	bool on_init;
-> > +	bool after_stop;
-> > +	bool after_crash;
-> > +};
-> > +
-> how about a bit field instead (just a proposition)?
-> Platform driver would set the sync flag and rproc_set_sync_flag could be a 
-> simple mask instead of a switch case.
+On Thu, Apr 30, 2020 at 12:23 PM Luck, Tony <tony.luck@intel.com> wrote:
+>
+> On Thu, Apr 30, 2020 at 11:42:20AM -0700, Andy Lutomirski wrote:
+> > I suppose there could be a consistent naming like this:
+> >
+> > copy_from_user()
+> > copy_to_user()
+> >
+> > copy_from_unchecked_kernel_address() [what probe_kernel_read() is]
+> > copy_to_unchecked_kernel_address() [what probe_kernel_write() is]
+> >
+> > copy_from_fallible() [from a kernel address that can fail to a kernel
+> > address that can't fail]
+> > copy_to_fallible() [the opposite, but hopefully identical to memcpy() on x86]
+> >
+> > copy_from_fallible_to_user()
+> > copy_from_user_to_fallible()
+> >
+> > These names are fairly verbose and could probably be improved.
+>
+> How about
+>
+>         try_copy_catch(void *dst, void *src, size_t count, int *fault)
+>
+> returns number of bytes not-copied (like copy_to_user etc).
+>
+> if return is not zero, "fault" tells you what type of fault
+> cause the early stop (#PF, #MC).
 
-I opted for a structure over bit fields because I thought it would be easier to
-read/understand.  Both approaches are valid and I have to particular preference
-other than, in my own view, a structure is easier to understand.  
+I do like try_copy_catch() for the case when neither of the buffers
+are __user (like in the pmem driver) and _copy_to_iter_fallible()
+(plus all the helpers it implies) for the other cases.
 
-I'll wait a little to see what other people think.  If nobody objects the next
-revision will have bit fields.
+copy_to_user_fallible
+copy_fallible_to_page
+copy_pipe_to_iter_fallible
 
-> 
-> Is it possible to split this patch in a different ways because difficult to understand as
-> rproc_sync_flags seems not used before 
-> [PATCH v3 09/14] remoteproc: Deal with synchronisation when crashing
-
-Certainly
-
-> 
-> Thanks
-> Arnaud  
-> 
-> >  /**
-> >   * struct rproc_ops - platform-specific device handlers
-> >   * @start:	power on the device and boot it
-> > @@ -459,6 +476,9 @@ struct rproc_dump_segment {
-> >   * @firmware: name of firmware file to be loaded
-> >   * @priv: private data which belongs to the platform-specific rproc module
-> >   * @ops: platform-specific start/stop rproc handlers
-> > + * @sync_ops: platform-specific start/stop rproc handlers when
-> > + *	      synchronising with a remote processor.
-> > + * @sync_flags: Determine the rproc_ops to choose in specific states.
-> >   * @dev: virtual device for refcounting and common remoteproc behavior
-> >   * @power: refcount of users who need this rproc powered up
-> >   * @state: state of the device
-> > @@ -482,6 +502,7 @@ struct rproc_dump_segment {
-> >   * @table_sz: size of @cached_table
-> >   * @has_iommu: flag to indicate if remote processor is behind an MMU
-> >   * @auto_boot: flag to indicate if remote processor should be auto-started
-> > + * @sync_with_rproc: true if currently synchronising with the rproc
-> >   * @dump_segments: list of segments in the firmware
-> >   * @nb_vdev: number of vdev currently handled by rproc
-> >   */
-> > @@ -492,6 +513,8 @@ struct rproc {
-> >  	const char *firmware;
-> >  	void *priv;
-> >  	struct rproc_ops *ops;
-> > +	struct rproc_ops *sync_ops;
-> > +	struct rproc_sync_flags sync_flags;
-> >  	struct device dev;
-> >  	atomic_t power;
-> >  	unsigned int state;
-> > @@ -515,6 +538,7 @@ struct rproc {
-> >  	size_t table_sz;
-> >  	bool has_iommu;
-> >  	bool auto_boot;
-> > +	bool sync_with_rproc;
-> >  	struct list_head dump_segments;
-> >  	int nb_vdev;
-> >  	u8 elf_class;
-> > 
+...because the mmu-fault handling is an aspect of "_user" and fallible
+implies other source fault reasons. It does leave a gap if an
+architecture has a concept of a fallible write, but that seems like
+something that will be handled asynchronously and not subject to this
+interface.
