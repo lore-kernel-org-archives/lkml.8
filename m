@@ -2,138 +2,73 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B55C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B074FC8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B232078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:10:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ljs9rQYO"
+	by mail.kernel.org (Postfix) with ESMTP id 8EAA4207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588245039;
+	bh=TsI/BKu4593Rcdqo2h9eyVYN7ozdDVL7qnI3d8BKDU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QcRNgiNTvygP5IzR7GAE8tuBCLIs5FU30B6HxKylm6iNw7PGNsiQaFklHqy5ri+6A
+	 m2BOp9RHCVB9Glf6hm1I9Z8EgQyHponFoZbOoipAl+v+vpe21EDEmEbLlpWl5zhzzj
+	 zy4oYHI2pPXUyeKGpv6N/EIHKzzSO4CQ5cByKvC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD3LKT (ORCPT
+        id S1726832AbgD3LKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:10:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36476 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgD3LKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:10:19 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C30D8321;
-        Thu, 30 Apr 2020 13:10:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1588245015;
-        bh=vzoIGymqMDr4/e03h5JjVx/KZIHtnmQaHGQ9XNk5uK4=;
+        Thu, 30 Apr 2020 07:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgD3LKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:10:38 -0400
+Received: from linux-8ccs (p3EE2CE96.dip0.t-ipconnect.de [62.226.206.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A00A720757;
+        Thu, 30 Apr 2020 11:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588245038;
+        bh=TsI/BKu4593Rcdqo2h9eyVYN7ozdDVL7qnI3d8BKDU0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ljs9rQYOPJA0aSO47jOEwAPJoY6ZuSjAu026tsgjxuc9vkCtysBW18J5kqOZAxv72
-         be88In7eRKa+ZDqolmSVj2xqY9pmLpNNRDoXUZDFyyppR6Bo/ih1syTJl3ZwYpk/tj
-         hLxDAnk+T3/s3GvhNMjl9JNM0mr+DLiTbnP6FU+k=
-Date:   Thu, 30 Apr 2020 14:10:14 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
-Message-ID: <20200430111014.GD5856@pendragon.ideasonboard.com>
-References: <20200414200151.80089-1-daniel@qtec.com>
- <20200414200151.80089-2-daniel@qtec.com>
- <20200430094233.GE867@valkosipuli.retiisi.org.uk>
+        b=MajYZnwnuJZ0SVyD/k1pSZHgRImpw5nnRSW6P/xXqhY5QZ/+JDyC15wZg1g4tz6KQ
+         cQbjatF9k2NZjv5y3isq/a+Y+ycEKGf96HBNBdKXjIOan8imCt7H3ED+H2mwzPPAU8
+         +2anzj0vlveaQHM0xhMJHk8lGNwcw46rcm7LIwOQ=
+Date:   Thu, 30 Apr 2020 13:10:33 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH v4 11/11] module: Make module_enable_ro() static again
+Message-ID: <20200430111032.GA4436@linux-8ccs>
+References: <cover.1588173720.git.jpoimboe@redhat.com>
+ <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200430094233.GE867@valkosipuli.retiisi.org.uk>
+In-Reply-To: <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
++++ Josh Poimboeuf [29/04/20 10:24 -0500]:
+>Now that module_enable_ro() has no more external users, make it static
+>again.
+>
+>Suggested-by: Jessica Yu <jeyu@kernel.org>
+>Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
-> Hi Daniel,
-> 
-> Thanks for the patchset.
-> 
-> I'm also cc'ing Laurent who I think could be interested in this one.
-> 
-> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
-> > Add min and max structures to the v4l2-subdev callback in order to allow
-> > the subdev to return a range of valid frame intervals.
-> > 
-> > This would operate similar to the struct v4l2_subdev_frame_size_enum and
-> > its max and min values for the width and the height. In this case, the
-> > possibility to return a frame interval range is added to the v4l2-subdev level
-> > whenever the v4l2 device operates in step-wise or continuous mode.
-> 
-> The current API only allows providing a list of enumerated values. That is
-> limiting indeed, especially on register list based sensor drivers where
-> vertical blanking is configurable.
-> 
-> I guess this could be extended to cover what V4L2, more or less. If we tell
-> it's a range, is it assumed to be contiguous? We don't have try operation
-> for the frame interval, but I guess set is good enough. The fraction is
-> probably best for TV standards but it's not what camera sensors natively
-> use. (But for a register list based driver, the established practice
-> remains to use frame interval.)
-> 
-> I'm also wondering the effect on existing user space; if a driver gives a
-> range, how will the existing programs work with such a driver?
-> 
-> I'd add an anonymous union with the interval field, the other field being
-> min_interval. Then the current applications would get the minimum interval
-> and still continue to function. I guess compilers are modern enough these
-> days we can have an anonymous union in the uAPI?
+Thanks! Since this patch is separate from the rest and it's based on
+modules-next, I can just take this last patch through the modules tree.
 
-We can discuss all this, but given patch 3/3 in this series, I think
-this isn't the right API :-) The sensor driver should not expose the
-frame interval enumeration API. It should instead expose control of the
-frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
-V4L2_CID_VBLANK.
-
-> > Signed-off-by: Daniel Gomez <daniel@qtec.com>
-> > ---
-> >  include/uapi/linux/v4l2-subdev.h | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/uapi/linux/v4l2-subdev.h b/include/uapi/linux/v4l2-subdev.h
-> > index 03970ce30741..ee15393c58cd 100644
-> > --- a/include/uapi/linux/v4l2-subdev.h
-> > +++ b/include/uapi/linux/v4l2-subdev.h
-> > @@ -117,6 +117,8 @@ struct v4l2_subdev_frame_interval {
-> >   * @code: format code (MEDIA_BUS_FMT_ definitions)
-> >   * @width: frame width in pixels
-> >   * @height: frame height in pixels
-> > + * @min_interval: min frame interval in seconds
-> > + * @max_interval: max frame interval in seconds
-> >   * @interval: frame interval in seconds
-> >   * @which: format type (from enum v4l2_subdev_format_whence)
-> >   */
-> > @@ -126,9 +128,11 @@ struct v4l2_subdev_frame_interval_enum {
-> >  	__u32 code;
-> >  	__u32 width;
-> >  	__u32 height;
-> > +	struct v4l2_fract min_interval;
-> > +	struct v4l2_fract max_interval;
-> 
-> This changes the memory layout of the struct and breaks the ABI. Any new
-> fields in the struct may only replace reserved fields while the rest must
-> stay unchanged.
-> 
-> >  	struct v4l2_fract interval;
-> >  	__u32 which;
-> > -	__u32 reserved[8];
-> > +	__u32 reserved[4];
-> >  };
-> >  
-> >  /**
-
--- 
-Regards,
-
-Laurent Pinchart
+Jessica
