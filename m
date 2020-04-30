@@ -2,168 +2,313 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B497FC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF9AC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9285720775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588258662;
-	bh=iITLkeVLvUEDVyYHfQOPsO5Y1j+DKWd5cn5U8Zr0ScM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WXxsNdVvrH6Yv8tiUcsTX7RhXQznJYDP4GrXaWY7kXlqM/U4Ap/DpW2Yo28DRkBUN
-	 u72uD9iXi2+KsWOzDaBa64zrkL0RwhkGdI8NVa8SK3qbfYSHZFfvJ8UnwLrNelLFet
-	 dQc1OLZjBMiAM1tiWqsvZbcFeKItIiwbSpCRcIlg=
+	by mail.kernel.org (Postfix) with ESMTP id DE30A2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XQAV9/kR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3yeCPvZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgD3O5b (ORCPT
+        id S1726770AbgD3O6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:57:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39387 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgD3O5Z (ORCPT
+        Thu, 30 Apr 2020 10:58:24 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:33167 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgD3O6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:57:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b11so7310940wrs.6;
-        Thu, 30 Apr 2020 07:57:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v2KXeJSGOxCLOqzZkZj8Dvo069WYxW+Vtn6eKg9tlBc=;
-        b=n0+5AMvaXwqlZgIbw9lEMVJx/hFkZjiRjmbUax79APlGhjiCXxBNgk2nK//4CXr5Bj
-         1Sdvy4Q6h41Ey453v3h/jiQ4QejYYiNHDDBVjX7yl3EVXPk1n/uDRWoHLsqZfVpI1NE1
-         afpwuIQxv3aFpQhpycPX5i+e+yhDCSc7re85OLKs87xNoHMZJ4WGnW0U4vl1pmbl5hBj
-         1Q+vawu5LPbvRi7sFDoHGGOWI/InwvUdw51yqcm9KpalH1Sg22YOa/rxgOyj/h5z+SwC
-         aneKde02qhjjNA+d31B+PKkQjxnB0uDGxIbkM6yjuGc/XEqWz/hxrKb8RzjLUGArLzH5
-         Lyhw==
-X-Gm-Message-State: AGi0PublSnNH18JyZ6Abls56+5LPTzCO2mXC3DVFJHhfHDSZmXRptMAV
-        N6Wo9+2TUzZppKO7DG56d3Q=
-X-Google-Smtp-Source: APiQypLyWBXOMWcM+U9JdSkAcZTAgQc1udSZa6plGTugiQm7hdsGILpSL6SjvdwK93UEObl5KKxM2w==
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr4171383wrt.270.1588258644136;
-        Thu, 30 Apr 2020 07:57:24 -0700 (PDT)
-Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
-        by smtp.gmail.com with ESMTPSA id 74sm4681829wrk.30.2020.04.30.07.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:57:22 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 16:57:21 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-Message-ID: <20200430145721.GF12655@dhcp22.suse.cz>
-References: <cover.1588092152.git.chris@chrisdown.name>
- <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <20200429101510.GA28637@dhcp22.suse.cz>
- <20200429140330.GA5054@cmpxchg.org>
- <20200429150414.GI28637@dhcp22.suse.cz>
- <20200429165627.GA24768@cmpxchg.org>
+        Thu, 30 Apr 2020 10:58:23 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 8D9458A2;
+        Thu, 30 Apr 2020 10:58:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 30 Apr 2020 10:58:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Ak+6sr0EdSMe3A9inDGvwJSeZxZ
+        IogcefCgeBSV8VR0=; b=XQAV9/kRBmRyGAocCw4OPv0FgLqOY+7u4SYFjXEElPn
+        puY5XUBWU3DhYpF62WzXhacU1tvWgLIk0L65DysYnDmfSpv8jhSMiAdvj/Yvhbrw
+        15qC1LoptX4yyI1aVcjvNckN8ir9yfuSY5+kFvTLKzKLwtusC3wrKPi5LgKG25dM
+        Ct+hQQAX4jeWxAmaJzLTecpmp9mIswSOaXO9v9I0yJ/pE6+k9HyRBzsdUBYKcx8y
+        Yf5np2aaO7vmsHpN9a9RNxyCEf6AEcka0p22EU34N+ZMzuZqFtOd7w7dtOF0S0mJ
+        8CBRahhhSnSuk/nN37gwGPEl+zxVrn4UIa3gaYVrh7Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Ak+6sr
+        0EdSMe3A9inDGvwJSeZxZIogcefCgeBSV8VR0=; b=3yeCPvZyx+ICx+H4qFKXKw
+        mIAPI8F5eRzBzwx7nbu76Gj+5u/Qtb60mqF8vdSRvqm34hdXj7KMelpz0CHuG50A
+        GQN1UOV0BOpluxE5huMKFKxAW9ZrSJFQynQW+8r33JAUOIeuFkoA5/VLksWPhWLb
+        hwwjvl6LseFebXRh7MGNK951l4XROIlXItct7E1b7dFNQkU8Tj/qnItZXiHESvR0
+        6q5L+IsQiXD6uRLSAVmNPiaMb7MMBUBW0WQmlNi2nBCJhhnmG7ghThhwdYz441fp
+        Vrnu732c4Aju18AHAui4OJ+hDeajkEh8fTKisxy1JsjcZ80QIQVFk29hFz15yy1A
+        ==
+X-ME-Sender: <xms:i-eqXsXFmiFAOha2sFLvEBVbhhGJIpylCcxwsBLspE7PBORMn4l7pg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdekvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:i-eqXv3TLeO7zifGOzODK7cQi9jkVk5tGE9mjpNX3UEX8NlsI-f1Mw>
+    <xmx:i-eqXskllfiqos-IENPO5uo30cPdhaz8nrJ68Vz3fie8ACKYi1yECQ>
+    <xmx:i-eqXmHlsJa2ZY1E0jqyARB1P0PY_j-XGRpUpjE1mtLIcoFM0aT52g>
+    <xmx:jueqXtQPpNh6ld88GnZUCc77-eyLRMN0UW9LrPrDg-7WGZCEaIdKKw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3E2913280065;
+        Thu, 30 Apr 2020 10:58:19 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 16:58:17 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Priit Laes <plaes@plaes.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 3/6] net: stmmac: dwmac-sunxi: Implement syscon-based
+ clock handling
+Message-ID: <20200430145817.5cqa542jncomcklt@gilmour.lan>
+References: <20200430115702.5768-1-plaes@plaes.org>
+ <20200430115702.5768-4-plaes@plaes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="putviyvqcoxcobld"
 Content-Disposition: inline
-In-Reply-To: <20200429165627.GA24768@cmpxchg.org>
+In-Reply-To: <20200430115702.5768-4-plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-04-20 12:56:27, Johannes Weiner wrote:
-[...]
-> I think to address this, we need a more comprehensive solution and
-> introduce some form of serialization. I'm not sure yet how that would
-> look like yet.
 
-Yeah, that is what I've tried to express earlier and that is why I would
-rather go with an uglier workaround for now and think about a more
-robust effective values calculation on top.
- 
-> I'm still not sure it's worth having a somewhat ugly workaround in
-> mem_cgroup_protection() to protect against half of the bug. If you
-> think so, the full problem should at least be documented and marked
-> XXX or something.
+--putviyvqcoxcobld
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, this makes sense to me. What about the following?
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 1b4150ff64be..50ffbc17cdd8 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -350,6 +350,42 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
- 	if (mem_cgroup_disabled())
- 		return 0;
- 
-+	/*
-+	 * There is no reclaim protection applied to a targeted reclaim.
-+	 * We are special casing this specific case here because
-+	 * mem_cgroup_protected calculation is not robust enough to keep
-+	 * the protection invariant for calculated effective values for
-+	 * parallel reclaimers with different reclaim target. This is
-+	 * especially a problem for tail memcgs (as they have pages on LRU)
-+	 * which would want to have effective values 0 for targeted reclaim
-+	 * but a different value for external reclaim.
-+	 *
-+	 * Example
-+	 * Let's have global and A's reclaim in parallel:
-+	 *  |
-+	 *  A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
-+	 *  |\
-+	 *  | C (low = 1G, usage = 2.5G)
-+	 *  B (low = 1G, usage = 0.5G)
-+	 *
-+	 * For the global reclaim
-+	 * A.elow = A.low
-+	 * B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
-+	 * C.elow = min(C.usage, C.low)
-+	 *
-+	 * With the effective values resetting we have A reclaim
-+	 * A.elow = 0
-+	 * B.elow = B.low
-+	 * C.elow = C.low
-+	 *
-+	 * If the global reclaim races with A's reclaim then
-+	 * B.elow = C.elow = 0 because children_low_usage > A.elow)
-+	 * is possible and reclaiming B would be violating the protection.
-+	 *
-+	 */
-+	if (memcg == root)
-+		return 0;
-+
- 	if (in_low_reclaim)
- 		return READ_ONCE(memcg->memory.emin);
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 05b4ec2c6499..df88a22f09bc 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6385,6 +6385,14 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
- 
- 	if (!root)
- 		root = root_mem_cgroup;
-+
-+	/*
-+	 * Effective values of the reclaim targets are ignored so they
-+	 * can be stale. Have a look at mem_cgroup_protection for more
-+	 * details.
-+	 * TODO: calculation should be more robust so that we do not need
-+	 * that special casing.
-+	 */
- 	if (memcg == root)
- 		return MEMCG_PROT_NONE;
- 
+On Thu, Apr 30, 2020 at 02:56:59PM +0300, Priit Laes wrote:
+> Convert the sun7i-gmac driver to use a regmap-based driver,
+> instead of relying on the custom clock implementation.
+>=20
+> This allows to get rid of the last custom clock in the sun7i
+> device tree making the sun7i fully CCU-compatible.
+>=20
+> Compatibility with existing devicetrees is retained.
+>=20
+> Signed-off-by: Priit Laes <plaes@plaes.org>
+> ---
+>  .../net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 130 ++++++++++++++++--
+>  1 file changed, 122 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/=
+net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+> index 0e1ca2cba3c7..206398f7a2af 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+> @@ -12,8 +12,11 @@
+>  #include <linux/module.h>
+>  #include <linux/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_net.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> =20
+>  #include "stmmac_platform.h"
+> =20
+> @@ -22,11 +25,23 @@ struct sunxi_priv_data {
+>  	int clk_enabled;
+>  	struct clk *tx_clk;
+>  	struct regulator *regulator;
+> +	struct regmap_field *regmap_field;
+> +};
+> +
+> +/* EMAC clock register @ 0x164 in the CCU address range */
+> +static const struct reg_field ccu_reg_field =3D {
+> +	.reg =3D 0x164,
+> +	.lsb =3D 0,
+> +	.msb =3D 31,
+>  };
+> =20
+>  #define SUN7I_GMAC_GMII_RGMII_RATE	125000000
+>  #define SUN7I_GMAC_MII_RATE		25000000
+> =20
+> +#define SUN7I_A20_CLK_MASK		GENMASK(2, 0)
+> +#define SUN7I_A20_RGMII_CLK		(BIT(2) | BIT(1))
+> +#define SUN7I_A20_MII_CLK		0
+> +
+>  static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
+>  {
+>  	struct sunxi_priv_data *gmac =3D priv;
+> @@ -38,7 +53,20 @@ static int sun7i_gmac_init(struct platform_device *pde=
+v, void *priv)
+>  			return ret;
+>  	}
+> =20
+> -	/* Set GMAC interface port mode
+> +	if (gmac->regmap_field) {
+> +		if (phy_interface_mode_is_rgmii(gmac->interface)) {
+> +			regmap_field_update_bits(gmac->regmap_field,
+> +						 SUN7I_A20_CLK_MASK,
+> +						 SUN7I_A20_RGMII_CLK);
+> +			return clk_prepare_enable(gmac->tx_clk);
+> +		}
 
-> In practice, I doubt this matters all that much because limit reclaim
-> and global reclaim tend to occur in complementary
-> containerization/isolation strategies, not heavily simultaneously.
+Why do you prepare and enable the clock here? ...
 
-I would expect that as well but this is always hard to tell.
+> +		regmap_field_update_bits(gmac->regmap_field,
+> +					 SUN7I_A20_CLK_MASK,
+> +					 SUN7I_A20_MII_CLK);
+> +		return clk_enable(gmac->tx_clk);
+> +	}
 
--- 
-Michal Hocko
-SUSE Labs
+=2E.. while you only enable it here ...
+
+> +	/* Legacy devicetree clock (allwinner,sun7i-a20-gmac-clk) support:
+>  	 *
+>  	 * The GMAC TX clock lines are configured by setting the clock
+>  	 * rate, which then uses the auto-reparenting feature of the
+> @@ -62,9 +90,16 @@ static void sun7i_gmac_exit(struct platform_device *pd=
+ev, void *priv)
+>  {
+>  	struct sunxi_priv_data *gmac =3D priv;
+> =20
+> -	if (gmac->clk_enabled) {
+> +	if (gmac->regmap_field) {
+> +		regmap_field_update_bits(gmac->regmap_field,
+> +					 SUN7I_A20_CLK_MASK, 0);
+>  		clk_disable(gmac->tx_clk);
+> -		gmac->clk_enabled =3D 0;
+> +	} else {
+> +		/* Handle legacy devicetree clock (sun7i-a20-gmac-clk) */
+> +		if (gmac->clk_enabled) {
+> +			clk_disable(gmac->tx_clk);
+> +			gmac->clk_enabled =3D 0;
+> +		}
+>  	}
+>  	clk_unprepare(gmac->tx_clk);
+
+=2E... and disable and unprepare it here?
+
+> @@ -72,10 +107,55 @@ static void sun7i_gmac_exit(struct platform_device *=
+pdev, void *priv)
+>  		regulator_disable(gmac->regulator);
+>  }
+> =20
+> +static struct regmap *sun7i_gmac_get_syscon_from_dev(struct device_node =
+*node)
+> +{
+> +	struct device_node *syscon_node;
+> +	struct platform_device *syscon_pdev;
+> +	struct regmap *regmap =3D NULL;
+> +
+> +	syscon_node =3D of_parse_phandle(node, "syscon", 0);
+> +	if (!syscon_node)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	syscon_pdev =3D of_find_device_by_node(syscon_node);
+> +	if (!syscon_pdev) {
+> +		/* platform device might not be probed yet */
+> +		regmap =3D ERR_PTR(-EPROBE_DEFER);
+> +		goto out_put_node;
+> +	}
+> +
+> +	/* If no regmap is found then the other device driver is at fault */
+> +	regmap =3D dev_get_regmap(&syscon_pdev->dev, NULL);
+> +	if (!regmap)
+> +		regmap =3D ERR_PTR(-EINVAL);
+> +
+> +	platform_device_put(syscon_pdev);
+> +out_put_node:
+> +	of_node_put(syscon_node);
+> +	return regmap;
+> +}
+> +
+>  static void sun7i_fix_speed(void *priv, unsigned int speed)
+>  {
+>  	struct sunxi_priv_data *gmac =3D priv;
+> =20
+> +	if (gmac->regmap_field) {
+> +		clk_disable(gmac->tx_clk);
+> +		clk_unprepare(gmac->tx_clk);
+> +		if (speed =3D=3D 1000)
+> +			regmap_field_update_bits(gmac->regmap_field,
+> +						 SUN7I_A20_CLK_MASK,
+> +						 SUN7I_A20_RGMII_CLK);
+> +		else
+> +			regmap_field_update_bits(gmac->regmap_field,
+> +						 SUN7I_A20_CLK_MASK,
+> +						 SUN7I_A20_MII_CLK);
+> +		clk_prepare_enable(gmac->tx_clk);
+
+
+If were going to use clk_prepare_enable, we might as well use
+clk_disable_unprepare
+
+> +		return;
+> +	}
+> +
+> +	/* Handle legacy devicetree clock (sun7i-a20-gmac-clk) */
+
+That doesn't say much, you should rather explain what the situation is exac=
+tly.
+
+> +
+>  	/* only GMII mode requires us to reconfigure the clock lines */
+>  	if (gmac->interface !=3D PHY_INTERFACE_MODE_GMII)
+>  		return;
+> @@ -102,6 +182,8 @@ static int sun7i_gmac_probe(struct platform_device *p=
+dev)
+>  	struct stmmac_resources stmmac_res;
+>  	struct sunxi_priv_data *gmac;
+>  	struct device *dev =3D &pdev->dev;
+> +	struct device_node *syscon_node;
+> +	struct regmap *regmap =3D NULL;
+>  	int ret;
+> =20
+>  	ret =3D stmmac_get_platform_resources(pdev, &stmmac_res);
+> @@ -124,11 +206,43 @@ static int sun7i_gmac_probe(struct platform_device =
+*pdev)
+>  		goto err_remove_config_dt;
+>  	}
+> =20
+> -	gmac->tx_clk =3D devm_clk_get(dev, "allwinner_gmac_tx");
+> -	if (IS_ERR(gmac->tx_clk)) {
+> -		dev_err(dev, "could not get tx clock\n");
+> -		ret =3D PTR_ERR(gmac->tx_clk);
+> -		goto err_remove_config_dt;
+> +	/* Attempt to fetch syscon node... */
+> +	syscon_node =3D of_parse_phandle(dev->of_node, "syscon", 0);
+> +	if (syscon_node) {
+> +		gmac->tx_clk =3D devm_clk_get(dev, "stmmaceth");
+> +		if (IS_ERR(gmac->tx_clk)) {
+> +			dev_err(dev, "Could not get TX clock\n");
+> +			ret =3D PTR_ERR(gmac->tx_clk);
+> +			goto err_remove_config_dt;
+> +		}
+
+I'm not quite sure why you added this clock lookup here? Wasn't it here alr=
+eady?
+
+Maxime
+
+--putviyvqcoxcobld
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqrniQAKCRDj7w1vZxhR
+xZyaAQDsoPEZO+RMAghgqFiaZgAIxVjUOPbVNuYyKb7pEwGGCQEA7VGSYNwkBDzN
+PWU3lUz+NIedfeEMtoNHCeq3266+hg8=
+=L/+p
+-----END PGP SIGNATURE-----
+
+--putviyvqcoxcobld--
