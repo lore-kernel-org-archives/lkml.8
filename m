@@ -2,445 +2,155 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D07C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0376EC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A54E207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC62F207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AzP5FELf"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="SiTYsTlp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD3MEp (ORCPT
+        id S1726859AbgD3MGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:04:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3MEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:04:45 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E9CC035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 05:04:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j2so6571778wrs.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 05:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=XtVtaHcUbf3+lIqcXENAN/tNjTakFyYRW672c6fuMhg=;
-        b=AzP5FELfnhwweEY2MS33HS7R3JKMY46vuAkHBl3hmdA09aaM0nxMPXWwF9YoS0+8P7
-         v+4D7HIGDrtakWRu77Q+xLZzEX9CpDPmmaAr6oOk70SY8ET6M/WXoRqpE8QmRFXrnfFT
-         VIYRHfDx7av8GH2gBuLU/cKjChL/kejdVk1a1rJ7EutE3tFwuWUCQyr2Pbg/H/M7KGIf
-         Eucypfja7KLrDkTVq0T6LJNf+gzDkrj4rtMx2stsyl2Z678JhksJiCG32usg973hfCHP
-         PAYyU/fwoG5eO8h8Euz3zcH/Amy2IfsotrkVVqb7ExmGAeQJiHDznDcK/poj+1NHN0+6
-         Vy8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=XtVtaHcUbf3+lIqcXENAN/tNjTakFyYRW672c6fuMhg=;
-        b=gUXttc9UvS0ZXTtrGJtWgndDW4jC57hDIcd//FTZnr6+97wVH5junK6KXiXZXrnkBy
-         r40wMvKj6YkgttnjmxC4Z1V1Ma7UzO3jwbst0Yca0bGg6qUxA52O5aOv0NbwRM2HqM4T
-         TiKXoaFkxTe+UYp+xs6NcS/LDe4ZAFaxdratNtUEKx4dtfW2tFwdU5aFjeE56m4kpRyV
-         NIcCzlkzKlnS3VLDcW5+VwHK5Ol4LAQYMJQarNP1uyvntKKXsOLc+rQPX1/gqZSz+huE
-         4BhA6kNm7B0uHHToC9pVqHk4dnRjFVwKAuh8EMwrmyxWnRF2c84IChTmFCPV5su5rTKk
-         xYrg==
-X-Gm-Message-State: AGi0PuYOCsXPbHLJAp2bkzpkdY2s0lmLpjAsld9dr4b4Nq5hlX14USVq
-        3QVfWyJWui9CT8FkF4ZCpmbztw==
-X-Google-Smtp-Source: APiQypLk3/R9WBe5dCBrX21eKg0heSb/6iuy4Awy6jtM4l3RdwCWVW9/4Aj6CC8BZxkRtCDdFpIC6g==
-X-Received: by 2002:a5d:5082:: with SMTP id a2mr3518238wrt.224.1588248283067;
-        Thu, 30 Apr 2020 05:04:43 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id i25sm11772873wml.43.2020.04.30.05.04.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 05:04:41 -0700 (PDT)
-References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com> <20200428210229.703309-3-martin.blumenstingl@googlemail.com> <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "open list\:ARM\/Amlogic Meson..." 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-In-reply-to: <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com>
-Date:   Thu, 30 Apr 2020 14:04:40 +0200
-Message-ID: <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com>
+        Thu, 30 Apr 2020 08:06:06 -0400
+Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:23518
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726127AbgD3MGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:06:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HWSF5YscwOMmLWJfHWpU8xxypQ/GolX6ZLfbQ3XIGQf0yGg0KZxJMUWHT9t9paiQ0Vsiq9RnzUIDx88jLbuF7pN8/wKLTmUQmCgYuqVXNmekJIHJHqsKv0T4IIgxwmxz/SILlTrU7wH0ImuKqV8O6xucDp3uzJuE6Q3Hf3Qg9XMBwG8Owisen8khd+zjGUMajIUTEQNkL/JGOTx7ms+fkjZq0G4f2Qh/sQSk4R/D5hN06c51gQ4P5i0E7Ddc/1/AASO/KmeRcRhSK5SL8i8R05xVMzRx4MlWM/Xx/hdLJLIF34d7sXWPnaUPi0HGzLSYNgFj5RfQvU7O1+uNHDtXbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TcHDJkr8twbZIBzugmOzaLCjeJwVTLtWJ+NTd6YpWMw=;
+ b=J/jRw1qd3HlCprHO+UrbyP4wyMxrDXKunsQ9sA5XfKlXxaNrl4C9oigSra7Lt7Lf1OTGjclovrqosmzbiMLs3lNmD+NH8fRPKEnG6mjdunm5KxoOPJrAC5RCSi79AjmTRTMfEejZNmh0dTuKIURsB3/PGLUjOgn1RZFfon0jTokxEJ1j2GDgc680LMaebU9qbWEcFI2Hfd4p0S147kPsQksDLGTn9rCsMohVuwdhiuPPYF61BGn/+tYhHZU5gs5+NSZIp/Ub0oyK6Icjo8W/EJMlW3O1awPmaj5iE1N7Hxp8pDGiuUEneGuroaDQCXx+RMN0zLOxRynwUGx82qYlnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TcHDJkr8twbZIBzugmOzaLCjeJwVTLtWJ+NTd6YpWMw=;
+ b=SiTYsTlp3Av22oCnKGgdPgt203OaTHfyCdA7K7qYksucHb/jmIL/IG6eHGFReqZbRXWSCwYHsH3JcTf/tUMwMRNKwbzwiLa1UawS5erdRRINcnNhnnQKqAPOTEX6astDL/h8OIsYVzulq80VVK+DC/8BpFE2E6BcAFp8IZXoNyo=
+Authentication-Results: armlinux.org.uk; dkim=none (message not signed)
+ header.d=none;armlinux.org.uk; dmarc=none action=none
+ header.from=oss.nxp.com;
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
+ by AM0PR04MB5059.eurprd04.prod.outlook.com (2603:10a6:208:bf::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
+ 2020 12:06:01 +0000
+Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::c4fe:d4a4:f0e1:a75b]) by AM0PR04MB5636.eurprd04.prod.outlook.com
+ ([fe80::c4fe:d4a4:f0e1:a75b%4]) with mapi id 15.20.2958.019; Thu, 30 Apr 2020
+ 12:06:01 +0000
+Date:   Thu, 30 Apr 2020 17:35:47 +0530
+From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-acpi@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>, linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v2 0/3] Introduce new APIs to support phylink
+ and phy layers
+Message-ID: <20200430120547.GA19262@lsv03152.swis.in-blr01.nxp.com>
+References: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427132409.23664-1-calvin.johnson@oss.nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SG2PR04CA0148.apcprd04.prod.outlook.com
+ (2603:1096:3:16::32) To AM0PR04MB5636.eurprd04.prod.outlook.com
+ (2603:10a6:208:130::22)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR04CA0148.apcprd04.prod.outlook.com (2603:1096:3:16::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 12:05:54 +0000
+X-Originating-IP: [14.142.151.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 621bbaad-9d09-4da5-4a23-08d7ecfed8ef
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5059:|AM0PR04MB5059:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB5059BD6D63F84E31491E6A03D2AA0@AM0PR04MB5059.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0389EDA07F
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5636.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(136003)(376002)(366004)(39860400002)(316002)(54906003)(956004)(7416002)(33656002)(8936002)(8676002)(55236004)(26005)(6506007)(5660300002)(186003)(7696005)(66476007)(6666004)(44832011)(66946007)(52116002)(66556008)(110136005)(1006002)(1076003)(4326008)(16526019)(55016002)(478600001)(9686003)(86362001)(2906002)(110426005)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vCb3Dc5VpIOWySpinUu2P7EB0/4ZEAW5jANrZAYer6BL3xtG5kXp4rvzQQfDAM+ILI3k0VqFD7FN0VtgmZ5LdXSNLYTUKhf98mh30PnqEcAWw/ZDE71gHmb99nRiPPehIqkjXrFlu6pjHelAaSutdYiwChjHUwspJwtpKYkwHKWdNuDeRtkHWl/Q4q//vZkOv1XcsDVddaPQOJT9DWNW56BtmLICdNUjvAgdluAn3CO7rPEkqh1lsVoa9KlKIEOmR7yfuF/j4tHjlAo4dP+2ZjdCDv84Zboy2DuZBuWVsxxdpM+iPuPKkntyhZrXrb+QPFIlugTOQ5eLBT4FKuw3trfD7rHrrVYhU+gee6HEfvyDWEeGwzaMsy5SyNl86mcuBAtu2kGE4LoS4idQmVwIlhUCjeaamHPjxf1sgTh/a8v8MpKBLnycIn5BWi9p62X3nO2FM1aNLdDTT2k/pHwEk/sPUl8ez9VtUztqN+rnFJ8/0zEq083Gw0FAY8SiASNCtwVrMzmWJUljiWAgh27o8w==
+X-MS-Exchange-AntiSpam-MessageData: lRazfolALNbRdaLQjzUZtLbFB+cO9fAf7gALuYV9TyhslZelOOgaLptR4kvGuo3Sz4AqTDLXAHWbSi/Od6vYT/Q2UqddryEuNsmbsTkk4Tll5BpTAz6mV29vaIn5ge0nUJIz5GeTnJkbTg4GdE6O+srXgKsfCsnk0q1XbBeDk6kT5SR+EWN4XiSQV2zcNNzAhY8Dfizp/s9NcMdQr0JsLadn7Gvj8dp9073ur/RzFp7+ugsaieTSjiTaIpDKE5kst0tI1J2ZIeazzN6APv8s5oGmGuvMdjqcTnwJO+Aia6gJlHC8X/2gPoPVj8XO+DJKymk/40CEi2H4jDMF1QIATCpyH8MTbH5ZOhDPepswd/yvfMOP71w95bc0syfnVs3pN22ezzmLckytejTnI+dsrgHuOishFNg7WDVUekGMFuvziFEPtHuUS+1wrDU1uJ8CuUo3QwSNtH80i6lCnvMJPBY6TtIx0VmTAuvPRgXybGzqZa/eFbi+ocLVpR8L27Ug8fKzOK9GZCotrbXiZq4ySXq4DX4p8Zm04JLBwKm6y8gRqUokI6DaoqRPm00MMBi0Wq2ZTasschtcTHALVnjFMeQY1I2I9MvNjs+mwwwZTROMcQrD7q/Em59OIga9aKWdqN0XIB4aVrYJnRM+LPIsRaA65RNYFaAxNYVaJlHEABoqyqqeRH/+qvNuBzTj7RjWZ24jGk+DcCdbTbxBwq36GK8fO33+lGHi1o2WTCJsleN4gakLZW0TbuLjjynws173s+z0ECr9wkn6utP9/HL671YH7PKoHIbIjh6jS1d0B70=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 621bbaad-9d09-4da5-4a23-08d7ecfed8ef
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 12:06:00.9229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tRZvVcNW3hDrFL9BGMLHLyKfjwiF6neb1MId7+xX1mK688VK2RFjBuboL5JnMQLCmqwGMScNiHEfqDtJ0eQYcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 27, 2020 at 06:54:06PM +0530, Calvin Johnson wrote:
 
-On Thu 30 Apr 2020 at 13:10, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+Hi Russell, others,
 
-> + Stephen
->
-> On Thu, 30 Apr 2020 at 11:47, Jerome Brunet <jbrunet@baylibre.com> wrote:
->>
->>
->> On Tue 28 Apr 2020 at 23:02, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->>
->> > The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
->> > card interface with 1/4/8-bit bus width.
->> > It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
->> >
->> > The public S805 datasheet [0] contains a short documentation about the
->> > registers. Unfortunately it does not describe how to use the registers
->> > to make the hardware work. Thus this driver is based on reading (and
->> > understanding) the Amlogic 3.10 GPL kernel code.
->> >
->> > Some hardware details are not easy to see. Jianxin Pan was kind enough
->> > to answer my questions:
->> > The hardware has built-in busy timeout support. The maximum timeout is
->> > 30 seconds. This is only documented in Amlogic's internal
->> > documentation.
->> >
->> > The controller only works with very specific clock configurations. The
->> > details are not part of the public datasheet. In my own words the
->> > supported configurations are:
->> > - 399.812kHz: clkin =  850MHz div = 2126 sd_rx_phase = 63
->> > - 1MHz:               clkin =  850MHz div = 850  sd_rx_phase = 55
->> > - 5.986MHz:   clkin =  850MHz div = 142  sd_rx_phase = 24
->> > - 25MHz:      clkin =  850MHz div = 34   sd_rx_phase = 15
->> > - 47.222MHz:  clkin =  850MHz div = 18   sd_rx_phase = 11/15 (SDR50/HS)
->> > - 53.125MHz:  clkin =  850MHz div = 16   sd_rx_phase = (tuning)
->> > - 70.833MHz:  clkin =  850MHz div = 12   sd_rx_phase = (tuning)
->> > - 85MHz:      clkin =  850MHz div = 10   sd_rx_phase = (tuning)
->> > - 94.44MHz:   clkin =  850MHz div = 9    sd_rx_phase = (tuning)
->> > - 106.25MHz:  clkin =  850MHz div = 8    sd_rx_phase = (tuning)
->> > - 127.5MHz:     clkin = 1275MHz div = 10   sd_rx_phase = (tuning)
->> > - 141.667MHz:   clkin =  850MHz div = 6    sd_rx_phase = (tuning)
->> > - 159.375MHz: clkin = 1275MHz div = 8    sd_rx_phase = (tuning)
->> > - 212.5MHz:   clkin = 1275MHz div = 6    sd_rx_phase = (tuning)
->> > - (sd_tx_phase is always 1, 94.44MHz is not listed in the datasheet
->> >    but this is what the 3.10 BSP kernel on Odroid-C1 actually uses)
->> >
->> > NOTE: CMD23 support is disabled for now because it results in command
->> > timeouts and thus decreases read performance.
->> >
->> > Tested-by: Wei Wang <lnykww@gmail.com>
->> > Tested-by: Xin Yin <yinxin_1989@aliyun.com>
->> > Reviewed-by: Xin Yin <yinxin_1989@aliyun.com>
->> > Tested-by: Anand Moon <linux.amoon@gmail.com>
->> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> > ---
->> >  drivers/mmc/host/Kconfig              |  14 +
->> >  drivers/mmc/host/Makefile             |   1 +
->> >  drivers/mmc/host/meson-mx-sdhc-clkc.c | 188 ++++++
->> >  drivers/mmc/host/meson-mx-sdhc.c      | 916 ++++++++++++++++++++++++++
->> >  drivers/mmc/host/meson-mx-sdhc.h      | 138 ++++
->> >  5 files changed, 1257 insertions(+)
->> >  create mode 100644 drivers/mmc/host/meson-mx-sdhc-clkc.c
->> >  create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
->> >  create mode 100644 drivers/mmc/host/meson-mx-sdhc.h
->> >
->> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->> > index 462b5352fea7..df3fc572f842 100644
->> > --- a/drivers/mmc/host/Kconfig
->> > +++ b/drivers/mmc/host/Kconfig
->> > @@ -405,6 +405,20 @@ config MMC_MESON_GX
->> >
->> >         If you have a controller with this interface, say Y here.
->> >
->> > +config MMC_MESON_MX_SDHC
->> > +     tristate "Amlogic Meson SDHC Host Controller support"
->> > +     depends on (ARM && ARCH_MESON) || COMPILE_TEST
->> > +     depends on COMMON_CLK
->> > +     depends on OF
->> > +     help
->> > +       This selects support for the SDHC Host Controller on
->> > +       Amlogic Meson6, Meson8, Meson8b and Meson8m2 SoCs.
->> > +       The controller supports the SD/SDIO Spec 3.x and eMMC Spec 4.5x
->> > +       with 1, 4, and 8 bit bus widths.
->> > +
->> > +       If you have a controller with this interface, say Y or M here.
->> > +       If unsure, say N.
->> > +
->> >  config MMC_MESON_MX_SDIO
->> >       tristate "Amlogic Meson6/Meson8/Meson8b SD/MMC Host Controller support"
->> >       depends on ARCH_MESON || COMPILE_TEST
->> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
->> > index b929ef941208..8bcb420e071c 100644
->> > --- a/drivers/mmc/host/Makefile
->> > +++ b/drivers/mmc/host/Makefile
->> > @@ -68,6 +68,7 @@ obj-$(CONFIG_MMC_VUB300)    += vub300.o
->> >  obj-$(CONFIG_MMC_USHC)               += ushc.o
->> >  obj-$(CONFIG_MMC_WMT)                += wmt-sdmmc.o
->> >  obj-$(CONFIG_MMC_MESON_GX)   += meson-gx-mmc.o
->> > +obj-$(CONFIG_MMC_MESON_MX_SDHC)      += meson-mx-sdhc-clkc.o meson-mx-sdhc.o
->> >  obj-$(CONFIG_MMC_MESON_MX_SDIO)      += meson-mx-sdio.o
->> >  obj-$(CONFIG_MMC_MOXART)     += moxart-mmc.o
->> >  obj-$(CONFIG_MMC_SUNXI)              += sunxi-mmc.o
->> > diff --git a/drivers/mmc/host/meson-mx-sdhc-clkc.c b/drivers/mmc/host/meson-mx-sdhc-clkc.c
->> > new file mode 100644
->> > index 000000000000..1e9dea94f9dc
->> > --- /dev/null
->> > +++ b/drivers/mmc/host/meson-mx-sdhc-clkc.c
->> > @@ -0,0 +1,188 @@
->> > +// SPDX-License-Identifier: GPL-2.0+
->> > +/*
->> > + * Amlogic Meson SDHC clock controller
->> > + *
->> > + * Copyright (C) 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> > + */
->> > +
->> > +#include <dt-bindings/clock/meson-mx-sdhc-clkc.h>
->> > +
->> > +#include <linux/clk-provider.h>
->> > +#include <linux/device.h>
->> > +#include <linux/platform_device.h>
->> > +
->> > +#include "meson-mx-sdhc.h"
->> > +
->> > +#define MESON_SDHC_NUM_BUILTIN_CLKS  6
->> > +
->> > +struct meson_mx_sdhc_clkc {
->> > +     struct clk_mux                  src_sel;
->> > +     struct clk_divider              div;
->> > +     struct clk_gate                 mod_clk_en;
->> > +     struct clk_gate                 tx_clk_en;
->> > +     struct clk_gate                 rx_clk_en;
->> > +     struct clk_gate                 sd_clk_en;
->> > +     struct clk_hw_onecell_data      hw_onecell_data;
->> > +};
->> > +
->> > +static const struct clk_div_table meson_mx_sdhc_div_table[] = {
->> > +     { .div = 6, .val = 5, },
->> > +     { .div = 8, .val = 7, },
->> > +     { .div = 9, .val = 8, },
->> > +     { .div = 10, .val = 9, },
->> > +     { .div = 12, .val = 11, },
->> > +     { .div = 16, .val = 15, },
->> > +     { .div = 18, .val = 17, },
->> > +     { .div = 34, .val = 33, },
->> > +     { .div = 142, .val = 141, },
->> > +     { .div = 850, .val = 849, },
->> > +     { .div = 2126, .val = 2125, },
->> > +     { .div = 4096, .val = 4095, },
->> > +     { /* sentinel */ }
->> > +};
->> > +
->> > +static const struct meson_mx_sdhc_clkc meson_mx_sdhc_clkc_data = {
->> > +     .src_sel = {
->> > +             .mask = 0x3,
->> > +             .shift = 16,
->> > +     },
->> > +     .div = {
->> > +             .shift = 0,
->> > +             .width = 12,
->> > +             .table = meson_mx_sdhc_div_table,
->> > +     },
->> > +     .mod_clk_en = {
->> > +             .bit_idx = 15,
->> > +     },
->> > +     .tx_clk_en = {
->> > +             .bit_idx = 14,
->> > +     },
->> > +     .rx_clk_en = {
->> > +             .bit_idx = 13,
->> > +     },
->> > +     .sd_clk_en = {
->> > +             .bit_idx = 12,
->> > +     },
->> > +};
->> > +
->> > +static const struct clk_init_data meson_mx_sdhc_clkc_init_data[] = {
->> > +     [SDHC_CLKID_SRC_SEL] = {
->> > +             .name = "sdhc_src_sel",
->> > +             .ops = &clk_mux_ops,
->> > +             .parent_data = (const struct clk_parent_data[]) {
->> > +                     { .fw_name = "clkin0" },
->> > +                     { .fw_name = "clkin1" },
->> > +                     { .fw_name = "clkin2" },
->> > +                     { .fw_name = "clkin3" },
->> > +             },
->> > +             .num_parents = 4,
->> > +     },
->> > +     [SDHC_CLKID_DIV] = {
->> > +             .name = "sdhc_div",
->> > +             .ops = &clk_divider_ops,
->> > +             .parent_hws = (const struct clk_hw *[]) {
->> > +                     &meson_mx_sdhc_clkc_data.src_sel.hw,
->> > +             },
->> > +             .num_parents = 1,
->> > +             .flags = CLK_SET_RATE_PARENT,
->> > +     },
->> > +     [SDHC_CLKID_MOD_CLK] = {
->> > +             .name = "sdhc_mod_clk_on",
->> > +             .ops = &clk_gate_ops,
->> > +             .parent_hws = (const struct clk_hw *[]) {
->> > +                     &meson_mx_sdhc_clkc_data.div.hw,
->> > +             },
->> > +             .num_parents = 1,
->> > +             .flags = CLK_SET_RATE_PARENT,
->> > +     },
->> > +     [SDHC_CLKID_SD_CLK] = {
->> > +             .name = "sdhc_tx_clk_on",
->> > +             .ops = &clk_gate_ops,
->> > +             .parent_hws = (const struct clk_hw *[]) {
->> > +                     &meson_mx_sdhc_clkc_data.div.hw,
->> > +             },
->> > +             .num_parents = 1,
->> > +             .flags = CLK_SET_RATE_PARENT,
->> > +     },
->> > +     [SDHC_CLKID_TX_CLK] = {
->> > +             .name = "sdhc_rx_clk_on",
->> > +             .ops = &clk_gate_ops,
->> > +             .parent_hws = (const struct clk_hw *[]) {
->> > +                     &meson_mx_sdhc_clkc_data.div.hw,
->> > +             },
->> > +             .num_parents = 1,
->> > +             .flags = CLK_SET_RATE_PARENT,
->> > +     },
->> > +     [SDHC_CLKID_RX_CLK] = {
->> > +             .name = "sdhc_sd_clk_on",
->> > +             .ops = &clk_gate_ops,
->> > +             .parent_hws = (const struct clk_hw *[]) {
->> > +                     &meson_mx_sdhc_clkc_data.div.hw,
->> > +             },
->> > +             .num_parents = 1,
->> > +             .flags = CLK_SET_RATE_PARENT,
->> > +     },
->> > +};
->>
->> That quite lot of structures.
->> The interesting information is the parent and divider table mostly, and
->> a few defines for the bit_idx.
->>
->> I feel this could be simplified so it is easier to follow.
->> Maybe something in the same fashion as meson8b-dwmac driver ?
->>
->> > +
->> > +int meson_mx_sdhc_register_clkc(struct device *dev, void __iomem *base)
->> > +{
->> > +     const struct clk_hw *div_parents[1], *gate_parents[1];
->> > +     struct clk_hw_onecell_data *onecell_data;
->> > +     struct meson_mx_sdhc_clkc *clkc_data;
->> > +     struct clk_init_data init_data;
->> > +     int i, ret;
->> > +
->> > +     clkc_data = devm_kzalloc(dev, struct_size(clkc_data,
->> > +                                               hw_onecell_data.hws,
->> > +                                               MESON_SDHC_NUM_BUILTIN_CLKS),
->> > +                              GFP_KERNEL);
->> > +     if (!clkc_data)
->> > +             return -ENOMEM;
->> > +
->> > +     memcpy(clkc_data, &meson_mx_sdhc_clkc_data,
->> > +            sizeof(meson_mx_sdhc_clkc_data));
->> > +
->> > +     div_parents[0] = &clkc_data->src_sel.hw;
->> > +     gate_parents[0] = &clkc_data->div.hw;
->> > +
->> > +     clkc_data->src_sel.reg = base + MESON_SDHC_CLKC;
->> > +     clkc_data->div.reg = base + MESON_SDHC_CLKC;
->> > +     clkc_data->mod_clk_en.reg = base + MESON_SDHC_CLKC;
->> > +     clkc_data->sd_clk_en.reg = base + MESON_SDHC_CLKC;
->> > +     clkc_data->tx_clk_en.reg = base + MESON_SDHC_CLKC;
->> > +     clkc_data->rx_clk_en.reg = base + MESON_SDHC_CLKC;
->> > +
->> > +     onecell_data = &clkc_data->hw_onecell_data;
->> > +     onecell_data->hws[SDHC_CLKID_SRC_SEL] = &clkc_data->src_sel.hw;
->> > +     onecell_data->hws[SDHC_CLKID_DIV] = &clkc_data->div.hw;
->> > +     onecell_data->hws[SDHC_CLKID_MOD_CLK] = &clkc_data->mod_clk_en.hw;
->> > +     onecell_data->hws[SDHC_CLKID_SD_CLK] = &clkc_data->sd_clk_en.hw;
->> > +     onecell_data->hws[SDHC_CLKID_TX_CLK] = &clkc_data->tx_clk_en.hw;
->> > +     onecell_data->hws[SDHC_CLKID_RX_CLK] = &clkc_data->rx_clk_en.hw;
->> > +
->> > +     for (i = 0; i < MESON_SDHC_NUM_BUILTIN_CLKS; i++) {
->> > +             init_data = meson_mx_sdhc_clkc_init_data[i];
->> > +
->> > +             if (i == SDHC_CLKID_SRC_SEL)
->> > +                     /* uses clk_parent_data instead */
->> > +                     init_data.parent_hws = NULL;
->> > +             else if (i == SDHC_CLKID_DIV)
->> > +                     init_data.parent_hws = div_parents;
->> > +             else
->> > +                     init_data.parent_hws = gate_parents;
->> > +
->> > +             onecell_data->hws[i]->init = &init_data;
->> > +
->> > +             ret = devm_clk_hw_register(dev, onecell_data->hws[i]);
->> > +             if (ret) {
->> > +                     dev_err(dev, "Registration of SDHC clock %d failed\n",
->> > +                             i);
->> > +                     return ret;
->> > +             }
->> > +     }
->> > +
->> > +     onecell_data->num = MESON_SDHC_NUM_BUILTIN_CLKS;
->> > +
->> > +     return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
->> > +                                        onecell_data);
->>
->> I think registering a provider for a module that does not provide clocks
->> to any other device is a bit overkill.
->>
->> I understand the matter is getting the per-user clk* pointer.
->> Since this is the module registering the clock, you can use clk_hw->clk
->> to get it.
->>
->> Once you have the clk* of the leaf clocks, you don't even need to keep
->> track of the clk_hw* since you are using devm_
->>
->> Afterward, we should propably discuss with Stephen if something should
->> be added in CCF to get a struct clk* from struct clk_hw*.
->>
->
-> [...]
->
-> Hmm.
->
-> I am not sure the above is a good idea, at all. Unless, I am
-> misunderstanding your point, which may be the case.
->
-> I think above "shortcuts" could lead to abuse of the clock framework
-> and its internal data structures. When going forward, this could make
-> it unnecessary harder to maintain the clock framework.
->
-> I know, it's not my responsibility, but from my experience with MMC
-> and SDIO interfaces, is that those have been too easy abuse - since
-> most of the data structures and interfaces have been exported. Now,
-> it's hard to roll back that, if you see what I mean.
+> Following functions are defined:
+>   phylink_fwnode_phy_connect()
+>   phylink_device_phy_connect()
+>   fwnode_phy_find_device()
+>   device_phy_find_device()
+>   fwnode_get_phy_node()
+> 
+> First two help in connecting phy to phylink instance.
+> Next two help in finding a phy on a mdiobus.
+> Last one helps in getting phy_node from a fwnode.
+> 
+> Changes in v2:
+>   move phy code from base/property.c to net/phy/phy_device.c
+>   replace acpi & of code to get phy-handle with fwnode_find_reference
+>   replace of_ and acpi_ code with generic fwnode to get phy-handle.
+> 
+> Calvin Johnson (3):
+>   device property: Introduce phy related fwnode functions
+>   net: phy: alphabetically sort header includes
+>   phylink: Introduce phylink_fwnode_phy_connect()
+> 
+>  drivers/net/phy/phy_device.c | 83 ++++++++++++++++++++++++++++++------
+>  drivers/net/phy/phylink.c    | 68 +++++++++++++++++++++++++++++
+>  include/linux/phy.h          |  3 ++
+>  include/linux/phylink.h      |  6 +++
+>  4 files changed, 146 insertions(+), 14 deletions(-)
 
-Indeed, it worth clarifying this first.
+I've a new patch introducing fwnode_mdiobus_register_phy and fwnode_get_phy_id.
+Can I introduce it in v3 of this patchset or do I need to send it separately?
+Please advice.
 
-With clk_register deprecated in favor of clk_hw_register, we are likely
-to see that case rise elsewhere.
-
->
->> > +}
->> > diff --git a/drivers/mmc/host/meson-mx-sdhc.c b/drivers/mmc/host/meson-mx-sdhc.c
->> > new file mode 100644
->> > index 000000000000..3c54d5f91fbc
->> > --- /dev/null
->> > +++ b/drivers/mmc/host/meson-mx-sdhc.c
->> > @@ -0,0 +1,916 @@
->> > +// SPDX-License-Identifier: GPL-2.0+
->> > +/*
->> > + * Amlogic Meson6/Meson8/Meson8b/Meson8m2 SDHC MMC host controller driver.
->> > + *
->> > + * Copyright (C) 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> > + */
->
-> [...]
->
-> Kind regards
-> Uffe
-
+Thanks
+Calvin
