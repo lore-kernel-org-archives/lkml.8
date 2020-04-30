@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A38C47255
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED444C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A78208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD72208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588263545;
-	bh=QZoCtLS8vGxFXMe1dFt6/xBiiVGEl5Zx8nnYO8f1efI=;
+	s=default; t=1588263552;
+	bh=1HSEtM//mtsWijKO6s3LsrrY5g4LGqp0ULlRYJzv8go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hYR/wIfwIrKmquAnUIg677TL3ASi7a0C45XlqiOzOyoi37Q99a7rqo1D92S/Xo8YN
-	 DWYjvLb+1POWnMoFYf01MXg7SjB8GbkYKk4YxXr0LmsoCdHFaWjodrSAlK4lg2lv3Z
-	 aTWyYP4zR6U4ASiBoKe5q85pzlj0A9cE7Wp/X8rQ=
+	b=Fk14Y3sapWluzcrXJ3N83ekisMqiQ/fHQgZDH+CgBE1PZl3uF7yHOQd89qloeglmd
+	 nyr5BIGwXcHHhD9umE+GmHgqZ48zEYZBuNwxA5lW5Ks6QXYPnWnwNLUuHulJU2JDSC
+	 30u9fOS10P58Lso+2XsfyDjedV9S6dQlFRTJoRzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgD3QSx (ORCPT
+        id S1728024AbgD3QSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgD3QSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:18:39 -0400
+        id S1727049AbgD3QSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:18:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5A524957;
+        by mail.kernel.org (Postfix) with ESMTPSA id C272E2173E;
         Thu, 30 Apr 2020 16:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588263518;
-        bh=QZoCtLS8vGxFXMe1dFt6/xBiiVGEl5Zx8nnYO8f1efI=;
+        s=default; t=1588263517;
+        bh=1HSEtM//mtsWijKO6s3LsrrY5g4LGqp0ULlRYJzv8go=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9OoOMPfLKL9ccdYmXdsNHV03NyOb/pVa+IhySo5mw0s7lDdxSnRk/HRvbEm8rO/x
-         tIpy4Iwcc/yAbwYL1iClCtqH3ONVtL4KfqkdV+EHkAHFe0/jLYgfZ25Ptg7oAx30er
-         dqKLIELwO1+0JYcsmvuBtft53HKwxBCuhQJaMOko=
+        b=ZIEkWaxruoI8rsJBH/VsKhH81CfBr1pX/uYW/ta2Pj4pE70cPG45WjjB5FDkbzM79
+         RkjX4fa8QqnVjXL0DOJpsSzoiksLGXUGI2/shW4AjSSyJH/ZnkumklOlrTo8bYQ8YQ
+         CEXZ9hmPzXDLi47/TRyn/TVFRQ9zu5MtYiMY2D1Y=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBtU-00AxhX-6L; Thu, 30 Apr 2020 18:18:36 +0200
+        id 1jUBtU-00Axh8-1g; Thu, 30 Apr 2020 18:18:36 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v4 12/19] docs: pci: endpoint/function/binding/pci-test.txt convert to ReST
-Date:   Thu, 30 Apr 2020 18:18:26 +0200
-Message-Id: <fa73d1a7fb6c4691899a110a732216bcdac75f2b.1588263270.git.mchehab+huawei@kernel.org>
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: [PATCH v4 07/19] docs: misc-devices/pci-endpoint-test.txt: convert to ReST
+Date:   Thu, 30 Apr 2020 18:18:21 +0200
+Message-Id: <5e6389e49965a39d5ea5face113848671409bb7e.1588263270.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588263270.git.mchehab+huawei@kernel.org>
 References: <cover.1588263270.git.mchehab+huawei@kernel.org>
@@ -60,98 +64,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert this file to ReST by adding a proper title to it and
-use the right markups for a table.
-
-While here, add a SPDX header.
+- use title markups;
+- mark literal blocks.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
- .../endpoint/function/binding/pci-test.txt    | 19 --------------
- Documentation/PCI/endpoint/index.rst          |  2 ++
- .../misc-devices/pci-endpoint-test.rst        |  2 +-
- 4 files changed, 29 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
- delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
+ .../{ad525x_dpot.txt => ad525x_dpot.rst}      | 24 +++++++++----------
+ Documentation/misc-devices/index.rst          |  1 +
+ drivers/misc/Kconfig                          |  2 +-
+ drivers/misc/ad525x_dpot.c                    |  2 +-
+ 4 files changed, 15 insertions(+), 14 deletions(-)
+ rename Documentation/misc-devices/{ad525x_dpot.txt => ad525x_dpot.rst} (85%)
 
-diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-new file mode 100644
-index 000000000000..57ee866fb165
---- /dev/null
-+++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
-@@ -0,0 +1,26 @@
+diff --git a/Documentation/misc-devices/ad525x_dpot.txt b/Documentation/misc-devices/ad525x_dpot.rst
+similarity index 85%
+rename from Documentation/misc-devices/ad525x_dpot.txt
+rename to Documentation/misc-devices/ad525x_dpot.rst
+index 0c9413b1cbf3..6483ec254520 100644
+--- a/Documentation/misc-devices/ad525x_dpot.txt
++++ b/Documentation/misc-devices/ad525x_dpot.rst
+@@ -1,6 +1,8 @@
+----------------------------------
+-  AD525x Digital Potentiometers
+----------------------------------
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==========================
-+PCI Test Endpoint Function
-+==========================
-+
-+name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
-+
-+Configurable Fields:
-+
-+================   ===========================================================
-+vendorid	   should be 0x104c
-+deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
-+revid		   don't care
-+progif_code	   don't care
-+subclass_code	   don't care
-+baseclass_code	   should be 0xff
-+cache_line_size	   don't care
-+subsys_vendor_id   don't care
-+subsys_id	   don't care
-+interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
-+msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
-+		   to test
-+msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
-+		   interrupts to test
-+================   ===========================================================
-diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
-deleted file mode 100644
-index cd76ba47394b..000000000000
---- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--PCI TEST ENDPOINT FUNCTION
--
--name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
--
--Configurable Fields:
--vendorid	 : should be 0x104c
--deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
--revid		 : don't care
--progif_code	 : don't care
--subclass_code	 : don't care
--baseclass_code	 : should be 0xff
--cache_line_size	 : don't care
--subsys_vendor_id : don't care
--subsys_id	 : don't care
--interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
--msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
--		   to test
--msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
--		   interrupts to test
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index d114ea74b444..4ca7439fbfc9 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -11,3 +11,5 @@ PCI Endpoint Framework
-    pci-endpoint-cfs
-    pci-test-function
-    pci-test-howto
-+
-+   function/binding/pci-test
-diff --git a/Documentation/misc-devices/pci-endpoint-test.rst b/Documentation/misc-devices/pci-endpoint-test.rst
-index 26e5d9ba146b..4cf3f4433be7 100644
---- a/Documentation/misc-devices/pci-endpoint-test.rst
-+++ b/Documentation/misc-devices/pci-endpoint-test.rst
-@@ -53,4 +53,4 @@ ioctl
- 	      Perform read tests. The size of the buffer should be passed
- 	      as argument.
++=============================
++AD525x Digital Potentiometers
++=============================
  
--.. [1] Documentation/PCI/endpoint/function/binding/pci-test.txt
-+.. [1] Documentation/PCI/endpoint/function/binding/pci-test.rst
+ The ad525x_dpot driver exports a simple sysfs interface.  This allows you to
+ work with the immediate resistance settings as well as update the saved startup
+@@ -8,9 +10,8 @@ settings.  Access to the factory programmed tolerance is also provided, but
+ interpretation of this settings is required by the end application according to
+ the specific part in use.
+ 
+----------
+-  Files
+----------
++Files
++=====
+ 
+ Each dpot device will have a set of eeprom, rdac, and tolerance files.  How
+ many depends on the actual part you have, as will the range of allowed values.
+@@ -24,23 +25,22 @@ and may vary greatly on a part-by-part basis.  For exact interpretation of
+ this field, please consult the datasheet for your part.  This is presented
+ as a hex file for easier parsing.
+ 
+------------
+-  Example
+------------
++Example
++=======
+ 
+ Locate the device in your sysfs tree.  This is probably easiest by going into
+-the common i2c directory and locating the device by the i2c slave address.
++the common i2c directory and locating the device by the i2c slave address::
+ 
+ 	# ls /sys/bus/i2c/devices/
+ 	0-0022  0-0027  0-002f
+ 
+ So assuming the device in question is on the first i2c bus and has the slave
+-address of 0x2f, we descend (unrelated sysfs entries have been trimmed).
++address of 0x2f, we descend (unrelated sysfs entries have been trimmed)::
+ 
+ 	# ls /sys/bus/i2c/devices/0-002f/
+ 	eeprom0 rdac0 tolerance0
+ 
+-You can use simple reads/writes to access these files:
++You can use simple reads/writes to access these files::
+ 
+ 	# cd /sys/bus/i2c/devices/0-002f/
+ 
+diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
+index 68b43e140641..a72ab89e7d1a 100644
+--- a/Documentation/misc-devices/index.rst
++++ b/Documentation/misc-devices/index.rst
+@@ -14,6 +14,7 @@ fit into other categories.
+ .. toctree::
+    :maxdepth: 2
+ 
++   ad525x_dpot
+    eeprom
+    ibmvmc
+    ics932s401
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 99e151475d8f..9388743d78e3 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -24,7 +24,7 @@ config AD525X_DPOT
+ 	  AD5271, AD5272, AD5274
+ 	  digital potentiometer chips.
+ 
+-	  See Documentation/misc-devices/ad525x_dpot.txt for the
++	  See Documentation/misc-devices/ad525x_dpot.rst for the
+ 	  userspace interface.
+ 
+ 	  This driver can also be built as a module.  If so, the module
+diff --git a/drivers/misc/ad525x_dpot.c b/drivers/misc/ad525x_dpot.c
+index ccce3226a571..6f164522b028 100644
+--- a/drivers/misc/ad525x_dpot.c
++++ b/drivers/misc/ad525x_dpot.c
+@@ -58,7 +58,7 @@
+  * AD5272		1		1024		20, 50, 100 (50-TP)
+  * AD5274		1		256		20, 50, 100 (50-TP)
+  *
+- * See Documentation/misc-devices/ad525x_dpot.txt for more info.
++ * See Documentation/misc-devices/ad525x_dpot.rst for more info.
+  *
+  * derived from ad5258.c
+  * Copyright (c) 2009 Cyber Switching, Inc.
 -- 
 2.25.4
 
