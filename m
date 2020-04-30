@@ -2,41 +2,38 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CCBC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB01C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE6820838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8320320870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgD3NDi (ORCPT
+        id S1727064AbgD3NDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:03:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49728 "EHLO mx2.suse.de"
+        Thu, 30 Apr 2020 09:03:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49726 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgD3NDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:03:37 -0400
+        id S1726770AbgD3NDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:03:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5BD26AC85;
+        by mx2.suse.de (Postfix) with ESMTP id 5C677ACA1;
         Thu, 30 Apr 2020 13:03:35 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Khazhismel Kumykov <khazhy@google.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Jason Baron <jbaron@akamai.com>, stable@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] epoll: atomically remove wait entry on wake up
-Date:   Thu, 30 Apr 2020 15:03:26 +0200
-Message-Id: <20200430130326.1368509-2-rpenyaev@suse.de>
+        Jason Baron <jbaron@akamai.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kselftests: introduce new epoll60 testcase for catching lost wakeups
+Date:   Thu, 30 Apr 2020 15:03:25 +0200
+Message-Id: <20200430130326.1368509-1-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200430130326.1368509-1-rpenyaev@suse.de>
-References: <20200430130326.1368509-1-rpenyaev@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -45,77 +42,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch does two things:
-
-1. fixes lost wakeup introduced by:
+This test case catches lost wake up introduced by:
   339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
 
-2. improves performance for events delivery.
+The test is simple: we have 10 threads and 10 event fds. Each thread
+can harvest only 1 event. 1 producer fires all 10 events at once and
+waits that all 10 events will be observed by 10 threads.
 
-The description of the problem is the following: if N (>1) threads
-are waiting on ep->wq for new events and M (>1) events come, it is
-quite likely that >1 wakeups hit the same wait queue entry, because
-there is quite a big window between __add_wait_queue_exclusive() and
-the following __remove_wait_queue() calls in ep_poll() function.  This
-can lead to lost wakeups, because thread, which was woken up, can
-handle not all the events in ->rdllist. (in better words the problem
-is described here: https://lkml.org/lkml/2019/10/7/905)
+In case of lost wakeup epoll_wait() will timeout and 0 will be
+returned.
 
-The idea of the current patch is to use init_wait() instead of
-init_waitqueue_entry(). Internally init_wait() sets
-autoremove_wake_function as a callback, which removes the wait entry
-atomically (under the wq locks) from the list, thus the next coming
-wakeup hits the next wait entry in the wait queue, thus preventing
-lost wakeups.
+Test case catches two sort of problems: forgotten wakeup on event,
+which hits the ->ovflist list, this problem was fixed by:
+  5a2513239750 ("eventpoll: fix missing wakeup for ovflist in ep_poll_callback")
 
-Problem is very well reproduced by the epoll60 test case [1].
-
-Wait entry removal on wakeup has also performance benefits, because
-there is no need to take a ep->lock and remove wait entry from the
-queue after the successful wakeup. Here is the timing output of
-the epoll60 test case:
-
-  With explicit wakeup from ep_scan_ready_list() (the state of the
-  code prior 339ddb53d373):
-
-    real    0m6.970s
-    user    0m49.786s
-    sys     0m0.113s
-
- After this patch:
-
-   real    0m5.220s
-   user    0m36.879s
-   sys     0m0.019s
-
-The other testcase is the stress-epoll [2], where one thread consumes
-all the events and other threads produce many events:
-
-  With explicit wakeup from ep_scan_ready_list() (the state of the
-  code prior 339ddb53d373):
-
-    threads  events/ms  run-time ms
-          8       5427         1474
-         16       6163         2596
-         32       6824         4689
-         64       7060         9064
-        128       6991        18309
-
- After this patch:
-
-    threads  events/ms  run-time ms
-          8       5598         1429
-         16       7073         2262
-         32       7502         4265
-         64       7640         8376
-        128       7634        16767
-
- (number of "events/ms" represents event bandwidth, thus higher is
-  better; number of "run-time ms" represents overall time spent
-  doing the benchmark, thus lower is better)
-
-[1] tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-[2] https://github.com/rouming/test-tools/blob/master/stress-epoll.c
+the other problem is when several sequential events hit the same
+waiting thread, thus other waiters get no wakeups. Problem is
+fixed in the following patch.
 
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -123,95 +66,174 @@ Cc: Khazhismel Kumykov <khazhy@google.com>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>
 Cc: Heiher <r@hev.cc>
 Cc: Jason Baron <jbaron@akamai.com>
-Cc: stable@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/eventpoll.c | 43 ++++++++++++++++++++++++-------------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+ .../filesystems/epoll/epoll_wakeup_test.c     | 146 ++++++++++++++++++
+ 1 file changed, 146 insertions(+)
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index d6ba0e52439b..aba03ee749f8 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1822,7 +1822,6 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- {
- 	int res = 0, eavail, timed_out = 0;
- 	u64 slack = 0;
--	bool waiter = false;
- 	wait_queue_entry_t wait;
- 	ktime_t expires, *to = NULL;
- 
-@@ -1867,21 +1866,23 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- 	 */
- 	ep_reset_busy_poll_napi_id(ep);
- 
--	/*
--	 * We don't have any available event to return to the caller.  We need
--	 * to sleep here, and we will be woken by ep_poll_callback() when events
--	 * become available.
--	 */
--	if (!waiter) {
--		waiter = true;
--		init_waitqueue_entry(&wait, current);
--
-+	do {
-+		/*
-+		 * Internally init_wait() uses autoremove_wake_function(),
-+		 * thus wait entry is removed from the wait queue on each
-+		 * wakeup. Why it is important? In case of several waiters
-+		 * each new wakeup will hit the next waiter, giving it the
-+		 * chance to harvest new event. Otherwise wakeup can be
-+		 * lost. This is also good performance-wise, because on
-+		 * normal wakeup path no need to call __remove_wait_queue()
-+		 * explicitly, thus ep->lock is not taken, which halts the
-+		 * event delivery.
-+		 */
-+		init_wait(&wait);
- 		write_lock_irq(&ep->lock);
- 		__add_wait_queue_exclusive(&ep->wq, &wait);
- 		write_unlock_irq(&ep->lock);
--	}
- 
--	for (;;) {
- 		/*
- 		 * We don't want to sleep if the ep_poll_callback() sends us
- 		 * a wakeup in between. That's why we set the task state
-@@ -1911,10 +1912,20 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- 			timed_out = 1;
- 			break;
- 		}
--	}
-+
-+		/* We were woken up, thus go and try to harvest some events */
-+		eavail = 1;
-+
-+	} while (0);
- 
- 	__set_current_state(TASK_RUNNING);
- 
-+	if (!list_empty_careful(&wait.entry)) {
-+		write_lock_irq(&ep->lock);
-+		__remove_wait_queue(&ep->wq, &wait);
-+		write_unlock_irq(&ep->lock);
-+	}
-+
- send_events:
- 	/*
- 	 * Try to transfer events to user space. In case we get 0 events and
-@@ -1925,12 +1936,6 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- 	    !(res = ep_send_events(ep, events, maxevents)) && !timed_out)
- 		goto fetch_events;
- 
--	if (waiter) {
--		write_lock_irq(&ep->lock);
--		__remove_wait_queue(&ep->wq, &wait);
--		write_unlock_irq(&ep->lock);
--	}
--
- 	return res;
+diff --git a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+index 11eee0b60040..d979ff14775a 100644
+--- a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
++++ b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+@@ -3,6 +3,7 @@
+ #define _GNU_SOURCE
+ #include <poll.h>
+ #include <unistd.h>
++#include <assert.h>
+ #include <signal.h>
+ #include <pthread.h>
+ #include <sys/epoll.h>
+@@ -3136,4 +3137,149 @@ TEST(epoll59)
+ 	close(ctx.sfd[0]);
  }
  
++enum {
++	EPOLL60_EVENTS_NR = 10,
++};
++
++struct epoll60_ctx {
++	volatile int stopped;
++	int ready;
++	int waiters;
++	int epfd;
++	int evfd[EPOLL60_EVENTS_NR];
++};
++
++static void *epoll60_wait_thread(void *ctx_)
++{
++	struct epoll60_ctx *ctx = ctx_;
++	struct epoll_event e;
++	sigset_t sigmask;
++	uint64_t v;
++	int ret;
++
++	/* Block SIGUSR1 */
++	sigemptyset(&sigmask);
++	sigaddset(&sigmask, SIGUSR1);
++	sigprocmask(SIG_SETMASK, &sigmask, NULL);
++
++	/* Prepare empty mask for epoll_pwait() */
++	sigemptyset(&sigmask);
++
++	while (!ctx->stopped) {
++		/* Mark we are ready */
++		__atomic_fetch_add(&ctx->ready, 1, __ATOMIC_ACQUIRE);
++
++		/* Start when all are ready */
++		while (__atomic_load_n(&ctx->ready, __ATOMIC_ACQUIRE) &&
++		       !ctx->stopped);
++
++		/* Account this waiter */
++		__atomic_fetch_add(&ctx->waiters, 1, __ATOMIC_ACQUIRE);
++
++		ret = epoll_pwait(ctx->epfd, &e, 1, 2000, &sigmask);
++		if (ret != 1) {
++			/* We expect only signal delivery on stop */
++			assert(ret < 0 && errno == EINTR && "Lost wakeup!\n");
++			assert(ctx->stopped);
++			break;
++		}
++
++		ret = read(e.data.fd, &v, sizeof(v));
++		/* Since we are on ET mode, thus each thread gets its own fd. */
++		assert(ret == sizeof(v));
++
++		__atomic_fetch_sub(&ctx->waiters, 1, __ATOMIC_RELEASE);
++	}
++
++	return NULL;
++}
++
++static inline unsigned long long msecs(void)
++{
++	struct timespec ts;
++	unsigned long long msecs;
++
++	clock_gettime(CLOCK_REALTIME, &ts);
++	msecs = ts.tv_sec * 1000ull;
++	msecs += ts.tv_nsec / 1000000ull;
++
++	return msecs;
++}
++
++static inline int count_waiters(struct epoll60_ctx *ctx)
++{
++	return __atomic_load_n(&ctx->waiters, __ATOMIC_ACQUIRE);
++}
++
++TEST(epoll60)
++{
++	struct epoll60_ctx ctx = { 0 };
++	pthread_t waiters[ARRAY_SIZE(ctx.evfd)];
++	struct epoll_event e;
++	int i, n, ret;
++
++	signal(SIGUSR1, signal_handler);
++
++	ctx.epfd = epoll_create1(0);
++	ASSERT_GE(ctx.epfd, 0);
++
++	/* Create event fds */
++	for (i = 0; i < ARRAY_SIZE(ctx.evfd); i++) {
++		ctx.evfd[i] = eventfd(0, EFD_NONBLOCK);
++		ASSERT_GE(ctx.evfd[i], 0);
++
++		e.events = EPOLLIN | EPOLLET;
++		e.data.fd = ctx.evfd[i];
++		ASSERT_EQ(epoll_ctl(ctx.epfd, EPOLL_CTL_ADD, ctx.evfd[i], &e), 0);
++	}
++
++	/* Create waiter threads */
++	for (i = 0; i < ARRAY_SIZE(waiters); i++)
++		ASSERT_EQ(pthread_create(&waiters[i], NULL,
++					 epoll60_wait_thread, &ctx), 0);
++
++	for (i = 0; i < 300; i++) {
++		uint64_t v = 1, ms;
++
++		/* Wait for all to be ready */
++		while (__atomic_load_n(&ctx.ready, __ATOMIC_ACQUIRE) !=
++		       ARRAY_SIZE(ctx.evfd))
++			;
++
++		/* Steady, go */
++		__atomic_fetch_sub(&ctx.ready, ARRAY_SIZE(ctx.evfd),
++				   __ATOMIC_ACQUIRE);
++
++		/* Wait all have gone to kernel */
++		while (count_waiters(&ctx) != ARRAY_SIZE(ctx.evfd))
++			;
++
++		/* 1ms should be enough to schedule away */
++		usleep(1000);
++
++		/* Quickly signal all handles at once */
++		for (n = 0; n < ARRAY_SIZE(ctx.evfd); n++) {
++			ret = write(ctx.evfd[n], &v, sizeof(v));
++			ASSERT_EQ(ret, sizeof(v));
++		}
++
++		/* Busy loop for 1s and wait for all waiters to wake up */
++		ms = msecs();
++		while (count_waiters(&ctx) && msecs() < ms + 1000)
++			;
++
++		ASSERT_EQ(count_waiters(&ctx), 0);
++	}
++	ctx.stopped = 1;
++	/* Stop waiters */
++	for (i = 0; i < ARRAY_SIZE(waiters); i++)
++		ret = pthread_kill(waiters[i], SIGUSR1);
++	for (i = 0; i < ARRAY_SIZE(waiters); i++)
++		pthread_join(waiters[i], NULL);
++
++	for (i = 0; i < ARRAY_SIZE(waiters); i++)
++		close(ctx.evfd[i]);
++	close(ctx.epfd);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.24.1
 
