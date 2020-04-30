@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E5AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870E1C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2FEE20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E13220873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254738;
-	bh=EturXDdmuhBBBinF/mcrRmdf5FdYX9aTc5Zb5f3bQPE=;
+	s=default; t=1588254746;
+	bh=tIxpfOA4unSyFcuBwL1ysoSVx3S9UkoYppubKOKbt1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTX5vfQFrpcEljZON5uQF3uoEIrwOOd5wo+mC9NjAlMM8FUNVQID8JSPDfAliH8nX
-	 cwb4Knj9NuFm8EEH0qLKiffhNvcNJ1qCZQL4OvhmcFTsawhp4cffMkD77uKfl/rvWO
-	 +n2RNEFvbkua1cwLxRzl8Q2R3LjfwAcEu1zhPPXg=
+	b=X6/TLi8ULY98ZD/vhIVY+xKVEeOyRw8lLVPwTe0dFxoeR7HjmnPfSQzVR/bYgjQ9l
+	 bPtL82ssWo0Yu65E6QflwuiijG9hf4sg+JYSmICaCTpLAmtIGoimdUI9Q/LOw2fQWI
+	 AYdxzu28LiKtiUv3rcGA0cHXWzH+YE2fU/KtCDi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgD3NwR (ORCPT
+        id S1728380AbgD3NwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728246AbgD3Nv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:58 -0400
+        id S1728255AbgD3NwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F11E6208D5;
-        Thu, 30 Apr 2020 13:51:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C26124953;
+        Thu, 30 Apr 2020 13:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254717;
-        bh=EturXDdmuhBBBinF/mcrRmdf5FdYX9aTc5Zb5f3bQPE=;
+        s=default; t=1588254719;
+        bh=tIxpfOA4unSyFcuBwL1ysoSVx3S9UkoYppubKOKbt1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQj5DzH6BBn77RpFmhClJnt6hPa6z40xK6GI8Tl13fuPFK9vLK+5TTVX/D0ABongs
-         YEgK5ZwliAui/fcV+y3gXR1YqYS1hxT+eQ1MJRHcDFiZEM/AiAMbS8SVXaIBpSOmV+
-         tWZam9EXm62FexpRTQYgb30+qm1nHReaysiQNbek=
+        b=RH0gfHAbf0QqUx0z5Q/ZyyXf7JqZmeWfuo07S/AwN0bsUg5d/foiCYjIzdv1S33fV
+         qI+mnQM6dIGsLGZ20XlyG8go506+e9pPi4WQdIlhLsj+OF2SphZoNXNffeoXVdKXUl
+         +JZvClv8X8iDAVqGPy4CaSUXGC/944SgR5pqCshE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        user-mode-linux-devel@lists.sourceforge.net,
-        user-mode-linux-user@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.6 65/79] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
-Date:   Thu, 30 Apr 2020 09:50:29 -0400
-Message-Id: <20200430135043.19851-65-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 67/79] net: phy: bcm84881: clear settings on link down
+Date:   Thu, 30 Apr 2020 09:50:31 -0400
+Message-Id: <20200430135043.19851-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -63,60 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitor Massaru Iha <vitor@massaru.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 63ec90f18204f2fe072df108de8a021b28b1b173 ]
+[ Upstream commit 796a8fa28980050bf1995617f0876484f3dc1026 ]
 
-In this workflow:
+Clear the link partner advertisement, speed, duplex and pause when
+the link goes down, as other phylib drivers do.  This avoids the
+stale link partner, speed and duplex settings being reported via
+ethtool.
 
-$ make ARCH=um defconfig && make ARCH=um -j8
-  [snip]
-$ make ARCH=um mrproper
-  [snip]
-$ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
-  [snip]
-  CC      scripts/mod/empty.o
-In file included from ../include/linux/types.h:6,
-                 from ../include/linux/mod_devicetable.h:12,
-                 from ../scripts/mod/devicetable-offsets.c:3:
-../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
-    5 | #include <asm/types.h>
-      |          ^~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
-make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
-make: *** [Makefile:180: sub-make] Error 2
-
-The cause of the error was because arch/$(SUBARCH)/include/generated files
-weren't properly cleaned by `make ARCH=um mrproper`.
-
-Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
-Reported-by: Theodore Ts'o <tytso@mit.edu>
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
-Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/bcm84881.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index d2daa206872da..275f5ffdf6f0a 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE)
- # When cleaning we don't include .config, so we don't include
- # TT or skas makefiles and don't clean skas_ptregs.h.
- CLEAN_FILES += linux x.i gmon.out
-+MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
+diff --git a/drivers/net/phy/bcm84881.c b/drivers/net/phy/bcm84881.c
+index 14d55a77eb28a..1260115829283 100644
+--- a/drivers/net/phy/bcm84881.c
++++ b/drivers/net/phy/bcm84881.c
+@@ -174,9 +174,6 @@ static int bcm84881_read_status(struct phy_device *phydev)
+ 	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
+ 		phydev->link = false;
  
- archclean:
- 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
+-	if (!phydev->link)
+-		return 0;
+-
+ 	linkmode_zero(phydev->lp_advertising);
+ 	phydev->speed = SPEED_UNKNOWN;
+ 	phydev->duplex = DUPLEX_UNKNOWN;
+@@ -184,6 +181,9 @@ static int bcm84881_read_status(struct phy_device *phydev)
+ 	phydev->asym_pause = 0;
+ 	phydev->mdix = 0;
+ 
++	if (!phydev->link)
++		return 0;
++
+ 	if (phydev->autoneg_complete) {
+ 		val = genphy_c45_read_lpa(phydev);
+ 		if (val < 0)
 -- 
 2.20.1
 
