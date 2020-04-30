@@ -2,167 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C5DC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2F0C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C8A208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CD620775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eRjy/X/c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F0Q4+cQN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lmwJzH8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgD3PAw (ORCPT
+        id S1727029AbgD3PDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:00:52 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:47127 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726519AbgD3PAv (ORCPT
+        Thu, 30 Apr 2020 11:03:16 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34936 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726762AbgD3PDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:00:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B10A78D5;
-        Thu, 30 Apr 2020 11:00:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 30 Apr 2020 11:00:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=wL1V4tEUZLHoYkqrxr+Oa2YFwHa
-        SxUnLHe2fYo122cQ=; b=eRjy/X/c9rApVN5yi3uYKaqPzwMsOtlHhuAPrrF9B0i
-        iQHRl9Hq3IoeKZnDpKXdUVukJFX4edjbAyw+PrWeL72xFgDS3d0VnDgD8vRomIHk
-        jHqHPb9GspYzXbr3/BFZykLjhgF85nlTBjs5l/y18Gw6PKaH2vp9kZCOjHZk+J/f
-        R9980fuYOFWW9Bm7XzlDnGQn3k/8or+kEj/WABQZmjjPRSbrXCjAgvySy5eSIc51
-        9roQF9ZR8AUC8j3NgSFrwg4dVBRFMGY9R5Qw8aC91OEv6jk3GTl0K8FqbtBmf/LF
-        uijbza0qqx+UuXw3zUf6xhLY0I9rgdgKyePp0M2VI7Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wL1V4t
-        EUZLHoYkqrxr+Oa2YFwHaSxUnLHe2fYo122cQ=; b=F0Q4+cQNnzFq6/khK4e0qg
-        /uk03HpDnjPjU69ImFsyOKvOUS5AT/EC3QOa+tZYvOBm3mp4t+wx9z4gzvDwl2LQ
-        gZJJvJAopHBtdg+gkElykoUiHQpX2C7uJPicjRck/hinYcfmpCGGUHEx+peQabh2
-        ZwAZ0kC60GiGdkbZkylblzzI/40ka8SI7jPpf0VkUv0MnhTn8+BwSDzfXJKl14fO
-        Cnj5XVcE26Y/kPKjfgusmQnp0p/q0eEao12kMqXGmYlCmHe+4Ngr4vtPMC0pluxx
-        HpscKjJZMHw/U/birRicLdmQXrbBku75D2qVzyBDRXf/dbQxdRyhLXgr3AFzyE2Q
-        ==
-X-ME-Sender: <xms:IOiqXstmmURRV0ZP7DmZQjTMi5sQQs2YJOKJg-9cVB14fX8rdv6YqQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdekfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:IeiqXgSZ82gBjRU5ofAh50ol90uhIKkhV4SvCizrBlbVQHMBUTyJaw>
-    <xmx:IeiqXo-y_KKfB6E-DGBL2WXPZ-FyCk90DGsGXLiFLt0W3Zdalko_ZA>
-    <xmx:IeiqXs_b7h9AdXlQrkqHgOKF51RQ1HbbJQ_Xx1EGnyKu71VSFPy1lg>
-    <xmx:IuiqXmZ0KdB4UONcdqNrdb_ratIO2QL61zscAKDpLU2RJwAOtLiPQw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B2E543065F2B;
-        Thu, 30 Apr 2020 11:00:48 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 17:00:46 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Priit Laes <plaes@plaes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 4/6] dt-bindings: net: sun7i-gmac: Add syscon support
-Message-ID: <20200430150046.theqniqcrfjiokyo@gilmour.lan>
-References: <20200430115702.5768-1-plaes@plaes.org>
- <20200430115702.5768-5-plaes@plaes.org>
+        Thu, 30 Apr 2020 11:03:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588258995; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=jhdlQT2vqv3qEZdgFhTq6+MiNtZ4KjJ/qRTV4AVufrM=; b=lmwJzH8iMSNrWRPZL91WFb/Emw8U5ZXwyAgRFkUr1Qg6SnDqD3Qv8qnIWTswQeedpZVhf197
+ QnqHbImmiFUx6lH/QBBWvivd9CuKjP4DO3O8860kIeGwnpU8/3hrSUsgf/HwK59rfspdkB/Z
+ C1uNFIF6VjQsXpywXXbewCu7e84=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaae87e.7f91e6aa95e0-smtp-out-n04;
+ Thu, 30 Apr 2020 15:02:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 49D2FC433D2; Thu, 30 Apr 2020 15:02:21 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7CE8EC433CB;
+        Thu, 30 Apr 2020 15:02:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7CE8EC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v3 6/9] bus: mhi: core: WARN_ON for malformed vector table
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org
+References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
+ <1588193551-31439-7-git-send-email-bbhatt@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <15f88b7a-a3cb-ac19-bffe-247f2e99d894@codeaurora.org>
+Date:   Thu, 30 Apr 2020 09:02:19 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="efw2ihuaxv6irv3b"
-Content-Disposition: inline
-In-Reply-To: <20200430115702.5768-5-plaes@plaes.org>
+In-Reply-To: <1588193551-31439-7-git-send-email-bbhatt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---efw2ihuaxv6irv3b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 30, 2020 at 02:57:00PM +0300, Priit Laes wrote:
-> Now that driver supports syscon-based regmap access, document also the
-> devicetree binding.
->=20
-> Signed-off-by: Priit Laes <plaes@plaes.org>
+On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
+> Add a bounds check in the firmware copy routine to exit if a malformed
+> vector table is found while attempting to load the firmware in to the
+> BHIe vector table.
+> 
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 > ---
->  .../bindings/net/allwinner,sun7i-a20-gmac.yaml    | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gm=
-ac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.ya=
-ml
-> index 703d0d886884..c41d7c598c19 100644
-> --- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
-> @@ -29,17 +29,26 @@ properties:
->    clocks:
->      items:
->        - description: GMAC main clock
+>   drivers/bus/mhi/core/boot.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+> index 17c636b..bc70edc 100644
+> --- a/drivers/bus/mhi/core/boot.c
+> +++ b/drivers/bus/mhi/core/boot.c
+> @@ -362,8 +362,14 @@ static void mhi_firmware_copy(struct mhi_controller *mhi_cntrl,
+>   	int i = 0;
+>   	struct mhi_buf *mhi_buf = img_info->mhi_buf;
+>   	struct bhi_vec_entry *bhi_vec = img_info->bhi_vec;
+> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>   
+>   	while (remainder) {
+> +		if (WARN_ON(i >= img_info->entries)) {
+> +			dev_err(dev, "Malformed vector table\n");
+
+I feel like this message needs more detail.  At a minimum, I think it 
+should indicate what vector table (BHIe).  I think if you can identify 
+what file, etc the the glitch is in, that would be better.  Maybe some 
+detail about i and img_info->entries.
+
+If I see this error message, I should have enough information to 
+immediately debug the issue.  If it tells enough to go directly into the 
+firmware file and have a look at entry X to see what might be corrupt 
+about it, that makes my debugging very efficient.  If I have to go back 
+to the code to figure out what "Malformed vector table" means, and then 
+maybe apply a patch to get more data about the error - the error message 
+is not as useful as it should be.
+
+> +			return;
+> +		}
 > +
-> +      # Deprecated
->        - description: TX clock
-> =20
->    clock-names:
->      items:
->        - const: stmmaceth
-> +
-> +      # Deprecated
->        - const: allwinner_gmac_tx
+>   		to_cpy = min(remainder, mhi_buf->len);
+>   		memcpy(mhi_buf->buf, buf, to_cpy);
+>   		bhi_vec->dma_addr = mhi_buf->dma_addr;
+> 
 
-That would be deprecated: true
 
-Also, you still require to have two clocks here?
-
-> =20
->    phy-supply:
->      description:
->        PHY regulator
-> =20
-> +  syscon:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      Phandle to the device containing the GMAC clock register
-> +
->  required:
->    - compatible
->    - reg
-> @@ -48,6 +57,7 @@ required:
->    - clocks
->    - clock-names
->    - phy-mode
-> +  - syscon
-
-You can't do that though, this changes the binding in a non-backward compat=
-ible
-way
-
-I guess you could add an if clause to require it if clocks has a single mem=
-ber.
-
-Maxime
-
---efw2ihuaxv6irv3b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqroHgAKCRDj7w1vZxhR
-xaUUAP9VjkAn7iLXVy4t1HqW05/RoWbJVdFH3BGNDFaVLw0YZAD/Zj1MU1dV2h5E
-VoTak9i1lQOKrH5HLCG+yUEjfZKZCQU=
-=aG3C
------END PGP SIGNATURE-----
-
---efw2ihuaxv6irv3b--
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
