@@ -2,106 +2,248 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58615C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DDAC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDDE207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588279384;
-	bh=u75tJYVYqVgwKuxyvKak/ZmBpHgmj5uCJfAwjytROXk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=saNOKYYMTJ87cxpTszlLZ3vpwnPeYdZhpMNslo1y4J4ZKgIDeJlHxF5nFdEfeOF3U
-	 F3Rmhhnn8ZfdhxI6zdt34uXxU6uo7mlM0yC0/EDeOGEeaNIOIr5Sz/C+64lc0vzBF0
-	 OIx6NeytfJghSXHtmW4sJP6RSvMwdLYh6TP/RmXY=
+	by mail.kernel.org (Postfix) with ESMTP id 0A80E20836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:51:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NP2qv5b+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgD3UnD (ORCPT
+        id S1726649AbgD3Uvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgD3UnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:43:02 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5150206C0;
-        Thu, 30 Apr 2020 20:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588279382;
-        bh=u75tJYVYqVgwKuxyvKak/ZmBpHgmj5uCJfAwjytROXk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Lo/oqZaXh7vcHQFfdXlnjaGTon80H4R9d/gJ3gIDroMAlE999ZPhFGt2CAgEd0l/+
-         RhvqHzdgIGpb0FfKhafe0UqCs5Chv22vRnKMSnwtUjSdupAg1L8EyzHVSOJJt44VJt
-         KJI7OV0aIbDtt8gAcJ0q0cgaWxNy4RlP1imVGnYU=
-Date:   Thu, 30 Apr 2020 15:43:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] PCI: brcmstb: fix window register offset from 4 to 8
-Message-ID: <20200430204300.GA63206@bjorn-Precision-5520>
+        Thu, 30 Apr 2020 16:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726338AbgD3Uvq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:51:46 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F70C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:51:46 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x77so487835pfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z/T+sqjzriwApQPNZZiP/b1FdETZszA1CYwNdpGLAcw=;
+        b=NP2qv5b+jPWNia/NbPWik2u7QNt3CPH39cpq5jmaPXD5hlUnZTgj946oxqA0XZBcmT
+         Dd5AvKrs76qyF6sQNkqlTqLgTAhO6QrUJ1ySM+wuzaHfowQhvrbJfBFzFffjcxiqJuAL
+         x0eDANLjWuPqo5cySfLNcjAdGzQ3Kesulvrin4uoFOBGvsR2xNHSGvncJiG70chn84pN
+         pXeFekkfkuCwIl30ZuWITGr0o36iYOWxw4ubIvmxdlTa2rD8yEhCyiVhD1XEZbUZkUMn
+         /8+P6IPrcg4piPhOlP52LxjVpOxq6fXRXhAr6sjXtQVtHmElAwhu/XDWqhAaKWGRBjCD
+         v+qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z/T+sqjzriwApQPNZZiP/b1FdETZszA1CYwNdpGLAcw=;
+        b=fQ1jcdZUyqiAQ5zTQXrcAaip4KEBkHoM24mRt6ZJXn8xlX8T2pKZlqnrSYCQ/a/kKI
+         pbkNyZe7dzlzsqCOHEI8wMRKbWx+uE5coBjnY4R+wO9LT9QWU4/FEt3ufpTR0jVTvEJE
+         PaJV47rNpNZzfzcMc56kJAN1vmH0vykD/mNIzV+orHiNiQLR2BeLMygFuBjlrPy2I60U
+         6IXoApf0BveuRA7Uxx9TNIZFczv8z9MnXURT54Nhvug1LIF4vHTAbEQZ53K3rxsE1E1W
+         HVMSOJL+p0ejb4HccaWi88blEQ+WreVcciwyZ3IyPE7bNjRto+kEeoMq6zg16kv8Bbiy
+         PCnw==
+X-Gm-Message-State: AGi0PubiQBmlP027J4tCOjtaSgsY/qiwCQV2nluWTPCXK06tNDpSf1ks
+        ErsRvcUp0tX+s7idrFnZeyo7mw==
+X-Google-Smtp-Source: APiQypIt+nZ0EnewUCudryVsUwv9nKND70SWKh1DFcVyMYgdcQGYHTWepdgAJg+wXKWv/u59zo0Baw==
+X-Received: by 2002:a63:3d43:: with SMTP id k64mr825299pga.150.1588279905969;
+        Thu, 30 Apr 2020 13:51:45 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id fy21sm548254pjb.25.2020.04.30.13.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 13:51:45 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 14:51:43 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com, loic.pallardy@st.com,
+        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 12/14] remoteproc: Introducing function
+ rproc_set_state_machine()
+Message-ID: <20200430205143.GC18004@xps15>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-13-mathieu.poirier@linaro.org>
+ <d297aeab-4f7e-95e0-04c0-266e0f08b2d0@st.com>
+ <1438e3f6-3d8a-7edd-f552-b01f84316ec7@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430185522.4116-2-james.quinlan@broadcom.com>
+In-Reply-To: <1438e3f6-3d8a-7edd-f552-b01f84316ec7@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:55:19PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Wed, Apr 29, 2020 at 04:38:54PM +0200, Arnaud POULIQUEN wrote:
 > 
-> The oubound memory window registers were being referenced
-> with an incorrect offset.  This probably wasn't noticed
-> previously as there was likely only one such outbound window.
-
-If you repost these for any other reason:
-
-Capitalize the first word of all the subject lines to match history.
-s/oubound/outbound/
-
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 454917ee9241..5b0dec5971b8 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -54,11 +54,11 @@
->  
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
->  #define PCIE_MEM_WIN0_LO(win)	\
-> -		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 4)
-> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 8)
->  
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI		0x4010
->  #define PCIE_MEM_WIN0_HI(win)	\
-> -		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 4)
-> +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
->  
->  #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
->  #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
-> -- 
-> 2.17.1
+> On 4/29/20 11:22 AM, Arnaud POULIQUEN wrote:
+> > 
+> > 
+> > On 4/24/20 10:01 PM, Mathieu Poirier wrote:
+> >> Introducting function rproc_set_state_machine() to add
+> >> operations and a set of flags to use when synchronising with
+> >> a remote processor.
+> >>
+> >> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >> ---
+> >>  drivers/remoteproc/remoteproc_core.c     | 54 ++++++++++++++++++++++++
+> >>  drivers/remoteproc/remoteproc_internal.h |  6 +++
+> >>  include/linux/remoteproc.h               |  3 ++
+> >>  3 files changed, 63 insertions(+)
+> >>
+> >> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> >> index 48afa1f80a8f..5c48714e8702 100644
+> >> --- a/drivers/remoteproc/remoteproc_core.c
+> >> +++ b/drivers/remoteproc/remoteproc_core.c
+> >> @@ -2065,6 +2065,59 @@ int devm_rproc_add(struct device *dev, struct rproc *rproc)
+> >>  }
+> >>  EXPORT_SYMBOL(devm_rproc_add);
+> >>  
+> >> +/**
+> >> + * rproc_set_state_machine() - Set a synchronisation ops and set of flags
+> >> + *			       to use with a remote processor
+> >> + * @rproc:	The remote processor to work with
+> >> + * @sync_ops:	The operations to use when synchronising with a remote
+> >> + *		processor
+> >> + * @sync_flags:	The flags to use when deciding if the remoteproc core
+> >> + *		should be synchronising with a remote processor
+> >> + *
+> >> + * Returns 0 on success, an error code otherwise.
+> >> + */
+> >> +int rproc_set_state_machine(struct rproc *rproc,
+> >> +			    const struct rproc_ops *sync_ops,
+> >> +			    struct rproc_sync_flags sync_flags)
+> > 
+> > So this API should be called by platform driver only in case of synchronization
+> > support, right?
+> > In this case i would rename it as there is also a state machine in "normal" boot
+> > proposal: rproc_set_sync_machine or rproc_set_sync_state_machine
+> > 
 > 
+> Reviewing the stm32 series, i wonder if sync_flags should be a pointer to a const structure
+> as the platform driver should not update it during the rproc live cycle.
+> Then IMO, using a pointer to the structure instead of the structure seems more 
+> in line with the rest of the remoteproc API.
+
+Humm... If we do make sync_flags constant then the platform drivers can't modify
+the values dynamically, as I did in the stm32 series.  This is something Loic
+had asked for.
+
+Moreover function rproc_set_state_machine() can't be called twice so updating
+the sync_flags can't happen.
+
+> 
+> >> +{
+> >> +	if (!rproc || !sync_ops)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/*
+> >> +	 * No point in going further if we never have to synchronise with
+> >> +	 * the remote processor.
+> >> +	 */
+> >> +	if (!sync_flags.on_init &&
+> >> +	    !sync_flags.after_stop && !sync_flags.after_crash)
+> >> +		return 0;
+> >> +
+> >> +	/*
+> >> +	 * Refuse to go further if remoteproc operations have been allocated
+> >> +	 * but they will never be used.
+> >> +	 */
+> >> +	if (rproc->ops && sync_flags.on_init &&
+> >> +	    sync_flags.after_stop && sync_flags.after_crash)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/*
+> >> +	 * Don't allow users to set this more than once to avoid situations
+> >> +	 * where the remote processor can't be recovered.
+> >> +	 */
+> >> +	if (rproc->sync_ops)
+> >> +		return -EINVAL;
+> >> +
+> >> +	rproc->sync_ops = kmemdup(sync_ops, sizeof(*sync_ops), GFP_KERNEL);
+> >> +	if (!rproc->sync_ops)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	rproc->sync_flags = sync_flags;
+> >> +	/* Tell the core what to do when initialising */
+> >> +	rproc_set_sync_flag(rproc, RPROC_SYNC_STATE_INIT);
+> > 
+> > Is there a use case where sync_flags.on_init is false and other flags are true?
+> > 
+> > Look like on_init is useless and should not be exposed to the platform driver.
+> > Or comments are missing to explain the usage of it vs the other flags.
+> > 
+> > Regards,
+> > Arnaud
+> >  
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +EXPORT_SYMBOL(rproc_set_state_machine);
+> >> +
+> >>  /**
+> >>   * rproc_type_release() - release a remote processor instance
+> >>   * @dev: the rproc's device
+> >> @@ -2088,6 +2141,7 @@ static void rproc_type_release(struct device *dev)
+> >>  	kfree_const(rproc->firmware);
+> >>  	kfree_const(rproc->name);
+> >>  	kfree(rproc->ops);
+> >> +	kfree(rproc->sync_ops);
+> >>  	kfree(rproc);
+> >>  }
+> >>  
+> >> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> >> index 7dcc0a26892b..c1a293a37c78 100644
+> >> --- a/drivers/remoteproc/remoteproc_internal.h
+> >> +++ b/drivers/remoteproc/remoteproc_internal.h
+> >> @@ -27,6 +27,8 @@ struct rproc_debug_trace {
+> >>  /*
+> >>   * enum rproc_sync_states - remote processsor sync states
+> >>   *
+> >> + * @RPROC_SYNC_STATE_INIT	state to use when the remoteproc core
+> >> + *				is initialising.
+> >>   * @RPROC_SYNC_STATE_SHUTDOWN	state to use after the remoteproc core
+> >>   *				has shutdown (rproc_shutdown()) the
+> >>   *				remote processor.
+> >> @@ -39,6 +41,7 @@ struct rproc_debug_trace {
+> >>   * operation to use.
+> >>   */
+> >>  enum rproc_sync_states {
+> >> +	RPROC_SYNC_STATE_INIT,
+> >>  	RPROC_SYNC_STATE_SHUTDOWN,
+> >>  	RPROC_SYNC_STATE_CRASHED,
+> >>  };
+> >> @@ -47,6 +50,9 @@ static inline void rproc_set_sync_flag(struct rproc *rproc,
+> >>  				       enum rproc_sync_states state)
+> >>  {
+> >>  	switch (state) {
+> >> +	case RPROC_SYNC_STATE_INIT:
+> >> +		rproc->sync_with_rproc = rproc->sync_flags.on_init;
+> >> +		break;
+> >>  	case RPROC_SYNC_STATE_SHUTDOWN:
+> >>  		rproc->sync_with_rproc = rproc->sync_flags.after_stop;
+> >>  		break;
+> >> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> >> index ceb3b2bba824..a75ed92b3de6 100644
+> >> --- a/include/linux/remoteproc.h
+> >> +++ b/include/linux/remoteproc.h
+> >> @@ -619,6 +619,9 @@ struct rproc *rproc_get_by_child(struct device *dev);
+> >>  struct rproc *rproc_alloc(struct device *dev, const char *name,
+> >>  			  const struct rproc_ops *ops,
+> >>  			  const char *firmware, int len);
+> >> +int rproc_set_state_machine(struct rproc *rproc,
+> >> +			    const struct rproc_ops *sync_ops,
+> >> +			    struct rproc_sync_flags sync_flags);
+> >>  void rproc_put(struct rproc *rproc);
+> >>  int rproc_add(struct rproc *rproc);
+> >>  int rproc_del(struct rproc *rproc);
+> >>
