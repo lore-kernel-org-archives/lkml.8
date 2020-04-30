@@ -2,121 +2,312 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEABC83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD33C83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA19820787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="r9gRGvtS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4WJhQ8eX"
+	by mail.kernel.org (Postfix) with ESMTP id 12B39208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgD3BfS (ORCPT
+        id S1726864AbgD3BfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:35:18 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38471 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726337AbgD3BfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:35:17 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 52EC15C012E;
-        Wed, 29 Apr 2020 21:35:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 29 Apr 2020 21:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=XX5ohvsksBkQGH5jbDa4t+EQwah
-        gIjz54VbrjjxbWJY=; b=r9gRGvtScYbH5in9aalUzwkJr/sKf1BncihRT0mNAHT
-        gaEJ3V12kbplqnc+7COsqikx8Qv0X6Hb+uXMW6LTWbU23tsA9F7yL0LBbjsHVyMy
-        ToewGhdtZop2zlTSBYaQjCRP5k73Q/DhMFpJur5XzAc6enZQTeuhn3ZVxMm/QNw6
-        bFaBmTpwdK0ToGK4rc7LtSw4Wpwsni7jOhumeAKL7jAkM2n0zItJnqHnThZlvfbU
-        iTScQhVqBoewR+8H72MvcsC76aAxjsjMrnwy5ktVdNSEsOtrVZL8mvJpQ+XBrmuK
-        jR6Qsru3JDh7wwuTBaRTc696q4PoTYg3Iy47ij7Yabw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XX5ohv
-        sksBkQGH5jbDa4t+EQwahgIjz54VbrjjxbWJY=; b=4WJhQ8eXa13H7Byw6ikUXH
-        D1RpSw38kXM2q26mmlPBLIzDw5h9iT3O5x7rylGnlA5Glcr+86JQWRVYDTjVwQK0
-        HGM+KWdfD2nfPx8lJfl4JqzD1KRv6AvGOb8VS7o4ZFQ+sMkkkyp9duX/jjmIdLZ8
-        xTzMQC71FGqnUPNomsK+7nwIbH87yaYh/dUVwBg6l4IusE5aDEVYPHIuPD0RAr3+
-        oxmBuBXajzJTLUWEtE9+Isj7TBdPyz7gs33EZaL4jdPZCL5TiYeCdYLdnXlGm9el
-        i1K2m6jUkBe1aJ577hlRGr1bLhp1S5kmH44JqR6/rPyUG3hmRAfKnvlMZ111HX+g
-        ==
-X-ME-Sender: <xms:VCuqXtY90SDK0St5lHn7_oAvpZhxHLArDg0rGLNkVSW-ThNal22prg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieeggdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
-    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecuggftrfgrthhtvg
-    hrnhepjeffvefffeevgfdtteegudffieduveeuhfettddvueehveethfffgeetfeeghfeu
-    necukfhppedutdekrdegledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgepheenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
-X-ME-Proxy: <xmx:VCuqXtvEoL6it9M_qxN7xt5qz1FIcJKZ8lQAoe13oY32aMyHgmk6bQ>
-    <xmx:VCuqXuvdsW2Mc_1fzxFvmOhnNEESF9IDLyh6C2iRLUAFymfxutwe_w>
-    <xmx:VCuqXmrvnd5C4B4FY99qPLAk02TUEFVeh7RPxWPO2YA2T8WvbFN1LQ>
-    <xmx:VCuqXmrakKYuK6fgDUbYgSaPYo_OOZOr3Wm-hN5nIkC5xHdT_kPuGw>
-Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E66533065EFE;
-        Wed, 29 Apr 2020 21:35:15 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 21:35:15 -0400
-From:   Rylan Dmello <mail@rylan.coffee>
-To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Subject: [PATCH v2 7/7] staging: qlge: Fix function argument alignment
- warning in ql_init_device
-Message-ID: <12c7c34330b410e4ee8b9b5634f1a50ceb9c3590.1588209862.git.mail@rylan.coffee>
-References: <cover.1588209862.git.mail@rylan.coffee>
+        Wed, 29 Apr 2020 21:35:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3342 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726338AbgD3BfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 21:35:21 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6CFCD98E0594281B511E;
+        Thu, 30 Apr 2020 09:35:16 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
+ 09:35:08 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <aviad.krawczyk@huawei.com>, <davem@davemloft.net>,
+        <luobin9@huawei.com>, <yuehaibing@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] hinic: make a bunch of functions static
+Date:   Thu, 30 Apr 2020 09:32:45 +0800
+Message-ID: <20200430013245.35028-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1588209862.git.mail@rylan.coffee>
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl check:
+These fucntions is used only in hinic_sriov.c,
+so make them static to fix sparse warnings.
 
-  CHECK: Alignment should match open parenthesis
-
-Signed-off-by: Rylan Dmello <mail@rylan.coffee>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/staging/qlge/qlge_main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ .../net/ethernet/huawei/hinic/hinic_sriov.c   | 91 ++++++++++---------
+ 1 file changed, 48 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index fa708c722033..93df4f79b21d 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -4433,8 +4433,7 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
- 	pdev->needs_freset = 1;
- 	pci_save_state(pdev);
- 	qdev->reg_base =
--	    ioremap(pci_resource_start(pdev, 1),
--			    pci_resource_len(pdev, 1));
-+		ioremap(pci_resource_start(pdev, 1), pci_resource_len(pdev, 1));
- 	if (!qdev->reg_base) {
- 		dev_err(&pdev->dev, "Register mapping failed.\n");
- 		err = -ENOMEM;
-@@ -4443,8 +4442,7 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
+index b24788e9733c..0d44af9dce2a 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_sriov.c
+@@ -23,8 +23,8 @@ MODULE_PARM_DESC(set_vf_link_state, "Set vf link state, 0 represents link auto,
+ #define HINIC_VLAN_PRIORITY_SHIFT 13
+ #define HINIC_ADD_VLAN_IN_MAC 0x8000
  
- 	qdev->doorbell_area_size = pci_resource_len(pdev, 3);
- 	qdev->doorbell_area =
--	    ioremap(pci_resource_start(pdev, 3),
--			    pci_resource_len(pdev, 3));
-+		ioremap(pci_resource_start(pdev, 3), pci_resource_len(pdev, 3));
- 	if (!qdev->doorbell_area) {
- 		dev_err(&pdev->dev, "Doorbell register mapping failed.\n");
- 		err = -ENOMEM;
+-int hinic_set_mac(struct hinic_hwdev *hwdev, const u8 *mac_addr, u16 vlan_id,
+-		  u16 func_id)
++static int hinic_set_mac(struct hinic_hwdev *hwdev, const u8 *mac_addr,
++			 u16 vlan_id, u16 func_id)
+ {
+ 	struct hinic_port_mac_cmd mac_info = {0};
+ 	u16 out_size = sizeof(mac_info);
+@@ -84,7 +84,7 @@ void hinic_notify_all_vfs_link_changed(struct hinic_hwdev *hwdev,
+ 	}
+ }
+ 
+-u16 hinic_vf_info_vlanprio(struct hinic_hwdev *hwdev, int vf_id)
++static u16 hinic_vf_info_vlanprio(struct hinic_hwdev *hwdev, int vf_id)
+ {
+ 	struct hinic_func_to_io *nic_io = &hwdev->func_to_io;
+ 	u16 pf_vlan, vlanprio;
+@@ -97,8 +97,8 @@ u16 hinic_vf_info_vlanprio(struct hinic_hwdev *hwdev, int vf_id)
+ 	return vlanprio;
+ }
+ 
+-int hinic_set_vf_vlan(struct hinic_hwdev *hwdev, bool add, u16 vid,
+-		      u8 qos, int vf_id)
++static int hinic_set_vf_vlan(struct hinic_hwdev *hwdev, bool add, u16 vid,
++			     u8 qos, int vf_id)
+ {
+ 	struct hinic_vf_vlan_config vf_vlan = {0};
+ 	u16 out_size = sizeof(vf_vlan);
+@@ -163,9 +163,9 @@ static int hinic_init_vf_config(struct hinic_hwdev *hwdev, u16 vf_id)
+ 	return 0;
+ }
+ 
+-int hinic_register_vf_msg_handler(void *hwdev, u16 vf_id,
+-				  void *buf_in, u16 in_size,
+-				  void *buf_out, u16 *out_size)
++static int hinic_register_vf_msg_handler(void *hwdev, u16 vf_id,
++					 void *buf_in, u16 in_size,
++					 void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_register_vf *register_info = buf_out;
+ 	struct hinic_hwdev *hw_dev = hwdev;
+@@ -192,9 +192,9 @@ int hinic_register_vf_msg_handler(void *hwdev, u16 vf_id,
+ 	return 0;
+ }
+ 
+-int hinic_unregister_vf_msg_handler(void *hwdev, u16 vf_id,
+-				    void *buf_in, u16 in_size,
+-				    void *buf_out, u16 *out_size)
++static int hinic_unregister_vf_msg_handler(void *hwdev, u16 vf_id,
++					   void *buf_in, u16 in_size,
++					   void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_hwdev *hw_dev = hwdev;
+ 	struct hinic_func_to_io *nic_io;
+@@ -209,9 +209,9 @@ int hinic_unregister_vf_msg_handler(void *hwdev, u16 vf_id,
+ 	return 0;
+ }
+ 
+-int hinic_change_vf_mtu_msg_handler(void *hwdev, u16 vf_id,
+-				    void *buf_in, u16 in_size,
+-				    void *buf_out, u16 *out_size)
++static int hinic_change_vf_mtu_msg_handler(void *hwdev, u16 vf_id,
++					   void *buf_in, u16 in_size,
++					   void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_hwdev *hw_dev = hwdev;
+ 	int err;
+@@ -227,9 +227,9 @@ int hinic_change_vf_mtu_msg_handler(void *hwdev, u16 vf_id,
+ 	return 0;
+ }
+ 
+-int hinic_get_vf_mac_msg_handler(void *hwdev, u16 vf_id,
+-				 void *buf_in, u16 in_size,
+-				 void *buf_out, u16 *out_size)
++static int hinic_get_vf_mac_msg_handler(void *hwdev, u16 vf_id,
++					void *buf_in, u16 in_size,
++					void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_port_mac_cmd *mac_info = buf_out;
+ 	struct hinic_hwdev *dev = hwdev;
+@@ -246,9 +246,9 @@ int hinic_get_vf_mac_msg_handler(void *hwdev, u16 vf_id,
+ 	return 0;
+ }
+ 
+-int hinic_set_vf_mac_msg_handler(void *hwdev, u16 vf_id,
+-				 void *buf_in, u16 in_size,
+-				 void *buf_out, u16 *out_size)
++static int hinic_set_vf_mac_msg_handler(void *hwdev, u16 vf_id,
++					void *buf_in, u16 in_size,
++					void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_port_mac_cmd *mac_out = buf_out;
+ 	struct hinic_port_mac_cmd *mac_in = buf_in;
+@@ -280,9 +280,9 @@ int hinic_set_vf_mac_msg_handler(void *hwdev, u16 vf_id,
+ 	return err;
+ }
+ 
+-int hinic_del_vf_mac_msg_handler(void *hwdev, u16 vf_id,
+-				 void *buf_in, u16 in_size,
+-				 void *buf_out, u16 *out_size)
++static int hinic_del_vf_mac_msg_handler(void *hwdev, u16 vf_id,
++					void *buf_in, u16 in_size,
++					void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_port_mac_cmd *mac_out = buf_out;
+ 	struct hinic_port_mac_cmd *mac_in = buf_in;
+@@ -312,9 +312,9 @@ int hinic_del_vf_mac_msg_handler(void *hwdev, u16 vf_id,
+ 	return err;
+ }
+ 
+-int hinic_get_vf_link_status_msg_handler(void *hwdev, u16 vf_id,
+-					 void *buf_in, u16 in_size,
+-					 void *buf_out, u16 *out_size)
++static int hinic_get_vf_link_status_msg_handler(void *hwdev, u16 vf_id,
++						void *buf_in, u16 in_size,
++						void *buf_out, u16 *out_size)
+ {
+ 	struct hinic_port_link_cmd *get_link = buf_out;
+ 	struct hinic_hwdev *hw_dev = hwdev;
+@@ -339,7 +339,7 @@ int hinic_get_vf_link_status_msg_handler(void *hwdev, u16 vf_id,
+ 	return 0;
+ }
+ 
+-struct vf_cmd_msg_handle nic_vf_cmd_msg_handler[] = {
++static struct vf_cmd_msg_handle nic_vf_cmd_msg_handler[] = {
+ 	{HINIC_PORT_CMD_VF_REGISTER, hinic_register_vf_msg_handler},
+ 	{HINIC_PORT_CMD_VF_UNREGISTER, hinic_unregister_vf_msg_handler},
+ 	{HINIC_PORT_CMD_CHANGE_MTU, hinic_change_vf_mtu_msg_handler},
+@@ -351,6 +351,7 @@ struct vf_cmd_msg_handle nic_vf_cmd_msg_handler[] = {
+ 
+ #define CHECK_IPSU_15BIT	0X8000
+ 
++static
+ struct hinic_sriov_info *hinic_get_sriov_info_by_pcidev(struct pci_dev *pdev)
+ {
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+@@ -372,8 +373,8 @@ static int hinic_check_mac_info(u8 status, u16 vlan_id)
+ 
+ #define HINIC_VLAN_ID_MASK	0x7FFF
+ 
+-int hinic_update_mac(struct hinic_hwdev *hwdev, u8 *old_mac, u8 *new_mac,
+-		     u16 vlan_id, u16 func_id)
++static int hinic_update_mac(struct hinic_hwdev *hwdev, u8 *old_mac,
++			    u8 *new_mac, u16 vlan_id, u16 func_id)
+ {
+ 	struct hinic_port_mac_update mac_info = {0};
+ 	u16 out_size = sizeof(mac_info);
+@@ -416,8 +417,8 @@ int hinic_update_mac(struct hinic_hwdev *hwdev, u8 *old_mac, u8 *new_mac,
+ 	return 0;
+ }
+ 
+-void hinic_get_vf_config(struct hinic_hwdev *hwdev, u16 vf_id,
+-			 struct ifla_vf_info *ivi)
++static void hinic_get_vf_config(struct hinic_hwdev *hwdev, u16 vf_id,
++				struct ifla_vf_info *ivi)
+ {
+ 	struct vf_data_storage *vfinfo;
+ 
+@@ -455,7 +456,8 @@ int hinic_ndo_get_vf_config(struct net_device *netdev,
+ 	return 0;
+ }
+ 
+-int hinic_set_vf_mac(struct hinic_hwdev *hwdev, int vf, unsigned char *mac_addr)
++static int hinic_set_vf_mac(struct hinic_hwdev *hwdev, int vf,
++			    unsigned char *mac_addr)
+ {
+ 	struct hinic_func_to_io *nic_io = &hwdev->func_to_io;
+ 	struct vf_data_storage *vf_info;
+@@ -504,7 +506,8 @@ int hinic_ndo_set_vf_mac(struct net_device *netdev, int vf, u8 *mac)
+ 	return 0;
+ }
+ 
+-int hinic_add_vf_vlan(struct hinic_hwdev *hwdev, int vf_id, u16 vlan, u8 qos)
++static int hinic_add_vf_vlan(struct hinic_hwdev *hwdev, int vf_id,
++			     u16 vlan, u8 qos)
+ {
+ 	struct hinic_func_to_io *nic_io = &hwdev->func_to_io;
+ 	int err;
+@@ -521,7 +524,7 @@ int hinic_add_vf_vlan(struct hinic_hwdev *hwdev, int vf_id, u16 vlan, u8 qos)
+ 	return 0;
+ }
+ 
+-int hinic_kill_vf_vlan(struct hinic_hwdev *hwdev, int vf_id)
++static int hinic_kill_vf_vlan(struct hinic_hwdev *hwdev, int vf_id)
+ {
+ 	struct hinic_func_to_io *nic_io = &hwdev->func_to_io;
+ 	int err;
+@@ -543,8 +546,8 @@ int hinic_kill_vf_vlan(struct hinic_hwdev *hwdev, int vf_id)
+ 	return 0;
+ }
+ 
+-int hinic_update_mac_vlan(struct hinic_dev *nic_dev, u16 old_vlan, u16 new_vlan,
+-			  int vf_id)
++static int hinic_update_mac_vlan(struct hinic_dev *nic_dev, u16 old_vlan,
++				 u16 new_vlan, int vf_id)
+ {
+ 	struct vf_data_storage *vf_info;
+ 	u16 vlan_id;
+@@ -651,7 +654,8 @@ int hinic_ndo_set_vf_vlan(struct net_device *netdev, int vf, u16 vlan, u8 qos,
+ 	return set_hw_vf_vlan(nic_dev, cur_vlanprio, vf, vlan, qos);
+ }
+ 
+-int hinic_set_vf_trust(struct hinic_hwdev *hwdev, u16 vf_id, bool trust)
++static int hinic_set_vf_trust(struct hinic_hwdev *hwdev, u16 vf_id,
++			      bool trust)
+ {
+ 	struct vf_data_storage *vf_infos;
+ 	struct hinic_func_to_io *nic_io;
+@@ -697,8 +701,8 @@ int hinic_ndo_set_vf_trust(struct net_device *netdev, int vf, bool setting)
+ }
+ 
+ /* pf receive message from vf */
+-int nic_pf_mbox_handler(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
+-			u16 in_size, void *buf_out, u16 *out_size)
++static int nic_pf_mbox_handler(void *hwdev, u16 vf_id, u8 cmd, void *buf_in,
++			       u16 in_size, void *buf_out, u16 *out_size)
+ {
+ 	struct vf_cmd_msg_handle *vf_msg_handle;
+ 	struct hinic_hwdev *dev = hwdev;
+@@ -786,7 +790,7 @@ static int hinic_init_vf_infos(struct hinic_func_to_io *nic_io, u16 vf_id)
+ 	return 0;
+ }
+ 
+-void hinic_clear_vf_infos(struct hinic_dev *nic_dev, u16 vf_id)
++static void hinic_clear_vf_infos(struct hinic_dev *nic_dev, u16 vf_id)
+ {
+ 	struct vf_data_storage *vf_infos;
+ 	u16 func_id;
+@@ -807,8 +811,8 @@ void hinic_clear_vf_infos(struct hinic_dev *nic_dev, u16 vf_id)
+ 	hinic_init_vf_infos(&nic_dev->hwdev->func_to_io, HW_VF_ID_TO_OS(vf_id));
+ }
+ 
+-int hinic_deinit_vf_hw(struct hinic_sriov_info *sriov_info, u16 start_vf_id,
+-		       u16 end_vf_id)
++static int hinic_deinit_vf_hw(struct hinic_sriov_info *sriov_info,
++			      u16 start_vf_id, u16 end_vf_id)
+ {
+ 	struct hinic_dev *nic_dev;
+ 	u16 func_idx, idx;
+@@ -908,7 +912,8 @@ void hinic_vf_func_free(struct hinic_hwdev *hwdev)
+ 	}
+ }
+ 
+-int hinic_init_vf_hw(struct hinic_hwdev *hwdev, u16 start_vf_id, u16 end_vf_id)
++static int hinic_init_vf_hw(struct hinic_hwdev *hwdev, u16 start_vf_id,
++			    u16 end_vf_id)
+ {
+ 	u16 i, func_idx;
+ 	int err;
 -- 
-2.26.2
+2.17.1
+
 
