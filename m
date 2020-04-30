@@ -2,82 +2,58 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A28C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E992C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1CF20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574F020775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262897;
-	bh=htL5CBKoN0WCDcYQWi30eM6Fpz9wSc9gmJDRu0SQ/NI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=K7ABeUH3cVL320SF7hphXb1U2ssgoZputj08m1JTIv1Rk68C2r9OUPi6/VbhWlV5n
-	 TMLH77q6bzt+bdr+GeXWoTjceN33oFnMkKigmryOgpImmuLX6A43n0vu1yDV4Fn18i
-	 2A61anZc7FBgIk1V787H26IR9b+cOgrOkLF9DV9Q=
+	s=default; t=1588262902;
+	bh=xBaOvA6HtzXvTRzX0qB7Mk2jjhXinG2Aw/XAQw989vo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n3kWEGgCWqT7jB2D/tHxXLM7OQAcFCPtvFFijD3a+0AAJjhd2/86xFsGTndU2NmSB
+	 4j9gK6/GBtR5CsKMSanixT8MF5ZT8EHTkwYCK6uR2HNSXVe5AUB95k6wAgSX18BV4A
+	 e2zboT6l7sFJ9cjsdYZKg7id4BW05jfBTA0w773Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgD3QIQ (ORCPT
+        id S1728556AbgD3QIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgD3QEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726816AbgD3QEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:37 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1A81208D5;
+        by mail.kernel.org (Postfix) with ESMTPSA id E160B2137B;
         Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=htL5CBKoN0WCDcYQWi30eM6Fpz9wSc9gmJDRu0SQ/NI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=unU5CxMku37iTcODJkr/My/DCiuY6c7gGAUz/nAMxHPid7wUgnKJN7TIkX32+xzAE
-         LaNUyPunTxlMUmMWOxf8nrGoMgwV6nioZLtQ6AY+8pCNjmTJpZEtKL/ngWXECpueqz
-         gmp7pUE+yyWwIAa56XTDl09fGP1NFHQBOR2lpjN0=
+        bh=xBaOvA6HtzXvTRzX0qB7Mk2jjhXinG2Aw/XAQw989vo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Wmnoe1ZCZDPowTaXBupFLU8m0sITPTVHmtR+qd3gZ5jYAiaawVp5P3/r7UX0So1SD
+         nf1WYuVBn+rL0YoLOe4qFyUWoKEaeHDASPeIMBMqw5BOUhLy4pARCesjgP37rLlHro
+         IxzUMsf19wjOWSA0bPSr1N+yWGABy7DlY4x4CKQw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBft-00AxE8-VJ; Thu, 30 Apr 2020 18:04:33 +0200
+        id 1jUBfu-00AxEY-4i; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        devel@driverdev.osuosl.org, coreteam@netfilter.org,
-        netfilter-devel@vger.kernel.org,
-        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
-        netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Florian Westphal <fw@strlen.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-wireless@vger.kernel.org, Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-can@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        linux-sctp@vger.kernel.org, Vlad Yasevich <vyasevich@gmail.com>,
-        rds-devel@oss.oracle.com,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        David Howells <dhowells@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Remi Denis-Courmont <courmisch@gmail.com>,
-        linux-rdma@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-x25@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 00/37] net: manually convert files to ReST format - part 2
-Date:   Thu, 30 Apr 2020 18:03:55 +0200
-Message-Id: <cover.1588261997.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 06/37] docs: networking: convert multiqueue.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:01 +0200
+Message-Id: <d28a323c1d4d309d3dbf68d5d61f9b997fcc1773.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
+References: <cover.1588261997.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,173 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That's the second part of my work to convert the networking
-text files into ReST. it is based on today's linux-next (next-20200430).
+- add SPDX header;
+- adjust titles and chapters, adding proper markups;
+- mark code blocks and literals as such;
+- use :field: markup;
+- adjust identation, whitespaces and blank lines;
+- add to networking/index.rst.
 
-The full series (including those ones) are at:
-
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=net-docs
-
-I should be sending the remaining patches (another /38 series)
-after getting those merged at -next.
-
-The documents, converted to HTML via the building system are at:
-
-	https://www.infradead.org/~mchehab/kernel_docs/networking/
-
-Mauro Carvalho Chehab (37):
-  docs: networking: convert l2tp.txt to ReST
-  docs: networking: convert lapb-module.txt to ReST
-  docs: networking: convert ltpc.txt to ReST
-  docs: networking: convert mac80211-injection.txt to ReST
-  docs: networking: convert mpls-sysctl.txt to ReST
-  docs: networking: convert multiqueue.txt to ReST
-  docs: networking: convert netconsole.txt to ReST
-  docs: networking: convert netdev-features.txt to ReST
-  docs: networking: convert netdevices.txt to ReST
-  docs: networking: convert netfilter-sysctl.txt to ReST
-  docs: networking: convert netif-msg.txt to ReST
-  docs: networking: convert nf_conntrack-sysctl.txt to ReST
-  docs: networking: convert nf_flowtable.txt to ReST
-  docs: networking: convert openvswitch.txt to ReST
-  docs: networking: convert operstates.txt to ReST
-  docs: networking: convert packet_mmap.txt to ReST
-  docs: networking: convert phonet.txt to ReST
-  docs: networking: convert pktgen.txt to ReST
-  docs: networking: convert PLIP.txt to ReST
-  docs: networking: convert ppp_generic.txt to ReST
-  docs: networking: convert proc_net_tcp.txt to ReST
-  docs: networking: convert radiotap-headers.txt to ReST
-  docs: networking: convert ray_cs.txt to ReST
-  docs: networking: convert rds.txt to ReST
-  docs: networking: convert regulatory.txt to ReST
-  docs: networking: convert rxrpc.txt to ReST
-  docs: networking: convert sctp.txt to ReST
-  docs: networking: convert secid.txt to ReST
-  docs: networking: convert seg6-sysctl.txt to ReST
-  docs: networking: convert skfp.txt to ReST
-  docs: networking: convert strparser.txt to ReST
-  docs: networking: convert switchdev.txt to ReST
-  docs: networking: convert tc-actions-env-rules.txt to ReST
-  docs: networking: convert tcp-thin.txt to ReST
-  docs: networking: convert team.txt to ReST
-  docs: networking: convert timestamping.txt to ReST
-  docs: networking: convert tproxy.txt to ReST
-
- .../admin-guide/kernel-parameters.txt         |    2 +-
- Documentation/admin-guide/serial-console.rst  |    2 +-
- Documentation/filesystems/afs.rst             |    2 +-
- Documentation/networking/bonding.rst          |    2 +-
- Documentation/networking/can.rst              |    2 +-
- .../networking/checksum-offloads.rst          |    2 +-
- Documentation/networking/index.rst            |   37 +
- Documentation/networking/ip-sysctl.rst        |    2 +-
- .../networking/{l2tp.txt => l2tp.rst}         |  145 ++-
- .../{lapb-module.txt => lapb-module.rst}      |  120 +-
- .../networking/{ltpc.txt => ltpc.rst}         |   45 +-
- ...1-injection.txt => mac80211-injection.rst} |   41 +-
- .../{mpls-sysctl.txt => mpls-sysctl.rst}      |   17 +-
- .../{multiqueue.txt => multiqueue.rst}        |   41 +-
- .../{netconsole.txt => netconsole.rst}        |  125 +-
- ...etdev-features.txt => netdev-features.rst} |   19 +-
- .../{netdevices.txt => netdevices.rst}        |   21 +-
- ...filter-sysctl.txt => netfilter-sysctl.rst} |   11 +-
- Documentation/networking/netif-msg.rst        |   95 ++
- Documentation/networking/netif-msg.txt        |   79 --
- ...ack-sysctl.txt => nf_conntrack-sysctl.rst} |   51 +-
- .../{nf_flowtable.txt => nf_flowtable.rst}    |   55 +-
- .../{openvswitch.txt => openvswitch.rst}      |   23 +-
- .../{operstates.txt => operstates.rst}        |   45 +-
- Documentation/networking/packet_mmap.rst      | 1084 +++++++++++++++++
- Documentation/networking/packet_mmap.txt      | 1061 ----------------
- .../networking/{phonet.txt => phonet.rst}     |   56 +-
- .../networking/{pktgen.txt => pktgen.rst}     |  316 ++---
- .../networking/{PLIP.txt => plip.rst}         |   43 +-
- .../{ppp_generic.txt => ppp_generic.rst}      |   52 +-
- .../{proc_net_tcp.txt => proc_net_tcp.rst}    |   23 +-
- ...iotap-headers.txt => radiotap-headers.rst} |   99 +-
- .../networking/{ray_cs.txt => ray_cs.rst}     |  101 +-
- Documentation/networking/{rds.txt => rds.rst} |  295 +++--
- .../{regulatory.txt => regulatory.rst}        |   29 +-
- .../networking/{rxrpc.txt => rxrpc.rst}       |  306 ++---
- .../networking/{sctp.txt => sctp.rst}         |   37 +-
- .../networking/{secid.txt => secid.rst}       |    6 +
- Documentation/networking/seg6-sysctl.rst      |   26 +
- Documentation/networking/seg6-sysctl.txt      |   18 -
- .../networking/{skfp.txt => skfp.rst}         |  153 ++-
- .../{strparser.txt => strparser.rst}          |   85 +-
- .../{switchdev.txt => switchdev.rst}          |  114 +-
- .../networking/tc-actions-env-rules.rst       |   29 +
- .../networking/tc-actions-env-rules.txt       |   24 -
- .../networking/{tcp-thin.txt => tcp-thin.rst} |    5 +
- .../networking/{team.txt => team.rst}         |    6 +
- .../{timestamping.txt => timestamping.rst}    |  154 ++-
- .../networking/{tproxy.txt => tproxy.rst}     |   55 +-
- MAINTAINERS                                   |   14 +-
- drivers/net/Kconfig                           |    4 +-
- drivers/net/appletalk/Kconfig                 |    2 +-
- drivers/net/ethernet/toshiba/ps3_gelic_net.c  |    2 +-
- drivers/net/ethernet/toshiba/spider_net.c     |    2 +-
- drivers/net/fddi/Kconfig                      |    2 +-
- drivers/net/plip/Kconfig                      |    2 +-
- drivers/net/wireless/Kconfig                  |    2 +-
- drivers/staging/fsl-dpaa2/ethsw/README        |    2 +-
- include/linux/netdev_features.h               |    2 +-
- include/net/cfg80211.h                        |    2 +-
- include/uapi/linux/errqueue.h                 |    2 +-
- net/Kconfig                                   |    2 +-
- net/core/pktgen.c                             |    2 +-
- net/lapb/Kconfig                              |    2 +-
- net/mac80211/tx.c                             |    2 +-
- net/netfilter/Kconfig                         |    2 +-
- net/rxrpc/Kconfig                             |    6 +-
- net/rxrpc/sysctl.c                            |    2 +-
- net/wireless/radiotap.c                       |    2 +-
- samples/pktgen/README.rst                     |    2 +-
- 70 files changed, 2864 insertions(+), 2357 deletions(-)
- rename Documentation/networking/{l2tp.txt => l2tp.rst} (79%)
- rename Documentation/networking/{lapb-module.txt => lapb-module.rst} (74%)
- rename Documentation/networking/{ltpc.txt => ltpc.rst} (86%)
- rename Documentation/networking/{mac80211-injection.txt => mac80211-injection.rst} (67%)
- rename Documentation/networking/{mpls-sysctl.txt => mpls-sysctl.rst} (82%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/networking/bonding.rst          |  2 +-
+ Documentation/networking/index.rst            |  1 +
+ .../{multiqueue.txt => multiqueue.rst}        | 41 +++++++++----------
+ 3 files changed, 22 insertions(+), 22 deletions(-)
  rename Documentation/networking/{multiqueue.txt => multiqueue.rst} (76%)
- rename Documentation/networking/{netconsole.txt => netconsole.rst} (66%)
- rename Documentation/networking/{netdev-features.txt => netdev-features.rst} (95%)
- rename Documentation/networking/{netdevices.txt => netdevices.rst} (89%)
- rename Documentation/networking/{netfilter-sysctl.txt => netfilter-sysctl.rst} (62%)
- create mode 100644 Documentation/networking/netif-msg.rst
- delete mode 100644 Documentation/networking/netif-msg.txt
- rename Documentation/networking/{nf_conntrack-sysctl.txt => nf_conntrack-sysctl.rst} (85%)
- rename Documentation/networking/{nf_flowtable.txt => nf_flowtable.rst} (76%)
- rename Documentation/networking/{openvswitch.txt => openvswitch.rst} (95%)
- rename Documentation/networking/{operstates.txt => operstates.rst} (87%)
- create mode 100644 Documentation/networking/packet_mmap.rst
- delete mode 100644 Documentation/networking/packet_mmap.txt
- rename Documentation/networking/{phonet.txt => phonet.rst} (82%)
- rename Documentation/networking/{pktgen.txt => pktgen.rst} (62%)
- rename Documentation/networking/{PLIP.txt => plip.rst} (92%)
- rename Documentation/networking/{ppp_generic.txt => ppp_generic.rst} (91%)
- rename Documentation/networking/{proc_net_tcp.txt => proc_net_tcp.rst} (83%)
- rename Documentation/networking/{radiotap-headers.txt => radiotap-headers.rst} (70%)
- rename Documentation/networking/{ray_cs.txt => ray_cs.rst} (65%)
- rename Documentation/networking/{rds.txt => rds.rst} (59%)
- rename Documentation/networking/{regulatory.txt => regulatory.rst} (94%)
- rename Documentation/networking/{rxrpc.txt => rxrpc.rst} (85%)
- rename Documentation/networking/{sctp.txt => sctp.rst} (64%)
- rename Documentation/networking/{secid.txt => secid.rst} (87%)
- create mode 100644 Documentation/networking/seg6-sysctl.rst
- delete mode 100644 Documentation/networking/seg6-sysctl.txt
- rename Documentation/networking/{skfp.txt => skfp.rst} (68%)
- rename Documentation/networking/{strparser.txt => strparser.rst} (80%)
- rename Documentation/networking/{switchdev.txt => switchdev.rst} (84%)
- create mode 100644 Documentation/networking/tc-actions-env-rules.rst
- delete mode 100644 Documentation/networking/tc-actions-env-rules.txt
- rename Documentation/networking/{tcp-thin.txt => tcp-thin.rst} (97%)
- rename Documentation/networking/{team.txt => team.rst} (67%)
- rename Documentation/networking/{timestamping.txt => timestamping.rst} (89%)
- rename Documentation/networking/{tproxy.txt => tproxy.rst} (70%)
 
+diff --git a/Documentation/networking/bonding.rst b/Documentation/networking/bonding.rst
+index dd49f95d28d3..24168b0d16bd 100644
+--- a/Documentation/networking/bonding.rst
++++ b/Documentation/networking/bonding.rst
+@@ -1639,7 +1639,7 @@ can safely be sent over either interface.  Such configurations may be achieved
+ using the traffic control utilities inherent in linux.
+ 
+ By default the bonding driver is multiqueue aware and 16 queues are created
+-when the driver initializes (see Documentation/networking/multiqueue.txt
++when the driver initializes (see Documentation/networking/multiqueue.rst
+ for details).  If more or less queues are desired the module parameter
+ tx_queues can be used to change this value.  There is no sysfs parameter
+ available as the allocation is done at module init time.
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index a751cda83c3d..492658bf7c0d 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -79,6 +79,7 @@ Contents:
+    ltpc
+    mac80211-injection
+    mpls-sysctl
++   multiqueue
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/networking/multiqueue.txt b/Documentation/networking/multiqueue.rst
+similarity index 76%
+rename from Documentation/networking/multiqueue.txt
+rename to Documentation/networking/multiqueue.rst
+index 4caa0e314cc2..0a576166e9dd 100644
+--- a/Documentation/networking/multiqueue.txt
++++ b/Documentation/networking/multiqueue.rst
+@@ -1,17 +1,17 @@
++.. SPDX-License-Identifier: GPL-2.0
+ 
+-		HOWTO for multiqueue network device support
+-		===========================================
++===========================================
++HOWTO for multiqueue network device support
++===========================================
+ 
+ Section 1: Base driver requirements for implementing multiqueue support
++=======================================================================
+ 
+ Intro: Kernel support for multiqueue devices
+ ---------------------------------------------------------
+ 
+ Kernel support for multiqueue devices is always present.
+ 
+-Section 1: Base driver requirements for implementing multiqueue support
+------------------------------------------------------------------------
+-
+ Base drivers are required to use the new alloc_etherdev_mq() or
+ alloc_netdev_mq() functions to allocate the subqueues for the device.  The
+ underlying kernel API will take care of the allocation and deallocation of
+@@ -26,8 +26,7 @@ comes online or when it's completely shut down (unregister_netdev(), etc.).
+ 
+ 
+ Section 2: Qdisc support for multiqueue devices
+-
+------------------------------------------------
++===============================================
+ 
+ Currently two qdiscs are optimized for multiqueue devices.  The first is the
+ default pfifo_fast qdisc.  This qdisc supports one qdisc per hardware queue.
+@@ -46,22 +45,22 @@ will be queued to the band associated with the hardware queue.
+ 
+ 
+ Section 3: Brief howto using MULTIQ for multiqueue devices
+----------------------------------------------------------------
++==========================================================
+ 
+ The userspace command 'tc,' part of the iproute2 package, is used to configure
+ qdiscs.  To add the MULTIQ qdisc to your network device, assuming the device
+-is called eth0, run the following command:
++is called eth0, run the following command::
+ 
+-# tc qdisc add dev eth0 root handle 1: multiq
++    # tc qdisc add dev eth0 root handle 1: multiq
+ 
+ The qdisc will allocate the number of bands to equal the number of queues that
+ the device reports, and bring the qdisc online.  Assuming eth0 has 4 Tx
+-queues, the band mapping would look like:
++queues, the band mapping would look like::
+ 
+-band 0 => queue 0
+-band 1 => queue 1
+-band 2 => queue 2
+-band 3 => queue 3
++    band 0 => queue 0
++    band 1 => queue 1
++    band 2 => queue 2
++    band 3 => queue 3
+ 
+ Traffic will begin flowing through each queue based on either the simple_tx_hash
+ function or based on netdev->select_queue() if you have it defined.
+@@ -69,11 +68,11 @@ function or based on netdev->select_queue() if you have it defined.
+ The behavior of tc filters remains the same.  However a new tc action,
+ skbedit, has been added.  Assuming you wanted to route all traffic to a
+ specific host, for example 192.168.0.3, through a specific queue you could use
+-this action and establish a filter such as:
++this action and establish a filter such as::
+ 
+-tc filter add dev eth0 parent 1: protocol ip prio 1 u32 \
+-	match ip dst 192.168.0.3 \
+-	action skbedit queue_mapping 3
++    tc filter add dev eth0 parent 1: protocol ip prio 1 u32 \
++	    match ip dst 192.168.0.3 \
++	    action skbedit queue_mapping 3
+ 
+-Author: Alexander Duyck <alexander.h.duyck@intel.com>
+-Original Author: Peter P. Waskiewicz Jr. <peter.p.waskiewicz.jr@intel.com>
++:Author: Alexander Duyck <alexander.h.duyck@intel.com>
++:Original Author: Peter P. Waskiewicz Jr. <peter.p.waskiewicz.jr@intel.com>
 -- 
 2.25.4
-
 
