@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F16C47255
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E21CC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34F9E2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5C92076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262760;
-	bh=2bKHDTVX1tmuy9i5+dwnxfglvtOh3JSyI/oVDrRUSO0=;
+	s=default; t=1588262752;
+	bh=HmyB3mSvSoBZPTU9c0iLb35gC8/ETJP1f64nm3K/i1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjJTCl8saTDeETi+BsVcGyoGwNpeKT1wJHoDaPcsS2Hh+HhMin2CWnMtSiJM8lsll
-	 v1NMYApQB23RZAXZqxNnTMEswRI6wqyQlq5P+IDdyB2+AxFQ66EBXQyxWMotRxg+IS
-	 +lLrb1wQuULkw27dXFfaCMZZeYnJ1PiKNig3vkLM=
+	b=2LErJj6PYXPbcr2BLGltbr7hQ4O9r8/akI8p+OdBVfDfx5RfmZy1ObmL+MKicwhSC
+	 s3Ju05OPGU0qqUpHQ8mwCrBKgFObWKKGjVFeHPAC9wzhhvWkUBivHx5Oa4G3e9TEE6
+	 V96jKQ1gKyeX2/zlfXA6A9JHOfftSGXKJ5u47h/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgD3QFr (ORCPT
+        id S1728287AbgD3QFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbgD3QEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727797AbgD3QEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:39 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6C61249A0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 841782498E;
         Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=2bKHDTVX1tmuy9i5+dwnxfglvtOh3JSyI/oVDrRUSO0=;
+        bh=HmyB3mSvSoBZPTU9c0iLb35gC8/ETJP1f64nm3K/i1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWLvoBhZZlv7vj9lk38wbvbIb6wd0og1ZUBgUgWkTQAxubALwdo/8KPeE7QXVt01d
-         bOR6DexKkB0stClC0cFspRqu7wnd0dxD7SosvYBPM3AMeSMoJGrX9xCSs2kqJfCOlL
-         jo3L7FwAOREwwWlZ9G6usP3gVSTn4IjXysUCOdHs=
+        b=vex0vRLfRaPVrDWeUZX5D7AZbuVYx+maDsfpkaQR2lYLrvz6Y/IEFw6KhhR4aTzUT
+         YZ5CMzEjin0mg2YFFcoKaYFttoivJ+bX/6XlfhS+2eyvb0OB4QTaMHC88/EYyKLktd
+         ZVV42aeM5mxj86iSlDx4aBMxMFdBj21z2/XxQi9U=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxH5-Vq; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxGQ-P1; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: [PATCH 37/37] docs: networking: convert tproxy.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:32 +0200
-Message-Id: <864518c020140359601ce16eda38f00e9cef5a44.1588261997.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 29/37] docs: networking: convert seg6-sysctl.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:24 +0200
+Message-Id: <3d8b7e996ad24578d9dcc72de4e0d4bc1479ddd2.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -66,147 +62,89 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust title markup;
 - mark code blocks and literals as such;
-- adjust identation, whitespaces and blank lines where needed;
+- add a document title;
+- adjust chapters, adding proper markups;
+- mark lists as such;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/index.rst            |  1 +
- .../networking/{tproxy.txt => tproxy.rst}     | 55 ++++++++++---------
- net/netfilter/Kconfig                         |  2 +-
- 3 files changed, 32 insertions(+), 26 deletions(-)
- rename Documentation/networking/{tproxy.txt => tproxy.rst} (70%)
+ Documentation/networking/index.rst       |  1 +
+ Documentation/networking/seg6-sysctl.rst | 26 ++++++++++++++++++++++++
+ Documentation/networking/seg6-sysctl.txt | 18 ----------------
+ 3 files changed, 27 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/networking/seg6-sysctl.rst
+ delete mode 100644 Documentation/networking/seg6-sysctl.txt
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 8f9a84b8e3f2..b423b2db5f96 100644
+index 8b672f252f67..716744c568b7 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -110,6 +110,7 @@ Contents:
-    tcp-thin
-    team
-    timestamping
-+   tproxy
+@@ -102,6 +102,7 @@ Contents:
+    rxrpc
+    sctp
+    secid
++   seg6-sysctl
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/tproxy.txt b/Documentation/networking/tproxy.rst
-similarity index 70%
-rename from Documentation/networking/tproxy.txt
-rename to Documentation/networking/tproxy.rst
-index b9a188823d9f..00dc3a1a66b4 100644
---- a/Documentation/networking/tproxy.txt
-+++ b/Documentation/networking/tproxy.rst
-@@ -1,3 +1,6 @@
+diff --git a/Documentation/networking/seg6-sysctl.rst b/Documentation/networking/seg6-sysctl.rst
+new file mode 100644
+index 000000000000..ec73e1445030
+--- /dev/null
++++ b/Documentation/networking/seg6-sysctl.rst
+@@ -0,0 +1,26 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=========================
- Transparent proxy support
- =========================
- 
-@@ -11,39 +14,39 @@ From Linux 4.18 transparent proxy support is also available in nf_tables.
- ================================
- 
- The idea is that you identify packets with destination address matching a local
--socket on your box, set the packet mark to a certain value:
-+socket on your box, set the packet mark to a certain value::
- 
--# iptables -t mangle -N DIVERT
--# iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT
--# iptables -t mangle -A DIVERT -j MARK --set-mark 1
--# iptables -t mangle -A DIVERT -j ACCEPT
-+    # iptables -t mangle -N DIVERT
-+    # iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT
-+    # iptables -t mangle -A DIVERT -j MARK --set-mark 1
-+    # iptables -t mangle -A DIVERT -j ACCEPT
- 
--Alternatively you can do this in nft with the following commands:
-+Alternatively you can do this in nft with the following commands::
- 
--# nft add table filter
--# nft add chain filter divert "{ type filter hook prerouting priority -150; }"
--# nft add rule filter divert meta l4proto tcp socket transparent 1 meta mark set 1 accept
-+    # nft add table filter
-+    # nft add chain filter divert "{ type filter hook prerouting priority -150; }"
-+    # nft add rule filter divert meta l4proto tcp socket transparent 1 meta mark set 1 accept
- 
- And then match on that value using policy routing to have those packets
--delivered locally:
-+delivered locally::
- 
--# ip rule add fwmark 1 lookup 100
--# ip route add local 0.0.0.0/0 dev lo table 100
-+    # ip rule add fwmark 1 lookup 100
-+    # ip route add local 0.0.0.0/0 dev lo table 100
- 
- Because of certain restrictions in the IPv4 routing output code you'll have to
- modify your application to allow it to send datagrams _from_ non-local IP
- addresses. All you have to do is enable the (SOL_IP, IP_TRANSPARENT) socket
--option before calling bind:
-+option before calling bind::
- 
--fd = socket(AF_INET, SOCK_STREAM, 0);
--/* - 8< -*/
--int value = 1;
--setsockopt(fd, SOL_IP, IP_TRANSPARENT, &value, sizeof(value));
--/* - 8< -*/
--name.sin_family = AF_INET;
--name.sin_port = htons(0xCAFE);
--name.sin_addr.s_addr = htonl(0xDEADBEEF);
--bind(fd, &name, sizeof(name));
-+    fd = socket(AF_INET, SOCK_STREAM, 0);
-+    /* - 8< -*/
-+    int value = 1;
-+    setsockopt(fd, SOL_IP, IP_TRANSPARENT, &value, sizeof(value));
-+    /* - 8< -*/
-+    name.sin_family = AF_INET;
-+    name.sin_port = htons(0xCAFE);
-+    name.sin_addr.s_addr = htonl(0xDEADBEEF);
-+    bind(fd, &name, sizeof(name));
- 
- A trivial patch for netcat is available here:
- http://people.netfilter.org/hidden/tproxy/netcat-ip_transparent-support.patch
-@@ -61,10 +64,10 @@ be able to find out the original destination address. Even in case of TCP
- getting the original destination address is racy.)
- 
- The 'TPROXY' target provides similar functionality without relying on NAT. Simply
--add rules like this to the iptables ruleset above:
-+add rules like this to the iptables ruleset above::
- 
--# iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
--  --tproxy-mark 0x1/0x1 --on-port 50080
-+    # iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
-+      --tproxy-mark 0x1/0x1 --on-port 50080
- 
- Or the following rule to nft:
- 
-@@ -82,10 +85,12 @@ nf_tables implementation.
- ====================================
- 
- To use tproxy you'll need to have the following modules compiled for iptables:
++====================
++Seg6 Sysfs variables
++====================
 +
-  - NETFILTER_XT_MATCH_SOCKET
-  - NETFILTER_XT_TARGET_TPROXY
- 
- Or the floowing modules for nf_tables:
 +
-  - NFT_SOCKET
-  - NFT_TPROXY
- 
-diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
-index 468fea1aebba..3a3915d2e1ea 100644
---- a/net/netfilter/Kconfig
-+++ b/net/netfilter/Kconfig
-@@ -1043,7 +1043,7 @@ config NETFILTER_XT_TARGET_TPROXY
- 	  on Netfilter connection tracking and NAT, unlike REDIRECT.
- 	  For it to work you will have to configure certain iptables rules
- 	  and use policy routing. For more information on how to set it up
--	  see Documentation/networking/tproxy.txt.
-+	  see Documentation/networking/tproxy.rst.
- 
- 	  To compile it as a module, choose M here.  If unsure, say N.
- 
++/proc/sys/net/conf/<iface>/seg6_* variables:
++============================================
++
++seg6_enabled - BOOL
++	Accept or drop SR-enabled IPv6 packets on this interface.
++
++	Relevant packets are those with SRH present and DA = local.
++
++	* 0 - disabled (default)
++	* not 0 - enabled
++
++seg6_require_hmac - INTEGER
++	Define HMAC policy for ingress SR-enabled packets on this interface.
++
++	* -1 - Ignore HMAC field
++	* 0 - Accept SR packets without HMAC, validate SR packets with HMAC
++	* 1 - Drop SR packets without HMAC, validate SR packets with HMAC
++
++	Default is 0.
+diff --git a/Documentation/networking/seg6-sysctl.txt b/Documentation/networking/seg6-sysctl.txt
+deleted file mode 100644
+index bdbde23b19cb..000000000000
+--- a/Documentation/networking/seg6-sysctl.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/proc/sys/net/conf/<iface>/seg6_* variables:
+-
+-seg6_enabled - BOOL
+-	Accept or drop SR-enabled IPv6 packets on this interface.
+-
+-	Relevant packets are those with SRH present and DA = local.
+-
+-	0 - disabled (default)
+-	not 0 - enabled
+-
+-seg6_require_hmac - INTEGER
+-	Define HMAC policy for ingress SR-enabled packets on this interface.
+-
+-	-1 - Ignore HMAC field
+-	0 - Accept SR packets without HMAC, validate SR packets with HMAC
+-	1 - Drop SR packets without HMAC, validate SR packets with HMAC
+-
+-	Default is 0.
 -- 
 2.25.4
 
