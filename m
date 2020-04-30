@@ -2,248 +2,221 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CB7C83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76225C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98D8721775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4132173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qF6hgZB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgD3Gad (ORCPT
+        id S1726672AbgD3GbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:30:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40118 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbgD3Gad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:30:33 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7246AD2AB6546329FFF5;
-        Thu, 30 Apr 2020 14:30:30 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
- 14:30:28 +0800
-Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-References: <20200421143149.45108-1-yuehaibing@huawei.com>
- <20200422093344.GY13121@gauss3.secunet.de>
- <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
- <CADvbK_cEgKCEGRJU1v=FAdFNoh3TzD+cZLiKUtsMLHJh3JqOfg@mail.gmail.com>
- <02a56d2c-8d27-f53a-d9e3-c25bd03677c8@huawei.com>
- <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
- <b392a477-2ab5-1045-a18c-4df915f78001@huawei.com>
- <CADvbK_dAjP-Qa1L0zDyzG_25bwr-3xtiPLzY4_CeimKcarp9Tg@mail.gmail.com>
- <cb82c789-8eb5-e7bf-4f5a-4a8ec0672648@huawei.com>
-CC:     Xin Long <lucien.xin@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        davem <davem@davemloft.net>, <kuba@kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Jamal Hadi Salim" <hadi@cyberus.ca>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <895e1510-6946-3580-fb90-7da328432f07@huawei.com>
-Date:   Thu, 30 Apr 2020 14:30:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <cb82c789-8eb5-e7bf-4f5a-4a8ec0672648@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+        Thu, 30 Apr 2020 02:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726358AbgD3GbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:31:08 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CAD5C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:31:06 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t9so309024pjw.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=dZjd4h4yhOmM5NOjj2GXWk2elbRPKbCxZOjy1xnvEzo=;
+        b=qF6hgZB25hqGbunddGpblJXgTIHuFfM9NxEQn81J9IPRWk00tmRcTXY0+aln/v4O+s
+         FZI4zbQ7bikN8NJ/Npci5wGRKHhEUEPMfGkBeekJ5hTAwZg5UzZkzDiJiFSbu5uKH+M/
+         RUH67CYO+lGeOO/fIcxrmIru4NBM+XBOdGJlxj9cGkG0+DyUUNA7/eZxPZSjOT+wnGjZ
+         xzuNlMtRiRH5YC3sMtadq5UEslN9/MGgFPG1hQJ+kzVZsaS4oYBkjmDWyVNMCCEw+r2Y
+         tc5SO0khPU7cvI0Pxh8jXCECKvhPMQzvydWigKezRvaMq1YDvGV0Rv/LsOXRJ4vyYSN3
+         9lBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dZjd4h4yhOmM5NOjj2GXWk2elbRPKbCxZOjy1xnvEzo=;
+        b=FI4Net0g0t6VzpJvBI9H5nJZ3/ihY/vOagqGMXBtFEO8JOTbPGCKkQ95BdFRHCHc+J
+         U7OLc5gNwht9XldZHG6GFcD18WRCPLgIetyRhq7BkD0oo/JPNV8dJOSoh8oxhXMJ+2lB
+         mnVPgJ8fqzB5WzSFZdLqz4YAZTv9tCQ9c78q2caPvdezA5RrmUK0K6NbGMNzUo9j0AXN
+         /C5PHNj6seiPrzRSnq2LJI7rDlzWb9KQfqyYo8CbYqO016NG7Ec+ZqCUK8tPwhJjp6uF
+         oXDQXQJmqbcfESAWrm0Sb/GsqGj33uiSV3awGiHSMTcOnMlHyUPSOe0wsUe02KTMxZCY
+         gJyg==
+X-Gm-Message-State: AGi0Pubb1Xw5saBy8aQbArOQySE5vPqKj3FU99ueGp8q0vOkLRg3lUlg
+        8fwU7KCZyY8cBPepN9uInN7Edj6d1/ch
+X-Google-Smtp-Source: APiQypJ8J196J+2qmCZmnvhVKQfJOcUcAxx630UMLybVqNinADyOQQJodGsfIyKPEx3LHw4fhcuR9Q==
+X-Received: by 2002:a17:902:b945:: with SMTP id h5mr2241918pls.224.1588228265856;
+        Wed, 29 Apr 2020 23:31:05 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6081:946c:419e:a71:7237:1613])
+        by smtp.gmail.com with ESMTPSA id m7sm2676772pfb.48.2020.04.29.23.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 23:31:05 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: soc: qcom: Add devicetree binding for Qcom IPCC
+Date:   Thu, 30 Apr 2020 12:00:53 +0530
+Message-Id: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/24 11:48, Yuehaibing wrote:
-> On 2020/4/23 17:43, Xin Long wrote:
->> On Thu, Apr 23, 2020 at 4:41 PM Yuehaibing <yuehaibing@huawei.com> wrote:
->>>
->>> On 2020/4/23 14:37, Xin Long wrote:
->>>> On Thu, Apr 23, 2020 at 10:26 AM Yuehaibing <yuehaibing@huawei.com> wrote:
->>>>>
->>>>> On 2020/4/22 23:41, Xin Long wrote:
->>>>>> On Wed, Apr 22, 2020 at 8:18 PM Yuehaibing <yuehaibing@huawei.com> wrote:
->>>>>>>
->>>>>>> On 2020/4/22 17:33, Steffen Klassert wrote:
->>>>>>>> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
->>>>>>>>> While update xfrm policy as follow:
->>>>>>>>>
->>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>>>>  priority 1 mark 0 mask 0x10
->>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>>>>  priority 2 mark 0 mask 0x00
->>>>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>>>>  priority 2 mark 0 mask 0x10
->>>>>>>>>
->>>>>>>>> We get this warning:
->>>>>>>>>
->>>>>>>>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
->>>>>>>>> Kernel panic - not syncing: panic_on_warn set ...
->>>>>>>>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
->>>>>>>>> Call Trace:
->>>>>>>>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
->>>>>>>>>  xfrm_policy_inexact_insert+0x70/0x330
->>>>>>>>>  xfrm_policy_insert+0x1df/0x250
->>>>>>>>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
->>>>>>>>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
->>>>>>>>>  netlink_rcv_skb+0x4c/0x120
->>>>>>>>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
->>>>>>>>>  netlink_unicast+0x1b3/0x270
->>>>>>>>>  netlink_sendmsg+0x350/0x470
->>>>>>>>>  sock_sendmsg+0x4f/0x60
->>>>>>>>>
->>>>>>>>> Policy C and policy A has the same mark.v and mark.m, so policy A is
->>>>>>>>> matched in first round lookup while updating C. However policy C and
->>>>>>>>> policy B has same mark and priority, which also leads to matched. So
->>>>>>>>> the WARN_ON is triggered.
->>>>>>>>>
->>>>>>>>> xfrm policy lookup should only be matched when the found policy has the
->>>>>>>>> same lookup keys (mark.v & mark.m) no matter priority.
->>>>>>>>>
->>>>>>>>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
->>>>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>>>>> ---
->>>>>>>>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
->>>>>>>>>  1 file changed, 5 insertions(+), 11 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
->>>>>>>>> index 297b2fd..67d0469 100644
->>>>>>>>> --- a/net/xfrm/xfrm_policy.c
->>>>>>>>> +++ b/net/xfrm/xfrm_policy.c
->>>>>>>>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
->>>>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>>>>>>>                                 struct xfrm_policy *pol)
->>>>>>>>>  {
->>>>>>>>> -    u32 mark = policy->mark.v & policy->mark.m;
->>>>>>>>> -
->>>>>>>>> -    if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>>>>>>>> -            return true;
->>>>>>>>> -
->>>>>>>>> -    if ((mark & pol->mark.m) == pol->mark.v &&
->>>>>>>>> -        policy->priority == pol->priority)
->>>>>>>>
->>>>>>>> If you remove the priority check, you can't insert policies with matching
->>>>>>>> mark and different priorities anymore. This brings us back the old bug.
->>>>>>>
->>>>>>> Yes, this is true.
->>>>>>>
->>>>>>>>
->>>>>>>> I plan to apply the patch from Xin Long, this seems to be the right way
->>>>>>>> to address this problem.
->>>>>>>
->>>>>>> That still brings an issue, update like this:
->>>>>>>
->>>>>>> policy A (mark.v = 1, mark.m = 0, priority = 1)
->>>>>>> policy B (mark.v = 1, mark.m = 0, priority = 1)
->>>>>>>
->>>>>>> A and B will all in the list.
->>>>>> I think this is another issue even before:
->>>>>> 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and
->>>>>> different priorities")
->>>>>>
->>>>>>>
->>>>>>> So should do this:
->>>>>>>
->>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>>>>>                                    struct xfrm_policy *pol)
->>>>>>>  {
->>>>>>> -       u32 mark = policy->mark.v & policy->mark.m;
->>>>>>> -
->>>>>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>>>>>> -               return true;
->>>>>>> -
->>>>>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
->>>>>>> +       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
->>>>>>>             policy->priority == pol->priority)
->>>>>>>                 return true;
->>>>>> "mark.v & mark.m" looks weird to me, it should be:
->>>>>> ((something & mark.m) == mark.v)
->>>>>>
->>>>>> So why should we just do this here?:
->>>>>> (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m &&
->>>>>>  policy->priority == pol->priority)
->>>>>
->>>>>
->>>>> This leads to this issue:
->>>>>
->>>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000005
->>>>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000003
->>>>>
->>>>> the two policies will be in list, which should not be allowed.
->>>> I think these are two different policies.
->>>> For instance:
->>>> mark = 0x1234567b will match the 1st one only.
->>>> mark = 0x1234567d will match the 2st one only
->>>>
->>>> So these should have been allowed, no?
->>>
->>> If mark = 0x12345671, it may match different policy depends on the order of inserting,
->>>
->>> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
->>> tmpl src 192.168.2.10 dst 192.168.1.20 proto esp mode tunnel mark 0x00000001 mask 0x00000005
->>>
->>> ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
->>> tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode beet mark 0x00000001 mask 0x00000003
->>>
->>> In fact, your case should use different priority to match.
->> Sorry, but it does match your above policies now, like in xfrm_policy_match(),
->> when fl->flowi_mark == 0x1234567b:
->>
->> (fl->flowi_mark & pol->mark.m) != pol->mark.v
->> 0x1234567b & 0x00000005 == 0x00000001
->>
->> and when fl->flowi_mark ==  0x1234567d:
->> 0x1234567d & 0x00000003 ==  0x00000001
->>
->> am I missing something?
-> 
-> when fl->flowi_mark == 0x12345671
-> 
-> 0x12345671 & 0x00000005 == 0x00000001
-> 0x12345671 & 0x00000003 == 0x00000001
-> 
-> This will match different policy depends on the order of policy inserting, it is not expected.
-> 
+Add devicetree YAML binding for Qualcomm Inter-Processor Communication
+Controller (IPCC) block.
 
-Steffen, any futher comment ?
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ .../bindings/soc/qcom/qcom,ipcc.yaml          | 85 +++++++++++++++++++
+ include/dt-bindings/soc/qcom,ipcc.h           | 38 +++++++++
+ 2 files changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
+ create mode 100644 include/dt-bindings/soc/qcom,ipcc.h
 
->>
->>
->>>
->>>>
->>>> I'm actually confused now.
->>>> does the mask work against its own value, or the other value?
->>>> as 'A == (mark.v&mark.m)' and '(A & mark.m) == mark.v' are different things.
->>>>
->>>> This can date back to Jamal's xfrm by MARK:
->>>>
->>>> https://lwn.net/Articles/375829/
->>>>
->>>> where it does 'm->v & m->m' in xfrm_mark_get() and
->>>> 'policy->mark.v & policy->mark.m' in xfrm_policy_insert() while
->>>> it does '(A & pol->mark.m) == pol->mark.v' in other places.
->>>>
->>>> Now I'm thinking 'm->v & m->m' is meaningless, by which if we get
->>>> a value != m->v, it means this mark can never be matched by any.
->>>>
->>>>   policy A (mark.v = 1, mark.m = 0, priority = 1)
->>>>   policy B (mark.v = 1, mark.m = 0, priority = 1)
->>>>
->>>> So probably we should avoid this case by check m->v == (m->v & m->m)
->>>> when adding a new policy.
->>>>
->>>> wdyt?
->>>>
->>>
->>
->> .
->>
-> 
-> 
-> .
-> 
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
+new file mode 100644
+index 000000000000..48b281181401
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/qcom/qcom,ipcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. Inter-Processor Communication Controller
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++description:
++  The Inter-Processor Communication Controller (IPCC) is a centralized hardware
++  to route the interrupts across various subsystems. It involves a three-level
++  addressing scheme called protocol, client and signal. For example, consider an
++  entity on the Application Processor Subsystem (APSS) that wants to listen to
++  Modem's interrupts via Shared Memory Point to Point (SMP2P) interface. In such
++  a case, the client would be Modem (client-id is 2) and the signal would be
++  SMP2P (signal-id is 2). The SMP2P itself falls under the Multiprocessor (MPROC)
++  protocol (protocol-id is 0). Refer include/dt-bindings/soc/qcom/qcom,ipcc.h
++  for the list of such IDs.
++
++  One of the duties of this interrupt controller driver is to forward the
++  interrupts to the correct entities on the APSS. The children inheriting the
++  interrupt-controller would be mentioning the client-id and signal-id it's
++  interested in.
++
++  On the other hand, sending an interrupt to a subsystem is done through the
++  mailbox interface, which again requires client-id and signal-id.
++
++properties:
++  compatible:
++    const: "qcom,ipcc"
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 3
++    description:
++      The first cell is the client-id, the second cell is the signal-id and the
++      third cell is the interrupt type.
++
++  "#mbox-cells":
++    const: 2
++    description:
++      The first cell is the client-id, and the second cell is the signal-id.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#mbox-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        #include <dt-bindings/soc/qcom,ipcc.h>
++
++        ipcc_mproc: qcom,ipcc@408000 {
++                compatible = "qcom,ipcc";
++                reg = <0x408000 0x1000>;
++                interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
++                interrupt-controller;
++                #interrupt-cells = <3>;
++                #mbox-cells = <2>;
++        };
++
++        smp2p-modem {
++                compatible = "qcom,smp2p";
++                interrupts-extended = <&ipcc_mproc IPCC_CLIENT_MPSS
++                                IPCC_MPROC_SIGNAL_SMP2P IRQ_TYPE_EDGE_RISING>;
++                mboxes = <&ipcc_mproc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_SMP2P>;
++
++                /* Other SMP2P fields */
++        };
+diff --git a/include/dt-bindings/soc/qcom,ipcc.h b/include/dt-bindings/soc/qcom,ipcc.h
+new file mode 100644
+index 000000000000..2926cdb4cb48
+--- /dev/null
++++ b/include/dt-bindings/soc/qcom,ipcc.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_QCOM_IPCC_H
++#define __DT_BINDINGS_QCOM_IPCC_H
++
++/* Signal IDs for MPROC protocol */
++#define IPCC_MPROC_SIGNAL_GLINK_QMP	0
++#define IPCC_MPROC_SIGNAL_SMP2P		2
++#define IPCC_MPROC_SIGNAL_PING		3
++#define IPCC_MPROC_SIGNAL_MAX		4 /* Used by driver only */
++
++#define IPCC_COMPUTE_L0_SIGNAL_MAX	32 /* Used by driver only */
++#define IPCC_COMPUTE_L1_SIGNAL_MAX	32 /* Used by driver only */
++
++/* Client IDs */
++#define IPCC_CLIENT_AOP			0
++#define IPCC_CLIENT_TZ			1
++#define IPCC_CLIENT_MPSS		2
++#define IPCC_CLIENT_LPASS		3
++#define IPCC_CLIENT_SLPI		4
++#define IPCC_CLIENT_SDC			5
++#define IPCC_CLIENT_CDSP		6
++#define IPCC_CLIENT_NPU			7
++#define IPCC_CLIENT_APSS		8
++#define IPCC_CLIENT_GPU			9
++#define IPCC_CLIENT_CVP			10
++#define IPCC_CLIENT_CAM			11
++#define IPCC_CLIENT_VPU			12
++#define IPCC_CLIENT_PCIE0		13
++#define IPCC_CLIENT_PCIE1		14
++#define IPCC_CLIENT_PCIE2		15
++#define IPCC_CLIENT_SPSS		16
++#define IPCC_CLIENT_MAX			17 /* Used by driver only */
++
++#endif
+-- 
+2.17.1
 
