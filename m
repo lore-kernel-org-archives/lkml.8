@@ -2,106 +2,111 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80493C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA864C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4A3205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDGrzE+f"
+	by mail.kernel.org (Postfix) with ESMTP id A73922074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588285435;
+	bh=Y2GCihUwr8R9/vV+JWxLfwoPSrdRHj7Qt32gPNYZNKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FJeZCaCklOTjziLiPChn/llfe1VX7zIQeuedlOFaWY2ZEu24KTVPdbpk+W8Fh+ee3
+	 9WWWGi6UxEGtI2yYRB31j59AVLAOv3Yq7cgqDiv6/PYfc5lupPGQynBJ2HqeB5fV94
+	 53ujmOY9cIAgS9PcbpppTBdbiPpA0gf4rAYnAgSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgD3WWk (ORCPT
+        id S1727101AbgD3WXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgD3WWk (ORCPT
+        Thu, 30 Apr 2020 18:23:54 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:36973 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgD3WXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:22:40 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9B1C035494;
-        Thu, 30 Apr 2020 15:22:40 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id q8so6047820eja.2;
-        Thu, 30 Apr 2020 15:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lvMPT6f6AC+jTWMexzBGTgQfnPn2sns2A3ZAPET4Rk8=;
-        b=gDGrzE+f56lxrYhorlloXvrhRNyhkGHdlX/F0I02YuvpvDDNDla0KCtwFzw2kvJqqu
-         0ieN5LpG9PRRyIU3+MUHISH7L/x+Y7MLJODAiDjdcfh1H2sHERqReCw0gO3oL493HeeI
-         SRqp2ersLwGciOj6u6CU+Fj3A4KV2ox/+zgzFcXUJPsBeStuLzd3NSTb2eHz9AjL+fsw
-         EPP6BYTb/pHU1TOyj4tbfcxC6KFhqIBurWOPHrelKexkgwqS/gqOsY61owwQRYNtaKWY
-         KLu9IBQCyTIiTwKwZfDXM7OamErwhQ47oWapXF1ENpY/Ngza0aM2mbJV8PfjJZjlQVcw
-         vtsw==
+        Thu, 30 Apr 2020 18:23:54 -0400
+Received: by mail-ua1-f67.google.com with SMTP id s5so3157081uad.4;
+        Thu, 30 Apr 2020 15:23:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lvMPT6f6AC+jTWMexzBGTgQfnPn2sns2A3ZAPET4Rk8=;
-        b=XWMKEEFMEMlkyBp/0jOVMePjNU+XFC2KjopShuT1W9j/KVvWzSay8onrnJclfqornZ
-         sz6Kbw7sb10aaTCaDzKwXBqD15hbYD2K5Pmdni+BgVBphoB/cX/I0yt/VDozUaciXau8
-         VHdOUpRQm1C+LTs8QhI/x9bAD0G1mLbCk6LTVmhiFm4CiaNqbTQvNLAJN/GxXaWnGgB7
-         PLK/y3UjDZQep/NbNZ+bqFeIHDD1FfxJpMNfTj8PEhDU2ehV9iFzmTA9Va1cjkMjT0uE
-         HmvCiaIdzxhcTsp+J4jrfR/ns0QXBLbl1NvmbHOgqqwl7jInnLqy/vadsQgKel1F1xSI
-         unxw==
-X-Gm-Message-State: AGi0PuYT4nHZfAj04gq8kP/BusV08GNVwwFJsQLh2VybXx/R3WLAXutj
-        fXkGLZv5sXVAZKO93JgEzbc=
-X-Google-Smtp-Source: APiQypLKsen+rCTMgTgVt6GGInCrJMGT5P71Rr98AZwQs0GMtid8gwZ2c9iPcOea3Brgf3zdQzctLg==
-X-Received: by 2002:a17:906:4c46:: with SMTP id d6mr587849ejw.257.1588285358634;
-        Thu, 30 Apr 2020 15:22:38 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain ([79.37.253.240])
-        by smtp.googlemail.com with ESMTPSA id w4sm56863eds.92.2020.04.30.15.22.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6zNCoweAOaTHQK115+b2oJjIZJeyrUxI9RbZEeQ0t38=;
+        b=Nl9jKJPnqu8bxXGmd/fg7ItjhviUtVDYhlZBOiuEsSXpNlJt2U8bAA92Yl4YMmlAmA
+         XBJ28GcRSlFyciFclmxePOarfkKzEkSazAS7xnT5XFfEoUmmplbQzMctSQifexwu2X2w
+         aaJCB2k0OQR4q9vkkmFOth8xvsCRQYRsS4hq14QGWz6Tl1iLxqIm3Cy1GKcHOGY7hBmK
+         EsoaWZurlFMxSq6Qf/lPDrowpWBQteAyGM0VUepZYMz0qgh+gG66NpNuHLmGKUGDF2Vv
+         P/hetxAhY+qHtmkpARj9XHGFVo/xmhNjDqhYFbrmgkB+/ybrePLccwlS0okN4WBN/Qdb
+         lk0A==
+X-Gm-Message-State: AGi0Pubpx49YT+bOOF0hzTwdfChPUaq1O/tj9dy1TwakKp9IlnDGHatE
+        ctQwURLKgfsNuOB1g1jOXVfFOmuY
+X-Google-Smtp-Source: APiQypLNvQTFk79922E/NOe1BWAd7Mvdk4sJ5qDzLZOce97xmW+K33M2X6OjUhReBqgbsNp/EM146w==
+X-Received: by 2002:ab0:2095:: with SMTP id r21mr860426uak.92.1588285432586;
+        Thu, 30 Apr 2020 15:23:52 -0700 (PDT)
+Received: from google.com (69.104.231.35.bc.googleusercontent.com. [35.231.104.69])
+        by smtp.gmail.com with ESMTPSA id s74sm308968vkb.48.2020.04.30.15.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 15:22:37 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sricharan R <sricharan@codeaurora.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: qcom: fix wrong compatible binding
-Date:   Fri,  1 May 2020 00:22:25 +0200
-Message-Id: <20200430222225.3941-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 30 Apr 2020 15:23:48 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 22:23:47 +0000
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     fdmanana@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, dennis@kernel.org, tj@kernel.org,
+        cl@linux.com, linux-btrfs@vger.kernel.org,
+        Filipe Manana <fdmanana@suse.com>
+Subject: Re: [PATCH] percpu: make pcpu_alloc() aware of current gfp context
+Message-ID: <20200430222347.GA164259@google.com>
+References: <20200430164356.15543-1-fdmanana@kernel.org>
+ <20200430144018.c855f031b321d68e5c89b30c@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430144018.c855f031b321d68e5c89b30c@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Binding in Documentation is still "operating-points-v2-kryo-cpu".
-Restore the old binding to fix the compatibility problem.
+On Thu, Apr 30, 2020 at 02:40:18PM -0700, Andrew Morton wrote:
+> On Thu, 30 Apr 2020 17:43:56 +0100 fdmanana@kernel.org wrote:
+> 
+> > From: Filipe Manana <fdmanana@suse.com>
+> > 
+> > Since 5.7-rc1, on btrfs we have a percpu counter initialization for which
+> > we always pass a GFP_KERNEL gfp_t argument (this happens since commit
+> > 2992df73268f78 ("btrfs: Implement DREW lock")).  That is safe in some
+> > contextes but not on others where allowing fs reclaim could lead to a
+> > deadlock because we are either holding some btrfs lock needed for a
+> > transaction commit or holding a btrfs transaction handle open.  Because
+> > of that we surround the call to the function that initializes the percpu
+> > counter with a NOFS context using memalloc_nofs_save() (this is done at
+> > btrfs_init_fs_root()).
+> > 
+> > However it turns out that this is not enough to prevent a possible
+> > deadlock because percpu_alloc() determines if it is in an atomic context
+> > by looking exclusively at the gfp flags passed to it (GFP_KERNEL in this
+> > case) and it is not aware that a NOFS context is set.  Because it thinks
+> > it is in a non atomic context it locks the pcpu_alloc_mutex, which can
+> > result in a btrfs deadlock when pcpu_balance_workfn() is running, has
+> > acquired that mutex and is waiting for reclaim, while the btrfs task that
+> > called percpu_counter_init() (and therefore percpu_alloc()) is holding
+> > either the btrfs commit_root semaphore or a transaction handle (done at
+> > fs/btrfs/backref.c:iterate_extent_inodes()), which prevents reclaim from
+> > finishing as an attempt to commit the current btrfs transaction will
+> > deadlock.
+> > 
+> 
+> Patch looks good and seems sensible, thanks.
+> 
 
-Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based socs")
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/cpufreq/qcom-cpufreq-nvmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Dennis Zhou <dennis@kernel.org>
 
-diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-index a1b8238872a2..d06b37822c3d 100644
---- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
-+++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-@@ -277,7 +277,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 	if (!np)
- 		return -ENOENT;
- 
--	ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
-+	ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
- 	if (!ret) {
- 		of_node_put(np);
- 		return -ENOENT;
--- 
-2.25.1
+> But why did btrfs use memalloc_nofs_save()/restore() rather than
+> s/GFP_KERNEL/GFP_NOFS/?
 
+I would also like to know.
+
+Thanks,
+Dennis
