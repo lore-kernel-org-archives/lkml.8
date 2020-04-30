@@ -2,160 +2,105 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EFFC83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00811C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5D020733
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:51:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcSieJrB"
+	by mail.kernel.org (Postfix) with ESMTP id CFBE72073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgD3CvJ (ORCPT
+        id S1726396AbgD3DAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:51:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726309AbgD3CvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:51:09 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB5DC035494;
-        Wed, 29 Apr 2020 19:51:08 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l78so4330326qke.7;
-        Wed, 29 Apr 2020 19:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gcb22CoM1BKj6UuzEDSUucJ6OH1JzdhT0xclshPmx0Q=;
-        b=WcSieJrBHge5UFApclx0pHGgVRD8ofAyr5C3TErHchgTZvl6zKcYvzMQEFBYwWO7tf
-         Z1poxpWIgm2vxZhZUzIUdHIQ62yg+n8wdrzUWn3AOv0UyEYQPzudoZIUiDUUSuikTKOC
-         sWP9naXE1vams9sDCwW4imVLKgPjT/76a6zCpPnS/TqF8s53vuvMnWhOwH1QnhYBbJmo
-         vZHoJ5HjpHvTeTsBRWpAVyKfKlU0qkdyR2wnEgKFzNoMlOrRiYnrY6zC8W34op5TgQZi
-         nrFRWfm9UUDXhWzCS3qd4wFG0aJ5d7FNgQFym92SnhthDCSX0YdWbnb3zu7fVAK2MOeq
-         KV1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gcb22CoM1BKj6UuzEDSUucJ6OH1JzdhT0xclshPmx0Q=;
-        b=SN/tRXNJVQytjiLuKJPLzFVxnrckB0EW6x8jpp2Bi/70nPCT9Pa9+FrSKEOM8OIqas
-         EEoSr3HDQVxiux8U5mqdMt2PLRWVOSGXxy8f6/LUWr+O+WKFScbldKWNT2gE99WeqxGp
-         hnHgMJnWecFCVhcMgXAyyXS9psNLAPMGfSPWsubzcqvYBeEDHh24XU1mqq0A2vfrjG3e
-         yq9ygR1sz6WT5CSgdykpdZBsSAgqYd5pGSpsTMhRVei4Qnk4jTS3UdQd+g1LNxYrszMg
-         7FklkvqN97/ddTB1hwJl6YEf+wZhbcK7NDK+1UFHpozAbHT0itRFxXaUyqXt8RvCruAg
-         IL8w==
-X-Gm-Message-State: AGi0PuYn8FrVZEnpgZ++lMUMmcqmngEKWhHruHKgF3EjlDf4i6majkcY
-        3VU2f9szgqOjjbLXx1MR1zp0yhc4PCXyTc/BrbM=
-X-Google-Smtp-Source: APiQypLWXPG9CeboheBCgGYAP4+yqKwc/KL3ZgrfZdgHy87JhcdGS9gN5OXL5bexOGYvqeV3VezNpi5MYjvElXb2rlI=
-X-Received: by 2002:a37:414a:: with SMTP id o71mr1495469qka.141.1588215068093;
- Wed, 29 Apr 2020 19:51:08 -0700 (PDT)
+        Wed, 29 Apr 2020 23:00:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:48020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgD3DAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 23:00:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8F5B1063;
+        Wed, 29 Apr 2020 20:00:15 -0700 (PDT)
+Received: from [10.163.71.104] (unknown [10.163.71.104])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56ACE3F68F;
+        Wed, 29 Apr 2020 20:00:13 -0700 (PDT)
+Subject: Re: [PATCH V2 00/16] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1,
+ ID_MMFR5 and other changes
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        mark.rutland@arm.com, maz@kernel.org, suzuki.poulose@arm.com,
+        James Morse <james.morse@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
+ <6749304e-8a4d-f4b9-eb40-91f0dd13166e@arm.com>
+ <20200429212614.GD8604@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <da15c0f0-f8ec-c2bc-bd5b-907a75119dc1@arm.com>
+Date:   Thu, 30 Apr 2020 08:29:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
- <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org> <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
-In-Reply-To: <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Thu, 30 Apr 2020 10:50:57 +0800
-Message-ID: <CAAM7YA=OU2jJ9F_p1fAknaxZCDWMY7w9yiRE0z0uqxDNYPG5Mg@mail.gmail.com>
-Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
-To:     Wu Bo <wubo40@huawei.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        liuzhiqiang26@huawei.com, linfeilong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200429212614.GD8604@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 8:49 AM Wu Bo <wubo40@huawei.com> wrote:
->
-> On 2020/4/28 22:48, Jeff Layton wrote:
-> > On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
-> >> if the ceph_mdsc_open_export_target_session() return fails,
-> >> should add a lock to avoid twice unlocking.
-> >> Because the lock will be released at the retry or out_unlock tag.
-> >>
-> >
-> > The problem looks real, but...
-> >
-> >> --
-> >> v1 -> v2:
-> >> add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag.
-> >>
-> >> Signed-off-by: Wu Bo <wubo40@huawei.com>
-> >> ---
-> >>   fs/ceph/caps.c | 27 +++++++++++++++------------
-> >>   1 file changed, 15 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> >> index 185db76..414c0e2 100644
-> >> --- a/fs/ceph/caps.c
-> >> +++ b/fs/ceph/caps.c
-> >> @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
-> >>
-> >>      /* open target session */
-> >>      tsession = ceph_mdsc_open_export_target_session(mdsc, target);
-> >> -    if (!IS_ERR(tsession)) {
-> >> -            if (mds > target) {
-> >> -                    mutex_lock(&session->s_mutex);
-> >> -                    mutex_lock_nested(&tsession->s_mutex,
-> >> -                                      SINGLE_DEPTH_NESTING);
-> >> -            } else {
-> >> -                    mutex_lock(&tsession->s_mutex);
-> >> -                    mutex_lock_nested(&session->s_mutex,
-> >> -                                      SINGLE_DEPTH_NESTING);
-> >> -            }
-> >> -            new_cap = ceph_get_cap(mdsc, NULL);
-> >> -    } else {
-> >> +    if (IS_ERR(tsession)) {
-> >>              WARN_ON(1);
-> >>              tsession = NULL;
-> >>              target = -1;
-> >> +            mutex_lock(&session->s_mutex);
-> >> +            spin_lock(&ci->i_ceph_lock);
-> >> +            goto out_unlock;
-> >
-> > Why did you make this case goto out_unlock instead of retrying as it did
-> > before?
-> >
->
-> If the problem occurs, target = -1, and goto retry lable, you need to
-> call __get_cap_for_mds() or even call __ceph_remove_cap(), and then jump
-> to out_unlock lable. All I think is unnecessary, goto out_unlock instead
-> of retrying directly.
->
-
-__ceph_remove_cap() must be called even if opening target session
-failed. I think adding a mutex_lock(&session->s_mutex) to the
-IS_ERR(tsession) block should be enough.
 
 
-> Thanks.
-> Wu Bo
->
-> >> +    }
-> >> +
-> >> +    if (mds > target) {
-> >> +            mutex_lock(&session->s_mutex);
-> >> +            mutex_lock_nested(&tsession->s_mutex,
-> >> +                                    SINGLE_DEPTH_NESTING);
-> >> +    } else {
-> >> +            mutex_lock(&tsession->s_mutex);
-> >> +            mutex_lock_nested(&session->s_mutex,
-> >> +                                    SINGLE_DEPTH_NESTING);
-> >>      }
-> >> +    new_cap = ceph_get_cap(mdsc, NULL);
-> >>      goto retry;
-> >>
-> >>   out_unlock:
-> >
->
->
+On 04/30/2020 02:56 AM, Will Deacon wrote:
+> Hi Anshuman,
+> 
+> On Wed, Apr 29, 2020 at 03:07:15PM +0530, Anshuman Khandual wrote:
+>> On 04/14/2020 03:18 PM, Anshuman Khandual wrote:
+>>> This series is primarily motivated from an adhoc list from Mark Rutland
+>>> during our previous ID_ISAR6 discussion [1]. The current proposal also
+>>> accommodates some more suggestions from Will and Suzuki.
+>>>
+>>> This series adds missing 32 bit system registers (ID_PFR2, ID_DFR1 and
+>>> ID_MMFR5), adds missing features bits on all existing system registers
+>>> (32 and 64 bit) and some other miscellaneous changes. While here it also
+>>> includes a patch which does macro replacement for various open bits shift
+>>> encodings for various CPU ID registers. There is a slight re-order of the
+>>> patches here as compared to the previous version (V1).
+>>>
+>>> This series is based on v5.7-rc1. All feature bits enabled here can be
+>>> referred in ARM DDI 0487F.a specification. Though I have tried to select
+>>> appropriate values for each new feature being added here, there might be
+>>> some inconsistencies (or mistakes). In which case, please do let me know
+>>> if anything needs to change. Thank you.
+>>>
+>>> [1] https://patchwork.kernel.org/patch/11287805/
+>>>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will@kernel.org>
+>>> Cc: Mark Rutland <mark.rutland@arm.com> 
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> Cc: James Morse <james.morse@arm.com>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Cc: kvmarm@lists.cs.columbia.edu
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>>
+>>> Changes in V2:
+>>>
+>>> - Added Suggested-by tag from Mark Rutland for all changes he had proposed
+>>> - Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
+>>> - Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
+>>> - Added ID_DFR1 and ID_MMFR5 system register definitions per Will
+>>> - Added remaining features bits for relevant 64 bit system registers per Will
+>>> - Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
+>>> - Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
+>>> - Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
+>>> - Changed some commit messages
+>>
+>> Just a gentle ping. I am wondering if you had a chance to glance
+>> through this updated series.
+> 
+> Please can you resend based on for-next/cpufeature?
+
+Sure, will do.
