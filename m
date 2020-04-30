@@ -5,96 +5,93 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAC3C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E7AC83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8911120787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549BA20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TNXZp5bl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uVdvH7xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgD3CSQ (ORCPT
+        id S1726819AbgD3CSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:18:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43730 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgD3CSQ (ORCPT
+        Wed, 29 Apr 2020 22:18:24 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39240 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbgD3CSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:18:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U2HnNR095384;
-        Thu, 30 Apr 2020 02:18:09 GMT
+        Wed, 29 Apr 2020 22:18:22 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U2CtXT122330;
+        Thu, 30 Apr 2020 02:18:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=1EpdnCTaGeK6kaN+YXuEy0NQfId+N/eZu0x/n1++L24=;
- b=TNXZp5blPFYqKb9u05Adt4NZDOoDfLcy+c2AYfdwzoTuZU2EAbYoywE22AFXEPrW8zVz
- LIx79oeY+Yjq+SLv2QIaxRCBeQtL7hjC5WreRBeB7pyOinuVVqZHEEVdoSPu0wTxzOV/
- /h7pBQEsG+BH3bG9YTmguNJa10BMOWyaEI1gQVaYObnMPQLQi1bWAZG9nkFcsjpMwLDT
- 3I+96bZXMS1F/9JScURLkzQnQi46mnKZ/38znzJINYYD4SNjMm0ja9VHNpdWVrI3Zgm6
- by5EX9mafkWxFeb+We75pKKThUaKoYyJGDABIZh0bfRrLu+PUiYWPqH2MQga6gFoFpJs +g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30p01nyf2d-1
+ bh=fPwXYJHHR+W1NjWv4Qp1lUFGK+tT0/YvyWBS49A3w8A=;
+ b=uVdvH7xc8nB8GW0v2enQ3JuDJtigWeUCf/UjIS+k91HHUYsUx6ib/bNO3ynKXHa99ll2
+ comg/inARD5QvgyWcYAcCW6sLP0+t5c1chcOqQ2ODTpnWVRsYXr4RndVgWmMZSJMa9OA
+ GpOng7ISeYTcaGbU7cJ5EDSMCIzTgl3Vw7qnN5uhDp10Ws3xrKyrzvBc42zPeRCuHUPs
+ WuGftXL+GJiqt5biCsa0p42DmW5PMX5aUUKtmLv6UjsUvuhmnd6BLlz9r+mOBZPPFH4x
+ DXHsNytxN+R3kT2UReSsTzFUk1wxy4NK9hvNd4FuIXN2chaQku04jiWONKoXx/htM0Jp Vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30nucg8wnf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 02:18:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U2I8vL114392;
-        Thu, 30 Apr 2020 02:18:09 GMT
+        Thu, 30 Apr 2020 02:18:11 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U2Gl4X141087;
+        Thu, 30 Apr 2020 02:18:10 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30mxrwcya0-1
+        by userp3030.oracle.com with ESMTP id 30mxpmf47e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 02:18:08 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03U2I5be008456;
-        Thu, 30 Apr 2020 02:18:05 GMT
+        Thu, 30 Apr 2020 02:18:10 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03U2I99r008462;
+        Thu, 30 Apr 2020 02:18:09 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 Apr 2020 19:18:05 -0700
+        with ESMTP ; Wed, 29 Apr 2020 19:18:09 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Arun Easi <aeasi@marvell.com>, Nilesh Javali <njavali@marvell.com>,
-        linux-scsi@vger.kernel.org,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Colin King <colin.king@canonical.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: qla2xxx: make 1 bit bit-fields unsigned int
-Date:   Wed, 29 Apr 2020 22:18:01 -0400
-Message-Id: <158821297686.28621.17012076745454768383.b4-ty@oracle.com>
+To:     aacraid@microsemi.com, jejb@linux.ibm.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: dpt_i2o: Remove always false 'chan < 0' statement
+Date:   Wed, 29 Apr 2020 22:18:04 -0400
+Message-Id: <158821297687.28621.4212963275967150101.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200428102013.1040598-1-colin.king@canonical.com>
-References: <20200428102013.1040598-1-colin.king@canonical.com>
+In-Reply-To: <1588162218-61757-1-git-send-email-wangxiongfeng2@huawei.com>
+References: <1588162218-61757-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- mlxlogscore=858 malwarescore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004300015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=788 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300015
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1015
- phishscore=0 mlxlogscore=913 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004300014
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ mlxlogscore=859 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 11:20:13 +0100, Colin King wrote:
+On Wed, 29 Apr 2020 20:10:18 +0800, Xiongfeng Wang wrote:
 
-> The bitfields mpi_fw_dump_reading and mpi_fw_dumped are currently signed
-> which is not recommended as the representation is an implementation defined
-> behaviour.  Fix this by making the bit-fields unsigned ints.
+> The channel index is represented by an unsigned variable 'u32 chan'. We
+> don't need to check whether it is less than zero. The following
+> statement is always false and let's remove it.
+> 	'chan < 0'
 
 Applied to 5.8/scsi-queue, thanks!
 
-[1/1] scsi: qla2xxx: make 1-bit bit-fields unsigned int
-      https://git.kernel.org/mkp/scsi/c/78b874b7cbf0
+[1/1] scsi: dpt_i2o: Remove always false 'chan < 0' statement
+      https://git.kernel.org/mkp/scsi/c/6f41f08c88c5
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
