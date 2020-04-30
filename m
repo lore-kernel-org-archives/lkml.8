@@ -2,149 +2,131 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36848C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBDCC83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BDA2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TRnJUs8S"
+	by mail.kernel.org (Postfix) with ESMTP id 9831720774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgD3Oib (ORCPT
+        id S1728162AbgD3Ois (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:38:31 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48125 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728040AbgD3Oib (ORCPT
+        Thu, 30 Apr 2020 10:38:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD3Ois (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:38:48 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UEa6KC117198;
+        Thu, 30 Apr 2020 10:38:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q7qk14mg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 10:38:32 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UEaI32118447;
         Thu, 30 Apr 2020 10:38:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588257509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ByKU/UvmG+5uVD3nwPmlWIqbXZ/e5s+ex3rfVMZS44E=;
-        b=TRnJUs8SRQxiNh7uZxh1UQ6QweqFyU94WmLpEfsULP/zetXOaa5Uryi3WnjFozKe4KY7Qc
-        roZm7fYNwK5ns8/k7TDBkZIzFAeah8H/z4zdLwZRxWPutna+mOtV1DGPqnEhYvE3i+vx2T
-        jz++vyuqgim3UqGo/EtoYMl/ra5Z5Bk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-aCIDm1xEOq-BFhOT_wXtLA-1; Thu, 30 Apr 2020 10:38:25 -0400
-X-MC-Unique: aCIDm1xEOq-BFhOT_wXtLA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37A9D1009613;
-        Thu, 30 Apr 2020 14:38:24 +0000 (UTC)
-Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 03BCD610AF;
-        Thu, 30 Apr 2020 14:38:22 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 10:38:21 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200430143821.GA10092@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad>
- <20200422172126.743908f5@thinkpad>
- <20200422194605.n77t2wtx5fomxpyd@treble>
- <20200423141834.234ed0bc@thinkpad>
- <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
- <20200423141228.sjvnxwdqlzoyqdwg@treble>
- <20200423181030.b5mircvgc7zmqacr@treble>
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q7qk14k1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 10:38:31 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UEZhnv012766;
+        Thu, 30 Apr 2020 14:38:29 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 30mcu52r72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 14:38:29 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UEcQwT60882962
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 14:38:27 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF50A52057;
+        Thu, 30 Apr 2020 14:38:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.14.241])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 28F3A52052;
+        Thu, 30 Apr 2020 14:38:26 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     borntraeger@de.ibm.com, david@redhat.com,
+        akpm@linux-foundation.org, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        jack@suse.cz, kirill@shutemov.name, dave.hansen@intel.com,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+Subject: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible pages
+Date:   Thu, 30 Apr 2020 16:38:25 +0200
+Message-Id: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423181030.b5mircvgc7zmqacr@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_09:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 suspectscore=1
+ mlxlogscore=978 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004300120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 01:10:30PM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 23, 2020 at 09:12:28AM -0500, Josh Poimboeuf wrote:
-> > > > this is strange. While I would have expected an exception similar to
-> > > > this, it really should have happened on the "sturg" instruction which
-> > > > does the DAT-off store in s390_kernel_write(), and certainly not with
-> > > > an ID of 0004 (protection). However, in your case, it happens on a
-> > > > normal store instruction, with 0004 indicating a protection exception.
-> > > > 
-> > > > This is more like what I would expect e.g. in the case where you do
-> > > > _not_ use the s390_kernel_write() function for RO module text patching,
-> > > > but rather normal memory access. So I am pretty sure that this is not
-> > > > related to the s390_kernel_write(), but some other issue, maybe some
-> > > > place left where you still use normal memory access?
-> > > 
-> > > The call trace above also suggests that it is not a late relocation, no? 
-> > > The path is from KLP module init function through klp_enable_patch. It should 
-> > > mean that the to-be-patched object is loaded (it must be a module thanks 
-> > > to a check klp_init_object_loaded(), vmlinux relocations were processed 
-> > > earlier in apply_relocations()).
-> > > 
-> > > However, the KLP module state here must be COMING, so s390_kernel_write() 
-> > > should be used. What are we missing?
-> > 
-> > I'm also scratching my head.  It _should_ be using s390_kernel_write()
-> > based on the module state, but I don't see that on the stack trace.
-> > 
-> > This trace (and Gerald's comment) seem to imply it's using
-> > __builtin_memcpy(), which might expected for UNFORMED state.
-> > 
-> > Weird...
-> 
-> Mystery solved:
-> 
->   $ CROSS_COMPILE=s390x-linux-gnu- scripts/faddr2line vmlinux apply_rela+0x16a/0x520
->   apply_rela+0x16a/0x520:
->   apply_rela at arch/s390/kernel/module.c:336
-> 
-> which corresponds to the following code in apply_rela():
-> 
-> 
-> 	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
-> 		if (info->plt_initialized == 0) {
-> 			unsigned int *ip;
-> 			ip = me->core_layout.base + me->arch.plt_offset +
-> 				info->plt_offset;
-> 			ip[0] = 0x0d10e310;	/* basr 1,0  */
-> 			ip[1] = 0x100a0004;	/* lg	1,10(1) */
-> 
-> 
-> Notice how it's writing directly to text... oops.
-> 
+Inaccessible pages are pages that should not be accessed by any device,
+and belong to a protected VM. If any such pages are passed to a
+device, there will be I/O errors, which will not always be recoverable,
+depending on the architecture and on the specific device.
 
-This is more of note for the future, but when/if we add livepatch
-support on arm64 we'll need to make the very same adjustment there as
-well.  See the following pattern:
+CPU accesses to inaccessible pages are less problematic, since they are
+always recoverable.
 
-arch/arm64/kernel/module.c:
+Page cache and direct I/O were fixed in a previous patch, in which a
+architecture hook is provided to make the page accessible by I/O
+devices.
 
-  reloc_insn_movw()
-  reloc_insn_imm()
-  reloc_insn_adrp()
+One possible remaining path to sneak a protected page directly to a
+device is sendfile and similar syscalls. Those syscalls take a page
+directly from the page cache and give them directly to the device with
+zero-copy. This bypasses both existing hooks in gup and in writeback.
 
-    *place = cpu_to_le32(insn);
+This patch fixes the issue by adding a call to arch_make_page_accessible
+in page_cache_pipe_buf_confirm, thus fixing the issue.
 
-maybe something like aarch64_insn_patch_text_nosync() could be used
-there, I dunno. (It looks like ftrace and jump_labels are using that
-interface.)
+Notice that we only need to make sure the source is accessible, since
+zero-copy only works in one direction, and CPU accesses to inaccessible
+pages are not a problem. Pagecache-to-pagecache is also not a problem
+since that is done by the CPU.
 
-This is outside the scope of the patchset, but I thought I'd mention it
-as I was curious to see how other arches were currently handling their
-relocation updates.
+The hook has no overhead for architectures that do not need to deal
+with inaccessible pages.
 
--- Joe
+Fixes: f28d43636d6f ("mm/gup/writeback: add callbacks for inaccessible pages")
+Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+---
+ fs/splice.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/fs/splice.c b/fs/splice.c
+index 4735defc46ee..f026e0ce9acd 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -106,6 +106,9 @@ static int page_cache_pipe_buf_confirm(struct pipe_inode_info *pipe,
+ 	struct page *page = buf->page;
+ 	int err;
+ 
++	if (arch_make_page_accessible(page))
++		return -EIO;
++
+ 	if (!PageUptodate(page)) {
+ 		lock_page(page);
+ 
+-- 
+2.25.4
 
