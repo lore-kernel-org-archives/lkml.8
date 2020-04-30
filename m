@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDBEC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BE3C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D51452070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A732070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mmww+RJV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fiRnfsbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgD3QcU (ORCPT
+        id S1726892AbgD3QcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:32:20 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56135 "EHLO
+        Thu, 30 Apr 2020 12:32:23 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56153 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgD3QcS (ORCPT
+        with ESMTP id S1726840AbgD3QcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:32:18 -0400
+        Thu, 30 Apr 2020 12:32:19 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200430163217euoutp01fe1904a0e5dc1de6a6afd8396179233a~Kpf-mLfyf2727927279euoutp01o
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 16:32:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200430163217euoutp01fe1904a0e5dc1de6a6afd8396179233a~Kpf-mLfyf2727927279euoutp01o
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200430163218euoutp01a99973ce088073c6bd46ea435de768c1~KpgBEMWW72458824588euoutp01U
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 16:32:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200430163218euoutp01a99973ce088073c6bd46ea435de768c1~KpgBEMWW72458824588euoutp01U
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588264337;
-        bh=k0wq6ZpDeeLk6QQH6CUaGaPwWrl1xqroWz3K7qcWkqQ=;
+        s=mail20170921; t=1588264338;
+        bh=7QE3VHZ7MPCtYt13bWDgB4+62v21P5g7HbzKzNmuRs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mmww+RJV37qDDgw29CeBIvEIJnOlE/ZDm9QB1pBIHej/18pcBg+5ZHDQqR6O04F0i
-         ggJfEWVurW+zyg5tto24TBR67vvCCbK85UcCT6SCmWb6JvgV2WdOJahmiVoCiO/ATZ
-         Vw50WVo7Q49FxH+4FXY6gPazUcsode3QzdwGSZpQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        b=fiRnfsbhvflbPEU3Y/0VHe1k11ThcpeuT1K7eAK0GAMqetMS5882tXLqC1cDnsFPs
+         aKIGVVxUu5idQ7pq9rQJPlsaz1gknUANVW7DjU+EL41DE7BffViOxSKedeFuYiDoL5
+         BCOnf0VzDgGE3iv3sYPqPxP/hbg970Kng4hVwOVA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200430163216eucas1p2f9d4d1904b2021701a358b81c68ab634~Kpf-RNYMx1928719287eucas1p2F;
-        Thu, 30 Apr 2020 16:32:16 +0000 (GMT)
+        20200430163218eucas1p27b766f65eec97aabce6a69a69fd47637~KpgAuUttp1131211312eucas1p2x;
+        Thu, 30 Apr 2020 16:32:18 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 4E.E8.61286.09DFAAE5; Thu, 30
-        Apr 2020 17:32:16 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 25.6A.60698.29DFAAE5; Thu, 30
+        Apr 2020 17:32:18 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200430163216eucas1p14e1529fdfbdd3663a5fdf3c9998e060b~Kpf_8hz6A3218332183eucas1p1i;
-        Thu, 30 Apr 2020 16:32:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200430163216eusmtrp154ab2438088e1fce38831cb8111b940f~Kpf_5aP0t2557325573eusmtrp1b;
-        Thu, 30 Apr 2020 16:32:16 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-a2-5eaafd90db74
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id BF.FE.08375.09DFAAE5; Thu, 30
-        Apr 2020 17:32:16 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        20200430163218eucas1p1e89bdacc1cb8f1819d72cd789e972648~KpgAc8rwl1989019890eucas1p16;
+        Thu, 30 Apr 2020 16:32:18 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200430163218eusmtrp20c91cf7ccc4c38135b833571ced7e676~KpgAcUP3F1116911169eusmtrp2k;
+        Thu, 30 Apr 2020 16:32:18 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-66-5eaafd923f45
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E1.BB.07950.19DFAAE5; Thu, 30
+        Apr 2020 17:32:17 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
         (KnoxPortal) with ESMTPA id
-        20200430163216eusmtip180f320c6ce70e7a7286911527d5a2c53~Kpf_t4NKT1208212082eusmtip1R;
-        Thu, 30 Apr 2020 16:32:16 +0000 (GMT)
+        20200430163217eusmtip28cd53c2abd3f287d82030a9d6a4357cb~KpgAP6wNa1765417654eusmtip2Y;
+        Thu, 30 Apr 2020 16:32:17 +0000 (GMT)
 From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -71,53 +71,53 @@ Cc:     Vivek Goyal <vgoyal@redhat.com>,
         James Morse <james.morse@arm.com>,
         Bhupesh Sharma <bhsharma@redhat.com>,
         =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH v2 1/2] arm64: kexec_file: print appropriate variable
-Date:   Thu, 30 Apr 2020 18:31:41 +0200
-Message-Id: <20200430163142.27282-2-l.stelmach@samsung.com>
+Subject: [PATCH v2 2/2] x86: kexec_file: print appropriate variable
+Date:   Thu, 30 Apr 2020 18:31:42 +0200
+Message-Id: <20200430163142.27282-3-l.stelmach@samsung.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200430163142.27282-1-l.stelmach@samsung.com>
 MIME-Version: 1.0
 Organization: Samsung R&D Institute Poland
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUYRTte5tPbexzMrzYIk36I6NFKnlgKxU8qCALCiKtqR62uMQ8l0xy
-        qYwyc8QxLTfGQXOYNG3GxMQmmyhNQx0jbcKw0gwtldRSs83XM+rfueeee+75Pi5LKntpL/Z4
-        RJSgiVCHqRgXqvrJZOvyjB+mkFUNRX5cQ2cNzRV9aqK50cqfDDd8Mw1x2Xc8uW5rKcE5bEbE
-        mXs6aO55bT7DlXTaCa69Xk9w3x9MUpzFfI3kOl5ZGa7/cyPFTVT20JswP56STvFlhWWIN5su
-        M3xXRx3DD7W0OPFvbBaKtxQn8sPWFwyfXmVC/Kh5Ed94YYze5brfZd1RIex4jKBZueGQy7GU
-        tiHyVKnitKPvHpWEsl1TkTMLeA1cKih3SkUurBIbETQP19NyMYZAO2idKUYRJNt10zL2z0jJ
-        FVeZL0XQVp7LyMUHBD1NU06SL4M3g7akkZawB3YQcF2/ScIkziTAqPOR8Fy8Dd48/PpHT2Ff
-        6NdOkdICBQ6E1soAOZ435CU3MxJ2xuug5JadlLACu8PTG72UhOdgPyg710nJ9t5w/m4eKeUB
-        XMBCSpadkENvhdbPguw5FwYaqpxkvACadWmULEkEXWaAPJqGoDp/gpI1gdDV8o2RNCReChW1
-        K2V6M9T3Ppn5Ejd4OeguJ3CDzOocUqYVcOmiUlb7wG1t3YyhF1wdMKIMpMr97y25/+XP/bdL
-        j0gT8hSixfBQQfSPEGJXiOpwMToidMWRyHAzmr695p8NIzXoS/thG8IsUs1WsGZTiJJWx4hx
-        4TYELKnyULwNnqYUR9VxZwRN5EFNdJgg2tB8llJ5KlYb+oOVOFQdJZwUhFOC5m+XYJ29ps9E
-        DLQ4JxkresPqDHFxCeke5fvKdhDjHx31J5ZttKyejAoZ2bJ74p0+LWFeZ8xFHZFkNeZ5eO+Z
-        v3jhkV9r/fueac/ef+Q5K+hxpD641o0urhpz31ZXGLz3vf3TEtW7AwexwxCURfnuXL89/rVh
-        rGmNISP+1vO2op6c2Dkfu82HAnxUlHhM7e9HakT1b+KP+SB3AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsVy+t/xu7oT/q6KM9j1T8Di+PUdrBYL35xi
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHee7brubsuiQPZkXDPii4NCOeMEqpDzcS6kv0Qmqzbiq+VLup
+        GZlmL5aaykZvajZLm0zJmmWmNmNFmpLiqi3LqFhhRq/OaopZzmvkt985z//8z//Aw5KK97Q/
+        m5S2X9CkqVOUjCfV9HC0N0T72xgbWtbmjTvszTSu+tRFY+f1CQZ/vVqE8Nkbfvi12UDgfkst
+        wiaHjcZPWioYXGPvI7D1np7A4+2jFG40nSGx7YWZwUPfOynsuu6gIzn+1/Fiiq+vrEe8yXiK
+        4QdsbQz/padHxr+xNFJ8Y3UO/9X8jOGLbxoR7zQt4DuPjdAbZ23zXLlLSEnKEDRLVu3wTNTn
+        NRB7P3AHvjUUolxU6V2APFjglkHv41KmAHmyCq4WwYWKYZlUjCDoqWynpcKJQPdSNyljp0YG
+        r4RKfQOCd7Z8JBWDCAyvtDK3L8NFQUlNJ+1mX66fgPP6SDeTnJaAWl2gm+dwa6CypJVxM8Ut
+        hhHnRcLNci4CHKPjjJRvIZQf6Z5iD24l1NT1kZLGBx5deEe5eTYXDPV5dkryXwhHb5WT7kDA
+        VbHgKr5NSqnXwlsdkjznwMeOmzKJA+DPnUuEJMkBnXa5NFqEoKnCRUmaCBjoGZs6nuSCoKFl
+        idSOgoEvXdOj3vD8s4+UwBu0Teeml8rh5AmFpA6EayVt04b+cPpjLSpFyrIZt5TNyF/2f5ce
+        kUbkJ6SLqQmCGJ4mZKpEdaqYnpag2rkn1YQmP1/3RMePZmQej7cgjkVKLzlrMsYqaHWGmJVq
+        QcCSSl/525jJlnyXOuugoNkTp0lPEUQLmsdSSj95+OWhGAWXoN4vJAvCXkHz75VgPfxzkSw/
+        bzB7fajjRlFB/P35hqw3E5kPymMzsxVal8rqc7dwbEX+1u2+iwKHkk/4dpH808Pl98e2BOSu
+        e7VbZTPoN8cZF3Vk80HhquKfm5bOHR62Wu32ZDxxeeP8z9HOtu3qQyFiQl39e+thUmPeFxE6
+        KzoAbWjeUO04sLrdK6xVJj5VUmKiOiyY1Ijqv8u2K0R4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsVy+t/xe7oT/66KM7i4yNLi+PUdrBYL35xi
         tfi84R+bxftlPYwW0zaKW9zft5zJ4uahFYwWmx5fY7W4vGsOm8XS6xeZLC4dWMBk8Wf/TxaL
         zZumMltcu7WPzeLlxxMsFj82PGZ1EPD43trH4rFm3hpGj02rOtk87lzbw+bx7tw5do8Hhzaz
         eGxeUu/xft9VNo++LasYPT5vkvM40fKFNYA7Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRS
-        z9DYPNbKyFRJ384mJTUnsyy1SN8uQS+j9cI75oLlvBU3n+1kaWCcxt3FyMEhIWAisbQbyOTi
-        EBJYyiix995vZoi4lMTKueldjJxAprDEn2tdbBA1Txklbj7tYwdJsAk4SvQvPcEKkhAReMwk
-        sfTTbjCHWWAak8ThaWuZQaqEBVwlHhz8BtbBIqAq8bIfYgOvgLXE+Q1mEBvkJWY3nmYDsTkF
-        bCSWrr4I1iokkCsxac80MJtXQFDi5MwnLCCtzALqEuvnCYGE+QW0JNY0XWcBsZmBxjRvnc08
-        gVFoFpKOWQgds5BULWBkXsUoklpanJueW2yoV5yYW1yal66XnJ+7iREY6duO/dy8g/HSxuBD
-        jAIcjEo8vBybVsUJsSaWFVfmHmKU4GBWEuF9GAsU4k1JrKxKLcqPLyrNSS0+xGgK9OVEZinR
-        5HxgEsoriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cC4cLvflpsZ
-        Zysyur9t6f7Ms/Z+iVg+95uwHs8tiieq+DQsy4uNBE5uNDrJFezI/e/4PKXYX05PZn88ERkZ
-        1XHONd3FLOnmUd9pK47drJ21OMLmhuiJk0u3Rm0tDdZ7VK70wXXZclWulBuZLstb+jYfqxAK
-        UmL2PzRv3cVs9dg5j7c+nWLIFH1CiaU4I9FQi7moOBEAruFe6woDAAA=
-X-CMS-MailID: 20200430163216eucas1p14e1529fdfbdd3663a5fdf3c9998e060b
+        z9DYPNbKyFRJ384mJTUnsyy1SN8uQS9jQdN6poIXAhUf1nczNjDO4+ti5OCQEDCReL7YoIuR
+        i0NIYCmjxP/731kh4lISK+emdzFyApnCEn+udbFB1DxllPi5eCYrSIJNwFGif+kJVpCEiMBj
+        Jomln3aDOcwC05gkDk9bywxSJSzgLDGvfzcbiM0ioCrx5fNcJhCbV8Ba4vHPP2wQK+QlZjee
+        BrM5BWwklq6+CNYrJJArMWnPNGaIekGJkzOfsIBcxyygLrF+nhBImF9AS2JN03UWEJsZaEzz
+        1tnMExiFZiHpmIXQMQtJ1QJG5lWMIqmlxbnpucVGesWJucWleel6yfm5mxiBsb7t2M8tOxi7
+        3gUfYhTgYFTi4eXYtCpOiDWxrLgy9xCjBAezkgjvw1igEG9KYmVValF+fFFpTmrxIUZToDcn
+        MkuJJucD01BeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGwn+1
+        roWWrWb9wSU5ZTxfQ76l3eq3+GgZPJuB58vOpfp3fd5de7JYnN392FrmT8z32k7WulS5KQlN
+        2/Oi7v9lrUatncdZalvERbTOT5Xb4mJ1+5kj37Pn96w/HvIwFbrpkD5B+pzIRjnz5KMip7On
+        Kkjt+LvEMTlL6rDo9tWuJVN+xc4LTv+jxFKckWioxVxUnAgABN726wsDAAA=
+X-CMS-MailID: 20200430163218eucas1p1e89bdacc1cb8f1819d72cd789e972648
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200430163216eucas1p14e1529fdfbdd3663a5fdf3c9998e060b
+X-RootMTR: 20200430163218eucas1p1e89bdacc1cb8f1819d72cd789e972648
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200430163216eucas1p14e1529fdfbdd3663a5fdf3c9998e060b
+X-CMS-RootMailID: 20200430163218eucas1p1e89bdacc1cb8f1819d72cd789e972648
 References: <20200430105034.17513-1-l.stelmach@samsung.com>
         <20200430163142.27282-1-l.stelmach@samsung.com>
-        <CGME20200430163216eucas1p14e1529fdfbdd3663a5fdf3c9998e060b@eucas1p1.samsung.com>
+        <CGME20200430163218eucas1p1e89bdacc1cb8f1819d72cd789e972648@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -126,47 +126,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The value of kbuf->memsz may be different than kbuf->bufsz after calling
 kexec_add_buffer(). Hence both values should be logged.
 
-Fixes: 52b2a8af74360 ("arm64: kexec_file: load initrd and device-tree")
-Fixes: 3751e728cef29 ("arm64: kexec_file: add crash dump support")
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>
+Fixes: ec2b9bfaac44e ("kexec_file: Change kexec_add_buffer to take kexec_buf as argument.")
+Fixes: 27f48d3e633be ("kexec-bzImage64: support for loading bzImage using 64bit entry")
+Fixes: dd5f726076cc7 ("kexec: support for kexec on panic using new system call")
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 ---
- arch/arm64/kernel/machine_kexec_file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/crash.c           | 2 +-
+ arch/x86/kernel/kexec-bzimage64.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index b40c3b0def92..5ebb21b859b4 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -284,7 +284,7 @@ int load_other_segments(struct kimage *image,
- 		image->arch.elf_headers_sz = headers_sz;
- 
- 		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			 image->arch.elf_headers_mem, headers_sz, headers_sz);
-+			 image->arch.elf_headers_mem, kbuf.bufsz, kbuf.memsz);
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index fd87b59452a3..d408e5b536fa 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -420,7 +420,7 @@ int crash_load_segments(struct kimage *image)
  	}
+ 	image->arch.elf_load_addr = kbuf.mem;
+ 	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-		 image->arch.elf_load_addr, kbuf.bufsz, kbuf.bufsz);
++		 image->arch.elf_load_addr, kbuf.bufsz, kbuf.memsz);
  
- 	/* load initrd */
-@@ -305,7 +305,7 @@ int load_other_segments(struct kimage *image,
+ 	return ret;
+ }
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index db6578d45157..420393c58a73 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -434,7 +434,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		goto out_free_params;
+ 	bootparam_load_addr = kbuf.mem;
+ 	pr_debug("Loaded boot_param, command line and misc at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-		 bootparam_load_addr, kbuf.bufsz, kbuf.bufsz);
++		 bootparam_load_addr, kbuf.bufsz, kbuf.memsz);
+ 
+ 	/* Load kernel */
+ 	kbuf.buffer = kernel + kern16_size;
+@@ -464,7 +464,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
  		initrd_load_addr = kbuf.mem;
  
  		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
 -				initrd_load_addr, initrd_len, initrd_len);
 +				initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+ 
+ 		setup_initrd(params, initrd_load_addr, initrd_len);
  	}
- 
- 	/* load dtb */
-@@ -332,7 +332,7 @@ int load_other_segments(struct kimage *image,
- 	image->arch.dtb_mem = kbuf.mem;
- 
- 	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			kbuf.mem, dtb_len, dtb_len);
-+			kbuf.mem, kbuf.bufsz, kbuf.memsz);
- 
- 	return 0;
- 
 -- 
 2.25.0
 
