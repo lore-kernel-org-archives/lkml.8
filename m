@@ -2,126 +2,97 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FABFC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3435C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED4A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13552137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnLEXZde"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ffzpgUFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgD3J1K (ORCPT
+        id S1726692AbgD3J1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:27:10 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38390 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726127AbgD3J1J (ORCPT
+        Thu, 30 Apr 2020 05:27:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbgD3J1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:27:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588238828;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+vie47UJ1oW/NhA/rX/zyO/BjzssU/nJjeCxNVmVx9Q=;
-        b=VnLEXZdecQgAWz0l3vW6p/9oMt/+ZHTYGeagvboLY0EA8Kw1CCKvDyxRPY4VaMRfe9bNGI
-        +mM+Mz1ggbTXQ3aozFmtA45y/twSOcoyW7CFaOhY1+zwvyyhg7UG3dTcrleS0zS0a/pRa9
-        M5k1CZTRQJJP8t4CrKpv0rI2LNOG9lA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-CohHsZLVNQui3WXMAdmJLw-1; Thu, 30 Apr 2020 05:27:07 -0400
-X-MC-Unique: CohHsZLVNQui3WXMAdmJLw-1
-Received: by mail-wr1-f69.google.com with SMTP id p2so3558445wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 02:27:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+vie47UJ1oW/NhA/rX/zyO/BjzssU/nJjeCxNVmVx9Q=;
-        b=V+z1ofzt/dLq9vIT2m+mdnYp+eBNuBRQlBqm+l6La9KepVz7f7dBGZ52EGeZbDKJcz
-         U7c8dXQxaI7I0N19MCR5Pg9XdZfp+qSTbI3UrRVAQAeyQZsXUhHV+OLpRhudKwbZKORV
-         5YpLoRoQIeRaPk/6DvVj5rdxvnmzZqx4mGwStQP1qhgQX/FYczHc4Wdq+O+SVZ//tXId
-         Bd2KcE884cURbVn8xAdLqPd05GBhnheMXjTkqE0Bxw/wUJnJViXehZNUk1qN9i0zdTyX
-         3NVwr3HGQ/dc7ZkSiTi4pMcrXdHw0rvb8CwnzNCHGhZqDiSl6amDtr3iGjCw4744FNux
-         NE8w==
-X-Gm-Message-State: AGi0Pub+mne1O2c2dFF58QDwQm17lOXcmXouRipmUvdAsQyookDZGve8
-        57nnTnCHPOFl77TBNURzcTcYQaX57rlNiG1QRXnw0Qad2vp/U5ySa1sDhqLIXdZZu409VQb7TE0
-        PxESm/SDOyTe5q3OKO2kJi4N6
-X-Received: by 2002:a7b:c456:: with SMTP id l22mr1910004wmi.148.1588238825850;
-        Thu, 30 Apr 2020 02:27:05 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIidEgYyupOkF7nL6eGUnI+MnsnTzTsxHxlSJH5y9TKoVaupD0CtacA6MBnjUdJnCD7NKs2TQ==
-X-Received: by 2002:a7b:c456:: with SMTP id l22mr1909983wmi.148.1588238825624;
-        Thu, 30 Apr 2020 02:27:05 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id o6sm3109407wrw.63.2020.04.30.02.27.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 02:27:05 -0700 (PDT)
-Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
- page ready notifications
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com>
- <20200429093634.1514902-5-vkuznets@redhat.com>
- <b1297936-cf69-227b-d758-c3f3ca09ae5d@redhat.com>
- <87sgglfjt9.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <18b66e2e-9256-0ef0-4783-f89211eeda88@redhat.com>
-Date:   Thu, 30 Apr 2020 11:27:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 30 Apr 2020 05:27:13 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDBCC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 02:27:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7cPRxJu+EyhIAY+ftHuzc0AbhzQQwoOVPsr7HZ0bIDM=; b=ffzpgUFUKJ0+SYn01RB34WtWAp
+        JBBdeuxuwp84NG/VuXaYYndIfklyTRcbe1MKAY+NWgF82Q30KlKWzYYd2ISXjU2GT7kZNp9mdodKw
+        SiVapQcR9WAn6kz+ihwRTMEOe5NqDJdI5aroWPse6Ei7A3Uw8ijT1rFaLX+31rLGIEOO079UElyIH
+        UG740O68etbTKvVOAudavegXtJh+0RMgLyU1+7qCfzvpzHRnQ8S2xbrSCLCoskwT9nU99dmX5ndtF
+        BMc55wpC0hMh4IpNOIvJEMQsRkig/OQsYLxSfw/sxqnOjYEOdJaGiL5z7VXiowlWWPO3zt7hgZKa/
+        rtgXjOcw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jU5T0-0002CN-In; Thu, 30 Apr 2020 09:26:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 06189301224;
+        Thu, 30 Apr 2020 11:26:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DEC99213923B9; Thu, 30 Apr 2020 11:26:48 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 11:26:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net, mingo@kernel.org,
+        tglx@linutronix.de, oleg@redhat.com, irogers@google.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org
+Subject: Re: [RFC][PATCH 1/7] rbtree: Add generic add and find helpers
+Message-ID: <20200430092648.GB13616@hirez.programming.kicks-ass.net>
+References: <20200429153258.563269446@infradead.org>
+ <20200429153549.006661686@infradead.org>
+ <20200430010405.GA237715@google.com>
+ <20200430084617.GQ13592@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <87sgglfjt9.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430084617.GQ13592@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/20 10:40, Vitaly Kuznetsov wrote:
->>  I think in that case
->> kvm_check_async_pf_completion will refuse to make progress.
->> You need to make this bit stateful (e.g. 1 = async PF in progress, 0 =
->> not in progress), and check that for page ready notifications instead of
->> EFLAGS.IF.  
->> This probably means that;
->>
->> - it might be simpler to move it to the vector MSR
-> I didn't want to merge 'ACK' with the vector MSR as it forces the guest
-> to remember the setting. It doesn't matter at all for Linux as we
-> hardcode the interrupt number but I can imaging an OS assigning IRQ
-> numbers dynamically, it'll need to keep record to avoid doing rdmsr.
+On Thu, Apr 30, 2020 at 10:46:17AM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 29, 2020 at 06:04:05PM -0700, Michel Lespinasse wrote:
 
-I would expect that it needs to keep it in a global variable anyway, but
-yes this is a good point.  You can also keep the ACK MSR and store the
-pending bit in the other MSR, kind of like you have separate ISR and EOI
-registers in the LAPIC.
+> > - Have you considered passing a cmp() function to rb_add() and
+> >   rb_add_cached(), and having these test cmp() < 0 rather than less() ?
+> >   I figure every user will need to have a cmp() function, so it'd be
+> >   nicer if they didn't also need a less() function, if the generated
+> >   code is similar (if you checked and rejected it because of bad code,
+> >   please just say so).
+> 
+> I did consider it; in fact I my original helpers had that.
+> 
+> The reaosn I went with less() over cmp() is that the add() vs find()
+> function signatures:
+> 
+>   bool (*less)(struct rb_node *, const struct rb_node *);
+>   int (*cmp)(const void *, const struct rb_node *);
+> 
+> differ anyway in the left-hand argument; this is 'fixable' when you
+> use an (on-stack) dummy object for find (as uprobes does), but that
+> doesn't always work, esp. when the object is big. And given you need two
+> functions anyway, I figured it was useful to name them differently.
+> 
+> If you've looked at the other patches a bit, you'll see I've implemented
+> both functions as 'trivial' wrappers around a single compare function in
+> many cases.
 
->> - it's definitely much simpler to remove the #PF-based mechanism for
->> injecting page ready notifications.
-> Yea, the logic in kvm_can_do_async_pf()/kvm_can_deliver_async_pf()
-> becomes cumbersome. If we are to drop #PF-based mechanism I'd split it
-> completely from the remaining synchronious #PF for page-not-present:
-> basically, we only need to check that the slot (which we agreed becomes
-> completely separate) is empty, interrupt/pending expception/... state
-> becomes irrelevant.
-
-Yes, that's a good point.
-
-Paolo
-
+I just realized I'd already done all this at some point ;-) See
+rbtree_latch.h. Clearly I failed to realize the full potential back when
+I did that.
