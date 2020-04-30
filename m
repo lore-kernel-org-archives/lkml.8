@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DDEC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2B9C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A099E2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351322071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TUErJTMo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FAkKib5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgD3VfZ (ORCPT
+        id S1727878AbgD3Vfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:35:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
+        Thu, 30 Apr 2020 17:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727831AbgD3VfW (ORCPT
+        by vger.kernel.org with ESMTP id S1727102AbgD3VfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:35:22 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CC79C08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:35:22 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id h124so7388779qke.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:35:22 -0700 (PDT)
+        Thu, 30 Apr 2020 17:35:21 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24843C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:35:21 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id z90so6376231qtd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qD/fVPgRRIyWs24d7bjWoi8ignYx3dFl8pvIjbbWrGU=;
-        b=TUErJTMoV2Ef58XYi9bdjAC95qZO4uGsDuy9cDeCcFK0IeRCQ3XBsVBS3vT1mPKyYa
-         WSG3QgGvw7KaL5Otq4jLPgL21AJtOyqW4K+lD4OSaE/JgP4aStbDKBEtSR6YIXRGCaUR
-         R+R7eTPKYorVu5YwLeAnCVDykVjmcC3RWwSeOmGGqixwAwqwtxRowH1DxIcLPvf89puD
-         ZnEsu25jLQa/BvMMZy0er6ViYWlhQRzLfgaREzV6AXLboEDrheW03mE1tZ7xt98INzfm
-         tWREoSJIJX5ZdZtjc7h+jDru14emC5cumLiKSLGF1qtCVoSvUX9Gb/RIs8v2s8G4eldD
-         2rLA==
+        bh=C4NZHd20DqH/vMopbnAr3CvIxlhLY+CMbHfzvIpU5fo=;
+        b=FAkKib5UEUdJ8vrJ3fEKyY/s8lgMD7f5u4GS4xdPjhvVpDtOAC8ykkeJnOk9FbzU3b
+         kmwrBahaK3+c+ARuIT6QoV3cVvis5z4O4onUhhXh2d8K3Q+GngbIOhXHY3/WTLU6J+6V
+         fM6JoA3LMLm7BWJkOiU5uB0Hwsfc4WwZiBxQ8K4nPkWZHUc4Fr1ugvPHifEUl8bbBBSY
+         cmZtYlfn+btahEQeH4+Ht8tRliKWoZf3Cg8juMNLcyqZWrfCk2hzMvuTxlrns1XwGGzy
+         vOJGflAAQL7XqHv6DcYQxjS2I6ArwHEy7PEy9gDKdC48OReAKAvOmiDA7xP54KrJRo48
+         LJVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qD/fVPgRRIyWs24d7bjWoi8ignYx3dFl8pvIjbbWrGU=;
-        b=Xon7k9OYqYV8JSAQpjAp/G+l1dvoIgfc4nXHLvOe+Ns/zUsuOguHDuXk46EWJsF8S2
-         +X+BQ6TByfj6uzba6OvSoY15LBP6xNKeH4M8fHYgqlc0siaqpaur9Sk45kJJb85lyG8T
-         Nn4oSaLCnlQgIla5oxfUTH+jWho99ve//w8AEZOfY2hVUiGvqRue7aFGZC7Qax03ADfF
-         JjdhfW9k4hAP9XVeGBdA6XE5x1sGxCxGPnKIISHMXL5NW8qTAEy946XxzTi0Lkmweyb9
-         8qi5TkuY1pOPLNxHltolrTvv5pNG8tby2ncM0wElltRMn5k/IrfIJ2Djp31mJOY26LGT
-         U8kw==
-X-Gm-Message-State: AGi0PuYrN4of7yqSNijA1+R7gANhVGspopHmAGWz9qRESioKRO9/lYpU
-        usmVCFFUdE1GbXOMKNCI7y+KAQ==
-X-Google-Smtp-Source: APiQypJi6p4doOBZCsZHqe8y+gXjnJQOo30NLPOjTKJ7zVOa3hlcWPk393DOxm2TvlEIiy3pxSBsRQ==
-X-Received: by 2002:a37:a049:: with SMTP id j70mr547040qke.193.1588282521684;
-        Thu, 30 Apr 2020 14:35:21 -0700 (PDT)
+        bh=C4NZHd20DqH/vMopbnAr3CvIxlhLY+CMbHfzvIpU5fo=;
+        b=YodD1+3hA04Ikp5L0AvgWCy8LUeYOHNqSn1XScKBSvNFgNCXIkUoSc8rgjYUmkB6OT
+         VCdSFnzvmvCMBw+2J75jzCiVCDyBB8WM0BgNyIAUvSuB+9OmpKh/sgfjDiQCnV4W536s
+         PwKNDbm4D/K2U9bcfEwvqR0d5nTo+Vlklk2D3xY5FhLaChqWTLFG7u6KpTghlUr9H3dS
+         eV+vEEwaGe+9FCnaq3orerc2lceIwWM7upSk5DpeYKjd/ETjslscazvmpLgSN56Bjsav
+         f3VtdE3e7IRRenHWEwukMTPzaTd4naZQD/y2Npgo3VOQFuCPoy22tic+Q40dbO3FBe/L
+         Sd6w==
+X-Gm-Message-State: AGi0PubuYLDk9mDng52hWg/JwM4foV+c2yGekMj4mHP7k0bIoMHS5tPt
+        jUjvQR39QFfJ51qwSjFVTpNHeQ==
+X-Google-Smtp-Source: APiQypI9hbKnj1Bz3fAGJul0OELxHEBWAad+NzSj8OX1wtfY7PAuFyORwlaik3yuLFedpJoPks83Hw==
+X-Received: by 2002:ac8:312e:: with SMTP id g43mr625184qtb.256.1588282520338;
+        Thu, 30 Apr 2020 14:35:20 -0700 (PDT)
 Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id s190sm1112543qkh.23.2020.04.30.14.35.20
+        by smtp.gmail.com with ESMTPSA id s190sm1112543qkh.23.2020.04.30.14.35.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 14:35:21 -0700 (PDT)
+        Thu, 30 Apr 2020 14:35:19 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net
 Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/3] net: ipa: zero return code before issuing generic EE command
-Date:   Thu, 30 Apr 2020 16:35:12 -0500
-Message-Id: <20200430213512.3434-4-elder@linaro.org>
+Subject: [PATCH net 2/3] net: ipa: fix an error message in gsi_channel_init_one()
+Date:   Thu, 30 Apr 2020 16:35:11 -0500
+Message-Id: <20200430213512.3434-3-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430213512.3434-1-elder@linaro.org>
 References: <20200430213512.3434-1-elder@linaro.org>
@@ -77,60 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zero the result code stored in a field of the scratch 0 register
-before issuing a generic EE command.  This just guarantees that
-the value we read later was actually written as a result of the
-command.
-
-Also add the definitions of two more possible result codes that can
-be returned when issuing flow control enable or disable commands:
-  INCORRECT_CHANNEL_STATE: - channel must be in started state
-  INCORRECT_DIRECTION - flow control is only valid for TX channels
+An error message about limiting the number of TREs used prints the
+wrong value.  Fix this bug.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/gsi.c     | 7 +++++++
- drivers/net/ipa/gsi_reg.h | 2 ++
- 2 files changed, 9 insertions(+)
+ drivers/net/ipa/gsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
-index b4206fda0b22..b671bea0aa7c 100644
+index 845478a19a4f..b4206fda0b22 100644
 --- a/drivers/net/ipa/gsi.c
 +++ b/drivers/net/ipa/gsi.c
-@@ -1041,6 +1041,7 @@ static void gsi_isr_gp_int1(struct gsi *gsi)
+@@ -1798,9 +1798,9 @@ static int gsi_channel_init_one(struct gsi *gsi,
  
- 	complete(&gsi->completion);
- }
-+
- /* Inter-EE interrupt handler */
- static void gsi_isr_glob_ee(struct gsi *gsi)
- {
-@@ -1493,6 +1494,12 @@ static int gsi_generic_command(struct gsi *gsi, u32 channel_id,
- 	struct completion *completion = &gsi->completion;
- 	u32 val;
- 
-+	/* First zero the result code field */
-+	val = ioread32(gsi->virt + GSI_CNTXT_SCRATCH_0_OFFSET);
-+	val &= ~GENERIC_EE_RESULT_FMASK;
-+	iowrite32(val, gsi->virt + GSI_CNTXT_SCRATCH_0_OFFSET);
-+
-+	/* Now issue the command */
- 	val = u32_encode_bits(opcode, GENERIC_OPCODE_FMASK);
- 	val |= u32_encode_bits(channel_id, GENERIC_CHID_FMASK);
- 	val |= u32_encode_bits(GSI_EE_MODEM, GENERIC_EE_FMASK);
-diff --git a/drivers/net/ipa/gsi_reg.h b/drivers/net/ipa/gsi_reg.h
-index 7613b9cc7cf6..acc9e744c67d 100644
---- a/drivers/net/ipa/gsi_reg.h
-+++ b/drivers/net/ipa/gsi_reg.h
-@@ -410,6 +410,8 @@
- #define INTER_EE_RESULT_FMASK		GENMASK(2, 0)
- #define GENERIC_EE_RESULT_FMASK		GENMASK(7, 5)
- #define GENERIC_EE_SUCCESS_FVAL			1
-+#define GENERIC_EE_INCORRECT_DIRECTION_FVAL	3
-+#define GENERIC_EE_INCORRECT_CHANNEL_FVAL	5
- #define GENERIC_EE_NO_RESOURCES_FVAL		7
- #define USB_MAX_PACKET_FMASK		GENMASK(15, 15)	/* 0: HS; 1: SS */
- #define MHI_BASE_CHANNEL_FMASK		GENMASK(31, 24)
+ 	/* Worst case we need an event for every outstanding TRE */
+ 	if (data->channel.tre_count > data->channel.event_count) {
+-		dev_warn(gsi->dev, "channel %u limited to %u TREs\n",
+-			data->channel_id, data->channel.tre_count);
+ 		tre_count = data->channel.event_count;
++		dev_warn(gsi->dev, "channel %u limited to %u TREs\n",
++			 data->channel_id, tre_count);
+ 	} else {
+ 		tre_count = data->channel.tre_count;
+ 	}
 -- 
 2.20.1
 
