@@ -2,130 +2,127 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C759C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F8CC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59FD32074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8B3207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByMRGswM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLPGrpSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgD3WFW (ORCPT
+        id S1727108AbgD3WGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
+        Thu, 30 Apr 2020 18:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgD3WFV (ORCPT
+        with ESMTP id S1726447AbgD3WGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:05:21 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E169C035494;
-        Thu, 30 Apr 2020 15:05:19 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c12so4112948wrp.0;
-        Thu, 30 Apr 2020 15:05:19 -0700 (PDT)
+        Thu, 30 Apr 2020 18:06:34 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7E8C035494;
+        Thu, 30 Apr 2020 15:06:33 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id k22so5854122eds.6;
+        Thu, 30 Apr 2020 15:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bw4xMsQlAdPbT32r9q7KuZwpeyRP0cX6BzQXI90BCN8=;
-        b=ByMRGswMWLGAUKHPhoXAN3w1R8HdhxRP4M/4ODXWHCLj7gYMAP0FIEG2VqZCmshrr6
-         ZxcQIkG1T7h6W+jiuTCvDA10h0s8VD84v2h8QRMFeZu/qfrIKB+Uf6h+12/CbKynlICf
-         XNk18X5SKhxKXwdNGquQa/hSPFITAtjQ2q9I3W3xtod8hG+zWp/XrtdH1ATUccOE+/PA
-         LwfjyOfhhEjlVSrZE6E/E52lAXBWSi0DbyFnfVI5a5ZKdj3P3rrRARsdm3Gj+9uBhenn
-         J1wOiuWUe4NZE0eIccydcbVmM32Y86b4ca+CnqPfBoC95swggbnNpNkvRPLbH8pjqXWP
-         E/OQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q+mkxNtTPZhi/LAJrBV1pwlKLJ9IVJIPihcu3p+f0f4=;
+        b=kLPGrpSDFXWcNc6EbBhYJxYWfjkLjQ7+maWsFJYWNSkObt+rcEeJ4YHfJ4srEPLr59
+         u9GoVC2YIHoGYphA8DHPpj0ik+WK/rfttyR7UuR3r21N9YO4lEmOq+ApSkv4fSt86vUD
+         L8pEXipDq1l3OXSBIcpf61geLhqO31d7ruLqGAa8u5Wlwv73OgaxTrt9xfHFqnUMuztX
+         SLYd0WkNO9/nPwxusMvXelK03QcKPcokvJdvso/snVDF2GfshMeFtXK0wMVn2CLYX0Vq
+         UNfdGFof4f0Jwd+KXQ6VhPUCWZ+VMn6LwMb/gkf4Mnddq/2K6jJdV9VgN3RPVjyKpGnj
+         vSIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Bw4xMsQlAdPbT32r9q7KuZwpeyRP0cX6BzQXI90BCN8=;
-        b=iRfta9dk14BmVn9n1ER30QzInsQ9yRx5lSuANhTtU8MeV1lXItU9/NkFC4IAXXgV33
-         7P1gGIDgr0D4EDDJTa5eG7ak2MydilMrnpbeWMQUDLDd6uenKPx5yzDCwTE6MtZ082oB
-         lt7facoLnqForOAKdhUgivp8Dx2yz/7zGpUaWM3T4qbCuXFKcmwtfb0A1WabTj6hvhZK
-         NTxq3KyLGkGKqiCmyrva+R0gZrsmjDe37FcRM1fa48q6EWHVAU8nhCzWcDtRip3MM7MX
-         qUXJvNicxUxY9ADJfWdmrtVFw6NY7a94nFDIGAgKH2ZfqM3MNSDxNQwCqam9wfv/6jO3
-         oUlQ==
-X-Gm-Message-State: AGi0PuagfDwLMqJwRXg68MkYapxft3DWwfVtvTwWywazjKPBN3aHAdh6
-        zfk6TWnlIGi5lxU9ES2jUAc=
-X-Google-Smtp-Source: APiQypLYqUO31tqU0YvMTIn8//k5oBDvmrxtqm2vFUpCvHub7k63ls1fdFvzV0p5CULjKqkXhDeoag==
-X-Received: by 2002:adf:d0ca:: with SMTP id z10mr818677wrh.172.1588284317856;
-        Thu, 30 Apr 2020 15:05:17 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id t67sm1475693wmg.40.2020.04.30.15.05.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 15:05:17 -0700 (PDT)
-To:     paul.kocialkowski@bootlin.com
-Cc:     devicetree@vger.kernel.org, ezequiel@collabora.com,
-        hansverk@cisco.com, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        thomas.petazzoni@bootlin.com
-References: <20200430164245.1630174-3-paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v3 2/4] arm64: dts: rockchip: Add RGA support to the PX30
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <c3954924-c220-73ef-06dd-85b6876be819@gmail.com>
-Date:   Fri, 1 May 2020 00:05:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        bh=q+mkxNtTPZhi/LAJrBV1pwlKLJ9IVJIPihcu3p+f0f4=;
+        b=hy3qxFBIMVrkMNpsJlmxdaEF44uAx9T3FqFKAxt8yRkC8yxPv1P6VjB8cOCZnj7WTs
+         gpgn8RrqjJuNYbAnxBiUGdU3MMpekF2sVMdxOqhuSstfBlJZIqTxQEchdwIuOPsmbXF3
+         ea2oibGmsSHNIo8kMEVivcKvcdh42mLLvrMaGMbzQ3QUc3dBB23akc3ZdiIIT50rHZpx
+         1XSO/z0orXrmWEtCNK5j8oxUUj/6Zx+j8CH0CRiBiFDXw3NNMtoVKUm7M+Eqz1D1Pw9x
+         /+7aGiPisijtz6OhEElfMCGFYR31STOA0lsoGSNm7gj60hgk59iMpO6yfxvgZAW+TBje
+         WpFQ==
+X-Gm-Message-State: AGi0PuY+k2prM2X2xR6K3zrBeVzK9dnJqqpxhLQbc8rrWFU2WQU3GSA0
+        bNYp4/7VlASrmr7rg06aqCY=
+X-Google-Smtp-Source: APiQypIgPFzSk+gRylgl6RZkkZgJyX6/kqkDDLtTXeaQ/UD4SIAItyRDStoTO2fc2ZgBpRYFfqAeZg==
+X-Received: by 2002:a05:6402:712:: with SMTP id w18mr1101986edx.386.1588284392192;
+        Thu, 30 Apr 2020 15:06:32 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain ([79.37.253.240])
+        by smtp.googlemail.com with ESMTPSA id t17sm54185edq.88.2020.04.30.15.06.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 15:06:31 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/11] Multiple fixes in PCIe qcom driver
+Date:   Fri,  1 May 2020 00:06:07 +0200
+Message-Id: <20200430220619.3169-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200430164245.1630174-3-paul.kocialkowski@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
 
-> The PX30 features a RGA block: add the necessary node to support it.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> index f809dd6d5dc3..3de70aa4f1ce 100644
-> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> @@ -1102,6 +1102,17 @@ vopl_mmu: iommu@ff470f00 {
->  		status = "disabled";
->  	};
->  
-> +	rga: rga@ff480000 {
-> +		compatible = "rockchip,px30-rga", "rockchip,rk3288-rga";
-> +		reg = <0x0 0xff480000 0x0 0x10000>;
-> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
-> +		clock-names = "aclk", "hclk", "sclk";
+v3:
+* Fix check reported by checkpatch --strict
+* Rename force_gen1 to gen
+* Fix spelling error
+* Better describe qcom_clear_and_set_dword
+* Make PARF deemph and equalization configurable
 
-> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-> +		reset-names = "core", "axi", "ahb";
-> +		power-domains = <&power PX30_PD_VO>;
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
 
-sort
+Abhishek Sahu (1):
+  PCI: qcom: change duplicate PCI reset to phy reset
 
-		power-domains = <&power PX30_PD_VO>;
-		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-		reset-names = "core", "axi", "ahb";
+Ansuel Smith (8):
+  PCI: qcom: add missing ipq806x clocks in PCIe driver
+  devicetree: bindings: pci: add missing clks to qcom,pcie
+  PCI: qcom: add missing reset for ipq806x
+  devicetree: bindings: pci: add ext reset to qcom,pcie
+  PCI: qcom: introduce qcom_clear_and_set_dword
+  PCI: qcom: add support for defining some PARF params
+  devicetree: bindings: pci: document PARF params bindings
+  devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
 
+Sham Muthayyan (2):
+  PCI: qcom: add ipq8064 rev2 variant and set tx term offset
+  PCI: qcom: add Force GEN1 support
 
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  51 +++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 241 ++++++++++++------
+ 2 files changed, 211 insertions(+), 81 deletions(-)
 
-> +	};
-> +
->  	qos_gmac: qos@ff518000 {
->  		compatible = "syscon";
->  		reg = <0x0 0xff518000 0x0 0x20>;
-> -- 
-> 2.26.0
+-- 
+2.25.1
 
