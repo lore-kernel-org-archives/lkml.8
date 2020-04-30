@@ -2,112 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC7AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C613C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A284220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D78F20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:09:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GnYrsaN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgD3PIs (ORCPT
+        id S1727778AbgD3PJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:08:48 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:48622 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbgD3PIr (ORCPT
+        Thu, 30 Apr 2020 11:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726350AbgD3PJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:08:47 -0400
-X-Greylist: delayed 1041 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 11:08:47 EDT
-Date:   Thu, 30 Apr 2020 10:51:23 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use
- mmap_sem properly in there
-Message-ID: <20200430145123.GE21576@brightrain.aerifal.cx>
-References: <20200429214954.44866-1-jannh@google.com>
- <20200429215620.GM1551@shell.armlinux.org.uk>
- <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
- <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
+        Thu, 30 Apr 2020 11:09:10 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090F0C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:09:10 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id 19so5474377oiy.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5zQi7r9M2LfUopK89C3EkicnA25N+tRTfqcQYXwGa4Q=;
+        b=GnYrsaN6NEU0QrNKTsi1gIN/yJe1TNR5CQCeXl9rdFJBLOEmWeZUNENU3rOJ3FSWsu
+         qT8FH1y2B/G4LzYSg5SbCtR7kirzz51BW/b7P9XMFnKufdGhmqHT7mXstdf34kryWalf
+         HfWcFuC1VUhCy/FePn/HmAx9/c3r7M9xMRFAE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5zQi7r9M2LfUopK89C3EkicnA25N+tRTfqcQYXwGa4Q=;
+        b=EWsO9XhaxQf9uwHteYqXLSMaN2HRfWTzh+oEqKaBghInYZP4YaC0/uS+dPZuXXQKWs
+         pRNObXP1SxIO6OymMybL4GNKFkIm0nYLo771cnLWkdIDoLFXUXJ4++2b9SAoEh59UJZ6
+         ReThdtEWQGm8Ib+NCQ3wIZQafgENrMONHmGNX+/D+MAMb+2RJtWxH+oEtJzFi6ZUApUp
+         NwTbETv5QRi6MVm7bh8o6MaSgY2VNLvfc/jUbwVepEYnnuSvb5tWMfSpmppYFExKaOxp
+         hg+dH7BkDq0lNZ3BwESVs4yiik5kFcCBngCCC/YmxV0FFg7ugoILrkGm4tsMuY30n5ql
+         6EMA==
+X-Gm-Message-State: AGi0PuZhZkZgjRXs4bq0lbWinHE/tluvcpr0kJxqBuaZk9XozYNxcnPM
+        ggUEjsPeyRmhhjfqU5iDG2Kxu64cppyRlECuFzxM9Q==
+X-Google-Smtp-Source: APiQypK116kyr5jlTbWU6tuCGp85AedUXlIu2BotcPBsyOWDWrXsYR7fZz/xZgi6gNwZzZIxNbnanEsgIscjJj+VMQg=
+X-Received: by 2002:aca:52d5:: with SMTP id g204mr2123371oib.14.1588259349392;
+ Thu, 30 Apr 2020 08:09:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200430145439.31257-1-manu@FreeBSD.org>
+In-Reply-To: <20200430145439.31257-1-manu@FreeBSD.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 30 Apr 2020 17:08:58 +0200
+Message-ID: <CAKMK7uHqFhd69Y7TM64ZHyi9-O0ka3h9dWG8mmiMQV5ZVBWWcA@mail.gmail.com>
+Subject: Re: [RESEND 1/2] drm/client: Dual licence the header in GPL-2 and MIT
+To:     Emmanuel Vadot <manu@freebsd.org>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dave Airlie <airlied@linux.ie>,
+        Matthew D Roper <matthew.d.roper@intel.com>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:10:05AM +1000, Greg Ungerer wrote:
-> 
-> 
-> On 30/4/20 9:03 am, Linus Torvalds wrote:
-> >On Wed, Apr 29, 2020 at 2:57 PM Russell King - ARM Linux admin
-> ><linux@armlinux.org.uk> wrote:
-> >>
-> >>I've never had any reason to use FDPIC, and I don't have any binaries
-> >>that would use it.  Nicolas Pitre added ARM support, so I guess he
-> >>would be the one to talk to about it.  (Added Nicolas.)
-> >
-> >While we're at it, is there anybody who knows binfmt_flat?
-> >
-> >It might be Nicolas too.
-> >
-> >binfmt_flat doesn't do core-dumping, but it has some other oddities.
-> >In particular, I'd like to bring sanity to the installation of the new
-> >creds, and all the _normal_ binfmt cases do it largely close together
-> >with setup_new_exec().
-> >
-> >binfmt_flat is doing odd things. It's doing this:
-> >
-> >         /* Flush all traces of the currently running executable */
-> >         if (id == 0) {
-> >                 ret = flush_old_exec(bprm);
-> >                 if (ret)
-> >                         goto err;
-> >
-> >                 /* OK, This is the point of no return */
-> >                 set_personality(PER_LINUX_32BIT);
-> >                 setup_new_exec(bprm);
-> >         }
-> >
-> >in load_flat_file() - which is also used to loading _libraries_. Where
-> >it makes no sense at all.
-> 
-> I haven't looked at the shared lib support in there for a long time,
-> but I thought that "id" is only 0 for the actual final program.
-> Libraries have a slot or id number associated with them.
+On Thu, Apr 30, 2020 at 4:54 PM Emmanuel Vadot <manu@freebsd.org> wrote:
+>
+> Source file was dual licenced but the header was omitted, fix that.
+> Contributors for this file are:
+> Daniel Vetter <daniel.vetter@ffwll.ch>
+> Matt Roper <matthew.d.roper@intel.com>
+> Maxime Ripard <mripard@kernel.org>
+> Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> Thomas Zimmermann <tzimmermann@suse.de>
+>
+> Acked-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> Acked-by: Matt Roper <matthew.d.roper@intel.com>
+> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
 
-This sounds correct. My understanding of FLAT shared library support
-is that it's really bad and based on having preassigned slot indices
-for each library on the system, and a global array per-process to give
-to data base address for each library. Libraries are compiled to know
-their own slot numbers so that they just load from fixed_reg[slot_id]
-to get what's effectively their GOT pointer.
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> ---
+>  include/drm/drm_client.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/drm/drm_client.h b/include/drm/drm_client.h
+> index 7402f852d3c4..eb259c2547af 100644
+> --- a/include/drm/drm_client.h
+> +++ b/include/drm/drm_client.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0 or MIT */
+>
+>  #ifndef _DRM_CLIENT_H_
+>  #define _DRM_CLIENT_H_
+> --
+> 2.25.1
+>
 
-I'm not sure if anybody has actually used this in over a decade. Last
-time I looked the tooling appeared broken, but in this domain lots of
-users have forked private tooling that's not publicly available or at
-least not publicly indexed, so it's hard to say for sure.
 
-Rich
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
