@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41003C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83962C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1543A2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615A52063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255919;
-	bh=usM7Jccak5exTEtTBEd6z2nFf26bUS/b4ELKv0lkYeU=;
+	s=default; t=1588255922;
+	bh=pNDq+qA0a6AeHHaZ1+wh57H8blS3M82LwnhCyrgPei8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OoM1ENvJuL9JqFugC2O7FD8qPRUm3vJStMjgdgkAR3kjhI14OWmiN83naVTPbzkn7
-	 ToWDDYBPQ3DDJDiLrnVnDINbOaefrrKEJyKnE+NEjGT3BGdp98pjbR4uDk2rvKXjWx
-	 hATYVQ1N4rgsB5dtKgTb2m1oBIQSduqogsDrH7Wo=
+	b=B3LmR7yYJkoMvPnOIwt1Cm6baGq26SbyUCYkm7zsZDqpLTWoqvA6lDnLrvibGaJev
+	 aZp+1w8RTpJqH12jK/MFBHjycQnSghu+63h++tQoSnscwGk+7KZQt4UTKUB1+dVHgO
+	 eDFrY+DO8bR122fP5GfNkn9WHyXfFHOUCdCZcnSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbgD3OL5 (ORCPT
+        id S1727977AbgD3NvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727982AbgD3NvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:17 -0400
+        id S1727887AbgD3NvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEDF20774;
-        Thu, 30 Apr 2020 13:51:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1176E24954;
+        Thu, 30 Apr 2020 13:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254676;
-        bh=usM7Jccak5exTEtTBEd6z2nFf26bUS/b4ELKv0lkYeU=;
+        s=default; t=1588254665;
+        bh=pNDq+qA0a6AeHHaZ1+wh57H8blS3M82LwnhCyrgPei8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MnDmBZPU7KOlVzJgz3bw4vJ2WlygTypmRj2TWLAxY6aaXXsMLrJfPmDFBTXCoJzGu
-         lorX7F3pSF2vI3GOQ9hyuv9dXDsY0chqPkAjCptx8G9/TxZE+78Mzy9DYmVq28bsC+
-         q05+UK5+3t5kqzr49n3LG3jjx4d7mJ2dM3rwNNSs=
+        b=wmqG9RGED98L/rX3qYChQfInbO2hMoWdwBwCgL6HGBiw/9WVGUniHHgsbjalvJDKj
+         z3ptY+puGMZV9tL6nhcqzrWvznwFPfCQn3pEBWrmJ/HeziC1pbf19kOse3Us6kM5Tk
+         5trv2rZ1+L0s80eBAb49o5dmyN5BoYfOX4iF8xMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 28/79] usb: dwc3: gadget: Do link recovery for SS and SSP
-Date:   Thu, 30 Apr 2020 09:49:52 -0400
-Message-Id: <20200430135043.19851-28-sashal@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 18/79] Revert "Kernel selftests: tpm2: check for tpm support"
+Date:   Thu, 30 Apr 2020 09:49:42 -0400
+Message-Id: <20200430135043.19851-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -61,56 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-[ Upstream commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 ]
+[ Upstream commit aaa2d92efe1f972567f1691b423ab8dc606ab3a9 ]
 
-The controller always supports link recovery for device in SS and SSP.
-Remove the speed limit check. Also, when the device is in RESUME or
-RESET state, it means the controller received the resume/reset request.
-The driver must send the link recovery to acknowledge the request. They
-are valid states for the driver to send link recovery.
+This reverts commit b32694cd0724d4ceca2c62cc7c3d3a8d1ffa11fc.
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+The original comment was neither reviewed nor tested. Thus, this the
+*only* possible action to take.
+
+Cc: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ tools/testing/selftests/tpm2/test_smoke.sh | 13 ++-----------
+ tools/testing/selftests/tpm2/test_space.sh |  9 +--------
+ 2 files changed, 3 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 1e68c90a83781..bc1cf6d0412a3 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1728,7 +1728,6 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
- 	u32			reg;
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index b630c7b5950a9..8155c2ea7ccbb 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,17 +1,8 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+-self.flags = flags
  
- 	u8			link_state;
--	u8			speed;
- 
- 	/*
- 	 * According to the Databook Remote wakeup request should
-@@ -1738,16 +1737,13 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
- 	 */
- 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
- 
--	speed = reg & DWC3_DSTS_CONNECTSPD;
--	if ((speed == DWC3_DSTS_SUPERSPEED) ||
--	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
--		return 0;
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
 -
- 	link_state = DWC3_DSTS_USBLNKST(reg);
+-
+-if [ -f /dev/tpm0 ] ; then
+-	python -m unittest -v tpm2_tests.SmokeTest
+-	python -m unittest -v tpm2_tests.AsyncTest
+-else
+-	exit $ksft_skip
+-fi
++python -m unittest -v tpm2_tests.SmokeTest
++python -m unittest -v tpm2_tests.AsyncTest
  
- 	switch (link_state) {
-+	case DWC3_LINK_STATE_RESET:
- 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
- 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
-+	case DWC3_LINK_STATE_RESUME:
- 		break;
- 	default:
- 		return -EINVAL;
+ CLEAR_CMD=$(which tpm2_clear)
+ if [ -n $CLEAR_CMD ]; then
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index 180b469c53b47..a6f5e346635e5 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,11 +1,4 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+-# Kselftest framework requirement - SKIP code is 4.
+-ksft_skip=4
+-
+-if [ -f /dev/tpmrm0 ] ; then
+-	python -m unittest -v tpm2_tests.SpaceTest
+-else
+-	exit $ksft_skip
+-fi
++python -m unittest -v tpm2_tests.SpaceTest
 -- 
 2.20.1
 
