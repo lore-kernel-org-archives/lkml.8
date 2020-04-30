@@ -2,148 +2,114 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33133C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ACBC83009
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A032073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582D42083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dj4Gjnwt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYmIRu4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgD3Dx0 (ORCPT
+        id S1726577AbgD3D6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:53:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54880 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726405AbgD3DxZ (ORCPT
+        Wed, 29 Apr 2020 23:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726454AbgD3D6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:53:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588218804;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZufJCVAcrddU2HlFIrpCmkEVQ7zG0wH3RUMx2nRv1lg=;
-        b=Dj4GjnwtYEgLaTu6eCM13Nfk2jQUFwfvuia3vXa69KKeQ+n0YR5aVIA0zKhH4xDg4zG3ew
-        8lD68Q3jlPTtz6Nmt0reZO3MGFepHxStOJkFBllhPRXnNwFIVVR5frp6l5/D6WWsKa5jhQ
-        PuPP3VPu05qXperMMO6FnTpdDwi+PZ4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-40vepxlRNWyw2n7pMye9iA-1; Wed, 29 Apr 2020 23:53:21 -0400
-X-MC-Unique: 40vepxlRNWyw2n7pMye9iA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8148A45F;
-        Thu, 30 Apr 2020 03:53:19 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7436E6606B;
-        Thu, 30 Apr 2020 03:53:17 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 22:53:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
-        peterz@infradead.org, rdunlap@infradead.org,
-        Arnd Bergmann <arnd@arndb.de>, bpf@vger.kernel.org,
-        daniel@iogearbox.net
-Subject: Re: BPF vs objtool again
-Message-ID: <20200430035315.tc74v5twfdxv2goh@treble>
-References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
- <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
- <20200429215159.eah6ksnxq6g5adpx@treble>
- <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
- <20200430001300.k3pgq2minrowstbs@treble>
- <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
+        Wed, 29 Apr 2020 23:58:04 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FFFC035494;
+        Wed, 29 Apr 2020 20:58:04 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id i16so9313ils.12;
+        Wed, 29 Apr 2020 20:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dOspF7w14kkeDi21u8LT7QgFXxgV7izAF+lcJJNgVGY=;
+        b=bYmIRu4t+F43Br1MFoLKj/2KtO7FtPfYz9X+TyYZxoaPYs1BJ/QRXEssrU845zScpm
+         qa0V8RWBlNhtqwhluBshdr6iF5yRI/eGZs2u24yuPZMqQ+zpySOdUQyENbz92ELghnyJ
+         n1roMjq2pLWUd+iVOiJ9w3hgd+pPFV76mCqg5qHlQ2rWmLxYjU1hOuCOOTd8n60Eg4UT
+         xDflhWEHpDN0r9htOae7GZXeeHSs5L8noBim03oMae4XfmD8Up84E/u/gVrChkjQbNR1
+         9DzELnLDwSSD8Ly4o3ELww+NcXeQw626i6z6z02jx7TNdgJA/EbIdDqR19N9bnMEi+8I
+         Nmhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dOspF7w14kkeDi21u8LT7QgFXxgV7izAF+lcJJNgVGY=;
+        b=e7oinwA9PMVhs8NeEJHLZ40p8prz6Eh6G/TSmZIxKN5CbqBW8kzeZ0uyJttX8LEM+f
+         Gk8ffUIMhvKgoArblEfEJXOfyzs5UT0jZOcwn6E2N8qhc8AIXMKNZMQZxYm4Hc8UyX+s
+         7JZbu/BxlYkdxZ5aBMAgSW6ekQy6OMrCcxhOkXl1aXBlR/KwxPG8dFmG/hFCIdbgznK1
+         25MNLv9eIeK3BgHwylZL/rYsb+S9HgPZiwGVIbthWRnJiScw82kNi0Yf7XX/D0NeNUts
+         AVw706Qi34H5KVnvUxq23JIQVSdL/UCLSZhnPLOpdgrmE58WEA7NIaYq3xSFsHHPhuUk
+         VGuQ==
+X-Gm-Message-State: AGi0PuaYydQ71jcT8gvzSJhrfUPA4saQ+N3o56gc21HdAocfD/fcJ2NY
+        XdnpmHAj7KuTXvoUM+DXkv9kWFkqP+1lX8xhLI6Y51DauEo=
+X-Google-Smtp-Source: APiQypKBylr/J39bqvf6uVDQ/V4pYdv1udXBLc1XsqJuj//ZCLP1m9QnRnyygT4OSfyQc+kSMNAYl97AjxOzhjIIeHA=
+X-Received: by 2002:a92:5d0f:: with SMTP id r15mr26441ilb.251.1588219083339;
+ Wed, 29 Apr 2020 20:58:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <1588216776-62161-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1588216776-62161-1-git-send-email-zou_wei@huawei.com>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Thu, 30 Apr 2020 12:05:34 +0800
+Message-ID: <CAAhV-H66CA+n+FQCia-_-o0AQLJ3HZrTAufZH1CgrR+k+xRo8g@mail.gmail.com>
+Subject: Re: [PATCH -next] KVM: MIPS/Emulate: Remove unneeded semicolon
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        kvm <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 07:10:52PM -0700, Alexei Starovoitov wrote:
-> > For example:
-> > 
-> > #define GOTO    ({ goto *jumptable[insn->code]; })
-> > 
-> > and then replace all 'goto select_insn' with 'GOTO;'
-> > 
-> > The problem is that with RETPOLINE=y, the function text size grows from
-> > 5k to 7k, because for each of the 160+ retpoline JMPs, GCC (stupidly)
-> > reloads the jump table register into a scratch register.
-> 
-> that would be a tiny change, right?
-> I'd rather go with that and gate it with 'ifdef CONFIG_FRAME_POINTER'
-> Like:
-> #ifndef CONFIG_FRAME_POINTER
-> #define CONT     ({ insn++; goto select_insn; })
-> #define CONT_JMP ({ insn++; goto select_insn; })
-> #else
-> #define CONT     ({ insn++; goto *jumptable[insn->code]; })
-> #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-> #endif
-> 
-> The reason this CONT and CONT_JMP macros are there because a combination
-> of different gcc versions together with different cpus make branch predictor
-> behave 'unpredictably'.
-> 
-> I've played with CONT and CONT_JMP either both doing direct goto or
-> indirect goto and observed quite different performance characteristics
-> from the interpreter.
-> What you see right now was the best tune I could get from a set of cpus
-> I had to play with and compilers. If I did the same tuning today the outcome
-> could have been different.
-> So I think it's totally fine to use above code. I think some cpus may actually
-> see performance gains with certain versions of gcc.
-> The retpoline text increase is unfortunate but when retpoline is on
-> other security knobs should be on too. In particular CONFIG_BPF_JIT_ALWAYS_ON
-> should be on as well. Which will remove interpreter from .text completely.
+Reviewed-by: Huacai Chen <chenhc@lemote.com>
 
-This would actually be contingent on RETPOLINE, not FRAME_POINTER.
-
-(FRAME_POINTER was the other issue with the "optimize" attribute, which
-we're reverting so it'll no longer be a problem.)
-
-So if you're not concerned about the retpoline text growth, it could be
-as simple as:
-
-#define CONT     ({ insn++; goto *jumptable[insn->code]; })
-#define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-
-
-Or, if you wanted to avoid the text growth, it could be:
-
-#ifdef CONFIG_RETPOLINE
-/*
- * Avoid a 40% increase in function text size by getting GCC to generate a
- * single retpoline jump instead of 160+.
- */
-#define CONT	 ({ insn++; goto select_insn; })
-#define CONT_JMP ({ insn++; goto select_insn; })
-
-select_insn:
-	goto *jumptable[insn->code];
-
-#else /* !CONFIG_RETPOLINE */
-#define CONT	 ({ insn++; goto *jumptable[insn->code]; })
-#define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-#endif /* CONFIG_RETPOLINE */
-
-
-But since this is legacy path, I think the first one is much nicer.
-
-
-Also, JMP_TAIL_CALL has a "goto select_insn", is it ok to convert that
-to CONT?
-
--- 
-Josh
-
+On Thu, Apr 30, 2020 at 11:13 AM Zou Wei <zou_wei@huawei.com> wrote:
+>
+> Fixes coccicheck warnings:
+>
+> arch/mips/kvm/emulate.c:1793:3-4: Unneeded semicolon
+> arch/mips/kvm/emulate.c:1968:3-4: Unneeded semicolon
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> ---
+>  arch/mips/kvm/emulate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/mips/kvm/emulate.c b/arch/mips/kvm/emulate.c
+> index 754094b..5c88bd1 100644
+> --- a/arch/mips/kvm/emulate.c
+> +++ b/arch/mips/kvm/emulate.c
+> @@ -1790,7 +1790,7 @@ static enum emulation_result kvm_mips_guest_cache_op(int (*fn)(unsigned long),
+>                         return EMULATE_EXCEPT;
+>                 default:
+>                         break;
+> -               };
+> +               }
+>         }
+>  }
+>
+> @@ -1965,7 +1965,7 @@ enum emulation_result kvm_mips_emulate_inst(u32 cause, u32 *opc,
+>                         break;
+>                 default:
+>                         goto unknown;
+> -               };
+> +               }
+>                 break;
+>  unknown:
+>  #endif
+> --
+> 2.6.2
+>
