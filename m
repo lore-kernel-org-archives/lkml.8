@@ -2,89 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4E9C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C232C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 072C92137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D7121974
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yl1Lo1IR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kpnp/1yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD3KaL (ORCPT
+        id S1726692AbgD3KeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:30:11 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:63566 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726907AbgD3KaJ (ORCPT
+        Thu, 30 Apr 2020 06:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725280AbgD3KeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:30:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588242608; h=In-Reply-To: Content-Type: MIME-Version:
- References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=k1Dl4yzC1omqlWq2Asz34n/944KUyAHUVkIZtMS/CJo=; b=Yl1Lo1IRrzZGr5pwN5aeQAURkb6bPcfXx/bA0bE7Ab1d1FBeOHuhov7mEzugBwC+Xclknt1a
- p4qgRzKY+I7Wh++jsrxhIla0SorpLFh32srAyQzy7OCOAMn0KKvPA1fGP35MQ1SOXeYMd6XH
- wqoQ4hG7IcOy29FmXu/vuHXja6w=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaaa89d.7f97a7408180-smtp-out-n03;
- Thu, 30 Apr 2020 10:29:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B4689C44793; Thu, 30 Apr 2020 10:29:48 +0000 (UTC)
-Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: svaddagi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF410C433CB;
-        Thu, 30 Apr 2020 10:29:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF410C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
-Date:   Thu, 30 Apr 2020 15:59:39 +0530
-From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH 0/1] virtio_mmio: hypervisor specific interfaces for
- MMIO
-Message-ID: <20200430102939.GG5097@quicinc.com>
-Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
-References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
- <20200430100821.GC19932@willie-the-truck>
+        Thu, 30 Apr 2020 06:34:07 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F1CC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:34:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r26so1306142wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=iKvyQs3hqK0Cahom1nAntcSOXnDcOmXkOeQhD6hPnVs=;
+        b=Kpnp/1yHy15dfbxKwTaVJgmapZynLaz8RCBCyrMnnFutFCQRtgUNqskx4jFHPHRvHm
+         dGpzg3VR+wMNhqkAQDXb+aT4QYFmvDQhYITXn7Wu3dfAwUoYjYN3YRnS/tVNRylo4wek
+         svFJl86VA+EVzElhfZK5IJKidQcnkDo3yBHhEFf+vCtvM90CwEN1k6pb/pTK5R3Yc7NN
+         z4uAcWS1gmVPgCeJehBfIBnMgZL/jHMFIVuypGJnTW+AJ5assTLDDeFjCs1/jAvS6ATP
+         YZUl915tMKglrZXlWWEuq6ersDF5c2+wm/gx11+lxoTcNl3jxFDtTuuGbx+3gerTLOYU
+         JBwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=iKvyQs3hqK0Cahom1nAntcSOXnDcOmXkOeQhD6hPnVs=;
+        b=ResOSXLReq3xGSeBci3ACMIY78KZ/vyfr/J+MjV7K5TZ3fW6J997FVwCgK0LF+mQNJ
+         PX7xA5+7B89wdN8S2fIEzJDuz26oF6fsWHaOzrT/1d3loznjgtS0YW7DKqiHN6SxZ6Fr
+         +FsdDn/6kuJizNVY5P4wt5bAhwJ/UJzSCk5DLtQQHG0f1TcwmlcQdU4QpJJ3+1fYB3Dc
+         UYwa0Qo34NvxuKFox+x/reULD4tmIQyJlBn8or6X2l6mEsf0ostRXLZvV9lT7xvpxW2n
+         3Fetr3HFxlsdalkQGmTtcXlySVLbkFFTETY0MBvRmFXB9EuRVa5fu53ruiOrUa5/WVni
+         p+sQ==
+X-Gm-Message-State: AGi0PuaO3/wHLZau7pvz67QNnMlCCPBnB5rqr+FyZXzPQURUxkjG/J1W
+        0J1l4pJU3IxovFqJpv2rzfN0POGp
+X-Google-Smtp-Source: APiQypLRo9BOzn4MqWto4kHSYcRYAxuUSxbia8X+XluJmYRYJICoxCn7H0cWHUumwiTcKesjpX0E5g==
+X-Received: by 2002:a7b:c38b:: with SMTP id s11mr2244959wmj.55.1588242845429;
+        Thu, 30 Apr 2020 03:34:05 -0700 (PDT)
+Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.gmail.com with ESMTPSA id n25sm11672204wmk.9.2020.04.30.03.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 03:34:04 -0700 (PDT)
+Message-ID: <2602d65b534fc0e9d6738d3c670bdb07fd287e5b.camel@gmail.com>
+Subject: Re: [PATCH v3 2/5] w1_therm: adding sysfs entry to check device
+ power
+From:   Akira shimahara <akira215corp@gmail.com>
+To:     Evgeniy Polyakov <zbr@ioremap.net>, Greg KH <greg@kroah.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 30 Apr 2020 12:34:03 +0200
+In-Reply-To: <330221588173223@mail.yandex.ru>
+References: <20200429133204.140081-1-akira215corp@gmail.com>
+         <20200429134655.GB2132814@kroah.com> <330221588173223@mail.yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200430100821.GC19932@willie-the-truck>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Will Deacon <will@kernel.org> [2020-04-30 11:08:22]:
+Hello,
 
-> > This patch is meant to seek comments. If its considered to be in right
-> > direction, will work on making it more complete and send the next version!
+Le mercredi 29 avril 2020 à 18:18 +0300, Evgeniy Polyakov a écrit :
+> Hi
 > 
-> What's stopping you from implementing the trapping support in the
-> hypervisor? Unlike the other patches you sent out, where the guest memory
-> is not accessible to the host, there doesn't seem to be any advantage to
-> not having trapping support, or am I missing something here?
+> 
+> 
+> 29.04.2020, 16:47, "Greg KH" <greg@kroah.com>:
+> 
+> 
+> 
+> > >  +What: /sys/bus/w1/devices/.../w1_slave
+> > >  +Date: Apr 2020
+> > >  +Contact: Akira Shimahara <akira215corp@gmail.com>
+> > >  +Description:
+> > >  + (RW) return the temperature in 1/1000 degC.
+> > >  + *read*: return 2 lines with the hexa output data sent on the
+> > >  + bus, return the CRC check and temperature in 1/1000 degC
+> > the w1_slave file returns a temperature???
+> > And sysfs is 1 value-per-file, not multiple lines.
+> 
+> 
+> It was 'content crc' previously, and probably a good idea would be to
+> add just one file with 'content'
+ 
+That's the purpose of the new sysfs entry 'temperature'. It only
+content temperature. As already mentionned we have to keep the w1_slave
+entry for compatibility purpose, all existing user application parse
+this file.
 
-Hi Will,
-	I have had this discussion with hypervisor folks. They seem to be
-concerned about complexity of having a VM's fault be handled in another
-untrusted VM. They are not keen to add MMIO support.
+I submitted the patch series yesterday night, splitting it in 9
+patches.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Regards,
+
+Akira Shimahara
+
