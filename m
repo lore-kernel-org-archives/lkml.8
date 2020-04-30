@@ -2,78 +2,101 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F7FC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8C5C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6BF214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE24F20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgD3HM0 (ORCPT
+        id S1726510AbgD3HOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:12:26 -0400
-Received: from smtp25.cstnet.cn ([159.226.251.25]:42868 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726337AbgD3HM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:12:26 -0400
-Received: from ubuntu.localdomain (unknown [223.104.3.134])
-        by APP-05 (Coremail) with SMTP id zQCowADnh_FPeqpeDU+oAA--.9471S2;
-        Thu, 30 Apr 2020 15:12:16 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     linux@armlinux.org.uk, michal.simek@xilinx.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ZYNQ: platsmp: fix ioremap return value
-Date:   Thu, 30 Apr 2020 15:12:15 +0800
-Message-Id: <20200430071215.13448-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowADnh_FPeqpeDU+oAA--.9471S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF48ZFWxGFyktryDZr1DJrb_yoWxurg_Aw
-        1xtanrW3sYqF1v9w4rCa18Crsrt348Cr1Fgry2yF92k3yUWr17Cryvya9aqw4xX3ZagrZ8
-        GrWxGryayw15JjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbwxYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
-        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-        IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-        xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcDDGUUUUU
-X-Originating-IP: [223.104.3.134]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCgECA1z4i0Q2CAAAsf
+        Thu, 30 Apr 2020 03:14:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35988 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbgD3HOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:14:46 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jU3P3-0004ek-SK; Thu, 30 Apr 2020 07:14:37 +0000
+Date:   Thu, 30 Apr 2020 09:14:37 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Arseny Maslennikov <ar@cs.msu.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Landley <rob@landley.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
+        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Subject: Re: [PATCH v3 4/7] linux/signal.h: Ignore SIGINFO by default in new
+ tasks
+Message-ID: <20200430071437.x3ilwkh3lyf4iq6u@wittgenstein>
+References: <20200430064301.1099452-1-ar@cs.msu.ru>
+ <20200430064301.1099452-5-ar@cs.msu.ru>
+ <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ioremap we should return -ENOMEM when it reports an
-memory allocation failure.
+On Thu, Apr 30, 2020 at 08:53:56AM +0200, Jiri Slaby wrote:
+> On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
+> > This matches the behaviour of other Unix-like systems that have SIGINFO
+> > and causes less harm to processes that do not install handlers for this
+> > signal, making the keyboard status character non-fatal for them.
+> > 
+> > This is implemented with the assumption that SIGINFO is defined
+> > to be equivalent to SIGPWR; still, there is no reason for PWR to
+> > result in termination of the signal recipient anyway — it does not
+> > indicate there is a fatal problem with the recipient's execution
+> > context (like e.g. FPE/ILL do), and we have TERM/KILL for explicit
+> > termination requests.
+> > 
+> > To put it another way:
+> > The only scenario where system behaviour actually changes is when the
+> > signal recipient has default disposition for SIGPWR. If a process
+> > chose to interpret a SIGPWR as an incentive to cleanly terminate, it
+> > would supply its own handler — and this commit does not affect processes
+> > with non-default handlers.
+> > 
+> > Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
+> > ---
+> >  include/linux/signal.h | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/signal.h b/include/linux/signal.h
+> > index 05bacd2ab..dc31da8fc 100644
+> > --- a/include/linux/signal.h
+> > +++ b/include/linux/signal.h
+> > @@ -369,7 +369,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
+> >   *	|  SIGSYS/SIGUNUSED  |	coredump 	|
+> >   *	|  SIGSTKFLT         |	terminate	|
+> >   *	|  SIGWINCH          |	ignore   	|
+> > - *	|  SIGPWR            |	terminate	|
+> > + *	|  SIGPWR            |	ignore   	|
+> 
+> You need to update signal.7 too:
+> https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man7/signal.7#n285
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- arch/arm/mach-zynq/platsmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+(I fail this whole thread via b4 and it appears that a bunch of messages
+are missing on lore. Might just be delay though.)
 
-diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.c
-index 68ec303fa278..308f74f9b4f9 100644
---- a/arch/arm/mach-zynq/platsmp.c
-+++ b/arch/arm/mach-zynq/platsmp.c
-@@ -47,7 +47,7 @@ int zynq_cpun_start(u32 address, int cpu)
- 				zero = ioremap(0, trampoline_code_size);
- 				if (!zero) {
- 					pr_warn("BOOTUP jump vectors not accessible\n");
--					return -1;
-+					return -ENOMEM;
- 				}
- 			} else {
- 				zero = (__force u8 __iomem *)PAGE_OFFSET;
--- 
-2.17.1
+How this is this not going to break userspace?
+Just for a start, SIGPWR (for better or worse) was used for a long time
+by some sandboxing/container runtimes to shutdown a process and still
+is.
 
+Christian
