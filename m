@@ -2,202 +2,159 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A2C83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8AEC83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D362083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9F42073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uENcP0JH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgD3DFq (ORCPT
+        id S1726526AbgD3DFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:05:46 -0400
-Received: from mx.socionext.com ([202.248.49.38]:42028 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3DFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:05:45 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 30 Apr 2020 12:05:43 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 24CE360057;
-        Thu, 30 Apr 2020 12:05:44 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 30 Apr 2020 12:05:44 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id E16371A12AD;
-        Thu, 30 Apr 2020 12:05:43 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2] dt-bindings: thermal: Convert UniPhier thermal monitor to json-schema
-Date:   Thu, 30 Apr 2020 12:05:34 +0900
-Message-Id: <1588215934-13252-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 Apr 2020 23:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726180AbgD3DFw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 23:05:52 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0AEC035494;
+        Wed, 29 Apr 2020 20:05:52 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id k133so3935111oih.12;
+        Wed, 29 Apr 2020 20:05:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VUvIqhD5Rxtvk/jJNTE+TX+Ap06+KNlY2PxWsoF7YmE=;
+        b=uENcP0JHZuNMkaSj1t7het/sY4CM7iUdPdQKE7KG3ndlBgIBTx12cuMhgPg/mEsJGk
+         qGtosYFNSpPj3UoukqC/H9FaF1cLDqpT5PAonTiMiCYEe1nxZQwBTjwaWAJRSoAZbBfr
+         h9mXNAwimPXirORJaJ/+A6D4MuppnM1nOuEayDk9mZUkxiQAQzdak3X5xHwwSsUKdLst
+         A5s2g2suW3ZUGQYrwyyTKJZU5OiGJPJMrIuJqs0H4RD67EjGQEE29oXDnzbnzDn37jro
+         B4EIruWgxFf34rHjHSYDPA1+fHP4+Vqdv1yS1XYDAz4OZJC/yCMd3SVZ+GUbSmv4DfzF
+         8juA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VUvIqhD5Rxtvk/jJNTE+TX+Ap06+KNlY2PxWsoF7YmE=;
+        b=kBPAy8sVpRdHcAA2w+x5GVY0HFHo8ULJRkhNFYm5TBgNYH8U+HjU5zJ61etA8F721r
+         tLx4RtoIecCrXSuz7kg+x3Tfp2tE4znaB7diV4Mp9fAoNQdkq/xfA+RVTqp1i/xiEvjP
+         hnanP2wzYpkHDRuzMvm9SJ2cctTCUzlcDcyabeNU8LUBrZ1TWSRENBJJH0Lm49I/bkKA
+         pzqI+KAlPfsRhc6XddIyOEmXQ/agoiGMcApjRvQTwN8xEFmXeGEBh0bFf2miOmVZPH39
+         D2kLmAj4QpG3aSpEhFW7R4w8oEyV8tiFO9GWsM2L5mpKH9wxwDlscJbi7uzJKwSeHzWq
+         Drnw==
+X-Gm-Message-State: AGi0Pua1kjkzgEZ0u1n0KRknGaZt73bJOIYtpNkwxmu8k49wyWBSu1dw
+        YDaJ3x+IYH12PLUm6PmKlsw=
+X-Google-Smtp-Source: APiQypJxYT67Wj4GYwNMziw54LqhetN94i+LuGa/7Fi/4X5Mj5VAWqVhBi1y04LKBxXwUaIAMUGIJg==
+X-Received: by 2002:aca:53cd:: with SMTP id h196mr311956oib.104.1588215950910;
+        Wed, 29 Apr 2020 20:05:50 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id h65sm916166oth.34.2020.04.29.20.05.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 20:05:50 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 20:05:48 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>
+Subject: Re: [PATCH v4 1/5] kbuild: add CONFIG_LD_IS_LLD
+Message-ID: <20200430030548.GA3546299@ubuntu-s3-xlarge-x86>
+References: <20200423171807.29713-1-natechancellor@gmail.com>
+ <20200428221419.2530697-1-natechancellor@gmail.com>
+ <20200428221419.2530697-2-natechancellor@gmail.com>
+ <CA+icZUXa3JBittjDVdNyV1M08dRt_pwACi2-0nLPEwao6yNABw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUXa3JBittjDVdNyV1M08dRt_pwACi2-0nLPEwao6yNABw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier thermal monitor binding to DT schema format.
+On Wed, Apr 29, 2020 at 09:13:40AM +0200, Sedat Dilek wrote:
+> On Wed, Apr 29, 2020 at 12:14 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > From: Sami Tolvanen <samitolvanen@google.com>
+> >
+> > Similarly to the CC_IS_CLANG config, add LD_IS_LLD to avoid GNU ld
+> > specific logic such as ld-version or ld-ifversion and gain the
+> > ability to select potential features that depend on the linker at
+> > configuration time such as LTO.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+> > [nc: Reword commit message]
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> 
+> Testing on Debian/testing AMD64 (since Linux v5.3):
+> #1: LLVM/Clang/LLD version 9.0 and 10.0
+> #2: Debian's GCC 9.3 with ld.lld-9 and ld.lld-10
+> 
+> I am linking my Linux-kernels with ld.lld despite there are issues -
+> then check with ld.bfd.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
+What issues are these? Have they been reported?
 
-Changes since v1:
-- Add maxItems to "socionext,tmod-calibration" property
-- Fix indents in examples
+Cheers,
+Nathan
 
-.../thermal/socionext,uniphier-thermal.yaml        | 59 ++++++++++++++++++++
- .../bindings/thermal/uniphier-thermal.txt          | 65 ----------------------
- 2 files changed, 59 insertions(+), 65 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
- delete mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-
-diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-new file mode 100644
-index 0000000..bb9594b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/socionext,uniphier-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext UniPhier thermal monitor
-+
-+description: |
-+  This describes the devicetree bindings for thermal monitor supported by
-+  PVT(Process, Voltage and Temperature) monitoring unit implemented on
-+  Socionext UniPhier SoCs.
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pxs2-thermal
-+      - socionext,uniphier-ld20-thermal
-+      - socionext,uniphier-pxs3-thermal
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 0
-+
-+  socionext,tmod-calibration:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - maxItems: 2
-+    description:
-+      A pair of calibrated values referred from PVT, in case that the values
-+      aren't set on SoC, like a reference board.
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - "#thermal-sensor-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    // The UniPhier thermal should be a subnode of a "syscon" compatible node.
-+
-+    sysctrl@61840000 {
-+        compatible = "socionext,uniphier-ld20-sysctrl",
-+                     "simple-mfd", "syscon";
-+        reg = <0x61840000 0x10000>;
-+
-+        pvtctl: thermal {
-+            compatible = "socionext,uniphier-ld20-thermal";
-+            interrupts = <0 3 1>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-deleted file mode 100644
-index ceb92a9..0000000
---- a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--* UniPhier Thermal bindings
--
--This describes the devicetree bindings for thermal monitor supported by
--PVT(Process, Voltage and Temperature) monitoring unit implemented on Socionext
--UniPhier SoCs.
--
--Required properties:
--- compatible :
--  - "socionext,uniphier-pxs2-thermal" : For UniPhier PXs2 SoC
--  - "socionext,uniphier-ld20-thermal" : For UniPhier LD20 SoC
--  - "socionext,uniphier-pxs3-thermal" : For UniPhier PXs3 SoC
--- interrupts : IRQ for the temperature alarm
--- #thermal-sensor-cells : Should be 0. See ./thermal.txt for details.
--
--Optional properties:
--- socionext,tmod-calibration: A pair of calibrated values referred from PVT,
--                              in case that the values aren't set on SoC,
--                              like a reference board.
--
--Example:
--
--	sysctrl@61840000 {
--		compatible = "socionext,uniphier-ld20-sysctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x61840000 0x10000>;
--		...
--		pvtctl: pvtctl {
--			compatible = "socionext,uniphier-ld20-thermal";
--			interrupts = <0 3 1>;
--			#thermal-sensor-cells = <0>;
--		};
--		...
--	};
--
--	thermal-zones {
--		cpu_thermal {
--			polling-delay-passive = <250>;	/* 250ms */
--			polling-delay = <1000>;		/* 1000ms */
--			thermal-sensors = <&pvtctl>;
--
--			trips {
--				cpu_crit: cpu_crit {
--					temperature = <110000>;	/* 110C */
--					hysteresis = <2000>;
--					type = "critical";
--				};
--				cpu_alert: cpu_alert {
--					temperature = <100000>;	/* 100C */
--					hysteresis = <2000>;
--					type = "passive";
--				};
--			};
--
--			cooling-maps {
--				map0 {
--					trip = <&cpu_alert>;
--					cooling-device = <&cpu0 (-1) (-1)>;
--				};
--				map1 {
--					trip = <&cpu_alert>;
--					cooling-device = <&cpu2 (-1) (-1)>;
--				};
--			};
--		};
--	};
--- 
-2.7.4
-
+> - Sedat -
+> 
+> > ---
+> >
+> > v3 -> v4:
+> >
+> > * No changes.
+> >
+> > v2 -> v3:
+> >
+> > * Add Masahiro's ack.
+> >
+> > v1 -> v2:
+> >
+> > * No changes.
+> >
+> > Sami, please scream if you are unhappy with how I worded this commit.
+> >
+> >  init/Kconfig | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index 9e22ee8fbd75e..c15ee42b82726 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -23,6 +23,9 @@ config LD_VERSION
+> >  config CC_IS_CLANG
+> >         def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
+> >
+> > +config LD_IS_LLD
+> > +       def_bool $(success,$(LD) -v | head -n 1 | grep -q LLD)
+> > +
+> >  config CLANG_VERSION
+> >         int
+> >         default $(shell,$(srctree)/scripts/clang-version.sh $(CC))
+> >
+> > base-commit: 96c9a7802af7d500a582d89a8b864584fe878c1b
+> > --
+> > 2.26.2
+> >
