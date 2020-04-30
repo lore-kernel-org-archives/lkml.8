@@ -2,67 +2,99 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4453C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC8C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B36AB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFA82076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:20:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="OzZrNtkd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gcaVyYdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgD3UTm (ORCPT
+        id S1727113AbgD3UUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:19:42 -0400
-Received: from mail.kocurkovo.cz ([185.8.236.170]:50384 "EHLO
-        mail.kocurkovo.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgD3UTc (ORCPT
+        Thu, 30 Apr 2020 16:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgD3UUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:19:32 -0400
-X-Greylist: delayed 559 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 16:19:31 EDT
-Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
-        id 2D1F6954; Thu, 30 Apr 2020 22:10:06 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 2D1F6954
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
-        s=mail; t=1588277406;
-        bh=GRiqx3S89pnK7y7w7UBxwGrz8iZUSDLvCma5su5DnY8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OzZrNtkdl+Tr4LsizEOjPoSKbwnO+sLyLOuLT+FGPu9wluqS6K+eYdfijsaeurXth
-         1Uqw+iNr2KC0JhrWN8HfiRMZC2rbOp4RxuX8wtW4xRS+1Lxay/50MFJe9pJP62Sl43
-         4h1CKo6sJi0ZVis0vVwfSAlGHYY3ayV5jPZlX5iU=
-From:   Matej Dujava <mdujava@kocurkovo.cz>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Matej Dujava <mdujava@kocurkovo.cz>
-Subject: [PATCH 0/3] Refactor reused code for updating fb_info
-Date:   Thu, 30 Apr 2020 22:09:23 +0200
-Message-Id: <1588277366-19354-1-git-send-email-mdujava@kocurkovo.cz>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 30 Apr 2020 16:20:24 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C64C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:20:24 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h4so683048ljg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=guKhKwrXEiDwgQzNFnO6v/2/mR5PiCzsUtQ3eT/ji4A=;
+        b=gcaVyYdy32+4klv0m7W2u51o7lyTPuxVavEx8YwwdS2ENTcJOhovS0+Av7iXHFQVaW
+         0DkmLQyPVheQfV0yVq4/ZjJ45Sm4cgzctg6kflk4xvDPRrCz9H4ctmEhZ7rU/ru60hBr
+         5GNSJ3glyv1H/QAIx+KBjmCRwKhXWNzFHz1I5byQDnFd7QYuRsaizyq0/JvpuuF3vJBs
+         sznI+dhDToDpZ8UYWzDkrEUWudNUnX2Au2DdObfHIzf0dkRHz9gnaCDhJiK/f0xcrvQq
+         j69cVNJu7Ta/ldmUGyk+fln1PTh2sTsRPZdyYGbDCCdEisLWPib9t2fJl2bYdT22T2p4
+         6sDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=guKhKwrXEiDwgQzNFnO6v/2/mR5PiCzsUtQ3eT/ji4A=;
+        b=P4TDXdQjKu4sfcr7/8UPu8z2bysppVEFXP2lynD5XRA+b2/hJOaXHBe4/aK/bprjte
+         j9+cOvVurNUK7DCsacWA1IazAbtEeoWcFCeXM8nOrWn+6/UblEX8WoHvOv8YC4b4bXku
+         OjpK4LOmERRq3u+V7tUcWwjhhiPvo17fKIpTWpjBMjsMNKC335ptMWWrhT53SdwILPpT
+         kHMZNY8JCAP3gUyf2XHTxr6EJAgfbA4nDhMiNq67JovlLk3pzdK2zkPaP4o5LwKRJDqy
+         6qRze23ajO/G1hPd7F33qUp65mCe+NbdrCbkIF6ECccnEkIyIUhFhg0llvD7uegCmQ9O
+         Ju4w==
+X-Gm-Message-State: AGi0PuZ9Be/sK4Jjh6mnRk9JHSe9lNuNuhlocU+5CGd2xTS9fkw5E5Mc
+        vmpZsVZKP9p1FJFgy2o3O7TttT8E2d001mLuTjl8ww==
+X-Google-Smtp-Source: APiQypIN1pXroLJgB0zigxp45+sMYFPb32PYYNnPovYQfEX4qVKgGdnnsiT3h2XmdfDD/SQlJTrtw3sUQJsp6N9FWGI=
+X-Received: by 2002:a2e:9a4a:: with SMTP id k10mr366782ljj.115.1588278022286;
+ Thu, 30 Apr 2020 13:20:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200430182712.237526-1-shakeelb@google.com> <20200430192907.GA2436@cmpxchg.org>
+In-Reply-To: <20200430192907.GA2436@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 30 Apr 2020 13:20:10 -0700
+Message-ID: <CALvZod6Gatw+sX7_hsVPB-O2yMt-ygXUSweQbHwxZHgwdEth4Q@mail.gmail.com>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set will unify reused switch statement updating fb_info by
-creating inline functions.
+On Thu, Apr 30, 2020 at 12:29 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 11:27:12AM -0700, Shakeel Butt wrote:
+> > Lowering memory.max can trigger an oom-kill if the reclaim does not
+> > succeed. However if oom-killer does not find a process for killing, it
+> > dumps a lot of warnings.
+> >
+> > Deleting a memcg does not reclaim memory from it and the memory can
+> > linger till there is a memory pressure. One normal way to proactively
+> > reclaim such memory is to set memory.max to 0 just before deleting the
+> > memcg. However if some of the memcg's memory is pinned by others, this
+> > operation can trigger an oom-kill without any process and thus can log a
+> > lot un-needed warnings. So, ignore all such warnings from memory.max.
+>
+> Can't you set memory.high=0 instead? It does the reclaim portion of
+> memory.max, without the actual OOM killing that causes you problems.
 
-Tested only by compilation.
-
-Matej Dujava (3):
-  staging: sm750fb: add missing case while setting FB_VISUAL
-  staging: sm750fb: add common function to set color offsets and visual
-    mode
-  staging: sm750fb: print error message with actual value
-
- drivers/staging/sm750fb/sm750.c | 150 +++++++++++++++-----------------
- 1 file changed, 68 insertions(+), 82 deletions(-)
-
--- 
-2.26.2
-
+Yes that would work but remote charging concerns me. Remote charging
+can still happen after the memcg is offlined and at the moment, high
+reclaim does not work for remote memcg and the usage can go till max
+or global pressure. This is most probably a misconfiguration and we
+might not receive the warnings in the log ever. Setting memory.max to
+0 will definitely give such warnings.
