@@ -2,120 +2,254 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3A9C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7625AC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF41B2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588249170;
-	bh=N9rKaTsZFrUvyvsuP9lOc4Wzmprx5voNQJlTVM2rGf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zui04giGDO/LmKMLp0W4ZpAcxftpAFzWOIGOrw9g5XdmnUWEBwWItg0hyVamY3BJn
-	 FqTrxRRrKpmWTN9h2VDAEgM4Xd9UI6Op4TBBAjkUFJG9eWv92fHylxs3tkVex/52w3
-	 joLUBSMtgwNTTNj9C6V8GMLl69KpLD9v102zeDxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4C6532076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZL/cHNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgD3MTa (ORCPT
+        id S1726770AbgD3MVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgD3MT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:19:29 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 30 Apr 2020 08:21:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37083 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726413AbgD3MVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:21:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588249271;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x9Oy7Lkbf5iDQCQG90qiSeeLh3uqoFDlnoF97dVTF3o=;
+        b=IZL/cHNufMBFejJcAgir8wnkrcZ0y5dYUyTkk+gIPmcO41gyhAquY/NR0X8mKB9EP3BPnv
+        OxaU+LK1CJwoXLVU9FITqpRTtge/B9p4H8ILCvIuudei2NK9FK91QSVqDtWIHYiv3OiRSz
+        KGcYwHeI/b5wpscFGYR8PnWY4gp9jfM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-T0oUkGWxMNW9P4uX0NQIKw-1; Thu, 30 Apr 2020 08:21:05 -0400
+X-MC-Unique: T0oUkGWxMNW9P4uX0NQIKw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDAE92076D;
-        Thu, 30 Apr 2020 12:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588249169;
-        bh=N9rKaTsZFrUvyvsuP9lOc4Wzmprx5voNQJlTVM2rGf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kUAkY5ypXbCmOb1J6dz7spcNrSx8SjCBuT8ha4oxfvY5gTGWEPVdtk14Hpg+O4PBl
-         Qj/56KbHndZm/zVKyt3Sn42jlYyvBevEtJJdc2RAZYMcLcdX91zOnVrswvPKexje0u
-         4TPMM4s4MnfBnUOCPqX9zSl5uoEUM+0WfU7etRYE=
-Date:   Thu, 30 Apr 2020 13:19:26 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v4 02/16] spi: atmel-quadspi: reject DTR ops
-Message-ID: <20200430121926.GC4633@sirena.org.uk>
-References: <20200424184410.8578-1-p.yadav@ti.com>
- <20200424184410.8578-3-p.yadav@ti.com>
- <20200430113243.GB4633@sirena.org.uk>
- <20200430121737.37dghomlluzqcxxi@ti.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 500AC83DE6B;
+        Thu, 30 Apr 2020 12:21:03 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-72.ams2.redhat.com [10.36.113.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 485DE1010403;
+        Thu, 30 Apr 2020 12:20:56 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Carlos O'Donell <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C startup and thread creation (v18)
+References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com>
+Date:   Thu, 30 Apr 2020 14:20:54 +0200
+In-Reply-To: <20200428171513.22926-1-mathieu.desnoyers@efficios.com> (Mathieu
+        Desnoyers's message of "Tue, 28 Apr 2020 13:15:11 -0400")
+Message-ID: <875zdhmaft.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
-Content-Disposition: inline
-In-Reply-To: <20200430121737.37dghomlluzqcxxi@ti.com>
-X-Cookie: Sign here without admitting guilt.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Mathieu Desnoyers:
 
---nmemrqcdn5VTmUEE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/NEWS b/NEWS
+> index 0e627b3405..0b85a02c12 100644
+> --- a/NEWS
+> +++ b/NEWS
+> @@ -18,6 +18,16 @@ Major new features:
+>  * The GNU C Library now loads audit modules listed in the DT_AUDIT and
+>    DT_DEPAUDIT dynamic section entries of the main executable.
+>=20=20
+> +* Support for automatically registering threads with the Linux rseq(2)
+> +  system call has been added.  This system call is implemented starting
+> +  from Linux 4.18.  The Restartable Sequences ABI accelerates user-space
+> +  operations on per-cpu data.  It allows user-space to perform updates
+> +  on per-cpu data without requiring heavy-weight atomic operations.
+> +  Automatically registering threads allows all libraries, including libc,
+> +  to make immediate use of the rseq(2) support by using the documented A=
+BI.
+> +  The GNU C Library manual has details on integration of Restartable
+> +  Sequences.
 
-On Thu, Apr 30, 2020 at 05:47:39PM +0530, Pratyush Yadav wrote:
+GNU style doesn't use (2) here, I think.
 
-> Most other controllers either don't specify a supports_op function at=20
-> all, in which case spi_mem_default_supports_op() is called, or do their=
-=20
-> custom logic and then call spi_mem_default_supports_op(). In both those=
-=20
-> cases, DTR ops would get rejected because of the call to=20
-> spi_mem_default_supports_op(). So they do not need to add the check=20
-> explicitly there.
+> diff --git a/manual/threads.texi b/manual/threads.texi
+> index 0858ef8f92..4754cdaeb5 100644
+> --- a/manual/threads.texi
+> +++ b/manual/threads.texi
 
-> The two exceptions are atmel-quadspi and spi-mtk-nor (which I missed=20
-> updating). They don't call the default supports_op, so they need to be=20
-> updated to explicitly to reject DTR ops.
+> @@ -881,3 +883,27 @@ Behaves like @code{pthread_timedjoin_np} except that=
+ the absolute time in
+>  @c pthread_spin_unlock
+>  @c pthread_testcancel
+>  @c pthread_yield
+> +
+> +@node Restartable Sequences
+> +@section Restartable Sequences
+> +@cindex rseq
 
-OK.
+Suggest: @cindex Restartable Sequences
 
-> Earlier versions of this series discovered the DTR capability from=20
-> devicetree. In that case, no change would be required at all, but review=
-=20
-> comments suggested I drop those changes. Instead, the controllers should=
-=20
-> accept/reject DTR ops in their supports_op hooks.
+> +
+> +This section describes @theglibc{} Restartable Sequences integration.
 
-It definitely shouldn't be in device tree, this is something that the
-silicon supports so we should already be able to figure out if we can
-use it with just the compatible.
+Suggest: This section describes Restartable Sequences integration for
+@theglibc{}.  (Avoids an excessively long noun phrase.)
 
---nmemrqcdn5VTmUEE
-Content-Type: application/pgp-signature; name="signature.asc"
+Maybe mention which uses of the rseq syscall are permitted behind the
+back of glibc?  And that code should not leave dangling rseq cs pointers
+behind (the dlopen interaction)?
 
------BEGIN PGP SIGNATURE-----
+> +@deftypevar {struct rseq} __rseq_abi
+> +@standards{Linux, sys/rseq.h}
+> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with t=
+he
+> +Restartable Sequences system call (Linux-specific).  The layout of this
+> +structure is defined by the Linux kernel @file{linux/rseq.h} UAPI.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6qwk0ACgkQJNaLcl1U
-h9CGPQf/RnFFO+2GEO20wzuUOjiIgXpgOfBnSKgMTXOWAmba2YafGkKYwsymVpGY
-zt5Q9vkcx9dsgudhY892WkRo/l9+xJOkSYbp38ld0QR+YNfXbPUPeuvhK2F39YTJ
-YjMbZw8hbYyMqF+yXbJXJrj7PGbu9ISesfBgC73i3ywZC8S9epUKQZp7HssURy/M
-GJEMzoM40Vam/V48VAPrMHa0Dut9Bum74W9jzW5Fpnxz00AkY47aeMzGSOD+IyHD
-zP97bFTE4NUym4FES9c9efA61FuUJxOK8YRN5Hmfn22BwxxQ6ZT1B+7jRv+Fj32J
-GfvAqmI+mYhLpW/bHI7PCh/eP/eO0g==
-=dS3u
------END PGP SIGNATURE-----
+The linux/rseq.h reference seems redundant, given that sys/rseq.h covers
+it as well.
 
---nmemrqcdn5VTmUEE--
+> +Registration of each thread's @code{__rseq_abi} is performed by
+> +@theglibc{} at libc initialization and pthread creation.
+
+Suggest: library initialization and thread creation
+
+> +@end deftypevar
+> +
+> +@deftypevr Macro int RSEQ_SIG
+> +@standards{Linux, sys/rseq.h}
+> +Each supported architecture provide a @code{RSEQ_SIG} macro in
+
+Typo: provides
+
+> +@file{sys/rseq.h} which contains a signature.  That signature is expecte=
+d to be
+> +present in the code before each Restartable Sequences abort handler.  Fa=
+ilure
+> +to provide the expected signature may terminate the process with a Segme=
+ntation
+> +fault.
+
+Suggest: segmentation fault (no capitalization)
+
+> diff --git a/misc/rseq-internal.h b/misc/rseq-internal.h
+> new file mode 100644
+> index 0000000000..16f197397f
+> --- /dev/null
+> +++ b/misc/rseq-internal.h
+
+Maybe this should go in to sysdeps/generic instead of misc?
+(See the recent discussion about elf_machine_sym_no_match.)
+
+> diff --git a/sysdeps/unix/sysv/linux/rseq-internal.h b/sysdeps/unix/sysv/=
+linux/rseq-internal.h
+> new file mode 100644
+> index 0000000000..3ecd4d0611
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/rseq-internal.h
+> @@ -0,0 +1,47 @@
+> +/* Restartable Sequences internal API.  Linux implementation.
+> +   Copyright (C) 2020 Free Software Foundation, Inc.
+> +
+> +   The GNU C Library is free software; you can redistribute it and/or
+> +   modify it under the terms of the GNU Lesser General Public
+> +   License as published by the Free Software Foundation; either
+> +   version 2.1 of the License, or (at your option) any later version.
+> +
+> +   The GNU C Library is distributed in the hope that it will be useful,
+> +   but WITHOUT ANY WARRANTY; without even the implied warranty of
+> +   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> +   Lesser General Public License for more details.
+> +
+> +   You should have received a copy of the GNU Lesser General Public
+> +   License along with the GNU C Library; if not, see
+> +   <https://www.gnu.org/licenses/>.  */
+> +
+> +#ifndef RSEQ_INTERNAL_H
+> +#define RSEQ_INTERNAL_H
+> +
+> +#include <sysdep.h>
+> +#include <errno.h>
+> +#include <kernel-features.h>
+> +#include <sys/rseq.h>
+> +
+> +#ifdef RSEQ_SIG
+> +static inline void
+> +rseq_register_current_thread (void)
+> +{
+> +  int ret;
+> +
+> +  if (__rseq_abi.cpu_id =3D=3D RSEQ_CPU_ID_REGISTRATION_FAILED)
+> +    return;
+> +  ret =3D INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
+> +                              0, RSEQ_SIG);
+> +  if (INTERNAL_SYSCALL_ERROR_P (ret) &&
+> +      INTERNAL_SYSCALL_ERRNO (ret) !=3D EBUSY)
+> +    __rseq_abi.cpu_id =3D RSEQ_CPU_ID_REGISTRATION_FAILED;
+
+Sorry, I forgot: Please add a comment that the EBUSY error is ignored
+because registration may have already happened in a legacy library.
+
+> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h b/sysdeps/unix/sysv/linux=
+/sys/rseq.h
+> new file mode 100644
+> index 0000000000..de6600ff45
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
+
+> +#ifdef __GLIBC_HAVE_KERNEL_RSEQ
+> +/* We use the structures declarations from the kernel headers.  */
+> +# include <linux/rseq.h>
+> +#else
+> +/* We use a copy of the include/uapi/linux/rseq.h kernel header.  */
+> +
+> +#include <asm/byteorder.h>
+
+Missing =E2=80=9C# include=E2=80=9C indentation.
+
+> +#ifdef __LP64__
+
+Likewise (more indentation needed below, include double-space
+indentation).
+
+> +/* Allocations of struct rseq and struct rseq_cs on the heap need to
+> +   be aligned on 32 bytes.  Therefore, use of malloc is discouraged
+> +   because it does not guarantee alignment.  posix_memalign should be
+> +   used instead.  */
+> +
+> +extern __thread struct rseq __rseq_abi
+> +__attribute__ ((tls_model ("initial-exec")));
+
+Please indent the __attribute__ with two spaces.
+
+Actual code looks good now.  Thanks.  I don't think there are any
+remaining issues except maybe more documentation.
+
+Florian
+
