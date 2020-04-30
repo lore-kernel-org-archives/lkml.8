@@ -2,172 +2,192 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B271C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43181C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A6120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F3F20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ahnocUsD";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ahnocUsD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XD4+LjTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgD3I0S (ORCPT
+        id S1726832AbgD3I0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 04:26:20 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48181 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726531AbgD3I0S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 04:26:18 -0400
-Received: from mail-db8eur05on2060.outbound.protection.outlook.com ([40.107.20.60]:5984
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726489AbgD3I0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:26:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+tb+i9wu0TS1gl1qo0tc2jROz2bGaHmSTlw1IBnRi0o=;
- b=ahnocUsDYWMcbqBnthqpoe+WqO6VVS1aTQXkGcRg5A8bZaM1HlzHLUdxHOO6t8ntSE0EIy/li/ucXB2Y4eTtYA/un8kzRL3Y4sFXbuXVWX6IoO2GHmVwfzKcaVD4PX0yO6vXqcBsj4c4ABQ/TBwMOJU39HWsGXOZtRr3xvXJEWk=
-Received: from MR2P264CA0076.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:32::16)
- by AM5PR0802MB2386.eurprd08.prod.outlook.com (2603:10a6:203:9b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Thu, 30 Apr
- 2020 08:26:12 +0000
-Received: from VE1EUR03FT041.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:32:cafe::d4) by MR2P264CA0076.outlook.office365.com
- (2603:10a6:500:32::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Thu, 30 Apr 2020 08:26:12 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT041.mail.protection.outlook.com (10.152.19.163) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:26:12 +0000
-Received: ("Tessian outbound b3a67fbfbb1f:v54"); Thu, 30 Apr 2020 08:26:10 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 47ec3989bcf6.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 95D81D35-B945-4BD3-9366-302A3FA1B570.1;
-        Thu, 30 Apr 2020 08:26:05 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 47ec3989bcf6.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 30 Apr 2020 08:26:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IWfcC2NMLho+VGzH1HqKVOXmjTeWOD40U85KwCuzbvxQ1WLPEHbvhtaunZiDXoBxJvbvqUxq9TRczjobcN7Wzjw6JGM8MVdcZGgvmj5FKOZ8oOCY3yBAwG2UArTlAdCHawQzt4lsMvCM4DTsBynRh1opwhFQKQch9ZdCYfF+NdBU28k40PPO2Y4meIuf5G86rIoItXHQwanNky4ewg5opMWq4AMQB3xVHyMaJlye0j9HvjoY1YyOv8ZGsb47QBRzE47/UoXoToXtOgKK9/CLAu95tex9rFz+p4EyMC9brHKc9MAlgunWKGecqMlWyX9flqzMenrfx58At+RjYGXtcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+tb+i9wu0TS1gl1qo0tc2jROz2bGaHmSTlw1IBnRi0o=;
- b=iFt4cZYkWZYG/3LmlnmGP1/DqAWkPkmQSh6F24G5dKsokL1dy3wFEoUHlXjKnefa6raqqVNdkdyqpB27Tnn2x2WuXuhKk0OXcBab4rsPyMcl5HaOz+2kLmHL4vMLeU0mntVpF8vA4U63QNiSNogMdKGc7l1wdLfxPh5IqvaHVD4wDNq7diHBQzi/cbekKjX8ED7ZC70tGJq6/vyQ3wMES929OkxlgdPnIHBmEZWPsNhtty3Dyirznwy3ykBRs0nnRUn/Gu0/3bXsEE9ZzpkQzBsEnYIk0cGxU7XqYsydDjpr536lA61OHivDWWTJ6oPI/fnvsZLoBnCxIb2BHyjqmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+tb+i9wu0TS1gl1qo0tc2jROz2bGaHmSTlw1IBnRi0o=;
- b=ahnocUsDYWMcbqBnthqpoe+WqO6VVS1aTQXkGcRg5A8bZaM1HlzHLUdxHOO6t8ntSE0EIy/li/ucXB2Y4eTtYA/un8kzRL3Y4sFXbuXVWX6IoO2GHmVwfzKcaVD4PX0yO6vXqcBsj4c4ABQ/TBwMOJU39HWsGXOZtRr3xvXJEWk=
-Received: from AM6PR08MB2999.eurprd08.prod.outlook.com (2603:10a6:209:44::28)
- by AM6PR08MB4168.eurprd08.prod.outlook.com (2603:10a6:20b:aa::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
- 2020 08:26:01 +0000
-Received: from AM6PR08MB2999.eurprd08.prod.outlook.com
- ([fe80::889a:5795:8fec:3bf1]) by AM6PR08MB2999.eurprd08.prod.outlook.com
- ([fe80::889a:5795:8fec:3bf1%3]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
- 08:26:00 +0000
-From:   Hadar Gat <Hadar.Gat@arm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Subject: RE: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
-Thread-Topic: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
-Thread-Index: AQHWHIgZN7YKol1Tq02g1xaDTWU+daiNEe0AgAFkcMCAAAISgIAC0ikggAAEJ4CAAAQ74A==
-Date:   Thu, 30 Apr 2020 08:26:00 +0000
-Message-ID: <AM6PR08MB29990D46BD6C974ACE1914F0E9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
-References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com>
- <1587987364-4566-2-git-send-email-hadar.gat@arm.com>
- <20200427150658.GA26305@gondor.apana.org.au>
- <DB7PR08MB3003E1459755B853B41490D6E9AC0@DB7PR08MB3003.eurprd08.prod.outlook.com>
- <20200428123007.GA3969@gondor.apana.org.au>
- <AM6PR08MB2999F52B99066C321837144DE9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
- <20200430074941.GA12529@gondor.apana.org.au>
-In-Reply-To: <20200430074941.GA12529@gondor.apana.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 9b64d07b-9683-4563-826c-b2270e40a0d1.0
-x-checkrecipientchecked: true
-Authentication-Results-Original: gondor.apana.org.au; dkim=none (message not
- signed) header.d=none;gondor.apana.org.au; dmarc=none action=none
- header.from=arm.com;
-x-originating-ip: [84.109.179.203]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b01a4c40-27fd-44a1-ae27-08d7ece02448
-x-ms-traffictypediagnostic: AM6PR08MB4168:|AM6PR08MB4168:|AM5PR0802MB2386:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM5PR0802MB2386152F669193A265F9EBA0E9AA0@AM5PR0802MB2386.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:4502;OLM:4502;
-x-forefront-prvs: 0389EDA07F
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB2999.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(66476007)(6506007)(66556008)(5660300002)(8676002)(478600001)(76116006)(66946007)(9686003)(55016002)(66446008)(7696005)(33656002)(64756008)(186003)(86362001)(2906002)(52536014)(26005)(8936002)(54906003)(71200400001)(316002)(6916009)(7416002)(4744005)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: wdQoYF4MGTj2gB55r8li1luiYITq8yxU1S+NyoMVMCUXA0VVXnl946d5Qz31jnL+YFikrYFvfvWMkfdm1p2pS7AqmjFOwTaP6u/TT/R7jJQbPrPcvqr62MGP4dXoPYVDGf1Q1keGsirMgnZRlvuuLjJJJjwjS46LARKiGBsC0jCnFNmGR/eDnZHLb9BosI5z16BXmVoDtnUIuxVrKPdk+t8FSST+Ie8GnNevDjBYgDcsgqkVu77eTnmgZskKnfMqFofcPdO2TvlZe+Bgom9iFLo5fZXPip/iPTA7s3xL+aE9XqJad+ezvht+GmV1gPgYe6V/EsHcKzilgsM7aG5UDgSXJPUJNuPEGs72jbEvpmEqI6oq9ZxQT7Dy+tJ4ExmbSCD+rswBl0R58BUoD5hLuTvWTkJtby5Svhk1hryG08x9uHuMPBFNHkQcsrsXskq4
-x-ms-exchange-antispam-messagedata: EHrrK5q1j4KTEKymMX7IGzkG0WtDcgfiRIVoWxNpdXQVZ1SUR2m1wbvI1SgSx9ZcWHGe4GEPsQ4mZJP6UxsuL9A8Pr/ozjicjNM1HEmntVPa87Oidrn828pfvXwrF1R/ZjsriVO7+hm72IJw+lhT/BA0cnapOcEHUdZmVmGUMVHBiEV4Klidh9dkGpaMebjGpPYW2EVvXQRwBye7d+sXmZJa5UQJ3L14KGDt5HtxE9k9wmMvnjBimb21guunt5lSH2F6/f0+eX8VP1VAuwXprBHDXCylojeoLR+yXQk7a0BOrfolE1DMqnnjL5AE2Qgq5heWBxvR/F++7BZGGSmEYf7OOMOSzmM+F1THV6xUXFnCZtQoL8fYuPZHv12GUCwg/zhD7+kBnc6rIhui2qJzCEValGDTfGl8U1AjfmMnWewRSZ/MUeHJjh0rr7Fnx15Dkw6EUWsKyIEdAfbdrDemL9hn6fmyNhSt3asTsNAhZc8h3Yhdn9ffJfE+hEtmp+JUfocKFqVocPGf2yricxZpY7wnLMPxaQUmk5C9JrZ5+rNBz4+MjDtk7dMmqnjOeKd7KawixVCFOc9/czrk9EItalYB+rYMXekAuWdAaO2/eYtEO2THneMIrYs6Jc/Lyw+PqerfD0etybzTbKH+BV2jEa3dU7IsWhqTVmenr+X2jX8fRD6nfIx/4oxM/XbAIG19bHU3GgfyYsNq68kTuyohkkF8w87tdyV6AykJZM4jbPnXzLYpAwMi9obpwfu3Zfuvp5lQD0Te/OT5uidxivzCA132zuC+146lXQQs0nOaV4k=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588235176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YGyRDtb4bigS4OJJzosmGsfyXf9UuewqBG5sz68PxEc=;
+        b=XD4+LjTR67qMiJunq9cF1ctpi5eWEO1IxZjj904vBOR9NTSrzkz9rnVY4l5fm684p4FtUe
+        lo53d4oVFvaL+3rFdvIGx3E4/7bbuuJeG8iU7Yn2me8kn+6RINWv4K/X4DI7B1+T0vVJfD
+        YYthciY3/DHq5OJ51ihV+R7xOUp7HpA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-JBFxwJdWOUuzqvSYhM5_XQ-1; Thu, 30 Apr 2020 04:26:14 -0400
+X-MC-Unique: JBFxwJdWOUuzqvSYhM5_XQ-1
+Received: by mail-wr1-f70.google.com with SMTP id p2so3474342wrx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:26:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YGyRDtb4bigS4OJJzosmGsfyXf9UuewqBG5sz68PxEc=;
+        b=cbmroXd+p3/lvdv4AqeNVOIG02mRg3fuDyA+pzezT6tAJZXv6be6z+QRdYzP7RZSfd
+         qcvMV8LN54uHwWXK6d0M9+QZy777tVBONES1wX5ImI8UPNSumWXeKZAlQPQjf6R9DXxh
+         DYLm2q/DXqneGVTcRdYCTVH1g6+oUNbEMNkDpvhLGdxFw6lbMGP2uXEc/uYJznGYPSdR
+         fX5Y0ME6uhuzNmzWhLkL309rCpxzgeXybJFuhQpFCP633mZhBrqnTZSxP3pw5cD6woWl
+         DqRgpTe33qVz1Iy1SZ8D956+zMn+g8hBjvWCImt9NtOP14oJbN+6oSsJGbbk6XbLVyY8
+         jBYQ==
+X-Gm-Message-State: AGi0PubCOv9cYbrHX0KgZQMMMxC69s4ya8kgk3dD+kZKYGV0BD7rQ8eX
+        ExLPFN53ZvaZNFlEnaeUlen8SnxlD4CZE+OBMC+6R4OWh69BPiN73OVidbEIvJ1YU7HRDHq7bFw
+        jryMBa2X3ZrnVmNvNwVzDVIQA
+X-Received: by 2002:adf:f781:: with SMTP id q1mr2361217wrp.323.1588235172031;
+        Thu, 30 Apr 2020 01:26:12 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJoi4cvRWNuIpuOzpMBz+IGc+hNuGVeAAtdk4bhTz0tRoJTi6UyA0vRsxW70RBXtjBsbtVC5Q==
+X-Received: by 2002:adf:f781:: with SMTP id q1mr2361196wrp.323.1588235171773;
+        Thu, 30 Apr 2020 01:26:11 -0700 (PDT)
+Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id z8sm2874873wrr.40.2020.04.30.01.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 01:26:11 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 10:26:08 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jia He <justin.he@arm.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kaly.Xin@arm.com
+Subject: Re: [PATCH] vhost: vsock: don't send pkt when vq is not started
+Message-ID: <20200430082608.wbtqgglmtnd7e5ci@steredhat>
+References: <20200430021314.6425-1-justin.he@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4168
-Original-Authentication-Results: gondor.apana.org.au; dkim=none (message not signed)
- header.d=none;gondor.apana.org.au; dmarc=none action=none
- header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT041.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(46966005)(336012)(54906003)(26005)(186003)(36906005)(86362001)(52536014)(9686003)(55016002)(70586007)(70206006)(33656002)(7696005)(450100002)(4326008)(47076004)(8676002)(6506007)(82310400002)(5660300002)(2906002)(81166007)(316002)(8936002)(82740400003)(356005)(478600001)(4744005)(6862004);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 7c7e9ade-6c4b-4d93-86b4-08d7ece01d92
-X-Forefront-PRVS: 0389EDA07F
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ViWqPpPCCReMQ9/RJQSkMe6iEVbWLnXMSKwGs+RATKR/82PPfBOwE1icGtZLqOP0IDiguAZZAqL0bLx1qu+ZF5YYHCAexy9IV7AAz3aEVVVUXIHnxpWykftEJTtT03a1PWtsMA7oYJt4utwWm116PrlO5cBWtlFrMbw6AnVGuxMIYCpcJNg9dejXqEwPeOxub8ResfqGZkvEq3av2wCo2t0nC3EbgZDIptGUxAu4m/rLkHSVEKCou/lqCa/WrD8aG6+gUvyCaPZ9grwjHjTEBXTTj8+uPXO+8f7wDWtBjqN8NqDsKCB5zGxwTprBpjAAQZ8kGPoxQ/fdwcn/6k8ggX8lynRqh5cpsKWTNmwxpZLP2jSUZeMLhHJvkiNtlpHxHJ+gy1DPNoQ3rg1f+9etiv0E+bGxUWXi+PYjMev9CVV5EXOzcy0+rBFk63lmdzVi+77EkOoGJMwkveaLyppvRmQvniotSlvnoXiGI058wO6Yzx6WH8vntBVg6fSwk5a3KJ/A9UONT+XYe3SsAAPlhw==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:26:12.0387
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b01a4c40-27fd-44a1-ae27-08d7ece02448
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2386
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430021314.6425-1-justin.he@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IEZyb206IGxpbnV4LWNyeXB0by1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWNyeXB0
-by0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgSGVyYmVydCBYdQ0KPiAN
-Cj4gT24gVGh1LCBBcHIgMzAsIDIwMjAgYXQgMDc6Mzk6MTRBTSArMDAwMCwgSGFkYXIgR2F0IHdy
-b3RlOg0KPiA+DQo+ID4gWWVzLCBpdCBidWlsZHMsIGJ1dCBpdCBpcyB1c2VsZXNzLg0KPiANCj4g
-QnV0IHRoYXQncyB0aGUgd2hvbGUgcG9pbnQgb2YgQ09NUElMRV9URVNULg0KDQpIZXJiZXJ0LA0K
-SSBkb24ndCB1bmRlcnN0YW5kIGlmIGFueXRoaW5nIG5lZWQgdG8gYmUgZml4ZWQgYmVmb3JlIHRo
-aXMgcGF0Y2ggY2FuIGJlIGFwcGxpZWQuDQpUaGUgcGF0Y2ggYWRkcyBkZXBlbmRlbmN5IG9uIE9G
-LCB3aGljaCB3YXMgbWlzc2luZyBhbmQgaXMgcmVxdWlyZWQgZm9yIHRoZSBjY3RybmcgZHJpdmVy
-Lg0KKEluZGVlZCBjY3RybmcgY29tcGlsYXRpb24gcGFzc2VkIGFsc28gd2l0aG91dCBDT05GSUdf
-T0YgYmVjYXVzZSBvZiB0aGUgZW1wdHkgaW1wbGVtZW50YXRpb24gb2Ygb2ZfcHJvcGVydHlfcmVh
-ZCooKSBmdW5jdGlvbnMgdGhhdCBzaW1wbHkgcmV0dXJucyAtRU5PU1lTLikNCg0KSGFkYXINCg==
+Hi Jia,
+thanks for the patch, some comments below:
+
+On Thu, Apr 30, 2020 at 10:13:14AM +0800, Jia He wrote:
+> Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
+> The unconditional timeout is caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
+> connect at client side. The vhost vsock client tries to connect an
+> initlizing virtio vsock server.
+> 
+> The abnormal flow looks like:
+> host-userspace           vhost vsock                       guest vsock
+> ==============           ===========                       ============
+> connect()     -------->  vhost_transport_send_pkt_work()   initializing
+>    |                     vq->private_data==NULL
+>    |                     will not be queued
+>    V
+> schedule_timeout(2s)
+>                          vhost_vsock_start()  <---------   device ready
+>                          set vq->private_data
+> 
+> wait for 2s and failed
+> 
+> connect() again          vq->private_data!=NULL          recv connecting pkt
+> 
+> 1. host userspace sends a connect pkt, at that time, guest vsock is under
+> initializing, hence the vhost_vsock_start has not been called. So
+> vq->private_data==NULL, and the pkt is not been queued to send to guest.
+> 2. then it sleeps for 2s
+> 3. after guest vsock finishes initializing, vq->private_data is set.
+> 4. When host userspace wakes up after 2s, send connecting pkt again,
+> everything is fine.
+> 
+> This fixes it by checking vq->private_data in vhost_transport_send_pkt,
+> and return at once if !vq->private_data. This makes user connect()
+> be returned with ECONNREFUSED.
+> 
+> After this patch, kata-runtime (with vsock enabled) boottime reduces from
+> 3s to 1s on ThunderX2 arm64 server.
+> 
+> [1] https://github.com/kata-containers/runtime/issues/1917
+> 
+> Reported-by: Ning Bo <n.b@live.com>
+> Signed-off-by: Jia He <justin.he@arm.com>
+> ---
+>  drivers/vhost/vsock.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> index e36aaf9ba7bd..67474334dd88 100644
+> --- a/drivers/vhost/vsock.c
+> +++ b/drivers/vhost/vsock.c
+> @@ -241,6 +241,7 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+>  {
+>  	struct vhost_vsock *vsock;
+>  	int len = pkt->len;
+> +	struct vhost_virtqueue *vq;
+>  
+>  	rcu_read_lock();
+>  
+> @@ -252,6 +253,13 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt *pkt)
+>  		return -ENODEV;
+>  	}
+>  
+> +	vq = &vsock->vqs[VSOCK_VQ_RX];
+> +	if (!vq->private_data) {
+
+I think is better to use vhost_vq_get_backend():
+
+	if (!vhost_vq_get_backend(&vsock->vqs[VSOCK_VQ_RX])) {
+		...
+
+This function should be called with 'vq->mutex' acquired as explained in
+the comment, but here we can avoid that, because we are not using the vq,
+so it is safe, because in vhost_transport_do_send_pkt() we check it again.
+
+Please add a comment explaining that.
+
+
+As an alternative to this patch, should we kick the send worker when the
+device is ready?
+
+IIUC we reach the timeout because the send worker (that runs
+vhost_transport_do_send_pkt()) exits immediately since 'vq->private_data'
+is NULL, and no one will requeue it.
+
+Let's do it when we know the device is ready:
+
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index e36aaf9ba7bd..295b5867944f 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -543,6 +543,11 @@ static int vhost_vsock_start(struct vhost_vsock *vsock)
+                mutex_unlock(&vq->mutex);
+        }
+ 
++       /* Some packets may have been queued before the device was started,
++        * let's kick the send worker to send them.
++        */
++       vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
++
+        mutex_unlock(&vsock->dev.mutex);
+        return 0;
+
+I didn't test it, can you try if it fixes the issue?
+
+I'm not sure which is better...
+
+Thanks,
+Stefano
+
