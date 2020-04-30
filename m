@@ -2,133 +2,279 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41223C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F191C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21DAA20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAOyVMbS"
+	by mail.kernel.org (Postfix) with ESMTP id ED90820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588275000;
+	bh=dqOhFaVS/FHSwNgYPL+ZhKklnBTId0tcH+qEXB2Z4SI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A+YI5fT6cuWMBDsd4o5oC8nEC4jIx5+Cg806TD15YfvYM/2DY54BuobNwlWQjcoCC
+	 MdIOo4TQXfNe9gwBjiTCZTfs/JQVoFh9kNhYzEcrdgwX5YvPqYxB6gGIXf6zCzxoOv
+	 CGim82nNgzVAigGAWWfrhPP1BWfUw9rL8eFVVdfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgD3T3t (ORCPT
+        id S1727074AbgD3T37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgD3T3t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:29:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8965C035494;
-        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t9so1233344pjw.0;
-        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=S56vvjgUJgJIcs0iI3orpY7ejPb7V1V+KfOnIEgpemg=;
-        b=oAOyVMbSFrTgrrXodp1aN7KVZh+59xE1YaGOAh56d1EC+I4gcm1UjNeI3p6/8+hOgz
-         2i5s2bjByfGsW01ml/aHEdaRd6QMQb65ef4L1x3R+8Z0+tV6gA1tugOZkpG4hujd3F2r
-         Uac4rrNRFI6dI2LsjxLXJEMUySVo8PN254L95aFVxbCN9Dg4IM81ws7Jkn7yhtZ4blTc
-         fi8d6VgtOrxaL/fcC9qDPkwCkGFlncx/GTj6uDsN+gnU7fMsaJgz6t1xYsdW6feHEfUw
-         ZWLFaCIYqIAtoUjGxBFLhY/4JIXbnLgCfZ9r7ZERjmZzVE7k+vVchNrCAoQRgXS/3200
-         iBBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=S56vvjgUJgJIcs0iI3orpY7ejPb7V1V+KfOnIEgpemg=;
-        b=LcZbhikXDV0hR4MnNepW6Mp/pKdmHfnsNpS1145Jdez5IS3Dj4SJYJ0xmXtbX04GOT
-         /bMmL4G2xtCqdk+/s7LSbNHCQJWJFhcq7i6HQnjpdIK2qDBXTAh08r9HexVU6oLYssrg
-         3VPWkO63qm02qWh4rIMCslJEjoS4+rLSBkfn2EY0jqxnEYAAeWWQXwTcClRmvny8rT3C
-         AhORxarfsB5iC3Cw5Ie3OvwrhJfTMiNjKutiulouHw/SvXOLyLq6TKigbl8vC0+bgcG7
-         qnXcOnqi5ruvGpMbtSmsrqIYJvKP5Du2Dv2zpRMwqL0Zw8sNULhpVhuuh0a8BNZh+9dw
-         wLSw==
-X-Gm-Message-State: AGi0PuZp9kup1fDlyTanCYU78Ep8PfjAo77Hb/MikJvmGon5XlGm47i6
-        tLiarpY87Fob3ybPIiqRTg==
-X-Google-Smtp-Source: APiQypJ7Vu9QFxwaGegbDs+zHeszCr6lN9AOoLWTdbcpuof9RCZcoh1RtagVlKoWgPy1jwwJ8NQDRg==
-X-Received: by 2002:a17:902:261:: with SMTP id 88mr537590plc.308.1588274988360;
-        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d32:dd79:dd81:b49d:fd6a:d165])
-        by smtp.gmail.com with ESMTPSA id e4sm461038pge.45.2020.04.30.12.29.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:29:47 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     mingo@redhat.com, pbonzini@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, bhelgaas@google.com,
-        sean.j.christopherson@intel.com, cai@lca.pw, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] x86: Fix RCU list usage to avoid false positive warnings
-Date:   Fri,  1 May 2020 00:59:32 +0530
-Message-Id: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 15:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727044AbgD3T36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:29:58 -0400
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0788D207DD;
+        Thu, 30 Apr 2020 19:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588274998;
+        bh=dqOhFaVS/FHSwNgYPL+ZhKklnBTId0tcH+qEXB2Z4SI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Cot2utlG3y0Gt/oOfcDlDE+GNGkj/OyGc4H5wTmvXaDy1uDnixBKkzv2Sue2Yo+By
+         iUiT3TD1+3PzV+L+7OxY/2zFwLq04r7VsLb5K2kwWgjKUOw8Iid3+MxORM5j9bTe4b
+         uLfc3pgMAGlVveHj1oCst4LSaHbRx4AjC0iFycRA=
+Received: by mail-io1-f48.google.com with SMTP id w4so2734251ioc.6;
+        Thu, 30 Apr 2020 12:29:58 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub4dP6ZVDvVWW2C2xQg+MfD3IUaX3O4u7KikLBNdTYGkDm6Qdys
+        I/O6fS1SlnY+pwWDRVynCulZrf9/M1pFr+NwoA0=
+X-Google-Smtp-Source: APiQypLWAJ1YdntzLHZLjMYVxGRBKiRsbrCNSKOvHqF1XCfzaw2CvWW2UMzg+mi/2CSg3LGdl28pif/t+uvM3xHv2DU=
+X-Received: by 2002:a6b:5904:: with SMTP id n4mr380223iob.142.1588274997255;
+ Thu, 30 Apr 2020 12:29:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200430182843.2510180-1-nivedita@alum.mit.edu> <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
+In-Reply-To: <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 30 Apr 2020 21:29:46 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGMnTfYiU_vMDYG0uy7Na7wy=5DRHERTzZQeb4UBusn0g@mail.gmail.com>
+Message-ID: <CAMj1kXGMnTfYiU_vMDYG0uy7Na7wy=5DRHERTzZQeb4UBusn0g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] efi/libstub: efi_info/efi_err message neatening
+To:     Joe Perches <joe@perches.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Thu, 30 Apr 2020 at 21:12, Joe Perches <joe@perches.com> wrote:
+>
+> Use a standard style for these output logging messages.
+>
+> Miscellanea:
+>
+> o Use more common macro #defines with fmt, ##__VA_ARGS__
+> 0 Remove trailing messages periods and odd ' uses
+> o Remove embedded function names and use %s, __func__
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>
+> Perhaps these trivialities on top of this series?
+>
 
-Use list_for_each_entry() instead of list_for_each_entry_rcu() whenever
-spinlock or mutex is always held.
-Otherwise, pass cond to list_for_each_entry_rcu().
+The EFI printing routines don't actually support format strings.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- arch/x86/kernel/nmi.c          | 2 +-
- arch/x86/kvm/irq_comm.c        | 3 ++-
- arch/x86/pci/mmconfig-shared.c | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
+Removing trailing periods is not really necessary IMO, but i'll take a
+patch that fixes those weird quotes.
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 6407ea21fa1b..999dc6c134d2 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -195,7 +195,7 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- 
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
--	list_for_each_entry_rcu(n, &desc->head, list) {
-+	list_for_each_entry(n, &desc->head, list) {
- 		/*
- 		 * the name passed in to describe the nmi handler
- 		 * is used as the lookup key
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-index c47d2acec529..5b88a648e079 100644
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -258,7 +258,8 @@ void kvm_fire_mask_notifiers(struct kvm *kvm, unsigned irqchip, unsigned pin,
- 	idx = srcu_read_lock(&kvm->irq_srcu);
- 	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
- 	if (gsi != -1)
--		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link)
-+		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link,
-+					srcu_read_lock_held(&kvm->irq_srcu))
- 			if (kimn->irq == gsi)
- 				kimn->func(kimn, mask);
- 	srcu_read_unlock(&kvm->irq_srcu, idx);
-diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-index 6fa42e9c4e6f..a096942690bd 100644
---- a/arch/x86/pci/mmconfig-shared.c
-+++ b/arch/x86/pci/mmconfig-shared.c
-@@ -797,7 +797,7 @@ int pci_mmconfig_delete(u16 seg, u8 start, u8 end)
- 	struct pci_mmcfg_region *cfg;
- 
- 	mutex_lock(&pci_mmcfg_lock);
--	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
-+	list_for_each_entry(cfg, &pci_mmcfg_list, list)
- 		if (cfg->segment == seg && cfg->start_bus == start &&
- 		    cfg->end_bus == end) {
- 			list_del_rcu(&cfg->list);
--- 
-2.17.1
+Thanks,
+Ard.
 
+
+
+>  drivers/firmware/efi/libstub/arm32-stub.c | 10 +++++-----
+>  drivers/firmware/efi/libstub/efi-stub.c   |  2 +-
+>  drivers/firmware/efi/libstub/efistub.h    |  9 ++++++---
+>  drivers/firmware/efi/libstub/fdt.c        |  8 ++++----
+>  drivers/firmware/efi/libstub/pci.c        |  4 ++--
+>  drivers/firmware/efi/libstub/relocate.c   |  2 +-
+>  drivers/firmware/efi/libstub/secureboot.c |  4 ++--
+>  7 files changed, 21 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
+> index b038afe..5795781 100644
+> --- a/drivers/firmware/efi/libstub/arm32-stub.c
+> +++ b/drivers/firmware/efi/libstub/arm32-stub.c
+> @@ -120,7 +120,7 @@ static efi_status_t reserve_kernel_base(unsigned long dram_base,
+>          */
+>         status = efi_get_memory_map(&map);
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("reserve_kernel_base(): Unable to retrieve memory map.\n");
+> +               efi_err("%s(): Unable to retrieve memory map\n", __func__);
+>                 return status;
+>         }
+>
+> @@ -162,7 +162,7 @@ static efi_status_t reserve_kernel_base(unsigned long dram_base,
+>                                              (end - start) / EFI_PAGE_SIZE,
+>                                              &start);
+>                         if (status != EFI_SUCCESS) {
+> -                               efi_err("reserve_kernel_base(): alloc failed.\n");
+> +                               efi_err("%s(): alloc failed\n", __func__);
+>                                 goto out;
+>                         }
+>                         break;
+> @@ -219,7 +219,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+>
+>         status = reserve_kernel_base(kernel_base, reserve_addr, reserve_size);
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Unable to allocate memory for uncompressed kernel.\n");
+> +               efi_err("Unable to allocate memory for uncompressed kernel\n");
+>                 return status;
+>         }
+>
+> @@ -232,7 +232,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+>         status = efi_relocate_kernel(image_addr, *image_size, *image_size,
+>                                      kernel_base + MAX_UNCOMP_KERNEL_SIZE, 0, 0);
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Failed to relocate kernel.\n");
+> +               efi_err("Failed to relocate kernel\n");
+>                 efi_free(*reserve_size, *reserve_addr);
+>                 *reserve_size = 0;
+>                 return status;
+> @@ -244,7 +244,7 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+>          * address at which the zImage is loaded.
+>          */
+>         if (*image_addr + *image_size > dram_base + ZIMAGE_OFFSET_LIMIT) {
+> -               efi_err("Failed to relocate kernel, no low memory available.\n");
+> +               efi_err("Failed to relocate kernel, no low memory available\n");
+>                 efi_free(*reserve_size, *reserve_addr);
+>                 *reserve_size = 0;
+>                 efi_free(*image_size, *image_addr);
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> index c2484b..19b42b 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -251,7 +251,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+>         if (!IS_ENABLED(CONFIG_EFI_ARMSTUB_DTB_LOADER) ||
+>              secure_boot != efi_secureboot_mode_disabled) {
+>                 if (strstr(cmdline_ptr, "dtb="))
+> -                       efi_err("Ignoring DTB from command line.\n");
+> +                       efi_err("Ignoring DTB from command line\n");
+>         } else {
+>                 status = efi_load_dtb(image, &fdt_addr, &fdt_size);
+>
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index 874233..369262 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -49,11 +49,14 @@ extern const efi_system_table_t *efi_system_table;
+>  #define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
+>  #endif
+>
+> -#define efi_info(msg)          do {                    \
+> -       if (!efi_quiet) efi_printk("EFI stub: "msg);    \
+> +#define efi_info(fmt, ...)                                             \
+> +do {                                                                   \
+> +       if (!efi_quiet)                                                 \
+> +               efi_printk("EFI stub: " fmt, ##__VA_ARGS__);            \
+>  } while (0)
+>
+> -#define efi_err(msg) efi_printk("EFI stub: ERROR: "msg)
+> +#define efi_err(fmt, ...)                                              \
+> +       efi_printk("EFI stub: ERROR: " fmt, ##__VA_ARGS__)
+>
+>  /* Helper macros for the usual case of using simple C variables: */
+>  #ifndef fdt_setprop_inplace_var
+> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+> index 11ecf3c..7c7257 100644
+> --- a/drivers/firmware/efi/libstub/fdt.c
+> +++ b/drivers/firmware/efi/libstub/fdt.c
+> @@ -270,7 +270,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
+>          */
+>         status = efi_get_memory_map(&map);
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Unable to retrieve UEFI memory map.\n");
+> +               efi_err("Unable to retrieve UEFI memory map\n");
+>                 return status;
+>         }
+>
+> @@ -279,7 +279,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
+>         map.map = &memory_map;
+>         status = efi_allocate_pages(MAX_FDT_SIZE, new_fdt_addr, max_addr);
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Unable to allocate memory for new device tree.\n");
+> +               efi_err("Unable to allocate memory for new device tree\n");
+>                 goto fail;
+>         }
+>
+> @@ -296,7 +296,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
+>                             initrd_addr, initrd_size);
+>
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Unable to construct new device tree.\n");
+> +               efi_err("Unable to construct new device tree\n");
+>                 goto fail_free_new_fdt;
+>         }
+>
+> @@ -342,7 +342,7 @@ efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
+>                 return EFI_SUCCESS;
+>         }
+>
+> -       efi_err("Exit boot services failed.\n");
+> +       efi_err("Exit boot services failed\n");
+>
+>  fail_free_new_fdt:
+>         efi_free(MAX_FDT_SIZE, *new_fdt_addr);
+> diff --git a/drivers/firmware/efi/libstub/pci.c b/drivers/firmware/efi/libstub/pci.c
+> index 60af51b..111c44b 100644
+> --- a/drivers/firmware/efi/libstub/pci.c
+> +++ b/drivers/firmware/efi/libstub/pci.c
+> @@ -28,7 +28,7 @@ void efi_pci_disable_bridge_busmaster(void)
+>
+>         if (status != EFI_BUFFER_TOO_SMALL) {
+>                 if (status != EFI_SUCCESS && status != EFI_NOT_FOUND)
+> -                       efi_err("Failed to locate PCI I/O handles'\n");
+> +                       efi_err("Failed to locate PCI I/O handles\n");
+>                 return;
+>         }
+>
+> @@ -42,7 +42,7 @@ void efi_pci_disable_bridge_busmaster(void)
+>         status = efi_bs_call(locate_handle, EFI_LOCATE_BY_PROTOCOL, &pci_proto,
+>                              NULL, &pci_handle_size, pci_handle);
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Failed to locate PCI I/O handles'\n");
+> +               efi_err("Failed to locate PCI I/O handles\n");
+>                 goto free_handle;
+>         }
+>
+> diff --git a/drivers/firmware/efi/libstub/relocate.c b/drivers/firmware/efi/libstub/relocate.c
+> index 93c04d..62e2d6 100644
+> --- a/drivers/firmware/efi/libstub/relocate.c
+> +++ b/drivers/firmware/efi/libstub/relocate.c
+> @@ -157,7 +157,7 @@ efi_status_t efi_relocate_kernel(unsigned long *image_addr,
+>                                              min_addr);
+>         }
+>         if (status != EFI_SUCCESS) {
+> -               efi_err("Failed to allocate usable memory for kernel.\n");
+> +               efi_err("Failed to allocate usable memory for kernel\n");
+>                 return status;
+>         }
+>
+> diff --git a/drivers/firmware/efi/libstub/secureboot.c b/drivers/firmware/efi/libstub/secureboot.c
+> index 5efc524..796a31 100644
+> --- a/drivers/firmware/efi/libstub/secureboot.c
+> +++ b/drivers/firmware/efi/libstub/secureboot.c
+> @@ -67,10 +67,10 @@ enum efi_secureboot_mode efi_get_secureboot(void)
+>                 return efi_secureboot_mode_disabled;
+>
+>  secure_boot_enabled:
+> -       efi_info("UEFI Secure Boot is enabled.\n");
+> +       efi_info("UEFI Secure Boot is enabled\n");
+>         return efi_secureboot_mode_enabled;
+>
+>  out_efi_err:
+> -       efi_err("Could not determine UEFI Secure Boot status.\n");
+> +       efi_err("Could not determine UEFI Secure Boot status\n");
+>         return efi_secureboot_mode_unknown;
+>  }
+> --
+> 2.26.0
+>
