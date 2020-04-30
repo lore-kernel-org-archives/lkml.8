@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60959C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE54C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C716206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF5C206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255330;
-	bh=N5kQtHnfbZR6ujyLKKZvN4ndgmsr8nvsHRD5vWXj018=;
+	s=default; t=1588255341;
+	bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hLMA3KnhP9cCNjSnFRyCI3oDGZxmhdSKuzhm+HIHkgtNOvvstDz1CTM4XS+gC9rdk
-	 +mBMlVZ/v3JFTBhmbPnGjz8j1q3/Y4spenlPRGsOOs8yHusGB1u55+uECJJgxyHg4m
-	 9ryYRChAtZ3iHPAZT8XTBOsdRPEETbrIrSUdnB7A=
+	b=pmwmRNn3nO8JBXjVfrVUlpFENoMoIfXWl6L32Slj87Xq9u8A3MqilOkxCAEpbSRuo
+	 6xumgTk845Q5qMkWKrdVmpk3SbhGZ3LIl9CmdGUT/X4JSP64ZYhJ92qI32m6HI+95t
+	 TJiE3lcP3GetHoZS/eZslOMy08TqCiEjzSeAed2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgD3OCI (ORCPT
+        id S1728779AbgD3Nxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:53:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728791AbgD3Nxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:45 -0400
+        id S1727083AbgD3NxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6466120870;
-        Thu, 30 Apr 2020 13:53:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2F9F2495A;
+        Thu, 30 Apr 2020 13:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254825;
-        bh=N5kQtHnfbZR6ujyLKKZvN4ndgmsr8nvsHRD5vWXj018=;
+        s=default; t=1588254785;
+        bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGGgt0LUy/zx/qH7p5GUk2rUpBmOZOYEcELpNBiylLhgNJtM4FfKCZMKXGaxWslJI
-         zFI3v7viglhlI6WTydIi/8CJ3hWIda2qAEd1CoExoSliDOSk1dKy9Alq01Ffsr0wDm
-         G/Q6hzAc2EwAFnAVyxEareT5SOvTyFyF1ja2L15M=
+        b=0AUGCAvvLE3XIpD9mPyws8R4W3bS6o1xJel2HS3iFs3gXGOj3u7gEn+x8JpfvVjhX
+         zyFCqmID1TcyKe3rtxKJANFDu2H8wpyVVUocXy5gCYUp0mYkjwnW9prDZCLQPegv1R
+         FoVfb2O+hnRMWw2zDNbDGky9+EL/8HHZeks/gIFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Beraud <julien.beraud@orolia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/30] net: stmmac: Fix sub-second increment
-Date:   Thu, 30 Apr 2020 09:53:12 -0400
-Message-Id: <20200430135325.20762-17-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 41/57] blk-iocost: Fix error on iocost_ioc_vrate_adj
+Date:   Thu, 30 Apr 2020 09:52:02 -0400
+Message-Id: <20200430135218.20372-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
-References: <20200430135325.20762-1-sashal@kernel.org>
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,76 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Beraud <julien.beraud@orolia.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
+[ Upstream commit d6c8e949a35d6906d6c03a50e9a9cdf4e494528a ]
 
-In fine adjustement mode, which is the current default, the sub-second
-    increment register is the number of nanoseconds that will be added to
-    the clock when the accumulator overflows. At each clock cycle, the
-    value of the addend register is added to the accumulator.
-    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
-    frequency of the ptp clock actually is.
-    The adjustment is then done on the addend register, only incrementing
-    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
-    (addend = 2^32 * 50MHz/ptp_clock_rate).
-    This causes the following issues :
-    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
-      the addend value calculation will overflow and the default
-      addend value will be set to 0, causing the clock to not work at
-      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
-    - The resolution of the timestamping clock is limited to 20ns while it
-      is not needed, thus limiting the accuracy of the timestamping to
-      20ns.
+Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
+argument of the iocost_ioc_vrate_adj trace entry defined in
+include/trace/events/iocost.h leading to the following error:
 
-    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
-    It will allow to reach the minimum possible frequency for
-    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
-    sub-second-increment to a higher value. For instance, for 25MHz, it
-    gives ssinc = 80ns and default_addend = 2^31.
-    It will also allow to use a lower value for sub-second-increment, thus
-    improving the timestamping accuracy with frequencies higher than
-    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
-    2^31.
+  /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
+  error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
+   , u32[]* __tracepoint_arg_missed_ppm
 
-v1->v2:
- - Remove modifications to the calculation of default addend, which broke
- compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
- is not an integer.
- - Modify description according to discussions.
+That argument type is indeed rather complex and hard to read. Looking
+at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
+the argument to a simple "u32 *missed_ppm" and adjusting the trace
+entry accordingly, the compilation error was gone.
 
-Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ block/blk-iocost.c            | 4 ++--
+ include/trace/events/iocost.h | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-index 7423262ce5907..e1fbd7c81bfa9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-@@ -36,12 +36,16 @@ static void config_sub_second_increment(void __iomem *ioaddr,
- 	unsigned long data;
- 	u32 reg_value;
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 9a599cc28c290..2dc5dc54e257f 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1594,7 +1594,7 @@ skip_surplus_transfers:
+ 				      vrate_min, vrate_max);
+ 		}
  
--	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
--	 *	formula = (1/ptp_clock) * 1000000000
--	 * where ptp_clock is 50MHz if fine method is used to update system
-+	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
-+	 * increment to twice the number of nanoseconds of a clock cycle.
-+	 * The calculation of the default_addend value by the caller will set it
-+	 * to mid-range = 2^31 when the remainder of this division is zero,
-+	 * which will make the accumulator overflow once every 2 ptp_clock
-+	 * cycles, adding twice the number of nanoseconds of a clock cycle :
-+	 * 2000000000ULL / ptp_clock.
- 	 */
- 	if (value & PTP_TCR_TSCFUPDT)
--		data = (1000000000ULL / 50000000);
-+		data = (2000000000ULL / ptp_clock);
- 	else
- 		data = (1000000000ULL / ptp_clock);
+-		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
++		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
+ 					   nr_lagging, nr_shortages,
+ 					   nr_surpluses);
  
+@@ -1603,7 +1603,7 @@ skip_surplus_transfers:
+ 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
+ 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
+ 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
+-					   &missed_ppm, rq_wait_pct, nr_lagging,
++					   missed_ppm, rq_wait_pct, nr_lagging,
+ 					   nr_shortages, nr_surpluses);
+ 	}
+ 
+diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
+index 7ecaa65b7106e..c2f580fd371b1 100644
+--- a/include/trace/events/iocost.h
++++ b/include/trace/events/iocost.h
+@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
+ 
+ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 
+-	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
++	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
+ 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
+ 		int nr_surpluses),
+ 
+@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
+ 		__entry->new_vrate = new_vrate;
+ 		__entry->busy_level = ioc->busy_level;
+-		__entry->read_missed_ppm = (*missed_ppm)[READ];
+-		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
++		__entry->read_missed_ppm = missed_ppm[READ];
++		__entry->write_missed_ppm = missed_ppm[WRITE];
+ 		__entry->rq_wait_pct = rq_wait_pct;
+ 		__entry->nr_lagging = nr_lagging;
+ 		__entry->nr_shortages = nr_shortages;
 -- 
 2.20.1
 
