@@ -2,176 +2,153 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD602C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFF9C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1282073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7525520836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:12:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dXBT/Feb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgD3SMw (ORCPT
+        id S1726762AbgD3SMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:12:52 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:35986 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgD3SMv (ORCPT
+        Thu, 30 Apr 2020 14:12:55 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53326 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726609AbgD3SMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:12:51 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUDg0-0000n9-R9; Thu, 30 Apr 2020 12:12:48 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUDfz-0005Zd-NS; Thu, 30 Apr 2020 12:12:48 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?utf-8?Q?St=C3=A9phane?= Graber <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org
-References: <20200430165717.1001605-1-christian.brauner@ubuntu.com>
-Date:   Thu, 30 Apr 2020 13:09:30 -0500
-In-Reply-To: <20200430165717.1001605-1-christian.brauner@ubuntu.com>
-        (Christian Brauner's message of "Thu, 30 Apr 2020 18:57:14 +0200")
-Message-ID: <87y2qczvz9.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 Apr 2020 14:12:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588270374; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=pPcbnLkLayy2Rm6j200c+uFP70JSkmmB+Gfck54oXYM=; b=dXBT/FeblLgKXrIN51v0M/5a+7hTF2Wk1URWoKX6Leaiv/h3b3HVvVVOjMRx3i0nTkkO3yx3
+ qrOyvLrtoQcH5+eJtujqhxqCF3B3azqdvCM1CMYIIIn35amDakPLwiZbvqt2RqyeE38pEO8T
+ ALHQbbhZitcmtF3SSUOl5ig8a1w=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eab1516.7f27703a0650-smtp-out-n04;
+ Thu, 30 Apr 2020 18:12:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 31282C433F2; Thu, 30 Apr 2020 18:12:37 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4822C433D2;
+        Thu, 30 Apr 2020 18:12:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A4822C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 30 Apr 2020 12:12:33 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
+        saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string
+ and mem_iface clock
+Message-ID: <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
+        saiprakash.ranjan@codeaurora.org
+References: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jUDfz-0005Zd-NS;;;mid=<87y2qczvz9.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/2u92/HUnzulG8cj3qAG1mxVp6CYsuNXk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 1/4] capability: add ns_capable_cred()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
-
-> Add a simple capability helper which makes it possible to determine
-> whether a set of creds is ns capable wrt to the passed in credentials.
-> This is not something exciting it's just a more pleasant wrapper around
-> security_capable() by allowing ns_capable_common() to ake a const struct
-> cred argument. In ptrace_has_cap() for example, we're using
-> security_capable() directly. ns_capable_cred() will be used in the next
-> patch to check against the target credentials the caller is going to
-> switch to.
-
-Given that this is to suppot setns.  I don't understand the
-justification for this.
-
-Is it your intention to use the reduced permissions that you get
-when you install a user namespace?
-
-Why do you want to use the reduced permissions when installing multiple
-namespaces at once?
-
-Eric
-
-
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Serge Hallyn <serge@hallyn.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+On Thu, Apr 30, 2020 at 09:29:47AM +0530, Sharat Masetty wrote:
+> This patch adds a new compatible string for sc7180 and also an
+> additional clock listing needed to power the TBUs and the TCU.
+> 
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 > ---
-> /* v2 */
-> patch introduced
-> ---
->  include/linux/capability.h |  3 +++
->  kernel/capability.c        | 17 +++++++++++------
->  2 files changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/capability.h b/include/linux/capability.h
-> index ecce0f43c73a..743a08d936fb 100644
-> --- a/include/linux/capability.h
-> +++ b/include/linux/capability.h
-> @@ -40,6 +40,7 @@ struct cpu_vfs_cap_data {
->  struct file;
->  struct inode;
->  struct dentry;
-> +struct cred;
->  struct task_struct;
->  struct user_namespace;
->  
-> @@ -209,6 +210,8 @@ extern bool has_ns_capability_noaudit(struct task_struct *t,
->  				      struct user_namespace *ns, int cap);
->  extern bool capable(int cap);
->  extern bool ns_capable(struct user_namespace *ns, int cap);
-> +extern bool ns_capable_cred(const struct cred *cred,
-> +			    struct user_namespace *ns, int cap);
->  extern bool ns_capable_noaudit(struct user_namespace *ns, int cap);
->  extern bool ns_capable_setid(struct user_namespace *ns, int cap);
->  #else
-> diff --git a/kernel/capability.c b/kernel/capability.c
-> index 1444f3954d75..84425781917e 100644
-> --- a/kernel/capability.c
-> +++ b/kernel/capability.c
-> @@ -361,8 +361,8 @@ bool has_capability_noaudit(struct task_struct *t, int cap)
->  	return has_ns_capability_noaudit(t, &init_user_ns, cap);
->  }
->  
-> -static bool ns_capable_common(struct user_namespace *ns,
-> -			      int cap,
-> +static bool ns_capable_common(const struct cred *cred,
-> +			      struct user_namespace *ns, int cap,
->  			      unsigned int opts)
->  {
->  	int capable;
-> @@ -372,7 +372,7 @@ static bool ns_capable_common(struct user_namespace *ns,
->  		BUG();
->  	}
->  
-> -	capable = security_capable(current_cred(), ns, cap, opts);
-> +	capable = security_capable(cred, ns, cap, opts);
->  	if (capable == 0) {
->  		current->flags |= PF_SUPERPRIV;
->  		return true;
-> @@ -393,10 +393,15 @@ static bool ns_capable_common(struct user_namespace *ns,
->   */
->  bool ns_capable(struct user_namespace *ns, int cap)
->  {
-> -	return ns_capable_common(ns, cap, CAP_OPT_NONE);
-> +	return ns_capable_common(current_cred(), ns, cap, CAP_OPT_NONE);
->  }
->  EXPORT_SYMBOL(ns_capable);
->  
-> +bool ns_capable_cred(const struct cred *cred, struct user_namespace *ns, int cap)
-> +{
-> +	return ns_capable_common(cred, ns, cap, CAP_OPT_NONE);
-> +}
-> +
->  /**
->   * ns_capable_noaudit - Determine if the current task has a superior capability
->   * (unaudited) in effect
-> @@ -411,7 +416,7 @@ EXPORT_SYMBOL(ns_capable);
->   */
->  bool ns_capable_noaudit(struct user_namespace *ns, int cap)
->  {
-> -	return ns_capable_common(ns, cap, CAP_OPT_NOAUDIT);
-> +	return ns_capable_common(current_cred(), ns, cap, CAP_OPT_NOAUDIT);
->  }
->  EXPORT_SYMBOL(ns_capable_noaudit);
->  
-> @@ -430,7 +435,7 @@ EXPORT_SYMBOL(ns_capable_noaudit);
->   */
->  bool ns_capable_setid(struct user_namespace *ns, int cap)
->  {
-> -	return ns_capable_common(ns, cap, CAP_OPT_INSETID);
-> +	return ns_capable_common(current_cred(), ns, cap, CAP_OPT_INSETID);
->  }
->  EXPORT_SYMBOL(ns_capable_setid);
->  
->
-> base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
+> v2: Addressed review comments from Doug
+> 
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index 6515dbe..ba5dba4 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -28,6 +28,7 @@ properties:
+>            - enum:
+>                - qcom,msm8996-smmu-v2
+>                - qcom,msm8998-smmu-v2
+> +              - qcom,sc7180-smmu-v2
+>                - qcom,sdm845-smmu-v2
+>            - const: qcom,smmu-v2
+> 
+> @@ -113,16 +114,23 @@ properties:
+>        present in such cases.
+> 
+>    clock-names:
+> +    minItems: 2
+> +    maxItems: 3
+>      items:
+>        - const: bus
+>        - const: iface
+> +      - const: mem_iface
+
+Hi Sharat -
+
+I think there was a bit of confusion due to renaming between downstream and
+upstream.  Currently for the sdm845 and friends we have:
+
+  clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+     <&gcc GCC_GPU_CFG_AHB_CLK>;
+  clock-names = "bus", "iface";
+
+Confusingly these same clocks downstream are "mem_iface_clk" and "iface_clk"
+respectively.
+
+It looks like you are trying to add GCC_DDRSS_GPU_AXI_CLK as "mem_iface" which
+was formerly "mem_clk" downstream. I'm not sure if the naming change is
+intentional or you were trying to make upstream and downstream match and didn't
+realize that they were renamed.
+
+I'm not sure if we need DDRSS_GPU_AXI_CLK or not. Empirically it works without
+it for sdm845 (I don't have a sc7180 to test) but we should probably loop back
+with either the clock team or the hardware designers to be sure there isn't a
+corner case that is missing. I agree with Doug that its always best if we don't
+need to add a clock.
+
+Jordan
+> 
+>    clocks:
+> +    minItems: 2
+> +    maxItems: 3
+>      items:
+>        - description: bus clock required for downstream bus access and for the
+>            smmu ptw
+>        - description: interface clock required to access smmu's registers
+>            through the TCU's programming interface.
+> +      - description: clock required for the inner working of SMMU TBUs and the
+> +          TCU like the pagetable walks and the TLB flushes.
+> 
+>    power-domains:
+>      maxItems: 1
+> --
+> 1.9.1
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
