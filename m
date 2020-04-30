@@ -2,82 +2,61 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F9C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056BAC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B36F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:08:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AehAW+v5"
+	by mail.kernel.org (Postfix) with ESMTP id D50BD2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588241309;
+	bh=xa6SpmSmz9EAdtVLWr+Oo3a8W/zi6Yh4mLHT8M/Bb5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N/7v5q8PkfGwmEg2lZLM0jdSrNUmM3bdzVvhyk8hSxMwoJ27gJ/dRAvHf7vIFjPoz
+	 jVVhR35up/4XQg34LheRMwH4+C1OpzUQTzsLF1Vi9le6jkGzIQF7bZLvc/5rcg+Nhw
+	 ZChcZ3pm5iIHIyse31STMChlaBXR/Tm2wUmr3png=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgD3KIE (ORCPT
+        id S1726817AbgD3KI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:08:04 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20554 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726127AbgD3KID (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:08:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588241282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4neCHXAikGnDrEWLfrOwLMssDcW49SbEXywLj9zmi5k=;
-        b=AehAW+v5Lb9A714OFCyIktZSISlm+vfy9O/sMuri4G8EFymfPLvuI7EChzWA+YaFhfzf+2
-        WjQJBBsR0/Ls/6viXOAGjGZuAY1tK/0OTtZiVlVCQpgoUJycUzU3hzGJnNrsTinv7eay4L
-        X8DJAcSID+Qqs/Vm22KDp2WKqvGPr2g=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-M9aPJGHCNIOTi5RtydCAAg-1; Thu, 30 Apr 2020 06:08:01 -0400
-X-MC-Unique: M9aPJGHCNIOTi5RtydCAAg-1
-Received: by mail-wm1-f71.google.com with SMTP id u11so389426wmc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:08:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4neCHXAikGnDrEWLfrOwLMssDcW49SbEXywLj9zmi5k=;
-        b=VenQw8e+c5XY+2I6DCgO/VLA4rvHzbl0ZafOidTb3sPx4wH4LjSXPMHKuimP8c9k/s
-         GSNieXDPG37ZkiiLR+wCHYW+dxymCUE5qu0pmrNmlKTHl6enOXEovrEFB4M36kaCQnBh
-         okM+KMPtIyM7Z6BikyFSxFkFz5mtD2Nuhr4fKNRWiJPWwBj/d9uK3l680xVQf4F6dgG0
-         WabPDtCEJxizLp2/z4SnjV1lbXZjZt+xTY2nlEk+X3cdWdcR5OT0t9cOmgZWq5AncjCI
-         SzIdKD1L8avtuFariGrs+361duLXHp3zXMdGIzrMPJYY6HJId63dqZz+pzMeCuS+b+1v
-         7DRQ==
-X-Gm-Message-State: AGi0PuYVH/KQXxcvTMF1lNzlKrSxjjpNtu9ORN/m8Z/hXgssH4LkL88i
-        E/C8tloeFHEPxEus/tp2GbNIShA74mvIi8FM1z1lCJb6s039ryYosecPsrIRCYKUOWyulmzPQyw
-        r78LogMjLcGmAybgvegryVak0
-X-Received: by 2002:a1c:2d0e:: with SMTP id t14mr2145465wmt.153.1588241280183;
-        Thu, 30 Apr 2020 03:08:00 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLHlrCbfCYrZ88o6DhjV70fA6mpNnqgpx+WR9c06xN4peVmevPZw2FufGVhiRy6EDg6FWX7OQ==
-X-Received: by 2002:a1c:2d0e:: with SMTP id t14mr2145451wmt.153.1588241279982;
-        Thu, 30 Apr 2020 03:07:59 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id u30sm3470829wru.13.2020.04.30.03.07.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 03:07:59 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 06:07:56 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        Thu, 30 Apr 2020 06:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgD3KI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:08:28 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98A012173E;
+        Thu, 30 Apr 2020 10:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588241308;
+        bh=xa6SpmSmz9EAdtVLWr+Oo3a8W/zi6Yh4mLHT8M/Bb5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GCUHU4XQOC1NYyjmFXVXCCbulAEM7AZSTxyQ7+5I2SwHz/G+uEMnzpoE4im98LLc8
+         wgr0/Gjnbc+UtBMh7+Fs0Cnj/od/q3LJ/UT4MmYDHK3a5/o+rhH2n1z5vbDrO/Is7j
+         sIS1+lyZbST/U8limbFBI5yeJZYFzMq+yVAkgwWM=
+Date:   Thu, 30 Apr 2020 11:08:22 +0100
+From:   Will Deacon <will@kernel.org>
 To:     Srivatsa Vaddagiri <vatsa@codeaurora.org>
-Cc:     konrad.wilk@oracle.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, will@kernel.org,
-        stefano.stabellini@xilinx.com, iommu@lists.linux-foundation.org,
+Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
+        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
+        iommu@lists.linux-foundation.org,
         virtualization@lists.linux-foundation.org,
         virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
         pratikp@codeaurora.org, christoffer.dall@arm.com,
         alex.bennee@linaro.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC/PATCH 0/1] virtio_mmio: hypervisor specific interfaces for
  MMIO
-Message-ID: <20200430060653-mutt-send-email-mst@kernel.org>
+Message-ID: <20200430100821.GC19932@willie-the-truck>
 References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,9 +64,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Apr 30, 2020 at 03:32:55PM +0530, Srivatsa Vaddagiri wrote:
 > The Type-1 hypervisor we are dealing with does not allow for MMIO transport. 
+> [1] summarizes some of the problems we have in making virtio work on such
+> hypervisors. This patch proposes a solution for transport problem viz how we can
+> do config space IO on such a hypervisor. Hypervisor specific methods
+> introduced allows for seamless IO of config space.
 
-How about PCI then?
+Seamless huh? You'd hope that might obviate the need for extra patches...
 
--- 
-MST
+> This patch is meant to seek comments. If its considered to be in right
+> direction, will work on making it more complete and send the next version!
 
+What's stopping you from implementing the trapping support in the
+hypervisor? Unlike the other patches you sent out, where the guest memory
+is not accessible to the host, there doesn't seem to be any advantage to
+not having trapping support, or am I missing something here?
+
+Will
