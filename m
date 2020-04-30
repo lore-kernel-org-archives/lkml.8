@@ -2,153 +2,107 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999BCC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FACBC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEE42082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1980F2074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:32:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VvzkadaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgD3Nbe (ORCPT
+        id S1726924AbgD3NcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726685AbgD3Nbe (ORCPT
+        Thu, 30 Apr 2020 09:32:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21524 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726692AbgD3NcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:31:34 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303DBC035494;
-        Thu, 30 Apr 2020 06:31:34 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 9FB0B634C8F;
-        Thu, 30 Apr 2020 16:31:25 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jU9Hh-0000RY-9w; Thu, 30 Apr 2020 16:31:25 +0300
-Date:   Thu, 30 Apr 2020 16:31:25 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
-Message-ID: <20200430133125.GL867@valkosipuli.retiisi.org.uk>
-References: <20200414200151.80089-1-daniel@qtec.com>
- <20200414200151.80089-2-daniel@qtec.com>
- <20200430094233.GE867@valkosipuli.retiisi.org.uk>
- <20200430111014.GD5856@pendragon.ideasonboard.com>
+        Thu, 30 Apr 2020 09:32:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588253541;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n+aTxk90D7+j/ZxikiZm7htr7ihgz4RE8XZxOaPVLGY=;
+        b=VvzkadaBT+qn7TSfrLnw0ja+C+Zg/U+re4yRmexhPHXN4FPLB6KTtnM9J3MDyM7Ac0LCNO
+        QEzB3Tym0WQjGwE8H+Ib422K2AXAYtATfOFpQ94/uhpRUCeTSvSkoIrkCSIqF89Y6+eZD0
+        WK4NGETX0aUnv+SkAMq/YhCBeEFEbSI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-ArhEU26BO125W0CCvV0s8A-1; Thu, 30 Apr 2020 09:32:19 -0400
+X-MC-Unique: ArhEU26BO125W0CCvV0s8A-1
+Received: by mail-wm1-f72.google.com with SMTP id w2so858255wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:32:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n+aTxk90D7+j/ZxikiZm7htr7ihgz4RE8XZxOaPVLGY=;
+        b=GM+Gip8/Cs+H7bGjKg3x2fuFn25j7ak2CvyzAbmjvNUQddVZrSuxFdMJ4qD+zAMaav
+         P355Pz0f2GlwqOa95NjakLeJ8BFBQLieCG9b3d/VIAcYLZTZh/OWME9OiNZwQTDdEwzZ
+         5LgJOJG5I3ObXBz9/XgQFdHU60CG1Aw+pALAMcexf/OKBqn3S/dsG3dSVB9WFHyAxaV7
+         Ut6xfx3HMqnix2DwRI1r5RI86EtlrGY12w9GrLOlLpz/Cl7K4SM6NSikX9Km7nJeNUcv
+         EnXyLuwroWZfpPSDIEpR+eHx3fCML5PSRRywTTaKBYAVfai3KXz065JqF7lQ/rnotxLw
+         Ntdg==
+X-Gm-Message-State: AGi0PubvanZMAYUVQL1/+W6ZM0pl3d4oZpXImfkqpTqbQYMYH6MJ716n
+        45KaZLWfKBhZgiCwUcjHp2gCJ+ZpWMdz1ovgM+NJs1rsa/CTmHnZo7w36TKJKuY4Bzj1Zra5vQF
+        L/jSJ+TrcoiHTmasvpsDE8rjz
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr3164041wml.133.1588253538321;
+        Thu, 30 Apr 2020 06:32:18 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLZwuDOopSSlnP92U8HygTNBmhhTn4PWDpNdu4eD+Pq/bkj6FBcQrWnMY670cOB2vZJ5e/KIA==
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr3164026wml.133.1588253538120;
+        Thu, 30 Apr 2020 06:32:18 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
+        by smtp.gmail.com with ESMTPSA id s6sm12332481wmh.17.2020.04.30.06.32.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 06:32:17 -0700 (PDT)
+Subject: Re: [PATCH v4 5/7] KVM: VMX: Optimize posted-interrupt delivery for
+ timer fastpath
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
+ <1588055009-12677-6-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <66fd6180-8e8b-1f9c-90f1-a55af1467388@redhat.com>
+Date:   Thu, 30 Apr 2020 15:32:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430111014.GD5856@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1588055009-12677-6-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On 28/04/20 08:23, Wanpeng Li wrote:
+> -	if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST &&
+> -	    kvm_vcpu_exit_request(vcpu))
+> -		exit_fastpath = EXIT_FASTPATH_NOP;
+> +	if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST) {
+> +		if (!kvm_vcpu_exit_request(vcpu))
+> +			vmx_sync_pir_to_irr(vcpu);
+> +		else
+> +			exit_fastpath = EXIT_FASTPATH_NOP;
+> +	}
 
-On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
-> Hello,
-> 
-> On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
-> > Hi Daniel,
-> > 
-> > Thanks for the patchset.
-> > 
-> > I'm also cc'ing Laurent who I think could be interested in this one.
-> > 
-> > On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
-> > > Add min and max structures to the v4l2-subdev callback in order to allow
-> > > the subdev to return a range of valid frame intervals.
-> > > 
-> > > This would operate similar to the struct v4l2_subdev_frame_size_enum and
-> > > its max and min values for the width and the height. In this case, the
-> > > possibility to return a frame interval range is added to the v4l2-subdev level
-> > > whenever the v4l2 device operates in step-wise or continuous mode.
-> > 
-> > The current API only allows providing a list of enumerated values. That is
-> > limiting indeed, especially on register list based sensor drivers where
-> > vertical blanking is configurable.
-> > 
-> > I guess this could be extended to cover what V4L2, more or less. If we tell
-> > it's a range, is it assumed to be contiguous? We don't have try operation
-> > for the frame interval, but I guess set is good enough. The fraction is
-> > probably best for TV standards but it's not what camera sensors natively
-> > use. (But for a register list based driver, the established practice
-> > remains to use frame interval.)
-> > 
-> > I'm also wondering the effect on existing user space; if a driver gives a
-> > range, how will the existing programs work with such a driver?
-> > 
-> > I'd add an anonymous union with the interval field, the other field being
-> > min_interval. Then the current applications would get the minimum interval
-> > and still continue to function. I guess compilers are modern enough these
-> > days we can have an anonymous union in the uAPI?
-> 
-> We can discuss all this, but given patch 3/3 in this series, I think
-> this isn't the right API :-) The sensor driver should not expose the
-> frame interval enumeration API. It should instead expose control of the
-> frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
-> V4L2_CID_VBLANK.
-> 
+This part should be in patch 3; not a big deal, I can reorganize that
+myself.
 
-That would require also exposing the size of the pixel array (and the
-analogue crop), in order to provide all the necessary information to
-calculate the frame rate. No objections there; this is a new driver.
+Paolo
 
-There are however existing drivers that implement s_frame_interval subdev
-ioctl; those might benefit from this one. Or would you implement the pixel
-rate based control as well, and effectively deprecate the s_frame_interval
-on those?
-
-> > > Signed-off-by: Daniel Gomez <daniel@qtec.com>
-> > > ---
-> > >  include/uapi/linux/v4l2-subdev.h | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/include/uapi/linux/v4l2-subdev.h b/include/uapi/linux/v4l2-subdev.h
-> > > index 03970ce30741..ee15393c58cd 100644
-> > > --- a/include/uapi/linux/v4l2-subdev.h
-> > > +++ b/include/uapi/linux/v4l2-subdev.h
-> > > @@ -117,6 +117,8 @@ struct v4l2_subdev_frame_interval {
-> > >   * @code: format code (MEDIA_BUS_FMT_ definitions)
-> > >   * @width: frame width in pixels
-> > >   * @height: frame height in pixels
-> > > + * @min_interval: min frame interval in seconds
-> > > + * @max_interval: max frame interval in seconds
-> > >   * @interval: frame interval in seconds
-> > >   * @which: format type (from enum v4l2_subdev_format_whence)
-> > >   */
-> > > @@ -126,9 +128,11 @@ struct v4l2_subdev_frame_interval_enum {
-> > >  	__u32 code;
-> > >  	__u32 width;
-> > >  	__u32 height;
-> > > +	struct v4l2_fract min_interval;
-> > > +	struct v4l2_fract max_interval;
-> > 
-> > This changes the memory layout of the struct and breaks the ABI. Any new
-> > fields in the struct may only replace reserved fields while the rest must
-> > stay unchanged.
-> > 
-> > >  	struct v4l2_fract interval;
-> > >  	__u32 which;
-> > > -	__u32 reserved[8];
-> > > +	__u32 reserved[4];
-> > >  };
-> > >  
-> > >  /**
-> 
--- 
-Regards,
-
-Sakari Ailus
