@@ -2,72 +2,113 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D1DC47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3469FC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E282186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588281168;
-	bh=BY3Hgo5t4BTs38VcTzig7+9uhGShsbCQBADRcW8MfS8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+R16RbmiujsN/6MxxXzCrxTvtqs0+sI+7+IlMm3P9NA56Hse72/QbHjc3JDXNbHQ
-	 com4GmUtUTRQ4e9K98LXxUobw6uNWeLpYTgQbkY2vtBXYBA7I6oD0Wax3sJwHzUya1
-	 yq62LDJ305hTht5yMC8Sn+mEAwp64R5xVfGL1H8s=
+	by mail.kernel.org (Postfix) with ESMTP id 14891207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgD3VMr (ORCPT
+        id S1726805AbgD3VO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 17:14:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64013 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgD3VMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:12:45 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8077208D6;
-        Thu, 30 Apr 2020 21:12:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588281164;
-        bh=BY3Hgo5t4BTs38VcTzig7+9uhGShsbCQBADRcW8MfS8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BzGmNngEM9g0/HwISElCO250AL+9P/5KZvtcVwjFIitnPlFlPOZX0Tz239VASq2k5
-         LfaBZfkUMeFGlvMhbk1vGNY+7P6Pixmjc3OCL037Cm1vb+mF+X9zS+U8FqncNJlEq3
-         LiySUpgQjPhWCwD7p23SqUFXZ8vhTrD18b4kJ9Zs=
-From:   Will Deacon <will@kernel.org>
-To:     mark.rutland@arm.com, Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf:Avoid duplicate printouts
-Date:   Thu, 30 Apr 2020 22:12:27 +0100
-Message-Id: <158827969499.122898.13692306035235615025.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200402115940.4928-1-tangbin@cmss.chinamobile.com>
-References: <20200402115940.4928-1-tangbin@cmss.chinamobile.com>
+        id S1726427AbgD3VO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:14:59 -0400
+IronPort-SDR: qXZaDFHARwr/CkDkWKKKCqQpo8baavmIP3ocnAjQ8Sm/jacWtHJd9q99qtLrr/oMtrfJtPyyWB
+ 1xa0+HwAmqNQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 14:14:57 -0700
+IronPort-SDR: 3oTPvy83hK+d3EIzFJWpbVd7IpQMrpf+3BjhaiYzaymcNq1dbM5WEC+pwgVk+1mYfOP3j1SbNo
+ OM0pcrzGtx5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="433110170"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga005.jf.intel.com with ESMTP; 30 Apr 2020 14:14:57 -0700
+Date:   Thu, 30 Apr 2020 14:14:57 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, rdunlap@infradead.org
+Subject: Re: [PATCH] mm/gup.c: Corrected document reference path
+Message-ID: <20200430211456.GA582335@iweiny-DESK2.sc.intel.com>
+References: <1588273314-3790-1-git-send-email-jrdr.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588273314-3790-1-git-send-email-jrdr.linux@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 19:59:40 +0800, Tang Bin wrote:
-> Because platform_get_irq() has dev_err(),so this place
-> should be removed.
+On Fri, May 01, 2020 at 12:31:54AM +0530, Souptick Joarder wrote:
+> Document path Documentation/vm/pin_user_pages.rst is not a correct
+> reference and it should be Documentation/core-api/pin_user_pages.rst.
+> 
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 
-Applied to arm64 (for-next/perf), thanks!
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-[1/1] drivers/perf: arm_dsu_pmu: Avoid duplicate printouts
-      https://git.kernel.org/arm64/c/5810f00ade49
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
+> ---
+>  mm/gup.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 7ce796c..4952f12 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2864,10 +2864,10 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+>   * the arguments here are identical.
+>   *
+>   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+> - * see Documentation/vm/pin_user_pages.rst for further details.
+> + * see Documentation/core-api/pin_user_pages.rst for further details.
+>   *
+> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+> - * is NOT intended for Case 2 (RDMA: long-term pins).
+> + * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst.
+> + * It is NOT intended for Case 2 (RDMA: long-term pins).
+>   */
+>  int pin_user_pages_fast(unsigned long start, int nr_pages,
+>  			unsigned int gup_flags, struct page **pages)
+> @@ -2904,10 +2904,10 @@ int pin_user_pages_fast(unsigned long start, int nr_pages,
+>   * the arguments here are identical.
+>   *
+>   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+> - * see Documentation/vm/pin_user_pages.rst for details.
+> + * see Documentation/core-api/pin_user_pages.rst for details.
+>   *
+> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+> - * is NOT intended for Case 2 (RDMA: long-term pins).
+> + * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst.
+> + * It is NOT intended for Case 2 (RDMA: long-term pins).
+>   */
+>  long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+>  			   unsigned long start, unsigned long nr_pages,
+> @@ -2940,10 +2940,10 @@ long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+>   * FOLL_PIN is set.
+>   *
+>   * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+> - * see Documentation/vm/pin_user_pages.rst for details.
+> + * see Documentation/core-api/pin_user_pages.rst for details.
+>   *
+> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+> - * is NOT intended for Case 2 (RDMA: long-term pins).
+> + * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst.
+> + * It is NOT intended for Case 2 (RDMA: long-term pins).
+>   */
+>  long pin_user_pages(unsigned long start, unsigned long nr_pages,
+>  		    unsigned int gup_flags, struct page **pages,
+> -- 
+> 1.9.1
+> 
+> 
