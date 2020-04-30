@@ -2,181 +2,179 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCE7C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5811CC47255
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A1A2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6E020787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aua11ZHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgD3S3V (ORCPT
+        id S1726503AbgD3SbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:29:21 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46839 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgD3S2t (ORCPT
+        Thu, 30 Apr 2020 14:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725844AbgD3SbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:28:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g26so2021873qtv.13;
-        Thu, 30 Apr 2020 11:28:48 -0700 (PDT)
+        Thu, 30 Apr 2020 14:31:09 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE68EC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:31:07 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g14so358462otg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iMCD+Jo7E8IZbBxHKMYz3Qb/9HJIoY2bae742xpPUjY=;
+        b=aua11ZHUyJrWxfH/6aP8CrbZcJDCWjioXF2XxEBLB2ngHWepZw1xBuSZfnzrNfwzta
+         xUjumh+rBT00oWNzWYG66IRDKD4J8zWQqYylpHeFPUpc9QvQbSsyHakHoEu+dyjLRUc4
+         SFxbpETHruDT3zVej0CEUaXZc0FXxgtLEXrYU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EcUky9yBFN6ujB2ntYpTB7VTKktGaxpi4ejrL8P/h1E=;
-        b=IT/oguN7Hb5Vgqb/O42N0xDirTMQiA6lg975+g5uwDSHNND+omuwwPHnUSY6KbJAo9
-         cLN+zR91REjEDwuxxpa4TYSjamk6mVdSF08suYO3MuWzS80RW29MEI06XXeCmoIsBlMX
-         XrGWpBuT3wzhNe/eEIDkXMZvlgc1nFAteP2Wp2ePmBDDKgGqagF9yJ+/RlkntTIFp5Du
-         8IdJkCv/Ls/itbxsjFi2iNKzqpDv5bCD+p6D/H/4L8/gzjUjMPClTK843k7crVDyIjl6
-         4EIaKvGf0sepaL4PjYvxm47I7SewxBD6VsQQAsdGJqzB+MkknWponc0Gbvi8KdjSWgoa
-         q71Q==
-X-Gm-Message-State: AGi0PuYxZm0agi93YEB8iH88GDe4O4uAs0FVJ0zOPKMJ7jeokKYRhZJU
-        +CzhoSSg+piaGxyeUC9fqI8=
-X-Google-Smtp-Source: APiQypIBF4h0Sb4L6jCOjmBFl+PgKD/JDvijNoStoUeXHpCicvKNOwruxLaaUA2juYJqRgN1nFGN9w==
-X-Received: by 2002:aed:34a5:: with SMTP id x34mr4852067qtd.216.1588271328308;
-        Thu, 30 Apr 2020 11:28:48 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v27sm449785qtb.35.2020.04.30.11.28.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 11:28:47 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/11] efi/x86: Use efi_err for error messages
-Date:   Thu, 30 Apr 2020 14:28:36 -0400
-Message-Id: <20200430182843.2510180-5-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200430182843.2510180-1-nivedita@alum.mit.edu>
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200430182843.2510180-1-nivedita@alum.mit.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iMCD+Jo7E8IZbBxHKMYz3Qb/9HJIoY2bae742xpPUjY=;
+        b=s5K+5D4UPb1mxxTiKqVRfh4WcvOH6i06ugSFk2h6csMcyR1uCYBJEMoyTdgVYJpymh
+         4MJTyq/iN8tILG12uV0iRmxKvAKLdln6R1tRFfsKfFHsx0wW7L8YcqVo3074a5fMNDjh
+         tRCStF2sm0mIZweYlfXooHcImeEvoMJKlEnniuTm4kop7/iAXcbpEf/u1nKWravGKE4L
+         2RfgoxXqNPAUMBXwK3y/MGLd+86qce26/hffHdBgz6tq2ir3DToTOdVspVdtXEgSA0HT
+         NOE+sXrr1Gr/ivMcV4XpzHT0sKZK5+CoElD9DuoGuvW2SJA+zo3cSmmRmM+Gpi17K8m1
+         24Ag==
+X-Gm-Message-State: AGi0PuY6EIfJIbGvw8HHm1ktHo+FLgPfXEDhoS5D9EX3KHA76dcGH/T4
+        BuKqLQeo2kqdpwIYSMVV6TCyLAnTiIcZ/w7UAQIhCw==
+X-Google-Smtp-Source: APiQypKyYOqC4tEmwwTS7QE+OtDLiAeWnwyyRNPl/roowM0owcKKaIbR2jDNbxulnsFh0+v9ggay3MC+vnWMcWGOKEk=
+X-Received: by 2002:a9d:d06:: with SMTP id 6mr405884oti.188.1588271466950;
+ Thu, 30 Apr 2020 11:31:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1588093804-30446-1-git-send-email-michalorzel.eng@gmail.com>
+ <875zdiacv2.fsf@intel.com> <CAOw6vbK69aWzti9a7MXNmAfVfJXzzC5g74p4ukSE49MhaV_b3g@mail.gmail.com>
+In-Reply-To: <CAOw6vbK69aWzti9a7MXNmAfVfJXzzC5g74p4ukSE49MhaV_b3g@mail.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 30 Apr 2020 20:30:53 +0200
+Message-ID: <CAKMK7uEzTn2nKyEaxMcd6602tprwkdnBrmrFYO+_Hi7FY39jAw@mail.gmail.com>
+Subject: Re: [PATCH] drm: Replace drm_modeset_lock/unlock_all with
+ DRM_MODESET_LOCK_ALL_* helpers
+To:     Sean Paul <seanpaul@chromium.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Michal Orzel <michalorzel.eng@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dave Airlie <airlied@linux.ie>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use efi_err instead of bare efi_printk for error messages.
+On Thu, Apr 30, 2020 at 5:38 PM Sean Paul <seanpaul@chromium.org> wrote:
+>
+> On Wed, Apr 29, 2020 at 4:57 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+> >
+> > On Tue, 28 Apr 2020, Michal Orzel <michalorzel.eng@gmail.com> wrote:
+> > > As suggested by the TODO list for the kernel DRM subsystem, replace
+> > > the deprecated functions that take/drop modeset locks with new helpers.
+> > >
+> > > Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_mode_object.c | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
+> > > index 35c2719..901b078 100644
+> > > --- a/drivers/gpu/drm/drm_mode_object.c
+> > > +++ b/drivers/gpu/drm/drm_mode_object.c
+> > > @@ -402,12 +402,13 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
+> > >  {
+> > >       struct drm_mode_obj_get_properties *arg = data;
+> > >       struct drm_mode_object *obj;
+> > > +     struct drm_modeset_acquire_ctx ctx;
+> > >       int ret = 0;
+> > >
+> > >       if (!drm_core_check_feature(dev, DRIVER_MODESET))
+> > >               return -EOPNOTSUPP;
+> > >
+> > > -     drm_modeset_lock_all(dev);
+> > > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
+> >
+> > I cry a little every time I look at the DRM_MODESET_LOCK_ALL_BEGIN and
+> > DRM_MODESET_LOCK_ALL_END macros. :(
+> >
+> > Currently only six users... but there are ~60 calls to
+> > drm_modeset_lock_all{,_ctx} that I presume are to be replaced. I wonder
+> > if this will come back and haunt us.
+> >
+>
+> What's the alternative? Seems like the options without the macros is
+> to use incorrect scope or have a bunch of retry/backoff cargo-cult
+> everywhere (and hope the copy source is done correctly).
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/firmware/efi/libstub/x86-stub.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Yeah Sean & me had a bunch of bikesheds and this is the least worst
+option we could come up with. You can't make it a function because of
+the control flow. You don't want to open code this because it's tricky
+to get right, if all you want is to just grab all locks. But it is
+magic hidden behind a macro, which occasionally ends up hurting.
+-Daniel
 
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index f91d4aab0156..3800eb22232e 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -49,7 +49,7 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- 	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size,
- 			     (void **)&rom);
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Failed to allocate memory for 'rom'\n");
-+		efi_err("Failed to allocate memory for 'rom'\n");
- 		return status;
- 	}
- 
-@@ -65,7 +65,7 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- 				PCI_VENDOR_ID, 1, &rom->vendor);
- 
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Failed to read rom->vendor\n");
-+		efi_err("Failed to read rom->vendor\n");
- 		goto free_struct;
- 	}
- 
-@@ -73,7 +73,7 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- 				PCI_DEVICE_ID, 1, &rom->devid);
- 
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Failed to read rom->devid\n");
-+		efi_err("Failed to read rom->devid\n");
- 		goto free_struct;
- 	}
- 
-@@ -118,7 +118,7 @@ static void setup_efi_pci(struct boot_params *params)
- 				     (void **)&pci_handle);
- 
- 		if (status != EFI_SUCCESS) {
--			efi_printk("Failed to allocate memory for 'pci_handle'\n");
-+			efi_err("Failed to allocate memory for 'pci_handle'\n");
- 			return;
- 		}
- 
-@@ -172,7 +172,7 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 		return;
- 
- 	if (efi_table_attr(p, version) != 0x10000) {
--		efi_printk("Unsupported properties proto version\n");
-+		efi_err("Unsupported properties proto version\n");
- 		return;
- 	}
- 
-@@ -185,7 +185,7 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 				     size + sizeof(struct setup_data),
- 				     (void **)&new);
- 		if (status != EFI_SUCCESS) {
--			efi_printk("Failed to allocate memory for 'properties'\n");
-+			efi_err("Failed to allocate memory for 'properties'\n");
- 			return;
- 		}
- 
-@@ -372,7 +372,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 
- 	status = efi_bs_call(handle_protocol, handle, &proto, (void **)&image);
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Failed to get handle for LOADED_IMAGE_PROTOCOL\n");
-+		efi_err("Failed to get handle for LOADED_IMAGE_PROTOCOL\n");
- 		efi_exit(handle, status);
- 	}
- 
-@@ -382,7 +382,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 	status = efi_allocate_pages(sizeof(struct boot_params),
- 				    (unsigned long *)&boot_params, ULONG_MAX);
- 	if (status != EFI_SUCCESS) {
--		efi_printk("Failed to allocate lowmem for boot params\n");
-+		efi_err("Failed to allocate lowmem for boot params\n");
- 		efi_exit(handle, status);
- 	}
- 
-@@ -749,7 +749,7 @@ unsigned long efi_main(efi_handle_t handle,
- 					     hdr->kernel_alignment,
- 					     LOAD_PHYSICAL_ADDR);
- 		if (status != EFI_SUCCESS) {
--			efi_printk("efi_relocate_kernel() failed!\n");
-+			efi_err("efi_relocate_kernel() failed!\n");
- 			goto fail;
- 		}
- 		/*
-@@ -786,7 +786,7 @@ unsigned long efi_main(efi_handle_t handle,
- 			efi_set_u64_split(size, &hdr->ramdisk_size,
- 					  &boot_params->ext_ramdisk_size);
- 		} else if (status != EFI_NOT_FOUND) {
--			efi_printk("efi_load_initrd_dev_path() failed!\n");
-+			efi_err("efi_load_initrd_dev_path() failed!\n");
- 			goto fail;
- 		}
- 	}
-@@ -813,13 +813,13 @@ unsigned long efi_main(efi_handle_t handle,
- 
- 	status = exit_boot(boot_params, handle);
- 	if (status != EFI_SUCCESS) {
--		efi_printk("exit_boot() failed!\n");
-+		efi_err("exit_boot() failed!\n");
- 		goto fail;
- 	}
- 
- 	return bzimage_addr;
- fail:
--	efi_printk("efi_main() failed!\n");
-+	efi_err("efi_main() failed!\n");
- 
- 	efi_exit(handle, status);
- }
+> Sean
+>
+> > BR,
+> > Jani.
+> >
+> >
+> > >
+> > >       obj = drm_mode_object_find(dev, file_priv, arg->obj_id, arg->obj_type);
+> > >       if (!obj) {
+> > > @@ -427,7 +428,7 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
+> > >  out_unref:
+> > >       drm_mode_object_put(obj);
+> > >  out:
+> > > -     drm_modeset_unlock_all(dev);
+> > > +     DRM_MODESET_LOCK_ALL_END(ctx, ret);
+> > >       return ret;
+> > >  }
+> > >
+> > > @@ -449,12 +450,13 @@ static int set_property_legacy(struct drm_mode_object *obj,
+> > >  {
+> > >       struct drm_device *dev = prop->dev;
+> > >       struct drm_mode_object *ref;
+> > > +     struct drm_modeset_acquire_ctx ctx;
+> > >       int ret = -EINVAL;
+> > >
+> > >       if (!drm_property_change_valid_get(prop, prop_value, &ref))
+> > >               return -EINVAL;
+> > >
+> > > -     drm_modeset_lock_all(dev);
+> > > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
+> > >       switch (obj->type) {
+> > >       case DRM_MODE_OBJECT_CONNECTOR:
+> > >               ret = drm_connector_set_obj_prop(obj, prop, prop_value);
+> > > @@ -468,7 +470,7 @@ static int set_property_legacy(struct drm_mode_object *obj,
+> > >               break;
+> > >       }
+> > >       drm_property_change_valid_put(prop, ref);
+> > > -     drm_modeset_unlock_all(dev);
+> > > +     DRM_MODESET_LOCK_ALL_END(ctx, ret);
+> > >
+> > >       return ret;
+> > >  }
+> >
+> > --
+> > Jani Nikula, Intel Open Source Graphics Center
+
+
+
 -- 
-2.26.2
-
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
