@@ -2,332 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2FDC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AAAC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACE321D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E763120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="V94lJhhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgD3J7R (ORCPT
+        id S1726857AbgD3J7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:59:17 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:56968 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726378AbgD3J7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:59:16 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id EBA90634C8F;
-        Thu, 30 Apr 2020 12:59:07 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jU5yF-0000QG-Pc; Thu, 30 Apr 2020 12:59:07 +0300
-Date:   Thu, 30 Apr 2020 12:59:07 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200430095907.GG867@valkosipuli.retiisi.org.uk>
-References: <20200429162437.2025699-1-robert.foss@linaro.org>
- <20200429162437.2025699-3-robert.foss@linaro.org>
- <20200430093524.GB2188@pengutronix.de>
- <20200430094549.GF867@valkosipuli.retiisi.org.uk>
- <20200430095332.GC2188@pengutronix.de>
+        Thu, 30 Apr 2020 05:59:21 -0400
+Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:37818
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726378AbgD3J7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:59:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=modYXQGQcyDQ2xfFapaVudJriEnKSztlssxbG2mRLZA5mNykI843NQZdqqlBbj67Tv+XZKn28up87aU85up0pMHljJQUXCkFdoMDtPS1p3q0G60spZA2JAm602nC9gDr5Z3Y3th3HL0bcN2fh4X3Y8XUHYyHRwAz309XZ4XWlVzOSjbCZNcheEi3mfLLpK/93aaDQQIqhmeLT9mTsUtDMsIVgOz7b4638gyw/A27M+S4Z8zph06fdd98cb96osRuJA2/cARRofO/gFz57nVGn2II+WBHxJY0UdDCkAJPB4MPhG1LpVUK8qPwUnJOrfYGfksraT6vJWePnN646s8AxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zO5KEr/c0V47cntzr6VM8XYrvXQmDezAE3ACOoAylNo=;
+ b=WKK2bD1xozB//Iof4LgxtH7Kh3Y41XvByD4S8WwvhpZZSopVeRcts9wivFsK6WRmqAOq6OR6JAW831G6JucKn7nKrGnpucYAZGMlMfoM8WT6aVjTsXXZthlPREAfsRdBXib+HUlMvXFdmKlzUGfWd7ajXaD1otYVtdwWiQMqsJG5W0nMn0Dpw3wAWU+ictVp6NruYz1QY/s1mrPDyMknU3lJ/UqyXmqGiD45T0uA1uMzCVI/q9zAZ6S6lx5LIOLo2rGOjLuGC6QCWWbJJg4SXAs+0xVHCPzdn7izLt/rgw4Rrlih4ezuDlwCRR4GrngfWZ9IuosoEZzV7lupa3JClw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zO5KEr/c0V47cntzr6VM8XYrvXQmDezAE3ACOoAylNo=;
+ b=V94lJhhIYF7dsKLMmVZ/SJx+BN0lN6M1uYMcHKPZpn7YbLh3dCJJHYscOAXsJESgyfjynUEZlVPP3lYs7sCECh7m9vIPLniazJIQ56SL9H2DGbDxr5pIx2bUq0ReWxjsQ24LRdG/WpKU1R2s6/3iudPH9fy/LXs405rDu5di4IU=
+Authentication-Results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none header.from=sifive.com;
+Received: from BN8PR13MB2611.namprd13.prod.outlook.com (2603:10b6:408:81::17)
+ by BN8PR13MB2884.namprd13.prod.outlook.com (2603:10b6:408:85::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14; Thu, 30 Apr
+ 2020 09:59:15 +0000
+Received: from BN8PR13MB2611.namprd13.prod.outlook.com
+ ([fe80::c129:8fca:5ed:8929]) by BN8PR13MB2611.namprd13.prod.outlook.com
+ ([fe80::c129:8fca:5ed:8929%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 09:59:15 +0000
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH 0/2] update is25wp256d page write capabilities
+Date:   Thu, 30 Apr 2020 02:58:50 -0700
+Message-Id: <1588240732-13905-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR08CA0027.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::40) To BN8PR13MB2611.namprd13.prod.outlook.com
+ (2603:10b6:408:81::17)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430095332.GC2188@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from gamma07.internal.sifive.com (64.62.193.194) by BYAPR08CA0027.namprd08.prod.outlook.com (2603:10b6:a03:100::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 09:59:13 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [64.62.193.194]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1f194c6f-10a8-4a0f-10b3-08d7eced2372
+X-MS-TrafficTypeDiagnostic: BN8PR13MB2884:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR13MB28844AFF04000F500A5F6BF099AA0@BN8PR13MB2884.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0389EDA07F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4MLehkgPkdJOeopcQ5DInrJdPpBpzTm9wqLhZroxLVHda4Xe3cClvQlAAh9+JrrOvWSIVR6R2E7H2X+l1y1iVCXshdJG0E6dEo5LmYISOHTppGezXUcPnavuwovA7HuNGbHOaIg7YPR59Iw3U0fHaFSLUsn8JTJA2pcle3iW23I0Ie4/RNJ4gzbhwyKUV7ATKqT5nB6PLcnoEeygaIY6zEXNuhfeHSpGHpJPourywBUL0nNb1RAmEgmFvcg5PZkOU7hA5mksWHIcpu5NYFY8RmErfQSmPYtglJMZxLQalE37woFys/0P+/9w/E2JiS/ybg0xa2MSrdXJH2SGcNtJHQ5gdjTz/KRrO8NzHiNGTCoxRs11X+PHIbcz2QdM1H0bZd3MnIOWiZw0ZSAhhALUGP83otyhFgdgXhz7UVeN1IJrqX5GaP0icZLm/7RmYKxz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(39850400004)(396003)(366004)(7696005)(52116002)(8676002)(8936002)(16526019)(186003)(26005)(5660300002)(4744005)(956004)(478600001)(2906002)(2616005)(316002)(6666004)(66476007)(66556008)(66946007)(86362001)(15650500001)(36756003)(107886003)(4326008)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: DHrcdylyOx4qjkqpiFsp8JI4sGtnPjIfZeVf9QSsxAyZaOLM6U3DaA2nRihFvUjNM78RNyIvBqci0ZXMF+JMG0R6idQGeIcMJaxHe0jpIiOx3VJWnLpm8Kqev1HLaRtTshbzJHnoh01tt8WP16SvACPAJHWW0oym08R5J/T0eFEth10mEPAplG8oDlIfmDy+RDA7dfbsDuORvXDt8nJV3OxkZOLyHKYEMPrCnq0TUGGX30ETepqBif2MpRWu+PfWn/lbVO8TinS7eVEGzJ4BHk2eEzo3a+rfoVR9qJL86V8UfKekegNb/Kgpaulzp8wpzIaltC0/5Ri+WJCwKGRHBqgAT17zt2gfZ6ppo7J6z4BDL9XPMJngEwc8b/oHBmCjcppQQ1gIRW6cbjDzcfwYuFoTZyjEQMHsux/KdGuUE2rmU7Hjn2KZwFVmo/UOdejU1yaaMlN66TKZmn53asJrLd8HAsIVe24QmHiMfgV8oh15i+HrPx11/T4cJPofTJKbrNKep/XHEG48YnWPII+mETbjdDiOyhcXnkgffr6PGTutE81hie/lcwMDOLQHII5wz9oF06v9CqZEQoRVORfFDwKYfymwzGdybNb6m0+rrC3H6I6U6F5B3Crp/PMTnhBV5njBlwv8dLEQGWMxuGws86gtjtYeDn9JThnvB2DMaIS0U57PZ9tyjxupD/QKHhIN5c+joRcJHg4RW+XIRbE1ND/DWB9AVA8c2MCNcJxeMD8zsEKPzg9YveFVY7PRMYbL/bjt3jP266z/UZRNPXJs1/uxd12G8stAbivkhjyCBsU=
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f194c6f-10a8-4a0f-10b3-08d7eced2372
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 09:59:14.8153
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +/iHnhN6rfjPAiU4XYNXWuSRwg175f0Z9QaDt7cH2VCLUI1FHSgc0RoNwes5Ll6UC6YzdmhBjqZdKCo0o4ACIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR13MB2884
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+HiFive Unleashed A00 board has is25wp256d snor chip. It is observed
+that it gets configured with Serial Input Page program by the end
+of spi_nor_scan. Using the post bfpt fixup hook we prioritize the
+page program settings to use quad input page program (opcode:0x34)
+over serial input page program (opcode: 0x12).
 
-On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
-> Hi Sakari,
-> 
-> On 20-04-30 12:45, Sakari Ailus wrote:
-> > Hi Marco,
-> > 
-> > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
-> > > Hi Robert,
-> > > 
-> > > thnakf for the patch but pls keep in mind to do one thing per patch.
-> > > IMHO this patch do a lot more. Anyway below are my comment :)
-> > > 
-> > > On 20-04-29 18:24, Robert Foss wrote:
-> > > > Add match table, enable ov8856_probe() to support
-> > > > both ACPI and DT modes.
-> > > 
-> > > You are also adding the support for reset-gpios and regualtors. IMHO the
-> > > commit message don't belong to the changes you made anymore.
-> > > 
-> > > > ACPI and DT modes are primarily distinguished from
-> > > > each other by relying on devm_XXX_get_optional()
-> > > > will return NULL instead of a reference for the
-> > > > desired managed resource.
-> > > > 
-> > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > > > ---
-> > > > 
-> > > > - Changes since v5:
-> > > >   * Maxime & Sakari: Replaced clock tolerance check with warning
-> > > > 
-> > > > - Changes since v4:
-> > > >   * Maxime & Sakari: Switch to clock-frequency
-> > > > 
-> > > > - Changes since v3:
-> > > >   * Remove redundant {}-brackets
-> > > >   * Compare xvclk_rate to 5% tolerance
-> > > >   * Andy: Use dev_fwnode()
-> > > >   * Andy: Use %pe instead of %ld + PTR_ERR()
-> > > >   * Andy: Invert reset_gpio logic
-> > > >   * Andy: Remove dev_dbg() from failing reset_gpio setup
-> > > >   * Andy: Use dev_err for logging for failures
-> > > >   * Andy: Remove dev_warn from EDEFER/regulator error path
-> > > >   * Andy & Sakari: Replaced GPIOD_OUT_XXX with 0/1
-> > > >   * Maxime & Sakari: Verify clock frequency from DT
-> > > >   * Sakari: Verify the 'xvclk_rate' is set correctly for ACPI/DT devices
-> > > >   * Sakari: Remove duplicate ov8856->dev assignment
-> > > > 
-> > > > - Changes since v2:
-> > > >   * Added "struct device *dev" member to struct ov8856
-> > > >   * Andy: Switch to optional version of devm_gpiod_get
-> > > >   * Andy: Switch to optional version of devm_clk_get
-> > > >   * Fabio: Add reset sleep period
-> > > >   * Sakari: Unify defines for 19.2Mhz
-> > > >   * Sakari: Remove 24Mhz clock, since it isn't needed for supported modes
-> > > >   * Sakari: Replace dev_info() with dev_dbg()
-> > > >   * Sakari: Switch induction variable type to unsigned
-> > > >   * Sakari: Don't wait for reset_gpio when in ACPI mode
-> > > >   * Sakari: Pull reset GPIO high on power on failure
-> > > >   * Sakari: Add power on/off to resume/suspend
-> > > >   * Sakari: Fix indentation
-> > > >   * Sakari: Power off during ov8856_remove()
-> > > >   * Sakari: Don't sleep during power-on in ACPI mode
-> > > >   * Sakari: Switch to getting xvclk from clk_get_rate
-> > > > 
-> > > > - Changes since v1:
-> > > >   * Andy & Sakari: Make XVCLK optional since to not break ACPI
-> > > >   * Fabio: Change n_shutdown_gpio name to reset_gpio
-> > > >   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
-> > > >   * Fabio: Remove empty line
-> > > >   * Fabio: Remove real error from devm_gpiod_get() failures
-> > > >   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
-> > > >   * Sakari: Use XVCLK rate as provided by DT
-> > > > 
-> > > >  drivers/media/i2c/ov8856.c | 137 +++++++++++++++++++++++++++++++++----
-> > > >  1 file changed, 123 insertions(+), 14 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> > > > index 8655842af275..4749dc74d5ad 100644
-> > > > --- a/drivers/media/i2c/ov8856.c
-> > > > +++ b/drivers/media/i2c/ov8856.c
-> > > > @@ -3,10 +3,13 @@
-> > > >  
-> > > >  #include <asm/unaligned.h>
-> > > >  #include <linux/acpi.h>
-> > > > +#include <linux/clk.h>
-> > > >  #include <linux/delay.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > >  #include <linux/i2c.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/pm_runtime.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > >  #include <media/v4l2-ctrls.h>
-> > > >  #include <media/v4l2-device.h>
-> > > >  #include <media/v4l2-fwnode.h>
-> > > > @@ -18,7 +21,7 @@
-> > > >  #define OV8856_LINK_FREQ_360MHZ		360000000ULL
-> > > >  #define OV8856_LINK_FREQ_180MHZ		180000000ULL
-> > > >  #define OV8856_SCLK			144000000ULL
-> > > > -#define OV8856_MCLK			19200000
-> > > > +#define OV8856_XVCLK_19_2		19200000
-> > > >  #define OV8856_DATA_LANES		4
-> > > >  #define OV8856_RGB_DEPTH		10
-> > > >  
-> > > > @@ -64,6 +67,12 @@
-> > > >  
-> > > >  #define to_ov8856(_sd)			container_of(_sd, struct ov8856, sd)
-> > > >  
-> > > > +static const char * const ov8856_supply_names[] = {
-> > > > +	"dovdd",	/* Digital I/O power */
-> > > > +	"avdd",		/* Analog power */
-> > > > +	"dvdd",		/* Digital core power */
-> > > > +};
-> > > > +
-> > > >  enum {
-> > > >  	OV8856_LINK_FREQ_720MBPS,
-> > > >  	OV8856_LINK_FREQ_360MBPS,
-> > > > @@ -566,6 +575,11 @@ struct ov8856 {
-> > > >  	struct media_pad pad;
-> > > >  	struct v4l2_ctrl_handler ctrl_handler;
-> > > >  
-> > > > +	struct device		*dev;
-> > > > +	struct clk		*xvclk;
-> > > > +	struct gpio_desc	*reset_gpio;
-> > > > +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
-> > > > +
-> > > >  	/* V4L2 Controls */
-> > > >  	struct v4l2_ctrl *link_freq;
-> > > >  	struct v4l2_ctrl *pixel_rate;
-> > > > @@ -908,6 +922,52 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
-> > > >  	return ret;
-> > > >  }
-> > > >  
-> > > > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > > > +{
-> > > > +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = clk_prepare_enable(ov8856->xvclk);
-> > > 
-> > > You're request the clk only in DT case or do I miss something? If so you
-> > > have to check if the clk is available.
-> > > 
-> > > > +	if (ret < 0) {
-> > > > +		dev_err(&client->dev, "failed to enable xvclk\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	if (is_acpi_node(dev_fwnode(ov8856->dev)))
-> > > > +		return 0;
-> > > > +
-> > > > +	if (ov8856->reset_gpio) {
-> > > > +		gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > > +		usleep_range(1000, 2000);
-> > > > +	}
-> > > > +
-> > > > +	ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> > > > +				    ov8856->supplies);
-> > > > +	if (ret < 0) {
-> > > > +		dev_err(&client->dev, "failed to enable regulators\n");
-> > > > +		goto disable_clk;
-> > > > +	}
-> > > > +
-> > > > +	gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-> > > 
-> > > You need to check the existance of the gpio here too.
-> > 
-> > No need to; the GPIO framework can handle this internally.
-> 
-> Ahh, I said nothing :) so all my comments about that can be dropped. 
-> 
-> > > > +	usleep_range(1500, 1800);
-> > > > +
-> > > > +	return 0;
-> > > > +
-> > > > +disable_clk:
-> > > > +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > 
-> > > And here.. pls check the whole patch.
-> > > 
-> > > > +	clk_disable_unprepare(ov8856->xvclk);
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static void __ov8856_power_off(struct ov8856 *ov8856)
-> > > > +{
-> > > > +	gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > > +	regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
-> > > > +			       ov8856->supplies);
-> > > > +	clk_disable_unprepare(ov8856->xvclk);
-> > > 
-> > > Clk is only availabel in DT use-case.
-> > > 
-> > > > +}
-> > > > +
-> > > >  static int __maybe_unused ov8856_suspend(struct device *dev)
-> > > >  {
-> > > >  	struct i2c_client *client = to_i2c_client(dev);
-> > > > @@ -918,6 +978,7 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
-> > > >  	if (ov8856->streaming)
-> > > >  		ov8856_stop_streaming(ov8856);
-> > > >  
-> > > > +	__ov8856_power_off(ov8856);
-> > > >  	mutex_unlock(&ov8856->mutex);
-> > > >  
-> > > >  	return 0;
-> > > > @@ -931,6 +992,8 @@ static int __maybe_unused ov8856_resume(struct device *dev)
-> > > >  	int ret;
-> > > >  
-> > > >  	mutex_lock(&ov8856->mutex);
-> > > > +
-> > > > +	__ov8856_power_on(ov8856);
-> > > >  	if (ov8856->streaming) {
-> > > >  		ret = ov8856_start_streaming(ov8856);
-> > > >  		if (ret) {
-> > > > @@ -1092,29 +1155,54 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > -static int ov8856_check_hwcfg(struct device *dev)
-> > > > +static int ov8856_get_hwcfg(struct ov8856 *ov8856)
-> > > >  {
-> > > > +	struct device *dev = ov8856->dev;
-> > > >  	struct fwnode_handle *ep;
-> > > >  	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > > >  	struct v4l2_fwnode_endpoint bus_cfg = {
-> > > >  		.bus_type = V4L2_MBUS_CSI2_DPHY
-> > > >  	};
-> > > > -	u32 mclk;
-> > > > +	u32 xvclk_rate;
-> > > >  	int ret;
-> > > >  	unsigned int i, j;
-> > > >  
-> > > >  	if (!fwnode)
-> > > >  		return -ENXIO;
-> > > >  
-> > > > -	ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > > > +	ret = fwnode_property_read_u32(fwnode, "clock-frequency",
-> > > > +		&xvclk_rate);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > >  
-> > > > -	if (mclk != OV8856_MCLK) {
-> > > > -		dev_err(dev, "external clock %d is not supported", mclk);
-> > > > -		return -EINVAL;
-> > > > +	if (!is_acpi_node(fwnode)) {
-> > > > +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > > > +		if (IS_ERR(ov8856->xvclk)) {
-> > > > +			dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > > > +					ov8856->xvclk);
-> > > > +			return PTR_ERR(ov8856->xvclk);
-> > > > +		}
-> > > > +
-> > > > +		clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > > > +		xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > > >  	}
-> > > 
-> > > Why do we handle the clock only in DT case? Is there a problem with the
-> > > clock handling and ACPI?
-> > 
-> > Not really, it's just that ACPI does not provide an interface to the clocks
-> > as such.
-> 
-> But you will get a clk by devm_clk_get()?
+The patchset is tested on Linux 5.7-rc3.
 
-No, because ACPI does not expose one to drivers. Effectively the entire
-power sequences are implemented in ACPI, not in the driver.
+Sagar Shrikant Kadam (2):
+  riscv: defconfig: enable spi nor on Hifive Unleashed A00 board.
+  spi: nor: update page program settings for is25wp256 using post bfpt
+    fixup
+
+ arch/riscv/configs/defconfig |  2 ++
+ drivers/mtd/spi-nor/issi.c   | 16 ++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
 -- 
-Regards,
+2.7.4
 
-Sakari Ailus
