@@ -2,147 +2,130 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1E6C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364E3C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 291CB20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:03:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="e2CSS06/"
+	by mail.kernel.org (Postfix) with ESMTP id 1359D2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588237448;
+	bh=Tdze56rm9Kb6AWKcsvq4L0khH80Bd7O66LekOsspEVQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HyUIgRERGXLav0mElz7V27C4f8bmfwQB1+8TNvNHVt+xcPlatH7VLwoOSG5t3IS6+
+	 E6Cyv9+0zYdoffyiks8nimD3T3lHVu29zFVl880txw961maqGR5WTd4JEBw6+BM66n
+	 GiOIPnDCpeOg+4cv40YBuXICxR3OoRaZ2yv53HTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgD3JDH (ORCPT
+        id S1726866AbgD3JEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:03:07 -0400
-Received: from mail-bn7nam10on2050.outbound.protection.outlook.com ([40.107.92.50]:61144
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbgD3JDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:03:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hdntmjxK0mg/JunuKlEm7Venp7hif/dknya/H9ttPcg88JT1eJev4Kg/pcrxfZSbaUEAzXmB5D4jCIWqZiagPOJpYCNSspiWaS+cQT4EStyXbHvLZMNaKMJFh7ZC0HTvMNSQ+yggdBRI1tbeNKMq8w+KRQvy20PATSXw7sH6qDoNl//QZJ+ANui1GhgD58LKTw4uOP1TWfIsgOZSRpRrcl88D1+6n5PPQaXk5hRuy41lhdyCiLi/dPfkrRpqJLg2zU9/Hx7rnp72+y7NaefiW0JGdk9xeYGk4dQFul7BktgHRHA2kzBzMwAoFsd8kaLCt67yoIeBSATa0uqywn2/Dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Doefa5wGXEATvHVmDaY92fi2QHe09JxXT3AM/usIw14=;
- b=HSpnt9k3JFBjwJuE8yjH30fcWFKQAPlvrK58chE6xBleYK+hu2wWtZHHu3TT7Fpxuw7RMLjV03xr8knCTXFusdao0vLwdGmKRKZVC3roJlDGOxtYdrYEkCzpqR5ZKBvI90rhSVVPGaGwaf2epPJBd3eABzEFm0sM6d7g92Td1JD1GZqX8WbomqxyUS86aDHcglzD2B6nvNk9rgsznmtl5az+yhIKDk4mK2t2LKW+C28iyxDZks72JNm/TFKSy+bfYUNHojucmyFJN4uC9v7V/r5aiw0W8zSBftctGBMAAQ3zKMDfpQWFN3JBIZJcv/el2bRrnFHdoCwm0WTmbuBT5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Doefa5wGXEATvHVmDaY92fi2QHe09JxXT3AM/usIw14=;
- b=e2CSS06/rQmsIChIJCLi3pVtf4iVWIBPKlrMP+QRyCeXpkBO3dvjarIem7g7ceUTvuXY4waIt39ic1f8wWWKwjJ6x23v+bhilitfMDFcSISkNXUIjYIt3iSBTtXhyDhnGIffCOE2i0xfwxxoU9nC65cssNbRKDCodm61bf39bJ0=
-Received: from SA9PR10CA0014.namprd10.prod.outlook.com (2603:10b6:806:a7::19)
- by DM5PR02MB3371.namprd02.prod.outlook.com (2603:10b6:4:6a::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
- 2020 09:03:02 +0000
-Received: from SN1NAM02FT048.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:a7:cafe::36) by SA9PR10CA0014.outlook.office365.com
- (2603:10b6:806:a7::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
- Transport; Thu, 30 Apr 2020 09:03:02 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT048.mail.protection.outlook.com (10.152.72.202) with Microsoft SMTP
- Server id 15.20.2937.19 via Frontend Transport; Thu, 30 Apr 2020 09:03:01
- +0000
-Received: from [149.199.38.66] (port=56252 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jU55r-0006qY-F5; Thu, 30 Apr 2020 02:02:55 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jU55x-0005IC-AD; Thu, 30 Apr 2020 02:03:01 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jU55s-0005ET-Er; Thu, 30 Apr 2020 02:02:56 -0700
-Subject: Re: [PATCH] tty: xilinx_uartps: Add the id to the console
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
-References: <06195dc0effe2fb82e264e4faefcfdd6ebc00516.1588234277.git.michal.simek@xilinx.com>
- <20200430084915.GD2496467@kroah.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <9a23de4e-39ef-a2f5-1386-2e65da47881f@xilinx.com>
-Date:   Thu, 30 Apr 2020 11:02:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 05:04:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36475 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgD3JEH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:04:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s202so4609412oih.3;
+        Thu, 30 Apr 2020 02:04:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IPIctqtbjHbN+c6WsGMnZ4aDcQr0Dn9FvwQoBcXdb4k=;
+        b=cWEchaky38a6ftNwmFGRftCwazWO2LC1n86PfbcJIlICh5bPgybL+cuaO+Egs4hFI1
+         7yLX88FQS8BIrL8l8+f8+9Dx3OWcoosY/YTK3mBu6O4O6zQswgKAwi2PIOhysFur6Ccb
+         8n5IStch8nTA4R42ojueTOudcJY0TMtdiYwasCBVRMCuFK4J8uR4SGg5oBBQTFHFvdQH
+         hzFTcj7XvyrzuC5YlraFT/28Z7I+19DhIONeOG6CAHnOv+K/og/8ix7ig/5RnRcfamGg
+         c+ik8DIFF62oR7nUNqfSU10IdwsKlGx1+57Z17QpSC52Z93v5E/G/oa7bogjp/76syTL
+         o0fA==
+X-Gm-Message-State: AGi0PuYlWhPme+BGipgKJv47SeWTe9R83Rqr49Bqvp2T/QD3giPinJhd
+        tt6M52sYai/e6JnCIdlszVH7RwkXcyU5nBix1KU=
+X-Google-Smtp-Source: APiQypJD2+GdHPcXAjdJ2otz/vhbS/df9CkF9oCL8wWT9gqhtZ1UAebHm6B/NCfiC2qhRAGhImTD5b2woCc+kgQvvjQ=
+X-Received: by 2002:aca:aa8c:: with SMTP id t134mr1027807oie.103.1588237445928;
+ Thu, 30 Apr 2020 02:04:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200430084915.GD2496467@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(376002)(136003)(46966005)(478600001)(316002)(110136005)(9786002)(31686004)(8676002)(70586007)(82310400002)(70206006)(47076004)(4326008)(81166007)(82740400003)(356005)(44832011)(426003)(336012)(4744005)(2616005)(31696002)(36756003)(26005)(8936002)(6666004)(186003)(5660300002)(2906002)(54906003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f22fb4d3-4a5b-4089-7ad9-08d7ece5495a
-X-MS-TrafficTypeDiagnostic: DM5PR02MB3371:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR02MB33716FAC17431804D369C8F1C6AA0@DM5PR02MB3371.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0389EDA07F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wz6vTy5agTKQraRm5mOEqnhZ8Fc5Sy+IsWGW5isxCwzEcVMg7Ro6Kf59Pqi6f+ZiHnL7qQdkWD7+NGL3o7p+nOvFaF4pQ8nY4rj0F7BxjBVA+KCvLvKUmkwFohNdlYpCC6LX3aXfbCoCoYmF90bYBDFF/H7G0w+M80NDrleTrrMHhUJpfVclS8XGLnVUxDQHrPDAhHqV6pwLqzQwWbLmle+W+sNxOpSoam1kqa9gUIinyMdTci5c3fB0/wSUUF0TXHbs5B1sUpmov/dC0LloZrHe98TWqzvDYfTPsmL6boyAlQzKWUyS5XuOq7BFWIhHaH33QFitcehBYkC6CExrNwzCRVYCKhU6StqbPQpy/ExrFMy/mq3ADm6NXR0HhzEzQdonF0mtWqsQ+RtbNJOX3BGfUfR6CIKHJUc5v9wS90/eAPjp2BCVT5Lp0+RDZf4omoP5iozEgMQEratyxGAxX+JAlJxPoCBYwAjl/POo1AvPOAIDPWQWs5yRvsnW+Xkr30UDxrn8ujmYXAVSQ02CqA==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 09:03:01.8416
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f22fb4d3-4a5b-4089-7ad9-08d7ece5495a
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3371
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
+ <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
+ <70e743cf-b88e-346a-5114-939b8724c83d@arm.com> <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
+In-Reply-To: <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 Apr 2020 11:03:54 +0200
+Message-ID: <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
+Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30. 04. 20 10:49, Greg Kroah-Hartman wrote:
-> On Thu, Apr 30, 2020 at 10:11:21AM +0200, Michal Simek wrote:
->> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->>
->> Update the console index. Once the serial node is found update it to the
->> console index.
->>
->> Fixes: 18cc7ac8a28e ("Revert "serial: uartps: Register own uart console and driver structures"")
->> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->> Cc: stable <stable@vger.kernel.org>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->> Greg: Would be good if you can take this patch to 5.7 and also to stable
->> trees.
-> 
-> WHy?  I don't understand what bug this fixes/resolves, please be much
-> more descriptive in your changelog text showing this if you wish for it
-> to be backported to a stable tree.  As it is, this just looks like you
-> are adding a new feature.
+On Thu, Apr 30, 2020 at 9:53 AM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
+>
+>
+>
+> On 4/29/20 6:12 PM, Valentin Schneider wrote:
+> > On 29/04/2020 16:57, Benjamin GAIGNARD wrote:
+> >>
+> >> On 4/29/20 5:50 PM, Rafael J. Wysocki wrote:
+> >>> On Friday, April 24, 2020 1:40:55 PM CEST Benjamin Gaignard wrote:
+> >>>> When start streaming from the sensor the CPU load could remain very low
+> >>>> because almost all the capture pipeline is done in hardware (i.e. without
+> >>>> using the CPU) and let believe to cpufreq governor that it could use lower
+> >>>> frequencies. If the governor decides to use a too low frequency that
+> >>>> becomes a problem when we need to acknowledge the interrupt during the
+> >>>> blanking time.
+> >>>> The delay to ack the interrupt and perform all the other actions before
+> >>>> the next frame is very short and doesn't allow to the cpufreq governor to
+> >>>> provide the required burst of power. That led to drop the half of the frames.
+> >>>>
+> >>>> To avoid this problem, DCMI driver informs the cpufreq governors by adding
+> >>>> a cpufreq minimum load QoS resquest.
+> >>> This seems to be addressing a use case that can be addressed with the help of
+> >>> utilization clamps with less power overhead.
+> >> Do mean clamping the policy frequencies ? I may have miss the API to do
+> >> that...
+> > IIUC Rafael is referring to uclamp, i.e. scheduler utilization clamping, see:
+> >
+> >    https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#cpu
+> >
+> > The above describes the cgroup interface, note that you can also set clamps
+> > per task (via sched_setattr()).
+> >
+> > One thing that comes to mind however is that schedutil only "sees" the clamps
+> > of runnable tasks, and from reading your changelog you may not have moments
+> > without any (i.e. gears are grinding in HW). You'd have to try boosting
+> > (setting a high uclamp.min) whatever tasks you have on the software side and
+> > see how it all behaves.
+>
+> Relying on userland side means that various applications need to be aware
+> of this specific hardware case and fix it. I was hoping to find a
+> solution in side the kernel
+> to not impact the software side.
 
-ok. Will send v2 with better description.
+That's not what I meant.
 
-Thanks,
-Michal
+I suppose that the interrupt processing in question takes place in
+process context and so you may set the lower clamp on the utilization
+of the task carrying that out.
+
+Alternatively, that task may be a deadline one.
