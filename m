@@ -2,254 +2,143 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8E1C83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD578C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5A62073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51442073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588216334;
+	bh=zFkysDiNlWdgOMOnQZac9a25NNHGxo2POncv2jmusUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rU6tZ3En7xI8WO7b8iWKdPk6JoKS2CGG9byb+dObGnwYQBeFiHmEJ+hnRjG+O/Fp+
+	 ofR1Pn3njrF6i8tgvjylhfsakWD/eRsA1rMyfszrmjJwXfSM3SOy3akeh0+MFOkUfm
+	 +QcGz3RBHbiSJ7fjda2PRHjBDoWxL8BoJEAWqjwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD3DJt (ORCPT
+        id S1726554AbgD3DMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:09:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:29952 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD3DJr (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:09:47 -0400
-IronPort-SDR: /VvEKGE3FXQna24TwNXwGpspTmLlF43LRWpELcUxf8xaLsajZYAm/T+9aqZxzB0jHMN8gKwREM
- gX7ItHmALVZg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 20:09:47 -0700
-IronPort-SDR: x0fXoui8TdQ8Sk8gt8c3kIlhHD79IZKSLdZw3pn4VPGnFAj/+BJ+gBmW21IjkwmXLUuQZrp41g
- 5QKlRK0m/oHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="248152009"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Apr 2020 20:09:44 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH 2/2] perf stat: Report summary for interval mode
-Date:   Thu, 30 Apr 2020 11:07:40 +0800
-Message-Id: <20200430030740.27156-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430030740.27156-1-yao.jin@linux.intel.com>
-References: <20200430030740.27156-1-yao.jin@linux.intel.com>
+        Wed, 29 Apr 2020 23:12:14 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:38854 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgD3DMN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 23:12:13 -0400
+Received: by mail-pf1-f173.google.com with SMTP id y25so2198824pfn.5;
+        Wed, 29 Apr 2020 20:12:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SMIh/7yA/TcacM5ktTGAgddafFfMiqmeZDeRLLRUZ38=;
+        b=N2mzXORPzsRrJudZJFe1GZB06YTGIF0fSTGsf1/Xur9WAeA23hlhOHaBO1APzaT+Qd
+         HuSM4tyTmxTIsEKN6rAQsyO9alCiwcyM6x1fgox5zj5sj0FP+Kr86MiiTdwYodO0bSMy
+         mRs3+hCPhs8H35EdmtGqltT4d6OVKCR0UEngFZp5U/GF2XiP4Qp+vk1iorA7r0oRkX8r
+         VWvr/bHUiaVLU7BexWuvWlvRSFWIit6SXZOMLMMJQjcdXSImQ2U1bwrgcB9YQi0dfyNI
+         yEXKOEsaT6TCQBO4TtebGpKq7haP3563aKU8QTUV6aMaZ2qeBWaX/XxxU5pPEPPD13Nz
+         A4YA==
+X-Gm-Message-State: AGi0PubGSjV5rgZM8rlT/4jHyvvYGBWEJszeq6c9r4iFii3zQk9qzExF
+        tdNLhFuKTOWR1QbgUHjDFuk=
+X-Google-Smtp-Source: APiQypImFjuz5sapmhHaxue1R17ZIKtmudlLldNmU5d8yRcooOIDtm3MCsQy/NjvrO7HHCc89emJww==
+X-Received: by 2002:a63:ce17:: with SMTP id y23mr1251673pgf.194.1588216332547;
+        Wed, 29 Apr 2020 20:12:12 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id x13sm1998429pgh.63.2020.04.29.20.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 20:12:11 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 20:12:10 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     matthew.gerlach@linux.intel.com
+Cc:     Xu Yilun <yilun.xu@intel.com>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mdf@kernel.org
+Subject: Re: How to update a piece of flash for FPGA firmware?
+Message-ID: <20200430031210.GA6168@epycbox.lan>
+References: <20200428050135.GA27416@yilunxu-OptiPlex-7050>
+ <alpine.LFD.2.21.2004281434001.59524@psera2-dell24.ra.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.2004281434001.59524@psera2-dell24.ra.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently perf-stat supports to print counts at regular interval (-I),
-but it's not very easy for user to get the overall statistics.
+Hi Matthew, Yilun
 
-The patch uses 'evsel->summary_counts' to sum up the per interval counts
-and copy the counts to 'evsel->counts' after printing the interval results.
-Next, we just follow the non-interval processing.
+On Tue, Apr 28, 2020 at 03:06:07PM -0700, matthew.gerlach@linux.intel.com wrote:
+> Hi Yilun,
+> 
+> You raise some very interesting questions. Please see
+> my comments below.
+> 
+> Matthew
+> 
+> On Tue, 28 Apr 2020, Xu Yilun wrote:
+> 
+> > Hi,
+> > 
+> > I wonder if an updating of FPGA Flash (but cannot reload) could be
+> > implemented as fpga-mgr?
+> > 
+> > I have the pcie based FPGA card. The bitstream for FPGA static region is
+> > stored on flash chip. Board will load the bitstream to FPGA on system
+> > power cycle. The flash chip could be accessed through "PCIE -> ... ->
+> > Flash update engine -> Flash". So the update of the FPGA static region is
+> > basicly updating the flash chip through PCIE and rebooting system.
+> 
+> I think you mean power cycle when you say "rebooting system" above, but
+> your point is worth highlighting.  During this flash update the
+> FPGA is actually fully configured and running its application.  Typically,
+> during a fpga-mgr update of the static region or partial reconfiguration
+> region, the actual contents of the fpga region is "changing" during the
+> update.
 
-Let's see some examples,
+Yeah, this sounds more like a flash driver with MTD or maybe NVMEM?
+That's probably how I'd do it. Depending on your (Q)SPI controller you
+might already have a driver for that, and you'd just have to instantiate
+it as a sub-device.
 
- root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
- #           time             counts unit events
-      1.000412064          2,281,114      cycles
-      2.001383658          2,547,880      cycles
+> 
+> > 
+> > Should I implement the flash update engine as a fpga-mgr device? On one
+> > hand it is just a flash write, FPGA functionality is actually not
+> > changed before reboot. Does fpga-mgr requires bitstream takes function
+> > immediately after write_complete()? On the other hand, the flash write
+> > do affects FPGA static region on next boot. Operating on the
+> > corresponding fpga region makes kernel fully aware of what is being
+> > done.
+> 
+> When an fpga-mgr is used in a device tree overlay flow, one gains
+> the benefit the enumeration of the nodes in the overlay after the
+> update has completed.
 
-  Performance counter stats for 'system wide':
+I'm not sure how to model 'on next reboot' part.
+> 
+> > 
+> > Actually the FPGA card do has the capability to reload bitstream at
+> > runtime. But it will cause the whole PCIE device lost, static region is
+> > also destroyed. We need to rescan PCI to get it back. So I think
+> > basically this is the same case as system reboot from FPGA's
+> > perspective.
+> 
+> Yes, on those cards that have the ability to power cycle themselves (i.e.
+> fully reconfigure the FPGA from flash), the PCIe connection to the card
+> is broken because of a surprise link down PCIe error.  As you say a PCI
+> rescan (i.e. re-enumeration of the entire card) is required.  Since
+> the card has to be re-scanned at the PCI level anyway, there may not be much
+> benefit to using the fpga-mgr in this flow.
 
-          4,828,994      cycles
+Agreed.
+> 
+> I wonder if these kinds of more disruptive updates are better suited to
+> something firmware updates rather than fpga updates?
 
-        2.002860349 seconds time elapsed
+Yeah.
 
- root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
- #           time             counts unit events
-      1.000389902          1,536,093      cycles
-      1.000389902            420,226      instructions              #    0.27  insn per cycle
-      2.001433453          2,213,952      cycles
-      2.001433453            735,465      instructions              #    0.33  insn per cycle
-
-  Performance counter stats for 'system wide':
-
-          3,750,045      cycles
-          1,155,691      instructions              #    0.31  insn per cycle
-
-        2.003023361 seconds time elapsed
-
- root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
- #           time             counts unit events
-      1.000435121            905,303      inst_retired.any          #      2.9 CPI
-      1.000435121          2,663,333      cycles
-      1.000435121            914,702      inst_retired.any          #      0.3 IPC
-      1.000435121          2,676,559      cpu_clk_unhalted.thread
-      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
-      2.001615941          3,551,357      cycles
-      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
-      2.001615941          3,551,044      cpu_clk_unhalted.thread
-
-  Performance counter stats for 'system wide':
-
-          2,856,395      inst_retired.any          #      2.2 CPI
-          6,214,690      cycles
-          2,865,539      inst_retired.any          #      0.5 IPC
-          6,227,603      cpu_clk_unhalted.thread
-
-        2.003403078 seconds time elapsed
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-stat.c | 14 ++++++++--
- tools/perf/util/stat.c    | 57 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/stat.h    |  5 ++++
- 3 files changed, 74 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3f050d85c277..338bd35e9901 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -355,6 +355,7 @@ static void read_counters(struct timespec *rs)
- static void process_interval(void)
- {
- 	struct timespec ts, rs;
-+	struct stats walltime_nsecs_stats_bak;
- 
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
-@@ -367,9 +368,11 @@ static void process_interval(void)
- 			pr_err("failed to write stat round event\n");
- 	}
- 
-+	walltime_nsecs_stats_bak = walltime_nsecs_stats;
- 	init_stats(&walltime_nsecs_stats);
- 	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
- 	print_counters(&rs, 0, NULL);
-+	walltime_nsecs_stats = walltime_nsecs_stats_bak;
- }
- 
- static void enable_counters(void)
-@@ -732,7 +735,14 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * avoid arbitrary skew, we must read all counters before closing any
- 	 * group leaders.
- 	 */
--	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
-+	if (!interval)
-+		read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
-+	else {
-+		stat_config.interval = 0;
-+		stat_config.summary = true;
-+		perf_evlist__copy_summary_counts(evsel_list);
-+		perf_evlist__process_summary_counts(&stat_config, evsel_list);
-+	}
- 
- 	/*
- 	 * We need to keep evsel_list alive, because it's processed
-@@ -2149,7 +2159,7 @@ int cmd_stat(int argc, const char **argv)
- 		}
- 	}
- 
--	if (!forever && status != -1 && !interval)
-+	if (!forever && status != -1 && (!interval || stat_config.summary))
- 		print_counters(NULL, argc, argv);
- 
- 	if (STAT_RECORD) {
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index cf09cd7675c2..a247ea9ea669 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -249,6 +249,63 @@ void perf_evlist__reset_prev_raw_counts(struct evlist *evlist)
- 		perf_evsel__reset_prev_raw_counts(evsel);
- }
- 
-+static void perf_evsel__copy_summary_counts(struct evsel *evsel)
-+{
-+	int ncpus = perf_evsel__nr_cpus(evsel);
-+	int nthreads = perf_thread_map__nr(evsel->core.threads);
-+
-+	for (int thread = 0; thread < nthreads; thread++) {
-+		for (int cpu = 0; cpu < ncpus; cpu++) {
-+			*perf_counts(evsel->counts, cpu, thread) =
-+				*perf_counts(evsel->summary_counts, cpu, thread);
-+		}
-+	}
-+
-+	evsel->prev_raw_counts->aggr = evsel->summary_counts->aggr;
-+}
-+
-+void perf_evlist__copy_summary_counts(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__copy_summary_counts(evsel);
-+}
-+
-+static void perf_stat_process_summary_counts(struct perf_stat_config *config,
-+					     struct evsel *evsel)
-+{
-+	struct perf_counts_values *summary = &evsel->summary_counts->aggr;
-+	struct perf_stat_evsel *ps = evsel->stats;
-+	u64 *count = evsel->summary_counts->aggr.values;
-+	int i;
-+
-+	if (!config->summary || config->aggr_mode != AGGR_GLOBAL)
-+		return;
-+
-+	for (i = 0; i < 3; i++)
-+		init_stats(&ps->res_stats[i]);
-+
-+	perf_counts_values__scale(summary, config->scale,
-+				  &evsel->summary_counts->scaled);
-+
-+	for (i = 0; i < 3; i++)
-+		update_stats(&ps->res_stats[i], count[i]);
-+
-+	perf_stat__update_shadow_stats(evsel, *count, 0, &rt_stat);
-+}
-+
-+void perf_evlist__process_summary_counts(struct perf_stat_config *config,
-+					 struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	perf_stat__reset_shadow_per_stat(&rt_stat);
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_stat_process_summary_counts(config, evsel);
-+}
-+
- static void zero_per_pkg(struct evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..bad7d7678148 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -110,6 +110,7 @@ struct perf_stat_config {
- 	bool			 all_kernel;
- 	bool			 all_user;
- 	bool			 percore_show_thread;
-+	bool			 summary;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
-@@ -199,6 +200,10 @@ void perf_evlist__free_stats(struct evlist *evlist);
- void perf_evlist__reset_stats(struct evlist *evlist);
- void perf_evlist__reset_prev_raw_counts(struct evlist *evlist);
- 
-+void perf_evlist__copy_summary_counts(struct evlist *evlist);
-+void perf_evlist__process_summary_counts(struct perf_stat_config *config,
-+					 struct evlist *evlist);
-+
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
- struct perf_tool;
--- 
-2.17.1
+Cheers,
+Moritz
 
