@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4031C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3D220774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A042072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254918;
-	bh=0mSkGy0oC3RiEQxtQffXpbxMNK+NEg71P7bFUCmUyDw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qy434wYtPms9CaE23Rj/jbc3feKKMoBh4N8khib6ciujph0QXM7ywJkvaK0qZ/XzH
-	 771s9StbTfvXddQj4MtvlDCjCTg8kXSTODWmCiW8m/6Iay2fGZ5LMCwgLBEVvLXYTu
-	 hBmadAz8NjsqF4s+OvKUNr2ZUfv0wS0sx4tSUu+M=
+	s=default; t=1588254922;
+	bh=Woue08UuH1E6xYnR1Xr3NYFk9h75iRDPF90J70dmpe8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cs0ejLzS8SKtU9R28s8VYWLx6n+BPbWNGg3K/5rBAXFRdazUANxJ/Hv+9qm1OGVgb
+	 bjPR3yDj1lW7yfxs17TYNoIqn/NxCPhVQp7BA5SfbTe2CtgEydBoDylfAVUAZHkCby
+	 bGQkTX/FTpw+kkOW+jGX0QRIOIWSWUEZGcEDqjIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728403AbgD3NzR (ORCPT
+        id S1728423AbgD3NzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgD3Nyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:32 -0400
+        id S1729004AbgD3Nyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2A920870;
-        Thu, 30 Apr 2020 13:54:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0161720873;
+        Thu, 30 Apr 2020 13:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254871;
-        bh=0mSkGy0oC3RiEQxtQffXpbxMNK+NEg71P7bFUCmUyDw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNDd8187a1/RI/XvENsvx2NZIlH6RY0Ssrxj72nNjBDVJtkME1XGfl9PGdoLaysOV
-         +UNUlpNn0/w68uTOEZmexv1I5WJisJ9hVMpyQEVqtiKNWxBgEFL1JPNdleAO+40AIK
-         MJEpJF8q59cdJ83k8VKD55fLUZVEvrfUBF7rPoQo=
+        s=default; t=1588254875;
+        bh=Woue08UuH1E6xYnR1Xr3NYFk9h75iRDPF90J70dmpe8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=d6b3ABofYW4QDnuVdDg4/HifuVzmMQLGndxF1T2rVZzuX6p/z7fbKh++CskHbxnsJ
+         Q+DF1M0Rl6DBt+rFnZNTEFAyobIQ+nYSjMS4I4wbJxRXuh+/cdIk7YzvQDZSTVAGus
+         1fB8VH8g+e11qiFe+MGNrccQRdVB+rxPfGRkqhhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/27] net: bcmgenet: suppress warnings on failed Rx SKB allocations
-Date:   Thu, 30 Apr 2020 09:54:01 -0400
-Message-Id: <20200430135402.20994-26-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/17] iio:ad7797: Use correct attribute_group
+Date:   Thu, 30 Apr 2020 09:54:17 -0400
+Message-Id: <20200430135433.21204-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
-References: <20200430135402.20994-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,45 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
+[ Upstream commit 28535877ac5b2b84f0d394fd67a5ec71c0c48b10 ]
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+It should use ad7797_attribute_group in ad7797_info,
+according to commit ("iio:ad7793: Add support for the ad7796 and ad7797").
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
+Scale is fixed for the ad7796 and not programmable, hence
+should not have the scale_available attribute.
 
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
-
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fd1a8b912841 ("iio:ad7793: Add support for the ad7796 and ad7797")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/ad7793.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 4b3660c63b864..38391230ca860 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1674,7 +1674,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
- 	dma_addr_t mapping;
- 
- 	/* Allocate a new Rx skb */
--	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
-+	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, priv->dev,
+diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+index 47c3d7f329004..437762a1e4877 100644
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -570,7 +570,7 @@ static const struct iio_info ad7797_info = {
+ 	.read_raw = &ad7793_read_raw,
+ 	.write_raw = &ad7793_write_raw,
+ 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
+-	.attrs = &ad7793_attribute_group,
++	.attrs = &ad7797_attribute_group,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ 	.driver_module = THIS_MODULE,
+ };
 -- 
 2.20.1
 
