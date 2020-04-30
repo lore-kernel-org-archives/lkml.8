@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE54C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E04C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF5C206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2692A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255341;
-	bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
+	s=default; t=1588255347;
+	bh=MVj9UZhM0DjTLdw9ouaGd2g02wNy/NokxdpMwsfgbjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmwmRNn3nO8JBXjVfrVUlpFENoMoIfXWl6L32Slj87Xq9u8A3MqilOkxCAEpbSRuo
-	 6xumgTk845Q5qMkWKrdVmpk3SbhGZ3LIl9CmdGUT/X4JSP64ZYhJ92qI32m6HI+95t
-	 TJiE3lcP3GetHoZS/eZslOMy08TqCiEjzSeAed2I=
+	b=VlyZXsplsKCy/oHWDcsd//T+bzF8QxOo5cG3z6IesKE6MCelv+QNgyx2FJ2Bin6v6
+	 KNqQ7hMcFZTFQv10nHnU4bCmZpUdJ+2v7IvtFM7/kK6dkw6yf4VLr02Kusqwp5RKAY
+	 R27S2gxBJOHS+W2dIAFxYemCH9DrXFCEKUbz0BVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgD3Nxn (ORCPT
+        id S1728992AbgD3OCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:53:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgD3NxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:05 -0400
+        id S1728782AbgD3Nxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2F9F2495A;
-        Thu, 30 Apr 2020 13:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607F920661;
+        Thu, 30 Apr 2020 13:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254785;
-        bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
+        s=default; t=1588254824;
+        bh=MVj9UZhM0DjTLdw9ouaGd2g02wNy/NokxdpMwsfgbjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AUGCAvvLE3XIpD9mPyws8R4W3bS6o1xJel2HS3iFs3gXGOj3u7gEn+x8JpfvVjhX
-         zyFCqmID1TcyKe3rtxKJANFDu2H8wpyVVUocXy5gCYUp0mYkjwnW9prDZCLQPegv1R
-         FoVfb2O+hnRMWw2zDNbDGky9+EL/8HHZeks/gIFM=
+        b=borSE9Wwo1dlImppD9DJxPCBIDLTfPQBhIZANuwCdTtQyMwE+KSgz819rdJewOwxp
+         lhXxAifiAeceLM9BLyeHNW8GkJHbNOFQgL2GDGYiAWqVck1XNECi0bn6ugPjyKFQu0
+         NLG5+qnc4zzmLJgBkuoiI1xl1/+zQuDCJ7XucQDQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 41/57] blk-iocost: Fix error on iocost_ioc_vrate_adj
-Date:   Thu, 30 Apr 2020 09:52:02 -0400
-Message-Id: <20200430135218.20372-41-sashal@kernel.org>
+Cc:     Julien Beraud <julien.beraud@orolia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/30] net: stmmac: fix enabling socfpga's ptp_ref_clock
+Date:   Thu, 30 Apr 2020 09:53:11 -0400
+Message-Id: <20200430135325.20762-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,80 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Julien Beraud <julien.beraud@orolia.com>
 
-[ Upstream commit d6c8e949a35d6906d6c03a50e9a9cdf4e494528a ]
+[ Upstream commit 15ce30609d1e88d42fb1cd948f453e6d5f188249 ]
 
-Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
-argument of the iocost_ioc_vrate_adj trace entry defined in
-include/trace/events/iocost.h leading to the following error:
+There are 2 registers to write to enable a ptp ref clock coming from the
+fpga.
+One that enables the usage of the clock from the fpga for emac0 and emac1
+as a ptp ref clock, and the other to allow signals from the fpga to reach
+emac0 and emac1.
+Currently, if the dwmac-socfpga has phymode set to PHY_INTERFACE_MODE_MII,
+PHY_INTERFACE_MODE_GMII, or PHY_INTERFACE_MODE_SGMII, both registers will
+be written and the ptp ref clock will be set as coming from the fpga.
+Separate the 2 register writes to only enable signals from the fpga to
+reach emac0 or emac1 when ptp ref clock is not coming from the fpga.
 
-  /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
-  error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
-   , u32[]* __tracepoint_arg_missed_ppm
-
-That argument type is indeed rather complex and hard to read. Looking
-at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
-the argument to a simple "u32 *missed_ppm" and adjusting the trace
-entry accordingly, the compilation error was gone.
-
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iocost.c            | 4 ++--
- include/trace/events/iocost.h | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 9a599cc28c290..2dc5dc54e257f 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1594,7 +1594,7 @@ skip_surplus_transfers:
- 				      vrate_min, vrate_max);
- 		}
- 
--		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
-+		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
- 					   nr_lagging, nr_shortages,
- 					   nr_surpluses);
- 
-@@ -1603,7 +1603,7 @@ skip_surplus_transfers:
- 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
- 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
- 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
--					   &missed_ppm, rq_wait_pct, nr_lagging,
-+					   missed_ppm, rq_wait_pct, nr_lagging,
- 					   nr_shortages, nr_surpluses);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index 5b3b06a0a3bf5..33407df6bea69 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -274,16 +274,19 @@ static int socfpga_dwmac_set_phy_mode(struct socfpga_dwmac *dwmac)
+ 	    phymode == PHY_INTERFACE_MODE_MII ||
+ 	    phymode == PHY_INTERFACE_MODE_GMII ||
+ 	    phymode == PHY_INTERFACE_MODE_SGMII) {
+-		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
+ 		regmap_read(sys_mgr_base_addr, SYSMGR_FPGAGRP_MODULE_REG,
+ 			    &module);
+ 		module |= (SYSMGR_FPGAGRP_MODULE_EMAC << (reg_shift / 2));
+ 		regmap_write(sys_mgr_base_addr, SYSMGR_FPGAGRP_MODULE_REG,
+ 			     module);
+-	} else {
+-		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2));
  	}
  
-diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-index 7ecaa65b7106e..c2f580fd371b1 100644
---- a/include/trace/events/iocost.h
-+++ b/include/trace/events/iocost.h
-@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
++	if (dwmac->f2h_ptp_ref_clk)
++		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
++	else
++		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK <<
++			  (reg_shift / 2));
++
+ 	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
  
- TRACE_EVENT(iocost_ioc_vrate_adj,
- 
--	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
-+	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
- 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
- 		int nr_surpluses),
- 
-@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
- 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
- 		__entry->new_vrate = new_vrate;
- 		__entry->busy_level = ioc->busy_level;
--		__entry->read_missed_ppm = (*missed_ppm)[READ];
--		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
-+		__entry->read_missed_ppm = missed_ppm[READ];
-+		__entry->write_missed_ppm = missed_ppm[WRITE];
- 		__entry->rq_wait_pct = rq_wait_pct;
- 		__entry->nr_lagging = nr_lagging;
- 		__entry->nr_shortages = nr_shortages;
+ 	/* Deassert reset for the phy configuration to be sampled by
 -- 
 2.20.1
 
