@@ -2,134 +2,382 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DF7C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B23FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1924120873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD7420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:11:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="MoTfSQge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgD3QLk (ORCPT
+        id S1728022AbgD3QLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgD3QLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:11:39 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E46412082E;
-        Thu, 30 Apr 2020 16:11:37 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 12:11:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 30 Apr 2020 12:11:43 -0400
+Received: from mail.efficios.com ([167.114.26.124]:37050 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgD3QLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:11:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 001A928F96E;
+        Thu, 30 Apr 2020 12:11:39 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ZrlHXs6onGvu; Thu, 30 Apr 2020 12:11:39 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 4475228F96D;
+        Thu, 30 Apr 2020 12:11:39 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4475228F96D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588263099;
+        bh=2HwmJtEER070u4lBMJNXi64Ro52thqNyCskx+bYyreU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=MoTfSQgeO6MWHIPVK45ojlMTg7nXX5Up9jNClABjWgb5HYvdSNfu3JLUgoIJT5e6o
+         8hsHQiZhfxVcqKCVreFolKpDmYwcAZ1j0++ck80sBEidtY7nYO+Sc0spmGf1it7I7y
+         QCagnVIU0QWtrQWMq7AEvGEePWE/YSKm44EJXEZmciJkePIOw5i4aYZptRUVAlmVSo
+         pNHlwn+mAHXBT2sLHthapnzwr7SZULnB+VtNULyr3h7InxsDrkRVOLkHlO91HVCSuR
+         w1zXyRx8oluM2Zgzfl3IhhZqRqA4+/YyVqbmFnhGvEpMNgCvwaxD29GKZlnmqo8+JU
+         iAIUK4+BG0+rw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5FQtNU0dVzqx; Thu, 30 Apr 2020 12:11:39 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 27AE028F786;
+        Thu, 30 Apr 2020 12:11:39 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 12:11:39 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
- text_poke()
-Message-ID: <20200430121136.6d7aeb22@gandalf.local.home>
-In-Reply-To: <20200430141120.GA8135@suse.de>
-References: <20200429054857.66e8e333@oasis.local.home>
-        <20200429105941.GQ30814@suse.de>
-        <20200429082854.6e1796b5@oasis.local.home>
-        <20200429100731.201312a9@gandalf.local.home>
-        <20200430141120.GA8135@suse.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com>
+In-Reply-To: <875zdhmaft.fsf@oldenburg2.str.redhat.com>
+References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com> <875zdhmaft.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v18)
+Thread-Index: ALv7ejwfabU6s2zeyWwqXfxwmTruEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 16:11:21 +0200
-Joerg Roedel <jroedel@suse.de> wrote:
+----- On Apr 30, 2020, at 8:20 AM, Florian Weimer fweimer@redhat.com wrote:
 
-> Hi,
-> 
-> On Wed, Apr 29, 2020 at 10:07:31AM -0400, Steven Rostedt wrote:
-> > Talking with Mathieu about this on IRC, he pointed out that my code does
-> > have a vzalloc() that is called:
-> > 
-> > in trace_pid_write()
-> > 
-> > 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
-> > 
-> > This is done when -P1,2 is on the trace-cmd command line.  
-> 
-> Okay, tracked it down, some instrumentation in the page-fault and
-> double-fault handler gave me the stack-traces. Here is what happens:
-> 
-> As already pointed out, it all happens because of page-faults on the
-> vzalloc'ed pid bitmap. It starts with this stack-trace:
-> 
->  RIP: 0010:trace_event_ignore_this_pid+0x23/0x30
+> * Mathieu Desnoyers:
+>=20
+>> diff --git a/NEWS b/NEWS
+>> index 0e627b3405..0b85a02c12 100644
+>> --- a/NEWS
+>> +++ b/NEWS
+>> @@ -18,6 +18,16 @@ Major new features:
+>>  * The GNU C Library now loads audit modules listed in the DT_AUDIT and
+>>    DT_DEPAUDIT dynamic section entries of the main executable.
+>> =20
+>> +* Support for automatically registering threads with the Linux rseq(2)
+>> +  system call has been added.  This system call is implemented starting
+>> +  from Linux 4.18.  The Restartable Sequences ABI accelerates user-spac=
+e
+>> +  operations on per-cpu data.  It allows user-space to perform updates
+>> +  on per-cpu data without requiring heavy-weight atomic operations.
+>> +  Automatically registering threads allows all libraries, including lib=
+c,
+>> +  to make immediate use of the rseq(2) support by using the documented =
+ABI.
+>> +  The GNU C Library manual has details on integration of Restartable
+>> +  Sequences.
+>=20
+> GNU style doesn't use (2) here, I think.
 
-Interesting. Because that function is this:
+OK
 
-bool trace_event_ignore_this_pid(struct trace_event_file *trace_file)
-{
-	struct trace_array *tr = trace_file->tr;
-	struct trace_array_cpu *data;
-	struct trace_pid_list *no_pid_list;
-	struct trace_pid_list *pid_list;
+>=20
+>> diff --git a/manual/threads.texi b/manual/threads.texi
+>> index 0858ef8f92..4754cdaeb5 100644
+>> --- a/manual/threads.texi
+>> +++ b/manual/threads.texi
+>=20
+>> @@ -881,3 +883,27 @@ Behaves like @code{pthread_timedjoin_np} except tha=
+t the
+>> absolute time in
+>>  @c pthread_spin_unlock
+>>  @c pthread_testcancel
+>>  @c pthread_yield
+>> +
+>> +@node Restartable Sequences
+>> +@section Restartable Sequences
+>> +@cindex rseq
+>=20
+> Suggest: @cindex Restartable Sequences
 
-	pid_list = rcu_dereference_raw(tr->filtered_pids);
-	no_pid_list = rcu_dereference_raw(tr->filtered_no_pids);
+OK
 
-	if (!pid_list && !no_pid_list)
-		return false;
+>=20
+>> +
+>> +This section describes @theglibc{} Restartable Sequences integration.
+>=20
+> Suggest: This section describes Restartable Sequences integration for
+> @theglibc{}.  (Avoids an excessively long noun phrase.)
 
-	data = this_cpu_ptr(tr->array_buffer.data);
+OK
 
-	return data->ignore_pid;
-}
+>=20
+> Maybe mention which uses of the rseq syscall are permitted behind the
+> back of glibc?  And that code should not leave dangling rseq cs pointers
+> behind (the dlopen interaction)?
 
-Where it only sees if the pid masks exist. That is, it looks to see if
-there's pointers to them, it doesn't actually touch the vmalloc'd area.
-This check is to handle a race between allocating and deallocating the
-buffers and setting the ignore_pid bit. The reading of these arrays is done
-at sched_switch time, which sets or clears the ignore_pid field.
+Here is the entire updated section, let me know if I missed anything:
 
-That said, since this only happens on buffer instances (it does not trigger
-on the top level instance, which uses the same code for the pid masks)
+@deftypevar {struct rseq} __rseq_abi
+@standards{Linux, sys/rseq.h}
+@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with the
+Restartable Sequences system call (Linux-specific).  The layout of this
+structure is defined by the @file{sys/rseq.h} header.  Registration of each
+thread's @code{__rseq_abi} is performed by @theglibc{} at libc library
+initialization and thread creation.
 
-Could this possibly be for the tr->array_buffer.data, which is allocated
-with:
+The main executable and shared libraries may either have an undefined
+@code{__rseq_abi} TLS symbol, or define their own, with the same
+declaration as the one present in @file{sys/rseq.h}.  The dynamic linker
+will ensure that only one of those available symbols will be used at
+runtime across the process.
 
-allocate_trace_buffer() {
-	[..]
-	buf->data = alloc_percpu(struct trace_array_cpu);
+If the main executable or shared libraries observe an uninitialized
+@code{__rseq_abi.cpu_id} field (value @code{RSEQ_CPU_ID_UNINITIALIZED}), th=
+ey
+may perform rseq registration to the kernel: this means either glibc was
+prevented from doing the registration, or an older glibc version, which doe=
+s
+not include rseq support, is in use.  When the main executable or a library
+thus takes ownership of the registration, the memory used to hold the
+@code{__rseq_abi} TLS variable must stay allocated, and is not re-used, unt=
+il
+the very end of the thread lifetime or until an explicit rseq unregistratio=
+n
+for that thread is performed.  It is not recommended to dlclose() libraries
+owning the @code{__rseq_abi} TLS variable.
 
-That is, the bug isn't the vmalloc being a problem, but perhaps the per_cpu
-allocation. This would explain why this crashes with the buffer instance
-and not with the top level instance. If it was related to the pid masks,
-then it would trigger for either (because they act the same in allocating
-at time of use). But when an instance is made, the tr->array_buffer.data is
-created. Which for the top level happens at boot up and the pages would
-have been synced long ago. But for a newly created instance, this happens
-just before its used. This could possibly explain why it's not a problem
-when doing it manually by hand, because the time between creating the
-instance, and the time to start and stop the tracing, is long enough for
-something to sync them page tables.
+Users of the @code{__rseq_abi} TLS symbol can store the address of a
+@code{struct rseq_cs} to the @code{__rseq_abi.rseq_cs.uptr.ptr} TLS variabl=
+e,
+thus informing the kernel that it enters a Restartable Sequence critical
+section.  This pointer and the code areas it itself points to must not be l=
+eft
+pointing to memory areas which are freed or re-used.  Several approaches ca=
+n
+guarantee this.  If the application or library can guarantee that the memor=
+y
+used to hold the @code{struct rseq_cs} and the code areas it refers to are
+never freed or re-used, no special action must be taken.  Else, before that
+memory is re-used of freed, the application is responsible for setting the
+@code{__rseq_abi.rseq_cs.uptr.ptr} TLS variable to @code{NULL} in each thre=
+ad's
+TLS to guarantee that it does not leak dangling references.  Because the
+application does not typically have knowledge of libraries' use of Restarta=
+ble
+Sequences, it is recommended that libraries using Restartable Sequences whi=
+ch
+may end up freeing or re-using their memory set the
+@code{__rseq_abi.rseq_cs.uptr.ptr} TLS variable to @code{NULL} before retur=
+ning
+from library functions which use Restartable Sequences.
 
-tl;dr; It's not an issue with the vmalloc, it's an issue with per_cpu
-allocations!
+>=20
+>> +@deftypevar {struct rseq} __rseq_abi
+>> +@standards{Linux, sys/rseq.h}
+>> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with =
+the
+>> +Restartable Sequences system call (Linux-specific).  The layout of this
+>> +structure is defined by the Linux kernel @file{linux/rseq.h} UAPI.
+>=20
+> The linux/rseq.h reference seems redundant, given that sys/rseq.h covers
+> it as well.
 
+OK
 
--- Steve
+>=20
+>> +Registration of each thread's @code{__rseq_abi} is performed by
+>> +@theglibc{} at libc initialization and pthread creation.
+>=20
+> Suggest: library initialization and thread creation
+
+OK
+
+>=20
+>> +@end deftypevar
+>> +
+>> +@deftypevr Macro int RSEQ_SIG
+>> +@standards{Linux, sys/rseq.h}
+>> +Each supported architecture provide a @code{RSEQ_SIG} macro in
+>=20
+> Typo: provides
+
+OK
+
+>=20
+>> +@file{sys/rseq.h} which contains a signature.  That signature is expect=
+ed to be
+>> +present in the code before each Restartable Sequences abort handler.  F=
+ailure
+>> +to provide the expected signature may terminate the process with a Segm=
+entation
+>> +fault.
+>=20
+> Suggest: segmentation fault (no capitalization)
+
+OK
+
+>=20
+>> diff --git a/misc/rseq-internal.h b/misc/rseq-internal.h
+>> new file mode 100644
+>> index 0000000000..16f197397f
+>> --- /dev/null
+>> +++ b/misc/rseq-internal.h
+>=20
+> Maybe this should go in to sysdeps/generic instead of misc?
+> (See the recent discussion about elf_machine_sym_no_match.)
+
+OK
+
+>=20
+>> diff --git a/sysdeps/unix/sysv/linux/rseq-internal.h
+>> b/sysdeps/unix/sysv/linux/rseq-internal.h
+>> new file mode 100644
+>> index 0000000000..3ecd4d0611
+>> --- /dev/null
+>> +++ b/sysdeps/unix/sysv/linux/rseq-internal.h
+>> @@ -0,0 +1,47 @@
+>> +/* Restartable Sequences internal API.  Linux implementation.
+>> +   Copyright (C) 2020 Free Software Foundation, Inc.
+>> +
+>> +   The GNU C Library is free software; you can redistribute it and/or
+>> +   modify it under the terms of the GNU Lesser General Public
+>> +   License as published by the Free Software Foundation; either
+>> +   version 2.1 of the License, or (at your option) any later version.
+>> +
+>> +   The GNU C Library is distributed in the hope that it will be useful,
+>> +   but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> +   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+>> +   Lesser General Public License for more details.
+>> +
+>> +   You should have received a copy of the GNU Lesser General Public
+>> +   License along with the GNU C Library; if not, see
+>> +   <https://www.gnu.org/licenses/>.  */
+>> +
+>> +#ifndef RSEQ_INTERNAL_H
+>> +#define RSEQ_INTERNAL_H
+>> +
+>> +#include <sysdep.h>
+>> +#include <errno.h>
+>> +#include <kernel-features.h>
+>> +#include <sys/rseq.h>
+>> +
+>> +#ifdef RSEQ_SIG
+>> +static inline void
+>> +rseq_register_current_thread (void)
+>> +{
+>> +  int ret;
+>> +
+>> +  if (__rseq_abi.cpu_id =3D=3D RSEQ_CPU_ID_REGISTRATION_FAILED)
+>> +    return;
+>> +  ret =3D INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq=
+),
+>> +                              0, RSEQ_SIG);
+>> +  if (INTERNAL_SYSCALL_ERROR_P (ret) &&
+>> +      INTERNAL_SYSCALL_ERRNO (ret) !=3D EBUSY)
+>> +    __rseq_abi.cpu_id =3D RSEQ_CPU_ID_REGISTRATION_FAILED;
+>=20
+> Sorry, I forgot: Please add a comment that the EBUSY error is ignored
+> because registration may have already happened in a legacy library.
+
+Considering that we now disable signals across thread creation, and that
+glibc's initialization happens before other libraries' constructors
+(as far as I remember even before LD_PRELOADed library constructors),
+in which scenario can we expect to have EBUSY here ?
+
+Not setting __rseq_abi.cpu_id to RSEQ_CPU_ID_REGISTRATION_FAILED in case
+of EBUSY is more a way to handle "unforeseen" scenarios where somehow the
+registration would already be done. But I cannot find an "expected"
+scenario which would lead to this now.
+
+So if EBUSY really is unexpected, how should we treat that ? I don't think
+setting REGISTRATION_FAILED would be appropriate, because then it would
+break assumption of the prior successful registration that have already
+been done by this thread.
+
+>=20
+>> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h
+>> b/sysdeps/unix/sysv/linux/sys/rseq.h
+>> new file mode 100644
+>> index 0000000000..de6600ff45
+>> --- /dev/null
+>> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
+>=20
+>> +#ifdef __GLIBC_HAVE_KERNEL_RSEQ
+>> +/* We use the structures declarations from the kernel headers.  */
+>> +# include <linux/rseq.h>
+>> +#else
+>> +/* We use a copy of the include/uapi/linux/rseq.h kernel header.  */
+>> +
+>> +#include <asm/byteorder.h>
+>=20
+> Missing =E2=80=9C# include=E2=80=9C indentation.
+
+OK
+
+>=20
+>> +#ifdef __LP64__
+>=20
+> Likewise (more indentation needed below, include double-space
+> indentation).
+
+OK
+
+>=20
+>> +/* Allocations of struct rseq and struct rseq_cs on the heap need to
+>> +   be aligned on 32 bytes.  Therefore, use of malloc is discouraged
+>> +   because it does not guarantee alignment.  posix_memalign should be
+>> +   used instead.  */
+>> +
+>> +extern __thread struct rseq __rseq_abi
+>> +__attribute__ ((tls_model ("initial-exec")));
+>=20
+> Please indent the __attribute__ with two spaces.
+
+OK
+
+>=20
+> Actual code looks good now.  Thanks.  I don't think there are any
+> remaining issues except maybe more documentation.
+
+I raised a few questions in my reply to yours, so I'll wait for your
+input on those topics before the next iteration.
+
+Thanks,
+
+Mathieu
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
