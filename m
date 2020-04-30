@@ -2,166 +2,108 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0379BC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D92CC83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38DA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588211235;
-	bh=omj+Wnlw7nrRcI7M/Sus+jSIgGuuMMuRYU8ep5SG4rc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CzGwQ6Ejt31v2yHl6HIz50+Hvev50DxvDxVmrgb/RnCbMSNd/WWdgqco/ioxLyeLz
-	 iXuMbUMlbz0bdYugD/CISh6oRdQ48MJtd2c2wMneKvBXtGsPnAWrbUpdIcWv2S8sDr
-	 cHl1aPFUKlUziQuUPFW+QFLqIVRsrO7KjcUXNvzo=
+	by mail.kernel.org (Postfix) with ESMTP id 5880D20B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsKFQT3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgD3BrP (ORCPT
+        id S1726501AbgD3BuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgD3BrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:47:14 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F060A2082E;
-        Thu, 30 Apr 2020 01:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588211232;
-        bh=omj+Wnlw7nrRcI7M/Sus+jSIgGuuMMuRYU8ep5SG4rc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BMIZZjwZjEHD4ivp8c4hXb9ANAbU7d0Mf0Ecu206TErFrGRBjAHnf1aPsfNc8TksK
-         0rQnIb5MLOUk2uwIuoTKS9cS/r3CIBAemt/w9hGpWKO1QOksxWh/kKOP0WadlNepGR
-         76JQmcDAPB6vR65CIJlOU/liyBjc6q/5xghTPSpA=
-Date:   Wed, 29 Apr 2020 18:47:11 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     js1304@gmail.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
+        Wed, 29 Apr 2020 21:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgD3BuX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 21:50:23 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D30C035494;
+        Wed, 29 Apr 2020 18:50:23 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id i16so4412739ils.12;
+        Wed, 29 Apr 2020 18:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y8ASo8zpK+8qPNof8u/cHdMqtlz7+kslUfS8Oj2LKzo=;
+        b=YsKFQT3reOM6k0etzlNKatoAoB8eS3oSXg4aogSsGj+BS7hEjdMtOWVXaO77T/HQKw
+         hEHrq0ofC8VjwZ/x3c3taB/oV7KRQUk+1oNGjllLZimTrlsev1U6dhu0zYATgrIupuLp
+         q0+Pb1D18JWDP/JQ8CNbqKpSNyCWfzylUEcabcyuin1SoTDUBQOEuLVXEL1nTk/jZFS9
+         hECoJovbAA/7cRjo02LMY0G2azloJS4+2tS526YUo20DtmTdxQEvDDrFzhMO3rPMVxH4
+         xgBf93K/xt09nGnW7hloNRwre4qBtdkX5aRu425sPKLvu0HFOheQBbJp6rxIBG/dv1li
+         Tfrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y8ASo8zpK+8qPNof8u/cHdMqtlz7+kslUfS8Oj2LKzo=;
+        b=TaB1/EEomAj4KFhqMtx732zsA2V49a+RO7BtRgDVhdC0Tqgy9wYmzOCb75nnX8ZbBG
+         SZ6BNjBDaeivZ7QIFeQumPGarlw6RVKoAcj/xTjgbzKcIlRsSErMBwZt0LKuiNV5BNLe
+         HaB/qAIV9Mf24nmQXENEiuxYV6JNkzHSiBQG6M6eQoELavkXcP3wcqQhgoeIwJQVLXor
+         ooso4pmvS2xN6nj2uFJRSIWQHPpWQ/m6qPUDmTpbYXcY0lCYgxboMff304KgxA5mILlZ
+         o/kWRmi4HjXa2L8jhL0Xyv3NthfQCDPn+GIo1ninDqqG558fHIMRw+2feoObEMK7cE2/
+         zOUQ==
+X-Gm-Message-State: AGi0PuZUJ81XxwNcoypICF5MWkRarSRD6rXf3oG0cIZsVwI6stBwWDc/
+        0gTSHXwywmBP4qlbJIErHaEXcs3jj72UAv5pAqs=
+X-Google-Smtp-Source: APiQypKaO9W65Xbq6DTbEi00VBnOqfpMGUq/H4qUQG6zRhnIEl6P9hJ6oEhz+iXGRx5G3BxLEZMkw1nz0eiSb08RjA8=
+X-Received: by 2002:a92:8d9d:: with SMTP id w29mr1330029ill.168.1588211422430;
+ Wed, 29 Apr 2020 18:50:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <CALOAHbCotD1-+o_XZPU_4_i8Nn98r5F_5NpGVd=z6UG=rUcCmA@mail.gmail.com>
+ <20200430011626.GA2754277@chrisdown.name> <CALOAHbCL_JJgcy9r99Kn81-o_t-fs_nQ+n7aKMHO-02QMCufEw@mail.gmail.com>
+ <20200430014603.GB2754277@chrisdown.name>
+In-Reply-To: <20200430014603.GB2754277@chrisdown.name>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 30 Apr 2020 09:49:46 +0800
+Message-ID: <CALOAHbAzZUwGq3mnEtOcSetvAAm+m=X_KnQ2eS9U0QQVHggWYg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 00/10] change the implementation of the PageHighMem()
-Message-Id: <20200429184711.9d603da097fdea80f574f1f1@linux-foundation.org>
-In-Reply-To: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 12:26:33 +0900 js1304@gmail.com wrote:
+On Thu, Apr 30, 2020 at 9:46 AM Chris Down <chris@chrisdown.name> wrote:
+>
+> Yafang Shao writes:
+> >My concern is why we add these barriers to memcg protection
+> >specifically but don't add these barriers to the other memebers like
+> >memcg->oom_group which has the same issue ?
+> >What is the difference between these members and that members ?
+>
+> There are certainly more missing cases -- I didn't look at oom_group
+> specifically, but it sounds likely if there's not other mitigating factors.
+> Most of us have just been busy and haven't had time to comprehensively fix all
+> the potential store and load tears.
+>
+> Tearing is another case of something that would be nice to fix once and for all
+> in the memcg code, but isn't causing any significant issues for the timebeing.
+> We should certainly aim to avoid introducing any new tearing opportunities,
+> though :-)
+>
+> So the answer is just that improvement is incremental and we've not had the
+> time to track down and fix them all. If you find more cases, feel free to send
+> out the patches and I'll be happy to take a look.
 
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> Changes on v2
-> - add "acked-by", "reviewed-by" tags
-> - replace PageHighMem() with use open-code, instead of using
-> new PageHighMemZone() macro. Related file is "include/linux/migrate.h"
-> 
-> Hello,
-> 
-> This patchset separates two use cases of PageHighMem() by introducing
-> PageHighMemZone() macro. And, it changes the implementation of
-> PageHighMem() to reflect the actual meaning of this macro. This patchset
-> is a preparation step for the patchset,
-> "mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE" [1].
-> 
-> PageHighMem() is used for two different cases. One is to check if there
-> is a direct mapping for this page or not. The other is to check the
-> zone of this page, that is, weather it is the highmem type zone or not.
-> 
-> Until now, both the cases are the perfectly same thing. So, implementation
-> of the PageHighMem() uses the one case that checks if the zone of the page
-> is the highmem type zone or not.
-> 
-> "#define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))"
-> 
-> ZONE_MOVABLE is special. It is considered as normal type zone on
-> !CONFIG_HIGHMEM, but, it is considered as highmem type zone
-> on CONFIG_HIGHMEM. Let's focus on later case. In later case, all pages
-> on the ZONE_MOVABLE has no direct mapping until now.
-> 
-> However, following patchset
-> "mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE"
-> , which is once merged and reverted, will be tried again and will break
-> this assumption that all pages on the ZONE_MOVABLE has no direct mapping.
-> Hence, the ZONE_MOVABLE which is considered as highmem type zone could
-> have the both types of pages, direct mapped and not. Since
-> the ZONE_MOVABLE could have both type of pages, __GFP_HIGHMEM is still
-> required to allocate the memory from it. And, we conservatively need to
-> consider the ZONE_MOVABLE as highmem type zone.
-> 
-> Even in this situation, PageHighMem() for the pages on the ZONE_MOVABLE
-> when it is called for checking the direct mapping should return correct
-> result. Current implementation of PageHighMem() just returns TRUE
-> if the zone of the page is on a highmem type zone. So, it could be wrong
-> if the page on the MOVABLE_ZONE is actually direct mapped.
-> 
-> To solve this potential problem, this patch introduces a new
-> PageHighMemZone() macro. In following patches, two use cases of
-> PageHighMem() are separated by calling proper macro, PageHighMem() and
-> PageHighMemZone(). Then, implementation of PageHighMem() will be changed
-> as just checking if the direct mapping exists or not, regardless of
-> the zone of the page.
-> 
-> Note that there are some rules to determine the proper macro.
-> 
-> 1. If PageHighMem() is called for checking if the direct mapping exists
-> or not, use PageHighMem().
-> 2. If PageHighMem() is used to predict the previous gfp_flags for
-> this page, use PageHighMemZone(). The zone of the page is related to
-> the gfp_flags.
-> 3. If purpose of calling PageHighMem() is to count highmem page and
-> to interact with the system by using this count, use PageHighMemZone().
-> This counter is usually used to calculate the available memory for an
-> kernel allocation and pages on the highmem zone cannot be available
-> for an kernel allocation.
-> 4. Otherwise, use PageHighMemZone(). It's safe since it's implementation
-> is just copy of the previous PageHighMem() implementation and won't
-> be changed.
+Thanks for your suggestion.
+I'm planning to add these barriers all over the memory cgroup code.
 
-hm, this won't improve maintainability :(
-
-- Everyone will need to remember when to use PageHighMem() and when
-  to use PageHighMemZone().  If they get it wrong, they're unlikely to
-  notice any problem in their runtime testing, correct?
-
-- New code will pop up which gets it wrong and nobody will notice for
-  a long time.
-
-So I guess we need to be pretty confident that the series "mm/cma:
-manage the memory of the CMA area by using the ZONE_MOVABLE" will be
-useful and merged before proceeding with this, yes?
-
-On the other hand, this whole series is a no-op until [10/10]
-(correct?) so it can be effectively reverted with a single line change,
-with later cleanups which revert the other 9 patches.
-
-So I think I'd like to take another look at "mm/cma: manage the memory
-of the CMA area by using the ZONE_MOVABLE" before figuring out what to
-do here.  Mainly to answer the question "is the new feature valuable
-enough to justify the maintainability impact".  So please do take some
-care in explaining the end-user benefit when preparing the new version
-of that patchset.
-
+-- 
+Thanks
+Yafang
