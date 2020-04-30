@@ -2,158 +2,174 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BABC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BD6C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B854207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F722054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WomAnelD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgD3TKj (ORCPT
+        id S1726921AbgD3TKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:10:39 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:58196 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgD3TKj (ORCPT
+        Thu, 30 Apr 2020 15:10:52 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11209 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgD3TKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:10:39 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUEZk-0000zA-Oa; Thu, 30 Apr 2020 13:10:24 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUEZj-0004x2-MM; Thu, 30 Apr 2020 13:10:24 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20200429214954.44866-1-jannh@google.com>
-        <20200429215620.GM1551@shell.armlinux.org.uk>
-        <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
-        <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
-        <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
-Date:   Thu, 30 Apr 2020 14:07:06 -0500
-In-Reply-To: <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 30 Apr 2020 09:54:28 -0700")
-Message-ID: <87imhgyeqt.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 Apr 2020 15:10:52 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eab223f0000>; Thu, 30 Apr 2020 12:08:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 12:10:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 12:10:51 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 19:10:51 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 19:10:50 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+Message-ID: <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+Date:   Thu, 30 Apr 2020 12:09:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jUEZj-0004x2-MM;;;mid=<87imhgyeqt.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+M59kbFeatkOUeTsajPIqn7fwIqzhVK08=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem properly in there
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588273727; bh=dOqhYhFFa7N2H5CvZpnGMF6qyNMlHRnVcxwPJYNk5s0=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WomAnelDH+mtKGSWgZPmyONNQwRSNKf0xS+2H8hQIu80Ewf1lwXxLYcs6h87wG7MW
+         sqQJVnqgdqPtq94/p1Qrk5Qr81/w6jgCh8XHOqeyAGVpUpdNMDXDktRbHvqoasqrr/
+         t/cAC/eRu4/wfZ8LvkFLzjshXGoox7NKWEHBDMU4HLYG/aOMsgdLcCYtoB0pRdcaTX
+         WNF4cQ9kLaAPE5b9J9xr6q6fKOEjLt7+Hfx+6gSqcexBwEeY8QWqeSW389SVwMlyuo
+         T9g0lqyu1wELpfEgN8uJQPPtEGbWWSPViEr8jw9iNfGtCH1i/Up+H1Nae2Ew2NEzRk
+         SJ0ncHypSsNhQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-> On Thu, Apr 30, 2020 at 7:10 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
-
->> > Most of that file goes back to pre-git days. And most of the commits
->> > since are not so much about binfmt_flat, as they are about cleanups or
->> > changes elsewhere where binfmt_flat was just a victim.
+On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
+>
+> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
 >>
->> I'll have a look at this.
+>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>>>>> +{
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>>>>> +
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>>>>> +
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
+>>>>>>> I guess it won't be great to freeze in the middle of a capture=20
+>>>>>>> process, so:
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(&chan->do=
+ne))
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+try_to_freeze();
+>>>>>> And here should be some locking protection in order not race with=20
+>>>>>> the
+>>>>>> chan_capture_kthread_start because kthread_finish could freeze=20
+>>>>>> before
+>>>>>> kthread_start.
+>>>>> Or maybe both start / finish threads should simply be allowed to=20
+>>>>> freeze
+>>>>> only when both capture and done lists are empty.
+>>>>>
+>>>>> if (list_empty(&chan->capture) &&
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
+>>>>
+>>>> good to freeze when not in middle of the frame capture but why=20
+>>>> should we not allow freeze in between captures?
+>>>>
+>>>> Other drivers do allow freeze in between frame captures.
+>>>>
+>>>> I guess we can freeze before dequeue for capture and in finish=20
+>>>> thread we can freeze after capture done. This also don't need to=20
+>>>> check for list_empty with freeze to allow between frame captures.
+>>>>
+>>> Also if we add check for both lists empty, freeze is not allowed as=20
+>>> long as streaming is going on and in case of continuous streaming=20
+>>> freeze will never happen.
+>>
+> To allow freeze b/w frames (but not in middle of a frame),
 >
-> Thanks.
+> for capture_start thread, probably we can do unconditional=20
+> try_to_freeze()
 >
->> Quick hack test shows moving setup_new_exec(bprm) to be just before
->> install_exec_creds(bprm) works fine for the static binaries case.
->> Doing the flush_old_exec(bprm) there too crashed out - I'll need to
->> dig into that to see why.
+> for capture_finish thread, at end of capture done we can do=20
+> try_to_freeze() only when done list is empty
 >
-> Just moving setup_new_exec() would at least allow us to then join the
-> two together, and just say "setup_new_exec() does the credential
-> installation too".
+My understanding is buffer updates/release should not happen after=20
+frozen state. So we should let frame capture of outstanding buffer to=20
+finish before freezing in capture_finish thread.
 
-But it is only half a help if we allow failure points between
-flush_old_exec and install_exec_creds.
+But for capture_start thread we can unconditionally freeze before=20
+dequeuing next buffer for capture.
 
-Greg do things work acceptably if install_exec_creds is moved to right
-after setup_new_exec? (patch below)
+With this when both threads are in frozen state and no buffer=20
+updates/captures will happen after frozen state.
 
-Looking at the code in load_flat_file after setup_new_exec it looks like
-the kinds of things that in binfmt_elf.c we do after install_exec_creds
-(aka vm_map).  So I think we want install_exec_creds sooner, instead
-of setup_new_exec later.
+I think its not required to finish streaming of all frames completely to=20
+let threads to enter frozen state as streaming can be continuous as well.
 
-> But if it's true that nobody really uses the odd flat library support
-> any more and there are no testers, maybe we should consider ripping it
-> out...
-
-I looked a little deeper and there is another reason to think about
-ripping out the flat library loader.  The code is recursive, and
-supports a maximum of 4 shared libraries in the entire system.
-
-load_flat_binary
-	load_flat_file
-        	calc_reloc
-                	load_flat_shared_libary
-                        	load_flat_file
-                                	....
-
-I am mystified with what kind of system can survive with a grand total
-of 4 shared libaries.  I think my a.out slackware system that I ran on
-my i486 had more shared libraries.
-
-Having read just a bit more it is definitely guaranteed (by the code)
-that the first time load_flat_file is called id 0 will be used (aka id 0
-is guaranteed to be the binary), and the ids 1, 2, 3 and 4 will only be
-used if a relocation includes that id to reference an external shared
-library.  That part of the code is drop dead simple.
-
----
-
-This is what I was thinking about applying.
-
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 831a2b25ba79..1a1d1fcb893f 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -541,6 +541,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		/* OK, This is the point of no return */
- 		set_personality(PER_LINUX_32BIT);
- 		setup_new_exec(bprm);
-+		install_exec_creds(bprm);
- 	}
- 
- 	/*
-@@ -963,8 +964,6 @@ static int load_flat_binary(struct linux_binprm *bprm)
- 		}
- 	}
- 
--	install_exec_creds(bprm);
--
- 	set_binfmt(&flat_format);
- 
- #ifdef CONFIG_MMU
-
-
+>> Hi Dmitry,
+>>
+>> Will update in v12 to not allow freeze in middle of a frame capture.
+>>
+>> Can you please confirm on above if you agree to allow freeze to=20
+>> happen in b/w frame captures?
+>>
+>> Also as most feedback has been received from you by now, appreciate=20
+>> if you can provide all in this v11 if you have anything else so we=20
+>> will not have any new changes after v12.
+>>
+>> Thanks
+>>
+>> Sowjanya
+>>
