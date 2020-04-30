@@ -2,128 +2,123 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877B7C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C5CC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0952076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="trOhVudw"
+	by mail.kernel.org (Postfix) with ESMTP id ED9BC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgD3NHq (ORCPT
+        id S1726816AbgD3NKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:07:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48114 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgD3NHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:07:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03UD7ir6027536;
-        Thu, 30 Apr 2020 08:07:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588252064;
-        bh=CCBvsCnbnKVyCy8qZajezdDs+LtdF+rrN8tIlu5hi+4=;
-        h=From:To:CC:Subject:Date;
-        b=trOhVudwBohlx2hlVlj735Z/efjQ1eEeqtV2lU/Ap6VwlDh4oOitLOpHyRpjy/eHG
-         OnpN9Yoq+H2PCmCVMMGYlvXpRxGrmgFWNKFkpGuLvzBk2SX8/D8o64p6b87iWEoZI+
-         9vt2/IGBAqGuf54hp0eSSRCxjfBbFmbihoF3cseo=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UD7iNN070882;
-        Thu, 30 Apr 2020 08:07:44 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
- Apr 2020 08:07:43 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 30 Apr 2020 08:07:44 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UD7ffY036041;
-        Thu, 30 Apr 2020 08:07:42 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>
-Subject: [GIT PULL] PHY: For 5.7 -rc
-Date:   Thu, 30 Apr 2020 18:37:41 +0530
-Message-ID: <20200430130741.2396-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 30 Apr 2020 09:10:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53122 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbgD3NKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:10:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 19F2BAB3D;
+        Thu, 30 Apr 2020 13:10:14 +0000 (UTC)
+Message-ID: <1588252185.16510.12.camel@suse.com>
+Subject: Re: general protection fault in go7007_usb_probe
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Thu, 30 Apr 2020 15:09:45 +0200
+In-Reply-To: <0000000000003cbf8e05a3d57b98@google.com>
+References: <0000000000003cbf8e05a3d57b98@google.com>
+Content-Type: multipart/mixed; boundary="=-+D+L3gse/YsCAM2iZJV0"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-Please find the PHY pull request for 5.7 -rc below.
+--=-+D+L3gse/YsCAM2iZJV0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Vinod Koul has kindly agreed to co-maintain PHY subsystem. So we are
-also moving linux-phy to a shared repository. I've included a patch
-to update MAINTAINER file to reflect both these changes in the pull
-request.
+Am Dienstag, den 21.04.2020, 16:36 -0700 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    e9010320 usb: cdns3: gadget: make a bunch of functions sta..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1263a930100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bd14feb44652cfaf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cabfa4b5b05ff6be4ef0
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com
 
-Other than that it includes couple of Qualcomm driver fixes and Kconfig
-depenecy fix in Tegra PHY. For the full list of changes see tag message
-below.
+#syz test: https://github.com/google/kasan.git e9010320
 
-Consider merging this for the upcoming -rc cycle and let me know if
-I have to make any changes.
+--=-+D+L3gse/YsCAM2iZJV0
+Content-Disposition: attachment; filename="0001-go7007-add-only-insanity-checking.patch"
+Content-Transfer-Encoding: base64
+Content-Type: text/x-patch; name="0001-go7007-add-only-insanity-checking.patch";
+	charset="UTF-8"
 
-Thanks
-Kishon
+RnJvbSBhMDA2YTcyNDg4MWJmYjU5MmRiNjFiYTE3ZGIxZTIxN2I5NjE1Y2M0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBXZWQsIDIyIEFwciAyMDIwIDEzOjQ5OjU1ICswMjAwClN1YmplY3Q6IFtQQVRDSF0gZ283MDA3
+OiBhZGQgb25seSBpbnNhbml0eSBjaGVja2luZwoKQSBtYWxpY2lvdXMgVVNCIGRldmljZSBtYXkg
+bGFjayBlbmRwb2ludHMgdGhlIGRyaXZlciBhc3N1bWVzIHRvIGV4aXN0CkFjY2Vzc2luZyB0aGVt
+IGxlYWRzIHRvIE5VTEwgcG9pbnRlciBhY2Nlc3Nlcy4gVGhpcyBwYXRjaCBpbnRyb2R1Y2VzCnNh
+bml0eSBjaGVja2luZy4KClNpZ25lZC1vZmYtYnk6IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3Vz
+ZS5jb20+CkZpeGVzOiA4NjZiODY5NWQ2N2U4ICgiU3RhZ2luZzogYWRkIHRoZSBnbzcwMDcgdmlk
+ZW8gZHJpdmVyIikKLS0tCiBkcml2ZXJzL21lZGlhL3VzYi9nbzcwMDcvZ283MDA3LXVzYi5jIHwg
+MjEgKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvdXNiL2dvNzAwNy9n
+bzcwMDctdXNiLmMgYi9kcml2ZXJzL21lZGlhL3VzYi9nbzcwMDcvZ283MDA3LXVzYi5jCmluZGV4
+IGY4ODljOWQ3NDBjZC4uYTQ1YWYxNDljYWRjIDEwMDY0NAotLS0gYS9kcml2ZXJzL21lZGlhL3Vz
+Yi9nbzcwMDcvZ283MDA3LXVzYi5jCisrKyBiL2RyaXZlcnMvbWVkaWEvdXNiL2dvNzAwNy9nbzcw
+MDctdXNiLmMKQEAgLTExMzIsNiArMTEzMiwyMCBAQCBzdGF0aWMgaW50IGdvNzAwN191c2JfcHJv
+YmUoc3RydWN0IHVzYl9pbnRlcmZhY2UgKmludGYsCiAJCWdvLT5ocGlfb3BzID0gJmdvNzAwN191
+c2Jfb25ib2FyZF9ocGlfb3BzOwogCWdvLT5ocGlfY29udGV4dCA9IHVzYjsKIAorCWlmICghdXNi
+LT51c2JkZXYpIHsKKwkJcHJpbnRrKEtFUk5fRVJSIkl0IGlzIGZ1bGwgb2Ygc3RhcnMhXG4iKTsK
+KwkJQlVHKCk7CisJfQorCisJaWYgKCF1c2ItPnVzYmRldi0+ZXBfaW4pIHsKKwkJcHJpbnRrKEtF
+Uk5fRVJSIkl0IGlzIGFsc28gZnVsbCBvZiBzdGFycyFcbiIpOworCQlCVUcoKTsKKwl9CisKKwll
+cCA9IHVzYi0+dXNiZGV2LT5lcF9pbls0XTsKKwlpZiAoIWVwKQorCQlyZXR1cm4gLUVOT0RFVjsK
+KwogCS8qIEFsbG9jYXRlIHRoZSBVUkIgYW5kIGJ1ZmZlciBmb3IgcmVjZWl2aW5nIGluY29taW5n
+IGludGVycnVwdHMgKi8KIAl1c2ItPmludHJfdXJiID0gdXNiX2FsbG9jX3VyYigwLCBHRlBfS0VS
+TkVMKTsKIAlpZiAodXNiLT5pbnRyX3VyYiA9PSBOVUxMKQpAQCAtMTE0MSw3ICsxMTU1LDYgQEAg
+c3RhdGljIGludCBnbzcwMDdfdXNiX3Byb2JlKHN0cnVjdCB1c2JfaW50ZXJmYWNlICppbnRmLAog
+CWlmICh1c2ItPmludHJfdXJiLT50cmFuc2Zlcl9idWZmZXIgPT0gTlVMTCkKIAkJZ290byBhbGxv
+Y2ZhaWw7CiAKLQllcCA9IHVzYi0+dXNiZGV2LT5lcF9pbls0XTsKIAlpZiAodXNiX2VuZHBvaW50
+X3R5cGUoJmVwLT5kZXNjKSA9PSBVU0JfRU5EUE9JTlRfWEZFUl9CVUxLKQogCQl1c2JfZmlsbF9i
+dWxrX3VyYih1c2ItPmludHJfdXJiLCB1c2ItPnVzYmRldiwKIAkJCXVzYl9yY3ZidWxrcGlwZSh1
+c2ItPnVzYmRldiwgNCksCkBAIC0xMjYzLDkgKzEyNzYsMTMgQEAgc3RhdGljIGludCBnbzcwMDdf
+dXNiX3Byb2JlKHN0cnVjdCB1c2JfaW50ZXJmYWNlICppbnRmLAogCiAJLyogQWxsb2NhdGUgdGhl
+IFVSQnMgYW5kIGJ1ZmZlcnMgZm9yIHJlY2VpdmluZyB0aGUgdmlkZW8gc3RyZWFtICovCiAJaWYg
+KGJvYXJkLT5mbGFncyAmIEdPNzAwN19VU0JfRVpVU0IpIHsKKwkJaWYgKCF1c2ItPnVzYmRldi0+
+ZXBfaW5bNl0pCisJCQlnb3RvIGFsbG9jZmFpbDsKIAkJdl91cmJfbGVuID0gMTAyNDsKIAkJdmlk
+ZW9fcGlwZSA9IHVzYl9yY3ZidWxrcGlwZSh1c2ItPnVzYmRldiwgNik7CiAJfSBlbHNlIHsKKwkJ
+aWYgKCF1c2ItPnVzYmRldi0+ZXBfaW5bMV0pCisJCQlnb3RvIGFsbG9jZmFpbDsKIAkJdl91cmJf
+bGVuID0gNTEyOwogCQl2aWRlb19waXBlID0gdXNiX3JjdmJ1bGtwaXBlKHVzYi0+dXNiZGV2LCAx
+KTsKIAl9CkBAIC0xMjg1LDYgKzEzMDIsOCBAQCBzdGF0aWMgaW50IGdvNzAwN191c2JfcHJvYmUo
+c3RydWN0IHVzYl9pbnRlcmZhY2UgKmludGYsCiAJLyogQWxsb2NhdGUgdGhlIFVSQnMgYW5kIGJ1
+ZmZlcnMgZm9yIHJlY2VpdmluZyB0aGUgYXVkaW8gc3RyZWFtICovCiAJaWYgKChib2FyZC0+Zmxh
+Z3MgJiBHTzcwMDdfVVNCX0VaVVNCKSAmJgogCSAgICAoYm9hcmQtPm1haW5faW5mby5mbGFncyAm
+IEdPNzAwN19CT0FSRF9IQVNfQVVESU8pKSB7CisJCWlmICghdXNiLT51c2JkZXYtPmVwX2luWzhd
+KQorCQkJZ290byBhbGxvY2ZhaWw7CiAJCWZvciAoaSA9IDA7IGkgPCA4OyArK2kpIHsKIAkJCXVz
+Yi0+YXVkaW9fdXJic1tpXSA9IHVzYl9hbGxvY191cmIoMCwgR0ZQX0tFUk5FTCk7CiAJCQlpZiAo
+dXNiLT5hdWRpb191cmJzW2ldID09IE5VTEwpCi0tIAoyLjE2LjQKCg==
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git tags/phy-for-5.7-rc
-
-for you to fetch changes up to 820eeb9de62f1f479c04fc6575d874611b1e2095:
-
-  phy: qualcomm: usb-hs-28nm: Prepare clocks in init (2020-04-30 12:10:49 +0530)
-
-----------------------------------------------------------------
-phy: for 5.7 -rc
-
-*) Update MAINTAINER to include Vinod Koul as co-maintainer of PHY
-*) Fix Kconfig dependencies in seen with PHY_TEGRA_XUSB
-*) Re-add "qcom,sdm845-qusb2-phy" compatible in phy-qcom-qusb2.c to
-   make it work with existing dtbs
-*) Move clock enable from ->poweron() to ->init() in Qualcomm
-   usb-hs-28nm driver to initialize HW in ->init()
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-----------------------------------------------------------------
-Bjorn Andersson (1):
-      phy: qualcomm: usb-hs-28nm: Prepare clocks in init
-
-John Stultz (1):
-      phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-
-Kishon Vijay Abraham I (1):
-      MAINTAINERS: Add Vinod Koul as Generic PHY co-maintainer
-
-Thierry Reding (1):
-      phy: tegra: Select USB_COMMON for usb_get_maximum_speed()
-
- MAINTAINERS                                 |  3 ++-
- drivers/phy/qualcomm/phy-qcom-qusb2.c       |  7 +++++++
- drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c | 32 +++++++++++++++++++++-----------
- drivers/phy/tegra/Kconfig                   |  3 ++-
- 4 files changed, 32 insertions(+), 13 deletions(-)
--- 
-2.17.1
+--=-+D+L3gse/YsCAM2iZJV0--
 
