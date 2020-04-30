@@ -2,111 +2,120 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB16C83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7A2C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5790520733
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B1E20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBzuDoac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgD3DkO (ORCPT
+        id S1726575AbgD3Dlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:40:14 -0400
-Received: from m176148.mail.qiye.163.com ([59.111.176.148]:12362 "EHLO
-        m176148.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgD3DkO (ORCPT
+        Wed, 29 Apr 2020 23:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726309AbgD3Dlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:40:14 -0400
-X-Greylist: delayed 390 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Apr 2020 23:40:12 EDT
-Received: from vivo.com (wm-8.qy.internal [127.0.0.1])
-        by m176148.mail.qiye.163.com (Hmail) with ESMTP id AA5181A3FD3;
-        Thu, 30 Apr 2020 11:33:07 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AMEAJAC4CHW7UjeCKaE3F4rq.3.1588217587684.Hmail.bernard@vivo.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gY2xrL21lc29uOiBmaXhlcyBtZW1sZWFrIGlzc3VlIGluIGluaXQgZXJyIGJyYW5jaA==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <CAFBinCA7CvBzEYMG+VmJTRF9zxajj1KOHt0F4A2hUJhKrTpmhw@mail.gmail.com>
+        Wed, 29 Apr 2020 23:41:36 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6A6C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:41:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g4so4941257ljl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lAKpy9G6EbRWu0SNu7HqdDYc2mfW8XyOZWnaalUzsJo=;
+        b=cBzuDoacowIj6r76Enk8iq8XtYvrttouwz6NUcNP3//+E9reswYpl0QZb42CEE6azq
+         KGTYCkmEkA8J6UJwfWuFWkRnvkIwNlsH9zIEnSGLH8fIWsyK4Cl0dPwGT8IcWwy3FFS6
+         P3U24KtHwq6fk6ZWPHh8m/kcuUnK6ZdWSuuhaoEsY5bwPNiPxqwbTMcS48fmXObr6k5B
+         vPlQcd5IPw3BHbW/HSNECbZ3oVSyWYQdHskdF2JUoDDI5scAvrF4SX3wqmf3TE7LpUau
+         KlWfDWBsVPP91YNJAgpCiV2xTCXM2E5lESKIiq+L/mFguTtdZq0qJVcXkX5U4vx3sQiB
+         +4RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lAKpy9G6EbRWu0SNu7HqdDYc2mfW8XyOZWnaalUzsJo=;
+        b=MsdZTj94yuSDxphEakQ8xZAdqHOkOW5C012aIDjrzHOdXvtbT8D7BTBYZBHbkqEpBq
+         6t1mUiG1uOZst23y6VNYW3r+sLKdTo5kHfkTlwtNwOKLY15uun5iOsaTlABK8ayUqnRE
+         qJqfowZoyYuTo0fe+RFmTrXTnuXM+jbLgd2wBwY2W9BKsmk7JXFXGs96Cb8Qp0LweXl1
+         wZwNf4z5I5RsiG6CKcB/GFirEp2PH9e6qT9M+hdec0R6oFRUXatcbFzuPMyD1aqfVS3g
+         3CcwfXbTlxymdEHqc5NO787n9t2Tuw8jOM2ix+zQHiBt5+0wNpvaU8Fa3mVKtZgD2FPh
+         8gyQ==
+X-Gm-Message-State: AGi0PuYc2wWRWnBUfsAOWL/ZqJLyXbQyFH9GBe5jxzgRoc3vE6MFt26q
+        Pdrz7Nyf6Q+VcMRSkMhsxkcatVXf4lJWwPDgmpziSg==
+X-Google-Smtp-Source: APiQypKrg+xYbwS9RWRxcI8l8qcEHNfYdlwlHnLQTHxwHOGeSvThNBa+jOvRlnv1RK8sPNAe6sjlczuJdlVwA2Yhl1s=
+X-Received: by 2002:a2e:8999:: with SMTP id c25mr829356lji.73.1588218094500;
+ Wed, 29 Apr 2020 20:41:34 -0700 (PDT)
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 30 Apr 2020 11:33:07 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Thu, 30 Apr 2020 11:33:07 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVLT0hLS0tJSUpJTklPT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTklMSU9ISk1DN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Nj46MTo4TzgzLEwuER44MBo#SD1PCQpVSFVKTkNDSUpMTkNMTE5MVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTU5MSDcG
-X-HM-Tid: 0a71c92527f89394kuwsaa5181a3fd3
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
+ <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+ <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
+ <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
+ <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
+ <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
+ <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
+ <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
+ <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
+ <CAHk-=wjUZLybZBJgOtD2gng=FS7USrbQQ1-tn5M+UP5DbCWdzw@mail.gmail.com>
+ <CAG48ez0FL3i4eGFYryOwG2nnS+JigfKYAVSV9ogVHjmjOWzsrA@mail.gmail.com>
+ <AM6PR03MB5170C5D02C6FCB6D69DFE3ADE4AA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg6oKSLkVhY5oqOFyzCCSr9eYPGK2SHJfgCXF_QOmPKog@mail.gmail.com>
+ <CAG48ez25=6qrCU51dEAV_ciyU2jvPuRFWfFOAAT22kmeAZccuQ@mail.gmail.com> <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 30 Apr 2020 05:41:07 +0200
+Message-ID: <CAG48ez0yLF4KAK5uMi1_b9woC7NYy0NamYD1jP7BOPJkpKR7Mw@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CkZyb206IE1hcnRpbiBCbHVtZW5zdGluZ2wgPG1hcnRpbi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFp
-bC5jb20+CkRhdGU6IDIwMjAtMDQtMzAgMDE6NDM6NTUKVG86ICBKZXJvbWUgQnJ1bmV0IDxqYnJ1
-bmV0QGJheWxpYnJlLmNvbT4KQ2M6ICBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+LE5l
-aWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4sU3RlcGhlbiBCb3lkIDxzYm95
-ZEBrZXJuZWwub3JnPixLZXZpbiBIaWxtYW4gPGtoaWxtYW5AYmF5bGlicmUuY29tPixsaW51eC1h
-bWxvZ2ljQGxpc3RzLmluZnJhZGVhZC5vcmcsbGludXgtY2xrQHZnZXIua2VybmVsLm9yZyxsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29tClN1Ympl
-Y3Q6IFJlOiBbUEFUQ0hdIGNsay9tZXNvbjogZml4ZXMgbWVtbGVhayBpc3N1ZSBpbiBpbml0IGVy
-ciBicmFuY2g+SGkgSmVyb21lLAo+Cj5PbiBXZWQsIEFwciAyOSwgMjAyMCBhdCAyOjM3IFBNIEpl
-cm9tZSBCcnVuZXQgPGpicnVuZXRAYmF5bGlicmUuY29tPiB3cm90ZToKPj4KPj4KPj4gT24gV2Vk
-IDI5IEFwciAyMDIwIGF0IDA1OjE0LCBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+IHdy
-b3RlOgo+Pgo+PiA+IEluIGNvbW1vbiBpbml0IGZ1bmN0aW9uLCB3aGVuIHJ1biBpbnRvIGVyciBi
-cmFuY2gsIHdlIGRpZG5gdAo+PiA+IHVzZSBrZnJlZSB0byByZWxlYXNlIGt6bWFsbG9jIGFyZWEs
-IHRoaXMgbWF5IGJyaW5nIGluIG1lbWxlYWsKPj4KPj4gVGh4IGZvciByZXBvcnRpbmcgdGhpcyBC
-ZXJuYXJkLgo+PiBJJ20gbm90IGEgZmFuIG9mIGFkZGluZyBrZnJlZSBldmVyeXdoZXJlLiBJJ2Qg
-bXVjaCBwcmVmZXIgYSBsYWJlbCBhbmQKPj4gY2xlYXIgZXJyb3IgZXhpdCBwYXRoLgo+Pgo+PiBU
-aGF0IGJlaW5nIHNhaWQsIHRoZSBhbGxvY2F0aW9uIGlzIHByb2JhYmx5IG5vdCB0aGUgb25seSB0
-aGluZyB0aGF0Cj4+IG5lZWRzIHRvIGJlIHVuZG9uZSBpbiBjYXNlIG9mIGVycm9yLiBJIGd1ZXNz
-IHRoaXMgaXMgZHVlIHRvIGNvbnZlcnNpb24KPj4gdG8gQ0xLX09GX0RFQ0xBUkVfRFJJVkVSKCkg
-d2hpY2ggZm9yY2VkIHRvIGRyb3AgYWxsIHRoZSBkZXZtXwo+PiBUaGlzIHdhcyBkb25lIGJlY2F1
-c2UgdGhlIGNsb2NrIGNvbnRyb2xsZXIgd2FzIHJlcXVpcmVkIGVhcmx5IGluIHRoZQo+PiBib290
-IHNlcXVlbmNlLgo+Pgo+PiBUaGVyZSBpcyAyIHBhdGhzIHRvIHByb3Blcmx5IHNvbHZlIHRoaXM6
-Cj4+IDEpIE9sZCBzY2hvb2w6IG1hbnVhbGx5IHVuZG8gZXZlcnl0aGluZyB3aXRoIGV2ZXJ5IGVy
-cm9yIGV4aXQgY29uZGl0aW9uCj4+ICAgIERvYWJsZSBidXQgcHJvYmFibHkgYSBiaXQgbWVzc3kK
-Pj4gMikgQ29udmVydCBiYWNrIHRoZSBkcml2ZXIgdG8gYSByZWFsIHBsYXRmb3JtIGRyaXZlciBh
-bmQgdXNlIGRldm1fLgo+PiAgICBXZSB3b3VsZCBzdGlsbCBuZWVkIHRoZSBjb250cm9sbGVyIHRv
-IHJlZ2lzdGVyIGVhcmx5IGJ1dCBJIHdvbmRlciBpZgo+PiAgICB3ZSBjb3VsZCB1c2UgdGhlIHNh
-bWUgbWV0aG9kIGFzIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDI3MDEuYyBhbmQKPj4gICAg
-dXNlIGFyY2hfaW5pdGNhbGwoKSA/Cj4+Cj4+IE1hcnRpbiwgeW91IGRpZCB0aGUgaW5pdGlhbCBj
-b252ZXJzaW9uLCB3aGF0IGRvIHlvdSB0aGluayBvZiBvcHRpb24gMiA/Cj5JIHRyaWVkIGl0IHdp
-dGggdGhlIGF0dGFjaGVkIHBhdGNoCj51bmZvcnR1bmF0ZWx5IG15ICJtOGJfY2xrY190ZXN0X3By
-b2JlIiBpcyBzdGlsbCBydW4gdG9vIGxhdGUKPgo+PiBXb3VsZCBpdCBzdGlsbCBhbnN3ZXIgdGhl
-IHByb2JsZW0geW91IHdlcmUgdHJ5aW5nIHRvIHNvbHZlIGJhY2sgdGhlbiA/Cj5JJ20gYWZyYWlk
-IGl0IGRvZXMgbm90Ogo+LSB0aGUgcmVzZXRzIGFyZSBuZWVkZWQgZWFybHkgZm9yIFNNUCBpbml0
-aWFsaXphdGlvbgo+LSB0aGUgY2xvY2tzIGFyZSBuZWVkZWQgZXZlbiBlYXJsaWVyIGZvciB0aW1l
-ciByZWdpc3RyYXRpb24gKHdlIGhhdmUKPmJvdGgsIHRoZSBBUk0gVFdEIHRpbWVyIGFuZCBzb21l
-IEFtbG9naWMgY3VzdG9tIHRpbWVyLiBib3RoIGhhdmUgY2xvY2sKPmlucHV0cykKPgo+PiBPbmUg
-YWRkZWQgYmVuZWZpdCBvZiBvcHRpb24gMiBpcyB3ZSBjb3VsZCBkcm9wIENMS19PRl9ERUNMQVJF
-X0RSSVZFUigpLgo+PiBXZSBjb3VsZCBldmVuIGRvIHRoZSBzYW1lIGluIGZvciB0aGUgb3RoZXIg
-U29Dcywgd2hpY2ggSSBzdXBwb3NlIHdvdWxkCj4+IGF2b2lkIGEgZmFpciBhbW91bnQgb2YgcHJv
-YmUgZGVmZXJyYWwuCj5pdCB3b3VsZCBiZSBncmVhdCwgaW5kZWVkCj5idXQgdGhpcyB3aWxsIG9u
-bHkgd29yayBvbmNlIHRpbWVyIGluaXRpYWxpemF0aW9uIGFuZCBTTVAgYm9vdCBjYW4KPmhhcHBl
-biBhdCBhIGxhdGVyIHN0YWdlCj4KPklmIHRoZSBjbG9jayBjb250cm9sbGVyIHJlZ2lzdHJhdGlv
-biBmYWlscyB0aGUgYm9hcmQgd29uJ3QgYm9vdC4gWWVzLAo+Y2xlYW5pbmcgdXAgbWVtb3J5IGlz
-IGdvb2QsIGJ1dCBpbiB0aGlzIHNwZWNpZmljIGNhc2UgaXQgd2lsbCBhZGQgYQo+Y291cGxlIG9m
-IGV4dHJhIENQVSBjeWNsZXMgYmVmb3JlIHRoZSBrZXJuZWwgaXMgZGVhZAo+U28sIGlmIHdlIHdh
-bnQgdG8gaWdub3JlIHRoYXQgZmFjdCB0aGVuIEkgYWdyZWUgd2l0aCB5b3VyIGZpcnN0IG9wdGlv
-bgo+KHVuZG9pbmcgdGhpbmdzIHRoZSAib2xkIHNjaG9vbCIgd2F5KS4KPgoKSGkKSSBhbSBub3Qg
-c3VyZSB3aGV0aGVyIG15IHVuZGVyc3RhbmRpbmcgaXMgY29ycmVjdC4gCkkgZmVlbHMgdGhhdCB0
-aGUgZmFpbHVyZSBvZiBvdXIgbW9kdWxlIGNhbiBub3QgYmxvY2sgdGhlIGVudGlyZSBrZXJuZWwg
-ZnJvbSBzdGFydGluZy4gCk1heWJlIHdlIHNob3VsZCB0aHJvdyBhbiBleGNlcHRpb24sIGNsZWFy
-IHRoZSBzdGF0dXMsIGFzICJvbGQgd2F5IiwgCmFuZCBjb250aW51ZSB0byBleGVjdXRlIHRoZSBr
-ZXJuZWwuCgpBbmQgaWYgb3VyIG1vZHVsZSByZXF1aXJlcyB0aGF0IHRoZSBrZXJuZWwgY2Fubm90
-IGNvbnRpbnVlIHRvIHJ1biB3aGVuIHRoZSBleGNlcHRpb24gb2NjdXJzLAp0aGVuIHdlIGRvIG5v
-dCBuZWVkIHRvIHJldHVybiBpbiB0aGUgZXJyb3IgYnJhbmNoLCBhbHNvIHdlIGRvIG5vdCBuZWVk
-IHRvIGtmcmVlLCBqdXN0IEJVR19PTigpLgoKUmVnYXJkcywKQmVybmFyZAoKPk1hcnRpbgoNCg0K
+On Thu, Apr 30, 2020 at 5:26 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Wed, Apr 29, 2020 at 8:00 PM Jann Horn <jannh@google.com> wrote:
+> >
+> > But if we go with Bernd's approach together with your restart
+> > suggestion,
+>
+> So repeat after me: Bernd's approach _without_ the restart is unacceptable.
+>
+> It's unacceptable because it breaks things that currently work, and
+> returns EAGAIN in situations where that is simple not a valid error
+> code.
+
+Sure, makes sense to me. I'm not eager to start randomly throwing
+EAGAIN where it couldn't happen before either (and I initially missed
+that Bernd's patch did that for procfs files, too).
+
+> That bug has nothing to do with ptrace(). It's literally a "write()"
+> to a file in /proc.
+>
+> What is so hard to get about this basic thing?
+
+You said:
+
+| So a ptrace() user (or [...] wouldn't even see the impossible EAGAIN error.
+
+So I assumed you explicitly wanted ptrace() to restart, too. I was
+just pointing out that that didn't make sense to me.
