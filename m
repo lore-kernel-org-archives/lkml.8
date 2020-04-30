@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB57C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E938C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46A32063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB0C2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255558;
-	bh=Kl08CSxK9cTZLizw5W56/tm53VbSYubwztTv1wcNJCs=;
+	s=default; t=1588255562;
+	bh=HvgQtozXPajYVnHS90k19ocaTh/Mfax+KW0Y9WIaGKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTpPTBjBvn2A6SsVbmFR2U7ft53SK852bF2YFeKNmgphZa2Kf80Yjj/XLPWaAyuP5
-	 ZyGaxPG+da+9JKAkrNbFisMVm2wq8XH5pv1rmHSqfvgM6yROaPBWdmZVHyObaiLzdU
-	 ELPbuHXBctuCUmqYoc9+EWZ30jGdhjOdGP3u1dGU=
+	b=qT4lCu11Jbu3PuHG5EYjDq+pGdCIBzdqguAHYZYjKW8a7zbtnK05K6d8ShC9PMB1v
+	 TxlmkGsgNJ5n1UJ1vPjGnk+T2TBKPYU8M1SGaGtLvm1+02aMLYVDtvsp+5lbUO4Cgo
+	 k60uUAmXuJFdEuJ3MOzRg8pEXh/S7U609EdN46Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgD3OF5 (ORCPT
+        id S1729242AbgD3OGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34408 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:06:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbgD3Nw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:56 -0400
+        id S1728548AbgD3Nwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F0E424954;
-        Thu, 30 Apr 2020 13:52:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF422495A;
+        Thu, 30 Apr 2020 13:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254776;
-        bh=Kl08CSxK9cTZLizw5W56/tm53VbSYubwztTv1wcNJCs=;
+        s=default; t=1588254774;
+        bh=HvgQtozXPajYVnHS90k19ocaTh/Mfax+KW0Y9WIaGKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQDe6tM8lUqR44W+S5zy0jgkYyk0DfAnSReYsYOqvJEEUbw/2CQdDWSnNRLgpPsu5
-         gRxPIK1ytRK7eex7ZImuy/vfqBIft3d67bLhXg6d/XKL0BRmeXFWn7GbwcXOF1Uhgi
-         qF++SeqsuSNoBiuUURVz3p0loQKX9GgXqIIdYZ5c=
+        b=V6Ml/ZeGHiw3Scnezk5pPMbodQuziMA7mHKyPxHoCBtY6AT9QVg2Fu8vxJc7vNQFk
+         uKKNl6wlPlSM/0PwQxUQ3r1kuOcEgiWJv7ls5jgcc2uSFZuG8fL5cdwIy+/5PlCIF3
+         o3BUj+uoA1hnTw40FER20yQsXFFGM3Oypc2rtM4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 33/57] ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-Date:   Thu, 30 Apr 2020 09:51:54 -0400
-Message-Id: <20200430135218.20372-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 31/57] ASoC: meson: axg-card: fix codec-to-codec link setup
+Date:   Thu, 30 Apr 2020 09:51:52 -0400
+Message-Id: <20200430135218.20372-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -60,50 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 54cb6221688660670a2e430892d7f4e6370263b8 ]
+[ Upstream commit 1164284270779e1865cc2046a2a01b58a1e858a9 ]
 
-Fix the rsnd_ssi_stop function to skip disabling the individual SSIs of
-a multi-SSI setup, as the actual stop is performed by rsnd_ssiu_stop_gen2
-- the same logic as in rsnd_ssi_start. The attempt to disable these SSIs
-was harmless, but caused a "status check failed" message to be printed
-for every SSI in the multi-SSI setup.
-The disabling of interrupts is still performed, as they are enabled for
-all SSIs in rsnd_ssi_init, but care is taken to not accidentally set the
-EN bit for an SSI where it was not set by rsnd_ssi_start.
+Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
+playback/capture if supported"), meson-axg cards which have codec-to-codec
+links fail to init and Oops:
 
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200417153017.1744454-3-matthias.blankertz@cetitec.com
+  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000128
+  Internal error: Oops: 96000044 [#1] PREEMPT SMP
+  CPU: 3 PID: 1582 Comm: arecord Not tainted 5.7.0-rc1
+  pc : invalidate_paths_ep+0x30/0xe0
+  lr : snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
+  Call trace:
+   invalidate_paths_ep+0x30/0xe0
+   snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
+   dpcm_path_get+0x38/0xd0
+   dpcm_fe_dai_open+0x70/0x920
+   snd_pcm_open_substream+0x564/0x840
+   snd_pcm_open+0xfc/0x228
+   snd_pcm_capture_open+0x4c/0x78
+   snd_open+0xac/0x1a8
+   ...
+
+While initiliazing the links, ASoC treats the codec-to-codec links of this
+card type as a DPCM backend. This error eventually leads to the Oops.
+
+Most of the card driver code is shared between DPCM backends and
+codec-to-codec links. The property "no_pcm" marking DCPM BE was left set on
+codec-to-codec links, leading to this problem. This commit fixes that.
+
+Fixes: 0a8f1117a680 ("ASoC: meson: axg-card: add basic codec-to-codec link support")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200420114511.450560-2-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/ssi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/soc/meson/axg-card.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index 9900a4f6f4e53..4a7d3413917fc 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -594,10 +594,16 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
- 	 * Capture:  It might not receave data. Do nothing
- 	 */
- 	if (rsnd_io_is_play(io)) {
--		rsnd_mod_write(mod, SSICR, cr | EN);
-+		rsnd_mod_write(mod, SSICR, cr | ssi->cr_en);
- 		rsnd_ssi_status_check(mod, DIRQ);
- 	}
+diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
+index 1f698adde506c..2b04ac3d8fd3b 100644
+--- a/sound/soc/meson/axg-card.c
++++ b/sound/soc/meson/axg-card.c
+@@ -586,8 +586,10 @@ static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
  
-+	/* In multi-SSI mode, stop is performed by setting ssi0129 in
-+	 * SSI_CONTROL to 0 (in rsnd_ssio_stop_gen2). Do nothing here.
-+	 */
-+	if (rsnd_ssi_multi_slaves_runtime(io))
-+		return 0;
-+
- 	/*
- 	 * disable SSI,
- 	 * and, wait idle state
+ 	if (axg_card_cpu_is_tdm_iface(dai_link->cpus->of_node))
+ 		ret = axg_card_parse_tdm(card, np, index);
+-	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node))
++	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node)) {
+ 		dai_link->params = &codec_params;
++		dai_link->no_pcm = 0; /* link is not a DPCM BE */
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
