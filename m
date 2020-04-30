@@ -2,130 +2,98 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52028C83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A7C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318862073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161C42073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R4YUqOnE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="an4TSvut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgD3EKX (ORCPT
+        id S1726554AbgD3EKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:10:23 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17160 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726040AbgD3EKX (ORCPT
+        Thu, 30 Apr 2020 00:10:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34695 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726481AbgD3EKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:10:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588219822; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=zY3h7WyYFL9pgdVpyH23IWdwL6hQCkZYVkn4m8ZIaOI=; b=R4YUqOnEOYg8hOW0glq6nrg0irAaIc8JemgUcbpUyWO8uo3C9BQNSu0JhZiJYxFM1js4ALir
- d7WL7H4IFSj5/Ah6wNO9OqCQVUyFZ2V6MEX7XdX7LQdPaMEnL3oN2+GNnXc24vx/MvMxuh7c
- fWTJsDrXUQaMBJFgEv7ZxhbjC34=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaa4fa9.7fc768d196c0-smtp-out-n03;
- Thu, 30 Apr 2020 04:10:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EF649C43637; Thu, 30 Apr 2020 04:10:16 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 30 Apr 2020 00:10:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588219844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o6NaKXa+l9qdhNmwuaFitGXRL4T48gITkqZV3NlW2qY=;
+        b=an4TSvutNrjoDzylU7AQxSeYcOnUy58QSsxIcwusmR/wD/JxRKPiBMVstH6SEIqs96TT8d
+        dFNmcOZMqHPCRKRyT0M4vikfdWItg+1J53gtOlNFAv0J5qqX0rNSM1gdoqHap0/w9Tso/g
+        gRQ27g3E4WsfmmPLGjYcKc57Levn5eU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-pWu7VxWUNR-RB7JNUh0LIQ-1; Thu, 30 Apr 2020 00:10:38 -0400
+X-MC-Unique: pWu7VxWUNR-RB7JNUh0LIQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FD30C433CB;
-        Thu, 30 Apr 2020 04:10:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FD30C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
-        beanhuo@micron.com, Avri.Altman@wdc.com,
-        bjorn.andersson@linaro.org, bvanassche@acm.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue during system resume
-Date:   Wed, 29 Apr 2020 21:10:05 -0700
-Message-Id: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1827B8014D5;
+        Thu, 30 Apr 2020 04:10:37 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A79F610023A6;
+        Thu, 30 Apr 2020 04:10:35 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 23:10:33 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     changhuaixin <changhuaixin@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
+        michal.lkml@markovi.net, mingo@redhat.com, tglx@linutronix.de,
+        x86@kernel.org, yamada.masahiro@socionext.com
+Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
+Message-ID: <20200430041033.x7hggzh2lsbtc3u7@treble>
+References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+ <20200429084933.GF13592@hirez.programming.kicks-ass.net>
+ <1CACF61E-FA7C-4986-AAD2-20A3B2BAC425@linux.alibaba.com>
+ <20200430040654.mnkcfmj32tr6m3mg@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430040654.mnkcfmj32tr6m3mg@treble>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During system resume, scsi_resume_device() decreases a request queue's
-pm_only counter if the scsi device was quiesced before. But after that,
-if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
-still held (non-zero). Current scsi resume hook only sets the RPM status
-of the scsi device and its request queue to RPM_ACTIVE, but leaves the
-pm_only counter unchanged. This may make the request queue's pm_only
-counter remain non-zero after resume hook returns, hence those who are
-waiting on the mq_freeze_wq would never be woken up. Fix this by calling
-blk_post_runtime_resume() if pm_only is non-zero to balance the pm_only
-counter which is held by the scsi device's RPM ops.
+On Wed, Apr 29, 2020 at 11:06:58PM -0500, Josh Poimboeuf wrote:
+> On Thu, Apr 30, 2020 at 10:32:17AM +0800, changhuaixin wrote:
+> > 
+> > 
+> > > On Apr 29, 2020, at 4:49 PM, Peter Zijlstra <peterz@infradead.org> wrote:
+> > > 
+> > > On Wed, Apr 29, 2020 at 02:46:24PM +0800, Huaixin Chang wrote:
+> > >> Move building of fast lookup table from boot to sorttable tool. This saves us
+> > >> 6380us boot time on Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz with cores.
+> > > 
+> > > And what does it add to the build time?
+> > 
+> > It takes a little more than 7ms to build fast lookup table in
+> > sorttable on the same CPU. And it is on the critical path.
+> 
+> Thanks, I like it.  It will help make the in-kernel unwinder even
+> simpler.  And it will enable unwinding from early boot.
+> 
+> Maybe someday we can move all the table sorting code into objtool, once
+> we have objtool running on vmlinux.o.
+> 
+> I'll try to review the patches soon.
 
-(struct request_queue)0xFFFFFF815B69E938
-	pm_only = (counter = 2),
-	rpm_status = 0,
-	dev = 0xFFFFFF815B0511A0,
+BTW, another cool feature would be for sorttable to run on modules
+during the module linking phase.
 
-((struct device)0xFFFFFF815B0511A0)).power
-	is_suspended = FALSE,
-	runtime_status = RPM_ACTIVE,
-
-(struct scsi_device)0xFFFFFF815b051000
-	request_queue = 0xFFFFFF815B69E938,
-	sdev_state = SDEV_RUNNING,
-	quiesced_by = 0x0,
-
-B::v.f_/task_
--000|__switch_to
--001|context_switch
--001|__schedule
--002|schedule
--003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
--004|generic_make_request
--005|submit_bio
-
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
-
-Change since v2:
-- Rebased on 5.8-scsi-queue
-
-Change since v1:
-- Added more debugging context info
-
- drivers/scsi/scsi_pm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
-index 3717eea..4804029 100644
---- a/drivers/scsi/scsi_pm.c
-+++ b/drivers/scsi/scsi_pm.c
-@@ -93,8 +93,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 		 */
- 		if (!err && scsi_is_sdev_device(dev)) {
- 			struct scsi_device *sdev = to_scsi_device(dev);
--
--			blk_set_runtime_active(sdev->request_queue);
-+			if (blk_queue_pm_only(sdev->request_queue))
-+				blk_post_runtime_resume(sdev->request_queue, 0);
-+			else
-+				blk_set_runtime_active(sdev->request_queue);
- 		}
- 	}
- 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Josh
+
