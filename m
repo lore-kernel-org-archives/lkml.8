@@ -2,184 +2,151 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1212FC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6E8C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC65F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CAD20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HGgxy6OF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ay5tSMlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgD3QQW (ORCPT
+        id S1727866AbgD3QQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:16:22 -0400
-Received: from mail.efficios.com ([167.114.26.124]:38382 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgD3QQV (ORCPT
+        Thu, 30 Apr 2020 12:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726405AbgD3QQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:16:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8853028FB2F;
-        Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id xDaO_UPW64z2; Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2862728FB2E;
-        Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2862728FB2E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588263380;
-        bh=3peYxHoeMxttyPs/kK0oeQFnIA8w0ML3Z5mFQwUuuw4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=HGgxy6OFkI+B2RtYLYDdQuTTa12hQjnYMjWP4XHHzt99nrJfOJKd7p/4232pNS2M7
-         BCjUTQ8ggo2ws08s2w/ThMutUQmT2qdsOhSfz1qROwCzDm/ZCCUQLAfXAC3i1RoNAY
-         fvhCZ8MprAIwkattoi3Vl09m7b3e3DUtVP659pFiHRhIce9mu7yxaA+WpxWbcm3SRx
-         Va3Wyw3OSBlDA2mcoJJpfMV8jbqwDnJhJWBvyANajN+efL1gMzF/UPaL9wnRcL6x18
-         30tgT0g6kcMUCk8rIUSn2WvfY75abPj9OgNkEtW7lRZ8VZvsV3KWPoqyp2lw8ZL7vt
-         okhQiAZIln0XQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id cVUp0jkXj21a; Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 1614F28F79B;
-        Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 12:16:20 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
+        Thu, 30 Apr 2020 12:16:26 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0303CC035494;
+        Thu, 30 Apr 2020 09:16:25 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id b20so1437430lff.2;
+        Thu, 30 Apr 2020 09:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vHCcWfIEICV286PlzrlDhon26egExA0EzSmCUey5zx8=;
+        b=ay5tSMlwbsTytMC7115ZGRlTIa6ajZl389PdP5rwRFjVdI2WdoqyVsj71qOrQeG4+3
+         UKYJyxd/cA0ur6rCIOqf1Ews+8L98JgIF6F+ljKM85bXDLpHp+CnOLJjuE3bBFLuyRnY
+         o/O3wePvR7bcNfq9OBC9q5xozmSaVSjKIlBgWdN5mX7JueVbkl63GNBkBR1NGUwfwGMM
+         g4ub0uMZ3dn7BqOxtEc7rOu5zDyTR2VThEy7nizswgYtakMsJQ4tP2QAPHFiUMLbw9aA
+         wTlUdDTBuWbEL4G2S75g8ppTLzaeLz5Uf3/9Nh/6mK2rkLJt7KevDilZvGEh3nYSuwNd
+         Mh4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vHCcWfIEICV286PlzrlDhon26egExA0EzSmCUey5zx8=;
+        b=RaVoHYHtIe4x/pDbYrAC43INUVHlLQ1ynZLoe1me9JNXS+UMcea6aE8bwQTFK9eYBB
+         xUV4dI7Cis8lx74sk2KPl239A3lKf8f1eFTptrWvO3mHL8wMVq3A4jjb6o0LerlAdZZC
+         qYfWtS4wNOMuk+xZat54d7CaXoAL4MFake34JA0Xs1b/tJ2aWZW8k+9nYiVyw8tIjw9o
+         tI/XSZl5q7e93QeVQO75taZjaoVY8TiBsyVD1n+bkGx0isfg7Nuz8mfV0BPlv1DYsMoM
+         HlOwOGDyIsdC2/2lE8ohSbg9fcXDIqaD1qfRHgq4iuMYTvQsqfux463QPRAnZ350VlZc
+         xs4g==
+X-Gm-Message-State: AGi0PuY41hKhUhI8A3RDN+21EXC/ErS1rX+1pQYLnXfbC8oUEXH+CJXF
+        zrPuaQHLuQf6ARxM1+a/YGQ=
+X-Google-Smtp-Source: APiQypI8ZN0KyOTXyMoykSTjnNSFhzlj/ggy7e3jSEAEM/HOQ9fxPmeQ5Yrj2uqnv4+yAUnZjlL2sg==
+X-Received: by 2002:ac2:489b:: with SMTP id x27mr2746373lfc.60.1588263383459;
+        Thu, 30 Apr 2020 09:16:23 -0700 (PDT)
+Received: from localhost.localdomain ([178.233.178.9])
+        by smtp.gmail.com with ESMTPSA id k6sm60638lfm.91.2020.04.30.09.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 09:16:22 -0700 (PDT)
+From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Alper Nebi Yasak <alpernebiyasak@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Message-ID: <505666080.77869.1588263380070.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200430121136.6d7aeb22@gandalf.local.home>
-References: <20200429054857.66e8e333@oasis.local.home> <20200429105941.GQ30814@suse.de> <20200429082854.6e1796b5@oasis.local.home> <20200429100731.201312a9@gandalf.local.home> <20200430141120.GA8135@suse.de> <20200430121136.6d7aeb22@gandalf.local.home>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
- text_poke()
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [RFC PATCH v2 0/3] Prefer working VT console over SPCR and device-tree chosen stdout-path
+Date:   Thu, 30 Apr 2020 19:14:34 +0300
+Message-Id: <20200430161438.17640-1-alpernebiyasak@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: x86/mm: Sync all vmalloc mappings before text_poke()
-Thread-Index: lAOrEjXtq/pzs5xj09aTYCikDgN7cA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 30, 2020, at 12:11 PM, rostedt rostedt@goodmis.org wrote:
+I recently experienced some trouble with setting up an encrypted-root
+system, my Chromebook Plus (rk3399-gru-kevin, ARM64) would appear to
+hang where it should have asked for an encryption passphrase; and I
+eventually figured out that the kernel preferred the serial port
+(inaccessible to me) over the built-in working display/keyboard and was
+probably asking there.
 
-> On Thu, 30 Apr 2020 16:11:21 +0200
-> Joerg Roedel <jroedel@suse.de> wrote:
-> 
->> Hi,
->> 
->> On Wed, Apr 29, 2020 at 10:07:31AM -0400, Steven Rostedt wrote:
->> > Talking with Mathieu about this on IRC, he pointed out that my code does
->> > have a vzalloc() that is called:
->> > 
->> > in trace_pid_write()
->> > 
->> > 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
->> > 
->> > This is done when -P1,2 is on the trace-cmd command line.
->> 
->> Okay, tracked it down, some instrumentation in the page-fault and
->> double-fault handler gave me the stack-traces. Here is what happens:
->> 
->> As already pointed out, it all happens because of page-faults on the
->> vzalloc'ed pid bitmap. It starts with this stack-trace:
->> 
->>  RIP: 0010:trace_event_ignore_this_pid+0x23/0x30
-> 
-> Interesting. Because that function is this:
-> 
-> bool trace_event_ignore_this_pid(struct trace_event_file *trace_file)
-> {
->	struct trace_array *tr = trace_file->tr;
->	struct trace_array_cpu *data;
->	struct trace_pid_list *no_pid_list;
->	struct trace_pid_list *pid_list;
-> 
->	pid_list = rcu_dereference_raw(tr->filtered_pids);
->	no_pid_list = rcu_dereference_raw(tr->filtered_no_pids);
-> 
->	if (!pid_list && !no_pid_list)
->		return false;
-> 
->	data = this_cpu_ptr(tr->array_buffer.data);
-> 
->	return data->ignore_pid;
-> }
-> 
-> Where it only sees if the pid masks exist. That is, it looks to see if
-> there's pointers to them, it doesn't actually touch the vmalloc'd area.
-> This check is to handle a race between allocating and deallocating the
-> buffers and setting the ignore_pid bit. The reading of these arrays is done
-> at sched_switch time, which sets or clears the ignore_pid field.
-> 
-> That said, since this only happens on buffer instances (it does not trigger
-> on the top level instance, which uses the same code for the pid masks)
-> 
-> Could this possibly be for the tr->array_buffer.data, which is allocated
-> with:
-> 
-> allocate_trace_buffer() {
->	[..]
->	buf->data = alloc_percpu(struct trace_array_cpu);
-> 
-> That is, the bug isn't the vmalloc being a problem, but perhaps the per_cpu
-> allocation. This would explain why this crashes with the buffer instance
-> and not with the top level instance. If it was related to the pid masks,
-> then it would trigger for either (because they act the same in allocating
-> at time of use). But when an instance is made, the tr->array_buffer.data is
-> created. Which for the top level happens at boot up and the pages would
-> have been synced long ago. But for a newly created instance, this happens
-> just before its used. This could possibly explain why it's not a problem
-> when doing it manually by hand, because the time between creating the
-> instance, and the time to start and stop the tracing, is long enough for
-> something to sync them page tables.
-> 
-> tl;dr; It's not an issue with the vmalloc, it's an issue with per_cpu
-> allocations!
+Running plymouth in the initramfs solves that specific problem, but
+both the documentation and tty-related kconfig descriptions imply that
+/dev/console should be tty0 if graphics are working, CONFIG_VT_CONSOLE
+is enabled and no explicit console argument is given in the kernel
+commandline.
 
-Did I mention that alloc_percpu uses:
+However, I'm seeing different behaviour on systems with SPCR (as in QEMU
+aarch64 virtual machines) and/or a device-tree chosen stdout-path node
+(as in most arm/arm64 devices). On these machines, depending on the
+console argument, the contents of the /proc/consoles file are:
 
-static void *pcpu_mem_zalloc(size_t size, gfp_t gfp)
-{
-        if (WARN_ON_ONCE(!slab_is_available()))
-                return NULL;
+                    |     "console=tty0"    |    (no console arg)   |
+  ------------------+-----------------------+-----------------------+
+  QEMU VM           | tty0     -WU (EC p  ) | ttyAMA0  -W- (EC   a) |
+  (w/ SPCR)         | ttyAMA0  -W- (E    a) |                       |
+  ------------------+-----------------------+-----------------------+
+  Chromebook Plus   | tty0     -WU (EC p  ) | ttyS2    -W- (EC p a) |
+  (w/ stdout-path)  |                       | tty0     -WU (E     ) |
+  ------------------+-----------------------+-----------------------+
+  Chromebook Plus   | tty0     -WU (EC p  ) | tty0     -WU (EC p  ) |
+  (w/o either)      |                       |                       |
+  ------------------+-----------------------+-----------------------+
 
-        if (size <= PAGE_SIZE)
-                return kzalloc(size, gfp);
-        else
-                return __vmalloc(size, gfp | __GFP_ZERO, PAGE_KERNEL);
-}
+This patchset tries to ensure that VT is preferred in those conditions
+even in the presence of firmware-mandated serial consoles. These should
+cleanly apply onto next-20200430.
 
-So yeah, it's vmalloc'd memory when size > PAGE_SIZE.
+More discussion due to or about the console confusion on ARM64:
+- My Debian bug report about the initramfs prompts [0]
+- Fedora test issue arising from ARM64 QEMU machines having SPCR [1]
+- Debian-installer discussion on what to do with multiple consoles [2]
 
-Thanks,
+[0] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=952452
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=1661288
+[2] https://lists.debian.org/debian-boot/2019/01/msg00184.html
 
-Mathieu
+Changes in v2:
+- Fix #elif to #else (Reported-by: kbuild test robot <lkp@intel.com>)
+- Refresh dmesg outputs with/without earlycon for next-20200430
+- Use the correct format when referencing a commit
 
+Alper Nebi Yasak (3):
+  printk: Add function to set console to preferred console's driver
+  vt: Set as preferred console when a non-dummy backend is bound
+  printk: Preset tty0 as a pseudo-preferred console
 
-
+ drivers/tty/vt/vt.c     |  7 +++++
+ include/linux/console.h |  1 +
+ kernel/printk/printk.c  | 68 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 76 insertions(+)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.26.2
+
