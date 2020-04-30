@@ -2,113 +2,174 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438D2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3018C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4B92063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255542;
-	bh=FkZ2zWP2/Oyz4STjhptqv0efeZOSnOKK3FTECYENSnQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMiVtN/FZDmFZxoWQkY3Ipvn/khHhGOQXBpkftTeZ1nQUE1JHiFVc8cMucuP/v15A
-	 BvmpiI+rc23WJxcNDiVhPCrnuPepZyXBMIit4Mz8E1bDLBIcQ3mDQ86d7WPFNEGHcv
-	 WY5TIXj5GpvMBdKe09FOh2wqusvdibughCLEabjU=
+	by mail.kernel.org (Postfix) with ESMTP id A2651206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLbsdDla"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgD3OFl (ORCPT
+        id S1729540AbgD3OFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728574AbgD3Nw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC914208D5;
-        Thu, 30 Apr 2020 13:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254779;
-        bh=FkZ2zWP2/Oyz4STjhptqv0efeZOSnOKK3FTECYENSnQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ipqwwLhxIoqdEzGr4dLLIPMtZUozEj3LC7j0sXLd3zaTTGN8LuRtVsR0iJ5vfEl9l
-         jDDX8B133jwJrctp6I6gIqg1jOdvltk9KIv2YYZODErNJMqxx4wXI9SRIPFWbAz6K9
-         i7YP48A02vBb7xgtRyXNKE6LbquqXqoq4zerOWOM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 36/57] net/mlx5e: Get the latest values from counters in switchdev mode
-Date:   Thu, 30 Apr 2020 09:51:57 -0400
-Message-Id: <20200430135218.20372-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 30 Apr 2020 10:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728965AbgD3OFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:05:46 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26BFC035494;
+        Thu, 30 Apr 2020 07:05:45 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id j14so1311724lfg.9;
+        Thu, 30 Apr 2020 07:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=j7xCCu9VuQu0HfGO2skjuS2R2CO/4T63UrJuAd/gmYA=;
+        b=TLbsdDlaakdtow4OFtE/0ekpvlLv6/nFuvtXG816d2BEb6ehtqhhfcTfqmyfiLLAoV
+         XIIB08dZb9nYnUs92wnmR0aI30oRu28+tydDM/O92gz49ePCRftk0BJDNoGteg4VZRxh
+         zP3TK3+aAzM69TejJWrr4FM8MsMEpK8C2ObWYORaNr0gLJbzL3af2HSUJmnNn9xBMxQr
+         ZGWx1zeI4aWGoIUoeDMkRk2S9vuguHOIO0wh3k9g+rSR+OBBVzru7VUK4lMM884vvFMT
+         /XzHWOY106qYz6/J01WULaqlEUqZKVvUXjNO84YYWkukT20vgmsTlVzZuvABb3hMDUVp
+         r1gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=j7xCCu9VuQu0HfGO2skjuS2R2CO/4T63UrJuAd/gmYA=;
+        b=Neh8l7SYQWfRM2M5p0+cjgTOlo50ykoY0ZrYm/h5fPICkY4w255fl6t69KdBSe6rbo
+         fOaxW8n2SqPOndaKhZywJrAL3WtHjQgeOT7kok9rajgL5JeI6wBWQdMNOErrRPo8ceVv
+         M6pi73GdLcvWYyaIEAF0jKQKOrkCxFAYZQTqAGDVikSYBA0Z6sk2y8v8WwibRclNzSJ1
+         PXMXquzeaiFgXggvN94B+aYKDweZNzMs8ladwslVnJnGMPWLeeIX91E+jv2ItARm7/1s
+         tWy9vHJmux20uES4ugVRjpetu4R+JSITKPMZEZx46xvP3+laS5KdSdt7fiHH5u3xsKds
+         GRSw==
+X-Gm-Message-State: AGi0PuYBcmz0YJ3sDP71EpBUKEaKjCz3MVgqN1pLf09+hxgV/VWlGOaw
+        0EHCtjXvj2n9C5vR+M9PbMY=
+X-Google-Smtp-Source: APiQypKMcejORSBVkOt2Y5RkeV20Y6iiGpHY/TlHCvnYcDxDGRMal4cEFSfQC4jjnhoPt1Wqp4Da/w==
+X-Received: by 2002:a05:6512:686:: with SMTP id t6mr2301585lfe.163.1588255542790;
+        Thu, 30 Apr 2020 07:05:42 -0700 (PDT)
+Received: from e123311-lin.cambridge.arm.com (static-91-225-135-18.devs.futuro.pl. [91.225.135.18])
+        by smtp.gmail.com with ESMTPSA id h24sm5034839lji.99.2020.04.30.07.05.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Apr 2020 07:05:42 -0700 (PDT)
+From:   Michal Orzel <michalorzel.eng@gmail.com>
+To:     jdelvare@suse.com, linux@roeck-us.net
+Cc:     Michal Orzel <michalorzel.eng@gmail.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix all coding-style warnings on lm75 driver
+Date:   Thu, 30 Apr 2020 16:05:34 +0200
+Message-Id: <1588255534-28073-1-git-send-email-michalorzel.eng@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjunz@mellanox.com>
+Check/fix all warnings generated by checkpatch.pl script on LM75 driver.
 
-[ Upstream commit dcdf4ce0ff4ba206fc362e149c8ae81d6a2f849c ]
-
-In the switchdev mode, when running "cat
-/sys/class/net/NIC/statistics/tx_packets", the ppcnt register is
-accessed to get the latest values. But currently this command can
-not get the correct values from ppcnt.
-
-From firmware manual, before getting the 802_3 counters, the 802_3
-data layout should be set to the ppcnt register.
-
-When the command "cat /sys/class/net/NIC/statistics/tx_packets" is
-run, before updating 802_3 data layout with ppcnt register, the
-monitor counters are tested. The test result will decide the
-802_3 data layout is updated or not.
-
-Actually the monitor counters do not support to monitor rx/tx
-stats of 802_3 in switchdev mode. So the rx/tx counters change
-will not trigger monitor counters. So the 802_3 data layout will
-not be updated in ppcnt register. Finally this command can not get
-the latest values from ppcnt register with 802_3 data layout.
-
-Fixes: 5c7e8bbb0257 ("net/mlx5e: Use monitor counters for update stats")
-Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/hwmon/lm75.c |  8 ++++++--
+ drivers/hwmon/lm75.h | 31 +++++++++++++++++--------------
+ 2 files changed, 23 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 88ea279c29bb8..0e340893ca002 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3579,7 +3579,12 @@ mlx5e_get_stats(struct net_device *dev, struct rtnl_link_stats64 *stats)
- 	struct mlx5e_vport_stats *vstats = &priv->stats.vport;
- 	struct mlx5e_pport_stats *pstats = &priv->stats.pport;
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index 5e63922..ba0be48 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -797,8 +797,10 @@ static int lm75_detect(struct i2c_client *new_client,
  
--	if (!mlx5e_monitor_counter_supported(priv)) {
-+	/* In switchdev mode, monitor counters doesn't monitor
-+	 * rx/tx stats of 802_3. The update stats mechanism
-+	 * should keep the 802_3 layout counters updated
+ 	/* First check for LM75A */
+ 	if (i2c_smbus_read_byte_data(new_client, 7) == LM75A_ID) {
+-		/* LM75A returns 0xff on unused registers so
+-		   just to be sure we check for that too. */
++		/*
++		 * LM75A returns 0xff on unused registers so
++		 * just to be sure we check for that too.
++		 */
+ 		if (i2c_smbus_read_byte_data(new_client, 4) != 0xff
+ 		 || i2c_smbus_read_byte_data(new_client, 5) != 0xff
+ 		 || i2c_smbus_read_byte_data(new_client, 6) != 0xff)
+@@ -849,6 +851,7 @@ static int lm75_suspend(struct device *dev)
+ {
+ 	int status;
+ 	struct i2c_client *client = to_i2c_client(dev);
++
+ 	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
+ 	if (status < 0) {
+ 		dev_dbg(&client->dev, "Can't read config? %d\n", status);
+@@ -863,6 +866,7 @@ static int lm75_resume(struct device *dev)
+ {
+ 	int status;
+ 	struct i2c_client *client = to_i2c_client(dev);
++
+ 	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
+ 	if (status < 0) {
+ 		dev_dbg(&client->dev, "Can't read config? %d\n", status);
+diff --git a/drivers/hwmon/lm75.h b/drivers/hwmon/lm75.h
+index b614e63..a398171 100644
+--- a/drivers/hwmon/lm75.h
++++ b/drivers/hwmon/lm75.h
+@@ -1,17 +1,15 @@
+ /* SPDX-License-Identifier: GPL-2.0-or-later */
+ /*
+-    lm75.h - Part of lm_sensors, Linux kernel modules for hardware
+-	      monitoring
+-    Copyright (c) 2003 Mark M. Hoffman <mhoffman@lightlink.com>
+-
+-*/
++ * lm75.h - Part of lm_sensors, Linux kernel modules for hardware monitoring
++ * Copyright (c) 2003 Mark M. Hoffman <mhoffman@lightlink.com>
++ */
+ 
+ /*
+-    This file contains common code for encoding/decoding LM75 type
+-    temperature readings, which are emulated by many of the chips
+-    we support.  As the user is unlikely to load more than one driver
+-    which contains this code, we don't worry about the wasted space.
+-*/
++ * This file contains common code for encoding/decoding LM75 type
++ * temperature readings, which are emulated by many of the chips
++ * we support.  As the user is unlikely to load more than one driver
++ * which contains this code, we don't worry about the wasted space.
++ */
+ 
+ #include <linux/kernel.h>
+ 
+@@ -20,18 +18,23 @@
+ #define LM75_TEMP_MAX 125000
+ #define LM75_SHUTDOWN 0x01
+ 
+-/* TEMP: 0.001C/bit (-55C to +125C)
+-   REG: (0.5C/bit, two's complement) << 7 */
++/*
++ * TEMP: 0.001C/bit (-55C to +125C)
++ * REG: (0.5C/bit, two's complement) << 7
++ */
+ static inline u16 LM75_TEMP_TO_REG(long temp)
+ {
+ 	int ntemp = clamp_val(temp, LM75_TEMP_MIN, LM75_TEMP_MAX);
++
+ 	ntemp += (ntemp < 0 ? -250 : 250);
+ 	return (u16)((ntemp / 500) << 7);
+ }
+ 
+ static inline int LM75_TEMP_FROM_REG(u16 reg)
+ {
+-	/* use integer division instead of equivalent right shift to
+-	   guarantee arithmetic shift and preserve the sign */
++	/*
++	 * use integer division instead of equivalent right shift to
++	 * guarantee arithmetic shift and preserve the sign
 +	 */
-+	if (!mlx5e_monitor_counter_supported(priv) ||
-+	    mlx5e_is_uplink_rep(priv)) {
- 		/* update HW stats in background for next time */
- 		mlx5e_queue_update_stats(priv);
- 	}
+ 	return ((s16)reg / 128) * 500;
+ }
 -- 
-2.20.1
+2.7.4
 
