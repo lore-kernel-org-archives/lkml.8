@@ -2,104 +2,95 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD80C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739CDC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50BFF20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5473D20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="kcXfTlk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgD3PlW (ORCPT
+        id S1727114AbgD3PlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:41:22 -0400
-Received: from smtprelay0083.hostedemail.com ([216.40.44.83]:37512 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726346AbgD3PlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:41:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id DCA6C18224D6A;
-        Thu, 30 Apr 2020 15:41:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: thing45_28b1dc48c5410
-X-Filterd-Recvd-Size: 2578
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 30 Apr 2020 15:41:19 +0000 (UTC)
-Message-ID: <30efd2838a876029600806e9b53e3284ccabc88d.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: add support to check 'Fixes:' tag format
-From:   Joe Perches <joe@perches.com>
-To:     Wang YanQing <udknight@gmail.com>,
-        Markus Elfring <Markus.Elfring@web.de>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>
-Date:   Thu, 30 Apr 2020 08:41:18 -0700
-In-Reply-To: <20200430125614.GA30691@udknight>
-References: <20200429163645.GA13810@udknight>
-         <4112ab7e-1f06-d880-e471-084c78bc84d4@web.de>
-         <20200430125614.GA30691@udknight>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 30 Apr 2020 11:41:24 -0400
+Received: from mx.blih.net ([212.83.155.74]:28049 "EHLO mx.blih.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726745AbgD3PlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:41:23 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 11:41:21 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bidouilliste.com;
+        s=mx; t=1588260880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=siSc+wVCx92pO4nia33BDv08pe+zzvG5bnkde4Ef3hA=;
+        b=kcXfTlk8jeWIUSRjFrlM1hLlaNQ+UzY1clgxUrwxs77nW0P4bPIpQOiyS/Gq0/Q/ofMfZW
+        jSYNHrh0No9Ku3Og660SQ+pU3e4h5FM4vb2Zvkm1qylrZxk2pH/C28ywxDzg199NuECgTv
+        5oBUbiuhidnkf8U/cMVTT4Iie8xbGjI=
+Received: from tails.home (lfbn-idf2-1-900-181.w86-238.abo.wanadoo.fr [86.238.131.181])
+        by mx.blih.net (OpenSMTPD) with ESMTPSA id 9728d90d (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Thu, 30 Apr 2020 15:34:40 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 17:34:40 +0200
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Emmanuel Vadot <manu@freebsd.org>,
+        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+        airlied@linux.ie, daniel@ffwll.ch, matthew.d.roper@intel.com,
+        noralf@tronnes.org, kraxel@redhat.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND 2/2] drm/format_helper: Dual licence the header in
+ GPL-2 and MIT
+Message-Id: <20200430173440.c006bbf57e70671dc4c324db@bidouilliste.com>
+In-Reply-To: <20200430150634.42zna3xwhj4cwsnd@gilmour.lan>
+References: <20200430145537.31474-1-manu@FreeBSD.org>
+        <20200430150634.42zna3xwhj4cwsnd@gilmour.lan>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-30 at 20:56 +0800, Wang YanQing wrote:
-> On Wed, Apr 29, 2020 at 07:40:21PM +0200, Markus Elfring wrote:
-> > > “...
-> > > Do not split the tag across multiple
-> > > lines, tags are exempt from the "wrap at 75 columns" rule in order to simplify
-> > > parsing scripts
-> > > ...”
-> > 
-> > Why do you not like the reformatting of the quotation so far
-> > (if such change descriptions should cope also with specific
-> > Unicode characters)?
-> > 
-> > “…
-> > Do not split the tag across multiple lines, tags are exempt from
-> > the "wrap at 75 columns" rule in order to simplify parsing scripts.
-> > …”
-> > 
-> > 
-> 
-> Sigh. I will fix it, but I want to hear from Joe Perches before
-> next patch version.
+On Thu, 30 Apr 2020 17:06:34 +0200
+Maxime Ripard <maxime@cerno.tech> wrote:
 
-Hello YanQing.
+> On Thu, Apr 30, 2020 at 04:55:37PM +0200, Emmanuel Vadot wrote:
+> > Source file was dual licenced but the header was omitted, fix that.
+> > Contributors for this file are:
+> > Noralf Tr=F8nnes <noralf@tronnes.org>
+> > Gerd Hoffmann <kraxel@redhat.com>
+> > Thomas Gleixner <tglx@linutronix.de>
+> >=20
+> > Acked-by: Gerd Hoffmann <kraxel@redhat.com>
+> > Acked-by: Noralf Tr=F8nnes <noralf@tronnes.org>
+> > Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
+> > ---
+> >  include/drm/drm_format_helper.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_h=
+elper.h
+> > index ac220aa1a245..7c5d4ffb2af2 100644
+> > --- a/include/drm/drm_format_helper.h
+> > +++ b/include/drm/drm_format_helper.h
+> > @@ -1,4 +1,4 @@
+> > -/* SPDX-License-Identifier: GPL-2.0-or-later */
+> > +/* SPDX-License-Identifier: GPL-2.0 or MIT */
+>=20
+> You changed the GPL license there, was that intentional?
+>=20
+> Maxime
 
-Just ignore Markus' replies here, he's well meaning
-but perhaps overly focused on trying to impose formal,
-but somewhat antique grammar and word choice uses that
-aren't particularly important for review.
+ No sorry, fixed in v2.
+ Thanks for noticing that.
 
-The most common variant I see here is someone writes
-
-Fixes: SHA1 ("Truncated commit description...")
-
-to apparently avoid a long line.
-
-btw:
-
-you can test your patch using checkpatch and --git like:
-
-$ git log -10000 --no-merges --grep="Fixes:" --format=%H | \
-  while read commit ; do \
-    ./scripts/checkpatch.pl --git $commit --types=GIT_COMMIT_ID --quiet --nosummary; \
-  done
-
-You could filter that either by modifying the patch
-changing to "GIT_COMMIT_ID_TEST" and changing to
-types=GIT_COMMIT_ID_TEST just for Fixes or maybe
-use another grep like grep -B3 -A3 "Fixes:" -i
-
-
+--=20
+Emmanuel Vadot <manu@bidouilliste.com>
