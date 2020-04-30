@@ -2,274 +2,159 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9B5C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC5C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A45620838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6F820838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VfgVR9kK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="m5u2SMwr";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="K9WZthbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD3HUn (ORCPT
+        id S1726476AbgD3HXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:20:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726412AbgD3HUn (ORCPT
+        Thu, 30 Apr 2020 03:23:45 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:36879 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgD3HXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:20:43 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CE7C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:20:42 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id b2so5346860ljp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:20:42 -0700 (PDT)
+        Thu, 30 Apr 2020 03:23:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1588231424; x=1619767424;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=SYzIB14lq0Pb8XunS2W8dGcsb0BTFu/Ozu1bSx7rvo4=;
+  b=m5u2SMwrnDc+SWcG62LOzoXVcJj/mJt7Q10A7kniyjOBIfo2809M0wCP
+   HK16M3yEhhV4QB90MeGyluiSjba9SZEgXgxgCcgDmeAcfLzRwg81SheOx
+   M8fJ/+BSSgzTtrrhQ7jl3JEjGrjS+nBvS7xyOz85OoCv8ImLiNYcaUN+q
+   uRZOpYLNbG/q3puznmyxyhJaom0m47bw6gQ9IaWF90uknHY9H0mCGBMYS
+   9ANu7IDGHnI2FKloiSyjV9K2YY8ynV/s/fmBcdKJXKg+8Jo/zM2tBSjPi
+   goPyAVmtHSaQ1eG51soyyOLZhlhX45K7x8JU69V6tA15b1A/5FaHPQ+mt
+   A==;
+IronPort-SDR: YNof1L6vEKaQokPb3xr7mHr/3cySRH4r1K0cAIHe7KNS8CWzHWpvyYau3yR0pNYeBXSHQI6bm4
+ yQuJq5RcqeDjseuELaZAbgdV5kxxRfCmEdQzo5jDP6J+ZnsQiiIN9egFmBNOduEVPXlR25aO22
+ M8FjR4LaSOx6kBF8rxDRZHKuRq2CS2NPWImab5flhIqYQQmvqLCrwXBBFIUyGsju3IoAUcmNQv
+ 1Xwh0T5RX8gmPtOZAov2Cw+hHLQ4Rc7fsAoSZgHm/NYH3hWL4Y6xRD41ChsLrYjnFb/idC+QB0
+ PSE=
+X-IronPort-AV: E=Sophos;i="5.73,334,1583164800"; 
+   d="scan'208";a="137977886"
+Received: from mail-cys01nam02lp2051.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.51])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2020 15:23:43 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=INEYla8KfzpybhAKI5VpoVngbBL9pYatxSwKyimIRTMa6hhSi/6/eZ5+SMLstfXsF5pBqHrEgbPGIhQUTjjJmpSk+NiC2GrqPXAJSK5z/se3a/zen8/Z64J/4bUOjXg4cMztQfn/S3bXsbWmKURJR4zAUcD7YTcDbpUCGBPFu5uRuCv3TTf7MxP/hXRaiiMri8TTi9ZEOeEQ9CQ5dWzjMJLHydAqbBTMK8c3+tsRvVP9AFWOGZtoXJ21JOVogHDaTRXtidXlsJObM2YLf9dHda+QIjppfdJHGuL3SBIcJ5MG9P6xu08QgJgrg36YewuR2i/A2LusUvqSQMqowOeyTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SYzIB14lq0Pb8XunS2W8dGcsb0BTFu/Ozu1bSx7rvo4=;
+ b=kpfyp339axEKeLUEt63rf8vBOHzvnwhwQVyKNtp8lxXqQcBRfs7RR6Ma5ng0W4X1Pub4XRqhdSJJ79bALjHYiegEJ+TLp+BsXdavvxL9T7HgJZfS7+1uOl9DCkODCRZIuyPxFDd6uZE8hPyUWCmkqzqpFEliWeCh1TxHui0kYYNO6JsouWF4mpaRqsj4EcSrjXHgI5gTJo/QnsOM5eZnef7G5244a0MOfqCR2GLmEeqGB5+vFjNgF8bUdqCv5pRmlAQj8V83UXS4t1nr7u5o4hPHX63zlbl2puIvNQiWoW20ZGBk42+xvalxRId+rE7E42dWMiwh1TQY6Bt8kEcZMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sZr1+3vRqE2FhkSDX5CtrXLEsRTbr/eXU3dnq5Mc93U=;
-        b=VfgVR9kKpczFIeN8+LnvP75Wr/OHUdd2lCZEgYm3svO+8+riMTwzBRxO3Cq9J/TmLy
-         ChH42dOaLXAXEjr5NC5/1e8eDGNWYtF6C0jm+iiDKuZkbZQPWzgw7D3QEc//FdP1Jsf6
-         4666lNVgzk7UM9nzTjLN0iJ+ibaKAS3FF48QAuNBMS7GvyxtQqRiGa42vUoO1TIWK4gT
-         iQkBiiMKb0BIJStddAjAiqa0Z/KOZSANm/AiLNWfKVkVCqHX9I5BMPlA6jCtli3TGAkr
-         brC3qTzapu8AcZ/0uZv78PL84nfqYZkh7DV5N5duQi/Y91l4Mxab5cIqLrjZh7Z4JuFw
-         +0sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sZr1+3vRqE2FhkSDX5CtrXLEsRTbr/eXU3dnq5Mc93U=;
-        b=feEN1ShRp2APWRbNFI58X4RJs8/NERZUQVqKlAmQrHmnuZTks/yGJeyoPRuuC8YUv0
-         g04HsRukotB1A4hxF8HLS7vgpbUqnSfakAFbIq+mOIOvz3oOYWqWac8l6Kf6+5EpVzqM
-         0ff0hUvqdoeoXdLYuViG71FmM6Zpvlq+Ckp9z40TmU9ZTVN7R9j6Xj0f+5hs85ri9p0L
-         OGcJEvR4CgdQiZ36Hg1lGK26ITUrAyvEpfNdH/THHU1vxTYEnxz6/P406RcUirpcStSn
-         tI9GyHrGLDm/GWYee90w9jpYcM36wCwXc8qcaoxsthC/RK1ZxBWNQLSB2/3B02IKFU2M
-         6NFA==
-X-Gm-Message-State: AGi0PuYogNDDu+67x0ffKV/fzrqFkLDHWQ37uOy7Ae8r6n0EB+Ps6GN8
-        sFC4390azTsfeFl+8JY1OHVp+ODH+0RV9z/RjNQQdg==
-X-Google-Smtp-Source: APiQypK4Y04DV3XhNEdb66Dsm96rNOrnM5vyzC6FyLQ9pLxPdGP3mKpGyotMazaX8TgXg6B+lWsEIipHmTHJXN1XPRQ=
-X-Received: by 2002:a2e:a365:: with SMTP id i5mr1242958ljn.293.1588231241153;
- Thu, 30 Apr 2020 00:20:41 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SYzIB14lq0Pb8XunS2W8dGcsb0BTFu/Ozu1bSx7rvo4=;
+ b=K9WZthbMWq0E7AKB6i6n89ZgLwzS0cBQCAPTeZgimOm8YRDtwTv5suAzlk5jnTbFmyXfp96uC5O2wQg5JGj+aPExpF31soOATyZAHDCefJhfCfA7iknPTyHXfZN/fEgLs90y268Ew0kfdpEdhA39FLO0bsvjvoIvy6NCc8AyK98=
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com (2603:10b6:a03:14::14)
+ by BYAPR04MB3973.namprd04.prod.outlook.com (2603:10b6:a02:b8::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
+ 2020 07:23:40 +0000
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1]) by BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1%6]) with mapi id 15.20.2958.019; Thu, 30 Apr 2020
+ 07:23:40 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Bean Huo <huobean@gmail.com>, Bart Van Assche <bvanassche@acm.org>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
+ driver
+Thread-Topic: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
+ driver
+Thread-Index: AQHWFC4dSn/DnOroKESaR41iHFfp4qiF2/SAgAK+MnCAAPi+kIAAmSYAgAJemjCAAWl4gIAASG8QgABD6oCAAtOb8A==
+Date:   Thu, 30 Apr 2020 07:23:40 +0000
+Message-ID: <BYAPR04MB4629393BA60AF5E5898FB304FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <20200416203126.1210-1-beanhuo@micron.com>
+         <20200416203126.1210-6-beanhuo@micron.com>
+         <8921adc3-0c1e-eb16-4a22-1a2a583fc8b3@acm.org>
+         <SN6PR04MB4640851C163648C54EB274C5FCD00@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <SN6PR04MB4640ABB2BB5D2CE5AA2C3778FCD10@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <12e8ad61-caa4-3d28-c1d7-febe99a488fb@acm.org>
+         <SN6PR04MB4640A33BBE0CD58107D7FC69FCAF0@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <b2584ba8-3542-1aae-5802-e59d218e1553@acm.org>
+         <SN6PR04MB464009AFAC8F7EFC04184826FCAC0@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <15eca4dd2ec8a4ba210ce0844e9f5027251fa6f2.camel@gmail.com>
+In-Reply-To: <15eca4dd2ec8a4ba210ce0844e9f5027251fa6f2.camel@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 485884c3-914a-49be-0f69-08d7ecd76811
+x-ms-traffictypediagnostic: BYAPR04MB3973:
+x-microsoft-antispam-prvs: <BYAPR04MB3973978233CFA5676FAE9F7CFCAA0@BYAPR04MB3973.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0389EDA07F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: x34asfkhK43XjfkAMV5oGFnd0b6HXIlFSj1ULzJnJe8Ex9iuc6CmOooFcPc186wSgNcoJ2SPhdNtD2MEmTON/P1ILVn9SrwA8xOpREgdaDMT4djjGk8P5rJUBCG3qFZ46AATA+s4zEwxxIm+5OwTTYO40gNv9vSYjx64u+mYUO8xwtxeXxjWsmcIuSbz0cL7CP0l4i+NS2QMBEXH+bhRxgFqufJ1YF7vQ3JWzmjErTz1ief+jSIGljp5oJ8654vuak3uKJUkX9zB4JobOlXuckCOT+wDpfMWGait4LuVNnDbLeH7rYs5RpYZbO+MzjLD/SSe/NWd0qwiYdRifJdZGtcNSItbQnVj9r4SWcliPTKS+L92OELiQ/c4twTx4AKX5qWnwU/xBAmY477bNhq1/RbY9D1gy4/+yW1xj+LObgpsYbUlsKF1zCMiUmFyPQJRXYFeZ46DVq96VVA57o4nwVMMfny2D+LB8NcNm1QiVqA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4629.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(39860400002)(136003)(346002)(7416002)(6506007)(4326008)(186003)(26005)(52536014)(2906002)(71200400001)(316002)(54906003)(8936002)(86362001)(5660300002)(478600001)(66556008)(110136005)(33656002)(7696005)(55016002)(8676002)(9686003)(66446008)(66946007)(76116006)(66476007)(64756008)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 8GKEwZxF8fpJIziWN6wPYMx7HibcASHIWVVuJDmTnDOqwZaUK9GAqRk3xI0EBq7SWCJTq810d8jjULNEwsPTWc6qrPIrUVX0WuRO1dNQM1zEhIQN34xdSgCwdUFG9WlvP1icmInBVF3JgdjwCrwWY8CrMRURYvh67H+r9kx+OqXKDI1C1rqzrK+kVlegSWL7Gt+gLT95eIDunkvvH62pgHWClqQ3C4mHGEDX8qAtFdIkEcylr5WA2MlWEG9e5TAERQz3a/l7B+SQSuegRckhQSGYLyniS+fXTr4yrhZ6XozOP/vdCs0yqde2oJBkAR/EdwL9CV6rEKfSS7XD3mVFDtRkQu5BnLEU07k5cFq8TFtnWGBsyKGhSHZ2vkVNvyqtDqli+M26kH4fG0fNmuyHZvRWk2uK1zH0+5/FW4OnFPAz6MAhHE5W1+aNjT6dZ6wIlJMzRTtmlkYPjvQViF70btBh/o+Q3oKhR4oh3i7t4x4tmfFu1C/ptmajYcTyaI5b6xcCJ9p+c7bDnLwtRDI7UY5NSWaJXRFLyjQcGWkg2kD7fPu1GouOz6wr87E9XzDTncH0vl0Rb7lP8jrPerIpKY9sByZOIfCCVsgIQerFs7/Vvz1s9JSlOrM6O49Jbmh2KnGae+ZPh/GPt7O4QzTi5msLGXGyfH7g8ghnafvFvxDY94Rj699SuBYxiyUC0Txhwpw8px2oh5ZDGx0ueWk9Ob4P/nwDIp4BChgJQ2avBfppYYVnZZKVYidPrjol3jTO5nwu5Cjxt8EmYDngGSGEYYEmgE3MOGKFIJsCgTif1S8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1587726554-32018-1-git-send-email-sumit.garg@linaro.org>
- <1587726554-32018-3-git-send-email-sumit.garg@linaro.org> <20200425112950.3a4815b6@why>
- <6fd3d96181ec53f735ef1b6a79d28da1@kernel.org> <CAFA6WYPNNNZeX5zpadayfiZ7P_mHmiREpUd5LZ3Jp+TjGVqoEw@mail.gmail.com>
- <ac57cb4bbb6507ee98f199d68a514503@kernel.org>
-In-Reply-To: <ac57cb4bbb6507ee98f199d68a514503@kernel.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 30 Apr 2020 12:50:28 +0530
-Message-ID: <CAFA6WYMheJxeKVC_YWN9owNJhcWTBsaOCvZXxq=GVj5ROJ0cvg@mail.gmail.com>
-Subject: Re: [RFC Patch v1 2/4] irqchip/gic-v3: Add support to handle SGI as
- pseudo NMI
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, julien.thierry.kdev@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 485884c3-914a-49be-0f69-08d7ecd76811
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 07:23:40.3037
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b7TDssO+F7MDbB4qpo5tkpD3KS4iiJ6+3xop4JUzoLi0XIeqmjPJ7xhffmoEsJaKB1KNKb8N/5dqlBgPL0GnCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3973
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On Wed, 29 Apr 2020 at 13:53, Marc Zyngier <maz@kernel.org> wrote:
->
-> Hi Sumit,
->
-> On 2020-04-28 15:11, Sumit Garg wrote:
-> > Hi Marc,
-> >
-> > Thanks for your comments and apologies for my delayed response as I
-> > was exploring ideas that you have shared.
-> >
-> > On Sat, 25 Apr 2020 at 20:02, Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2020-04-25 11:29, Marc Zyngier wrote:
-> >> > On Fri, 24 Apr 2020 16:39:12 +0530
-> >> > Sumit Garg <sumit.garg@linaro.org> wrote:
-> >> >
-> >> > Hi Sumit,
-> >> >
-> >> >> With pseudo NMIs enabled, interrupt controller can be configured to
-> >> >> deliver SGI as a pseudo NMI. So add corresponding handling for SGIs.
-> >> >>
-> >> >> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> >> >> ---
-> >> >>  drivers/irqchip/irq-gic-v3.c | 22 +++++++++++++++++-----
-> >> >>  1 file changed, 17 insertions(+), 5 deletions(-)
-> >> >>
-> >> >> diff --git a/drivers/irqchip/irq-gic-v3.c
-> >> >> b/drivers/irqchip/irq-gic-v3.c
-> >> >> index d7006ef..be361bf 100644
-> >> >> --- a/drivers/irqchip/irq-gic-v3.c
-> >> >> +++ b/drivers/irqchip/irq-gic-v3.c
-> >> >> @@ -609,17 +609,29 @@ static inline void gic_handle_nmi(u32 irqnr,
-> >> >> struct pt_regs *regs)
-> >> >>      if (irqs_enabled)
-> >> >>              nmi_enter();
-> >> >>
-> >> >> -    if (static_branch_likely(&supports_deactivate_key))
-> >> >> -            gic_write_eoir(irqnr);
-> >> >>      /*
-> >> >>       * Leave the PSR.I bit set to prevent other NMIs to be
-> >> >>       * received while handling this one.
-> >> >>       * PSR.I will be restored when we ERET to the
-> >> >>       * interrupted context.
-> >> >>       */
-> >> >> -    err = handle_domain_nmi(gic_data.domain, irqnr, regs);
-> >> >> -    if (err)
-> >> >> -            gic_deactivate_unhandled(irqnr);
-> >> >> +    if (likely(irqnr > 15)) {
-> >> >> +            if (static_branch_likely(&supports_deactivate_key))
-> >> >> +                    gic_write_eoir(irqnr);
-> >> >> +
-> >> >> +            err = handle_domain_nmi(gic_data.domain, irqnr, regs);
-> >> >> +            if (err)
-> >> >> +                    gic_deactivate_unhandled(irqnr);
-> >> >> +    } else {
-> >> >> +            gic_write_eoir(irqnr);
-> >> >> +            if (static_branch_likely(&supports_deactivate_key))
-> >> >> +                    gic_write_dir(irqnr);
-> >> >> +#ifdef CONFIG_SMP
-> >> >> +            handle_IPI(irqnr, regs);
-> >> >> +#else
-> >> >> +            WARN_ONCE(true, "Unexpected SGI received!\n");
-> >> >> +#endif
-> >> >> +    }
-> >> >>
-> >> >>      if (irqs_enabled)
-> >> >>              nmi_exit();
-> >> >
-> >> > If there is one thing I would like to avoid, it is to add more ugly
-> >> > hacks to the way we handle SGIs. There is very little reason why SGIs
-> >> > should be handled differently from all other interrupts. They have the
-> >> > same properties, and it is only because of the 32bit legacy that we
-> >> > deal
-> >> > with them in such a cumbersome way. Nothing that we cannot fix though.
-> >> >
-> >> > What I would really like to see is first a conversion of the SGIs to
-> >> > normal, full fat interrupts. These interrupts can then be configured as
-> >> > NMI using the normal API.
-> >> >
-> >> > I think Julien had something along these lines (or was that limited to
-> >> > the PMU?). Otherwise, I'll happily help you with that.
-> >>
-> >> OK, to give you an idea of what I am after, here's a small series[1]
-> >> that
-> >> can be used as a base (it has been booted exactly *once* on a model,
-> >> and
-> >> is thus absolutely perfect ;-).
-> >
-> > Thanks for this series. I have re-based my patch-set on top of this
-> > series [1] and just dropped this patch #2. It works fine for me.
->
-> I just had a look.
->
-> "irqchip/gic-v3: Enable arch specific IPI as pseudo NMI" is still done
-> the wrong way, I'm afraid. You directly poke into the GIC configuration,
-> which isn't acceptable, as you leave the rest of the kernel completely
-> unaware that this is a NMI. You should make the interrupt a NMI as it
-> is being configured in gic_smp_init(), calling request_nmi() at this
-> stage.
-
-Sure, I will try to follow your suggestion. But I think it's better to
-first generalize the base IPI allocation scheme.
-
->
-> >>
-> >> There is still a bit of work to be able to actually request a SGI
-> >> (they
-> >> are hard-wired as chained interrupts so far, as this otherwise changes
-> >> the output of /proc/interrupts, among other things), but you will
-> >> hopefully see what I'm aiming for.
-> >
-> > I was exploring this idea: "request a SGI". I guess here you meant to
-> > request a new SGI as a normal NMI/IRQ via common APIs such as
-> > request_percpu_nmi() or request_percpu_irq() rather than statically
-> > adding a new IPI as per this patch [2], correct? If yes, then I have
-> > following follow up queries:
-> >
-> > 1. Do you envision any drivers to use SGIs in a similar manner as they
-> > use SPIs or PPIs?
->
-> No. SGIs are already pretty much all allocated for the kernel's internal
-> needs and once we allocate an additional one for this KGDB feature,
-> we're out of non-secure SGIs. We could start a multiplexing scheme to
-> overcome this, but the kernel already has plenty of other mechanisms
-> for internal communication. After all, why would you need anything more
-> than smp_call_function()?
->
-> The single use case I can imagine is that you'd want to signal a CPU
-> that isn't running Linux. This would require a lot more work than
-> just an interrupt, and is out of scope for the time being.
-
-Thanks for the clarification.
-
->
-> > 2. How do you envision allocation of SGIs as currently they are
-> > hardcoded in an arch specific file (like arch/arm64/kernel/smp.c
-> > +794)?
->
-> What I would like is for the arch code to request these interrupts as
-> normal interrupts, for which there is one problem to solve: how do you
-> find out about the Linux IRQ number for a given IPI. Or rather, how
-> do you get rid of the requirement to have IPI numbers at all and just
-> say "give me a per-cpu interrupt that I can use as an IPI, and by the
-> way here's the handler you can call".
-
-I think what you are looking for here is something that could be
-sufficed via enabling "CONFIG_GENERIC_IRQ_IPI" framework for arm64/arm
-architectures. It's currently used for mips architecture. Looking at
-its implementation, I think it should be possible to hook up SGIs
-under new IPI irq_domain for GICv2/v3.
-
-So with this framework we should be able to dynamically allocate IPIs
-and use common APIs such as request_irq()/request_nmi() to tell IPI
-specific handlers.
-
-If this approach looks sane to you then I can start working on a PoC
-implementation for arm64.
-
->
-> And I insist: this is only for the arch code. Nothing else.
->
-
-Makes sense.
-
-> > 3. AFAIK, the major difference among SGIs and SPIs or PPIs is the
-> > trigger method where SGIs are software triggered and SPIs or PPIs are
-> > hardware triggered. And I couldn't find a generalized method across
-> > architectures to invoke SGIs. So how do you envision drivers to invoke
-> > SGIs in an architecture agnostic manner?
->
-> Well, SGIs are not architecture agnostic. They are fundamentally part of
-> the GIC architecture, which only exists for the two ARM architectures.
->
-> SGIs are not a general purpose mechanism. IPIs are, and we have services
-> on top of IPIs, such as invoking a function on a remote CPU. What else
-> do you need?
-
-Yeah that was mine understanding as well. But I was just clarifying if
-you have any further use-cases in mind for IPIs.
-
--Sunit
-
->
-> Thanks,
->
->           M.
-> --
-> Jazz is not dead. It just smells funny...
+SGkgQmVhbiwNCg0KPiA+IEJ5IG5vdyB3ZSd2ZSByZWFkIHRoZSBkZXZpY2UgSFBCIGNvbmZpZ3Vy
+YXRpb24sIGFuZCB3ZSBhcmUgcmVhZHkgIHRvDQo+ID4gYXR0YWNoIGEgc2NzaSBkZXZpY2UgdG8g
+b3VyIEhQQiBsdW5zLiAgQSBwZXJmZWN0IHRpbWluZyBtaWdodCBiZQ0KPiA+IHdoaWxlDQo+ID4g
+c2NzaSBpcyBwZXJmb3JtaW5nIGl0cyAuc2xhdmVfYWxsb2MoKSBvciAuc2xhdmVfY29uZmlndXJl
+KCkuDQo+ID4NCj4gDQo+IGhpLCBBdnJpDQo+IFRoYXQgbWVhbnMgSFBCIG1lbW9yeSBhbGxvY2F0
+aW9uIGRvbmUgaW4gLnNjYW5fZmluaXNoZWQoKSA/DQpUaGUgc3BlY2lmaWNzIG9mIHRoaXMgZmVh
+dHVyZSBhcmUgeWV0IHRvIGJlIGRldGVybWluZWQuDQoNCkFtb25nIHRob3NlLCB5ZXMgLSB3ZSBu
+ZWVkIHRvIGRpc2N1c3MgaG93IHRvIGhhbmRsZSB0aGUgbWVtb3J5IGFsbG9jYXRpb24uDQpTdGF0
+aWNhbGx5IGFsbG9jYXRpbmcgdGhlIHJlcXVpcmVkIGNhY2hlIGZvciB0aGUgZW50aXJlIG1heC1h
+Y3RpdmUtc3VicmVnaW9ucywNCldoaWNoIG1heSBzdW0tdXAgdG8gYSBodW5kcmVkcyBvZiBNQiwg
+aGFzIGl0cyBvYnZpb3VzIGRvd25zaXplLiANCldlIG5lZWQgdG8gZGlzY3VzcyB0aGlzIGZ1cnRo
+ZXIuDQoNCj4gYW5kIHNkX2luaXRfY29tbWFuZCgpIG5lZWRzIHRvIGNoYW5nZSBhcyB3ZWxsLCBh
+ZGQgYSBuZXcgcmVxdWVzdA0KPiB0eXBlIFJFUV9PUF9IUEJfUkVBRD8NCkFnYWluLCB0aGlzIGlz
+IGFuIGltcGxlbWVudGF0aW9uIGlzc3VlLg0KV2UgbmVlZCB0byBmaWd1cmUgaXQgb3V0IGluIHRo
+ZSBzZXF1ZWwuDQpFLmcuIHdlIG1pZ2h0IHdhbnQgdG8gbWFrZSB1c2Ugb2YgdGhlIGNvbWJpbmF0
+aW9uIG9mIGEgdmFsaWQgaGFuZGxlciBhbmQgYmxrX29wX2lzX3ByaXZhdGUuDQoNCkkgdGhpbmsg
+aXQgd291bGQgYmUgbW9yZSBjb25zdHJ1Y3RpdmUsIGlmIHdlIGNhbiBkZWNpZGUgZmlyc3Qgb24g
+dGhlIG1vZHVsZSBsYXlvdXQsDQpBbmQgZmlndXJlIG91dCB0aGUgb3RoZXIgZGV0YWlscyBhcyB3
+ZSBnbz8NCg0KQ2FuIHlvdSBwcm92aWRlIHRoZSBwcm9zIGFuZCBjb25zIGZvciB0aGUgU2Ftc3Vu
+ZyBhcHByb2FjaCAtDQppbXBsZW1lbnRpbmcgYWxsIEhQQiBmdW5jdGlvbmFsaXRpZXMgdXNpbmcg
+YSBzaW5nbGUgTExEPw0KDQpUaGFua3MsDQpBdnJpDQoNCj4gDQo+IA0KPiBCZWFuDQo+IA0KDQo=
