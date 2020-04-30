@@ -2,45 +2,45 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2340C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501DCC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B12F32186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0872186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234037;
-	bh=kwMHrQRCUR0Xnjbf55cLJqGOENIDvbYB5y5ST/WRl6w=;
+	s=default; t=1588234044;
+	bh=2uk4vuo8OceUNZZViPFMJEfPFWL6CEM3o4lkAfUrGCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTTbF7sUSAICHKZE9fOH+VwIiJDlGhrrd/we5P0O3U1bdJC2T6JrShxab7HJCUXIs
-	 ngE4Qu206AP5akjO4MK1RliIdckqUoNsAtnEpV3a45fK1RdEC3PVUUv98cllKzH3uq
-	 zmjteA9VJuwwVzDnaCYBVoRII1mJIe6/vEpKwZKc=
+	b=QFWBASrG+jBeowiW1bm4Ymx8vmRFD3E83JrEFr1nN5tBYZqfM8bwzAXMc1qPOhC1r
+	 yi3NSUclV7VTYzbxP/HxLlUmQ1eLbojXRFUL9OMFPYnHJpx+MLJvtY/0qG7lgvQ4T/
+	 ESlglkkeY3Oc4MKhWQwZKLks+mMbg5pJZ4Jl88G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgD3IHQ (ORCPT
+        id S1727114AbgD3IHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51226 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbgD3IGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:06:49 -0400
+        id S1726906AbgD3IGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:06:47 -0400
 Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A47D72186A;
-        Thu, 30 Apr 2020 08:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828F621974;
+        Thu, 30 Apr 2020 08:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234008;
-        bh=kwMHrQRCUR0Xnjbf55cLJqGOENIDvbYB5y5ST/WRl6w=;
+        s=default; t=1588234006;
+        bh=2uk4vuo8OceUNZZViPFMJEfPFWL6CEM3o4lkAfUrGCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cn1xEq0YyV3o+vE/Xuar5Hm8tFbZ5uBt7y+LbKe1qe6T9tn95ytJUULutb3jxGAEm
-         CVnVs+VQNxhGdMf8OeDZFH9ozwQoJS6m2W37Ly3vsP+QHNE1joV2Ja5bX8YWuEXjKs
-         M7zDutva9fee7ChAlYVG33bcbpSm2be/Nn372Xgs=
+        b=IGaxNTLeS9yhWqzKvVjc2ESi38PzzhIq9ttgBe8qykNz2k7IXQkDDtofRL7t4MCS+
+         Yb27Ea/4lo1VxTzlvOJ+CUe6R/eVVALWyoOs0rArNa6S4w2aKrrf5sG5ZGhSy3Fqgk
+         t4XoQn7wt4UR+deuF4t+R3w+5GMlssS8jokbZmHY=
 Received: by pali.im (Postfix)
-        id DF46B7AD; Thu, 30 Apr 2020 10:06:46 +0200 (CEST)
+        id ACD857AD; Thu, 30 Apr 2020 10:06:44 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -56,9 +56,9 @@ To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 07/12] PCI: aardvark: Add PHY support
-Date:   Thu, 30 Apr 2020 10:06:20 +0200
-Message-Id: <20200430080625.26070-8-pali@kernel.org>
+Subject: [PATCH v4 05/12] PCI: aardvark: Issue PERST via GPIO
+Date:   Thu, 30 Apr 2020 10:06:18 +0200
+Message-Id: <20200430080625.26070-6-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
 References: <20200430080625.26070-1-pali@kernel.org>
@@ -70,149 +70,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+Add support for issuing PERST via GPIO specified in 'reset-gpios'
+property (as described in PCI device tree bindings).
 
-With recent proposed changes for U-Boot it is possible that bootloader
-won't initialize the PHY for this controller (currently the PHY is
-initialized regardless whether PCI is used in U-Boot, but with these
-proposed changes the PHY is initialized only on request).
+Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
+after reboot when PERST is not issued during driver initialization.
 
-Since the mvebu-a3700-comphy driver by Miquèl Raynal supports enabling
-PCIe PHY, and since Linux' functionality should be independent on what
-bootloader did, add code for enabling generic PHY if found in device OF
-node.
+If bootloader already enabled link training then issuing PERST has no
+effect for some buggy cards (e.g. Compex WLE900VX) and these cards are
+not detected. We therefore clear the LINK_TRAINING_EN register before.
 
-The mvebu-a3700-comphy driver does PHY powering via SMC calls to ARM
-Trusted Firmware. The corresponding code in ARM Trusted Firmware skips
-one register write which U-Boot does not: step 7 ("Enable TX"), see [1].
-Instead ARM Trusted Firmware expects PCIe driver to do this step,
-probably because the register is in PCIe controller address space,
-instead of PHY address space. We therefore add this step into the
-advk_pcie_setup_hw function.
+It was observed that Compex WLE900VX card needs to be in PERST reset
+for at least 10ms if bootloader enabled link training.
 
-[1] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/drivers/marvell/comphy/phy-comphy-3700.c?h=v2.3-rc2#n836
+Tested on Turris MOX.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Miquèl Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 69 +++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 43 ++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 8332c71d69fa..053ae6c19a3d 100644
+index e202f954eb84..2ecc79c03ade 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -16,6 +16,7 @@
- #include <linux/kernel.h>
- #include <linux/pci.h>
- #include <linux/init.h>
-+#include <linux/phy/phy.h>
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/delay.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+@@ -18,6 +19,7 @@
  #include <linux/platform_device.h>
  #include <linux/msi.h>
  #include <linux/of_address.h>
-@@ -104,6 +105,8 @@
- #define     PCIE_CORE_CTRL2_STRICT_ORDER_ENABLE	BIT(5)
- #define     PCIE_CORE_CTRL2_OB_WIN_ENABLE	BIT(6)
- #define     PCIE_CORE_CTRL2_MSI_ENABLE		BIT(10)
-+#define PCIE_CORE_REF_CLK_REG			(CONTROL_BASE_ADDR + 0x14)
-+#define     PCIE_CORE_REF_CLK_TX_ENABLE		BIT(1)
- #define PCIE_MSG_LOG_REG			(CONTROL_BASE_ADDR + 0x30)
- #define PCIE_ISR0_REG				(CONTROL_BASE_ADDR + 0x40)
- #define PCIE_MSG_PM_PME_MASK			BIT(7)
-@@ -207,6 +210,7 @@ struct advk_pcie {
++#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ 
+ #include "../pci.h"
+@@ -204,6 +206,7 @@ struct advk_pcie {
+ 	int root_bus_nr;
  	int link_gen;
  	struct pci_bridge_emul bridge;
- 	struct gpio_desc *reset_gpio;
-+	struct phy *phy;
++	struct gpio_desc *reset_gpio;
  };
  
  static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
-@@ -358,6 +362,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+@@ -330,10 +333,31 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
+ 	dev_err(dev, "link never came up\n");
+ }
  
- 	advk_pcie_issue_perst(pcie);
++static void advk_pcie_issue_perst(struct advk_pcie *pcie)
++{
++	u32 reg;
++
++	if (!pcie->reset_gpio)
++		return;
++
++	/* PERST does not work for some cards when link training is enabled */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg &= ~LINK_TRAINING_EN;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/* 10ms delay is needed for some cards */
++	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
++	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
++	usleep_range(10000, 11000);
++	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
++}
++
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
  
-+	/* Enable TX */
-+	reg = advk_readl(pcie, PCIE_CORE_REF_CLK_REG);
-+	reg |= PCIE_CORE_REF_CLK_TX_ENABLE;
-+	advk_writel(pcie, reg, PCIE_CORE_REF_CLK_REG);
++	advk_pcie_issue_perst(pcie);
 +
  	/* Set to Direct mode */
  	reg = advk_readl(pcie, CTRL_CONFIG_REG);
  	reg &= ~(CTRL_MODE_MASK << CTRL_MODE_SHIFT);
-@@ -1041,6 +1050,62 @@ static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
- 	return IRQ_HANDLED;
- }
+@@ -406,7 +430,8 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
-+static void __maybe_unused advk_pcie_disable_phy(struct advk_pcie *pcie)
-+{
-+	phy_power_off(pcie->phy);
-+	phy_exit(pcie->phy);
-+}
-+
-+static int advk_pcie_enable_phy(struct advk_pcie *pcie)
-+{
-+	int ret;
-+
-+	if (!pcie->phy)
-+		return 0;
-+
-+	ret = phy_init(pcie->phy);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
+ 	/*
+ 	 * PERST# signal could have been asserted by pinctrl subsystem before
+-	 * probe() callback has been called, making the endpoint going into
++	 * probe() callback has been called or issued explicitly by reset gpio
++	 * function advk_pcie_issue_perst(), making the endpoint going into
+ 	 * fundamental reset. As required by PCI Express spec a delay for at
+ 	 * least 100ms after such a reset before link training is needed.
+ 	 */
+@@ -1046,6 +1071,22 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	pcie->root_bus_nr = bus->start;
+ 
++	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
++						       "reset-gpios", 0,
++						       GPIOD_OUT_LOW,
++						       "pcie1-reset");
++	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
 +	if (ret) {
-+		phy_exit(pcie->phy);
-+		return ret;
++		if (ret == -ENOENT) {
++			pcie->reset_gpio = NULL;
++		} else {
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "Failed to get reset-gpio: %i\n",
++					ret);
++			return ret;
++		}
 +	}
 +
-+	ret = phy_power_on(pcie->phy);
-+	if (ret) {
-+		phy_exit(pcie->phy);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int advk_pcie_setup_phy(struct advk_pcie *pcie)
-+{
-+	struct device *dev = &pcie->pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	int ret = 0;
-+
-+	pcie->phy = devm_of_phy_get(dev, node, NULL);
-+	if (IS_ERR(pcie->phy) && (PTR_ERR(pcie->phy) == -EPROBE_DEFER))
-+		return PTR_ERR(pcie->phy);
-+
-+	/* Old bindings miss the PHY handle */
-+	if (IS_ERR(pcie->phy)) {
-+		dev_warn(dev, "PHY unavailable (%ld)\n", PTR_ERR(pcie->phy));
-+		pcie->phy = NULL;
-+		return 0;
-+	}
-+
-+	ret = advk_pcie_enable_phy(pcie);
-+	if (ret)
-+		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
-+
-+	return ret;
-+}
-+
- static int advk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1100,6 +1165,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	else
- 		pcie->link_gen = ret;
- 
-+	ret = advk_pcie_setup_phy(pcie);
-+	if (ret)
-+		return ret;
-+
- 	advk_pcie_setup_hw(pcie);
- 
- 	advk_sw_pci_bridge_init(pcie);
+ 	ret = of_pci_get_max_link_speed(dev->of_node);
+ 	if (ret <= 0 || ret > 3)
+ 		pcie->link_gen = 3;
 -- 
 2.20.1
 
