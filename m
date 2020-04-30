@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2689C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06118C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9040A20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC742072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255048;
-	bh=3/POyiqtelTVhdORwpZ36G6ZaXCF8YcncynUzPf+djo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1wiMF1hFH6QZy8vAsf4/DZ1dvv23A/9GKFxo78ReGfmmeiQWmNz2hbywXHARPlM4
-	 BsSAyNABpBNOUmzibxK3wyUK9SOJBjZFahzQGhDSfwujb9DPEOLFBkWYzWD+eVEosH
-	 YuaZBaz/dvZitJzyZ5ZJApIAEWxQ4zyoA7pQjUck=
+	s=default; t=1588255052;
+	bh=ZQ0XHbfBWQiIWiONf5FTHXKsilzV6KRIvH4mlihmPd4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DqXjKYI/8xenEF72IRGaZ/xp4BBNENh7xb/5CpqzMT7ePi3djf6yRnQeIaaND3uI+
+	 8mxdSnQxaF9rq1kLm5MLK3ZBIQxEijaOHnLTwJ0P4TMHajMmZfpjm5uJZUZaWe7+ws
+	 9ZfKELUUQhFDjzQak0HV5Gvx9vKUbWfWpHB55/vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgD3Ny5 (ORCPT
+        id S1729297AbgD3N5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36382 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbgD3NyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:09 -0400
+        id S1729084AbgD3Nyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6C4820873;
-        Thu, 30 Apr 2020 13:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75BA20774;
+        Thu, 30 Apr 2020 13:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254849;
-        bh=3/POyiqtelTVhdORwpZ36G6ZaXCF8YcncynUzPf+djo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ry3UICElTD3yXk1nXxgz7xENlenctsToLfzc+lw0e5XPeRl9j+YAm43+2tRrIQwB4
-         6XsIjACQ2zzC3O24fA+QKjRl76TqEEMZyGCbi1XalGS7jOSBy2XqNif1gumktuJ5wQ
-         rW3ZmN0i/4sukD2Bnn9Bpmtmc/4RrC/G0ceaBkoU=
+        s=default; t=1588254895;
+        bh=ZQ0XHbfBWQiIWiONf5FTHXKsilzV6KRIvH4mlihmPd4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sH9AC5a+lJIVe6ALZvXNS7qJDlTQ1T4stehdn/wC7kGK1KM670GFDobUAFguWOcIj
+         iVUZBqzhqf+MRRK0qS9SuV1159ye2ini05tJyY207v2QgfEAt+2xe/8P+nm8e+uZJH
+         stsryPdXp7QoHXfblWtKOmO0l/kM0DOIqeH8zweg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Fabio Estevam <festivem@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 06/27] ASoC: sgtl5000: Fix VAG power-on handling
-Date:   Thu, 30 Apr 2020 09:53:41 -0400
-Message-Id: <20200430135402.20994-6-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/11] iio:ad7797: Use correct attribute_group
+Date:   Thu, 30 Apr 2020 09:54:43 -0400
+Message-Id: <20200430135453.21353-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
-References: <20200430135402.20994-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,87 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit aa7812737f2877e192d57626cbe8825cc7cf6de9 ]
+[ Upstream commit 28535877ac5b2b84f0d394fd67a5ec71c0c48b10 ]
 
-As mentioned slightly out of patch context in the code, there
-is no reset routine for the chip. On boards where the chip is
-supplied by a fixed regulator, it might not even be resetted
-during (e.g. watchdog) reboot and can be in any state.
+It should use ad7797_attribute_group in ad7797_info,
+according to commit ("iio:ad7793: Add support for the ad7796 and ad7797").
 
-If the device is probed with VAG enabled, the driver's probe
-routine will generate a loud pop sound when ANA_POWER is
-being programmed. Avoid this by properly disabling just the
-VAG bit and waiting the required power down time.
+Scale is fixed for the ad7796 and not programmable, hence
+should not have the scale_available attribute.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-by: Fabio Estevam <festivem@gmail.com>
-Link: https://lore.kernel.org/r/20200414181140.145825-1-sebastian.reichel@collabora.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: fd1a8b912841 ("iio:ad7793: Add support for the ad7796 and ad7797")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 34 ++++++++++++++++++++++++++++++++++
- sound/soc/codecs/sgtl5000.h |  1 +
- 2 files changed, 35 insertions(+)
+ drivers/iio/adc/ad7793.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index ca8a70ab22a82..d64cb28e8dc5c 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1563,6 +1563,40 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
- 		dev_err(&client->dev,
- 			"Error %d initializing CHIP_CLK_CTRL\n", ret);
- 
-+	/* Mute everything to avoid pop from the following power-up */
-+	ret = regmap_write(sgtl5000->regmap, SGTL5000_CHIP_ANA_CTRL,
-+			   SGTL5000_CHIP_ANA_CTRL_DEFAULT);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Error %d muting outputs via CHIP_ANA_CTRL\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	/*
-+	 * If VAG is powered-on (e.g. from previous boot), it would be disabled
-+	 * by the write to ANA_POWER in later steps of the probe code. This
-+	 * may create a loud pop even with all outputs muted. The proper way
-+	 * to circumvent this is disabling the bit first and waiting the proper
-+	 * cool-down time.
-+	 */
-+	ret = regmap_read(sgtl5000->regmap, SGTL5000_CHIP_ANA_POWER, &value);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to read ANA_POWER: %d\n", ret);
-+		goto disable_clk;
-+	}
-+	if (value & SGTL5000_VAG_POWERUP) {
-+		ret = regmap_update_bits(sgtl5000->regmap,
-+					 SGTL5000_CHIP_ANA_POWER,
-+					 SGTL5000_VAG_POWERUP,
-+					 0);
-+		if (ret) {
-+			dev_err(&client->dev, "Error %d disabling VAG\n", ret);
-+			goto disable_clk;
-+		}
-+
-+		msleep(SGTL5000_VAG_POWERDOWN_DELAY);
-+	}
-+
- 	/* Follow section 2.2.1.1 of AN3663 */
- 	ana_pwr = SGTL5000_ANA_POWER_DEFAULT;
- 	if (sgtl5000->num_supplies <= VDDD) {
-diff --git a/sound/soc/codecs/sgtl5000.h b/sound/soc/codecs/sgtl5000.h
-index 22f3442af9826..9ea41749d0375 100644
---- a/sound/soc/codecs/sgtl5000.h
-+++ b/sound/soc/codecs/sgtl5000.h
-@@ -236,6 +236,7 @@
- /*
-  * SGTL5000_CHIP_ANA_CTRL
-  */
-+#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
- #define SGTL5000_LINE_OUT_MUTE			0x0100
- #define SGTL5000_HP_SEL_MASK			0x0040
- #define SGTL5000_HP_SEL_SHIFT			6
+diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+index 91d34ed756eaf..fe0c5a155e211 100644
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -579,7 +579,7 @@ static const struct iio_info ad7797_info = {
+ 	.read_raw = &ad7793_read_raw,
+ 	.write_raw = &ad7793_write_raw,
+ 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
+-	.attrs = &ad7793_attribute_group,
++	.attrs = &ad7797_attribute_group,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ 	.driver_module = THIS_MODULE,
+ };
 -- 
 2.20.1
 
