@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13303C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F380C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2493206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D3F206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255638;
-	bh=12G08OjkcLRNptzhaSvIbZJBb4wxK+MHHopIQJcsoTE=;
+	s=default; t=1588255649;
+	bh=nsssbZy682qJB1nLB7JZpO040fXKDc94Bx3ipos/8Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYR1fLr0+/EiWvPpu8w6AugyaTuYRf3femtavsZsmNSOJhsuQARxXxzhOJIIvfkyh
-	 XEk3PDjyIXE3QZ+/fZGBMzMIm3VtuDksH17VCS1dYqu0mi8rrCjR2eYTJY3cONx7P2
-	 uoMpbsoVeHHt92ki06tU3lKncy8K4eIl0MyQAwQM=
+	b=C80DY1Uyg6XvPmSC87ZsbruFedGkV2CAfRrsmabEyx5Waq2Z1MWikBO1VjNgWJtXi
+	 qk5rSs50iArQuaeI/bWnaegqTcyC8yShIzbhbvR0E3blh0G2otJeGpaVMupg3M23GG
+	 BDCrbRFfbn1y3E4dzz65p/sopoL1XzeLzxYlD4sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgD3OHR (ORCPT
+        id S1727883AbgD3OH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:07:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34022 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728474AbgD3Nwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:42 -0400
+        id S1728458AbgD3Nwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CC5720873;
-        Thu, 30 Apr 2020 13:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070162137B;
+        Thu, 30 Apr 2020 13:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254761;
-        bh=12G08OjkcLRNptzhaSvIbZJBb4wxK+MHHopIQJcsoTE=;
+        s=default; t=1588254758;
+        bh=nsssbZy682qJB1nLB7JZpO040fXKDc94Bx3ipos/8Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XHB2UbZE7FdkYpyv5NQMY/C2EJtd1+Csyz1Y4ZiwjzA4FjKxRHL9LcReepon/LM1W
-         69Mki9lRaNT9dtcQOW0/WcQ2nLYnwfaSRjMLMtd/9LyqWYjokMU+THyRFSz/JVoTC1
-         Rm1qa34EnIUFRAAqMJNgLU5L4CbGHAp3hYopWRnc=
+        b=jmmohAGkJJPtEa8+Ty4L83qD3RX8a2LIuXbZnYqrjjpC0uOBlkan+/qZpwxXQrk9x
+         UYgDzs7eXVWMYcHibMgG5buf2Lgs624Ge0p720Um35kIVWrWQ1yTcdXxTEkQiKR6kW
+         KRdZ2tgdGzfkFVBLGQbkTYoK1g5/1F7jBEAv6upk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Elder <elder@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 20/57] remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
-Date:   Thu, 30 Apr 2020 09:51:41 -0400
-Message-Id: <20200430135218.20372-20-sashal@kernel.org>
+Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 17/57] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
+Date:   Thu, 30 Apr 2020 09:51:38 -0400
+Message-Id: <20200430135218.20372-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -59,36 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Matthias Blankertz <matthias.blankertz@cetitec.com>
 
-[ Upstream commit 13c060b50a341dd60303e5264d12108b5747f200 ]
+[ Upstream commit b94e164759b82d0c1c80d4b1c8f12c9bee83f11d ]
 
-If looking up the DT "firmware-name" property fails in q6v6_probe(),
-the function returns without freeing the remoteproc structure
-that has been allocated.  Fix this by jumping to the free_rproc
-label, which takes care of this.
+The HDMI?_SEL register maps up to four stereo SSI data lanes onto the
+sdata[0..3] inputs of the HDMI output block. The upper half of the
+register contains four blocks of 4 bits, with the most significant
+controlling the sdata3 line and the least significant the sdata0 line.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
-Link: https://lore.kernel.org/r/20200403175005.17130-3-elder@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The shift calculation has an off-by-one error, causing the parent SSI to
+be mapped to sdata3, the first multi-SSI child to sdata0 and so forth.
+As the parent SSI transmits the stereo L/R channels, and the HDMI core
+expects it on the sdata0 line, this causes no audio to be output when
+playing stereo audio on a multichannel capable HDMI out, and
+multichannel audio has permutated channels.
+
+Fix the shift calculation to map the parent SSI to sdata0, the first
+child to sdata1 etc.
+
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200415141017.384017-3-matthias.blankertz@cetitec.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 2 +-
+ sound/soc/sh/rcar/ssiu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 783d00131a2a9..6ba065d5c4d95 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1440,7 +1440,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
- 					    1, &qproc->hexagon_mdt_image);
- 	if (ret < 0 && ret != -EINVAL)
--		return ret;
-+		goto free_rproc;
+diff --git a/sound/soc/sh/rcar/ssiu.c b/sound/soc/sh/rcar/ssiu.c
+index f35d882118874..9c7c3e7539c93 100644
+--- a/sound/soc/sh/rcar/ssiu.c
++++ b/sound/soc/sh/rcar/ssiu.c
+@@ -221,7 +221,7 @@ static int rsnd_ssiu_init_gen2(struct rsnd_mod *mod,
+ 			i;
  
- 	platform_set_drvdata(pdev, qproc);
- 
+ 		for_each_rsnd_mod_array(i, pos, io, rsnd_ssi_array) {
+-			shift	= (i * 4) + 16;
++			shift	= (i * 4) + 20;
+ 			val	= (val & ~(0xF << shift)) |
+ 				rsnd_mod_id(pos) << shift;
+ 		}
 -- 
 2.20.1
 
