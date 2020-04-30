@@ -2,477 +2,178 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05C5C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA42C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 849572083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588217369;
-	bh=kR28ZcVhVHvx8oo9QzdGVr24XzQ/PIYPvK9k1nvJ8F8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Uskt5cmSXo1TlEXmnXBb1BX5hBjFDtARW/e2HSsGHDpvIfTDcskDak/Oh89ddWcLy
-	 DGog8bTstNaUIdB49DrWHBc803BUhbCmImkI6FM952udkz7TDFXDuovTEuESHwE4I6
-	 iTfUgn2zqz6Me7D/Ee2bmo/h1BK7XCiqyIOBOWbM=
+	by mail.kernel.org (Postfix) with ESMTP id BC02520733
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:36:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="bbOosWt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD3D32 (ORCPT
+        id S1726454AbgD3Dg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgD3D32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:29:28 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A6820733;
-        Thu, 30 Apr 2020 03:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588217367;
-        bh=kR28ZcVhVHvx8oo9QzdGVr24XzQ/PIYPvK9k1nvJ8F8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=v0YjtelYIxOIo7n//X5pmhPYAe/qLGxVovqbD7K3ArWlavGZsjl/gtx6P3GvXmYKG
-         55ILEH5gLDkGf6GJg/Gnkckh+HskZBLf/+PDapP+Q6XMWhku/gfdMaO0MOmkV9+zMd
-         V/p9cQvi7yk3EWr+FlRrVE/c+FwiB/eXT3CSCcVA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C697D352269B; Wed, 29 Apr 2020 20:29:26 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 20:29:26 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: rcu_barrier() + membarrier() + scheduler deadlock?
-Message-ID: <20200430032926.GA1499@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <F64C791A-0EA7-458E-82C0-B98A1032066C@lca.pw>
- <20200430032238.GP7560@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
+        Wed, 29 Apr 2020 23:36:28 -0400
+Received: from mail-bn8nam11on2125.outbound.protection.outlook.com ([40.107.236.125]:10592
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726309AbgD3Dg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 23:36:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GsW6z1TNwNgnVO8Jtm95REVlh3cXYqHa7zRLyInLUwXNwfk3lL/8C6Ok0VNDQOYnXwjiIOvYDP7LgJwDYGqgKrYZEEC4c7s24hsaFJMaifIGgFl11CuVzG5TnjbqoIwiaWUOl6WWDgnU9nrQOxDXgA8s6FqJ7DsgiDvqrQRVWmBVkmLNYOqOP0rX+UENom9clsMu9oTmZhDubUhvD9qiiOBw069EvUkDGB3+WgZMgMCJTn85RtMnin7kMsDcU90dBbdsId8nxcMYVkDsVeiwY+2ucpiZGkwO21z6BG65MQo39MKWMllP5zFwlwOiJpODpfW2Jp4u2Y9E8FZW5mok2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NobJXkBPXkhSADDNjB5Em1tDmWoTMnJuWf4RyXVOZgE=;
+ b=dX1OMnvdTc1SXjNEBXppz5bsfMIrbNOyxDT1prJFF5m6z2J0BXC865CAcnvuX0/wFsdcwgUcmH/fRYopFTBhn6zUgMO/X42xS6ulpCGT34ypZH+gOxVAxPU3iOpomeWbcgnaZEyx1i9PSFag0R3+BuANHdG0+S7ruBQHCkAcWQdfpuMZbLEqnABwwsj/VURqkiNlBtqw/FD6LJx0BH1DHOyV8gcx5SV9JYRe8a1GFx3/ZIE9UB1iWi1FNbrVsvkVgFL3xt2IK1wjiANn/St9JIg7Pg84cwsbDQ2COGCfcR453XsaBjrJLVrFDShHR73sR7OSQj1JYoZtf6Yu0RQDpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NobJXkBPXkhSADDNjB5Em1tDmWoTMnJuWf4RyXVOZgE=;
+ b=bbOosWt9g75v9D0E6bTYiFdMgK0wEKVA4hJShHWgjL8kXgPIokSE4FOCbxTwPde9VnCquaoiysowg5WQse+m/bUxC3JVmQnCMXXcbAzyolpeTUUa6Ye1c9K5Vtbaqrm9NuA11vlnzSWJuS7V8xXOse4GKzu3i7otX0OROELaFCQ=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6689.namprd04.prod.outlook.com (2603:10b6:a03:228::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
+ 2020 03:36:21 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 03:36:21 +0000
+Date:   Thu, 30 Apr 2020 11:36:14 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Nicolas Boichat <drinkcat@google.com>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>,
+        Qilin Wen <qwen@analogixsemi.com>,
+        Ming Liu <mliu@analogixsemi.com>
+Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Message-ID: <20200430033614.GA6645@xin-VirtualBox>
+References: <cover.1582529411.git.xji@analogixsemi.com>
+ <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
+ <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
+ <20200424065124.GA31922@xin-VirtualBox>
+ <CANMq1KBJ6f74aNAr8BwC3wz8MEeJzwXOQE44gv6C=DNzYmUWCQ@mail.gmail.com>
+ <20200428100508.GD3456981@phenom.ffwll.local>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430032238.GP7560@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200428100508.GD3456981@phenom.ffwll.local>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK0PR03CA0097.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::13) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK0PR03CA0097.apcprd03.prod.outlook.com (2603:1096:203:b0::13) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 03:36:21 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: afd949fc-13f3-4530-db6c-08d7ecb7a696
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6689:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB66892C68B5FAB0B2EDBDEFC7C7AA0@BY5PR04MB6689.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0389EDA07F
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39840400004)(376002)(396003)(366004)(136003)(346002)(54906003)(33656002)(2906002)(86362001)(33716001)(966005)(6496006)(8676002)(53546011)(478600001)(956004)(6666004)(110136005)(186003)(52116002)(16526019)(66556008)(66476007)(4326008)(5660300002)(9686003)(26005)(1076003)(8936002)(316002)(55016002)(107886003)(66946007)(83080400001)(7416002);DIR:OUT;SFP:1102;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J8qfGlcmC+zJfoJRULtpnFIIIxLF2e9KlZcOdFy86THRh8q4gzj1wuXHjW/wbZ2BQgz2gBLV86OLd6T8sYJjhLx2AmP69spvcc9BUE+V9x5gnwFriXAn6hXTL2ATtezt5OE7CprgeBZhwNcWsha0VjCNdaG9GGT8DYU5DAFmzVaifYSxexlEZ+V9LSxlsk0wMkamns84nYTqnV0vrpZM9oMGyUfrvxk6QE89Zl3WYqJiEF4RG6nVGB95iEmPPN0cNwMZQQfrKHxekGptj5V7zxBz+VDXJeaQIQJTMdqEYDHgpkdRadVIrozW4E8yZVncZPAo1VcwGdarcR4L9SehVTSEDB1dTeTFFwLQxzjYlVU6S0bxKeqZTgX8qNigcnHIuRmF4bN48ZJDH5ClBzY1amxLGjznYEQk69ooQE9Eu7wlVDeVloHaHEhvRvcBvdBYhUwU6Jbbprbs/0eatVqw2sB84SMpiaCxNatSzYre4jntwA1KryoY/GqksELVNBjamlWyrNO8fpCv1oci+KCrew==
+X-MS-Exchange-AntiSpam-MessageData: OwR1GrqwP0B0d49LgRW34Qxp0S19hefkb47QgPvh5CGYyA0CaFkO7KQS4cHKucP15T2NuHQxRtSFcB3Hli8WWXE1L8sApcQzkwrl5es5chl8DQtNBQ9KzmYwG7DgzGA8Yv7olkUWRG8zZ3y8k081L0TnS/EytJ/zpBd3p7bbkjJ7Oo8K715N/+ntp5oJua3qh7XH//d88l+u9fXG5Nmt1mm2xng+DJ/BsCgYyWU15GXG+bYSxek2skYFtple96KK59DOemvVRyRixMw/iCFF8n4NXqIQ6Pygt3yL5eRA3QUzrQGx5lGvU+iLqCT54KjIRVhEI1HYTXOW3yZ75a7ZSUb01+HLyFHtQ7cO3sY+gWhXZbvBF3YmSuhlZYwFi03fYhmo2ot6ihptdNBQsSRMGyBM31/ZuyVujLEr+Rxl2yr3oESaVp6NXslra67FX5TSP46jlqPt+rp+051wu8NoYCRZmJJNJ4dhQCsbxTCWr7z7t8Z1Z4bmk+Qcfkb52UUdfPAUhOSNvB/jaVHt6bYpU+pURKSQy1VmgnH97SVbv282DLjpd1W6YKreTy65gXv8Db13LbSTyOeiD+bmSMc9rKpuQY5L9GizBGn7FX2tibNPO4ke4jztOCx7+mn+ULKt3AucZoH3tKxxI5ELHA1GJ1WkcuiVNtdv1+zF11AsIwl9p96PWPv4MCdb3Aihef0Lpc435lJX24vwRPApJJAEEw7SfMwYu5JS2jvo8SjL0MdL8ZmRQRZ/izv9GlhN3Evo0HFOVYyPvP9FDL8eDgScFqqjMdej29ScPTV65OBSiJ9jetkugCx/rwqRVcTlvtwJ
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afd949fc-13f3-4530-db6c-08d7ecb7a696
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 03:36:21.8142
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MZu3UXc5OZOqfS1+eQaQojDNiqgtL/weWTK3JV8Ge9YpTbhm5R9M3GS2HhApxB7FeaMRmAUnKeIlNEzx9BtVkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6689
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 08:22:38PM -0700, Paul E. McKenney wrote:
-> On Wed, Apr 29, 2020 at 11:00:58PM -0400, Qian Cai wrote:
-> > Doing some fuzzers on many CPUs triggers a deadlock really quickly.  I can see that there were several tasks had been stuck for a while,
+On Tue, Apr 28, 2020 at 12:05:08PM +0200, Daniel Vetter wrote:
+> On Fri, Apr 24, 2020 at 08:12:04PM +0800, Nicolas Boichat wrote:
+> > On Fri, Apr 24, 2020 at 2:51 PM Xin Ji <xji@analogixsemi.com> wrote:
+> > >
+> > > On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
+> > > > Hi,
+> > > >
+> > > > Just commenting on the mode_fixup function that was added in v7.
+> > > >
+> > > [snip]
+> > > > > +       /*
+> > > > > +        * once illegal timing detected, use default HFP, HSYNC, HBP
+> > > > > +        */
+> > > > > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
+> > > >
+> > > > should this be adj_hblanking/adj_hfp/adj_hbp?
+> > > NO, need check original HFP and HBP, if they are not legal, driver need
+> > > set default value to adj_hsync, adj_hfp, adj_hbp.
+> > > >
+> > > > > +               adj_hsync = SYNC_LEN_DEF;
+> > > > > +               adj_hfp = HFP_HBP_DEF;
+> > > > > +               adj_hbp = HFP_HBP_DEF;
+> > > > > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
+> > > > > +               if (hblanking < HBLANKING_MIN) {
+> > > > > +                       delta_adj = HBLANKING_MIN - hblanking;
+> > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > > > > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
+> > > > > +               } else {
+> > > > > +                       delta_adj = hblanking - HBLANKING_MIN;
+> > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > > > > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
+> > > > > +               }
+> > > > > +
+> > > > > +               DRM_WARN("illegal hblanking timing, use default.\n");
+> > > > > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
+> > > >
+> > > > How likely is it that this mode is going to work? Can you just return
+> > > > false here to reject the mode?
+> > > We want to set the default minimal Hblancking value, then it may display,
+> > > otherwise. If we just return false, there is no display for sure.
 > > 
-> > CPUA:
-> > slab_caches_to_rcu_destroy_workfn()
-> > rcu_barrier()
-> > wait_for_completion()
-> > 
-> > CPUB:
-> > sched_setaffinity()
-> > __set_cpus_allowed_ptr()
-> > stop_one_cpu()
-> > 
-> > CPUC:
-> > __x64_sys_membarrier
-> > synchronize_rcu()
-> > __wait_rcu_gp()
-> > wait_for_completion()
-> > 
-> > Lockdep did not flag anything useful at all. Any clue?
+> > Right, understand your argument. I'm pondering if it's not just better
+> > to reject the mode rather than trying a timing that is definitely
+> > quite different from what the monitor was asking for. No super strong
+> > opinion, I'll let other people on the list weigh in.
 > 
-> CPUA and CPUC are most likely both waiting for a grace period to complete.
+> Yeah mode_fixup is supposed to be used to adjust the mode in intermediate
+> stages (e.g. if you go from progressive to interlaced only at the end of
+> your pipeline or something like that). It's not meant for adjusting the
+> mode yout actually put out through a hdmi or dp connector. For fixed
+> panels adjusting modes to fit the panel is also fairly common, but not for
+> external outputs.
 > 
-> CPUA will be blocking CPU hotplug (get_online_cpus()) in case that
-> matters.  I am not seeing any obvious wait for an RCU grace period
-> in CPUB.
-> 
-> But which task's affinity is being set?  That of the grace-period kthread?
-> If not, are there rcuo kthreads present?  Either way, preventing any of
-> RCU's kthreads from running could block potentially both CPUA and CPUC.
-> Though in the case of the grace-period kthread, I would expect to see
-> an RCU CPU stall warning.
-> 
-> Could you please share your .config?
-
-And there are a number of tasks below marked "can't die".  So maybe
-something more fundamental is stuck?
-
-							Thanx, Paul
-
-> > [52885.040113][T150406] futex_wake_op: trinity-c9 tries to shift op by -1189; fix this program
-> > [52890.366916][T150196] futex_wake_op: trinity-c3 tries to shift op by -1; fix this program
-> > [52896.369779][T151054] futex_wake_op: trinity-c23 tries to shift op by 710; fix this program
-> > [52901.770688][  T310] INFO: task kworker/36:2:142207 blocked for more than 122 seconds.
-> > [52901.811471][  T310]       Tainted: G             L    5.7.0-rc3-next-20200429 #2
-> > [52901.849148][  T310] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > [52901.889803][  T310] kworker/36:2    D29104 142207      2 0x90004000
-> > [52901.919461][  T310] Workqueue: events slab_caches_to_rcu_destroy_workfn
-> > [52901.950935][  T310] Call Trace:
-> > [52901.965369][  T310]  __schedule+0x77e/0x1070
-> > [52901.986211][  T310]  ? __sched_text_start+0x8/0x8
-> > [52902.008267][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52902.031764][  T310]  schedule+0x95/0x160
-> > [52902.050729][  T310]  schedule_timeout+0x47c/0x6a0
-> > [52902.072897][  T310]  ? print_irqtrace_events+0x110/0x110
-> > [52902.098316][  T310]  ? usleep_range+0x100/0x100
-> > [52902.119664][  T310]  ? mark_held_locks+0x86/0xb0
-> > [52902.141397][  T310]  ? _raw_spin_unlock_irq+0x27/0x40
-> > [52902.165326][  T310]  ? _raw_spin_unlock_irq+0x27/0x40
-> > [52902.189622][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52902.213641][  T310]  ? wait_for_completion+0x116/0x1a0
-> > [52902.238757][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52902.261648][  T310]  wait_for_completion+0x11e/0x1a0
-> > [52902.285516][  T310]  ? wait_for_completion_interruptible+0x220/0x220
-> > [52902.316342][  T310]  ? rcu_read_lock_held+0xc0/0xc0
-> > [52902.340298][  T310]  rcu_barrier+0x2c5/0x440
-> > [52902.361736][  T310]  slab_caches_to_rcu_destroy_workfn+0x95/0xe0
-> > [52902.391109][  T310]  process_one_work+0x57e/0xb90
-> > [52902.413244][  T310]  ? pwq_dec_nr_in_flight+0x170/0x170
-> > [52902.437957][  T310]  ? worker_thread+0x14b/0x5b0
-> > [52902.460357][  T310]  worker_thread+0x63/0x5b0
-> > [52902.481267][  T310]  ? process_one_work+0xb90/0xb90
-> > [52902.504818][  T310]  kthread+0x1f7/0x220
-> > [52902.523542][  T310]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-> > [52902.550801][  T310]  ret_from_fork+0x3a/0x50
-> > [52902.560427][T151328] futex_wake_op: trinity-c10 tries to shift op by -1; fix this program
-> > [52902.571250][  T310] INFO: task trinity-c18:145344 can't die for more than 123 seconds.
-> > [52902.648554][  T310] trinity-c18     R  running task    26944 145344  74932 0x10004004
-> > [52902.700179][  T310] Call Trace:
-> > [52902.715039][  T310]  __schedule+0x77e/0x1070
-> > [52902.735531][  T310]  ? __sched_text_start+0x8/0x8
-> > [52902.757922][  T310]  ? do_syscall_64+0x28d/0xaf0
-> > [52902.779731][  T310]  ? do_syscall_64+0x28d/0xaf0
-> > [52902.802215][  T310]  schedule+0x95/0x160
-> > [52902.821375][  T310]  do_syscall_64+0x23e/0xaf0
-> > [52902.843517][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52902.871003][  T310]  ? ftrace_syscall_enter+0x4b0/0x4b0
-> > [52902.896034][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52902.922153][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52902.950409][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52902.976721][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52903.002409][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52903.030018][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52903.050021][  T310] Code: Bad RIP value.
-> > [52903.068733][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000cb
-> > [52903.107680][  T310] RAX: 0000000000000000 RBX: 00000000000000cb RCX: 00007fa3d9cd670d
-> > [52903.144861][  T310] RDX: 00007fa3d7c38000 RSI: 0000000000000004 RDI: 0000000000000000
-> > [52903.182189][  T310] RBP: 00000000000000cb R08: 000000000000ca23 R09: 00000000000000b3
-> > [52903.219290][  T310] R10: 000000002ab3d706 R11: 0000000000000246 R12: 0000000000000002
-> > [52903.256653][  T310] R13: 00007fa3d8608058 R14: 00007fa3d9b956c0 R15: 00007fa3d8608000
-> > [52903.294988][  T310] INFO: task trinity-c24:146199 can't die for more than 124 seconds.
-> > [52903.333911][  T310] trinity-c24     R  running task    26944 146199  74932 0x10000004
-> > [52903.377051][  T310] Call Trace:
-> > [52903.393139][  T310]  __schedule+0x77e/0x1070
-> > [52903.413685][  T310]  ? __sched_text_start+0x8/0x8
-> > [52903.435602][  T310]  ? check_flags.part.28+0x86/0x220
-> > [52903.459452][  T310]  preempt_schedule_common+0x16/0x50
-> > [52903.483985][  T310]  _cond_resched+0x22/0x30
-> > [52903.504130][  T310]  stop_one_cpu+0xd7/0x140
-> > [52903.524695][  T310]  ? stop_cpus.constprop.3+0x130/0x130
-> > [52903.550266][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52903.572005][  T310]  ? sched_ttwu_pending+0x1b0/0x1b0
-> > [52903.595973][  T310]  ? lock_downgrade+0x3e0/0x3e0
-> > [52903.618468][  T310]  ? mark_held_locks+0x34/0xb0
-> > [52903.640239][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52903.662057][  T310]  __set_cpus_allowed_ptr+0x382/0x3a0
-> > [52903.686744][  T310]  ? move_queued_task+0x3c0/0x3c0
-> > [52903.709784][  T310]  ? cpuset_cpus_allowed+0x10b/0x200
-> > [52903.734212][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52903.757482][  T310]  ? __bitmap_and+0xd8/0x100
-> > [52903.779002][  T310]  sched_setaffinity+0x476/0x660
-> > [52903.802046][  T310]  ? __x64_sys_sched_getattr+0x3e0/0x3e0
-> > [52903.827730][  T310]  ? __kasan_check_write+0x14/0x20
-> > [52903.851859][  T310]  __x64_sys_sched_setaffinity+0x118/0x180
-> > [52903.881315][  T310]  ? sched_setaffinity+0x660/0x660
-> > [52903.906012][  T310]  ? do_syscall_64+0x79/0xaf0
-> > [52903.927530][  T310]  ? rcu_read_lock_bh_held+0xc0/0xc0
-> > [52903.951683][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52903.976607][  T310]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52904.004024][  T310]  do_syscall_64+0xcc/0xaf0
-> > [52904.023909][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52904.047409][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52904.072656][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52904.099856][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52904.125615][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52904.167434][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52904.193732][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52904.213368][  T310] Code: Bad RIP value.
-> > [52904.231318][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000cb
-> > [52904.269002][  T310] RAX: ffffffffffffffda RBX: 00000000000000cb RCX: 00007fa3d9cd670d
-> > [52904.344529][  T310] RDX: 00007fa3d803c000 RSI: 0000000000000200 RDI: 0000000000000000
-> > [52904.382761][  T310] RBP: 00000000000000cb R08: 0001802261008040 R09: 00000000000000ba
-> > [52904.422223][  T310] R10: 00000000000000a8 R11: 0000000000000246 R12: 0000000000000002
-> > [52904.458152][  T310] R13: 00007fa3d85de058 R14: 00007fa3d9b956c0 R15: 00007fa3d85de000
-> > [52904.494711][  T310] INFO: task trinity-c6:146436 can't die for more than 125 seconds.
-> > [52904.530683][  T310] trinity-c6      R  running task    27328 146436  74932 0x10000004
-> > [52904.567167][  T310] Call Trace:
-> > [52904.582145][  T310]  __schedule+0x77e/0x1070
-> > [52904.601969][  T310]  ? __sched_text_start+0x8/0x8
-> > [52904.623515][  T310]  ? check_flags.part.28+0x86/0x220
-> > [52904.647020][  T310]  preempt_schedule_common+0x16/0x50
-> > [52904.671405][  T310]  _cond_resched+0x22/0x30
-> > [52904.690871][  T310]  stop_one_cpu+0xd7/0x140
-> > [52904.710359][  T310]  ? stop_cpus.constprop.3+0x130/0x130
-> > [52904.734818][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52904.755537][  T310]  ? sched_ttwu_pending+0x1b0/0x1b0
-> > [52904.778632][  T310]  ? lock_downgrade+0x3e0/0x3e0
-> > [52904.800232][  T310]  ? mark_held_locks+0x34/0xb0
-> > [52904.821408][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52904.842299][  T310]  __set_cpus_allowed_ptr+0x382/0x3a0
-> > [52904.866634][  T310]  ? move_queued_task+0x3c0/0x3c0
-> > [52904.890341][  T310]  ? cpuset_cpus_allowed+0x10b/0x200
-> > [52904.916217][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52904.939059][  T310]  ? __bitmap_and+0xd8/0x100
-> > [52904.959333][  T310]  sched_setaffinity+0x476/0x660
-> > [52904.981422][  T310]  ? __x64_sys_sched_getattr+0x3e0/0x3e0
-> > [52905.006183][  T310]  ? copy_user_generic_unrolled+0x9e/0xc0
-> > [52905.031792][  T310]  __x64_sys_sched_setaffinity+0x118/0x180
-> > [52905.057598][  T310]  ? sched_setaffinity+0x660/0x660
-> > [52905.080302][  T310]  ? do_syscall_64+0x79/0xaf0
-> > [52905.101464][  T310]  ? rcu_read_lock_bh_held+0xc0/0xc0
-> > [52905.126828][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52905.150334][  T310]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52905.177570][  T310]  do_syscall_64+0xcc/0xaf0
-> > [52905.197688][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52905.221392][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52905.246586][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52905.273733][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52905.300142][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52905.324980][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52905.351394][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52905.371850][  T310] Code: Bad RIP value.
-> > [52905.390680][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000cb
-> > [52905.432007][  T310] RAX: ffffffffffffffda RBX: 00000000000000cb RCX: 00007fa3d9cd670d
-> > [52905.470212][  T310] RDX: 00007fa3d7e3c000 RSI: 0000000000000004 RDI: 0000000000000000
-> > [52905.507836][  T310] RBP: 00000000000000cb R08: 00000000fffffff9 R09: ffffffffffff896f
-> > [52905.545501][  T310] R10: 000000000000fff7 R11: 0000000000000246 R12: 0000000000000002
-> > [52905.581885][  T310] R13: 00007fa3d865c058 R14: 00007fa3d9b956c0 R15: 00007fa3d865c000
-> > [52905.620176][  T310] INFO: task trinity-c38:147003 can't die for more than 126 seconds.
-> > [52905.656622][  T310] trinity-c38     R  running task    27880 147003  74932 0x10000004
-> > [52905.692374][  T310] Call Trace:
-> > [52905.706772][  T310]  __schedule+0x77e/0x1070
-> > [52905.726246][  T310]  ? __sched_text_start+0x8/0x8
-> > [52905.747783][  T310]  ? check_flags.part.28+0x86/0x220
-> > [52905.770984][  T310]  preempt_schedule_common+0x16/0x50
-> > [52905.794507][  T310]  _cond_resched+0x22/0x30
-> > [52905.814101][  T310]  stop_one_cpu+0xd7/0x140
-> > [52905.833704][  T310]  ? stop_cpus.constprop.3+0x130/0x130
-> > [52905.858045][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52905.879452][  T310]  ? sched_ttwu_pending+0x1b0/0x1b0
-> > [52905.903104][  T310]  ? lock_downgrade+0x3e0/0x3e0
-> > [52905.927387][  T310]  ? mark_held_locks+0x34/0xb0
-> > [52905.949981][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52905.970691][  T310]  __set_cpus_allowed_ptr+0x382/0x3a0
-> > [52905.994868][  T310]  ? move_queued_task+0x3c0/0x3c0
-> > [52906.017315][  T310]  ? cpuset_cpus_allowed+0x10b/0x200
-> > [52906.040870][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52906.063266][  T310]  ? __bitmap_and+0xd8/0x100
-> > [52906.083575][  T310]  sched_setaffinity+0x476/0x660
-> > [52906.105559][  T310]  ? __x64_sys_sched_getattr+0x3e0/0x3e0
-> > [52906.130620][  T310]  ? __kasan_check_write+0x14/0x20
-> > [52906.153322][  T310]  __x64_sys_sched_setaffinity+0x118/0x180
-> > [52906.179289][  T310]  ? sched_setaffinity+0x660/0x660
-> > [52906.202438][  T310]  ? do_syscall_64+0x79/0xaf0
-> > [52906.223078][  T310]  ? rcu_read_lock_bh_held+0xc0/0xc0
-> > [52906.246181][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52906.269667][  T310]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52906.296537][  T310]  do_syscall_64+0xcc/0xaf0
-> > [52906.316130][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52906.339641][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52906.364738][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52906.391937][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52906.419260][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52906.446669][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52906.473222][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52906.493314][  T310] Code: Bad RIP value.
-> > [52906.511339][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000cb
-> > [52906.549312][  T310] RAX: ffffffffffffffda RBX: 00000000000000cb RCX: 00007fa3d9cd670d
-> > [52906.585138][  T310] RDX: 00007fa3d7c3c000 RSI: 0000000000000008 RDI: 0000000000000000
-> > [52906.620955][  T310] RBP: 00000000000000cb R08: fffffffffffffff8 R09: fffffffffffffffc
-> > [52906.657616][  T310] R10: 0000000000000200 R11: 0000000000000246 R12: 0000000000000002
-> > [52906.694196][  T310] R13: 00007fa3d857c058 R14: 00007fa3d9b956c0 R15: 00007fa3d857c000
-> > [52906.730152][  T310] INFO: task trinity-c2:147285 can't die for more than 127 seconds.
-> > [52906.766086][  T310] trinity-c2      R  running task    27896 147285  74932 0x10000004
-> > [52906.801993][  T310] Call Trace:
-> > [52906.816338][  T310]  __schedule+0x77e/0x1070
-> > [52906.836024][  T310]  ? __sched_text_start+0x8/0x8
-> > [52906.857547][  T310]  ? up_write+0xe9/0x290
-> > [52906.876797][  T310]  schedule+0x95/0x160
-> > [52906.915571][  T310]  schedule_timeout+0x47c/0x6a0
-> > [52906.939198][  T310]  ? usleep_range+0x100/0x100
-> > [52906.961983][  T310]  ? lock_downgrade+0x3e0/0x3e0
-> > [52906.983597][  T310]  ? mark_held_locks+0x34/0xb0
-> > [52907.005053][  T310]  ? _raw_spin_unlock_irq+0x27/0x40
-> > [52907.028158][  T310]  ? _raw_spin_unlock_irq+0x27/0x40
-> > [52907.051323][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52907.074918][  T310]  ? wait_for_completion+0x116/0x1a0
-> > [52907.098366][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52907.120794][  T310]  wait_for_completion+0x11e/0x1a0
-> > [52907.143566][  T310]  ? wait_for_completion_interruptible+0x220/0x220
-> > [52907.172861][  T310]  __wait_rcu_gp+0x1ad/0x1e0
-> > [52907.193176][  T310]  synchronize_rcu+0x128/0x1a0
-> > [52907.214557][  T310]  ? synchronize_rcu_expedited+0x5e0/0x5e0
-> > [52907.240532][  T310]  ? match_held_lock+0x20/0x270
-> > [52907.262106][  T310]  ? invoke_rcu_core+0xf0/0xf0
-> > [52907.282779][  T310]  ? check_chain_key+0x1df/0x2e0
-> > [52907.304629][  T310]  ? find_held_lock+0xca/0xf0
-> > [52907.325381][  T310]  ? __kasan_check_read+0x11/0x20
-> > [52907.347666][  T310]  __x64_sys_membarrier+0x205/0x62e
-> > [52907.370924][  T310]  ? membarrier_exec_mmap+0x50/0x50
-> > [52907.394034][  T310]  ? do_syscall_64+0x79/0xaf0
-> > [52907.414823][  T310]  ? rcu_read_lock_bh_held+0xc0/0xc0
-> > [52907.440213][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52907.466322][  T310]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52907.494190][  T310]  do_syscall_64+0xcc/0xaf0
-> > [52907.514834][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52907.539609][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52907.564670][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52907.593100][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52907.619749][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52907.645538][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52907.673066][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52907.693218][  T310] Code: Bad RIP value.
-> > [52907.711803][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000144
-> > [52907.750495][  T310] RAX: ffffffffffffffda RBX: 0000000000000144 RCX: 00007fa3d9cd670d
-> > [52907.786490][  T310] RDX: 0000000000000080 RSI: 0000000000000000 RDI: 0000000000000001
-> > [52907.822363][  T310] RBP: 0000000000000144 R08: 00000000eeeeeeee R09: 0000000000003418
-> > [52907.858106][  T310] R10: 0000000000004ff8 R11: 0000000000000246 R12: 0000000000000002
-> > [52907.894476][  T310] R13: 00007fa3d8678058 R14: 00007fa3d9b956c0 R15: 00007fa3d8678000
-> > [52907.930457][  T310] INFO: task trinity-c27:149010 can't die for more than 129 seconds.
-> > [52907.971719][  T310] trinity-c27     R  running task    26944 149010  74932 0x10000004
-> > [52908.008456][  T310] Call Trace:
-> > [52908.022892][  T310]  __schedule+0x77e/0x1070
-> > [52908.042479][  T310]  ? __sched_text_start+0x8/0x8
-> > [52908.063993][  T310]  ? check_flags.part.28+0x86/0x220
-> > [52908.087103][  T310]  preempt_schedule_common+0x16/0x50
-> > [52908.110659][  T310]  _cond_resched+0x22/0x30
-> > [52908.130167][  T310]  stop_one_cpu+0xd7/0x140
-> > [52908.149705][  T310]  ? stop_cpus.constprop.3+0x130/0x130
-> > [52908.174087][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52908.194356][  T310]  ? sched_ttwu_pending+0x1b0/0x1b0
-> > [52908.217715][  T310]  ? lock_downgrade+0x3e0/0x3e0
-> > [52908.239236][  T310]  ? mark_held_locks+0x34/0xb0
-> > [52908.260471][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52908.281298][  T310]  __set_cpus_allowed_ptr+0x382/0x3a0
-> > [52908.305375][  T310]  ? move_queued_task+0x3c0/0x3c0
-> > [52908.327364][  T310]  ? cpuset_cpus_allowed+0x10b/0x200
-> > [52908.350892][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52908.373276][  T310]  ? __bitmap_and+0xd8/0x100
-> > [52908.393650][  T310]  sched_setaffinity+0x476/0x660
-> > [52908.397305][T151560] futex_wake_op: trinity-c39 tries to shift op by -852; fix this program
-> > [52908.415599][  T310]  ? __x64_sys_sched_getattr+0x3e0/0x3e0
-> > [52908.455822][T151560] futex_wake_op: trinity-c39 tries to shift op by -852; fix this program
-> > [52908.483899][  T310]  ? __kasan_check_write+0x14/0x20
-> > [52908.483908][  T310]  __x64_sys_sched_setaffinity+0x118/0x180
-> > [52908.483916][  T310]  ? sched_setaffinity+0x660/0x660
-> > [52908.483925][  T310]  ? do_syscall_64+0x79/0xaf0
-> > [52908.483934][  T310]  ? rcu_read_lock_bh_held+0xc0/0xc0
-> > [52908.640521][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52908.664068][  T310]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52908.692710][  T310]  do_syscall_64+0xcc/0xaf0
-> > [52908.712603][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52908.736117][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52908.762313][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52908.789929][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52908.815487][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52908.840248][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52908.867098][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52908.886542][  T310] Code: Bad RIP value.
-> > [52908.904432][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000cb
-> > [52908.942172][  T310] RAX: ffffffffffffffda RBX: 00000000000000cb RCX: 00007fa3d9cd670d
-> > [52908.981963][  T310] RDX: 00007fa3d843c000 RSI: 0000000000000004 RDI: 0000000000000000
-> > [52909.020646][  T310] RBP: 00000000000000cb R08: 00000000ffffffff R09: fffffffffffffffa
-> > [52909.057043][  T310] R10: 000000000000001b R11: 0000000000000246 R12: 0000000000000002
-> > [52909.093664][  T310] R13: 00007fa3d85c9058 R14: 00007fa3d9b956c0 R15: 00007fa3d85c9000
-> > [52909.129758][  T310] INFO: task trinity-c20:149065 can't die for more than 130 seconds.
-> > [52909.166089][  T310] trinity-c20     R  running task    27712 149065  74932 0x10000004
-> > [52909.202031][  T310] Call Trace:
-> > [52909.216658][  T310]  __schedule+0x77e/0x1070
-> > [52909.236187][  T310]  ? __sched_text_start+0x8/0x8
-> > [52909.257916][  T310]  ? check_flags.part.28+0x86/0x220
-> > [52909.281061][  T310]  preempt_schedule_common+0x16/0x50
-> > [52909.304664][  T310]  _cond_resched+0x22/0x30
-> > [52909.324257][  T310]  stop_one_cpu+0xd7/0x140
-> > [52909.343842][  T310]  ? stop_cpus.constprop.3+0x130/0x130
-> > [52909.369442][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52909.390672][  T310]  ? sched_ttwu_pending+0x1b0/0x1b0
-> > [52909.413672][  T310]  ? lock_downgrade+0x3e0/0x3e0
-> > [52909.435178][  T310]  ? mark_held_locks+0x34/0xb0
-> > [52909.456323][  T310]  ? task_rq_unlock+0x6e/0x80
-> > [52909.478561][  T310]  __set_cpus_allowed_ptr+0x382/0x3a0
-> > [52909.505164][  T310]  ? move_queued_task+0x3c0/0x3c0
-> > [52909.529450][  T310]  ? cpuset_cpus_allowed+0x10b/0x200
-> > [52909.553226][  T310]  ? trace_hardirqs_on+0x3a/0x160
-> > [52909.575565][  T310]  ? __bitmap_and+0xd8/0x100
-> > [52909.596065][  T310]  sched_setaffinity+0x476/0x660
-> > [52909.617927][  T310]  ? __x64_sys_sched_getattr+0x3e0/0x3e0
-> > [52909.643034][  T310]  ? copy_user_generic_unrolled+0x86/0xc0
-> > [52909.669320][  T310]  __x64_sys_sched_setaffinity+0x118/0x180
-> > [52909.696241][  T310]  ? sched_setaffinity+0x660/0x660
-> > [52909.719315][  T310]  ? do_syscall_64+0x79/0xaf0
-> > [52909.740952][  T310]  ? rcu_read_lock_bh_held+0xc0/0xc0
-> > [52909.765524][  T310]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-> > [52909.790368][  T310]  ? entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52909.818929][  T310]  do_syscall_64+0xcc/0xaf0
-> > [52909.839558][  T310]  ? perf_call_bpf_enter+0x1a0/0x1a0
-> > [52909.863846][  T310]  ? syscall_return_slowpath+0x580/0x580
-> > [52909.889545][  T310]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xb3
-> > [52909.916624][  T310]  ? trace_hardirqs_off_caller+0x3a/0x150
-> > [52909.942269][  T310]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> > [52909.966872][  T310]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > [52909.995175][  T310] RIP: 0033:0x7fa3d9cd670d
-> > [52910.017390][  T310] Code: Bad RIP value.
-> > [52910.035569][  T310] RSP: 002b:00007fff1d6588c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000cb
-> > [52910.073407][  T310] RAX: ffffffffffffffda RBX: 00000000000000cb RCX: 00007fa3d9cd670d
-> > [52910.109426][  T310] RDX: 00007fa3d7c37000 RSI: 00000000000000a2 RDI: 0000000000000000
-> > [52910.145197][  T310] RBP: 00000000000000cb R08: ffffffdffdefffff R09: 000000008084b740
-> > [52910.181004][  T310] R10: 0000000000000080 R11: 0000000000000246 R12: 0000000000000002
-> > [52910.217004][  T310] R13: 00007fa3d85fa058 R14: 00007fa3d9b956c0 R15: 00007fa3d85fa000
-> > [52910.254432][  T310] 
-> > [52910.254432][  T310] Showing all locks held in the system:
-> > [52910.289717][  T310] 1 lock held by ksoftirqd/16/94:
-> > [52910.312041][  T310]  #0: ffff88985fa453d8 (&rq->lock){-.-.}-{2:2}, at: newidle_balance+0x88d/0x9c0
-> > [52910.353309][  T310] 1 lock held by khungtaskd/310:
-> > [52910.375374][  T310]  #0: ffffffffb3bcacc0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire.constprop.30+0x0/0x30
-> > [52910.422536][  T310] 3 locks held by kworker/u96:1/60424:
-> > [52910.446875][  T310]  #0: ffff88984fef1538 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52910.493637][  T310]  #1: ffffc900240ffe00 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52910.542269][  T310]  #2: ffffffffb409cf30 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0xa9/0x5c0
-> > [52910.583972][  T310] 2 locks held by runc/74923:
-> > [52910.604801][  T310]  #0: ffff88842f510898 (&tty->ldisc_sem){++++}-{0:0}, at: ldsem_down_read+0x32/0x40
-> > [52910.647284][  T310]  #1: ffffc900064bb2e8 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x187/0xe20
-> > [52910.692274][  T310] 8 locks held by runc/74924:
-> > [52910.713003][  T310]  #0: ffff888842e453d8 (&rq->lock){-.-.}-{2:2}, at: __schedule+0x227/0x1070
-> > [52910.752393][  T310]  #1: ffffffffb3bcacc0 (rcu_read_lock){....}-{1:2}, at: perf_iterate_sb+0x0/0x500
-> > [52910.794272][  T310]  #2: ffff88842f510ae8 (&o_tty->termios_rwsem/1){++++}-{3:3}, at: n_tty_write+0x126/0x7c0
-> > [52910.839386][  T310]  #3: ffff88842f510d30 (&tty->write_wait){-.-.}-{2:2}, at: remove_wait_queue+0x29/0xc0
-> > [52910.885384][  T310]  #4: ffff888429bb0558 (&port->lock#2){-.-.}-{2:2}, at: pty_write+0x82/0xf0
-> > [52910.924906][  T310]  #5: ffffffffb3bcacc0 (rcu_read_lock){....}-{1:2}, at: __queue_work+0x8b/0xa40
-> > [52910.965808][  T310]  #6: ffff88820f19c418 (&pool->lock/1){-.-.}-{2:2}, at: __queue_work+0x154/0xa40
-> > [52911.008506][  T310]  #7: ffff888349990828 (&p->pi_lock){-.-.}-{2:2}, at: try_to_wake_up+0xb0/0xfb0
-> > [52911.054482][  T310] 2 locks held by kworker/26:2/87166:
-> > [52911.078400][  T310]  #0: ffff888207838338 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.124769][  T310]  #1: ffffc900203ffe00 ((work_completion)(&ctx->exit_work)){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.175647][  T310] 2 locks held by kworker/13:2/110105:
-> > [52911.199910][  T310]  #0: ffff888207838338 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.246366][  T310]  #1: ffffc90031bffe00 (free_ipc_work){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.289451][  T310] 2 locks held by kworker/24:0/140617:
-> > [52911.313772][  T310]  #0: ffff888207018938 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.360933][  T310]  #1: ffffc90021a6fe00 ((work_completion)(&rew.rew_work)){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.411991][  T310] 3 locks held by kworker/36:2/142207:
-> > [52911.437085][  T310]  #0: ffff888207838338 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.483296][  T310]  #1: ffffc9002420fe00 (slab_caches_to_rcu_destroy_work){+.+.}-{0:0}, at: process_one_work+0x45c/0xb90
-> > [52911.537354][  T310]  #2: ffffffffb3bd9128 (rcu_state.barrier_mutex){+.+.}-{3:3}, at: rcu_barrier+0x4c/0x440
-> > [52911.585581][  T310] 1 lock held by trinity-c11/151262:
-> > [52911.609175][  T310]  #0: ffff889660160248 (&sb->s_type->i_mutex_key#8){+.+.}-{3:3}, at: __sock_release+0x54/0x120
-> > [52911.655737][  T310] 1 lock held by trinity-c35/151367:
-> > [52911.680063][  T310]  #0: ffffffffb3bd9220 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x4cc/0x5e0
-> > [52911.768193][  T310] 2 locks held by trinity-c30/151624:
-> > [52911.792141][  T310] 1 lock held by trinity-c33/151643:
-> > [52911.815251][  T310]  #0: ffffffffb3bd9220 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x4cc/0x5e0
-> > [52911.863988][  T310] 1 lock held by trinity-c19/151731:
-> > [52911.889078][  T310] 
-> > [52911.899680][  T310] =============================================
+> Since this is a DP bridge I'd say no adjusting, just reject what doesn't
+> fit.
+We have found some panel which HBP less than 8, if we reject to adjust
+video timing, then there is no display. The customer does not accept it,
+they push us to fix it, the only resolve way is to adjust timing.
+> -Daniel
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
