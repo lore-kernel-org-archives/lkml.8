@@ -2,137 +2,184 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BE5C83007
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB57C83007
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD512083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957362082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgD3A6E (ORCPT
+        id S1726573AbgD3BA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
+        Wed, 29 Apr 2020 21:00:56 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37828 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgD3A6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:58:03 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF92E20787;
-        Thu, 30 Apr 2020 00:58:02 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 20:58:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] docs: sysctl/kernel: document ftrace entries
-Message-ID: <20200429205801.5ce95ab3@oasis.local.home>
-In-Reply-To: <20200429205757.8677-1-steve@sk2.org>
-References: <20200429205757.8677-1-steve@sk2.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726279AbgD3BAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 21:00:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4409C2005E8;
+        Thu, 30 Apr 2020 03:00:53 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 29AA42005A3;
+        Thu, 30 Apr 2020 03:00:48 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3382E402E2;
+        Thu, 30 Apr 2020 09:00:42 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V4 1/5] dt-bindings: clock: Convert i.MX6Q clock to json-schema
+Date:   Thu, 30 Apr 2020 08:51:57 +0800
+Message-Id: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 22:57:56 +0200
-Stephen Kitt <steve@sk2.org> wrote:
+Convert the i.MX6Q clock binding to DT schema format using json-schema.
 
-> Based on the ftrace documentation, the tp_printk boot parameter
-> documentation, and the implementation in kernel/trace/trace.c.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
-> Changes since v2:
->   - spelling and grammar fixes in ftrace_dump_on_oops ("outputing it"
->     -> "outputting them")  
->   - "and::" in a single line in tracepoint_printk
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V3:
+	- update license to be with (GPL-2.0-only OR BSD-2-Clause);
+	- remove unnecessary minItem for interrupts;
+	- remove label in example.
+---
+ .../devicetree/bindings/clock/imx6q-clock.txt      | 41 --------------
+ .../devicetree/bindings/clock/imx6q-clock.yaml     | 66 ++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
 
-I didn't re-read or compare this patch with v1, but if the only changes
-were the above:
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-
-> 
-> Documentation/admin-guide/sysctl/kernel.rst | 48 +++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index 82bfd5892663..b1ad4c86274d 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -265,6 +265,27 @@ domain names are in general different. For a detailed discussion
->  see the ``hostname(1)`` man page.
->  
->  
-> +ftrace_dump_on_oops
-> +===================
-> +
-> +Determines whether ``ftrace_dump()`` should be called on an oops (or
-> +kernel panic). This will output the contents of the ftrace buffers to
-> +the console.  This is very useful for capturing traces that lead to
-> +crashes and outputting them to a serial console.
-> +
-> += ===================================================
-> +0 Disabled (default).
-> +1 Dump buffers of all CPUs.
-> +2 Dump the buffer of the CPU that triggered the oops.
-> += ===================================================
-> +
-> +
-> +ftrace_enabled, stack_tracer_enabled
-> +====================================
-> +
-> +See :doc:`/trace/ftrace`.
-> +
-> +
->  hardlockup_all_cpu_backtrace
->  ============================
->  
-> @@ -1191,6 +1212,33 @@ If a value outside of this range is written to ``threads-max`` an
->  ``EINVAL`` error occurs.
->  
->  
-> +traceoff_on_warning
-> +===================
-> +
-> +When set, disables tracing (see :doc:`/trace/ftrace`) when a
-> +``WARN()`` is hit.
-> +
-> +
-> +tracepoint_printk
-> +=================
-> +
-> +When tracepoints are sent to printk() (enabled by the ``tp_printk``
-> +boot parameter), this entry provides runtime control::
-> +
-> +    echo 0 > /proc/sys/kernel/tracepoint_printk
-> +
-> +will stop tracepoints from being sent to printk(), and::
-> +
-> +    echo 1 > /proc/sys/kernel/tracepoint_printk
-> +
-> +will send them to printk() again.
-> +
-> +This only works if the kernel was booted with ``tp_printk`` enabled.
-> +
-> +See :doc:`/admin-guide/kernel-parameters` and
-> +:doc:`/trace/boottime-trace`.
-> +
-> +
->  unknown_nmi_panic
->  =================
->  
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+deleted file mode 100644
+index 13d36d4..0000000
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-* Clock bindings for Freescale i.MX6 Quad
+-
+-Required properties:
+-- compatible: Should be "fsl,imx6q-ccm"
+-- reg: Address and length of the register set
+-- interrupts: Should contain CCM interrupt
+-- #clock-cells: Should be <1>
+-
+-Optional properties:
+-- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
+-  on power off.
+-  Use this property if the SoC should be powered off by external power
+-  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+-  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+-  be using "syscon-poweroff" driver instead.
+-- clocks: list of clock specifiers, must contain an entry for each entry
+-          in clock-names
+-- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+-for the full list of i.MX6 Quad and DualLite clock IDs.
+-
+-Examples:
+-
+-#include <dt-bindings/clock/imx6qdl-clock.h>
+-
+-clks: ccm@20c4000 {
+-	compatible = "fsl,imx6q-ccm";
+-	reg = <0x020c4000 0x4000>;
+-	interrupts = <0 87 0x04 0 88 0x04>;
+-	#clock-cells = <1>;
+-};
+-
+-uart1: serial@2020000 {
+-	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+-	reg = <0x02020000 0x4000>;
+-	interrupts = <0 26 0x04>;
+-	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
+-	clock-names = "ipg", "per";
+-};
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+new file mode 100644
+index 0000000..0dc96ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock bindings for Freescale i.MX6 Quad
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    const: fsl,imx6q-ccm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: 24m osc
++      - description: 32k osc
++      - description: ckih1 clock input
++      - description: anaclk1 clock input
++      - description: anaclk2 clock input
++
++  clock-names:
++    items:
++      - const: osc
++      - const: ckil
++      - const: ckih1
++      - const: anaclk1
++      - const: anaclk2
++
++  fsl,pmic-stby-poweroff:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Use this property if the SoC should be powered off by external power
++      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
++      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
++      be using "syscon-poweroff" driver instead.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#clock-cells'
++
++examples:
++  # Clock Control Module node:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clock-controller@20c4000 {
++        compatible = "fsl,imx6q-ccm";
++        reg = <0x020c4000 0x4000>;
++        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
++                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
++        #clock-cells = <1>;
++    };
+-- 
+2.7.4
 
