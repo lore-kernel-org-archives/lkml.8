@@ -2,115 +2,186 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66506C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50EBC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 440102072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BC920774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u7CR8FQp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hc8MJ3lI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgD3Mid (ORCPT
+        id S1726975AbgD3Mis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:38:33 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44506 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726511AbgD3Mic (ORCPT
+        Thu, 30 Apr 2020 08:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726946AbgD3Mir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:38:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588250312; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=s9tiGzSDMy7NhyUbB2bWUK71xrktfp/JVsuI2n9mC8A=;
- b=u7CR8FQpVednGb+38mOkq20bHa0egUVVxKoD9Xdp6O/pIsvCU/0pX9qlF0KNXgaQJAh6UQkG
- PDznMJ7yJqepB6vbeBgnyn3k9SJSahzrZMfDPN/sGlV84Is9OxeXW5G0KThixrIkWB9F8HFr
- Ui+ywX4uOFK5QSks+JjdEbGHPQE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaac6ba.7fdc60f4d570-smtp-out-n05;
- Thu, 30 Apr 2020 12:38:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BB9F4C4478F; Thu, 30 Apr 2020 12:38:18 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EBE81C433D2;
-        Thu, 30 Apr 2020 12:38:17 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Thu, 30 Apr 2020 08:38:47 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16AA3C035494;
+        Thu, 30 Apr 2020 05:38:47 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id q124so2677189pgq.13;
+        Thu, 30 Apr 2020 05:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:to:cc:subject:from:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wRkLzyuGtF2Q4xp2VtfmTiBkQlJCTHTwWparYAwfuoU=;
+        b=hc8MJ3lIn6hFiDSeQRVBfFF5RjA6A4aKPnMetaQ2cBW3UpKDngHpg7uTPdFQDAC/yv
+         3OcBj+GPux+F9egKh2SmpGDxiBzsBgUY/E8N5fh3uG+G41v4lIpFZWysQBIM95+nVzvM
+         EOFZWGukCgJi+fi3tRBkGlzTwYeuQwUNv841tdEyCVhF1HXWk0FWreJqAEqwChsowQED
+         +2RoXGbP7wAyNBIos5OqBvM//NlO2/Qm2WcM9qxsI9GGQ68+QyR+5lFBDzLNYFHAeEI7
+         nZDfcjXr2G2sIcVCNJ1thihIsrN/0NAkczvaVuGuQreOgq5tWbD/JhtvTYTQvhOt+loZ
+         XrTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:to:cc:subject:from:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wRkLzyuGtF2Q4xp2VtfmTiBkQlJCTHTwWparYAwfuoU=;
+        b=CrgCjoZIYbZ8hxd4dv+YQt5N2fVUBG3KxebMF5eZ7k6TABoi0rqWc2Teu6WD+NLk9A
+         bh9R0+fRaAU7D/uh78eqqbZM9pfoR9BOKpZsyAfXRPWBV4lrGXtaKuMNFDvOUciUXZ1H
+         lk7DBKIB2Be+ylKOTJFqj1jXighgUCUP2jJ6VqiY9zfazH40YscYZYh/wAxE5Hxwg4mv
+         929RETRwFMzft9LpJ9QELPWwWR0hqGzpEiGJt0kWL3/0gH30O8ZfZQx/FTZrHouPqlgm
+         i20igvBGkAO0fxjVQtGYYsQ1h9v3RfDrhHgK6q9xUYBha7w6Ag/2nTBi/meDHPUtdj8e
+         HVSA==
+X-Gm-Message-State: AGi0PuYz4qzFbGgTRsN+7HFwFfglxHbmwHa94nxxkH10lSEUA1tvekrw
+        PlB9lgxk7RhYD846HzCP2Ikx+caFyO4=
+X-Google-Smtp-Source: APiQypJnc8CIw8oUiz5n/9wpAcF+kiut6okC3LgQuHaXJ0vd7qaO8AbwDSQ+6SFKCPDpJZnkA74Gew==
+X-Received: by 2002:a62:1814:: with SMTP id 20mr3378663pfy.63.1588250326268;
+        Thu, 30 Apr 2020 05:38:46 -0700 (PDT)
+Received: from localhost ([240f:3d:c6f9:1:201:c0ff:fe08:7c1a])
+        by smtp.gmail.com with ESMTPSA id q23sm202716pgn.90.2020.04.30.05.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 05:38:45 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 21:38:42 +0900 (JST)
+Message-Id: <20200430.213842.00392641.hdk1983@gmail.com>
+To:     linux-nilfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference at
+ 00000000000000a8 in nilfs_segctor_do_co
+From:   Hideki EIRAKU <hdk1983@gmail.com>
+In-Reply-To: <20200328.182640.1933740379722138264.hermes@ceres.dti.ne.jp>
+References: <20200328.182640.1933740379722138264.hermes@ceres.dti.ne.jp>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Apr 2020 20:38:17 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        rnayak@codeaurora.org, stanley.chu@mediatek.com,
-        alim.akhtar@samsung.com, beanhuo@micron.com,
-        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
- during system resume
-In-Reply-To: <BYAPR04MB462931F8DF1112CAF7F80CA4FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
-References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
- <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
- <BYAPR04MB462931F8DF1112CAF7F80CA4FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
-Message-ID: <eb7520b6274474f4b8d803a76b85107a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avri,
-
-On 2020-04-30 17:11, Avri Altman wrote:
->> 
->> On 2020-04-29 21:10, Can Guo wrote:
->> > During system resume, scsi_resume_device() decreases a request queue's
->> > pm_only counter if the scsi device was quiesced before. But after that,
->> > if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
->> > still held (non-zero). Current scsi resume hook only sets the RPM status
->> > of the scsi device and its request queue to RPM_ACTIVE, but leaves the
->> > pm_only counter unchanged. This may make the request queue's pm_only
->> > counter remain non-zero after resume hook returns, hence those who are
->> > waiting on the mq_freeze_wq would never be woken up. Fix this by calling
->> > blk_post_runtime_resume() if pm_only is non-zero to balance the pm_only
->> > counter which is held by the scsi device's RPM ops.
->> 
->> How was this issue discovered? How has this patch been tested?
+> In Msg <874kuapb2s.fsf@logand.com>;
+>    Subject "Re: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct":
 > 
-> I think this insight was originally gained as part of commit 
-> fb276f770118
-> (scsi: ufs: Enable block layer runtime PM for well-known logical units)
-> 
-> But I will let Can reply on that.
-> 
-> Thanks,
-> Avri
-> 
-
-Thanks for pointing to that commit, but this is a different story here.
-SCSI devices, which have block layer runtime PM enabled, can hit this 
-issue
-during system resume. In the contratry, those which have block layer 
-runtime
-PM disabled are immune to this issue.
-
-Thanks,
-
-Can Guo.
+>> Tomas Hlavaty <tom@logand.com> writes:
+>>>>> 2) Can you mount the corrupted(?) partition from a recent version of
+>>>>> kernel ?
 >> 
->> Thanks,
+>> I tried the following Linux kernel versions:
 >> 
->> Bart.
+>> - v4.19
+>> - v5.4
+>> - v5.5.11
+>> 
+>> and still get the crash
+
+I found conditions to reproduce this issue with Linux 5.7-rc3:
+
+- CONFIG_MEMCG=y *and* CONFIG_BLK_CGROUP=y
+
+- When the NILFS2 file system writes to a device, the device file has
+  never written by other programs since boot
+
+The following is an example with CONFIG_MEMCG=y and
+CONFIG_BLK_CGROUP=y kernel.  If you do mkfs and mount it, it works
+because the mkfs command has written data to the device file before
+mounting:
+
+# mkfs -t nilfs2 /dev/sda1
+mkfs.nilfs2 (nilfs-utils 2.2.7)
+Start writing file system initial data to the device
+       Blocksize:4096  Device:/dev/sda1  Device Size:267386880
+File system initialization succeeded !! 
+# mount /dev/sda1 /mnt
+# touch /mnt
+# sync
+# 
+
+Loopback mount seems to be the same - if you do losetup, mkfs and
+mount on a loopback device, it works:
+
+# losetup /dev/loop0 foo
+# mkfs -t nilfs2 /dev/loop0
+mkfs.nilfs2 (nilfs-utils 2.2.7)
+Start writing file system initial data to the device
+       Blocksize:4096  Device:/dev/loop0  Device Size:267386880
+File system initialization succeeded !! 
+# mount /dev/sda1 /mnt
+# touch /mnt
+# sync
+# 
+
+But if you do mkfs on a file and use mount -o loop, it may fail,
+depending on whether the loopback device assigned by the mount command
+was used or not before mounting:
+
+# /sbin/mkfs.nilfs2 ./foo
+mkfs.nilfs2 (nilfs-utils 2.2.7)
+Start writing file system initial data to the device
+       Blocksize:4096  Device:./foo  Device Size:268435456
+File system initialization succeeded !! 
+# mount -o loop ./foo /mnt
+[   36.371331] NILFS (loop0): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
+# touch /mnt
+# sync
+[   40.252869] BUG: kernel NULL pointer dereference, address: 00000000000000a8
+(snip)
+
+After reboot, it fails:
+
+# mount /dev/sda1 /mnt
+[   14.021188] NILFS (sda1): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
+# touch /mnt
+# sync
+[   20.576309] BUG: kernel NULL pointer dereference, address: 00000000000000a8
+(snip)
+
+But if you do dummy write to the device file before mounting, it
+works:
+
+# dd if=/dev/sda1 of=/dev/sda1 count=1
+1+0 records in
+1+0 records out
+512 bytes copied, 0.0135982 s, 37.7 kB/s
+# mount /dev/sda1 /mnt
+[   52.604560] NILFS (sda1): mounting unchecked fs
+[   52.613335] NILFS (sda1): recovery complete
+[   52.613877] NILFS (sda1): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
+# touch /mnt
+# sync
+# 
+
+# losetup /dev/loop0 foo
+# dd if=/dev/loop0 of=/dev/loop0 count=1
+1+0 records in
+1+0 records out
+512 bytes copied, 0.0243797 s, 21.0 kB/s
+# mount /dev/loop0 /mnt
+[  271.915595] NILFS (loop0): mounting unchecked fs
+[  272.049603] NILFS (loop0): recovery complete
+[  272.049724] NILFS (loop0): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
+# touch /mnt
+# sync
+# 
+
+I think the dummy write is a simple workaround for now, unless
+mounting NILFS2 at boot time.  But I have been using NILFS2 /home for
+years, I would like to know better workarounds.
+
