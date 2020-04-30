@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C560FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D453C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 969F1206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D201206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255784;
-	bh=VH3MrWqeXNoY1d7dlhcKWGe+53MwSL9WYC83oj3Q7Vs=;
+	s=default; t=1588255785;
+	bh=zO7R679Gr2AtMhtzxEms+JbhQBtZBn/rOHFwp6nT9xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xM2QhfsX9cMNGv3obT6z38aEo20RYAzhYblxvaVokp9kpAXaiMvst94hqoN7mPP3p
-	 Sahkxd4DN0QUTdHdQzilwoZT0OJHBZPJ5rT9Q1zVxY8U0Ffly2ksTvWXMBthMXqxzi
-	 n4vqw5uFAwYbVLVc3+7Vf0Btz/4bsDp1au5o3DFo=
+	b=OOXDuBUdi3d/dfBEafol6kHLOIOSS0FK6IuWIpBkBHmkh6BJsAuGBAszswqlyTWE0
+	 T4+z7K5+xQFdg7b+LZU69Uh607CYwDQa46QMFPmtuzeOKH8RlsOi4cMR+ufPq7sDwb
+	 V2Eamj+afEAxTzUZJ9pYB/1UcKvXtlnrC8KGIFmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgD3OJn (ORCPT
+        id S1728691AbgD3OJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:09:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbgD3Nvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:45 -0400
+        id S1728187AbgD3Nvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEFF22137B;
-        Thu, 30 Apr 2020 13:51:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0266208DB;
+        Thu, 30 Apr 2020 13:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254704;
-        bh=VH3MrWqeXNoY1d7dlhcKWGe+53MwSL9WYC83oj3Q7Vs=;
+        s=default; t=1588254706;
+        bh=zO7R679Gr2AtMhtzxEms+JbhQBtZBn/rOHFwp6nT9xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIRc9vROXwziewuaw2YYCtauBArTxuYe6CcxZbBgWIFKjU/7GkkOfdWPYwh7LPvVk
-         OAqRmYAHbAAEZU7u+RBaY3XDM4rEhN0VCVKHZWArvQwZWog8FEoBeI/DdChiW5nug2
-         RleAP0CS0i0mmLz3Ytqz0K5ijwcLk42+2gAdfh6A=
+        b=ahcXR5SN75w+Uu5qJlIPaUVEtgP83DiXg+5sw04SnNcstAbhyAWBclP7YqnJhrEgT
+         TKFxO4pFN1yl6LBxnX7EflD6L/bskFn7Xi1qkeggOYJYz2Oqc0uMVpYu66JjsYVUmK
+         oQvy7oeuA86KmO0NI1NxjtjZscumKfM2G0MwT648=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>, Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 53/79] bpf: Fix handling of XADD on BTF memory
-Date:   Thu, 30 Apr 2020 09:50:17 -0400
-Message-Id: <20200430135043.19851-53-sashal@kernel.org>
+Cc:     Chris Rorvick <chris@rorvick.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 55/79] iwlwifi: actually check allocated conf_tlv pointer
+Date:   Thu, 30 Apr 2020 09:50:19 -0400
+Message-Id: <20200430135043.19851-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -58,47 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Chris Rorvick <chris@rorvick.com>
 
-[ Upstream commit 8ff3571f7e1bf3f293cc5e3dc14f2943f4fa7fcf ]
+[ Upstream commit a176e114ace4cca7df0e34b4bd90c301cdc6d653 ]
 
-check_xadd() can cause check_ptr_to_btf_access() to be executed with
-atype==BPF_READ and value_regno==-1 (meaning "just check whether the access
-is okay, don't tell me what type it will result in").
-Handle that case properly and skip writing type information, instead of
-indexing into the registers at index -1 and writing into out-of-bounds
-memory.
+Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
+conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
+("iwlwifi: dbg: move debug data to a struct") but does not implement the
+check correctly.
 
-Note that at least at the moment, you can't actually write through a BTF
-pointer, so check_xadd() will reject the program after calling
-check_ptr_to_btf_access with atype==BPF_WRITE; but that's after the
-verifier has already corrupted memory.
-
-This patch assumes that BTF pointers are not available in unprivileged
-programs.
-
-Fixes: 9e15db66136a ("bpf: Implement accurate raw_tp context access via BTF")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200417000007.10734-2-jannh@google.com
+Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
+Tweeted-by: @grsecurity
+Signed-off-by: Chris Rorvick <chris@rorvick.com>
+Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200417074558.12316-1-sedat.dilek@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 2 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index e4357a301fb8f..1381913cb10ba 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2885,7 +2885,7 @@ static int check_ptr_to_btf_access(struct bpf_verifier_env *env,
- 	if (ret < 0)
- 		return ret;
- 
--	if (atype == BPF_READ) {
-+	if (atype == BPF_READ && value_regno >= 0) {
- 		if (ret == SCALAR_VALUE) {
- 			mark_reg_unknown(env, regs, value_regno);
- 			return 0;
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 0481796f75bc4..c24350222133d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1467,7 +1467,7 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
+ 				kmemdup(pieces->dbg_conf_tlv[i],
+ 					pieces->dbg_conf_tlv_len[i],
+ 					GFP_KERNEL);
+-			if (!pieces->dbg_conf_tlv[i])
++			if (!drv->fw.dbg.conf_tlv[i])
+ 				goto out_free_fw;
+ 		}
+ 	}
 -- 
 2.20.1
 
