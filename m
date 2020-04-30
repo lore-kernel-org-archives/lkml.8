@@ -2,121 +2,106 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EBFC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C703CC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0450D2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234056;
-	bh=7Q6yx7BAcNGphXyMJ64Hizlmq02sPIkiGXe5IfpE7Z8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClmFZXtJ8Hg4Z+t38rSyKlPrPECZRex1juXi0ieKup4a0q/HjCOmx68ScE3jOAsq1
-	 cWx/Y+MpFGwUaHl55//++OY6nTwAFH/vUfItSqZEO35UOMJEbSdLT8BteNQm7qrgQU
-	 rQv/B7L86LjudkIwjGPrn8arKU9HtB+jrpyp5zVI=
+	by mail.kernel.org (Postfix) with ESMTP id A6E1E21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgD3IHe (ORCPT
+        id S1726783AbgD3IHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:07:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgD3IGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:06:43 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        Thu, 30 Apr 2020 04:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgD3IHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:07:39 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A6EC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:07:38 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7E032192A;
-        Thu, 30 Apr 2020 08:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234003;
-        bh=7Q6yx7BAcNGphXyMJ64Hizlmq02sPIkiGXe5IfpE7Z8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtcL8ObD9ZShKGhTyCFi7x9xii5PxTKPG28YjJWpUDfsSnzJR2XRsB+IuWynuwZ5s
-         FVggj8KBUEpbTwrAOvO0TrscLr5TJOODGSjQ8wfYnUasQD+lssLZCNSAjD00ONAR87
-         LuwCzjE1oAbDDpLUvris+w/1Bl6QBWsByjAMKaz8=
-Received: by pali.im (Postfix)
-        id EF9F8AC9; Thu, 30 Apr 2020 10:06:40 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4 02/12] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
-Date:   Thu, 30 Apr 2020 10:06:15 +0200
-Message-Id: <20200430080625.26070-3-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
-References: <20200430080625.26070-1-pali@kernel.org>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AD6532A0221;
+        Thu, 30 Apr 2020 09:07:35 +0100 (BST)
+Date:   Thu, 30 Apr 2020 10:07:33 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
+        <pgaj@cadence.com>, <linux-i3c@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <praneeth@ti.com>
+Subject: Re: [PATCH v6 3/8] i3c: master: i3c mastership request and handover
+Message-ID: <20200430100733.4e0dc578@collabora.com>
+In-Reply-To: <1587140462-30209-1-git-send-email-pthombar@cadence.com>
+References: <1587140398-29473-1-git-send-email-pthombar@cadence.com>
+        <1587140462-30209-1-git-send-email-pthombar@cadence.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+On Fri, 17 Apr 2020 18:21:02 +0200
+Parshuram Thombare <pthombar@cadence.com> wrote:
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
+> +
+> +/* This function is expected to be called with normaluse_lock */
+> +int i3c_master_acquire_bus(struct i3c_master_controller *master)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!master->this || master->this != master->bus.cur_master) {
 
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
+Let's limit the number of indentations by doing
 
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
+	if (master->this == master->bus.cur_master)
+		return 0;
 
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
 
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
+> +		if (master->mr_state == I3C_MR_IDLE) {
+> +			master->mr_state = I3C_MR_WAIT_DA;
+> +			init_completion(&master->mr_comp);
+> +			queue_work(master->wq, &master->sec_mst_work);
+> +			/*
+> +			 * Bus acquire procedure may need write lock
+> +			 * so release read lock before yielding
+> +			 * to bus acquire state machine
+> +			 */
+> +			i3c_bus_normaluse_unlock(&master->bus);
+> +			wait_for_completion(&master->mr_comp);
+> +			i3c_bus_normaluse_lock(&master->bus);
 
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
+Is that really enough? I remember we had something a bit more complex
+to handle the case where bus is acquired to send a message to a device,
+and another master on the bus re-acquires it before we have a chance to
+send this message message. i3c_master_acquire_bus_ownership() was
+dealing with that in Przemek series. It seems you've rewritten a lot of
+these things. Would you mind explaining why, and how that works?
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+> +			if (master->mr_state != I3C_MR_DONE)
+> +				ret = -EAGAIN;
+> +			master->mr_state = I3C_MR_IDLE;
+> +		} else {
+> +			/*
+> +			 * MR request is already in process for
+> +			 * this master
+> +			 */
+> +			ret = -EAGAIN;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_master_acquire_bus);
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index f9955b494267..74b90940a9d4 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -356,10 +356,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 
- 	advk_pcie_wait_for_link(pcie);
- 
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
--- 
-2.20.1
 
