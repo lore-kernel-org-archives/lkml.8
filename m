@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC22C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2689C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F17920661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9040A20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255043;
-	bh=RtPGQP6LVoOfzFD/zLo30XZLoTCqCol91LfLLxoVg2k=;
+	s=default; t=1588255048;
+	bh=3/POyiqtelTVhdORwpZ36G6ZaXCF8YcncynUzPf+djo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u8UuUWdN4sAeusaJg1x9R8ilc8i3MVicp9MLYji4FdNvJWI8by/lNvn1lai5vHxyg
-	 rBXIUecQqkJGJ6vZomdhJObrf9tVQ5tIaG2CCUfx2yvfFtj74vgrDQBflmEMSbpjKf
-	 Rxn0yajUhHPfVGEw4m+O2ao5keLGHuwFc2mVxNWs=
+	b=s1wiMF1hFH6QZy8vAsf4/DZ1dvv23A/9GKFxo78ReGfmmeiQWmNz2hbywXHARPlM4
+	 BsSAyNABpBNOUmzibxK3wyUK9SOJBjZFahzQGhDSfwujb9DPEOLFBkWYzWD+eVEosH
+	 YuaZBaz/dvZitJzyZ5ZJApIAEWxQ4zyoA7pQjUck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgD3N5V (ORCPT
+        id S1729087AbgD3Ny5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbgD3Ny7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:59 -0400
+        id S1728900AbgD3NyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1462420873;
-        Thu, 30 Apr 2020 13:54:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C4820873;
+        Thu, 30 Apr 2020 13:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254898;
-        bh=RtPGQP6LVoOfzFD/zLo30XZLoTCqCol91LfLLxoVg2k=;
+        s=default; t=1588254849;
+        bh=3/POyiqtelTVhdORwpZ36G6ZaXCF8YcncynUzPf+djo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQZOeY+nttbhTGHeaTlL1Lb09/QUtrQ9HPF2HrCC/sXFOpfR1nYhzdr5zMEZ24RLe
-         zkI3TPeZZ1LlFq915wngk4vJxQlL0EVMRsMzQiwwI3GsEkX7U5aSazbAIQrpODslMJ
-         v4mEx0qPNxeAJOnF+9JAq3nX3KLtr/lqDGlYkfpM=
+        b=Ry3UICElTD3yXk1nXxgz7xENlenctsToLfzc+lw0e5XPeRl9j+YAm43+2tRrIQwB4
+         6XsIjACQ2zzC3O24fA+QKjRl76TqEEMZyGCbi1XalGS7jOSBy2XqNif1gumktuJ5wQ
+         rW3ZmN0i/4sukD2Bnn9Bpmtmc/4RrC/G0ceaBkoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/11] team: fix hang in team_mode_get()
-Date:   Thu, 30 Apr 2020 09:54:46 -0400
-Message-Id: <20200430135453.21353-4-sashal@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Fabio Estevam <festivem@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 06/27] ASoC: sgtl5000: Fix VAG power-on handling
+Date:   Thu, 30 Apr 2020 09:53:41 -0400
+Message-Id: <20200430135402.20994-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135453.21353-1-sashal@kernel.org>
-References: <20200430135453.21353-1-sashal@kernel.org>
+In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
+References: <20200430135402.20994-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,93 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit 1c30fbc76b8f0c07c92a8ca4cd7c456612e17eb5 ]
+[ Upstream commit aa7812737f2877e192d57626cbe8825cc7cf6de9 ]
 
-When team mode is changed or set, the team_mode_get() is called to check
-whether the mode module is inserted or not. If the mode module is not
-inserted, it calls the request_module().
-In the request_module(), it creates a child process, which is
-the "modprobe" process and waits for the done of the child process.
-At this point, the following locks were used.
-down_read(&cb_lock()); by genl_rcv()
-    genl_lock(); by genl_rcv_msc()
-        rtnl_lock(); by team_nl_cmd_options_set()
-            mutex_lock(&team->lock); by team_nl_team_get()
+As mentioned slightly out of patch context in the code, there
+is no reset routine for the chip. On boards where the chip is
+supplied by a fixed regulator, it might not even be resetted
+during (e.g. watchdog) reboot and can be in any state.
 
-Concurrently, the team module could be removed by rmmod or "modprobe -r"
-The __exit function of team module is team_module_exit(), which calls
-team_nl_fini() and it tries to acquire following locks.
-down_write(&cb_lock);
-    genl_lock();
-Because of the genl_lock() and cb_lock, this process can't be finished
-earlier than request_module() routine.
+If the device is probed with VAG enabled, the driver's probe
+routine will generate a loud pop sound when ANA_POWER is
+being programmed. Avoid this by properly disabling just the
+VAG bit and waiting the required power down time.
 
-The problem secenario.
-CPU0                                     CPU1
-team_mode_get
-    request_module()
-                                         modprobe -r team_mode_roundrobin
-                                                     team <--(B)
-        modprobe team <--(A)
-            team_mode_roundrobin
-
-By request_module(), the "modprobe team_mode_roundrobin" command
-will be executed. At this point, the modprobe process will decide
-that the team module should be inserted before team_mode_roundrobin.
-Because the team module is being removed.
-
-By the module infrastructure, the same module insert/remove operations
-can't be executed concurrently.
-So, (A) waits for (B) but (B) also waits for (A) because of locks.
-So that the hang occurs at this point.
-
-Test commands:
-    while :
-    do
-        teamd -d &
-	killall teamd &
-	modprobe -rv team_mode_roundrobin &
-    done
-
-The approach of this patch is to hold the reference count of the team
-module if the team module is compiled as a module. If the reference count
-of the team module is not zero while request_module() is being called,
-the team module will not be removed at that moment.
-So that the above scenario could not occur.
-
-Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reviewed-by: Fabio Estevam <festivem@gmail.com>
+Link: https://lore.kernel.org/r/20200414181140.145825-1-sebastian.reichel@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/team/team.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/sgtl5000.c | 34 ++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/sgtl5000.h |  1 +
+ 2 files changed, 35 insertions(+)
 
-diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index e51fb7cb77282..d0943415aeff1 100644
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -466,6 +466,9 @@ static const struct team_mode *team_mode_get(const char *kind)
- 	struct team_mode_item *mitem;
- 	const struct team_mode *mode = NULL;
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index ca8a70ab22a82..d64cb28e8dc5c 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1563,6 +1563,40 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
+ 		dev_err(&client->dev,
+ 			"Error %d initializing CHIP_CLK_CTRL\n", ret);
  
-+	if (!try_module_get(THIS_MODULE))
-+		return NULL;
++	/* Mute everything to avoid pop from the following power-up */
++	ret = regmap_write(sgtl5000->regmap, SGTL5000_CHIP_ANA_CTRL,
++			   SGTL5000_CHIP_ANA_CTRL_DEFAULT);
++	if (ret) {
++		dev_err(&client->dev,
++			"Error %d muting outputs via CHIP_ANA_CTRL\n", ret);
++		goto disable_clk;
++	}
 +
- 	spin_lock(&mode_list_lock);
- 	mitem = __find_mode(kind);
- 	if (!mitem) {
-@@ -481,6 +484,7 @@ static const struct team_mode *team_mode_get(const char *kind)
- 	}
- 
- 	spin_unlock(&mode_list_lock);
-+	module_put(THIS_MODULE);
- 	return mode;
- }
- 
++	/*
++	 * If VAG is powered-on (e.g. from previous boot), it would be disabled
++	 * by the write to ANA_POWER in later steps of the probe code. This
++	 * may create a loud pop even with all outputs muted. The proper way
++	 * to circumvent this is disabling the bit first and waiting the proper
++	 * cool-down time.
++	 */
++	ret = regmap_read(sgtl5000->regmap, SGTL5000_CHIP_ANA_POWER, &value);
++	if (ret) {
++		dev_err(&client->dev, "Failed to read ANA_POWER: %d\n", ret);
++		goto disable_clk;
++	}
++	if (value & SGTL5000_VAG_POWERUP) {
++		ret = regmap_update_bits(sgtl5000->regmap,
++					 SGTL5000_CHIP_ANA_POWER,
++					 SGTL5000_VAG_POWERUP,
++					 0);
++		if (ret) {
++			dev_err(&client->dev, "Error %d disabling VAG\n", ret);
++			goto disable_clk;
++		}
++
++		msleep(SGTL5000_VAG_POWERDOWN_DELAY);
++	}
++
+ 	/* Follow section 2.2.1.1 of AN3663 */
+ 	ana_pwr = SGTL5000_ANA_POWER_DEFAULT;
+ 	if (sgtl5000->num_supplies <= VDDD) {
+diff --git a/sound/soc/codecs/sgtl5000.h b/sound/soc/codecs/sgtl5000.h
+index 22f3442af9826..9ea41749d0375 100644
+--- a/sound/soc/codecs/sgtl5000.h
++++ b/sound/soc/codecs/sgtl5000.h
+@@ -236,6 +236,7 @@
+ /*
+  * SGTL5000_CHIP_ANA_CTRL
+  */
++#define SGTL5000_CHIP_ANA_CTRL_DEFAULT		0x0133
+ #define SGTL5000_LINE_OUT_MUTE			0x0100
+ #define SGTL5000_HP_SEL_MASK			0x0040
+ #define SGTL5000_HP_SEL_SHIFT			6
 -- 
 2.20.1
 
