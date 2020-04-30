@@ -2,63 +2,109 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65A3C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466CCC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04922082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9BC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgD3J4E (ORCPT
+        id S1726845AbgD3J4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:56:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:51616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgD3J4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:56:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14DCE1063;
-        Thu, 30 Apr 2020 02:56:03 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.118])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 928963F68F;
-        Thu, 30 Apr 2020 02:56:01 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 10:55:59 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        guohanjun@huawei.com, john.garry@huawei.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC PATCH] cpufreq: add support for HiSilicon SoC HIP09
-Message-ID: <20200430095559.GB28579@bogus>
-References: <1588227599-46438-1-git-send-email-wangxiongfeng2@huawei.com>
+        Thu, 30 Apr 2020 05:56:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3399 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726404AbgD3J4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:56:13 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 42939D7958846926E965;
+        Thu, 30 Apr 2020 17:56:11 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 30 Apr 2020 17:56:03 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] scsi: aacraid: Make some symbols static
+Date:   Thu, 30 Apr 2020 18:02:12 +0800
+Message-ID: <1588240932-69020-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588227599-46438-1-git-send-email-wangxiongfeng2@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:19:59PM +0800, Xiongfeng Wang wrote:
-> HiSilicon SoC has a separate System Control Processor(SCP) dedicated for
-> clock frequency adjustment and has been using the cpufreq driver
-> 'cppc-cpufreq'. New HiSilicon SoC HIP09 add support for CPU Boost, but
-> ACPI CPPC doesn't support this. In HiSilicon SoC HIP09, each core has
-> its own clock domain. It is better for the core itself to adjust its
-> frequency when we require fast response. In this patch, we add a
-> separate cpufreq driver for HiSilicon SoC HIP09.
->
+Fix the following sparse warnings:
 
-I disagree with this approach unless you have tried to extend the CPPC
-in ACPI to accommodate this boost feature you need. Until you show those
-efforts and disagreement to do that from ASWG, I am NACKing this approach.
+drivers/scsi/aacraid/linit.c:867:6: warning:
+symbol 'aac_tmf_callback' was not declared. Should it be static?
+drivers/scsi/aacraid/linit.c:1081:5: warning:
+symbol 'aac_eh_host_reset' was not declared. Should it be static?
+drivers/scsi/aacraid/commsup.c:2354:5: warning:
+symbol 'aac_send_safw_hostttime' was not declared. Should it be static?
+drivers/scsi/aacraid/commsup.c:2383:5: warning:
+symbol 'aac_send_hosttime' was not declared. Should it be static?
 
---
-Regards,
-Sudeep
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/scsi/aacraid/commsup.c | 4 ++--
+ drivers/scsi/aacraid/linit.c   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
+index ddd73f6..8ee4e1a 100644
+--- a/drivers/scsi/aacraid/commsup.c
++++ b/drivers/scsi/aacraid/commsup.c
+@@ -2351,7 +2351,7 @@ static int aac_send_wellness_command(struct aac_dev *dev, char *wellness_str,
+ 	goto out;
+ }
+ 
+-int aac_send_safw_hostttime(struct aac_dev *dev, struct timespec64 *now)
++static int aac_send_safw_hostttime(struct aac_dev *dev, struct timespec64 *now)
+ {
+ 	struct tm cur_tm;
+ 	char wellness_str[] = "<HW>TD\010\0\0\0\0\0\0\0\0\0DW\0\0ZZ";
+@@ -2380,7 +2380,7 @@ int aac_send_safw_hostttime(struct aac_dev *dev, struct timespec64 *now)
+ 	return ret;
+ }
+ 
+-int aac_send_hosttime(struct aac_dev *dev, struct timespec64 *now)
++static int aac_send_hosttime(struct aac_dev *dev, struct timespec64 *now)
+ {
+ 	int ret = -ENOMEM;
+ 	struct fib *fibptr;
+diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+index a0a2b3a..a308e86 100644
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -864,7 +864,7 @@ static u8 aac_eh_tmf_hard_reset_fib(struct aac_hba_map_info *info,
+        return HBA_IU_TYPE_SATA_REQ;
+ }
+ 
+-void aac_tmf_callback(void *context, struct fib *fibptr)
++static void aac_tmf_callback(void *context, struct fib *fibptr)
+ {
+ 	struct aac_hba_resp *err =
+ 		&((struct aac_native_hba *)fibptr->hw_fib_va)->resp.err;
+@@ -1078,7 +1078,7 @@ static int aac_eh_bus_reset(struct scsi_cmnd* cmd)
+  *	@scsi_cmd:	SCSI command block causing the reset
+  *
+  */
+-int aac_eh_host_reset(struct scsi_cmnd *cmd)
++static int aac_eh_host_reset(struct scsi_cmnd *cmd)
+ {
+ 	struct scsi_device * dev = cmd->device;
+ 	struct Scsi_Host * host = dev->host;
+-- 
+2.6.2
+
