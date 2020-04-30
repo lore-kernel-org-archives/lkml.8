@@ -2,184 +2,136 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664FAC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02CFC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 426322076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A7B2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Wmw/kJfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgD3MSv (ORCPT
+        id S1727088AbgD3MTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:18:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50670 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726500AbgD3MSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:18:50 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6FD73288DB83002DBE5D;
-        Thu, 30 Apr 2020 20:18:43 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
- 20:18:35 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <njavali@marvell.com>, <GR-QLogic-Storage-Upstream@marvell.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <hmadhani@marvell.com>, <joe.carnuccio@cavium.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] scsi: qla2xxx: use true,false for ha->fw_dumped
-Date:   Thu, 30 Apr 2020 20:18:00 +0800
-Message-ID: <20200430121800.15323-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        Thu, 30 Apr 2020 08:19:14 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:55579 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgD3MTO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:19:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588249154; x=1619785154;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=FqHwryvgLS2NgWVBuzeKX/BTcH4tM09RlPs9SNV3JzI=;
+  b=Wmw/kJfL6C6SLs3jUxhQi5KjdKCKVtUcNE0WRV5yiBqm4OHbRKo04CN/
+   MgabzmYYM3uIG1oVqKDtG8DZ0LYOZNl6WsSsTMpwxCwAqF+MOnlRtp+8W
+   NfPGcBzYIRdBgujvUdZsF7TQJTf7LMmT349+Fs8RWwFke7r803ZJNuorP
+   0=;
+IronPort-SDR: RA0AyilcDdCw1tnYARhcVG8Id/5ch/NAkIl7UeiRy32XFKG0h6SL0Saz13LGDdM6cMzjQ0wqon
+ AYXRGP1WWADA==
+X-IronPort-AV: E=Sophos;i="5.73,334,1583193600"; 
+   d="scan'208";a="40433150"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 30 Apr 2020 12:19:11 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id 74BA9A1DFE;
+        Thu, 30 Apr 2020 12:19:10 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Apr 2020 12:19:07 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.90) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Apr 2020 12:19:03 +0000
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+ <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+ <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
+ <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
+ <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
+ <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
+ <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
+ <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+ <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
+ <0c919928-00ed-beda-e984-35f7b6ca42fb@redhat.com>
+ <702b2eaa-e425-204e-e19d-649282bfe170@amazon.com>
+ <d13f3c5c-33f5-375b-8582-fe37402777cb@redhat.com>
+ <d4091c63-6df6-8980-72c6-282cc553527e@amazon.com>
+ <bed6e250-9de5-d719-623b-b72db78ebcb9@redhat.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <131ae410-58a5-63c9-14b5-0fe39ab69278@amazon.com>
+Date:   Thu, 30 Apr 2020 14:19:01 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <bed6e250-9de5-d719-623b-b72db78ebcb9@redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D29UWC001.ant.amazon.com (10.43.162.143) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
-
-drivers/scsi/qla2xxx/qla_tmpl.c:1120:2-20: WARNING: Assignment of 0/1 to
-bool variable
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/scsi/qla2xxx/qla_attr.c | 2 +-
- drivers/scsi/qla2xxx/qla_dbg.c  | 4 ++--
- drivers/scsi/qla2xxx/qla_nx.c   | 4 ++--
- drivers/scsi/qla2xxx/qla_nx2.c  | 8 ++++----
- drivers/scsi/qla2xxx/qla_os.c   | 2 +-
- drivers/scsi/qla2xxx/qla_tmpl.c | 2 +-
- 6 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index ca7118982c12..c54a1e72e30c 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -84,7 +84,7 @@ qla2x00_sysfs_write_fw_dump(struct file *filp, struct kobject *kobj,
- 			qla82xx_md_prep(vha);
- 		}
- 		ha->fw_dump_reading = 0;
--		ha->fw_dumped = 0;
-+		ha->fw_dumped = false;
- 		break;
- 	case 1:
- 		if (ha->fw_dumped && !ha->fw_dump_reading) {
-diff --git a/drivers/scsi/qla2xxx/qla_dbg.c b/drivers/scsi/qla2xxx/qla_dbg.c
-index b23f6f621f74..efdceeefaf45 100644
---- a/drivers/scsi/qla2xxx/qla_dbg.c
-+++ b/drivers/scsi/qla2xxx/qla_dbg.c
-@@ -706,12 +706,12 @@ qla2xxx_dump_post_process(scsi_qla_host_t *vha, int rval)
- 		ql_log(ql_log_warn, vha, 0xd000,
- 		    "Failed to dump firmware (%x), dump status flags (0x%lx).\n",
- 		    rval, ha->fw_dump_cap_flags);
--		ha->fw_dumped = 0;
-+		ha->fw_dumped = false;
- 	} else {
- 		ql_log(ql_log_info, vha, 0xd001,
- 		    "Firmware dump saved to temp buffer (%ld/%p), dump status flags (0x%lx).\n",
- 		    vha->host_no, ha->fw_dump, ha->fw_dump_cap_flags);
--		ha->fw_dumped = 1;
-+		ha->fw_dumped = true;
- 		qla2x00_post_uevent_work(vha, QLA_UEVENT_CODE_FW_DUMP);
- 	}
- }
-diff --git a/drivers/scsi/qla2xxx/qla_nx.c b/drivers/scsi/qla2xxx/qla_nx.c
-index 185c5f34d4c1..d2037253e2d7 100644
---- a/drivers/scsi/qla2xxx/qla_nx.c
-+++ b/drivers/scsi/qla2xxx/qla_nx.c
-@@ -4177,7 +4177,7 @@ qla82xx_md_collect(scsi_qla_host_t *vha)
- 		goto md_failed;
- 	}
- 
--	ha->fw_dumped = 0;
-+	ha->fw_dumped = false;
- 
- 	if (!ha->md_tmplt_hdr || !ha->md_dump) {
- 		ql_log(ql_log_warn, vha, 0xb038,
-@@ -4357,7 +4357,7 @@ qla82xx_md_collect(scsi_qla_host_t *vha)
- 	ql_log(ql_log_info, vha, 0xb044,
- 	    "Firmware dump saved to temp buffer (%ld/%p %ld/%p).\n",
- 	    vha->host_no, ha->md_tmplt_hdr, vha->host_no, ha->md_dump);
--	ha->fw_dumped = 1;
-+	ha->fw_dumped = true;
- 	qla2x00_post_uevent_work(vha, QLA_UEVENT_CODE_FW_DUMP);
- 
- md_failed:
-diff --git a/drivers/scsi/qla2xxx/qla_nx2.c b/drivers/scsi/qla2xxx/qla_nx2.c
-index c056f466f1f4..b5c3e56edaba 100644
---- a/drivers/scsi/qla2xxx/qla_nx2.c
-+++ b/drivers/scsi/qla2xxx/qla_nx2.c
-@@ -1441,7 +1441,7 @@ qla8044_device_bootstrap(struct scsi_qla_host *vha)
- 	if (idc_ctrl & GRACEFUL_RESET_BIT1) {
- 		qla8044_wr_reg(ha, QLA8044_IDC_DRV_CTRL,
- 		    (idc_ctrl & ~GRACEFUL_RESET_BIT1));
--		ha->fw_dumped = 0;
-+		ha->fw_dumped = false;
- 	}
- 
- dev_ready:
-@@ -3249,7 +3249,7 @@ qla8044_collect_md_data(struct scsi_qla_host *vha)
- 		goto md_failed;
- 	}
- 
--	ha->fw_dumped = 0;
-+	ha->fw_dumped = false;
- 
- 	if (!ha->md_tmplt_hdr || !ha->md_dump) {
- 		ql_log(ql_log_warn, vha, 0xb10e,
-@@ -3470,7 +3470,7 @@ qla8044_collect_md_data(struct scsi_qla_host *vha)
- 	ql_log(ql_log_info, vha, 0xb110,
- 	    "Firmware dump saved to temp buffer (%ld/%p %ld/%p).\n",
- 	    vha->host_no, ha->md_tmplt_hdr, vha->host_no, ha->md_dump);
--	ha->fw_dumped = 1;
-+	ha->fw_dumped = true;
- 	qla2x00_post_uevent_work(vha, QLA_UEVENT_CODE_FW_DUMP);
- 
- 
-@@ -3487,7 +3487,7 @@ qla8044_get_minidump(struct scsi_qla_host *vha)
- 	struct qla_hw_data *ha = vha->hw;
- 
- 	if (!qla8044_collect_md_data(vha)) {
--		ha->fw_dumped = 1;
-+		ha->fw_dumped = true;
- 		ha->prev_minidump_failed = 0;
- 	} else {
- 		ql_log(ql_log_fatal, vha, 0xb0db,
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 63e20c40e977..554e1d1b4c79 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -4620,7 +4620,7 @@ qla2x00_free_fw_dump(struct qla_hw_data *ha)
- 	ha->flags.fce_enabled = 0;
- 	ha->eft = NULL;
- 	ha->eft_dma = 0;
--	ha->fw_dumped = 0;
-+	ha->fw_dumped = false;
- 	ha->fw_dump_cap_flags = 0;
- 	ha->fw_dump_reading = 0;
- 	ha->fw_dump = NULL;
-diff --git a/drivers/scsi/qla2xxx/qla_tmpl.c b/drivers/scsi/qla2xxx/qla_tmpl.c
-index 342363862434..819c46f31c05 100644
---- a/drivers/scsi/qla2xxx/qla_tmpl.c
-+++ b/drivers/scsi/qla2xxx/qla_tmpl.c
-@@ -1117,7 +1117,7 @@ qla27xx_fwdump(scsi_qla_host_t *vha, int hardware_locked)
- 		}
- 
- 		vha->hw->fw_dump_len = len;
--		vha->hw->fw_dumped = 1;
-+		vha->hw->fw_dumped = true;
- 
- 		ql_log(ql_log_warn, vha, 0xd015,
- 		    "-> Firmware dump saved to buffer (%lu/%p) <%lx>\n",
--- 
-2.21.1
+CgpPbiAzMC4wNC4yMCAxMzo1OCwgUGFvbG8gQm9uemluaSB3cm90ZToKPiAKPiBPbiAzMC8wNC8y
+MCAxMzo0NywgQWxleGFuZGVyIEdyYWYgd3JvdGU6Cj4+Pgo+Pj4gU28gdGhlIGlzc3VlIHdvdWxk
+IGJlIHRoYXQgYSBmaXJtd2FyZSBpbWFnZSBwcm92aWRlZCBieSB0aGUgcGFyZW50IGNvdWxkCj4+
+PiBiZSB0YW1wZXJlZCB3aXRoIGJ5IHNvbWV0aGluZyBtYWxpY2lvdXMgcnVubmluZyBpbiB0aGUg
+cGFyZW50IGVuY2xhdmU/Cj4+Cj4+IFlvdSBoYXZlIHRvIGhhdmUgYSByb290IG9mIHRydXN0IHNv
+bWV3aGVyZS4gVGhhdCByb290IHRoZW4gY2hlY2tzIGFuZAo+PiBhdHRlc3RzIGV2ZXJ5dGhpbmcg
+aXQgcnVucy4gV2hhdCBleGFjdGx5IHdvdWxkIHlvdSBhdHRlc3QgZm9yIHdpdGggYQo+PiBmbGF0
+IGFkZHJlc3Mgc3BhY2UgbW9kZWw/Cj4+Cj4+IFNvIHRoZSBpc3N1ZSBpcyB0aGF0IHRoZSBlbmNs
+YXZlIGNvZGUgY2FuIG5vdCB0cnVzdCBpdHMgb3duIGludGVncml0eSBpZgo+PiBpdCBkb2Vzbid0
+IGhhdmUgYW55dGhpbmcgYXQgYSBoaWdoZXIgbGV2ZWwgYXR0ZXN0aW5nIGl0LiBUaGUgd2F5IHRo
+aXMgaXMKPj4gdXN1YWxseSBzb2x2ZWQgb24gYmFyZSBtZXRhbCBzeXN0ZW1zIGlzIHRoYXQgeW91
+IHRydXN0IHlvdXIgQ1BVIHdoaWNoCj4+IHRoZW4gY2hlY2tzIHRoZSBmaXJtd2FyZSBpbnRlZ3Jp
+dHkgKEJvb3QgR3VhcmQpLiBXaGVyZSB3b3VsZCB5b3UgcHV0Cj4+IHRoYXQgY2hlY2sgaW4gYSBW
+TSBtb2RlbD8KPiAKPiBJbiB0aGUgZW5jbGF2ZSBkZXZpY2UgZHJpdmVyLCBJIHdvdWxkIGp1c3Qg
+bGltaXQgdGhlIGF0dGVzdGF0aW9uIHRvIHRoZQo+IGZpcm13YXJlIGltYWdlCj4gCj4gU28geWVh
+aCBpdCB3b3VsZG4ndCBiZSBhIG1vZGUgd2hlcmUgbmVfbG9hZF9pbWFnZSBpcyBub3QgaW52b2tl
+ZCBhbmQKPiB0aGUgZW5jbGF2ZSBzdGFydHMgaW4gcmVhbCBtb2RlIGF0IDB4ZmZmZmZmMC4gIFlv
+dSB3b3VsZCBzdGlsbCBuZWVkCj4gImxvYWQgaW1hZ2UiIGZ1bmN0aW9uYWxpdHkuCj4gCj4+IEhv
+dyBjbG9zZSB3b3VsZCBpdCBiZSB0byBhIG5vcm1hbCBWTSB0aGVuPyBBbmQKPj4gaWYgaXQncyBu
+b3QsIHdoYXQncyB0aGUgcG9pbnQgb2Ygc3RpY2tpbmcgdG8gc3VjaCB0ZXJyaWJsZSBsZWdhY3kg
+Ym9vdAo+PiBwYXRocz8KPiAKPiBUaGUgcG9pbnQgaXMgdGhhdCB0aGVyZSdzIGFscmVhZHkgdHdv
+IHBsYXVzaWJsZSBsb2FkZXJzIGZvciB0aGUga2VybmVsCj4gKGJ6SW1hZ2UgYW5kIEVMRiksIHNv
+IEknZCBsaWtlIHRvIGRlY291cGxlIHRoZSBsb2FkZXIgYW5kIHRoZSBpbWFnZS4KClRoZSBsb2Fk
+ZXIgaXMgaW1wbGVtZW50ZWQgYnkgdGhlIGVuY2xhdmUgZGV2aWNlLiBJZiBpdCB3aXNoZXMgdG8g
+c3VwcG9ydCAKYnpJbWFnZSBhbmQgRUxGIGl0IGRvZXMgdGhhdC4gVG9kYXksIGl0IG9ubHkgZG9l
+cyBiekltYWdlIHRob3VnaCBJSVJDIDopLgoKU28geWVzLCB0aGV5IGFyZSBkZWNvdXBsZWQ/IEFy
+ZSB5b3Ugc2F5aW5nIHlvdSB3b3VsZCBsaWtlIHRvIGJ1aWxkIHlvdXIgCm93biBjb2RlIGluIGFu
+eSB3YXkgeW91IGxpa2U/IFdlbGwsIHRoYXQgbWVhbnMgd2UgZWl0aGVyIG5lZWQgdG8gYWRkIApz
+dXBwb3J0IGZvciBhbm90aGVyIGxvYWRlciBpbiB0aGUgZW5jbGF2ZSBkZXZpY2Ugb3IgeW91ciB3
+b3JrbG9hZHMganVzdCAKZmFrZXMgYSBiekltYWdlIGhlYWRlciBhbmQgZ2V0cyBsb2FkZWQgcmVn
+YXJkbGVzcyA6KS4KCgpBbGV4CgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBH
+bWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlz
+dGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0
+IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBE
+RSAyODkgMjM3IDg3OQoKCg==
 
