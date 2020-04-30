@@ -2,151 +2,120 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7BFC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B8FC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A0E20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35B920787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mX/VUhlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgD3RUK (ORCPT
+        id S1726756AbgD3RU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:20:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3820 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726440AbgD3RUJ (ORCPT
+        Thu, 30 Apr 2020 13:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726355AbgD3RUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:20:09 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UH2OqJ073064;
-        Thu, 30 Apr 2020 13:19:54 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhc3vs69-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 13:19:52 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UH4DJ5084423;
-        Thu, 30 Apr 2020 13:19:51 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhc3vs5b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 13:19:51 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UHAvTE017841;
-        Thu, 30 Apr 2020 17:19:49 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 30mcu7322e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 17:19:49 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UHJko756360974
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 17:19:46 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EF4411C04C;
-        Thu, 30 Apr 2020 17:19:46 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63DDB11C04A;
-        Thu, 30 Apr 2020 17:19:45 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.14.241])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Apr 2020 17:19:45 +0000 (GMT)
-Date:   Thu, 30 Apr 2020 19:19:42 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
-        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
-Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
- pages
-Message-ID: <20200430191942.3ae9155f@p-imbrenda>
-In-Reply-To: <172c51f7-7dd6-7dd0-153f-aedd4b10a9f3@intel.com>
-References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
-        <2a1abf38-d321-e3c7-c3b1-53b6db6da310@intel.com>
-        <b077744e-65be-f89c-55bb-4fc0f712eb76@de.ibm.com>
-        <609afef2-43c2-d048-1c01-448a53a54d4e@intel.com>
-        <20200430005310.7b25efab@p-imbrenda>
-        <172c51f7-7dd6-7dd0-153f-aedd4b10a9f3@intel.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Apr 2020 13:20:55 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3527C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 10:20:54 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z1so110106pfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 10:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OaoWzWV5VQdkXlx1W0mhM139g1iUDLV+um1kY+EVRdA=;
+        b=mX/VUhlD5Z5dC1P65kSuNUE7hIcr4Kh/o+uBhm/q690m4TF+Ot8HGqz3wlGXLRZx1w
+         GaII4K+11fo2JiO8nGIhZ45BA6l3W9HEoT6/BC+7k7ggmAeCMolqx7zjtjtg1LWMyU4Q
+         8mGUONSEyM0r3moVIl7UB55iDJAmoo9a0cbix0IX7l8RJsdjZgjA5MMQgZ/cTL++yFjH
+         WvAEL8s02KL3f+Hg2apCdJ7UEdGB3jj5YobUiV0V9/bfCntWnmjzY+fFpsJlr7XbAD4L
+         OKDZu4xoh3+RjQZX3kSAUT0D8Fmd26ZIzt3joXLJIR0au3J7iuyClHxzfWIpQEze2XVC
+         UTPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OaoWzWV5VQdkXlx1W0mhM139g1iUDLV+um1kY+EVRdA=;
+        b=Dw5zX4rStEreqNJCDEfYzyaV3FhZUvQkdQguEN/bUre6Rftxjg9jKzUZgRZJmP0zic
+         5lX6HdKaXKGPlPvvMV091uHXaIkq7TgNPDbHcMwEd/dLzs6kFxh3zzmdGvvORFxgzgkG
+         TFPN2nGx14NKw+jBAnpo7t31v+ogpT2fqmlorz6md/aPqJCusNATp4TaYMJw7mwO7qQ4
+         5Y6C4puUJYt+0QA0hxFhlahx4IycXVxP/2FZqJnIB+SeG8yqdlUjJ5E+pG233xX5ulaA
+         b82t8vEZ1xN+CtWMM66J4Bs6ZFKBsjySTKvwQ7rPMc1fnrphf2Ar68Jys4YNljdOFKAV
+         fDBQ==
+X-Gm-Message-State: AGi0PubVOLuEL8jIQy1tVFg/MUs8iGEfPU4PP3U5hwVnqzdHqoZvZsQh
+        Dq17DJSbHaxj4i2IiX96Ab0S
+X-Google-Smtp-Source: APiQypIFGoYKRmXCKaIropj/Nb4pYx44aEvNe68yMeW1wIRAxBHaoAvIr159kwiS4aSfJ9JlX1R0KQ==
+X-Received: by 2002:a63:6f82:: with SMTP id k124mr1258152pgc.278.1588267253330;
+        Thu, 30 Apr 2020 10:20:53 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6081:946c:419e:a71:7237:1613])
+        by smtp.gmail.com with ESMTPSA id k4sm290920pgg.88.2020.04.30.10.20.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 Apr 2020 10:20:52 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 22:50:47 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     hemantk@codeaurora.org, bbhatt@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] Misc MHI fixes
+Message-ID: <20200430172047.GI9449@Mani-XPS-13-9360>
+References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_11:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 mlxlogscore=830 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004300132
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 16:52:46 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+Hi Jeff,
 
-> On 4/29/20 3:53 PM, Claudio Imbrenda wrote:
-> >> Actually, that's the problem.  You've gone through all these
-> >> careful checks and made the page inaccessible.  *After* that
-> >> process, how do you keep the page from being hit by an I/O device
-> >> before it's made accessible again?  My patch just assumes that
-> >> *all* pages have gone through that process and passed those
-> >> checks.  
-> > I don't understand what you are saying here.
-> > 
-> > we start with all pages accessible, we mark pages as inaccessible
-> > when they are imported in the secure guest (we use the PG_arch_1
-> > bit in struct page). we then try to catch all I/O on inaccessible
-> > pages and make them accessible so that I/O devices are happy.   
+On Mon, Apr 27, 2020 at 09:59:07AM -0600, Jeffrey Hugo wrote:
+> A few (independent) fixes to the MHI bus for issues that I have come across
+> while developing against the mainline code.
 > 
-> The catching mechanism is incomplete, that's all I'm saying.
-
-well, sendto in the end does a copy_from_user or a get_user_pages_fast,
-both are covered (once we fix the make_accessible to work on FOLL_GET
-too). 
-
-> Without looking too hard, and not even having the hardware, I've found
-> two paths where the "catching" was incomplete:
+> v3:
+> -reorder series to put changes which are ready, based on reviews, in front
+> -change error from EIO to ETIMEDOUT when sync_power_up fails
+> -add change to correct a conflict of channel device names
 > 
-> 	1. sendfile(), which you've patched
-> 	2. sendto(), which you haven't patched
+> v2:
+> -fix syserr reset log message
+> -fix power up error check code style
+> -add change to remove pci assumptions for register accesses
+> -add comment typo fix
 > 
-> > either your quick and dirty patch was too dirty (e.g. not accounting
-> > for possible races between make_accessible/make_inaccessible), or
-> > some of the functions in the trace you provided should do
-> > pin_user_page instead of get_user_page (or both)  
 > 
-> I looked in the traces for any races.  For sendto(), at least, the
-> make_accessible() never happened before the process exited.  That's
-> entirely consistent with the theory that it entirely missed being
-> caught.  I can't find any evidence that there were races.
+> Jeffrey Hugo (6):
+>   bus: mhi: core: Make sure to powerdown if mhi_sync_power_up fails
+>   bus: mhi: core: Remove link_status() callback
+>   bus: mhi: core: Offload register accesses to the controller
+>   bus: mhi: core: Fix typo in comment
+>   bus: mhi: core: Handle syserr during power_up
+>   bus: mhi: core: Fix channel device name conflict
 > 
-> Go ahead and try it.  You have the patch!  I mean, I found a bug in
-> about 10 minutes in one tiny little VM.
 
-I tried your patch, but I could not reproduce the problem. I have a
-Debian 10 x86_64 with the latest kernel from master and your patch on
-top. is there anything I'm missing? which virtual devices are you using?
-any particular .config options?
+I'll queue all these patches except [5/6] to mhi-next branch and also send
+them along with one of my fix to Greg to be included in upcoming RC.
 
-I could easily get the mm_make_accessible tracepoints, but I never
-manage to trigger the mm_accessible_error ones.
+Thanks,
+Mani
 
-are you using transparent hugepages by any chance? the
-infrastructure for inaccessible pages is meant only for small pages,
-since on s390x only small pages can ever be used for secure
-guests and therefore become inaccessible.
-
-> And, yes, you need to get rid of the FOLL_PIN check unless you want to
-> go change a big swath of the remaining get_user_pages*() sites.
-
+>  drivers/bus/mhi/core/init.c     |  7 +++----
+>  drivers/bus/mhi/core/internal.h |  3 ---
+>  drivers/bus/mhi/core/main.c     | 16 ++++------------
+>  drivers/bus/mhi/core/pm.c       | 26 +++++++++++++++++++++++++-
+>  include/linux/mhi.h             | 10 +++++++---
+>  5 files changed, 39 insertions(+), 23 deletions(-)
+> 
+> -- 
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
