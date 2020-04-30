@@ -4,53 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108FBC47255
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84423C47256
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBB0F2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D6F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262824;
-	bh=nFix0a/j/Cj5TviaDz5+T9+Ut0oC83oAgMWkoZOnEvQ=;
+	s=default; t=1588262822;
+	bh=QUfv6scPo1my4zCr4LFZW2U/OmwyKCvSjBoQt0t5VTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXU7FD3s22Nxc6eFg/dnTY9aOSvau5Av/czOYValqKVNksx2NzCSn/DenTOEs+y2c
-	 zuUb0pRT8itR9HMpp++elYYoTi0oAqDb+If6c7xbiPfAPrmkyB4pOfIY/2ijPdicjO
-	 YYMmp4P0BqxdIDGcGRIYB/o0I3i8qttWg4PJl+Ak=
+	b=f3+1HsPBpCs1UPGuGIdIAi5x7MFdNZThLTM4G5ndxj8pLkGrIpBAISW42hd64MQaR
+	 bu5MhuHf74lSotp4QdlpJgxvCRl/b/Frqi/EKtIlTodXqLPWTvGjzDojWvIhY8BR2B
+	 a/b17gUxGFxeq06xp9gNkugMQ473XbY4C2ndC1c4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgD3QHD (ORCPT
+        id S1726519AbgD3QHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:07:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50864 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726867AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A49624970;
-        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCAAE208DB;
+        Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=nFix0a/j/Cj5TviaDz5+T9+Ut0oC83oAgMWkoZOnEvQ=;
+        bh=QUfv6scPo1my4zCr4LFZW2U/OmwyKCvSjBoQt0t5VTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IkzFj0pBnvQtFcGQpcY7mKuY7CwzkLdlE9w6FUv7aqrdOx4zaGMTkIpYV8ysll2T1
-         YWMwLz/uVefvLrz5q1HgKt9hKtsA6TpgTUSWhUnk7V6Ll+9UTUBJpAFWzWDgGHYEKr
-         kSTOF+2o8uoSimJ5RQtZMq8CkGNGhZnKfh58O9FU=
+        b=ILVqWCsii4IU1ATzx4qBN0ji2HPtDUiD1ypny4cMcn8WIKumlXEoumCQXrWkhGAsS
+         oqJiaJ6yjraaA1oh6BASaq3vxmcTqRowqQ4Stn/vU/B81VCie/cvgBBhe1wx+S7UZI
+         FfWKvLFp4pUWT9e9zstR2q/MmWx/VeFkjhTEP+sU=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxFc-Fq; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxEd-5h; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 19/37] docs: networking: convert PLIP.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:14 +0200
-Message-Id: <3a25bd7bb5cda9f622d43584bd0d062034fa4fb6.1588261997.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
+        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 07/37] docs: networking: convert netconsole.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:02 +0200
+Message-Id: <f6772b566eea20879d82b1a2015fc97b137a5f24.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -62,164 +68,353 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
+- add a document title;
 - mark code blocks and literals as such;
-- adjust identation, whitespaces and blank lines where needed;
+- mark tables as such;
+- add notes markups;
+- adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/index.rst            |  1 +
- .../networking/{PLIP.txt => plip.rst}         | 43 +++++++++++--------
- drivers/net/plip/Kconfig                      |  2 +-
- 3 files changed, 27 insertions(+), 19 deletions(-)
- rename Documentation/networking/{PLIP.txt => plip.rst} (92%)
+ .../admin-guide/kernel-parameters.txt         |   2 +-
+ Documentation/admin-guide/serial-console.rst  |   2 +-
+ Documentation/networking/index.rst            |   1 +
+ .../{netconsole.txt => netconsole.rst}        | 125 +++++++++++-------
+ drivers/net/Kconfig                           |   4 +-
+ drivers/net/ethernet/toshiba/ps3_gelic_net.c  |   2 +-
+ drivers/net/ethernet/toshiba/spider_net.c     |   2 +-
+ 7 files changed, 84 insertions(+), 54 deletions(-)
+ rename Documentation/networking/{netconsole.txt => netconsole.rst} (66%)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 25644daa36ea..5a44c1bf85e7 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -638,7 +638,7 @@
+ 
+ 			See Documentation/admin-guide/serial-console.rst for more
+ 			information.  See
+-			Documentation/networking/netconsole.txt for an
++			Documentation/networking/netconsole.rst for an
+ 			alternative.
+ 
+ 		uart[8250],io,<addr>[,options]
+diff --git a/Documentation/admin-guide/serial-console.rst b/Documentation/admin-guide/serial-console.rst
+index a8d1e36b627a..58b32832e50a 100644
+--- a/Documentation/admin-guide/serial-console.rst
++++ b/Documentation/admin-guide/serial-console.rst
+@@ -54,7 +54,7 @@ You will need to create a new device to use ``/dev/console``. The official
+ ``/dev/console`` is now character device 5,1.
+ 
+ (You can also use a network device as a console.  See
+-``Documentation/networking/netconsole.txt`` for information on that.)
++``Documentation/networking/netconsole.rst`` for information on that.)
+ 
+ Here's an example that will use ``/dev/ttyS1`` (COM2) as the console.
+ Replace the sample values as needed.
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 696181a96e3c..18bb10239cad 100644
+index 492658bf7c0d..e58f872d401d 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -92,6 +92,7 @@ Contents:
-    packet_mmap
-    phonet
-    pktgen
-+   plip
+@@ -80,6 +80,7 @@ Contents:
+    mac80211-injection
+    mpls-sysctl
+    multiqueue
++   netconsole
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/PLIP.txt b/Documentation/networking/plip.rst
-similarity index 92%
-rename from Documentation/networking/PLIP.txt
-rename to Documentation/networking/plip.rst
-index ad7e3f7c3bbf..0eda745050ff 100644
---- a/Documentation/networking/PLIP.txt
-+++ b/Documentation/networking/plip.rst
-@@ -1,4 +1,8 @@
+diff --git a/Documentation/networking/netconsole.txt b/Documentation/networking/netconsole.rst
+similarity index 66%
+rename from Documentation/networking/netconsole.txt
+rename to Documentation/networking/netconsole.rst
+index 296ea00fd3eb..1f5c4a04027c 100644
+--- a/Documentation/networking/netconsole.txt
++++ b/Documentation/networking/netconsole.rst
+@@ -1,7 +1,16 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+================================================
- PLIP: The Parallel Line Internet Protocol Device
-+================================================
- 
- Donald Becker (becker@super.org)
- I.D.A. Supercomputing Research Center, Bowie MD 20715
-@@ -83,7 +87,7 @@ When the PLIP driver is used in IRQ mode, the timeout used for triggering a
- data transfer (the maximal time the PLIP driver would allow the other side
- before announcing a timeout, when trying to handshake a transfer of some
- data) is, by default, 500usec. As IRQ delivery is more or less immediate,
--this timeout is quite sufficient. 
-+this timeout is quite sufficient.
- 
- When in IRQ-less mode, the PLIP driver polls the parallel port HZ times
- per second (where HZ is typically 100 on most platforms, and 1024 on an
-@@ -115,7 +119,7 @@ printer "null" cable to transfer data four bits at a time using
- data bit outputs connected to status bit inputs.
- 
- The second data transfer method relies on both machines having
--bi-directional parallel ports, rather than output-only ``printer''
-+bi-directional parallel ports, rather than output-only ``printer``
- ports.  This allows byte-wide transfers and avoids reconstructing
- nibbles into bytes, leading to much faster transfers.
- 
-@@ -132,7 +136,7 @@ bits with standard status register implementation.
- 
- A cable that implements this protocol is available commercially as a
- "Null Printer" or "Turbo Laplink" cable.  It can be constructed with
--two DB-25 male connectors symmetrically connected as follows:
-+two DB-25 male connectors symmetrically connected as follows::
- 
-     STROBE output	1*
-     D0->ERROR	2 - 15		15 - 2
-@@ -146,7 +150,8 @@ two DB-25 male connectors symmetrically connected as follows:
-     SLCTIN	17 - 17
-     extra grounds are 18*,19*,20*,21*,22*,23*,24*
-     GROUND	25 - 25
--* Do not connect these pins on either end
++==========
++Netconsole
++==========
 +
-+    * Do not connect these pins on either end
  
- If the cable you are using has a metallic shield it should be
- connected to the metallic DB-25 shell at one end only.
-@@ -155,14 +160,14 @@ Parallel Transfer Mode 1
+ started by Ingo Molnar <mingo@redhat.com>, 2001.09.17
++
+ 2.6 port and netpoll api by Matt Mackall <mpm@selenic.com>, Sep 9 2003
++
+ IPv6 support by Cong Wang <xiyou.wangcong@gmail.com>, Jan 1 2013
++
+ Extended console support by Tejun Heo <tj@kernel.org>, May 1 2015
+ 
+ Please send bug reports to Matt Mackall <mpm@selenic.com>
+@@ -23,34 +32,34 @@ Sender and receiver configuration:
+ ==================================
+ 
+ It takes a string configuration parameter "netconsole" in the
+-following format:
++following format::
+ 
+  netconsole=[+][src-port]@[src-ip]/[<dev>],[tgt-port]@<tgt-ip>/[tgt-macaddr]
+ 
+    where
+-        +             if present, enable extended console support
+-        src-port      source for UDP packets (defaults to 6665)
+-        src-ip        source IP to use (interface address)
+-        dev           network interface (eth0)
+-        tgt-port      port for logging agent (6666)
+-        tgt-ip        IP address for logging agent
+-        tgt-macaddr   ethernet MAC address for logging agent (broadcast)
++	+             if present, enable extended console support
++	src-port      source for UDP packets (defaults to 6665)
++	src-ip        source IP to use (interface address)
++	dev           network interface (eth0)
++	tgt-port      port for logging agent (6666)
++	tgt-ip        IP address for logging agent
++	tgt-macaddr   ethernet MAC address for logging agent (broadcast)
+ 
+-Examples:
++Examples::
+ 
+  linux netconsole=4444@10.0.0.1/eth1,9353@10.0.0.2/12:34:56:78:9a:bc
+ 
+-  or
++or::
+ 
+  insmod netconsole netconsole=@/,@10.0.0.2/
+ 
+-  or using IPv6
++or using IPv6::
+ 
+  insmod netconsole netconsole=@/,@fd00:1:2:3::1/
+ 
+ It also supports logging to multiple remote agents by specifying
+ parameters for the multiple agents separated by semicolons and the
+-complete string enclosed in "quotes", thusly:
++complete string enclosed in "quotes", thusly::
+ 
+  modprobe netconsole netconsole="@/,@10.0.0.2/;@/eth1,6892@10.0.0.3/"
+ 
+@@ -67,14 +76,19 @@ for example:
+ 
+    On distributions using a BSD-based netcat version (e.g. Fedora,
+    openSUSE and Ubuntu) the listening port must be specified without
+-   the -p switch:
++   the -p switch::
+ 
+-   'nc -u -l -p <port>' / 'nc -u -l <port>' or
+-   'netcat -u -l -p <port>' / 'netcat -u -l <port>'
++	nc -u -l -p <port>' / 'nc -u -l <port>
++
++    or::
++
++	netcat -u -l -p <port>' / 'netcat -u -l <port>
+ 
+ 3) socat
+ 
+-   'socat udp-recv:<port> -'
++::
++
++   socat udp-recv:<port> -
+ 
+ Dynamic reconfiguration:
  ========================
+@@ -92,7 +106,7 @@ netconsole module (or kernel, if netconsole is built-in).
+ Some examples follow (where configfs is mounted at the /sys/kernel/config
+ mountpoint).
  
- The second data transfer method relies on both machines having
--bi-directional parallel ports, rather than output-only ``printer''
-+bi-directional parallel ports, rather than output-only ``printer``
- ports.  This allows byte-wide transfers, and avoids reconstructing
- nibbles into bytes.  This cable should not be used on unidirectional
--``printer'' (as opposed to ``parallel'') ports or when the machine
-+``printer`` (as opposed to ``parallel``) ports or when the machine
- isn't configured for PLIP, as it will result in output driver
- conflicts and the (unlikely) possibility of damage.
+-To add a remote logging target (target names can be arbitrary):
++To add a remote logging target (target names can be arbitrary)::
  
--The cable for this transfer mode should be constructed as follows:
-+The cable for this transfer mode should be constructed as follows::
+  cd /sys/kernel/config/netconsole/
+  mkdir target1
+@@ -102,12 +116,13 @@ above) and are disabled by default -- they must first be enabled by writing
+ "1" to the "enabled" attribute (usually after setting parameters accordingly)
+ as described below.
  
-     STROBE->BUSY 1 - 11
-     D0->D0	2 - 2
-@@ -179,7 +184,8 @@ The cable for this transfer mode should be constructed as follows:
-     GND->ERROR	18 - 15
-     extra grounds are 19*,20*,21*,22*,23*,24*
-     GROUND	25 - 25
--* Do not connect these pins on either end
+-To remove a target:
++To remove a target::
+ 
+  rmdir /sys/kernel/config/netconsole/othertarget/
+ 
+ The interface exposes these parameters of a netconsole target to userspace:
+ 
++	==============  =================================       ============
+ 	enabled		Is this target currently enabled?	(read-write)
+ 	extended	Extended mode enabled			(read-write)
+ 	dev_name	Local network interface name		(read-write)
+@@ -117,12 +132,13 @@ The interface exposes these parameters of a netconsole target to userspace:
+ 	remote_ip	Remote agent's IP address		(read-write)
+ 	local_mac	Local interface's MAC address		(read-only)
+ 	remote_mac	Remote agent's MAC address		(read-write)
++	==============  =================================       ============
+ 
+ The "enabled" attribute is also used to control whether the parameters of
+ a target can be updated or not -- you can modify the parameters of only
+ disabled targets (i.e. if "enabled" is 0).
+ 
+-To update a target's parameters:
++To update a target's parameters::
+ 
+  cat enabled				# check if enabled is 1
+  echo 0 > enabled			# disable the target (if required)
+@@ -140,12 +156,12 @@ Extended console:
+ 
+ If '+' is prefixed to the configuration line or "extended" config file
+ is set to 1, extended console support is enabled. An example boot
+-param follows.
++param follows::
+ 
+  linux netconsole=+4444@10.0.0.1/eth1,9353@10.0.0.2/12:34:56:78:9a:bc
+ 
+ Log messages are transmitted with extended metadata header in the
+-following format which is the same as /dev/kmsg.
++following format which is the same as /dev/kmsg::
+ 
+  <level>,<sequnum>,<timestamp>,<contflag>;<message text>
+ 
+@@ -155,12 +171,12 @@ newline is used as the delimeter.
+ 
+ If a message doesn't fit in certain number of bytes (currently 1000),
+ the message is split into multiple fragments by netconsole. These
+-fragments are transmitted with "ncfrag" header field added.
++fragments are transmitted with "ncfrag" header field added::
+ 
+  ncfrag=<byte-offset>/<total-bytes>
+ 
+ For example, assuming a lot smaller chunk size, a message "the first
+-chunk, the 2nd chunk." may be split as follows.
++chunk, the 2nd chunk." may be split as follows::
+ 
+  6,416,1758426,-,ncfrag=0/31;the first chunk,
+  6,416,1758426,-,ncfrag=16/31; the 2nd chunk.
+@@ -168,39 +184,52 @@ chunk, the 2nd chunk." may be split as follows.
+ Miscellaneous notes:
+ ====================
+ 
+-WARNING: the default target ethernet setting uses the broadcast
+-ethernet address to send packets, which can cause increased load on
+-other systems on the same ethernet segment.
++.. Warning::
+ 
+-TIP: some LAN switches may be configured to suppress ethernet broadcasts
+-so it is advised to explicitly specify the remote agents' MAC addresses
+-from the config parameters passed to netconsole.
++   the default target ethernet setting uses the broadcast
++   ethernet address to send packets, which can cause increased load on
++   other systems on the same ethernet segment.
+ 
+-TIP: to find out the MAC address of, say, 10.0.0.2, you may try using:
++.. Tip::
+ 
+- ping -c 1 10.0.0.2 ; /sbin/arp -n | grep 10.0.0.2
++   some LAN switches may be configured to suppress ethernet broadcasts
++   so it is advised to explicitly specify the remote agents' MAC addresses
++   from the config parameters passed to netconsole.
+ 
+-TIP: in case the remote logging agent is on a separate LAN subnet than
+-the sender, it is suggested to try specifying the MAC address of the
+-default gateway (you may use /sbin/route -n to find it out) as the
+-remote MAC address instead.
++.. Tip::
+ 
+-NOTE: the network device (eth1 in the above case) can run any kind
+-of other network traffic, netconsole is not intrusive. Netconsole
+-might cause slight delays in other traffic if the volume of kernel
+-messages is high, but should have no other impact.
++   to find out the MAC address of, say, 10.0.0.2, you may try using::
+ 
+-NOTE: if you find that the remote logging agent is not receiving or
+-printing all messages from the sender, it is likely that you have set
+-the "console_loglevel" parameter (on the sender) to only send high
+-priority messages to the console. You can change this at runtime using:
++	ping -c 1 10.0.0.2 ; /sbin/arp -n | grep 10.0.0.2
+ 
+- dmesg -n 8
++.. Tip::
+ 
+-or by specifying "debug" on the kernel command line at boot, to send
+-all kernel messages to the console. A specific value for this parameter
+-can also be set using the "loglevel" kernel boot option. See the
+-dmesg(8) man page and Documentation/admin-guide/kernel-parameters.rst for details.
++   in case the remote logging agent is on a separate LAN subnet than
++   the sender, it is suggested to try specifying the MAC address of the
++   default gateway (you may use /sbin/route -n to find it out) as the
++   remote MAC address instead.
 +
-+    * Do not connect these pins on either end
- 
- Once again, if the cable you are using has a metallic shield it should
- be connected to the metallic DB-25 shell at one end only.
-@@ -188,7 +194,7 @@ PLIP Mode 0 transfer protocol
- =============================
- 
- The PLIP driver is compatible with the "Crynwr" parallel port transfer
--standard in Mode 0.  That standard specifies the following protocol:
-+standard in Mode 0.  That standard specifies the following protocol::
- 
-    send header nibble '0x8'
-    count-low octet
-@@ -196,20 +202,21 @@ standard in Mode 0.  That standard specifies the following protocol:
-    ... data octets
-    checksum octet
- 
--Each octet is sent as
-+Each octet is sent as::
++.. note::
 +
- 	<wait for rx. '0x1?'>	<send 0x10+(octet&0x0F)>
- 	<wait for rx. '0x0?'>	<send 0x00+((octet>>4)&0x0F)>
++   the network device (eth1 in the above case) can run any kind
++   of other network traffic, netconsole is not intrusive. Netconsole
++   might cause slight delays in other traffic if the volume of kernel
++   messages is high, but should have no other impact.
++
++.. note::
++
++   if you find that the remote logging agent is not receiving or
++   printing all messages from the sender, it is likely that you have set
++   the "console_loglevel" parameter (on the sender) to only send high
++   priority messages to the console. You can change this at runtime using::
++
++	dmesg -n 8
++
++   or by specifying "debug" on the kernel command line at boot, to send
++   all kernel messages to the console. A specific value for this parameter
++   can also be set using the "loglevel" kernel boot option. See the
++   dmesg(8) man page and Documentation/admin-guide/kernel-parameters.rst
++   for details.
  
- To start a transfer the transmitting machine outputs a nibble 0x08.
- That raises the ACK line, triggering an interrupt in the receiving
- machine.  The receiving machine disables interrupts and raises its own ACK
--line. 
-+line.
+ Netconsole was designed to be as instantaneous as possible, to
+ enable the logging of even the most critical kernel bugs. It works
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index c822f4a6d166..ad64be98330f 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -302,7 +302,7 @@ config NETCONSOLE
+ 	tristate "Network console logging support"
+ 	---help---
+ 	  If you want to log kernel messages over the network, enable this.
+-	  See <file:Documentation/networking/netconsole.txt> for details.
++	  See <file:Documentation/networking/netconsole.rst> for details.
  
--Restated:
-+Restated::
+ config NETCONSOLE_DYNAMIC
+ 	bool "Dynamic reconfiguration of logging targets"
+@@ -312,7 +312,7 @@ config NETCONSOLE_DYNAMIC
+ 	  This option enables the ability to dynamically reconfigure target
+ 	  parameters (interface, IP addresses, port numbers, MAC addresses)
+ 	  at runtime through a userspace interface exported using configfs.
+-	  See <file:Documentation/networking/netconsole.txt> for details.
++	  See <file:Documentation/networking/netconsole.rst> for details.
  
--(OUT is bit 0-4, OUT.j is bit j from OUT. IN likewise)
--Send_Byte:
--   OUT := low nibble, OUT.4 := 1
--   WAIT FOR IN.4 = 1
--   OUT := high nibble, OUT.4 := 0
--   WAIT FOR IN.4 = 0
-+  (OUT is bit 0-4, OUT.j is bit j from OUT. IN likewise)
-+  Send_Byte:
-+     OUT := low nibble, OUT.4 := 1
-+     WAIT FOR IN.4 = 1
-+     OUT := high nibble, OUT.4 := 0
-+     WAIT FOR IN.4 = 0
-diff --git a/drivers/net/plip/Kconfig b/drivers/net/plip/Kconfig
-index b41035be2d51..e03556d1d0c2 100644
---- a/drivers/net/plip/Kconfig
-+++ b/drivers/net/plip/Kconfig
-@@ -21,7 +21,7 @@ config PLIP
- 	  bits at a time (mode 0) or with special PLIP cables, to be used on
- 	  bidirectional parallel ports only, which can transmit 8 bits at a
- 	  time (mode 1); you can find the wiring of these cables in
--	  <file:Documentation/networking/PLIP.txt>.  The cables can be up to
-+	  <file:Documentation/networking/plip.rst>.  The cables can be up to
- 	  15m long.  Mode 0 works also if one of the machines runs DOS/Windows
- 	  and has some PLIP software installed, e.g. the Crynwr PLIP packet
- 	  driver (<http://oak.oakland.edu/simtel.net/msdos/pktdrvr-pre.html>)
+ config NETPOLL
+ 	def_bool NETCONSOLE
+diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.c b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
+index 070dd6fa9401..310e6839c6e5 100644
+--- a/drivers/net/ethernet/toshiba/ps3_gelic_net.c
++++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
+@@ -1150,7 +1150,7 @@ static irqreturn_t gelic_card_interrupt(int irq, void *ptr)
+  * gelic_net_poll_controller - artificial interrupt for netconsole etc.
+  * @netdev: interface device structure
+  *
+- * see Documentation/networking/netconsole.txt
++ * see Documentation/networking/netconsole.rst
+  */
+ void gelic_net_poll_controller(struct net_device *netdev)
+ {
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index 6576271642c1..3902b3aeb0c2 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -1615,7 +1615,7 @@ spider_net_interrupt(int irq, void *ptr)
+  * spider_net_poll_controller - artificial interrupt for netconsole etc.
+  * @netdev: interface device structure
+  *
+- * see Documentation/networking/netconsole.txt
++ * see Documentation/networking/netconsole.rst
+  */
+ static void
+ spider_net_poll_controller(struct net_device *netdev)
 -- 
 2.25.4
 
