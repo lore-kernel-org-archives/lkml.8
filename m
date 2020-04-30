@@ -2,119 +2,86 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEC8C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B615C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000842063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 016FC2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255835;
-	bh=HvgQtozXPajYVnHS90k19ocaTh/Mfax+KW0Y9WIaGKY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qaQlKA8rCXePNL6vJUS+QfZti5c01ecavD9GckEd+zanzz6XwlPJf6uIeiJPqnr1a
-	 QjQDSAIz64u+9sMhcASGE8ERaX7deqysdaBPNXyfM7Egyszoo++4XSmNaqIfjtg+4C
-	 4naFp/5yZOEpZjYRJjQYERWZCsPIUe3XyY0ZOT1U=
+	s=default; t=1588255842;
+	bh=aN/QFdkySs8u03EQh9vrb0JVJZFAh2mYagETahi8M1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fxaxwTJuSvQ27Pupfq1H1DeYsMP2zzux+3YJ5aWZEW8S3ZfWfd1lCyHp2tyimGwVS
+	 +ArmkAUFlP+T8DzGVhWxcBuwbeKPl0PX8pOX3PB4vIKWl3nqXlwyE/tPniLbtzRmP5
+	 pWkluRuT1t63WJnqNuztBzp3CY4kYSuF62xvB0Ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgD3OKe (ORCPT
+        id S1728384AbgD3OKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgD3Nvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCBC4208D5;
-        Thu, 30 Apr 2020 13:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254695;
-        bh=HvgQtozXPajYVnHS90k19ocaTh/Mfax+KW0Y9WIaGKY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e8Zbt/oLXNVBN2tX4ubBEhZrbuDKcIdIEq5nxPtFk+ke+xT65NV2sBELAoDSQIBDu
-         34W3r8M4KwSSTWhII08tvhy8Z4wSf59kXnSN/Okix6fUD5Rkv+FPmAzzV7v/dwcmpb
-         lRE7p4kXVl7U0VvZaZ8NmImJJxPxwnXWL4+Ftees=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 45/79] ASoC: meson: axg-card: fix codec-to-codec link setup
-Date:   Thu, 30 Apr 2020 09:50:09 -0400
-Message-Id: <20200430135043.19851-45-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
-References: <20200430135043.19851-1-sashal@kernel.org>
+        Thu, 30 Apr 2020 10:10:41 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41493 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgD3OKg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:10:36 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 19so5296471oiy.8;
+        Thu, 30 Apr 2020 07:10:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UgTzeSieOrk7bgrXOEEKGS4vqDfJdjTM5De/Mq9VpvA=;
+        b=JWOX0Ed3jmGp6wkD/eNtW0sqU5QOV1BhW3dIUgQM7c8xKxB+g6ByzsbQdwASNAuaqV
+         dKJsenliIraZEhOll/hMYfqgJDHSn/7TFjFjeRi4GlhmaUT6H2rB403f9cOj0cIiQ9KR
+         B/jEgrtmPxUqeqkUz7n8oATnC4ewSk7bgz01lmVhEWAj9MEl1INlKdUAXYjdanVBF7jU
+         TBSJeSE6dKRa95zhhozKwruww3nXXpk5eg6ZBpxvkoecZayfEm61qSzIBnV0BYk9iU8u
+         4bMoFDs8gOdMTaJvs5gyzpmNVnAF70vL8hWsfvY00FnLuAgghoruUfxfLedvYzBcAZXe
+         Q+Qw==
+X-Gm-Message-State: AGi0PuYpt07znlPgszPB9xCUpC9vutwcJ9pUj/QxenaCyXVobquNemRg
+        8Mtylh00FJROHY47QQ8CQA==
+X-Google-Smtp-Source: APiQypLd3ij132amZqmzb1pb6Pu49V28sjYMfyg7bc6xj1bapelOBMaB7UdhZBZ0xlBAKCAGhjm7Iw==
+X-Received: by 2002:aca:6546:: with SMTP id j6mr29159oiw.155.1588255835409;
+        Thu, 30 Apr 2020 07:10:35 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w24sm1346250oor.47.2020.04.30.07.10.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:10:34 -0700 (PDT)
+Received: (nullmailer pid 5452 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:10:33 -0000
+Date:   Thu, 30 Apr 2020 09:10:33 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Christian Hewitt <christianshewitt@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: arm: amlogic: add support for the
+ Beelink GT-King Pro
+Message-ID: <20200430141033.GA5382@bogus>
+References: <20200419055322.16138-1-christianshewitt@gmail.com>
+ <20200419055322.16138-4-christianshewitt@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419055322.16138-4-christianshewitt@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+On Sun, 19 Apr 2020 05:53:21 +0000, Christian Hewitt wrote:
+> The Shenzen AZW (Beelink) GT-King Pro is based on the Amlogic W400 reference
+> board with an S922X chip.
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-[ Upstream commit 1164284270779e1865cc2046a2a01b58a1e858a9 ]
-
-Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
-playback/capture if supported"), meson-axg cards which have codec-to-codec
-links fail to init and Oops:
-
-  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000128
-  Internal error: Oops: 96000044 [#1] PREEMPT SMP
-  CPU: 3 PID: 1582 Comm: arecord Not tainted 5.7.0-rc1
-  pc : invalidate_paths_ep+0x30/0xe0
-  lr : snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
-  Call trace:
-   invalidate_paths_ep+0x30/0xe0
-   snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
-   dpcm_path_get+0x38/0xd0
-   dpcm_fe_dai_open+0x70/0x920
-   snd_pcm_open_substream+0x564/0x840
-   snd_pcm_open+0xfc/0x228
-   snd_pcm_capture_open+0x4c/0x78
-   snd_open+0xac/0x1a8
-   ...
-
-While initiliazing the links, ASoC treats the codec-to-codec links of this
-card type as a DPCM backend. This error eventually leads to the Oops.
-
-Most of the card driver code is shared between DPCM backends and
-codec-to-codec links. The property "no_pcm" marking DCPM BE was left set on
-codec-to-codec links, leading to this problem. This commit fixes that.
-
-Fixes: 0a8f1117a680 ("ASoC: meson: axg-card: add basic codec-to-codec link support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200420114511.450560-2-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/meson/axg-card.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index 1f698adde506c..2b04ac3d8fd3b 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -586,8 +586,10 @@ static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
- 
- 	if (axg_card_cpu_is_tdm_iface(dai_link->cpus->of_node))
- 		ret = axg_card_parse_tdm(card, np, index);
--	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node))
-+	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node)) {
- 		dai_link->params = &codec_params;
-+		dai_link->no_pcm = 0; /* link is not a DPCM BE */
-+	}
- 
- 	return ret;
- }
--- 
-2.20.1
-
+Acked-by: Rob Herring <robh@kernel.org>
