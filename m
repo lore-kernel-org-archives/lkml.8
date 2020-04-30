@@ -2,131 +2,150 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F432C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB5DC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F8F20731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbKzr/tr"
+	by mail.kernel.org (Postfix) with ESMTP id C36CA20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgD3Trx (ORCPT
+        id S1727853AbgD3TsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgD3Trv (ORCPT
+        Thu, 30 Apr 2020 15:48:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3300 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726375AbgD3Tr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:47:51 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BCE5C035494;
-        Thu, 30 Apr 2020 12:47:51 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y3so2262513lfy.1;
-        Thu, 30 Apr 2020 12:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mIuHJU3SfHPl0RlejSUY/NsnmtLzGRCO/6m26262Qts=;
-        b=RbKzr/trk67WayG7elaPPX9h6D/tQB6VZKQORz+fZuTF7YBeGLG3C4am6mD45328hT
-         37OqtMi3I1RRZeMmeJy2kzEqFWdrhS8dTVqItMjNTV5lNCyn0gSvDHQaZ2m77IIgGNkg
-         xZf9ztBtT0ZhdnO/YO1tY74RQbxvXkMc1LGd6u4rV4j4T/YH+ouhu5YOrlQRHb1S2/vX
-         5bMBdP0NOGsn3bZZjyjKB+aMkVxPEkxZlOA8b4Tnh21QR8ewXVJ15rwVlZws9MDzdfY9
-         MKX6ZPzTNVmo5CI+lTQd+fEG4rp5gLTYS5ZpqVfdct6Q4ccA2t0+9nKIZDkjlzuGqHtV
-         i+eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mIuHJU3SfHPl0RlejSUY/NsnmtLzGRCO/6m26262Qts=;
-        b=OaUlXmsF2asSGREkue23WjF3slY+s8Jhgo7rjFH6cyGQVYyILf/EBIhGm8bj5A5cO4
-         0yB/Oq2phZRMaXL2f2EHs7ciaDL65E9K6zp3+XeGx/Hv2pwF0joGJdLdmvZ2O9PT8REU
-         ePELm4YIIlRkfzsaIuuuzS1F7sHJuwgqwvY6ivXr32LD135kDL9Apjvlk8CttqKj5+CT
-         wAgyPud+z2N6J3Xf/GePT7iI09SYmMERgv8nCYgW2Z7kWNPEfyszhNFTVAw62aZ6V5d5
-         N/B3guM2MJocHbUqag7BjYHrUcsCnDrl75PIO2aFbuStkz7gikV70e3jbpjgtO+B6Lt2
-         H74Q==
-X-Gm-Message-State: AGi0PuYqzC1WH5vf7uEB4kzmUfJSiyrY7TUXNIaiabnnkqArSyuirekW
-        z+kcm/UV4TRP38QNdNqBohNbQO4F
-X-Google-Smtp-Source: APiQypJ/PhT1DuhOzdGayhmjuvx7BfUu8iIXwu5yKcUo9HfxYkFcMc39UJZac+fPMA3r6zKqk6lcdw==
-X-Received: by 2002:ac2:5474:: with SMTP id e20mr174444lfn.200.1588276069158;
-        Thu, 30 Apr 2020 12:47:49 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id k6sm471090lfm.91.2020.04.30.12.47.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 12:47:48 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <34a49a30-71f2-5b24-20a4-7d98ae37cefa@gmail.com>
- <1b23178b-0e5c-c97e-434c-f9cc3c02805b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ebfb532b-bcd2-f356-49e0-e4d72d0db933@gmail.com>
-Date:   Thu, 30 Apr 2020 22:47:47 +0300
+        Thu, 30 Apr 2020 15:47:59 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UJWK2k097567;
+        Thu, 30 Apr 2020 15:47:54 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhc410ha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 15:47:54 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UJUcMF016879;
+        Thu, 30 Apr 2020 19:47:51 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu738v7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 19:47:51 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UJlntH57344092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 19:47:49 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 574765204F;
+        Thu, 30 Apr 2020 19:47:49 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.152.63])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 08C875204E;
+        Thu, 30 Apr 2020 19:47:48 +0000 (GMT)
+Subject: Re: [PATCH 1/1] net/mlx5: Call pci_disable_sriov() on remove
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>
+References: <20200430120308.92773-1-schnelle@linux.ibm.com>
+ <20200430120308.92773-2-schnelle@linux.ibm.com>
+ <2409e7071482b8d05447b8660abcac15987ad399.camel@mellanox.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <36de00e7-cccb-7de8-bd93-84cf647d6d39@linux.ibm.com>
+Date:   Thu, 30 Apr 2020 21:47:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1b23178b-0e5c-c97e-434c-f9cc3c02805b@nvidia.com>
+In-Reply-To: <2409e7071482b8d05447b8660abcac15987ad399.camel@mellanox.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_12:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=804 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004300145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.04.2020 22:32, Sowjanya Komatineni пишет:
+
+
+On 4/30/20 5:58 PM, Saeed Mahameed wrote:
+> On Thu, 2020-04-30 at 14:03 +0200, Niklas Schnelle wrote:
+>> as described in Documentation/PCI/pci-iov-howto.rst a driver with SR-
+>> IOV
+>> support should call pci_disable_sriov() in the remove handler.
 > 
-> On 4/30/20 6:38 AM, Dmitry Osipenko wrote:
->> 30.04.2020 01:00, Sowjanya Komatineni пишет:
->>> +/**
->>> + * struct tegra_csi_ops - Tegra CSI operations
->>> + *
->>> + * @csi_streaming: programs csi hardware to enable or disable
->>> streaming.
->>> + * @csi_err_recover: csi hardware block recovery in case of any
->>> capture errors
->>> + *        due to missing source stream or due to improper csi input
->>> from
->>> + *        the external source.
->>> + */
->>> +struct tegra_csi_ops {
->>> +    int (*csi_streaming)(struct tegra_csi_channel *csi_chan, u8
->>> pg_mode,
->>> +                 int enable);
->> What about to split csi_streaming() into csi_start_streaming() /
->> csi_stop_streaming()?
+> Hi Niklas,
+> 
+> looking at the documentation, it doesn't say "should" it just gives the
+> code as example.
+> 
+>> Otherwise removing a PF (e.g. via pci_stop_and_remove_bus_device())
+>> with
+>> attached VFs does not properly shut the VFs down before shutting down
+>> the PF. This leads to the VF drivers handling defunct devices and
+>> accompanying error messages.
 >>
->> This will make tegra_csi_ops to be consistent with the tegra_ve_ops. A
->> separated start/stop operations are somewhat more natural to have in
->> general.
 > 
-> vi ops is for vb2_ops which has separate start/stop so has seperate
-> start/stop for vi ops.
+> Which should be the admin responsibility .. if the admin want to do
+> this, then let it be.. why block him ? 
 > 
-> csi is subdev and csi ops is for v4l2_subdev_ops which as s_stream
-> callback only.
+> our mlx5 driver in the vf handles this gracefully and once pf
+> driver/device is back online the vf driver quickly recovers.
+See my answer to your other answer ;-)
 > 
-> So, created single stream function for csi to match same as subdev_ops.
-
-It will be nicer to have separate ops for CSI, regardless of the
-subdev_ops. It should be okay to have a single-combined ops if CSI
-start/stop was trivial, but it's not the case here.
-
-For example, the pm_runtime_put() shouldn't be invoked if stream's
-stopping fails. The stopping can't fail for the current code, but this
-could change in the future.
-
-You could make csi_streaming to return void, telling explicitly that
-this code can't fail. Then the combined OPS should be okay to have.
+>> In the current code pci_disable_sriov() is already called in
+>> mlx5_sriov_disable() but not in mlx5_sriov_detach() which is called
+>> from
+>> the remove handler. Fix this by moving the pci_disable_sriov() call
+>> into
+>> mlx5_device_disable_sriov() which is called by both.
+>>
+>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+>> ---
+>>  drivers/net/ethernet/mellanox/mlx5/core/sriov.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>> b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>> index 3094d20297a9..2401961c9f5b 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+>> @@ -114,6 +114,8 @@ mlx5_device_disable_sriov(struct mlx5_core_dev
+>> *dev, int num_vfs, bool clear_vf)
+>>  	int err;
+>>  	int vf;
+>>  
+>> +	pci_disable_sriov(dev->pdev);
+>> +
+>>  	for (vf = num_vfs - 1; vf >= 0; vf--) {
+>>  		if (!sriov->vfs_ctx[vf].enabled)
+>>  			continue;
+>> @@ -156,7 +158,6 @@ static void mlx5_sriov_disable(struct pci_dev
+>> *pdev)
+>>  	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
+>>  	int num_vfs = pci_num_vf(dev->pdev);
+>>  
+>> -	pci_disable_sriov(pdev);
+> 
+> this patch is no good as it breaks code symmetry.. and could lead to
+> many new issues.
+Ah you're right I totally missed that there is a matching pci_enable_sriov() in
+mlx5_enable_sriov() haven't used these myself before and since it wasn't in the
+documentation example I somehow expected it to happen in non-driver code,
+so for symmetry that would also have to move to mlx5_device_enable_sriov(),
+sorry for the oversight.
+> 
+> 
+>>  	mlx5_device_disable_sriov(dev, num_vfs, true);
+>>  }
+>>  
+> 
