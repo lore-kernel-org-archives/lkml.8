@@ -2,190 +2,181 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3904FC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB7CC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC7F2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966D82070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XLnBFQL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgD3Nip (ORCPT
+        id S1727818AbgD3Nir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:38:45 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61389 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbgD3Nin (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:38:43 -0400
-IronPort-SDR: dmFKBRsR31GHjEZ8oxOiFdca9trLAZtmCh2QHh+F51wMQA64hZGEWLi0h6U/gWplXrH4KaRc8w
- cPMiElNAU7fA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 06:38:42 -0700
-IronPort-SDR: yZoYA8Yk7lCOe409WCst2FaaUWobRCyqWOOakOowW74bp1U/EyP54g3hGjBzGnxoFfsr1dWWt0
- cYhsjce1nJig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="368146857"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.213.153]) ([10.254.213.153])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Apr 2020 06:38:35 -0700
-Subject: Re: [PATCH] perf parse-events: Use strcmp to compare the PMU name
-To:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        "irogers@google.com" <irogers@google.com>
-References: <20200430003618.17002-1-yao.jin@linux.intel.com>
- <20200430084529.GC1681583@krava>
- <66b84e3f-f7d8-bb65-616e-d159a509a439@huawei.com>
- <20200430111551.GC1694693@krava>
- <0195184b-0b43-f2fd-8d80-3b70d3f5a950@huawei.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <8685d584-1d28-4648-8d85-2ea637f3c695@linux.intel.com>
-Date:   Thu, 30 Apr 2020 21:38:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 09:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgD3Nio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:38:44 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C0FC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:38:42 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id v4so7492974wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KnR7bkdv4N1Nq9MuZiNtgrfGxSJ17VM7ueK9N7RTvfw=;
+        b=XLnBFQL5UUro9alKKy0D0DfX9qkXZAq/iO+O/1OXTpBDq+W8EbPNOI96gbJrDL1z+8
+         zLmHUj7VCkJG4KEqGmUU+quv2A2YiGLWJpEhqNnfg1KYU3NVeFD1YDO9jY8cBwTC991M
+         YOc88uX9Z8DS1xDqBUFQzgrkK/I5XnhgZliHM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=KnR7bkdv4N1Nq9MuZiNtgrfGxSJ17VM7ueK9N7RTvfw=;
+        b=Q2N7H6wNFetVzBBCSkUN9KC1geeP0dQ9qWAbTmIrSfDISYBDSIhy0ZGNctd1S364FX
+         QUfhSQaNjGz/Dsze6hdpjWM7895G9UD1u2O85h0jcejT1lYCwV/YbhDdT2HBg6DLJoqW
+         ILWyOM3dOcuWeDaLUd14rYcwLaYUUoMKRi4y2NCXqnzzyWvd/wAB+17/5SzXmpaHZ82p
+         gAle9k9wPdMHwG6g80qwPqdS3DwXtCNHa/SZbULh8kfbqZ3WS6S+qKSYvd9VgEcpAlNA
+         nz3zBCP18fM9Lv+Fa9dq0uYFADxNl6zltlOai5Z0JVv1WHQKQD2L/M5jmq9IP224jjdN
+         2kxw==
+X-Gm-Message-State: AGi0PuY8WGqKpBRlyV0wxA1q6321hc+dw+H2g4YeKo2iiX+R/Chm24Zq
+        9lkEmeBxc4XI/h5IxkIwlRbMkg==
+X-Google-Smtp-Source: APiQypL+QGXvyVhP/QeAHVWOyWEduq4cr+Jqf1PzGKDCYktsJpNMQ7Lne/j1S3qXZBUt6Kmx+2hfrw==
+X-Received: by 2002:a7b:c84f:: with SMTP id c15mr2905324wml.166.1588253921689;
+        Thu, 30 Apr 2020 06:38:41 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id u127sm12408532wme.8.2020.04.30.06.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 06:38:41 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 15:38:39 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Xin Ji <xji@analogixsemi.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>,
+        Qilin Wen <qwen@analogixsemi.com>,
+        Ming Liu <mliu@analogixsemi.com>
+Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Message-ID: <20200430133839.GB10381@phenom.ffwll.local>
+Mail-Followup-To: Xin Ji <xji@analogixsemi.com>,
+        Nicolas Boichat <drinkcat@google.com>, devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>,
+        Qilin Wen <qwen@analogixsemi.com>, Ming Liu <mliu@analogixsemi.com>
+References: <cover.1582529411.git.xji@analogixsemi.com>
+ <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
+ <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
+ <20200424065124.GA31922@xin-VirtualBox>
+ <CANMq1KBJ6f74aNAr8BwC3wz8MEeJzwXOQE44gv6C=DNzYmUWCQ@mail.gmail.com>
+ <20200428100508.GD3456981@phenom.ffwll.local>
+ <20200430033614.GA6645@xin-VirtualBox>
+ <20200430133731.GA10381@phenom.ffwll.local>
 MIME-Version: 1.0
-In-Reply-To: <0195184b-0b43-f2fd-8d80-3b70d3f5a950@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430133731.GA10381@phenom.ffwll.local>
+X-Operating-System: Linux phenom 5.4.0-4-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John, Jiri,
+On Thu, Apr 30, 2020 at 03:37:31PM +0200, Daniel Vetter wrote:
+> On Thu, Apr 30, 2020 at 11:36:14AM +0800, Xin Ji wrote:
+> > On Tue, Apr 28, 2020 at 12:05:08PM +0200, Daniel Vetter wrote:
+> > > On Fri, Apr 24, 2020 at 08:12:04PM +0800, Nicolas Boichat wrote:
+> > > > On Fri, Apr 24, 2020 at 2:51 PM Xin Ji <xji@analogixsemi.com> wrote:
+> > > > >
+> > > > > On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > Just commenting on the mode_fixup function that was added in v7.
+> > > > > >
+> > > > > [snip]
+> > > > > > > +       /*
+> > > > > > > +        * once illegal timing detected, use default HFP, HSYNC, HBP
+> > > > > > > +        */
+> > > > > > > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
+> > > > > >
+> > > > > > should this be adj_hblanking/adj_hfp/adj_hbp?
+> > > > > NO, need check original HFP and HBP, if they are not legal, driver need
+> > > > > set default value to adj_hsync, adj_hfp, adj_hbp.
+> > > > > >
+> > > > > > > +               adj_hsync = SYNC_LEN_DEF;
+> > > > > > > +               adj_hfp = HFP_HBP_DEF;
+> > > > > > > +               adj_hbp = HFP_HBP_DEF;
+> > > > > > > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
+> > > > > > > +               if (hblanking < HBLANKING_MIN) {
+> > > > > > > +                       delta_adj = HBLANKING_MIN - hblanking;
+> > > > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > > > > > > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
+> > > > > > > +               } else {
+> > > > > > > +                       delta_adj = hblanking - HBLANKING_MIN;
+> > > > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
+> > > > > > > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
+> > > > > > > +               }
+> > > > > > > +
+> > > > > > > +               DRM_WARN("illegal hblanking timing, use default.\n");
+> > > > > > > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
+> > > > > >
+> > > > > > How likely is it that this mode is going to work? Can you just return
+> > > > > > false here to reject the mode?
+> > > > > We want to set the default minimal Hblancking value, then it may display,
+> > > > > otherwise. If we just return false, there is no display for sure.
+> > > > 
+> > > > Right, understand your argument. I'm pondering if it's not just better
+> > > > to reject the mode rather than trying a timing that is definitely
+> > > > quite different from what the monitor was asking for. No super strong
+> > > > opinion, I'll let other people on the list weigh in.
+> > > 
+> > > Yeah mode_fixup is supposed to be used to adjust the mode in intermediate
+> > > stages (e.g. if you go from progressive to interlaced only at the end of
+> > > your pipeline or something like that). It's not meant for adjusting the
+> > > mode yout actually put out through a hdmi or dp connector. For fixed
+> > > panels adjusting modes to fit the panel is also fairly common, but not for
+> > > external outputs.
+> > > 
+> > > Since this is a DP bridge I'd say no adjusting, just reject what doesn't
+> > > fit.
+> > We have found some panel which HBP less than 8, if we reject to adjust
+> > video timing, then there is no display. The customer does not accept it,
+> > they push us to fix it, the only resolve way is to adjust timing.
+> 
+> Are we talking about external DP screen here, or some built-in panel? For
+> the later case we do a lot of mode adjusting in many drivers ...
+> 
+> I haven't checked, by if our connector type is eDP then this should be all
+> fine.
 
-On 4/30/2020 7:48 PM, John Garry wrote:
-> On 30/04/2020 12:15, Jiri Olsa wrote:
-> 
-> +
-> 
->> On Thu, Apr 30, 2020 at 09:54:18AM +0100, John Garry wrote:
->>> On 30/04/2020 09:45, Jiri Olsa wrote:
->>>> On Thu, Apr 30, 2020 at 08:36:18AM +0800, Jin Yao wrote:
->>>>> A big uncore event group is split into multiple small groups which
->>>>> only include the uncore events from the same PMU. This has been
->>>>> supported in the commit 3cdc5c2cb924a ("perf parse-events: Handle
->>>>> uncore event aliases in small groups properly").
->>>>>
->>>>> If the event's PMU name starts to repeat, it must be a new event.
->>>>> That can be used to distinguish the leader from other members.
->>>>> But now it only compares the pointer of pmu_name
->>>>> (leader->pmu_name == evsel->pmu_name).
->>>>>
->>>>> If we use "perf stat -M LLC_MISSES.PCIE_WRITE -a" on cascadelakex,
->>>>> the event list is:
->>>>>
->>>>> evsel->name                    evsel->pmu_name
->>>>> ---------------------------------------------------------------
->>>>> unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_4 (as leader)
->>>>> unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_2
->>>>> unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_0
->>>>> unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_5
->>>>> unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_3
->>>>> unc_iio_data_req_of_cpu.mem_write.part0        uncore_iio_1
->>>>> unc_iio_data_req_of_cpu.mem_write.part1        uncore_iio_4
->>>>> ......
->>>>>
->>>>> For the event "unc_iio_data_req_of_cpu.mem_write.part1" with
->>>>> "uncore_iio_4", it should be the event from PMU "uncore_iio_4".
->>>>> It's not a new leader for this PMU.
->>>>>
->>>>> But if we use "(leader->pmu_name == evsel->pmu_name)", the check
->>>>> would be failed and the event is stored to leaders[] as a new
->>>>> PMU leader.
->>>>>
->>>>> So this patch uses strcmp to compare the PMU name between events.
->>>>>
->>>>> Fixes: 3cdc5c2cb924a ("perf parse-events: Handle uncore event aliases in 
->>>>> small groups properly")
->>>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>>
->>>> looks good, any chance we could have automated test
->>>> for this uncore leader setup logic? like maybe the way
->>>> John did the pmu-events tests? like test will trigger
->>>> only when there's the pmu/events in the system
->>>>
->>>> Acked-by: Jiri Olsa <jolsa@redhat.com>
->>>>
->>>> thanks,
->>>> jirka
->>>
->>> Hi jirka,
->>>
->>> JFYI, this is effectively the same patch as I mentioned to you, which was a
->>> fix for the same WARN:
->>>
->>> https://lore.kernel.org/linux-arm-kernel/1587120084-18990-2-git-send-email-john.garry@huawei.com/ 
->>>
->>>
->>> but I found that it "fixed" d4953f7ef1a2 ("perf parse-events: Fix 3 use
->>> after frees found with clang ASANutil/parse-events.c"), based on bisect
->>> breakage
->>
->> hum right.. sorry I did not recalled that, there's
->> also the warn removal in here, could you guys also
->> plz sync on the fixes clauses?
-> 
-> I just thought that it fixes d4953f7ef1a2, as I found that the pointer equality 
-> fails from that commit. I assume the parse-events code was sound before then (in 
-> that regard). That's all I know :)
-> 
-> Thanks!
-> 
-
-For 3cdc5c2cb924a, I just think it should use strcmp for pmu_name comparison 
-rather than using pointer. But I'm OK to add d4953f7ef1a2 in fixes clauses. :)
-
-Thanks
-Jin Yao
-
->>
->> thanks,
->> jirka
->>
->>>
->>> cheers
->>>
->>>>
->>>>
->>>>> ---
->>>>>    tools/perf/util/parse-events.c | 5 ++---
->>>>>    1 file changed, 2 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->>>>> index 10107747b361..786eddb6a097 100644
->>>>> --- a/tools/perf/util/parse-events.c
->>>>> +++ b/tools/perf/util/parse-events.c
->>>>> @@ -1629,12 +1629,11 @@ parse_events__set_leader_for_uncore_aliase(char 
->>>>> *name, struct list_head *list,
->>>>>             * event. That can be used to distinguish the leader from
->>>>>             * other members, even they have the same event name.
->>>>>             */
->>>>> -        if ((leader != evsel) && (leader->pmu_name == evsel->pmu_name)) {
->>>>> +        if ((leader != evsel) &&
->>>>> +            !strcmp(leader->pmu_name, evsel->pmu_name)) {
->>>>>                is_leader = false;
->>>>>                continue;
->>>>>            }
->>>>> -        /* The name is always alias name */
->>>>> -        WARN_ON(strcmp(leader->name, evsel->name));
->>>>>            /* Store the leader event for each PMU */
->>>>>            leaders[nr_pmu++] = (uintptr_t) evsel;
->>>>> -- 
->>>>> 2.17.1
->>>>>
->>>>
->>>> .
->>>>
->>>
->>
->> .
->>
-> 
+Ok I read the patch now, you seem to support both. Would it work if we
+make this adjustement conditional on it being an internal panel only? I
+think that would be perfect.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
