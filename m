@@ -2,109 +2,96 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E0CC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE5BC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E68720870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588269230;
-	bh=4Xo8/1e7qaJmuQQltLTfB4vjVZPdGrjTFYT8oEPKWno=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Eb+YOsWnu2UcSH2eZaOTioqbkRRYOz1xtYCT9kgaHebUBoBSr/9rrZdrJ5Rx0M85k
-	 obUAR5PROCLQV5yFx50AU43uvPE1DKtZhalqKEaVh59y/FxIJjZ6VXJjsCSWH3Gijt
-	 wIVv4+h83jYDCpvumtkj62sCeJvEjBJ8Tw7abr+E=
+	by mail.kernel.org (Postfix) with ESMTP id D8ABF20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgD3Rxt (ORCPT
+        id S1726524AbgD3RyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgD3Rxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:53:49 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9B7F20836;
-        Thu, 30 Apr 2020 17:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588269228;
-        bh=4Xo8/1e7qaJmuQQltLTfB4vjVZPdGrjTFYT8oEPKWno=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TnzHy6V0ZH7paWMDm5JrkAHnp/DaOr3pZvhvI0vYr1381WdBJTPVhmepyRnBUiLba
-         o8thxzN3rCxTBpDBvcLfBQetKd7K7qWM3ZeU1eXq82INA7n961BxRiD4T+u1HNYwcZ
-         dpNJGdEFn0SyLaoq3c7EWRsANA/N5cp3TcBUyYss=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jUDNb-0088YE-6h; Thu, 30 Apr 2020 18:53:47 +0100
+        Thu, 30 Apr 2020 13:54:15 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2137 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726285AbgD3RyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 13:54:14 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 67AC53A5A62927E3F39B;
+        Thu, 30 Apr 2020 18:54:12 +0100 (IST)
+Received: from [127.0.0.1] (10.47.0.178) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 30 Apr
+ 2020 18:54:10 +0100
+Subject: Re: [PATCH v3 12/12] perf test: improve pmu event metric testing
+To:     Ian Rogers <irogers@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kajoljain <kjain@linux.ibm.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20200430075144.132716-1-irogers@google.com>
+ <20200430075144.132716-13-irogers@google.com>
+ <6a3d68fd-c489-c0d5-8612-69f15be1bf64@huawei.com>
+ <CAP-5=fUA3UDNdreJBhdLBPgyFUutN_qUqaL-Diu3yihSDc_niw@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <49698917-cdc0-52d5-9c08-ba82f8438657@huawei.com>
+Date:   Thu, 30 Apr 2020 18:53:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAP-5=fUA3UDNdreJBhdLBPgyFUutN_qUqaL-Diu3yihSDc_niw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Apr 2020 18:53:47 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] Split off nVHE hyp code
-In-Reply-To: <20200430144831.59194-1-dbrazdil@google.com>
-References: <20200430144831.59194-1-dbrazdil@google.com>
-User-Agent: Roundcube Webmail/1.4.3
-Message-ID: <73efca41e7b955db4963ff182624107d@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: dbrazdil@google.com, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Originating-IP: [10.47.0.178]
+X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-Thanks for posting this, looks quite interesting!
-
-On 2020-04-30 15:48, David Brazdil wrote:
-> Refactor files in arch/arm64/kvm/hyp to compile all code which runs in 
-> EL2
-> under nVHE into separate object files from the rest of KVM. This is 
-> done in
-> preparation for being able to unmap .hyp.text from EL1 but has other 
-> benefits,
-> notably:
->  * safe use of KASAN/UBSAN/GCOV instrumentation on VHE code,
->  * cleaner HVC API,
->  * no need for __hyp_text annotations.
+On 30/04/2020 15:31, Ian Rogers wrote:
+> On Thu, Apr 30, 2020 at 4:44 AM John Garry <john.garry@huawei.com> wrote:
+>>
+>> On 30/04/2020 08:51, Ian Rogers wrote:
+>>> Add a basic floating point number test to expr.
+>>> Break pmu-events test into 2 and add a test to verify that all pmu metric
+>>> expressions simply parse.
+>>
+>> Could we add also add something in jevents to ensure this?
 > 
-> nVHE-specific code is moved to hyp/nvhe and compiled with custom build 
-> rules
-> similar to those used by EFI stub. Shared source files are compiled 
-> under both
-> VHE and nVHE build rules. Where a source file contained both VHE and 
-> nVHE code,
-> it is split into a shared header file and two C source files. This is 
-> done one
-> file per commit to make review easier.
+> I think it is an interesting possibility. Instead of strings we could
+> also parse the metrics into C functions, that could cause build time
+> errors at least for the simple expressions. An issue I've faced is
+> that if jevents fails, such as a json parse error, it has an exit code
+> of 0 and creates an empty map file. This allows the build to proceed
+> but with the pmu-events functionality broken. I'd prefer a build to
+> fail as early as possible.
 
-Do you have any figure on how much bigger the final kernel becomes once 
-this
-is applied? I guess I can find out pretty easily, but this is the kind 
-of thing
-that would be useful to make part of your cover letter.
-
-I'll try to review this shortly.
+Yeah, the idea is to allow perf to continue to build even when we have 
+broken JSONs, but without aliases. It's been that way since day one, so 
+maybe that can be turned off now.
 
 Thanks,
-
-         M.
+John
