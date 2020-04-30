@@ -2,167 +2,468 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ADAC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B74C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D2B2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31582074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:52:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RI0Z4mxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgD3MwM (ORCPT
+        id S1727030AbgD3MwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:52:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726127AbgD3MwM (ORCPT
+        Thu, 30 Apr 2020 08:52:18 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40608 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgD3MwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:52:12 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B821BC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 05:52:11 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 631232A274B;
-        Thu, 30 Apr 2020 13:52:08 +0100 (BST)
-Date:   Thu, 30 Apr 2020 14:52:05 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: Re: [PATCH v2] mtd: Fix mtd not the same name not registered if
- nvmem
-Message-ID: <20200430145205.06e16bd4@collabora.com>
-In-Reply-To: <CAPybu_38B-1MaX-t61WBHrZkXhJ4P8fT4n9cdXzZs3LmBr5vZQ@mail.gmail.com>
-References: <20200401100240.445447-1-ribalda@kernel.org>
-        <20200402065953.9974-1-ribalda@kernel.org>
-        <CAPybu_34nSmbu4JMK-uA3SWrj_eMUftZ8S6zf1Vpg3Etkz3SPw@mail.gmail.com>
-        <20200427162222.1c2b2c85@xps13>
-        <20200427163711.07614619@collabora.com>
-        <20200427164922.5829717f@xps13>
-        <20200427211024.174f5830@collabora.com>
-        <CAPybu_38B-1MaX-t61WBHrZkXhJ4P8fT4n9cdXzZs3LmBr5vZQ@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Apr 2020 08:52:17 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03UCqE7F088275;
+        Thu, 30 Apr 2020 07:52:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588251134;
+        bh=K4d+nmeB1EYZz6Viig2DwGBIetdlcYnDJCY+gI0Fdoo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RI0Z4mxFvkZJLGh5uca8ucD6OGvNZ4nRnG0TBSZa+K0mXnPPsXIHlHlE1j2eZPT/F
+         6H/DBqDdPPEuzew6xAGnoiZPCUzu25Fzov3ggSEfowMZEKBMM5gWIEvVgdKhQ8jxDA
+         gYX+umIic8kwli2Bt9KdwtfGl5RoNfCgAJv72PHQ=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UCqE58048191;
+        Thu, 30 Apr 2020 07:52:14 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Apr 2020 07:52:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Apr 2020 07:52:14 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UCqEaa092612;
+        Thu, 30 Apr 2020 07:52:14 -0500
+Subject: Re: [PATCH 2/2] power: supply: Introduce the BQ27561 Fuel gauge
+ driver
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     "Andrew F. Davis" <afd@ti.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417172227.28075-1-dmurphy@ti.com>
+ <20200417172227.28075-2-dmurphy@ti.com>
+ <20200429220522.w3likr4ywklxrkvr@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <26d120ab-5506-f0f8-1d45-fd7c5c4a1bde@ti.com>
+Date:   Thu, 30 Apr 2020 07:43:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200429220522.w3likr4ywklxrkvr@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 14:26:51 +0200
-Ricardo Ribalda Delgado <ribalda@kernel.org> wrote:
+Sebastian
 
-> Hi
-> 
-> On Mon, Apr 27, 2020 at 9:10 PM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
-> >
-> > On Mon, 27 Apr 2020 16:49:22 +0200
-> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >  
-> > > Hi Boris,
-> > >
-> > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 27 Apr
-> > > 2020 16:37:11 +0200:
-> > >  
-> > > > On Mon, 27 Apr 2020 16:22:22 +0200
-> > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > >  
-> > > > > Hi Ricardo,
-> > > > >
-> > > > > Ricardo Ribalda Delgado <ribalda@kernel.org> wrote on Tue, 14 Apr 2020
-> > > > > 15:47:23 +0200:
-> > > > >  
-> > > > > > Ping?
-> > > > > >
-> > > > > > On Thu, Apr 2, 2020 at 8:59 AM Ricardo Ribalda Delgado
-> > > > > > <ribalda@kernel.org> wrote:  
-> > > > > > >
-> > > > > > > When the nvmem framework is enabled, a nvmem device is created per mtd
-> > > > > > > device/partition.
-> > > > > > >
-> > > > > > > It is not uncommon that a device can have multiple mtd devices with
-> > > > > > > partitions that have the same name. Eg, when there DT overlay is allowed
-> > > > > > > and the same device with mtd is attached twice.
-> > > > > > >
-> > > > > > > Under that circumstances, the mtd fails to register due to a name
-> > > > > > > duplication on the nvmem framework.
-> > > > > > >
-> > > > > > > With this patch we add a _1, _2, _X to the subsequent names if there is
-> > > > > > > a collition, and throw a warning, instead of not starting the mtd
-> > > > > > > device.
-> > > > > > >
-> > > > > > > [    8.948991] sysfs: cannot create duplicate filename '/bus/nvmem/devices/Production Data'
-> > > > > > > [    8.948992] CPU: 7 PID: 246 Comm: systemd-udevd Not tainted 5.5.0-qtec-standard #13
-> > > > > > > [    8.948993] Hardware name: AMD Dibbler/Dibbler, BIOS 05.22.04.0019 10/26/2019
-> > > > > > > [    8.948994] Call Trace:
-> > > > > > > [    8.948996]  dump_stack+0x50/0x70
-> > > > > > > [    8.948998]  sysfs_warn_dup.cold+0x17/0x2d
-> > > > > > > [    8.949000]  sysfs_do_create_link_sd.isra.0+0xc2/0xd0
-> > > > > > > [    8.949002]  bus_add_device+0x74/0x140
-> > > > > > > [    8.949004]  device_add+0x34b/0x850
-> > > > > > > [    8.949006]  nvmem_register.part.0+0x1bf/0x640
-> > > > > > > ...
-> > > > > > > [    8.948926] mtd mtd8: Failed to register NVMEM device
-> > > > > > >
-> > > > > > > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>  
-> > > > >
-> > > > > Thanks for proposing this change. Indeed we are aware of the problem
-> > > > > and the best solution that we could come up with was to create an
-> > > > > additional "unique_name" field to the mtd_info structure. This new
-> > > > > field would have the form:
-> > > > >
-> > > > >     [<parent-unique-name><separator>]<mtd-name>
-> > > > >
-> > > > > The separator might be '~' (but I am completely open on that), and that
-> > > > > would give for instance:
-> > > > >
-> > > > >     my-controller~my-device~my-part~mysub-part  
-> > > >
-> > > > I'd prefer something slightly more standard for the separator, like '/',
-> > > > which is what we usually use when we want to represent a path in a tree.
-> > > > I do agree on the general approach though.  
-> > >
-> > > I am not sure / is a valid separator here we would use this
-> > > name to create a sysfs entry. Would it work?  
-> >
-> > Hm, you're probably right, I didn't check how the name was used by
-> > nvmem. I also see that partition names can contain spaces, which is
-> > not that great. So, if we want to use mtd->unique_name we should
-> > probably sanitize it before passing it to nvmem. All this makes me
-> > reconsider your initial proposal: use 'mtdX' as the nvmem name. It's
-> > unique and it's simple enough to not require this extra sanitization
-> > pass, on the other hand, guessing the nvmem partition based on such an
-> > opaque name is not simple, not to mention that the mtd device name can
-> > change depending on the probe order.
-> >
-> > I also wonder if creating nvmem devs unconditionally for all mtd
-> > devices is a good idea. Sounds like we should only do that if there's an
-> > explicit request to have one partition exposed as an nvmem.
-> >
-> > Note that, no matter what we decide about nvmem, I think having unique
-> > names at the MTD level is a good thing.  
-> 
-> I have no preference one way or another.
-> 
-> The issue is that our current master leads to mtds not working fine
-> and making the system unusable. Whatever we decide it must be fast and
-> the patch backported.
-> 
-> My original patch follows the same logic as led does where there is a
-> duplicated name. I can send a separate patch that uses mtdX and then
-> you decide what to pick. Or we can go with a third way, but it needs
-> to be soon ;).
+On 4/29/20 5:05 PM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Fri, Apr 17, 2020 at 12:22:27PM -0500, Dan Murphy wrote:
+>> Introduce the BQ27561 Fuel gauge driver from Texas Instruments. The
+>> driver also supports the BQ27750 as it has the same register map and
+>> bit mask.
+> Why a separate driver instead of adding support to bq27xxx? The register
+> map seems to be similar enough.
 
-Please send a patch using dev_name(&mtd->dev), and let's hope it
-doesn't break someone else use case.
+I will need to see if I can integrate this into the bq27xxx.  I have to 
+look at these 2 devices as well as another device that we need to integrate
+
+But preliminary analysis suggests that we can integrate these 2 devices 
+plus the third one into the driver.
+
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/power/supply/Kconfig      |   9 +
+>>   drivers/power/supply/Makefile     |   1 +
+>>   drivers/power/supply/bq27561_fg.c | 304 ++++++++++++++++++++++++++++++
+>>   3 files changed, 314 insertions(+)
+>>   create mode 100644 drivers/power/supply/bq27561_fg.c
+>>
+>> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+>> index f3424fdce341..febf6bf8c4ea 100644
+>> --- a/drivers/power/supply/Kconfig
+>> +++ b/drivers/power/supply/Kconfig
+>> @@ -597,6 +597,15 @@ config CHARGER_BQ25890
+>>   	help
+>>   	  Say Y to enable support for the TI BQ25890 battery charger.
+>>   
+>> +config FUEL_GAUGE_BQ27561
+>> +	tristate "Texas Instruments bq27561 fuel gauge driver"
+>> +	depends on I2C
+>> +	select REGMAP_I2C
+> good :)
+Ack
+>
+>> +	depends on GPIOLIB || COMPILE_TEST
+>> +	help
+>> +	 Say Y here to enable support for fuel gauge with TI bq27561
+>> +	 fuel gauge chips.
+>> +
+>>   config CHARGER_SMB347
+>>   	tristate "Summit Microelectronics SMB347 Battery Charger"
+>>   	depends on I2C
+>> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+>> index 6c7da920ea83..4e402292b276 100644
+>> --- a/drivers/power/supply/Makefile
+>> +++ b/drivers/power/supply/Makefile
+>> @@ -81,6 +81,7 @@ obj-$(CONFIG_CHARGER_BQ24190)	+= bq24190_charger.o
+>>   obj-$(CONFIG_CHARGER_BQ24257)	+= bq24257_charger.o
+>>   obj-$(CONFIG_CHARGER_BQ24735)	+= bq24735-charger.o
+>>   obj-$(CONFIG_CHARGER_BQ25890)	+= bq25890_charger.o
+>> +obj-$(CONFIG_FUEL_GAUGE_BQ27561)	+= bq27561_fg.o
+>>   obj-$(CONFIG_CHARGER_SMB347)	+= smb347-charger.o
+>>   obj-$(CONFIG_CHARGER_TPS65090)	+= tps65090-charger.o
+>>   obj-$(CONFIG_CHARGER_TPS65217)	+= tps65217_charger.o
+>> diff --git a/drivers/power/supply/bq27561_fg.c b/drivers/power/supply/bq27561_fg.c
+>> new file mode 100644
+>> index 000000000000..b9f7cdc00d2e
+>> --- /dev/null
+>> +++ b/drivers/power/supply/bq27561_fg.c
+>> @@ -0,0 +1,304 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// BQ27561 Fuel Gauge Driver
+>> +// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+>> +// Author: Dan Murphy <dmurphy@ti.com>
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/power_supply.h>
+>> +#include <linux/types.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/moduleparam.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/of.h>
+>> +
+>> +#define BQ27561_REG_CNTL	0x00
+>> +#define BQ27561_REG_AR		0x02
+>> +#define BQ27561_REG_TEMP	0x06
+>> +#define BQ27561_REG_VOLT	0x08
+>> +#define BQ27561_REG_REMAIN_CAP	0x10
+>> +#define BQ27561_REG_BATTSTAT	0x0a
+>> +#define BQ27561_REG_CURRENT	0x0c
+>> +#define BQ27561_REG_FCC		0x12
+>> +#define BQ27561_REG_AVG_CURRENT	0x14
+>> +#define BQ27561_REG_TTE		0x16
+>> +#define BQ27561_REG_TTF		0x18
+>> +#define BQ27561_REG_CYCLECNT	0x2a
+>> +#define BQ27561_REG_RSOC	0x2c
+>> +
+>> +#define BQ27561_VAL_MULTIPLIER	1000
+>> +#define BQ27561_TEMP_K_TO_C	2732
+>> +#define BQ27561_TIME_MIN_TO_S	60
+>> +
+>> +#define BQ27561_BATT_DEPLETED	BIT(4)
+>> +#define BQ27561_BATT_CHARGED	BIT(5)
+>> +#define BQ27561_BATT_DISCHARGING	BIT(6)
+>> +
+>> +enum {
+>> +	BQ27561,
+>> +	BQ27750,
+>> +};
+>> +
+>> +struct bq27561_device {
+>> +	struct device *dev;
+>> +	struct i2c_client *client;
+>> +	struct power_supply *battery;
+>> +};
+>> +
+>> +static enum power_supply_property bq27561_properties[] = {
+>> +	POWER_SUPPLY_PROP_STATUS,
+>> +	POWER_SUPPLY_PROP_CAPACITY,
+>> +	POWER_SUPPLY_PROP_TEMP,
+>> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>> +	POWER_SUPPLY_PROP_CURRENT_NOW,
+>> +	POWER_SUPPLY_PROP_CHARGE_NOW,
+>> +	POWER_SUPPLY_PROP_CHARGE_FULL,
+>> +	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
+>> +};
+>> +
+>> +static int bq27561_get_temp(struct bq27561_device *bq)
+>> +{
+>> +	unsigned int temp;
+>> +
+>> +	temp = i2c_smbus_read_word_data(bq->client, BQ27561_REG_TEMP);
+> please use regmap instead of direct i2c read/write commands!
+>
+OK I did not look at regmap close enough to see if it supports smbus.  
+But apparently it does.
+
+I just need to make sure.
+
+
+>> +	if (temp < 0)
+>> +		return temp;
+> so e.g. -EIO will become -0.5°C?
+Ack.  It is hard to get a negative temp to be recorded by the thermister 
+in testing.
+>
+>> +	return temp - BQ27561_TEMP_K_TO_C;
+>> +}
+>> +
+>> +static int bq27561_get_voltage(struct bq27561_device *bq)
+>> +{
+>> +	unsigned int batt_volt;
+>> +
+>> +	batt_volt = i2c_smbus_read_word_data(bq->client, BQ27561_REG_VOLT);
+>> +	if (batt_volt < 0)
+>> +		return batt_volt;
+>> +
+>> +	return batt_volt * BQ27561_VAL_MULTIPLIER;
+>> +}
+>> +
+>> +static int bq27561_get_current(struct bq27561_device *bq)
+>> +{
+>> +	unsigned int batt_curr;
+>> +
+>> +	batt_curr = i2c_smbus_read_word_data(bq->client, BQ27561_REG_CURRENT);
+>> +	if (batt_curr < 0)
+>> +		return batt_curr;
+>> +
+>> +	return batt_curr * BQ27561_VAL_MULTIPLIER;
+>> +}
+>> +
+>> +static int bq27561_get_charge_capacity(struct bq27561_device *bq)
+>> +{
+>> +	unsigned int charge_cap;
+>> +
+>> +	charge_cap = i2c_smbus_read_word_data(bq->client, BQ27561_REG_FCC);
+>> +	if (charge_cap < 0)
+>> +		return charge_cap;
+>> +
+>> +	return charge_cap * BQ27561_VAL_MULTIPLIER;
+>> +}
+>> +
+>> +static int bq27561_get_batt_status(struct bq27561_device *bq)
+>> +{
+>> +	unsigned int batt_stat;
+>> +	unsigned int curr;
+>> +	int ret;
+>> +
+>> +	batt_stat = i2c_smbus_read_word_data(bq->client, BQ27561_REG_BATTSTAT);
+>> +	if (batt_stat < 0)
+>> +		return batt_stat;
+>> +
+>> +	curr = i2c_smbus_read_word_data(bq->client, BQ27561_REG_CURRENT);
+>> +	if (curr < 0)
+>> +		return curr;
+>> +
+>> +	if (batt_stat & BQ27561_BATT_CHARGED)
+>> +		ret = POWER_SUPPLY_STATUS_FULL;
+>> +	else if (batt_stat & BQ27561_BATT_DISCHARGING || curr == 0)
+>> +		ret = POWER_SUPPLY_STATUS_DISCHARGING;
+>> +	else if (curr > 0)
+>> +		ret = POWER_SUPPLY_STATUS_CHARGING;
+>> +	else
+>> +		ret = POWER_SUPPLY_STATUS_UNKNOWN;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int bq27561_get_empty_time(struct bq27561_device *bq)
+>> +{
+>> +	unsigned int empty_time;
+>> +
+>> +	empty_time = i2c_smbus_read_word_data(bq->client, BQ27561_REG_TTE);
+>> +	if (empty_time < 0)
+>> +		return empty_time;
+>> +
+>> +	return empty_time * BQ27561_TIME_MIN_TO_S;
+>> +}
+>> +
+>> +static int bq27561_get_property(struct power_supply *psy,
+>> +				enum power_supply_property psp,
+>> +				union power_supply_propval *val)
+>> +{
+>> +	struct bq27561_device *bq = power_supply_get_drvdata(psy);
+>> +	int ret = 0;
+>> +
+>> +	switch (psp) {
+>> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+>> +		ret = bq27561_get_voltage(bq);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
+>> +		ret = bq27561_get_current(bq);
+>> +		if (ret < 0)
+>> +			return ret;
+> current can be negative (charging vs discharging).
+Ack
+>
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	case POWER_SUPPLY_PROP_STATUS:
+>> +		ret = bq27561_get_batt_status(bq);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	case POWER_SUPPLY_PROP_TEMP:
+>> +		val->intval = bq27561_get_temp(bq);
+>> +		break;
+> no error handling?
+Ack
+>
+>> +	case POWER_SUPPLY_PROP_CAPACITY:
+>> +		ret = i2c_smbus_read_word_data(bq->client, BQ27561_REG_RSOC);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	case POWER_SUPPLY_PROP_CHARGE_FULL:
+>> +		ret = bq27561_get_charge_capacity(bq);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
+>> +		ret = bq27561_get_empty_time(bq);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	case POWER_SUPPLY_PROP_CHARGE_NOW:
+>> +		ret = i2c_smbus_read_word_data(bq->client, BQ27561_REG_AR);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		val->intval = ret;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	};
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bq27561_set_property(struct power_supply *psy,
+>> +				enum power_supply_property psp,
+>> +				const union power_supply_propval *val)
+>> +{
+>> +	struct bq27561_device *bq = power_supply_get_drvdata(psy);
+>> +	int ret = 0;
+>> +
+>> +	switch (psp) {
+>> +	case POWER_SUPPLY_PROP_CHARGE_NOW:
+>> +		ret = i2c_smbus_write_word_data(bq->client, BQ27561_REG_AR,
+>> +						val->intval);
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	};
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int bq27561_prop_is_writeable(struct power_supply *psy,
+>> +				     enum power_supply_property prop)
+>> +{
+>> +	switch (prop) {
+>> +	case POWER_SUPPLY_PROP_CHARGE_NOW:
+>> +		return 1;
+>> +	default:
+>> +		return 0;
+>> +	};
+>> +}
+>> +
+>> +static struct power_supply_desc bq27561_power_supply_desc = {
+>> +	.type = POWER_SUPPLY_TYPE_BATTERY,
+>> +	.properties = bq27561_properties,
+>> +	.num_properties = ARRAY_SIZE(bq27561_properties),
+>> +	.get_property = bq27561_get_property,
+>> +	.set_property = bq27561_set_property,
+>> +	.property_is_writeable = bq27561_prop_is_writeable,
+>> +};
+>> +
+>> +static int bq27561_probe(struct i2c_client *client,
+>> +				 const struct i2c_device_id *id)
+>> +{
+>> +	struct bq27561_device *bq;
+>> +	struct power_supply_config psy_cfg;
+>> +
+>> +	bq = devm_kzalloc(&client->dev, sizeof(*bq), GFP_KERNEL);
+>> +	if (!bq)
+>> +		return -ENOMEM;
+>> +
+>> +	bq->dev = &client->dev;
+>> +	bq->client = client;
+>> +	i2c_set_clientdata(client, bq);
+>> +
+>> +	psy_cfg.drv_data = bq;
+> You should setup psy_cfg.of_node, so that it can be referenced
+> in DT.
+>
+Ack
+>> +	bq27561_power_supply_desc.name = id->name;
+>> +	bq->battery = devm_power_supply_register(bq->dev,
+>> +						 &bq27561_power_supply_desc,
+>> +						 &psy_cfg);
+>> +
+>> +	if (IS_ERR(bq->battery))
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id bq27561_match_table[] = {
+>> +	{.compatible = "ti,bq27561",},
+>> +	{.compatible = "ti,bq27750",},
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, bq_fg_match_table);
+>> +
+>> +static const struct i2c_device_id bq27561_id[] = {
+>> +	{"bq27561", BQ27561},
+>> +	{"bq27750", BQ27750},
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, bq27561_id);
+>> +
+>> +static struct i2c_driver bq27561_battery_driver = {
+>> +	.driver = {
+>> +		   .name = "bq27561-fuel-gauge",
+>> +		   .of_match_table = bq27561_match_table,
+>> +		   .owner = THIS_MODULE,
+> i2c_register_driver() sets it owner automatically, so
+> drop this.
+>
+>> +		   },
+>> +	.probe = bq27561_probe,
+>> +	.id_table = bq27561_id,
+>> +};
+>> +module_i2c_driver(bq27561_battery_driver);
+>> +
+>> +MODULE_AUTHOR("Texas Instruments");
+>> +MODULE_DESCRIPTION("bq27561 battery monitor driver");
+>> +MODULE_LICENSE("GPL v2");
+> -- Sebastian
