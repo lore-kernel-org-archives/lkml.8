@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4223BC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B42C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D09D20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D4220775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262870;
-	bh=VskrOSds+k6lATCBRxSNU8FwGkjkFNi0RCLoQYUzeio=;
+	s=default; t=1588262881;
+	bh=yFi98m0dMb+zcVAw2IGTkDdl9KK+Ps1SAKk7Nkf6Fwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Og7uQrnDo1GDAiWIuBU6A6WSr9ykT8c0xv8ls41+lg9zXv87VsZrKr1zHhnOCSb74
-	 js29F1OB/00qZqmxkdQfDJTxMX75rrRKbegimyUZZI/u0omwNDunYi6W/+UqSiRJ3c
-	 xHfrTmJCEb1tuPCS4CXDy78HoDEJbeoPJkX4ove8=
+	b=ZYUvV29AZgMX+W5o5niKaf9xH1NLcLUxpHtoA1tvWIHFLuEngqZpn3MQy1UFWu/mG
+	 ZwwDYMOjFBkSvdK4j8ITDxuc1aShWcvKXTVw92HyDrKkPsanEcbY3hFzFIXa38w1xr
+	 p+rh09z4qDnwjh7RuMypNCDuR4PsX75qHVtSkFwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgD3QHs (ORCPT
+        id S1728099AbgD3QIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:04:38 -0400
+        id S1726835AbgD3QEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:04:37 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA6F3217BA;
+        by mail.kernel.org (Postfix) with ESMTPSA id EC6C124953;
         Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588262676;
-        bh=VskrOSds+k6lATCBRxSNU8FwGkjkFNi0RCLoQYUzeio=;
+        bh=yFi98m0dMb+zcVAw2IGTkDdl9KK+Ps1SAKk7Nkf6Fwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w96YBFQL43JPBzEzOIR2cQc1RJ1EREU8munTIHlc6DD2iW/w2zeeoTWGmN4q7IP9v
-         /Vd7qXRQzofKcwb3CwxqsUeayJzgBMhkogOEWKx6gHc3/551p5K2eSZKWyAq3h5DUH
-         Wi/MHtE9M2Qdtm2ZEGG2+AhB82t+i1tnsCZgEIEA=
+        b=1SVqXcieMewTFeMAntOPvpidXTy5lXp7EMl/8ayfKMojHuwESUkG9XscmShiHFbVk
+         /0PIShBLnclxg1Clp4W+xd5TVFMRUgrW9V37gCrdfljiPkHIbOpfpo82av6k6uxA7K
+         lbuYLggRuZg6LkOqbeCm09ff7Z1L60nBWOMMFnWI=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxEi-6Z; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxEu-8O; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 08/37] docs: networking: convert netdev-features.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:03 +0200
-Message-Id: <6990088c4a50c1da5a563649189e5fd0c114ddf3.1588261997.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 10/37] docs: networking: convert netfilter-sysctl.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:05 +0200
+Message-Id: <5e9c77b49925c2154cc30b7c18f89d9db29ce9ed.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -64,114 +64,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Not much to be done here:
 
 - add SPDX header;
-- adjust titles and chapters, adding proper markups;
+- add a document title;
+- add a chapter markup;
+- mark tables as such;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/checksum-offloads.rst          |  2 +-
- Documentation/networking/index.rst            |  1 +
- ...etdev-features.txt => netdev-features.rst} | 19 +++++++++++--------
- include/linux/netdev_features.h               |  2 +-
- 4 files changed, 14 insertions(+), 10 deletions(-)
- rename Documentation/networking/{netdev-features.txt => netdev-features.rst} (95%)
+ Documentation/networking/index.rst                    |  1 +
+ .../{netfilter-sysctl.txt => netfilter-sysctl.rst}    | 11 +++++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+ rename Documentation/networking/{netfilter-sysctl.txt => netfilter-sysctl.rst} (62%)
 
-diff --git a/Documentation/networking/checksum-offloads.rst b/Documentation/networking/checksum-offloads.rst
-index 905c8a84b103..69b23cf6879e 100644
---- a/Documentation/networking/checksum-offloads.rst
-+++ b/Documentation/networking/checksum-offloads.rst
-@@ -59,7 +59,7 @@ recomputed for each resulting segment.  See the skbuff.h comment (section 'E')
- for more details.
- 
- A driver declares its offload capabilities in netdev->hw_features; see
--Documentation/networking/netdev-features.txt for more.  Note that a device
-+Documentation/networking/netdev-features.rst for more.  Note that a device
- which only advertises NETIF_F_IP[V6]_CSUM must still obey the csum_start and
- csum_offset given in the SKB; if it tries to deduce these itself in hardware
- (as some NICs do) the driver should check that the values in the SKB match
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index e58f872d401d..4c6aa3db97d4 100644
+index 5a320553ffba..1ae0cbef8c04 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -81,6 +81,7 @@ Contents:
-    mpls-sysctl
-    multiqueue
+@@ -83,6 +83,7 @@ Contents:
     netconsole
-+   netdev-features
+    netdev-features
+    netdevices
++   netfilter-sysctl
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/netdev-features.txt b/Documentation/networking/netdev-features.rst
-similarity index 95%
-rename from Documentation/networking/netdev-features.txt
-rename to Documentation/networking/netdev-features.rst
-index 58dd1c1e3c65..a2d7d7160e39 100644
---- a/Documentation/networking/netdev-features.txt
-+++ b/Documentation/networking/netdev-features.rst
-@@ -1,3 +1,6 @@
+diff --git a/Documentation/networking/netfilter-sysctl.txt b/Documentation/networking/netfilter-sysctl.rst
+similarity index 62%
+rename from Documentation/networking/netfilter-sysctl.txt
+rename to Documentation/networking/netfilter-sysctl.rst
+index 55791e50e169..beb6d7b275d4 100644
+--- a/Documentation/networking/netfilter-sysctl.txt
++++ b/Documentation/networking/netfilter-sysctl.rst
+@@ -1,8 +1,15 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=====================================================
- Netdev features mess and how to get out from it alive
- =====================================================
++=========================
++Netfilter Sysfs variables
++=========================
++
+ /proc/sys/net/netfilter/* Variables:
++====================================
  
-@@ -6,8 +9,8 @@ Author:
+ nf_log_all_netns - BOOLEAN
+-	0 - disabled (default)
+-	not 0 - enabled
++	- 0 - disabled (default)
++	- not 0 - enabled
  
- 
- 
-- Part I: Feature sets
--======================
-+Part I: Feature sets
-+====================
- 
- Long gone are the days when a network card would just take and give packets
- verbatim.  Today's devices add multiple features and bugs (read: offloads)
-@@ -39,8 +42,8 @@ one used internally by network core:
- 
- 
- 
-- Part II: Controlling enabled features
--=======================================
-+Part II: Controlling enabled features
-+=====================================
- 
- When current feature set (netdev->features) is to be changed, new set
- is calculated and filtered by calling ndo_fix_features callback
-@@ -65,8 +68,8 @@ driver except by means of ndo_fix_features callback.
- 
- 
- 
-- Part III: Implementation hints
--================================
-+Part III: Implementation hints
-+==============================
- 
-  * ndo_fix_features:
- 
-@@ -94,8 +97,8 @@ Errors returned are not (and cannot be) propagated anywhere except dmesg.
- 
- 
- 
-- Part IV: Features
--===================
-+Part IV: Features
-+=================
- 
- For current list of features, see include/linux/netdev_features.h.
- This section describes semantics of some of them.
-diff --git a/include/linux/netdev_features.h b/include/linux/netdev_features.h
-index 9d53c5ad272c..2cc3cf80b49a 100644
---- a/include/linux/netdev_features.h
-+++ b/include/linux/netdev_features.h
-@@ -89,7 +89,7 @@ enum {
- 	 * Add your fresh new feature above and remember to update
- 	 * netdev_features_strings[] in net/core/ethtool.c and maybe
- 	 * some feature mask #defines below. Please also describe it
--	 * in Documentation/networking/netdev-features.txt.
-+	 * in Documentation/networking/netdev-features.rst.
- 	 */
- 
- 	/**/NETDEV_FEATURE_COUNT
+ 	By default, only init_net namespace can log packets into kernel log
+ 	with LOG target; this aims to prevent containers from flooding host
 -- 
 2.25.4
 
