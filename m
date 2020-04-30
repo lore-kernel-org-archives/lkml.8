@@ -2,226 +2,202 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45326C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BD5C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2061420873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d1eBggrt"
+	by mail.kernel.org (Postfix) with ESMTP id E45B920731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588276725;
+	bh=8UGlkfS3b0Qfi+GqXTADnCgpEzDxYSx5dvkPteuNa1g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j+LfFL74nVKFfeuuAGpc+MjFIJjdpG3as4WM8Fx2T3isLNeuK5+NMtPj1lP04w3EH
+	 06DUx5swbpDQuKOpCMdTr2j63A1t/HpCSxwNo4wwe6nAxpWHL1jA4CWkhwAmUJyQvz
+	 bOOAKlm/QLncbSDmVC7v7MpXTcUvT07oW1SMwVDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgD3T5x (ORCPT
+        id S1726867AbgD3T6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56274 "EHLO
+        Thu, 30 Apr 2020 15:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgD3T5x (ORCPT
+        with ESMTP id S1726548AbgD3T6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:57:53 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC67FC08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:57:52 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id s10so2713423plr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:57:52 -0700 (PDT)
+        Thu, 30 Apr 2020 15:58:44 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E9FC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:58:42 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so5566381edq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:58:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ara67cN5iki3Ojktfn4ur4orVePchyu4PeOXIZf30Mg=;
-        b=d1eBggrtVzvxL+4jQ5qW1PCGyTkhmVC2jWhtfOxi09Fah64Hfo9QDWrK5wcaQL7kaS
-         VCY6nJVuOAnNMSPTrr3tfribxfPfH9zUEIKuhaZPyEtT+HEyXhSjOBqIB8+nAlbAZ0OJ
-         hPJGn5cvFnZgMLvwzuNfZ0dCiQhXwSwwg4GjxKSDgj7lGVg142DIRyRs3K0cJfmHqfAy
-         Vsb5eYy2v9doTOF02Spr+vxNEdYqzVTVGZRcToF7AfC6veZilcm7gp6Rbbc4uaZ3R/fS
-         0aMc1b3U5gcI85zHYom6rjYy/tXIKaYrvpXn0LxfHYmu2qd0FNa/WCil414gsv3OnfQZ
-         Y04Q==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=buJprfejQSl5yOput5ZzEt1+jJW0SdBoSZ4YNZtieEY=;
+        b=VUySWc9/2/N9fwGhjHudR0NYsyMdMYZXogyCdl4rAuef6cbEQbsUZSSi0oWuzE4z5h
+         oCVQ61Pc7cnFxML60ozbbHuETGxsnqdWrMhn5WWKV0YPtGOtTP7g+li2MpWKMXtZQPIL
+         fURRW8u5/c5rMyeSpaud7CEBjaUNeWdlVUYJY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ara67cN5iki3Ojktfn4ur4orVePchyu4PeOXIZf30Mg=;
-        b=bAt7E+BGJQNsMR4gKojmV4ntTkofq+CFJTUr4oUUuzM7j8KeZ294hRGnTam5nqLcon
-         LxyjR6rR5Sb8VnUTAOZaZ/UxGqYkOZZIFBpiLfJzooEYdWsXcrSiGttZCrxfB2R26XUb
-         PnfovLWkzk6PGpNn4wmnCWg3FSaVopiCo/rZ8GCykDGa4EhtUe7SXyrDYZNRGldUoGGN
-         0SJbQ3Do7sKIeX4zga8PdnoYCXJXzNELRGOK31xloS5iWCpkAM6ccml5WZi3+IqCYHQV
-         NU7gc8gZvkHbmc4j7FNmxOXU/E7QcXQPcN9h2ZZusmBlUpDxEYa+ytieelGqP1OJEzrR
-         vL9g==
-X-Gm-Message-State: AGi0PuZQX4sx6/ioLRewKvF7CTVdHHdbdV20xGI1r9YnCcWYRLd73v1D
-        HUTAaaSGn9CuGetjMnwOFvCFzw==
-X-Google-Smtp-Source: APiQypL6jZ39gXeEW4b2DwBMoz5wCVMdp0O9pLgfSwbPCw/1uJ2G9zdRMWtd4H1ZLuSmHgVxyFGiNQ==
-X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr565196pjk.58.1588276672231;
-        Thu, 30 Apr 2020 12:57:52 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id z1sm503182pjn.43.2020.04.30.12.57.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:57:51 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 13:57:49 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com, loic.pallardy@st.com,
-        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/14] remoteproc: Call core functions based on
- synchronisation flag
-Message-ID: <20200430195749.GC17031@xps15>
-References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
- <20200424200135.28825-9-mathieu.poirier@linaro.org>
- <a17d871a-3b3f-a462-9b2c-f9183f80a533@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=buJprfejQSl5yOput5ZzEt1+jJW0SdBoSZ4YNZtieEY=;
+        b=afdf0n64CoL0LK4l3ALQ0XfP22DoajcKyVP2XcdyCDR/qjW0dtxTQ04zUfPpMvzb3m
+         RVrKkz/G1O6YEx2+VLOVDCKjTuNoegUdnynl2s1sdsPlrW0+caBBKxLYAK0IVL6CyV0J
+         fcPhVNBicE8j46UORWrE90hzmq6UWIj2MFkXs9FdRV19SP6rP7Gk4Zb79MSMJolHccr0
+         rEDu9ZavCXaxR7u80KHFAeoImguqyL2rzmU3ztB161J6DP7gR7k1e9IawkAVkq14AmYm
+         RLwZmWaM7yYphFdDKywLCWO1GKXz8T8LtZM/fs3EW9AEcCwy2lLTc/m1KARWzsaQgJqn
+         gFAA==
+X-Gm-Message-State: AGi0PuY7LhQ9Z6zmgtyLntGKFOhBIhfDb54aUpldxejY0iCWAi3khJ1I
+        GRjEuRJ2H8LlIAsLVFxcBrgxZtcT0rw=
+X-Google-Smtp-Source: APiQypLZAdBovXkh9CFMEKa127psAgREaMTk4jcHambMnTuzWRiPxj8FHgAYNKT7Cldsg8rqRvDNLg==
+X-Received: by 2002:aa7:cd06:: with SMTP id b6mr605283edw.67.1588276721219;
+        Thu, 30 Apr 2020 12:58:41 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id co22sm51823edb.30.2020.04.30.12.58.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:58:41 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id a8so5585447edv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:58:40 -0700 (PDT)
+X-Received: by 2002:a05:6512:1114:: with SMTP id l20mr178100lfg.31.1588276256935;
+ Thu, 30 Apr 2020 12:50:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a17d871a-3b3f-a462-9b2c-f9183f80a533@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com> <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+In-Reply-To: <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 30 Apr 2020 12:50:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
+Message-ID: <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 07:27:27PM +0200, Arnaud POULIQUEN wrote:
-> 
-> 
-> On 4/24/20 10:01 PM, Mathieu Poirier wrote:
-> > Call the right core function based on whether we should synchronise
-> > with a remote processor or boot it from scratch.
-> > 
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > ---
-> >  drivers/remoteproc/remoteproc_internal.h | 50 ++++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> > 
-> > diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> > index dda7044c4b3e..3985c084b184 100644
-> > --- a/drivers/remoteproc/remoteproc_internal.h
-> > +++ b/drivers/remoteproc/remoteproc_internal.h
-> > @@ -72,6 +72,12 @@ static inline bool rproc_needs_syncing(struct rproc *rproc)
-> >  static inline
-> >  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->sanity_check)
-> > +			return rproc->sync_ops->sanity_check(rproc, fw);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->sanity_check)
-> >  		return rproc->ops->sanity_check(rproc, fw);
-> 
-> Regarding this patch I'm trying to determine whether it makes sense to have ops or
-> sync_ops set to null. Your[v3 01/14]  patch commit explains that ops can be null in case of
-> synchronisation.
-> But it seems deprecated with the sync_ops introduction...
+On Thu, Apr 30, 2020 at 12:23 PM Luck, Tony <tony.luck@intel.com> wrote:
+>
+> How about
+>
+>         try_copy_catch(void *dst, void *src, size_t count, int *fault)
+>
+> returns number of bytes not-copied (like copy_to_user etc).
+>
+> if return is not zero, "fault" tells you what type of fault
+> cause the early stop (#PF, #MC).
 
-Your comment made me go over the logic again...  If rproc_needs_syncing() is
-true then we necessarily have a sync_ops.  If rproc_needs_syncing() is false,
-there too we automatically have an ops.  As such and as you point out, checking
-for rproc->sync_ops and rproc-ops is probably useless.
+That just makes things worse.
 
-> 
-> And if sync_ops is null, is it still necessary to define a remoteproc device?
+The problem isn't "what fault did I get?".
 
-Not sure I understand your point here but with the reasonning from above it
-is probably moot anyway. 
+The problem is "what is the point of this function?".
 
-> 
-> Regards
-> Arnad
-> 
-> >  
-> > @@ -81,6 +87,12 @@ int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
-> >  static inline
-> >  u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->get_boot_addr)
-> > +			return rproc->sync_ops->get_boot_addr(rproc, fw);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->get_boot_addr)
-> >  		return rproc->ops->get_boot_addr(rproc, fw);
-> >  
-> > @@ -90,6 +102,12 @@ u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
-> >  static inline
-> >  int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->load)
-> > +			return rproc->sync_ops->load(rproc, fw);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->load)
-> >  		return rproc->ops->load(rproc, fw);
-> >  
-> > @@ -98,6 +116,12 @@ int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
-> >  
-> >  static inline int rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->parse_fw)
-> > +			return rproc->sync_ops->parse_fw(rproc, fw);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->parse_fw)
-> >  		return rproc->ops->parse_fw(rproc, fw);
-> >  
-> > @@ -108,6 +132,13 @@ static inline
-> >  int rproc_handle_rsc(struct rproc *rproc, u32 rsc_type, void *rsc, int offset,
-> >  		     int avail)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->handle_rsc)
-> > +			return rproc->sync_ops->handle_rsc(rproc, rsc_type,
-> > +							   rsc, offset, avail);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->handle_rsc)
-> >  		return rproc->ops->handle_rsc(rproc, rsc_type, rsc, offset,
-> >  					      avail);
-> > @@ -119,6 +150,13 @@ static inline
-> >  struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
-> >  						   const struct firmware *fw)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->find_loaded_rsc_table)
-> > +			return rproc->sync_ops->find_loaded_rsc_table(rproc,
-> > +								      fw);
-> > +		return NULL;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->find_loaded_rsc_table)
-> >  		return rproc->ops->find_loaded_rsc_table(rproc, fw);
-> >  
-> > @@ -127,6 +165,12 @@ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
-> >  
-> >  static inline int rproc_start_device(struct rproc *rproc)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->start)
-> > +			return rproc->sync_ops->start(rproc);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->start)
-> >  		return rproc->ops->start(rproc);
-> >  
-> > @@ -135,6 +179,12 @@ static inline int rproc_start_device(struct rproc *rproc)
-> >  
-> >  static inline int rproc_stop_device(struct rproc *rproc)
-> >  {
-> > +	if (rproc_needs_syncing(rproc)) {
-> > +		if (rproc->sync_ops && rproc->sync_ops->stop)
-> > +			return rproc->sync_ops->stop(rproc);
-> > +		return 0;
-> > +	}
-> > +
-> >  	if (rproc->ops && rproc->ops->stop)
-> >  		return rproc->ops->stop(rproc);
-> >  
-> > 
+In other words, I want the code to explain _why_ it uses a particular function.
+
+So the question the function should answer is not "Why did it take a
+fault?", but "Why isn't this just a 'memcpy()'"?
+
+When somebody writes
+
+    x = copy_to_user(a,b,c);
+
+the "why is it not a memcpy" question never comes up, because the code
+is obvious. It's not a memory copy, because it's copying to user
+space, and user space is different!
+
+In contrast, if you write
+
+    x = copy_safe(a,b,c);
+
+then what is going on? There is no rhyme or reason to the call. Is the
+source unsafe? Wny? Is the destination faulting? Why? Both? How?
+
+So "copy_to_user()" _answers_ a question. But "copy_safe()" just
+results in more questions. See the difference?
+
+And notice that the "why did it fault" question is NOT about your
+"what kind of fault did it take" question. That question is generally
+pretty much uninteresting.
+
+The question I want answered is "why is this function being called AT ALL".
+
+Again, "copy_to_user()" can fail, and we know to check failure cases.
+But more importantly, the _reason_ it can fail is obvious from the
+name and from the use. There's no confusion about "why".
+
+"copy_safe()"? or "try_copy_catch()"? No such thing. It doesn't answer
+that fundamental "why" question.
+
+And yes, this also has practical consequences. If you know that the
+failure is due to the source being some special memory (and if we care
+about the MC case with unaligned accesses), then the function in
+question should probably strive to make those _source_ accesses be the
+aligned ones.  But if it's the destination that is special memory,
+then it's the writes to the destination that should be aligned. If you
+need both, you may need to be either mutually aligned, or do byte
+accesses, or do special shifting copies. So it matters for any initial
+alignment code (if the thing has alignment issues to begin with).
+
+I haven't even gotten an answer to the "why would the write fail".
+When I asked, Dan said
+
+ "writes can mmu-fault now that memcpy_mcsafe() is also used by
+_copy_to_iter_mcsafe()"
+
+but as mentioned, the only reason I can find for _that_ is that the
+destination is user space.
+
+In which case a "copy_safe()" absolutely could never work.
+
+If I can't figure out the "why is this function used" or even figure
+out why it needs the semantics it claims it needs, then there's a
+problem.
+
+Personally, I suspect that the *easiest* way to support the broken
+nvdimm semantics is to not have a "copy" function at all as the basic
+accessor model.
+
+Why? Exactly because "copy" is not a fundamental well-defined action.
+You get nasty combinatorial explosions of different things, where you
+have three different kinds of sources (user, RAM, nvdimm) and three
+different kinds of destinations.
+
+And that's ignoring the whole "maybe you don't want to do a plain
+copy, maybe you want to calculate a RAID checksum, or do a 'strcpy()'
+or whatever". If those are ever issues, you get another explosion of
+combinations.
+
+The only *fundamental* access would likely be a single read/write
+operation, not a copy operation. Think "get_user()" instead of
+"copy_from_user()".  Even there you get combinatorial explosions with
+access sizes, but you can often generate those automatically or with
+simple patterns, and then you can build up the copy functions from
+that if you really need to.
+
+                   Linus
