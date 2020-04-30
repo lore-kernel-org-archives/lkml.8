@@ -2,218 +2,134 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF761C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1548C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CABBD20731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8069A20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r5+Ev1Uh"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cDz9M1OI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgD3Ty5 (ORCPT
+        id S1726927AbgD3T47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:54:57 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10214 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD3Ty4 (ORCPT
+        Thu, 30 Apr 2020 15:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgD3T46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:54:56 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab2ccc0001>; Thu, 30 Apr 2020 12:53:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 12:54:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 30 Apr 2020 12:54:56 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 19:54:55 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 19:54:54 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
- <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
- <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
- <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
- <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
-Message-ID: <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
-Date:   Thu, 30 Apr 2020 12:53:26 -0700
+        Thu, 30 Apr 2020 15:56:58 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFADC08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:56:58 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id f7so381951pfa.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kPzmBEkauB3ZxlWoeL0oahZoxKT2pd5/ATvEYXXQ2xc=;
+        b=cDz9M1OIiYUZDQy3cKKmDRnnZGONTni4S2ZJmbWsXQswsF3MB7iZ+K3PywbHI2cWbR
+         Mf+XxDVUPKnyap5PXRKDqhPWc+/EwhWy6fZ8gUzzuRfmafcNZHlfXmJMNJPwQxVI6Bfg
+         FCIoaX7FhQ+08qxE1xXh3e3gsMJ/niq0fcsb71m4Zqes5WHpzuG5w2aBQqkzMZXH7UBa
+         KL30k1EahReJwjOt4M95T/dXETNQsy4A91l5/w+UKSYVkEgWNlSd0qxCviBLmgso/VVN
+         aOyLbNNAbCghJ4VXC1lPu7rjzDYGWNO30XQuVsOWwxQESN5qpOewu37dyuqtrr1oPDRH
+         X2wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kPzmBEkauB3ZxlWoeL0oahZoxKT2pd5/ATvEYXXQ2xc=;
+        b=XjMKZK+RQWR4JQNZj+1WwRgO7Xm1fRblURnouUTvIDtBNM4+PkoaTk6HBYWOSRcZCG
+         JDtexFwcLFh3zRT8mguztj6gnFqVhSr6deSEzbF3uBPBtNMQ3qeMGamtFWkXVnIPETHd
+         VjOFY1WcFPxa0PxDwi7CdjDy7Kjo2nWtY05F3gEjeO6jZTb791wyJqML2oBC9LKMAIx+
+         YTRlKKAdEnQN6XCHNqrAHR9hF/z/Pzpl00zosNJE9FZ9e7OAD/jELAjjShThXUSeSxIE
+         PIBClfE4aAXVG/Mk1sL6p3iPS7x40uaa2Na9Tm26xYFJ8JF4+R5SKwdw2A9jomsEY0JL
+         IrXA==
+X-Gm-Message-State: AGi0PuZ+MOabY4WYJ2d0QVGA+n8yvImfS87I7GmTSnULIz0V6/Tpg5pC
+        hjYY8LyJzPB2N3y6Ixh68WPpKvhV4ajnnA==
+X-Google-Smtp-Source: APiQypKdj0QpDYDUfAC9z2RZ/9tolDELVk/9HhdYUHTHTaYPn+2ATTJzAJWy/9EnPJ3YrN00rHSs8A==
+X-Received: by 2002:a62:3006:: with SMTP id w6mr391270pfw.29.1588276617468;
+        Thu, 30 Apr 2020 12:56:57 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id z1sm502198pjn.43.2020.04.30.12.56.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:56:56 -0700 (PDT)
+Subject: Re: [PATCH] pipe: read/write_iter() handler should check for
+ IOCB_NOWAIT
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <273d8294-2508-a4c2-f96e-a6a394f94166@kernel.dk>
+ <20200430175856.GX29705@bombadil.infradead.org>
+ <d00f0ead-2782-06b3-6e21-559d8c86c461@kernel.dk>
+ <bb78a400-8af5-aae8-8049-fd37e1a4db07@kernel.dk>
+Message-ID: <82433793-07ed-ea65-5962-86c8e4c59afb@kernel.dk>
+Date:   Thu, 30 Apr 2020 13:56:55 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <bb78a400-8af5-aae8-8049-fd37e1a4db07@kernel.dk>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588276429; bh=iLEsNONYtUM83I/6rf3F7v6izbOK0RTRNROBYHEGAAQ=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=r5+Ev1UhHhPKTT6YLWXAlcCSn/0IBWM6ybo5P01BmkDfIEGWufH9uGnK2uJVsd5KJ
-         fDr0eUn0qOJN/Ch9HhHKs5sq/Xw9AlNlR8G5KwufehiZz3hRALEdzYmgQnkgTW5y35
-         A3COQbAn3OLbRmevjUAMeqxGvLwaxsbRzHK9X/itKwqZ7IH2PJ8B4xYP01pLCQK2IV
-         v6kq+gnXR5sXdVz4kfAvVl7u+8p1ELXEmKgYuWhUQzayvTD0Bk0jgL2Rk9FVrEAAsz
-         fUbwcJzFavjUgNbKtmHEo+GQxAyVpVa2eBuEd62+O3YTX2x0KOSdezcXtmNTmdC3ua
-         Tq5roq9RTNi5Q==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/30/20 12:46 PM, Sowjanya Komatineni wrote:
->
-> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
->> 30.04.2020 22:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
->>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
->>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
->>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->>>>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
->>>>>>>>>>> +{
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>>>>>>>> I guess it won't be great to freeze in the middle of a capture
->>>>>>>>>> process, so:
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(=
-&chan->done))
->>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 try_to_freeze();
->>>>>>>>> And here should be some locking protection in order not race with
->>>>>>>>> the
->>>>>>>>> chan_capture_kthread_start because kthread_finish could freeze
->>>>>>>>> before
->>>>>>>>> kthread_start.
->>>>>>>> Or maybe both start / finish threads should simply be allowed to
->>>>>>>> freeze
->>>>>>>> only when both capture and done lists are empty.
->>>>>>>>
->>>>>>>> if (list_empty(&chan->capture) &&
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
->>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
->>>>>>> good to freeze when not in middle of the frame capture but why
->>>>>>> should we not allow freeze in between captures?
->>>>>>>
->>>>>>> Other drivers do allow freeze in between frame captures.
->>>>>>>
->>>>>>> I guess we can freeze before dequeue for capture and in finish
->>>>>>> thread we can freeze after capture done. This also don't need to
->>>>>>> check for list_empty with freeze to allow between frame captures.
->>>>>>>
->>>>>> Also if we add check for both lists empty, freeze is not allowed as
->>>>>> long as streaming is going on and in case of continuous streaming
->>>>>> freeze will never happen.
->>>> To allow freeze b/w frames (but not in middle of a frame),
+On 4/30/20 1:51 PM, Jens Axboe wrote:
+> On 4/30/20 12:47 PM, Jens Axboe wrote:
+>> On 4/30/20 11:58 AM, Matthew Wilcox wrote:
+>>> On Thu, Apr 30, 2020 at 10:24:46AM -0600, Jens Axboe wrote:
+>>>> Pipe read/write only checks for the file O_NONBLOCK flag, but we should
+>>>> also check for IOCB_NOWAIT for whether or not we should handle this read
+>>>> or write in a non-blocking fashion. If we don't, then we will block on
+>>>> data or space for iocbs that explicitly asked for non-blocking
+>>>> operation. This messes up callers that explicitly ask for non-blocking
+>>>> operations.
 >>>>
->>>> for capture_start thread, probably we can do unconditional
->>>> try_to_freeze()
->> Is it possible to use wait_event_freezable()?
->>
->> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
->>
->> Will the wait_event_interruptible() be woken up when system freezes?
->
-> Based on wait_event_freezable implementation, looks like it similar to=20
-> wait_event_interruptible + try_to_free() as it does freezable_schedule=20
-> unlike schedule with wait_event_interruptible.
->
-> So using this for capture_start may be ok to allow freeze before start=20
-> of frame. But can't use for capture_finish as this is same as=20
-> wait_event_interruptible followed by unconditional try_to_freeze.
->
->>
->>>> for capture_finish thread, at end of capture done we can do
->>>> try_to_freeze() only when done list is empty
->> This doesn't prevent situation where the done-list is empty and the
->> "finish" thread freezes, in the same time the "start" thread issues new
->> capture and then freezes too.
->>
->> 1. "start" thread issues capture
->>
->> 2. "finish" thread wakes and waits for the capture to complete
->>
->> 3. "start" thread begins another capture, waits for FRAME_START
->>
->> 4. system freezing activates
->>
->> 5. "finish" thread completes the capture and freezes because done-list
->> is empty
->>
->> 6. "start" thread gets FRAME_START, issues another capture and freezes
->
-> This will not happen as we allow double buffering done list will not=20
-> be empty till stream stop happens
->
-> There will always be 1 outstanding frame in done list
-
-Correction, there will always be 1 outstanding buffer except beginning=20
-during beginning of stream.
-
-Except during beginning frames, done list will not be empty for all=20
-subsequent streaming process
-
->
->>> My understanding is buffer updates/release should not happen after
->>> frozen state. So we should let frame capture of outstanding buffer to
->>> finish before freezing in capture_finish thread.
+>>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
 >>>
->>> But for capture_start thread we can unconditionally freeze before
->>> dequeuing next buffer for capture.
->>>
->>> With this when both threads are in frozen state and no buffer
->>> updates/captures will happen after frozen state.
->>>
->>> I think its not required to finish streaming of all frames=20
->>> completely to
->>> let threads to enter frozen state as streaming can be continuous as=20
->>> well.
->> Yes, only freezing in the middle of IO should be avoided.
+>>> Wouldn't this be better?
 >>
->> https://lwn.net/Articles/705269/
->>
->>>>> Hi Dmitry,
->>>>>
->>>>> Will update in v12 to not allow freeze in middle of a frame capture.
->>>>>
->>>>> Can you please confirm on above if you agree to allow freeze to
->>>>> happen in b/w frame captures?
->>>>>
->>>>> Also as most feedback has been received from you by now, appreciate
->>>>> if you can provide all in this v11 if you have anything else so we
->>>>> will not have any new changes after v12.
->> I'll take another look tomorrow / during weekend and let you know.
+>> Yeah, that's probably a better idea. Care to send a "proper" patch?
+> 
+> I take that back, running into issues going with a whole-sale conversion
+> like that:
+> 
+> mkdir("/run/dhcpcd", 0755)              = -1 EEXIST (File exists)
+> openat(AT_FDCWD, "/run/dhcpcd/ens7.pid", O_WRONLY|O_CREAT|O_NONBLOCK|O_CLOEXEC, 0644) = 4
+> flock(4, LOCK_EX|LOCK_NB)               = 0
+> getpid()                                = 214
+> ftruncate(4, 0)                         = 0
+> lseek(4, 0, SEEK_SET)                   = 0
+> fstat(4, {st_mode=S_IFREG|0644, st_size=0, ...}) = 0
+> lseek(4, 0, SEEK_CUR)                   = 0
+> write(4, "214\n", 4)                    = -1 EINVAL (Invalid argument)
+> 
+> which I don't know where is coming from yet, but it's definitely
+> breakage by auto setting IOCB_NOWAIT if O_NONBLOCK is set.
+> 
+> I'd prefer to go your route, but I also would like this fixed for pipes
+> for 5.7. So I'd suggest we go with mine, and then investigate why this
+> is breaking stuff and go with the all-in approach for 5.8 if feasible.
+
+OK, it's the old classic in generic_write_checks(), is my guess:
+
+        if ((iocb->ki_flags & IOCB_NOWAIT) && !(iocb->ki_flags & IOCB_DIRECT))  
+                return -EINVAL;
+
+so we definitely can't just flip the switch on O_NONBLOCK -> IOCB_NOWAIT
+in general, at least not for writes.
+
+-- 
+Jens Axboe
+
