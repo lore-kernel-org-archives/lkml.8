@@ -2,354 +2,303 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1DCC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD60C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71656214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45158206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JHRLDGPx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K2/K+MQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgD3InV (ORCPT
+        id S1727094AbgD3Ine (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:43:21 -0400
-Received: from mail-eopbgr700045.outbound.protection.outlook.com ([40.107.70.45]:54881
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726765AbgD3InV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:43:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cVb6zaTegTw4CAdYUSs9zd6u3Qhcbt5yLDsKWJsQIJpCK3QbpPPwSLSmgziGvTLs9igm467/5PKgzbGduQ/tSIYDZszkotdE1pzcGO0x8gEm7L0Wb9iJXiJZZ/1FfJ16G8KODkC5FxTwcqzQGZB0qtOcaHQGkAhlgdxJVw0N3EkgiQ42tIfgsf+oJgBalpqYwgtpZZp2IW88+Yw296sVuZ/YIg0XecByS8BuQU9bxUEJGtu3PU8HgzncOMWyLQJZusDTK+jlN36RLE8J584tgcnT2dCuSPNVpsynMVAJ42blP7oZi35Po1mychgDQTyKlX/JcV0aQVwucKPe0ONVVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=th9gCGQ91L9XX4ZbdL4mIFdQGKabGX+H5YWFfqm6wpI=;
- b=J6oIRYSSyZsgox2GuCK3UHRUPqhULQmwfFIy300zO9TKR6SSHOtI7BWCHI516e4I26lhVFlJGc1S2UyFthWSvTpNgkLh8wvW8TI2QVazea5hq17a5Wuojk/mIolnvmFinDhdeAkm7hJo6NhnnE4S32kVlEN/4cC5+7axtYafvbhn8GEYRBNUWfOO5WtHLGeU6DQpUuxniqQ2Tc4bVx5F8xDP0DKlBIFLEL+RD2zVnlvHa22hEQLX5brogSwXE9dMzRP6uvIvRt9dy0WPnj8ygFWjpmNfrxTE/ULwmAC8OGpXCYLmnuu5ejggB4m9gLE+4XOhxarjLB3q515Ka0eDfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=th9gCGQ91L9XX4ZbdL4mIFdQGKabGX+H5YWFfqm6wpI=;
- b=JHRLDGPxJ05LI1dE1EX7yNDdtxO/W4NVL2HU/+HJQo4YrX3NCKQ2fr73OEgzzqTr8RzH3UtrAIe7AcV75XjHfTpYNB0VZT9WUSvIOuiIR4d01qC03IHKpRsk25ACTwLGkBKyrU0iR2fFnd54huAMqozIsny2ukIRpW0fYuyQzzM=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1883.namprd12.prod.outlook.com (2603:10b6:3:113::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Thu, 30 Apr 2020 08:43:18 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 08:43:17 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com, brijesh.singh@amd.com
-Subject: [PATCH v7 08/18] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
-Date:   Thu, 30 Apr 2020 08:43:08 +0000
-Message-Id: <e4bc3979b1797188deb75994e698a03d4fdbd143.1588234824.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM6PR02CA0133.namprd02.prod.outlook.com
- (2603:10b6:5:1b4::35) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Thu, 30 Apr 2020 04:43:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42491 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726797AbgD3Ind (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:43:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588236211;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1kM0a92K8sUlr72TjTnIA2PAkVDQz3aVDeS/XY8PMQg=;
+        b=K2/K+MQyqcNfPx71wBe1jG3BIIEo5qoJ5I9hoxYPzPuV00kcG5CiYxkTUtc0JnB62jbnyH
+        sOY5P0lGBjFejtQYgHP0lNXeWefk64lv0ffc0KAtS63NMO/P5sOcCNJe+3rUMEGT6PUUYY
+        +W4dd8vTnbTMQSlr1FWq3dC4gXwe6eY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-L3sJ-jQCPPuWYQ9pIQeUPA-1; Thu, 30 Apr 2020 04:43:28 -0400
+X-MC-Unique: L3sJ-jQCPPuWYQ9pIQeUPA-1
+Received: by mail-wm1-f72.google.com with SMTP id 72so3755782wmb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:43:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1kM0a92K8sUlr72TjTnIA2PAkVDQz3aVDeS/XY8PMQg=;
+        b=Skjc7n4QSnm/3YeY01w3BfWab6QqsJ9zLUJzBWMHK/9PCO5s3Kz211mDDd1CN+STka
+         +01mOqrroEbrD6jlGsJlms35Y4SGiu3zxkVnZ3ZD8daYOX8udeF9VnY4gD30G51IyNkG
+         9qz01+3rSd/Nq6lbfF1KFbU108gp/XuWtNFOCAFaAQwno1q/P1DNqjWV065VhUaImc25
+         A4lSqCRhAtGohvNW9M3hymOAkA4Eqxn64nF90Nb6cnkEM+D3qxn7fO2Q4LrGe8ZkYmjv
+         7nr82wBDAAmRQMGKC7J5YgW2IS13fkQaZyRBUUGFO4PEyW2KFj4ICDrHoOD6rt2NrZqL
+         EBUw==
+X-Gm-Message-State: AGi0Pub826fxopkgWOXNgxslOFaGjAVjCxk+kAv3f2gJ2kli6QS3cm9Q
+        t3Yv/LjKDsPUDJcMTz7MB73dFgPJHhtj/QuQmn+buykV+bkCWyr5IErGmZnO0CYZYwABae01OBe
+        gr/lueLJRtqCVo/izyVms5sDr
+X-Received: by 2002:adf:f4d1:: with SMTP id h17mr2481678wrp.69.1588236207413;
+        Thu, 30 Apr 2020 01:43:27 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJw8hg1EN3eBuDG3y+jkkwakE2C8r3PVXSy4jnI3smooojJLNVd47P9FjcsLtLJYEZWpp/vOQ==
+X-Received: by 2002:adf:f4d1:: with SMTP id h17mr2481646wrp.69.1588236207089;
+        Thu, 30 Apr 2020 01:43:27 -0700 (PDT)
+Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id l4sm2984683wrv.60.2020.04.30.01.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 01:43:26 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 10:43:23 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-block@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, cohuck@redhat.com,
+        Jason Wang <jasowang@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: Re: [PATCH v3] virtio-blk: handle block_device_operations callbacks
+ after hot unplug
+Message-ID: <20200430084323.qts2q5ql7rkclk2h@steredhat>
+References: <20200429165345.144702-1-stefanha@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by DM6PR02CA0133.namprd02.prod.outlook.com (2603:10b6:5:1b4::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:43:16 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a4fa82e9-b60b-43e8-e20e-08d7ece28779
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1883:|DM5PR12MB1883:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB18836B199BF4AC11AE045BCD8EAA0@DM5PR12MB1883.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:323;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(136003)(376002)(39860400002)(478600001)(86362001)(956004)(8936002)(26005)(2906002)(2616005)(6916009)(8676002)(36756003)(6486002)(7416002)(4326008)(16526019)(186003)(66574012)(7696005)(66476007)(5660300002)(66946007)(6666004)(52116002)(66556008)(316002)(136400200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: k2RxeY3oMUm87IUTy/1S2GTb7Xii4u7JwgcaIcz5Yzb83ASa4SNZin/AS1wTwIXNtF/sSEk41INoZhdICimKq/I2V6DjPxEPoiCUza/uowZnkoDfsjoB7XM9hp4pyq7fh5KQUGtkzdzByI1QvelbaFmyTOsCjN/aodzYwl6tvpPg7TtJs5K6Jv5UmVrp6K+Zdlz1MQhgbWcJIkWk2CUjb3X5mYbzfFyClFe2oXqcwaoqUScFGk2lhrd5ZOytXnDO9+45XCY7lAyW/6lkUVmrAeLmbi7QzxaZIgbMCb89du5WOJ//yM8cElk9bY7Qbc7TJ5FyucgHnGv6U5T/T3kZjsOtKD3axbHfbTfEtgxEPQU9K8cAV+mD1KGvpj8jHyftvQFORy3dqNPBKHd2ad/TKn8KbBEwEjyx/X1Lr4txaYCOCZ5QKRQeJGM+8Y9LicptiZfovxJBuTBZPzbRNpe77bebSiEhLy2kgeYVdaaYixHLM+Hf55LbFCaLXulrFd52
-X-MS-Exchange-AntiSpam-MessageData: STgdo3WnvWXp8dSfsaOztMje/cTfZhGV7GDGhZZayc6+GMMWSEF0woU0qPDQkzSb4tlNTlDMl+RiewFZ8M1We2qoxehCZ7dx6mYCrwTAPXh+I9I/nnISV/DTJP2Eh/A6MJWFfvkM4Kt4AIBUQZh5FQPVMzDtyy32oxajoWQLuv+ASOkYq8UeFBz4hA5y+YASVB1iC0mZJmdvUxJ1xzNL6zfnu8QGGWWhAr9i8PTank5LEpL0J0/YkDgjWm4tVvEGC5xIf+ndFiB6qFrqAixTpc5wI5BTnnGJl1zEDIYiaYQwram9pwcGPG3mg7e4TSUx869wR3QKEXkM2+YCwDQYv/DwgUP9s9hggzxsSlmWpATfSk7TZPkmBUYcUtxhuGCYzsycIzppYmHtEGPI+wDArh398UNWv6BfcMg+Eb46OqEnEpmxbL+VbKNsGwuVSwGbUfQkowbj7k+F2ho4BF8XivEgGlceKHVbzgNW2Gbd9HLkudurvwPEiYqKqrIKvyR8C6rcSbmK8qICkiB/HshzzSz/ZjG3a0Zt5obcSItlzyAfXzzYdt5CF7c14L5rgx3zJxhvtx/3MKE23M7R78S+VHhNg/JHZ+Kn5TK809qjOL1PdLxelLYwip6SMwvAZbF+5pTgIb4k9fI7ZZMP+sTuzTh4Aa/BtLYqGF31WmfsU0UKfrqQQpjdB/mqAnnHI/fLpUALMy270BZZewi/d7sP6RUo0ZsFehYGrjTVng4+kkJsY/umotjzh6utjDennOCGiC0mxFMTQ747Wc+WQabcOk/4bjvb/Me7Qm79aTh41Zs=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4fa82e9-b60b-43e8-e20e-08d7ece28779
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:43:17.8069
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OxAeo4kfcYoKlSi4y+3hPT5CNqNi9tJph0dNcnS5m1sFkBccIbs+SwNKkVq4rQ3WANogbBKeDVELKlGVNITrNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1883
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429165345.144702-1-stefanha@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brijesh Singh <Brijesh.Singh@amd.com>
+On Wed, Apr 29, 2020 at 05:53:45PM +0100, Stefan Hajnoczi wrote:
+> A userspace process holding a file descriptor to a virtio_blk device can
+> still invoke block_device_operations after hot unplug.  This leads to a
+> use-after-free accessing vblk->vdev in virtblk_getgeo() when
+> ioctl(HDIO_GETGEO) is invoked:
+> 
+>   BUG: unable to handle kernel NULL pointer dereference at 0000000000000090
+>   IP: [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
+>   PGD 800000003a92f067 PUD 3a930067 PMD 0
+>   Oops: 0000 [#1] SMP
+>   CPU: 0 PID: 1310 Comm: hdio-getgeo Tainted: G           OE  ------------   3.10.0-1062.el7.x86_64 #1
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+>   task: ffff9be5fbfb8000 ti: ffff9be5fa890000 task.ti: ffff9be5fa890000
+>   RIP: 0010:[<ffffffffc00e5450>]  [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
+>   RSP: 0018:ffff9be5fa893dc8  EFLAGS: 00010246
+>   RAX: ffff9be5fc3f3400 RBX: ffff9be5fa893e30 RCX: 0000000000000000
+>   RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff9be5fbc10b40
+>   RBP: ffff9be5fa893dc8 R08: 0000000000000301 R09: 0000000000000301
+>   R10: 0000000000000000 R11: 0000000000000000 R12: ffff9be5fdc24680
+>   R13: ffff9be5fbc10b40 R14: ffff9be5fbc10480 R15: 0000000000000000
+>   FS:  00007f1bfb968740(0000) GS:ffff9be5ffc00000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000000090 CR3: 000000003a894000 CR4: 0000000000360ff0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   Call Trace:
+>    [<ffffffffc016ac37>] virtblk_getgeo+0x47/0x110 [virtio_blk]
+>    [<ffffffff8d3f200d>] ? handle_mm_fault+0x39d/0x9b0
+>    [<ffffffff8d561265>] blkdev_ioctl+0x1f5/0xa20
+>    [<ffffffff8d488771>] block_ioctl+0x41/0x50
+>    [<ffffffff8d45d9e0>] do_vfs_ioctl+0x3a0/0x5a0
+>    [<ffffffff8d45dc81>] SyS_ioctl+0xa1/0xc0
+> 
+> A related problem is that virtblk_remove() leaks the vd_index_ida index
+> when something still holds a reference to vblk->disk during hot unplug.
+> This causes virtio-blk device names to be lost (vda, vdb, etc).
+> 
+> Fix these issues by protecting vblk->vdev with a mutex and reference
+> counting vblk so the vd_index_ida index can be removed in all cases.
+> 
+> Fixes: 48e4043d4529523cbc7fa8dd745bd8e2c45ce1d3
+>        ("virtio: add virtio disk geometry feature")
+> Reported-by: Lance Digby <ldigby@redhat.com>
+> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> ---
+>  drivers/block/virtio_blk.c | 87 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 79 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 93468b7c6701..6f7f277495f4 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -33,6 +33,16 @@ struct virtio_blk_vq {
+>  } ____cacheline_aligned_in_smp;
+>  
+>  struct virtio_blk {
+> +	/*
+> +	 * vdev may be accessed without taking this mutex in blk-mq and
+> +	 * virtqueue code paths because virtblk_remove() stops them before vdev
+> +	 * is freed.
+> +	 *
+> +	 * Everything else must hold this mutex when accessing vdev and must
+> +	 * handle the case where vdev is NULL after virtblk_remove() has been
+> +	 * called.
+> +	 */
+> +	struct mutex vdev_mutex;
 
-This hypercall is used by the SEV guest to notify a change in the page
-encryption status to the hypervisor. The hypercall should be invoked
-only when the encryption attribute is changed from encrypted -> decrypted
-and vice versa. By default all guest pages are considered encrypted.
+The patch LGTM, I'm just worried about cache_type_store() and
+cache_type_show() because IIUC they aren't in blk-mq and virtqueue code
+paths, but they use vdev.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86@kernel.org
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- Documentation/virt/kvm/hypercalls.rst | 15 +++++
- arch/x86/include/asm/kvm_host.h       |  2 +
- arch/x86/kvm/svm/sev.c                | 90 +++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.c                |  2 +
- arch/x86/kvm/svm/svm.h                |  4 ++
- arch/x86/kvm/vmx/vmx.c                |  1 +
- arch/x86/kvm/x86.c                    |  6 ++
- include/uapi/linux/kvm_para.h         |  1 +
- 8 files changed, 121 insertions(+)
+Do we have to take the mutex there too?
 
-diff --git a/Documentation/virt/kvm/hypercalls.rst b/Documentation/virt/kvm/hypercalls.rst
-index dbaf207e560d..ff5287e68e81 100644
---- a/Documentation/virt/kvm/hypercalls.rst
-+++ b/Documentation/virt/kvm/hypercalls.rst
-@@ -169,3 +169,18 @@ a0: destination APIC ID
- 
- :Usage example: When sending a call-function IPI-many to vCPUs, yield if
- 	        any of the IPI target vCPUs was preempted.
-+
-+
-+8. KVM_HC_PAGE_ENC_STATUS
-+-------------------------
-+:Architecture: x86
-+:Status: active
-+:Purpose: Notify the encryption status changes in guest page table (SEV guest)
-+
-+a0: the guest physical address of the start page
-+a1: the number of pages
-+a2: encryption attribute
-+
-+   Where:
-+	* 1: Encryption attribute is set
-+	* 0: Encryption attribute is cleared
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 42a2d0d3984a..4a8ee22f4f5b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1254,6 +1254,8 @@ struct kvm_x86_ops {
- 
- 	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
- 	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
-+	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
-+				  unsigned long sz, unsigned long mode);
- };
- 
- struct kvm_x86_init_ops {
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 1f9181e37ef0..7dc68db70405 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -1347,6 +1347,93 @@ static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	return ret;
- }
- 
-+static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	unsigned long *map;
-+	unsigned long sz;
-+
-+	if (sev->page_enc_bmap_size >= new_size)
-+		return 0;
-+
-+	sz = ALIGN(new_size, BITS_PER_LONG) / 8;
-+
-+	map = vmalloc(sz);
-+	if (!map) {
-+		pr_err_once("Failed to allocate encrypted bitmap size %lx\n",
-+				sz);
-+		return -ENOMEM;
-+	}
-+
-+	/* mark the page encrypted (by default) */
-+	memset(map, 0xff, sz);
-+
-+	bitmap_copy(map, sev->page_enc_bmap, sev->page_enc_bmap_size);
-+	kvfree(sev->page_enc_bmap);
-+
-+	sev->page_enc_bmap = map;
-+	sev->page_enc_bmap_size = new_size;
-+
-+	return 0;
-+}
-+
-+int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
-+				  unsigned long npages, unsigned long enc)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	kvm_pfn_t pfn_start, pfn_end;
-+	gfn_t gfn_start, gfn_end;
-+
-+	if (!sev_guest(kvm))
-+		return -EINVAL;
-+
-+	if (!npages)
-+		return 0;
-+
-+	gfn_start = gpa_to_gfn(gpa);
-+	gfn_end = gfn_start + npages;
-+
-+	/* out of bound access error check */
-+	if (gfn_end <= gfn_start)
-+		return -EINVAL;
-+
-+	/* lets make sure that gpa exist in our memslot */
-+	pfn_start = gfn_to_pfn(kvm, gfn_start);
-+	pfn_end = gfn_to_pfn(kvm, gfn_end);
-+
-+	if (is_error_noslot_pfn(pfn_start) && !is_noslot_pfn(pfn_start)) {
-+		/*
-+		 * Allow guest MMIO range(s) to be added
-+		 * to the page encryption bitmap.
-+		 */
-+		return -EINVAL;
-+	}
-+
-+	if (is_error_noslot_pfn(pfn_end) && !is_noslot_pfn(pfn_end)) {
-+		/*
-+		 * Allow guest MMIO range(s) to be added
-+		 * to the page encryption bitmap.
-+		 */
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&kvm->lock);
-+
-+	if (sev->page_enc_bmap_size < gfn_end)
-+		goto unlock;
-+
-+	if (enc)
-+		__bitmap_set(sev->page_enc_bmap, gfn_start,
-+				gfn_end - gfn_start);
-+	else
-+		__bitmap_clear(sev->page_enc_bmap, gfn_start,
-+				gfn_end - gfn_start);
-+
-+unlock:
-+	mutex_unlock(&kvm->lock);
-+	return 0;
-+}
-+
- int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_sev_cmd sev_cmd;
-@@ -1560,6 +1647,9 @@ void sev_vm_destroy(struct kvm *kvm)
- 
- 	sev_unbind_asid(kvm, sev->handle);
- 	sev_asid_free(sev->asid);
-+
-+	kvfree(sev->page_enc_bmap);
-+	sev->page_enc_bmap = NULL;
- }
- 
- int __init sev_hardware_setup(void)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 2f379bacbb26..1013ef0f4ce2 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4014,6 +4014,8 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
- 
- 	.check_nested_events = svm_check_nested_events,
-+
-+	.page_enc_status_hc = svm_page_enc_status_hc,
- };
- 
- static struct kvm_x86_init_ops svm_init_ops __initdata = {
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index df3474f4fb02..6a562f5928a2 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -65,6 +65,8 @@ struct kvm_sev_info {
- 	int fd;			/* SEV device fd */
- 	unsigned long pages_locked; /* Number of pages locked */
- 	struct list_head regions_list;  /* List of registered regions */
-+	unsigned long *page_enc_bmap;
-+	unsigned long page_enc_bmap_size;
- };
- 
- struct kvm_svm {
-@@ -400,6 +402,8 @@ int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
- 			       bool has_error_code, u32 error_code);
- int svm_check_nested_events(struct kvm_vcpu *vcpu);
- int nested_svm_exit_special(struct vcpu_svm *svm);
-+int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
-+				  unsigned long npages, unsigned long enc);
- 
- /* avic.c */
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c2c6335a998c..7d01d3aa6461 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7838,6 +7838,7 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.nested_get_evmcs_version = NULL,
- 	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
- 	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
-+	.page_enc_status_hc = NULL,
- };
- 
- static __init int hardware_setup(void)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c5835f9cb9ad..5f5ddb5765e2 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7605,6 +7605,12 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
- 		kvm_sched_yield(vcpu->kvm, a0);
- 		ret = 0;
- 		break;
-+	case KVM_HC_PAGE_ENC_STATUS:
-+		ret = -KVM_ENOSYS;
-+		if (kvm_x86_ops.page_enc_status_hc)
-+			ret = kvm_x86_ops.page_enc_status_hc(vcpu->kvm,
-+					a0, a1, a2);
-+		break;
- 	default:
- 		ret = -KVM_ENOSYS;
- 		break;
-diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-index 8b86609849b9..847b83b75dc8 100644
---- a/include/uapi/linux/kvm_para.h
-+++ b/include/uapi/linux/kvm_para.h
-@@ -29,6 +29,7 @@
- #define KVM_HC_CLOCK_PAIRING		9
- #define KVM_HC_SEND_IPI		10
- #define KVM_HC_SCHED_YIELD		11
-+#define KVM_HC_PAGE_ENC_STATUS		12
- 
- /*
-  * hypercalls use architecture specific
--- 
-2.17.1
+Thanks,
+Stefano
+
+>  	struct virtio_device *vdev;
+>  
+>  	/* The disk structure for the kernel. */
+> @@ -44,6 +54,13 @@ struct virtio_blk {
+>  	/* Process context for config space updates */
+>  	struct work_struct config_work;
+>  
+> +	/*
+> +	 * Tracks references from block_device_operations open/release and
+> +	 * virtio_driver probe/remove so this object can be freed once no
+> +	 * longer in use.
+> +	 */
+> +	refcount_t refs;
+> +
+>  	/* What host tells us, plus 2 for header & tailer. */
+>  	unsigned int sg_elems;
+>  
+> @@ -295,10 +312,55 @@ static int virtblk_get_id(struct gendisk *disk, char *id_str)
+>  	return err;
+>  }
+>  
+> +static void virtblk_get(struct virtio_blk *vblk)
+> +{
+> +	refcount_inc(&vblk->refs);
+> +}
+> +
+> +static void virtblk_put(struct virtio_blk *vblk)
+> +{
+> +	if (refcount_dec_and_test(&vblk->refs)) {
+> +		ida_simple_remove(&vd_index_ida, vblk->index);
+> +		mutex_destroy(&vblk->vdev_mutex);
+> +		kfree(vblk);
+> +	}
+> +}
+> +
+> +static int virtblk_open(struct block_device *bd, fmode_t mode)
+> +{
+> +	struct virtio_blk *vblk = bd->bd_disk->private_data;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&vblk->vdev_mutex);
+> +
+> +	if (vblk->vdev)
+> +		virtblk_get(vblk);
+> +	else
+> +		ret = -ENXIO;
+> +
+> +	mutex_unlock(&vblk->vdev_mutex);
+> +	return ret;
+> +}
+> +
+> +static void virtblk_release(struct gendisk *disk, fmode_t mode)
+> +{
+> +	struct virtio_blk *vblk = disk->private_data;
+> +
+> +	virtblk_put(vblk);
+> +}
+> +
+>  /* We provide getgeo only to please some old bootloader/partitioning tools */
+>  static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+>  {
+>  	struct virtio_blk *vblk = bd->bd_disk->private_data;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&vblk->vdev_mutex);
+> +
+> +	if (!vblk->vdev) {
+> +		ret = -ENXIO;
+> +		goto out;
+> +	}
+>  
+>  	/* see if the host passed in geometry config */
+>  	if (virtio_has_feature(vblk->vdev, VIRTIO_BLK_F_GEOMETRY)) {
+> @@ -314,11 +376,15 @@ static int virtblk_getgeo(struct block_device *bd, struct hd_geometry *geo)
+>  		geo->sectors = 1 << 5;
+>  		geo->cylinders = get_capacity(bd->bd_disk) >> 11;
+>  	}
+> -	return 0;
+> +out:
+> +	mutex_unlock(&vblk->vdev_mutex);
+> +	return ret;
+>  }
+>  
+>  static const struct block_device_operations virtblk_fops = {
+>  	.owner  = THIS_MODULE,
+> +	.open = virtblk_open,
+> +	.release = virtblk_release,
+>  	.getgeo = virtblk_getgeo,
+>  };
+>  
+> @@ -655,6 +721,10 @@ static int virtblk_probe(struct virtio_device *vdev)
+>  		goto out_free_index;
+>  	}
+>  
+> +	/* This reference is dropped in virtblk_remove(). */
+> +	refcount_set(&vblk->refs, 1);
+> +	mutex_init(&vblk->vdev_mutex);
+> +
+>  	vblk->vdev = vdev;
+>  	vblk->sg_elems = sg_elems;
+>  
+> @@ -820,8 +890,6 @@ static int virtblk_probe(struct virtio_device *vdev)
+>  static void virtblk_remove(struct virtio_device *vdev)
+>  {
+>  	struct virtio_blk *vblk = vdev->priv;
+> -	int index = vblk->index;
+> -	int refc;
+>  
+>  	/* Make sure no work handler is accessing the device. */
+>  	flush_work(&vblk->config_work);
+> @@ -831,18 +899,21 @@ static void virtblk_remove(struct virtio_device *vdev)
+>  
+>  	blk_mq_free_tag_set(&vblk->tag_set);
+>  
+> +	mutex_lock(&vblk->vdev_mutex);
+> +
+>  	/* Stop all the virtqueues. */
+>  	vdev->config->reset(vdev);
+>  
+> -	refc = kref_read(&disk_to_dev(vblk->disk)->kobj.kref);
+> +	/* Virtqueues are stopped, nothing can use vblk->vdev anymore. */
+> +	vblk->vdev = NULL;
+> +
+>  	put_disk(vblk->disk);
+>  	vdev->config->del_vqs(vdev);
+>  	kfree(vblk->vqs);
+> -	kfree(vblk);
+>  
+> -	/* Only free device id if we don't have any users */
+> -	if (refc == 1)
+> -		ida_simple_remove(&vd_index_ida, index);
+> +	mutex_unlock(&vblk->vdev_mutex);
+> +
+> +	virtblk_put(vblk);
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> -- 
+> 2.25.3
+> 
 
