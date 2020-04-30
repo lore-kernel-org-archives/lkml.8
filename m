@@ -2,207 +2,129 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F51BC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16864C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5AF208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppGdVqJB"
+	by mail.kernel.org (Postfix) with ESMTP id F1913208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgD3Tcc (ORCPT
+        id S1727799AbgD3Tcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 15:32:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34003 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727778AbgD3Tcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 15:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgD3Tca (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:32:30 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3CC6C035494;
-        Thu, 30 Apr 2020 12:32:29 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u127so3459283wmg.1;
-        Thu, 30 Apr 2020 12:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=0z3bz8GHGPa78UwshxZhNUFF/6aFNBbBGeFVwVNQDYY=;
-        b=ppGdVqJBXbLSpIrQCY1ozvroDp4TLSqgyQS2NNqnXYHJhb9g4jfrHBqFNAC/XOvRND
-         i3kt0M5496nR+kVLiPtrUk3rl+XBQQtbr8jnGb84DS2o4Lg7rxwBgV+GJGHpR9WW5WfA
-         dJ6SSns3+SeH2vRW5E5Md6GHM9uQrD9t7VBJF8TqpFR0NKukcGVyTq9RRltyGodKMgMy
-         LK1C84brXRB5uJvMzQ/Izr1GsXq1eeCLZtGpqBoamd+GAF/Al84FMfYBbNXParRx+zIc
-         RNPUaVWr7p3n8d4q7Uo9OAsoWycIs4PE6N9k4TeWrx0hIWXPqbaaMc5mxfSmh6UlSf27
-         FdoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0z3bz8GHGPa78UwshxZhNUFF/6aFNBbBGeFVwVNQDYY=;
-        b=EqOzkeElmJ2KoKLERURXugGI4UlQHLjtECC0SrBFrXy/j3CokXw4XSTBfsovgomZgL
-         bkqnjI0ZE9F8YwDzUOzn2LMJjuUbkgcConH8L5oGWY/Cndid3WZUsm1dTu/dK9HUgpnZ
-         fC8OgnOkZNhjDUlyHC55+ONK/8dqbBI7g4aNLVn0T+fj2ztwaL0+Nz2LtwX+xxQj6Ayw
-         yofHx+LA7EdOxTHuRQcdnu4q1MSyk4dardvP+m6ZLodm6PySRnqCr02IeifHLdALUlvS
-         Dd5+Cpl0djJBtfeg2Xjz+ePzE8o+As8cfYENWAKi0TxjalfgJyF4dCNXj7ClzU0LmXVG
-         8m6w==
-X-Gm-Message-State: AGi0PuZp3a87D9qd1di45eb+G7/lC11toPTflTZQgz0VmtlO7fryKTUa
-        mOb5w2Lluv4vFS7ZEbxefozj1LED
-X-Google-Smtp-Source: APiQypK1EufViVhFCNKpk8QsjwkuUSJw9M6vbScfidJsn1IbQ+H9ejtcjMcaMLUmlUYDt8UVWRrDDA==
-X-Received: by 2002:a05:600c:2c47:: with SMTP id r7mr181396wmg.50.1588275148619;
-        Thu, 30 Apr 2020 12:32:28 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.131.64])
-        by smtp.gmail.com with ESMTPSA id h188sm917002wme.8.2020.04.30.12.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:32:28 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] io_uring: fix timeout offset with batch CQ commit
-Date:   Thu, 30 Apr 2020 22:31:10 +0300
-Message-Id: <c0c123dffee3ddf01d120d311cd21fc0271d52d6.1588253029.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1588253029.git.asml.silence@gmail.com>
-References: <cover.1588253029.git.asml.silence@gmail.com>
+IronPort-SDR: YfyNnwlponU4ZvqqFUk/m6OOaiTxL4hz8aA/64v9W4sETkGje64d9HAkQtks0Rov30DhBAgaqn
+ ee+0a8S2azig==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 12:32:31 -0700
+IronPort-SDR: qbP7bELUd3YdDmIK7rpWTWGP1m6vZ2Kt5/t96FsE4n1qznI4O1qEUj9ImpwE9T8bs8tB+Xt11A
+ jLBGEA/DXQYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="261884344"
+Received: from dnlloyd-mobl.amr.corp.intel.com (HELO [10.255.231.251]) ([10.255.231.251])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 12:32:31 -0700
+From:   Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name
+Cc:     david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        peterz@infradead.org, sean.j.christopherson@intel.com
+References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
+ <2a1abf38-d321-e3c7-c3b1-53b6db6da310@intel.com>
+ <d77d1e86-ac99-8c18-658c-d8150a71b11e@de.ibm.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <540f483f-5e58-f342-e771-9d90c4d3fb6a@intel.com>
+Date:   Thu, 30 Apr 2020 12:32:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <d77d1e86-ac99-8c18-658c-d8150a71b11e@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Completions may be done in batches, where io_commit_cqring() is called
-only once at the end. It means, that timeout sequence checks are done
-only once and don't consider events in between, so potentially failing
-to trigger some timeouts.
+On 4/30/20 11:12 AM, Christian Borntraeger wrote:
+> On 29.04.20 18:07, Dave Hansen wrote:
+>> On 4/28/20 3:50 PM, Claudio Imbrenda wrote:
+>>> If a page is inaccesible and it is used for things like sendfile, then
+>>> the content of the page is not always touched, and can be passed
+>>> directly to a driver, causing issues.
+>>>
+>>> This patch fixes the issue by adding a call to arch_make_page_accessible
+>>> in page_cache_pipe_buf_confirm; this fixes the issue.
+>> I spent about 5 minutes putting together a patch:
+>>
+>> 	https://sr71.net/~dave/intel/accessible.patch
+> You only set the page flag for compound pages. that of course leaves a big pile
+> of pages marked a not accessible, thus explaining the sendto trace and all kind
+> of other random traces.
 
-Do a separate CQ sequence accounting in u64. On timeout sequence
-checking look up to UINT_MAX sequence behind, which it could have
-missed. It's safe to do, because sqe->off is u32 and so can't wrap
-around to used [seq - UINT_MAX, seq] window.
+Ahh, nice catch!  That does explain an oddity or two that I saw.
 
-It's also necessary to decouple CQ timeout sequences from
-ctx->cq_cached_tail for implementing "single CQE per link" feature and
-others.
+> What do you see when you also do the  SetPageAccessible(page);
+> in the else page of prep_new_page (order == 0).
+> (I do get > 10000 of these non compound page allocs just during boot).
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+Yes, I see the same thing.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index fb8ec4b00375..f09c1d3a7e63 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -298,6 +298,7 @@ struct io_ring_ctx {
- 		unsigned		cq_entries;
- 		unsigned		cq_mask;
- 		atomic_t		cq_timeouts;
-+		u64			cq_seq;
- 		unsigned long		cq_check_overflow;
- 		struct wait_queue_head	cq_wait;
- 		struct fasync_struct	*cq_fasync;
-@@ -385,7 +386,7 @@ struct io_timeout {
- 	u64				addr;
- 	int				flags;
- 	u32				off;
--	u32				target_seq;
-+	u64				target_seq;
- };
- 
- struct io_rw {
-@@ -1081,6 +1082,7 @@ static void io_kill_timeout(struct io_kiocb *req)
- 	ret = hrtimer_try_to_cancel(&req->io->timeout.timer);
- 	if (ret != -1) {
- 		atomic_inc(&req->ctx->cq_timeouts);
-+		req->ctx->cq_seq--;
- 		list_del_init(&req->list);
- 		req->flags |= REQ_F_COMP_LOCKED;
- 		io_cqring_fill_event(req, 0);
-@@ -1098,16 +1100,31 @@ static void io_kill_timeouts(struct io_ring_ctx *ctx)
- 	spin_unlock_irq(&ctx->completion_lock);
- }
- 
-+static inline bool io_check_in_range(u64 pos, u64 start, u64 end)
-+{
-+	/* if @end < @start, check for [end, MAX_U64] + [MAX_U64, start] */
-+	return (pos - start) <= (end - start);
-+}
-+
- static void __io_flush_timeouts(struct io_ring_ctx *ctx)
- {
-+	u64 start_seq = ctx->cq_seq;
-+
-+
-+	/*
-+	 * Batched CQ commit may have left some pending timeouts sequences
-+	 * behind @cq_sqe. Look back to find them. Note, that sqe->off is u32,
-+	 * and it uses u64 to not falsely trigger timeouts with large off.
-+	 */
-+	start_seq -= UINT_MAX;
- 	do {
- 		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
- 							struct io_kiocb, list);
- 
- 		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
- 			break;
--		if (req->timeout.target_seq != ctx->cached_cq_tail
--					- atomic_read(&ctx->cq_timeouts))
-+		if (!io_check_in_range(req->timeout.target_seq, start_seq,
-+					ctx->cq_seq))
- 			break;
- 
- 		list_del_init(&req->list);
-@@ -1143,6 +1160,7 @@ static struct io_uring_cqe *io_get_cqring(struct io_ring_ctx *ctx)
- 		return NULL;
- 
- 	ctx->cached_cq_tail++;
-+	ctx->cq_seq++;
- 	return &rings->cqes[tail & ctx->cq_mask];
- }
- 
-@@ -4537,6 +4555,8 @@ static enum hrtimer_restart io_timeout_fn(struct hrtimer *timer)
- 	atomic_inc(&ctx->cq_timeouts);
- 
- 	spin_lock_irqsave(&ctx->completion_lock, flags);
-+	ctx->cq_seq--;
-+
- 	/*
- 	 * We could be racing with timeout deletion. If the list is empty,
- 	 * then timeout lookup already found it and will be handling it.
-@@ -4660,7 +4680,7 @@ static int io_timeout(struct io_kiocb *req)
- 	struct io_ring_ctx *ctx = req->ctx;
- 	struct io_timeout_data *data = &req->io->timeout;
- 	struct list_head *entry;
--	u32 tail, off = req->timeout.off;
-+	u32 off = req->timeout.off;
- 
- 	spin_lock_irq(&ctx->completion_lock);
- 
-@@ -4675,8 +4695,7 @@ static int io_timeout(struct io_kiocb *req)
- 		goto add;
- 	}
- 
--	tail = ctx->cached_cq_tail - atomic_read(&ctx->cq_timeouts);
--	req->timeout.target_seq = tail + off;
-+	req->timeout.target_seq = ctx->cq_seq + off;
- 
- 	/*
- 	 * Insertion sort, ensuring the first entry in the list is always
-@@ -4684,7 +4703,7 @@ static int io_timeout(struct io_kiocb *req)
- 	 */
- 	list_for_each_prev(entry, &ctx->timeout_list) {
- 		struct io_kiocb *nxt = list_entry(entry, struct io_kiocb, list);
--		u32 nxt_off = nxt->timeout.target_seq - tail;
-+		u32 nxt_off = (u32)(nxt->timeout.target_seq - ctx->cq_seq);
- 
- 		if (!(nxt->flags & REQ_F_TIMEOUT_NOSEQ) && (off >= nxt_off))
- 			break;
--- 
-2.24.0
-
+I updated the patch and double-checked that it triggers properly with a
+socket-based sendfile().
