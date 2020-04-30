@@ -4,146 +4,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F63C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A46FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A76B206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF7E206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgD3Vbs (ORCPT
+        id S1727070AbgD3VcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:31:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:38147 "EHLO
+        Thu, 30 Apr 2020 17:32:04 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:48833 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3Vbs (ORCPT
+        with ESMTP id S1726336AbgD3VcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:31:48 -0400
+        Thu, 30 Apr 2020 17:32:03 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MtO06-1jB6Ge1DyQ-00upFR; Thu, 30 Apr 2020 23:31:34 +0200
+ 1MfHUx-1iwbf70Yfb-00gsjk; Thu, 30 Apr 2020 23:31:46 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH 01/15] crypto - Avoid free() namespace collision
-Date:   Thu, 30 Apr 2020 23:30:43 +0200
-Message-Id: <20200430213101.135134-2-arnd@arndb.de>
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sara Sharon <sara.sharon@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 02/15] iwlwifi: mvm: fix gcc-10 zero-length-bounds warning
+Date:   Thu, 30 Apr 2020 23:30:44 +0200
+Message-Id: <20200430213101.135134-3-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200430213101.135134-1-arnd@arndb.de>
 References: <20200430213101.135134-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:noS1A6Il77uJCdtGIYMZsJck2JXiveiOZSUU5gHZOHPp0AFDTnW
- 9BCHOGqOI/yBx5RXfvWRKtYRNyKnpp68SRNe0h2ZYgnKxkFGXPnuHgRgJEc2UGiWM1yLkrz
- xjXPO8iHxtBMWllSKb7JEAeiZkyyjVXq4tHGoHz+gNfvrkNqqKM6/q5A2nBAFqx5g9kd/Ll
- eErk/7Bn10CsNpdrXig3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p2C9HxJm+L0=:55xdeEk+6o+d7sn4iF5aNM
- WX4slNCr3MDcqpD29KX/r/SlH3Kr97Ch0/dChnheCMKdIwK0V/wszQIAIUF0QZvi8luTGAu9e
- W6T3DUF/nagJnIfqQW8KlSyAF6kAN7OWOS7GACZoR4H+BAfl8UkRIcYVXddw/jVW1W8to/6dJ
- 46zj+1M7sEFtgsAxSjkysZQjbYKWkfKGmf1aUrLlx8MHgyEpvgEwPnqUmmaJeT3p+5rIYm8cA
- Ifee+aDak4AXOzu/dw74j/HxZ+JxmEueA96dUbew6nzc10LyrUIzI5PmDC7DVGaSw2eDvCb/a
- LqMrKYZfi1M34LwUGspwwSrmuBP1QweRvhzr9Pq76+6AuS6C+wbFaXKf4tAItjqMBZELk0F8v
- 1sfzreBAGDdiB8P3vrUZRoBHAmiu6HRIURxmQoRaePPhfTa9bh2ID2KlXyTZOc5Tz+DJqMVaJ
- gn7433rGebUp4czo9n9JxAGNbpAZnZMHd6ZBc86EO76fMDkIFMGTapT0nRDFDZO7Efl05WHTx
- 59tByoLcrs+YV3WA73Aohwl5Y6RMazRwWflLZ/Qa38yjTPEN24EJCfCfdKaUrpTZMJnd1RhJ3
- nimvoI58oT3txz3u2RL75cenfR0/lVzci9Xn8YM2aDRi6Q52ChU5ndS0gfXcKnFQcYVEaEBhQ
- aIGlyWKHAG0zJXFVXjR1YuRijZmFcJaEi0+P5AKu5rL8+9BrCCmig89HX/3oAlkPsysMTwr/Z
- vRnjNBz0ddQqhs5MMHaWgdk/vx0J1CnnUPCt4X0tv70ApEMRFx+aGR82RPZvn8Woy6AuwRtHt
- gKSBJlrdpj3tbwDFhMaavcMz1aIN5pBzaImRtjSGLW7cym3QW0=
+X-Provags-ID: V03:K1:lQP65S7LwC6OwI92N4uIJiItdidHEpOk62jho5rpr9MQGl0HjXZ
+ 61U0AbdpViblUikFmv9NwFYuekR9P0SmnIQkiDlSXipkrAVHEO5BMq88MZI6NRnqryCssyS
+ vpgpn5jAG/7xFSbqWmLBDyjm2Rlw6Bv246k8MEhF+J6vpqkjfjwPTx2w3YBFUamsfMxcbal
+ HerQDt2KcBHgm1DPAhILQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Eq+KYWUtplI=:bbiSluhmCo/PlA0yETxveN
+ 90eKlGoZpYuNinQfPNl9y8guRXUHQPAj+0g31axpsZVcPGPQIAZVTwzWtyMUyfQxG6l3sH6h6
+ l3lVCvXlc76LzqgpQCmXlGm+fFopVRqu3WuTm9DXXYDGMAPEK0XXCtvVnYY/mzOiJDd6QS1Mt
+ 3/u9JANIkGmRc9kBKOb9RnKa35mTZmvjltyFsRfK4y+VszQB4oXneTbrSoSpAGV6ET0t2F+n/
+ xzqdAnY3ZpsaMHUZUAfnTnJz1Pa0NTBV9PB93OlVwqB/HKqYkIHXfWXtjU8gguSyvsu+XtG7I
+ QAoRk+tRpgQUcWqY881mD74t9NCG+LAGChcI9xsmnwUjDZjxxGY5xucUtVTmYS5TvC3Eh76fW
+ 8Gv9ujukt+BBaiCFJIJ6Caq4IlVanpBQrP4CAxoIcz0Yuo61IGAqUETgJrl0QeEqpkwd7z3fl
+ 8sr1HRCBJ4C1gqZ44zf/d9OOpaRHb9MstxDL5puR5lELpXXiC8kwmqB+sFmVL0C6+3J5uaUrD
+ sMm1Yctdw1a+Ivu9IZfw9ml3xm87F9vvwJ2aIOFnlEBC4kAwQLpomxwb29vpAqGTtNpTrpod3
+ REeXd699bO6GkcXhnbbB6oXrEmf2M8Dyf3ZTM86BQpj0slz4AKvjTDzVSdhfT9kzwVjiDohLz
+ tm6q5qBybVGwplf5fUHJNU/ITmwvRsnVSMUWlQI2RKmCbfmUfTpuanzVRYdtrJ9gfZZQYS9M1
+ 2qrJRipmwEi5Nk/wjWFRbOpP0kyaUbQkm4tnAlas9Q9cH9IKjvHnf2OaBDyEbfbqNFzzlOZcv
+ 5dfXRPv3v1jXC7lgTp20eNIXHMkuri0PCRNJaEX/W1NQ+48kDI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc-10 complains about using the name of a standard library
-function in the kernel, as we are not building with -ffreestanding:
+gcc-10 complains when a zero-length array is accessed:
 
-crypto/xts.c:325:13: error: conflicting types for built-in function 'free'; expected 'void(void *)' [-Werror=builtin-declaration-mismatch]
-  325 | static void free(struct skcipher_instance *inst)
-      |             ^~~~
-crypto/lrw.c:290:13: error: conflicting types for built-in function 'free'; expected 'void(void *)' [-Werror=builtin-declaration-mismatch]
-  290 | static void free(struct skcipher_instance *inst)
-      |             ^~~~
-crypto/lrw.c:27:1: note: 'free' is declared in header '<stdlib.h>'
+drivers/net/wireless/intel/iwlwifi/mvm/tx.c: In function 'iwl_mvm_rx_ba_notif':
+drivers/net/wireless/intel/iwlwifi/mvm/tx.c:1929:17: warning: array subscript 9 is outside the bounds of an interior zero-length array 'struct iwl_mvm_compressed_ba_tfd[0]' [-Wzero-length-bounds]
+ 1929 |     &ba_res->tfd[i];
+      |      ~~~~~~~~~~~^~~
+In file included from drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:68,
+                 from drivers/net/wireless/intel/iwlwifi/mvm/fw-api.h:68,
+                 from drivers/net/wireless/intel/iwlwifi/mvm/sta.h:73,
+                 from drivers/net/wireless/intel/iwlwifi/mvm/mvm.h:83,
+                 from drivers/net/wireless/intel/iwlwifi/mvm/tx.c:72:
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:769:35: note: while referencing 'tfd'
+  769 |  struct iwl_mvm_compressed_ba_tfd tfd[0];
+      |                                   ^~~
 
-The xts and lrw cipher implementations run into this because they do
-not use the conventional namespaced function names.
+Change this structure to use a flexible-array member for 'tfd' instead,
+along with the various structures using an zero-length ieee80211_hdr
+array that do not show warnings today but might be affected by similar
+issues in the future.
 
-It might be better to rename all local functions in those files to
-help with things like 'ctags' and 'grep', but just renaming these two
-avoids the build issue. I picked the more verbose crypto_xts_free()
-and crypto_lrw_free() names for consistency with several other drivers
-that do use namespaced function names.
-
-Fixes: f1c131b45410 ("crypto: xts - Convert to skcipher")
-Fixes: 700cb3f5fe75 ("crypto: lrw - Convert to skcipher")
+Fixes: 6f68cc367ab6 ("iwlwifi: api: annotate compressed BA notif array sizes")
+Fixes: c46e7724bfe9 ("iwlwifi: mvm: support new BA notification response")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- crypto/lrw.c | 6 +++---
- crypto/xts.c | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/fw/api/tx.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/crypto/lrw.c b/crypto/lrw.c
-index 376d7ed3f1f8..5b07a7c09296 100644
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -287,7 +287,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
- 	crypto_free_skcipher(ctx->child);
- }
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+index f1d1fe96fecc..82d59b5a5f8c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+@@ -293,7 +293,7 @@ struct iwl_tx_cmd {
+ 	__le16 pm_frame_timeout;
+ 	__le16 reserved4;
+ 	u8 payload[0];
+-	struct ieee80211_hdr hdr[0];
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_6 */
  
--static void free(struct skcipher_instance *inst)
-+static void crypto_lrw_free(struct skcipher_instance *inst)
- {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -400,12 +400,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
+ struct iwl_dram_sec_info {
+@@ -319,7 +319,7 @@ struct iwl_tx_cmd_gen2 {
+ 	__le32 flags;
+ 	struct iwl_dram_sec_info dram_info;
+ 	__le32 rate_n_flags;
+-	struct ieee80211_hdr hdr[0];
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_7 */
  
--	inst->free = free;
-+	inst->free = crypto_lrw_free;
+ /**
+@@ -342,7 +342,7 @@ struct iwl_tx_cmd_gen3 {
+ 	struct iwl_dram_sec_info dram_info;
+ 	__le32 rate_n_flags;
+ 	__le64 ttl;
+-	struct ieee80211_hdr hdr[0];
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_8 */
  
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err) {
- err_free_inst:
--		free(inst);
-+		crypto_lrw_free(inst);
- 	}
- 	return err;
- }
-diff --git a/crypto/xts.c b/crypto/xts.c
-index dbdd8af629e6..3565f3b863a6 100644
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -322,7 +322,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
- 	crypto_free_cipher(ctx->tweak);
- }
+ /*
+@@ -766,8 +766,8 @@ struct iwl_mvm_compressed_ba_notif {
+ 	__le32 tx_rate;
+ 	__le16 tfd_cnt;
+ 	__le16 ra_tid_cnt;
+-	struct iwl_mvm_compressed_ba_tfd tfd[0];
+ 	struct iwl_mvm_compressed_ba_ratid ra_tid[0];
++	struct iwl_mvm_compressed_ba_tfd tfd[];
+ } __packed; /* COMPRESSED_BA_RES_API_S_VER_4 */
  
--static void free(struct skcipher_instance *inst)
-+static void crypto_xts_free(struct skcipher_instance *inst)
- {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -434,12 +434,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
+ /**
+@@ -784,7 +784,7 @@ struct iwl_mac_beacon_cmd_v6 {
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+-	struct ieee80211_hdr frame[0];
++	struct ieee80211_hdr frame[];
+ } __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_6 */
  
--	inst->free = free;
-+	inst->free = crypto_xts_free;
+ /**
+@@ -805,7 +805,7 @@ struct iwl_mac_beacon_cmd_v7 {
+ 	__le32 tim_size;
+ 	__le32 ecsa_offset;
+ 	__le32 csa_offset;
+-	struct ieee80211_hdr frame[0];
++	struct ieee80211_hdr frame[];
+ } __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_7 */
  
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err) {
- err_free_inst:
--		free(inst);
-+		crypto_xts_free(inst);
- 	}
- 	return err;
- }
+ enum iwl_mac_beacon_flags {
+@@ -840,7 +840,7 @@ struct iwl_mac_beacon_cmd {
+ 	__le32 tim_size;
+ 	__le32 ecsa_offset;
+ 	__le32 csa_offset;
+-	struct ieee80211_hdr frame[0];
++	struct ieee80211_hdr frame[];
+ } __packed; /* BEACON_TEMPLATE_CMD_API_S_VER_10 */
+ 
+ struct iwl_beacon_notif {
 -- 
 2.26.0
 
