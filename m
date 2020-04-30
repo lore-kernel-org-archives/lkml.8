@@ -2,128 +2,114 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D389C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618C1C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A9D2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD4B2074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NlMK9W5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgD3Nmx (ORCPT
+        id S1727077AbgD3NnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:42:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726577AbgD3Nmx (ORCPT
+        Thu, 30 Apr 2020 09:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbgD3NnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:42:53 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UDabZW014329;
-        Thu, 30 Apr 2020 09:42:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30q7qjy82w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 09:42:43 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UDad0e014593;
-        Thu, 30 Apr 2020 09:42:42 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30q7qjy81w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 09:42:42 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UDf7E4017958;
-        Thu, 30 Apr 2020 13:42:40 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5tn88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 13:42:40 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UDgc4A64487508
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 13:42:38 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D476A405C;
-        Thu, 30 Apr 2020 13:42:38 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12FE1A405B;
-        Thu, 30 Apr 2020 13:42:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.170.249])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Apr 2020 13:42:36 +0000 (GMT)
-Message-ID: <1588254156.5167.32.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>, linux-integrity@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Mickael Salaun <mic@digikod.net>,
-        Steve Grubb <sgrubb@redhat.com>, Jann Horn <jannh@google.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 30 Apr 2020 09:42:36 -0400
-In-Reply-To: <202004300526.H4rF1lW2%lkp@intel.com>
-References: <1588167523-7866-3-git-send-email-zohar@linux.ibm.com>
-         <202004300526.H4rF1lW2%lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Thu, 30 Apr 2020 09:43:14 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91729C035494;
+        Thu, 30 Apr 2020 06:43:13 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id l19so6508358lje.10;
+        Thu, 30 Apr 2020 06:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A6YpIeXRQ3oa6pHUnqjGa6cFyQysn0a0+/4OldnV7wc=;
+        b=NlMK9W5m4IrjAVP/UBA9HRX7+gBleYHX+FLGYqR8aidm2COx+iIfMluQMCW7CTLV3F
+         JFHRrUlJjgrBclgNWmLhXuRws8+pVHitwE/W1J67DLM1ZqFhSoWfBpedb47/RBpPPZX0
+         SVZws+ERwzguHh2vdhonfG0YQUCvlEqrlUbsXFcsPhDd4C5ixp8KeJnvesj82o2kEVLg
+         6wuVc/QKj0mHwxp2J2tD+MprigE4iFM3S0xA/uqYV0bsJj0tA7a1cxV/vC0z77+sTpFK
+         WhFodDLaFR5ePQ6uumzITOrPCFjHucmvUJIEHYnWi9kAK2iizMTHQrE9Kg5uAodq4gja
+         SmcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A6YpIeXRQ3oa6pHUnqjGa6cFyQysn0a0+/4OldnV7wc=;
+        b=omRTGxERbeN8Z4zNXQQKwbbfucV0C0ICT9jmCrRP2tyQE0K2hLqQaS1HsvkBx3BvJ3
+         56GOVudwY7Jj9XEG2NT/jb5aMNnN60yIrwadN956OykbSIjBS57NpELr3p6n/EmD7uIx
+         q6Qxh0HDGR31W5dhfLXw1QljyDI6EZ/hOP4dpGzIQeVfOS0RZYw4kqADXU2Pcn78F/8N
+         WV4EKkjPirNuWkiIVdzD9ICyOyV6SbjI1IYHKo93Y3+lv3aHUx4GAtFThFV8O/p9RNpT
+         2YhpF2dTP9yUDpCjlR7HfvFFZoRMJiFS3zA94D3gb8m4eifA5GrPhMJGYYGyb5NH0Ex8
+         hmlQ==
+X-Gm-Message-State: AGi0Pub2NdRoeqWdOqDCBfYgImD6xtXy68wL9v1zhE6TpT2turDGoIbj
+        u3NnFtjzGzfVD+PEeHXAP44PLnXZ
+X-Google-Smtp-Source: APiQypLu4E1H7UuvzOwc6X6QOCGTmpm6Y0rl0EDyrOXLiRl67uwW+l1xjxt9ugjM78meqa0X0aNI8A==
+X-Received: by 2002:a2e:9d8c:: with SMTP id c12mr2409610ljj.67.1588254191854;
+        Thu, 30 Apr 2020 06:43:11 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j24sm4389258ljg.60.2020.04.30.06.43.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 06:43:11 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5d559a5a-ac84-f128-ccea-270974560b58@gmail.com>
+Date:   Thu, 30 Apr 2020 16:43:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_08:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 adultscore=0
- impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004300111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mickaël,
+30.04.2020 01:00, Sowjanya Komatineni пишет:
+> +void tegra_channel_release_buffers(struct tegra_vi_channel *chan,
+> +				   enum vb2_buffer_state state)
+> +{
+> +	struct tegra_channel_buffer *buf, *nbuf;
+> +
+> +	spin_lock(&chan->start_lock);
+> +	list_for_each_entry_safe(buf, nbuf, &chan->capture, queue) {
+> +		vb2_buffer_done(&buf->buf.vb2_buf, state);
+> +		list_del(&buf->queue);
+> +	}
+> +
 
-On Thu, 2020-04-30 at 05:24 +0800, kbuild test robot wrote:
-> Hi Mimi,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on integrity/next-integrity]
-> [also build test ERROR on linus/master v5.7-rc3 next-20200429]
-> [cannot apply to security/next-testing]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+I'd remove this blank line to make lock/unlock block more human-readable.
 
-To prevent this sort of message, in the future could you include this
-patch (2/2) with your patch set?  Please include the "Reviewed-by:
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com>" tag.
+> +	spin_unlock(&chan->start_lock);
+> +
+> +	spin_lock(&chan->done_lock);
+> +	list_for_each_entry_safe(buf, nbuf, &chan->done, queue) {
+> +		vb2_buffer_done(&buf->buf.vb2_buf, state);
+> +		list_del(&buf->queue);
+> +	}
+> +
 
-thanks,
+And thins line too.
 
-Mimi
-
-> 
-> url:    https://github.com/0day-ci/linux/commits/Mimi-Zohar/ima-extending-IMA-policy-to-support-interpreters/20200430-030608
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
-> config: arc-allyesconfig (attached as .config)
-> compiler: arc-elf-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=arc 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    security/integrity/ima/ima_main.c: In function 'ima_file_check':
-> >> security/integrity/ima/ima_main.c:442:20: error: 'MAY_OPENEXEC' undeclared (first use in this function); did you mean 'MAY_OPEN'?
->      442 |         MAY_EXEC | MAY_OPENEXEC |
->          |                    ^~~~~~~~~~~~
->          |                    MAY_OPEN
+> +	spin_unlock(&chan->done_lock);
+> +}
 
