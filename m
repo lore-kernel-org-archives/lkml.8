@@ -2,305 +2,115 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A6C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66506C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77E772072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440102072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:38:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u7CR8FQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgD3Mhh (ORCPT
+        id S1726937AbgD3Mid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:37:37 -0400
-Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:46718 "EHLO
-        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgD3Mha (ORCPT
+        Thu, 30 Apr 2020 08:38:33 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44506 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726511AbgD3Mic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:37:30 -0400
-IronPort-SDR: zRXC6M2FUn1WZaDz1avibpNtAnAhZij38kZyoSNXxrHQ7AESSKILAU4bHzgEB3TEQTh/ZoQgqf
- Tb7UZ98nhGLoeKthwEjCkXSz40v12uYj0PPrzuG5zvaNqXQ7j1Qpv9XWLUcf92n27FXpexMpzF
- roi0JtnAM8++rAdzUCwSs1Ux6qttU5vHGQy1CK4O52aAJ/PT13GOsAuK1/Cn+p6o4SG5dbrH71
- Fm/HbJpGOqL2S1SwEBWblfJIZlfojV8RN61siXt1/HNZx7+FR3/1RoAwEitIUqD7eIIAkQD/fj
- IpM=
-X-IronPort-AV: E=Sophos;i="5.73,334,1583186400"; 
-   d="scan'208";a="278151911"
-From:   =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
-        <vesa.jaaskelainen@vaisala.com>
-To:     op-tee@lists.trustedfirmware.org,
-        Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
-        <vesa.jaaskelainen@vaisala.com>
-Subject: [PATCH v2 1/3] tee: add support for session's client UUID generation
-Date:   Thu, 30 Apr 2020 15:37:09 +0300
-Message-Id: <20200430123711.20083-2-vesa.jaaskelainen@vaisala.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430123711.20083-1-vesa.jaaskelainen@vaisala.com>
-References: <20200430123711.20083-1-vesa.jaaskelainen@vaisala.com>
+        Thu, 30 Apr 2020 08:38:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588250312; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=s9tiGzSDMy7NhyUbB2bWUK71xrktfp/JVsuI2n9mC8A=;
+ b=u7CR8FQpVednGb+38mOkq20bHa0egUVVxKoD9Xdp6O/pIsvCU/0pX9qlF0KNXgaQJAh6UQkG
+ PDznMJ7yJqepB6vbeBgnyn3k9SJSahzrZMfDPN/sGlV84Is9OxeXW5G0KThixrIkWB9F8HFr
+ Ui+ywX4uOFK5QSks+JjdEbGHPQE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaac6ba.7fdc60f4d570-smtp-out-n05;
+ Thu, 30 Apr 2020 12:38:18 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BB9F4C4478F; Thu, 30 Apr 2020 12:38:18 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EBE81C433D2;
+        Thu, 30 Apr 2020 12:38:17 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 30 Apr 2020 12:37:21.0286 (UTC) FILETIME=[17B4FA60:01D61EEC]
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Apr 2020 20:38:17 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, hongwus@codeaurora.org,
+        rnayak@codeaurora.org, stanley.chu@mediatek.com,
+        alim.akhtar@samsung.com, beanhuo@micron.com,
+        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
+ during system resume
+In-Reply-To: <BYAPR04MB462931F8DF1112CAF7F80CA4FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
+ <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
+ <BYAPR04MB462931F8DF1112CAF7F80CA4FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+Message-ID: <eb7520b6274474f4b8d803a76b85107a@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TEE Client API defines that from user space only information needed for
-specified login operations is group identifier for group based logins.
+Hi Avri,
 
-REE kernel is expected to formulate trustworthy client UUID and pass that
-to TEE environment. REE kernel is required to verify that provided group
-identifier for group based logins matches calling processes group
-memberships.
+On 2020-04-30 17:11, Avri Altman wrote:
+>> 
+>> On 2020-04-29 21:10, Can Guo wrote:
+>> > During system resume, scsi_resume_device() decreases a request queue's
+>> > pm_only counter if the scsi device was quiesced before. But after that,
+>> > if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is
+>> > still held (non-zero). Current scsi resume hook only sets the RPM status
+>> > of the scsi device and its request queue to RPM_ACTIVE, but leaves the
+>> > pm_only counter unchanged. This may make the request queue's pm_only
+>> > counter remain non-zero after resume hook returns, hence those who are
+>> > waiting on the mq_freeze_wq would never be woken up. Fix this by calling
+>> > blk_post_runtime_resume() if pm_only is non-zero to balance the pm_only
+>> > counter which is held by the scsi device's RPM ops.
+>> 
+>> How was this issue discovered? How has this patch been tested?
+> 
+> I think this insight was originally gained as part of commit 
+> fb276f770118
+> (scsi: ufs: Enable block layer runtime PM for well-known logical units)
+> 
+> But I will let Can reply on that.
+> 
+> Thanks,
+> Avri
+> 
 
-TEE specification only defines that the information passed from REE
-environment to TEE environment is encoded into on UUID.
+Thanks for pointing to that commit, but this is a different story here.
+SCSI devices, which have block layer runtime PM enabled, can hit this 
+issue
+during system resume. In the contratry, those which have block layer 
+runtime
+PM disabled are immune to this issue.
 
-In order to guarantee trustworthiness of client UUID user space is not
-allowed to freely pass client UUID.
+Thanks,
 
-UUIDv5 form is used encode variable amount of information needed for
-different login types.
-
-Signed-off-by: Vesa Jääskeläinen <vesa.jaaskelainen@vaisala.com>
----
- drivers/tee/Kconfig     |   1 +
- drivers/tee/tee_core.c  | 153 ++++++++++++++++++++++++++++++++++++++++
- include/linux/tee_drv.h |  16 +++++
- 3 files changed, 170 insertions(+)
-
-diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
-index 8da63f38e6bd..806eb87d4da0 100644
---- a/drivers/tee/Kconfig
-+++ b/drivers/tee/Kconfig
-@@ -3,6 +3,7 @@
- config TEE
- 	tristate "Trusted Execution Environment support"
- 	depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
-+	select CRYPTO_SHA1
- 	select DMA_SHARED_BUFFER
- 	select GENERIC_ALLOCATOR
- 	help
-diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-index 6aec502c495c..d5db206d6af2 100644
---- a/drivers/tee/tee_core.c
-+++ b/drivers/tee/tee_core.c
-@@ -6,18 +6,33 @@
- #define pr_fmt(fmt) "%s: " fmt, __func__
- 
- #include <linux/cdev.h>
-+#include <linux/cred.h>
- #include <linux/fs.h>
- #include <linux/idr.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/tee_drv.h>
- #include <linux/uaccess.h>
-+#include <crypto/hash.h>
-+#include <crypto/sha.h>
- #include "tee_private.h"
- 
- #define TEE_NUM_DEVICES	32
- 
- #define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
- 
-+#define TEE_UUID_NS_NAME_SIZE	128
-+
-+/*
-+ * TEE Client UUID name space identifier (UUIDv4)
-+ *
-+ * Value here is random UUID that is allocated as name space identifier for
-+ * forming Client UUID's for TEE environment using UUIDv5 scheme.
-+ */
-+static const uuid_t tee_client_uuid_ns = UUID_INIT(0x58ac9ca0, 0x2086, 0x4683,
-+						   0xa1, 0xb8, 0xec, 0x4b,
-+						   0xc0, 0x8e, 0x01, 0xb6);
-+
- /*
-  * Unprivileged devices in the lower half range and privileged devices in
-  * the upper half range.
-@@ -110,6 +125,144 @@ static int tee_release(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
-+/**
-+ * uuid_v5() - Calculate UUIDv5
-+ * @uuid: Resulting UUID
-+ * @ns: Name space ID for UUIDv5 function
-+ * @name: Name for UUIDv5 function
-+ * @size: Size of name
-+ *
-+ * UUIDv5 is specific in RFC 4122.
-+ *
-+ * This implements section (for SHA-1):
-+ * 4.3.  Algorithm for Creating a Name-Based UUID
-+ */
-+static int uuid_v5(uuid_t *uuid, const uuid_t *ns, const void *name,
-+		   size_t size)
-+{
-+	unsigned char hash[SHA1_DIGEST_SIZE];
-+	struct crypto_shash *shash = NULL;
-+	struct shash_desc *desc = NULL;
-+	int rc;
-+
-+	shash = crypto_alloc_shash("sha1", 0, 0);
-+	if (IS_ERR(shash)) {
-+		rc = PTR_ERR(shash);
-+		pr_err("shash(sha1) allocation failed\n");
-+		return rc;
-+	}
-+
-+	desc = kzalloc(sizeof(*desc) + crypto_shash_descsize(shash),
-+		       GFP_KERNEL);
-+	if (!desc) {
-+		rc = -ENOMEM;
-+		goto out_free_shash;
-+	}
-+
-+	desc->tfm = shash;
-+
-+	rc = crypto_shash_init(desc);
-+	if (rc < 0)
-+		goto out_free_desc;
-+
-+	rc = crypto_shash_update(desc, (const u8 *)ns, sizeof(*ns));
-+	if (rc < 0)
-+		goto out_free_desc;
-+
-+	rc = crypto_shash_update(desc, (const u8 *)name, size);
-+	if (rc < 0)
-+		goto out_free_desc;
-+
-+	rc = crypto_shash_final(desc, hash);
-+	if (rc < 0)
-+		goto out_free_desc;
-+
-+	memcpy(uuid->b, hash, UUID_SIZE);
-+
-+	/* Tag for version 5 */
-+	uuid->b[6] = (hash[6] & 0x0F) | 0x50;
-+	uuid->b[8] = (hash[8] & 0x3F) | 0x80;
-+
-+out_free_desc:
-+	kfree(desc);
-+
-+out_free_shash:
-+	crypto_free_shash(shash);
-+	return rc;
-+}
-+
-+int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
-+				 const u8 connection_data[TEE_IOCTL_UUID_LEN])
-+{
-+	const char *application_id = NULL;
-+	gid_t ns_grp = (gid_t)-1;
-+	kgid_t grp = INVALID_GID;
-+	char *name = NULL;
-+	int name_len;
-+	int rc;
-+
-+	if (connection_method == TEE_IOCTL_LOGIN_PUBLIC) {
-+		/* Nil UUID to be passed to TEE environment */
-+		uuid_copy(uuid, &uuid_null);
-+		return 0;
-+	}
-+
-+	/*
-+	 * In Linux environment client UUID is based on UUIDv5.
-+	 *
-+	 * Determine client UUID with following semantics for 'name':
-+	 *
-+	 * For TEEC_LOGIN_USER:
-+	 * uid=<uid>
-+	 *
-+	 * For TEEC_LOGIN_GROUP:
-+	 * gid=<gid>
-+	 *
-+	 */
-+
-+	name = kzalloc(TEE_UUID_NS_NAME_SIZE, GFP_KERNEL);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	switch (connection_method) {
-+	case TEE_IOCTL_LOGIN_USER:
-+		name_len = snprintf(name, TEE_UUID_NS_NAME_SIZE, "uid=%x",
-+				    current_euid().val);
-+		if (name_len >= TEE_UUID_NS_NAME_SIZE) {
-+			rc = -E2BIG;
-+			goto out_free_name;
-+		}
-+		break;
-+
-+	case TEE_IOCTL_LOGIN_GROUP:
-+		memcpy(&ns_grp, connection_data, sizeof(gid_t));
-+		grp = make_kgid(current_user_ns(), ns_grp);
-+		if (!gid_valid(grp) || !in_egroup_p(grp)) {
-+			rc = -EPERM;
-+			goto out_free_name;
-+		}
-+
-+		name_len = snprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x",
-+				    grp.val);
-+		if (name_len >= TEE_UUID_NS_NAME_SIZE) {
-+			rc = -E2BIG;
-+			goto out_free_name;
-+		}
-+		break;
-+
-+	default:
-+		rc = -EINVAL;
-+		goto out_free_name;
-+	}
-+
-+	rc = uuid_v5(uuid, &tee_client_uuid_ns, name, name_len);
-+out_free_name:
-+	kfree(name);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(tee_session_calc_client_uuid);
-+
- static int tee_ioctl_version(struct tee_context *ctx,
- 			     struct tee_ioctl_version_data __user *uvers)
- {
-diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-index 1412e9cc79ce..8471b790e858 100644
---- a/include/linux/tee_drv.h
-+++ b/include/linux/tee_drv.h
-@@ -165,6 +165,22 @@ int tee_device_register(struct tee_device *teedev);
-  */
- void tee_device_unregister(struct tee_device *teedev);
- 
-+/**
-+ * tee_session_calc_client_uuid() - Calculates client UUID for session
-+ * @uuid:		Resulting UUID
-+ * @connection_method:	Connection method for session (TEE_IOCTL_LOGIN_*)
-+ * @connectuon_data:	Connection data for opening session
-+ *
-+ * Based on connection method calculates UUIDv5 based client UUID.
-+ *
-+ * For group based logins verifies that calling process has specified
-+ * credentials.
-+ *
-+ * @return < 0 on failure
-+ */
-+int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
-+				 const u8 connection_data[TEE_IOCTL_UUID_LEN]);
-+
- /**
-  * struct tee_shm - shared memory object
-  * @ctx:	context using the object
--- 
-2.17.1
-
+Can Guo.
+>> 
+>> Thanks,
+>> 
+>> Bart.
