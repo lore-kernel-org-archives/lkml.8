@@ -2,113 +2,120 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95008C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E3FC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 730ED2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:40:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mnX7Cg+i"
+	by mail.kernel.org (Postfix) with ESMTP id 22F1220784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD3Fkr (ORCPT
+        id S1726433AbgD3Fwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 01:40:47 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23811 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726391AbgD3Fkq (ORCPT
+        Thu, 30 Apr 2020 01:52:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726180AbgD3Fw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 01:40:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588225245; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=/s8xOLocV/YTRQ/Nzq+NBZkj5U9IzFR+p0Ifn/H2Edo=;
- b=mnX7Cg+iQBgIFgzMQIScYwJvmGId1zr+BXVyPj09L0ibHfrPmnV+iFR2a8sMABCyRyvgxucJ
- NLTxDj/03hRTRELh629MkclZGeDLREC5Fe8uSxES5yyM6C8Jw3A5JCF/DPLslAUjJSx2xn6I
- Cnp+UHb01oN95nsFJ2du6i9ZMQ4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaa64dc.7f707f237e30-smtp-out-n01;
- Thu, 30 Apr 2020 05:40:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 24818C44791; Thu, 30 Apr 2020 05:40:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4EF4BC433CB;
-        Thu, 30 Apr 2020 05:40:43 +0000 (UTC)
+        Thu, 30 Apr 2020 01:52:29 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U5ViQ1014088;
+        Thu, 30 Apr 2020 01:52:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mfhg8mt0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 01:52:21 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03U5qFlN063752;
+        Thu, 30 Apr 2020 01:52:21 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mfhg8msb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 01:52:20 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U5pNJo014810;
+        Thu, 30 Apr 2020 05:52:18 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu71wvq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 05:52:18 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U5qFog25821338
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 05:52:15 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 800E1A4062;
+        Thu, 30 Apr 2020 05:52:15 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5DF6A405F;
+        Thu, 30 Apr 2020 05:52:10 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.199.54.187])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 05:52:10 +0000 (GMT)
+Subject: Re: [RFC 1/3] powernv/cpuidle : Support for pre-entry and post exit
+ of stop state in firmware
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@ozlabs.org
+Cc:     ego@linux.vnet.ibm.com, mikey@neuling.org, mpe@ellerman.id.au,
+        oohall@gmail.com, psampat@linux.ibm.com, svaidy@linux.ibm.com,
+        skiboot@lists.ozlabs.org
+References: <20200427021027.114582-1-huntbag@linux.vnet.ibm.com>
+ <1588035100.usm3gb816q.astroid@bobo.none>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Message-ID: <66ce544a-c1bf-4e84-2a7c-7480bbc0e12c@linux.vnet.ibm.com>
+Date:   Thu, 30 Apr 2020 11:22:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1588035100.usm3gb816q.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Apr 2020 13:40:43 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
-        beanhuo@micron.com, Avri.Altman@wdc.com,
-        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
- during system resume
-In-Reply-To: <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
-References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
- <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
-Message-ID: <1ef85ee212bee679f7b2927cbbc79cba@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_01:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+Hi Nick,
 
-On 2020-04-30 13:08, Bart Van Assche wrote:
-> On 2020-04-29 21:10, Can Guo wrote:
->> During system resume, scsi_resume_device() decreases a request queue's
->> pm_only counter if the scsi device was quiesced before. But after 
->> that,
->> if the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter 
->> is
->> still held (non-zero). Current scsi resume hook only sets the RPM 
->> status
->> of the scsi device and its request queue to RPM_ACTIVE, but leaves the
->> pm_only counter unchanged. This may make the request queue's pm_only
->> counter remain non-zero after resume hook returns, hence those who are
->> waiting on the mq_freeze_wq would never be woken up. Fix this by 
->> calling
->> blk_post_runtime_resume() if pm_only is non-zero to balance the 
->> pm_only
->> counter which is held by the scsi device's RPM ops.
-> 
-> How was this issue discovered? How has this patch been tested?
-> 
-> Thanks,
-> 
-> Bart.
-
-As the issue was found after system resumes, so the issue was discovered
-during system suspend/resume test, and it is very easy to be replicated.
-After system resumes, if this issue hits some scsi devices, all bios 
-sent
-to their request queues are blocked, which may cause a system hang if 
-the
-scsi devices are vital to system functionality.
-
-To make sure the patch work well, we have tested system suspend/resume
-and made sure no system hang happen due to request queues got blocked
-by imbalanced pm_only counter.
+Have you posted out the kernel side of "opal v4" patchset?
+I could only find the opal patchset.
 
 Thanks,
+Abhishek
 
-Can Guo.
+On 04/28/2020 06:38 AM, Nicholas Piggin wrote:
+> Thanks for picking this up and pushing it along. I do plan to come back
+> and take another look at it all, but what we do need to do first is get
+> a coherent approach to this proposed new calling convention and OS ops.
+>
+> It's fine to work on this in the meantime, but to start merging things
+> my idea is:
+>
+> - OPAL must leave r13-r15 untouched for the OS.
+> - OS ops are made available only for a "v4" OS that uses the new
+>    calling convention, including kernel stack.
+> - OS ops baseline (all OSes must provide) will be console / printk
+>    facility, trap handling and crash/symbol decoding on behalf of OPAL,
+>    and runtime virtual memory.
+>
+> Other OS ops features can be added in the versioned structure, including
+> this.
+>
+> I'm trying to get back to cleaning these things up and start getting
+> them merged now. Any comments or review on those would be helpful.
+>
+> Thanks,
+> Nick
+>
+
