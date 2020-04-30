@@ -2,101 +2,114 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCBAC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15E1C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4DE2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588240247;
-	bh=2m/uMwubJU0+KIoLz1IiF/eJGyPbsWV2OVU8vrOQqBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fDUi5tZPJDpEMtEKgdpqxh4qfc2QOG7eWTuCjcTS3y4tLToKJ4SWjjjLHdXeLE3SG
-	 Ntr78YF9qBrI792M472HoJ8uX/MT4kdxGMAum7byrUybfAwu6XP1aq9IcHOeKGn0Ys
-	 ts4D8Ozg8dKsNlxiWnPvdyyMOMR/Hu3EGUs5BiMo=
+	by mail.kernel.org (Postfix) with ESMTP id 948902082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgD3Juq (ORCPT
+        id S1726845AbgD3JwO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbgD3Juq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:50:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E8842082E;
-        Thu, 30 Apr 2020 09:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588240245;
-        bh=2m/uMwubJU0+KIoLz1IiF/eJGyPbsWV2OVU8vrOQqBo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2NRs0g5xV7M8d3FZI52+oAVxuGVFjMu5w2Mtg08swn4HAuP9oO90gxHDaPWncU2UL
-         LHZJg7J1RhAMhIQhXIHKyOLmHY9dQlwhRuRCVLx4RQskm5Pe4dqAJsLx2cEZ4Q1UHw
-         DI8NdPhL4/nhgDpGR/qDoTIRy7rNQwpQDiXhw35A=
-Date:   Thu, 30 Apr 2020 10:50:37 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        James Morse <james.morse@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: kvm: fix gcc-10 shift warning
-Message-ID: <20200430095037.GA19932@willie-the-truck>
-References: <20200429185657.4085975-1-arnd@arndb.de>
- <20200430090251.715f6bf0@why>
- <20200430082927.GA18615@willie-the-truck>
- <20200430193910.294842c4@canb.auug.org.au>
+        Thu, 30 Apr 2020 05:52:14 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:52635 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726405AbgD3JwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:52:14 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-128-jza2LrHfM5yaVMLeML32iw-1; Thu, 30 Apr 2020 10:52:09 +0100
+X-MC-Unique: jza2LrHfM5yaVMLeML32iw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 Apr 2020 10:52:09 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 Apr 2020 10:52:09 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Takashi Iwai' <tiwai@suse.de>
+CC:     'Arnd Bergmann' <arnd@arndb.de>, Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ALSA: opti9xx: shut up gcc-10 range warning
+Thread-Topic: [PATCH] ALSA: opti9xx: shut up gcc-10 range warning
+Thread-Index: AQHWHljP0SPhFOMubESmHZ4J5JyFcqiRUaDQ///yewCAACbi8A==
+Date:   Thu, 30 Apr 2020 09:52:09 +0000
+Message-ID: <94cc90ff07364743809698fae2ef7138@AcuMS.aculab.com>
+References: <20200429190216.85919-1-arnd@arndb.de>
+        <c513eb4c4a01470eb3c47d8134afbec1@AcuMS.aculab.com>
+ <s5hk11xidob.wl-tiwai@suse.de>
+In-Reply-To: <s5hk11xidob.wl-tiwai@suse.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430193910.294842c4@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 07:39:10PM +1000, Stephen Rothwell wrote:
-> On Thu, 30 Apr 2020 09:29:28 +0100 Will Deacon <will@kernel.org> wrote:
-> > On Thu, Apr 30, 2020 at 09:02:51AM +0100, Marc Zyngier wrote:
-> > > On Wed, 29 Apr 2020 20:56:20 +0200
-> > > Arnd Bergmann <arnd@arndb.de> wrote:
-> > >   
-> > > > Fixes: 22998131ab33 ("arm64: add support for folded p4d page tables")
-> > 
-> > Happy to queue via arm64 for 5.8. Does that work for you, Arnd, or were you
-> > planning to get this in sooner than that?
+From: Takashi Iwai
+> Sent: 30 April 2020 09:25
 > 
-> The commit that this fixes is in Andrew's patch series in linux-next,
-> so it should just go in there.
+> On Thu, 30 Apr 2020 10:15:02 +0200,
+> David Laight wrote:
+> >
+> > From: Arnd Bergmann
+....
+> > > +static inline void snd_miro_write_mask(struct snd_miro *chip,
+> > > +		unsigned char reg, unsigned char value, unsigned char mask)
+> > > +{
+> > > +	unsigned char oldval = snd_miro_read(chip, reg);
+> > >
+> > > -#define snd_miro_write_mask(chip, reg, value, mask)	\
+> > > -	snd_miro_write(chip, reg,			\
+> > > -		(snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
+> > > +	snd_miro_write(chip, reg, (oldval & ~mask) | (value & mask));
+> > > +}
+> >
+> > Isn't that likely to add additional masking with 0xff at the call sites?
+> > You will probably get better code if the arguments are 'unsigned int'.
+> 
+> I don't think such a micro optimization is needed.
+> All registers, values and masks in the driver are 8bit, so keeping all
+> unsigned char is rather an improvement of readability.
 
-Yes, you're right. Sorry for the noise.
+And every time you do any arithmetic they get extended to int.
+And if you pass them to a function (as char) the compiler
+has to mask the result of any arithmetic back to 8 bits.
 
-Will
+On x86 the compiler can use the 'as if' rule and do 8 bit arithmetic.
+But only if it can determine that the high bits aren't actually used.
+On almost every other architecture you are likely to get a lot
+of masking operations.
+
+Just because the domain of a variable of 0..255 doesn't mean
+that 'unsigned char' is an appropriate type for a variable.
+
+For x86-64 (and probably others) 'unsigned int' is usually best for
+anything that cannot be negative.
+In particular it saves the sign extension instruction that has to
+be inserted when an 'int' variable is used as an array index.
+
+FWIW I think that somewhere else the ~mask had to be replaced
+with (mask ^ 0xff) do avoid another spurious compiler warning.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
