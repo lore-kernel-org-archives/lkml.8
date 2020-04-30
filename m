@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E55FC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD21C83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 259B821569
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7A121569
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgD3Bkx (ORCPT
+        id S1726798AbgD3BlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:40:53 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:25994 "EHLO
+        Wed, 29 Apr 2020 21:41:05 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:29267 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726535AbgD3Bkw (ORCPT
+        by vger.kernel.org with ESMTP id S1726545AbgD3Bkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 21:40:52 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 29 Apr 2020 18:40:50 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 29 Apr 2020 18:40:49 -0700
+  by ironmsg02-sd.qualcomm.com with ESMTP; 29 Apr 2020 18:40:49 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id EEA464D38; Wed, 29 Apr 2020 18:40:49 -0700 (PDT)
+        id E20D14CAF; Wed, 29 Apr 2020 18:40:49 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v14 08/11] pwm: sun4i: Use nsecs_to_jiffies to avoid a division
-Date:   Wed, 29 Apr 2020 18:40:44 -0700
-Message-Id: <0c8e6ec44d95954a6a62553c31cfcd62cbb8aa98.1588208650.git.gurus@codeaurora.org>
+Subject: [PATCH v14 07/11] pwm: sifive: Use 64-bit division macro
+Date:   Wed, 29 Apr 2020 18:40:43 -0700
+Message-Id: <ca783e0f5ff7b517ce0854908f0e89b07551bfe5.1588208650.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1588208650.git.gurus@codeaurora.org>
 References: <cover.1588208650.git.gurus@codeaurora.org>
@@ -53,29 +53,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using nsecs_to_jiffies() which
-does away with the need for a division operation.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+handle a 64-bit divisor.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- drivers/pwm/pwm-sun4i.c | 2 +-
+ drivers/pwm/pwm-sifive.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 5c677c5..1694e69 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -285,7 +285,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		usecs_to_jiffies(cstate.period / 1000 + 1);
-+		nsecs_to_jiffies(cstate.period + 1000);
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index cc63f9b..62de0bb 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * consecutively
+ 	 */
+ 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+-	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
++	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
+ 	/* The hardware cannot generate a 100% duty cycle */
+ 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
  
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
