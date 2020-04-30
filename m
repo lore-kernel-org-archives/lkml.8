@@ -2,86 +2,114 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD98C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD6C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A5E20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588259542;
-	bh=YOc7T/JJogTmepE6jFRhfEQUCfqsI45Cz1kZ1rWCLSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i5KGPV3MmfoCdDM5AKlXcTiDskkRhrfqVuEO2BoCSIyxlZSHhB7Ck2Qjo3AYLy9gY
-	 Cq+KGg4HuECk0u//8MAIh6BfDROHwAmlIiz5Dwm45hXpprY/m106XQBuBl244qWXvv
-	 oBXkvu1EVltj4Vs/k+IgICCb8UcDtE1YIHyL0nrM=
+	by mail.kernel.org (Postfix) with ESMTP id E7AD120775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="raszGkcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgD3PMV (ORCPT
+        id S1727095AbgD3PMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:12:21 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:44318 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgD3PMV (ORCPT
+        Thu, 30 Apr 2020 11:12:45 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33338 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726626AbgD3PMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:12:21 -0400
-Received: by mail-oo1-f66.google.com with SMTP id p67so1348536ooa.11;
-        Thu, 30 Apr 2020 08:12:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=obpQxpSJiyFLGTkwGrLdNKbwi6uRMLRDKh8cYyDjJsI=;
-        b=tnOqxCrTJGePguJFugSrWx8GaWchdS9npWVa9TtaeGPiGjx4bxTWO3BMgCpzPAIydu
-         FQgVr3KNfFBnHiATvfI1etKhO3ul4JC5FGUPTp4+EtP5hfOCAGaRF7RIT2kSZPKxHg/j
-         hQz8pWlfCwhDBu26WinoLKoWTnBLUQC3HWq7/aVUcyOhxKUW5NgU9yAfXdLr+inoWei/
-         YXqPqFoqtYLmPFazGIVk/LNdPI/eivk8y9V/9VcgmAwg8vMUim6j/9EXWMK/GJhxgpHZ
-         uZiXASAE67cQclHCO6DYEF+Qd/dEmE4eCR/+ihzBMqFisJQ5HEvoYN1LVCc1flqqNbsm
-         D8rQ==
-X-Gm-Message-State: AGi0PubXlm0nRD6maCRlcJEn7MwO/48UAJJG5tA1SBBBZDuMrs30/Jf4
-        Ih94CEZS5fFqAz4/TjOXCA==
-X-Google-Smtp-Source: APiQypJ4BHLeZGMcwyA8O7CLgokYWdf16RFXaSVYKFjfgHJjv8YSnSyns/hrZx52G4ePwLQZAGxRzA==
-X-Received: by 2002:a4a:8253:: with SMTP id t19mr3218052oog.69.1588259538956;
-        Thu, 30 Apr 2020 08:12:18 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o10sm43210oti.52.2020.04.30.08.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 08:12:18 -0700 (PDT)
-Received: (nullmailer pid 11469 invoked by uid 1000);
-        Thu, 30 Apr 2020 15:12:17 -0000
-Date:   Thu, 30 Apr 2020 10:12:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hyunki00.koo@samsung.com
-Subject: Re: [PATCH v8 2/3] dt-bindings: serial: Add reg-io-width compatible
-Message-ID: <20200430151217.GA11429@bogus>
-References: <20200420013300.17249-1-hyunki00.koo@samsung.com>
- <CGME20200420013325epcas2p13f65e6bc8ba68f89c805704830144870@epcas2p1.samsung.com>
- <20200420013300.17249-2-hyunki00.koo@samsung.com>
+        Thu, 30 Apr 2020 11:12:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588259564; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=+Elf3SEuakpHyKtLd2fhgPxNApOMvDXgdZ23op/04/o=; b=raszGkcn6qzpFgcSrQbSvrgY/iEOabQmzBBmLRQhTams+tp+FfwXWwXzO+prVVv3AzyVHSoq
+ 3HY47lRAoDFRBtQVyoA+BhZ+LYMlw7ks9R+d47ORvox+7XTsUu61Dkma6T4cffOSsaCx8IRQ
+ CxA6UIBJfdtSDirts/HSgy5i1HA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaaeae7.7f2dc00b1998-smtp-out-n03;
+ Thu, 30 Apr 2020 15:12:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 38A40C433CB; Thu, 30 Apr 2020 15:12:39 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA60CC432C2;
+        Thu, 30 Apr 2020 15:12:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA60CC432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v3 9/9] bus: mhi: core: Ensure non-zero session or
+ sequence ID values
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org
+References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
+ <1588193551-31439-10-git-send-email-bbhatt@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <e609031b-33a1-2db6-21b9-8ebadafba509@codeaurora.org>
+Date:   Thu, 30 Apr 2020 09:12:35 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420013300.17249-2-hyunki00.koo@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1588193551-31439-10-git-send-email-bbhatt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 10:32:57 +0900, Hyunki Koo wrote:
-> Add a description for reg-io-width options for the samsung serial
-> UART peripheral.
+On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
+> While writing any sequence or session identifiers, it is possible that
+> the host could write a zero value, whereas only non-zero values are
+> supported writes to those registers. Ensure that host does not write a
+> non-zero value for those cases.
 > 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>   drivers/bus/mhi/core/boot.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+> index 0bc9c50..c9971d4 100644
+> --- a/drivers/bus/mhi/core/boot.c
+> +++ b/drivers/bus/mhi/core/boot.c
+> @@ -199,6 +199,9 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+>   	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
+>   
+>   	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
+> +	if (unlikely(!sequence_id))
+> +		sequence_id = 1;
+
+Seems like you could use prandom_u32_max(), and add 1 to the result to 
+eliminate the conditional.  What do you think?
+
+> +
+>   	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
+>   			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
+>   			    sequence_id);
+> @@ -254,6 +257,9 @@ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
+>   		      lower_32_bits(dma_addr));
+>   	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
+>   	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
+> +	if (unlikely(!session_id))
+> +		session_id = 1;
+> +
+>   	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
+>   	read_unlock_bh(pm_lock);
+>   
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
