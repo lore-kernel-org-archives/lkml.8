@@ -6,135 +6,120 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B0DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC904C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2519E206D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE5E206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgD3Vcm (ORCPT
+        id S1727886AbgD3Vcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:32:42 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:51025 "EHLO
+        Thu, 30 Apr 2020 17:32:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:49795 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3Vcl (ORCPT
+        with ESMTP id S1726336AbgD3Vcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:32:41 -0400
+        Thu, 30 Apr 2020 17:32:47 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MRmwM-1jaI7F1geQ-00T9PZ; Thu, 30 Apr 2020 23:32:35 +0200
+ 1M2w0K-1jTBOd0Rhs-003PJb; Thu, 30 Apr 2020 23:32:23 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH 08/15] usb: ehci: avoid gcc-10 zero-length-bounds warning
-Date:   Thu, 30 Apr 2020 23:30:50 +0200
-Message-Id: <20200430213101.135134-9-arnd@arndb.de>
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jeremy Sowden <jeremy@azazel.net>,
+        Li RongQing <lirongqing@baidu.com>,
+        Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jules Irenge <jbi.octave@gmail.com>,
+        Dirk Morris <dmorris@metaloft.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH 06/15] netfilter: conntrack: avoid gcc-10 zero-length-bounds warning
+Date:   Thu, 30 Apr 2020 23:30:48 +0200
+Message-Id: <20200430213101.135134-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200430213101.135134-1-arnd@arndb.de>
 References: <20200430213101.135134-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:9LwbzPiDVBTutPI7/SmbJcMbJzAjVunAx6lsoRTMq+jOauVlaC3
- MgKUiAe+HddGUKoavqOfiAsSpWnCH3KOmtqZqSCBvUZkoD9k1rj+PQ4AVhfvLLaMvdG9CX+
- 7Y4+sJJK7i+mMhDuVBqNuXk9EhPc6KK6v5/xyT3y9wGWLHToM1tskvt271mkLVQOER9AXa0
- qJwyxkiW9dCsIY54jJz+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lguDXmXr0vo=:HF3x9q9yVSo8GfNZqml4nG
- Y1So3lZ/EU291ooBiltDFReKVfKroB8H0GqCweHIfHh6ZZf6T5OnasR3za5ZgEKMNPJOljE4a
- rWkbTcCbBgIhJhoqEWoe41PNI+jy4CTiEv0dQJqPzDkW8tMgWVqFNEPh0lS+VGUI7FvAZr8MA
- pofS+LpblAWAZaqFYgbVxEEwkjisO8qqt9+kX6Y5DtO90yomqQtzL1YRZ/UUH+HQ4TKRP6oM1
- 5W1QWYCFiV5y3z/VGtB/va7j9vYN5YCGZFty33a+DKvGVQHTXL+H19tHgYZpzabzt2mmpwL2h
- DhQVJYKPM5s8dsNv6ho3RpA4FEpOhyvpUX09S/CtvXi61/rfEf/TSLZBytZDOUONU5h5HvV/S
- CJJR6hf6ytHn3MRgCJ/ASzMQCjsOVhVD1JdGu53rovZp++mR3j4SOCNpO9bnqXB89k6rUGuiQ
- s/FhHMGN8ra75zHUkqrTLKsz7+PYN04EYGegMNGOrs2EZUeQvHWdWBpqLCApu0pcbVLoh5hNh
- dAsXXYqkNqL82ettUCs/rW41TxPWItB/wdrvmowJ55Z6SvBDAHKzINaUA3dDfgrXO+VGpGeGT
- LbiHgKUPF23qbcBSa3hKkjDFs7i2BrTuAxWrkPJ+W85XBX+xuD0tBeFExInOrjz0306cCzMim
- p5B/m+taevaLNoTey3/geklfUu+bp9vOpBdLvQjcvjo00thdkxfYSTXnHATU3pkLpOc4SlCDH
- i2X+CjrNuhZomIKp6ZFwG5PTc5bt9MSl8wDWg33jP19lMpou6wQm5Eg5T/yjaziSMHK/nPASt
- z60ev2uT6xJm/Vhvywu0OrPttAQ8naeLtNyPkstQNrkLFzSFq8=
+X-Provags-ID: V03:K1:8Sp1zqk0kvXNuoj2OkQlE/ujFJe7AlEDhxnJ66L0VukuMY/xxYi
+ +JgvA3BEJVInn94lFMseSuPlDxRS/GL/oaTPplGHTZvnLqo7E/MijvoRxlN0VmpEU2lISm0
+ lE2g9NCgBPAiDai9y5MKBi5xa6BaV6duj4paBSzna762U2aagG+uxR3tmKxRzdadqKwZsQP
+ sTKb8dOBMg6yReMFaqH6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VNz0tYWZTqk=:UsDGslkgNI5fdFKkPvadEp
+ 6mtBxc23aMctyVNSUmtxjmYVlBSip2tqZUVeWE3owPBMOAzBA5KaIipnOc4+0PpR/FzETZXhO
+ /k094E//vxZnfTOZxqwMe+rNEuL0uTQol7g1+JVqrOgBs2tl/5LVpo9uSRvLzyXzdq2Ih5x0s
+ jy/nvLF4ZaFqgffe/1Ij5wy0qGZizKErNItmS1jZA6GqPUe99IR4qVP7GSRFnoVuCGHIOkZOs
+ BQT/QITf4RXgOM09POIWx1EiXMaeET75PoUV7WQXZZyFvQl3GSfxdSsR0njRL/iQlQOJUUKE9
+ HQ46qhkyrNPeO9/5HNrtbsMadFiSghd5C7WtARl2/ebqhQY5u14yK2gX5RvTwKjC/msY4V8Ma
+ 2EiUu4H49OIhOMwK25KYdEKkBe4iS8YAYY6HfBsYZMw8UPWtFchtX4QaTouIA3PJerFzR134x
+ UXcMBdnxLcwasMRYHXnRcWyBFuFOH52QC4NhpI4q3L4IkIRLoXfg3sHIbH/H6qhI+OEwFKzIS
+ w5wNzOrgxrviDDsIdTsyVYONKT7Art9WABh/fydx/FW/BGuc87HioQ0GUfFWI2bZRfpBVA4gc
+ f3CFLH2Cykr1Tkom3EUXjDWcZSBSW2905QaeE4oDK2EzR+hRbUHN40VCs9rEp1amdToMv4w1e
+ CxpXRZvYI3iG3prMVih9ujBWabjb9AN6M6Bh9N69PBEboD2TQAz0fF9+0BhaU4f0h+gt5PFEg
+ zcJRCivnsDG1XWjKDrp4p7GKd5RRj8vZDIuQuj5eq8x9vUwrxFnvSCdj5F9dgU1Ze5PBO1AAt
+ Ei0a3eb1reZbx2wTQbnlgmpLvtKHD8vLmD5ZgRjMFVANTbDmUk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building ehci drivers with gcc-10 results in a number of warnings like
-when an zero-length array is accessed:
+gcc-10 warns around a suspicious access to an empty struct member:
 
-drivers/usb/host/ehci-hub.c: In function 'ehci_bus_suspend':
-drivers/usb/host/ehci-hub.c:320:30: error: array subscript 14 is outside the bounds of an interior zero-length array 'u32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
-  320 |    u32 __iomem *hostpc_reg = &ehci->regs->hostpc[port];
-      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/usb/host/ehci.h:273,
-                 from drivers/usb/host/ehci-hcd.c:96:
-include/linux/usb/ehci_def.h:186:7: note: while referencing 'hostpc'
-  186 |  u32  hostpc[0]; /* HOSTPC extension */
-      |       ^~~~~~
-In file included from drivers/usb/host/ehci-hcd.c:305:
-drivers/usb/host/ehci-hub.c: In function 'ehci_hub_control':
-drivers/usb/host/ehci-hub.c:892:15: error: array subscript 256 is outside the bounds of an interior zero-length array 'u32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
-  892 |  hostpc_reg = &ehci->regs->hostpc[temp];
-      |               ^~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/usb/host/ehci.h:273,
-                 from drivers/usb/host/ehci-hcd.c:96:
-include/linux/usb/ehci_def.h:186:7: note: while referencing 'hostpc'
-  186 |  u32  hostpc[0]; /* HOSTPC extension */
-      |       ^~~~~~
+net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
+net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
+ 1522 |  memset(&ct->__nfct_init_offset[0], 0,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from net/netfilter/nf_conntrack_core.c:37:
+include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
+   90 |  u8 __nfct_init_offset[0];
+      |     ^~~~~~~~~~~~~~~~~~
 
-All these fields are colocated with reserved fields that I guess
-refer to the correct field length.
+The code is correct but a bit unusual. Rework it slightly in a way that
+does not trigger the warning, using an empty struct instead of an empty
+array. There are probably more elegant ways to do this, but this is the
+smallest change.
 
-Change the two struct definition to use an unnamed union to define
-both of these fields at the same location as the corresponding
-reserved fields.
-
+Fixes: c41884ce0562 ("netfilter: conntrack: avoid zeroing timer")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/usb/ehci_def.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ include/net/netfilter/nf_conntrack.h | 2 +-
+ net/netfilter/nf_conntrack_core.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
-index 78e006355557..8777d8e56ef2 100644
---- a/include/linux/usb/ehci_def.h
-+++ b/include/linux/usb/ehci_def.h
-@@ -127,7 +127,8 @@ struct ehci_regs {
- #define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 9f551f3b69c6..90690e37a56f 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -87,7 +87,7 @@ struct nf_conn {
+ 	struct hlist_node	nat_bysource;
+ #endif
+ 	/* all members below initialized via memset */
+-	u8 __nfct_init_offset[0];
++	struct { } __nfct_init_offset;
  
- 	/* PORTSC: offset 0x44 */
--	u32		port_status[0];	/* up to N_PORTS */
-+	union {
-+		u32		port_status[9];	/* up to N_PORTS */
- /* EHCI 1.1 addendum */
- #define PORTSC_SUSPEND_STS_ACK 0
- #define PORTSC_SUSPEND_STS_NYET 1
-@@ -165,7 +166,8 @@ struct ehci_regs {
- #define PORT_CONNECT	(1<<0)		/* device connected */
- #define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
+ 	/* If we were expected by an expectation, this will be it */
+ 	struct nf_conn *master;
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index c4582eb71766..0173398f4ced 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1519,9 +1519,9 @@ __nf_conntrack_alloc(struct net *net,
+ 	ct->status = 0;
+ 	ct->timeout = 0;
+ 	write_pnet(&ct->ct_net, net);
+-	memset(&ct->__nfct_init_offset[0], 0,
++	memset(&ct->__nfct_init_offset, 0,
+ 	       offsetof(struct nf_conn, proto) -
+-	       offsetof(struct nf_conn, __nfct_init_offset[0]));
++	       offsetof(struct nf_conn, __nfct_init_offset));
  
--	u32		reserved3[9];
-+		u32		reserved3[9];
-+	};
+ 	nf_ct_zone_add(ct, zone);
  
- 	/* USBMODE: offset 0x68 */
- 	u32		usbmode;	/* USB Device mode */
-@@ -181,11 +183,13 @@ struct ehci_regs {
-  * PORTSCx
-  */
- 	/* HOSTPC: offset 0x84 */
--	u32		hostpc[0];	/* HOSTPC extension */
-+	union {
-+		u32		hostpc[17];	/* HOSTPC extension */
- #define HOSTPC_PHCD	(1<<22)		/* Phy clock disable */
- #define HOSTPC_PSPD	(3<<25)		/* Port speed detection */
- 
--	u32		reserved5[17];
-+		u32		reserved5[17];
-+	};
- 
- 	/* USBMODE_EX: offset 0xc8 */
- 	u32		usbmode_ex;	/* USB Device mode extension */
 -- 
 2.26.0
 
