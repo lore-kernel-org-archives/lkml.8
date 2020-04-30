@@ -2,171 +2,310 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E03CC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC68C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A6320661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EBCfRCyN"
+	by mail.kernel.org (Postfix) with ESMTP id 5F09420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgD3Pic (ORCPT
+        id S1726689AbgD3Pj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726420AbgD3Pib (ORCPT
+        Thu, 30 Apr 2020 11:39:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49484 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgD3Pj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:38:31 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818D9C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:38:31 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x12so5307129qts.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P9HhjXHjgQ2uRdTOdCGFRzrISVJUe9hHihb1s6U+pG0=;
-        b=EBCfRCyNsTlDJFaRQRt4ZOByXKwsez2d0WVoOUVj0uyzY2FQjjUArA4Cdr92cMp5yy
-         00zTxOzpBt6C0OXx4Ubu0BX+XEnhoymU29QAZiSeYC1TaiquQ6Guo8m/i8tGqEPIt2Yt
-         upoTJJeeNPy2dAk4ETUD4kl9Dplk18J7ntJnI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P9HhjXHjgQ2uRdTOdCGFRzrISVJUe9hHihb1s6U+pG0=;
-        b=T4HkOpwyeUhAL+zOhor/b8cbkyQBUHtgTDClDdMRvLjlx3uByi87iFkd9pI3Tagnqo
-         yecjY2Lb2ozsh6um0vrcq/puzB0plL5bhe4YVt9A7zl0oSgcJvJniwiuVgiyOyBhnQE6
-         N+VvBjdeXh0xJ3UZ8uigKXFLcFtMz6CjWbtPyFeJ8volN7X6C7B6AOLbN3FxZ4ee8e95
-         P7wCdrFl76cjE0fot7kwpwZyyS0DTBSWkkw5QtjPYShTY/XLXUDuI5OgirzD4TBabs9d
-         aJ7YBn+FNwUr6skTYTLjtFx2UJTH3q417UJ5HEslT2tYDrlICQrFk/rBd3ot+QPRoH0P
-         KrQw==
-X-Gm-Message-State: AGi0PuawiKRClGwvDDklcYVGP816Kfh/4CRGM6OI8waT+B64PJh2Uf9f
-        rXgfbXjysLV9itHG0JPvAoYx4PPwPgI=
-X-Google-Smtp-Source: APiQypJ5ArB8+NKHRnssmuj19aGbmgYBPRM4Bd7f0g9wK2xkVNqsL1j2JoYDtt7zn2EIAaTKVkyq+g==
-X-Received: by 2002:ac8:66d8:: with SMTP id m24mr4296291qtp.175.1588261109694;
-        Thu, 30 Apr 2020 08:38:29 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id o13sm277866qke.77.2020.04.30.08.38.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 08:38:28 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id v10so3427262ybk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:38:27 -0700 (PDT)
-X-Received: by 2002:a5b:483:: with SMTP id n3mr6464401ybp.519.1588261107424;
- Thu, 30 Apr 2020 08:38:27 -0700 (PDT)
+        Thu, 30 Apr 2020 11:39:57 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2A4432A29C3
+Subject: Re: [PATCH] platform: chrome: Allocate sensorhub resource before
+ claiming sensors
+To:     Gwendal Grignou <gwendal@chromium.org>, dianders@chromium.org
+Cc:     bleung@chromium.org, groeck@chromium.org,
+        linux-kernel@vger.kernel.org
+References: <20200427225902.30404-1-gwendal@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <721e938c-9ef3-a01d-3e3e-98dd97172ba4@collabora.com>
+Date:   Thu, 30 Apr 2020 17:39:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1588093804-30446-1-git-send-email-michalorzel.eng@gmail.com> <875zdiacv2.fsf@intel.com>
-In-Reply-To: <875zdiacv2.fsf@intel.com>
-From:   Sean Paul <seanpaul@chromium.org>
-Date:   Thu, 30 Apr 2020 11:37:49 -0400
-X-Gmail-Original-Message-ID: <CAOw6vbK69aWzti9a7MXNmAfVfJXzzC5g74p4ukSE49MhaV_b3g@mail.gmail.com>
-Message-ID: <CAOw6vbK69aWzti9a7MXNmAfVfJXzzC5g74p4ukSE49MhaV_b3g@mail.gmail.com>
-Subject: Re: [PATCH] drm: Replace drm_modeset_lock/unlock_all with
- DRM_MODESET_LOCK_ALL_* helpers
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Michal Orzel <michalorzel.eng@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        mripard@kernel.org, tzimmermann@suse.de,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200427225902.30404-1-gwendal@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 4:57 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Tue, 28 Apr 2020, Michal Orzel <michalorzel.eng@gmail.com> wrote:
-> > As suggested by the TODO list for the kernel DRM subsystem, replace
-> > the deprecated functions that take/drop modeset locks with new helpers.
-> >
-> > Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
-> > ---
-> >  drivers/gpu/drm/drm_mode_object.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
-> > index 35c2719..901b078 100644
-> > --- a/drivers/gpu/drm/drm_mode_object.c
-> > +++ b/drivers/gpu/drm/drm_mode_object.c
-> > @@ -402,12 +402,13 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
-> >  {
-> >       struct drm_mode_obj_get_properties *arg = data;
-> >       struct drm_mode_object *obj;
-> > +     struct drm_modeset_acquire_ctx ctx;
-> >       int ret = 0;
-> >
-> >       if (!drm_core_check_feature(dev, DRIVER_MODESET))
-> >               return -EOPNOTSUPP;
-> >
-> > -     drm_modeset_lock_all(dev);
-> > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
->
-> I cry a little every time I look at the DRM_MODESET_LOCK_ALL_BEGIN and
-> DRM_MODESET_LOCK_ALL_END macros. :(
->
-> Currently only six users... but there are ~60 calls to
-> drm_modeset_lock_all{,_ctx} that I presume are to be replaced. I wonder
-> if this will come back and haunt us.
->
+Hi Gwendal,
 
-What's the alternative? Seems like the options without the macros is
-to use incorrect scope or have a bunch of retry/backoff cargo-cult
-everywhere (and hope the copy source is done correctly).
+Thank you for your patch.
 
-Sean
+On 28/4/20 0:59, Gwendal Grignou wrote:
+> Allocate callbacks array before enumerating the sensors:
+> The probe routine for these sensors (for instance cros_ec_sensors_probe)
+> can be called within the sensorhub probe routine
+> (cros_ec_sensors_probe())
+> 
+> Fixes: 145d59baff594 ("platform/chrome: cros_ec_sensorhub: Add FIFO support")
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 
-> BR,
-> Jani.
->
->
-> >
-> >       obj = drm_mode_object_find(dev, file_priv, arg->obj_id, arg->obj_type);
-> >       if (!obj) {
-> > @@ -427,7 +428,7 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
-> >  out_unref:
-> >       drm_mode_object_put(obj);
-> >  out:
-> > -     drm_modeset_unlock_all(dev);
-> > +     DRM_MODESET_LOCK_ALL_END(ctx, ret);
-> >       return ret;
-> >  }
-> >
-> > @@ -449,12 +450,13 @@ static int set_property_legacy(struct drm_mode_object *obj,
-> >  {
-> >       struct drm_device *dev = prop->dev;
-> >       struct drm_mode_object *ref;
-> > +     struct drm_modeset_acquire_ctx ctx;
-> >       int ret = -EINVAL;
-> >
-> >       if (!drm_property_change_valid_get(prop, prop_value, &ref))
-> >               return -EINVAL;
-> >
-> > -     drm_modeset_lock_all(dev);
-> > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
-> >       switch (obj->type) {
-> >       case DRM_MODE_OBJECT_CONNECTOR:
-> >               ret = drm_connector_set_obj_prop(obj, prop, prop_value);
-> > @@ -468,7 +470,7 @@ static int set_property_legacy(struct drm_mode_object *obj,
-> >               break;
-> >       }
-> >       drm_property_change_valid_put(prop, ref);
-> > -     drm_modeset_unlock_all(dev);
-> > +     DRM_MODESET_LOCK_ALL_END(ctx, ret);
-> >
-> >       return ret;
-> >  }
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
+Applied as a fix for 5.7
+
+> ---
+>  drivers/platform/chrome/cros_ec_sensorhub.c   | 80 +++++++++++--------
+>  .../platform/chrome/cros_ec_sensorhub_ring.c  | 73 ++++++++++-------
+>  .../linux/platform_data/cros_ec_sensorhub.h   |  1 +
+>  3 files changed, 93 insertions(+), 61 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
+> index b7f2c00db5e1e..9c4af76a9956e 100644
+> --- a/drivers/platform/chrome/cros_ec_sensorhub.c
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub.c
+> @@ -52,28 +52,15 @@ static int cros_ec_sensorhub_register(struct device *dev,
+>  	int sensor_type[MOTIONSENSE_TYPE_MAX] = { 0 };
+>  	struct cros_ec_command *msg = sensorhub->msg;
+>  	struct cros_ec_dev *ec = sensorhub->ec;
+> -	int ret, i, sensor_num;
+> +	int ret, i;
+>  	char *name;
+>  
+> -	sensor_num = cros_ec_get_sensor_count(ec);
+> -	if (sensor_num < 0) {
+> -		dev_err(dev,
+> -			"Unable to retrieve sensor information (err:%d)\n",
+> -			sensor_num);
+> -		return sensor_num;
+> -	}
+> -
+> -	sensorhub->sensor_num = sensor_num;
+> -	if (sensor_num == 0) {
+> -		dev_err(dev, "Zero sensors reported.\n");
+> -		return -EINVAL;
+> -	}
+>  
+>  	msg->version = 1;
+>  	msg->insize = sizeof(struct ec_response_motion_sense);
+>  	msg->outsize = sizeof(struct ec_params_motion_sense);
+>  
+> -	for (i = 0; i < sensor_num; i++) {
+> +	for (i = 0; i < sensorhub->sensor_num; i++) {
+>  		sensorhub->params->cmd = MOTIONSENSE_CMD_INFO;
+>  		sensorhub->params->info.sensor_num = i;
+>  
+> @@ -140,8 +127,7 @@ static int cros_ec_sensorhub_probe(struct platform_device *pdev)
+>  	struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
+>  	struct cros_ec_sensorhub *data;
+>  	struct cros_ec_command *msg;
+> -	int ret;
+> -	int i;
+> +	int ret, i, sensor_num;
+>  
+>  	msg = devm_kzalloc(dev, sizeof(struct cros_ec_command) +
+>  			   max((u16)sizeof(struct ec_params_motion_sense),
+> @@ -166,10 +152,52 @@ static int cros_ec_sensorhub_probe(struct platform_device *pdev)
+>  	dev_set_drvdata(dev, data);
+>  
+>  	/* Check whether this EC is a sensor hub. */
+> -	if (cros_ec_check_features(data->ec, EC_FEATURE_MOTION_SENSE)) {
+> +	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE)) {
+> +		sensor_num = cros_ec_get_sensor_count(ec);
+> +		if (sensor_num < 0) {
+> +			dev_err(dev,
+> +				"Unable to retrieve sensor information (err:%d)\n",
+> +				sensor_num);
+> +			return sensor_num;
+> +		}
+> +		if (sensor_num == 0) {
+> +			dev_err(dev, "Zero sensors reported.\n");
+> +			return -EINVAL;
+> +		}
+> +		data->sensor_num = sensor_num;
+> +
+> +		/*
+> +		 * Prepare the ring handler before enumering the
+> +		 * sensors.
+> +		 */
+> +		if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
+> +			ret = cros_ec_sensorhub_ring_allocate(data);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +
+> +		/* Enumerate the sensors.*/
+>  		ret = cros_ec_sensorhub_register(dev, data);
+>  		if (ret)
+>  			return ret;
+> +
+> +		/*
+> +		 * When the EC does not have a FIFO, the sensors will query
+> +		 * their data themselves via sysfs or a software trigger.
+> +		 */
+> +		if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
+> +			ret = cros_ec_sensorhub_ring_add(data);
+> +			if (ret)
+> +				return ret;
+> +			/*
+> +			 * The msg and its data is not under the control of the
+> +			 * ring handler.
+> +			 */
+> +			return devm_add_action_or_reset(dev,
+> +					cros_ec_sensorhub_ring_remove,
+> +					data);
+> +		}
+> +
+>  	} else {
+>  		/*
+>  		 * If the device has sensors but does not claim to
+> @@ -184,22 +212,6 @@ static int cros_ec_sensorhub_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> -	/*
+> -	 * If the EC does not have a FIFO, the sensors will query their data
+> -	 * themselves via sysfs or a software trigger.
+> -	 */
+> -	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE_FIFO)) {
+> -		ret = cros_ec_sensorhub_ring_add(data);
+> -		if (ret)
+> -			return ret;
+> -		/*
+> -		 * The msg and its data is not under the control of the ring
+> -		 * handler.
+> -		 */
+> -		return devm_add_action_or_reset(dev,
+> -						cros_ec_sensorhub_ring_remove,
+> -						data);
+> -	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> index c48e5b38a4417..24e48d96ed766 100644
+> --- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> @@ -957,17 +957,15 @@ static int cros_ec_sensorhub_event(struct notifier_block *nb,
+>  }
+>  
+>  /**
+> - * cros_ec_sensorhub_ring_add() - Add the FIFO functionality if the EC
+> - *				  supports it.
+> + * cros_ec_sensorhub_ring_allocate() - Prepare the FIFO functionality if the EC
+> + *				       supports it.
+>   *
+>   * @sensorhub : Sensor Hub object.
+>   *
+>   * Return: 0 on success.
+>   */
+> -int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
+> +int cros_ec_sensorhub_ring_allocate(struct cros_ec_sensorhub *sensorhub)
+>  {
+> -	struct cros_ec_dev *ec = sensorhub->ec;
+> -	int ret;
+>  	int fifo_info_length =
+>  		sizeof(struct ec_response_motion_sense_fifo_info) +
+>  		sizeof(u16) * sensorhub->sensor_num;
+> @@ -978,6 +976,49 @@ int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
+>  	if (!sensorhub->fifo_info)
+>  		return -ENOMEM;
+>  
+> +	/*
+> +	 * Allocate the callback area based on the number of sensors.
+> +	 * Add one for the sensor ring.
+> +	 */
+> +	sensorhub->push_data = devm_kcalloc(sensorhub->dev,
+> +			sensorhub->sensor_num,
+> +			sizeof(*sensorhub->push_data),
+> +			GFP_KERNEL);
+> +	if (!sensorhub->push_data)
+> +		return -ENOMEM;
+> +
+> +	sensorhub->tight_timestamps = cros_ec_check_features(
+> +			sensorhub->ec,
+> +			EC_FEATURE_MOTION_SENSE_TIGHT_TIMESTAMPS);
+> +
+> +	if (sensorhub->tight_timestamps) {
+> +		sensorhub->batch_state = devm_kcalloc(sensorhub->dev,
+> +				sensorhub->sensor_num,
+> +				sizeof(*sensorhub->batch_state),
+> +				GFP_KERNEL);
+> +		if (!sensorhub->batch_state)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cros_ec_sensorhub_ring_add() - Add the FIFO functionality if the EC
+> + *				  supports it.
+> + *
+> + * @sensorhub : Sensor Hub object.
+> + *
+> + * Return: 0 on success.
+> + */
+> +int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
+> +{
+> +	struct cros_ec_dev *ec = sensorhub->ec;
+> +	int ret;
+> +	int fifo_info_length =
+> +		sizeof(struct ec_response_motion_sense_fifo_info) +
+> +		sizeof(u16) * sensorhub->sensor_num;
+> +
+>  	/* Retrieve FIFO information */
+>  	sensorhub->msg->version = 2;
+>  	sensorhub->params->cmd = MOTIONSENSE_CMD_FIFO_INFO;
+> @@ -998,31 +1039,9 @@ int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub)
+>  	if (!sensorhub->ring)
+>  		return -ENOMEM;
+>  
+> -	/*
+> -	 * Allocate the callback area based on the number of sensors.
+> -	 */
+> -	sensorhub->push_data = devm_kcalloc(
+> -			sensorhub->dev, sensorhub->sensor_num,
+> -			sizeof(*sensorhub->push_data),
+> -			GFP_KERNEL);
+> -	if (!sensorhub->push_data)
+> -		return -ENOMEM;
+> -
+>  	sensorhub->fifo_timestamp[CROS_EC_SENSOR_LAST_TS] =
+>  		cros_ec_get_time_ns();
+>  
+> -	sensorhub->tight_timestamps = cros_ec_check_features(
+> -			ec, EC_FEATURE_MOTION_SENSE_TIGHT_TIMESTAMPS);
+> -
+> -	if (sensorhub->tight_timestamps) {
+> -		sensorhub->batch_state = devm_kcalloc(sensorhub->dev,
+> -				sensorhub->sensor_num,
+> -				sizeof(*sensorhub->batch_state),
+> -				GFP_KERNEL);
+> -		if (!sensorhub->batch_state)
+> -			return -ENOMEM;
+> -	}
+> -
+>  	/* Register the notifier that will act as a top half interrupt. */
+>  	sensorhub->notifier.notifier_call = cros_ec_sensorhub_event;
+>  	ret = blocking_notifier_chain_register(&ec->ec_dev->event_notifier,
+> diff --git a/include/linux/platform_data/cros_ec_sensorhub.h b/include/linux/platform_data/cros_ec_sensorhub.h
+> index c588be843f61b..0ecce6aa69d5e 100644
+> --- a/include/linux/platform_data/cros_ec_sensorhub.h
+> +++ b/include/linux/platform_data/cros_ec_sensorhub.h
+> @@ -185,6 +185,7 @@ int cros_ec_sensorhub_register_push_data(struct cros_ec_sensorhub *sensorhub,
+>  void cros_ec_sensorhub_unregister_push_data(struct cros_ec_sensorhub *sensorhub,
+>  					    u8 sensor_num);
+>  
+> +int cros_ec_sensorhub_ring_allocate(struct cros_ec_sensorhub *sensorhub);
+>  int cros_ec_sensorhub_ring_add(struct cros_ec_sensorhub *sensorhub);
+>  void cros_ec_sensorhub_ring_remove(void *arg);
+>  int cros_ec_sensorhub_ring_fifo_enable(struct cros_ec_sensorhub *sensorhub,
+> 
