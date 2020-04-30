@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52060C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEDAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 310B62063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ABD206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255504;
-	bh=SO3BYQowliBmPRGXfww4Fy5vRaMnVv1Bl6d1cIXTCDI=;
+	s=default; t=1588255510;
+	bh=dOA8n0tJWKHGY0ZgO52Pl8gFZpj1lU4mNQIpj3C22lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JStQgCcueMe9mQineKmRcJTXFh38hJdXKEQ+vnhvCuEnt74AokJDs2AYSGZprcR2g
-	 nPyZDZwJrDdHyGZ0IVQydxw0Z7Ac0PvYSdVYyq/I5FyGATM8WVnMSpja8Bw4xEfBbE
-	 Sv9wN1b7C07y5ehLI+/jkqQXQf7AW72MSHUCGDZY=
+	b=N2Jf1VdPMx86KNmOyyyN3A6ZLMLMbq7ubCKzSXaUHnEZlWauvgsefu5iMtwuVS+T0
+	 N9LuI97/fJZ8NZGoqTA+l3zFSjlhIz7ro+tkcCTOku2Q/A2x9gJmtxWUwi1dKYNta1
+	 517XLb1/24ZH8QaJtvnSjexgEop3JAFajeyUVU70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgD3NxE (ORCPT
+        id S1729520AbgD3OFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:53:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33818 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbgD3Nwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:36 -0400
+        id S1728599AbgD3NxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9426824955;
-        Thu, 30 Apr 2020 13:52:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BFF208D5;
+        Thu, 30 Apr 2020 13:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254755;
-        bh=SO3BYQowliBmPRGXfww4Fy5vRaMnVv1Bl6d1cIXTCDI=;
+        s=default; t=1588254783;
+        bh=dOA8n0tJWKHGY0ZgO52Pl8gFZpj1lU4mNQIpj3C22lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E43Cq7zAlfLI+qzPOY0YyS4NRNGU7hE2RLIxYtkeKkxQMhVcG3pV9xvRik9aeRX6f
-         ZV8hRnnNlQV1bKT6MKoqtJx5OYrK6OW42kbwWz9YzoLukNsoTG45+ne8kVEQSFoHsc
-         BRb80jW4QOKhb/tu7vBBrCZM5b1tEmpzI1C2n634=
+        b=M1CDCvIZyX+tx7W1ErS9kDZNWFUJO6E4QaKgHV8oLXOyNYA9ZEH3Byk6xZJwYjJzv
+         YnnznaqliV1miJKBq/rSnuJ7Xkgt/Rr4zu+Aq6DVTUw2Xx/wRBkeqlJieaxyr52axH
+         qnCb+jL8yoE73YWaAgZnHnCJLHlD8WAp90v87USE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/57] usb: dwc3: gadget: Properly set maxpacket limit
-Date:   Thu, 30 Apr 2020 09:51:35 -0400
-Message-Id: <20200430135218.20372-14-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        patches@opensource.wolfsonmicro.com, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 39/57] ASoC: wm8960: Fix wrong clock after suspend & resume
+Date:   Thu, 30 Apr 2020 09:52:00 -0400
+Message-Id: <20200430135218.20372-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -61,133 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit d94ea5319813658ad5861d161ae16a194c2abf88 ]
+[ Upstream commit 1e060a453c8604311fb45ae2f84f67ed673329b4 ]
 
-Currently the calculation of max packet size limit for IN endpoints is
-too restrictive. This prevents a matching of a capable hardware endpoint
-during configuration. Below is the minimum recommended HW configuration
-to support a particular endpoint setup from the databook:
+After suspend & resume, wm8960_hw_params may be called when
+bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
+is not called. But if sample rate is changed at that time, then
+the output clock rate will be not correct.
 
-For OUT endpoints, the databook recommended the minimum RxFIFO size to
-be at least 3x MaxPacketSize + 3x setup packets size (8 bytes each) +
-clock crossing margin (16 bytes).
+So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
+is not necessary and it causes above issue.
 
-For IN endpoints, the databook recommended the minimum TxFIFO size to be
-at least 3x MaxPacketSize for endpoints that support burst. If the
-endpoint doesn't support burst or when the device is operating in USB
-2.0 mode, a minimum TxFIFO size of 2x MaxPacketSize is recommended.
-
-Base on these recommendations, we can calculate the MaxPacketSize limit
-of each endpoint. This patch revises the IN endpoint MaxPacketSize limit
-and also sets the MaxPacketSize limit for OUT endpoints.
-
-Reference: Databook 3.30a section 3.2.2 and 3.2.3
-
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.h   |  4 +++
- drivers/usb/dwc3/gadget.c | 52 ++++++++++++++++++++++++++++++---------
- 2 files changed, 45 insertions(+), 11 deletions(-)
+ sound/soc/codecs/wm8960.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 3ecc69c5b150f..ce4acbf7fef90 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -310,6 +310,10 @@
- #define DWC3_GTXFIFOSIZ_TXFDEF(n)	((n) & 0xffff)
- #define DWC3_GTXFIFOSIZ_TXFSTADDR(n)	((n) & 0xffff0000)
+diff --git a/sound/soc/codecs/wm8960.c b/sound/soc/codecs/wm8960.c
+index 55112c1bba5e7..6cf0f6612bdaf 100644
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+@@ -860,8 +860,7 @@ static int wm8960_hw_params(struct snd_pcm_substream *substream,
  
-+/* Global RX Fifo Size Register */
-+#define DWC31_GRXFIFOSIZ_RXFDEP(n)	((n) & 0x7fff)	/* DWC_usb31 only */
-+#define DWC3_GRXFIFOSIZ_RXFDEP(n)	((n) & 0xffff)
-+
- /* Global Event Size Registers */
- #define DWC3_GEVNTSIZ_INTMASK		BIT(31)
- #define DWC3_GEVNTSIZ_SIZE(n)		((n) & 0xffff)
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 18251efd216d3..77c50d43df03b 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2224,7 +2224,6 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
- {
- 	struct dwc3 *dwc = dep->dwc;
- 	int mdwidth;
--	int kbytes;
- 	int size;
+ 	wm8960->is_stream_in_use[tx] = true;
  
- 	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
-@@ -2240,17 +2239,17 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
- 	/* FIFO Depth is in MDWDITH bytes. Multiply */
- 	size *= mdwidth;
+-	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
+-	    !wm8960->is_stream_in_use[!tx])
++	if (!wm8960->is_stream_in_use[!tx])
+ 		return wm8960_configure_clocking(component);
  
--	kbytes = size / 1024;
--	if (kbytes == 0)
--		kbytes = 1;
--
- 	/*
--	 * FIFO sizes account an extra MDWIDTH * (kbytes + 1) bytes for
--	 * internal overhead. We don't really know how these are used,
--	 * but documentation say it exists.
-+	 * To meet performance requirement, a minimum TxFIFO size of 3x
-+	 * MaxPacketSize is recommended for endpoints that support burst and a
-+	 * minimum TxFIFO size of 2x MaxPacketSize for endpoints that don't
-+	 * support burst. Use those numbers and we can calculate the max packet
-+	 * limit as below.
- 	 */
--	size -= mdwidth * (kbytes + 1);
--	size /= kbytes;
-+	if (dwc->maximum_speed >= USB_SPEED_SUPER)
-+		size /= 3;
-+	else
-+		size /= 2;
- 
- 	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
- 
-@@ -2268,8 +2267,39 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
- static int dwc3_gadget_init_out_endpoint(struct dwc3_ep *dep)
- {
- 	struct dwc3 *dwc = dep->dwc;
-+	int mdwidth;
-+	int size;
-+
-+	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
-+
-+	/* MDWIDTH is represented in bits, convert to bytes */
-+	mdwidth /= 8;
- 
--	usb_ep_set_maxpacket_limit(&dep->endpoint, 1024);
-+	/* All OUT endpoints share a single RxFIFO space */
-+	size = dwc3_readl(dwc->regs, DWC3_GRXFIFOSIZ(0));
-+	if (dwc3_is_usb31(dwc))
-+		size = DWC31_GRXFIFOSIZ_RXFDEP(size);
-+	else
-+		size = DWC3_GRXFIFOSIZ_RXFDEP(size);
-+
-+	/* FIFO depth is in MDWDITH bytes */
-+	size *= mdwidth;
-+
-+	/*
-+	 * To meet performance requirement, a minimum recommended RxFIFO size
-+	 * is defined as follow:
-+	 * RxFIFO size >= (3 x MaxPacketSize) +
-+	 * (3 x 8 bytes setup packets size) + (16 bytes clock crossing margin)
-+	 *
-+	 * Then calculate the max packet limit as below.
-+	 */
-+	size -= (3 * 8) + 16;
-+	if (size < 0)
-+		size = 0;
-+	else
-+		size /= 3;
-+
-+	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
- 	dep->endpoint.max_streams = 15;
- 	dep->endpoint.ops = &dwc3_gadget_ep_ops;
- 	list_add_tail(&dep->endpoint.ep_list,
+ 	return 0;
 -- 
 2.20.1
 
