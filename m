@@ -2,88 +2,98 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF96C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761A4C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD882054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BE4207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgD3TMt (ORCPT
+        id S1726764AbgD3TOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:12:49 -0400
-Received: from smtprelay0106.hostedemail.com ([216.40.44.106]:49208 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbgD3TMs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:12:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 65EE718224D67;
-        Thu, 30 Apr 2020 19:12:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wine71_8ca3b86da0a02
-X-Filterd-Recvd-Size: 2589
-Received: from joe-laptop.perches.com (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 30 Apr 2020 19:12:46 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>, linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        x86@kernel.org
-Subject: [PATCH 2/2] efi/libstub: Correct comment typos
-Date:   Thu, 30 Apr 2020 12:12:42 -0700
-Message-Id: <ec53e67b3ac928922807db3cb1585e911971dadc.1588273612.git.joe@perches.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
-References: <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
+        Thu, 30 Apr 2020 15:14:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43872 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgD3TOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:14:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B3C4DABC2;
+        Thu, 30 Apr 2020 19:14:36 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 21:14:34 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before text_poke()
+Message-ID: <20200430191434.GC8135@suse.de>
+References: <20200429054857.66e8e333@oasis.local.home>
+ <20200429105941.GQ30814@suse.de>
+ <20200429082854.6e1796b5@oasis.local.home>
+ <20200429100731.201312a9@gandalf.local.home>
+ <20200430141120.GA8135@suse.de>
+ <20200430121136.6d7aeb22@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430121136.6d7aeb22@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a couple typos in comments.
+On Thu, Apr 30, 2020 at 12:11:36PM -0400, Steven Rostedt wrote:
+> bool trace_event_ignore_this_pid(struct trace_event_file *trace_file)
+> {
+> 	struct trace_array *tr = trace_file->tr;
+> 	struct trace_array_cpu *data;
+> 	struct trace_pid_list *no_pid_list;
+> 	struct trace_pid_list *pid_list;
+> 
+> 	pid_list = rcu_dereference_raw(tr->filtered_pids);
+> 	no_pid_list = rcu_dereference_raw(tr->filtered_no_pids);
+> 
+> 	if (!pid_list && !no_pid_list)
+> 		return false;
+> 
+> 	data = this_cpu_ptr(tr->array_buffer.data);
+> 
+> 	return data->ignore_pid;
+> }
+>
+> [...]
+> 
+> tl;dr; It's not an issue with the vmalloc, it's an issue with per_cpu
+> allocations!
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
+Yes, looks like you are right, it faults on the return statement, so the
+data-pointer seems not to be mapped. I looked at another instance:
 
-Perhaps these trivialities on top of this series?
+The trapping instruction is:
 
-drivers/firmware/efi/libstub/pci.c      | 2 +-
- drivers/firmware/efi/libstub/relocate.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+	movzbl 0x7c(%rax),%eax
 
-diff --git a/drivers/firmware/efi/libstub/pci.c b/drivers/firmware/efi/libstub/pci.c
-index 111c44b..17a53d8 100644
---- a/drivers/firmware/efi/libstub/pci.c
-+++ b/drivers/firmware/efi/libstub/pci.c
-@@ -69,7 +69,7 @@ void efi_pci_disable_bridge_busmaster(void)
- 		 * access to the framebuffer. Drivers for true PCIe graphics
- 		 * controllers that are behind a PCIe root port do not use
- 		 * DMA to implement the GOP framebuffer anyway [although they
--		 * may use it in their implentation of Gop->Blt()], and so
-+		 * may use it in their implementation of Gop->Blt()], and so
- 		 * disabling DMA in the PCI bridge should not interfere with
- 		 * normal operation of the device.
- 		 */
-diff --git a/drivers/firmware/efi/libstub/relocate.c b/drivers/firmware/efi/libstub/relocate.c
-index 62e2d6..a7ad26 100644
---- a/drivers/firmware/efi/libstub/relocate.c
-+++ b/drivers/firmware/efi/libstub/relocate.c
-@@ -140,7 +140,7 @@ efi_status_t efi_relocate_kernel(unsigned long *image_addr,
- 	 * The EFI firmware loader could have placed the kernel image
- 	 * anywhere in memory, but the kernel has restrictions on the
- 	 * max physical address it can run at.  Some architectures
--	 * also have a prefered address, so first try to relocate
-+	 * also have a preferred address, so first try to relocate
- 	 * to the preferred address.  If that fails, allocate as low
- 	 * as possible while respecting the required alignment.
- 	 */
--- 
-2.26.0
+Which is a pointer-dereference, with %rax=0xffffe8ffffccc870. The 'data'
+pointer is allocated with alloc_percpu().
 
+And alloc_percpu() calls down into pcpu_alloc(), which allocates new
+percpu chunks using vmalloc() on x86. And there we are again in the
+vmalloc area.
+
+Regards,
+
+	Joerg
