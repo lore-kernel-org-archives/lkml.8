@@ -2,170 +2,309 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B408C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1029C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E00420784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761072083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMMsSbBY"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="GAq8Py8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD3Fwv (ORCPT
+        id S1726430AbgD3GBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 01:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3Fwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 01:52:51 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF892C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:52:50 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so5133706ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:52:50 -0700 (PDT)
+        Thu, 30 Apr 2020 02:01:45 -0400
+Received: from mail-dm6nam10on2103.outbound.protection.outlook.com ([40.107.93.103]:48704
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726180AbgD3GBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:01:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Je7izg2x4U70dG19t9RZWnWuUoIz4kJcbZmzwJRoHQE0pbZwmvimRiZkKkDoDsok5wbBFTLT7gU0Kw23oFFptGKNxknaj6+bDtijST42T3M4dyFJuuQiz0ANHqfdWCV7xopJJ2I6cn4MkcAZrhHr1jUT+9tFAYU8iXPgdKx6t6i/HF0HrIK3fgAsUEQWxVTIRKkKSbm8FEhKVcibwPNIRgrj71hv8NlUQnI4ATfMmdhMNTQdsgzeGCInNJmvCHSOsTmyl0WCbsEbniMgAnVEh/6sRWQmQXgR8Yg9zt4WAcO8yLmqq2dMU/sxUCdSJy2Yk+Usaz0EmBW2a3UjKno1dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/qQ/yx6abKRIL0FsJwS93t9eFiymJD6IOqEolKEMHSc=;
+ b=KqVx1zu+cEtV7QoFhRHs9uzQKEKdp9kYPcJMTygx4x7mPdV+bJyyNDiZyYxgC+pFwzr+HXcKdHzlrqG5djM04O9RqwNGuDkUEqasb5MllXVZyhZcFSzBQEow5dBysasg+lSYO8EewyBfVU2/slYzthAw3KAkrGtgXvjoduH9MpKlSexjs2b6gsPk/gHDDFu1Sz63uw+cZk1YhEN9tifG4ftmZs7uJ927H43UloebwwRmd2XauUqiYiB/m/cXAxLD77miO/TsRoyx6OAnSl4o/SRoMStEwEzbsy1NfZ5xf8zcdjWImeNzoevjVPdot0OJFNFx/U8sQ/63gYD8ToiOKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RwmYZ3E2Cn3/mLXJyzZsWl6huqbPer1PdGV+pzidiwA=;
-        b=JMMsSbBY9Xotty3p1/IOhmUfb1M9vDuomzbNVK9plmB1y+RJx7utPY0/QRdMvEelOt
-         Xmr5Von19/WQmSodxjguM171c5DhGOJUwydRla7c3M8bFbTCtYkxg4q2V0wBtk2ywXJl
-         4l1V1aBV2Gi9GOTd+e7FfmarOp83wiRuR5oOzpNagGS4VZjFFBwBl7KcN/WBXrgOieTH
-         YvgptMgduY0xTTXiFTE1bOqfrVsnVTTQ2tPw1XAkALs/EhJKQoicrWIPpjsab6B1/nG1
-         F/aa+7aPppsp5La/NvyuejWJOFIocwkPO807G/dXNYJYlVDzA4tGcBI6XIy0Uh784SRp
-         w8Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RwmYZ3E2Cn3/mLXJyzZsWl6huqbPer1PdGV+pzidiwA=;
-        b=XBQzDd3/H8ugg76T6RsC5uuFw1RHsYD3x4brmchad3nEjZMK6epc0L9Z+QEhd/zV+B
-         +G2r7xuLxYivPJbJAONKh05xqRJsoMGj386qEyww7OOSOua1Yp0LXiUXzSE1i7cj8gXw
-         s/OTcus3d3LBtHU3TZjks2xs4mnmOyWvbeHBxj8/5B95DSF/q7U+eRUsQTnixf39eIbY
-         cR95uInq45k1JkmUBIDwgeZ9RqfkSs2y9I9dCIrytvUq8gRrZxlaVp7vZuYkeMwSoBz8
-         wSA82nrHD5kpjMW2vYHNDwlKU4mN9GXhTOPIGoizUXSPq98WHnnBVvNJ9OQV1OMcpO9K
-         ta9Q==
-X-Gm-Message-State: AGi0PuYr+m5vzJAU/Os6mcCLFm/wSaZSGho79splMdQSKE6r1d4z894H
-        kCm8m7/LqdfplkzYJKVcfsE=
-X-Google-Smtp-Source: APiQypLutdv0RfgCbbx60i8SZmUJ4DmZhZ2I+iHcCi1c66UJa9V3ha0BZI7e3IXSOgpcMDklzORucQ==
-X-Received: by 2002:a2e:9084:: with SMTP id l4mr1157836ljg.132.1588225969010;
-        Wed, 29 Apr 2020 22:52:49 -0700 (PDT)
-Received: from [192.168.0.103] (static-91-225-135-18.devs.futuro.pl. [91.225.135.18])
-        by smtp.gmail.com with ESMTPSA id k18sm4836849lfg.81.2020.04.29.22.52.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 22:52:48 -0700 (PDT)
-Subject: Re: [PATCH] drm: Replace drm_modeset_lock/unlock_all with
- DRM_MODESET_LOCK_ALL_* helpers
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch
-Cc:     intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <1588093804-30446-1-git-send-email-michalorzel.eng@gmail.com>
- <875zdiacv2.fsf@intel.com>
-From:   =?UTF-8?B?TWljaGHFgiBPcnplxYI=?= <michalorzel.eng@gmail.com>
-Message-ID: <dab8f564-d2b3-de19-f56d-f741046c39c6@gmail.com>
-Date:   Thu, 30 Apr 2020 07:52:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/qQ/yx6abKRIL0FsJwS93t9eFiymJD6IOqEolKEMHSc=;
+ b=GAq8Py8eNemiPtRXyVx9KrccuDl78mU1IVzgeSa3Gu4bu3rnqMRn1k563jW4f/INZYpVZTPQqv68Y7j0GOs1ARquJMpA/oSNVqKOAPibhAxiuv9w7shnistGzBMgthu41tL2LS7DfeLWRSRD+oYtbTAMA286i/u7lxQzAhqts4c=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6996.namprd04.prod.outlook.com (2603:10b6:a03:224::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
+ 2020 06:01:40 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 06:01:40 +0000
+Date:   Thu, 30 Apr 2020 14:01:32 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Message-ID: <20200430060132.GB6645@xin-VirtualBox>
+References: <cover.1587880280.git.xji@analogixsemi.com>
+ <67ccead807b7d0a50df479cab2c9d325041224bc.1587880280.git.xji@analogixsemi.com>
+ <20200427184909.GA15880@ravnborg.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427184909.GA15880@ravnborg.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR0302CA0008.apcprd03.prod.outlook.com
+ (2603:1096:202::18) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-In-Reply-To: <875zdiacv2.fsf@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2PR0302CA0008.apcprd03.prod.outlook.com (2603:1096:202::18) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2979.14 via Frontend Transport; Thu, 30 Apr 2020 06:01:39 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2dd22024-81d2-4e30-5a7f-08d7eccbf34c
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6996:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB69961C26C836FCE568FD4156C7AA0@BY5PR04MB6996.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0389EDA07F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: p1wKTUCAorEQzSmWXb16+TfXpi7ak4u6Uo9yDI4N/9w50fl9MTf/bALCd8xUOq7I2uo8r82yoC18GzEcxS2auKQXtyCCQZBcI2+ln159Rg0UDz+Fdz+WrpAIQIT8apCnJx0XQ3nFLYS9EnQrI8lr9mJdAGLz4vzNa44l5kNRwUxfZeGhktKxP39nc3zm48TGN+Skj00DHPv+DD9ESitvnTfMkptc2CjJTbPCiORLYp8uHPoG9I6NUiYQUYjpuFwCroX+olTmsvXfZAN62wcTiPpANZSZ3WYXbq9dYP3wjnL0mOXrm5roulmad9irsHWXW+Pax4eq9qtHAPQKJtGLjNA/hFe2z+EILL1seMm13p4Puqm1QL+lFnSsvkJ1SNBF/OC3bNc7fhcdS+84e3be2lw2Tq4AjN9cI0yBEKgyvVjnCQS4raYWjgJCr44Ctqkg+GC3UdDMIk/zc/V+huRI+5C1A0Oj/tx1YA2qkl2dEQBGS2Nj9YONValHbHFn8lE2CWWlD6fIxY0fJcLP75AIqA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(346002)(39840400004)(396003)(376002)(1076003)(66556008)(4326008)(66476007)(186003)(66946007)(55016002)(7416002)(16526019)(26005)(956004)(9686003)(2906002)(6666004)(54906003)(6916009)(8936002)(6496006)(86362001)(33656002)(8676002)(107886003)(33716001)(478600001)(5660300002)(52116002)(316002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: nSvanHTZKE2srxNW9ynwr+/C978IjFo8Euit5SYaVmg17h3RVK+ylFxz2Dl/1v5n56/fGzlzaUQQap/KXcY799KAUlNhi3tpziwAnVk2QG0l9T8oSjjBiXQrt/M5QmqlZbzFcDkAKLJr7XRXmdrSBHXd6Lu/I3J6ly2dx5+cxsUl8slI8IZKPr4B4cfCOTs/lXpHcp4ym/kgtTlgd/dufyTOwMAAMg4/YeIVk5/nJQZazYmpPw3PN8zuJ2sUso93LGVp6KnPWSXLl9yhcbRra7LBTpjbuP3Usc9s+AJkOCSSdaDZ8BDCfoZXxB/2y41X7HW+jtlGGhGDBCDhB+M8twhV4FwWDvjxeTXHRs5o4CHbqV/9p7JKN3ackUJifTCj8KHeMPQSda4KT75p571vdk4iA2Tj2kEvDKHdMXwd/KUx/yuDn1ZR1bvUZ/N85YlUF9Y8+zj96EvFYdfpvOSSF2UB38vqzkbXcD0BQCPoMWxW+Xa4z5OeQxkDWuPVg77zfbJIrrY4/zPD+M5TIIN/duDj0gju3JL7BwcEjcWoV6JXDom+t9NBHZUvajVcTXTEznPlZDC6j/a+fYgf6YbWGAmRxNPn4Bp4xJT2hJL2M3s1Xqpd9XXAmzeGqGtBDSF+w+xMyPxfcHNPLgqRxjYgjv1gCKykmDwT+jUwVI2GTTX98sYjAwk/RUPj75jK8mq7TdhKZBZCkpKdqhDl+uHpphfb34PppQceaL9oQx4V09YFQMLXZn+iZROm9AP3v1G9FZQq3tePhvq/nYvdR0NUs+lWSqDkUlZKPL0uUt25FyqvEUFAJy5B2tulGUZUKjH8
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2dd22024-81d2-4e30-5a7f-08d7eccbf34c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 06:01:40.6422
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CAVPU8Me5UJF7/8kK/IXKTOCyZHLJE9JYvbRUvi2uXMw8LSxvb/454Gqo3Q4nBrHN24imSUQ5bSHfiuXhRpwZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6996
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sam, thanks for your comments.
 
-
-On 29.04.2020 10:57, Jani Nikula wrote:
-> On Tue, 28 Apr 2020, Michal Orzel <michalorzel.eng@gmail.com> wrote:
->> As suggested by the TODO list for the kernel DRM subsystem, replace
->> the deprecated functions that take/drop modeset locks with new helpers.
->>
->> Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
->> ---
->>  drivers/gpu/drm/drm_mode_object.c | 10 ++++++----
->>  1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
->> index 35c2719..901b078 100644
->> --- a/drivers/gpu/drm/drm_mode_object.c
->> +++ b/drivers/gpu/drm/drm_mode_object.c
->> @@ -402,12 +402,13 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
->>  {
->>  	struct drm_mode_obj_get_properties *arg = data;
->>  	struct drm_mode_object *obj;
->> +	struct drm_modeset_acquire_ctx ctx;
->>  	int ret = 0;
->>  
->>  	if (!drm_core_check_feature(dev, DRIVER_MODESET))
->>  		return -EOPNOTSUPP;
->>  
->> -	drm_modeset_lock_all(dev);
->> +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
+On Mon, Apr 27, 2020 at 08:49:09PM +0200, Sam Ravnborg wrote:
+> Hi Xin Ji
 > 
-> I cry a little every time I look at the DRM_MODESET_LOCK_ALL_BEGIN and
-> DRM_MODESET_LOCK_ALL_END macros. :(
+> On Mon, Apr 27, 2020 at 02:17:46PM +0800, Xin Ji wrote:
+> > The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+> > for portable device. It converts MIPI to DisplayPort 1.3 4K.
 > 
-> Currently only six users... but there are ~60 calls to
-> drm_modeset_lock_all{,_ctx} that I presume are to be replaced. I wonder
-> if this will come back and haunt us.
+> Thanks for providing this binding.
+> When you re-submit please also send to devicetree@vger.kernel.org.
+OK
 > 
-> BR,
-> Jani.
-
-Hm, so we can either replace all of these calls(I think it's a better option) or abandon the idea of removing this deprecated function.
-In the latter scenario, it'd be beneficial to remove this from TODO.
-
-Best regards
-Michal
-
+> Running the binding through dt_binding_check gives me:
+> 
+> /home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml: ignoring, error in schema:
+> warning: no schema found in file: /home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> make[2]: *** [/home/sam/drm/linux.git/Documentation/devicetree/bindings/Makefile:42: Documentation/devicetree/bindings/processed-schema.yaml] Error 255
+> make[2]: *** Waiting for unfinished jobs....
+> /home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml: Additional properties are not allowed ('example' was unexpected)
+> /home/sam/drm/linux.git/Documentation/devicetree/bindings/display/bridge/anx7625.yaml: Additional properties are not allowed ('example' was unexpected)
+> 
+> See writing-schemas.rst for instruction installing tools etc.
+OK
+> 
+> > 
+> > You can add support to your board with binding.
+> > 
+> > Example:
+> > 	anx7625_bridge: encoder@58 {
+> > 		compatible = "analogix,anx7625";
+> > 		reg = <0x58>;
+> > 		status = "okay";
+> > 		panel-flags = <1>;
+> > 		enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> > 		reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> > 		#address-cells = <1>;
+> > 		#size-cells = <0>;
+> > 
+> > 		port@0 {
+> > 		  reg = <0>;
+> > 		  anx_1_in: endpoint {
+> > 		    remote-endpoint = <&mipi_dsi>;
+> > 		  };
+> > 		};
+> > 
+> > 		port@2 {
+> > 		  reg = <2>;
+> > 		  anx_1_out: endpoint {
+> > 		    remote-endpoint = <&panel_in>;
+> > 		  };
+> > 		};
+> > 	};
+> > 
+> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > ---
+> >  .../bindings/display/bridge/anx7625.yaml           | 91 ++++++++++++++++++++++
+> >  1 file changed, 91 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.yaml b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> > new file mode 100644
+> > index 0000000..1149ebb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/anx7625.yaml
+> 
+> Name the file "analogix,anx7625.yaml".
+> (We should rename anx6345.yaml, so others do not omit the company name)
+OK
+> 
+> > @@ -0,0 +1,91 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 Analogix Semiconductor, Inc.
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/display/bridge/anx7625.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
+> > +
+> > +maintainers:
+> > +  - Xin Ji <xji@analogixsemi.com>
+> > +
+> > +description: |
+> > +  The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
+> > +  designed for portable devices.
+> > +
+> > +properties:
+> > +  "#address-cells": true
+> > +  "#size-cells": true
+> > +
+> > +  compatible:
+> > +    items:
+> > +      - const: analogix,anx7625
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  panel-flags:
+> > +    description: indicate the panel is internal or external.
+> > +    maxItems: 1
+> This property hint at something needs to be modelled in a different way.
+> I do not recall other bindings need similar info.
+I'll change it to vendor,int-property
+> 
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> A description would be nice.
+OK
+> 
+> > +
+> > +  enable-gpios:
+> > +    description: used for power on chip control, POWER_EN pin D2.
+> > +    maxItems: 1
+> > +
+> > +  reset-gpios:
+> > +    description: used for reset chip control, RESET_N pin B7.
+> > +    maxItems: 1
+> > +
+> > +  port@0:
+> > +    type: object
+> > +    description:
+> > +      A port node pointing to MIPI DSI host port node.
+> > +
+> > +  port@1:
+> > +    type: object
+> > +    description:
+> > +      A port node pointing to MIPI DPI host port node.
+> Maybe explain how it differs from port@0 and why it is optional.
+It seems this port is not need any more, I'll remove this port.
+> 
+> > +
+> > +  port@2:
+> > +    type: object
+> > +    description:
+> > +      A port node pointing to panel port node.
+> Unless there is a good reason not to then please use a ports node, like
+> you see in almost (all?) other bridge bindings.
+I'll use ports node.
+> 
+> > +
+> > +required:
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +  - compatible
+> > +  - reg
+> > +  - port@0
+> > +  - port@2
+> 
+> additionalProperties: false??
+OK
 > 
 > 
->>  
->>  	obj = drm_mode_object_find(dev, file_priv, arg->obj_id, arg->obj_type);
->>  	if (!obj) {
->> @@ -427,7 +428,7 @@ int drm_mode_obj_get_properties_ioctl(struct drm_device *dev, void *data,
->>  out_unref:
->>  	drm_mode_object_put(obj);
->>  out:
->> -	drm_modeset_unlock_all(dev);
->> +	DRM_MODESET_LOCK_ALL_END(ctx, ret);
->>  	return ret;
->>  }
->>  
->> @@ -449,12 +450,13 @@ static int set_property_legacy(struct drm_mode_object *obj,
->>  {
->>  	struct drm_device *dev = prop->dev;
->>  	struct drm_mode_object *ref;
->> +	struct drm_modeset_acquire_ctx ctx;
->>  	int ret = -EINVAL;
->>  
->>  	if (!drm_property_change_valid_get(prop, prop_value, &ref))
->>  		return -EINVAL;
->>  
->> -	drm_modeset_lock_all(dev);
->> +	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, ret);
->>  	switch (obj->type) {
->>  	case DRM_MODE_OBJECT_CONNECTOR:
->>  		ret = drm_connector_set_obj_prop(obj, prop, prop_value);
->> @@ -468,7 +470,7 @@ static int set_property_legacy(struct drm_mode_object *obj,
->>  		break;
->>  	}
->>  	drm_property_change_valid_put(prop, ref);
->> -	drm_modeset_unlock_all(dev);
->> +	DRM_MODESET_LOCK_ALL_END(ctx, ret);
->>  
->>  	return ret;
->>  }
+> > +
+> > +example:
+> It must be named "examples:" - this is what dt_binding_check complains
+> about.
+OK
 > 
+> > +  - |
+> > +    anx7625_bridge: encoder@58 {
+> > +        compatible = "analogix,anx7625";
+> > +        reg = <0x58>;
+> > +        status = "okay";
+> No status in examples.
+OK
+> 
+> > +        panel-flags = <1>;
+> > +        enable-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+> You need to include a header file to pull in GPIO_ACTIVE_HIGH - see what
+> other bindings do.
+> > +        reset-gpios = <&pio 73 GPIO_ACTIVE_HIGH>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        port@0 {
+> > +          reg = <0>;
+> Be consistent with indent. My personal preference is 4 spaces.
+OK
+> 
+> > +          anx_1_in: endpoint {
+> > +            remote-endpoint = <&mipi_dsi>;
+> > +          };
+> > +        };
+> > +
+> > +        port@2 {
+> > +          reg = <2>;
+> > +          anx_1_out: endpoint {
+> > +            remote-endpoint = <&panel_in>;
+> > +          };
+> > +        };
+> > +    };
+> 
+> Lot's of small comments. But if this is your first binding then this is
+> expected.
+> Looks forward for v2.
+> 
+> 	Sam
