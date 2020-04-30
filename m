@@ -2,130 +2,184 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A685C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A808C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC2A20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7432064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ejzlSjOS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GHpzMcM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgD3Vlh (ORCPT
+        id S1727833AbgD3VmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726447AbgD3Vlg (ORCPT
+        Thu, 30 Apr 2020 17:42:18 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.228]:27507 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726447AbgD3VmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:41:36 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71ACCC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:41:36 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id s10so5776775edy.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:41:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hkpaJwE+XdImJwiRCGmMrHpnH9Do497AqONxguPuLh4=;
-        b=ejzlSjOSQT9fOgnWL9BlmOywT9YUrObwmrAsjURuygWHxwV8OQVp72xlXJtZ02/TVw
-         DIT/agnijUbVoAX7BK86VAyjiWzMyGXM2KTuZI6UNemsiX1Cq2rx0pT3HwreM1CaOKlk
-         g255rxIrtopXIP8n5gl+jKtXRgHpDyi++7rWe+DxBDgBZCFAwnPQpsWVH19peAeY9FzY
-         yaIFdv6+/raAyg7urd5JvKL/fqOUW4UB7EqADLBzSUJ+f8Aahl2Zz0zKvpxAEb37wx7V
-         DTqNs130Y7jUegFidoOJ9vnmbx17b9H5MOSZ5HwfoY9hpRUnZWiWdAn+WzCJoM0ygalG
-         kz4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hkpaJwE+XdImJwiRCGmMrHpnH9Do497AqONxguPuLh4=;
-        b=OGWbNsi89R35TlR2t7Rpv3eXQtLsI/xIKQrtmlTKRJdah5C1TrA0yq8Em6PO0UjgdS
-         qk+KO+PPAL8gGleifU7D+2QbJfY4Wb3n4C8/ko6mjodoSWHhTBBlyA1wxSTv5N91VGH7
-         I30bCrJsoT+io5H4WH66ANomdOr7haHC1pXwUWJ7LfWYSWbdp4AP5XbquPeW2GnLn7yh
-         9Apb7NN4tUXl4oDKnJ3WjlAReL9NfKbpR5VWl1kHtpNCe4gogm5FyGBbD10Wm5oKP5IS
-         5fiYWs5iYaDWBNQwhhtegCYnXlYWA0AxbDyvYSuTpqAQG/p20J2GkTBsoY/iJw0qI0r7
-         oJ7A==
-X-Gm-Message-State: AGi0PuZisogtvxevjff/bkBjp2D4GJY7U1df3BPJBL/c8iagLKzT4HWG
-        Qrvnv4FTrW6Gwb6ZzI+pLW9xoeivHyqacJ0/bcQiIA==
-X-Google-Smtp-Source: APiQypJ/NZIDe1nyo+ttBHz9E+jzzV+NreYGwdIKd9gp9L17jS4zp63ur9u6iJDTRLJh3/QP04vldfbKOZe8y5H1q9E=
-X-Received: by 2002:a50:c28a:: with SMTP id o10mr979777edf.85.1588282895115;
- Thu, 30 Apr 2020 14:41:35 -0700 (PDT)
+        Thu, 30 Apr 2020 17:42:18 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id B81CC3A67
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 16:42:16 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id UGwijmIdaAGTXUGwij4RYA; Thu, 30 Apr 2020 16:42:16 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qsjMy7T38hExjF72AbAYAmnsKSYdgi4xV240NBm4wdc=; b=GHpzMcM97p9tjvA9yoILL9pxUr
+        XGqzqLAnobG0z4pcGyuFdJsznGUbeiqYPJ4TJY/SXcRg78wBXmTH+Mc/8bLluHEIZM05gGgFqJ5C0
+        S7amWx6i57zQX8RFlrcq5MJqgwGgLofX98kr5Fyyk2h7opgbVuTGQ3/SF3F+LmXdOi1qbh5vyZ1x7
+        JylHqgQ5cCHhXfvmB2YFcq3tNxIO0LOVduTe/pjjLa9vbBIjBuH1Vax37o92l4AAhGa+hIeKDReLI
+        XD/7Ea5h7glsMlqiCqatIiV0kEYxrko+ffL01a16/kGGMUSaTOUHg8C/1DnlSKRFVm6hDfESDI8bB
+        6P75CORA==;
+Received: from [189.207.59.248] (port=56346 helo=[192.168.15.9])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jUGwi-004DQP-AL; Thu, 30 Apr 2020 16:42:16 -0500
+Subject: Re: [PATCH 12/15] media: s5k5baf: avoid gcc-10 zero-length-bounds
+ warning
+To:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Mauro Carvalho Chehab <m.chehab@samsung.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20200430213101.135134-1-arnd@arndb.de>
+ <20200430213101.135134-13-arnd@arndb.de>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <9ff27422-911a-c285-108c-f29908b68d19@embeddedor.com>
+Date:   Thu, 30 Apr 2020 16:46:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com> <20200430143131.7b8ff07f022ed879305de82f@linux-foundation.org>
-In-Reply-To: <20200430143131.7b8ff07f022ed879305de82f@linux-foundation.org>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 30 Apr 2020 17:40:59 -0400
-Message-ID: <CA+CK2bDwg=s6RbTCirm4U5gvRsnCMred-pnrW=WzN9hfGuBsiQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] padata: parallelize deferred page init
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200430213101.135134-13-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jUGwi-004DQP-AL
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.9]) [189.207.59.248]:56346
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 5:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Thu, 30 Apr 2020 16:11:18 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
->
-> > Sometimes the kernel doesn't take full advantage of system memory
-> > bandwidth, leading to a single CPU spending excessive time in
-> > initialization paths where the data scales with memory size.
-> >
-> > Multithreading naturally addresses this problem, and this series is the
-> > first step.
-> >
-> > It extends padata, a framework that handles many parallel singlethreaded
-> > jobs, to handle multithreaded jobs as well by adding support for
-> > splitting up the work evenly, specifying a minimum amount of work that's
-> > appropriate for one helper thread to do, load balancing between helpers,
-> > and coordinating them.  More documentation in patches 4 and 7.
-> >
-> > The first user is deferred struct page init, a large bottleneck in
-> > kernel boot--actually the largest for us and likely others too.  This
-> > path doesn't require concurrency limits, resource control, or priority
-> > adjustments like future users will (vfio, hugetlb fallocate, munmap)
-> > because it happens during boot when the system is otherwise idle and
-> > waiting on page init to finish.
-> >
-> > This has been tested on a variety of x86 systems and speeds up kernel
-> > boot by 6% to 49% by making deferred init 63% to 91% faster.
->
-> How long is this up-to-91% in seconds?  If it's 91% of a millisecond
-> then not impressed.  If it's 91% of two weeks then better :)
->
-> Relatedly, how important is boot time on these large machines anyway?
-> They presumably have lengthy uptimes so boot time is relatively
-> unimportant?
+Hi Arnd,
 
-Large machines indeed have a lengthy uptime, but they also can host a
-large number of VMs meaning that downtime of the host increases the
-downtime of VMs in cloud environments. Some VMs might be very sensible
-to downtime: game servers, traders, etc.
+On 4/30/20 16:30, Arnd Bergmann wrote:
+> gcc-10 warns about accessing a zero-length struct member:
+> 
+> drivers/media/i2c/s5k5baf.c: In function 's5k5baf_load_setfile':
+> drivers/media/i2c/s5k5baf.c:390:13: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct <anonymous>[0]' [-Wzero-length-bounds]
+>   390 |   if (f->seq[i].offset + d <= end)
+>       |       ~~~~~~^~~
+> 
+> This should really be a flexible-array member, but the structure
+> already has one. I experimentally confirmed that swapping the two
+> avoids the warning, as the 'data[]' array is not accessed like this.
+> 
+> Fixes: 3ba225b506a2 ("treewide: Replace zero-length array with flexible-array member")
+> Fixes: 7d459937dc09 ("[media] Add driver for Samsung S5K5BAF camera sensor")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/media/i2c/s5k5baf.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/s5k5baf.c b/drivers/media/i2c/s5k5baf.c
+> index 42584a088273..0b1ddedcf7dc 100644
+> --- a/drivers/media/i2c/s5k5baf.c
+> +++ b/drivers/media/i2c/s5k5baf.c
+> @@ -277,11 +277,11 @@ enum {
+>  
+>  struct s5k5baf_fw {
+>  	u16 count;
+> +	u16 data[0];
+>  	struct {
+>  		u16 id;
+>  		u16 offset;
+> -	} seq[0];
+> -	u16 data[];
+> +	} seq[];
+>  };
+>  
+>  struct s5k5baf {
+> 
 
->
-> IOW, can you please explain more fully why this patchset is valuable to
-> our users?
+The treewide patch is an experimental change and, as this change only applies
+to my -next tree, I will carry this patch in it, so other people don't have
+to worry about this at all.
+
+Thank you
+--
+Gustavo
