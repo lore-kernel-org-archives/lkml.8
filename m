@@ -2,113 +2,135 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1618C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD5DC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5A5214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0kElSQb"
+	by mail.kernel.org (Postfix) with ESMTP id 15A00214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgD3Gts (ORCPT
+        id S1726463AbgD3GyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:49:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25289 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726491AbgD3Gtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:49:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588229386;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6jDhUGC0q9fpb0E7nmomakw81mS0R94uGtBxC+k3irk=;
-        b=b0kElSQb60ylUG8YrqZUtsaPUvlxLfbwt17AW9TlbAP4az8FVT3Ah9wuHitck7JIxSJt/R
-        F6Cj3bqO8Yx1ZGfDVrxRm7LoDE8Yxky5Hq0GHc6rP38CjfcnR980FzslJJqMuTS5iQhiqk
-        FZDRqeFQehE7M4dOlgK2DiC6Knodn/c=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-GK0GwWwBPr2AUrjybWXTQw-1; Thu, 30 Apr 2020 02:49:44 -0400
-X-MC-Unique: GK0GwWwBPr2AUrjybWXTQw-1
-Received: by mail-wr1-f69.google.com with SMTP id s11so3382042wru.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 23:49:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6jDhUGC0q9fpb0E7nmomakw81mS0R94uGtBxC+k3irk=;
-        b=U1uW2Ed+dKIxHU7to+ZFaHAabMyTu8ryHCZC8guYI4ZceksvAh4+bF521TbOMqL5qE
-         YCEswu6xTwIdnmAjUzI3/Zdgn91AG9C6TagK+sKyP6ChjZeZ1L9iWHy0m37UDsu35j0e
-         iRXNW3H2HMQ+R1IxvYNt5ajEyxZgQBmPzMAfrfQb0wDWEFnTsEbQTbrjId7QL2CSxbMB
-         cYpkDbAye4vyyKkhxxb1sR0Y53T1yiu+R0oGV9ByzqbauMMfhzizM4NLeIS0l8mN0aHN
-         cXvVcTH33N5ujDUh1hS/36RlPKsHhQcssNAeBSwkgABeMJipCYyzQQmFD5y29edtxD3M
-         2xCQ==
-X-Gm-Message-State: AGi0PubolWIVTvLYHgh30X7Dv/jn53fG3tvOyBT1XrlmBWnBVX2dkgOc
-        08ICZgQEqflz5poA9bY2W2z2DR9trbkA8VZBZAWwQjNp0HeNAUT8sqE9ok1M1MvJ5l9y8XG3xq4
-        GG1nJ4O6Ic+RlpvvO7kI7SNTd
-X-Received: by 2002:adf:d0ce:: with SMTP id z14mr1006543wrh.179.1588229382511;
-        Wed, 29 Apr 2020 23:49:42 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJsr6rw4wP2fqMQl3zalW7R42B7drXGchkN9CzcjY2NDZHyXF3Wa5dNOSiiq9a1MPMvoUroSQ==
-X-Received: by 2002:adf:d0ce:: with SMTP id z14mr1006517wrh.179.1588229382284;
-        Wed, 29 Apr 2020 23:49:42 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id g74sm11257055wme.44.2020.04.29.23.49.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 23:49:41 -0700 (PDT)
-Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
- page ready notifications
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com>
- <20200429093634.1514902-5-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b1297936-cf69-227b-d758-c3f3ca09ae5d@redhat.com>
-Date:   Thu, 30 Apr 2020 08:49:41 +0200
+        Thu, 30 Apr 2020 02:54:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36430 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgD3GyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:54:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 21F1BAC44;
+        Thu, 30 Apr 2020 06:53:58 +0000 (UTC)
+Subject: Re: [PATCH v3 4/7] linux/signal.h: Ignore SIGINFO by default in new
+ tasks
+To:     Arseny Maslennikov <ar@cs.msu.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Landley <rob@landley.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
+        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+References: <20200430064301.1099452-1-ar@cs.msu.ru>
+ <20200430064301.1099452-5-ar@cs.msu.ru>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
+Date:   Thu, 30 Apr 2020 08:53:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200429093634.1514902-5-vkuznets@redhat.com>
+In-Reply-To: <20200430064301.1099452-5-ar@cs.msu.ru>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/20 11:36, Vitaly Kuznetsov wrote:
-> +	case MSR_KVM_ASYNC_PF_ACK:
-> +		if (data & 0x1)
-> +			kvm_check_async_pf_completion(vcpu);
-> +		break;
+On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
+> This matches the behaviour of other Unix-like systems that have SIGINFO
+> and causes less harm to processes that do not install handlers for this
+> signal, making the keyboard status character non-fatal for them.
+> 
+> This is implemented with the assumption that SIGINFO is defined
+> to be equivalent to SIGPWR; still, there is no reason for PWR to
+> result in termination of the signal recipient anyway — it does not
+> indicate there is a fatal problem with the recipient's execution
+> context (like e.g. FPE/ILL do), and we have TERM/KILL for explicit
+> termination requests.
+> 
+> To put it another way:
+> The only scenario where system behaviour actually changes is when the
+> signal recipient has default disposition for SIGPWR. If a process
+> chose to interpret a SIGPWR as an incentive to cleanly terminate, it
+> would supply its own handler — and this commit does not affect processes
+> with non-default handlers.
+> 
+> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
+> ---
+>  include/linux/signal.h | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/signal.h b/include/linux/signal.h
+> index 05bacd2ab..dc31da8fc 100644
+> --- a/include/linux/signal.h
+> +++ b/include/linux/signal.h
+> @@ -369,7 +369,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
+>   *	|  SIGSYS/SIGUNUSED  |	coredump 	|
+>   *	|  SIGSTKFLT         |	terminate	|
+>   *	|  SIGWINCH          |	ignore   	|
+> - *	|  SIGPWR            |	terminate	|
+> + *	|  SIGPWR            |	ignore   	|
 
-Does this work if interrupts are turned off?  I think in that case
-kvm_check_async_pf_completion will refuse to make progress.  You need to
-make this bit stateful (e.g. 1 = async PF in progress, 0 = not in
-progress), and check that for page ready notifications instead of
-EFLAGS.IF.  This probably means that;
+You need to update signal.7 too:
+https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man7/signal.7#n285
 
-- it might be simpler to move it to the vector MSR
-
-- it's definitely much simpler to remove the #PF-based mechanism for
-injecting page ready notifications.
-
-Thanks,
-
-Paolo
-
+thanks,
+-- 
+js
+suse labs
