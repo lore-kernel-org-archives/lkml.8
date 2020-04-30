@@ -2,109 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E475EC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06591C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B45DB20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFJz3jN9"
+	by mail.kernel.org (Postfix) with ESMTP id D778B20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgD3KTY (ORCPT
+        id S1726789AbgD3KUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3KTU (ORCPT
+        Thu, 30 Apr 2020 06:20:35 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:57268 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725280AbgD3KU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:19:20 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545DDC035494;
-        Thu, 30 Apr 2020 03:19:20 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 188so1209357wmc.2;
-        Thu, 30 Apr 2020 03:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=sbJYXBlwGOLyg45ji2Ben6BeJhkkj20b9i5FNHgQc7E=;
-        b=TFJz3jN9l51rL4sTRvaVWsNqtueSOmy0YG5dmVZvHcJy4oBNjiahe+LWXBQ0omqKGM
-         k7U8HX+i6gwboswmMM7LMM5IqcT/1ixfnPbCg01AUcEawoXsvhW+xg4wFcvwqXc43gCn
-         YIs3qJp5bEZip/9tf6qhMdsNPfeL35Mpa1g65e2pAW+fWeuDCst9JFRU/M8BgsFUinDW
-         57orgljHmHwzOmTgSVrus7Z8x+jt8+/w2xmYoJvrSoURGhlCdILwZFdpxVXbagM+kb+r
-         qUJPqKJ/EMBwrKf1/klC0EuRmjlzYmMorc7Q1VCfgjiqikXPAyLFcaqhN/744J1VABTH
-         Yr5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=sbJYXBlwGOLyg45ji2Ben6BeJhkkj20b9i5FNHgQc7E=;
-        b=eVl4mfW0dlC4oxXblQ8IiUuenVskuu06Ms6bGxi1cAGPUSBe5eW1PlRDcG0tQ43x0j
-         7txD2WPTuw++wIuAKrncABDfRpb9FkeWNkEnYtshLh5mL42PkWvkMhsy9rX6TLaywPby
-         bPt9d6O7Y8/LzQZ3vwPJD7BzpYxhPADSUCGrZxkno6eqg0KsdMlKw8gY6el9NCwAzhON
-         HRimerOkVI1XIhyp6aBHxp4FzpV/kiagfNeDL+Un2kWFnpbJcfr+C2OeG3wa5nFL+DvS
-         cBKjYYQvLtLVcKqzSJSn4ph2Cb/UET0dNf168qgGtyBhinbbkdA6nc/MwNy/T2s04e41
-         lBLg==
-X-Gm-Message-State: AGi0PuZSBVobo2mHZwWZTphV4Tcj8r3DL9M6J3L0WdxmGzZ+UmmdFnUV
-        lIHdnH233VqSvJe9Iv1uwuc=
-X-Google-Smtp-Source: APiQypIFiyR1IL2f8nMpAUjauJb0orpbTeK/JIXN9qbR7trpNDpfeWSNlZ611isWlDjsKZ6MpJqPYA==
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr2141356wmi.178.1588241956107;
-        Thu, 30 Apr 2020 03:19:16 -0700 (PDT)
-Received: from [192.168.43.138] ([37.142.166.235])
-        by smtp.gmail.com with ESMTPSA id 185sm13450326wmc.32.2020.04.30.03.19.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 03:19:15 -0700 (PDT)
-Subject: Re: [PATCH v7 2/7] tpm: tpm_tis: Add verify_data_integrity handle toy
- tpm_tis_phy_ops
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
-        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com,
-        Christophe Ricard <christophe-h.ricard@st.com>
-References: <20200427124931.115697-1-amirmizi6@gmail.com>
- <20200427124931.115697-3-amirmizi6@gmail.com>
- <20200429053456.GE8452@linux.intel.com>
-From:   Amir Mizinski <amirmizi6@gmail.com>
-Message-ID: <d0eec29a-20f5-1187-f0c3-c564879d7878@gmail.com>
-Date:   Thu, 30 Apr 2020 10:19:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 06:20:26 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8AD6A634C8F;
+        Thu, 30 Apr 2020 13:20:18 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jU6Ik-0000QX-ER; Thu, 30 Apr 2020 13:20:18 +0300
+Date:   Thu, 30 Apr 2020 13:20:18 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200430102018.GI867@valkosipuli.retiisi.org.uk>
+References: <20200429162437.2025699-1-robert.foss@linaro.org>
+ <20200429162437.2025699-3-robert.foss@linaro.org>
+ <20200430093524.GB2188@pengutronix.de>
+ <20200430094549.GF867@valkosipuli.retiisi.org.uk>
+ <20200430095332.GC2188@pengutronix.de>
+ <20200430095907.GG867@valkosipuli.retiisi.org.uk>
+ <20200430101157.GD2188@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200429053456.GE8452@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430101157.GD2188@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 12:11:57PM +0200, Marco Felsch wrote:
+> On 20-04-30 12:59, Sakari Ailus wrote:
+> > Hi Marco,
+> > 
+> > On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
+> > > Hi Sakari,
+> > > 
+> > > On 20-04-30 12:45, Sakari Ailus wrote:
+> > > > Hi Marco,
+> > > > 
+> > > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
+> 
+> ...
+> 
+> > > > > > -	if (mclk != OV8856_MCLK) {
+> > > > > > -		dev_err(dev, "external clock %d is not supported", mclk);
+> > > > > > -		return -EINVAL;
+> > > > > > +	if (!is_acpi_node(fwnode)) {
+> > > > > > +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> > > > > > +		if (IS_ERR(ov8856->xvclk)) {
+> > > > > > +			dev_err(dev, "could not get xvclk clock (%pe)\n",
+> > > > > > +					ov8856->xvclk);
+> > > > > > +			return PTR_ERR(ov8856->xvclk);
+> > > > > > +		}
+> > > > > > +
+> > > > > > +		clk_set_rate(ov8856->xvclk, xvclk_rate);
+> > > > > > +		xvclk_rate = clk_get_rate(ov8856->xvclk);
+> > > > > >  	}
+> > > > > 
+> > > > > Why do we handle the clock only in DT case? Is there a problem with the
+> > > > > clock handling and ACPI?
+> > > > 
+> > > > Not really, it's just that ACPI does not provide an interface to the clocks
+> > > > as such.
+> > > 
+> > > But you will get a clk by devm_clk_get()?
+> > 
+> > No, because ACPI does not expose one to drivers. Effectively the entire
+> > power sequences are implemented in ACPI, not in the driver.
+> > 
+> 
+> Ah okay, thanks for the explanation. I'm really not into the ACPI
+> stuff.. So this means the __power_off / power_on should only be done if
+> we are using DT's?
 
-On 2020-04-29 05:34, Jarkko Sakkinen wrote:
-> On Mon, Apr 27, 2020 at 03:49:26PM +0300, amirmizi6@gmail.com wrote:
->> +    bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
->> +                      size_t len);
->
-> Why can't the i2c driver verify this in the end of read_bytes()?
->
+Correct. That's why it bails out early. It could be yet earlier though,
+without doing anything.
 
-The TPM calculates the checksum of the entire command data at the end
-of command transmission or the checksum of the entire response data at the
-end of response transmission.
-read_bytes is not necessarily called at the end of response transmission. Same for write_bytes.
-
-> /Jarkko
-
+-- 
+Sakari Ailus
