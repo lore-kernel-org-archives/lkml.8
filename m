@@ -2,116 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E764BC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43FEC83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A142173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588228916;
-	bh=X8gimk3yFAeK754Nb7O29n9XhkvBxvxg4SjVPsgNc2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h8VuDZEZFqUjxy9IsOaaB+JyfLHmsrWH1eD138H60yO8MWP/R8GEhSBfOq7prp2so
-	 EziUHkCCEMv52oU0eOEtnsrOcCFsJ9PGgLzS1kQLhQVO1tTfY+DurCzPpQ7Jpw1wRj
-	 Iviloq7En8EBCZp/HFZ2sTfECzJ4U8qVcT8cYs1U=
+	by mail.kernel.org (Postfix) with ESMTP id C3A7C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:42:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="PKuE5VM0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p8B8FL6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgD3Gl4 (ORCPT
+        id S1726550AbgD3Gm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3Glz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:41:55 -0400
+        Thu, 30 Apr 2020 02:42:59 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58175 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726180AbgD3Gm6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:42:58 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 901365C00AF;
+        Thu, 30 Apr 2020 02:42:57 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Thu, 30 Apr 2020 02:42:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=jAz8BqP1L52IWPGLL0vxJ+gS/S+
+        8G9kBMZSXzW897Jo=; b=PKuE5VM0CASyCOgYSdvxd13brg8UVv0R8DaNeR38nkY
+        NqnarYhOpjw7OBZ/Yh9ZHLpHp+M8YcWzOV87zd/RszZMj6VrVpuT6VVhJ2y+43jv
+        BHBrGT/bJfwTri21TxAMb1otvOkHmyLAe9eVzBZtVskXcunQXuGepvmvHS/pcrky
+        +JhdDT0hnHGzQ+gSNYhc2sO76wI1XhaORxPAvQWOHVmTYSGf1PlIGQb23MU/jGty
+        C3KByaKnH2IkTk0d2Ag16Ngic9m0C/GNERLJhv0s9N+kpRjrMK7V94PtNPwLM5L9
+        nc8kNcMHWvfIyDZqe/pfxftqU5q/VUypZnY5EtjGznw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=jAz8Bq
+        P1L52IWPGLL0vxJ+gS/S+8G9kBMZSXzW897Jo=; b=p8B8FL6Ci9B9K+4TDUWE7M
+        zLk3HuT3JvOlEpqOxGJ0RUPiGzKM+fgAG3uUV7Fi1qjBnhNRwABZTMHqM8jByczD
+        foHSQWfcXFfzklR91tX/ECcLeXkWpjehC9x8o/iDpwhNMJjWR4qNF3erPwn/BjOL
+        C5NDEjYy7xinXOiKaxEO6w9mlAYor6O57FFiHwduCl95QL17D5AiM6EHup7PIlnf
+        t65lrPuLQhF2tuK+mdRKEEXciXaqCnFq1KXYeZIPFWuRPgXLYIYcpgDmRmg1+DkM
+        aicQgPfThaFPpJturq/yuXMwvFNoWR9L/ApZBxhGZujbKkMuacZwCma5Y1jX/aew
+        ==
+X-ME-Sender: <xms:cXOqXi5h9axX0lwRygHJjlhlzgkKVIIfYsoSOM3XbRSrha_1uhGe2w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieeggddutdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
+    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
+    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:cXOqXgKBWWYmL9xDvkSG5z6v1QdvV4Y4dWMf8o4vnv3OHvJD86MINw>
+    <xmx:cXOqXuZxw7EShR5fFEC-NHlAXzy4auXu1XEJQw8Ydss-Sp2pq5icpw>
+    <xmx:cXOqXt2jI6BkvWP46eYjuCFTq9qt1MvJ2E7uL8mips-MmNPxpc5ggg>
+    <xmx:cXOqXtOjeRJBxx8wyCkVFeMrbyMaWsvqk4xgy-mmlTppW90ZXa8GRA>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B5220784;
-        Thu, 30 Apr 2020 06:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588228915;
-        bh=X8gimk3yFAeK754Nb7O29n9XhkvBxvxg4SjVPsgNc2s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=roKlYC4uPUs+R+tqgf43a/hneMSfmZSv4Lfp7+UBTdYwCJzx70fegoc2JrwU5IfVD
-         Wz3M4FXcyD/MMWJt14Oga8bAFNgncpHXEnRu0PT/2rdzmA2gMZuxDDjSaoYAkfeRwj
-         v4ZvQCeb1CMGGXu02GN/9dRaPbGZAWlo8FvFgA9s=
-Date:   Thu, 30 Apr 2020 08:41:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Andrei Vagin <avagin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "X.f. Ren" <xiaofeng.ren@nxp.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Kuldeep Singh <kuldeep.singh@nxp.com>
-Subject: Re: [PATCH 5.6 000/167] 5.6.8-rc1 review
-Message-ID: <20200430064153.GD2377651@kroah.com>
-References: <20200428182225.451225420@linuxfoundation.org>
- <CA+G9fYvPhDsaHKJSGfxWLUPmrf_mRx7S3_RdXWmRzbg25SRRoQ@mail.gmail.com>
+        by mail.messagingengine.com (Postfix) with ESMTPA id DE42B3065F05;
+        Thu, 30 Apr 2020 02:42:56 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 08:42:51 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Clement Leger <cleger@kalray.eu>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH] remoteproc: Fix wrong rvring index computation
+Message-ID: <20200430064251.GE2377651@kroah.com>
+References: <20191004073736.8327-1-cleger@kalray.eu>
+ <CAD=FV=WgUNySbRE9dZys28fFo3eZwf_2=cj68jaw1ftakJDzVQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYvPhDsaHKJSGfxWLUPmrf_mRx7S3_RdXWmRzbg25SRRoQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=WgUNySbRE9dZys28fFo3eZwf_2=cj68jaw1ftakJDzVQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 02:38:29PM +0530, Naresh Kamboju wrote:
-> On Tue, 28 Apr 2020 at 23:57, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.6.8 release.
-> > There are 167 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 30 Apr 2020 18:20:42 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.8-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Wed, Apr 29, 2020 at 04:26:41PM -0700, Doug Anderson wrote:
+> Hi,
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> On Fri,  4 Oct 2019 Clement Leger <cleger@kalray.eu> wrote:
+> >
+> > Index of rvring is computed using pointer arithmetic. However, since
+> > rvring->rvdev->vring is the base of the vring array, computation
+> > of rvring idx should be reversed. It previously lead to writing at negative
+> > indices in the resource table.
+> >
+> > Signed-off-by: Clement Leger <cleger@kalray.eu>
+> > ---
+> >  drivers/remoteproc/remoteproc_core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Randomly stumbled upon this in a list of patches.  This patch landed
+> in mainline as:
+> 
+> 00a0eec59ddb remoteproc: Fix wrong rvring index computation
+> 
+> Should it be queued up for stable?  I'm guessing:
+> 
+> Fixes: c0d631570ad5 ("remoteproc: set vring addresses in resource table")
 
-Great, thanks fro testing these and letting me know.
-
-> NOTE:
-> This kernel panic seems to be platform specific.
-> However, I am sharing a few kernel panic logs here.
-> While running LTP cve[1] and  libhugetlbfs[2] test suite on nxp ls2088
-> device the kernel panic noticed with different kernel dump
-> and unfortunately it is not easily reproducible.
-> At this point it is unclear whether this problem
-> started happening from this stable rc review or not.
-> Because a different type of kernel panic noticed on Linus 's  mainline tree
-> (5.7.0-rc2) version kernel while running LTP containers tests.
-
-If you end up narrowing this down to an offending commit, that would be
-great.
-
-thanks,
+Thanks, now queued up.
 
 greg k-h
