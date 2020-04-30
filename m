@@ -2,181 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02DDC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97778C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84C8820787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7606E20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ApEshFyn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oeLytCEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgD3K2a (ORCPT
+        id S1726790AbgD3K3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:28:30 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52153 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726127AbgD3K2a (ORCPT
+        Thu, 30 Apr 2020 06:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726127AbgD3K3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:28:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588242508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=h5p3gDi1VEjOInC7wzq0lhr6Bn3YffDIogBP2mcy8kc=;
-        b=ApEshFynpCo2DKwvXqgduhxTJupJd6GRUaANRxpLqvPo7AvL7PmytAwfXx/m8NTAqPl4ol
-        BcLOZq3IjBQ8tIFZbcvDT33KEqXo0hDBwxpAOEcUajXbUv4jGpHaYlJteQ25uPAkLu6CJE
-        O2MSNjV/akwNQ9SUd2B43urNlnTvmV4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-llRHx5pBNDeMzb8y6aaysA-1; Thu, 30 Apr 2020 06:28:26 -0400
-X-MC-Unique: llRHx5pBNDeMzb8y6aaysA-1
-Received: by mail-wm1-f72.google.com with SMTP id f81so417611wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:28:25 -0700 (PDT)
+        Thu, 30 Apr 2020 06:29:16 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437DFC035494;
+        Thu, 30 Apr 2020 03:29:16 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so1288789wml.2;
+        Thu, 30 Apr 2020 03:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=KHpNLJMS3mu2V09RaaLnnYRUJwfut2dVA8xoIPufxks=;
+        b=oeLytCEGaH/rofZN/yNpDszUHyJ0X32104xC8+aTBe4mX32nz2AURmDDWgwu9g6qXJ
+         oIJUpk0XC1NkmPDpywPDTNN2xT7qf8TlCQeI+qF2zsHB2rJ9vQxzNpm9Adt4WyVUDvHJ
+         SSnE76fPC83wV6AofqkxMI/p12PzsVok1Ud5MAAjBXNgw5W7gM6+cVQ3vKsmOaJDhYG2
+         pkEfV5iE6erfSXnAIx9vgTjLZCwt9U/j4I1Jj+1fLNNoosGGJ7jRqGm4Wc2U6kLOtedL
+         02YQDP+aQpGDYVKKHVwADxnYTdCnTPh2FiMyaqHpTm9nxqmTmGHBpIhGy9sTnQqkQwZ9
+         nXng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h5p3gDi1VEjOInC7wzq0lhr6Bn3YffDIogBP2mcy8kc=;
-        b=ezBPZN0JFbzJdDbseauW6BQI5dOizRVI0GEhYyrh7+OkGBAV18YdFaQ6/8ITeYiBVZ
-         7C9HxCv/j7RtrDvY0rDz1JENaESOyI+7wOLICDx4UClrdSq7yK455tZRMH3eXyhld9EE
-         MziyPlUexQN5VVXph0vKN2G/YgdvEwEH//+BI4komeMc30mZPucAVwDAb5ij6ElXPZF6
-         qEe1ypY5QNzewbe4xjgCB3K2z7LmQAauSM9S2Weip8muHHuob4WAUVddm+ZaGzirY1gq
-         zWEsz51szOZKM0/TS7pWv0Zl34cJ7aYFsGnIzqIEUDQ7C5WPJmrMj06ijJ4ze0mgyrXl
-         xMCg==
-X-Gm-Message-State: AGi0PuarduO2LqZux+EOvFSWWPB8KpusSa2SrDPwaaZeoe2vK0pQ4qXl
-        FfAaBAE49xjOVn04LpG/hOmIaqJw7kBU9DioNivNTXC1z9fFexmYvu4MdUy21wX78FO9052IiTS
-        dhl6szsGxEhbEbN433ude8sSr
-X-Received: by 2002:adf:9441:: with SMTP id 59mr3078537wrq.211.1588242504888;
-        Thu, 30 Apr 2020 03:28:24 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKdaYMooyRpO60M9yffISXrKNIX1+9SfmvT2a95+mlrjkv1g1RtPlrwD7pghxHm4UBclpULEg==
-X-Received: by 2002:adf:9441:: with SMTP id 59mr3078513wrq.211.1588242504609;
-        Thu, 30 Apr 2020 03:28:24 -0700 (PDT)
-Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
-        by smtp.gmail.com with ESMTPSA id s14sm1695648wro.29.2020.04.30.03.28.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 03:28:24 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 06:28:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-block@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, cohuck@redhat.com,
-        Jason Wang <jasowang@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: Re: [PATCH v3] virtio-blk: handle block_device_operations callbacks
- after hot unplug
-Message-ID: <20200430062549-mutt-send-email-mst@kernel.org>
-References: <20200429165345.144702-1-stefanha@redhat.com>
- <20200430084323.qts2q5ql7rkclk2h@steredhat>
- <20200430101410.GA164094@stefanha-x1.localdomain>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=KHpNLJMS3mu2V09RaaLnnYRUJwfut2dVA8xoIPufxks=;
+        b=qnMLami22sdUSmEFkenlgWTpwUTCcClDBBBW4oPvJdMtNMZtWhqvDROktGqsRskaXN
+         L22bSNnwWOB9RlhL3TAMVAKnxTWQLVONXFKse/eB8nSjp9mNDjqsOO+Akz1TjXAlamkO
+         NEBFlbMDkp6KAHPgfLVUBnCmIh66cmoM0idXULHnwR0dkBVimLQT/TUR6l4z6DkRToXN
+         VcLu7zbRjfsWFGTiQHpvTsKpKdWih0YPPI2GdEEI+1dhTPSlBRTq0ANWEeYI9lEsVrIe
+         ICRCmdnMlONI3y8vEuzRosywNBP3D8FmJwoXnGB6TAfLAjcDkxgV25QO5HEsZHfz/VP5
+         jwrg==
+X-Gm-Message-State: AGi0PuYnCbX3PGywQxnqfsUwS1ZYGUkvzDdbISqh5sR61laI+5VuMpFv
+        1amaw1bAI88JqOYH7vwD9N4=
+X-Google-Smtp-Source: APiQypKTabP3IH+sEVHf+m5JSdymF9eA/BbYpwtxCF6TlSLWdp2QHMQ9rTYPLEhiw7qSWNMsyHFHGA==
+X-Received: by 2002:a1c:64c5:: with SMTP id y188mr2189457wmb.130.1588242554995;
+        Thu, 30 Apr 2020 03:29:14 -0700 (PDT)
+Received: from [192.168.43.138] ([37.142.166.235])
+        by smtp.gmail.com with ESMTPSA id x18sm3209513wrs.11.2020.04.30.03.29.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 03:29:14 -0700 (PDT)
+Subject: Re: [PATCH v7 3/7] tpm: tpm_tis: Rewrite "tpm_tis_req_canceled()"
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, benoit.houyere@st.com,
+        eajames@linux.ibm.com, joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        oshri.alkoby@nuvoton.com, tmaimon77@gmail.com, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, Dan.Morav@nuvoton.com,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com
+References: <20200427124931.115697-1-amirmizi6@gmail.com>
+ <20200427124931.115697-4-amirmizi6@gmail.com>
+ <20200429053703.GF8452@linux.intel.com>
+From:   Amir Mizinski <amirmizi6@gmail.com>
+Message-ID: <41fd551b-e678-32bb-781d-48cfe1a3c5bb@gmail.com>
+Date:   Thu, 30 Apr 2020 10:29:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430101410.GA164094@stefanha-x1.localdomain>
+In-Reply-To: <20200429053703.GF8452@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:14:10AM +0100, Stefan Hajnoczi wrote:
-> On Thu, Apr 30, 2020 at 10:43:23AM +0200, Stefano Garzarella wrote:
-> > On Wed, Apr 29, 2020 at 05:53:45PM +0100, Stefan Hajnoczi wrote:
-> > > A userspace process holding a file descriptor to a virtio_blk device can
-> > > still invoke block_device_operations after hot unplug.  This leads to a
-> > > use-after-free accessing vblk->vdev in virtblk_getgeo() when
-> > > ioctl(HDIO_GETGEO) is invoked:
-> > > 
-> > >   BUG: unable to handle kernel NULL pointer dereference at 0000000000000090
-> > >   IP: [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
-> > >   PGD 800000003a92f067 PUD 3a930067 PMD 0
-> > >   Oops: 0000 [#1] SMP
-> > >   CPU: 0 PID: 1310 Comm: hdio-getgeo Tainted: G           OE  ------------   3.10.0-1062.el7.x86_64 #1
-> > >   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
-> > >   task: ffff9be5fbfb8000 ti: ffff9be5fa890000 task.ti: ffff9be5fa890000
-> > >   RIP: 0010:[<ffffffffc00e5450>]  [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
-> > >   RSP: 0018:ffff9be5fa893dc8  EFLAGS: 00010246
-> > >   RAX: ffff9be5fc3f3400 RBX: ffff9be5fa893e30 RCX: 0000000000000000
-> > >   RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff9be5fbc10b40
-> > >   RBP: ffff9be5fa893dc8 R08: 0000000000000301 R09: 0000000000000301
-> > >   R10: 0000000000000000 R11: 0000000000000000 R12: ffff9be5fdc24680
-> > >   R13: ffff9be5fbc10b40 R14: ffff9be5fbc10480 R15: 0000000000000000
-> > >   FS:  00007f1bfb968740(0000) GS:ffff9be5ffc00000(0000) knlGS:0000000000000000
-> > >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > >   CR2: 0000000000000090 CR3: 000000003a894000 CR4: 0000000000360ff0
-> > >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >   Call Trace:
-> > >    [<ffffffffc016ac37>] virtblk_getgeo+0x47/0x110 [virtio_blk]
-> > >    [<ffffffff8d3f200d>] ? handle_mm_fault+0x39d/0x9b0
-> > >    [<ffffffff8d561265>] blkdev_ioctl+0x1f5/0xa20
-> > >    [<ffffffff8d488771>] block_ioctl+0x41/0x50
-> > >    [<ffffffff8d45d9e0>] do_vfs_ioctl+0x3a0/0x5a0
-> > >    [<ffffffff8d45dc81>] SyS_ioctl+0xa1/0xc0
-> > > 
-> > > A related problem is that virtblk_remove() leaks the vd_index_ida index
-> > > when something still holds a reference to vblk->disk during hot unplug.
-> > > This causes virtio-blk device names to be lost (vda, vdb, etc).
-> > > 
-> > > Fix these issues by protecting vblk->vdev with a mutex and reference
-> > > counting vblk so the vd_index_ida index can be removed in all cases.
-> > > 
-> > > Fixes: 48e4043d4529523cbc7fa8dd745bd8e2c45ce1d3
-> > >        ("virtio: add virtio disk geometry feature")
-> > > Reported-by: Lance Digby <ldigby@redhat.com>
-> > > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> > > ---
-> > >  drivers/block/virtio_blk.c | 87 ++++++++++++++++++++++++++++++++++----
-> > >  1 file changed, 79 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> > > index 93468b7c6701..6f7f277495f4 100644
-> > > --- a/drivers/block/virtio_blk.c
-> > > +++ b/drivers/block/virtio_blk.c
-> > > @@ -33,6 +33,16 @@ struct virtio_blk_vq {
-> > >  } ____cacheline_aligned_in_smp;
-> > >  
-> > >  struct virtio_blk {
-> > > +	/*
-> > > +	 * vdev may be accessed without taking this mutex in blk-mq and
-> > > +	 * virtqueue code paths because virtblk_remove() stops them before vdev
-> > > +	 * is freed.
-> > > +	 *
-> > > +	 * Everything else must hold this mutex when accessing vdev and must
-> > > +	 * handle the case where vdev is NULL after virtblk_remove() has been
-> > > +	 * called.
-> > > +	 */
-> > > +	struct mutex vdev_mutex;
-> > 
-> > The patch LGTM, I'm just worried about cache_type_store() and
-> > cache_type_show() because IIUC they aren't in blk-mq and virtqueue code
-> > paths, but they use vdev.
-> > 
-> > Do we have to take the mutex there too?
-> 
-> No, because del_gendisk() in virtblk_remove() deletes the sysfs
-> attributes before vblk->vdev is set to NULL.  kernfs deactivates the
-> kernfs nodes so that further read()/write() operations fail with ENODEV
-> (see fs/kernfs/dir.c and fs/kernfs/file.c).
-> 
-> I have tested that a userspace process with a sysfs attr file open
-> cannot access the attribute after virtblk_remove().
-> 
-> Stefan
 
-Sounds good, but pls update the comment adding something like
-" .. or anything coming from block layer since del_gendisk()
-  in virtblk_remove deletes the disk before vblk->vdev is set to NULL.
-"
+On 2020-04-29 05:37, Jarkko Sakkinen wrote:
+> On Mon, Apr 27, 2020 at 03:49:27PM +0300, amirmizi6@gmail.com wrote:
+>> From: Amir Mizinski <amirmizi6@gmail.com>
+>>
+>> Using this function while reading/writing data resulted in an aborted
+>> operation.
+>> After investigating the issue according to the TCG TPM Profile (PTP)
+>> Specifications, I found that "request to cancel" should occur only if
+>> TPM_STS.commandReady bit is lit.
+>> Note that i couldn't find a case where the present condition
+>> (in the linux kernel) is valid, so I'm removing the case for
+>> "TPM_VID_WINBOND" since we have no need for it.
+>>
+>> Also, the default comparison is wrong. Only cmdReady bit needs to be
+>> compared instead of the full lower status register byte.
+>>
+>> Fixes: 1f86605 (tpm: Fix cancellation of TPM commands (polling mode))
+>
+> Needs to have exactly 12 hex digits of the hash.
+>
 
--- 
-MST
+Ok, i'll fix this for version 8. Thank you.
+
+> /Jarkko
 
