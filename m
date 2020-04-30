@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1498C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D4CC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B004F2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD6D2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pGfETTCU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HUmhodjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgD3TGR (ORCPT
+        id S1726774AbgD3TGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48064 "EHLO
+        Thu, 30 Apr 2020 15:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgD3TGQ (ORCPT
+        with ESMTP id S1726712AbgD3TGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:06:16 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D3CC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:06:16 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r4so3259280pgg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:06:16 -0700 (PDT)
+        Thu, 30 Apr 2020 15:06:20 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CA3C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:06:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 7so3847798pjo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:06:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zx0E+HqaN1bUC1TO1dtOQ7VQXn9VN+e8/WjHREoxvcw=;
-        b=pGfETTCUGJ1eplG30Gh134q0RJpVt2LEqKse+6q9W9S31dTzgSwHfioljRBmVjtup6
-         K+Z9SU8M2FodJMg1JhhKs18gVO4xC1z+Vo79wh/+K9RYUoH5cd3LKWKw09QWmvhjC6Z/
-         K5/OUPMjTqydRKN53yusuaggvVJ0gVZgjzvt5UyKdz0upTJplIJYPUP6jpcllIvFOJ4J
-         q3FazBste8FZQJvxSc6zCQwN/jHQfqP39vgbHdMxz4mdj3GNnhFWB5qqLCcul8nAY8sZ
-         1gr+7UfyZ8T4lEaM/hPDv9tl1KY5MBoBJz8ISvTBM5x/TpdgtTwUKjHT9qIRfAm6+ya6
-         DEiw==
+        bh=HqOW945RKza/JpsluftGvHrtnYoUZM59Kb7ny0dAINI=;
+        b=HUmhodjJnkMQH959dPU/FHOgOs2RkforQQ0szf496o+WX6SXYZ4txDutrlJ09paeEp
+         YnGrVxpyc9xN/RvDelHq5cnG+E5Qylju4uuR54oABDtxzQWRjrhIjB7uA2/YzKgTO2NF
+         8q9gyK959A+0hmvuF/3G23aiz64pcm7snO5OKlLmXIWUm4i2y3rzcv+gKeAsisc35Zwe
+         rFSVEwpl6IfoY3uEATOFabKnKC3GfqNUhFO6CnUobxWBKcvWri7GG7VdR3Iv0fdMVThD
+         zf5MVpvxjIORR8qdHVS2pxNxojLobHj+LaZwc7Uzp9zEEUOHV1yloBTM5H1no6QO6BBS
+         Itsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=zx0E+HqaN1bUC1TO1dtOQ7VQXn9VN+e8/WjHREoxvcw=;
-        b=V/bZosmMpeD+LRnPrM4/dzD1KR9NiZThtr611r7H/9eJKXdqi/iPmJBXAzdZbGiwx5
-         eTxxN5dJG9nQ5HFxa2qAJ7t0N+YM9ThKTyYw9qgijXRiJvMZ0jUifBVm0wW2nijsdK1W
-         +EsJ/KrJElCv0B148CbADt+2Ai8qBEnOLLoI9jw82WVcaVzJhQwgIMWwvXZia0z8tB6X
-         RZXJhPYAPeLnc+6I9RcCcqvr/a37wSECUaNUcoAMG/uUyhJVO2g3MS8oddyDNjkFtENo
-         A2d67pKaje9lxEGGkR+OA3w+P43zx0y74ISvxKdd1cQLKu7Dn0MxBvIH1VK4nwgXLw+f
-         DuUg==
-X-Gm-Message-State: AGi0PuZF68XWk91xDRWfb3wxxUR2ktmsDRLHSqx1W/bnLFSBKPbRVG1z
-        6fUzi6dhkk5ft4Ppf3aYf8NP
-X-Google-Smtp-Source: APiQypIz7M4XRoff71ERL1h7ZhbbJwJXnruE5yMtB50LeY3NFYKPbTHrJ6OexVFO51GAQqylNa670Q==
-X-Received: by 2002:a63:de49:: with SMTP id y9mr349872pgi.435.1588273575577;
-        Thu, 30 Apr 2020 12:06:15 -0700 (PDT)
+        bh=HqOW945RKza/JpsluftGvHrtnYoUZM59Kb7ny0dAINI=;
+        b=XdpaaNmdiTeWJd/9nVrwgZ+8QWQbkDkcOzOa/A5PnyFrBfDmclAaSYK6ZKKYFcLQ/x
+         vhqXkxta8YySBC2ECo/3/t6pUdNCtJ3zPyTiYcGGIByqV5o6g48eoI8owLao6wsx550p
+         EnbJCV0xGVeJAHL/rCYP2rCG0GFOn814cUHaxDzJz72ABgpyxatdPEF+lu4+iduuFPbI
+         jBEpaC3DY+T4WgtGyaU9f6WyfKK4okueFMrHLPhgK7fsnk6xY4++FPclho3b9T5zYP5X
+         3mHLabjjdNxEqyXx6Z3I8q0ingbyJ8PCseR9MFRFt6rpbECumiEjG536O7YpDfliPE+N
+         sH3A==
+X-Gm-Message-State: AGi0PuYz03b/u6GwNEih/+799K0oGuDi/1PvX9EGM+POXwHIwcPGUM2Y
+        dtBjw4gYXExCSmTAu3ytkOH6
+X-Google-Smtp-Source: APiQypIoz9U4YuvrxFQ8f8sIIRfoCejZKyaTDPp9ytCz1Crot+vzDnqAgJj+U7x/JkSmrd7ZTxNQyw==
+X-Received: by 2002:a17:902:b948:: with SMTP id h8mr414798pls.309.1588273579341;
+        Thu, 30 Apr 2020 12:06:19 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:6081:946c:419e:a71:7237:1613])
-        by smtp.gmail.com with ESMTPSA id l37sm467863pje.12.2020.04.30.12.06.12
+        by smtp.gmail.com with ESMTPSA id l37sm467863pje.12.2020.04.30.12.06.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:06:15 -0700 (PDT)
+        Thu, 30 Apr 2020 12:06:18 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     hemantk@codeaurora.org, jhugo@codeaurora.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/6] bus: mhi: core: Make sure to powerdown if mhi_sync_power_up fails
-Date:   Fri,  1 May 2020 00:35:51 +0530
-Message-Id: <20200430190555.32741-3-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 3/6] bus: mhi: core: Remove link_status() callback
+Date:   Fri,  1 May 2020 00:35:52 +0530
+Message-Id: <20200430190555.32741-4-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200430190555.32741-1-manivannan.sadhasivam@linaro.org>
 References: <20200430190555.32741-1-manivannan.sadhasivam@linaro.org>
@@ -76,36 +76,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jeffrey Hugo <jhugo@codeaurora.org>
 
-Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
-clean up the resources.  Otherwise a BUG could be triggered when
-attempting to clean up MSIs because the IRQ is still active from a
-request_irq().
+If the MHI core detects invalid data due to a PCI read, it calls into
+the controller via link_status() to double check that the link is infact
+down.  All in all, this is pretty pointless, and racy.  There are no good
+reasons for this, and only drawbacks.
+
+Its pointless because chances are, the controller is going to do the same
+thing to determine if the link is down - attempt a PCI access and compare
+the result.  This does not make the link status decision any smarter.
+
+Its racy because its possible that the link was down at the time of the
+MHI core access, but then recovered before the controller access.  In this
+case, the controller will indicate the link is not down, and the MHI core
+will precede to use a bad value as the MHI core does not attempt to retry
+the access.
+
+Retrying the access in the MHI core is a bad idea because again, it is
+racy - what if the link is down again?  Furthermore, there may be some
+higher level state associated with the link status, that is now invalid
+because the link went down.
+
+The only reason why the MHI core could see "invalid" data when doing a PCI
+access, that is actually valid, is if the register actually contained the
+PCI spec defined sentinel for an invalid access.  In this case, it is
+arguable that the MHI implementation broken, and should be fixed, not
+worked around.
+
+Therefore, remove the link_status() callback before anyone attempts to
+implement it.
 
 Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Hemant Kumar <hemantk@codeaurora.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/bus/mhi/core/pm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/bus/mhi/core/init.c | 6 ++----
+ drivers/bus/mhi/core/main.c | 5 ++---
+ include/linux/mhi.h         | 2 --
+ 3 files changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index 3529419d076b..e7c831867a23 100644
---- a/drivers/bus/mhi/core/pm.c
-+++ b/drivers/bus/mhi/core/pm.c
-@@ -1045,7 +1045,11 @@ int mhi_sync_power_up(struct mhi_controller *mhi_cntrl)
- 			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
- 			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index b38359c480ea..2af08d57ec28 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -812,10 +812,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 	if (!mhi_cntrl)
+ 		return -EINVAL;
  
--	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
-+	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -ETIMEDOUT;
-+	if (ret)
-+		mhi_power_down(mhi_cntrl, false);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(mhi_sync_power_up);
+-	if (!mhi_cntrl->runtime_get || !mhi_cntrl->runtime_put)
+-		return -EINVAL;
+-
+-	if (!mhi_cntrl->status_cb || !mhi_cntrl->link_status)
++	if (!mhi_cntrl->runtime_get || !mhi_cntrl->runtime_put ||
++	    !mhi_cntrl->status_cb)
+ 		return -EINVAL;
  
+ 	ret = parse_config(mhi_cntrl, config);
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 3e9aa3b2da77..374e3db31ab7 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -20,9 +20,8 @@ int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+ {
+ 	u32 tmp = readl(base + offset);
+ 
+-	/* If there is any unexpected value, query the link status */
+-	if (PCI_INVALID_READ(tmp) &&
+-	    mhi_cntrl->link_status(mhi_cntrl))
++	/* If the value is invalid, the link is down */
++	if (PCI_INVALID_READ(tmp))
+ 		return -EIO;
+ 
+ 	*out = tmp;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 3e76dc9cba5d..0794483b9a18 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -335,7 +335,6 @@ struct mhi_controller_config {
+  * @syserr_worker: System error worker
+  * @state_event: State change event
+  * @status_cb: CB function to notify power states of the device (required)
+- * @link_status: CB function to query link status of the device (required)
+  * @wake_get: CB function to assert device wake (optional)
+  * @wake_put: CB function to de-assert device wake (optional)
+  * @wake_toggle: CB function to assert and de-assert device wake (optional)
+@@ -417,7 +416,6 @@ struct mhi_controller {
+ 
+ 	void (*status_cb)(struct mhi_controller *mhi_cntrl,
+ 			  enum mhi_callback cb);
+-	int (*link_status)(struct mhi_controller *mhi_cntrl);
+ 	void (*wake_get)(struct mhi_controller *mhi_cntrl, bool override);
+ 	void (*wake_put)(struct mhi_controller *mhi_cntrl, bool override);
+ 	void (*wake_toggle)(struct mhi_controller *mhi_cntrl);
 -- 
 2.17.1
 
