@@ -2,124 +2,182 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DA2C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084ABC83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A867F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12EE2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588217215;
+	bh=3S8xmYxzk+yx3Xnz6sGXbikies4Onj7ra67w7X4Pt6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=izsRsfEykfYkDtM8FvxdPdSo9s0i/7wph0nKCBf+DybcPrNbZfU/umbTBK9uIZeVP
+	 mvGWCF3AlkvKGG86lnmWZ0yzqXoPipHkndzAboRTvdT+fPH7aHEa+umOEX0CFqkNOL
+	 NC/9NRedjzvsRSikbDxW1NXsMiGW3PR9yk+NcvF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgD3D0p (ORCPT
+        id S1726682AbgD3D0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:26:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50886 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726309AbgD3D0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:26:44 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EDB4D33C49F59BC82B6E;
-        Thu, 30 Apr 2020 11:26:41 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 30 Apr 2020 11:26:32 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Yuqi Jin <jinyuqi@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [RFC PATCH] fs: Move @f_count to different cacheline with @f_mode
-Date:   Thu, 30 Apr 2020 11:25:32 +0800
-Message-ID: <1588217132-41242-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 Apr 2020 23:26:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35936 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD3D0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 23:26:54 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z1so2222008pfn.3;
+        Wed, 29 Apr 2020 20:26:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B/yD4aYy+x5y2S0pou2i8a1nwXsjhcizrnINaWT4DzY=;
+        b=KXhjgYdn4E6lJ9yyaFAYWBFwj59ff/GV+0A4/Y3JjLyENPzhTO8UCc3FXBgQQfefYe
+         mA5hBj1LioHu1H11oB5OPABmh5Jcwoga2NMRfmwyXLpno9ji1svBrQDa1FiMTFQjFxSC
+         TlGTrGWg+eXLKcnJHSD9Ta7TgHrY89jxWdQ6//q5Dx479hALi+WVOSvw+KWkJ3uyrE4o
+         o0goDuMA1BN+40anmd4OUcfHBP6tDd+LE3pGwUJXZoljB5fzg8y27RzWY7AwlIQHemkM
+         T+WrBMxvHtkoUuiwMn0RtolfblSKMTGY/Qh3RCHATeK38nxsN9L3yUbgyNBguizeriK/
+         nyiA==
+X-Gm-Message-State: AGi0PuZpvfRltmg1B73SJfDji/8lkcu2r1z8OhfVw/hRPjnW6lJ2mLtm
+        WLE8tbtTM72G8CDnar48IInVcBQK
+X-Google-Smtp-Source: APiQypJXFJrJOiKHX9ggSpsLho0xiRuKgxJmFyuVchIeWwNUCgdCIX7Fa3c9zwdqsUTYCjd98vYoIQ==
+X-Received: by 2002:a63:dc41:: with SMTP id f1mr1420544pgj.348.1588217211774;
+        Wed, 29 Apr 2020 20:26:51 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id d8sm2189038pfd.159.2020.04.29.20.26.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 20:26:50 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 20:26:49 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: How to upload fpga firmware
+Message-ID: <20200430032649.GB6168@epycbox.lan>
+References: <20200422114432.GM1694@pengutronix.de>
+ <20200423013648.GA2430@epycbox.lan>
+ <20200423062331.GR1694@pengutronix.de>
+ <20200425035949.GA11710@epycbox.lan>
+ <20200427064433.GH5877@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427064433.GH5877@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuqi Jin <jinyuqi@huawei.com>
+On Mon, Apr 27, 2020 at 08:44:33AM +0200, Sascha Hauer wrote:
+> On Fri, Apr 24, 2020 at 08:59:49PM -0700, Moritz Fischer wrote:
+> > Hi Sascha,
+> > 
+> > On Thu, Apr 23, 2020 at 08:23:31AM +0200, Sascha Hauer wrote:
+> > > Hi Moritz,
+> > > 
+> > > On Wed, Apr 22, 2020 at 06:36:48PM -0700, Moritz Fischer wrote:
+> > > > Hi Sascha,
+> > > > 
+> > > > On Wed, Apr 22, 2020 at 01:44:32PM +0200, Sascha Hauer wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > I wonder what can be done with the mainline state of drivers/fpga/. The
+> > > > > entry to the framework seems to be fpga_mgr_load(). The only user of
+> > > > > this function is fpga_region_program_fpga(). This in turn is only called
+> > > > > in response of applying a device tree overlay. A device tree overlay is
+> > > > > applied with of_overlay_fdt_apply() which has no users in the Kernel.
+> > > > 
+> > > > Yes. It is waiting for dt_overlays one way or another. I personally
+> > > > don't currently have the bandwidth to work actively on this.
+> > > > 
+> > > > > My current task is to load a firmware to a FPGA. The code all seems to
+> > > > > be there in the Kernel, it only lacks a way to trigger it. I am not very
+> > > > > interested in device tree overlays since the FPGA appears as a PCI
+> > > > > device (although applying a dtbo could enable the PCIe controller device
+> > > > > tree node). Is there some mainline way to upload FPGA firmware? At the
+> > > > > moment we are using the attached patch to trigger loading the firmware
+> > > > > from userspace. Would something like this be acceptable for mainline?
+> > > > 
+> > > > We've looked into this sort of patches over the years and never came to
+> > > > a general interface that really works.
+> > > > 
+> > > > The OPAE folks (and other users I know of) usually use FPGA Manager with
+> > > > a higher layer on top of it that moves the bitstream into the kernel via
+> > > > an ioctl().
+> > > > 
+> > > > One concept I had toyed with mentally, but haven't really gotten around
+> > > > to implement is a 'discoverable' region, that would deal with the
+> > > > necessary re-enumeration via a callback and have a sysfs interface
+> > > > similar to what the patch below has.
+> > > > This would essentially cover use-cases where you have a discoverable
+> > > > device implemented in FPGA logic, such as say an FPGA hanging off of
+> > > > PCIe bus that can get loaded over USB, a CPLD or some other side-band
+> > > > mechanism. After loading the image you'd have to rescan the PCIe bus -
+> > > > which - imho is the kernel's job.
+> > > > 
+> > > > What I really wanna avoid is creating another /dev/fpga0 / /dev/xdevcfg
+> > > > that completely leaves the kernel in the dark about the fact that it
+> > > > reconfigures a bit of hardware hanging off the bus.
+> > > 
+> > > Yes, makes sense. While this would suffice my needs at the moment it
+> > > really sounds like a dead end.
+> > > 
+> > > > 
+> > > > In my ideal world you'd create a pci driver that binds to your device,
+> > > > and creates mfd style subdevices for whatever you'd want your design to
+> > > > do. One of these devices would be an FPGA and a FPGA region attached to
+> > > > that FPGA manager. Your top level driver would co-ordinate the fact that
+> > > > you are re-programming parts of the FPGA and create / destroy devices as
+> > > > needed for the hardware contained in the bitstream.
+> > > 
+> > > In my case there is no pci device visible before loading the firmware,
+> > > so creating a pci driver is not an option. Maybe pci host controllers
+> > > could register themselves as fpga-bridges. With this we could put the
+> > > pci host controller (or the pci device, AFAIK there is a PCI device tree
+> > > binding) where the fpga is connected into the fpga-bridges phandles list
+> > > of the fpga-region.
+> > 
+> > Can you talk a bit more about the system you're working with? Is there
+> > some sort of sideband mechanism to load the image? What exposes the
+> > image loading capaibility? A CPLD, an ASIC, USB device, JTAG?
+> 
+> We have two systems. One uploads the FPGA firmware via SPI passive
+> serial mode (compatible fpga-arria10-passive-serial). The other system
+> has a ftdi FT232H USB/serial converter chip working in synchronous FIFO
+> mode, connected to the FPGA via a CPLD. The series from Anatolij Gustchin
+> here https://patchwork.kernel.org/cover/10824743/ would have been useful
+> for us, although of course our CPLD has a different protocol. On this
+> system we currently ended up with a small custom driver which bypasses
+> FPGA manager and only uploads the firmware at USB connect time.
 
-__fget_files does check the @f_mode with mask variable and will do some
-atomic operations on @f_count while both are on the same cacheline.
-Many CPU cores do file access and it will cause much conflicts on @f_count. 
-If we could make the two members into different cachelines, it shall relax
-the siutations.
+Yeah this seems imho the only legit use-case for a something like the
+sysfs entry for the fpga-region. That being said once we add that, it's
+going to become ABI and everyone is gonna use that instead of
+implementing a proper driver using FPGA Regions to deal with
+re-enumeration.
 
-We have tested this on ARM64 and X86, the result is as follows:
+We don't really have a good way of modelling systems where the bus is
+100% discoverable (like a PCI device), but only after we load firmware.
 
-Syscall of unixbench has been run on Huawei Kunpeng920 with this patch:
-24 x System Call Overhead  1
+I mean you could implement a FPGA manager for your CPLD that also
+instantiates a region that you then target when you want to reprogram
+the FPGA region. How you'd tie that together though with the PCI device
+to get the bus to be re-enumerated as part of reprogramming the region,
+I'm not 100% sure :)
 
-System Call Overhead                    3160841.4 lps   (10.0 s, 1 samples)
+> > It also depends a bit on the use-case: After you program the bitstream,
+> > do you need to runtime re-program it? Does it do partial
+> > reconfiguration? Are there subdevices inside your device, or is the
+> > whole thing a discoverable PCI device afterwards?
+> 
+> On both systems It's one PCI device only. Currently we don't need runtime
+> re-programming, although this might be useful in the future. Also there's
+> no partial reconfiguration.
+> 
 
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    3160841.4   2107.2
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         2107.2
+Sorry for the late response, things are busy at the moment.
 
-Without this patch:
-24 x System Call Overhead  1
-
-System Call Overhead                    2222456.0 lps   (10.0 s, 1 samples)
-
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    2222456.0   1481.6
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         1481.6
-
-And on Intel 6248 platform with this patch:
-40 CPUs in system; running 24 parallel copies of tests
-
-System Call Overhead                        4288509.1 lps   (10.0 s, 1 samples)
-
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    4288509.1   2859.0
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         2859.0
-
-Without this patch:
-40 CPUs in system; running 24 parallel copies of tests
-
-System Call Overhead                        3666313.0 lps   (10.0 s, 1 samples)
-
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    3666313.0   2444.2
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         2444.2
-
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
- include/linux/fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4f6f59b4f22a..90e76283f0fd 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -953,7 +953,6 @@ struct file {
- 	 */
- 	spinlock_t		f_lock;
- 	enum rw_hint		f_write_hint;
--	atomic_long_t		f_count;
- 	unsigned int 		f_flags;
- 	fmode_t			f_mode;
- 	struct mutex		f_pos_lock;
-@@ -976,6 +975,7 @@ struct file {
- #endif /* #ifdef CONFIG_EPOLL */
- 	struct address_space	*f_mapping;
- 	errseq_t		f_wb_err;
-+	atomic_long_t		f_count;
- } __randomize_layout
-   __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
- 
--- 
-2.7.4
-
+Cheers,
+Moritz
