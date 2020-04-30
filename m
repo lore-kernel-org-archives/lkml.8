@@ -2,160 +2,124 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38600C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A36C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B212076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUF51ZdE"
+	by mail.kernel.org (Postfix) with ESMTP id 8DBB92076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgD3QCW (ORCPT
+        id S1726815AbgD3QE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726350AbgD3QCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:02:21 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF96AC035494;
-        Thu, 30 Apr 2020 09:02:21 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x15so11595pfa.1;
-        Thu, 30 Apr 2020 09:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cNV8wBKZnzVBtfymmveclI4KpbJZuqPxmoI95kkMdEk=;
-        b=gUF51ZdEmMNREvmXqCvOQL6dUB2acFhJN4T+qV1lyQaqLu19s6doZkP4sgYp+HFDxZ
-         vB0lbjGzTxRL0fE/0T+K+CkxGMAw3phFJpqHqgcsu395S+hUjHM5tAqQTmfF4iNiTK0S
-         rUy19yKokxXhSnhmACYx4qtBM0xXlI+/94J8U8fhHMisdBW4uA2nlERs8MexdDiujgcZ
-         owtBIRwsLeE/PmzeQlKTzRuCL3sk/LZ2tdoyH5VDaq9dBHU2/0EM0T/Zls4dXbKeiLK1
-         6fCIg28YSOEKSUTj0xoShyBrKt5gcQKodO8WzxA4w7+0WouJT5aiUzn2W9DlzrOGIU/i
-         usYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cNV8wBKZnzVBtfymmveclI4KpbJZuqPxmoI95kkMdEk=;
-        b=i7OpEODc4npCC8mfXm1lhF/LZ6A4mKhw1tyuUpzTgysIU6cbDkD6ZRZXJNIwefDlMW
-         ZJwz+/LxIRrCnvBPfvNHJNadoCNfe1jLDq97rWl7CVapasboEn0W4li7z4Wp7lNtSDxu
-         MPEKbliIkeliAdhHReI8jPaQo4Ywmv9fD4G1//xU7+fWPYUFghc6ftcbv5WI67jZaK8v
-         5i0VflgXss13Tvwba5VxwBtXtqLJ6zYHp8hwNLMsvTHX8hbtbd2J45InmWtGt6QCFxzN
-         TUrO7SUO3ocTBtf47Kt6TpXAJ5QACWr2bWcC5OJDMaA++efxJln95/OWd/abFxWCErcL
-         D18w==
-X-Gm-Message-State: AGi0PuYqAmoYBM/boydJyRPuVmVi8wm/O9jCioC7ETcY3/i5RlO3btym
-        Sk687PFzK2bToX0WTZuXFczmxhY=
-X-Google-Smtp-Source: APiQypKDW2dWa9U3zBxfHDvIfC7dS46oUZwZ5hSH0zqX0CXg5Qavgg068rmwXmccEmvXAV0Z3Zj/ng==
-X-Received: by 2002:aa7:9811:: with SMTP id e17mr28538pfl.70.1588262541257;
-        Thu, 30 Apr 2020 09:02:21 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d32:dd79:2591:468a:ee81:9c85])
-        by smtp.gmail.com with ESMTPSA id 5sm244359pjf.19.2020.04.30.09.02.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 09:02:20 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        paulmck@kernel.org
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] integrity: evm: Fix RCU list related warnings.
-Date:   Thu, 30 Apr 2020 21:32:05 +0530
-Message-Id: <20200430160205.17798-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 12:04:27 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31780 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgD3QE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:04:26 -0400
+IronPort-SDR: Df8We27yhKqo7qpTknh7hRdrJQm27s3PXw/3A3CvYcPFbKTQZc5urqKQYIOE5egkv43DnN+BuO
+ Kni/8a7Gavug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 09:04:24 -0700
+IronPort-SDR: GGSzCMoySeYAUbJAzl2mHzLAbB6NpkILcMU5FKnDmI8Hd9CO4dZEQh8q2QgRszsoQswMn9gG6D
+ vRptZ69zdrKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="261827387"
+Received: from rariojas-mobl.amr.corp.intel.com (HELO [10.252.135.40]) ([10.252.135.40])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 09:04:23 -0700
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
+ MHP_NO_FIRMWARE_MEMMAP
+To:     David Hildenbrand <david@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+References: <20200430102908.10107-1-david@redhat.com>
+ <20200430102908.10107-3-david@redhat.com>
+ <87pnbp2dcz.fsf@x220.int.ebiederm.org>
+ <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <c905918d-54f6-0f17-ca5b-cd3371ada788@intel.com>
+Date:   Thu, 30 Apr 2020 09:04:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On 4/30/20 8:52 AM, David Hildenbrand wrote:
+>> Justifying behavior by documentation that does not consider memory
+>> hotplug is bad thinking.
+> Are you maybe confusing this patch series with the arm64 approach? This
+> is not about ordinary hotplugged DIMMs.
+> 
+> I'd love to get Dan's, Dave's and Michal's opinion.
 
-This patch fixes the following warning and few other
-instances of traversal of evm_config_xattrnames list:
+The impact on kexec from the DAX "kmem" driver's use of hotplug was
+inadvertent and unfortunate.
 
-[   32.848432] =============================
-[   32.848707] WARNING: suspicious RCU usage
-[   32.848966] 5.7.0-rc1-00006-ga8d5875ce5f0b #1 Not tainted
-[   32.849308] -----------------------------
-[   32.849567] security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
-
-Since entries are only added to the list and never deleted,
-use list_For_each_entry_lockless() instead of
-list_for_each_entry_rcu() for traversing the list.
-Also, add a relevant comment in evm_secfs.c to indicate this fact.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- security/integrity/evm/evm_crypto.c | 2 +-
- security/integrity/evm/evm_main.c   | 4 ++--
- security/integrity/evm/evm_secfs.c  | 9 ++++++++-
- 3 files changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index 35682852ddea..b2dc87da5f50 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -207,7 +207,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
- 	data->hdr.length = crypto_shash_digestsize(desc->tfm);
- 
- 	error = -ENODATA;
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		bool is_ima = false;
- 
- 		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
-diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index d361d7fdafc4..0d36259b690d 100644
---- a/security/integrity/evm/evm_main.c
-+++ b/security/integrity/evm/evm_main.c
-@@ -97,7 +97,7 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
- 	if (!(inode->i_opflags & IOP_XATTR))
- 		return -EOPNOTSUPP;
- 
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
- 		if (error < 0) {
- 			if (error == -ENODATA)
-@@ -228,7 +228,7 @@ static int evm_protected_xattr(const char *req_xattr_name)
- 	struct xattr_list *xattr;
- 
- 	namelen = strlen(req_xattr_name);
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		if ((strlen(xattr->name) == namelen)
- 		    && (strncmp(req_xattr_name, xattr->name, namelen) == 0)) {
- 			found = 1;
-diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-index 39ad1038d45d..cfc3075769bb 100644
---- a/security/integrity/evm/evm_secfs.c
-+++ b/security/integrity/evm/evm_secfs.c
-@@ -232,7 +232,14 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
- 		goto out;
- 	}
- 
--	/* Guard against races in evm_read_xattrs */
-+	/*
-+	 * xattr_list_mutex guards against races in evm_read_xattrs().
-+	 * Entries are only added to the evm_config_xattrnames list
-+	 * and never deleted. Therefore, the list is traversed
-+	 * using list_for_each_entry_lockless() without holding
-+	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
-+	 * and evm_protected_xattr().
-+	 */
- 	mutex_lock(&xattr_list_mutex);
- 	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
- 		if (strcmp(xattr->name, tmp->name) == 0) {
--- 
-2.17.1
-
+The problem statement and solution seem pretty sane to me.
