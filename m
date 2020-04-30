@@ -2,182 +2,166 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C4DC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90525C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 769B5206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D28206D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgD3OdU (ORCPT
+        id S1728285AbgD3Odh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:33:20 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34754 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgD3OdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:33:20 -0400
-IronPort-SDR: Q6doJSoDXBXzHRsTFxX/go+ZrrmtK1dgrU5uNed92Pccrmk15LavZXWaccd5elwe9x4+i8kBi8
- NxrSJfcg26GA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 07:33:19 -0700
-IronPort-SDR: Nj8aldPz8EtixhdgRFYIMZbnlonNQ5lHzCvYg3eQ5LPJU0YsrABCoc1hCal0oggzNpounrRXuP
- fJXU910ggtTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="258318594"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga003.jf.intel.com with ESMTP; 30 Apr 2020 07:33:16 -0700
-Subject: Re: [PATCH v11 2/5] usb: renesas-xhci: Add the renesas xhci driver
-To:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?Q?Andreas_B=c3=b6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200430101019.1130956-1-vkoul@kernel.org>
- <20200430101019.1130956-3-vkoul@kernel.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <8ffd119b-192f-8fcc-46cc-3a405e30338c@linux.intel.com>
-Date:   Thu, 30 Apr 2020 17:36:03 +0300
+        Thu, 30 Apr 2020 10:33:37 -0400
+Received: from www62.your-server.de ([213.133.104.62]:47190 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgD3Odh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:33:37 -0400
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jUAFo-0000Xz-Tz; Thu, 30 Apr 2020 16:33:33 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jUAFo-0001Sb-H9; Thu, 30 Apr 2020 16:33:32 +0200
+Subject: Re: KASAN: use-after-free Write in bpf_link_put
+To:     syzbot <syzbot+39b64425f91b5aab714d@syzkaller.appspotmail.com>,
+        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <0000000000006780dc05a47ed632@google.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <2ae442cb-b6ab-0624-a2a0-0f98a5c217bf@iogearbox.net>
+Date:   Thu, 30 Apr 2020 16:33:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200430101019.1130956-3-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0000000000006780dc05a47ed632@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25798/Thu Apr 30 14:03:33 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.4.2020 13.10, Vinod Koul wrote:
-> From: Christian Lamparter <chunkeey@googlemail.com>
+On 4/30/20 11:39 AM, syzbot wrote:
+> Hello,
 > 
-> This add a new driver for renesas xhci which is basically a firmware
-> loader for uPD720201 and uPD720202 w/o ROM. It uses xhci-pci driver for
-> most of the work.
+> syzbot found the following crash on:
 > 
-> This is added in Makefile before the xhci-pci driver so that it first
-> get probed for renesas devices before the xhci-pci driver has a chance
-> to claim any device.
+> HEAD commit:    449e14bf bpf: Fix unused variable warning
+> git tree:       bpf-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=109eb5f8100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=16d87c420507d444
+> dashboard link: https://syzkaller.appspot.com/bug?extid=39b64425f91b5aab714d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+39b64425f91b5aab714d@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in atomic64_dec_and_test include/asm-generic/atomic-instrumented.h:1557 [inline]
+> BUG: KASAN: use-after-free in bpf_link_put+0x19/0x1b0 kernel/bpf/syscall.c:2255
+> Write of size 8 at addr ffff8880a7248800 by task syz-executor.0/28011
 
-Most of the above is no longer correct
+Andrii, ptal, thanks!
 
+> CPU: 0 PID: 28011 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x188/0x20d lib/dump_stack.c:118
+>   print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+>   __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+>   kasan_report+0x33/0x50 mm/kasan/common.c:625
+>   check_memory_region_inline mm/kasan/generic.c:187 [inline]
+>   check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+>   atomic64_dec_and_test include/asm-generic/atomic-instrumented.h:1557 [inline]
+>   bpf_link_put+0x19/0x1b0 kernel/bpf/syscall.c:2255
+>   bpf_link_release+0x33/0x40 kernel/bpf/syscall.c:2270
+>   __fput+0x33e/0x880 fs/file_table.c:280
+>   task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>   exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
+>   prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+>   syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+>   do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+>   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x7fc891a66469
+> Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ff 49 2b 00 f7 d8 64 89 01 48
+> RSP: 002b:00007fc892156db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> RAX: fffffffffffffff4 RBX: 000000000042c4e0 RCX: 00007fc891a66469
+> RDX: 0000000000000010 RSI: 0000000020000040 RDI: 000000000000001c
+> RBP: 00000000006abf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000005
+> R13: 000000000000004f R14: 0000000000415473 R15: 00007fc8921575c0
 > 
-> This patch adds a firmware loader for the uPD720201K8-711-BAC-A
-> and uPD720202K8-711-BAA-A variant. Both of these chips are listed
-> in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
-> devices which need the firmware loader on page 2 in order to
-> work as they "do not support the External ROM".
+> Allocated by task 28011:
+>   save_stack+0x1b/0x40 mm/kasan/common.c:49
+>   set_track mm/kasan/common.c:57 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:495 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+>   kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+>   kmalloc include/linux/slab.h:555 [inline]
+>   kzalloc include/linux/slab.h:669 [inline]
+>   cgroup_bpf_link_attach+0x13d/0x5b0 kernel/bpf/cgroup.c:894
+>   link_create kernel/bpf/syscall.c:3765 [inline]
+>   __do_sys_bpf+0x238c/0x46d0 kernel/bpf/syscall.c:3987
+>   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>   entry_SYSCALL_64_after_hwframe+0x49/0xb3
 > 
-> The "Firmware Download Sequence" is describe in chapter
-> "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
+> Freed by task 28011:
+>   save_stack+0x1b/0x40 mm/kasan/common.c:49
+>   set_track mm/kasan/common.c:57 [inline]
+>   kasan_set_free_info mm/kasan/common.c:317 [inline]
+>   __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+>   __cache_free mm/slab.c:3426 [inline]
+>   kfree+0x109/0x2b0 mm/slab.c:3757
+>   cgroup_bpf_link_attach+0x2bc/0x5b0 kernel/bpf/cgroup.c:906
+>   link_create kernel/bpf/syscall.c:3765 [inline]
+>   __do_sys_bpf+0x238c/0x46d0 kernel/bpf/syscall.c:3987
+>   do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>   entry_SYSCALL_64_after_hwframe+0x49/0xb3
 > 
-> The firmware "K2013080.mem" is available from a USB3.0 Host to
-> PCIe Adapter (PP2U-E card) "Firmware download" archive. An
-> alternative version can be sourced from Netgear's WNDR4700 GPL
-> archives.
+> The buggy address belongs to the object at ffff8880a7248800
+>   which belongs to the cache kmalloc-128 of size 128
+> The buggy address is located 0 bytes inside of
+>   128-byte region [ffff8880a7248800, ffff8880a7248880)
+> The buggy address belongs to the page:
+> page:ffffea00029c9200 refcount:1 mapcount:0 mapping:00000000a3d4ec31 index:0xffff8880a7248700
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea00024ceac8 ffffea000251d3c8 ffff8880aa000700
+> raw: ffff8880a7248700 ffff8880a7248000 000000010000000f 0000000000000000
+> page dumped because: kasan: bad access detected
 > 
-> The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
-> (2012-06-15) state that the firmware is for the following devices:
->  - uPD720201 ES 2.0 sample whose revision ID is 2.
->  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
->  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> Memory state around the buggy address:
+>   ffff8880a7248700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8880a7248780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>> ffff8880a7248800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                     ^
+>   ffff8880a7248880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   ffff8880a7248900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ==================================================================
 > 
-> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> [vkoul: fixed comments:
-> 	used macros for timeout count and delay
-> 	removed renesas_fw_alive_check
-> 	cleaned renesas_fw_callback
-> 	removed recursion for renesas_fw_download
-> 	add register defines and field names
-> 	move to a separate file
-> 	make fw loader as sync probe so that we execute in probe and
->         prevent race]
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> 
 > ---
->  drivers/usb/host/Makefile           |   3 +-
->  drivers/usb/host/xhci-pci-renesas.c | 361 ++++++++++++++++++++++++++++
->  drivers/usb/host/xhci-pci.h         |  16 ++
->  3 files changed, 379 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/usb/host/xhci-pci-renesas.c
->  create mode 100644 drivers/usb/host/xhci-pci.h
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 > 
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index b191361257cc..c3a79f626393 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -70,7 +70,8 @@ obj-$(CONFIG_USB_OHCI_HCD_DAVINCI)	+= ohci-da8xx.o
->  obj-$(CONFIG_USB_UHCI_HCD)	+= uhci-hcd.o
->  obj-$(CONFIG_USB_FHCI_HCD)	+= fhci.o
->  obj-$(CONFIG_USB_XHCI_HCD)	+= xhci-hcd.o
-> -obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-> +usb-xhci-pci-objs		:= xhci-pci.o xhci-pci-renesas.o
-> +obj-$(CONFIG_USB_XHCI_PCI)	+= usb-xhci-pci.o
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
-I don't think it's a good idea to rename the xhci-pci module to usb-xhci-pci
-
-does
-
-xhci-pci-y			:= xhci-pci.o xhci-pci-renesas.o
-obj-$(CONFIG_USB_XHCI_PCI)	+= xhci-pci.o
-
-cause some kbuild issues?
-
--Mathias
