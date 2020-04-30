@@ -2,155 +2,156 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0312C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5E4C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A617B20836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A99820836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UIzTRbYX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kt9s26Qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgD3STi (ORCPT
+        id S1726736AbgD3SVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:19:38 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8280 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3STh (ORCPT
+        Thu, 30 Apr 2020 14:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbgD3SVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:19:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab163d0000>; Thu, 30 Apr 2020 11:17:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 11:19:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 11:19:37 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 18:19:37 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 18:19:35 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
-Message-ID: <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
-Date:   Thu, 30 Apr 2020 11:18:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 14:21:36 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64947C08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:21:36 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id a5so4690281vsm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=SR5cmb+TdKfA9P9unlHlcoWqQ+iFT2b4XsANwGqxz5Y=;
+        b=Kt9s26Qov6Qn68/Pe3SRmeowZf7qJWgEO/1aiZYlcrWn/63/H0Mxf0JJVVMFh+pL7n
+         K4YQd/0YimnlqtXjKhoN+B+6gQ/2W073uz2X5RxT5/69tfGQIiW/gnVrr3EHLGpP1Q86
+         2T/hEImFFlMGoRGn2f5o5tH6Ov3xB60rvdHTo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=SR5cmb+TdKfA9P9unlHlcoWqQ+iFT2b4XsANwGqxz5Y=;
+        b=QRwbpFZnhcnblRD2ZwEUAiAKHXznAlAM+Z8qBBQdjj6aI6+0Tn1wZhYNCtN9KUFh9N
+         0mPJvGPmuS4GnuTYJ8WXdpgc/2UrTz7UiWQLkg0F+VTDHyGUsoONif5Q76Yd3bc8lISO
+         byI37iZ5MYbUOE41Jw95VTFJAuuASKXT8Q3X1+Qmt5WMavXYxQBQpUXYmqf2N3S881hm
+         NNSU0sHNduerKuQL265Iz07cjnjYVNNPRzBmNvzY1kkDv5VlDjGZJfVQRtLR47sNa//q
+         TC3Bfn+7CSss2UFRNm/E9kNL2gQ+HcygVCj5qq3xJFY95+32QDmcSclGPz+bb16O2q15
+         +YHA==
+X-Gm-Message-State: AGi0PuarzQYmQLmYmQwTEpcjsN2LA4kTK9jtfJTA5BApk+M31ms7+SgR
+        KlISJuqozJYFjOBxeSNUUd7t/M4R9os=
+X-Google-Smtp-Source: APiQypKIM0WBcLQ89742WFUDuLdNefHzJN27vpHjzovNBlLVJIvdjrrqhfh8GPJn/phoL5/z3PR3vg==
+X-Received: by 2002:a67:804c:: with SMTP id b73mr101855vsd.195.1588270895115;
+        Thu, 30 Apr 2020 11:21:35 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id l14sm144574vkl.47.2020.04.30.11.21.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 11:21:33 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id l25so4702950vso.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:21:33 -0700 (PDT)
+X-Received: by 2002:a67:bd07:: with SMTP id y7mr112084vsq.109.1588270892989;
+ Thu, 30 Apr 2020 11:21:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588270653; bh=ohRADXuDVSbfuKDemL6KlJp4gvc5xFXfIRWVd+qBixM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=UIzTRbYXVHksNJe2IzQvFcLxdGJKeeB0UUtI8EJKq8drnM36u+15eSwIsxJcl1lXz
-         0z/kJj40OEH6AtwGMs3z48FH096qMn3++VHTU2md0zUDeCkPrjSp6p2OS3yrlzFUCt
-         LNskQ6+n3BWKn5xCyKCBjTaHxNWG11GbhrkuaM9PqaGppirx6Lp4sdFwG40+5PHbDM
-         Yii6YWdsF6vPA1L0Ijf3TgAoLElFjK65+lT7TPHEuNnqrKGN0TjTy6M6hu37FV+FDH
-         jgE4fSIMEYLyRHosvo33XU/RNoZtu52+mqgTdteyTushcfupuK1Yl/I7euGQUkiWa7
-         UDifnOjDwwT6w==
+References: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org> <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 30 Apr 2020 11:21:21 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Usp5RxgXtjtgBe6jR3o=-+EXkYZuVzx_AF3=BsVu+OeA@mail.gmail.com>
+Message-ID: <CAD=FV=Usp5RxgXtjtgBe6jR3o=-+EXkYZuVzx_AF3=BsVu+OeA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string
+ and mem_iface clock
+To:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
+On Thu, Apr 30, 2020 at 11:12 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
->>
->> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->>>
->>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> +static int chan_capture_kthread_finish(void *data)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>>>> I guess it won't be great to freeze in the middle of a capture=20
->>>>>> process, so:
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (list_empty(&chan->don=
-e))
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 t=
-ry_to_freeze();
->>>>> And here should be some locking protection in order not race with the
->>>>> chan_capture_kthread_start because kthread_finish could freeze before
->>>>> kthread_start.
->>>> Or maybe both start / finish threads should simply be allowed to=20
->>>> freeze
->>>> only when both capture and done lists are empty.
->>>>
->>>> if (list_empty(&chan->capture) &&
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
->>>
->>> good to freeze when not in middle of the frame capture but why=20
->>> should we not allow freeze in between captures?
->>>
->>> Other drivers do allow freeze in between frame captures.
->>>
->>> I guess we can freeze before dequeue for capture and in finish=20
->>> thread we can freeze after capture done. This also don't need to=20
->>> check for list_empty with freeze to allow between frame captures.
->>>
->> Also if we add check for both lists empty, freeze is not allowed as=20
->> long as streaming is going on and in case of continuous streaming=20
->> freeze will never happen.
+> On Thu, Apr 30, 2020 at 09:29:47AM +0530, Sharat Masetty wrote:
+> > This patch adds a new compatible string for sc7180 and also an
+> > additional clock listing needed to power the TBUs and the TCU.
+> >
+> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > ---
+> > v2: Addressed review comments from Doug
+> >
+> >  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > index 6515dbe..ba5dba4 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > @@ -28,6 +28,7 @@ properties:
+> >            - enum:
+> >                - qcom,msm8996-smmu-v2
+> >                - qcom,msm8998-smmu-v2
+> > +              - qcom,sc7180-smmu-v2
+> >                - qcom,sdm845-smmu-v2
+> >            - const: qcom,smmu-v2
+> >
+> > @@ -113,16 +114,23 @@ properties:
+> >        present in such cases.
+> >
+> >    clock-names:
+> > +    minItems: 2
+> > +    maxItems: 3
+> >      items:
+> >        - const: bus
+> >        - const: iface
+> > +      - const: mem_iface
 >
-To allow freeze b/w frames (but not in middle of a frame),
+> Hi Sharat -
+>
+> I think there was a bit of confusion due to renaming between downstream and
+> upstream.  Currently for the sdm845 and friends we have:
+>
+>   clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+>      <&gcc GCC_GPU_CFG_AHB_CLK>;
+>   clock-names = "bus", "iface";
+>
+> Confusingly these same clocks downstream are "mem_iface_clk" and "iface_clk"
+> respectively.
+>
+> It looks like you are trying to add GCC_DDRSS_GPU_AXI_CLK as "mem_iface" which
+> was formerly "mem_clk" downstream. I'm not sure if the naming change is
+> intentional or you were trying to make upstream and downstream match and didn't
+> realize that they were renamed.
+>
+> I'm not sure if we need DDRSS_GPU_AXI_CLK or not. Empirically it works without
+> it for sdm845 (I don't have a sc7180 to test) but we should probably loop back
+> with either the clock team or the hardware designers to be sure there isn't a
+> corner case that is missing. I agree with Doug that its always best if we don't
+> need to add a clock.
 
-for capture_start thread, probably we can do unconditional try_to_freeze()
+I can confirm that on sc7180 the GPU seems to come up just fine
+without the clock being specified in the iommu node.  Definitely would
+be good to know what's broken and if nothing is broken maybe we can
+change this patch to just add the sc7180 compatible string and drop
+the clock.  I do note that the GMU already has a reference to the same
+"GCC_DDRSS_GPU_AXI_CLK" clock.
 
-for capture_finish thread, at end of capture done we can do=20
-try_to_freeze() only when done list is empty
-
-> Hi Dmitry,
->
-> Will update in v12 to not allow freeze in middle of a frame capture.
->
-> Can you please confirm on above if you agree to allow freeze to happen=20
-> in b/w frame captures?
->
-> Also as most feedback has been received from you by now, appreciate if=20
-> you can provide all in this v11 if you have anything else so we will=20
-> not have any new changes after v12.
->
-> Thanks
->
-> Sowjanya
->
+-Doug
