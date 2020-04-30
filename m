@@ -2,588 +2,291 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1956C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C93C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D9520757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935482186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="OByRhbuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgD3H3c (ORCPT
+        id S1726621AbgD3Hae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:29:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51102 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726433AbgD3H3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:29:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0802CAD79;
-        Thu, 30 Apr 2020 07:29:29 +0000 (UTC)
-Subject: Re: [PATCH v3 7/7] n_tty: Provide an informational line on VSTATUS
- receipt
-To:     Arseny Maslennikov <ar@cs.msu.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rob Landley <rob@landley.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>, mm <linux-mm@kvack.org>
-References: <20200430064301.1099452-1-ar@cs.msu.ru>
- <20200430064301.1099452-8-ar@cs.msu.ru>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e29068ce-0d28-5469-a31d-a86bc311cc9a@suse.cz>
-Date:   Thu, 30 Apr 2020 09:29:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200430064301.1099452-8-ar@cs.msu.ru>
-Content-Type: text/plain; charset=iso-8859-2
+        Thu, 30 Apr 2020 03:30:34 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:37098 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726412AbgD3Had (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:30:33 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U7QNEt006901;
+        Thu, 30 Apr 2020 03:30:26 -0400
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2056.outbound.protection.outlook.com [104.47.45.56])
+        by mx0b-00128a01.pphosted.com with ESMTP id 30qpmkrhcw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 03:30:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ifpLpRjNHOlXahiLDaxY1Ps7ZZr5XjBGnHi8RCIO43tvYxl2RuXnpnbKTIPiUhLt+iMruE6v3Eua6cLiYaDCjfzEl2nw5vfvW3RQsAx1iULp2RMkUrgOHL5tAW4aSbC5prv3qVIR4HZ31gwjkPMb13DLLfWJyrPAg3/jO0KhKHE3sHjqfee3v5AirZm31JfaEc2BPM+SL1D4gvMqb8KHkeR0DSMy8zflDPVM79a6ZiFXuD0XL3s+YzUady5cnMK4S4dw3H1yKZhI5GqnkJCETJCkvnweIiZhe9cNpq91cznE7QmqiWz850ASYIpuyiXO8ggxGkMRYiCjD+PEm+rSjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6omSXnCWaA7Dcmmn1dslib0uYgRNpHXG0BANSsaKx6U=;
+ b=T4Aeb47JBCDM5XIAdcCU51r4E+5lirgZ6vUX5lbWSoNy2b4ZKTYiNEKpyOWqW4atU3ZiBQgzB7qQ0ztRDTulKnlgqKGHB+0U+Sktmrpux352i3FB87C8Vroq9U7ZTMxK31j+7fgZuJQ4q8WTVTe14aVZ7MzbpZLD4/OGWO8Px8XRTmrCw1e+pM2eQ/maYSR8VwwsBw+HgqimnH6DyTJeMDQ5qgAPAS7HurwkZeUxl/VMSaBTg6PyxROxMhsC3LqW9AwdhPbX855DCVbx6dTdrdPff/JP1ZWXAtW+8b6OfbBFFq8MOh4kLViplpwupZ6sieAHo/KlYghKnVrddPkmRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6omSXnCWaA7Dcmmn1dslib0uYgRNpHXG0BANSsaKx6U=;
+ b=OByRhbuoO5qlWcfAai1FZbPZoxH62xkU0DFkqBJs/54p411srIzIw08bi8SxQ/nPhKK8NgUExcAtV9fcd3muSbzyeRZMf5bSQl5E37wpPILOB0D5VLBgn3nS4ZlIyKB8/laMWly+BFjLOs8Fk4R6tfiRf4hkY1T3mWrw2huN85s=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4281.namprd03.prod.outlook.com (2603:10b6:5:a::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.13; Thu, 30 Apr 2020 07:30:24 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
+ 07:30:23 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+CC:     "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Thread-Topic: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Thread-Index: AQHV8gBr/PFF68cjP0mJ7GikcNLAp6h3h5YAgAFDNoCAAFoPgIAA1qCAgBM87ACAAAtdAIAEWqUA
+Date:   Thu, 30 Apr 2020 07:30:23 +0000
+Message-ID: <be31bfcde7dc35b07855302d5cbf6db42bc7f634.camel@analog.com>
+References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+         <20200413180556.20638f3b@archlinux>
+         <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
+         <20200414184505.0cd39249@archlinux>
+         <f13b4286c5f133e7461d59965d7f84af059c8e89.camel@analog.com>
+         <208699ad-1302-aac1-c2e7-4f469e39a7eb@microchip.com>
+         <b50961e86a536223be7e3df0f276e572a435f644.camel@analog.com>
+In-Reply-To: <b50961e86a536223be7e3df0f276e572a435f644.camel@analog.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none header.from=analog.com;
+x-originating-ip: [188.27.130.47]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a1f84c51-8404-4f2f-ba0a-08d7ecd85888
+x-ms-traffictypediagnostic: DM6PR03MB4281:
+x-microsoft-antispam-prvs: <DM6PR03MB4281CFBB4842EF47961A0D6EF9AA0@DM6PR03MB4281.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0389EDA07F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(39860400002)(396003)(136003)(346002)(186003)(53546011)(66446008)(110136005)(2616005)(316002)(6506007)(2906002)(71200400001)(54906003)(86362001)(5660300002)(4326008)(64756008)(26005)(8676002)(8936002)(6512007)(66476007)(66946007)(91956017)(76116006)(478600001)(966005)(6486002)(66556008)(36756003)(309714004);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pJZ/Es/oZT/p5mCe+J0H7EYGeGU/Hini2e3AhAPjoqnRISVmQ41TX1nqjnlODfAVAkwEXErfBw/euoAQaaYLvjJwF39EYMk0nWmaA4jjg8Odb+l/3ij3V1l9+TS+y+v2HHKP24DwnrGiJdoDDn0K2lMIv8gdO6mOPQ4Qgi/9rdTb6vric0JJMhYm7PBX2O3hqX7qEtr9tr7ffVL1Mn/xVLQpm+wRgj08bqS222Rz2q7PJOdh04fhU1QbbLByw7Lz97dzU2DlykcGZ0hnZLUjO4ZMWjc9LKepyte+NsWxpUnWt0A71z1bi5oAywwiKUk4CAp2P8maR5wwVw+qw2dzHNBhn22Ld6YxWjER3L+KE+Ol8poBlswH90YNnUrhT6I1aVE9OkqbaepBhMLuyCVl4DCvD9dYZ1gPo8YaJSFoUFA9DxLn+LdcS5kcyHTiRzZoYQR/8p+EnmC/51C38r3VzG6axKA+Vdg6fNaQ1mEebCzEtQbE6JaqJsCxJP+biy5clrJ3Yt2GYCNJXLpogD9YtNzKYfAjyGUcpDI60c+cqajRwIQPB6v0Ev4dl6mWSWKz
+x-ms-exchange-antispam-messagedata: nBEjVxRpr//qEMuxpe4za70BkyUjejVa0I1sV83Y17qEase2GAyvaXdVxVKrgsnPdZDuNOWujoYO/DJmCXXBS2vA5ByWPoZAwKMtaNYQyQvVENKfzB61O1YicC0E48d8AwP9R9tUfGwPrQpaeF+4ajfM6ijkCNlZJHyq2O7kt4uzqjMQBEO5yMbrvvBjrhKcDI/VWmeVspe7qP1qXPEP5dfwLfm1xBoLYFotZrHSsNjTR1JGx4vvEKBMmLgzQypZptWuPnnBe2Gv9BW+BnX1GYAVD9YKh5K7wDrb2sGDHSZ59sQ2nWH2XwYLMNP0y3NOOI1EUj4B5uH7u5A+poKN63oglmVY8gZKK8x/KNOd8fUY9QDsWl6ABtDvL5VV57+NKyTQqWxxxNhOCLU+W9wpwPAG75AOukhFJYWagxspJuVWkbAf5+PBf4Dy2raQ5oL9HtijYdOvWZ62CmXX1E1QLWXhRk07VBo159DV/qHvJFWy/cEZQtBwCP24cPgm/Hl88L0q0N0X9DOuIdKeHegSBz3nUUP8kdNA20WU28IGNoVEFMA1IVw8eo6NTzGJVchuHRukACRZOI5LJ1Zqu4qqI7b3u1BFZIWzds+4Zi9bzSyJenst9J8Q6IHGwKodkGXiwSkgGq2R1YEaceEaYhWsXSi/DiBGt2mqdeDu0faSG8bi7qcySQqxYssUW6GZ174Ee10Kq2CePw56LIbipFJJS1drl2dkeNddIPWwM1gmnc52rBN9IY3/tlcT/ihejDWrKrqx4rfxBgs5JOTxUrD8BgE8M3jJ4Fk3hnEC3u+FWMc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <25F2CDE99FF5CB4CBA537F7E07943C42@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1f84c51-8404-4f2f-ba0a-08d7ecd85888
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 07:30:23.6922
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 573JHmYHo79AH4pU63nuwYCgX1C1+hSg9Gr5zOoAWO6QmutZum2vT7FdtGDmnrLnYPdwQtMZ5jIWsLexNp+G7Zw/YvLXDI5ro5WDp/HJxwU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4281
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_02:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0
+ clxscore=1015 lowpriorityscore=0 phishscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-General comments:
-- care to CC scheduler and mm people?
-- couldn't this share some code with fs/proc?
-- I am not sure/convinced it is worth the hassle
-
-On 30. 04. 20, 8:43, Arseny Maslennikov wrote:
-> If the three termios local flags isig, icanon, iexten are enabled
-> and the local flag nokerninfo is disabled for a tty governed
-> by the n_tty line discipline, then on receiving the keyboard status
-> character n_tty will generate a status message and write it out to
-> the tty before sending SIGINFO to the tty's foreground process group.
-> 
-> This kerninfo line contains information about the current system load
-> as well as some properties of "the most interesting" process in the
-> tty's current foreground process group, namely:
->  - its PID as seen inside its deepest PID namespace;
->    * the whole process group ought to be in a single PID namespace,
->      so this is actually deterministic
->  - its saved command name truncated to 16 bytes (task_struct::comm);
->    * at the time of writing TASK_COMM_LEN == 16
->  - its state and some related bits, procps-style;
->  - for S and D: its symbolic wait channel, if available; or a short
->    description for other process states instead;
->  - its user, system and real rusage time values;
->  - its resident set size (as well as the high watermark) in kilobytes.
-> 
-> The "most interesting" process is chosen as follows:
->  - runnables over everything
->  - uninterruptibles over everything else
->  - among 2 runnables pick the biggest utime + stime
->  - any unresolved ties are decided in favour of greatest PID.
-> 
-> While the kerninfo line is not very useful for debugging the kernel
-> itself, since we have much more powerful debugging tools, it still gives
-> the user behind the terminal some meaningful feedback to a VSTATUS that
-> works even if no processes respond.
-
-Care to append an example output to the commit message?
-
-> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-...
-> index f72a3fd4b..905cdd985 100644
-> --- a/drivers/tty/n_tty.c
-> +++ b/drivers/tty/n_tty.c
-> @@ -79,6 +80,8 @@
->  #define ECHO_BLOCK		256
->  #define ECHO_DISCARD_WATERMARK	N_TTY_BUF_SIZE - (ECHO_BLOCK + 32)
->  
-> +#define STATUS_LINE_LEN (2 * KSYM_NAME_LEN)
-
-It's too magic constant.
-
-> @@ -2489,6 +2496,21 @@ static int n_tty_ioctl(struct tty_struct *tty, struct file *file,
->  	}
->  }
->  
-> +static void n_tty_status_line(struct tty_struct *tty)
-> +{
-> +	struct n_tty_data *ldata = tty->disc_data;
-> +	char *msg, *buf;
-> +	msg = buf = kzalloc(STATUS_LINE_LEN, GFP_KERNEL);
-> +	tty_sprint_status_line(tty, buf + 1, STATUS_LINE_LEN - 1);
-> +	/* The only current caller of this takes output_lock for us. */
-
-So add a lockdep assertion?
-
-> +	if (ldata->column != 0)
-> +		*msg = '\n';
-> +	else
-> +		msg++;
-> +	do_n_tty_write(tty, NULL, msg, strlen(msg));
-> +	kfree(buf);
-> +}
-> +
->  static struct tty_ldisc_ops n_tty_ops = {
->  	.magic           = TTY_LDISC_MAGIC,
->  	.name            = "n_tty",
-> diff --git a/drivers/tty/n_tty_status.c b/drivers/tty/n_tty_status.c
-> new file mode 100644
-> index 000000000..d92261bbe
-> --- /dev/null
-> +++ b/drivers/tty/n_tty_status.c
-> @@ -0,0 +1,338 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +#include <linux/kallsyms.h>
-> +#include <linux/pid.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/signal.h>
-> +#include <linux/sched/loadavg.h>
-> +#include <linux/sched/cputime.h>
-> +#include <linux/sched/mm.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +
-> +#define BCOMPARE(lbool, rbool) ((lbool) << 1 | (rbool))
-> +#define BCOMPARE_NONE 0
-> +#define BCOMPARE_RIGHT 1
-> +#define BCOMPARE_LEFT 2
-> +#define BCOMPARE_BOTH (BCOMPARE_LEFT | BCOMPARE_RIGHT)
-> +
-> +/*
-> + * Select the most interesting task of two.
-> + *
-> + * The implemented approach is simple for now:
-> + * - pick runnable
-> + * - if no runnables, pick uninterruptible
-> + * - if tie between runnables, pick highest utime + stime
-> + * - if a tie is not broken by the above, pick highest pid nr.
-> + *
-> + * For reference, here's the one used in FreeBSD:
-> + * - pick runnables over anything
-> + * - if both runnables, pick highest cpu utilization
-> + * - if no runnables, pick shortest sleep time (the scheduler
-> + *   actually takes care to maintain this statistic)
-> + * - other ties are decided in favour of youngest process.
-> + */
-> +static struct task_struct *__better_proc_R(struct task_struct *a,
-
-Why so weird name __better_proc_R?
-
-> +		struct task_struct *b)
-> +{
-> +	unsigned long flags;
-> +	u64 atime, btime, tgutime, tgstime;
-> +	struct task_struct *ret;
-> +
-> +	if (!lock_task_sighand(a, &flags))
-> +		goto out_a_unlocked;
-> +	thread_group_cputime_adjusted(a, &tgutime, &tgstime);
-> +	atime = tgutime + tgstime;
-> +	unlock_task_sighand(a, &flags);
-> +
-> +	if (!lock_task_sighand(b, &flags))
-> +		goto out_b_unlocked;
-> +	thread_group_cputime_adjusted(b, &tgutime, &tgstime);
-> +	btime = tgutime + tgstime;
-> +	unlock_task_sighand(b, &flags);
-> +
-> +	ret = atime > btime ? a : b;
-> +
-> +	return ret;
-> +
-> +out_b_unlocked:
-> +out_a_unlocked:
-> +	return task_pid_vinr(a) > task_pid_vinr(b) ? a : b;
-> +}
-> +
-> +static struct task_struct *__better_proc(struct task_struct *a,
-
-Again, why "__" in the name?
-
-> +		struct task_struct *b)
-> +{
-> +	if (!pid_alive(a))
-> +		return b;
-> +	if (!pid_alive(b))
-> +		return a;
-> +
-> +	switch (BCOMPARE(a->state == TASK_RUNNING,
-> +			b->state == TASK_RUNNING)) {
-> +	case BCOMPARE_LEFT:
-> +		return a;
-> +	case BCOMPARE_RIGHT:
-> +		return b;
-> +	case BCOMPARE_BOTH:
-> +		return __better_proc_R(a, b);
-> +	}
-
-Doesn't this look saner and better:
-
-if (a->state == TASK_RUNNING && b->state == TASK_RUNNING)
-  return __better_proc_R(a, b);
-if (a->state == TASK_RUNNING)
-  return a;
-if (b->state == TASK_RUNNING)
-  return b;
-
-?
-
-And one doesn't need to decrypt the defines.
-
-> +	switch (BCOMPARE(a->state == TASK_UNINTERRUPTIBLE,
-> +			b->state == TASK_UNINTERRUPTIBLE)) {
-> +	case BCOMPARE_LEFT:
-> +		return a;
-> +	case BCOMPARE_RIGHT:
-> +		return b;
-> +	case BCOMPARE_BOTH:
-> +		break;
-
-dtto.
-
-> +	}
-> +
-> +	/* TODO: Perhaps we should check something else... */
-> +	return task_pid_vinr(a) > task_pid_vinr(b) ? a : b;
-> +}
-> +
-> +/* Weed out NULLs. */
-> +static inline struct task_struct *better_proc(struct task_struct *a,
-> +		struct task_struct *b) {
-> +	return a ? (b ? __better_proc(a, b) : a) : b;
-
-This urgently calls for ifs and not ternany operators.
-
-Actually you don't need this helper at all. Check a and b in the same if
-as the respective !pid_alive above.
-
-> +}
-> +
-> +static int scnprint_load(char *msgp, size_t size)
-> +{
-> +	unsigned long la[3];
-> +
-> +	get_avenrun(la, FIXED_1/200, 0);
-> +	return scnprintf(msgp, size, "load: %lu.%02lu; ",
-> +			LOAD_INT(la[0]), LOAD_FRAC(la[0]));
-> +}
-> +
-> +static int scnprint_task(char *msgp, size_t size, struct task_struct *task)
-> +{
-> +	char commname[TASK_COMM_LEN];
-> +
-> +	get_task_comm(commname, task);
-> +	return scnprintf(msgp, size, "%d/%s:", task_pid_vinr(task), commname);
-> +}
-> +
-> +static int scnprint_rusage(char *msgp, ssize_t size,
-> +		struct task_struct *task, struct mm_struct *mm)
-> +{
-> +	struct rusage ru;
-> +	struct timespec64 utime, stime;
-> +	struct timespec64 rtime;
-> +	u64 now;
-> +	int ret = 0;
-> +	int psz = 0;
-> +
-> +	getrusage(task, RUSAGE_BOTH, &ru);
-> +	now = ktime_get_ns();
-> +
-> +	utime.tv_sec = ru.ru_utime.tv_sec;
-> +	utime.tv_nsec = ru.ru_utime.tv_usec * NSEC_PER_USEC;
-> +	stime.tv_sec = ru.ru_stime.tv_sec;
-> +	stime.tv_nsec = ru.ru_stime.tv_usec * NSEC_PER_USEC;
-> +
-> +	rtime = ns_to_timespec64(now - task->start_time);
-> +
-> +	psz = scnprintf(msgp, size,
-> +			"%llu.%03lur %llu.%03luu %llu.%03lus",
-> +			rtime.tv_sec, rtime.tv_nsec / NSEC_PER_MSEC,
-> +			utime.tv_sec, utime.tv_nsec / NSEC_PER_MSEC,
-> +			stime.tv_sec, stime.tv_nsec / NSEC_PER_MSEC);
-> +	ret += psz;
-> +	msgp += psz;
-> +	size -= psz;
-> +
-> +	if (mm) {
-> +		psz = scnprintf(msgp, size,
-> +				" %luk/%luk",
-> +				get_mm_rss(mm) * PAGE_SIZE / 1024,
-> +				get_mm_hiwater_rss(mm) * PAGE_SIZE / 1024);
-> +		ret += psz;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int scnprint_state(char *msgp, ssize_t size,
-> +		struct task_struct *task, struct mm_struct *mm)
-> +{
-> +	char stat[8] = {0};
-> +	const char *state_descr = "";
-> +	struct task_struct *parent = NULL;
-> +	struct task_struct *real_parent = NULL;
-> +	unsigned long wchan = 0;
-> +	int psz = 0;
-> +	char symname[KSYM_NAME_LEN];
-> +
-> +	stat[psz++] = task_state_to_char(task);
-> +	if (task_nice(task) < 0)
-> +		stat[psz++] = '<';
-> +	else if (task_nice(task) > 0)
-> +		stat[psz++] = 'N';
-> +	if (mm && mm->locked_vm)
-> +		stat[psz++] = 'L';
-> +	if (get_nr_threads(task) > 1)
-> +		stat[psz++] = 'l';
-> +
-> +	switch (stat[0]) {
-> +	case 'R':
-> +		if (task_curr(task))
-> +			stat[psz++] = '!';
-> +		break;
-> +	case 'S':
-> +	case 'D':
-> +		wchan = get_wchan(task);
-> +		if (!wchan)
-> +			break;
-> +		if (!lookup_symbol_name(wchan, symname))
-> +			state_descr = symname;
-> +		else
-> +			/* get_wchan() returned something
-> +			 * that looks like no kernel symbol.
-> +			 */
-> +			state_descr = "*unknown*";
-> +		break;
-> +	case 'T':
-> +		state_descr = "stopped";
-> +		break;
-> +	case 't':
-> +		state_descr = "traced";
-> +		break;
-> +	case 'Z':
-> +		rcu_read_lock();
-> +		real_parent = rcu_dereference(task->real_parent);
-> +		parent = rcu_dereference(task->parent);
-> +		psz = sprintf(symname, "zombie; ppid=%d",
-> +			task_tgid_nr_ns(real_parent,
-> +				ns_of_pid(task_pid(task))));
-> +		if (parent != real_parent)
-> +			sprintf(symname + psz, " reaper=%d",
-> +				task_tgid_nr_ns(parent,
-> +					ns_of_pid(task_pid(task))));
-> +		rcu_read_unlock();
-> +		state_descr = symname;
-> +		break;
-> +	case 'I':
-> +		/* Can this even happen? */
-> +		state_descr = "idle";
-> +		break;
-> +	default:
-> +		state_descr = "unknown";
-> +	}
-> +
-> +	psz = scnprintf(msgp, size, "%s", stat);
-> +	msgp += psz;
-> +	size -= psz;
-> +	if (*state_descr)
-> +		psz += scnprintf(msgp, size, wchan ? " [%s]" : " (%s)", state_descr);
-> +
-> +	return psz;
-> +}
-> +
-> +/**
-> + *	tty_sprint_status_line	-		produce kerninfo line
-> + *	@tty: terminal device
-> + *	@msg: preallocated memory buffer
-> + *	@length: maximum line length
-> + *
-> + *	Reports state of foreground process group in a null-terminated string
-> + *	located at @msg, @length bytes long. If @length is insufficient,
-> + *	the line gets truncated.
-> + */
-> +void tty_sprint_status_line(struct tty_struct *t, char *msg, size_t length)
-> +{
-> +	struct task_struct *tsk = NULL, *mit = NULL;
-> +	struct mm_struct *mm;
-> +	struct pid *pgrp = NULL;
-> +	char *msgp = msg;
-> +	int psz = 0;
-> +
-> +	if (!length)
-> +		return;
-> +	length--; /* Make room for trailing '\n' */
-> +
-> +	psz = scnprint_load(msgp, length);
-> +	if (psz > 0) {
-> +		msgp += psz;
-> +		length -= psz;
-> +	}
-> +	if (!length)
-> +		goto finalize_message;
-> +
-> +	/* Not sure if session pid is protected by ctrl_lock
-> +	 * or tasklist_lock...
-> +	 */
-> +	pgrp = t->session;
-> +	if (pgrp == NULL) {
-> +		psz = scnprintf(msgp, length, "not a controlling tty");
-> +		if (psz > 0)
-> +			msgp += psz;
-> +		goto finalize_message;
-> +	}
-> +	pgrp = tty_get_pgrp(t);
-> +	if (pgrp == NULL) {
-> +		psz = scnprintf(msgp, length, "no foreground process group");
-> +		if (psz > 0)
-> +			msgp += psz;
-> +		goto finalize_message;
-> +	}
-> +
-> +	read_lock(&tasklist_lock);
-> +	do_each_pid_task(pgrp, PIDTYPE_PGID, tsk)
-> +	{
-> +		/* Select the most interesting task. */
-> +		if (tsk == better_proc(mit, tsk))
-> +			mit = tsk;
-> +	} while_each_pid_task(pgrp, PIDTYPE_PGID, tsk);
-> +	read_unlock(&tasklist_lock);
-> +
-> +	if (!pid_alive(mit))
-> +		goto finalize_message;
-> +
-> +	/* Gather intel on most interesting task. */
-> +	/* Can the mm of a foreground process turn out to be NULL?
-> +	 * Definitely; for example, if it is a zombie.
-> +	 */
-> +	mm = get_task_mm(mit);
-> +
-> +	psz = scnprint_task(msgp, length, mit);
-> +	if (psz > 0) {
-> +		msgp += psz;
-> +		length -= psz;
-> +	}
-> +	if (!length)
-> +		goto finalize_message;
-> +	*msgp++ = ' ';
-> +	length--;
-> +
-> +	psz = scnprint_state(msgp, length, mit, mm);
-> +	if (psz > 0) {
-> +		msgp += psz;
-> +		length -= psz;
-> +	}
-> +	if (!length)
-> +		goto finalize_message;
-> +	*msgp++ = ' ';
-> +	length--;
-> +
-> +	psz = scnprint_rusage(msgp, length, mit, mm);
-> +	if (psz > 0) {
-> +		msgp += psz;
-> +		length -= psz;
-> +	}
-> +	if (!length)
-> +		goto finalize_message;
-> +	*msgp++ = ' ';
-> +	length--;
-> +
-> +	if (!mm)
-> +		goto finalize_message;
-> +
-> +	mmput(mm);
-> +
-> +finalize_message:
-> +	*msgp++ = '\n';
-> +	if (pgrp)
-> +		put_pid(pgrp);
-> +}
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 4418f5cb8..195abd47d 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1318,6 +1318,8 @@ static inline struct pid *task_pid(struct task_struct *task)
->   * task_xid_nr()     : global id, i.e. the id seen from the init namespace;
->   * task_xid_vnr()    : virtual id, i.e. the id seen from the pid namespace of
->   *                     current.
-> + * task_xid_vinr()   : virtual inner id, i.e. the id seen from the namespace of
-> + *                     the task itself;
->   * task_xid_nr_ns()  : id seen from the ns specified;
->   *
->   * see also pid_nr() etc in include/linux/pid.h
-> @@ -1339,6 +1341,11 @@ static inline pid_t task_pid_vnr(struct task_struct *tsk)
->  	return __task_pid_nr_ns(tsk, PIDTYPE_PID, NULL);
->  }
->  
-> +static inline pid_t task_pid_vinr(struct task_struct *tsk)
-> +{
-> +	return __task_pid_nr_ns(tsk, PIDTYPE_PID, ns_of_pid(task_pid(tsk)));
-> +}
-> +
-
-This smells like it should be done in a separate patch.
-
->  static inline pid_t task_tgid_nr(struct task_struct *tsk)
->  {
-> diff --git a/include/linux/tty.h b/include/linux/tty.h
-> index 3499845ab..2023addaf 100644
-> --- a/include/linux/tty.h
-> +++ b/include/linux/tty.h
-> @@ -727,6 +727,9 @@ extern void __init n_tty_init(void);
->  static inline void n_tty_init(void) { }
->  #endif
->  
-> +/* n_tty_status.c */
-> +extern void tty_sprint_status_line(struct tty_struct *tty, char *msg, size_t size);
-
-No need for extern.
-
-thanks,
--- 
-js
-suse labs
+T24gTW9uLCAyMDIwLTA0LTI3IGF0IDEzOjAwICswMDAwLCBBcmRlbGVhbiwgQWxleGFuZHJ1IHdy
+b3RlOg0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBNb24sIDIwMjAtMDQtMjcgYXQgMTI6MjAgKzAw
+MDAsIEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4gPiBbRXh0ZXJuYWxdDQo+
+ID4gDQo+ID4gT24gMTUuMDQuMjAyMCAwOTozMywgQXJkZWxlYW4sIEFsZXhhbmRydSB3cm90ZToN
+Cj4gPiANCj4gPiA+IE9uIFR1ZSwgMjAyMC0wNC0xNCBhdCAxODo0NSArMDEwMCwgSm9uYXRoYW4g
+Q2FtZXJvbiB3cm90ZToNCj4gPiA+ID4gT24gVHVlLCAxNCBBcHIgMjAyMCAxMjoyMjo0NSArMDAw
+MA0KPiA+ID4gPiA8RXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tPiB3cm90ZToNCj4gPiA+ID4g
+DQo+ID4gPiA+ID4gT24gMTMuMDQuMjAyMCAyMDowNSwgSm9uYXRoYW4gQ2FtZXJvbiB3cm90ZToN
+Cj4gPiA+ID4gPiA+IE9uIFdlZCwgNCBNYXIgMjAyMCAxMDo0MjoxOCArMDIwMA0KPiA+ID4gPiA+
+ID4gQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4gd3Jv
+dGU6DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gVGhpcyBjaGFuZ2UgbW92ZXMgdGhlIGxv
+Z2ljIHRvIGNoZWNrIGlmIHRoZSBjdXJyZW50IGNoYW5uZWwgaXMgdGhlDQo+ID4gPiA+ID4gPiA+
+IHRvdWNoc2NyZWVuIGNoYW5uZWwgdG8gYSBzZXBhcmF0ZSBoZWxwZXIuDQo+ID4gPiA+ID4gPiA+
+IFRoaXMgcmVkdWNlcyBzb21lIGNvZGUgZHVwbGljYXRpb24sIGJ1dCB0aGUgbWFpbiBpbnRlbnQg
+aXMgdG8gcmUtDQo+ID4gPiA+ID4gPiA+IHVzZQ0KPiA+ID4gPiA+ID4gPiB0aGlzDQo+ID4gPiA+
+ID4gPiA+IGluIHRoZSBuZXh0IHBhdGNoZXMuDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBh
+bmFsb2cuY29tPg0KPiA+ID4gPiA+ID4gRXVnZW4gLyBMdWRvdmljLA0KPiA+ID4gPiA+ID4gDQo+
+ID4gPiA+ID4gPiBIYXZlIHlvdSBoYWQgYSBjaGFuY2UgdG8gbG9vayBhdCB0aGlzIHNlcmllcz8N
+Cj4gPiA+ID4gPiANCj4gPiA+ID4gPiBIaSBKb25hdGhhbiwNCj4gPiA+ID4gPiANCj4gPiA+ID4g
+PiBEb2VzIHRoZSBwYXRjaCBhcHBseSBjb3JyZWN0bHkgZm9yIHlvdSA/DQo+ID4gPiA+IA0KPiA+
+ID4gPiBJIGhhdmVuJ3QgdHJpZWQgeWV0IDopDQo+ID4gPiA+IA0KPiA+ID4gDQo+ID4gPiBJJ3Zl
+IHJlYmFzZWQgdGhpcyBwYXRjaHNldCBvbiB0b3Agb2YgY3VycmVudCBpaW8vdGVzdGluZyBhbmQg
+aXQgc3RpbGwNCj4gPiA+IGFwcGxpZXMuDQo+ID4gPiANCj4gPiANCj4gPiBIaSBBbGV4LA0KPiA+
+IA0KPiA+IEkgdHJpZWQgdGhpcyBwYXRjaCBvbiB0b3Agb2YgbXkgdHJlZSAoaG93ZXZlciBJIGFt
+IHRlc3Rpbmcgd2l0aCBhbiBvbGRlciANCj4gPiBrZXJuZWwgNS40KSAsIGFuZCBJIGhhdmUgaXNz
+dWVzIHN0YXJ0aW5nIHRoZSBidWZmZXIgYWZ0ZXIgeW91IG1vdmVkIG15IA0KPiA+IGNvZGUgdG8g
+dGhlIHByZWVuYWJsZSBjYWxsYmFjay4NCj4gPiANCj4gPiBOYW1lbHksIG9uIHRoZSBsaW5lOg0K
+PiA+IA0KPiA+IGlmICghKGluZGlvX2Rldi0+Y3VycmVudG1vZGUgJiBJTkRJT19BTExfVFJJR0dF
+UkVEX01PREVTKSkNCj4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+IA0KDQpJ
+biB0aGUgbWVhbnRpbWUgSSBmb3VuZCB0aGlzIHBhdGNoOg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvbGludXgtaWlvLzE0MzE1MjU4OTEtMTkyODUtNS1naXQtc2VuZC1lbWFpbC1sYXJzQG1ldGFm
+b28uZGUvDQoNCmZyb20gYWJvdXQgfjUgeWVhcnMgYWdvOw0KDQppZiB0aGlzIHBhdGNoIGlzIGEg
+dmFsaWQgcHJvcG9zYWwsIGl0IGNvdWxkIGZpeCB0aGlzIGNhc2UgYXMgd2VsbDsNCndlbGwsIGl0
+IG1pZ2h0IGJyZWFrIG90aGVycywgc28gYXBwbHlpbmcgaXQgW25vd10gd291bGQgbmVlZCBzb21l
+IGdlbmVyYWwgcmV2aWV3DQpvZiBhbGwgcHJlL3Bvc3QgZW5hYmxlL2Rpc2FibGUgaG9va3MNCg0K
+PiBBcG9sb2dpZXMgZm9yIHRoZSBicmVha2FnZS4NCj4gDQo+IEZvciB0aGUgdG91Y2gtcGFydCBJ
+IGRvbid0IHNlZSB0aGF0IGNvZGUgYmVpbmcgZXhlY3V0ZWQuDQo+IA0KPiBCdXQgYSBxdWVzdGlv
+biBpczogZG9lcyB0aGUgZHJpdmVyIG5lZWQgdG8gY2hlY2sgZm9yIHRoZSBjdXJyZW50bW9kZT8N
+Cj4gT3IgaXMgdGhhdCBzb21ldGhpbmcgdGhhdCB0aGUgSUlPIGNvcmUgc2hvdWxkIGRvPw0KPiAN
+Cj4gPiBBbmQgd2l0aCB0aGlzICwgdGhlIHByZWVuYWJsZSBmYWlscyBvbiBteSBzaWRlLCBiZWNh
+dXNlIHRoZSBjdXJyZW50IG1vZGUgDQo+ID4gaXMgbm90IHlldCBzd2l0Y2hlZCB0byB0cmlnZ2Vy
+ZWQuDQo+ID4gDQo+ID4gSSBkbyByZW1lbWJlciBhZGRpbmcgdGhpcyBsaW5lIHdpdGggYSBzcGVj
+aWZpYyByZWFzb24uIEl0IG1heSBiZSByZWxhdGVkIA0KPiA+IHRvIHRvdWNoc2NyZWVuIG9wZXJh
+dGlvbnMsIGJ1dCBJIGhhdmUgdG8gcmV0ZXN0IHRoZSB0b3VjaCB3aXRoIGFuZCANCj4gPiB3aXRo
+b3V0IHRoaXMgbGluZSBhbmQgeW91ciBwYXRjaC4NCj4gPiANCj4gPiBNZWFud2hpbGUsIG1heWJl
+IHlvdSBoYXZlIGFueSBzdWdnZXN0aW9ucyBvbiBob3cgdG8gZml4IHRoZSBidWZmZXIgPyANCj4g
+DQo+IFdlbGwsIHRoZXJlIHdhcyB0aGUgcXVlc3Rpb24gb2Ygd2hldGhlciBpaW9fdHJpZ2dlcmVk
+X2J1ZmZlcl9wb3N0ZW5hYmxlKCkgW3RvDQo+IGF0dGFjaCB0aGUgcG9sbGZ1bmNdIG1ha2VzIHNl
+bnNlIHRvIGJlIGNhbGxlZCBmaXJzdC9sYXN0IGluIHRoZSBvbGQNCj4gYXQ5MV9hZGNfYnVmZmVy
+X3Bvc3RlbmFibGUoKSwgYW5kIHRoZSBhbnN3ZXIgd2FzICdsYXN0Jzsgc28gdGhlbiBvbmUgc29s
+dXRpb24NCj4gd2FzIHRvIG1vdmUgdGhpbmdzIHRvIHByZWVuYWJsZSgpLg0KPiANCj4gR29pbmcg
+YmFjayB0byB0aGUgb2xkIHBhdGNoIGlzbid0IGlkZWFsLCBhcyB0aGUgaWRlYSB3YXMgdG8gbWFr
+ZSB0aGUgcG9zaXRpb24NCj4gb2YNCj4gaWlvX3RyaWdnZXJlZF9idWZmZXJfcG9zdGVuYWJsZSgp
+IGNvbnNpc3RlbnQgYWNyb3NzIGFsbCBkcml2ZXJzLCBzbyB0aGF0IGl0DQo+IGNhbg0KPiBiZSBy
+ZW1vdmVkIFthbmQgbW92ZWQgdG8gdGhlIElJTyBjb3JlXS4NCj4gDQo+IEJ1dCBpZiB3ZSBuZWVk
+IHJldmVydCB0aGUgcGF0Y2gsIHRoZW4gSSBndWVzcyBpdCdzIGZpbmUuDQo+IFRoZSBvbmx5IHNv
+bHV0aW9uIEkgc2VlIHJpZ2h0IG5vdyBbZm9yIGdvaW5nIGZvcndhcmRdLCBpcyB0byByZW1vdmUg
+dGhhdCBjaGVjaw0KPiBmb3IgJ2N1cnJyZW50bW9kZScNCj4gDQo+ID4gVGhpcyBjaGVjayBoZXJl
+IG1ha2VzIGFueSBzZW5zZSB0byB5b3UgPw0KPiANCj4gSSB0aGluayBKb25hdGhhbiBtYXkgaGF2
+ZSB0byBhZGQgc29tZSBpbnB1dCBoZXJlLCBidXQgSSB0aGluayB0aGF0IGluIHRoaXMNCj4gY3Vy
+cmVudCBzaXR1YXRpb24sIGNoZWNraW5nICdjdXJyZW50bW9kZScgbG9va3MgbGlrZSBpcyByZS12
+YWxpZGF0aW5nIGhvdyB0aGUNCj4gZGV2aWNlIHdhcyBjb25maWd1cmVkIHZpYSB0aGUgSUlPIGZy
+YW1ld29yay4NCj4gSSBhbSBub3Qgc3VyZSBpZiBpdCdzIG5lZWRlZCBvciBub3QuDQo+IA0KPiA+
+IFRoYW5rcywNCj4gPiBFdWdlbg0KPiA+IA0KPiA+ID4gPiA+IEkgd2lsbCB0cnkgdG8gdGVzdCBp
+dCAsIGlmIEkgbWFuYWdlIHRvIGFwcGx5IGl0Lg0KPiA+ID4gPiA+IEkgY2FuIG9ubHkgdGVzdCB0
+aGUgQURDIHRob3VnaCBiZWNhdXNlIGF0IHRoaXMgbW9tZW50IEkgZG8gbm90IGhhdmUgYQ0KPiA+
+ID4gPiA+IHRvdWNoc2NyZWVuIGF0IGRpc3Bvc2FsLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IE1l
+YW53aGlsZSwgdGhlIGNvZGUgbG9va3MgZ29vZCBmb3IgbWUsDQo+ID4gPiA+ID4gDQo+ID4gPiA+
+ID4gUmV2aWV3ZWQtYnk6IEV1Z2VuIEhyaXN0ZXYgPGV1Z2VuLmhyaXN0ZXZAbWljcm9jaGlwLmNv
+bT4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBCeSB0aGUgd2F5LCBJIGRvIG5vdCBrbm93IGlmIG15
+IHR3byBwZW5kaW5nIHBhdGNoZXMgb24gdGhpcyBkcml2ZXINCj4gPiA+ID4gPiB3aWxsDQo+ID4g
+PiA+ID4gY29uZmxpY3Qgb3Igbm90Lg0KPiA+ID4gPiANCj4gPiA+ID4gQXMgdGhpcyBpcyBhIGxv
+bmcgdGVybSByZXdvcmsgcGF0Y2ggYXQgaGVhcnQsIHRoZXJlIGlzbid0IGFueSBwYXJ0aWN1bGFy
+DQo+ID4gPiA+IHJ1c2ggYXMgbG9uZyBhcyB3ZSBkb24ndCBsb29zZSBpdCBmb3JldmVyIQ0KPiA+
+ID4gPiANCj4gPiA+ID4gVGhhbmtzLA0KPiA+ID4gPiANCj4gPiA+ID4gSm9uYXRoYW4NCj4gPiA+
+ID4gDQo+ID4gPiA+ID4gRXVnZW4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IFRoYW5rcywNCj4g
+PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gSm9uYXRoYW4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IFRoaXMgcGF0Y2hzZXQgY29u
+dGludWVzIGRpc2N1c3Npb246DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBodHRwczov
+L3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtaWlvLzIw
+MTkxMDIzMDgyNTA4LjE3NTgzLTEtYWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20vX187ISFB
+M05pOENTMHkyWSFxbDFiWWlOTVBGbHoxdHduQ0NBUXBpRUJ2cHp4Ul9WSEFQTDcxMnJXRmZ3eTJU
+U0tqWjJVaEdCb1Y3LTI5U3lueTZ6MHlnJA0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4g
+QXBvbG9naWVzIGZvciB0aGUgZGVsYXkuDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiBD
+aGFuZ2Vsb2cgdjEgLT4gdjI6DQo+ID4gPiA+ID4gPiA+ICogYWRkZWQgcGF0Y2ggJ2lpbzogYXQ5
+MS1zYW1hNWQyX2FkYzogc3BsaXQNCj4gPiA+ID4gPiA+ID4gYXQ5MV9hZGNfY3VycmVudF9jaGFu
+X2lzX3RvdWNoKCkNCj4gPiA+ID4gPiA+ID4gICAgIGhlbHBlcicNCj4gPiA+ID4gPiA+ID4gKiBy
+ZW5hbWVkIGF0OTFfYWRjX2J1ZmZlcl9wb3N0ZW5hYmxlKCkgLT4NCj4gPiA+ID4gPiA+ID4gYXQ5
+MV9hZGNfYnVmZmVyX3ByZWVuYWJsZSgpDQo+ID4gPiA+ID4gPiA+ICAgICAtIGF0OTFfYWRjX2J1
+ZmZlcl9wb3N0ZW5hYmxlKCkgLSBub3cganVzdCBjYWxscw0KPiA+ID4gPiA+ID4gPiAgICAgICBp
+aW9fdHJpZ2dlcmVkX2J1ZmZlcl9wb3N0ZW5hYmxlKCkgaWYgdGhlIGNoYW5uZWwgaXNuJ3QgdGhl
+DQo+ID4gPiA+ID4gPiA+IHRvdWNoc2NyZWVuDQo+ID4gPiA+ID4gPiA+ICAgICAgIGNoYW5uZWwN
+Cj4gPiA+ID4gPiA+ID4gKiByZW5hbWVkIGF0OTFfYWRjX2J1ZmZlcl9wcmVkaXNhYmxlKCkgLT4N
+Cj4gPiA+ID4gPiA+ID4gYXQ5MV9hZGNfYnVmZmVyX3Bvc3RkaXNhYmxlKCkNCj4gPiA+ID4gPiA+
+ID4gICAgIC0gYXQ5MV9hZGNfYnVmZmVyX3ByZWRpc2FibGUoKSAtIG5vdyBqdXN0IGNhbGxzDQo+
+ID4gPiA+ID4gPiA+ICAgICAgIGlpb190cmlnZ2VyZWRfYnVmZmVyX3ByZWRpc2FibGUoKSBpZiB0
+aGUgY2hhbm5lbCBpc24ndCB0aGUNCj4gPiA+ID4gPiA+ID4gdG91Y2hzY3JlZW4NCj4gPiA+ID4g
+PiA+ID4gICAgICAgY2hhbm5lbA0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gICAgZHJp
+dmVycy9paW8vYWRjL2F0OTEtc2FtYTVkMl9hZGMuYyB8IDMxICsrKysrKysrKysrKysrKy0tLS0t
+LS0tDQo+ID4gPiA+ID4gPiA+IC0tLS0tLS0NCj4gPiA+ID4gPiA+ID4gICAgMSBmaWxlIGNoYW5n
+ZWQsIDE1IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPiANCj4g
+PiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2FkYy9hdDkxLXNhbWE1ZDJfYWRj
+LmMNCj4gPiA+ID4gPiA+ID4gYi9kcml2ZXJzL2lpby9hZGMvYXQ5MS0NCj4gPiA+ID4gPiA+ID4g
+c2FtYTVkMl9hZGMuYw0KPiA+ID4gPiA+ID4gPiBpbmRleCBhNWM3NzcxMjI3ZDUuLmYyYTc0YzQ3
+Yzc2OCAxMDA2NDQNCj4gPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9paW8vYWRjL2F0OTEtc2Ft
+YTVkMl9hZGMuYw0KPiA+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2lpby9hZGMvYXQ5MS1zYW1h
+NWQyX2FkYy5jDQo+ID4gPiA+ID4gPiA+IEBAIC04NzMsMTggKzg3MywyNCBAQCBzdGF0aWMgaW50
+IGF0OTFfYWRjX2RtYV9zdGFydChzdHJ1Y3QgaWlvX2Rldg0KPiA+ID4gPiA+ID4gPiAqaW5kaW9f
+ZGV2KQ0KPiA+ID4gPiA+ID4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+ID4gPiA+ID4gPiAgICB9
+DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiArc3RhdGljIGJvb2wgYXQ5MV9hZGNfY3Vy
+cmVudF9jaGFuX2lzX3RvdWNoKHN0cnVjdCBpaW9fZGV2DQo+ID4gPiA+ID4gPiA+ICppbmRpb19k
+ZXYpDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiA+ICsgICAgIHN0cnVjdCBhdDkxX2Fk
+Y19zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPiA+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiA+ICsgICAgIHJldHVybiAhIWJpdG1hcF9zdWJzZXQoaW5kaW9fZGV2LT5hY3RpdmVf
+c2Nhbl9tYXNrLA0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICZz
+dC0+dG91Y2hfc3QuY2hhbm5lbHNfYml0bWFzaywNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBBVDkxX1NBTUE1RDJfTUFYX0NIQU5fSURYICsgMSk7DQo+ID4gPiA+
+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gICAgc3RhdGljIGludCBh
+dDkxX2FkY19idWZmZXJfcG9zdGVuYWJsZShzdHJ1Y3QgaWlvX2Rldg0KPiA+ID4gPiA+ID4gPiAq
+aW5kaW9fZGV2KQ0KPiA+ID4gPiA+ID4gPiAgICB7DQo+ID4gPiA+ID4gPiA+ICAgICAgICAgaW50
+IHJldDsNCj4gPiA+ID4gPiA+ID4gICAgICAgICBzdHJ1Y3QgYXQ5MV9hZGNfc3RhdGUgKnN0ID0g
+aWlvX3ByaXYoaW5kaW9fZGV2KTsNCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ICAgICAg
+ICAgLyogY2hlY2sgaWYgd2UgYXJlIGVuYWJsaW5nIHRyaWdnZXJlZCBidWZmZXIgb3IgdGhlDQo+
+ID4gPiA+ID4gPiA+IHRvdWNoc2NyZWVuDQo+ID4gPiA+ID4gPiA+ICovDQo+ID4gPiA+ID4gPiA+
+IC0gICAgIGlmIChiaXRtYXBfc3Vic2V0KGluZGlvX2Rldi0+YWN0aXZlX3NjYW5fbWFzaywNCj4g
+PiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgJnN0LT50b3VjaF9zdC5jaGFubmVs
+c19iaXRtYXNrLA0KPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICBBVDkxX1NB
+TUE1RDJfTUFYX0NIQU5fSURYICsgMSkpIHsNCj4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAv
+KiB0b3VjaHNjcmVlbiBlbmFibGluZyAqLw0KPiA+ID4gPiA+ID4gPiArICAgICBpZiAoYXQ5MV9h
+ZGNfY3VycmVudF9jaGFuX2lzX3RvdWNoKGluZGlvX2RldikpDQo+ID4gPiA+ID4gPiA+ICAgICAg
+ICAgICAgICAgICByZXR1cm4gYXQ5MV9hZGNfY29uZmlndXJlX3RvdWNoKHN0LCB0cnVlKTsNCj4g
+PiA+ID4gPiA+ID4gLSAgICAgfQ0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICAgICAg
+ICAgLyogaWYgd2UgYXJlIG5vdCBpbiB0cmlnZ2VyZWQgbW9kZSwgd2UgY2Fubm90IGVuYWJsZSB0
+aGUNCj4gPiA+ID4gPiA+ID4gYnVmZmVyLg0KPiA+ID4gPiA+ID4gPiAqLw0KPiA+ID4gPiA+ID4g
+PiAgICAgICAgIGlmICghKGluZGlvX2Rldi0+Y3VycmVudG1vZGUgJiBJTkRJT19BTExfVFJJR0dF
+UkVEX01PREVTKSkNCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFM
+Ow0KPiA+ID4gPiA+ID4gPiBAQCAtOTA2LDEyICs5MTIsOSBAQCBzdGF0aWMgaW50IGF0OTFfYWRj
+X2J1ZmZlcl9wcmVkaXNhYmxlKHN0cnVjdA0KPiA+ID4gPiA+ID4gPiBpaW9fZGV2ICppbmRpb19k
+ZXYpDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgdTggYml0Ow0KPiA+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+ID4gICAgICAgICAvKiBjaGVjayBpZiB3ZSBhcmUgZGlzYWJsaW5nIHRyaWdnZXJlZCBi
+dWZmZXIgb3IgdGhlDQo+ID4gPiA+ID4gPiA+IHRvdWNoc2NyZWVuDQo+ID4gPiA+ID4gPiA+ICov
+DQo+ID4gPiA+ID4gPiA+IC0gICAgIGlmIChiaXRtYXBfc3Vic2V0KGluZGlvX2Rldi0+YWN0aXZl
+X3NjYW5fbWFzaywNCj4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgJnN0LT50
+b3VjaF9zdC5jaGFubmVsc19iaXRtYXNrLA0KPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICBBVDkxX1NBTUE1RDJfTUFYX0NIQU5fSURYICsgMSkpIHsNCj4gPiA+ID4gPiA+ID4g
+LSAgICAgICAgICAgICAvKiB0b3VjaHNjcmVlbiBkaXNhYmxlICovDQo+ID4gPiA+ID4gPiA+ICsg
+ICAgIGlmIChhdDkxX2FkY19jdXJyZW50X2NoYW5faXNfdG91Y2goaW5kaW9fZGV2KSkNCj4gPiA+
+ID4gPiA+ID4gICAgICAgICAgICAgICAgIHJldHVybiBhdDkxX2FkY19jb25maWd1cmVfdG91Y2go
+c3QsIGZhbHNlKTsNCj4gPiA+ID4gPiA+ID4gLSAgICAgfQ0KPiA+ID4gPiA+ID4gPiArDQo+ID4g
+PiA+ID4gPiA+ICAgICAgICAgLyogaWYgd2UgYXJlIG5vdCBpbiB0cmlnZ2VyZWQgbW9kZSwgbm90
+aGluZyB0byBkbyBoZXJlICovDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgaWYgKCEoaW5kaW9fZGV2
+LT5jdXJyZW50bW9kZSAmIElORElPX0FMTF9UUklHR0VSRURfTU9ERVMpKQ0KPiA+ID4gPiA+ID4g
+PiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiA+ID4gPiA+IEBAIC0xODg2
+LDE0ICsxODg5LDEwIEBAIHN0YXRpYyBfX21heWJlX3VudXNlZCBpbnQNCj4gPiA+ID4gPiA+ID4g
+YXQ5MV9hZGNfcmVzdW1lKHN0cnVjdA0KPiA+ID4gPiA+ID4gPiBkZXZpY2UgKmRldikNCj4gPiA+
+ID4gPiA+ID4gICAgICAgICAgICAgICAgIHJldHVybiAwOw0KPiA+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+ID4gICAgICAgICAvKiBjaGVjayBpZiB3ZSBhcmUgZW5hYmxpbmcgdHJpZ2dlcmVkIGJ1
+ZmZlciBvciB0aGUNCj4gPiA+ID4gPiA+ID4gdG91Y2hzY3JlZW4NCj4gPiA+ID4gPiA+ID4gKi8N
+Cj4gPiA+ID4gPiA+ID4gLSAgICAgaWYgKGJpdG1hcF9zdWJzZXQoaW5kaW9fZGV2LT5hY3RpdmVf
+c2Nhbl9tYXNrLA0KPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICAmc3QtPnRv
+dWNoX3N0LmNoYW5uZWxzX2JpdG1hc2ssDQo+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAg
+ICAgICAgIEFUOTFfU0FNQTVEMl9NQVhfQ0hBTl9JRFggKyAxKSkgew0KPiA+ID4gPiA+ID4gPiAt
+ICAgICAgICAgICAgIC8qIHRvdWNoc2NyZWVuIGVuYWJsaW5nICovDQo+ID4gPiA+ID4gPiA+ICsg
+ICAgIGlmIChhdDkxX2FkY19jdXJyZW50X2NoYW5faXNfdG91Y2goaW5kaW9fZGV2KSkNCj4gPiA+
+ID4gPiA+ID4gICAgICAgICAgICAgICAgIHJldHVybiBhdDkxX2FkY19jb25maWd1cmVfdG91Y2go
+c3QsIHRydWUpOw0KPiA+ID4gPiA+ID4gPiAtICAgICB9IGVsc2Ugew0KPiA+ID4gPiA+ID4gPiAr
+ICAgICBlbHNlDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gYXQ5MV9hZGNf
+Y29uZmlndXJlX3RyaWdnZXIoc3QtPnRyaWcsIHRydWUpOw0KPiA+ID4gPiA+ID4gPiAtICAgICB9
+DQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiAgICAgICAgIC8qIG5vdCBuZWVkZWQgYnV0
+IG1vcmUgZXhwbGljaXQgKi8NCj4gPiA+ID4gPiA+ID4gICAgICAgICByZXR1cm4gMDsNCg==
