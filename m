@@ -2,102 +2,125 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F07C83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83460C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84EC821973
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C572083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:26:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="NEm5AmoT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNt0W47d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgD3BQb (ORCPT
+        id S1726441AbgD3B0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
+        Wed, 29 Apr 2020 21:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgD3BQb (ORCPT
+        with ESMTP id S1726329AbgD3B0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:16:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6427CC035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:16:29 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z6so53874wml.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:16:29 -0700 (PDT)
+        Wed, 29 Apr 2020 21:26:06 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D4AC035494;
+        Wed, 29 Apr 2020 18:26:03 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id w14so2933582lfk.3;
+        Wed, 29 Apr 2020 18:26:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l64V23ovWLJzXgRwUJUSoRHmFCYvD/C61lUFlvHuAM8=;
-        b=NEm5AmoTD2jKzz4hSccJVFQ1FPjZ6Bxkvy9pbF1n13au2XvE7BgLVefCXG75LJARlN
-         vnoy8WuPgSjgJpXQR+RcXTzwoRRtfu4SDZm+Yc+p6DSFyw0qj5XWcrtNba7s9fwH42iU
-         Dmrs/6XTu4+ArHUN5ftQeDPkUfs2GVxihVugU=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=21hAksTDotqpkMDq5xLuGQkVLpud8HtePplRE81B5jU=;
+        b=MNt0W47dVdSty8zvvSAY7gxbeSx7TmcNfNDTQ/ciWsZi62PSgPSmu1xDYVRGpuHep0
+         KfH/hNEiutHmu+Rt12Q4i6BLevqW0OLXw7mOVnNxRIDzuaWqn3G7fMwMb/Y+gK/5NGfi
+         TWb2vS/9Q0lcwDjzCj19/P3vlKInVVJxq+PIwTQTWlfaaxakzjYNr6WhmWIMhltCPkIs
+         rD0zsS2PjN+E0POXwnZOHMzT/exL1y8+WkufyFsscNrAYryr8lz0DqyvgJtErcz105Z1
+         bRtpwSzP2RMFO05gjqaYem4OcODHR/56vtSYJr2qPdOvCiEBxg8cX5Ru+YLRlA0uR75a
+         rOWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l64V23ovWLJzXgRwUJUSoRHmFCYvD/C61lUFlvHuAM8=;
-        b=sLvdACwbh6VWkaIJEjDx24z8cXjyXF48rUWTWexC1rKJGOTCkFGLhStJI3NPTOILVm
-         54TSVci4IegQo6URdF2e/+3OWSneOlQcyCLwpMjEr4bMuGPWocSmvwqfO7tdjQHPlN+i
-         AqFv2vSCVf7lv2Lt17R20b4R5+X9uNjg83DEXl81yaOUZVzhg7EijP7SUeAFFseiJ689
-         Le5FkWEqP7BhxeY38bsuTYyg1QzxGUdjkC0MclyjDDMx0rzkmk+rypCo24/ZR2En+dkQ
-         88fDPEd6oQik+2KRc+zYqnlBKVqOEWZwjvY8gCfI1JT1Ob51FykyQAU5fnRxfjEKr4HT
-         nnmg==
-X-Gm-Message-State: AGi0PuZiQ3YCL+eKm2JdPG5jyv332O9ZiDxRRRil2qrArX9yz5eCyS6P
-        TZBYnLK4G3bhric6eCThS9KQXlLdo0nJLQ==
-X-Google-Smtp-Source: APiQypLqV+ArzORPofbv6BQwM8YI/oPdsz+Copu8gSwvyT8oSBSXG3Ri7l1nKh86jTZCo5uAEF/Ejw==
-X-Received: by 2002:a05:600c:2c04:: with SMTP id q4mr93056wmg.7.1588209387919;
-        Wed, 29 Apr 2020 18:16:27 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
-        by smtp.gmail.com with ESMTPSA id e11sm1467438wrn.87.2020.04.29.18.16.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 18:16:27 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 02:16:26 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-Message-ID: <20200430011626.GA2754277@chrisdown.name>
-References: <cover.1588092152.git.chris@chrisdown.name>
- <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <CALOAHbCotD1-+o_XZPU_4_i8Nn98r5F_5NpGVd=z6UG=rUcCmA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=21hAksTDotqpkMDq5xLuGQkVLpud8HtePplRE81B5jU=;
+        b=rNBGLco4vp2SvxofFIM9i+W001/9VVk56h3azjExdtrKZs4dBQ5ljRbODIG1mu6TcT
+         r8iWqapp99D4c2KZoZ5KVoNotQycy2C4rkT0VEe050YsKYSGS8F7uOHLcuORYQvMV0PG
+         aOFbK28/Xx4bbVQQwRMwz3e9P/DXaJwLlH2N/8eVmoTkbBSE/DUaA136/CWOQ49Q+s0v
+         JtDZL6zTiWFb5GnKzUwRsz0WL48UbZKnrdZLJYk9pxB5luKuSCDXzYt7oLiWgwC5rt+b
+         KgwuRoXmR55GnVc660jyvnxLsvvZJM8wzd0S3HSRzanq1UkUd6UdlbP5J6z46QDPwx24
+         VjwA==
+X-Gm-Message-State: AGi0PuYGmtpNagDnyVu5G2sYHhfepzXkstE9frXNsvqYRlseGUFUsgh8
+        bMkWL6XeebxibHmco0ZSu3LmMIorUZZ1YfvFyrIFzXPWHLg=
+X-Google-Smtp-Source: APiQypIAhL6OppU7Z8eeHJftsz8pmdrVOqiVbrzIQYKvHB2fTjgnYThkeaiKeH99qXj87xW7NANHsfWhX7P73Iwzzek=
+X-Received: by 2002:ac2:58f6:: with SMTP id v22mr383803lfo.146.1588209960084;
+ Wed, 29 Apr 2020 18:26:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CALOAHbCotD1-+o_XZPU_4_i8Nn98r5F_5NpGVd=z6UG=rUcCmA@mail.gmail.com>
+References: <20200426122237.j2ah64uoivp26ioj@debian.debian-2>
+In-Reply-To: <20200426122237.j2ah64uoivp26ioj@debian.debian-2>
+From:   Bo YU <tsu.yubo@gmail.com>
+Date:   Thu, 30 Apr 2020 09:23:52 +0800
+Message-ID: <CAKq8=3JFn8D1wjd==g0cFov935cyvd=DybCzvWG1PM8NrcMUXw@mail.gmail.com>
+Subject: Re: [PATCH -next] block/genhd: align title and output
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yafang,
-
-Yafang Shao writes:
->Would you pls. add some comments above these newly added WRITE_ONCE() ?
->E.g.
->What does them mean to fix ?
->Why do we must add WRITE_ONCE() and READ_ONCE here and there all over
->the memcg protection ?
->Otherwise, it may be harder to understand by the others.
-
-There is already discussion in the changelogs for previous store tear 
-improvements. For example, b3a7822e5e75 ("mm, memcg: prevent 
-mem_cgroup_protected store tearing").
-
-WRITE_ONCE and READ_ONCE are standard compiler barriers, in this case, to avoid 
-store tears from writes in another thread (effective protection caching is 
-designed by its very nature to permit racing, but tearing is non-ideal).
-
-You can find out more about them in the "COMPILER BARRIER" section in 
-Documentation/memory-barriers.txt. I'm not really seeing the value of adding an 
-extra comment about this specific use of them, unless you have some more 
-explicit concern.
+On Sun, Apr 26, 2020 at 8:22 PM Bo YU <tsu.yubo@gmail.com> wrote:
+>
+> Before the patch:
+>
+> major minor  #blocks  name
+>
+>  254        0   57671680 vda
+>  254        1   57670656 vda1
+>
+> After the patch:
+>
+> major minor   #blocks    name
+>
+> 254   0       57671680   vda
+> 254   1       57670656   vda1
+>
+> According to LDD3,major device maximun number is 12 bit,as it has 4 char
+> placeholders.minor device maximum number is 20 bit(7 char palceholders)
+> and keeping 10 char palceholders for blocks tag.If want to keep
+> palceholder's numbers dynamiclly, There is more tricks to do that.  So i
+> keep it simple.
+>
+> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+> ---
+>  block/genhd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 06b642b23a07..63a483cf76b9 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -1151,7 +1151,7 @@ static void *show_partition_start(struct seq_file *seqf, loff_t *pos)
+>
+>         p = disk_seqf_start(seqf, pos);
+>         if (!IS_ERR_OR_NULL(p) && !*pos)
+> -               seq_puts(seqf, "major minor  #blocks  name\n\n");
+> +               seq_puts(seqf, "major minor   #blocks    name\n\n");
+>         return p;
+>  }
+>
+> @@ -1172,7 +1172,7 @@ static int show_partition(struct seq_file *seqf, void *v)
+>         /* show the full disk and all non-0 size partitions of it */
+>         disk_part_iter_init(&piter, sgp, DISK_PITER_INCL_PART0);
+>         while ((part = disk_part_iter_next(&piter)))
+> -               seq_printf(seqf, "%4d  %7d %10llu %s\n",
+> +               seq_printf(seqf, "%-4d  %-7d %-10llu %s\n",
+>                            MAJOR(part_devt(part)), MINOR(part_devt(part)),
+>                            (unsigned long long)part_nr_sects_read(part) >> 1,
+>                            disk_name(sgp, part->partno, buf));
+> --
+> 2.11.0
+>
+Sorry, Ping again
