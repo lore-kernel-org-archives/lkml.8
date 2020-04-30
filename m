@@ -2,211 +2,160 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9025CC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAD2C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656B22082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF6C208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iVeNuxg4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qA+PMiz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgD3NLF (ORCPT
+        id S1726852AbgD3NNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:11:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10170 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726577AbgD3NLE (ORCPT
+        Thu, 30 Apr 2020 09:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbgD3NNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:11:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588252262; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=IWQCgRCTAvu6acX8+beIsSHVTleZwB9MBvZXRrdCz7A=; b=iVeNuxg4n/KtFZqZGy4c/30a+c41jtnlWDucYTZxhISx09gGPJXi2fzDhrU3fPHI2z6NjSL4
- KjBVR6AyaxN6pByeEMTtK7iT0Or/1sP2rBhLflVyJNWyDSo+aSbR34+cprDLyMoJr+NjqzFb
- 7PbF4g4FQ2GkRvGvbmrN/w/QdbY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaace56.7f88f8ef2f10-smtp-out-n01;
- Thu, 30 Apr 2020 13:10:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F8A6C43637; Thu, 30 Apr 2020 13:10:46 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63CB4C433CB;
-        Thu, 30 Apr 2020 13:10:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 63CB4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Thu, 30 Apr 2020 18:40:37 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] sched/deadline: Make DL capacity-aware
-Message-ID: <20200430131036.GE19464@codeaurora.org>
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-6-dietmar.eggemann@arm.com>
+        Thu, 30 Apr 2020 09:13:06 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719DFC035494;
+        Thu, 30 Apr 2020 06:13:04 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id v4so7439107wme.1;
+        Thu, 30 Apr 2020 06:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N8o0WCkgmNcRVLVFgbGXJgHA8SmIuPpmu2c2tbvo+tw=;
+        b=qA+PMiz8eAXBGH9BURIrD/1CrZpiAUC83W+MjER4hnqkuSfCzux0bA14WLnqH4D2Vt
+         +zE0BWwQd6sqQGTHQ+M0MUU2oC2O7Ww1ywFxfqDsGtJgooVYxl4hvYUoV07WlaaSJukw
+         Ex3+6dwRoq9OAOadSJ9TV8uwaglubeHUtzrvSWfq1mCHktlBxuFiUYvaPESZ2pnnQLaG
+         bpMlH6fw3qUfaFl9wyLfc4OA7CLeKu3ddGPKdY1LZ+fuo71rY6E8beOIHxMknJCAsG9j
+         vjJagusyKaqs2acIAjPFrCwXDzUAiXOfdBxdNNKBVW2bVxl3hdi/3NEyptJbcHxmQp1S
+         QSaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N8o0WCkgmNcRVLVFgbGXJgHA8SmIuPpmu2c2tbvo+tw=;
+        b=lhI4lmXfIoG4UzxzPpfDP1xtRGjKDqANBaFHzeUdFxoxWxN9Q/t3TpiQJcQDMXWSc8
+         G6ZzMm3+IL1XPfXGEsVJFfNp4Trfgq0agJDwiTnikTE99FarMZYV0/9MgkX6RkLbWWXy
+         aCLd0gljXkpTXXVK/NTSTRC7pxrJ2ZfITh3ctwwm/wFNCgSX2wFFlnfIGWUjiBT2NXWV
+         X5FkMUHIQ7ZyDyOQECbt5T8X8dzVsfl0Ju+/RF9Tnv8Dr1G7wx+yjtBely9r80pYIQky
+         DiIeFciOPb9TRmlu3VJ4ySbg8X28eTtrwN3ZbxbVPHrw01pmRjXRXAYSlazS4H5zEK1r
+         r/SQ==
+X-Gm-Message-State: AGi0PuZeykTisLaFVOnftIHx3h9urGZ1wQJuR2mL7ApkPS4nUIc0cU0C
+        0J5eOOPJ3WcgnLHSjThWfyBGMIPLKSPnc/33C0k=
+X-Google-Smtp-Source: APiQypLRoWdeYknVupE+6N8yAi1xDxWATm+stncb9njAtDCMiRIWkFBmlcq9r4s+xdnKcd1PEPCOx2mPQcXe0iWsqp8=
+X-Received: by 2002:a7b:cc8e:: with SMTP id p14mr2914876wma.70.1588252383121;
+ Thu, 30 Apr 2020 06:13:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427083709.30262-6-dietmar.eggemann@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200430085318.114894-1-jian-hong@endlessm.com>
+In-Reply-To: <20200430085318.114894-1-jian-hong@endlessm.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 30 Apr 2020 09:12:51 -0400
+Message-ID: <CADnq5_MjWEj6UwNZnuz=s+w=Hru7Gyzn8_rWAEDMH16MQZOiDg@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: drm/amdgpu: Disable [1002:6611] in radeon
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Tianci . Yin" <tianci.yin@amd.com>,
+        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        linux-media <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:37:08AM +0200, Dietmar Eggemann wrote:
-> From: Luca Abeni <luca.abeni@santannapisa.it>
-> 
-> The current SCHED_DEADLINE (DL) scheduler uses a global EDF scheduling
-> algorithm w/o considering CPU capacity or task utilization.
-> This works well on homogeneous systems where DL tasks are guaranteed
-> to have a bounded tardiness but presents issues on heterogeneous
-> systems.
-> 
-> A DL task can migrate to a CPU which does not have enough CPU capacity
-> to correctly serve the task (e.g. a task w/ 70ms runtime and 100ms
-> period on a CPU w/ 512 capacity).
-> 
-> Add the DL fitness function dl_task_fits_capacity() for DL admission
-> control on heterogeneous systems. A task fits onto a CPU if:
-> 
->     CPU original capacity / 1024 >= task runtime / task deadline
-> 
-> Use this function on heterogeneous systems to try to find a CPU which
-> meets this criterion during task wakeup, push and offline migration.
-> 
-> On homogeneous systems the original behavior of the DL admission
-> control should be retained.
-> 
-> Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+On Thu, Apr 30, 2020 at 9:08 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+>
+> The AMD/ATI Oland [1002:6611]'s HDMI output status is not synchronous
+> as shown on UI after hot re-plug the HDMI cable, if it is radeon in
+> used. The amdgpu module does not hit this issue.
+>
+> This patch disables [1002:6611] in radeon and enables it in amdgpu.
+>
+> Fixes: https://gitlab.freedesktop.org/drm/amd/-/issues/1117
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+
+Nack.  Amdgpu does not have support for VCE or UVD yet so you are just
+trading one issue for another.  It would be better to figure out why
+the audio is not updated properly in some cases.
+
+Alex
+
 > ---
->  kernel/sched/cpudeadline.c | 14 +++++++++++++-
->  kernel/sched/deadline.c    | 18 ++++++++++++++----
->  kernel/sched/sched.h       | 15 +++++++++++++++
->  3 files changed, 42 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-> index 5cc4012572ec..8630f2a40a3f 100644
-> --- a/kernel/sched/cpudeadline.c
-> +++ b/kernel/sched/cpudeadline.c
-> @@ -121,7 +121,19 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
->  
->  	if (later_mask &&
->  	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
-> -		return 1;
-> +		int cpu;
-> +
-> +		if (!static_branch_unlikely(&sched_asym_cpucapacity))
-> +			return 1;
-> +
-> +		/* Ensure the capacity of the CPUs fits the task. */
-> +		for_each_cpu(cpu, later_mask) {
-> +			if (!dl_task_fits_capacity(p, cpu))
-> +				cpumask_clear_cpu(cpu, later_mask);
-> +		}
-> +
-> +		if (!cpumask_empty(later_mask))
-> +			return 1;
->  	} else {
->  		int best_cpu = cpudl_maximum(cp);
->  
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 08ab28e1cefc..575b7d88d839 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -1634,6 +1634,7 @@ static int
->  select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
->  {
->  	struct task_struct *curr;
-> +	bool select_rq;
->  	struct rq *rq;
->  
->  	if (sd_flag != SD_BALANCE_WAKE)
-> @@ -1653,10 +1654,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
->  	 * other hand, if it has a shorter deadline, we
->  	 * try to make it stay here, it might be important.
->  	 */
-> -	if (unlikely(dl_task(curr)) &&
-> -	    (curr->nr_cpus_allowed < 2 ||
-> -	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
-> -	    (p->nr_cpus_allowed > 1)) {
-> +	select_rq = unlikely(dl_task(curr)) &&
-> +		    (curr->nr_cpus_allowed < 2 ||
-> +		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
-> +		    p->nr_cpus_allowed > 1;
-> +
-> +	/*
-> +	 * Take the capacity of the CPU into account to
-> +	 * ensure it fits the requirement of the task.
-> +	 */
-> +	if (static_branch_unlikely(&sched_asym_cpucapacity))
-> +		select_rq |= !dl_task_fits_capacity(p, cpu);
-> +
-> +	if (select_rq) {
->  		int target = find_later_rq(p);
-
-I see that find_later_rq() checks if the previous CPU is part of
-later_mask and returns it immediately. So we don't migrate the
-task in the case where there previous CPU can't fit the task and
-there are no idle CPUs on which the task can fit. LGTM.
-
->  
->  		if (target != -1 &&
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 511edacc2282..ec0efd99497b 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -317,6 +317,21 @@ static inline bool __dl_overflow(struct dl_bw *dl_b, unsigned long cap,
->  	       cap_scale(dl_b->bw, cap) < dl_b->total_bw - old_bw + new_bw;
->  }
->  
-> +/*
-> + * Verify the fitness of task @p to run on @cpu taking into account the
-> + * CPU original capacity and the runtime/deadline ratio of the task.
-> + *
-> + * The function will return true if the CPU original capacity of the
-> + * @cpu scaled by SCHED_CAPACITY_SCALE >= runtime/deadline ratio of the
-> + * task and false otherwise.
-> + */
-> +static inline bool dl_task_fits_capacity(struct task_struct *p, int cpu)
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 11 +++++++++++
+>  include/drm/drm_pciids.h                |  1 -
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> index 8ea86ffdea0d..1ad6f13a5bc0 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> @@ -1017,6 +1017,15 @@ MODULE_DEVICE_TABLE(pci, pciidlist);
+>
+>  static struct drm_driver kms_driver;
+>
+> +static void amdgpu_pci_fixup(struct pci_dev *pdev)
 > +{
-> +	unsigned long cap = arch_scale_cpu_capacity(cpu);
-> +
-> +	return cap_scale(p->dl.dl_deadline, cap) >= p->dl.dl_runtime;
+> +#ifdef CONFIG_DRM_AMDGPU_SI
+> +       /* [1002:6611] is disabled in radeon, so enable si_support in amdgpu. */
+> +       if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x6611)
+> +               amdgpu_si_support = 1;
+> +#endif
 > +}
 > +
-
-This is same as
-
-return p->dl.dl_bw >> (BW_SHIFT - SCHED_CAPACITY_SHIFT) <= cap
-
-Correct?  If yes, would it be better to use this?
-
-Thanks,
-Pavan
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+>  static int amdgpu_pci_probe(struct pci_dev *pdev,
+>                             const struct pci_device_id *ent)
+>  {
+> @@ -1036,6 +1045,8 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
+>                 return -ENODEV;
+>         }
+>
+> +       amdgpu_pci_fixup(pdev);
+> +
+>  #ifdef CONFIG_DRM_AMDGPU_SI
+>         if (!amdgpu_si_support) {
+>                 switch (flags & AMD_ASIC_MASK) {
+> diff --git a/include/drm/drm_pciids.h b/include/drm/drm_pciids.h
+> index b7e899ce44f0..57368a0f5b82 100644
+> --- a/include/drm/drm_pciids.h
+> +++ b/include/drm/drm_pciids.h
+> @@ -171,7 +171,6 @@
+>         {0x1002, 0x6607, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_IS_MOBILITY|RADEON_NEW_MEMMAP}, \
+>         {0x1002, 0x6608, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
+>         {0x1002, 0x6610, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
+> -       {0x1002, 0x6611, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
+>         {0x1002, 0x6613, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_NEW_MEMMAP}, \
+>         {0x1002, 0x6617, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_IS_MOBILITY|RADEON_NEW_MEMMAP}, \
+>         {0x1002, 0x6620, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|RADEON_IS_MOBILITY|RADEON_NEW_MEMMAP}, \
+> --
+> 2.26.2
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
