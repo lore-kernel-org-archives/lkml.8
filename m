@@ -2,141 +2,151 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB2BC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92656C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB07A2072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682C02072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdDsdhzG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JGLye7rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgD3MnE (ORCPT
+        id S1726850AbgD3MnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726520AbgD3MnD (ORCPT
+        Thu, 30 Apr 2020 08:43:20 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20107 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726520AbgD3MnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:43:03 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87B9C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 05:43:02 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id g10so1067386lfj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 05:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yumFUMI4249WSXzPR5V8YGUqtmGI9DD0x2OLnA0cDLs=;
-        b=KdDsdhzGLrYgimJfZZEx2eF9JO3+vXrJDCCyg2oLnXyV21m1T5GaQnN9reCiJZLVeU
-         SFS+4h4iZ3hVadXJCwKLrbUOBvVEP8R0kSWGduLVKwuQeNAzrHW76gFSq0HwXyd/L8V9
-         /GfHGAaHyBl7SO2CWZqNCVw7ogKQ6cUYCtq+1+xSTHDhjefdtltnpdNrxTK961Kf1T7j
-         O2qsrBiIKIeUWxrIME5UQ0zDVN36ratrdn7Nxq7HmPJV51QZXoABVzTf5xxb1jRLDF7h
-         lQGM7JTRIsFXKDn7jTV+XFm5+oQRHIU8q7tZw+RIPO0+BsOQOAqhcJ0lOmTNB0Gthear
-         Z1yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yumFUMI4249WSXzPR5V8YGUqtmGI9DD0x2OLnA0cDLs=;
-        b=QtvFIaXPYZ6/jChqLx7UBavNi2KYtiQ3iF0AuGdmvSxEA3+p0znTxAdGFyQ8HSx/8U
-         X5QQg3tpT2TY9Qy5z5tbiPrZfm/8AITeiWDqz+sscymbX81FEm//6xfxagjE3m4HF9BP
-         Mdc4EtIh4jvZPvYhyNluca9j/9OxiJx4UeyqPC3pmFul2hN9xfWypNDSP2dilpd/bOUY
-         felM0AJAXuEVVH0G2XKZkFYb6pD7TGfZfG7U0i/BYV/oPvzZII826zZAYpkFRFQTrols
-         gYmMWxBXoQu2e2V4ymNG/8chFyL/valLaSE211HjeTkPxfCx+TGMME+Aha0XDTWp2Bp2
-         Xs9A==
-X-Gm-Message-State: AGi0PuZsAYzChAYoi54cyVRXvUapG+vT9weqVx3xqYQn/Ynud81MwTG2
-        wJ2mDhKh5cLl7U66uy7l1RyM+zV92kR+Jec5rnA+Kg==
-X-Google-Smtp-Source: APiQypJekjcGgPXZsen7oTWtrMSl8LNdd5NgzZz+7x/cBDOlIlwEtuDvRS04xXh/mklX3ikBcToqDcSTP+2TCkhdBo4=
-X-Received: by 2002:ac2:5e65:: with SMTP id a5mr2039989lfr.189.1588250581343;
- Thu, 30 Apr 2020 05:43:01 -0700 (PDT)
+        Thu, 30 Apr 2020 08:43:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588250598;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BAg82KvpzRQfogFt02yjyfPQP7IP6UKcwesWkwykLkE=;
+        b=JGLye7rdSmwMnNM7ST4YFIHAeIHi3vOMCN9k2Jj9R6lbKA+zqA0ggJA/+EqP2nHOPvLvpx
+        GUuD/hmVsNUOvNP7gn5zqWJhFLScQl3aXpCCxMlEX2An05dACdrGHRThRizQDR/VMcTfUp
+        wvrLooIZXly3oOtXhG+Dco+fwDC+RUg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-105-JzxphAwAO8irvk7l5Tymgg-1; Thu, 30 Apr 2020 08:43:14 -0400
+X-MC-Unique: JzxphAwAO8irvk7l5Tymgg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F19211800D4A;
+        Thu, 30 Apr 2020 12:43:12 +0000 (UTC)
+Received: from krava (unknown [10.40.192.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04515196AE;
+        Thu, 30 Apr 2020 12:43:09 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 14:43:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCHv2 0/3] perf tools: Add support for user defined metric
+Message-ID: <20200430124306.GD1694693@krava>
+References: <20200421181337.988681-1-jolsa@kernel.org>
+ <8df4b32b-4abc-7ea9-feaf-a16be6edf64f@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200428050242.17717-1-swood@redhat.com> <jhjzhatdgxh.mognet@arm.com>
- <CAKfTPtDktpTB7d6qhmcX0HtryezzFygk4kOC22Qf=OM77QpLYg@mail.gmail.com> <jhjy2qdcmc2.mognet@arm.com>
-In-Reply-To: <jhjy2qdcmc2.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 30 Apr 2020 14:42:50 +0200
-Message-ID: <CAKfTPtA_duZpnvMx+czAosCikVL=cESKhPQcRrQUdKWKobZBaA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] newidle_balance() latency mitigation
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Scott Wood <swood@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8df4b32b-4abc-7ea9-feaf-a16be6edf64f@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 at 12:14, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
->
-> On 30/04/20 08:44, Vincent Guittot wrote:
-> > On Thu, 30 Apr 2020 at 01:13, Valentin Schneider
-> > <valentin.schneider@arm.com> wrote:
-> >>
-> >>
-> >> On 28/04/20 06:02, Scott Wood wrote:
-> >> > These patches mitigate latency caused by newidle_balance() on large
-> >> > systems, by enabling interrupts when the lock is dropped, and exiting
-> >> > early at various points if an RT task is runnable on the current CPU.
-> >> >
-> >> > When applied to an RT kernel on a 72-core machine (2 threads per core), I
-> >> > saw significant reductions in latency as reported by rteval -- from
-> >> > over 500us to around 160us with hyperthreading disabled, and from
-> >> > over 1400us to around 380us with hyperthreading enabled.
-> >> >
-> >> > This isn't the first time something like this has been tried:
-> >> > https://lore.kernel.org/lkml/20121222003019.433916240@goodmis.org/
-> >> > That attempt ended up being reverted:
-> >> > https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/
-> >> >
-> >> > The problem in that case was the failure to keep BH disabled, and the
-> >> > difficulty of fixing that when called from the post_schedule() hook.
-> >> > This patchset uses finish_task_switch() to call newidle_balance(), which
-> >> > enters in non-atomic context so we have full control over what we disable
-> >> > and when.
-> >> >
-> >> > There was a note at the end about wanting further discussion on the matter --
-> >> > does anyone remember if that ever happened and what the conclusion was?
-> >> > Are there any other issues with enabling interrupts here and/or moving
-> >> > the newidle_balance() call?
-> >> >
-> >>
-> >> Random thought that just occurred to me; in the grand scheme of things,
-> >> with something in the same spirit as task-stealing (i.e. don't bother with
-> >> a full fledged balance at newidle, just pick one spare task somewhere),
-> >> none of this would be required.
-> >
-> > newly idle load balance already stops after picking 1 task
->
-> Mph, I had already forgotten your changes there. Is that really always the
-> case for newidle? In e.g. the busiest->group_type == group_fully_busy case,
-> I think we can pull more than one task.
+On Thu, Apr 30, 2020 at 04:54:41PM +0530, kajoljain wrote:
+> 
+> 
+> On 4/21/20 11:43 PM, Jiri Olsa wrote:
+> > hi,
+> > Joe asked for possibility to add user defined metrics. Given that
+> > we already have metrics support, I added --metrics-file option that
+> > allows to specify custom metrics.
+> > 
+> >   $ cat metrics
+> >   # IPC
+> >   mine1 = instructions / cycles;
+> >   /* DECODED_ICACHE_UOPS% */
+> >   mine2 = 100 * (idq.dsb_uops / \ (idq.ms_uops + idq.mite_uops + idq.dsb_uops + lsd.uops));
+> > 
+> >   $ sudo perf stat --metrics-file ./metrics -M mine1,mine2 --metric-only -a -I 1000
+> >   #           time       insn per cycle                mine1                mine2
+> >        1.000536263                0.71                   0.7                 41.4
+> >        2.002069025                0.31                   0.3                 14.1
+> >        3.003427684                0.27                   0.3                 14.8
+> >        4.004807132                0.25                   0.2                 12.1
+> >   ...
+> > 
+> > v2 changes:
+> >   - add new --metrics-file option
+> >   - rebased on current perf/core expression bison/flex enhancements
+> > 
+> > Also available in:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> >   perf/metric
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > ---
+> > Jiri Olsa (3):
+> >       perf expr: Add parsing support for multiple expressions
+> >       perf expr: Allow comments in custom metric file
+> >       perf stat: Add --metrics-file option
+> 
+> Hi Jiri,
+>      I try to look into these patches. As far as I understand we are using
+> syntax "Name: Expression" for user defined events. It will be great if we mention
+> this format somewhere for users.
 
-for newly_idle load balance, detach_tasks stops after finding 1 suitable task
+right, Andi also asked for that, I'll describe it in a man page
 
->
-> > Now if your proposal is to pick one random task on one random cpu, I'm
-> > clearly not sure that's a good idea
-> >
->
-> IIRC Steve's implementation was to "simply" pull one task from any CPU
-> within the LLC domain that had > 1 runnable tasks. I quite like this since
-> picking any one task is almost always better than switching to the idle
-> task, but it wasn't a complete newidle_balance() replacement just yet.
->
-> >
-> >>
-> >> Sadly I don't think anyone has been looking at it any recently.
+> 
+> Otherwise it works fine for me. Try by testing it for different metric expressions.
+
+thanks for testing
+
+> But still curious about reason for adding this support. Isn't json file is there for same purpose?
+
+we've been asked by Joe about the possibility to specify metric by user
+through the command line..  with json you have all them compiled in and 
+you can't change them or specify your own without recompiling perf
+
+jirka
+
+> 
+> Thanks,
+> Kajol Jain
+> > 
+> >  tools/perf/Documentation/perf-stat.txt |  3 +++
+> >  tools/perf/builtin-stat.c              |  7 +++++--
+> >  tools/perf/tests/expr.c                | 13 +++++++++++++
+> >  tools/perf/util/expr.c                 |  6 ++++++
+> >  tools/perf/util/expr.h                 | 19 +++++++++++++++++--
+> >  tools/perf/util/expr.l                 | 24 ++++++++++++++++++++++++
+> >  tools/perf/util/expr.y                 | 13 ++++++++++++-
+> >  tools/perf/util/metricgroup.c          | 66 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+> >  tools/perf/util/metricgroup.h          |  3 ++-
+> >  tools/perf/util/stat.h                 |  1 +
+> >  10 files changed, 142 insertions(+), 13 deletions(-)
+> > 
+> 
+
