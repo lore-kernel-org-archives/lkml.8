@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B4C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B15C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1444220873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372762076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262814;
-	bh=kwLf545ZLLKl4cDNQVW1Q3oZtALV8Rc5ZHCSwPCR5Ng=;
+	s=default; t=1588262819;
+	bh=+k2ZI+83OqAv8SgP/rHh8+y4ELKKcvrshRN7zFngHYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCORlzsfp7TngyvACLUmEihTqI0ZHCpoQuLm+OYZGmx7RwHwXON94m/35POnQOnUL
-	 BroesV17yKxwfkEvHtH9FeBmKA6wJnXb8ZlMxhXUu4K1Koucb2hxuUcyOrcrbd0D0S
-	 NziZyWX0gfOYRbI+CCKm+BN8UXVbSKTz2In2ifWM=
+	b=jVFNC3MvZVPuU6luTeflA4Xy0K0JQnKObmC4cqAj2swK2AjUcnKA3gNDk+cONSl4i
+	 hRH0CKwR6PzE/I5J1NQj4Z4oRb6jqBbi+7zaJmyoP3gMkXpsYPI3lFpMNLOW/5uGiO
+	 oiPh5lqGamaidocGtq2jttglXN1j5prtG7X8dhyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgD3QEj (ORCPT
+        id S1728488AbgD3QG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50378 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgD3QEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:04:36 -0400
+        id S1727082AbgD3QEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:04:38 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEF3420775;
-        Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27BFD24963;
+        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588262675;
-        bh=kwLf545ZLLKl4cDNQVW1Q3oZtALV8Rc5ZHCSwPCR5Ng=;
+        s=default; t=1588262676;
+        bh=+k2ZI+83OqAv8SgP/rHh8+y4ELKKcvrshRN7zFngHYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9ovvL+5dz7imvEp73G2FjBuKbniXBnBMIKtI4d9elsbHrE1UUt+FzZpOrn37PSO+
-         nBWW4Ee5nxtZ9iU0NIL+oRH8wC7P1d0G55vIa3LWdDlXuEynayk6+qNL8oqvTIchaC
-         HvaP/bdqo+axBzq/a/8HQ/laEsPCtjA5OuBycePk=
+        b=f/BEeEmpqRnOcvdGABiLIRLxrXFqnPlXXZG/MFY+kDtHENeg5rFQseDf8nDz9A1wX
+         inWAWNLAzBhizetP8QtoWMzNejg8HjlpRkfRj071V1NBVxIQnFHBX/fYTEC1w0v78I
+         LBCblgg48z61suaBtuHuuObh/6tYt9vhW9xClUm0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxEJ-1p; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxFI-CT; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 03/37] docs: networking: convert ltpc.txt to ReST
-Date:   Thu, 30 Apr 2020 18:03:58 +0200
-Message-Id: <6e495bae2c1b7804fd7ff0d3462c1d15b5c0dc3d.1588261997.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 15/37] docs: networking: convert operstates.txt to ReST
+Date:   Thu, 30 Apr 2020 18:04:10 +0200
+Message-Id: <aca46c2bc16a33b9da2f1943edf520baf72c508b.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -63,178 +63,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
 - add a document title;
-- mark code blocks and literals as such;
-- mark tables as such;
-- adjust identation, whitespaces and blank lines;
+- adjust chapters, adding proper markups;
+- mark lists as such;
+- adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/networking/index.rst            |  1 +
- .../networking/{ltpc.txt => ltpc.rst}         | 45 ++++++++++++-------
- drivers/net/appletalk/Kconfig                 |  2 +-
- 3 files changed, 31 insertions(+), 17 deletions(-)
- rename Documentation/networking/{ltpc.txt => ltpc.rst} (86%)
+ .../{operstates.txt => operstates.rst}        | 45 ++++++++++++++-----
+ 2 files changed, 34 insertions(+), 12 deletions(-)
+ rename Documentation/networking/{operstates.txt => operstates.rst} (87%)
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index acd2567cf0d4..b3608b177a8b 100644
+index b7f558480aca..028a36821b9a 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -76,6 +76,7 @@ Contents:
-    kcm
-    l2tp
-    lapb-module
-+   ltpc
+@@ -88,6 +88,7 @@ Contents:
+    nf_conntrack-sysctl
+    nf_flowtable
+    openvswitch
++   operstates
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/ltpc.txt b/Documentation/networking/ltpc.rst
-similarity index 86%
-rename from Documentation/networking/ltpc.txt
-rename to Documentation/networking/ltpc.rst
-index a005a73b76d0..0ad197fd17ce 100644
---- a/Documentation/networking/ltpc.txt
-+++ b/Documentation/networking/ltpc.rst
-@@ -1,3 +1,9 @@
+diff --git a/Documentation/networking/operstates.txt b/Documentation/networking/operstates.rst
+similarity index 87%
+rename from Documentation/networking/operstates.txt
+rename to Documentation/networking/operstates.rst
+index b203d1334822..9c918f7cb0e8 100644
+--- a/Documentation/networking/operstates.txt
++++ b/Documentation/networking/operstates.rst
+@@ -1,5 +1,12 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+===========
-+LTPC Driver
-+===========
-+
- This is the ALPHA version of the ltpc driver.
- 
- In order to use it, you will need at least version 1.3.3 of the
-@@ -15,7 +21,7 @@ yourself.  (see "Card Configuration" below for how to determine or
- change the settings on your card)
- 
- When the driver is compiled into the kernel, you can add a line such
--as the following to your /etc/lilo.conf:
-+as the following to your /etc/lilo.conf::
- 
-  append="ltpc=0x240,9,1"
- 
-@@ -25,13 +31,13 @@ the driver will try to determine them itself.
- 
- If you load the driver as a module, you can pass the parameters "io=",
- "irq=", and "dma=" on the command line with insmod or modprobe, or add
--them as options in a configuration file in /etc/modprobe.d/ directory:
-+them as options in a configuration file in /etc/modprobe.d/ directory::
- 
-  alias lt0 ltpc # autoload the module when the interface is configured
-  options ltpc io=0x240 irq=9 dma=1
- 
- Before starting up the netatalk demons (perhaps in rc.local), you
--need to add a line such as:
-+need to add a line such as::
- 
-  /sbin/ifconfig lt0 127.0.0.42
- 
-@@ -42,7 +48,7 @@ The appropriate netatalk configuration depends on whether you are
- attached to a network that includes AppleTalk routers or not.  If,
- like me, you are simply connecting to your home Macintoshes and
- printers, you need to set up netatalk to "seed".  The way I do this
--is to have the lines
-+is to have the lines::
- 
-  dummy -seed -phase 2 -net 2000 -addr 2000.26 -zone "1033"
-  lt0 -seed -phase 1 -net 1033 -addr 1033.27 -zone "1033"
-@@ -57,13 +63,13 @@ such.
- 
- If you are attached to an extended AppleTalk network, with routers on
- it, then you don't need to fool around with this -- the appropriate
--line in atalkd.conf is
-+line in atalkd.conf is::
- 
-  lt0 -phase 1
- 
----------------------------------------
- 
--Card Configuration:
-+Card Configuration
 +==================
- 
- The interrupts and so forth are configured via the dipswitch on the
- board.  Set the switches so as not to conflict with other hardware.
-@@ -73,26 +79,32 @@ board.  Set the switches so as not to conflict with other hardware.
-        original documentation refers to IRQ2.  Since you'll be running
-        this on an AT (or later) class machine, that really means IRQ9.
- 
-+       ===     ===========================================================
-        SW1     IRQ 4
-        SW2     IRQ 3
-        SW3     IRQ 9 (2 in original card documentation only applies to XT)
-+       ===     ===========================================================
- 
- 
-        DMA -- choose DMA 1 or 3, and set both corresponding switches.
- 
-+       ===     =====
-        SW4     DMA 3
-        SW5     DMA 1
-        SW6     DMA 3
-        SW7     DMA 1
-+       ===     =====
- 
- 
-        I/O address -- choose one.
- 
-+       ===     =========
-        SW8     220 / 240
-+       ===     =========
- 
----------------------------------------
- 
--IP:
-+IP
-+==
- 
- Yes, it is possible to do IP over LocalTalk.  However, you can't just
- treat the LocalTalk device like an ordinary Ethernet device, even if
-@@ -102,9 +114,9 @@ Instead, you follow the same procedure as for doing IP in EtherTalk.
- See Documentation/networking/ipddp.rst for more information about the
- kernel driver and userspace tools needed.
- 
----------------------------------------
- 
--BUGS:
-+Bugs
-+====
- 
- IRQ autoprobing often doesn't work on a cold boot.  To get around
- this, either compile the driver as a module, or pass the parameters
-@@ -120,12 +132,13 @@ It may theoretically be possible to use two LTPC cards in the same
- machine, but this is unsupported, so if you really want to do this,
- you'll probably have to hack the initialization code a bit.
- 
--______________________________________
- 
--THANKS:
--	Thanks to Alan Cox for helpful discussions early on in this
-+Thanks
-+======
++Operational States
++==================
 +
-+Thanks to Alan Cox for helpful discussions early on in this
- work, and to Denis Hainsworth for doing the bleeding-edge testing.
  
---- Bradford Johnson <bradford@math.umn.edu>
-+Bradford Johnson <bradford@math.umn.edu>
+ 1. Introduction
++===============
  
---- Updated 11/09/1998 by David Huggins-Daines <dhd@debian.org>
-+Updated 11/09/1998 by David Huggins-Daines <dhd@debian.org>
-diff --git a/drivers/net/appletalk/Kconfig b/drivers/net/appletalk/Kconfig
-index ccde6479050c..10589a82263b 100644
---- a/drivers/net/appletalk/Kconfig
-+++ b/drivers/net/appletalk/Kconfig
-@@ -48,7 +48,7 @@ config LTPC
- 	  If you are in doubt, this card is the one with the 65C02 chip on it.
- 	  You also need version 1.3.3 or later of the netatalk package.
- 	  This driver is experimental, which means that it may not work.
--	  See the file <file:Documentation/networking/ltpc.txt>.
-+	  See the file <file:Documentation/networking/ltpc.rst>.
+ Linux distinguishes between administrative and operational state of an
+ interface. Administrative state is the result of "ip link set dev
+@@ -20,6 +27,7 @@ and changeable from userspace under certain rules.
  
- config COPS
- 	tristate "COPS LocalTalk PC support"
+ 
+ 2. Querying from userspace
++==========================
+ 
+ Both admin and operational state can be queried via the netlink
+ operation RTM_GETLINK. It is also possible to subscribe to RTNLGRP_LINK
+@@ -30,16 +38,20 @@ These values contain interface state:
+ 
+ ifinfomsg::if_flags & IFF_UP:
+  Interface is admin up
++
+ ifinfomsg::if_flags & IFF_RUNNING:
+  Interface is in RFC2863 operational state UP or UNKNOWN. This is for
+  backward compatibility, routing daemons, dhcp clients can use this
+  flag to determine whether they should use the interface.
++
+ ifinfomsg::if_flags & IFF_LOWER_UP:
+  Driver has signaled netif_carrier_on()
++
+ ifinfomsg::if_flags & IFF_DORMANT:
+  Driver has signaled netif_dormant_on()
+ 
+ TLV IFLA_OPERSTATE
++------------------
+ 
+ contains RFC2863 state of the interface in numeric representation:
+ 
+@@ -47,26 +59,33 @@ IF_OPER_UNKNOWN (0):
+  Interface is in unknown state, neither driver nor userspace has set
+  operational state. Interface must be considered for user data as
+  setting operational state has not been implemented in every driver.
++
+ IF_OPER_NOTPRESENT (1):
+  Unused in current kernel (notpresent interfaces normally disappear),
+  just a numerical placeholder.
++
+ IF_OPER_DOWN (2):
+  Interface is unable to transfer data on L1, f.e. ethernet is not
+  plugged or interface is ADMIN down.
++
+ IF_OPER_LOWERLAYERDOWN (3):
+  Interfaces stacked on an interface that is IF_OPER_DOWN show this
+  state (f.e. VLAN).
++
+ IF_OPER_TESTING (4):
+  Unused in current kernel.
++
+ IF_OPER_DORMANT (5):
+  Interface is L1 up, but waiting for an external event, f.e. for a
+  protocol to establish. (802.1X)
++
+ IF_OPER_UP (6):
+  Interface is operational up and can be used.
+ 
+ This TLV can also be queried via sysfs.
+ 
+ TLV IFLA_LINKMODE
++-----------------
+ 
+ contains link policy. This is needed for userspace interaction
+ described below.
+@@ -75,6 +94,7 @@ This TLV can also be queried via sysfs.
+ 
+ 
+ 3. Kernel driver API
++====================
+ 
+ Kernel drivers have access to two flags that map to IFF_LOWER_UP and
+ IFF_DORMANT. These flags can be set from everywhere, even from
+@@ -126,6 +146,7 @@ netif_carrier_ok() && !netif_dormant():
+ 
+ 
+ 4. Setting from userspace
++=========================
+ 
+ Applications have to use the netlink interface to influence the
+ RFC2863 operational state of an interface. Setting IFLA_LINKMODE to 1
+@@ -139,18 +160,18 @@ are multicasted on the netlink group RTNLGRP_LINK.
+ 
+ So basically a 802.1X supplicant interacts with the kernel like this:
+ 
+--subscribe to RTNLGRP_LINK
+--set IFLA_LINKMODE to 1 via RTM_SETLINK
+--query RTM_GETLINK once to get initial state
+--if initial flags are not (IFF_LOWER_UP && !IFF_DORMANT), wait until
+- netlink multicast signals this state
+--do 802.1X, eventually abort if flags go down again
+--send RTM_SETLINK to set operstate to IF_OPER_UP if authentication
+- succeeds, IF_OPER_DORMANT otherwise
+--see how operstate and IFF_RUNNING is echoed via netlink multicast
+--set interface back to IF_OPER_DORMANT if 802.1X reauthentication
+- fails
+--restart if kernel changes IFF_LOWER_UP or IFF_DORMANT flag
++- subscribe to RTNLGRP_LINK
++- set IFLA_LINKMODE to 1 via RTM_SETLINK
++- query RTM_GETLINK once to get initial state
++- if initial flags are not (IFF_LOWER_UP && !IFF_DORMANT), wait until
++  netlink multicast signals this state
++- do 802.1X, eventually abort if flags go down again
++- send RTM_SETLINK to set operstate to IF_OPER_UP if authentication
++  succeeds, IF_OPER_DORMANT otherwise
++- see how operstate and IFF_RUNNING is echoed via netlink multicast
++- set interface back to IF_OPER_DORMANT if 802.1X reauthentication
++  fails
++- restart if kernel changes IFF_LOWER_UP or IFF_DORMANT flag
+ 
+ if supplicant goes down, bring back IFLA_LINKMODE to 0 and
+ IFLA_OPERSTATE to a sane value.
 -- 
 2.25.4
 
