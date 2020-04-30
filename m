@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB887C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E75C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3422495E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B512520774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254703;
-	bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
+	s=default; t=1588254709;
+	bh=MPyBt+js+ZFj7/UkvTMgEb63O/0/GYa3hNOG0libZHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jl3fiBReOME/M7oTJtycRuaEp05+OJcXq1tHIMX+FQnhhN3V/4RU7xHG4fDauT+n+
-	 lvchWfR/KywPspnnCrecC6v+Wcy6IpHuMupvRr7eW3Kl/a3rD9TSt9y1JBm/yjr0rV
-	 fGLuJgZAHT2I7254uX29G7Y2Q214AgflRAkAo3fY=
+	b=skU1YE6HvQgCLObgxL7jK5Z+qM0h1a1ska5Ky0+vaALZv8F8tPBQIEavhBAI2FdJg
+	 /IV3prG/sSkiKi/n2OndUbeJWP5KbeIqzxeAyjqhMBt3r27I4ZZrxk4DoTwPRE8oCW
+	 uRn2xzgFbzq642NKqQ47QLGcBUDGgtNw/dLoZz2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgD3Nvn (ORCPT
+        id S1728201AbgD3Nvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:51:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgD3Nvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:32 -0400
+        id S1728118AbgD3Nvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D67B208D5;
-        Thu, 30 Apr 2020 13:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB0A824959;
+        Thu, 30 Apr 2020 13:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254691;
-        bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
+        s=default; t=1588254696;
+        bh=MPyBt+js+ZFj7/UkvTMgEb63O/0/GYa3hNOG0libZHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4qRjVFYPCIXGUPqfAOdhKzQiQx/fRMm6dVAC8oHb9rlmP/KVIddd1TdRhuSB3niv
-         fPYfeeapfupSQVkmRAUh5YXbG4yn7n4jR3pBcOizO8fc3WQnG0s219FKJkYknetpUc
-         Og3LEVrZkrO8FNi0ZaOFNfb9PiTp3V8VzlbOtPp8=
+        b=cSoJaBgyuKYwHRQS974aKdgIks3CKwh04cDs6HOJOLOdXT3ZJ6DmtJqT1RZ1nyHV3
+         +gCrH+DMZfoDZak2NcQdwE+rHXKGrdFWHefQUVxvQErQEqiN/aRHu0CjuR4Xz8kO95
+         iX6JkZfP4sLs/9k19VtdnvsB40BOyBnKPNXoB2Zs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Beraud <julien.beraud@orolia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 42/79] net: stmmac: Fix sub-second increment
-Date:   Thu, 30 Apr 2020 09:50:06 -0400
-Message-Id: <20200430135043.19851-42-sashal@kernel.org>
+Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 46/79] ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
+Date:   Thu, 30 Apr 2020 09:50:10 -0400
+Message-Id: <20200430135043.19851-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -59,76 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Beraud <julien.beraud@orolia.com>
+From: Matthias Blankertz <matthias.blankertz@cetitec.com>
 
-[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
+[ Upstream commit 0c258657ddfe81b4fc0183378d800c97ba0b7cdd ]
 
-In fine adjustement mode, which is the current default, the sub-second
-    increment register is the number of nanoseconds that will be added to
-    the clock when the accumulator overflows. At each clock cycle, the
-    value of the addend register is added to the accumulator.
-    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
-    frequency of the ptp clock actually is.
-    The adjustment is then done on the addend register, only incrementing
-    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
-    (addend = 2^32 * 50MHz/ptp_clock_rate).
-    This causes the following issues :
-    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
-      the addend value calculation will overflow and the default
-      addend value will be set to 0, causing the clock to not work at
-      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
-    - The resolution of the timestamping clock is limited to 20ns while it
-      is not needed, thus limiting the accuracy of the timestamping to
-      20ns.
+The master SSI of a multi-SSI setup was attached both to the
+RSND_MOD_SSI slot and the RSND_MOD_SSIP slot of the rsnd_dai_stream.
+This is not correct wrt. the meaning of being "parent" in the rest of
+the SSI code, where it seems to indicate an SSI that provides clock and
+word sync but is not transmitting/receiving audio data.
 
-    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
-    It will allow to reach the minimum possible frequency for
-    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
-    sub-second-increment to a higher value. For instance, for 25MHz, it
-    gives ssinc = 80ns and default_addend = 2^31.
-    It will also allow to use a lower value for sub-second-increment, thus
-    improving the timestamping accuracy with frequencies higher than
-    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
-    2^31.
+Not treating the multi-SSI master as parent allows removal of various
+special cases to the rsnd_ssi_is_parent conditions introduced in commit
+a09fb3f28a60 ("ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode").
+It also fixes the issue that operations performed via rsnd_dai_call()
+were performed twice for the master SSI. This caused some "status check
+failed" spam when stopping a multi-SSI stream as the driver attempted to
+stop the master SSI twice.
 
-v1->v2:
- - Remove modifications to the calculation of default addend, which broke
- compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
- is not an integer.
- - Modify description according to discussions.
-
-Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200417153017.1744454-2-matthias.blankertz@cetitec.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ sound/soc/sh/rcar/ssi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-index 0201596225592..e5d9007c8090b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-@@ -26,12 +26,16 @@ static void config_sub_second_increment(void __iomem *ioaddr,
- 	unsigned long data;
- 	u32 reg_value;
- 
--	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
--	 *	formula = (1/ptp_clock) * 1000000000
--	 * where ptp_clock is 50MHz if fine method is used to update system
-+	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
-+	 * increment to twice the number of nanoseconds of a clock cycle.
-+	 * The calculation of the default_addend value by the caller will set it
-+	 * to mid-range = 2^31 when the remainder of this division is zero,
-+	 * which will make the accumulator overflow once every 2 ptp_clock
-+	 * cycles, adding twice the number of nanoseconds of a clock cycle :
-+	 * 2000000000ULL / ptp_clock.
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index d51fb3a394486..9900a4f6f4e53 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -407,7 +407,7 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 	 * We shouldn't exchange SWSP after running.
+ 	 * This means, parent needs to care it.
  	 */
- 	if (value & PTP_TCR_TSCFUPDT)
--		data = (1000000000ULL / 50000000);
-+		data = (2000000000ULL / ptp_clock);
- 	else
- 		data = (1000000000ULL / ptp_clock);
+-	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
++	if (rsnd_ssi_is_parent(mod, io))
+ 		goto init_end;
  
+ 	if (rsnd_io_is_play(io))
+@@ -559,7 +559,7 @@ static int rsnd_ssi_start(struct rsnd_mod *mod,
+ 	 * EN is for data output.
+ 	 * SSI parent EN is not needed.
+ 	 */
+-	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
++	if (rsnd_ssi_is_parent(mod, io))
+ 		return 0;
+ 
+ 	ssi->cr_en = EN;
+@@ -582,7 +582,7 @@ static int rsnd_ssi_stop(struct rsnd_mod *mod,
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+ 		return 0;
+ 
+-	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
++	if (rsnd_ssi_is_parent(mod, io))
+ 		return 0;
+ 
+ 	cr  =	ssi->cr_own	|
+@@ -620,7 +620,7 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 	if (rsnd_is_gen1(priv))
+ 		return 0;
+ 
+-	if (rsnd_ssi_is_parent(mod, io) && !rsnd_ssi_multi_slaves(io))
++	if (rsnd_ssi_is_parent(mod, io))
+ 		return 0;
+ 
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+@@ -737,6 +737,9 @@ static void rsnd_ssi_parent_attach(struct rsnd_mod *mod,
+ 	if (!rsnd_rdai_is_clk_master(rdai))
+ 		return;
+ 
++	if (rsnd_ssi_is_multi_slave(mod, io))
++		return;
++
+ 	switch (rsnd_mod_id(mod)) {
+ 	case 1:
+ 	case 2:
 -- 
 2.20.1
 
