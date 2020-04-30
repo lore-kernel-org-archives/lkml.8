@@ -2,95 +2,163 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739CDC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A10C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5473D20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="kcXfTlk8"
+	by mail.kernel.org (Postfix) with ESMTP id 6E5F12076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgD3PlY (ORCPT
+        id S1727886AbgD3Pl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:41:24 -0400
-Received: from mx.blih.net ([212.83.155.74]:28049 "EHLO mx.blih.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgD3PlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:41:23 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 11:41:21 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bidouilliste.com;
-        s=mx; t=1588260880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=siSc+wVCx92pO4nia33BDv08pe+zzvG5bnkde4Ef3hA=;
-        b=kcXfTlk8jeWIUSRjFrlM1hLlaNQ+UzY1clgxUrwxs77nW0P4bPIpQOiyS/Gq0/Q/ofMfZW
-        jSYNHrh0No9Ku3Og660SQ+pU3e4h5FM4vb2Zvkm1qylrZxk2pH/C28ywxDzg199NuECgTv
-        5oBUbiuhidnkf8U/cMVTT4Iie8xbGjI=
-Received: from tails.home (lfbn-idf2-1-900-181.w86-238.abo.wanadoo.fr [86.238.131.181])
-        by mx.blih.net (OpenSMTPD) with ESMTPSA id 9728d90d (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Thu, 30 Apr 2020 15:34:40 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 17:34:40 +0200
-From:   Emmanuel Vadot <manu@bidouilliste.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Emmanuel Vadot <manu@freebsd.org>,
-        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        airlied@linux.ie, daniel@ffwll.ch, matthew.d.roper@intel.com,
-        noralf@tronnes.org, kraxel@redhat.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND 2/2] drm/format_helper: Dual licence the header in
- GPL-2 and MIT
-Message-Id: <20200430173440.c006bbf57e70671dc4c324db@bidouilliste.com>
-In-Reply-To: <20200430150634.42zna3xwhj4cwsnd@gilmour.lan>
-References: <20200430145537.31474-1-manu@FreeBSD.org>
-        <20200430150634.42zna3xwhj4cwsnd@gilmour.lan>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 Apr 2020 11:41:27 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:50172 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726745AbgD3Pl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:41:26 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUBJT-0008Qi-7v; Thu, 30 Apr 2020 09:41:23 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUBJS-0002Fp-2k; Thu, 30 Apr 2020 09:41:22 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+References: <20200430102908.10107-1-david@redhat.com>
+        <20200430102908.10107-3-david@redhat.com>
+Date:   Thu, 30 Apr 2020 10:38:04 -0500
+In-Reply-To: <20200430102908.10107-3-david@redhat.com> (David Hildenbrand's
+        message of "Thu, 30 Apr 2020 12:29:07 +0200")
+Message-ID: <87pnbp2dcz.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jUBJS-0002Fp-2k;;;mid=<87pnbp2dcz.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18EJxut0ZMAzA6GiTlXjw55Di06eL/sNkE=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 17:06:34 +0200
-Maxime Ripard <maxime@cerno.tech> wrote:
+David Hildenbrand <david@redhat.com> writes:
 
-> On Thu, Apr 30, 2020 at 04:55:37PM +0200, Emmanuel Vadot wrote:
-> > Source file was dual licenced but the header was omitted, fix that.
-> > Contributors for this file are:
-> > Noralf Tr=F8nnes <noralf@tronnes.org>
-> > Gerd Hoffmann <kraxel@redhat.com>
-> > Thomas Gleixner <tglx@linutronix.de>
-> >=20
-> > Acked-by: Gerd Hoffmann <kraxel@redhat.com>
-> > Acked-by: Noralf Tr=F8nnes <noralf@tronnes.org>
-> > Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
-> > ---
-> >  include/drm/drm_format_helper.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_h=
-elper.h
-> > index ac220aa1a245..7c5d4ffb2af2 100644
-> > --- a/include/drm/drm_format_helper.h
-> > +++ b/include/drm/drm_format_helper.h
-> > @@ -1,4 +1,4 @@
-> > -/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > +/* SPDX-License-Identifier: GPL-2.0 or MIT */
->=20
-> You changed the GPL license there, was that intentional?
->=20
-> Maxime
+> Some devices/drivers that add memory via add_memory() and friends (e.g.,
+> dax/kmem, but also virtio-mem in the future) don't want to create entries
+> in /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+> memory to the boot memmap of the kexec kernel.
+>
+> In fact, such memory is never exposed via the firmware memmap as System
+> RAM (e.g., e820), so exposing this memory via /sys/firmware/memmap/ is
+> wrong:
+>  "kexec needs the raw firmware-provided memory map to setup the
+>   parameter segment of the kernel that should be booted with
+>   kexec. Also, the raw memory map is useful for debugging. For
+>   that reason, /sys/firmware/memmap is an interface that provides
+>   the raw memory map to userspace." [1]
+>
+> We don't have to worry about firmware_map_remove() on the removal path.
+> If there is no entry, it will simply return with -EINVAL.
+>
+> [1]
+> https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-memmap
 
- No sorry, fixed in v2.
- Thanks for noticing that.
 
---=20
-Emmanuel Vadot <manu@bidouilliste.com>
+You know what this justification is rubbish, and I have previously
+explained why it is rubbish.
+
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+This needs to be based on weather the added memory is ultimately normal
+ram or is something special.
+
+At least when we are talking memory resources.  Keeping it out of the
+firmware map that is fine.
+
+If the hotplugged memory is the result of plugging a stick of ram
+into the kernel and can and should used be like any other memory
+it should be treated like any normal memory.
+
+If the hotplugged memory is something special it should be treated as
+something special.
+
+Justifying behavior by documentation that does not consider memory
+hotplug is bad thinking.
+
+
+
+
+
+
+
+
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/memory_hotplug.h | 8 ++++++++
+>  mm/memory_hotplug.c            | 3 ++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 0151fb935c09..4ca418a731eb 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -68,6 +68,14 @@ struct mhp_params {
+>  	pgprot_t pgprot;
+>  };
+>  
+> +/* Flags used for add_memory() and friends. */
+> +
+> +/*
+> + * Don't create entries in /sys/firmware/memmap/. The memory is detected and
+> + * added via a device driver, not via the initial (firmware) memmap.
+> + */
+> +#define MHP_NO_FIRMWARE_MEMMAP		1
+> +
+>  /*
+>   * Zone resizing functions
+>   *
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c01be92693e3..e94ede9cad00 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1062,7 +1062,8 @@ int __ref add_memory_resource(int nid, struct resource *res,
+>  	BUG_ON(ret);
+>  
+>  	/* create new memmap entry */
+> -	firmware_map_add_hotplug(start, start + size, "System RAM");
+> +	if (!(flags & MHP_NO_FIRMWARE_MEMMAP))
+> +		firmware_map_add_hotplug(start, start + size, "System RAM");
+>  
+>  	/* device_online() will take the lock when calling online_pages() */
+>  	mem_hotplug_done();
