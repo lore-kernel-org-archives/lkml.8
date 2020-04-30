@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271EFC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB31C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B0620870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6197B20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254883;
-	bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
+	s=default; t=1588254885;
+	bh=S1JSz+EuGCEko2kFV6Ps5rtlpdoxnciQSx+eYv1jOe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IEjOCVqRO9wyu+OJMBSPjA3ISiRk8qOM8yTsyGu6JAWsVQ8RX7Y1kigM8Hi6aHBXq
-	 ldqPqI8NKjVwxnvdGOsgjnBWh8Csn5j42usSz8oZ44pFeUlxokaPMlpq/Lqyf7lR2N
-	 rif3DXWZZn2tXTVXoI5USTAvExMTOp66erzF4Il0=
+	b=Vd+7azEAiE5PP8xXV7VceCMZDA5zo7mSOXLaHX7x1tq/kjeBDzLmubrMMY5izo0fe
+	 xFA8Sj2a1K8nd/nyeno5fyfeJNpRsbrZeDlcUr8RJnNXcphxRq95WFxVICFtzPupoI
+	 JCAXzlymg5gSrzfrFG/L2rCs0X0lN+xlV0ieeS6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgD3Nyl (ORCPT
+        id S1729038AbgD3Nyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgD3Nxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:54 -0400
+        id S1728852AbgD3Nx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F05724953;
-        Thu, 30 Apr 2020 13:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F812063A;
+        Thu, 30 Apr 2020 13:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254833;
-        bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
+        s=default; t=1588254837;
+        bh=S1JSz+EuGCEko2kFV6Ps5rtlpdoxnciQSx+eYv1jOe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeJusWDcwnwFMI+MsMV5ZHa9rQcluQiU2lElOvZN2MuRSzM7Iy9fhgdjn1Eh9/Ktp
-         w4kojSytj4pb0dt+wOhCGB617AxeCQkKSrSDuYeOv1HjQIvsRrHnUTFfpd1Ee+ePXS
-         01TZ6hpE6QTQorvaVgnERJwT1gsuyhXNvDcrFIjU=
+        b=BAtq/URLJVjvAjl60C5iYDR7Fa5L5ZvXBljRLch3F/c+z9HkpxhyEyDg9xzFbOt3u
+         wA65Wg7cPQJhoqu7q6ZpqzjrOouceSfyJ+OGny20jrSTVSQ0R3VkMnXSrtngNU1zVP
+         gbsT/nJfYMbDy+pBIapfW6ORry7P6OqkrwWevFbQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 25/30] scripts/config: allow colons in option strings for sed
-Date:   Thu, 30 Apr 2020 09:53:20 -0400
-Message-Id: <20200430135325.20762-25-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 28/30] net: bcmgenet: suppress warnings on failed Rx SKB allocations
+Date:   Thu, 30 Apr 2020 09:53:23 -0400
+Message-Id: <20200430135325.20762-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
 References: <20200430135325.20762-1-sashal@kernel.org>
@@ -59,46 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
+[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
 
-Sed broke on some strings as it used colon as a separator.
-I made it more robust by using \001, which is legit POSIX AFAIK.
+The driver is designed to drop Rx packets and reclaim the buffers
+when an allocation fails, and the network interface needs to safely
+handle this packet loss. Therefore, an allocation failure of Rx
+SKBs is relatively benign.
 
-E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
-failed with: sed: -e expression #1, char 55: unknown option to `s'
+However, the output of the warning message occurs with a high
+scheduling priority that can cause excessive jitter/latency for
+other high priority processing.
 
-Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+This commit suppresses the warning messages to prevent scheduling
+problems while retaining the failure count in the statistics of
+the network interface.
+
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/config | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/config b/scripts/config
-index e0e39826dae90..eee5b7f3a092a 100755
---- a/scripts/config
-+++ b/scripts/config
-@@ -7,6 +7,9 @@ myname=${0##*/}
- # If no prefix forced, use the default CONFIG_
- CONFIG_="${CONFIG_-CONFIG_}"
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 789c206b515ed..89cc146d2c5c8 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1699,7 +1699,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
+ 	dma_addr_t mapping;
  
-+# We use an uncommon delimiter for sed substitutions
-+SED_DELIM=$(echo -en "\001")
-+
- usage() {
- 	cat >&2 <<EOL
- Manipulate options in a .config file from the command line.
-@@ -83,7 +86,7 @@ txt_subst() {
- 	local infile="$3"
- 	local tmpfile="$infile.swp"
- 
--	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
-+	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
- 	# replace original file with the edited one
- 	mv "$tmpfile" "$infile"
- }
+ 	/* Allocate a new Rx skb */
+-	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
++	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
++				 GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!skb) {
+ 		priv->mib.alloc_rx_buff_failed++;
+ 		netif_err(priv, rx_err, priv->dev,
 -- 
 2.20.1
 
