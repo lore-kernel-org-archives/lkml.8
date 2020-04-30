@@ -2,34 +2,35 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D034C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358DEC8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0101B205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB2E2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgD3MqI convert rfc822-to-8bit (ORCPT
+        id S1727029AbgD3MqM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:46:08 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:35962 "EHLO
+        Thu, 30 Apr 2020 08:46:12 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:35990 "EHLO
         skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgD3MqH (ORCPT
+        with ESMTP id S1726902AbgD3MqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:46:07 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        by skedge04.snt-world.com (Postfix) with ESMTP id 7A03567A7D8;
-        Thu, 30 Apr 2020 14:46:04 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 30 Apr 2020 08:46:11 -0400
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        by skedge04.snt-world.com (Postfix) with ESMTP id 1011167A7D8;
+        Thu, 30 Apr 2020 14:46:08 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 30 Apr
- 2020 14:46:03 +0200
+ 2020 14:46:07 +0200
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Thu, 30 Apr 2020 14:46:03 +0200
+ 15.01.1913.007; Thu, 30 Apr 2020 14:46:07 +0200
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Adam Ford <aford173@gmail.com>, Anson Huang <Anson.Huang@nxp.com>,
         Christian Gmeiner <christian.gmeiner@gmail.com>,
@@ -51,11 +52,15 @@ CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 0/4] Add support for i.MX8MM GPUs through Etnaviv
-Thread-Topic: [RFC PATCH 0/4] Add support for i.MX8MM GPUs through Etnaviv
-Thread-Index: AQHWHu1P24EsvLcp2k6XxTQQ1PmCiA==
-Date:   Thu, 30 Apr 2020 12:46:03 +0000
-Message-ID: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+Subject: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe time on
+ i.MX8MM
+Thread-Topic: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe
+ time on i.MX8MM
+Thread-Index: AQHWHu1RaS/QCZFEh0aIMChy0QTuwg==
+Date:   Thu, 30 Apr 2020 12:46:07 +0000
+Message-ID: <20200430124602.14463-2-frieder.schrempf@kontron.de>
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20200430124602.14463-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -67,7 +72,7 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 7A03567A7D8.AE648
+X-SnT-MailScanner-ID: 1011167A7D8.A1C56
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
@@ -87,28 +92,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-This series contains patches to enable GPU support for the i.MX8MM.
-There is currently no upstream support for the display subsystem of
-the i.MX8MM, but I have a 5.4-based tree with some ported drivers for
-LCDIF, DSIM bridge, etc. (see [1]) which I used to test the GPU with
-glmark2.
+On i.MX8MM there is an interrupt getting triggered immediately after
+requesting the IRQ, which leads to a stall as the handler accesses
+the GPU registers whithout the clock being enabled.
 
-I'm posting this as an RFC for now, as I'm not feeling confident of
-all of the changes. Especially patch 1 seems a bit like a hack. Maybe
-someone can help me understand the underlying problem and/or come up
-with a better fix.
+Enabling the clocks briefly seems to clear the IRQ state, so we do
+this before requesting the IRQ.
 
-[1] https://git.kontron-electronics.de/linux/linux/-/commits/v5.4-ktn
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 29 ++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-Frieder Schrempf (4):
-  drm/etnaviv: Prevent IRQ triggering at probe time on i.MX8MM
-  drm/etnaviv: Fix error path in etnaviv_gpu_clk_enable()
-  drm/etnaviv: Change order of enabling clocks to fix boot on i.MX8MM
-  arm64: dts: imx8mm: Add GPU nodes for 2D and 3D core using Etnaviv
-
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 ++++++++++++
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c     | 68 ++++++++++++++---------
- 2 files changed, 79 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index a31eeff2b297..23877c1f150a 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -1775,13 +1775,6 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
+ 		return gpu->irq;
+ 	}
+ 
+-	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+-			       dev_name(gpu->dev), gpu);
+-	if (err) {
+-		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, err);
+-		return err;
+-	}
+-
+ 	/* Get Clocks: */
+ 	gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
+ 	DBG("clk_reg: %p", gpu->clk_reg);
+@@ -1805,6 +1798,28 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
+ 		gpu->clk_shader = NULL;
+ 	gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
+ 
++	/*
++	 * On i.MX8MM there is an interrupt getting triggered immediately
++	 * after requesting the IRQ, which leads to a stall as the handler
++	 * accesses the GPU registers whithout the clock being enabled.
++	 * Enabling the clocks briefly seems to clear the IRQ state, so we do
++	 * this here before requesting the IRQ.
++	 */
++	err = etnaviv_gpu_clk_enable(gpu);
++	if (err)
++		return err;
++
++	err = etnaviv_gpu_clk_disable(gpu);
++	if (err)
++		return err;
++
++	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
++			       dev_name(gpu->dev), gpu);
++	if (err) {
++		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, err);
++		return err;
++	}
++
+ 	/* TODO: figure out max mapped size */
+ 	dev_set_drvdata(dev, gpu);
+ 
 -- 
 2.17.1
