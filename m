@@ -2,142 +2,284 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DA8C83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FA9C83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0314208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5496120787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5t2x5SQ"
+	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="myWsFO+w";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sxDoiZxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgD3BcF (ORCPT
+        id S1726684AbgD3BcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:32:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43967 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726476AbgD3BcC (ORCPT
+        Wed, 29 Apr 2020 21:32:18 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52573 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726291AbgD3BcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:32:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588210320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dn/lWgNDUyOjkAW0d+CfM2/g1REm4TptTiXnq8Nxe00=;
-        b=a5t2x5SQWs6kd1slZGVzEDZCQj1U8znW6DovxB/v+uAYqnBKoMJa4v04zeSh2I2zN1T9PZ
-        gqSpjnEfN4BzKl2MXtJAA/Pwks2HXD4WRnhergqlz2/blPjGgbPJTZt/ixjhG9CUXVZhrd
-        jonRlpzM1y20c1casqapgvATmpkHP20=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-YRv229c6PBSsndGaIbz2-A-1; Wed, 29 Apr 2020 21:31:54 -0400
-X-MC-Unique: YRv229c6PBSsndGaIbz2-A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55701108BD0F;
-        Thu, 30 Apr 2020 01:31:52 +0000 (UTC)
-Received: from ovpn-112-24.phx2.redhat.com (ovpn-112-24.phx2.redhat.com [10.3.112.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D17DE5C1D0;
-        Thu, 30 Apr 2020 01:31:50 +0000 (UTC)
-Message-ID: <0945b70535f11c9abd45d3a3da2e984c4b1d832b.camel@redhat.com>
-Subject: Re: [RFC PATCH 1/3] sched/fair: Call newidle_balance() from
- finish_task_switch()
-From:   Scott Wood <swood@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Rik van Riel <riel@surriel.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-In-Reply-To: <20200429090533.GH13592@hirez.programming.kicks-ass.net>
-References: <20200428050242.17717-1-swood@redhat.com>
-         <20200428050242.17717-2-swood@redhat.com> <jhjftcns35d.mognet@arm.com>
-         <20200428220917.GB16027@hirez.programming.kicks-ass.net>
-         <c4a8d1f044b721a2c396fa00a0244eff0b851ae4.camel@redhat.com>
-         <20200428230204.GE16027@hirez.programming.kicks-ass.net>
-         <89043649a64fc97dd90eb25c85bcc8f65483cf4f.camel@redhat.com>
-         <20200429090533.GH13592@hirez.programming.kicks-ass.net>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Apr 2020 21:32:17 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3BC845C00A0;
+        Wed, 29 Apr 2020 21:32:16 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 29 Apr 2020 21:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
+        date:from:to:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=xz3mRUUiSRTWNRhEtbEIScUIML6
+        Spu5Ed03IWtKwZRY=; b=myWsFO+wg0rdCf7su944CazFOf2uERYU/WAtJ2Kmo3f
+        Jo/qM4yFz1QWvUk8tvl5jYxkBFBiJbnQQxgefxDePVGHvo00EuyHBQlEaaVVqxKS
+        Uqpj7cfW0G29vutCupxjspEvVlkcdRmVgYecw3AfHUUUBKvdKmmDqvE0Ijzhte3c
+        j6Z6z5EqxeE9/wZyip4KAT/AFyWtghTcDNjF3dsNDB/FfdvQ9UQUmvOhHUJZuRUV
+        sU3/y6BE4Nl24XzRwHTI+fOQYC5+gtvFHzUGRWWauKl1dn0T5XlNlzz4EfjKGjHA
+        n5t/KSr3ZS3TzhEmVhEIBar99roiTIjdect6WoHB9Yw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=xz3mRU
+        UiSRTWNRhEtbEIScUIML6Spu5Ed03IWtKwZRY=; b=sxDoiZxjB5Q+QW0lWdM3Cz
+        6cqQnguc5yxaAqdg8R3JGyCeVq+/YjjpFcIm06QL5jo9IJURTOIfwe4l0UWaGamB
+        f1cEPR/USI6XEvVsFus9PnwHe8ekNICptu8GrF54ZvUmZj8wnief846wY2EEXqHD
+        GFkMEwNPZNz8rw0YA+5Ejy1NXBMialQ+Rh7Cx/Gf9YJKXX6ul8sLfdVBKeKC0MWL
+        YBewX8KlG1kmYvmp85hlxJ7ybMdgp12T6A6gcOhC/0ddYNx697CmdL81+ROu0bKb
+        VNN/2UczrG1I9x4uwy3aaQkpMKV/OuI2Uf5uk4oinHxsyJOUsWOCxSMF68bsAIkQ
+        ==
+X-ME-Sender: <xms:oCqqXmhK1vMYVHHcUskyYxb4dNugtfKPE8nm_tjdPK5cUAayylbzJA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieeggdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtjeenucfhrhhomheptfihlhgrnhcu
+    ffhmvghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecuggftrfgrthhtvg
+    hrnhepjeffvefffeevgfdtteegudffieduveeuhfettddvueehveethfffgeetfeeghfeu
+    necukfhppedutdekrdegledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
+X-ME-Proxy: <xmx:oCqqXmVMIELrf2kwDaZsmKEgTwVYssnNjdbxaGgweP2Q6bMLG7FoJQ>
+    <xmx:oCqqXlD_x2P0hFuzPOx2Xyx7B7ToSgSqavXdh5jQATz5inQmfzR04A>
+    <xmx:oCqqXqla7gi-eXFhwVS9-IAnDYemY9ufAbE1dXy-BoiBleL4hPf4Uw>
+    <xmx:oCqqXlCzk91rK8i4cjQ5t2m8KxFaSBta68ECuQgF87D4Ft1GmlNcgw>
+Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CA3DD3280068;
+        Wed, 29 Apr 2020 21:32:15 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 21:32:15 -0400
+From:   Rylan Dmello <mail@rylan.coffee>
+To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+Subject: [PATCH v2 1/7] staging: qlge: Fix indentation in ql_set_mac_addr_reg
+Message-ID: <299f2cb3b7d4efa30b44d4d1defbcd5f54bd7eaf.1588209862.git.mail@rylan.coffee>
+References: <cover.1588209862.git.mail@rylan.coffee>
 MIME-Version: 1.0
-Date:   Wed, 29 Apr 2020 20:31:39 -0500
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cover.1588209862.git.mail@rylan.coffee>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-29 at 11:05 +0200, Peter Zijlstra wrote:
-> On Tue, Apr 28, 2020 at 06:20:32PM -0500, Scott Wood wrote:
-> > On Wed, 2020-04-29 at 01:02 +0200, Peter Zijlstra wrote:
-> > > On Tue, Apr 28, 2020 at 05:55:03PM -0500, Scott Wood wrote:
-> > > > On Wed, 2020-04-29 at 00:09 +0200, Peter Zijlstra wrote:
-> > > > > Also, if you move it this late, this is entirely the wrong
-> > > > > place.  If you do it after the context switch either use the
-> > > > > balance_callback or put it in the idle path.
-> > > > > 
-> > > > > But what Valentin said; this needs a fair bit of support, the
-> > > > > whole reason we've never done this is to avoid that double
-> > > > > context switch...
-> > > > > 
-> > > > 
-> > > > balance_callback() enters with the rq lock held but BH not
-> > > > separately
-> > > 
-> > > BH? softirqs you mean? Pray tell more.
-> > 
-> > In https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/ the need to
-> > keep softirqs disabled during rebalance was brought up, but simply
-> > wrapping
-> > the lock dropping in local_bh_enable()/local_bh_disable() meant that
-> > local_bh_enable() would be called with interrupts disabled, which isn't
-> > allowed.
-> 
-> That thread, nor your explanation make any sense -- why do we care about
-> softirqs?, 
+Based on Joe Perches' feedback, fix the indentation throughout
+ql_set_mac_addr_reg. This helps fix several "line over 80 characters"
+warnings along with the original "multiple line dereference" warning.
 
-I was trusting Steve's claim that that was the issue (it seemed plausible
-given that system-wide rebalancing is done from a softirq).  If things have
-changed since then, great.  If that was never the issue, then there's the
-question of what caused the bug Sasha saw.
+Fix checkpatch.pl warnings:
 
-> nor do I see how placing it in finish_task_switch() helps
-> with any of this.
+  WARNING: Avoid multiple line dereference - prefer 'qdev->func'
+  WARNING: line over 80 characters
 
-It lets us do the local_bh_enable() after IRQs are enabled, since we don't
-enter with any existing atomic context.  Though I suppose we could instead
-do another lock drop at the end of newidle_balance() just to enable
-softirqs.
+Signed-off-by: Rylan Dmello <mail@rylan.coffee>
+---
+ drivers/staging/qlge/qlge_main.c | 167 +++++++++++++++----------------
+ 1 file changed, 78 insertions(+), 89 deletions(-)
 
-> > > > disabled, which interferes with the ability to enable interrupts
-> > > > but not BH.  It also gets called from rt_mutex_setprio() and
-> > > > __sched_setscheduler(), and I didn't want the caller of those to
-> > > > be stuck with the latency.
-> > > 
-> > > You're not reading it right.
-> > 
-> > Could you elaborate?
-> 
-> If you were to do a queue_balance_callback() from somewhere in the
-> pick_next_task() machinery, then the balance_callback() at the end of
-> __schedule() would run it, and it'd be gone. How would
-> rt_mutex_setprio() / __sched_setscheduler() be affected?
-
-The rq lock is dropped between queue_balance_callback() and the
-balance_callback() at the end of __schedule().  What stops
-setprio/setscheduler on another cpu from doing the callback at that
-point?
-
--Scott
-
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index d7e4dfafc1a3..29610618c7c0 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -329,100 +329,89 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
+ 	int status = 0;
+ 
+ 	switch (type) {
+-	case MAC_ADDR_TYPE_MULTI_MAC:
+-		{
+-			u32 upper = (addr[0] << 8) | addr[1];
+-			u32 lower = (addr[2] << 24) | (addr[3] << 16) |
+-					(addr[4] << 8) | (addr[5]);
++	case MAC_ADDR_TYPE_MULTI_MAC: {
++		u32 upper = (addr[0] << 8) | addr[1];
++		u32 lower = (addr[2] << 24) | (addr[3] << 16) | (addr[4] << 8) |
++			    (addr[5]);
+ 
+-			status =
+-				ql_wait_reg_rdy(qdev,
+-						MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			ql_write32(qdev, MAC_ADDR_IDX, (offset++) |
+-				(index << MAC_ADDR_IDX_SHIFT) |
+-				type | MAC_ADDR_E);
+-			ql_write32(qdev, MAC_ADDR_DATA, lower);
+-			status =
+-				ql_wait_reg_rdy(qdev,
+-						MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			ql_write32(qdev, MAC_ADDR_IDX, (offset++) |
+-				(index << MAC_ADDR_IDX_SHIFT) |
+-				type | MAC_ADDR_E);
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		ql_write32(qdev, MAC_ADDR_IDX,
++			   (offset++) | (index << MAC_ADDR_IDX_SHIFT) | type |
++				   MAC_ADDR_E);
++		ql_write32(qdev, MAC_ADDR_DATA, lower);
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		ql_write32(qdev, MAC_ADDR_IDX,
++			   (offset++) | (index << MAC_ADDR_IDX_SHIFT) | type |
++				   MAC_ADDR_E);
+ 
+-			ql_write32(qdev, MAC_ADDR_DATA, upper);
+-			status =
+-				ql_wait_reg_rdy(qdev,
+-						MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			break;
+-		}
+-	case MAC_ADDR_TYPE_CAM_MAC:
+-		{
+-			u32 cam_output;
+-			u32 upper = (addr[0] << 8) | addr[1];
+-			u32 lower =
+-			    (addr[2] << 24) | (addr[3] << 16) | (addr[4] << 8) |
++		ql_write32(qdev, MAC_ADDR_DATA, upper);
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		break;
++	}
++	case MAC_ADDR_TYPE_CAM_MAC: {
++		u32 cam_output;
++		u32 upper = (addr[0] << 8) | addr[1];
++		u32 lower = (addr[2] << 24) | (addr[3] << 16) | (addr[4] << 8) |
+ 			    (addr[5]);
+-			status =
+-			    ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			ql_write32(qdev, MAC_ADDR_IDX, (offset++) | /* offset */
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		ql_write32(qdev, MAC_ADDR_IDX,
++			   (offset++) | /* offset */
+ 				   (index << MAC_ADDR_IDX_SHIFT) | /* index */
+-				   type);	/* type */
+-			ql_write32(qdev, MAC_ADDR_DATA, lower);
+-			status =
+-			    ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			ql_write32(qdev, MAC_ADDR_IDX, (offset++) | /* offset */
++				   type); /* type */
++		ql_write32(qdev, MAC_ADDR_DATA, lower);
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		ql_write32(qdev, MAC_ADDR_IDX,
++			   (offset++) | /* offset */
+ 				   (index << MAC_ADDR_IDX_SHIFT) | /* index */
+-				   type);	/* type */
+-			ql_write32(qdev, MAC_ADDR_DATA, upper);
+-			status =
+-			    ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			ql_write32(qdev, MAC_ADDR_IDX, (offset) |	/* offset */
+-				   (index << MAC_ADDR_IDX_SHIFT) |	/* index */
+-				   type);	/* type */
+-			/* This field should also include the queue id
+-			 * and possibly the function id.  Right now we hardcode
+-			 * the route field to NIC core.
+-			 */
+-			cam_output = (CAM_OUT_ROUTE_NIC |
+-				      (qdev->
+-				       func << CAM_OUT_FUNC_SHIFT) |
+-					(0 << CAM_OUT_CQ_ID_SHIFT));
+-			if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
+-				cam_output |= CAM_OUT_RV;
+-			/* route to NIC core */
+-			ql_write32(qdev, MAC_ADDR_DATA, cam_output);
+-			break;
+-		}
+-	case MAC_ADDR_TYPE_VLAN:
+-		{
+-			u32 enable_bit = *((u32 *) &addr[0]);
+-			/* For VLAN, the addr actually holds a bit that
+-			 * either enables or disables the vlan id we are
+-			 * addressing. It's either MAC_ADDR_E on or off.
+-			 * That's bit-27 we're talking about.
+-			 */
+-			status =
+-			    ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
+-			if (status)
+-				goto exit;
+-			ql_write32(qdev, MAC_ADDR_IDX, offset |	/* offset */
+-				   (index << MAC_ADDR_IDX_SHIFT) |	/* index */
+-				   type |	/* type */
+-				   enable_bit);	/* enable/disable */
+-			break;
+-		}
++				   type); /* type */
++		ql_write32(qdev, MAC_ADDR_DATA, upper);
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		ql_write32(qdev, MAC_ADDR_IDX,
++			   (offset) | /* offset */
++				   (index << MAC_ADDR_IDX_SHIFT) | /* index */
++				   type); /* type */
++		/* This field should also include the queue id
++		 * and possibly the function id.  Right now we hardcode
++		 * the route field to NIC core.
++		 */
++		cam_output = (CAM_OUT_ROUTE_NIC |
++			      (qdev->func << CAM_OUT_FUNC_SHIFT) |
++			      (0 << CAM_OUT_CQ_ID_SHIFT));
++		if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
++			cam_output |= CAM_OUT_RV;
++		/* route to NIC core */
++		ql_write32(qdev, MAC_ADDR_DATA, cam_output);
++		break;
++	}
++	case MAC_ADDR_TYPE_VLAN: {
++		u32 enable_bit = *((u32 *)&addr[0]);
++		/* For VLAN, the addr actually holds a bit that
++		 * either enables or disables the vlan id we are
++		 * addressing. It's either MAC_ADDR_E on or off.
++		 * That's bit-27 we're talking about.
++		 */
++		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
++		if (status)
++			goto exit;
++		ql_write32(qdev, MAC_ADDR_IDX,
++			   offset | /* offset */
++				   (index << MAC_ADDR_IDX_SHIFT) | /* index */
++				   type | /* type */
++				   enable_bit); /* enable/disable */
++		break;
++	}
+ 	case MAC_ADDR_TYPE_MULTI_FLTR:
+ 	default:
+ 		netif_crit(qdev, ifup, qdev->ndev,
+-- 
+2.26.2
 
