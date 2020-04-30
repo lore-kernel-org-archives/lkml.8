@@ -2,211 +2,142 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71040C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA003C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 404AB2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974552063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="rEt7LUcd"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c07CBkLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgD3N7U (ORCPT
+        id S1729259AbgD3N71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:59:20 -0400
-Received: from mail-dm6nam12on2093.outbound.protection.outlook.com ([40.107.243.93]:35136
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728283AbgD3N7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:59:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I6JVKx67HV5kuxCh9T0l1mZe8hLmJCXswIZKx2AOonvAUB33ZkARhJQwhLFZHZO+2KbQd+wont2vTUa4eOE8ngf8K3ML99D2eVsSvm8IR5yOpxTjPc5XLOUuPdA/iLCzdFQgEKRCLQv5VjJmq8hgsNwRwmSGKFCMRSuAho8M/K4A8hWUdTH9fv/rFQAVEcVnNeL1Cybk+DL9l6XV2GZ11XaombRLoUqzEFIjPgocSvODj3r0tnUsHM+/Jwym9ZWZNp8rKEu+OrIE6z76G5v9CHd1Rz61RNCXTVX1yQ1hBLfUtywucE9YbdU+cUtp+xhuJHwO9+TsgMM6oHLXOThkYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nV2K2UmOfEu2/KxSlCxftF8YHacxp+rmdX293usi4xs=;
- b=bCUWhovNrF70xVNhFMaxgINFh4l4HrAtmThCEgu3FcFxgd8M+ZN83Dr4zQRUEiHsA9Cxxe3FJyB4NSROHtJzQeActcwmuIW3DN3dt4SeZmUNJPibNx6bVv7suzjFiThrWN5I2UZq//LCYV6IRcy7Z/GZEdE+x4YEODZl1Uij/zt+28QhSvC5qHUjql+kD2YK7GCTCJIa01nSR/L8eLUDXWJDa90KnC86g1EI3c91FjtsMvKF8QLRu3d4lk9IjEP8pPVN+berxa6fxVO6pBCU7tHxjPWgkoD0CyqFx5D/ZH+kz9mfkkDFKzSDqkNOLjWr7sqzNvyI/dBZOSt+9tUo+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
- header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+        Thu, 30 Apr 2020 09:59:27 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:55590 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgD3N7Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:59:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nV2K2UmOfEu2/KxSlCxftF8YHacxp+rmdX293usi4xs=;
- b=rEt7LUcd5dvfyH7bXmERWnHfvpaS6OADkRZXQS/cAhLS4Ym0TwuMz8Ysr/XPKwtku0ZGffvZjPbUM1kS/OeVEcbcRwSopxuXuSP0oOFQYrNSDaxIS3G/YGVgVGoSeHeBWz917sCPTxVqzRNOBCsISvTUL4OJ635osEsZHsJJZic=
-Authentication-Results: analogixsemi.com; dkim=none (message not signed)
- header.d=none;analogixsemi.com; dmarc=none action=none
- header.from=analogixsemi.com;
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
- by BY5PR04MB7105.namprd04.prod.outlook.com (2603:10b6:a03:222::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 30 Apr
- 2020 13:59:01 +0000
-Received: from BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f]) by BY5PR04MB6739.namprd04.prod.outlook.com
- ([fe80::4517:bcc8:a3bd:407f%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
- 13:59:01 +0000
-Date:   Thu, 30 Apr 2020 21:58:52 +0800
-From:   Xin Ji <xji@analogixsemi.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>
-Subject: Re: [PATCH v7 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
- DP bridge driver
-Message-ID: <20200430135852.GA2270@xin-VirtualBox>
-References: <a81adcf2e79d440edcb7b3989f31efcb80a6e9ff.1582529411.git.xji@analogixsemi.com>
- <CANMq1KBfB6tXFqYGvr=8fV_bpCV5GbVHeEbRs+fuaZba65-OPw@mail.gmail.com>
- <20200424065124.GA31922@xin-VirtualBox>
- <CANMq1KBJ6f74aNAr8BwC3wz8MEeJzwXOQE44gv6C=DNzYmUWCQ@mail.gmail.com>
- <20200428100508.GD3456981@phenom.ffwll.local>
- <20200430033614.GA6645@xin-VirtualBox>
- <20200430133731.GA10381@phenom.ffwll.local>
- <20200430133839.GB10381@phenom.ffwll.local>
- <20200430134746.GA2188@xin-VirtualBox>
- <20200430135438.GD10381@phenom.ffwll.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430135438.GD10381@phenom.ffwll.local>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HKAPR04CA0003.apcprd04.prod.outlook.com
- (2603:1096:203:d0::13) To BY5PR04MB6739.namprd04.prod.outlook.com
- (2603:10b6:a03:229::8)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588255164; x=1619791164;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=DRh1x2n81OczNTTRQAJJlAM7ugTuGaMZPhGlmvFnHbw=;
+  b=c07CBkLtiIU2OfE3LScMjZ3eI6jhuez7Tz25qRy6HHHZXph7t7WI1HZ/
+   AEOqbdw4ygaM1+CvbvGiPSlwGP+m1yPmUtuXJlLLF9XIOw8JS0R6EvMDD
+   HrhOOfWvPydSQz5qO+zgrFVRTL+2cF/aOlkH8gO0MOfDnP2f0mIksHX1D
+   w=;
+IronPort-SDR: /FFZ+ApaAE/IKWimclexhRpcmPXvkaZDR8Vq5fFEV86qB1lpyOf3+bFv904y7YWE7F0jcfFqQL
+ JOF35abba7cA==
+X-IronPort-AV: E=Sophos;i="5.73,336,1583193600"; 
+   d="scan'208";a="32126486"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Apr 2020 13:59:22 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 3F69AC5C2E;
+        Thu, 30 Apr 2020 13:59:22 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Apr 2020 13:59:21 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.65) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Apr 2020 13:59:14 +0000
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Alexander Graf <graf@amazon.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+ <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+ <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
+ <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
+ <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
+ <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
+ <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
+ <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
+ <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
+ <ad01ef35-9ee5-cf94-640c-4c26184946fa@redhat.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <60262862-8e82-608e-544d-8794ac36010e@amazon.com>
+Date:   Thu, 30 Apr 2020 16:59:03 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xin-VirtualBox (114.247.245.254) by HKAPR04CA0003.apcprd04.prod.outlook.com (2603:1096:203:d0::13) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 13:59:00 +0000
-X-Originating-IP: [114.247.245.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bb8a6d22-0e4c-44f9-033e-08d7ed0ea2c0
-X-MS-TrafficTypeDiagnostic: BY5PR04MB7105:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR04MB7105BC1E6CDBD2F2E927F5E9C7AA0@BY5PR04MB7105.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39850400004)(396003)(346002)(136003)(376002)(7416002)(5660300002)(6666004)(478600001)(4326008)(83080400001)(107886003)(66946007)(9686003)(66476007)(55016002)(6916009)(66556008)(16526019)(6496006)(33656002)(26005)(33716001)(54906003)(8936002)(316002)(966005)(1076003)(8676002)(186003)(2906002)(956004)(53546011)(52116002)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DX3TiNaBit1WJJ2IXHpRrlj7Nd31Z1lPJ1raNJu2gIc6JU82PrMjhq51XuOYRe+0iZ4GjGZj2jJvYBMqYmG+mmrglnrtBy1wtwdW2BlJwHIfZQBnZgvq9Ftt2JQF/n6TWgEckqZUxrAmA6XD5yKgzhQl7blZQeTNg4LxvYhtbXRpPKPgEZg9uLOoWS4psciqKOrGzJTXACKCulZe20YMz+8opqPIMy/6B7lxdTVcy++VuJFFWzV/26CxpM9ypp1GUu/pDA/BZTULb/okncLd9yKkvYugMNCMb9Q9QeR3+M8zYn0/BZDtHjAErWsDF6n1jBTP1YQIM32xTR9nUlsDk/1Fg4yuuWAqeem2KKb3wEvhvqQwkrFDDaZ354HSV6oruM5W0FagDXusY+9ySixWPkhM3Vu9GXTgzX3oQps6fnW2DKMWaUqXqWxL9pv5HogJPNF3mKMZbMRFI390M5nRFhbAmu/eG1MLJPlxILgCRAtuHWIbm2JsjQKyMt73wtP3ZeOrQlzyupVJxhC8B3FrQQ==
-X-MS-Exchange-AntiSpam-MessageData: iEUx9eNooNBJ6sjBqjD9ozxAY8wF6MY0uFEzIFRj4ehBotD/fig16HGWIlIcmO8kUFH45SbFd/73nziuav3fkx0USv+Z1JKyMtI/awHICoHRTPDnp9WHmQrD60dKkuMytmIbkFlxYY1Dpv6jaeatHVYq2OuqNnXox5yElhys7EnWpRMmNN2/5QydMmwwWsVWS8yqJ6QEVUJmo74IQpCjWJeTMLUpnKvQ5XisYtm6Z8tAejLdgofkl2Ha3wR3woS3svpjXQCOGn7eydykACvdLZrYFhfP+jfyfZ5AYDRJHv05oJqRTGpbjaA7ulvVC257my3lXsofVnvNYgYnlyVxVffbjWUHyz4gwLt8S3VPtYK9DsLzMfreM0vfv4WAFVWQg4pEBZdsTHs6yMBiP8E989mB7dwkC3uchPTHornV9e8NIW4iupZp0BZP9RFT/AzaDqZJqaAEstGfrGmw1yM2Dvp7e1HO8UckJg/m1zulowRGru1/ZB+U0ZcEaGQKfNH/iG8oxBgUwEmyfuC2u17JBwTgXKVlTxy37CmBphfvj5nQOJFV1IeNLW6n/leWSNqc4XRJuyKI/zdjqxF2HpF6AYB2HdN7ErasV7Wl8rwzP/biubIeg0VXr8YcL1vRslZqeB/ibqadWEB6/rxgBGzogXqVOIj/U9nAyDXrkySVZwqG+UjiKqOT2c5ei04Y0wQPbEDb7XpmDSRQPAKWo5G3ec/cxAtrH9Oe+2MIy7uFDHG05Dy2zZOkYumy1xQaTP+xCSL+HdTK95SneazfDHki1bKlaxnvOkG4N2t+xGKMj07C14WwEW0gn/WRB0gRY1hj
-X-OriginatorOrg: analogixsemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb8a6d22-0e4c-44f9-033e-08d7ed0ea2c0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 13:59:01.4192
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PtTwQUkPtDVHLz+5lBzeay7bHLZ4w04qm1Vseg1ReJOkm1MMDOJBQHoWlgqbNW739+iHG6g9ekYzw8zLzz8S+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7105
+In-Reply-To: <ad01ef35-9ee5-cf94-640c-4c26184946fa@redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.65]
+X-ClientProxiedBy: EX13D40UWC002.ant.amazon.com (10.43.162.191) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 03:54:38PM +0200, Daniel Vetter wrote:
-> On Thu, Apr 30, 2020 at 09:47:46PM +0800, Xin Ji wrote:
-> > Hi Daniel,
-> > 
-> > On Thu, Apr 30, 2020 at 03:38:39PM +0200, Daniel Vetter wrote:
-> > > On Thu, Apr 30, 2020 at 03:37:31PM +0200, Daniel Vetter wrote:
-> > > > On Thu, Apr 30, 2020 at 11:36:14AM +0800, Xin Ji wrote:
-> > > > > On Tue, Apr 28, 2020 at 12:05:08PM +0200, Daniel Vetter wrote:
-> > > > > > On Fri, Apr 24, 2020 at 08:12:04PM +0800, Nicolas Boichat wrote:
-> > > > > > > On Fri, Apr 24, 2020 at 2:51 PM Xin Ji <xji@analogixsemi.com> wrote:
-> > > > > > > >
-> > > > > > > > On Thu, Apr 23, 2020 at 07:55:15PM +0800, Nicolas Boichat wrote:
-> > > > > > > > > Hi,
-> > > > > > > > >
-> > > > > > > > > Just commenting on the mode_fixup function that was added in v7.
-> > > > > > > > >
-> > > > > > > > [snip]
-> > > > > > > > > > +       /*
-> > > > > > > > > > +        * once illegal timing detected, use default HFP, HSYNC, HBP
-> > > > > > > > > > +        */
-> > > > > > > > > > +       if (hblanking < HBLANKING_MIN || (hfp < HP_MIN && hbp < HP_MIN)) {
-> > > > > > > > >
-> > > > > > > > > should this be adj_hblanking/adj_hfp/adj_hbp?
-> > > > > > > > NO, need check original HFP and HBP, if they are not legal, driver need
-> > > > > > > > set default value to adj_hsync, adj_hfp, adj_hbp.
-> > > > > > > > >
-> > > > > > > > > > +               adj_hsync = SYNC_LEN_DEF;
-> > > > > > > > > > +               adj_hfp = HFP_HBP_DEF;
-> > > > > > > > > > +               adj_hbp = HFP_HBP_DEF;
-> > > > > > > > > > +               vref = adj->clock * 1000 / (adj->htotal * adj->vtotal);
-> > > > > > > > > > +               if (hblanking < HBLANKING_MIN) {
-> > > > > > > > > > +                       delta_adj = HBLANKING_MIN - hblanking;
-> > > > > > > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
-> > > > > > > > > > +                       adj->clock += DIV_ROUND_UP(adj_clock, 1000);
-> > > > > > > > > > +               } else {
-> > > > > > > > > > +                       delta_adj = hblanking - HBLANKING_MIN;
-> > > > > > > > > > +                       adj_clock = vref * delta_adj * adj->vtotal;
-> > > > > > > > > > +                       adj->clock -= DIV_ROUND_UP(adj_clock, 1000);
-> > > > > > > > > > +               }
-> > > > > > > > > > +
-> > > > > > > > > > +               DRM_WARN("illegal hblanking timing, use default.\n");
-> > > > > > > > > > +               DRM_WARN("hfp(%d),hbp(%d),hsync(%d).\n", hfp, hbp, hsync);
-> > > > > > > > >
-> > > > > > > > > How likely is it that this mode is going to work? Can you just return
-> > > > > > > > > false here to reject the mode?
-> > > > > > > > We want to set the default minimal Hblancking value, then it may display,
-> > > > > > > > otherwise. If we just return false, there is no display for sure.
-> > > > > > > 
-> > > > > > > Right, understand your argument. I'm pondering if it's not just better
-> > > > > > > to reject the mode rather than trying a timing that is definitely
-> > > > > > > quite different from what the monitor was asking for. No super strong
-> > > > > > > opinion, I'll let other people on the list weigh in.
-> > > > > > 
-> > > > > > Yeah mode_fixup is supposed to be used to adjust the mode in intermediate
-> > > > > > stages (e.g. if you go from progressive to interlaced only at the end of
-> > > > > > your pipeline or something like that). It's not meant for adjusting the
-> > > > > > mode yout actually put out through a hdmi or dp connector. For fixed
-> > > > > > panels adjusting modes to fit the panel is also fairly common, but not for
-> > > > > > external outputs.
-> > > > > > 
-> > > > > > Since this is a DP bridge I'd say no adjusting, just reject what doesn't
-> > > > > > fit.
-> > > > > We have found some panel which HBP less than 8, if we reject to adjust
-> > > > > video timing, then there is no display. The customer does not accept it,
-> > > > > they push us to fix it, the only resolve way is to adjust timing.
-> > > > 
-> > > > Are we talking about external DP screen here, or some built-in panel? For
-> > > > the later case we do a lot of mode adjusting in many drivers ...
-> > > > 
-> > > > I haven't checked, by if our connector type is eDP then this should be all
-> > > > fine.
-> > > 
-> > > Ok I read the patch now, you seem to support both. Would it work if we
-> > > make this adjustement conditional on it being an internal panel only? I
-> > > think that would be perfect.
-> > > -Daniel
-> > > -- 
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > Based on comments of V8, only keeped eDP built-in panel in V9 version,
-> > removed external DP screen support.
-> 
-> Ah even better. Then the above adjusting has my:
-> 
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> Maybe add a comment to the code summarizing the discussion. Definitely
-> needs to be covered in the commit message.
-OK, I'll add it in the next serial.
+CgpPbiAyOS8wNC8yMDIwIDE2OjIwLCBQYW9sbyBCb256aW5pIHdyb3RlOgo+IE9uIDI4LzA0LzIw
+IDE3OjA3LCBBbGV4YW5kZXIgR3JhZiB3cm90ZToKPj4+IFNvIHdoeSBub3QganVzdCBzdGFydCBy
+dW5uaW5nIHRoZSBlbmNsYXZlIGF0IDB4ZmZmZmZmZjAgaW4gcmVhbCBtb2RlPwo+Pj4gWWVzIGV2
+ZXJ5Ym9keSBoYXRlcyBpdCwgYnV0IHRoYXQncyB3aGF0IE9TZXMgYXJlIHdyaXR0ZW4gYWdhaW5z
+dC4gIEluCj4+PiB0aGUgc2ltcGxlc3QgZXhhbXBsZSwgdGhlIHBhcmVudCBlbmNsYXZlIGNhbiBs
+b2FkIGJ6SW1hZ2UgYW5kIGluaXRyZCBhdAo+Pj4gMHgxMDAwMCBhbmQgcGxhY2UgZmlybXdhcmUg
+dGFibGVzIChNUFRhYmxlIGFuZCBETUkpIHNvbWV3aGVyZSBhdAo+Pj4gMHhmMDAwMDsgdGhlIGZp
+cm13YXJlIHdvdWxkIGp1c3QgYmUgYSBmZXcgbW92cyB0byBzZWdtZW50IHJlZ2lzdGVycwo+Pj4g
+Zm9sbG93ZWQgYnkgYSBsb25nIGptcC4KPj4gVGhlcmUgaXMgYSBiaXQgb2YgaW5pdGlhbCBhdHRl
+c3RhdGlvbiBmbG93IGluIHRoZSBlbmNsYXZlLCBzbyB0aGF0Cj4+IHlvdSBjYW4gYmUgc3VyZSB0
+aGF0IHRoZSBjb2RlIHRoYXQgaXMgcnVubmluZyBpcyBhY3R1YWxseSB3aGF0IHlvdSB3YW50ZWQg
+dG8KPj4gcnVuLgo+IENhbiB5b3UgZXhwbGFpbiB0aGlzLCBzaW5jZSBpdCdzIG5vdCBkb2N1bWVu
+dGVkPwoKSGFzaCB2YWx1ZXMgYXJlIGNvbXB1dGVkIGZvciB0aGUgZW50aXJlIGVuY2xhdmUgaW1h
+Z2UgKEVJRiksIHRoZSBrZXJuZWwgCmFuZCByYW1kaXNrKHMpLiBUaGF0J3MgdXNlZCwgZm9yIGV4
+YW1wbGUsIHRvIGNoZWNrdGhhdCB0aGUgZW5jbGF2ZSBpbWFnZSAKdGhhdCBpcyBsb2FkZWQgaW4g
+dGhlIGVuY2xhdmUgVk0gaXMgdGhlIG9uZSB0aGF0IHdhcyBpbnRlbmRlZCB0byBiZSBydW4uCgpU
+aGVzZSBjcnlwdG8gbWVhc3VyZW1lbnRzIGFyZSBpbmNsdWRlZCBpbiBhIHNpZ25lZCBhdHRlc3Rh
+dGlvbiBkb2N1bWVudCAKZ2VuZXJhdGVkIGJ5IHRoZSBOaXRybyBIeXBlcnZpc29yIGFuZCBmdXJ0
+aGVyIHVzZWQgdG8gcHJvdmUgdGhlIGlkZW50aXR5IApvZiB0aGUgZW5jbGF2ZS4gS01TIGlzIGFu
+IGV4YW1wbGUgb2Ygc2VydmljZSB0aGF0IE5FIGlzIGludGVncmF0ZWQgd2l0aCAKYW5kIHRoYXQg
+Y2hlY2tzIHRoZSBhdHRlc3RhdGlvbiBkb2MuCgo+Cj4+ICDCoCB2bSA9IG5lX2NyZWF0ZSh2Y3B1
+cyA9IDQpCj4+ICDCoCBuZV9zZXRfbWVtb3J5KHZtLCBodmEsIGxlbikKPj4gIMKgIG5lX2xvYWRf
+aW1hZ2Uodm0sIGFkZHIsIGxlbikKPj4gIMKgIG5lX3N0YXJ0KHZtKQo+Pgo+PiBUaGF0IHdheSB3
+ZSB3b3VsZCBnZXQgdGhlIEVJRiBsb2FkaW5nIGludG8ga2VybmVsIHNwYWNlLiAiTE9BRF9JTUFH
+RSIKPj4gd291bGQgb25seSBiZSBhdmFpbGFibGUgaW4gdGhlIHRpbWUgd2luZG93IGJldHdlZW4g
+c2V0X21lbW9yeSBhbmQgc3RhcnQuCj4+IEl0IGJhc2ljYWxseSBpbXBsZW1lbnRzIGEgbWVtY3B5
+KCksIGJ1dCBpdCB3b3VsZCBjb21wbGV0ZWx5IGhpZGUgdGhlCj4+IGhpZGRlbiBzZW1hbnRpY3Mg
+b2Ygd2hlcmUgYW4gRUlGIGhhcyB0byBnbywgc28gZnV0dXJlIGRldmljZSB2ZXJzaW9ucwo+PiAo
+b3IgZXZlbiBvdGhlciBlbmNsYXZlIGltcGxlbWVudGVycykgY291bGQgY2hhbmdlIHRoZSBsb2dp
+Yy4KPj4KPj4gSSB0aGluayBpdCBhbHNvIG1ha2VzIHNlbnNlIHRvIGp1c3QgYWxsb2NhdGUgdGhv
+c2UgNCBpb2N0bHMgZnJvbQo+PiBzY3JhdGNoLiBQYW9sbywgd291bGQgeW91IHN0aWxsIHdhbnQg
+dG8gImRvbmF0ZSIgS1ZNIGlvY3RsIHNwYWNlIGluIHRoYXQKPj4gY2FzZT8KPiBTdXJlLCB0aGF0
+J3Mgbm90IGEgcHJvYmxlbS4KCk9rLCB0aGFua3MgZm9yIGNvbmZpcm1hdGlvbi4gSSd2ZSB1cGRh
+dGVkIHRoZSBpb2N0bCBudW1iZXIgZG9jdW1lbnRhdGlvbiAKdG8gcmVmbGVjdCB0aGUgaW9jdGwg
+c3BhY2UgdXBkYXRlLCB0YWtpbmcgaW50byBhY2NvdW50IHRoZSBwcmV2aW91cyAKZGlzY3Vzc2lv
+bjsgYW5kbm93LCBnaXZlbiBhbHNvIHRoZSBwcm9wb3NhbCBhYm92ZSBmcm9tIEFsZXgsIHRoZSAK
+ZGlzY3Vzc2lvbnMgd2UgY3VycmVudGx5IGhhdmUgYW5kIGNvbnNpZGVyaW5nIGZ1cnRoZXIgZWFz
+eSBleHRlbnNpYmlsaXR5IApvZiB0aGUgdXNlciBzcGFjZSBpbnRlcmZhY2UuCgpUaGFua3MsCkFu
+ZHJhCgo+PiBPdmVyYWxsLCB0aGUgYWJvdmUgc2hvdWxkIGFkZHJlc3MgbW9zdCBvZiB0aGUgY29u
+Y2VybnMgeW91IHJhaXNlZCBpbgo+PiB0aGlzIG1haWwsIHJpZ2h0PyBJdCBzdGlsbCByZXF1aXJl
+cyBjb3B5aW5nLCBidXQgYXQgbGVhc3Qgd2UgZG9uJ3QgaGF2ZQo+PiB0byBrZWVwIHRoZSBjb3B5
+IGluIGtlcm5lbCBzcGFjZS4KCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgKFJvbWFuaWEp
+IFMuUi5MLiByZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJlZXQsIFVCQzUsIGZs
+b29yIDIsIElhc2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJlZ2lzdGVyZWQgaW4g
+Um9tYW5pYS4gUmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
 
-Thanks, Xin
-> 
-> Thanks, Daniel
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
