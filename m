@@ -2,125 +2,173 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD2C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2A5C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23CF02192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:10:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jS4fO3pE"
+	by mail.kernel.org (Postfix) with ESMTP id 68FD921973
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588241456;
+	bh=VAgbOnSoX9sB+B286FpkDF5zW+bXV05rs7ozwk8ygCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xNqCRL0fMw7R8miKaK6AsQ4K934qF2OW2z1dSBgrgyUzZNjiR4AxksorCgUhbBk29
+	 b5Fcyb4ML8MQ2a5AjgfThbEWbBKQ6WSFU3k5HQsRUv7awadsZShWqh0SvbgJu35lkE
+	 PshYtVC8oWMCs7ACyKm52H1UwgaBJjNmU55PJF7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgD3KKv (ORCPT
+        id S1726935AbgD3KKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:10:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44108 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgD3KKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:10:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03U9wtDG044025;
-        Thu, 30 Apr 2020 10:10:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=5WhGcq90rfMBRqKV0qb10Jbha9Kn+6XcelGD6TM+nHo=;
- b=jS4fO3pEbYQLmfAdBVeBEL97Vc+ySSqlzQqty9S2gK4Qdz8bU7ZTqWDfUVa3E6VAWz2u
- gAaVpz338nMUpXb1U7PZZyIZTdk7e/Oxg6Dvx+V+HMxNk6f7MzXo2FpgmK4r3Eq97ZUS
- sAdGfnpdqauMl2mP07sUtXHGUYdJgn6/c2mjyvehF3bnu7RGgBW+wqEwGMHhoQIaBAlT
- gMJjaD4siEPLuOlBuUcukGyuCGCueXATJ4YogQ4+QjDXEHEyIz5JLWoFyEKEdOAHZdjX
- zfg5c2wo8YJl1jzSih6Pm78hhwF5Fh0LnC9XDOPi6ZUdwV7IJHHVQ/PNfCHeHG721Po8 tA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30nucgajn0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 10:10:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UA6XDC113255;
-        Thu, 30 Apr 2020 10:08:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30qtkvykbc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 10:08:38 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03UA8bQi028097;
-        Thu, 30 Apr 2020 10:08:37 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Apr 2020 10:08:36 +0000
-Date:   Thu, 30 Apr 2020 13:08:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Rylan Dmello <mail@rylan.coffee>, devel@driverdev.osuosl.org,
-        GR-Linux-NIC-Dev@marvell.com, Manish Chopra <manishc@marvell.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] staging: qlge: Remove gotos from
- ql_set_mac_addr_reg
-Message-ID: <20200430100828.GU2014@kadam>
-References: <cover.1588209862.git.mail@rylan.coffee>
- <a6f485e43eb55e8fdc64a7a346cb0419b55c3cb6.1588209862.git.mail@rylan.coffee>
- <20200430093835.GT2014@kadam>
- <4c91091b304fc5df2a2f292a1e0c78d80217bb94.camel@perches.com>
+        Thu, 30 Apr 2020 06:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgD3KKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:10:49 -0400
+Received: from localhost.localdomain (unknown [122.182.217.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A8921974;
+        Thu, 30 Apr 2020 10:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588241449;
+        bh=VAgbOnSoX9sB+B286FpkDF5zW+bXV05rs7ozwk8ygCI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2tyNX0N32imfS5toJMXQO0FxEaHuXMYIFOjcAIo+9P139vJHxoQpAAN2CJ8LMLSi6
+         UdqWrEVlSdt+oO7if1QNhUSopc43BbzDSNEI4NnQQmg/QU6bAxoSao3fxLeOWyFiH3
+         NUdcxQmuMQ95MNydCC7GoLkF1mSjYuuyl++nqZKE=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 3/5] usb: xhci: Add support for Renesas controller with memory
+Date:   Thu, 30 Apr 2020 15:40:17 +0530
+Message-Id: <20200430101019.1130956-4-vkoul@kernel.org>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200430101019.1130956-1-vkoul@kernel.org>
+References: <20200430101019.1130956-1-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c91091b304fc5df2a2f292a1e0c78d80217bb94.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 mlxscore=0
- phishscore=0 mlxlogscore=991 adultscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004300081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300081
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 03:03:07AM -0700, Joe Perches wrote:
-> On Thu, 2020-04-30 at 12:38 +0300, Dan Carpenter wrote:
-> > On Wed, Apr 29, 2020 at 09:33:04PM -0400, Rylan Dmello wrote:
-> > > As suggested by Joe Perches, this patch removes the 'exit' label
-> > > from the ql_set_mac_addr_reg function and replaces the goto
-> > > statements with break statements.
-> []
-> > > diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-> []
-> > > @@ -336,22 +336,20 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
-> > >  
-> > >  		status = ql_wait_reg_rdy(qdev, MAC_ADDR_IDX, MAC_ADDR_MW, 0);
-> > >  		if (status)
-> > > -			goto exit;
-> > > +			break;
-> > 
-> > Just "return status".  A direct return is immediately clear but with a
-> > break statement then you have to look down a bit and then scroll back.
-> 
-> To me, 6 of 1, half dozen of other as
-> all the case breaks could be returns.
-> 
-> So either form is fine with me.
-> 
-> The old form was poor through.
+Some rensas controller like uPD720201 and uPD720202 need firmware to be
+loaded. Add these devices in table and invoke renesas firmware loader
+functions to check and load the firmware into device memory when
+required.
 
-With a goto exit or a break you have to scroll down to exactly the same
-place.  There is no difference at all.
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/usb/host/xhci-pci.c | 35 ++++++++++++++++++++++++++++++++++-
+ drivers/usb/host/xhci.h     |  1 +
+ 2 files changed, 35 insertions(+), 1 deletion(-)
 
-Anyway, I'm actually fine with this patch series as-is.  It improves
-a whole lot of stuff and doesn't cause any problems which weren't
-there to begin with.
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index b6c2f5c530e3..ef513c2fb843 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -15,6 +15,7 @@
+ 
+ #include "xhci.h"
+ #include "xhci-trace.h"
++#include "xhci-pci.h"
+ 
+ #define SSIC_PORT_NUM		2
+ #define SSIC_PORT_CFG2		0x880c
+@@ -87,7 +88,16 @@ static int xhci_pci_reinit(struct xhci_hcd *xhci, struct pci_dev *pdev)
+ 
+ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ {
+-	struct pci_dev		*pdev = to_pci_dev(dev);
++	struct pci_dev                  *pdev = to_pci_dev(dev);
++	struct xhci_driver_data         *driver_data;
++	const struct pci_device_id      *id;
++
++	id = pci_match_id(pdev->driver->id_table, pdev);
++
++	if (id && id->driver_data) {
++		driver_data = (struct xhci_driver_data *)id->driver_data;
++		xhci->quirks |= driver_data->quirks;
++	}
+ 
+ 	/* Look for vendor-specific quirks */
+ 	if (pdev->vendor == PCI_VENDOR_ID_FRESCO_LOGIC &&
+@@ -328,6 +338,14 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	int retval;
+ 	struct xhci_hcd *xhci;
+ 	struct usb_hcd *hcd;
++	struct xhci_driver_data *driver_data;
++
++	driver_data = (struct xhci_driver_data *)id->driver_data;
++	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
++		retval = renesas_xhci_check_request_fw(dev, id);
++		if (retval)
++			return retval;
++	}
+ 
+ 	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
+ 	pm_runtime_get_noresume(&dev->dev);
+@@ -389,6 +407,9 @@ static void xhci_pci_remove(struct pci_dev *dev)
+ 	struct xhci_hcd *xhci;
+ 
+ 	xhci = hcd_to_xhci(pci_get_drvdata(dev));
++	if (xhci->quirks & XHCI_RENESAS_FW_QUIRK)
++		renesas_xhci_pci_exit(dev);
++
+ 	xhci->xhc_state |= XHCI_STATE_REMOVING;
+ 
+ 	if (xhci->quirks & XHCI_DEFAULT_PM_RUNTIME_ALLOW)
+@@ -540,14 +561,26 @@ static void xhci_pci_shutdown(struct usb_hcd *hcd)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
++static const struct xhci_driver_data reneses_data = {
++	.quirks  = XHCI_RENESAS_FW_QUIRK,
++	.firmware = "renesas_usb_fw.mem",
++};
++
+ /* PCI driver selection metadata; PCI hotplugging uses this */
+ static const struct pci_device_id pci_ids[] = {
++	{ PCI_DEVICE(0x1912, 0x0014),
++		.driver_data =  (unsigned long)&reneses_data,
++	},
++	{ PCI_DEVICE(0x1912, 0x0015),
++		.driver_data =  (unsigned long)&reneses_data,
++	},
+ 	/* handle any USB 3.0 xHCI controller */
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_USB_XHCI, ~0),
+ 	},
+ 	{ /* end: all zeroes */ }
+ };
+ MODULE_DEVICE_TABLE(pci, pci_ids);
++MODULE_FIRMWARE("renesas_usb_fw.mem");
+ 
+ /* pci driver glue; this is a "new style" PCI driver module */
+ static struct pci_driver xhci_pci_driver = {
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 3289bb516201..4047363c7423 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1873,6 +1873,7 @@ struct xhci_hcd {
+ #define XHCI_DEFAULT_PM_RUNTIME_ALLOW	BIT_ULL(33)
+ #define XHCI_RESET_PLL_ON_DISCONNECT	BIT_ULL(34)
+ #define XHCI_SNPS_BROKEN_SUSPEND    BIT_ULL(35)
++#define XHCI_RENESAS_FW_QUIRK	BIT_ULL(36)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+-- 
+2.25.3
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-regards,
-dan carpenter
