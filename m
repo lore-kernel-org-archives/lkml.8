@@ -2,199 +2,111 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E07C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F468C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEE420836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jpQ5KXL7"
+	by mail.kernel.org (Postfix) with ESMTP id 0581E20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgD3UM3 (ORCPT
+        id S1727865AbgD3UNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:12:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59106 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgD3UMY (ORCPT
+        Thu, 30 Apr 2020 16:13:52 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39037 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgD3UNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:12:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UK9LwW022271;
-        Thu, 30 Apr 2020 20:11:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=BK9ctXRrIpRgGO6ZKhxMQ6dCR5vDweThxUdS7159PCM=;
- b=jpQ5KXL7fHt/Y5npAsmAs/QsQ+pjs4ePHIf/dZrXUuCAui+XQSMhvn8iHskTMt4CCVIh
- EtEY5b+bLXik8SQ6sbK1t1R6nEqRSOxjNt1WaB1s+idAtx7iWLLifU2FnX47a/ySMunb
- PZ/BeOZd5UjTZ3qHnOQsCpw9j8RpOF2u4f6ngFeyMbAQvjKBC/d6camCMcTNAzYjD2eV
- KU6Vk6TSix5hAu9wsw6xCb4hLXaEl3l+34NDB8pT00gp/lfTCURkqFaGIU6IfUoCJ42I
- RsGbY/W5gwxJuh28ppKkjDFRuMs3WlDL68KGmBLFshrcK1PcypS/wOQWIFMmjpiqaCWL Jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30p01p45a9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 20:11:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UK7PdW095893;
-        Thu, 30 Apr 2020 20:11:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30qtjy23ky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 20:11:40 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03UKBZBd024024;
-        Thu, 30 Apr 2020 20:11:35 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Apr 2020 13:11:35 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
+        Thu, 30 Apr 2020 16:13:50 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9F8B7FF80A;
+        Thu, 30 Apr 2020 20:13:45 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 22:13:45 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        david@lechnology.com, felipe.balbi@linux.intel.com,
+        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH 2/7] padata: initialize earlier
-Date:   Thu, 30 Apr 2020 16:11:20 -0400
-Message-Id: <20200430201125.532129-3-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
-References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
+Message-ID: <20200430201345.GX51277@piout.net>
+References: <cover.1588176662.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2
- malwarescore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1015
- phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
- suspectscore=2 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004300150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1588176662.git.vilhelm.gray@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-padata will soon initialize the system's struct pages in parallel, so it
-needs to be ready by page_alloc_init_late().
+Hi,
 
-The error return from padata_driver_init() triggers an initcall warning,
-so add a warning to padata_init() to avoid silent failure.
+On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:
+> Over the past couple years we have noticed some shortcomings with the
+> Counter sysfs interface. Although useful in the majority of situations,
+> there are certain use-cases where interacting through sysfs attributes
+> can become cumbersome and inefficient. A desire to support more advanced
+> functionality such as timestamps, multi-axis positioning tables, and
+> other such latency-sensitive applications, has motivated a reevaluation
+> of the Counter subsystem. I believe a character device interface will be
+> helpful for this more niche area of counter device use.
+> 
+> To quell any concerns from the offset: this patchset makes no changes to
+> the existing Counter sysfs userspace interface -- existing userspace
+> applications will continue to work with no modifications necessary. I
+> request that driver maintainers please test their applications to verify
+> that this is true, and report any discrepancies if they arise.
+> 
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
----
- include/linux/padata.h |  6 ++++++
- init/main.c            |  2 ++
- kernel/padata.c        | 17 ++++++++---------
- 3 files changed, 16 insertions(+), 9 deletions(-)
+On that topic, I'm wondering why the counter subsystem uses /sys/bus
+instead of /sys/class that would be more natural for a class of devices.
+I can't see how counters would be considered busses. I think you should
+consider moving it over to /sys/class (even if deprecating
+/sys/bus/counter will be long).
 
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index a0d8b41850b25..476ecfa41f363 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -164,6 +164,12 @@ struct padata_instance {
- #define	PADATA_INVALID	4
- };
- 
-+#ifdef CONFIG_PADATA
-+extern void __init padata_init(void);
-+#else
-+static inline void __init padata_init(void) {}
-+#endif
-+
- extern struct padata_instance *padata_alloc_possible(const char *name);
- extern void padata_free(struct padata_instance *pinst);
- extern struct padata_shell *padata_alloc_shell(struct padata_instance *pinst);
-diff --git a/init/main.c b/init/main.c
-index ee4947af823f3..5451a80e43016 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -94,6 +94,7 @@
- #include <linux/rodata_test.h>
- #include <linux/jump_label.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/padata.h>
- 
- #include <asm/io.h>
- #include <asm/bugs.h>
-@@ -1438,6 +1439,7 @@ static noinline void __init kernel_init_freeable(void)
- 	smp_init();
- 	sched_init_smp();
- 
-+	padata_init();
- 	page_alloc_init_late();
- 	/* Initialize page ext after all struct pages are initialized. */
- 	page_ext_init();
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 36a8e98741bb3..b05cd30f8905b 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -31,7 +31,6 @@
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/rcupdate.h>
--#include <linux/module.h>
- 
- #define MAX_OBJ_NUM 1000
- 
-@@ -1049,26 +1048,26 @@ void padata_free_shell(struct padata_shell *ps)
- }
- EXPORT_SYMBOL(padata_free_shell);
- 
--#ifdef CONFIG_HOTPLUG_CPU
--
--static __init int padata_driver_init(void)
-+void __init padata_init(void)
- {
-+#ifdef CONFIG_HOTPLUG_CPU
- 	int ret;
- 
- 	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, "padata:online",
- 				      padata_cpu_online, NULL);
- 	if (ret < 0)
--		return ret;
-+		goto err;
- 	hp_online = ret;
- 
- 	ret = cpuhp_setup_state_multi(CPUHP_PADATA_DEAD, "padata:dead",
- 				      NULL, padata_cpu_dead);
- 	if (ret < 0) {
- 		cpuhp_remove_multi_state(hp_online);
--		return ret;
-+		goto err;
- 	}
--	return 0;
--}
--module_init(padata_driver_init);
- 
-+	return;
-+err:
-+	pr_warn("padata: initialization failed\n");
- #endif
-+}
+> Interaction with Counter character devices occurs via ioctl commands.
+> This allows userspace applications to access and set counter data using
+> native C datatypes rather than working through string translations.
+> 
+
+I agree with David that you should consider using read to retrieve the
+counter data as this will simplify interrupt handling/polling and
+blocking/non-blocking reads can be used by an application. ABI wise,
+this can also be a good move as you could always consider having an
+ioctl requesting a specific format when reading the device so you are
+not stuck with the initial format you are going to choose.
+
+> 2. Should device driver callbacks return int or long? I sometimes see
+>    error values returned as long (e.g. PTR_ERR(), the file_operations
+>    structure's ioctl callbacks, etc.); when is it necessary to return
+>    long as opposed to int?
+> 
+
+You should use a long if you ever have to return a point as it is
+guaranteed to have the correct size. Else, just stick to an int if you
+are not going to overflow it.
+
+> 3. I only implemented the unlocked_ioctl callback. Should I implement a
+>    compat_ioctl callback as well?
+> 
+
+The compat_ioctl is to handle 32bit userspace running on a 64bit kernel.
+If your structures have the same size in both cases, then you don't have
+to implement compat_ioctl.
+
+Have a look at Documentation/driver-api/ioctl.rst
+
+
 -- 
-2.26.2
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
