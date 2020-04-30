@@ -2,145 +2,156 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B490FC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A17C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 823082070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KFDY+ase"
+	by mail.kernel.org (Postfix) with ESMTP id 0BD7F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgD3QhC (ORCPT
+        id S1726755AbgD3QhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:37:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55442 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726377AbgD3QhB (ORCPT
+        Thu, 30 Apr 2020 12:37:16 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:56712 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgD3QhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:37:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588264619;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N1kujXhR0DAj22ohzNF4EmVUFABeAdXNfPVcnWuHRxo=;
-        b=KFDY+ase3naK51WgBRbCjBlmNZYfCdBzYBm51jEk3Rxhk9vEoLZd7w1vJ4cSE8jORDWT+O
-        /OotW0baUaJFps68dGevuP2MU1buGHRZY0X9x2O736t3sbLISiq6+aUhN7PIES1BCLhQtA
-        +slKPjdGIVTO2d6QMLvRpbM1nNVCb0M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-413-629V3yTBP9erMAd_WkCRDQ-1; Thu, 30 Apr 2020 12:36:55 -0400
-X-MC-Unique: 629V3yTBP9erMAd_WkCRDQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BEDC107ACF9;
-        Thu, 30 Apr 2020 16:36:53 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-113-72.ams2.redhat.com [10.36.113.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B6F76061B;
-        Thu, 30 Apr 2020 16:36:46 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C startup and thread creation (v18)
-References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com>
-        <875zdhmaft.fsf@oldenburg2.str.redhat.com>
-        <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com>
-Date:   Thu, 30 Apr 2020 18:36:44 +0200
-In-Reply-To: <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Thu, 30 Apr 2020 12:11:39 -0400
-        (EDT)")
-Message-ID: <878sidkk0z.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 30 Apr 2020 12:37:15 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUCBV-000583-GC; Thu, 30 Apr 2020 10:37:13 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUCBT-0003Sj-B6; Thu, 30 Apr 2020 10:37:12 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+References: <20200430102908.10107-1-david@redhat.com>
+        <20200430102908.10107-3-david@redhat.com>
+        <87pnbp2dcz.fsf@x220.int.ebiederm.org>
+        <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
+Date:   Thu, 30 Apr 2020 11:33:53 -0500
+In-Reply-To: <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com> (David
+        Hildenbrand's message of "Thu, 30 Apr 2020 17:52:35 +0200")
+Message-ID: <871ro52ary.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-XM-SPF: eid=1jUCBT-0003Sj-B6;;;mid=<871ro52ary.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/rjTp6/iiXIJNS/hMPK4PB5d8gU9GVdPg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+David Hildenbrand <david@redhat.com> writes:
 
-> @deftypevar {struct rseq} __rseq_abi
-> @standards{Linux, sys/rseq.h}
-> @Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with the
-> Restartable Sequences system call (Linux-specific).  The layout of this
-> structure is defined by the @file{sys/rseq.h} header.  Registration of each
-> thread's @code{__rseq_abi} is performed by @theglibc{} at libc library
-> initialization and thread creation.
-
-s/libc library/library/
-
-> The main executable and shared libraries may either have an undefined
-> @code{__rseq_abi} TLS symbol, or define their own, with the same
-> declaration as the one present in @file{sys/rseq.h}.  The dynamic linker
-> will ensure that only one of those available symbols will be used at
-> runtime across the process.
->
-> If the main executable or shared libraries observe an uninitialized
-> @code{__rseq_abi.cpu_id} field (value @code{RSEQ_CPU_ID_UNINITIALIZED}), they
-> may perform rseq registration to the kernel: this means either glibc was
-> prevented from doing the registration, or an older glibc version, which does
-> not include rseq support, is in use.  When the main executable or a library
-> thus takes ownership of the registration, the memory used to hold the
-> @code{__rseq_abi} TLS variable must stay allocated, and is not re-used, until
-> the very end of the thread lifetime or until an explicit rseq unregistration
-> for that thread is performed.  It is not recommended to dlclose() libraries
-> owning the @code{__rseq_abi} TLS variable.
-
-s/dlclose()/@code{dlclose}/ (no parentheses)
-
-Rest looks okay.
-
->>> +  if (__rseq_abi.cpu_id == RSEQ_CPU_ID_REGISTRATION_FAILED)
->>> +    return;
->>> +  ret = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
->>> +                              0, RSEQ_SIG);
->>> +  if (INTERNAL_SYSCALL_ERROR_P (ret) &&
->>> +      INTERNAL_SYSCALL_ERRNO (ret) != EBUSY)
->>> +    __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
+> On 30.04.20 17:38, Eric W. Biederman wrote:
+>> David Hildenbrand <david@redhat.com> writes:
 >> 
->> Sorry, I forgot: Please add a comment that the EBUSY error is ignored
->> because registration may have already happened in a legacy library.
+>>> Some devices/drivers that add memory via add_memory() and friends (e.g.,
+>>> dax/kmem, but also virtio-mem in the future) don't want to create entries
+>>> in /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+>>> memory to the boot memmap of the kexec kernel.
+>>>
+>>> In fact, such memory is never exposed via the firmware memmap as System
+>>> RAM (e.g., e820), so exposing this memory via /sys/firmware/memmap/ is
+>>> wrong:
+>>>  "kexec needs the raw firmware-provided memory map to setup the
+>>>   parameter segment of the kernel that should be booted with
+>>>   kexec. Also, the raw memory map is useful for debugging. For
+>>>   that reason, /sys/firmware/memmap is an interface that provides
+>>>   the raw memory map to userspace." [1]
+>>>
+>>> We don't have to worry about firmware_map_remove() on the removal path.
+>>> If there is no entry, it will simply return with -EINVAL.
+>>>
+>>> [1]
+>>> https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-memmap
+>> 
+>> 
+>> You know what this justification is rubbish, and I have previously
+>> explained why it is rubbish.
 >
-> Considering that we now disable signals across thread creation, and that
-> glibc's initialization happens before other libraries' constructors
-> (as far as I remember even before LD_PRELOADed library constructors),
-> in which scenario can we expect to have EBUSY here ?
-
-That's a good point.
-
-> Not setting __rseq_abi.cpu_id to RSEQ_CPU_ID_REGISTRATION_FAILED in case
-> of EBUSY is more a way to handle "unforeseen" scenarios where somehow the
-> registration would already be done. But I cannot find an "expected"
-> scenario which would lead to this now.
+> Actually, no, I don't think it is rubbish. See patch #3 and the cover
+> letter why this is the right thing to do *for special memory*, *not
+> ordinary DIMMs*.
 >
-> So if EBUSY really is unexpected, how should we treat that ? I don't think
-> setting REGISTRATION_FAILED would be appropriate, because then it would
-> break assumption of the prior successful registration that have already
-> been done by this thread.
+> And to be quite honest, I think your response is a little harsh. I don't
+> recall you replying to my virtio-mem-related comments.
+>
+>> 
+>> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> 
+>> This needs to be based on weather the added memory is ultimately normal
+>> ram or is something special.
+>
+> Yes, that's what the caller are expected to decide, see patch #3.
+>
+> kexec should try to be as closely as possible to a real reboot - IMHO.
 
-You could call __libc_fatal with an error message.  ENOSYS is definitely
-an expected error code here, and EPERM (and perhaps EACCES) can happen
-with seccomp filters.
+That is very fuzzy in terms of hotplug memory.  The kexec'd kernel
+should see the hotplugged memory assuming it is ordinary memory.
 
-Thanks,
-Florian
+But kexec is not a reboot although it is quite similar.   Kexec is
+swapping one running kernel and it's state for another kernel without
+rebooting.
+
+>> Justifying behavior by documentation that does not consider memory
+>> hotplug is bad thinking.
+>
+> Are you maybe confusing this patch series with the arm64 approach? This
+> is not about ordinary hotplugged DIMMs.
+
+I think I am.
+
+My challenge is that I don't see anything in the description that says
+this isn't about ordinary hotplugged DIMMs.  All I saw was hotplug
+memory.
+
+If the class of memory is different then please by all means let's mark
+it differently in struct resource so everyone knows it is different.
+But that difference needs to be more than hotplug.
+
+That difference needs to be the hypervisor loaned us memory and might
+take it back at any time, or this memory is persistent and so it has
+these different characteristics so don't use it as ordinary ram.
+
+That information is also useful to other people looking at the system
+and seeing what is going on.
+
+Just please don't muddle the concepts, or assume that whatever subset of
+hotplug memory you are dealing with is the only subset.
+
+I didn't see that flag making the distinction about the kind of memory
+it is.
+
+Eric
+
+
+
 
