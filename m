@@ -2,159 +2,150 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5BFC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594D9C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5796420731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588265692;
-	bh=GRz0MjdAJYUSKX0qjB7uaN1+gBpFef7jlGLPAFPcUn0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wdRPAdpNXNYa0dYupRkJPReGU/YhB5Zd58On7cNCSX3vUoDjhpIvTb0ydpjVFYiCc
-	 BpX7juOR6ywjdkBZ797U2w12of3LvCauGprB5ylp5Xq71pEqwTVHUEGHy5J2XXciZy
-	 N+a36/z1Ox3rKaohAGNV9EMW4ftp6TqE0hilMdJs=
+	by mail.kernel.org (Postfix) with ESMTP id 3547020731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="P6ml2Iwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgD3Qyv (ORCPT
+        id S1726712AbgD3Qz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726272AbgD3Qyv (ORCPT
+        Thu, 30 Apr 2020 12:55:57 -0400
+Received: from mail.efficios.com ([167.114.26.124]:49564 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgD3Qz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:54:51 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22CDC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:54:50 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a21so40116ljj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jusIkjp3Dz4is1PZPLtprnCAT5bOhq5lF7YlVU3AWyQ=;
-        b=K/L1x2WLoEDVhKcajWjRfk8di4UnhY9fQ857BctryF99FXnh8lvm/+FMFP7To9VzLC
-         Oeh5Zl2gS6/3rwg+PAIfEpUDm0vFKxb3sBkuIMd/j+tdM33ErRljDKSRox35DyrhVqQy
-         cxTvpJRHT1GSdzAq5WmfU86CiiQNmQ4AcXgOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jusIkjp3Dz4is1PZPLtprnCAT5bOhq5lF7YlVU3AWyQ=;
-        b=JdjxCR9B3TWfZWtVRiU6rp8SIRyq1H5xV4mfYnA625wjVrgRIaN8kcY/fSrgl1HWuj
-         R329ym6twrBiubGPlBRVbTKErROetNPHXWy3e02GJozlD/n+KGJc2UBpXlSrMIAWfuFH
-         POY8z8IdcT3ZvaMXUm8kwhL+3vhqxo5bFv1+AsvaLZ7Z9x54cOYLfqYjv1g1mTgphEH0
-         +OJYB4Riym7f68qJ3efvkc85jqohy6SkWzcHlrkbZEVOmCy/JxBdi5o/kh9/Wqo0xu51
-         X5KpflxbbwVuTnVzXbcJPtQJNtFS566dwVMBLs35R+FLP0c1vy5w69zSmB2rG/Ps5Wue
-         tZNg==
-X-Gm-Message-State: AGi0PuaFsbQ13X2Pme4XhdZqHHrm5gLbPym3IovFmMLNAdekVVQrWlVw
-        rCIeGGJzBsCZ73imnTmcl9WJHQkh6wI=
-X-Google-Smtp-Source: APiQypImXeEbxtL7c3uuxIaXyJw9GW1Gz1zvC/A4TrCZhI3oJTRqVBrNKH5JRJeYLUsuQGs7Iiz5vg==
-X-Received: by 2002:a05:651c:39b:: with SMTP id e27mr130566ljp.145.1588265687533;
-        Thu, 30 Apr 2020 09:54:47 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id g3sm255111ljk.27.2020.04.30.09.54.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 09:54:46 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id j14so1813586lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:54:45 -0700 (PDT)
-X-Received: by 2002:a05:6512:405:: with SMTP id u5mr2728777lfk.192.1588265685113;
- Thu, 30 Apr 2020 09:54:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429214954.44866-1-jannh@google.com> <20200429215620.GM1551@shell.armlinux.org.uk>
- <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com> <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
-In-Reply-To: <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 30 Apr 2020 09:54:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
-Message-ID: <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
- properly in there
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thu, 30 Apr 2020 12:55:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 7276B29019A;
+        Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id R5cw2QtpS93e; Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 23F64290199;
+        Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 23F64290199
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588265755;
+        bh=Mp2N6YTybV9Yy+BQgTJKnPNXrZLjJEVr2GwPlCCPe5c=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=P6ml2Iwzx7dNVYFLxrkWSsVQThYw2dO3hAxklBIuoMnX1mQB+Y+TkBHjCIh/KOIiK
+         9BF34ObzvD7EE0Hr81wiv7OtYPzdGzJXdgqrla23Pz5l57swsihELEvq3+YXRQClmD
+         81+/l/Fs9ulbqJ73MQSBGcwOfmUe8AbfDdOMlfyXDnaSuFW047vhG9fsmbW+mLtMbc
+         NtgKvA+1/SvxFlG9EBw4mryfTapc5isfKLWecPHz2sww9O0bRpma0OU09IM+lhT1/j
+         ubLuTCXPy4/5jJfn2l/haVyrwneiGLCkA4es97pCEgtPeQk9956ziSJ7+Ktofw3NOA
+         x0OenWRJfbIvw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id GXJtEnICMaN0; Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 0F11629021D;
+        Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 12:55:54 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
         Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1972833271.77975.1588265754974.JavaMail.zimbra@efficios.com>
+In-Reply-To: <878sidkk0z.fsf@oldenburg2.str.redhat.com>
+References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com> <875zdhmaft.fsf@oldenburg2.str.redhat.com> <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com> <878sidkk0z.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v18)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v18)
+Thread-Index: vkaNGJYbQ5to7FGk5na6JixiLNcPYQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 7:10 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
->
-> > in load_flat_file() - which is also used to loading _libraries_. Where
-> > it makes no sense at all.
->
-> I haven't looked at the shared lib support in there for a long time,
-> but I thought that "id" is only 0 for the actual final program.
-> Libraries have a slot or id number associated with them.
+----- On Apr 30, 2020, at 12:36 PM, Florian Weimer fweimer@redhat.com wrote:
 
-Yes, that was my assumption, but looking at the code, it really isn't
-obvious that that is the case at all.
+> * Mathieu Desnoyers:
+> 
+[...]
+> 
+>>>> +  if (__rseq_abi.cpu_id == RSEQ_CPU_ID_REGISTRATION_FAILED)
+>>>> +    return;
+>>>> +  ret = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
+>>>> +                              0, RSEQ_SIG);
+>>>> +  if (INTERNAL_SYSCALL_ERROR_P (ret) &&
+>>>> +      INTERNAL_SYSCALL_ERRNO (ret) != EBUSY)
+>>>> +    __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
+>>> 
+>>> Sorry, I forgot: Please add a comment that the EBUSY error is ignored
+>>> because registration may have already happened in a legacy library.
+>>
+>> Considering that we now disable signals across thread creation, and that
+>> glibc's initialization happens before other libraries' constructors
+>> (as far as I remember even before LD_PRELOADed library constructors),
+>> in which scenario can we expect to have EBUSY here ?
+> 
+> That's a good point.
+> 
+>> Not setting __rseq_abi.cpu_id to RSEQ_CPU_ID_REGISTRATION_FAILED in case
+>> of EBUSY is more a way to handle "unforeseen" scenarios where somehow the
+>> registration would already be done. But I cannot find an "expected"
+>> scenario which would lead to this now.
+>>
+>> So if EBUSY really is unexpected, how should we treat that ? I don't think
+>> setting REGISTRATION_FAILED would be appropriate, because then it would
+>> break assumption of the prior successful registration that have already
+>> been done by this thread.
+> 
+> You could call __libc_fatal with an error message.  ENOSYS is definitely
+> an expected error code here, and EPERM (and perhaps EACCES) can happen
+> with seccomp filters.
 
-'id' gets calculated from fields that very much look like they could
-be zero (eg by taking the top bits from another random field).
+If we go this way, I'd also recommend to treat any situation where
+__rseq_abi.cpu_id is already initialized as a fatal error. Does the
+code below seem OK to you ?
 
-> > Most of that file goes back to pre-git days. And most of the commits
-> > since are not so much about binfmt_flat, as they are about cleanups or
-> > changes elsewhere where binfmt_flat was just a victim.
->
-> I'll have a look at this.
+static inline void
+rseq_register_current_thread (void)
+{
+  int ret;
 
-Thanks.
+  if (__rseq_abi.cpu_id != RSEQ_CPU_ID_UNINITIALIZED)
+    __libc_fatal ("rseq already initialized for this thread\n");
+  ret = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
+                              0, RSEQ_SIG);
+  if (INTERNAL_SYSCALL_ERROR_P (ret))
+    {
+      if (INTERNAL_SYSCALL_ERRNO (ret) == EBUSY)
+        __libc_fatal ("rseq already registered for this thread\n");
+      __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
+    }
+}
 
-> Quick hack test shows moving setup_new_exec(bprm) to be just before
-> install_exec_creds(bprm) works fine for the static binaries case.
-> Doing the flush_old_exec(bprm) there too crashed out - I'll need to
-> dig into that to see why.
+Thanks,
 
-Just moving setup_new_exec() would at least allow us to then join the
-two together, and just say "setup_new_exec() does the credential
-installation too".
+Mathieu
 
-So to some degree, that's the important one.
-
-But that flush_old_exec() does look odd in load_flat_file(). It's not
-like anything but executing a binary should flush the old exec.
-Certainly not loading a library, however odd that flat library code
-is.
-
-My _guess_ is that the reason for this is that "load_flat_file()" also
-does a lot of verification of the file and does that whole "return
--ENOEXEC if the file format isn't right". So we don't want to flush
-the old exec before that is done, but we obviously also don't want to
-flush the old exec after we've actually loaded the new one into
-memory..
-
-So the location of flush_old_exec() makes that kind of sense, but it
-would have made it better if that flat file support had a clear
-separation of "check the file" from "load the file".
-
-Oh well. As mentioned, the whole "at least put setup_new_exec() and
-install_exec_creds() together" is the bigger thing.
-
-But if it's true that nobody really uses the odd flat library support
-any more and there are no testers, maybe we should consider ripping it
-out...
-
-                Linus
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
