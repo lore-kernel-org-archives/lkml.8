@@ -2,127 +2,310 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EC6C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF422C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E92220774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A510F205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jlD8S9bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgD3WUJ (ORCPT
+        id S1727784AbgD3WUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:20:09 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64761 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgD3WUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:20:09 -0400
-IronPort-SDR: Nmy2SMonhEF9N5yObYCShGyE0JIviHsvavAck0uweUqq+6nFtjb8JOeBJhhTv2evzjQMA3RNZx
- 1FePlNckYeAg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 15:20:08 -0700
-IronPort-SDR: T7uBwXiNPRoS+3hMz5KdpH/1eTYmxcBu2tj7GmZEFouoQWuhYFf2wiVPVtTggMbBWOoPKAxDeG
- ZOTJnFvd6Opw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
-   d="scan'208";a="261929251"
-Received: from dnlloyd-mobl.amr.corp.intel.com (HELO [10.255.231.251]) ([10.255.231.251])
-  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 15:20:07 -0700
-Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
- pages
-From:   Dave Hansen <dave.hansen@intel.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        viro@zeniv.linux.org.uk
-Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
-References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
- <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
- <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
- CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
- 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
- K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
- VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
- e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
- ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
- kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
- rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
- f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
- mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
- UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
- sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
- 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
- cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
- UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
- db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
- lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
- kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
- gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
- AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
- XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
- e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
- pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
- YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
- lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
- M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
- 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
- 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
- OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
- ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
- z5cecg==
-Message-ID: <561b39e0-4501-a6c3-5aa8-13a68d1c9484@intel.com>
-Date:   Thu, 30 Apr 2020 15:20:07 -0700
+        Thu, 30 Apr 2020 18:20:37 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18046 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgD3WUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 18:20:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eab4f270000>; Thu, 30 Apr 2020 15:20:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Apr 2020 15:20:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 15:20:36 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 22:20:35 +0000
+Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 22:20:29 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+ <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+ <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+ <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
+ <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
+ <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
+ <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
+ <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
+ <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
+ <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+Message-ID: <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+Date:   Thu, 30 Apr 2020 15:19:00 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588285223; bh=w/+Cr9VQxl0rdOKMwo55fWqb+uL6Teyc7xqvUUJB8nk=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=jlD8S9bkc07IvIAs1vyLks6zla/YWiKcJ8Yuoo66G+CA5cz/XHfFgYErNo4uNE2rc
+         RhWUQ7NVMNqsh/zMhTD955wDejKvGl457NoT2sN67uhDaUgn1zXphjmXWE5zjEDCzi
+         Js5QVCqLuPFCNtezAfAhl9p0Jol4AZghcBolAYiSHoOFm+yqgS3LOWuuEhnj58EL1A
+         draEopun7850Ttse1ZN2+HsnRiS+dbNJvtvpzIx1+oWsO5TfoxWqNdZGGpTyMY5PCV
+         eVnJGq/XYVg+1sPg40JdpohJTNLq5I039KZFWXuBq8WHUtbmFhk9Yc2ITXYEMh1XcA
+         hYcrkuviLyW9w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One other thing...  The gup code will not take references on ref-frozen
-pages:
 
-> static inline __must_check bool try_get_page(struct page *page)
-> {
->         page = compound_head(page);
->         if (WARN_ON_ONCE(page_ref_count(page) <= 0))
->                 return false;
->         page_ref_inc(page);
->         return true;
-> }
+On 4/30/20 3:16 PM, Sowjanya Komatineni wrote:
+>
+> On 4/30/20 2:53 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/30/20 2:37 PM, Sowjanya Komatineni wrote:
+>>>
+>>> On 4/30/20 2:26 PM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 4/30/20 2:17 PM, Dmitry Osipenko wrote:
+>>>>> 30.04.2020 23:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> On 4/30/20 12:53 PM, Sowjanya Komatineni wrote:
+>>>>>>> On 4/30/20 12:46 PM, Sowjanya Komatineni wrote:
+>>>>>>>> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
+>>>>>>>>> 30.04.2020 22:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
+=82:
+>>>>>>>>>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+>>>>>>>>>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+>>>>>>>>>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=
+=D0=B5=D1=82:
+>>>>>>>>>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>>>>>>>>>>>>>>> +{
+>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D da=
+ta;
+>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
+>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freez=
+e();
+>>>>>>>>>>>>>>>>> I guess it won't be great to freeze in the middle of a=20
+>>>>>>>>>>>>>>>>> capture
+>>>>>>>>>>>>>>>>> process, so:
+>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
+ (list_empty(&chan->done))
+>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
+>>>>>>>>>>>>>>>> And here should be some locking protection in order not=20
+>>>>>>>>>>>>>>>> race
+>>>>>>>>>>>>>>>> with
+>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>> chan_capture_kthread_start because kthread_finish could=20
+>>>>>>>>>>>>>>>> freeze
+>>>>>>>>>>>>>>>> before
+>>>>>>>>>>>>>>>> kthread_start.
+>>>>>>>>>>>>>>> Or maybe both start / finish threads should simply be=20
+>>>>>>>>>>>>>>> allowed to
+>>>>>>>>>>>>>>> freeze
+>>>>>>>>>>>>>>> only when both capture and done lists are empty.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> if (list_empty(&chan->capture) &&
+>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done=
+))
+>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
+>>>>>>>>>>>>>> good to freeze when not in middle of the frame capture=20
+>>>>>>>>>>>>>> but why
+>>>>>>>>>>>>>> should we not allow freeze in between captures?
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Other drivers do allow freeze in between frame captures.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I guess we can freeze before dequeue for capture and in=20
+>>>>>>>>>>>>>> finish
+>>>>>>>>>>>>>> thread we can freeze after capture done. This also don't=20
+>>>>>>>>>>>>>> need to
+>>>>>>>>>>>>>> check for list_empty with freeze to allow between frame=20
+>>>>>>>>>>>>>> captures.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>> Also if we add check for both lists empty, freeze is not=20
+>>>>>>>>>>>>> allowed as
+>>>>>>>>>>>>> long as streaming is going on and in case of continuous=20
+>>>>>>>>>>>>> streaming
+>>>>>>>>>>>>> freeze will never happen.
+>>>>>>>>>>> To allow freeze b/w frames (but not in middle of a frame),
+>>>>>>>>>>>
+>>>>>>>>>>> for capture_start thread, probably we can do unconditional
+>>>>>>>>>>> try_to_freeze()
+>>>>>>>>> Is it possible to use wait_event_freezable()?
+>>>>>>>>>
+>>>>>>>>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.=
+txt=20
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Will the wait_event_interruptible() be woken up when system=20
+>>>>>>>>> freezes?
+>>>>>>>> Based on wait_event_freezable implementation, looks like it=20
+>>>>>>>> similar
+>>>>>>>> to wait_event_interruptible + try_to_free() as it does
+>>>>>>>> freezable_schedule unlike schedule with wait_event_interruptible.
+>>>>>>>>
+>>>>>>>> So using this for capture_start may be ok to allow freeze before
+>>>>>>>> start of frame. But can't use for capture_finish as this is=20
+>>>>>>>> same as
+>>>>>>>> wait_event_interruptible followed by unconditional try_to_freeze.
+>>>>>>>>
+>>>>>>>>>>> for capture_finish thread, at end of capture done we can do
+>>>>>>>>>>> try_to_freeze() only when done list is empty
+>>>>>>>>> This doesn't prevent situation where the done-list is empty=20
+>>>>>>>>> and the
+>>>>>>>>> "finish" thread freezes, in the same time the "start" thread=20
+>>>>>>>>> issues new
+>>>>>>>>> capture and then freezes too.
+>>>>>>>>>
+>>>>>>>>> 1. "start" thread issues capture
+>>>>>>>>>
+>>>>>>>>> 2. "finish" thread wakes and waits for the capture to complete
+>>>>>>>>>
+>>>>>>>>> 3. "start" thread begins another capture, waits for FRAME_START
+>>>>>>>>>
+>>>>>>>>> 4. system freezing activates
+>>>>>>>>>
+>>>>>>>>> 5. "finish" thread completes the capture and freezes because=20
+>>>>>>>>> done-list
+>>>>>>>>> is empty
+>>>>>>>>>
+>>>>>>>>> 6. "start" thread gets FRAME_START, issues another capture and=20
+>>>>>>>>> freezes
+>>>>>>>> This will not happen as we allow double buffering done list=20
+>>>>>>>> will not
+>>>>>>>> be empty till stream stop happens
+>>>>>>>>
+>>>>>>>> There will always be 1 outstanding frame in done list
+>>>>>>> Correction, there will always be 1 outstanding buffer except=20
+>>>>>>> beginning
+>>>>>>> during beginning of stream.
+>>>>>>>
+>>>>>>> Except during beginning frames, done list will not be empty for all
+>>>>>>> subsequent streaming process
+>>>>>> Also to be clear, hardware sees next frame start event prior to=20
+>>>>>> previous
+>>>>>> frame mw_ack event as mw_ack event happens after frame end. So once
+>>>>>> initial buffer got queued to done list to finish processes, while
+>>>>>> waiting for mw_ack next frame start happens and pushes next=20
+>>>>>> buffer to
+>>>>>> done list.
+>>>>> What about this variant:
+>>>>>
+>>>>> 1. "start" thread wakes up to start capture
+>>>>>
+>>>>> 2. system freezing activates
+>>>>>
+>>>>> 3. "finish" thread wakes up and freezes
+>>>>
+>>>> finish thread will wake up only when done list is not=20
+>>>> empty/kthread_stop/wake even from capture start thread.
+>>>>
+>>>> Also when I said will allow try_to_free when done list is empty I=20
+>>>> meant to have this at end of capture_done() in finish thread
+>>>>
+>>>>>
+>>>>> 4. "start" thread issues capture and freezes
+>>>>>
+>>>>> And again, I assume that system's freezing should wake
+>>>>> wait_event_interruptible(), otherwise it won't be possible to freeze
+>>>>> idling threads at all and freezing should fail (IIUC).
+>>>>
+>>>> Based on kernel doc on freezing, looks like when we mark thread as=20
+>>>> freezable, freeze state happens when we explicitly call try_to_freeze.
+>>>>
+>>>> I don't think its other way where freeze causes=20
+>>>> wait_event_interruptible to wake up.
+>>
+>> Based on my understanding when we mark thread as freezable,
+>>
+>> with wait_event_freezable() - after wait event, it invokes=20
+>> try_to_freeze(). So frozen state enters unconditionally with this.
+>>
+>> with wait_event_interruptible - we do try_to_freeze when its safe to=20
+>> enter frozen state.
+>>
+>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
+>>
+> Sorry correction. When system tries to freeze tasks looks like it will=20
+> sending signal to thread and wake up happens when signal is sent to=20
+> thread and freezable thread should invoke try_to_free when its safe to=20
+> free
 
-*But*, notice that the path that skips taking a ref is also a
-WARN_ON_ONCE().  Basically, if you get to try_get_page() on a ref-frozen
-page, it's considered buggy.  This makes sense because you fundamentally
-can't freeze refs on a page that might have more refs taken on it.
+freeze_task() sends fake signal
 
-I think all the other users do this by ensuring that any PTE that could
-be gup'd is set non-present before the refs are frozen and remote TLBs
-are flushed which also ensures no GUPs are running.  I don't know if the
-s390 code has some other way of preventing GUPs, but leaving Present=1
-PTEs while you freeze refs would be quite troublesome on x86.
+https://elixir.bootlin.com/linux/v5.7-rc2/source/kernel/freezer.c#L115
+
+>
+>>
+>>>>
+>>>>> And in this case synchronization between start/finish threads=20
+>>>>> should be
+>>>>> needed in regards to freezing.
+>>>>
+>>>> Was thinking to have counter to track outstanding frame w.r.t=20
+>>>> single shot issue b/w start and finish and allow to freeze only=20
+>>>> when no outstanding frames in process.
+>>>>
+>>>> This will make sure freeze will not happen when any buffers are in=20
+>>>> progress
+>>>>
+>>>>> Note that this could be a wrong assumption, I'm not closely familiar
+>>>>> with how freezer works.
+>>>
+>>> kthread_start can unconditionally allow try_to_freeze before start=20
+>>> of frame capture
+>>>
+>>> We can compute captures inflight w.r.t single shot issued during=20
+>>> capture start and finished frames by kthread_finish and allow=20
+>>> kthread_finish to freeze only when captures inflight is 0.
+>>>
+>>> This allows freeze to happen b/w frames but not in middle of frame
+will have caps inflight check in v12 to allow freeze finish thread only=20
+when no captures are in progress
+>>>
+>>>
