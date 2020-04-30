@@ -2,251 +2,125 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBD4C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E874C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9F49208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588260259;
-	bh=keg6jYch6p2n6C2v/pWw6mL3CkzZWD6u8lTvaRcb5D4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rr0Bg4gRkRU5ZuqwK9CDh4AyN46vXEGm76i+BO2e91GNRE5Bctk/299v1H18Jk9dk
-	 E09GBbSjFCA445cA5wC9NPnbkE6FZhH3XFvY5CSvQPaEgIl7bbN0AMPrHA9fPmOL6C
-	 OZqrBOvY/V3MnVyU4gl9EOEf+N/KiOwJECNiOGB0=
+	by mail.kernel.org (Postfix) with ESMTP id 150A220731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgD3PYS (ORCPT
+        id S1727800AbgD3P0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:24:18 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33199 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgD3PYR (ORCPT
+        Thu, 30 Apr 2020 11:26:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49392 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgD3P0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:24:17 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j26so5234128ots.0;
-        Thu, 30 Apr 2020 08:24:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u4g24e3GzwdiYIpTDMkHlnY+SwtLlwI/g7Kc4NqV3FM=;
-        b=TdHtPfPiDpFSjQ7rAknghIRiOPwnYwMDbSJxTqoatwenKBTZehrcoYJLi7fEMPKydJ
-         74h3rE+EVVIcCXwhYVtxJ/nGMlBSHbziBG1pVbzsLv+hZM7dGVN24mdDhA3IOdB06p8x
-         Th27exzb+fTIiwdNyavEMWXwY/WcOyydF1ovQuzmJ2i/L1U4kgXOpx9Qu4uhle8TCNW5
-         yXBPvXGzuBsJ4PmYIwPBYgIuMdcNMNwTKU+93CyfrR3DXmZjD9a+cHj57xACQ0zzda7j
-         mRy9nCbTCujJPOi6PnIbtQpPqi6Z9cEf/6Bjz+VonPHDu+5XTMGbcWHa+2QBMB7Lb06p
-         bnGg==
-X-Gm-Message-State: AGi0PuY4CVKlXrc2vz1e5myFhhRTlpesK3PzbvSVD1NW7saCwbf3WKvg
-        vpoKWIOJGN2IgIY6Zr0nGw==
-X-Google-Smtp-Source: APiQypIEEBcRD0MSn0hGLzIxLkXC5lYI2OeNfPr7SM8+BRERqIlo3llUkEhqFKBx/zMNHevWxNEssQ==
-X-Received: by 2002:a9d:7b55:: with SMTP id f21mr2114497oto.31.1588260256120;
-        Thu, 30 Apr 2020 08:24:16 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm49738ott.51.2020.04.30.08.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 08:24:15 -0700 (PDT)
-Received: (nullmailer pid 30190 invoked by uid 1000);
-        Thu, 30 Apr 2020 15:24:14 -0000
-Date:   Thu, 30 Apr 2020 10:24:14 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     devicetree@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-Message-ID: <20200430152414.GA19887@bogus>
-References: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
- <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
+        Thu, 30 Apr 2020 11:26:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 156592A297F
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Handle NULL EC pointer
+ during probe.
+To:     Prashant Malani <pmalani@chromium.org>,
+        Daniil Lunev <dlunev@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200428110253.1.I926f6741079cafb04ecb592130aef75b24ad31ae@changeid>
+ <c57b0892-d68d-f0f2-3cc1-b8549983227e@collabora.com>
+ <CAONX=-dLVBpz+p1si4cWGHEmQ_toO8kW=fCPcdUuX2KLc-o=2A@mail.gmail.com>
+ <CAONX=-dDWjMQDGncSgXNf86Bt3C5OUtFqh=Pe2HToGPSv5qa4A@mail.gmail.com>
+ <CACeCKacoEjQm0_VfZGYNEZVhKubPyqspNZupQk+7piJOsVzH+Q@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <fc7901ff-9e67-d6d5-f084-70233fd8344c@collabora.com>
+Date:   Thu, 30 Apr 2020 17:26:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACeCKacoEjQm0_VfZGYNEZVhKubPyqspNZupQk+7piJOsVzH+Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 12:26:08PM +0800, Chris Ruehl wrote:
-> Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
+Hi Prashant,
+
+On 30/4/20 2:43, Prashant Malani wrote:
+> On Wed, Apr 29, 2020 at 5:38 PM Daniil Lunev <dlunev@chromium.org> wrote:
+>>
+>> [to make it appear on the mailing list as I didn't realize I was in
+>> hypertext sending mode]
+>>
+>> On Thu, Apr 30, 2020 at 10:11 AM Daniil Lunev <dlunev@chromium.org> wrote:
+>>>
+>>> Hi Enric.
+>>> I encountered the issue on a Hatch device when trying running 5.4 kernel on that. After talking to Prashant it seems that any device with coreboot built before a certain point (a particular fix for device hierarchy in ACPI tables of Chrome devices which happened in mid-April) will not be able to correctly initialize the driver and will get a kernel panic trying to do so.
 > 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
-> v5:
-> correct require section
-> set maintainer of analog.com
-> v4..v2: no change
+> A clarifying detail here: This should not be seen in any current
+> *production* device. No prod device firmware will carry the erroneous
+> ACPI device entry.
 > 
->  .../bindings/iio/dac/lltc,ltc2632.yaml        | 76 +++++++++++++++++++
->  .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
->  2 files changed, 76 insertions(+), 49 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-> new file mode 100644
-> index 000000000000..b0043144fbc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +
-> +description: |
-> +  Bindings for the Linear Technology LTC2632/2634/2636 DAC
-> +  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - lltc,ltc2632-l12
-> +      - lltc,ltc2632-l10
-> +      - lltc,ltc2632-l8
-> +      - lltc,ltc2632-h12
-> +      - lltc,ltc2632-h10
-> +      - lltc,ltc2632-h8
-> +      - lltc,ltc2634-l12
-> +      - lltc,ltc2634-l10
-> +      - lltc,ltc2634-l8
-> +      - lltc,ltc2634-h12
-> +      - lltc,ltc2634-h10
-> +      - lltc,ltc2634-h8
-> +      - lltc,ltc2636-l12
-> +      - lltc,ltc2636-l10
-> +      - lltc,ltc2636-l8
-> +      - lltc,ltc2636-h12
-> +      - lltc,ltc2636-h10
-> +      - lltc,ltc2636-h8
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 2000000
-> +
-> +  vref-supply:
-> +    description:
-> +	  Phandle to the external reference voltage supply. This should
 
-There's a tab here which the yaml parser isn't going to like. Not sure 
-why my checker didn't run on this, but make sure 'make dt_binding_check' 
-passes.
+Thanks for the clarification. Then, I don't think we need to upstream this. This
+kind of "defensive-programming" it's not something that should matter to upstream.
 
-> +      only be set if there is an external reference voltage connected to the VREF
-> +      pin. If the property is not set the internal reference is used.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    vref: regulator-vref {
-> +        compatible = "regulator-fixed";
-> +        regulator-name = "vref-ltc2632";
-> +        regulator-min-microvolt = <1250000>;
-> +        regulator-max-microvolt = <1250000>;
-> +        regulator-always-on;
-> +    };
-> +
-> +    spi_master {
+Thanks,
+ Enric
 
-spi {
 
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      dac: ltc2632@0 {
-
-dac@0
-
-And drop the unused label.
-
-> +        compatible = "lltc,ltc2632";
-> +        reg = <0>;    /* CS0 */
-> +        spi-max-frequency = <1000000>;
-> +        vref-supply = <&vref>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> deleted file mode 100644
-> index 1ab9570cf219..000000000000
-> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> +++ /dev/null
-> @@ -1,49 +0,0 @@
-> -Linear Technology LTC2632/2634/2636 DAC
-> -
-> -Required properties:
-> - - compatible: Has to contain one of the following:
-> -	lltc,ltc2632-l12
-> -	lltc,ltc2632-l10
-> -	lltc,ltc2632-l8
-> -	lltc,ltc2632-h12
-> -	lltc,ltc2632-h10
-> -	lltc,ltc2632-h8
-> -	lltc,ltc2634-l12
-> -	lltc,ltc2634-l10
-> -	lltc,ltc2634-l8
-> -	lltc,ltc2634-h12
-> -	lltc,ltc2634-h10
-> -	lltc,ltc2634-h8
-> -	lltc,ltc2636-l12
-> -	lltc,ltc2636-l10
-> -	lltc,ltc2636-l8
-> -	lltc,ltc2636-h12
-> -	lltc,ltc2636-h10
-> -	lltc,ltc2636-h8
-> -
-> -Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
-> -apply. In particular, "reg" and "spi-max-frequency" properties must be given.
-> -
-> -Optional properties:
-> -	- vref-supply: Phandle to the external reference voltage supply. This should
-> -	  only be set if there is an external reference voltage connected to the VREF
-> -	  pin. If the property is not set the internal reference is used.
-> -
-> -Example:
-> -
-> -	vref: regulator-vref {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "vref-ltc2632";
-> -		regulator-min-microvolt = <1250000>;
-> -		regulator-max-microvolt = <1250000>;
-> -		regulator-always-on;
-> -	};
-> -
-> -	spi_master {
-> -		dac: ltc2632@0 {
-> -			compatible = "lltc,ltc2632-l12";
-> -			reg = <0>; /* CS0 */
-> -			spi-max-frequency = <1000000>;
-> -			vref-supply = <&vref>; /* optional */
-> -		};
-> -	};
-> -- 
-> 2.20.1
-> 
+>>> Thanks,
+>>> Daniil
+>>>
+>>> On Thu, Apr 30, 2020 at 7:58 AM Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+>>>>
+>>>> Hi Daniil,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On 28/4/20 3:02, Daniil Lunev wrote:
+>>>>> Missing EC in device hierarchy causes NULL pointer to be returned to the
+>>>>> probe function which leads to NULL pointer dereference when trying to
+>>>>> send a command to the EC. This can be the case if the device is missing
+>>>>> or incorrectly configured in the firmware blob. Even if the situation
+>>>>
+>>>> There is any production device with a buggy firmware outside? Or this is just
+>>>> for defensive programming while developing the firmware? Which device is
+>>>> affected for this issue?
+>>>>
+>>>> Thanks,
+>>>>  Enric
+>>>>
+>>>>> occures, the driver shall not cause a kernel panic as the condition is
+>>>>> not critical for the system functions.
+>>>>>
+>>>>> Signed-off-by: Daniil Lunev <dlunev@chromium.org>
+>>>>> ---
+>>>>>
+>>>>>  drivers/platform/chrome/cros_ec_typec.c | 5 +++++
+>>>>>  1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+>>>>> index 874269c07073..30d99c930445 100644
+>>>>> --- a/drivers/platform/chrome/cros_ec_typec.c
+>>>>> +++ b/drivers/platform/chrome/cros_ec_typec.c
+>>>>> @@ -301,6 +301,11 @@ static int cros_typec_probe(struct platform_device *pdev)
+>>>>>
+>>>>>       typec->dev = dev;
+>>>>>       typec->ec = dev_get_drvdata(pdev->dev.parent);
+>>>>> +     if (!typec->ec) {
+>>>>> +             dev_err(dev, "Failed to get Cros EC data\n");
+>>>>> +             return -EINVAL;
+>>>>> +     }
+>>>>> +
+>>>>>       platform_set_drvdata(pdev, typec);
+>>>>>
+>>>>>       ret = cros_typec_get_cmd_version(typec);
+>>>>>
