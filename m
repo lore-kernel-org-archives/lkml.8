@@ -2,117 +2,133 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC3DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41223C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3A9220656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DAA20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VgEzGXuH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAOyVMbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgD3T3X (ORCPT
+        id S1727027AbgD3T3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:29:23 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8943 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgD3T3V (ORCPT
+        Thu, 30 Apr 2020 15:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgD3T3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:29:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab26ce0001>; Thu, 30 Apr 2020 12:28:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 12:29:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 12:29:21 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 19:29:20 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 19:29:19 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <18d457dd-17cb-633e-cdec-e0abfe73b0b0@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <10286a40-ed3c-1999-68fa-7099130a2423@nvidia.com>
-Date:   Thu, 30 Apr 2020 12:27:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <18d457dd-17cb-633e-cdec-e0abfe73b0b0@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588274894; bh=+3lStLw5yssQ0AKxd+sc1j1usFslZ6/M/9XZ4GHBV9w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=VgEzGXuHYNGSQ+lgeTnPiB/xxffHbRX9bSPslEoyb5hWTxK4OHySD9I0srZBKKBTm
-         Vep79jUMJmlAkESyVFlbqjXU0n7RN2HsDJOqdzui7G9QMu+Rw/DKjINMx/O3eA8xo6
-         FcGdfSV4vaoenWB+ItVETxBgdxBIy7i/KEX3eqoCFeyP3zJ24nLq+3WPN1nDx0U60B
-         SIEI529dw2XeiX/M1JCov7c6OPz4DKKd9FJeMVajjS8z1VexD+5y8Y09VPBAVtr6mV
-         AL4Vd9qcwTRQCW3F8VNB3sx6kiAAbz06kC6uJjFDczETj9v4/T4+MuXwjNSG+Cnsto
-         I/+RD7azUQunA==
+        Thu, 30 Apr 2020 15:29:49 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8965C035494;
+        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t9so1233344pjw.0;
+        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=S56vvjgUJgJIcs0iI3orpY7ejPb7V1V+KfOnIEgpemg=;
+        b=oAOyVMbSFrTgrrXodp1aN7KVZh+59xE1YaGOAh56d1EC+I4gcm1UjNeI3p6/8+hOgz
+         2i5s2bjByfGsW01ml/aHEdaRd6QMQb65ef4L1x3R+8Z0+tV6gA1tugOZkpG4hujd3F2r
+         Uac4rrNRFI6dI2LsjxLXJEMUySVo8PN254L95aFVxbCN9Dg4IM81ws7Jkn7yhtZ4blTc
+         fi8d6VgtOrxaL/fcC9qDPkwCkGFlncx/GTj6uDsN+gnU7fMsaJgz6t1xYsdW6feHEfUw
+         ZWLFaCIYqIAtoUjGxBFLhY/4JIXbnLgCfZ9r7ZERjmZzVE7k+vVchNrCAoQRgXS/3200
+         iBBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=S56vvjgUJgJIcs0iI3orpY7ejPb7V1V+KfOnIEgpemg=;
+        b=LcZbhikXDV0hR4MnNepW6Mp/pKdmHfnsNpS1145Jdez5IS3Dj4SJYJ0xmXtbX04GOT
+         /bMmL4G2xtCqdk+/s7LSbNHCQJWJFhcq7i6HQnjpdIK2qDBXTAh08r9HexVU6oLYssrg
+         3VPWkO63qm02qWh4rIMCslJEjoS4+rLSBkfn2EY0jqxnEYAAeWWQXwTcClRmvny8rT3C
+         AhORxarfsB5iC3Cw5Ie3OvwrhJfTMiNjKutiulouHw/SvXOLyLq6TKigbl8vC0+bgcG7
+         qnXcOnqi5ruvGpMbtSmsrqIYJvKP5Du2Dv2zpRMwqL0Zw8sNULhpVhuuh0a8BNZh+9dw
+         wLSw==
+X-Gm-Message-State: AGi0PuZp9kup1fDlyTanCYU78Ep8PfjAo77Hb/MikJvmGon5XlGm47i6
+        tLiarpY87Fob3ybPIiqRTg==
+X-Google-Smtp-Source: APiQypJ7Vu9QFxwaGegbDs+zHeszCr6lN9AOoLWTdbcpuof9RCZcoh1RtagVlKoWgPy1jwwJ8NQDRg==
+X-Received: by 2002:a17:902:261:: with SMTP id 88mr537590plc.308.1588274988360;
+        Thu, 30 Apr 2020 12:29:48 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:d32:dd79:dd81:b49d:fd6a:d165])
+        by smtp.gmail.com with ESMTPSA id e4sm461038pge.45.2020.04.30.12.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 12:29:47 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     mingo@redhat.com, pbonzini@redhat.com, bp@alien8.de
+Cc:     x86@kernel.org, bhelgaas@google.com,
+        sean.j.christopherson@intel.com, cai@lca.pw, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        frextrite@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] x86: Fix RCU list usage to avoid false positive warnings
+Date:   Fri,  1 May 2020 00:59:32 +0530
+Message-Id: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-On 4/30/20 6:34 AM, Dmitry Osipenko wrote:
-> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static int tegra_csi_init(struct host1x_client *client)
->> +{
->> +	struct tegra_csi *csi =3D host1x_client_to_csi(client);
->> +	struct tegra_video_device *vid =3D dev_get_drvdata(client->host);
->> +	int ret;
->> +
->> +	INIT_LIST_HEAD(&csi->csi_chans);
->> +
->> +	ret =3D tegra_csi_tpg_channels_alloc(csi);
->> +	if (ret < 0) {
->> +		dev_err(csi->dev,
->> +			"failed to allocate tpg channels: %d\n", ret);
->> +		goto cleanup;
->> +	}
->> +
->> +	ret =3D tegra_csi_channels_init(csi);
->> +	if (ret < 0)
->> +		goto cleanup;
->> +
->> +	vid->csi =3D csi;
->> +
->> +	return 0;
->> +
->> +cleanup:
->> +	tegra_csi_channels_cleanup(csi);
->> +	pm_runtime_put_sync(csi->dev);
-> This pm_runtime_put_sync() should be removed.
+Use list_for_each_entry() instead of list_for_each_entry_rcu() whenever
+spinlock or mutex is always held.
+Otherwise, pass cond to list_for_each_entry_rcu().
 
-Sorry, I had it correct in follow-up patches and missed this to remove=20
-in v12.
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ arch/x86/kernel/nmi.c          | 2 +-
+ arch/x86/kvm/irq_comm.c        | 3 ++-
+ arch/x86/pci/mmconfig-shared.c | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-Will double check all changes before sending v12 once all v11 feedback=20
-from you is done.
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 6407ea21fa1b..999dc6c134d2 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -195,7 +195,7 @@ void unregister_nmi_handler(unsigned int type, const char *name)
+ 
+ 	raw_spin_lock_irqsave(&desc->lock, flags);
+ 
+-	list_for_each_entry_rcu(n, &desc->head, list) {
++	list_for_each_entry(n, &desc->head, list) {
+ 		/*
+ 		 * the name passed in to describe the nmi handler
+ 		 * is used as the lookup key
+diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+index c47d2acec529..5b88a648e079 100644
+--- a/arch/x86/kvm/irq_comm.c
++++ b/arch/x86/kvm/irq_comm.c
+@@ -258,7 +258,8 @@ void kvm_fire_mask_notifiers(struct kvm *kvm, unsigned irqchip, unsigned pin,
+ 	idx = srcu_read_lock(&kvm->irq_srcu);
+ 	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
+ 	if (gsi != -1)
+-		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link)
++		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link,
++					srcu_read_lock_held(&kvm->irq_srcu))
+ 			if (kimn->irq == gsi)
+ 				kimn->func(kimn, mask);
+ 	srcu_read_unlock(&kvm->irq_srcu, idx);
+diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+index 6fa42e9c4e6f..a096942690bd 100644
+--- a/arch/x86/pci/mmconfig-shared.c
++++ b/arch/x86/pci/mmconfig-shared.c
+@@ -797,7 +797,7 @@ int pci_mmconfig_delete(u16 seg, u8 start, u8 end)
+ 	struct pci_mmcfg_region *cfg;
+ 
+ 	mutex_lock(&pci_mmcfg_lock);
+-	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
++	list_for_each_entry(cfg, &pci_mmcfg_list, list)
+ 		if (cfg->segment == seg && cfg->start_bus == start &&
+ 		    cfg->end_bus == end) {
+ 			list_del_rcu(&cfg->list);
+-- 
+2.17.1
 
->
->> +	return ret;
->> +}
