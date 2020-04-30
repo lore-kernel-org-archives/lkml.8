@@ -2,101 +2,166 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0A6C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A29C83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0214B2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208F32082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="AgHK/cFg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u4//czMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgD3BEd (ORCPT
+        id S1726631AbgD3BFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48138 "EHLO
+        Wed, 29 Apr 2020 21:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726279AbgD3BEc (ORCPT
+        by vger.kernel.org with ESMTP id S1726279AbgD3BF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:04:32 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291B5C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:04:32 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id e17so3660138qtp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:04:32 -0700 (PDT)
+        Wed, 29 Apr 2020 21:05:29 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9703EC035494;
+        Wed, 29 Apr 2020 18:05:29 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id w6so4405132ilg.1;
+        Wed, 29 Apr 2020 18:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=nHd4t1dxAGq6mLJOxoRUU+Fay7yLnL9/fA8P7+mfDpQ=;
-        b=AgHK/cFgIOfkFmmQJ2HHgpg3mx5clBmVW8MSgmXFicJyCJ7uFPspAVHR0NEiw9NKoI
-         gep34agHPjs5RuEmiYWHSn+KyGhnMiDOdm2q0JfUMqqaV/P6rJ0s1LLiTktKWnJPcD7L
-         DV2ThlelvfRAnYXjfKYFJIjuY/jQ8d27bN7IBHRgXqNlQedc7yhrytKpevi+SzGJibw/
-         7ZqEpkp+LVWoZ3Q+jRu0nFJJT24qXdvadNF23JNoMuP8+aI7uNU1szKkiw33VIDiKPLC
-         klezXWYEPlNEOjtem1Ra/HmwgV5jOSGB5Vhp5i2dUuzwwaro53RAyZAesvGtOyahi1ht
-         YsSw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CUmejEMI9W4148ZwbJQR4oRKJlfTuk5tiVFPgpBtfEE=;
+        b=u4//czMye7iX+yYcmMhK7eYzznKYgw27pn66Zlm/n4vCL+HBVx6UoX792Q3CHu0/co
+         /FWAkSuboMQrgFRjTVVQOlwchBkpd5hSwn+PmXDgWq3qCGCYF4umAVs5s/EFrGEX2u2G
+         m0S5LTfiJUlEky6L995fUQPY2LE2Jpxo15lNlxeFW7yk7+N5zZPXObxIoZeMHVTSX4db
+         8pWWyoCWwP7wBB+VFp6F/kTl4YwU0X7ynN3cZcUlerH2MhnkX63lZYN+rEYW0PxwxuZ/
+         FJB5Zeh6+syBfi8Zyxr2EsvHcx11JakjhVraYhuCj7bNWp52dhDpg22hD1IO04SEdi8C
+         JwTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=nHd4t1dxAGq6mLJOxoRUU+Fay7yLnL9/fA8P7+mfDpQ=;
-        b=T4hF/fNXqwuo1x0Fqd+D5og3GBj/XBFUhw4p+zba2AOcieksu5ubjYiobs6vTv1gvA
-         kMFtdHVHeZ7gwFT9oBVnuXkAo7K7MGCu9nTLvHEhFWPznZpR3s5j/IPcKh/R6jG80s6p
-         wPQnDtOhPmu8GNDN1Ez2azMgxrOZWirRnquv8i/tYLIZo54lz+UWzsmBaXcDbrW0tGRm
-         DLQxhrxY3h630b11AsOgwnNj//9dnYqjNq7pAOZHb4Jp7UYh+kqsTAUeeTtu5eiBjTTf
-         2VZXmgJmtT3khLLeHmoy3YXoKxkborObkaVCdVpCGDTq5S+sUFSJkKNqzplBTp3Q1c1W
-         SJLw==
-X-Gm-Message-State: AGi0PuZMlL3902vAW01byLCUXhPKw/dEuW2u9mfd+eovxMbbrbRzsjwK
-        C8Jb0G4TC5qPS/R5BMvLP5HUn4TGjM/dMg==
-X-Google-Smtp-Source: APiQypIinv6LGmMaBvcDc2ShRyQ8bG/OhOfqiG0k/1Z4rM4tPxtPlwHvvLLjHt/GZvL/0oAqyQ51KA==
-X-Received: by 2002:aed:3aa3:: with SMTP id o32mr1207048qte.364.1588208671328;
-        Wed, 29 Apr 2020 18:04:31 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h6sm739542qtd.79.2020.04.29.18.04.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Apr 2020 18:04:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200429112014.GN21900@8bytes.org>
-Date:   Wed, 29 Apr 2020 21:04:29 -0400
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4B6E0A22-C301-43C9-A8ED-AB473342463C@lca.pw>
-References: <20200418121022.GA6113@8bytes.org>
- <57CBF6B2-4745-4E36-9AA5-7E0876E3DA8F@lca.pw>
- <20200418183429.GH21900@8bytes.org>
- <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
- <20200429112014.GN21900@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CUmejEMI9W4148ZwbJQR4oRKJlfTuk5tiVFPgpBtfEE=;
+        b=ct+BZFGmo1/4tr2SBzxQbCSmfjghQTpV2RpU/aiOjSDQYgmCiZ5dO8PS15ey0I1rdA
+         /vWlOkhKca6jOGVd9IgnItmsw5Sm3H9lkkFzCphaQO/2Oas+D50ZyrwDq97DmuFoNTjC
+         GlCrTy0+UzKy0IePoVreabPdYFJ29dVV91DDJQzLsm/M1uim3tmxOlMKy0unjeobPfwB
+         O8L9oKMHeRHbvolLypsdcaEsOX2Og/rh0Pa55bAUN/n2FNvBz8Z0tmZcCcYv/OZnJo7a
+         oQHCvGrTraVgjykkAT8wYzIcPax20J1I/PuB5TNC6ie1x/vyCRY3ZRbO3IGBjgjdUrVx
+         Dg8Q==
+X-Gm-Message-State: AGi0PuZOuleFdGkNW3S1D7LJTpGz1nrPlIettmxGIzp8EAHMAzr5Qq4x
+        8o6uiiLaRig4bZOnqDQTjWPPmajOySnp5STt9OCgK8JOcn0=
+X-Google-Smtp-Source: APiQypLHLFF0yYE4l1uu8thH5v0632Zbu9203Hngur/IfGiLPu/p/UdZpVGulsn3Tzg3pnUc5O73XqTJqFkV2GZNT9Q=
+X-Received: by 2002:a92:1b91:: with SMTP id f17mr1150332ill.142.1588208728936;
+ Wed, 29 Apr 2020 18:05:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+In-Reply-To: <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 30 Apr 2020 09:04:53 +0800
+Message-ID: <CALOAHbCotD1-+o_XZPU_4_i8Nn98r5F_5NpGVd=z6UG=rUcCmA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 2:26 AM Chris Down <chris@chrisdown.name> wrote:
+>
+> From: Yafang Shao <laoar.shao@gmail.com>
+>
+> A cgroup can have both memory protection and a memory limit to isolate
+> it from its siblings in both directions - for example, to prevent it
+> from being shrunk below 2G under high pressure from outside, but also
+> from growing beyond 4G under low pressure.
+>
+> Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> implemented proportional scan pressure so that multiple siblings in
+> excess of their protection settings don't get reclaimed equally but
+> instead in accordance to their unprotected portion.
+>
+> During limit reclaim, this proportionality shouldn't apply of course:
+> there is no competition, all pressure is from within the cgroup and
+> should be applied as such. Reclaim should operate at full efficiency.
+>
+> However, mem_cgroup_protected() never expected anybody to look at the
+> effective protection values when it indicated that the cgroup is above
+> its protection. As a result, a query during limit reclaim may return
+> stale protection values that were calculated by a previous reclaim cycle
+> in which the cgroup did have siblings.
+>
+> When this happens, reclaim is unnecessarily hesitant and potentially
+> slow to meet the desired limit. In theory this could lead to premature
+> OOM kills, although it's not obvious this has occurred in practice.
+>
+> Fixes: 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Roman Gushchin <guro@fb.com>
+>
+> [hannes@cmpxchg.org: rework code comment]
+> [hannes@cmpxchg.org: changelog]
+> [chris@chrisdown.name: fix store tear]
+> [chris@chrisdown.name: retitle]
+> ---
+>  mm/memcontrol.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 0be00826b832..b0374be44e9e 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6392,8 +6392,19 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>
+>         if (!root)
+>                 root = root_mem_cgroup;
+> -       if (memcg == root)
+> +       if (memcg == root) {
+> +               /*
+> +                * The cgroup is the reclaim root in this reclaim
+> +                * cycle, and therefore not protected. But it may have
+> +                * stale effective protection values from previous
+> +                * cycles in which it was not the reclaim root - for
+> +                * example, global reclaim followed by limit reclaim.
+> +                * Reset these values for mem_cgroup_protection().
+> +                */
+> +               WRITE_ONCE(memcg->memory.emin, 0);
+> +               WRITE_ONCE(memcg->memory.elow, 0);
 
 
-> On Apr 29, 2020, at 7:20 AM, Joerg Roedel <joro@8bytes.org> wrote:
->=20
-> On Mon, Apr 20, 2020 at 09:26:12AM -0400, Qian Cai wrote:
->> No dice. There could be some other races. For example,
->=20
-> Can you please test this branch:
->=20
-> 	=
-https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=3Dam=
-d-iommu-fixes
->=20
-> It has the previous fix in it and a couple more to make sure the
-> device-table is updated and flushed before increase_address_space()
-> updates domain->pt_root.
+Hi Chris,
 
-It looks promising as it survives for a day=E2=80=99s stress testing. =
-I=E2=80=99ll keep it running for a few days to be sure.=
+Would you pls. add some comments above these newly added WRITE_ONCE() ?
+E.g.
+What does them mean to fix ?
+Why do we must add WRITE_ONCE() and READ_ONCE here and there all over
+the memcg protection ?
+Otherwise, it may be harder to understand by the others.
+
+
+>                 return MEMCG_PROT_NONE;
+> +       }
+>
+>         usage = page_counter_read(&memcg->memory);
+>         if (!usage)
+> --
+> 2.26.2
+>
+
+
+-- 
+Thanks
+Yafang
