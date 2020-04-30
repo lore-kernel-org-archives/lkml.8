@@ -2,276 +2,126 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680EBC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FABFC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 456C22137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588238649;
-	bh=nKUeUMluq/oQnrmCxPNikkHoRlzc57C1yPNEqExU9eI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J5K7OA5gfJ/DJMKNnql1TZwASKY7FquorKZVVKm/bBsMPyz3bMrMAA+pmft/tuxIY
-	 xMlLtYkMpnsvC1ElkqmeyB+mj/Dvj2c4XbKJ6f4ap8Et4HoXcYX7EZJHPDZ89WXfuv
-	 wD3sfX+fgLqavrnqfNKPs92CXU4mBaSAFZjMVuVI=
+	by mail.kernel.org (Postfix) with ESMTP id 2ED4A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:27:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnLEXZde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgD3JYI (ORCPT
+        id S1726549AbgD3J1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgD3JYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:24:08 -0400
-Received: from localhost (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B12F2137B;
-        Thu, 30 Apr 2020 09:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588238647;
-        bh=nKUeUMluq/oQnrmCxPNikkHoRlzc57C1yPNEqExU9eI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hn6qTe5UzILAKkegNQcUp8BSIdBrMGRPBp6ostyjnLE9cd3IrGEFbI7EpnJSo01F5
-         G8EqYSBpXPoquyjWiLraMS8mSZQqHVbVr+yhehuQr7Z5aC2sSlfQDsx3F4aHmPB3qy
-         UZl0Cwx2mwg9VV6X6Yf0wLV3mbjIQsvi70Y7olik=
-Date:   Thu, 30 Apr 2020 14:53:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Raghavendra Rao Ananta <rananta@codeaurora.org>
-Subject: Re: [PATCH 2/2] soc: qcom: ipcc: Add support for IPCC controller
-Message-ID: <20200430092358.GI948789@vkoul-mobl.Dlink>
-References: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
- <20200430063054.18879-2-manivannan.sadhasivam@linaro.org>
- <20200430072448.GF948789@vkoul-mobl.Dlink>
- <20200430090247.GC9449@Mani-XPS-13-9360>
+        Thu, 30 Apr 2020 05:27:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38390 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726127AbgD3J1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:27:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588238828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+vie47UJ1oW/NhA/rX/zyO/BjzssU/nJjeCxNVmVx9Q=;
+        b=VnLEXZdecQgAWz0l3vW6p/9oMt/+ZHTYGeagvboLY0EA8Kw1CCKvDyxRPY4VaMRfe9bNGI
+        +mM+Mz1ggbTXQ3aozFmtA45y/twSOcoyW7CFaOhY1+zwvyyhg7UG3dTcrleS0zS0a/pRa9
+        M5k1CZTRQJJP8t4CrKpv0rI2LNOG9lA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-298-CohHsZLVNQui3WXMAdmJLw-1; Thu, 30 Apr 2020 05:27:07 -0400
+X-MC-Unique: CohHsZLVNQui3WXMAdmJLw-1
+Received: by mail-wr1-f69.google.com with SMTP id p2so3558445wrx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 02:27:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+vie47UJ1oW/NhA/rX/zyO/BjzssU/nJjeCxNVmVx9Q=;
+        b=V+z1ofzt/dLq9vIT2m+mdnYp+eBNuBRQlBqm+l6La9KepVz7f7dBGZ52EGeZbDKJcz
+         U7c8dXQxaI7I0N19MCR5Pg9XdZfp+qSTbI3UrRVAQAeyQZsXUhHV+OLpRhudKwbZKORV
+         5YpLoRoQIeRaPk/6DvVj5rdxvnmzZqx4mGwStQP1qhgQX/FYczHc4Wdq+O+SVZ//tXId
+         Bd2KcE884cURbVn8xAdLqPd05GBhnheMXjTkqE0Bxw/wUJnJViXehZNUk1qN9i0zdTyX
+         3NVwr3HGQ/dc7ZkSiTi4pMcrXdHw0rvb8CwnzNCHGhZqDiSl6amDtr3iGjCw4744FNux
+         NE8w==
+X-Gm-Message-State: AGi0Pub+mne1O2c2dFF58QDwQm17lOXcmXouRipmUvdAsQyookDZGve8
+        57nnTnCHPOFl77TBNURzcTcYQaX57rlNiG1QRXnw0Qad2vp/U5ySa1sDhqLIXdZZu409VQb7TE0
+        PxESm/SDOyTe5q3OKO2kJi4N6
+X-Received: by 2002:a7b:c456:: with SMTP id l22mr1910004wmi.148.1588238825850;
+        Thu, 30 Apr 2020 02:27:05 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIidEgYyupOkF7nL6eGUnI+MnsnTzTsxHxlSJH5y9TKoVaupD0CtacA6MBnjUdJnCD7NKs2TQ==
+X-Received: by 2002:a7b:c456:: with SMTP id l22mr1909983wmi.148.1588238825624;
+        Thu, 30 Apr 2020 02:27:05 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
+        by smtp.gmail.com with ESMTPSA id o6sm3109407wrw.63.2020.04.30.02.27.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 02:27:05 -0700 (PDT)
+Subject: Re: [PATCH RFC 4/6] KVM: x86: acknowledgment mechanism for async pf
+ page ready notifications
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-5-vkuznets@redhat.com>
+ <b1297936-cf69-227b-d758-c3f3ca09ae5d@redhat.com>
+ <87sgglfjt9.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <18b66e2e-9256-0ef0-4783-f89211eeda88@redhat.com>
+Date:   Thu, 30 Apr 2020 11:27:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430090247.GC9449@Mani-XPS-13-9360>
+In-Reply-To: <87sgglfjt9.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-20, 14:32, Manivannan Sadhasivam wrote:
-> Hi,
-> 
-> On Thu, Apr 30, 2020 at 12:54:48PM +0530, Vinod Koul wrote:
-> > On 30-04-20, 12:00, Manivannan Sadhasivam wrote:
-> > 
-> > > +#define IPCC_SIGNAL_ID_MASK		GENMASK(15, 0)
-> > > +#define IPCC_CLIENT_ID_MASK		GENMASK(31, 16)
-> > > +#define IPCC_CLIENT_ID_SHIFT		16
-> > > +
-> > > +#define IPCC_NO_PENDING_IRQ		0xffffffff
-> > 
-> > Why not GENMASK(31, 0)
-> > 
-> 
-> Hmm, I usually use GENMASK for mask defines. But yeah it can be used here.
+On 30/04/20 10:40, Vitaly Kuznetsov wrote:
+>>  I think in that case
+>> kvm_check_async_pf_completion will refuse to make progress.
+>> You need to make this bit stateful (e.g. 1 = async PF in progress, 0 =
+>> not in progress), and check that for page ready notifications instead of
+>> EFLAGS.IF.  
+>> This probably means that;
+>>
+>> - it might be simpler to move it to the vector MSR
+> I didn't want to merge 'ACK' with the vector MSR as it forces the guest
+> to remember the setting. It doesn't matter at all for Linux as we
+> hardcode the interrupt number but I can imaging an OS assigning IRQ
+> numbers dynamically, it'll need to keep record to avoid doing rdmsr.
 
-Well the idea behind genmask was to avoid coding mistakes which sounds
-apt here as well :)
+I would expect that it needs to keep it in a global variable anyway, but
+yes this is a good point.  You can also keep the ACK MSR and store the
+pending bit in the other MSR, kind of like you have separate ISR and EOI
+registers in the LAPIC.
 
-> 
-> > > +static struct qcom_ipcc_proto_data *ipcc_proto_data;
-> > 
-> > why do we need a global which is used only once.
-> > 
-> 
-> Ah, that's a left over. Will remove it.
-> 
-> > > +static void qcom_ipcc_mask_irq(struct irq_data *irqd)
-> > > +{
-> > > +	struct qcom_ipcc_proto_data *proto_data;
-> > > +	irq_hw_number_t hwirq = irqd_to_hwirq(irqd);
-> > > +	u16 sender_client_id = qcom_ipcc_get_client_id(hwirq);
-> > > +	u16 sender_signal_id = qcom_ipcc_get_signal_id(hwirq);
-> > 
-> > last three are used for debug log, fn can be much simpler if we get rid
-> > of noise.. Do we really need this to be production :)
-> > 
-> 
-> This is for debugging the production systems, that's why dev_dbg. So I don't
-> consider it as a noise :)
+>> - it's definitely much simpler to remove the #PF-based mechanism for
+>> injecting page ready notifications.
+> Yea, the logic in kvm_can_do_async_pf()/kvm_can_deliver_async_pf()
+> becomes cumbersome. If we are to drop #PF-based mechanism I'd split it
+> completely from the remaining synchronious #PF for page-not-present:
+> basically, we only need to check that the slot (which we agreed becomes
+> completely separate) is empty, interrupt/pending expception/... state
+> becomes irrelevant.
 
-This in an irq chip, the debug code is much more than actual function!
-Anyone who wants to debug can add these lines :)
+Yes, that's a good point.
 
-> > > +	proto_data = irq_data_get_irq_chip_data(irqd);
-> > > +
-> > > +	dev_dbg(proto_data->dev,
-> > > +		"Disabling interrupts for: client_id: %u; signal_id: %u\n",
-> > > +		sender_client_id, sender_signal_id);
-> > > +
-> > > +	writel(hwirq, proto_data->base + IPCC_REG_RECV_SIGNAL_DISABLE);
-> > > +}
-> > > +
-> > > +static void qcom_ipcc_unmask_irq(struct irq_data *irqd)
-> > > +{
-> > > +	struct qcom_ipcc_proto_data *proto_data;
-> > > +	irq_hw_number_t hwirq = irqd_to_hwirq(irqd);
-> > > +	u16 sender_client_id = qcom_ipcc_get_client_id(hwirq);
-> > > +	u16 sender_signal_id = qcom_ipcc_get_signal_id(hwirq);
-> > 
-> > here as well
-> > 
-> > > +static int qcom_ipcc_domain_xlate(struct irq_domain *d,
-> > > +				  struct device_node *node, const u32 *intspec,
-> > > +				  unsigned int intsize,
-> > > +				  unsigned long *out_hwirq,
-> > > +				  unsigned int *out_type)
-> > 
-> > pls align these to match open parenthesis
-> > 
-> 
-> It is aligned. Perhaps diff is showing it as mangled due to ignoring
-> whitespaces?
+Paolo
 
-Not sure, even checkpatch seems to think so
-
-> 
-> > > +static int qcom_ipcc_setup_mbox(struct qcom_ipcc_proto_data *proto_data,
-> > > +				struct device_node *controller_dn)
-> > > +{
-> > > +	struct mbox_controller *mbox;
-> > > +	struct device_node *client_dn;
-> > > +	struct device *dev = proto_data->dev;
-> > > +	struct of_phandle_args curr_ph;
-> > > +	int i, j, ret;
-> > > +	int num_chans = 0;
-> > > +
-> > > +	/*
-> > > +	 * Find out the number of clients interested in this mailbox
-> > > +	 * and create channels accordingly.
-> > > +	 */
-> > > +	for_each_node_with_property(client_dn, "mboxes") {
-> > > +		if (!of_device_is_available(client_dn))
-> > > +			continue;
-> > > +		i = of_count_phandle_with_args(client_dn,
-> > > +					       "mboxes", "#mbox-cells");
-> > > +		for (j = 0; j < i; j++) {
-> > > +			ret = of_parse_phandle_with_args(client_dn, "mboxes",
-> > > +							 "#mbox-cells", j,
-> > > +							 &curr_ph);
-> > 
-> > this sounds like something DT should do, not drivers :)
-> > 
-> 
-> Right. This is design discussion I'd like to have. Currently the driver checks
-> the DT and allocates the total number of mbox channels. But I think the more
-> cleaner way would be to have this driver allocating fixed number of channels
-> statically and let the clients use it.
-
-Sorry my point was about code of checking mboxes and #mbox-cells, these
-seems generic enough and could be moved into of core code :)
-
-But I think making fixed number of channels should not be done if DT can
-provide this information.
-
-> Maybe Raghavendra/Venkat can comment here?
-> 
-> > > +static int qcom_ipcc_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct qcom_ipcc_proto_data *proto_data;
-> > > +	int ret;
-> > > +
-> > > +	proto_data = devm_kzalloc(&pdev->dev, sizeof(*proto_data), GFP_KERNEL);
-> > > +	if (!proto_data)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	ipcc_proto_data = proto_data;
-> > > +	proto_data->dev = &pdev->dev;
-> > > +
-> > > +	proto_data->base = devm_platform_ioremap_resource(pdev, 0);
-> > > +	if (IS_ERR(proto_data->base)) {
-> > > +		dev_err(&pdev->dev, "Failed to ioremap the ipcc base addr\n");
-> > > +		return PTR_ERR(proto_data->base);
-> > > +	}
-> > > +
-> > > +	proto_data->irq = platform_get_irq(pdev, 0);
-> > > +	if (proto_data->irq < 0) {
-> > > +		dev_err(&pdev->dev, "Failed to get the IRQ\n");
-> > > +		return proto_data->irq;
-> > > +	}
-> > > +
-> > > +	/* Perform a SW reset on this client's protocol state */
-> > > +	writel(0x1, proto_data->base + IPCC_REG_CLIENT_CLEAR);
-> > > +
-> > > +	proto_data->irq_domain = irq_domain_add_tree(pdev->dev.of_node,
-> > > +						     &qcom_ipcc_irq_ops,
-> > > +						     proto_data);
-> > > +	if (!proto_data->irq_domain) {
-> > > +		dev_err(&pdev->dev, "Failed to add irq_domain\n");
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +
-> > > +	ret = qcom_ipcc_setup_mbox(proto_data, pdev->dev.of_node);
-> > > +	if (ret) {
-> > > +		dev_err(&pdev->dev, "Failed to create mailbox\n");
-> > > +		goto err_mbox;
-> > > +	}
-> > > +
-> > > +	ret = devm_request_irq(&pdev->dev, proto_data->irq, qcom_ipcc_irq_fn,
-> > > +			       IRQF_TRIGGER_HIGH, "ipcc", proto_data);
-> > > +	if (ret < 0) {
-> > > +		dev_err(&pdev->dev, "Failed to register the irq: %d\n", ret);
-> > 
-> > Should the qcom_ipcc_setup_mbox() not be unroller here?
-> 
-> qcom_ipcc_setup_mbox() uses devm_ API for registering mbox controller. So what
-> is the issue?
-
-Ah missed the devm parts, i think no unroll required here
-
-> > > +		goto err_mbox;
-> > > +	}
-> > > +
-> > > +	enable_irq_wake(proto_data->irq);
-> > > +	platform_set_drvdata(pdev, proto_data);
-> > > +
-> > > +	return 0;
-> > > +
-> > > +err_mbox:
-> > > +	irq_domain_remove(proto_data->irq_domain);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int qcom_ipcc_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct qcom_ipcc_proto_data *proto_data = platform_get_drvdata(pdev);
-> > > +
-> > > +	disable_irq_wake(proto_data->irq);
-> > > +	irq_domain_remove(proto_data->irq_domain);
-> > 
-> > So you are calling this when your isr is active, we have possibility of
-> > race here. This function come with a warning:
-> > "The caller must ensure that all mappings within the domain have been disposed"
-> 
-> I thought it is not required since most of the interrupt controller drivers
-> don't do it. But checked with Marc Zyngier and he suggested to dispose the
-> mapping as that's the good practice. The usual pattern is an interrupt
-> controller is not built as a module and the assumption is it lives forever.
-> 
-> But one issue here is, currently we don't know the allocated irqs (in specific
-> hw irq numbers) as we don't create the mapping. It gets created when a client
-> calls platform_get_irq(). In the irq handler, we just read the current hw irq
-> number from a register. So, if we want to dispose the mapping then we need to
-> track the allocated irqs. Else we need to create the mapping for all possible
-> clients in this driver itself. I'm not sure which one is preferred.
-> 
-> Maybe Bjorn/qcom folks can comment what is preferred here?
-
-Maybe this should also be lives forever cases then! :)
-
--- 
-~Vinod
