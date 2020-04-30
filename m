@@ -2,136 +2,120 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02CFC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3A9C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A7B2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Wmw/kJfL"
+	by mail.kernel.org (Postfix) with ESMTP id DF41B2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588249170;
+	bh=N9rKaTsZFrUvyvsuP9lOc4Wzmprx5voNQJlTVM2rGf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zui04giGDO/LmKMLp0W4ZpAcxftpAFzWOIGOrw9g5XdmnUWEBwWItg0hyVamY3BJn
+	 FqTrxRRrKpmWTN9h2VDAEgM4Xd9UI6Op4TBBAjkUFJG9eWv92fHylxs3tkVex/52w3
+	 joLUBSMtgwNTTNj9C6V8GMLl69KpLD9v102zeDxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgD3MTO (ORCPT
+        id S1727096AbgD3MTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:19:14 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:55579 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgD3MTO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:19:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588249154; x=1619785154;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=FqHwryvgLS2NgWVBuzeKX/BTcH4tM09RlPs9SNV3JzI=;
-  b=Wmw/kJfL6C6SLs3jUxhQi5KjdKCKVtUcNE0WRV5yiBqm4OHbRKo04CN/
-   MgabzmYYM3uIG1oVqKDtG8DZ0LYOZNl6WsSsTMpwxCwAqF+MOnlRtp+8W
-   NfPGcBzYIRdBgujvUdZsF7TQJTf7LMmT349+Fs8RWwFke7r803ZJNuorP
-   0=;
-IronPort-SDR: RA0AyilcDdCw1tnYARhcVG8Id/5ch/NAkIl7UeiRy32XFKG0h6SL0Saz13LGDdM6cMzjQ0wqon
- AYXRGP1WWADA==
-X-IronPort-AV: E=Sophos;i="5.73,334,1583193600"; 
-   d="scan'208";a="40433150"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 30 Apr 2020 12:19:11 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id 74BA9A1DFE;
-        Thu, 30 Apr 2020 12:19:10 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 30 Apr 2020 12:19:07 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.90) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 30 Apr 2020 12:19:03 +0000
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
- <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
- <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
- <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
- <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
- <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
- <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
- <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
- <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
- <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
- <0c919928-00ed-beda-e984-35f7b6ca42fb@redhat.com>
- <702b2eaa-e425-204e-e19d-649282bfe170@amazon.com>
- <d13f3c5c-33f5-375b-8582-fe37402777cb@redhat.com>
- <d4091c63-6df6-8980-72c6-282cc553527e@amazon.com>
- <bed6e250-9de5-d719-623b-b72db78ebcb9@redhat.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <131ae410-58a5-63c9-14b5-0fe39ab69278@amazon.com>
-Date:   Thu, 30 Apr 2020 14:19:01 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 30 Apr 2020 08:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgD3MT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:19:29 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAE92076D;
+        Thu, 30 Apr 2020 12:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588249169;
+        bh=N9rKaTsZFrUvyvsuP9lOc4Wzmprx5voNQJlTVM2rGf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kUAkY5ypXbCmOb1J6dz7spcNrSx8SjCBuT8ha4oxfvY5gTGWEPVdtk14Hpg+O4PBl
+         Qj/56KbHndZm/zVKyt3Sn42jlYyvBevEtJJdc2RAZYMcLcdX91zOnVrswvPKexje0u
+         4TPMM4s4MnfBnUOCPqX9zSl5uoEUM+0WfU7etRYE=
+Date:   Thu, 30 Apr 2020 13:19:26 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v4 02/16] spi: atmel-quadspi: reject DTR ops
+Message-ID: <20200430121926.GC4633@sirena.org.uk>
+References: <20200424184410.8578-1-p.yadav@ti.com>
+ <20200424184410.8578-3-p.yadav@ti.com>
+ <20200430113243.GB4633@sirena.org.uk>
+ <20200430121737.37dghomlluzqcxxi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <bed6e250-9de5-d719-623b-b72db78ebcb9@redhat.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D29UWC001.ant.amazon.com (10.43.162.143) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
+Content-Disposition: inline
+In-Reply-To: <20200430121737.37dghomlluzqcxxi@ti.com>
+X-Cookie: Sign here without admitting guilt.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAzMC4wNC4yMCAxMzo1OCwgUGFvbG8gQm9uemluaSB3cm90ZToKPiAKPiBPbiAzMC8wNC8y
-MCAxMzo0NywgQWxleGFuZGVyIEdyYWYgd3JvdGU6Cj4+Pgo+Pj4gU28gdGhlIGlzc3VlIHdvdWxk
-IGJlIHRoYXQgYSBmaXJtd2FyZSBpbWFnZSBwcm92aWRlZCBieSB0aGUgcGFyZW50IGNvdWxkCj4+
-PiBiZSB0YW1wZXJlZCB3aXRoIGJ5IHNvbWV0aGluZyBtYWxpY2lvdXMgcnVubmluZyBpbiB0aGUg
-cGFyZW50IGVuY2xhdmU/Cj4+Cj4+IFlvdSBoYXZlIHRvIGhhdmUgYSByb290IG9mIHRydXN0IHNv
-bWV3aGVyZS4gVGhhdCByb290IHRoZW4gY2hlY2tzIGFuZAo+PiBhdHRlc3RzIGV2ZXJ5dGhpbmcg
-aXQgcnVucy4gV2hhdCBleGFjdGx5IHdvdWxkIHlvdSBhdHRlc3QgZm9yIHdpdGggYQo+PiBmbGF0
-IGFkZHJlc3Mgc3BhY2UgbW9kZWw/Cj4+Cj4+IFNvIHRoZSBpc3N1ZSBpcyB0aGF0IHRoZSBlbmNs
-YXZlIGNvZGUgY2FuIG5vdCB0cnVzdCBpdHMgb3duIGludGVncml0eSBpZgo+PiBpdCBkb2Vzbid0
-IGhhdmUgYW55dGhpbmcgYXQgYSBoaWdoZXIgbGV2ZWwgYXR0ZXN0aW5nIGl0LiBUaGUgd2F5IHRo
-aXMgaXMKPj4gdXN1YWxseSBzb2x2ZWQgb24gYmFyZSBtZXRhbCBzeXN0ZW1zIGlzIHRoYXQgeW91
-IHRydXN0IHlvdXIgQ1BVIHdoaWNoCj4+IHRoZW4gY2hlY2tzIHRoZSBmaXJtd2FyZSBpbnRlZ3Jp
-dHkgKEJvb3QgR3VhcmQpLiBXaGVyZSB3b3VsZCB5b3UgcHV0Cj4+IHRoYXQgY2hlY2sgaW4gYSBW
-TSBtb2RlbD8KPiAKPiBJbiB0aGUgZW5jbGF2ZSBkZXZpY2UgZHJpdmVyLCBJIHdvdWxkIGp1c3Qg
-bGltaXQgdGhlIGF0dGVzdGF0aW9uIHRvIHRoZQo+IGZpcm13YXJlIGltYWdlCj4gCj4gU28geWVh
-aCBpdCB3b3VsZG4ndCBiZSBhIG1vZGUgd2hlcmUgbmVfbG9hZF9pbWFnZSBpcyBub3QgaW52b2tl
-ZCBhbmQKPiB0aGUgZW5jbGF2ZSBzdGFydHMgaW4gcmVhbCBtb2RlIGF0IDB4ZmZmZmZmMC4gIFlv
-dSB3b3VsZCBzdGlsbCBuZWVkCj4gImxvYWQgaW1hZ2UiIGZ1bmN0aW9uYWxpdHkuCj4gCj4+IEhv
-dyBjbG9zZSB3b3VsZCBpdCBiZSB0byBhIG5vcm1hbCBWTSB0aGVuPyBBbmQKPj4gaWYgaXQncyBu
-b3QsIHdoYXQncyB0aGUgcG9pbnQgb2Ygc3RpY2tpbmcgdG8gc3VjaCB0ZXJyaWJsZSBsZWdhY3kg
-Ym9vdAo+PiBwYXRocz8KPiAKPiBUaGUgcG9pbnQgaXMgdGhhdCB0aGVyZSdzIGFscmVhZHkgdHdv
-IHBsYXVzaWJsZSBsb2FkZXJzIGZvciB0aGUga2VybmVsCj4gKGJ6SW1hZ2UgYW5kIEVMRiksIHNv
-IEknZCBsaWtlIHRvIGRlY291cGxlIHRoZSBsb2FkZXIgYW5kIHRoZSBpbWFnZS4KClRoZSBsb2Fk
-ZXIgaXMgaW1wbGVtZW50ZWQgYnkgdGhlIGVuY2xhdmUgZGV2aWNlLiBJZiBpdCB3aXNoZXMgdG8g
-c3VwcG9ydCAKYnpJbWFnZSBhbmQgRUxGIGl0IGRvZXMgdGhhdC4gVG9kYXksIGl0IG9ubHkgZG9l
-cyBiekltYWdlIHRob3VnaCBJSVJDIDopLgoKU28geWVzLCB0aGV5IGFyZSBkZWNvdXBsZWQ/IEFy
-ZSB5b3Ugc2F5aW5nIHlvdSB3b3VsZCBsaWtlIHRvIGJ1aWxkIHlvdXIgCm93biBjb2RlIGluIGFu
-eSB3YXkgeW91IGxpa2U/IFdlbGwsIHRoYXQgbWVhbnMgd2UgZWl0aGVyIG5lZWQgdG8gYWRkIApz
-dXBwb3J0IGZvciBhbm90aGVyIGxvYWRlciBpbiB0aGUgZW5jbGF2ZSBkZXZpY2Ugb3IgeW91ciB3
-b3JrbG9hZHMganVzdCAKZmFrZXMgYSBiekltYWdlIGhlYWRlciBhbmQgZ2V0cyBsb2FkZWQgcmVn
-YXJkbGVzcyA6KS4KCgpBbGV4CgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBH
-bWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlz
-dGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0
-IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBE
-RSAyODkgMjM3IDg3OQoKCg==
 
+--nmemrqcdn5VTmUEE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Apr 30, 2020 at 05:47:39PM +0530, Pratyush Yadav wrote:
+
+> Most other controllers either don't specify a supports_op function at=20
+> all, in which case spi_mem_default_supports_op() is called, or do their=
+=20
+> custom logic and then call spi_mem_default_supports_op(). In both those=
+=20
+> cases, DTR ops would get rejected because of the call to=20
+> spi_mem_default_supports_op(). So they do not need to add the check=20
+> explicitly there.
+
+> The two exceptions are atmel-quadspi and spi-mtk-nor (which I missed=20
+> updating). They don't call the default supports_op, so they need to be=20
+> updated to explicitly to reject DTR ops.
+
+OK.
+
+> Earlier versions of this series discovered the DTR capability from=20
+> devicetree. In that case, no change would be required at all, but review=
+=20
+> comments suggested I drop those changes. Instead, the controllers should=
+=20
+> accept/reject DTR ops in their supports_op hooks.
+
+It definitely shouldn't be in device tree, this is something that the
+silicon supports so we should already be able to figure out if we can
+use it with just the compatible.
+
+--nmemrqcdn5VTmUEE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6qwk0ACgkQJNaLcl1U
+h9CGPQf/RnFFO+2GEO20wzuUOjiIgXpgOfBnSKgMTXOWAmba2YafGkKYwsymVpGY
+zt5Q9vkcx9dsgudhY892WkRo/l9+xJOkSYbp38ld0QR+YNfXbPUPeuvhK2F39YTJ
+YjMbZw8hbYyMqF+yXbJXJrj7PGbu9ISesfBgC73i3ywZC8S9epUKQZp7HssURy/M
+GJEMzoM40Vam/V48VAPrMHa0Dut9Bum74W9jzW5Fpnxz00AkY47aeMzGSOD+IyHD
+zP97bFTE4NUym4FES9c9efA61FuUJxOK8YRN5Hmfn22BwxxQ6ZT1B+7jRv+Fj32J
+GfvAqmI+mYhLpW/bHI7PCh/eP/eO0g==
+=dS3u
+-----END PGP SIGNATURE-----
+
+--nmemrqcdn5VTmUEE--
