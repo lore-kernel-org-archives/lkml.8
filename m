@@ -2,180 +2,109 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDFEC83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E661CC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 545E72072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE5B2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgD3OfT (ORCPT
+        id S1727832AbgD3Ohf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgD3OfT (ORCPT
+        Thu, 30 Apr 2020 10:37:35 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:58637 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgD3Ohe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:35:19 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143ADC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:35:19 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jUAHL-0000D2-Lw; Thu, 30 Apr 2020 16:35:07 +0200
-Message-ID: <3895f202cf5919e41a56878a62f6d5259dea12d3.camel@pengutronix.de>
-Subject: Re: [RFC PATCH 3/4] drm/etnaviv: Change order of enabling clocks to
- fix boot on i.MX8MM
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Adam Ford <aford173@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 30 Apr 2020 16:35:06 +0200
-In-Reply-To: <20200430124602.14463-4-frieder.schrempf@kontron.de>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
-         <20200430124602.14463-4-frieder.schrempf@kontron.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Thu, 30 Apr 2020 10:37:34 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MIdW9-1jR82b0yLl-00EeNQ; Thu, 30 Apr 2020 16:37:32 +0200
+Received: by mail-lj1-f181.google.com with SMTP id a21so6730895ljb.9;
+        Thu, 30 Apr 2020 07:37:32 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYVvNVD8LV5PFwVzTONFmFqc//D+YDUDLdl+S9QWhsRflIH1pIn
+        OMzUVei/m8W4oTN1kiWvgh9SNt9LQmGQj2xNE5w=
+X-Google-Smtp-Source: APiQypKy09PyZ77uDaKFQBZDXtEJTxnP/Uxzu/oGwEvoJF58LAwmPUjJ46HDG+QBqJFw4DyG+mO8+PH9i4BCelnxYMs=
+X-Received: by 2002:a2e:8999:: with SMTP id c25mr2478620lji.73.1588257451645;
+ Thu, 30 Apr 2020 07:37:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200428212357.2708786-1-arnd@arndb.de> <20200430052157.GD432386@unreal>
+In-Reply-To: <20200430052157.GD432386@unreal>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 30 Apr 2020 16:37:14 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a25MeyBgwZ9ZF2JbfpVChQuZ1wWc6VT1MFZ8-7haubVDw@mail.gmail.com>
+Message-ID: <CAK8P3a25MeyBgwZ9ZF2JbfpVChQuZ1wWc6VT1MFZ8-7haubVDw@mail.gmail.com>
+Subject: Re: [PATCH] net/mlx5: reduce stack usage in qp_read_field
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:xOfNUyzSsonNWZrgxw2ZjAzaywN26VV5YITBAqO/SEzxptoc19J
+ GDwPDqXISPWejg2N1f41nO/+NoHYrfbIfiyt3v+An3SjNKu8+GPlFesIo5AVyWNeCkoWLXH
+ t/6IYeX28aInOfD9D2yAJOjGLmr6/KyfW1owlIpoS35HJ6TYO50X5FyPQDYFGWHoZdPPnxe
+ LPqek/vnMZymJtaTydQxw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bupaEUd07sg=:mLlPlQmtDA1UEP9GIqDo+D
+ m+m9HDKSft6fPnYPjsu4r1Gq8+Zs/vyxShg9EgSDeuuuKj5s2Nmd6aE03nFzITkLRRlZVyWDJ
+ RQvu9NWySuas2jQNGAgOFXxSIY5UsdRqGy/pHC12Ev9zz2Z7ZOXjGVzrjlxWxFxLGNrenVusZ
+ z5dgMYm8OuqlCpvgcvSZS4K2bBYia5fYkwuXpf881x29qJp9NXLMPKWRywD8JU07PpD2/KHoG
+ 47jCULAeBaXq2M0Bc7ZGcdZfqL/cG/ZDw0U5x85ioxR1yeSS3PuNejN68dy9xXMex5w1UUY7Q
+ O14yC9UQWDvwcRaj9Clj/C8vRbN3SIQYA/0nj3A8DG4uXnstuqOWcXK3aEIdNxhbPmUiS6RKB
+ koPRx8upQSUcUO0TrjYdbJ/IjCeC1pj4JMst790+hpKxu7yTLh3mP5HhZeUJdfmHlZMdBpfMT
+ d/ipulafFmxtrb3oH/6ylJYNh54TC1cBqnOuV0NsR07f/im1PHC2CIQfXFzaXkdYU/ryOd5eb
+ NeN43GscgSJ48wRAkvjkTlyX0/MJcmzz5FG/fT9Iv5nDW67lvgpyn1Vby6QzPO1DyH5fDDmLb
+ BH9lBqucIdVh7Q2Bqgra4qYQGrLXMOiwvpOV6ur9KKpVINlkYP2Ha/8FnfIzsK12oPdtdtzHa
+ lqrJ4rBfuam3ZtoAEval+gCR0/ERVzln62azBxOx2pi47pUIH/qxZMBD5Gr/RLLkwGOyD7cvB
+ xubwL8afsVhMAnlOrssBhi/Vvu1ii9fFoAsuZLyAgA8rKDhqDaxHFCtG8rHnRxhFjwYqhDijX
+ 8OOTmJwsA3T1Md2Oj6D8a+rZE8NjV/na/haiWkgQkKw+ezEmDA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> On some i.MX8MM devices the boot hangs when enabling the GPU clocks.
-> Changing the order of clock initalization to
-> 
-> core -> shader -> bus -> reg
-> 
-> fixes the issue. This is the same order used in the imx platform code
-> of the downstream GPU driver in the NXP kernel [1]. For the sake of
-> consistency we also adjust the order of disabling the clocks to the
-> reverse.
-> 
-> [1] https://source.codeaurora.org/external/imx/linux-imx/tree/drivers/mxc/gpu-viv/hal/os/linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c?h=imx_5.4.3_2.0.0#n1538
+On Thu, Apr 30, 2020 at 7:22 AM Leon Romanovsky <leon@kernel.org> wrote:
+> On Tue, Apr 28, 2020 at 11:23:47PM +0200, Arnd Bergmann wrote:
+> > Moving the mlx5_ifc_query_qp_out_bits structure on the stack was a bit
+> > excessive and now causes the compiler to complain on 32-bit architectures:
+> >
+> > drivers/net/ethernet/mellanox/mlx5/core/debugfs.c: In function 'qp_read_field':
+> > drivers/net/ethernet/mellanox/mlx5/core/debugfs.c:274:1: error: the frame size of 1104 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> >
+> > Revert the previous patch partially to use dynamically allocation as
+> > the code did before. Unfortunately there is no good error handling
+> > in case the allocation fails.
+> >
+> > Fixes: 57a6c5e992f5 ("net/mlx5: Replace hand written QP context struct with automatic getters")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/net/ethernet/mellanox/mlx5/core/debugfs.c | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> Thanks Arnd, I'll pick it to mlx5-next.
+>
+> I was under impression that the frame size was increased a long
+> time ago. Is this 1K limit still effective for all archs?
+> Or is it is 32-bit leftover?
 
-I don't see why the order of the clocks is important. Is this really a
-GPU issue? As in: does a GPU access hang when enabling the clocks in
-the wrong order? Or is this a clock driver issue with a clock access
-hanging due to an upstream clock still being disabled?
+I got the output on a 32-bit build, but that doesn't make the code
+right on 64-bit.
 
-Regards,
-Lucas
+While warning limit is generally 1024 bytes for 32-bit architectures,
+and 2048 bytes fro 64-bit architectures,  we should probably
+reduce the latter to something like 1280 bytes and fix up the
+warnings that introduces.
 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 42 +++++++++++++--------------
->  1 file changed, 21 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> index 7b138d4dd068..424b2e5951f0 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -1487,55 +1487,55 @@ static int etnaviv_gpu_clk_enable(struct etnaviv_gpu *gpu)
->  {
->  	int ret;
->  
-> -	if (gpu->clk_reg) {
-> -		ret = clk_prepare_enable(gpu->clk_reg);
-> +	if (gpu->clk_core) {
-> +		ret = clk_prepare_enable(gpu->clk_core);
->  		if (ret)
->  			return ret;
->  	}
->  
-> -	if (gpu->clk_bus) {
-> -		ret = clk_prepare_enable(gpu->clk_bus);
-> +	if (gpu->clk_shader) {
-> +		ret = clk_prepare_enable(gpu->clk_shader);
->  		if (ret)
-> -			goto disable_clk_reg;
-> +			goto disable_clk_core;
->  	}
->  
-> -	if (gpu->clk_core) {
-> -		ret = clk_prepare_enable(gpu->clk_core);
-> +	if (gpu->clk_bus) {
-> +		ret = clk_prepare_enable(gpu->clk_bus);
->  		if (ret)
-> -			goto disable_clk_bus;
-> +			goto disable_clk_shader;
->  	}
->  
-> -	if (gpu->clk_shader) {
-> -		ret = clk_prepare_enable(gpu->clk_shader);
-> +	if (gpu->clk_reg) {
-> +		ret = clk_prepare_enable(gpu->clk_reg);
->  		if (ret)
-> -			goto disable_clk_core;
-> +			goto disable_clk_bus;
->  	}
->  
->  	return 0;
->  
-> -disable_clk_core:
-> -	if (gpu->clk_core)
-> -		clk_disable_unprepare(gpu->clk_core);
->  disable_clk_bus:
->  	if (gpu->clk_bus)
->  		clk_disable_unprepare(gpu->clk_bus);
-> -disable_clk_reg:
-> -	if (gpu->clk_reg)
-> -		clk_disable_unprepare(gpu->clk_reg);
-> +disable_clk_shader:
-> +	if (gpu->clk_shader)
-> +		clk_disable_unprepare(gpu->clk_shader);
-> +disable_clk_core:
-> +	if (gpu->clk_core)
-> +		clk_disable_unprepare(gpu->clk_core);
->  
->  	return ret;
->  }
->  
->  static int etnaviv_gpu_clk_disable(struct etnaviv_gpu *gpu)
->  {
-> +	if (gpu->clk_reg)
-> +		clk_disable_unprepare(gpu->clk_reg);
-> +	if (gpu->clk_bus)
-> +		clk_disable_unprepare(gpu->clk_bus);
->  	if (gpu->clk_shader)
->  		clk_disable_unprepare(gpu->clk_shader);
->  	if (gpu->clk_core)
->  		clk_disable_unprepare(gpu->clk_core);
-> -	if (gpu->clk_bus)
-> -		clk_disable_unprepare(gpu->clk_bus);
-> -	if (gpu->clk_reg)
-> -		clk_disable_unprepare(gpu->clk_reg);
->  
->  	return 0;
->  }
+Generally speaking, I'd say a function using more than a few hundred
+bytes tends to be a bad idea, but we can't warn about those without
+also warning about the handful of cases that do it for a good reason
+and using close to 1024 bytes on 32 bit systems or a little more on
+64-bit systems, in places that are known not to have deep call chains.
 
+       Arnd
