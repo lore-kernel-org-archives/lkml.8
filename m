@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B66C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D1DC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0AC42166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E282186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588281165;
-	bh=4N+XVeWe5iq04Af3epw8kMsGp1IN/CYN912qwCpTA+s=;
+	s=default; t=1588281168;
+	bh=BY3Hgo5t4BTs38VcTzig7+9uhGShsbCQBADRcW8MfS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g74cQm5DqEL7biOORQDA4EMRQm7ZdN3ij0roPS+mKcdc5xaEHvq5bFhVCWlYeBm6D
-	 9uwb839RioxvAHPVwGOW8UVReJMvzMhWtUM3PpptzNL3VNObp8CGP3L1eF8JgVq+83
-	 0oOFzUSfdlIBtVDPXR9WHoXwYnriYA9RzhKaO5rU=
+	b=n+R16RbmiujsN/6MxxXzCrxTvtqs0+sI+7+IlMm3P9NA56Hse72/QbHjc3JDXNbHQ
+	 com4GmUtUTRQ4e9K98LXxUobw6uNWeLpYTgQbkY2vtBXYBA7I6oD0Wax3sJwHzUya1
+	 yq62LDJ305hTht5yMC8Sn+mEAwp64R5xVfGL1H8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgD3VMp (ORCPT
+        id S1727865AbgD3VMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 17:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbgD3VMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:12:43 -0400
+        id S1727854AbgD3VMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:12:45 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F12721582;
-        Thu, 30 Apr 2020 21:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8077208D6;
+        Thu, 30 Apr 2020 21:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588281163;
-        bh=4N+XVeWe5iq04Af3epw8kMsGp1IN/CYN912qwCpTA+s=;
+        s=default; t=1588281164;
+        bh=BY3Hgo5t4BTs38VcTzig7+9uhGShsbCQBADRcW8MfS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G4TMXZERpTTWLYGfiFF4kOPedHTqdRmFawNiSLOe7so1vvLn+x+o19bMQ2FYZSrCa
-         bet803u2jgYcax7efa5uXbVq9owjsehp1vSmheGnZJJEgTzZMwy4D5oBu+l0naC3Uj
-         fdYNL+IXBVDztIrZvJ9fn28omeJLKgBw8Yo1PwXk=
+        b=BzGmNngEM9g0/HwISElCO250AL+9P/5KZvtcVwjFIitnPlFlPOZX0Tz239VASq2k5
+         LfaBZfkUMeFGlvMhbk1vGNY+7P6Pixmjc3OCL037Cm1vb+mF+X9zS+U8FqncNJlEq3
+         LiySUpgQjPhWCwD7p23SqUFXZ8vhTrD18b4kJ9Zs=
 From:   Will Deacon <will@kernel.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, mark.rutland@arm.com
+To:     mark.rutland@arm.com, Tang Bin <tangbin@cmss.chinamobile.com>
 Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf:arm_spe:Avoid duplicate printouts
-Date:   Thu, 30 Apr 2020 22:12:26 +0100
-Message-Id: <158827977305.123274.1505711753559195244.b4-ty@kernel.org>
+Subject: Re: [PATCH] perf:Avoid duplicate printouts
+Date:   Thu, 30 Apr 2020 22:12:27 +0100
+Message-Id: <158827969499.122898.13692306035235615025.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200402120330.19468-1-tangbin@cmss.chinamobile.com>
-References: <20200402120330.19468-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200402115940.4928-1-tangbin@cmss.chinamobile.com>
+References: <20200402115940.4928-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,14 +56,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 20:03:30 +0800, Tang Bin wrote:
+On Thu, 2 Apr 2020 19:59:40 +0800, Tang Bin wrote:
 > Because platform_get_irq() has dev_err(),so this place
 > should be removed.
 
 Applied to arm64 (for-next/perf), thanks!
 
-[1/1] drivers/perf: arm_spe_pmu: Avoid duplicate printouts
-      https://git.kernel.org/arm64/c/1f0d97bb7082
+[1/1] drivers/perf: arm_dsu_pmu: Avoid duplicate printouts
+      https://git.kernel.org/arm64/c/5810f00ade49
 
 Cheers,
 -- 
