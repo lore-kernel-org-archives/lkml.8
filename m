@@ -2,111 +2,105 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44644C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A30C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 201AC2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="u43mV+hG"
+	by mail.kernel.org (Postfix) with ESMTP id 6499B21973
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588281968;
+	bh=/84uoMk6xtc0fw3gx35sjXWR9jNo9Z9IE9/R9jq5lMw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DF+kuvx8yFeD6EmGFxerDj5xRUfgaT2s29+haFluUXT3PLESJreS4mAHzByWmi+HI
+	 lIEnwbTmJrtX1Kc5EaE2j3ptByVfhr6H7Y0dwLh5VOqNjhcSdOno85IuL3NmzSa8le
+	 Fv7O07JLFBU4A7L0ULDcz91pB4+8ghyWyFVYxbpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgD3VYe (ORCPT
+        id S1726869AbgD3V0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726470AbgD3VYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:24:33 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCABC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:24:32 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id k22so5770161eds.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=ZoHEfmnTDcYESuGHbMmk2jQ8V1rJF9rmlj/si8zVjxI=;
-        b=u43mV+hGSTT4+UwN7S5H34Rl13o9HAwNg3reMvcv91FGB3/J/PQKAaZFJ/nQeimszj
-         THdwtNIqmHQ0JM/vyg7n58WK7i+eO6w6ei1Eha2OHMyHSK2yNuB1ZQxeg374ux1IgYzI
-         vRmwvziesLZIYRTX0nTIzUc5dB5xBETPxmwQ66CdMuXnJ1ISnquymOV5aWGUCxILtguO
-         2/V7AYrHZvKXQ/Tlp8jziBb0p/Q0813u8Vwdg4bF/yT5sE4Ho0EVXaNPW2F0YAfac6cf
-         GFZJpTwp/3KlgkjkAz141tqNE1prHqV5Nio3IiZ1VKSmruzUiA9PW9wkiLQF5K6yZdh1
-         FTQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=ZoHEfmnTDcYESuGHbMmk2jQ8V1rJF9rmlj/si8zVjxI=;
-        b=eA7A5kcNGieAjkgZOTpnaxI0bqcVo0ilxZiN90nbWZi97c6cqMMbSd8OPwugvEpjI+
-         Ix6zFch47/fkV53Uyw6rYyZCrDb+3trnoWFuZkgEDuDSIWs/STHkx9itetcfp24RJ07F
-         T7ofi6krwd+5BcVm+G4cGqKlnejXEx8wpP3j/Ppn6ZNKJjIp9oy2gWTjxYx/AXJODNWR
-         30d98gtd51FB7gDcgVTonIgg/3bR0sy5lbGFI57i5tf2Trre3iW3PwfO6lE5RGC4x87G
-         9io0QrYJbZIMQco8DB0pG8qb/PUAwd/0yJe893L4T8e/on1t0OboD/+SpkKEhW7fpefM
-         PP/Q==
-X-Gm-Message-State: AGi0PuZFAfgbp4yhHGhVk6m6zNvbvKw0J6hf+0ck8XLVFZcumeI/zzAi
-        2WXHG4QlmJckhlNR6ONSwRzvvRjx6uAx+uv9gJBb
-X-Google-Smtp-Source: APiQypI6YkJcQVy9dVwcQVWuwmfdhb49nrj1ejVM0ZNVwEg0+5MtwD5WvMB0rhXXebaqXN/7l4V5Ld230nhh48E9fV8=
-X-Received: by 2002:a50:d98b:: with SMTP id w11mr865134edj.196.1588281871459;
- Thu, 30 Apr 2020 14:24:31 -0700 (PDT)
+        Thu, 30 Apr 2020 17:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbgD3V0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:26:07 -0400
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E07621973;
+        Thu, 30 Apr 2020 21:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588281966;
+        bh=/84uoMk6xtc0fw3gx35sjXWR9jNo9Z9IE9/R9jq5lMw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VRmNr5RBTPhRd60+StAQHWJmGef8T+NugRaofsy+un1Eln/Qcs4JM1XC2p/sLYn+o
+         lKmlV2leZcE2oZyhkd5seo9kAxRc6X7RP4T9YeUSEXrx4cYwRvBtcUmD1oyAKT7RNt
+         e9jB4IWz1aZpMZLwp3uZYt44ttGWAH7coF9Iuads=
+Received: by mail-il1-f172.google.com with SMTP id u189so2818978ilc.4;
+        Thu, 30 Apr 2020 14:26:06 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYB9ujUa7cYimLfDm1Dpcq3u7GDbIq3gyQMcIOCJ4jn63DBFera
+        hG9qEdQOuLzf+m7UkvFig/KrDYqCuaO2I+VrJUI=
+X-Google-Smtp-Source: APiQypJyZqcbA2fElVFv1VmD7vn4/0o5hM15ftpa/GSsTlIBinowD3KMADxV8uJ/0nFzxtWYwFn1Um0TP4jV5ka4d54=
+X-Received: by 2002:a92:aa0f:: with SMTP id j15mr404629ili.211.1588281964921;
+ Thu, 30 Apr 2020 14:26:04 -0700 (PDT)
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 30 Apr 2020 17:24:20 -0400
-Message-ID: <CAHC9VhTu3YWPmwtA7RERHDRhQt0wAkmN4GJCmaRY7KSFRwtACQ@mail.gmail.com>
-Subject: [GIT PULL] SELinux fixes for v5.7 (#2)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20200429190119.43595-1-arnd@arndb.de> <20200430211516.gkwaefjrzj2dypmr@cantor>
+ <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 30 Apr 2020 23:25:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHc0uzzTKp7oj23_=X9ek2KNrKMq1gL09X7cTnjhV=nXQ@mail.gmail.com>
+Message-ID: <CAMj1kXHc0uzzTKp7oj23_=X9ek2KNrKMq1gL09X7cTnjhV=nXQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, 30 Apr 2020 at 23:21, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Apr 30, 2020 at 11:15 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+> >
+> > On Wed Apr 29 20, Arnd Bergmann wrote:
+> > >Building with gcc-10 causes a harmless warning about a section mismatch:
+> > >
+> > >WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+> > >The function tpm2_calc_event_log_size() references
+> > >the function __init early_memunmap().
+> > >This is often because tpm2_calc_event_log_size lacks a __init
+> > >annotation or the annotation of early_memunmap is wrong.
+> > >
+> > >Add the missing annotation.
+> > >
+> > >Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
+> > >Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Minor thing, but should the Fixes be c46f3405692d ("tpm: Reserve the TPM final events table")? Or what am I missing
+> > about e658c82be556 that causes this? Just trying to understand what I did. :)
+>
+> You are right, I misread the git history. Can you fix it up when applying the
+> patch, or should I resend it?
+>
 
-Two more SELinux patches to fix problems in the v5.7-rcX releases.
-Wei Yongjun's patch fixes a return code in an error path, and my patch
-fixes a problem where we were not correctly applying access controls
-to all of the netlink messages in the netlink_send LSM hook.  Both
-patches pass our tests without problem and currently apply cleanly on
-top of your master branch.  Please merge for the next -rcX release.
-
-Thanks,
--Paul
-
---
-The following changes since commit af15f14c8cfcee515f4e9078889045ad63efefe3:
-
- selinux: free str on error in str_read() (2020-04-15 17:23:16 -0400)
-
-are available in the Git repository at:
-
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20200430
-
-for you to fetch changes up to fb73974172ffaaf57a7c42f35424d9aece1a5af6:
-
- selinux: properly handle multiple messages in selinux_netlink_send()
-   (2020-04-30 16:18:37 -0400)
-
-----------------------------------------------------------------
-selinux/stable-5.7 PR 20200430
-
-----------------------------------------------------------------
-Paul Moore (1):
-     selinux: properly handle multiple messages in selinux_netlink_send()
-
-Wei Yongjun (1):
-     selinux: fix error return code in cond_read_list()
-
-security/selinux/hooks.c          | 70 +++++++++++++++++++++----------
-security/selinux/ss/conditional.c |  2 +-
-2 files changed, 46 insertions(+), 26 deletions(-)
--- 
-paul moore
-www.paul-moore.com
+I can fix it up, no worries.
