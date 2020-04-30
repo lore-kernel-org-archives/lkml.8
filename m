@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A715C83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF26C83009
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16D4221D7A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A096C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C1EG6HhU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iWfP66op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD3HwA (ORCPT
+        id S1726784AbgD3HwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54954 "EHLO
+        Thu, 30 Apr 2020 03:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgD3Hv5 (ORCPT
+        with ESMTP id S1726768AbgD3HwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:51:57 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 309A5C08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:56 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id f11so5607057qkk.16
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:56 -0700 (PDT)
+        Thu, 30 Apr 2020 03:52:01 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F61C08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:52:01 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id d206so6781602ybh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=OXZleKkWZzKKnBm05g6e7Gyf0CCs6T7oZwd1F3IVZx4=;
-        b=C1EG6HhUQ5D15iyeuJcwxudDHk6qhacqj5n4mQFO6tI0bfeP20qfPVb9ijMjXsMqWH
-         gvW23rVkDh7/o/ryFZpKB2sxt0t3etH76T1HzskMlXKWtC+bGaw75xRBEK71EXbXALzn
-         x794TFWnO0FxH/KFEaE6QvHkr1Va0gDyJQg7mAEALgcqUFxvB9RSv3FYI2VErZt22O6Q
-         Gh9LxMLUDOatqBCpy8aPSpz+/mjqGIu9vWC3Ujog47tPs064V1M81xLBC/MZ0yJSM4+r
-         QM/ZNmTnsgNlpddMRE7konL6s229HcJu7qJUlh/jGUayibM+l73NVUYiygWZ6fBDnehg
-         bLxg==
+        bh=sO5BGMnC3muRvVqxOCgNBH4Ftq8H2ieY1lBwILjyo+Y=;
+        b=iWfP66opqu/6m9OFsmapPj7vQ0nAygVMj9AbB6MvVz6Lqwq67+pWxjJvmy/O2QxSb3
+         F/OyHjxRGoemdnQre4MkndxjuT2DWeWyERGvGEHpYSbwMyp2kH3Z9uIASIq7J54IP3Yo
+         BSg9OPhFoNEDTfE1HMDm1c3pKWHMfsFT6GQzhIGyV+hx/iW034Gn4FsHED1Ryh9NOKsT
+         lXROzQux6Tv72xaRsiXww6ngAWYRJd89TrldaggOQFj/rGqeIk98YL7vdov6S84J20Sh
+         EbDTa0B470bgw3GHsb7vPt26pn3VGyT3u43FUmurK//qrJo8gMxGVGYoOaMelM8e2VnX
+         aKqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=OXZleKkWZzKKnBm05g6e7Gyf0CCs6T7oZwd1F3IVZx4=;
-        b=Ak3N5FnLG0haTYsOwPXeOqfCnN9WTJm+/lbF6mhtiABQqL1MR9ewe0s1DnfuArkTPR
-         caxyngBWyDOyK6phJELtkg5MP9hfncFP7fK+3nqEgJ2Pcm2b/Vg7UYFsJFmDkJ3PwT3v
-         QApvAbp59hUbdQhsXOjOT0xM6wg/3wWS5L2p3VW7Bixt8DXxy2AoJ7fZzYosbpGjttMW
-         z8udd5IjjUjmY33i7Dqp4bMdT8d5JTjMbYb5IEECKy/PljPo6+36Hg6JOaG0h1eFEDUS
-         vCqMI2dtRPK9PfgJRDnR4dK3wLgPuGx9nWiFNk5LN2AtvVX8mfJ58Y2mdJEUYDkcApc8
-         RF7w==
-X-Gm-Message-State: AGi0PuY6cQUFdI3AAN24sxtsUVaIld8EZu3bl6CRtI4TlrUCOSmScFji
-        SlhUMzTmOhGpj7OSTNvsrprciK6aJKkS
-X-Google-Smtp-Source: APiQypIojP4DrIlirV7kdIoUxGsRMdepHKr7XyHfku5l94Rx8mPKVgjFX9aNiU2zmgw/YI0mZckqIU8P9kHg
-X-Received: by 2002:ad4:45ae:: with SMTP id y14mr1737378qvu.145.1588233115263;
- Thu, 30 Apr 2020 00:51:55 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 00:51:36 -0700
+        bh=sO5BGMnC3muRvVqxOCgNBH4Ftq8H2ieY1lBwILjyo+Y=;
+        b=LT9ifMv04rYj/YawiB3CgZUfAysl1Q0bzOUHqZyClCioebCi4oVbKPk4VRC0rW/lh6
+         xEdMcGdPukxBMRS8iqzET4s20o6MO0GLpgx51rHmXmPLL+9O/RAWnrYIRnTkam/tLjtT
+         Qie71kxw1c/4u0vpoE6MQ9/vbePoxGSaS2Y22Af1cCyyNTp3XLYaWqTvqIq3LDMCysnc
+         O3UJi1kWLFGZNo3ybm58eG2aFRi6qQyYTIYJ8Cif/94ba4nmCnSNM0o1hkUpIe1z87h+
+         C4+DCDsCT84Zf75BD4SLhSVqTiDak7Jv7wWPkNcavoa/wqZYAftYoY1Yy/HrHEx7h6Sf
+         uVAg==
+X-Gm-Message-State: AGi0PuaYNOt5R3Z00c0zki25fIv5hc820jgf2Vkh697q2n/0Mqfnnq7r
+        XLWAfgpFTbTgMnAgsa4caROIiKImiyNB
+X-Google-Smtp-Source: APiQypIn3eB2pOEd0OmoPGLUSkobU3LKaOPQtkbK940g/ZkTpZU/FcUZaeDGne+OEryY+ti0RqD3HYwyELUk
+X-Received: by 2002:a25:6b06:: with SMTP id g6mr3682977ybc.506.1588233120753;
+ Thu, 30 Apr 2020 00:52:00 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 00:51:39 -0700
 In-Reply-To: <20200430075144.132716-1-irogers@google.com>
-Message-Id: <20200430075144.132716-5-irogers@google.com>
+Message-Id: <20200430075144.132716-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20200430075144.132716-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v3 04/12] perf expr: allow ',' to be an other token
+Subject: [PATCH v3 07/12] perf expr: debug lex if debugging yacc
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,26 +89,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Corrects parse errors in expr__find_other of expressions with min.
+Only effects parser debugging (disabled by default). Enables displaying
+'--accepting rule at line .. ("...").
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index cd17486c1c5d..54260094b947 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -80,7 +80,7 @@ other: ID
- 	ctx->ids[ctx->num_ids++].name = $1;
- }
- |
--MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
-+MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index c3382d58cf40..8694bec86f1a 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -44,6 +44,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
  
+ #ifdef PARSER_DEBUG
+ 	expr_debug = 1;
++	expr_set_debug(1, scanner);
+ #endif
  
- all_expr: if_expr			{ *final_val = $1; }
+ 	ret = expr_parse(val, ctx, scanner);
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
