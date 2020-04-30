@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A523C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E628C47256
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058C820873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCF020774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254847;
-	bh=A79yTIEIgZyFXKXDxg707Ot1cK7Ju0UZF8cSjotjnTA=;
+	s=default; t=1588254849;
+	bh=ofC+s2rpOOXSYWluYL+/aP6SMzxLfIP2anHBiVYKQ9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QfzqTp2+jht3QmrY6QxC8a1G5clk784pbd+I8ZN0F3roA83Tauj2YuNPRCPuFArjb
-	 54icrfamE18yGMTfM0P5ZdfE9MYIyMEviLqo7XBsAhVaj0jMS9eoyyhxEy56pjWkzk
-	 OaJQZ+b+oTjEOGN+B/hGydKhCtBhqg5kT5lywTpw=
+	b=A9gmmCMf03fUD3YJdlfjViRSkULtXrVDr3f62J+JpnsonxE1VnoRaODUpskk0Az0B
+	 /LKk9SdSiTyKVRXpbbcT3Mrc2KmXmdpjxr0/ZwIvYYrKNi5VkZpDSWpXLWTCgLvOMA
+	 UlBcgD6LC3xLshVXj+gQXTIgvrp6VkGK6bmOIDQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgD3NyF (ORCPT
+        id S1728893AbgD3NyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728698AbgD3NxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:22 -0400
+        id S1728736AbgD3Nxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E35208CA;
-        Thu, 30 Apr 2020 13:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCA72072A;
+        Thu, 30 Apr 2020 13:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254802;
-        bh=A79yTIEIgZyFXKXDxg707Ot1cK7Ju0UZF8cSjotjnTA=;
+        s=default; t=1588254813;
+        bh=ofC+s2rpOOXSYWluYL+/aP6SMzxLfIP2anHBiVYKQ9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyeisUpsdYnRUzHKhphicBI7nsS2fYeItsCuHK2xL65rgX5R11VKJCh7K0Y6xNlOc
-         CcWLHA4OWE+JcaMrvL2YSCdSCygk4bQevmTZ5PmgCXkGWTT8aIxV8wa7TzlhN/sBHQ
-         Z1PZoteyFHgSQ2FWUFSVcF5k0PfwwLFZ1NTsTSG4=
+        b=gcGkurw7+f2DA/X5R/STGiqKJdO6UGCVWcUcDrWC5dAg6c7w9Vu8vncxPMnq5TnTQ
+         sq1343eCZvODng9Hz0J9VfGudvS+qPORJKwinazTet2sfr2Q8MYg8GjrnFHdZHCmDF
+         xL+wFasiZ6vHA7co1r35ZMjtkcFeFGTtECs9ETwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Wang YanQing <udknight@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 56/57] bpf, x86_32: Fix clobbering of dst for BPF_JSET
-Date:   Thu, 30 Apr 2020 09:52:17 -0400
-Message-Id: <20200430135218.20372-56-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 06/30] ASoC: q6dsp6: q6afe-dai: add missing channels to MI2S DAIs
+Date:   Thu, 30 Apr 2020 09:53:01 -0400
+Message-Id: <20200430135325.20762-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,88 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 50fe7ebb6475711c15b3397467e6424e20026d94 ]
+[ Upstream commit 0c824ec094b5cda766c80d88c2036e28c24a4cb1 ]
 
-The current JIT clobbers the destination register for BPF_JSET BPF_X
-and BPF_K by using "and" and "or" instructions. This is fine when the
-destination register is a temporary loaded from a register stored on
-the stack but not otherwise.
+For some reason, the MI2S DAIs do not have channels_min/max defined.
+This means that snd_soc_dai_stream_valid() returns false,
+i.e. the DAIs have neither valid playback nor capture stream.
 
-This patch fixes the problem (for both BPF_K and BPF_X) by always loading
-the destination register into temporaries since BPF_JSET should not
-modify the destination register.
+It's quite surprising that this ever worked correctly,
+but in 5.7-rc1 this is now failing badly: :)
 
-This bug may not be currently triggerable as BPF_REG_AX is the only
-register not stored on the stack and the verifier uses it in a limited
-way.
+Commit 0e9cf4c452ad ("ASoC: pcm: check if cpu-dai supports a given stream")
+introduced a check for snd_soc_dai_stream_valid() before calling
+hw_params(), which means that the q6i2s_hw_params() function
+was never called, eventually resulting in:
 
-Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Wang YanQing <udknight@gmail.com>
-Link: https://lore.kernel.org/bpf/20200422173630.8351-2-luke.r.nels@gmail.com
+    qcom-q6afe aprsvc:q6afe:4:4: no line is assigned
+
+... even though "qcom,sd-lines" is set in the device tree.
+
+Commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
+now even avoids creating PCM devices if the stream is not supported,
+which means that it is failing even earlier with e.g.:
+
+    Primary MI2S: ASoC: no backend playback stream
+
+Avoid all that trouble by adding channels_min/max for the MI2S DAIs.
+
+Fixes: 24c4cbcfac09 ("ASoC: qdsp6: q6afe: Add q6afe dai driver")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200415150050.616392-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/net/bpf_jit_comp32.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ sound/soc/qcom/qdsp6/q6afe-dai.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index cc9ad3892ea6b..ba7d9ccfc6626 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -2015,8 +2015,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 		case BPF_JMP | BPF_JSET | BPF_X:
- 		case BPF_JMP32 | BPF_JSET | BPF_X: {
- 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
--			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
--			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
-+			u8 dreg_lo = IA32_EAX;
-+			u8 dreg_hi = IA32_EDX;
- 			u8 sreg_lo = sstk ? IA32_ECX : src_lo;
- 			u8 sreg_hi = sstk ? IA32_EBX : src_hi;
- 
-@@ -2028,6 +2028,13 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 					      add_2reg(0x40, IA32_EBP,
- 						       IA32_EDX),
- 					      STACK_VAR(dst_hi));
-+			} else {
-+				/* mov dreg_lo,dst_lo */
-+				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
-+				if (is_jmp64)
-+					/* mov dreg_hi,dst_hi */
-+					EMIT2(0x89,
-+					      add_2reg(0xC0, dreg_hi, dst_hi));
- 			}
- 
- 			if (sstk) {
-@@ -2052,8 +2059,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 		case BPF_JMP | BPF_JSET | BPF_K:
- 		case BPF_JMP32 | BPF_JSET | BPF_K: {
- 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
--			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
--			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
-+			u8 dreg_lo = IA32_EAX;
-+			u8 dreg_hi = IA32_EDX;
- 			u8 sreg_lo = IA32_ECX;
- 			u8 sreg_hi = IA32_EBX;
- 			u32 hi;
-@@ -2066,6 +2073,13 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 					      add_2reg(0x40, IA32_EBP,
- 						       IA32_EDX),
- 					      STACK_VAR(dst_hi));
-+			} else {
-+				/* mov dreg_lo,dst_lo */
-+				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
-+				if (is_jmp64)
-+					/* mov dreg_hi,dst_hi */
-+					EMIT2(0x89,
-+					      add_2reg(0xC0, dreg_hi, dst_hi));
- 			}
- 
- 			/* mov ecx,imm32 */
+diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
+index 8f6c8fc073a93..1fc1939b90c2f 100644
+--- a/sound/soc/qcom/qdsp6/q6afe-dai.c
++++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
+@@ -899,6 +899,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -914,6 +916,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -928,6 +932,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -943,6 +949,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -957,6 +965,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -972,6 +982,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -986,6 +998,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -1001,6 +1015,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
 -- 
 2.20.1
 
