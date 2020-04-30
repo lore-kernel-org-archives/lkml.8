@@ -2,94 +2,133 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9CAC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9A6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89BCB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE342076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255417;
+	bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Afq3n48lPu/fzqe6JaMsOBseKnXZyBEh8kaGymuWXF+i8ZdoJQTCtutYHqtIWAUlY
+	 BbvkUKBXVpa+Hn3s0woksYT8XmKWU4FyjCZzcqdFP7/NB5wgr9FmrLDHKjPDdwDvoB
+	 QbOop0aHH4Ux2YXXoSitCJcIGiIaYp/AFR8B+3Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgD3OD3 (ORCPT
+        id S1728717AbgD3Nxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:03:29 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38235 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729065AbgD3ODU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:03:20 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g19so4971559otk.5;
-        Thu, 30 Apr 2020 07:03:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kz7Wj6UlhUtYyAjOVoDBpABEhXzAY8F1XL3/Z2xqUzA=;
-        b=k/hifpxip8WvfwSk64PvtfcABtuv8RJlaepsuoRFODq+LzNM7jsZy/m7vozJM7FlE1
-         8es+NHpnYCIFeHsBaSR/cHZJVQRj9X5cuMiB+sZbV71Gik//CqwD29PngIR+qpIdKNJO
-         NwbrFdEGQtQpHxPqlKOasB4pEuivsBARaRdIzqe5waOcjhq2dUhXUeE8bBXfN7dmucOC
-         3IamyNuOSBctLWtJaGqZ/CQlYjpsOFn6jKGl4NdW1mPoLhk++sO7vWSF2lgw+YzqcLIA
-         71wIxEPJYAdJY3pXSACUcudGfJALwL76xTM9XGdPtDCEAoOfeBlgUUrTRfD5M0bZ902G
-         rMgQ==
-X-Gm-Message-State: AGi0PuZtS7tXCKHB5KWLJYULNeCNYIJUS3ZymQQCDvhRIQ9pzPhSRfjK
-        xcA7ErqFg+IpJmqyT68OKiy38aKyzmSCmMIsD8I=
-X-Google-Smtp-Source: APiQypKwUUCVBWIBcqOPUBZmRRdT7JXpn2BYbxbHqquKVj0D5RpVp1Oagg3I9RqW87RaXrHEMn4Krxr5O0GVmmhdSMo=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr2469309otn.107.1588255399560;
- Thu, 30 Apr 2020 07:03:19 -0700 (PDT)
+        Thu, 30 Apr 2020 09:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728531AbgD3Nwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:51 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEA0208D6;
+        Thu, 30 Apr 2020 13:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254770;
+        bh=RihZBV2HIqeSd4Zs1oz0PgSiSUHUetLAYV3q+QRh/Go=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o/XSRQWiADeN4B6bLN+25m5LKCosCNtSSoB60IbFaetaWE2uwt9cPt1oMOpJJAdl2
+         ft6F5qebx+FBbNc0dYAsQG2M8awNewt3wfxrk2pP9fVSEsUC6pTRSBqZ4eTIrSQAdf
+         xaXW7p7qgHih6hWTmfbhbV+Mg1QqG+84zflh96pE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julien Beraud <julien.beraud@orolia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 28/57] net: stmmac: Fix sub-second increment
+Date:   Thu, 30 Apr 2020 09:51:49 -0400
+Message-Id: <20200430135218.20372-28-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:03:08 +0200
-Message-ID: <CAMuHMdU=_yAxxc7vLzRC5576TTjwjZta=fBgWQ5gmDX5rfRkVA@mail.gmail.com>
-Subject: Re: [PATCH 14/18] dt-bindings: serial: renesas,scifb: Document
- r8a7742 bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFB ports,
-> so document the SoC specific bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+From: Julien Beraud <julien.beraud@orolia.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
 
-Gr{oetje,eeting}s,
+In fine adjustement mode, which is the current default, the sub-second
+    increment register is the number of nanoseconds that will be added to
+    the clock when the accumulator overflows. At each clock cycle, the
+    value of the addend register is added to the accumulator.
+    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
+    frequency of the ptp clock actually is.
+    The adjustment is then done on the addend register, only incrementing
+    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
+    (addend = 2^32 * 50MHz/ptp_clock_rate).
+    This causes the following issues :
+    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
+      the addend value calculation will overflow and the default
+      addend value will be set to 0, causing the clock to not work at
+      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
+    - The resolution of the timestamping clock is limited to 20ns while it
+      is not needed, thus limiting the accuracy of the timestamping to
+      20ns.
 
-                        Geert
+    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
+    It will allow to reach the minimum possible frequency for
+    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
+    sub-second-increment to a higher value. For instance, for 25MHz, it
+    gives ssinc = 80ns and default_addend = 2^31.
+    It will also allow to use a lower value for sub-second-increment, thus
+    improving the timestamping accuracy with frequencies higher than
+    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
+    2^31.
 
+v1->v2:
+ - Remove modifications to the calculation of default addend, which broke
+ compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
+ is not an integer.
+ - Modify description according to discussions.
+
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 0201596225592..e5d9007c8090b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -26,12 +26,16 @@ static void config_sub_second_increment(void __iomem *ioaddr,
+ 	unsigned long data;
+ 	u32 reg_value;
+ 
+-	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
+-	 *	formula = (1/ptp_clock) * 1000000000
+-	 * where ptp_clock is 50MHz if fine method is used to update system
++	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
++	 * increment to twice the number of nanoseconds of a clock cycle.
++	 * The calculation of the default_addend value by the caller will set it
++	 * to mid-range = 2^31 when the remainder of this division is zero,
++	 * which will make the accumulator overflow once every 2 ptp_clock
++	 * cycles, adding twice the number of nanoseconds of a clock cycle :
++	 * 2000000000ULL / ptp_clock.
+ 	 */
+ 	if (value & PTP_TCR_TSCFUPDT)
+-		data = (1000000000ULL / 50000000);
++		data = (2000000000ULL / ptp_clock);
+ 	else
+ 		data = (1000000000ULL / ptp_clock);
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
