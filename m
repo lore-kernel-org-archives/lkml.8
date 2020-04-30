@@ -2,152 +2,97 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDFEC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73D9C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F52B2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE673214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="C7NzSwQe"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NJXEF7jN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgD3IeN (ORCPT
+        id S1726830AbgD3Iep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726611AbgD3IeN (ORCPT
+        Thu, 30 Apr 2020 04:34:45 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22538 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726626AbgD3Ieo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:34:13 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D034C08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:34:12 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n17so3990544ejh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=87dIcS/jrU3IxflLIkdtnvU4qll0iHvEZNuLGZ4o7wI=;
-        b=C7NzSwQeQ8r7hb6zu0mE43nN5BVsWOZy21t9s86oMspwPoqNG+2r9QwYXMI253bkO+
-         f2NXbqJEZlVUDXw2jKOJXTdMksOMSeCU/1+d1/KW3kPK6bDnIkjaV85ydvslVx7+7VaK
-         H/Wy8s3jtrbog9dFPbt+U8g4F9a/kPxAFzoHfDtTpSCDud/nTiDKxbIHNOx4gDT1cWli
-         scShmtfTOkTf1D6LztaDjOZAMAIUOcl9E1Ehg4s+icpPrmffJn6TfhOtMJuuVZZemCWo
-         u5q8IaOdIkls7C87+V/X7frCMtH72XB/et/faVXvhnFad5uP3/TQ8BbSLNTCllAusarT
-         BwFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=87dIcS/jrU3IxflLIkdtnvU4qll0iHvEZNuLGZ4o7wI=;
-        b=GnrWuY4H2IeomhcpMJ/8bETWbmRTujKAiU5M/1kXTwgCt9MsSX/N31bXW5S7NbkSEa
-         20YOa95c5PspDRiK0431o1+sTVdevO0VgIWxpNKmlgo8P1ITtrmbQI8a2HiWcx6Hk2ls
-         gGTbCr8TPZYq4202tyRFZ1E0MU7TWBTNXbY2kPf2LK3/4HqZEmeJSgkAEEPNcVTbG3XN
-         5bvSmMJqFzirJ1SOst42afIpZSVIGeysCq71BlpjiM15AaevVGh7ajrxQ7ZLwWpPKXiq
-         Vp6aEOQsPnHCN+sYCdKse5ZGwAn9Obwjj+Wd1JsMx1sI+FqD3x0GFFxlYCdGtsilH4J5
-         TeMg==
-X-Gm-Message-State: AGi0PuYzLHFgR4fN/MHzBEl/pt0UZx/V2vHy5YUsz4UpvZJui64lsI1u
-        wj/yOIcq8dLx2Uzh/OFjESsuBK8+nVt+j99DZlwMMw==
-X-Google-Smtp-Source: APiQypLBVztlIIHfr3wCtEt+MVa/TaJHl/O1nuNqStB0TwAKkS6wTTbCgFJlPXMDG8iI601GTPaB481cRsH+FNdImHY=
-X-Received: by 2002:a17:906:7750:: with SMTP id o16mr1715515ejn.12.1588235651152;
- Thu, 30 Apr 2020 01:34:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429160803.109056-1-david@redhat.com> <20200429160803.109056-3-david@redhat.com>
- <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com> <CAPcyv4i04+QLxiOyz04_eef2DFetEFKBUmi2A4xxw9abQD8hNQ@mail.gmail.com>
- <e32522cd-31bb-e129-47a6-9ec13b570506@redhat.com>
-In-Reply-To: <e32522cd-31bb-e129-47a6-9ec13b570506@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 30 Apr 2020 01:34:00 -0700
-Message-ID: <CAPcyv4gjRE23BHsBAnaVWAPUHWdenxYMUwDBnDF7UmoejmmbNQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
+        Thu, 30 Apr 2020 04:34:44 -0400
+X-UUID: 43c21cef6078476389d66a49ecbd8a15-20200430
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=y3dVWlbJZTjwoFW54DLo0jxBmIShjMB5D+SoEOe2dsw=;
+        b=NJXEF7jNt2L2Tjt3F6okEWGHouC8xG61jl5leFJxco5bypXIXsqK9IA3fGlW5BdCJmyP1C5qyNtbbHgVXx8crgn6fUmmkqYY1vao8q3m6E4W2tYtUDOhVPbN9NZmWESFflNnliorucM/JRc0NvdJ9ClKBLd9vNlg76whtne/PYM=;
+X-UUID: 43c21cef6078476389d66a49ecbd8a15-20200430
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 730264044; Thu, 30 Apr 2020 16:34:40 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 30 Apr 2020 16:34:36 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Apr 2020 16:34:37 +0800
+Message-ID: <1588235677.3197.2.camel@mtkswgap22>
+Subject: RE: [PATCH v2 1/5] scsi: ufs: allow legacy UFS devices to enable
+ WriteBooster
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Date:   Thu, 30 Apr 2020 16:34:37 +0800
+In-Reply-To: <BYAPR04MB4629B87143D7BD7693141D39FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <20200429135610.23750-1-stanley.chu@mediatek.com>
+         <20200429135610.23750-2-stanley.chu@mediatek.com>
+         <BYAPR04MB4629B87143D7BD7693141D39FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 1:21 AM David Hildenbrand <david@redhat.com> wrote:
-> >> Just because we decided to use some DAX memory in the current kernel as
-> >> system ram, doesn't mean we should make that decision for the kexec
-> >> kernel (e.g., using it as initial memory, placing kexec binaries onto
-> >> it, etc.). This is also not what we would observe during a real reboot.
-> >
-> > Agree.
-> >
-> >> I can see that the "System RAM" resource will show up as child resource
-> >> under the device e.g., in /proc/iomem.
-> >>
-> >> However, entries in /sys/firmware/memmap/ are created as "System RAM".
-> >
-> > True. Do you think this rename should just be limited to what type
-> > /sys/firmware/memmap/ emits? I have the concern, but no proof
->
-> We could split this patch into
->
-> MHP_NO_FIRMWARE_MEMMAP (create firmware memmap entries)
->
-> and
->
-> MHP_DRIVER_MANAGED (name of the resource)
->
-> See below, the latter might not be needed.
->
-> > currently, that there are /proc/iomem walkers that explicitly look for
-> > "System RAM", but might be thrown off by "System RAM (driver
-> > managed)". I was not aware of /sys/firmware/memmap until about 5
-> > minutes ago.
->
-> The only two users of /proc/iomem I am aware of are kexec-tools and some
-> s390x tools.
->
-> kexec-tools on x86-64 uses /sys/firmware/memmap to craft the initial
-> memmap, but uses /proc/iomem to
-> a) Find places for kexec images
-> b) Detect memory regions to dump via kdump
->
-> I am not yet sure if we really need the "System RAM (driver managed)"
-> part. If we can teach kexec-tools to
-> a) Don't place kexec images on "System RAM" that has a parent resource
-> (most likely requires kexec-tools changes)
-> b) Consider for kdump "System RAM" that has a parent resource
-> we might be able to avoid renaming that. (I assume that's already done)
->
-> E.g., regarding virtio-mem (patch #3) I am currently also looking into
-> creating a parent resource instead, like dax/kmem to avoid the rename:
->
-> :/# cat /proc/iomem
-> 00000000-00000fff : Reserved
-> [...]
-> 100000000-13fffffff : System RAM
-> 140000000-33fffffff : virtio0
->   140000000-147ffffff : System RAM
->   148000000-14fffffff : System RAM
->   150000000-157ffffff : System RAM
-> 340000000-303fffffff : virtio1
->   340000000-347ffffff : System RAM
-> 3280000000-32ffffffff : PCI Bus 0000:00
+SGkgQXZyaSwNCg0KT24gVGh1LCAyMDIwLTA0LTMwIGF0IDA3OjQ0ICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gSGkgU3RhbmxleSwNCj4gIA0KPiA+IA0KPiA+IFdyaXRlQm9vc3RlciBmZWF0
+dXJlIG1heSBiZSBzdXBwb3J0ZWQgYnkgc29tZSBsZWdhY3kgVUZTIGRldmljZXMNCj4gPiAoaS5l
+LiwgPCAzLjEpIGJ5IHVwZ3JhZGluZyBmaXJtd2FyZS4NCj4gPiANCj4gPiBUbyBlbmFibGUgV3Jp
+dGVCb29zdGVyIGZlYXR1cmUgaW4gc3VjaCBkZXZpY2VzLCByZWxheCB0aGUgZW50cmFuY2UNCj4g
+PiBjb25kaXRpb24gb2YgdWZzaGNkX3diX3Byb2JlKCkgdG8gYWxsb3cgaG9zdCBkcml2ZXIgdG8g
+Y2hlY2sgdGhvc2UNCj4gPiBkZXZpY2VzJyBXcml0ZUJvb3N0ZXIgY2FwYWJpbGl0eS4NCj4gPiAN
+Cj4gPiBXcml0ZUJvb3N0ZXIgZmVhdHVyZSBjYW4gYmUgYXZhaWxhYmxlIGlmIGJlbG93IGJvdGgg
+Y29uZGl0aW9ucyBhcmUNCj4gPiBzYXRpc2ZpZWQsDQo+ID4gDQo+ID4gMS4gRGV2aWNlIGRlc2Ny
+aXB0b3IgaGFzIGRFeHRlbmRlZFVGU0ZlYXR1cmVzU3VwcG9ydCBmaWVsZC4NCj4gPiAyLiBXcml0
+ZUJvb3N0ZXIgc3VwcG9ydCBpcyBzcGVjaWZpZWQgaW4gYWJvdmUgZmllbGQuDQo+ID4gDQo+ID4g
+U2lnbmVkLW9mZi1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNvbT4NCj4g
+PiBSZXZpZXdlZC1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCj4gV0Igd2FzIGZp
+cnN0IGludHJvZHVjZWQgYXMgcGFydCBvZiBVRlMzLjEsIGFuZCBsYXRlbHkgYXMgcGFydCBvZiBV
+RlMyLjIuDQo+IEFueSBub24tc3RhbmRhcmQgYmVoYXZpb3Igc2hvdWxkIGJlIGNsYXNzaWZpZWQg
+YXMgYSBxdWlyay4NCg0KT0shIEkgd2lsbCB0cnkgdG8gcmV2aXNlIHRoaXMgcGF0Y2ggdG8gYWxs
+b3cgb25seSBzdGFuZGFyZCBkZXZpY2VzDQpoYW5kbGVkIGJ5IG5vcm1hbCBwYXRoIGFuZCBub24t
+c3RhbmRhcmQgZGV2aWNlcyBoYW5kbGVkIGJ5IGRldmljZQ0KcXVpcmtzLg0KDQpUaGFua3MsDQpT
+dGFubGV5IENodQ0KDQo=
 
-Looks good to me if it flies with kexec-tools.
