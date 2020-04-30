@@ -2,137 +2,206 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD2EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33299C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F09208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B24F20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ugvEiDv4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Flnu8Aml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgD3Tcl (ORCPT
+        id S1726778AbgD3Tdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52192 "EHLO
+        Thu, 30 Apr 2020 15:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgD3Tc3 (ORCPT
+        with ESMTP id S1726366AbgD3Tdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:32:29 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F4EC035495;
-        Thu, 30 Apr 2020 12:32:28 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so3454831wml.2;
-        Thu, 30 Apr 2020 12:32:28 -0700 (PDT)
+        Thu, 30 Apr 2020 15:33:49 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBACC035494;
+        Thu, 30 Apr 2020 12:33:48 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so2061985lfd.0;
+        Thu, 30 Apr 2020 12:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=NqvUEoit9P+cpSl6nYi0nxVzc/4LWISaQv+Z+9RKBic=;
-        b=ugvEiDv4uJ50G9ECpsXW77N8GR9G2OYI1Bx1JWXCqiRYIfGRe3ZIADdX3eHA0HbYtr
-         NpuJrUkxapdnkXT82XlNUdc7umgOrMnaDHIJWUoIZRyS63JHUzdupOXTxr/R3ljEe2de
-         h1ojessGkRDd9UtORS+nZkS7N+4PZfa1sbYmlCfMpXHwY+D/4ZMfQC817re9sAV9gWD5
-         JoTf6O99UC+dngpULkaZYTDE1nr/HpHM4Tt6SAg03ncRvVxss/rf8Y9ufdUyXk7JlFAA
-         L1NZxyBf3JxQMxdTrkNcbDA9MHVfwNt91Pm8Wl7YnH22TzBmB5q9x8tF9lXGjh1r2FeX
-         zW3g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N21UHwUtojGFrYGUsgpMdiZpUK/5e8XahCdaTyz1hic=;
+        b=Flnu8AmltNiSqSEdZAhCz6x974hUmqtWxh2iiF2EnCS+b0uFjxFN2M8Rp1Y3Gln8PY
+         HHblTtK4rcJMbneYQ/z+L2Zq6xAbpaodd/sFjl1FSYwSxRzp4VbCuVUpWK56QsD5bO0S
+         4kcZG3uit7qXR/JemhYNh9RX2fr61HhXEgusahwTlcCJiyNayonTBnS1E+8BBRoRvB0C
+         mrOimLOoPGFJJCiMV5h+4BtW00mncQv4v51GpYEPBojASPOj/OsxD9NHfbUV6HrktXfC
+         t0V5DuXASYBTd51iPDYGNZ6B78VRTw+wiC1G8QoxviJrnWM2uiTifh17n3p5RJ6RYJmC
+         uwvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NqvUEoit9P+cpSl6nYi0nxVzc/4LWISaQv+Z+9RKBic=;
-        b=irbT5XOCIp7X/5GdJZHl5/gF+0L5WH6tfdkBfI9yFA+bMItTtJ/QbVpkinj2hWe9xo
-         dmmk5CPdPnHzWBk1nG/94l74tyhbQPusQ8hTIpl6qYPSDfopYuL5up+Dsg8WvADTVjsQ
-         jbKMwrn1J2YLLHk47ed0nY9BAMMRNqZXLPrDbm3ujpi8tF1VPZvPw+fFBVS2Ujn+7lHu
-         zxc+K6TOsX+kZ8x47E8ZCPmXD5TNvzruZuBL1j57Lxqhg4O79qMBeS8wqqCd59eccJH/
-         2AkrM6jgh3igay0QWQDix5GhpUP92doJ7Bem7J2vwf3bvwSz5Qs48TsNvm4QuuQyl9ae
-         nP6A==
-X-Gm-Message-State: AGi0PuasVV1DpSH+yXxQLCIRjbKfnIE8WAgfp3gPj2cKUjSGARqysAXB
-        eYf5+3cbBVjeviB2fN8s5uQFWjI/
-X-Google-Smtp-Source: APiQypKnaO0GEo57412SWqh2djAMIR+mjnRI2ETYvmbpg6yy+Cb21M3QDJL/rductp/TeOeDRM66sA==
-X-Received: by 2002:a1c:7715:: with SMTP id t21mr150525wmi.182.1588275147391;
-        Thu, 30 Apr 2020 12:32:27 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.131.64])
-        by smtp.gmail.com with ESMTPSA id h188sm917002wme.8.2020.04.30.12.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:32:26 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] io_uring: don't trigger timeout with another t-out
-Date:   Thu, 30 Apr 2020 22:31:09 +0300
-Message-Id: <2fd19ca7ea8ce47a19802abf38d64a1460c9002f.1588253029.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1588253029.git.asml.silence@gmail.com>
-References: <cover.1588253029.git.asml.silence@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N21UHwUtojGFrYGUsgpMdiZpUK/5e8XahCdaTyz1hic=;
+        b=qIVH3+vjpnF3GhhWUuj001a6Ectrw/6S2p/5thkxxDcezhJ0xY20cvKF//H82VlrCi
+         EzO/Zhkbgim4tvew14NmVeJQdXtj3z1vzVLUJrum6zUZGF1l6GTcDWL2jQhF07IsG57P
+         5hg6PHGD5zwTUhAm72Kb5VWDrpo5LpDaxMq/nPh0zpuSQ/keLecn0BDUlI0hVh5AKI8H
+         WvosZHHUkt0qO/Xcl1hMcgCeWVRnKCgIrc8fqrlIMTwebwPYv9rIcVQBeKIf0YBtv2oz
+         eBs4T4H0tiHoNZ0sXulEnIkmRDvNI0zfgh5DXxiD9MlpojgNhPyJ/zVNUB0T7bR0fyMY
+         eQlw==
+X-Gm-Message-State: AGi0PuYXZpkO0MXQeLyCbmEViQtnvR3XMT9mX7gCLY57LgaeVpT0g7Bt
+        wVE8otVREROpWWNhVMrc3bk4rpdp
+X-Google-Smtp-Source: APiQypKcJeTLicQiy3MA/QNzKLfjDr3UefC+JvTUATlunfuuHaaXCBh6cS+f/mZY1ETyyN5p/RjqIw==
+X-Received: by 2002:a19:f70c:: with SMTP id z12mr160047lfe.78.1588275226646;
+        Thu, 30 Apr 2020 12:33:46 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id 25sm449422lft.68.2020.04.30.12.33.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 12:33:45 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+ <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+Date:   Thu, 30 Apr 2020 22:33:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When deciding whether to fire a timeout basing on number of completions,
-ignore CQEs emitted by other timeouts.
+30.04.2020 22:09, Sowjanya Komatineni пишет:
+> 
+> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
+>>
+>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
+>>>>>
+>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
+>>>>>> 30.04.2020 17:02, Dmitry Osipenko пишет:
+>>>>>>> 30.04.2020 16:56, Dmitry Osipenko пишет:
+>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni пишет:
+>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
+>>>>>>>>> +{
+>>>>>>>>> +    struct tegra_vi_channel *chan = data;
+>>>>>>>>> +    struct tegra_channel_buffer *buf;
+>>>>>>>>> +
+>>>>>>>>> +    set_freezable();
+>>>>>>>>> +
+>>>>>>>>> +    while (1) {
+>>>>>>>>> +        try_to_freeze();
+>>>>>>>> I guess it won't be great to freeze in the middle of a capture
+>>>>>>>> process, so:
+>>>>>>>>         if (list_empty(&chan->done))
+>>>>>>>>             try_to_freeze();
+>>>>>>> And here should be some locking protection in order not race with
+>>>>>>> the
+>>>>>>> chan_capture_kthread_start because kthread_finish could freeze
+>>>>>>> before
+>>>>>>> kthread_start.
+>>>>>> Or maybe both start / finish threads should simply be allowed to
+>>>>>> freeze
+>>>>>> only when both capture and done lists are empty.
+>>>>>>
+>>>>>> if (list_empty(&chan->capture) &&
+>>>>>>      list_empty(&chan->done))
+>>>>>>     try_to_freeze();
+>>>>>
+>>>>> good to freeze when not in middle of the frame capture but why
+>>>>> should we not allow freeze in between captures?
+>>>>>
+>>>>> Other drivers do allow freeze in between frame captures.
+>>>>>
+>>>>> I guess we can freeze before dequeue for capture and in finish
+>>>>> thread we can freeze after capture done. This also don't need to
+>>>>> check for list_empty with freeze to allow between frame captures.
+>>>>>
+>>>> Also if we add check for both lists empty, freeze is not allowed as
+>>>> long as streaming is going on and in case of continuous streaming
+>>>> freeze will never happen.
+>>>
+>> To allow freeze b/w frames (but not in middle of a frame),
+>>
+>> for capture_start thread, probably we can do unconditional
+>> try_to_freeze()
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
+Is it possible to use wait_event_freezable()?
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 006ac57af842..fb8ec4b00375 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1098,33 +1098,20 @@ static void io_kill_timeouts(struct io_ring_ctx *ctx)
- 	spin_unlock_irq(&ctx->completion_lock);
- }
- 
--static inline bool io_check_in_range(u32 pos, u32 start, u32 end)
--{
--	/* if @end < @start, check for [end, MAX_UINT] + [MAX_UINT, start] */
--	return (pos - start) <= (end - start);
--}
--
- static void __io_flush_timeouts(struct io_ring_ctx *ctx)
- {
--	u32 end, start;
--
--	start = end = ctx->cached_cq_tail;
- 	do {
- 		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
- 							struct io_kiocb, list);
- 
- 		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
- 			break;
--		/*
--		 * multiple timeouts may have the same target,
--		 * check that @req is in [first_tail, cur_tail]
--		 */
--		if (!io_check_in_range(req->timeout.target_seq, start, end))
-+		if (req->timeout.target_seq != ctx->cached_cq_tail
-+					- atomic_read(&ctx->cq_timeouts))
- 			break;
- 
- 		list_del_init(&req->list);
- 		io_kill_timeout(req);
--		end = ctx->cached_cq_tail;
- 	} while (!list_empty(&ctx->timeout_list));
- }
- 
-@@ -4688,7 +4675,7 @@ static int io_timeout(struct io_kiocb *req)
- 		goto add;
- 	}
- 
--	tail = ctx->cached_cq_tail;
-+	tail = ctx->cached_cq_tail - atomic_read(&ctx->cq_timeouts);
- 	req->timeout.target_seq = tail + off;
- 
- 	/*
--- 
-2.24.0
+https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
 
+Will the wait_event_interruptible() be woken up when system freezes?
+
+>> for capture_finish thread, at end of capture done we can do
+>> try_to_freeze() only when done list is empty
+
+This doesn't prevent situation where the done-list is empty and the
+"finish" thread freezes, in the same time the "start" thread issues new
+capture and then freezes too.
+
+1. "start" thread issues capture
+
+2. "finish" thread wakes and waits for the capture to complete
+
+3. "start" thread begins another capture, waits for FRAME_START
+
+4. system freezing activates
+
+5. "finish" thread completes the capture and freezes because done-list
+is empty
+
+6. "start" thread gets FRAME_START, issues another capture and freezes
+
+> My understanding is buffer updates/release should not happen after
+> frozen state. So we should let frame capture of outstanding buffer to
+> finish before freezing in capture_finish thread.
+> 
+> But for capture_start thread we can unconditionally freeze before
+> dequeuing next buffer for capture.
+> 
+> With this when both threads are in frozen state and no buffer
+> updates/captures will happen after frozen state.
+> 
+> I think its not required to finish streaming of all frames completely to
+> let threads to enter frozen state as streaming can be continuous as well.
+
+Yes, only freezing in the middle of IO should be avoided.
+
+https://lwn.net/Articles/705269/
+
+>>> Hi Dmitry,
+>>>
+>>> Will update in v12 to not allow freeze in middle of a frame capture.
+>>>
+>>> Can you please confirm on above if you agree to allow freeze to
+>>> happen in b/w frame captures?
+>>>
+>>> Also as most feedback has been received from you by now, appreciate
+>>> if you can provide all in this v11 if you have anything else so we
+>>> will not have any new changes after v12.
+
+I'll take another look tomorrow / during weekend and let you know.
