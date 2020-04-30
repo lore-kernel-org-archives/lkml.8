@@ -2,105 +2,118 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE4BC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C43C8300D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6C12186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB31120575
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD3KLM (ORCPT
+        id S1727071AbgD3KMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:11:12 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:46104 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgD3KLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:11:09 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 711EB1A075C;
-        Thu, 30 Apr 2020 12:11:07 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 64EBE1A0759;
-        Thu, 30 Apr 2020 12:11:07 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D226203C1;
-        Thu, 30 Apr 2020 12:11:07 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 13:11:07 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] clk: imx8mp: Set the correct parent for audio_root_clk
-Message-ID: <20200430101107.t76727jwwkyhlkvd@fsr-ub1664-175>
-References: <1588000281-6594-1-git-send-email-abel.vesa@nxp.com>
- <AM6PR04MB49663A072F56397BE55FF3C480AC0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+        Thu, 30 Apr 2020 06:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726626AbgD3KMH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:12:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0899C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:12:06 -0700 (PDT)
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jU6Ah-000826-Ty; Thu, 30 Apr 2020 12:11:59 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jU6Af-00047P-AG; Thu, 30 Apr 2020 12:11:57 +0200
+Date:   Thu, 30 Apr 2020 12:11:57 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200430101157.GD2188@pengutronix.de>
+References: <20200429162437.2025699-1-robert.foss@linaro.org>
+ <20200429162437.2025699-3-robert.foss@linaro.org>
+ <20200430093524.GB2188@pengutronix.de>
+ <20200430094549.GF867@valkosipuli.retiisi.org.uk>
+ <20200430095332.GC2188@pengutronix.de>
+ <20200430095907.GG867@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR04MB49663A072F56397BE55FF3C480AC0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200430095907.GG867@valkosipuli.retiisi.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 12:00:34 up 68 days, 21:17, 162 users,  load average: 1.44, 7.88,
+ 6.50
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-04-28 08:15:51, Aisheng Dong wrote:
-> > From: Abel Vesa <abel.vesa@nxp.com>
-> > Sent: Monday, April 27, 2020 11:11 PM
-> > 
-> > Instead of ipg_root, the parent needs to be ipg_audio_root.
-> > 
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+On 20-04-30 12:59, Sakari Ailus wrote:
+> Hi Marco,
 > 
-> I have a few doubts about this patch:
-> 1. From latest RM, it seems CCGR101 (0x4650) is a shared gate for many audio instances.
-> 2. If this patch is about AUDIO_AHB_CLK_ROOT, then it's parent is AHB[POST_PODF] from the clock tree in RM.
-> Not quite understand why this patch changes to IPG[POST_PODF]. Is this RM incorrect issue?
+> On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
+> > Hi Sakari,
+> > 
+> > On 20-04-30 12:45, Sakari Ailus wrote:
+> > > Hi Marco,
+> > > 
+> > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
+
+...
+
+> > > > > -	if (mclk != OV8856_MCLK) {
+> > > > > -		dev_err(dev, "external clock %d is not supported", mclk);
+> > > > > -		return -EINVAL;
+> > > > > +	if (!is_acpi_node(fwnode)) {
+> > > > > +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> > > > > +		if (IS_ERR(ov8856->xvclk)) {
+> > > > > +			dev_err(dev, "could not get xvclk clock (%pe)\n",
+> > > > > +					ov8856->xvclk);
+> > > > > +			return PTR_ERR(ov8856->xvclk);
+> > > > > +		}
+> > > > > +
+> > > > > +		clk_set_rate(ov8856->xvclk, xvclk_rate);
+> > > > > +		xvclk_rate = clk_get_rate(ov8856->xvclk);
+> > > > >  	}
+> > > > 
+> > > > Why do we handle the clock only in DT case? Is there a problem with the
+> > > > clock handling and ACPI?
+> > > 
+> > > Not really, it's just that ACPI does not provide an interface to the clocks
+> > > as such.
+> > 
+> > But you will get a clk by devm_clk_get()?
 > 
-> BTW, if this patch is taken from someone else, we usually better keep the original author if not fundamental changes.
+> No, because ACPI does not expose one to drivers. Effectively the entire
+> power sequences are implemented in ACPI, not in the driver.
 > 
 
-I made this change at the suggestion from S.j. Wang.
-I'm the original author in linux-nxp (internal tree).
+Ah okay, thanks for the explanation. I'm really not into the ACPI
+stuff.. So this means the __power_off / power_on should only be done if
+we are using DT's?
 
-> Regards
-> Aisheng
-> 
-> > ---
-> >  drivers/clk/imx/clk-imx8mp.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c index
-> > 41469e2..dcdfc9d 100644
-> > --- a/drivers/clk/imx/clk-imx8mp.c
-> > +++ b/drivers/clk/imx/clk-imx8mp.c
-> > @@ -727,7 +727,7 @@ static int imx8mp_clocks_probe(struct platform_device
-> > *pdev)
-> >  	hws[IMX8MP_CLK_HDMI_ROOT] = imx_clk_hw_gate4("hdmi_root_clk",
-> > "hdmi_axi", ccm_base + 0x45f0, 0);
-> >  	hws[IMX8MP_CLK_TSENSOR_ROOT] =
-> > imx_clk_hw_gate4("tsensor_root_clk", "ipg_root", ccm_base + 0x4620, 0);
-> >  	hws[IMX8MP_CLK_VPU_ROOT] = imx_clk_hw_gate4("vpu_root_clk",
-> > "vpu_bus", ccm_base + 0x4630, 0);
-> > -	hws[IMX8MP_CLK_AUDIO_ROOT] = imx_clk_hw_gate4("audio_root_clk",
-> > "ipg_root", ccm_base + 0x4650, 0);
-> > +	hws[IMX8MP_CLK_AUDIO_ROOT] = imx_clk_hw_gate4("audio_root_clk",
-> > +"ipg_audio_root", ccm_base + 0x4650, 0);
-> > 
-> >  	hws[IMX8MP_CLK_ARM] = imx_clk_hw_cpu("arm", "arm_a53_core",
-> >  					     hws[IMX8MP_CLK_A53_CORE]->clk,
-> > --
-> > 2.7.4
-> 
+Regards,
+  Marco
