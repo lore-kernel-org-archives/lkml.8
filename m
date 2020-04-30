@@ -2,115 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68FAC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9005C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F63208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901202076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:28:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMKcXJnv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SLiAg5x6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgD3NYZ (ORCPT
+        id S1726962AbgD3N2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727085AbgD3NYY (ORCPT
+        Thu, 30 Apr 2020 09:28:12 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41116 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726685AbgD3N2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:24:24 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64271C035494;
-        Thu, 30 Apr 2020 06:24:23 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h4so6432840ljg.12;
-        Thu, 30 Apr 2020 06:24:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qde8t3vRUc/hQ/MC7JEYphNWgl9OWJai6PKBunRXPXA=;
-        b=lMKcXJnvcttkwHN0EbPnQfc1IC1TeYfDz2/nKRisC3XiSrB6PRb6AMLIkRVM3+cbXv
-         iSFdihYCojZZbCI4glgaa3Lz74NEbsN/kPs0wpfm/7+amrmd9LCoShpr0Id6Kx9ieenf
-         mIuqI/Zqr06HVNstAfDNtLuoPQ0TkhhpbiSQwy7X8XiTYsU5XWgZeHOzRH7pU20SKimY
-         0LtRVMhyDxnuDRD4qQ6H5emdnmTEuNwSTu8+HDURfpB4WZcz0ajyGLhdY9v6oS/GzE1y
-         BHDTbisHQnjiUv9Yu5jUZf5t4lke+TxWj7+CKHzhXHeSxITy+6mhIzInLIFAvEdHIDoQ
-         CIBg==
+        Thu, 30 Apr 2020 09:28:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588253291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VAxtXeE7jABzTDpf7SPMl48rHqhFXJS9keWJIiG3Vjk=;
+        b=SLiAg5x6zLzSI03Q5HaZEdnZTNFklIAEnOZIHyWeDpSVXMmBmfd66hsTmeH3kOHIE6WZIr
+        4tMq0g8gXX3hdzbBgLfKvLxBnGIig+Oqgeeile1sLGZuB5wSu5hJUzFqIQ09tLsp3C8wJj
+        NA79besaqkrSg44gP5Ovuyq/iSqV7y0=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-PBa_XjHKPHKKMlvkPtHqAw-1; Thu, 30 Apr 2020 09:28:09 -0400
+X-MC-Unique: PBa_XjHKPHKKMlvkPtHqAw-1
+Received: by mail-qk1-f200.google.com with SMTP id 30so6386479qkp.21
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:28:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qde8t3vRUc/hQ/MC7JEYphNWgl9OWJai6PKBunRXPXA=;
-        b=YsILYFAR32LJqnoMTOfitLmbeOJMuz6xK0+LxnbQfh+yKiIDTtrP0Q++H82evq5TF5
-         ocBZneha8HIrND0dQi07mWsLK3DKBOgxEJQ+g9IS63F9GW19eQd92+nWEJmGgHRA8c2u
-         R9olJkzyu3sZ/WPJw5Wf+0uIw6qtVbBH9E9BNlIVH+hVdBieRh0L7qs/maiyYGQbS6Ci
-         /eLQd9uocNCFf9XtDIx3wzezNaV2VogKwNcO+x8g2QD3RPFrieNRQ2kFVy1z6/azcZ/0
-         PAPZ4KWtJyVS181KyWUSYY404P7ir/F3Xmknr7C3qlWPmZr617kOQCSj9DWDRJYB/ldE
-         QmCA==
-X-Gm-Message-State: AGi0PuZBa3fSQkKA6s+yF0a1xiZp+dEDGaYEJUKNzL8eyNinFfXw0Aw4
-        qNmzSK/DZnj4O0z6tSv45YCvBReR
-X-Google-Smtp-Source: APiQypKVnFF7PMVGH7zBRJZEH4i3Y3qqneV0Yoo3oMoTYqDvFv2MSojkc9RD0I7qj0CVmALYXElfpQ==
-X-Received: by 2002:a2e:99c2:: with SMTP id l2mr2248343ljj.92.1588253061664;
-        Thu, 30 Apr 2020 06:24:21 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id h6sm4566128ljj.29.2020.04.30.06.24.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 06:24:20 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 3/5] media: tegra-video: Move PM runtime handle to
- streaming
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588047650-29402-1-git-send-email-skomatineni@nvidia.com>
- <1588047650-29402-4-git-send-email-skomatineni@nvidia.com>
- <631390cb-9aff-0e3f-6c39-81d6c565987e@gmail.com>
- <3ef69413-a606-b475-f530-d5534760b73b@nvidia.com>
- <2b334095-fadb-bf0a-f7a8-62fc798c2bd2@gmail.com>
- <18a7b095-7f0f-7819-c786-7e011cfd14ed@nvidia.com>
- <ce31e273-f424-f13e-5cd6-0db2589a2a10@gmail.com>
- <5741d5d3-e474-e23c-4841-809df5760067@nvidia.com>
- <f6e34203-3e4b-b804-30a5-bf78445ab366@gmail.com>
-Message-ID: <6a676161-e948-9afc-296b-ccd1df202e36@gmail.com>
-Date:   Thu, 30 Apr 2020 16:24:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VAxtXeE7jABzTDpf7SPMl48rHqhFXJS9keWJIiG3Vjk=;
+        b=D56PdBFnq9gHNC712bCCnExSGf9a/33Xie5a9Sy3fhHBdh4hc3u8CqeUyzEBi8sTjn
+         LA818UK0axiarg+liWV5/i9fXncbrZqyYozCErMv+a1nEBSQt1aN4a4Pt0a0ObsH8+DA
+         DuEv7elufYstMxGCG6jkU7poUYIsKtEjXrt2Enl2a21BrCnThWqYFTOBTctN5LxxL4lZ
+         JRDpyoG3H/WwsbbJnausL1KbmEwoRbkM1d96zQ3WyzxG/vGnChqVNB+I9qJPuNWXJkLO
+         KsGzncQVbLlvOnCGv/L8FLsIqEgxCEf/IBM9/MCF9b+rxeW+5aZVBrBCZ80UzzDkCYhB
+         r0WQ==
+X-Gm-Message-State: AGi0PuZd6RRh+Z6bUVgttzhOVQOmv10HgTvVOZDKmCcTpisPiVp4QznY
+        cYUyYCye2NHWNuVp4qT/y8qMq7WQQH8pzJpsX7iZmnElRHO/xnx9WzucdBWLt/icZ/5/aEvXzbw
+        9h/nuxW62v7z7cFNBUwTMx0U/
+X-Received: by 2002:a37:b141:: with SMTP id a62mr3469473qkf.135.1588253288515;
+        Thu, 30 Apr 2020 06:28:08 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIfQeoTAzFa9+FkrkC/xFo4/XpcSAU+KiLE0SM26HDG/2LCq0fmh2kYaCiKeF3HdOmVYFBpdQ==
+X-Received: by 2002:a37:b141:: with SMTP id a62mr3469441qkf.135.1588253288132;
+        Thu, 30 Apr 2020 06:28:08 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id b42sm2186346qta.29.2020.04.30.06.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 06:28:07 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 09:28:05 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH RFC 3/6] KVM: x86: interrupt based APF page-ready event
+ delivery
+Message-ID: <20200430132805.GB40678@xz-x1>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-4-vkuznets@redhat.com>
+ <20200429212708.GA40678@xz-x1>
+ <87v9lhfk7v.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <f6e34203-3e4b-b804-30a5-bf78445ab366@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <87v9lhfk7v.fsf@vitty.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.04.2020 19:04, Dmitry Osipenko пишет:
-...
->>>>>>>> +             ret = pm_runtime_get_sync(csi->dev);
->>>>>>>> +             if (ret < 0) {
->>>>>>>> +                     dev_err(csi->dev,
->>>>>>>> +                             "failed to get runtime PM: %d\n",
->>>>>>>> ret);
->>>>>>>> +                     pm_runtime_put_noidle(csi->dev);
->>> Why this pm_runtime_put_noidle() is needed? This should be wrong, please
->>> remove it.
->>
->> pm_runtime_get_sync() increments power.usage_count prior to rpm_resume
->>
->> if rpm_resume fails it does not decrement usage_count.
->>
->> So to balance count on failure, calling pm_runtime_put_noidle()
+On Thu, Apr 30, 2020 at 10:31:32AM +0200, Vitaly Kuznetsov wrote:
+> as we need to write to two MSRs to configure the new mechanism ordering
+> becomes important. If the guest writes to ASYNC_PF_EN first to establish
+> the shared memory stucture the interrupt in ASYNC_PF2 is not yet set
+> (and AFAIR '0' is a valid interrupt!) so if an async pf happens
+> immediately after that we'll be forced to inject INT0 in the guest and
+> it'll get confused and linkely miss the event.
 > 
-> Hmm.. maybe you're right. I'll need to take a more detailed look.
-> 
+> We can probably mandate the reverse sequence: guest has to set up
+> interrupt in ASYNC_PF2 first and then write to ASYNC_PF_EN (with both
+> bit 0 and bit 3). In that case the additional 'enable' bit in ASYNC_PF2
+> seems redundant. This protocol doesn't look too complex for guests to
+> follow.
 
-I checked the RPM's use-count after error condition and yours variant is
-correct. Perhaps we should start correcting all other Tegra drivers that
-do not handle the RPM error properly.
+Yep looks good.  We should also update the document too about the fact.
+
+Thanks,
+
+-- 
+Peter Xu
+
