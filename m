@@ -2,123 +2,89 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12492C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9B3C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25B92070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:47:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DR4GRE1T"
+	by mail.kernel.org (Postfix) with ESMTP id EA6A6208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588265283;
+	bh=axoYz9ubvidu6Q4qb8tE1iZySwHLJ5aESX8frhVyuiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=neadj2oKAh1Tv4ACAITaci+EI86iVcOYchFiYf48p6hT+TIHH7c8o2Q697OOwv+Oj
+	 CWbGTxmJR1xEbEMjGBmN31KYWPg8CZbLw6ibJFabQpJhmhtVCw4uVSYgo3l6L3KS8/
+	 /h8XVfmPRI3geyK3hjEYbmfLPXZBMzNpw8TsZufs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgD3Qrl (ORCPT
+        id S1726745AbgD3QsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726396AbgD3Qrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:47:41 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E848C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:47:41 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id 19so2171669ioz.10
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:47:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hBtVi/B4LPd4rRf9CEmZJjnlyoXbvXsuWtCUKyK+qR8=;
-        b=DR4GRE1TTJdVdqqNkzD9HvSJO3aKd8slDhb6oW+zf4W3fg6ciNocMNd0uAmOp9/LgQ
-         cdAfiNZUtnc15ebRDnToxFcEed9hDv0mdi28ZFPnEVxiEfo+BQszuWQgZRn65MiJoAyJ
-         jn97XH/UG5N4WBMhhQ3jQLMtEX4MQqOPntizs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hBtVi/B4LPd4rRf9CEmZJjnlyoXbvXsuWtCUKyK+qR8=;
-        b=I/ZI+gnh+XIj3Z40K/qefidUDDuiDlPjLC+eTY1YqOKIHehOqCQD3WXft91RSGmErw
-         OFOrgQJK9xHLWnVN6Uhdixo4lJdROVwVLAdEt79f7H9K2uVfcImbuWFxy4kw09ffdVhC
-         32r8MVlHN/DdTwXMM4kCEuOrD8JfCQmoA8CU9fTiCmzSb2/gg7CSBuaneGgR2E6Fye1q
-         q/V7ELbXko0JfPF3PurHCjpF8Jk0CRkMwnNFTQYPmcSkKmKjSNpGdbQDv0eaQPJZNH1h
-         xJNzeCwj5XmEXsSif6Zs3z6dr17uZ+HMF7RyC17k4RkoOz/gLpn9woiG/BkQ2aKLgZUY
-         SnEQ==
-X-Gm-Message-State: AGi0PuZAgeCvr7L3Vz5lLr/JqfU4ymx/Swsft2cvb34oDYkLkqRocMBg
-        XkWOZzbznooEWmSaTQ0w5jPH90YSY+M=
-X-Google-Smtp-Source: APiQypLl4afuSKhEVh1sZFMBRA4i+0D99g1WeGAFzhSM3nvJs3kfKgXXXGLYPsDF/9G24lFl3YSq7A==
-X-Received: by 2002:a02:a517:: with SMTP id e23mr2619012jam.56.1588265260557;
-        Thu, 30 Apr 2020 09:47:40 -0700 (PDT)
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com. [209.85.166.43])
-        by smtp.gmail.com with ESMTPSA id g90sm127323ila.19.2020.04.30.09.47.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 09:47:40 -0700 (PDT)
-Received: by mail-io1-f43.google.com with SMTP id k23so2195369ios.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:47:40 -0700 (PDT)
-X-Received: by 2002:a5d:87cd:: with SMTP id q13mr2758350ios.61.1588265259570;
- Thu, 30 Apr 2020 09:47:39 -0700 (PDT)
+        Thu, 30 Apr 2020 12:48:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbgD3QsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:48:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7332070B;
+        Thu, 30 Apr 2020 16:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588265281;
+        bh=axoYz9ubvidu6Q4qb8tE1iZySwHLJ5aESX8frhVyuiE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ca/g0WoiwN4MNpRo23zI84MuVdc3f57axAaaKLI+X0I8yCH2/jidRQBKHbK8Kj0le
+         p0ifJPTxniAeJNPxdDSQ3sL1FcGdRO8dvdmXF6bViBXQY+Fl9+SUzjn0eh/2hXocYc
+         SNXgDN/8PRduyw3CCDEyv20e7Bjs+BAm0Et0exUw=
+Date:   Thu, 30 Apr 2020 17:47:56 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        mark.rutland@arm.com, maz@kernel.org, suzuki.poulose@arm.com,
+        James Morse <james.morse@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 00/16] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1,
+ ID_MMFR5 and other changes
+Message-ID: <20200430164756.GH25258@willie-the-truck>
+References: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
+ <6749304e-8a4d-f4b9-eb40-91f0dd13166e@arm.com>
+ <20200429212614.GD8604@willie-the-truck>
+ <da15c0f0-f8ec-c2bc-bd5b-907a75119dc1@arm.com>
 MIME-Version: 1.0
-References: <20200429170804.880720-1-daniel.thompson@linaro.org> <20200430161741.1832050-1-daniel.thompson@linaro.org>
-In-Reply-To: <20200430161741.1832050-1-daniel.thompson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 30 Apr 2020 09:47:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U64XLRFkTyTi1qDZjTYQKJ9WVBf3OoULpw6yncOQURTg@mail.gmail.com>
-Message-ID: <CAD=FV=U64XLRFkTyTi1qDZjTYQKJ9WVBf3OoULpw6yncOQURTg@mail.gmail.com>
-Subject: Re: [PATCH v2] serial: kgdboc: Allow earlycon initialization to be deferred
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da15c0f0-f8ec-c2bc-bd5b-907a75119dc1@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Apr 30, 2020 at 08:29:44AM +0530, Anshuman Khandual wrote:
+> On 04/30/2020 02:56 AM, Will Deacon wrote:
+> > On Wed, Apr 29, 2020 at 03:07:15PM +0530, Anshuman Khandual wrote:
+> >> On 04/14/2020 03:18 PM, Anshuman Khandual wrote:
+> >>> Changes in V2:
+> >>>
+> >>> - Added Suggested-by tag from Mark Rutland for all changes he had proposed
+> >>> - Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
+> >>> - Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
+> >>> - Added ID_DFR1 and ID_MMFR5 system register definitions per Will
+> >>> - Added remaining features bits for relevant 64 bit system registers per Will
+> >>> - Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
+> >>> - Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
+> >>> - Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
+> >>> - Changed some commit messages
+> >>
+> >> Just a gentle ping. I am wondering if you had a chance to glance
+> >> through this updated series.
+> > 
+> > Please can you resend based on for-next/cpufeature?
+> 
+> Sure, will do.
 
-On Thu, Apr 30, 2020 at 9:18 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> Currently there is no guarantee that an earlycon will be initialized
-> before kgdboc tries to adopt it. Almost the opposite: on systems
-> with ACPI then if earlycon has no arguments then it is guaranteed that
-> earlycon will not be initialized.
->
-> This patch mitigates the problem by giving kgdboc_earlycon a second
-> chance during console_init(). This isn't quite as good as stopping during
-> early parameter parsing but it is still early in the kernel boot.
->
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->
-> Notes:
->     v2: Simplified, more robust, runs earlier, still has Doug's
->         recent patchset as a prerequisite. What's not to like?
->
->     More specifically, based on feedback from Doug Anderson, I
->     have replaced the initial hacky implementation with a console
->     initcall.
->
->     I also made it defer more aggressively after realizing that both
->     earlycon and kgdboc_earlycon are handled as early parameters
->     (meaning I think the current approach relies on the ordering
->     of drivers/tty/serial/Makefile to ensure the earlycon is enabled
->     before kgdboc tries to adopt it).
->
->     Finally, my apologies to Jason and kgdb ML folks, who are seeing
->     this patch for the first time. I copied the original circulation
->     list from a patch that wasn't kgdb related and forgot to update.
->
->  drivers/tty/serial/kgdboc.c | 41 +++++++++++++++++++++++++++++++++++--
->  1 file changed, 39 insertions(+), 2 deletions(-)
+Thanks. I'll keep an eye out for them.
 
-Thanks, this looks great!
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Will
