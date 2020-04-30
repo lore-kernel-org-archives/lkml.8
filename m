@@ -2,130 +2,137 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEDFC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC6BC83009
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547142073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1635721973
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588234003;
+	bh=/yZOHoDX1nONlr6EIuWq1MLzabyhsCxyiK11zIWZqK8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AxfDhUg4zEhEWXQzCsGnXqKJuij48W7Pi8mKqElDaFaVRn8Il7pMB1QU+/Fg0fcAx
+	 GrqO8eJFV3NuUkcEEVZydLOhQDsbcGSAcv9OFxhPqdRr07uo1rG2MAT/z5GD70AQTP
+	 eR55Zuhb+1gWw9GYrTLY8XlLesjAsKYt9Dw9RMYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgD3IDx convert rfc822-to-8bit (ORCPT
+        id S1726689AbgD3IGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:03:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41484 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726476AbgD3IDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:03:52 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-188-QwramPYPODaeNg-qytVVbw-1; Thu, 30 Apr 2020 09:03:47 +0100
-X-MC-Unique: QwramPYPODaeNg-qytVVbw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 Apr 2020 09:03:47 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 Apr 2020 09:03:47 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Roberto Sassu' <roberto.sassu@huawei.com>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "rgoldwyn@suse.de" <rgoldwyn@suse.de>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "silviu.vlasceanu@huawei.com" <silviu.vlasceanu@huawei.com>,
-        "krzysztof.struczynski@huawei.com" <krzysztof.struczynski@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [RESEND][PATCH v2 3/6] ima: Fix ima digest hash table key
- calculation
-Thread-Topic: [RESEND][PATCH v2 3/6] ima: Fix ima digest hash table key
- calculation
-Thread-Index: AQHWHS80o0OMQYVPmUqc5kiRSsIx16iRUJzg
-Date:   Thu, 30 Apr 2020 08:03:47 +0000
-Message-ID: <060c71f88c8d4c6a9fafca4b329605c5@AcuMS.aculab.com>
-References: <20200427102900.18887-3-roberto.sassu@huawei.com>
- <20200428073010.25631-1-roberto.sassu@huawei.com>
-In-Reply-To: <20200428073010.25631-1-roberto.sassu@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 30 Apr 2020 04:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgD3IGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:06:41 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DE22073E;
+        Thu, 30 Apr 2020 08:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588234000;
+        bh=/yZOHoDX1nONlr6EIuWq1MLzabyhsCxyiK11zIWZqK8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ajtL/aqywUl5X1FHyaEFS+da9+i3QR+qOmoX2r7A8jPKoT1iMx2YUAsSzDqQuwjvh
+         NtC8kBMeHg9SqYczMGSCw0B+IepJcGHh+OKt+TLreyNgA9t9GU2wOF+4uj/jdoJ1P6
+         43753G4QnsHbYv7RTUc2ZKm8m4r/NdjLw9I0gj7E=
+Received: by pali.im (Postfix)
+        id 8D14C7AD; Thu, 30 Apr 2020 10:06:38 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and Compex wifi cards
+Date:   Thu, 30 Apr 2020 10:06:13 +0200
+Message-Id: <20200430080625.26070-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu
-> Sent: 28 April 2020 08:30
-> From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-> 
-> Function hash_long() accepts unsigned long, while currently only one byte
-> is passed from ima_hash_key(), which calculates a key for ima_htable.
-> 
-> Given that hashing the digest does not give clear benefits compared to
-> using the digest itself, remove hash_long() and return the modulus
-> calculated on the first two bytes of the digest with the number of slots.
-> Also reduce the depth of the hash table by doubling the number of slots.
-> 
-> Changelog
-> 
-> v2: directly access the first two bytes of the digest to avoid memory
->     access issues on big endian systems (suggested by David Laight)
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
-> Co-developed-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Hello,
 
-Acked-by: David.Laight@aculab.com
+this is the fourth version of the patch series for Armada 3720 PCIe
+controller (aardvark). It's main purpose is to fix some bugs regarding
+buggy ath10k cards, but we also found out some suspicious stuff about
+the driver and the SOC itself, which we try to address.
 
-> ---
->  security/integrity/ima/ima.h | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 467dfdbea25c..02796473238b 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -36,7 +36,7 @@ enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
->  #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
->  #define IMA_EVENT_NAME_LEN_MAX	255
-> 
-> -#define IMA_HASH_BITS 9
-> +#define IMA_HASH_BITS 10
->  #define IMA_MEASURE_HTABLE_SIZE (1 << IMA_HASH_BITS)
-> 
->  #define IMA_TEMPLATE_FIELD_ID_MAX_LEN	16
-> @@ -179,9 +179,10 @@ struct ima_h_table {
->  };
->  extern struct ima_h_table ima_htable;
-> 
-> -static inline unsigned long ima_hash_key(u8 *digest)
-> +static inline unsigned int ima_hash_key(u8 *digest)
->  {
-> -	return hash_long(*digest, IMA_HASH_BITS);
-> +	/* there is no point in taking a hash of part of a digest */
-> +	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
->  }
-> 
->  #define __ima_hooks(hook)		\
-> --
-> 2.17.1
+Patches are available also in my git branch pci-aardvark:
+https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Changes since v3:
+- do not change return value of of_pci_get_max_link_speed() function
+- mark zero 'max-link-speed' as invalid
+- silently use gen3 speed when 'max-link-speed' as invalid
+
+Changes since v2:
+- move PCIe max-link-speed property to armada-37xx.dtsi
+- replace custom macros by standard linux/pci_regs.h macros
+- increase PERST delay to 10ms (needed for initialized Compex WLE900VX)
+- disable link training before PERST (needed for Compex WLE900VX)
+- change of_pci_get_max_link_speed() function to signal -ENOENT
+- handle errors from of_pci_get_max_link_speed() function
+- updated comments, commit titles and messages
+
+Changes since v1:
+- commit titles and messages were reviewed and some of them were rewritten
+- patches 1 and 5 from v1 which touch PCIe speed configuration were
+  reworked into one patch
+- patch 2 from v1 was removed, it is not needed anymore
+- patch 7 from v1 now touches the device tree of armada-3720-db
+- a patch was added that tries to enable PCIe PHY via generic-phy API
+  (if a phandle to the PHY is found in the device tree)
+- a patch describing the new PCIe node DT properties was added
+- a patch was added that moves the PHY phandle from board device trees
+  to armada-37xx.dtsi
+
+Marek and Pali
+
+Marek Behún (5):
+  PCI: aardvark: Improve link training
+  PCI: aardvark: Add PHY support
+  dt-bindings: PCI: aardvark: Describe new properties
+  arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+  arm64: dts: marvell: armada-37xx: Move PCIe comphy handle property
+
+Pali Rohár (7):
+  PCI: aardvark: Train link immediately after enabling training
+  PCI: aardvark: Don't blindly enable ASPM L0s and don't write to
+    read-only register
+  PCI: of: Zero max-link-speed value is invalid
+  PCI: aardvark: Issue PERST via GPIO
+  PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
+  PCI: aardvark: Replace custom macros by standard linux/pci_regs.h
+    macros
+  arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+
+ .../devicetree/bindings/pci/aardvark-pci.txt  |   4 +
+ .../arm64/boot/dts/marvell/armada-3720-db.dts |   3 +
+ .../dts/marvell/armada-3720-espressobin.dtsi  |   2 +-
+ .../dts/marvell/armada-3720-turris-mox.dts    |   6 -
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   4 +-
+ drivers/pci/controller/pci-aardvark.c         | 263 +++++++++++++++---
+ drivers/pci/of.c                              |   2 +-
+ 7 files changed, 231 insertions(+), 53 deletions(-)
+
+-- 
+2.20.1
 
