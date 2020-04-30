@@ -2,123 +2,319 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDE8C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1511AC8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88E4220838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="qkoMOUkb"
+	by mail.kernel.org (Postfix) with ESMTP id ECBCA2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgD3J7g (ORCPT
+        id S1726859AbgD3KA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:59:36 -0400
-Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:37818
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726826AbgD3J7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:59:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uak6xEeq4ji3/4qjjdbTe0Q/oX/Ee1kvVuiX3kQIekOqTmr8AfDPbU3duF7mdyUZxdWtaJ9FOcgWoAL35I60P2JOykarOKc01HlqriDNa1HOetJPv/x9Cmj3yhuxrFUcOW2BAvSPqG+lVEuDLkE+RQLQEZ/FSWnnj5AbvBzvyMIBNO4SaZpUMLqMwpnFrxGCtL8hlkgpEi9fonzfwr2paBlVMdj/bszJmUPV80xLiD6bKLkbBmv/TM+kcZMswO0FtqT0wNYBGssPQi4spmULQKnQ/pTdBov5iIFa/6Rmuk2KoDZfFyxMiPONUPjJmfaIREw6s5mmlf8i1bw9+JxAMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xCjrNLC2LhnFkNcifiJpqfLa/GGgYoNgV84DoNYXhiw=;
- b=N1tFlprDu3Kd8PFMaUXPt9/CBhw1c3mgEUy3DqXs79s1wqHpA8pkOjhgV0O81kOS6YuFKjCf//oVlQbZzV18GG7uND547B3/yk0I9H1xpNh0qlVvQ/JPYPhGUfFxCnjb34RvH38ZthyfoRLeC+pvzud2EAKMJthM/m0R9zpswOzmZ8SuXdIR1nkpNQIIoj9uYTRSWcWEbN/M0Jc4c07hIlnCMv4g1CCs4DaCmJ5NLevOaYZhLn7gkboPKd/5np9xJKV1VukH1selhKjyuPHWSdKsC/n4EL552BzoFFwOuen5JcjBnQ/dxD4GxTegcvTFUyXOb4IowXgFH/VebBdz3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xCjrNLC2LhnFkNcifiJpqfLa/GGgYoNgV84DoNYXhiw=;
- b=qkoMOUkbFbATJoVjN72Ixn7WCyVE5dnwQOGAokQPL8ZaWx6kzbKK3WcFwHbTkAnaix4D3VApMASGZTQGGeubDSjS+fjqz5mT4I1I/K5VqCEHISB9XZtSeYcKBauIiC+UFu5+wvXD5RTqPUG/JV2iblKCw5T7tCT5kBTvAmGI2F8=
-Authentication-Results: microchip.com; dkim=none (message not signed)
- header.d=none;microchip.com; dmarc=none action=none header.from=sifive.com;
-Received: from BN8PR13MB2611.namprd13.prod.outlook.com (2603:10b6:408:81::17)
- by BN8PR13MB2884.namprd13.prod.outlook.com (2603:10b6:408:85::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14; Thu, 30 Apr
- 2020 09:59:18 +0000
-Received: from BN8PR13MB2611.namprd13.prod.outlook.com
- ([fe80::c129:8fca:5ed:8929]) by BN8PR13MB2611.namprd13.prod.outlook.com
- ([fe80::c129:8fca:5ed:8929%6]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
- 09:59:18 +0000
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com
-Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
-        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH 1/2] riscv: defconfig: enable spi nor on Hifive Unleashed A00 board.
-Date:   Thu, 30 Apr 2020 02:58:51 -0700
-Message-Id: <1588240732-13905-2-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588240732-13905-1-git-send-email-sagar.kadam@sifive.com>
-References: <1588240732-13905-1-git-send-email-sagar.kadam@sifive.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR08CA0027.namprd08.prod.outlook.com
- (2603:10b6:a03:100::40) To BN8PR13MB2611.namprd13.prod.outlook.com
- (2603:10b6:408:81::17)
+        Thu, 30 Apr 2020 06:00:59 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39260 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbgD3KA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:00:58 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5272D2007C9;
+        Thu, 30 Apr 2020 12:00:56 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 44A092007C4;
+        Thu, 30 Apr 2020 12:00:56 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C9D320397;
+        Thu, 30 Apr 2020 12:00:56 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 13:00:55 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "aford173@gmail.com" <aford173@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH V2 07/10] clk: imx: add mux ops for i.MX8M composite clk
+Message-ID: <20200430100055.6rhec5rwtz2yyqbl@fsr-ub1664-175>
+References: <1584008384-11578-1-git-send-email-peng.fan@nxp.com>
+ <1584008384-11578-8-git-send-email-peng.fan@nxp.com>
+ <AM6PR04MB4966D0EF272CAB282BF72EB580AE0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB6PR0402MB276047141A63BE756B9C06D988AF0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from gamma07.internal.sifive.com (64.62.193.194) by BYAPR08CA0027.namprd08.prod.outlook.com (2603:10b6:a03:100::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 09:59:17 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [64.62.193.194]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 39f59fe8-1b43-4f15-1e76-08d7eced25c5
-X-MS-TrafficTypeDiagnostic: BN8PR13MB2884:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR13MB28840A50452C06794ED0832D99AA0@BN8PR13MB2884.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1265;
-X-Forefront-PRVS: 0389EDA07F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xxicrGQAppmCd9g9ACLPPrwQl8lVGO4Rx1ZRBagPsmuwXf3vacWBDg8QzfKSdh+Lq+EJIBKycRL2YbeGjzYdxAjxr9JvT+pnQHfpadyK4BrqFQ5XxCIl/P31shP9sTvr8l2FgKhLxMIK6+VWV2cQj791Wlbex7NKzB3S7rwK9lIBbA7kI1H8toT4gwZtoBaq5gRyw5MIkgMlxD/GiMQRkeKVbPrxsaxHd53P4h1sjDF5Tjp80sPHwrEmcwxGmCrx4Q5Q4eHTOFBwaS1Ml1SCqKeYr3P232vCccNsHZ0qKJs9uUmCu8uLvHLlic5zZuNIMk1ZxMIVXcAqxgoL3yO1DYLTpZr3TkAzh++QZ0q6xXpm1xa3kAkywBLri0n6nquswAQIqFOTxAfki1iLQezeClCSvQ5fnUNW7yZERRfj7nwHSrehaClmQLgYEcYgtJ10
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR13MB2611.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(39850400004)(396003)(366004)(7696005)(52116002)(8676002)(8936002)(16526019)(186003)(26005)(5660300002)(4744005)(956004)(478600001)(2906002)(2616005)(316002)(6666004)(66476007)(66556008)(66946007)(86362001)(36756003)(107886003)(4326008)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GSecvMogeO4xfYfwXzYLnRhZ/Qxf8JH09tISPVYn9sB7MIAzE42EG4jgqn9Fz1DQBw9bFmp/tEvZ4sDm52fcQ3RzRBoEtVW7qmzV4TJk6du4ixHl629Uuue55NSxdRwDDWufbaDLWvVgDH0mgO4SxTdG2b8vnxivnuNlTEgTTQjFInn6ol47jAxPANEVMOx4imQKNR5Dg2Jm4UvrOmPGPnwxTKPkxZfcwfsp8+1awMhdb+v4n/0DwN9ZWyoMxxY5b2CudnTJdW0phacpzgjtqZ1fYwO/7C1KN7W+Jk3UR9obFNhe56+lW/plYb4sKAiz6jI5Yc/fJbU4Cx2J6Bpj5nbPYB1xdiFtLCyvH14SH1yOQMxqs+ciS6amPcSxjnAlb8wsyTK7rW90eQFPJMmBs2afQX0AExpkRmN+j6ZGpU2ZIMFVI5bEb0FeNBFbn0yQ1NTbzBClY1xEacjQ7zO+w9B011rd1UGpqpZQR1cC/xhKkNN+o7UWxVFNEdUPSm11hTilQ9iplqFt148NcC89vJwZjCuqQo6bRfUcY0R7TbrdrSo7BAkLq0o9gxUknUKASVI3ZwpdSb3SjJUXtyLvrjxaDs0r+dpBQHvnNIQHHwvuhqu/mchUih48GairkjLtBwW76J3qndBkUOKIb/7lDa5KKIW4aGQgCYmi4gUkTIVI0aQSYaS8iir46ck9X2ZWRdfCLJXEBclouwy0aB8GMvMj+qjXNKmR0U/h4mSvSQ8KL+Bbp1ndJ9fXTSkXkvfetMxisZN2Qu2lMn3hD1PpDoMXxYqlD/2YREwOXV4cfKY=
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39f59fe8-1b43-4f15-1e76-08d7eced25c5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 09:59:18.6071
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g4NdIfRh0nZAlpEVZgg7Ukq7HkkJlVWcJQEeviumtvyAuTFvC0xnW45bleOFgXomILZiHau2qroVrm4ifufRmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR13MB2884
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB276047141A63BE756B9C06D988AF0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable MTD based SPI-NOR framework in order to use spi flash
-available on HiFive Unleashed A00 board.
+On 20-04-27 09:11:56, Peng Fan wrote:
+> > Subject: RE: [PATCH V2 07/10] clk: imx: add mux ops for i.MX8M composite
+> > clk
+> > 
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > > Sent: Thursday, March 12, 2020 6:20 PM
+> > >
+> > > The CORE/BUS root slice has following design, simplied graph:
+> > > The difference is core not have pre_div block.
+> > > A composite core/bus clk has 8 inputs for mux to select, saying clk[0-7].
+> > >
+> > >             SEL_A  GA
+> > >             +--+  +-+
+> > >             |  +->+ +------+
+> > > CLK[0-7]--->+  |  +-+      |
+> > >        |    |  |      +----v---+    +----+
+> > >        |    +--+      |pre_diva+---->    |  +---------+
+> > >        |              +--------+    |mux +--+post_div |
+> > >        |    +--+      |pre_divb+--->+    |  +---------+
+> > >        |    |  |      +----^---+    +----+
+> > >        +--->+  |  +-+      |
+> > >             |  +->+ +------+
+> > >             +--+  +-+
+> > >             SEL_B  GB
+> > >
+> > > There will be system hang, when doing the following steps:
+> > > 1. switch mux from clk0 to clk1
+> > > 2. gate off clk0
+> > > 3. swtich from clk1 to clk2, or gate off clk1
+> > >
+> > > Step 3 triggers system hang.
+> > 
+> > Why Step 3 triggers system hang? Is this a HW limitation?
+> 
+> It is what hardware designed.
+> 
+> There is a counter inside the clk root module to choose
+> SEL_A or SEL_B. If choose SEL_B, the parent of SEL_B must
+> be active, otherwise the change from SEL_A to SEL_B
+> will cause hang.
+> 
+> SEL_A and SEL_B is inside the clock root module,
+> It is not clk's software parentA/B. misunderstand
+> this will misunderstand the whole fix.
+> 
+> > 
+> > >
+> > > If we skip step2, keep clk0 on, step 3 will not trigger system hang.
+> > > However we have CLK_OPS_PARENT_ENABLE flag, which will unprepare
+> > > disable the clk0 which will not be used.
+> > >
+> > > To address this issue, we could use following simplied software flow:
+> > > After the first target register set
+> > > wait the target register set finished
+> > > set the target register set again
+> > > wait the target register set finished
+> > >
+> > > The upper flow will make sure SEL_A and SEL_B both set the new mux,
+> > > but with only one path gate on.
+> > >
+> > > And there will be no system hang anymore with step3.
+> > 
+> > Is this IC proposed solution?
+> 
+> This is what I proposed and IC team confirmed.
+> 
+> > 
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V2:
+> > >  Drop wait after write, add one line comment for write twice.
+> > >
+> > >  drivers/clk/imx/clk-composite-8m.c | 62
+> > > +++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 61 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/clk/imx/clk-composite-8m.c
+> > > b/drivers/clk/imx/clk-composite-8m.c
+> > > index 99773519b5a5..eae02c151ced 100644
+> > > --- a/drivers/clk/imx/clk-composite-8m.c
+> > > +++ b/drivers/clk/imx/clk-composite-8m.c
+> > > @@ -24,6 +24,12 @@
+> > >
+> > >  #define PCG_CGC_SHIFT		28
+> > >
+> > > +#define PRE_REG_OFF		0x30
+> > > +#define PRE_MUXA_SHIFT		24
+> > > +#define PRE_MUXA_MASK		0x7
+> > > +#define PRE_MUXB_SHIFT		8
+> > > +#define PRE_MUXB_MASK		0x7
+> > 
+> > Are those macros used somewhere?
+> 
+> Remove in v3.
+> 
+> > 
+> > > +
+> > >  static unsigned long imx8m_clk_composite_divider_recalc_rate(struct
+> > > clk_hw *hw,
+> > >  						unsigned long parent_rate)
+> > >  {
+> > > @@ -124,6 +130,57 @@ static const struct clk_ops
+> > > imx8m_clk_composite_divider_ops = {
+> > >  	.set_rate = imx8m_clk_composite_divider_set_rate,
+> > >  };
+> > >
+> > > +static u8 imx8m_clk_composite_mux_get_parent(struct clk_hw *hw) {
+> > > +	struct clk_mux *mux = to_clk_mux(hw);
+> > > +	u32 val;
+> > > +
+> > > +	val = readl(mux->reg) >> mux->shift;
+> > > +	val &= mux->mask;
+> > > +
+> > > +	return clk_mux_val_to_index(hw, mux->table, mux->flags, val); }
+> > 
+> > You don't have to redefinition them if they're the same as clk_mux_ops.
+> > You have the access to clk_mux_ops.
+> 
+> This will require export_symbol of clk_mux_ops callbacks.
+> 
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- arch/riscv/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Maybe you can do here:
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 4da4886..970580b 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -80,6 +80,8 @@ CONFIG_USB_STORAGE=y
- CONFIG_USB_UAS=y
- CONFIG_MMC=y
- CONFIG_MMC_SPI=y
-+CONFIG_MTD=y
-+CONFIG_MTD_SPI_NOR=y
- CONFIG_RTC_CLASS=y
- CONFIG_VIRTIO_PCI=y
- CONFIG_VIRTIO_BALLOON=y
--- 
-2.7.4
+return clk_mux_ops.get_parent(hw);
 
+> > 
+> > > +
+> > > +static int imx8m_clk_composite_mux_set_parent(struct clk_hw *hw, u8
+> > > +index) {
+> > > +	struct clk_mux *mux = to_clk_mux(hw);
+> > > +	u32 val = clk_mux_index_to_val(mux->table, mux->flags, index);
+> > > +	unsigned long flags = 0;
+> > > +	u32 reg;
+> > > +
+> > > +	if (mux->lock)
+> > > +		spin_lock_irqsave(mux->lock, flags);
+> > > +
+> > > +	reg = readl(mux->reg);
+> > > +	reg &= ~(mux->mask << mux->shift);
+> > > +	val = val << mux->shift;
+> > > +	reg |= val;
+> > > +	/* write twice to make sure SEL_A/B point the same mux */
+> > > +	writel(reg, mux->reg);
+> > > +	writel(reg, mux->reg);
+> > 
+> > Why this affects both SEL_A/B?
+> 
+> The internal counter will make sure both SEL_A/B point
+> to the same mux.
+> 
+> > Very tricky and may worth more comments.
+> 
+> Ah, I think RM should be clear about the target interface
+> and non-target interface.
+> 
+> When you write once, saying use SEL_A, when
+> you write the 2nd, the hardware will use SEL_B,
+> when you write 3rd, the hardware will use SEL_A.
+> and ...
+> 
+
+This is a very interesting behavior from HW point of view.
+So every write changes the mux ? 
+
+Unless there is an ERRATA for this, we'll get a lot of pushback from upstream.
+
+> > 
+> > Besides that, I'd like to see Abel's comments on this patch.
+> 
+> 
+> Abel,
+> 
+>  Any comments?
+> 
+> Thanks,
+> Peng.
+> 
+> > 
+> > Regards
+> > Aisheng
+> > 
+> > > +
+> > > +	if (mux->lock)
+> > > +		spin_unlock_irqrestore(mux->lock, flags);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int
+> > > +imx8m_clk_composite_mux_determine_rate(struct clk_hw *hw,
+> > > +				       struct clk_rate_request *req) {
+> > > +	struct clk_mux *mux = to_clk_mux(hw);
+> > > +
+> > > +	return clk_mux_determine_rate_flags(hw, req, mux->flags); }
+> > 
+> > Same as bove.
+> > 
+> > > +
+> > > +
+> > > +const struct clk_ops imx8m_clk_composite_mux_ops = {
+> > > +	.get_parent = imx8m_clk_composite_mux_get_parent,
+> > > +	.set_parent = imx8m_clk_composite_mux_set_parent,
+> > > +	.determine_rate = imx8m_clk_composite_mux_determine_rate,
+> > > +};
+> > > +
+> > >  struct clk_hw *imx8m_clk_hw_composite_flags(const char *name,
+> > >  					const char * const *parent_names,
+> > >  					int num_parents, void __iomem *reg, @@ -136,6
+> > > +193,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char
+> > > +*name,
+> > >  	struct clk_gate *gate = NULL;
+> > >  	struct clk_mux *mux = NULL;
+> > >  	const struct clk_ops *divider_ops;
+> > > +	const struct clk_ops *mux_ops;
+> > >
+> > >  	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+> > >  	if (!mux)
+> > > @@ -157,10 +215,12 @@ struct clk_hw
+> > > *imx8m_clk_hw_composite_flags(const char *name,
+> > >  		div->shift = PCG_DIV_SHIFT;
+> > >  		div->width = PCG_CORE_DIV_WIDTH;
+> > >  		divider_ops = &clk_divider_ops;
+> > > +		mux_ops = &imx8m_clk_composite_mux_ops;
+> > >  	} else {
+> > >  		div->shift = PCG_PREDIV_SHIFT;
+> > >  		div->width = PCG_PREDIV_WIDTH;
+> > >  		divider_ops = &imx8m_clk_composite_divider_ops;
+> > > +		mux_ops = &clk_mux_ops;
+> > >  	}
+> > >
+> > >  	div->lock = &imx_ccm_lock;
+> > > @@ -176,7 +236,7 @@ struct clk_hw
+> > *imx8m_clk_hw_composite_flags(const
+> > > char *name,
+> > >  	gate->lock = &imx_ccm_lock;
+> > >
+> > >  	hw = clk_hw_register_composite(NULL, name, parent_names,
+> > > num_parents,
+> > > -			mux_hw, &clk_mux_ops, div_hw,
+> > > +			mux_hw, mux_ops, div_hw,
+> > >  			divider_ops, gate_hw, &clk_gate_ops, flags);
+> > >  	if (IS_ERR(hw))
+> > >  		goto fail;
+> > > --
+> > > 2.16.4
+> 
