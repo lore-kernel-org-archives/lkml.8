@@ -2,216 +2,251 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5781C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBD4C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865EF205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:23:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jRAACe3R"
+	by mail.kernel.org (Postfix) with ESMTP id E9F49208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588260259;
+	bh=keg6jYch6p2n6C2v/pWw6mL3CkzZWD6u8lTvaRcb5D4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rr0Bg4gRkRU5ZuqwK9CDh4AyN46vXEGm76i+BO2e91GNRE5Bctk/299v1H18Jk9dk
+	 E09GBbSjFCA445cA5wC9NPnbkE6FZhH3XFvY5CSvQPaEgIl7bbN0AMPrHA9fPmOL6C
+	 OZqrBOvY/V3MnVyU4gl9EOEf+N/KiOwJECNiOGB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD3PXc (ORCPT
+        id S1726763AbgD3PYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:23:32 -0400
-Received: from mail.efficios.com ([167.114.26.124]:52070 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgD3PXb (ORCPT
+        Thu, 30 Apr 2020 11:24:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33199 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbgD3PYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:23:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 6B42F28F3E3;
-        Thu, 30 Apr 2020 11:23:30 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id C6EyuYAfL3om; Thu, 30 Apr 2020 11:23:30 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 1416428F3E2;
-        Thu, 30 Apr 2020 11:23:30 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1416428F3E2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588260210;
-        bh=6Sx1GJXEO6S/nQiDfv+3DQvQUtNhB+yVzvi6csoiNEY=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=jRAACe3RQ281gdlMDgzhST7siwMevuUcoLIzXVXMVBTFcLrNAtH9wfkTnzyllk4w6
-         Ul8pL49wWreSDvAZRwuf2AGrRWHMe8DFSYxPuT2P6T4wvtToTDCsNhX2dWY459F6Qg
-         AV/EuPk95TfKTrP8Lr7i1WbBAIutJtHzTM+AWA8G0BTYsqb/q3jJ9tTdj9YCWL+6/M
-         SREYBgSiCzoAvsOy23JDQMEU4A+ecPy9t1YKU3VkzJnE8mpE8gGcZQQ0RcTtOSRogl
-         rBCr3aL7o7DhekukEHgIB9+YqaipJbzBuMNH4EqN+uHymmzEL8fDqAp7DhX5Hpuv4m
-         oEsqr2XtjmlkQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id YuHCX-Utpz_I; Thu, 30 Apr 2020 11:23:30 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 03D6728F271;
-        Thu, 30 Apr 2020 11:23:30 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 11:23:29 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Joerg Roedel <jroedel@suse.de>, rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 30 Apr 2020 11:24:17 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j26so5234128ots.0;
+        Thu, 30 Apr 2020 08:24:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u4g24e3GzwdiYIpTDMkHlnY+SwtLlwI/g7Kc4NqV3FM=;
+        b=TdHtPfPiDpFSjQ7rAknghIRiOPwnYwMDbSJxTqoatwenKBTZehrcoYJLi7fEMPKydJ
+         74h3rE+EVVIcCXwhYVtxJ/nGMlBSHbziBG1pVbzsLv+hZM7dGVN24mdDhA3IOdB06p8x
+         Th27exzb+fTIiwdNyavEMWXwY/WcOyydF1ovQuzmJ2i/L1U4kgXOpx9Qu4uhle8TCNW5
+         yXBPvXGzuBsJ4PmYIwPBYgIuMdcNMNwTKU+93CyfrR3DXmZjD9a+cHj57xACQ0zzda7j
+         mRy9nCbTCujJPOi6PnIbtQpPqi6Z9cEf/6Bjz+VonPHDu+5XTMGbcWHa+2QBMB7Lb06p
+         bnGg==
+X-Gm-Message-State: AGi0PuY4CVKlXrc2vz1e5myFhhRTlpesK3PzbvSVD1NW7saCwbf3WKvg
+        vpoKWIOJGN2IgIY6Zr0nGw==
+X-Google-Smtp-Source: APiQypIEEBcRD0MSn0hGLzIxLkXC5lYI2OeNfPr7SM8+BRERqIlo3llUkEhqFKBx/zMNHevWxNEssQ==
+X-Received: by 2002:a9d:7b55:: with SMTP id f21mr2114497oto.31.1588260256120;
+        Thu, 30 Apr 2020 08:24:16 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm49738ott.51.2020.04.30.08.24.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 08:24:15 -0700 (PDT)
+Received: (nullmailer pid 30190 invoked by uid 1000);
+        Thu, 30 Apr 2020 15:24:14 -0000
+Date:   Thu, 30 Apr 2020 10:24:14 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     devicetree@vger.kernel.org,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Steve Winslow <swinslow@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Message-ID: <50145570.77817.1588260209983.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200430141120.GA8135@suse.de>
-References: <20200429054857.66e8e333@oasis.local.home> <20200429105941.GQ30814@suse.de> <20200429082854.6e1796b5@oasis.local.home> <20200429100731.201312a9@gandalf.local.home> <20200430141120.GA8135@suse.de>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
- text_poke()
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
+Message-ID: <20200430152414.GA19887@bogus>
+References: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
+ <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: x86/mm: Sync all vmalloc mappings before text_poke()
-Thread-Index: XrnEl/HdUEdw3GQc1LVTNHxd8OdDzw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 30, 2020, at 10:11 AM, Joerg Roedel jroedel@suse.de wrote:
+On Mon, Apr 20, 2020 at 12:26:08PM +0800, Chris Ruehl wrote:
+> Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+> v5:
+> correct require section
+> set maintainer of analog.com
+> v4..v2: no change
+> 
+>  .../bindings/iio/dac/lltc,ltc2632.yaml        | 76 +++++++++++++++++++
+>  .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
+>  2 files changed, 76 insertions(+), 49 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+> new file mode 100644
+> index 000000000000..b0043144fbc4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +
+> +description: |
+> +  Bindings for the Linear Technology LTC2632/2634/2636 DAC
+> +  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - lltc,ltc2632-l12
+> +      - lltc,ltc2632-l10
+> +      - lltc,ltc2632-l8
+> +      - lltc,ltc2632-h12
+> +      - lltc,ltc2632-h10
+> +      - lltc,ltc2632-h8
+> +      - lltc,ltc2634-l12
+> +      - lltc,ltc2634-l10
+> +      - lltc,ltc2634-l8
+> +      - lltc,ltc2634-h12
+> +      - lltc,ltc2634-h10
+> +      - lltc,ltc2634-h8
+> +      - lltc,ltc2636-l12
+> +      - lltc,ltc2636-l10
+> +      - lltc,ltc2636-l8
+> +      - lltc,ltc2636-h12
+> +      - lltc,ltc2636-h10
+> +      - lltc,ltc2636-h8
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 2000000
+> +
+> +  vref-supply:
+> +    description:
+> +	  Phandle to the external reference voltage supply. This should
 
-> Hi,
-> 
-> On Wed, Apr 29, 2020 at 10:07:31AM -0400, Steven Rostedt wrote:
->> Talking with Mathieu about this on IRC, he pointed out that my code does
->> have a vzalloc() that is called:
->> 
->> in trace_pid_write()
->> 
->> 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
->> 
->> This is done when -P1,2 is on the trace-cmd command line.
-> 
-> Okay, tracked it down, some instrumentation in the page-fault and
-> double-fault handler gave me the stack-traces. Here is what happens:
-> 
-> As already pointed out, it all happens because of page-faults on the
-> vzalloc'ed pid bitmap. It starts with this stack-trace:
-> 
-> RIP: 0010:trace_event_ignore_this_pid+0x23/0x30
-> Code: e9 c2 4b 6b 00 cc cc 48 8b 57 28 48 8b 8a b8 00 00 00 48 8b 82 c0 00 00 00
-> 48 85 c0 74 11 48 8b 42 28 65 48 03 05 5d 9c e6 7e <0f> b6 40 7c c3 48 85 c9 75
-> ea f3 c3 90 48 8b 4f 70 48 83 02 01 48
-> RSP: 0018:ffffc90000673bd8 EFLAGS: 00010082
-> RAX: ffffe8ffffd8c870 RBX: 0000000000000203 RCX: ffff88810734ca90
-> RDX: ffff888451578000 RSI: ffffffff820f3d2a RDI: ffff888453594d68
-> RBP: ffff888453594d68 R08: 000000000001845e R09: ffffffff81114ba0
-> R10: 0000000000000000 R11: 000000000000000e R12: 4000000000000000
-> R13: ffffffff820f3d2a R14: 000000000001845e R15: 4000000000000002
->  ? trace_event_raw_event_rcu_fqs+0xa0/0xa0
->  trace_event_raw_event_rcu_dyntick+0x89/0xa0
->  ? trace_event_raw_event_rcu_dyntick+0x89/0xa0
->  ? trace_event_raw_event_rcu_dyntick+0x89/0xa0
->  ? insn_get_prefixes.part.2+0x174/0x2d0
->  rcu_irq_enter+0xf0/0x1d0
->  rcu_irq_enter_irqson+0x21/0x50
->  switch_mm_irqs_off+0x43c/0x570
->  ? do_one_initcall+0x51/0x210
->  __text_poke+0x1a9/0x470
->  text_poke_bp_batch+0x73/0x180
->  text_poke_flush+0x43/0x50
->  arch_jump_label_transform_apply+0x16/0x30
->  __static_key_slow_dec_cpuslocked+0x42/0x50
->  static_key_slow_dec+0x1f/0x50
->  tracepoint_probe_unregister+0x1e2/0x220
->  trace_event_reg+0x6a/0x80
->  __ftrace_event_enable_disable+0x1ca/0x240
->  __ftrace_set_clr_event_nolock+0xe1/0x140
->  __ftrace_set_clr_event+0x3d/0x60
->  system_enable_write+0x76/0xa0
->  vfs_write+0xad/0x1a0
->  ? rcu_irq_exit+0xb8/0x170
->  ksys_write+0x48/0xb0
->  do_syscall_64+0x60/0x200
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x7f875b0ecdb0
-> Code: Bad RIP value.
-> RSP: 002b:00007ffc746be918 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f875b0ecdb0
-> RDX: 0000000000000001 RSI: 00007ffc746be93f RDI: 0000000000000004
-> RBP: 00007ffc746be9a0 R08: 636172742f6c6500 R09: 0000000002242ee0
-> R10: 6f662f7365636e61 R11: 0000000000000246 R12: 000000000040a4b0
-> R13: 00007ffc746bebd0 R14: 0000000000000000 R15: 0000000000000000
-> 
-> I havn't figured out how rcu_irq_enter() calls down into
-> trace_event_raw_event_rcu_dyntick() and further into
-> trace_event_ignore_this_pid(), but the stacktrace shows it does.
-> 
-> So trace_event_ignore_this_pid() faults on the vzalloc()'ed memory, calling
-> into the page-fault handler. What happens there is:
-> 
-> RIP: 0010:trace_event_ignore_this_pid+0x23/0x30
-> Code: e9 c2 4b 6b 00 cc cc 48 8b 57 28 48 8b 8a b8 00 00 00 48 8b 82 c0 00 00 00
-> 48 85 c0 74 11 48 8b 42 28 65 48 03 05 5d 9c e6 7e <0f> b6 40 7c c3 48 85 c9 75
-> ea f3 c3 90 48 8b 4f 70 48 83 02 01 48
-> RSP: 0018:ffffc90000673a50 EFLAGS: 00010082
-> RAX: ffffe8ffffd8c870 RBX: 0000000000000203 RCX: ffff88810734ca90
-> RDX: ffff888451578000 RSI: ffffe8ffffd8c8ec RDI: ffff88844fd98478
-> RBP: ffff88844fd98478 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffe8ffffd8c8ec
-> R13: 0000000000000000 R14: ffffc90000673b28 R15: 0000000000000000
->  trace_event_raw_event_x86_exceptions+0x87/0xa0
->  ? trace_event_buffer_lock_reserve+0x6e/0x110
->  do_page_fault+0x45e/0x630
->  ? trace_hardirqs_off_thunk+0x1a/0x37
->  page_fault+0x43/0x50
-> 
-> The page-fault handler calls a tracing function which again ends up in
-> trace_event_ignore_this_pid(), where it faults again. From here on the CPU is in
-> a page-fault loop, which continues until the stack overflows (with
-> CONFIG_VMAP_STACK).
-> 
-> Then there is no mapped stack anymore, so the page-fault results in a
-> double-fault, which uses an IST stack. The double-fault handler does
-> ist_enter(), which calls into rcu_nmi_enter(), which also has trace-events down
-> its call-path. I have no stack-trace for this, but what likely happens
-> now is that it page-faults again while on the IST stack and the
-> page-fault loops until the #DF IST stack overflows. Then the next #DF
-> happens and the stack pointer is reset to the top of the #DF IST stack,
-> starting the loop over again. This loops forever, causing the hang.
+There's a tab here which the yaml parser isn't going to like. Not sure 
+why my checker didn't run on this, but make sure 'make dt_binding_check' 
+passes.
 
-I suspect it's called by:
+> +      only be set if there is an external reference voltage connected to the VREF
+> +      pin. If the property is not set the internal reference is used.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    vref: regulator-vref {
+> +        compatible = "regulator-fixed";
+> +        regulator-name = "vref-ltc2632";
+> +        regulator-min-microvolt = <1250000>;
+> +        regulator-max-microvolt = <1250000>;
+> +        regulator-always-on;
+> +    };
+> +
+> +    spi_master {
 
-include/linux/trace_event.h:trace_trigger_soft_disabled():
+spi {
 
-static inline bool
-trace_trigger_soft_disabled(struct trace_event_file *file)
-{
-        unsigned long eflags = file->flags;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      dac: ltc2632@0 {
 
-        if (!(eflags & EVENT_FILE_FL_TRIGGER_COND)) {
-                if (eflags & EVENT_FILE_FL_TRIGGER_MODE)
-                        event_triggers_call(file, NULL, NULL);
-                if (eflags & EVENT_FILE_FL_SOFT_DISABLED)
-                        return true;
-                if (eflags & EVENT_FILE_FL_PID_FILTER)
-                        return trace_event_ignore_this_pid(file);
-        }
-        return false;
-}
+dac@0
 
-Thanks,
+And drop the unused label.
 
-Mathieu
-
+> +        compatible = "lltc,ltc2632";
+> +        reg = <0>;    /* CS0 */
+> +        spi-max-frequency = <1000000>;
+> +        vref-supply = <&vref>;
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> deleted file mode 100644
+> index 1ab9570cf219..000000000000
+> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -Linear Technology LTC2632/2634/2636 DAC
+> -
+> -Required properties:
+> - - compatible: Has to contain one of the following:
+> -	lltc,ltc2632-l12
+> -	lltc,ltc2632-l10
+> -	lltc,ltc2632-l8
+> -	lltc,ltc2632-h12
+> -	lltc,ltc2632-h10
+> -	lltc,ltc2632-h8
+> -	lltc,ltc2634-l12
+> -	lltc,ltc2634-l10
+> -	lltc,ltc2634-l8
+> -	lltc,ltc2634-h12
+> -	lltc,ltc2634-h10
+> -	lltc,ltc2634-h8
+> -	lltc,ltc2636-l12
+> -	lltc,ltc2636-l10
+> -	lltc,ltc2636-l8
+> -	lltc,ltc2636-h12
+> -	lltc,ltc2636-h10
+> -	lltc,ltc2636-h8
+> -
+> -Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> -apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+> -
+> -Optional properties:
+> -	- vref-supply: Phandle to the external reference voltage supply. This should
+> -	  only be set if there is an external reference voltage connected to the VREF
+> -	  pin. If the property is not set the internal reference is used.
+> -
+> -Example:
+> -
+> -	vref: regulator-vref {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vref-ltc2632";
+> -		regulator-min-microvolt = <1250000>;
+> -		regulator-max-microvolt = <1250000>;
+> -		regulator-always-on;
+> -	};
+> -
+> -	spi_master {
+> -		dac: ltc2632@0 {
+> -			compatible = "lltc,ltc2632-l12";
+> -			reg = <0>; /* CS0 */
+> -			spi-max-frequency = <1000000>;
+> -			vref-supply = <&vref>; /* optional */
+> -		};
+> -	};
+> -- 
+> 2.20.1
 > 
-> Regards,
-> 
-> 	Joerg
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
