@@ -2,87 +2,183 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81524C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17856C83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2B52076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE2D2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dFbVayoo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d8Q0nNyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgD3OYB (ORCPT
+        id S1728065AbgD3OYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:24:01 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:29309 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726520AbgD3OYA (ORCPT
+        Thu, 30 Apr 2020 10:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgD3OYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:24:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588256639; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=LZuaOG4S+qR9ammm/O51mTS7Ln6Qd+RiwI7E7O4Amdk=; b=dFbVayoofuvEmr++KvkzxOhR92hffj/74T0B/CChGU6opv5hcWRI+5izvd7xaAexdrKNtP8l
- Mnsz0E6OHL9/25wOVoSJ7p3Avl8wS/5VSj50/caNaVxHFqJC9NL5sWFIkOthtfJvGLfMBoG5
- ZKThNIdGDKw2GQwUAeVxTdcITeM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaadf6f.7f1fff91b2d0-smtp-out-n05;
- Thu, 30 Apr 2020 14:23:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DFBCC433D2; Thu, 30 Apr 2020 14:23:43 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7D0EC433CB;
-        Thu, 30 Apr 2020 14:23:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7D0EC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 2/9] bus: mhi: core: Cache intmod from mhi event to mhi
- channel
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
- <1588193551-31439-3-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <45ebe201-5b2a-f32a-2768-8b710fda4ec2@codeaurora.org>
-Date:   Thu, 30 Apr 2020 08:23:39 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1588193551-31439-3-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Apr 2020 10:24:23 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64AC6C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:24:23 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id y73so7809472ybe.22
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:24:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pPMd8GxOGm3PZwmKjJNhDVTp6BEu4LYZBpof2RciyW4=;
+        b=d8Q0nNydiTmsktkI9xbCiukARVhVtmZojz9tyrLg5wwlSscPmZSFjPoJIM1OvHX+l4
+         S4N5YWorYvuSsheAvaqlEU1cMU8tMo3BOFyibxo0Idxfzs2aYlw7cVZL/sZBb6ofjSnH
+         Br+7uBs+nFj2QHPNbBwFPAcbx4nx98XeEDUyr77ycx5r0PGZFaQLS3j/jQUNhYS8xOir
+         VpLiAtoQi9GMvX182A42I2wn2JHa+wrj8rYAhB6j32FL9TZgp9SrVbwZz8p2s90VEgn/
+         cZ16PaCJHwp8UeA/pwlfWHdXz8w25KN90se8ul/3oueVGKdj6i92mdN51RIVoIvc5fMI
+         MPrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pPMd8GxOGm3PZwmKjJNhDVTp6BEu4LYZBpof2RciyW4=;
+        b=Qj0mbJw6RxcrzicBcmWoX0ehkC0g+GPuYfscJox5HRHSnOVWvWIBEblAIjtlEzKtIW
+         rS3+LuyMfZYVrfjMKNhANnS5x5cc1AOrQhC4PMbfpoP55pfeIuLYHrb77f5WFTk6gmE6
+         oKrvS2rlKTH/JPNUJxejXzuPHTWMX+rdIDUdl3+YX/1qwIcjfxqGMgoXtSU3YXfX432X
+         Cqv8m4xrbDRnxTeJlM3WjqLEJM+Xj1/GzofOMEifFAUJhpca6ZSp4mYi1M8xcdy7MEJ/
+         SkoBCe6mIBLXitOch7FXXntURFzVecBm+/uaMGOTENCvQuulyLY7wRqPbIJpRzc/ACuf
+         ktRA==
+X-Gm-Message-State: AGi0PubbE8eF8OZM1iFfmkAjWCsbRIGRCs4sccSzLaRCCVi9csJ2TzMz
+        ENnfLBx2NyxPRz9DhF02bYtFx02ANDdN
+X-Google-Smtp-Source: APiQypK3Vpft00hes53MtZEVCGv8AFAIWWwXyGRt84ln9KqoYa7RHrUR62Y+lauNqNBrxPeLot4ZXLxuzIPz
+X-Received: by 2002:a25:1a84:: with SMTP id a126mr6320236yba.161.1588256662435;
+ Thu, 30 Apr 2020 07:24:22 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 07:24:15 -0700
+Message-Id: <20200430142419.252180-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH v13 0/4] perf tools: add support for libpfm4
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
-> From: Hemant Kumar <hemantk@codeaurora.org>
-> 
-> Driver is using zero initialized intmod value from mhi channel when
-> configuring TRE for bei field. This prevents interrupt moderation to
-> take effect in case it is supported by an event ring. Fix this by
-> copying intmod value from associated event ring to mhi channel upon
-> registering mhi controller.
-> 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
+This patch links perf with the libpfm4 library if it is available and
+LIBPFM4 is passed to the build. The libpfm4 library contains hardware
+event tables for all processors supported by perf_events. It is a
+helper library that helps convert from a symbolic event name to the
+event encoding required by the underlying kernel interface. This
+library is open-source and available from: http://perfmon2.sf.net.
+    
+With this patch, it is possible to specify full hardware events
+by name. Hardware filters are also supported. Events must be
+specified via the --pfm-events and not -e option. Both options
+are active at the same time and it is possible to mix and match:
+    
+$ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
 
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+v13 moves libpfm_initialize purely into pfm.c as suggested by
+    acme@kernel.org.
+v12 changes NO_LIBPFM4 as a make option to LIBPFM4, ie opt-in rather
+    than opt-out of feature detection and build support. Suggested by
+    acme@kernel.org. It also moves passing the ASCIIDOC_EXTRA argument
+    into its own commit.
+v11 reformats the perf list output.
+v10 addresses review comments from jolsa@redhat.com.
+v9 removes some unnecessary #ifs.
+v8 addresses review comments from jolsa@redhat.com.
+   Breaks the patch into 4, adds a test and moves the libpfm code into its
+   own file. perf list encoding tries to be closer to existing.
+v7 rebases and adds fallback code for libpfm4 events.
+   The fallback code is to force user only priv level in case the
+   perf_event_open() syscall failed for permissions reason.
+   the fallback forces a user privilege level restriction on the event
+   string, so depending on the syntax either u or :u is needed.
+    
+   But libpfm4 can use a : or . as the separator, so simply searching
+   for ':' vs. '/' is not good enough to determine the syntax needed.
+   Therefore, this patch introduces a new evsel boolean field to mark
+   events coming from  libpfm4. The field is then used to adjust the
+   fallback string.
+v6 was a rebase.
+v5 was a rebase.
+v4 was a rebase on
+   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+   branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+   missed in v3.
+v3 is against acme/perf/core and removes a diagnostic warning.
+v2 of this patch makes the --pfm-events man page documentation
+   conditional on libpfm4 behing configured. It tidies some of the
+   documentation and adds the feature test missed in the v1 patch.
+
+Ian Rogers (1):
+  perf doc: pass ASCIIDOC_EXTRA as an argument
+
+Stephane Eranian (3):
+  tools feature: add support for detecting libpfm4
+  perf pmu: add perf_pmu__find_by_type helper
+  perf tools: add support for libpfm4
+
+ tools/build/Makefile.feature             |   3 +-
+ tools/build/feature/Makefile             |   6 +-
+ tools/build/feature/test-libpfm4.c       |   9 +
+ tools/perf/Documentation/perf-record.txt |  11 +
+ tools/perf/Documentation/perf-stat.txt   |  10 +
+ tools/perf/Documentation/perf-top.txt    |  11 +
+ tools/perf/Makefile.config               |  13 ++
+ tools/perf/Makefile.perf                 |   8 +-
+ tools/perf/builtin-record.c              |   6 +
+ tools/perf/builtin-stat.c                |   6 +
+ tools/perf/builtin-top.c                 |   6 +
+ tools/perf/tests/Build                   |   1 +
+ tools/perf/tests/builtin-test.c          |   9 +
+ tools/perf/tests/pfm.c                   | 203 ++++++++++++++++
+ tools/perf/tests/tests.h                 |   3 +
+ tools/perf/util/Build                    |   2 +
+ tools/perf/util/evsel.c                  |   2 +-
+ tools/perf/util/evsel.h                  |   1 +
+ tools/perf/util/parse-events.c           |  30 ++-
+ tools/perf/util/parse-events.h           |   4 +
+ tools/perf/util/pfm.c                    | 281 +++++++++++++++++++++++
+ tools/perf/util/pfm.h                    |  37 +++
+ tools/perf/util/pmu.c                    |  11 +
+ tools/perf/util/pmu.h                    |   1 +
+ 24 files changed, 661 insertions(+), 13 deletions(-)
+ create mode 100644 tools/build/feature/test-libpfm4.c
+ create mode 100644 tools/perf/tests/pfm.c
+ create mode 100644 tools/perf/util/pfm.c
+ create mode 100644 tools/perf/util/pfm.h
 
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.26.2.303.gf8c07b1a785-goog
+
