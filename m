@@ -2,107 +2,133 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7EEC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E15C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8FF20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588237221;
-	bh=6KQACPLN/GZpi+FYGmYG62Ze5DkTEi4wV710+OZY2aQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=061VJtkI1ErYpRDC624NdnZx9Eq1EX+TMSOMlm3VQnDurudV9TINSswz3MklQ6GAy
-	 GOdeSFga7WfBat3uw27ajJ7sgwiZVbrMMV7vUQzu5STHBXlcB/h3BLEX/NHrRX4CxJ
-	 qbP/zNabEgJhAU3uyR6eDb4IU62QvdasfQ2hjJfY=
+	by mail.kernel.org (Postfix) with ESMTP id D964520784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WDSPCjvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgD3JAU (ORCPT
+        id S1726817AbgD3JAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:00:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33853 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgD3JAS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:00:18 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 72so4306278otu.1;
-        Thu, 30 Apr 2020 02:00:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6KQACPLN/GZpi+FYGmYG62Ze5DkTEi4wV710+OZY2aQ=;
-        b=H3Jrnez4+57h4GGsGlUKjBUCzgCWRyEy6JDWuCmKOCUwez6SKQkM17Y0T4lZYkM+3/
-         U4vZQnqImo3eBrs+Ia2oUL/dju4W8ziszY+cnBNYNA47hbTjvd9X0eS6zcQFYB4QTHF0
-         o+msu24phfMWs/i/Rb9SoKhf1O/TMa12x79vd1Msgn42LseBhvKVz+TbJaJu8uNgpFSL
-         AoZiHg7TzuKitI1VP7RIjEtRs7qV5Y5iQjbDxYfF3Cu/mXxUsL2wzB5TFO/AtqcoWRPG
-         Gv2InbBZN8+ZURT3Kek0CDOPH7tpWuSYn8S9AhwB8MaZg33w6ypVtCqokvlSp4qLKRMP
-         25EQ==
-X-Gm-Message-State: AGi0PuZ/6WYvKDfchk5YdRNXQF+OKEYiYpF+ah6eQ9rFZ3kCPO0QYV0r
-        ENSw71cjgK1fJsovF8cELACBs1r5AYHNIpCuL0qQDA==
-X-Google-Smtp-Source: APiQypION7scbqEm7NDh6Gggg+1C2ij+NE18vee8aBc9XS9X5f4dFoPNeOl0elV99+hw6k1aQNEtvFSivkjKAlKGNyw=
-X-Received: by 2002:a9d:112:: with SMTP id 18mr1274967otu.167.1588237217674;
- Thu, 30 Apr 2020 02:00:17 -0700 (PDT)
+        Thu, 30 Apr 2020 05:00:38 -0400
+Received: from mout.web.de ([212.227.15.14]:54273 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgD3JAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:00:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588237216;
+        bh=T07bRhShktcbk/3lm3d+/ljB7VcvVOvAHGkNMfRfgKY=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=WDSPCjvgj9NkcbNOOCmfpyDwhMNA+2ema1wXYj82DXWbQs24TSfm6BpKt3SFlI2XN
+         Bc5/iDX7n8769VPj76/G7zJXnMT7kRj3Gb7bxMT7ZwoifUZbIYXxrUNoYjqhVWiLPz
+         8he1qXziFrZOyaRo3LgII1JUdiBjlk3a9RlxXBq4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.175.216]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lfipe-1incQU0SU6-00pPu7; Thu, 30
+ Apr 2020 11:00:16 +0200
+To:     Xu Wang <vulab@iscas.ac.cn>, linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ZYNQ: platsmp: Return -ENOMEM after a failed ioremap()
+ call in zynq_cpun_start()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9cf516c9-3a29-fb39-8943-49c906b3eea7@web.de>
+Date:   Thu, 30 Apr 2020 11:00:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200424114058.21199-1-benjamin.gaignard@st.com>
- <7657495.QyJl4BcWH5@kreacher> <CAKfTPtBNH8x=83RVQajgK859qQGjMTyvEdP4GioMONEZp9t-NA@mail.gmail.com>
-In-Reply-To: <CAKfTPtBNH8x=83RVQajgK859qQGjMTyvEdP4GioMONEZp9t-NA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Apr 2020 11:00:05 +0200
-Message-ID: <CAJZ5v0g+9DYuGS8URoXYecOxcnu5-kC-D=gvYTuMvxMZbYXR9w@mail.gmail.com>
-Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>, hugues.fruchet@st.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MkAn8sGoCY4NjJFBk34Jt/ezhBfs1X9l/SNmrUIwFVwkNNJCxtn
+ kaFFcRFwaJd8KXzM74jRzAv+4r7Yk3582LUW3COPg4l3bT4L9KGQitwnXrApPRwTcSMST4D
+ CE5893CosxF/ZzntzkW2/t/3uzTQ7LVuwqGyw20hd/9p0vloIV2oKfouB9+YBDVLSlw8P26
+ 2/yf3BYRR4fgSc9hfUSRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3Yvp3yO0fnM=:FbVB9vZdaXMJEDYrNnF7cQ
+ ueRbFAPL/ynqvSC+TVNHARZYXVGmLY9IfBm6bM3vfRuxxIegXSeJ6rOYdoCKXrZ+B5giFb4TA
+ Wbh1tmgtYEw4XWCg/uTfYjw4nRbN31KEtV8kDiDobBPPlo7QpewIWd3PQfwr+Iw196ZIeEnct
+ nFv9PUvgi0W80cd8ax4bFCYyHiJh1NuZoLMHqSat5ogsXv6ZJ77aiUxJKK7u5+2TG38ExuT/M
+ uo3z6ozWOfTFPT9ILiBSiru9XIxidyPCqneaSTbZcIOahT9yE1CVVuAQBQ6HvxDuopH8l5BZt
+ H5zPh1SHKttltQr3WAzcnquEDuCPEAm5FFwBfdkRr6QjpRH4d8UaPeWbqGjvtqASsXne9FaV1
+ fxjRLP773BWRlLvJvm4AA467SihGzwOMRXg0w3exjSUtxYNNhSNlaH9yHrGTIBk+frSVBsfdj
+ koircz/aUr9ghxl3u9uZmS2DOAAA9sx7DuJOIrkzKt35ONddlVRJUfFW0hLX6sDKlKKMtpHlC
+ bj/c6mvPGm71XbRbAbXb/IJvACRuK10d6/LIoI24x/CFn7woZ/hamZ2DNzwTgnKqrRxwVdo/d
+ cu1C88EtUWIM14bkuq1LpPSCY2Hp5zseZ7f+N7Jrd566qQ/Tqu6LW55OHP+ypkbIYtsPdQFCN
+ va06H3KAn+YseZXSK6/AH9LnOSTPvqYlFMWiSizlsbbxudBjWbO2nwyYoXJ4ljPtDzTuNtae5
+ Hef9w2EunseMihRtSGdwtqfad95y55Fee0r1HYeZbWwPo5HCMGUNMLEId+/OdwFMlQSBb97qa
+ i/JNAeH5vzwtF2VTZ9kiN15vW1GoF80og07UyZ7A3oiM69HQ3lz4gOGnK+Eet50UwfKx67HdM
+ s5IXTn+iHMagpDR7kpUOBXRAx4Fw80YfNu4lje/tqzxiYyeybf45nDA7rXXUbH75w9/n1XLL3
+ 7NaeXXm3R5i+KKzIOWaIaqstqqisgfKszJsroTDqOJ9RVSKyCJZRDRqPJhMabym4asSkvWV2e
+ SwrG9d5bDnbBQfWfjpoN8tAZKl7ZXRftXsS/vkNNfnJ1WgXqP0HdJH6Zw9ITW8b6ZAA8Z08ZF
+ ZjGYGu7Z8jSsGsmfHrqN1q/JCJNQ9qrrA8No+bgsc86DtwqMCYIOPRv4LEtO62N4DYOGM+qV3
+ yldxntrksXwi4aBwhbTFDiIt7SWT1yY4pPXD49D+v6dgR2lyAllOa9qcYOP90L+NFGBrMjYIH
+ +xSP7k/4PLqNW6DMk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 7:08 PM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> On Wed, 29 Apr 2020 at 17:50, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > On Friday, April 24, 2020 1:40:55 PM CEST Benjamin Gaignard wrote:
-> > > When start streaming from the sensor the CPU load could remain very low
-> > > because almost all the capture pipeline is done in hardware (i.e. without
-> > > using the CPU) and let believe to cpufreq governor that it could use lower
-> > > frequencies. If the governor decides to use a too low frequency that
-> > > becomes a problem when we need to acknowledge the interrupt during the
-> > > blanking time.
-> > > The delay to ack the interrupt and perform all the other actions before
-> > > the next frame is very short and doesn't allow to the cpufreq governor to
-> > > provide the required burst of power. That led to drop the half of the frames.
-> > >
-> > > To avoid this problem, DCMI driver informs the cpufreq governors by adding
-> > > a cpufreq minimum load QoS resquest.
-> >
-> > This seems to be addressing a use case that can be addressed with the help of
-> > utilization clamps with less power overhead.
->
-> Can't freq_qos_update_request() be also used if you don't have cgroup
-> enabled on your system ?
+> In ioremap we should return -ENOMEM when it reports an
+> memory allocation failure.
 
-It can.
+I suggest to improve this change description.
 
-The problem here is that imposing a global minimum frequency limit
-generally causes the power draw of the system to increase regardless
-of what is going on, including the CPUs that are not involved in the
-handling of the interrupt in question.
+Will the tag =E2=80=9CFixes=E2=80=9D be relevant because of the adjusted e=
+rror code?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D1d2cc5ac6f6668cc15216d5105=
+1103c61467d7e8#n183
 
-That seems a bit excessive ...
+Regards,
+Markus
