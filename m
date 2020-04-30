@@ -2,172 +2,113 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C34C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D034C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF17205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGyEvoSI"
+	by mail.kernel.org (Postfix) with ESMTP id 0101B205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgD3Mpp (ORCPT
+        id S1726950AbgD3MqI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726808AbgD3Mpo (ORCPT
+        Thu, 30 Apr 2020 08:46:08 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:35962 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgD3MqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:45:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C4D7C035494;
-        Thu, 30 Apr 2020 05:45:44 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id d15so6746233wrx.3;
-        Thu, 30 Apr 2020 05:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nTelbWge7w+/UEuocO2uUnURIuxUwZKm7wDXXQqaeMw=;
-        b=VGyEvoSILzN3pCvWFpscfa7jp4vFjoeWc0e5mpjAylmg+ja4ODabRLpT+LVrdVwYFT
-         mguw/PEM+HKrxEphD38GAMxLu7CDAlaMEm92/091sxO+FMXzvEOPYjZdbYDsistHp7TK
-         LlYgwzbwVRBZCDd9u5i2uIvuT/Gmp2Wlsmy3Mo77jCYNpJY1eJd/41X1tj1ypySGNlUE
-         K7syk2kytKk39aJYWkcqIQE2gEK/97zKaId66vNJlpdq4STH6MEhV+P0kTAliHha0T0e
-         4+V4vkitY2dVn6c8Oi9KxvLHgaiFHjziTDv8QCjo4YBBy6kEtglig+fGY7gZ1DbJ4dcj
-         WDvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nTelbWge7w+/UEuocO2uUnURIuxUwZKm7wDXXQqaeMw=;
-        b=DQr5uDwh/2fNtI/M/lDgn4YndjwgSuzJqQM0/aWNBSwVwqdWWDIMYnncivvEcOuRIw
-         Kb9c4jCYDZV49tEZV4w8tQfohONzHmNOoQFFbylPXrPALDai593xMYYucs18rUtai+cG
-         g6C3dCqxojO8LJpdagzjdwjsnGEe4myMISO385O7k3MShE+Z6at4MjQzAp5V/P/xzXrT
-         +VgWI3QZ1J1p5UD+pP5nLJlFfhsIx3TyHWWVtwZR5GI1tJ4HwKg0JF8/+D8I4imUmi1p
-         oE8cfdpdukvtL4yRqRPXJ8c+wJ9ryoqg0CIxjz0spOCshtdDiI3iHCgtSztW/VbEa14m
-         DWxA==
-X-Gm-Message-State: AGi0Puac1s5F/1X+hhTU06f+W9vbC06m3OLSDT1Dkjek+FR6xAGPPGSi
-        XvLxLw415/etAdDppvNy4SS7Ce2SZxc=
-X-Google-Smtp-Source: APiQypJGUJirvshsvajkCVQFbP0RO3lE77GpsE/ZwA8WZNBPaAZkiayWTQwQ+4mvYVLIQcvMCxESJA==
-X-Received: by 2002:adf:9793:: with SMTP id s19mr3482561wrb.147.1588250743269;
-        Thu, 30 Apr 2020 05:45:43 -0700 (PDT)
-Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.googlemail.com with ESMTPSA id l16sm3700287wrp.91.2020.04.30.05.45.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Apr 2020 05:45:42 -0700 (PDT)
-Message-ID: <79278fe0f4e0ce820484386a72bc6044d3c66822.camel@gmail.com>
-Subject: Re: [PATCH v2 5/5] scsi: ufs: UFS Host Performance Booster(HPB)
- driver
-From:   Bean Huo <huobean@gmail.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Thu, 30 Apr 2020 08:46:07 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        by skedge04.snt-world.com (Postfix) with ESMTP id 7A03567A7D8;
+        Thu, 30 Apr 2020 14:46:04 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 30 Apr
+ 2020 14:46:03 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.007; Thu, 30 Apr 2020 14:46:03 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Adam Ford <aford173@gmail.com>, Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "Li Jun" <jun.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 30 Apr 2020 14:45:40 +0200
-In-Reply-To: <BYAPR04MB4629393BA60AF5E5898FB304FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
-References: <20200416203126.1210-1-beanhuo@micron.com>
-         <20200416203126.1210-6-beanhuo@micron.com>
-         <8921adc3-0c1e-eb16-4a22-1a2a583fc8b3@acm.org>
-         <SN6PR04MB4640851C163648C54EB274C5FCD00@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <SN6PR04MB4640ABB2BB5D2CE5AA2C3778FCD10@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <12e8ad61-caa4-3d28-c1d7-febe99a488fb@acm.org>
-         <SN6PR04MB4640A33BBE0CD58107D7FC69FCAF0@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <b2584ba8-3542-1aae-5802-e59d218e1553@acm.org>
-         <SN6PR04MB464009AFAC8F7EFC04184826FCAC0@SN6PR04MB4640.namprd04.prod.outlook.com>
-         <15eca4dd2ec8a4ba210ce0844e9f5027251fa6f2.camel@gmail.com>
-         <BYAPR04MB4629393BA60AF5E5898FB304FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [RFC PATCH 0/4] Add support for i.MX8MM GPUs through Etnaviv
+Thread-Topic: [RFC PATCH 0/4] Add support for i.MX8MM GPUs through Etnaviv
+Thread-Index: AQHWHu1P24EsvLcp2k6XxTQQ1PmCiA==
+Date:   Thu, 30 Apr 2020 12:46:03 +0000
+Message-ID: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 7A03567A7D8.AE648
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, anson.huang@nxp.com,
+        christian.gmeiner@gmail.com, daniel.baluta@nxp.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        etnaviv@lists.freedesktop.org, festevam@gmail.com, jun.li@nxp.com,
+        kernel@pengutronix.de, l.stach@pengutronix.de,
+        leonard.crestez@nxp.com, linux+etnaviv@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, peng.fan@nxp.com,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, shengjiu.wang@nxp.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-30 at 07:23 +0000, Avri Altman wrote:
-> Hi Bean,
-> 
-> > > By now we've read the device HPB configuration, and we are
-> > > ready  to
-> > > attach a scsi device to our HPB luns.  A perfect timing might be
-> > > while
-> > > scsi is performing its .slave_alloc() or .slave_configure().
-> > > 
-> > 
-> > hi, Avri
-> > That means HPB memory allocation done in .scan_finished() ?
-> 
-> The specifics of this feature are yet to be determined.
-> 
-> Among those, yes - we need to discuss how to handle the memory
-> allocation.
-> Statically allocating the required cache for the entire max-active-
-> subregions,
-> Which may sum-up to a hundreds of MB, has its obvious downsize. 
-> We need to discuss this further.
-> 
-> > and sd_init_command() needs to change as well, add a new request
-> > type REQ_OP_HPB_READ?
-> 
-> Again, this is an implementation issue.
-> We need to figure it out in the sequel.
-> E.g. we might want to make use of the combination of a valid handler
-> and blk_op_is_private.
-> 
-> I think it would be more constructive, if we can decide first on the
-> module layout,
-> And figure out the other details as we go?
-> 
-> Can you provide the pros and cons for the Samsung approach -
-> implementing all HPB functionalities using a single LLD?
-> 
-> Thanks,
-> Avri
-> 
-Hi Avri
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Samsung approach is a flat design and the HPB functions are embedded in
-the UFSHBA driver, looks ugly.  Each LU has its own HPB cache, which
-statically allocated in HPB initialization stage.  If one LU runs out
-of its HPB cache, it is impossbile to borrow HPB cache from its
-neighbour LU. Also, HPB requests are enqueued to the scsi_device
-request_queue and then fly back to SCSI layer. This unavoidably
-lengthens the latency of HPB entry update. 
-For the HPB host control mode, the predictability of HPB region
-activation of this design is lower, since HPB driver doesn't know which
-Region exactly should be activated in advance.
+This series contains patches to enable GPU support for the i.MX8MM.
+There is currently no upstream support for the display subsystem of
+the i.MX8MM, but I have a 5.4-based tree with some ported drivers for
+LCDIF, DSIM bridge, etc. (see [1]) which I used to test the GPU with
+glmark2.
 
-Regarding its pros, exactly I don't know, maybe it is relatively
-simple, work, and there are already customers who are using it now.
-also, we don't need to argue with SCSI layers and maintenance is
-easier.
+I'm posting this as an RFC for now, as I'm not feeling confident of
+all of the changes. Especially patch 1 seems a bit like a hack. Maybe
+someone can help me understand the underlying problem and/or come up
+with a better fix.
 
-To me, hierarchical design sounds good, and move the implementation of
-HPB manager module to SCSI layer is nice. but what is opinion of
-others? and which way they prefer. or they want us to continue current
-Samsung approach and solve its cons further.
+[1] https://git.kontron-electronics.de/linux/linux/-/commits/v5.4-ktn
 
-thanks,
+Frieder Schrempf (4):
+  drm/etnaviv: Prevent IRQ triggering at probe time on i.MX8MM
+  drm/etnaviv: Fix error path in etnaviv_gpu_clk_enable()
+  drm/etnaviv: Change order of enabling clocks to fix boot on i.MX8MM
+  arm64: dts: imx8mm: Add GPU nodes for 2D and 3D core using Etnaviv
 
-Bean
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 ++++++++++++
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c     | 68 ++++++++++++++---------
+ 2 files changed, 79 insertions(+), 25 deletions(-)
 
-> > 
-> > 
-> > Bean
-> > 
-> 
-> 
-
+-- 
+2.17.1
