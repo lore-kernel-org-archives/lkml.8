@@ -2,64 +2,99 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8170FC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF10BC83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6916A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2295208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:07:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JJMEwpVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgD3CEl (ORCPT
+        id S1726511AbgD3CHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgD3CEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:04:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 097D920757;
-        Thu, 30 Apr 2020 02:04:39 +0000 (UTC)
-Date:   Wed, 29 Apr 2020 22:04:38 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Po-Hsu Lin <po-hsu.lin@canonical.com>
-Cc:     linux-kselftest@vger.kernel.org, mingo@redhat.com,
-        shuah <shuah@kernel.org>, Colin King <colin.king@canonical.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH] selftests/ftrace: treat module requirement unmet
- situation as unsupported
-Message-ID: <20200429220438.3a7bbc17@gandalf.local.home>
-In-Reply-To: <CAMy_GT88BD6Ty9=gtqhsm2UPf8aX-=SHZrWj_-UZJONnk73+nQ@mail.gmail.com>
-References: <20200429095044.24625-1-po-hsu.lin@canonical.com>
-        <20200429122855.02594f33@gandalf.local.home>
-        <CAMy_GT88BD6Ty9=gtqhsm2UPf8aX-=SHZrWj_-UZJONnk73+nQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 Apr 2020 22:07:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgD3CHC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:07:02 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A171C035494;
+        Wed, 29 Apr 2020 19:07:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=djVWTxQYfvvGPGVFEwE2B90kkenXlbJGcD+PszmK/2M=; b=JJMEwpVhbqEyGZO1pKvJpLnxth
+        l1dJJuerlo8k6yWXdJPNp+1kH1Oyo5kRouZLy3l789vCJ+vxL/gSEbyC4c3psSR8P804xeCogBX2M
+        VAFy1RSfIdypQziZGq1UySM3FMVxZQNei7JFpfQLE1Igoi0iJ2NA5A2aYquBMVVgSziPXEBh0Nxzh
+        ZQ1ZBIuytrhT8BzPQizoAO3nA+btm4GZ/nVBVBe4QpJL9PeIjnWfQTE2IJpOHKJIE1EEK4EtblaSf
+        Iyo2WHE0ul+UFfvw7T7QfY++MM7AdS2K1LNEiNmv6greKpZ2EmZjAmuvmMfT7lQbcW/C/mvBL8fe3
+        rZrXahig==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jTybJ-0007Az-Jf; Thu, 30 Apr 2020 02:06:57 +0000
+Subject: Re: [PATCH] dma-buf: Documentation: fix: `make htmldocs` warnings
+To:     Vitor Massaru Iha <vitor@massaru.org>,
+        dri-devel@lists.freedesktop.org
+Cc:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200430015930.32224-1-vitor@massaru.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cb4d93a0-b967-f37d-ea01-0368c91b896e@infradead.org>
+Date:   Wed, 29 Apr 2020 19:06:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200430015930.32224-1-vitor@massaru.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 09:46:36 +0800
-Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
+On 4/29/20 6:59 PM, Vitor Massaru Iha wrote:
+> Add missed ":" on kernel-doc function parameter.
+> 
+> This patch fixes this warnings from `make htmldocs`:
+> ./drivers/dma-buf/dma-buf.c:678: warning: Function parameter or member 'importer_ops' not described in 'dma_buf_dynamic_attach'
+> ./drivers/dma-buf/dma-buf.c:678: warning: Function parameter or member 'importer_priv' not described in 'dma_buf_dynamic_attach'
+> 
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> ---
+>  drivers/dma-buf/dma-buf.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index ccc9eda1bc28..0756d2155745 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -655,8 +655,8 @@ EXPORT_SYMBOL_GPL(dma_buf_put);
+>   * calls attach() of dma_buf_ops to allow device-specific attach functionality
+>   * @dmabuf:		[in]	buffer to attach device to.
+>   * @dev:		[in]	device to be attached.
+> - * @importer_ops	[in]	importer operations for the attachment
+> - * @importer_priv	[in]	importer private pointer for the attachment
+> + * @importer_ops:	[in]	importer operations for the attachment
+> + * @importer_priv:	[in]	importer private pointer for the attachment
+>   *
+>   * Returns struct dma_buf_attachment pointer for this attachment. Attachments
+>   * must be cleaned up by calling dma_buf_detach().
+> 
 
-> > I'm fine with these changes if Masami is. But it is Masami's call as his
-> > infrastructure is more sensitive to the return calls than mine. I just run
-> > the test and see what passes. I don't actually look at the return codes.  
-> Another thing to note is that this will also change the "# of
-> unresolved" and "# of unsupported" in the summary at the end of the
-> test report.
+Sumit said that he would be applying my patch from April 7:
+https://lore.kernel.org/linux-media/7bcbe6fe-0b4b-87da-d003-b68a26eb4cf0@infradead.org/
 
-Understood. In my testing, I have all the modules enabled so I don't worry
-about it ;-)
+thanks.
+-- 
+~Randy
 
--- Steve
