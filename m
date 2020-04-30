@@ -2,148 +2,145 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3899C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C99C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE98A2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A54321974
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="okXjo4Ut";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gDNDrbyI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QnXAYetq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgD3IPc (ORCPT
+        id S1726854AbgD3IQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:15:32 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:60547 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbgD3IPb (ORCPT
+        Thu, 30 Apr 2020 04:16:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60089 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgD3IQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:15:31 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6E8195C00E7;
-        Thu, 30 Apr 2020 04:15:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 30 Apr 2020 04:15:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=vftGE7rXgB48AHwPWrZZjNjKTNb
-        wd8gbxpiL8fgB6Sk=; b=okXjo4Utd/ya/jwoNazuWTUk441cI0/uExpwq+7dDKs
-        Ne+yu43+r9bWUMy344IdIB1ZXSpDhUjyiLOZEXEq0WeSY3nxPy/EpWeJT4BLV42h
-        8S5BZQVgJy0x3oDmIQys1hX/dW8GBRxgriXQGTPkvsdvfA4ZYBes1PYINrIogeuG
-        uWprbjPbbTxrXa3miCXICj/zIL5MvxRqNjFfcMPgtLcGrQhxwRtWseDB+mdxnYrN
-        IWd9sYpZDv6a3Xtk9jlHhm9DJOIeZEXxPsd/Za4BIQiOd2UPAZ2ukh9TBXhX8BER
-        I6ho4/e1O1c3PjtWf5RdaWOA+/XjVmTWySKAjJM+0zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vftGE7
-        rXgB48AHwPWrZZjNjKTNbwd8gbxpiL8fgB6Sk=; b=gDNDrbyIQapEpFTwd77d4L
-        BQJYwtam6D2W+vv7eQEhPmiy6lml5Ntigi3sQaqkmPLMlH8DbJWETM+wDn8PnQH8
-        o8Lu7BNMThWjle/A40pz/2pixJfh82IEeiUWBKYSB8qN2oEo5eE42+SCfOQkInqU
-        XlP4fQjLlmoo4eQp6uQz0NGtT9qUOtLZN8UKpgtSa/ZWWg/oLVQVWa20/lotLmTa
-        /kkXkATX8dXu/sY0EoZrdWhm4J5JjQl/boBBCyE74TcyzSaFWY03CwM883SylOJb
-        0diHLnq6RCsOAUoUzr9mww4vZak3t2kaPdn49/9AHm/ljNuUK0d9Uyd2bccXQi0A
-        ==
-X-ME-Sender: <xms:H4mqXk6FXSigqZZ63A-zRewYbt93EmZmJ6GeoPbwUPBGgMzbWf6Lcw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
-    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeekfedr
-    keeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:H4mqXqehf9Wfgrx20CqZwlGMyGgdQhC9IN_htwcadyA9U80oqKM_Iw>
-    <xmx:H4mqXo5hOIpcaFGIiIyTj7e2ZBigPL71TXtk72lG9fQ7DZ3nHk6hXw>
-    <xmx:H4mqXryFffcLO8MNyshLSx_DcEZnVfhkz-bF7kk5PWNtxJ2Lil8XsQ>
-    <xmx:IImqXkw5sly5qifI2Gi8C1kMNsu3Y-QzheVJ4HP7Z8lucoLF37Fmjg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 89F4E3065F07;
-        Thu, 30 Apr 2020 04:15:27 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 10:15:25 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: linux-next: manual merge of the driver-core tree with the
- driver-core.current tree
-Message-ID: <20200430081525.GA2496246@kroah.com>
-References: <20200430142506.0626f8c4@canb.auug.org.au>
+        Thu, 30 Apr 2020 04:16:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588234561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XWFBCycrzpYryQQUalteW2/Qk7N32f3MKAGykOY2kJY=;
+        b=QnXAYetqBeO4/Zsgqk6qcQNidNTmQY5WZZ0Api1io4QSLHJZbrNmja0Uun95B9nIn+ENr9
+        h4juGz43deMKWS0Fyvk5KqfhP+z7xXayogUzHGURoUNGCxttJ2wyofX0/1SLvmVdeniDtX
+        J2VUvqfuOjGElCRh5vxtSspwUmht0c0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-x9Pn4iPLMIutuPhv_WeicQ-1; Thu, 30 Apr 2020 04:15:55 -0400
+X-MC-Unique: x9Pn4iPLMIutuPhv_WeicQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE791872FE0;
+        Thu, 30 Apr 2020 08:15:53 +0000 (UTC)
+Received: from krava (unknown [10.40.192.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ACA3E5D9F1;
+        Thu, 30 Apr 2020 08:15:47 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 10:15:41 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2] perf mem2node: avoid double free related to realloc
+Message-ID: <20200430081541.GA1681583@krava>
+References: <20200320182347.87675-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430142506.0626f8c4@canb.auug.org.au>
+In-Reply-To: <20200320182347.87675-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:25:06PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Fri, Mar 20, 2020 at 11:23:47AM -0700, Ian Rogers wrote:
+> Realloc of size zero is a free not an error, avoid this causing a double
+> free. Caught by clang's address sanitizer:
 > 
-> Today's linux-next merge of the driver-core tree got a conflict in:
+> ==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
+>     #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
+>     #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
+>     #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
+>     #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
+>     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+>     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+>     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+>     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+>     #8 0x564965942e41 in main tools/perf/perf.c:538:3
 > 
->   drivers/base/dd.c
+> 0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
+> freed by thread T0 here:
+>     #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
+>     #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
+>     #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+>     #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+>     #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+>     #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+>     #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+>     #7 0x564965942e41 in main tools/perf/perf.c:538:3
 > 
-> between commits:
+> previously allocated by thread T0 here:
+>     #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
+>     #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
+>     #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
+>     #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+>     #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+>     #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+>     #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+>     #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+>     #8 0x564965942e41 in main tools/perf/perf.c:538:3
 > 
->   ce68929f07de ("driver core: Revert default driver_deferred_probe_timeout value to 0")
->   4ccc03e28ec3 ("driver core: Use dev_warn() instead of dev_WARN() for deferred_probe_timeout warnings")
->   35a672363ab3 ("driver core: Ensure wait_for_device_probe() waits until the deferred_probe_timeout fires")
+> v2: add a WARN_ON_ONCE when the free condition arises.
 > 
-> from the driver-core.current tree and commit:
-> 
->   eb7fbc9fb118 ("driver core: Add missing '\n' in log messages")
-> 
-> from the driver-core tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/base/dd.c
-> index 94037be7f5d7,efe6df5bff26..000000000000
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@@ -258,8 -266,8 +258,8 @@@ int driver_deferred_probe_check_state(s
->   		return -ENODEV;
->   	}
->   
->  -	if (!driver_deferred_probe_timeout) {
->  -		dev_WARN(dev, "deferred probe timeout, ignoring dependency\n");
->  +	if (!driver_deferred_probe_timeout && initcalls_done) {
-> - 		dev_warn(dev, "deferred probe timeout, ignoring dependency");
-> ++		dev_warn(dev, "deferred probe timeout, ignoring dependency\n");
->   		return -ETIMEDOUT;
->   	}
->   
-> @@@ -275,8 -283,7 +275,8 @@@ static void deferred_probe_timeout_work
->   	flush_work(&deferred_probe_work);
->   
->   	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, deferred_probe)
-> - 		dev_info(private->device, "deferred probe pending");
-> + 		dev_info(private->device, "deferred probe pending\n");
->  +	wake_up(&probe_timeout_waitqueue);
->   }
->   static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
->   
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Looks good, I'll handle this when the .linus branch gets merged into
-Linus's tree.
+I overlooked v2 for this, sry
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
 thanks,
+jirka
 
-greg k-h
+> ---
+>  tools/perf/util/mem2node.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+> index 797d86a1ab09..c84f5841c7ab 100644
+> --- a/tools/perf/util/mem2node.c
+> +++ b/tools/perf/util/mem2node.c
+> @@ -1,5 +1,6 @@
+>  #include <errno.h>
+>  #include <inttypes.h>
+> +#include <asm/bug.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/kernel.h>
+>  #include <linux/zalloc.h>
+> @@ -95,7 +96,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
+>  
+>  	/* Cut unused entries, due to merging. */
+>  	tmp_entries = realloc(entries, sizeof(*entries) * j);
+> -	if (tmp_entries)
+> +	if (tmp_entries || WARN_ON_ONCE(j == 0))
+>  		entries = tmp_entries;
+>  
+>  	for (i = 0; i < j; i++) {
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
+
