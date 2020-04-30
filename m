@@ -6,90 +6,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E6FC83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493ECC83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B68B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CB52083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgD3Cja (ORCPT
+        id S1726852AbgD3Clv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:39:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49382 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726180AbgD3Cja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:39:30 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1B6DEBFF82905B21826C;
-        Thu, 30 Apr 2020 10:39:28 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 30 Apr 2020 10:39:21 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <anton@tuxera.com>
-CC:     <linux-ntfs-dev@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] NTFS: Remove unneeded semicolon
-Date:   Thu, 30 Apr 2020 10:45:34 +0800
-Message-ID: <1588214734-49415-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Wed, 29 Apr 2020 22:41:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:47946 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726180AbgD3Clv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:41:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 742771063;
+        Wed, 29 Apr 2020 19:41:50 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D915F3F68F;
+        Wed, 29 Apr 2020 19:41:47 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kaly.Xin@arm.com, Jia He <justin.he@arm.com>
+Subject: [PATCH] vhost: add mutex_lock/unlock for vhost_vq_reset
+Date:   Thu, 30 Apr 2020 10:41:40 +0800
+Message-Id: <20200430024140.42065-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warnings:
+vq->mutex is to protect any vq accessing, hence adding mutex_lock/unlock
+makes sense to avoid potential race condition.
 
-fs/ntfs/lcnalloc.c:902:2-3: Unneeded semicolon
-fs/ntfs/super.c:1615:2-3: Unneeded semicolon
-fs/ntfs/super.c:1684:2-3: Unneeded semicolon
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Signed-off-by: Jia He <justin.he@arm.com>
 ---
- fs/ntfs/lcnalloc.c | 2 +-
- fs/ntfs/super.c    | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/vhost/vhost.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ntfs/lcnalloc.c b/fs/ntfs/lcnalloc.c
-index eda9972..66c2b29 100644
---- a/fs/ntfs/lcnalloc.c
-+++ b/fs/ntfs/lcnalloc.c
-@@ -899,7 +899,7 @@ s64 __ntfs_cluster_free(ntfs_inode *ni, const VCN start_vcn, s64 count,
- 		}
- 		/* We have freed @to_free real clusters. */
- 		real_freed = to_free;
--	};
-+	}
- 	/* Go to the next run and adjust the number of clusters left to free. */
- 	++rl;
- 	if (count >= 0)
-diff --git a/fs/ntfs/super.c b/fs/ntfs/super.c
-index 7dc3bc6..d78d312 100644
---- a/fs/ntfs/super.c
-+++ b/fs/ntfs/super.c
-@@ -1612,7 +1612,7 @@ static bool load_and_init_attrdef(ntfs_volume *vol)
- 		memcpy((u8*)vol->attrdef + (index++ << PAGE_SHIFT),
- 				page_address(page), size);
- 		ntfs_unmap_page(page);
--	};
-+	}
- 	if (size == PAGE_SIZE) {
- 		size = i_size & ~PAGE_MASK;
- 		if (size)
-@@ -1681,7 +1681,7 @@ static bool load_and_init_upcase(ntfs_volume *vol)
- 		memcpy((char*)vol->upcase + (index++ << PAGE_SHIFT),
- 				page_address(page), size);
- 		ntfs_unmap_page(page);
--	};
-+	}
- 	if (size == PAGE_SIZE) {
- 		size = i_size & ~PAGE_MASK;
- 		if (size)
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index d450e16c5c25..622bfba2e5ab 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -297,6 +297,7 @@ static void vhost_vq_meta_reset(struct vhost_dev *d)
+ static void vhost_vq_reset(struct vhost_dev *dev,
+ 			   struct vhost_virtqueue *vq)
+ {
++	mutex_lock(&vq->mutex);
+ 	vq->num = 1;
+ 	vq->desc = NULL;
+ 	vq->avail = NULL;
+@@ -323,6 +324,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+ 	vq->umem = NULL;
+ 	vq->iotlb = NULL;
+ 	__vhost_vq_meta_reset(vq);
++	mutex_unlock(&vq->mutex);
+ }
+ 
+ static int vhost_worker(void *data)
 -- 
-2.6.2
+2.17.1
 
