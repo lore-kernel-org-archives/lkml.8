@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B102C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E54EC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59799208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A352137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254687;
-	bh=NCEMTGfWpoYFw/KeMl/To3iZwdhBGM7JjgTt34Xc6Y4=;
+	s=default; t=1588254689;
+	bh=xgLQmrYQLaqzEq2YE5Jd2f4XvD6+UY39LmbWTDJ6BCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NaDspyGJjO105KKfLdcFBGfGA/esZv7C2ULUZM/1+nxh67LGp8tZrIiuSVUqPdAN
-	 b6bki3loXpdRVpmyA8GP/Vt3khWrv1+6g7ed2L9d3NAwN2tx97ETVodbGTFYQmb2rR
-	 1rLQAIkuRKtQ6LIsglK7/AprpbN5OKnMinJbNRMs=
+	b=t6C2N07D/z9db+0E5k12askqX8kR1zM1hx6q/1EJzuWUhhWT/j2n4yFVSouoMaJn+
+	 7JdFBPtousyf772+gy3ra1ONzPMP1WBx82jH16JgKNyZK6S9Uef1xazsUoae3vrUaV
+	 vp6GCSV0YpR0mWWPVjFVCKB0eFww7JxQ/wbfiuWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgD3Nv0 (ORCPT
+        id S1728074AbgD3Nv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:51:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbgD3NvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:14 -0400
+        id S1727972AbgD3NvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7514220873;
-        Thu, 30 Apr 2020 13:51:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 907192082E;
+        Thu, 30 Apr 2020 13:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254673;
-        bh=NCEMTGfWpoYFw/KeMl/To3iZwdhBGM7JjgTt34Xc6Y4=;
+        s=default; t=1588254675;
+        bh=xgLQmrYQLaqzEq2YE5Jd2f4XvD6+UY39LmbWTDJ6BCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S1AEHnA8IH2DtG6TyeAMspRKXkDakmgkB+oAhZAXv4wmv76QQcJlVk9mAeI/OBdS2
-         MEmCBVGc6n/OBrsgpND4F8kVUObILV8RQx46ua+Gw8o4NilvE1Xj85Rc7n+tnH6IoZ
-         Nejk6087bmMnzYiWN0quKsIPH4iy2N/xgTW6l8CA=
+        b=NIYmexUOrWijR53/qFeIIwMKkKSxjc3tGorxfasMYiNRpFyaPLb/lBcNYexgFURoM
+         T+EhZGqacu+p/RDTb0nfvOB1DSHjajzUJB1WWLPVlY5pL1S7tJK4FVsFITNvMFbEZI
+         Ii7XjKDLY8KzxCCVNngW7B2drO4cJfbTE82Mfqzc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 25/79] ASoC: q6dsp6: q6afe-dai: add missing channels to MI2S DAIs
-Date:   Thu, 30 Apr 2020 09:49:49 -0400
-Message-Id: <20200430135043.19851-25-sashal@kernel.org>
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 27/79] usb: dwc3: gadget: Properly set maxpacket limit
+Date:   Thu, 30 Apr 2020 09:49:51 -0400
+Message-Id: <20200430135043.19851-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -60,121 +61,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 0c824ec094b5cda766c80d88c2036e28c24a4cb1 ]
+[ Upstream commit d94ea5319813658ad5861d161ae16a194c2abf88 ]
 
-For some reason, the MI2S DAIs do not have channels_min/max defined.
-This means that snd_soc_dai_stream_valid() returns false,
-i.e. the DAIs have neither valid playback nor capture stream.
+Currently the calculation of max packet size limit for IN endpoints is
+too restrictive. This prevents a matching of a capable hardware endpoint
+during configuration. Below is the minimum recommended HW configuration
+to support a particular endpoint setup from the databook:
 
-It's quite surprising that this ever worked correctly,
-but in 5.7-rc1 this is now failing badly: :)
+For OUT endpoints, the databook recommended the minimum RxFIFO size to
+be at least 3x MaxPacketSize + 3x setup packets size (8 bytes each) +
+clock crossing margin (16 bytes).
 
-Commit 0e9cf4c452ad ("ASoC: pcm: check if cpu-dai supports a given stream")
-introduced a check for snd_soc_dai_stream_valid() before calling
-hw_params(), which means that the q6i2s_hw_params() function
-was never called, eventually resulting in:
+For IN endpoints, the databook recommended the minimum TxFIFO size to be
+at least 3x MaxPacketSize for endpoints that support burst. If the
+endpoint doesn't support burst or when the device is operating in USB
+2.0 mode, a minimum TxFIFO size of 2x MaxPacketSize is recommended.
 
-    qcom-q6afe aprsvc:q6afe:4:4: no line is assigned
+Base on these recommendations, we can calculate the MaxPacketSize limit
+of each endpoint. This patch revises the IN endpoint MaxPacketSize limit
+and also sets the MaxPacketSize limit for OUT endpoints.
 
-... even though "qcom,sd-lines" is set in the device tree.
+Reference: Databook 3.30a section 3.2.2 and 3.2.3
 
-Commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
-now even avoids creating PCM devices if the stream is not supported,
-which means that it is failing even earlier with e.g.:
-
-    Primary MI2S: ASoC: no backend playback stream
-
-Avoid all that trouble by adding channels_min/max for the MI2S DAIs.
-
-Fixes: 24c4cbcfac09 ("ASoC: qdsp6: q6afe: Add q6afe dai driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200415150050.616392-1-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6afe-dai.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/dwc3/core.h   |  4 +++
+ drivers/usb/dwc3/gadget.c | 52 ++++++++++++++++++++++++++++++---------
+ 2 files changed, 45 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-index c1a7624eaf175..2a5302f1db98a 100644
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -902,6 +902,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -917,6 +919,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -931,6 +935,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -946,6 +952,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -960,6 +968,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -975,6 +985,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -989,6 +1001,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -1004,6 +1018,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 3ecc69c5b150f..ce4acbf7fef90 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -310,6 +310,10 @@
+ #define DWC3_GTXFIFOSIZ_TXFDEF(n)	((n) & 0xffff)
+ #define DWC3_GTXFIFOSIZ_TXFSTADDR(n)	((n) & 0xffff0000)
+ 
++/* Global RX Fifo Size Register */
++#define DWC31_GRXFIFOSIZ_RXFDEP(n)	((n) & 0x7fff)	/* DWC_usb31 only */
++#define DWC3_GRXFIFOSIZ_RXFDEP(n)	((n) & 0xffff)
++
+ /* Global Event Size Registers */
+ #define DWC3_GEVNTSIZ_INTMASK		BIT(31)
+ #define DWC3_GEVNTSIZ_SIZE(n)		((n) & 0xffff)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 9460d42f86757..1e68c90a83781 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2227,7 +2227,6 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
+ {
+ 	struct dwc3 *dwc = dep->dwc;
+ 	int mdwidth;
+-	int kbytes;
+ 	int size;
+ 
+ 	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
+@@ -2243,17 +2242,17 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
+ 	/* FIFO Depth is in MDWDITH bytes. Multiply */
+ 	size *= mdwidth;
+ 
+-	kbytes = size / 1024;
+-	if (kbytes == 0)
+-		kbytes = 1;
+-
+ 	/*
+-	 * FIFO sizes account an extra MDWIDTH * (kbytes + 1) bytes for
+-	 * internal overhead. We don't really know how these are used,
+-	 * but documentation say it exists.
++	 * To meet performance requirement, a minimum TxFIFO size of 3x
++	 * MaxPacketSize is recommended for endpoints that support burst and a
++	 * minimum TxFIFO size of 2x MaxPacketSize for endpoints that don't
++	 * support burst. Use those numbers and we can calculate the max packet
++	 * limit as below.
+ 	 */
+-	size -= mdwidth * (kbytes + 1);
+-	size /= kbytes;
++	if (dwc->maximum_speed >= USB_SPEED_SUPER)
++		size /= 3;
++	else
++		size /= 2;
+ 
+ 	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
+ 
+@@ -2271,8 +2270,39 @@ static int dwc3_gadget_init_in_endpoint(struct dwc3_ep *dep)
+ static int dwc3_gadget_init_out_endpoint(struct dwc3_ep *dep)
+ {
+ 	struct dwc3 *dwc = dep->dwc;
++	int mdwidth;
++	int size;
++
++	mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
++
++	/* MDWIDTH is represented in bits, convert to bytes */
++	mdwidth /= 8;
+ 
+-	usb_ep_set_maxpacket_limit(&dep->endpoint, 1024);
++	/* All OUT endpoints share a single RxFIFO space */
++	size = dwc3_readl(dwc->regs, DWC3_GRXFIFOSIZ(0));
++	if (dwc3_is_usb31(dwc))
++		size = DWC31_GRXFIFOSIZ_RXFDEP(size);
++	else
++		size = DWC3_GRXFIFOSIZ_RXFDEP(size);
++
++	/* FIFO depth is in MDWDITH bytes */
++	size *= mdwidth;
++
++	/*
++	 * To meet performance requirement, a minimum recommended RxFIFO size
++	 * is defined as follow:
++	 * RxFIFO size >= (3 x MaxPacketSize) +
++	 * (3 x 8 bytes setup packets size) + (16 bytes clock crossing margin)
++	 *
++	 * Then calculate the max packet limit as below.
++	 */
++	size -= (3 * 8) + 16;
++	if (size < 0)
++		size = 0;
++	else
++		size /= 3;
++
++	usb_ep_set_maxpacket_limit(&dep->endpoint, size);
+ 	dep->endpoint.max_streams = 15;
+ 	dep->endpoint.ops = &dwc3_gadget_ep_ops;
+ 	list_add_tail(&dep->endpoint.ep_list,
 -- 
 2.20.1
 
