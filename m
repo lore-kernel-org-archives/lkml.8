@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F90C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13303C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BB0206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2493206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255635;
-	bh=IpPVEfvJLI6p3CS+kHD0JvcDAyrdouIX9eEe+XK+FGM=;
+	s=default; t=1588255638;
+	bh=12G08OjkcLRNptzhaSvIbZJBb4wxK+MHHopIQJcsoTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYJE5n3+qNPb8Rh+J8C7f6ylUHw6Oxeu5J5Q71mZ7ooT7ltF4a0Clx53hkYsOcLhk
-	 J/rEVnVtcdBqGrfgWy6nLA9OZ/eFutZ+aARifbY0WFfNdi7nlDeNE6dg7Ox51phFf+
-	 URP60DpdZYYG7QzxAOMJ2+7Tdbw6b8oNgYQHvX0k=
+	b=yYR1fLr0+/EiWvPpu8w6AugyaTuYRf3femtavsZsmNSOJhsuQARxXxzhOJIIvfkyh
+	 XEk3PDjyIXE3QZ+/fZGBMzMIm3VtuDksH17VCS1dYqu0mi8rrCjR2eYTJY3cONx7P2
+	 uoMpbsoVeHHt92ki06tU3lKncy8K4eIl0MyQAwQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgD3OHO (ORCPT
+        id S1728884AbgD3OHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34058 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgD3Nwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:43 -0400
+        id S1728474AbgD3Nwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2637A208D5;
-        Thu, 30 Apr 2020 13:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CC5720873;
+        Thu, 30 Apr 2020 13:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254762;
-        bh=IpPVEfvJLI6p3CS+kHD0JvcDAyrdouIX9eEe+XK+FGM=;
+        s=default; t=1588254761;
+        bh=12G08OjkcLRNptzhaSvIbZJBb4wxK+MHHopIQJcsoTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ie1DZ49qjCAyYvnuAamTMawdVIo62RDX3PniJPtlugsr1OOOvwzpu4hSHDXEfIK+C
-         t2p8kKxtcW1cA28p6Dk0s3NDuonnOdhlZ814YOukhCA38cKkJ8KMJ99KdRSLyzzW6E
-         w7C4mBpScp/oN4DjLfIyS8Tv5rjIO2dKNdQBxhKQ=
+        b=XHB2UbZE7FdkYpyv5NQMY/C2EJtd1+Csyz1Y4ZiwjzA4FjKxRHL9LcReepon/LM1W
+         69Mki9lRaNT9dtcQOW0/WcQ2nLYnwfaSRjMLMtd/9LyqWYjokMU+THyRFSz/JVoTC1
+         Rm1qa34EnIUFRAAqMJNgLU5L4CbGHAp3hYopWRnc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/57] usb: gadget: udc: atmel: Fix vbus disconnect handling
-Date:   Thu, 30 Apr 2020 09:51:42 -0400
-Message-Id: <20200430135218.20372-21-sashal@kernel.org>
+Cc:     Alex Elder <elder@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 20/57] remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
+Date:   Thu, 30 Apr 2020 09:51:41 -0400
+Message-Id: <20200430135218.20372-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -60,40 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit 12b94da411f9c6d950beb067d913024fd5617a61 ]
+[ Upstream commit 13c060b50a341dd60303e5264d12108b5747f200 ]
 
-A DMA transfer can be in progress while vbus is lost due to a cable
-disconnect. For endpoints that use DMA, this condition can lead to
-peripheral hang. The patch ensures that endpoints are disabled before
-the clocks are stopped to prevent this issue.
+If looking up the DT "firmware-name" property fails in q6v6_probe(),
+the function returns without freeing the remoteproc structure
+that has been allocated.  Fix this by jumping to the free_rproc
+label, which takes care of this.
 
-Fixes: a64ef71ddc13 ("usb: gadget: atmel_usba_udc: condition clocks to vbus state")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Alex Elder <elder@linaro.org>
+Link: https://lore.kernel.org/r/20200403175005.17130-3-elder@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/atmel_usba_udc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 1d0d8952a74bf..58e5b015d40e6 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1950,10 +1950,10 @@ static irqreturn_t usba_vbus_irq_thread(int irq, void *devid)
- 			usba_start(udc);
- 		} else {
- 			udc->suspended = false;
--			usba_stop(udc);
--
- 			if (udc->driver->disconnect)
- 				udc->driver->disconnect(&udc->gadget);
-+
-+			usba_stop(udc);
- 		}
- 		udc->vbus_prev = vbus;
- 	}
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 783d00131a2a9..6ba065d5c4d95 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1440,7 +1440,7 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
+ 					    1, &qproc->hexagon_mdt_image);
+ 	if (ret < 0 && ret != -EINVAL)
+-		return ret;
++		goto free_rproc;
+ 
+ 	platform_set_drvdata(pdev, qproc);
+ 
 -- 
 2.20.1
 
