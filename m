@@ -2,101 +2,90 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8C5C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD52C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE24F20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962D120784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgD3HOr (ORCPT
+        id S1726677AbgD3HPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:14:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35988 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgD3HOq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:14:46 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jU3P3-0004ek-SK; Thu, 30 Apr 2020 07:14:37 +0000
-Date:   Thu, 30 Apr 2020 09:14:37 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Arseny Maslennikov <ar@cs.msu.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Landley <rob@landley.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
-Subject: Re: [PATCH v3 4/7] linux/signal.h: Ignore SIGINFO by default in new
- tasks
-Message-ID: <20200430071437.x3ilwkh3lyf4iq6u@wittgenstein>
-References: <20200430064301.1099452-1-ar@cs.msu.ru>
- <20200430064301.1099452-5-ar@cs.msu.ru>
- <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
+        Thu, 30 Apr 2020 03:15:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42192 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgD3HPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:15:46 -0400
+IronPort-SDR: Q2MYjqK/DWU2uBBjpP5LMybLyroO7l3FjiTQc5dcrq/Cg0+85lYJCM9A4x6SNZjOLrYOvKrmBf
+ nMf3WX0S1oFg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 00:15:45 -0700
+IronPort-SDR: n91qNzkX1l82MhoicLietInMyXKYMW9JTz+X32HY2znoZXSR+IlKxECRjzEqNA7wScoLvfkA1I
+ zx0N07yLJvOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="249668452"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Apr 2020 00:15:45 -0700
+Received: from [10.249.229.126] (abudanko-mobl.ccr.corp.intel.com [10.249.229.126])
+        by linux.intel.com (Postfix) with ESMTP id 32F63580646;
+        Thu, 30 Apr 2020 00:15:21 -0700 (PDT)
+Subject: [PATCH v3 1/3] perf docs: extend CAP_SYS_ADMIN with CAP_PERFMON where
+ needed
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+References: <0fffd9e2-1f22-a0c2-c2e3-cb7f4bb89d66@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <3b19cf79-f02d-04b4-b8b1-0039ac023b2c@linux.intel.com>
+Date:   Thu, 30 Apr 2020 10:15:21 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <0fffd9e2-1f22-a0c2-c2e3-cb7f4bb89d66@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <780cb05e-a749-77a0-dabc-bd09982aa028@suse.cz>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 08:53:56AM +0200, Jiri Slaby wrote:
-> On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
-> > This matches the behaviour of other Unix-like systems that have SIGINFO
-> > and causes less harm to processes that do not install handlers for this
-> > signal, making the keyboard status character non-fatal for them.
-> > 
-> > This is implemented with the assumption that SIGINFO is defined
-> > to be equivalent to SIGPWR; still, there is no reason for PWR to
-> > result in termination of the signal recipient anyway — it does not
-> > indicate there is a fatal problem with the recipient's execution
-> > context (like e.g. FPE/ILL do), and we have TERM/KILL for explicit
-> > termination requests.
-> > 
-> > To put it another way:
-> > The only scenario where system behaviour actually changes is when the
-> > signal recipient has default disposition for SIGPWR. If a process
-> > chose to interpret a SIGPWR as an incentive to cleanly terminate, it
-> > would supply its own handler — and this commit does not affect processes
-> > with non-default handlers.
-> > 
-> > Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-> > ---
-> >  include/linux/signal.h | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/signal.h b/include/linux/signal.h
-> > index 05bacd2ab..dc31da8fc 100644
-> > --- a/include/linux/signal.h
-> > +++ b/include/linux/signal.h
-> > @@ -369,7 +369,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
-> >   *	|  SIGSYS/SIGUNUSED  |	coredump 	|
-> >   *	|  SIGSTKFLT         |	terminate	|
-> >   *	|  SIGWINCH          |	ignore   	|
-> > - *	|  SIGPWR            |	terminate	|
-> > + *	|  SIGPWR            |	ignore   	|
-> 
-> You need to update signal.7 too:
-> https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man7/signal.7#n285
 
-(I fail this whole thread via b4 and it appears that a bunch of messages
-are missing on lore. Might just be delay though.)
+Extend CAP_SYS_ADMIN with CAP_PERFMON in the docs.
 
-How this is this not going to break userspace?
-Just for a start, SIGPWR (for better or worse) was used for a long time
-by some sandboxing/container runtimes to shutdown a process and still
-is.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-intel-pt.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Christian
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 456fdcbf26ac..832408a54c1c 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -687,7 +687,7 @@ The v4.2 kernel introduced support for a context switch metadata event,
+ PERF_RECORD_SWITCH, which allows unprivileged users to see when their processes
+ are scheduled out and in, just not by whom, which is left for the
+ PERF_RECORD_SWITCH_CPU_WIDE, that is only accessible in system wide context,
+-which in turn requires CAP_SYS_ADMIN.
++which in turn requires CAP_PERFMON or CAP_SYS_ADMIN.
+ 
+ Please see the 45ac1403f564 ("perf: Add PERF_RECORD_SWITCH to indicate context
+ switches") commit, that introduces these metadata events for further info.
+-- 
+2.24.1
+
+
