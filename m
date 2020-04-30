@@ -2,201 +2,139 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7857C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBCEC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD4A21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD042076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y4mL6D3z"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NaZ8A2/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgD3Pwu (ORCPT
+        id S1726871AbgD3P6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:52:50 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59221 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726441AbgD3Pwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:52:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588261967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=OP9zUYIno6x6iC1SiniLiH6Fo13bK6xGgljySSJVtbc=;
-        b=Y4mL6D3z3mKod/PR8LmOw1jpVRAdtjqd0S82/1eX1m1GFMPXDr0xJtnwyLAXyvJ3SssDki
-        zOQnTlymh7sb844lfgKU43HMdnQZ/mdpD9Yn3FkLRRdww7Tk9TDsieyligsnR9mNB6Jm4J
-        4KlNYAbmuNKvbFJkXRAJn2OVIoVsMbA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-scg0K8IrNv2RPP-fweQOMw-1; Thu, 30 Apr 2020 11:52:44 -0400
-X-MC-Unique: scg0K8IrNv2RPP-fweQOMw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 694A264AD9;
-        Thu, 30 Apr 2020 15:52:42 +0000 (UTC)
-Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 758B8605DE;
-        Thu, 30 Apr 2020 15:52:36 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
- <20200430102908.10107-3-david@redhat.com>
- <87pnbp2dcz.fsf@x220.int.ebiederm.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
-Date:   Thu, 30 Apr 2020 17:52:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <87pnbp2dcz.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 30 Apr 2020 11:58:10 -0400
+Received: from mail-db8eur05on2053.outbound.protection.outlook.com ([40.107.20.53]:6168
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726420AbgD3P6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:58:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dzXUIHEWQ1I2g38AQNh4V6gMf0cilHwI4JDX2hzbpNUrm8T6B6y2eUjSph5f2BgwHxT0amE5uFygVod7mdBmfIGPOeTMLmDOu9HCvsR5OOszNipMC4Seb0uhGHw4FwQqrvkvn3u3IFE9iYRVSoTG5k1UgdJortyvWm5AUaJghxNbhtwnn2Dq9dmp7nj8du8HQe6goazOUDHI/gfSgk4glntbV3uAHDG4Os9hTd/bLEuBsrw7umKwdo+i22ouN3XqWqOVxBtHSjijHoFecfL/CE2Yh+j1VNtJCVmPC3D+FC8vtvx3UhQqbZoVJbN4oR6By5JO4sk+i8sPiP/2Ox8Mig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JkwqgrUJ3gK4EIlL/kP7TenoEXydC4ciSCf5vULGVNo=;
+ b=myvH4RQeAiuJBH8k5n6OGuwawG6Yc0Oxa9RHElMiQfY0f5Nj/CgmGX257jbCbs1K9x9CJF0u8MDOjijDBDOWChbH/hz9ZxF5H73erLO7XzPZXJvQXW0j5OWfTr87pWWEYh/iHM92C2H9sYNiWGQHt9RWXTbzZ5ULXkEobTPGKziavCBRNEduagjE3pwRZNxuRa9w/1UhO170fJtwNeWr/OoENgaDrTpJKZLpRyjkL7d32esgYQM1HR5s37+o2SCmmZPRr/YyPBwJjJ50UVGbYok8+aLVhNs48FcaWCj5DsJqSfVWf/8jvJNP1VaRREHfDFR2oHsUPehf7L/+T+l5dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JkwqgrUJ3gK4EIlL/kP7TenoEXydC4ciSCf5vULGVNo=;
+ b=NaZ8A2/cT0ojZYlo6OeV+BZabOsASjCyNZW0zyfYtr4V+Oc4l6dNnJpDlUoLMZR0XNmYhzo3gHNon+c5zhFatke8Jd376I4cwZiwesRn+BN71nhXIGmD8PprXvzrmdD91flLE4viGxGS4X4UEVcdzkY+MfLe1kr2HrTHRxkntio=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6942.eurprd05.prod.outlook.com (2603:10a6:800:182::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
+ 2020 15:58:04 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
+ 15:58:04 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "schnelle@linux.ibm.com" <schnelle@linux.ibm.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [PATCH 1/1] net/mlx5: Call pci_disable_sriov() on remove
+Thread-Topic: [PATCH 1/1] net/mlx5: Call pci_disable_sriov() on remove
+Thread-Index: AQHWHudo8BynXPiFfkigfe9EJ+7d7qiR0nIA
+Date:   Thu, 30 Apr 2020 15:58:04 +0000
+Message-ID: <2409e7071482b8d05447b8660abcac15987ad399.camel@mellanox.com>
+References: <20200430120308.92773-1-schnelle@linux.ibm.com>
+         <20200430120308.92773-2-schnelle@linux.ibm.com>
+In-Reply-To: <20200430120308.92773-2-schnelle@linux.ibm.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: linux.ibm.com; dkim=none (message not signed)
+ header.d=none;linux.ibm.com; dmarc=none action=none header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b4b51150-54e2-490c-5d87-08d7ed1f44a2
+x-ms-traffictypediagnostic: VI1PR05MB6942:
+x-microsoft-antispam-prvs: <VI1PR05MB6942578C77CE45EF37B03F75BEAA0@VI1PR05MB6942.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0389EDA07F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 39tM26UxrHTUsh0uKgPW+wnl0F8tpQd60he6mhgxMDtD/wBtRWy0zdo2a6cEOUHHlnGCJ4Af0zTHQoSOCES/QoVFP3K3Xm+w0j9SdmJeCsiJCN5s5W2LqZfwouHBebelUgGgNOAO1z1c3wSnBOSgOc2ozOmbDnM5JkOOfmCICJzTYIbCr+dRo3pyZ4U4RtKUuKtl8dq7v2EJm2kH4bMAWWBHpl6LBxSvz+Mggi6oSB7Upr67vHESEmaSeJK/Rhq4FGX8G9SJBWJveHyVHPmTVTjnQqlJ0czpbM2GhXzcY3CMCMYJYIehPhy2rsCepN2xIYv2pD3DOuSxVpX5nJH/GVCfXw7Sdic684o/Koub5sPh103ZTyo615VF32J5NOYww6nl4pOc1YN4Ut/kRusXMLpv7jYie3DFzTnk4+rRWIjEqEjF7yNy0/SHwWL3rih9
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(346002)(366004)(376002)(5660300002)(8936002)(66946007)(2906002)(4326008)(66556008)(6512007)(8676002)(66446008)(91956017)(66476007)(64756008)(76116006)(6486002)(86362001)(2616005)(478600001)(36756003)(54906003)(186003)(26005)(316002)(6506007)(6916009)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: DzCaWgm3T5Drp4v3LT6aJr7/IY2PK3QyWDIEPKoKYnun99dwbAgcN7xm8m8nhrzxQq8vAVxwdNFvmdLvtseHiidzZ+6YSUYe7DE4v7uFyqSwY7vtt/uLq9+lH8aKJRqoEN6LhEU7slBw0rEy3zyS3bUnx2M4yEJyWWhxau15na+NydQIPk3EWdLY7+cX3+zgYeZ12ixf7m6dk5eCKb/TpDEyzk4QvwQhdtoQelbOCF2TBnniRt5d57Lv5dVV5vjhJ4/pN95Wu9AQRIWG3qWYRAEgQbJYewXLmijk7iIjgG0iT3KThiaXZ6ajzolheTqaKTe0rRTYduWzoVm7D8id4HtPykQsD57++RdF4hfZ6obyEIIXk56TDbZHR/Wh3ZqOv6mDfYxfo7oC91nWDWwfj02c9SYYiNphZRdey/qRIjiJgA9BWgZ9U7CjwKyEQfGlXR9Scujik90PiQEH0lErwteKSBY8Dkq0PA1lJ0H+rN2UikEDrkYqqU7ZHkict/wJhocT3pckkqJY7T8N1suNq4eosCVxnHg8wCe8vyEkVscW0AQxEx/gxTEfh76ECfYGVOycVgSdeitn0w+cSeOdm3fT6zrtjoMfLqIKz/zxMdUFgDZV1YM4RBTuMu+6X3BYV5M0ia03yp5EpvopX6T9MyDR/Xhe5DYYQiwl7yWoAwz9XdV+P4dSN2vjS77EbZs9Oq8jKwh84qUF0n75uLeqtc4Yq4IsGIiTbGFpdoQoQtHqAb8QaR3YyHymg6Aov+AXog5H4mnU1Db8uj9FqdHjo4jJ/CZ1eriXn2DMOmLiLYU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <96E15CDB427ED246BE912471EFDF4EB6@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4b51150-54e2-490c-5d87-08d7ed1f44a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 15:58:04.6665
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9fyVIwolMs08EN44bhhAR9TPS+m0VvH7oT/Sm/V0Ph5ybwE4Szlgy8hqV84lfOlDT4tLV9qxqcwSgxv+WZ9iFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6942
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.04.20 17:38, Eric W. Biederman wrote:
-> David Hildenbrand <david@redhat.com> writes:
->=20
->> Some devices/drivers that add memory via add_memory() and friends (e.g=
-.,
->> dax/kmem, but also virtio-mem in the future) don't want to create entr=
-ies
->> in /sys/firmware/memmap/ - primarily to hinder kexec from adding this
->> memory to the boot memmap of the kexec kernel.
->>
->> In fact, such memory is never exposed via the firmware memmap as Syste=
-m
->> RAM (e.g., e820), so exposing this memory via /sys/firmware/memmap/ is
->> wrong:
->>  "kexec needs the raw firmware-provided memory map to setup the
->>   parameter segment of the kernel that should be booted with
->>   kexec. Also, the raw memory map is useful for debugging. For
->>   that reason, /sys/firmware/memmap is an interface that provides
->>   the raw memory map to userspace." [1]
->>
->> We don't have to worry about firmware_map_remove() on the removal path=
-.
->> If there is no entry, it will simply return with -EINVAL.
->>
->> [1]
->> https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-me=
-mmap
->=20
->=20
-> You know what this justification is rubbish, and I have previously
-> explained why it is rubbish.
-
-Actually, no, I don't think it is rubbish. See patch #3 and the cover
-letter why this is the right thing to do *for special memory*, *not
-ordinary DIMMs*.
-
-And to be quite honest, I think your response is a little harsh. I don't
-recall you replying to my virtio-mem-related comments.
-
->=20
-> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
->=20
-> This needs to be based on weather the added memory is ultimately normal
-> ram or is something special.
-
-Yes, that's what the caller are expected to decide, see patch #3.
-
-kexec should try to be as closely as possible to a real reboot - IMHO.
-
->=20
-> At least when we are talking memory resources.  Keeping it out of the
-> firmware map that is fine.
->=20
-> If the hotplugged memory is the result of plugging a stick of ram
-> into the kernel and can and should used be like any other memory
-> it should be treated like any normal memory.
->=20
-> If the hotplugged memory is something special it should be treated as
-> something special.
-
-I am really sorry, I can't make sense of what you are trying to say here.
-
->=20
-> Justifying behavior by documentation that does not consider memory
-> hotplug is bad thinking.
-
-Are you maybe confusing this patch series with the arm64 approach? This
-is not about ordinary hotplugged DIMMs.
-
-I'd love to get Dan's, Dave's and Michal's opinion.
-
---=20
-Thanks,
-
-David / dhildenb
-
+T24gVGh1LCAyMDIwLTA0LTMwIGF0IDE0OjAzICswMjAwLCBOaWtsYXMgU2NobmVsbGUgd3JvdGU6
+DQo+IGFzIGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0aW9uL1BDSS9wY2ktaW92LWhvd3RvLnJzdCBh
+IGRyaXZlciB3aXRoIFNSLQ0KPiBJT1YNCj4gc3VwcG9ydCBzaG91bGQgY2FsbCBwY2lfZGlzYWJs
+ZV9zcmlvdigpIGluIHRoZSByZW1vdmUgaGFuZGxlci4NCg0KSGkgTmlrbGFzLA0KDQpsb29raW5n
+IGF0IHRoZSBkb2N1bWVudGF0aW9uLCBpdCBkb2Vzbid0IHNheSAic2hvdWxkIiBpdCBqdXN0IGdp
+dmVzIHRoZQ0KY29kZSBhcyBleGFtcGxlLg0KDQo+IE90aGVyd2lzZSByZW1vdmluZyBhIFBGIChl
+LmcuIHZpYSBwY2lfc3RvcF9hbmRfcmVtb3ZlX2J1c19kZXZpY2UoKSkNCj4gd2l0aA0KPiBhdHRh
+Y2hlZCBWRnMgZG9lcyBub3QgcHJvcGVybHkgc2h1dCB0aGUgVkZzIGRvd24gYmVmb3JlIHNodXR0
+aW5nIGRvd24NCj4gdGhlIFBGLiBUaGlzIGxlYWRzIHRvIHRoZSBWRiBkcml2ZXJzIGhhbmRsaW5n
+IGRlZnVuY3QgZGV2aWNlcyBhbmQNCj4gYWNjb21wYW55aW5nIGVycm9yIG1lc3NhZ2VzLg0KPiAN
+Cg0KV2hpY2ggc2hvdWxkIGJlIHRoZSBhZG1pbiByZXNwb25zaWJpbGl0eSAuLiBpZiB0aGUgYWRt
+aW4gd2FudCB0byBkbw0KdGhpcywgdGhlbiBsZXQgaXQgYmUuLiB3aHkgYmxvY2sgaGltID8gDQoN
+Cm91ciBtbHg1IGRyaXZlciBpbiB0aGUgdmYgaGFuZGxlcyB0aGlzIGdyYWNlZnVsbHkgYW5kIG9u
+Y2UgcGYNCmRyaXZlci9kZXZpY2UgaXMgYmFjayBvbmxpbmUgdGhlIHZmIGRyaXZlciBxdWlja2x5
+IHJlY292ZXJzLg0KDQo+IEluIHRoZSBjdXJyZW50IGNvZGUgcGNpX2Rpc2FibGVfc3Jpb3YoKSBp
+cyBhbHJlYWR5IGNhbGxlZCBpbg0KPiBtbHg1X3NyaW92X2Rpc2FibGUoKSBidXQgbm90IGluIG1s
+eDVfc3Jpb3ZfZGV0YWNoKCkgd2hpY2ggaXMgY2FsbGVkDQo+IGZyb20NCj4gdGhlIHJlbW92ZSBo
+YW5kbGVyLiBGaXggdGhpcyBieSBtb3ZpbmcgdGhlIHBjaV9kaXNhYmxlX3NyaW92KCkgY2FsbA0K
+PiBpbnRvDQo+IG1seDVfZGV2aWNlX2Rpc2FibGVfc3Jpb3YoKSB3aGljaCBpcyBjYWxsZWQgYnkg
+Ym90aC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE5pa2xhcyBTY2huZWxsZSA8c2NobmVsbGVAbGlu
+dXguaWJtLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1
+L2NvcmUvc3Jpb3YuYyB8IDMgKystDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQv
+bWVsbGFub3gvbWx4NS9jb3JlL3NyaW92LmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxs
+YW5veC9tbHg1L2NvcmUvc3Jpb3YuYw0KPiBpbmRleCAzMDk0ZDIwMjk3YTkuLjI0MDE5NjFjOWY1
+YiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3Jl
+L3NyaW92LmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3Jl
+L3NyaW92LmMNCj4gQEAgLTExNCw2ICsxMTQsOCBAQCBtbHg1X2RldmljZV9kaXNhYmxlX3NyaW92
+KHN0cnVjdCBtbHg1X2NvcmVfZGV2DQo+ICpkZXYsIGludCBudW1fdmZzLCBib29sIGNsZWFyX3Zm
+KQ0KPiAgCWludCBlcnI7DQo+ICAJaW50IHZmOw0KPiAgDQo+ICsJcGNpX2Rpc2FibGVfc3Jpb3Yo
+ZGV2LT5wZGV2KTsNCj4gKw0KPiAgCWZvciAodmYgPSBudW1fdmZzIC0gMTsgdmYgPj0gMDsgdmYt
+LSkgew0KPiAgCQlpZiAoIXNyaW92LT52ZnNfY3R4W3ZmXS5lbmFibGVkKQ0KPiAgCQkJY29udGlu
+dWU7DQo+IEBAIC0xNTYsNyArMTU4LDYgQEAgc3RhdGljIHZvaWQgbWx4NV9zcmlvdl9kaXNhYmxl
+KHN0cnVjdCBwY2lfZGV2DQo+ICpwZGV2KQ0KPiAgCXN0cnVjdCBtbHg1X2NvcmVfZGV2ICpkZXYg
+ID0gcGNpX2dldF9kcnZkYXRhKHBkZXYpOw0KPiAgCWludCBudW1fdmZzID0gcGNpX251bV92Zihk
+ZXYtPnBkZXYpOw0KPiAgDQo+IC0JcGNpX2Rpc2FibGVfc3Jpb3YocGRldik7DQoNCnRoaXMgcGF0
+Y2ggaXMgbm8gZ29vZCBhcyBpdCBicmVha3MgY29kZSBzeW1tZXRyeS4uIGFuZCBjb3VsZCBsZWFk
+IHRvDQptYW55IG5ldyBpc3N1ZXMuDQoNCg0KPiAgCW1seDVfZGV2aWNlX2Rpc2FibGVfc3Jpb3Yo
+ZGV2LCBudW1fdmZzLCB0cnVlKTsNCj4gIH0NCj4gIA0KDQo=
