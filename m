@@ -2,114 +2,151 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40692C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7BFC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E2121775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="LLjA9fjL"
+	by mail.kernel.org (Postfix) with ESMTP id D3A0E20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgD3RUF (ORCPT
+        id S1726736AbgD3RUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:20:05 -0400
-Received: from mail.efficios.com ([167.114.26.124]:59474 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgD3RUE (ORCPT
+        Thu, 30 Apr 2020 13:20:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726440AbgD3RUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:20:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D20BE290A16;
-        Thu, 30 Apr 2020 13:20:03 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id fTKELdeRdh4k; Thu, 30 Apr 2020 13:20:03 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 852BC290B08;
-        Thu, 30 Apr 2020 13:20:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 852BC290B08
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588267203;
-        bh=Di5qGah5r+8XjpKMIa4fYVeZjc/aoZbDYSfzdYCDF9E=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=LLjA9fjLx88v78z9kHXBV3cIBVT6Ytx8fLd+ncdm/H4h0dOBMwGQQZkr1DNZs4w8Q
-         ht+RcBbU/rWPTeeiy/8YEqPyj70VzUzeHFQMMcI591D522jKRMPgFZxCvpSBCuv9/A
-         RJ/kD/p5uk5DkRtJdz+9YZkYWFIJyn0GWmxPbU27UhDVPeEryFAw2NBbM6J9nTzOEX
-         7kziDXe0bAIiR+SFz6iyUlEAuM2neGIVXLX+aSc28ByC1BmTnEAhXz6BvxtOvR+7kZ
-         ZaOeEUMAPzl7txUceVIFAbGMWu8WheV4EC+yTU5rvG2dh5A5XfCGL406IosNCED8X0
-         HYZH7aQSoy9gw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4W0RDaxPKok7; Thu, 30 Apr 2020 13:20:03 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 679BE2904FA;
-        Thu, 30 Apr 2020 13:20:03 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 13:20:03 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <729499446.78182.1588267203324.JavaMail.zimbra@efficios.com>
-In-Reply-To: <874kt0lx6i.fsf@oldenburg2.str.redhat.com>
-References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com> <875zdhmaft.fsf@oldenburg2.str.redhat.com> <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com> <878sidkk0z.fsf@oldenburg2.str.redhat.com> <1972833271.77975.1588265754974.JavaMail.zimbra@efficios.com> <874kt0lx6i.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C
- startup and thread creation (v18)
+        Thu, 30 Apr 2020 13:20:09 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UH2OqJ073064;
+        Thu, 30 Apr 2020 13:19:54 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhc3vs69-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 13:19:52 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UH4DJ5084423;
+        Thu, 30 Apr 2020 13:19:51 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhc3vs5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 13:19:51 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UHAvTE017841;
+        Thu, 30 Apr 2020 17:19:49 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu7322e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 17:19:49 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UHJko756360974
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 17:19:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EF4411C04C;
+        Thu, 30 Apr 2020 17:19:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63DDB11C04A;
+        Thu, 30 Apr 2020 17:19:45 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.14.241])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 17:19:45 +0000 (GMT)
+Date:   Thu, 30 Apr 2020 19:19:42 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
+ pages
+Message-ID: <20200430191942.3ae9155f@p-imbrenda>
+In-Reply-To: <172c51f7-7dd6-7dd0-153f-aedd4b10a9f3@intel.com>
+References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
+        <2a1abf38-d321-e3c7-c3b1-53b6db6da310@intel.com>
+        <b077744e-65be-f89c-55bb-4fc0f712eb76@de.ibm.com>
+        <609afef2-43c2-d048-1c01-448a53a54d4e@intel.com>
+        <20200430005310.7b25efab@p-imbrenda>
+        <172c51f7-7dd6-7dd0-153f-aedd4b10a9f3@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v18)
-Thread-Index: ovrJOjNB9Oey32yCPILsJBJkjrvzzg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_11:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=830 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004300132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 30, 2020, at 1:07 PM, Florian Weimer fweimer@redhat.com wrote:
-[...]
-> __libc_fatal does not attribute the error to glibc, so I suggest to
-> start the error messages with =E2=80=9Cglibc fatal error: =E2=80=9D, so t=
-hat people know
-> where to look.
+On Wed, 29 Apr 2020 16:52:46 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-OK. Is there a strict requirement on limiting to 80 columns for code
-including an error message string in glibc ? IOW:
+> On 4/29/20 3:53 PM, Claudio Imbrenda wrote:
+> >> Actually, that's the problem.  You've gone through all these
+> >> careful checks and made the page inaccessible.  *After* that
+> >> process, how do you keep the page from being hit by an I/O device
+> >> before it's made accessible again?  My patch just assumes that
+> >> *all* pages have gone through that process and passed those
+> >> checks.  
+> > I don't understand what you are saying here.
+> > 
+> > we start with all pages accessible, we mark pages as inaccessible
+> > when they are imported in the secure guest (we use the PG_arch_1
+> > bit in struct page). we then try to catch all I/O on inaccessible
+> > pages and make them accessible so that I/O devices are happy.   
+> 
+> The catching mechanism is incomplete, that's all I'm saying.
 
-  if (__rseq_abi.cpu_id !=3D RSEQ_CPU_ID_UNINITIALIZED)
-    __libc_fatal ("glibc fatal error: rseq already initialized for this thr=
-ead\n");
+well, sendto in the end does a copy_from_user or a get_user_pages_fast,
+both are covered (once we fix the make_accessible to work on FOLL_GET
+too). 
 
-or
+> Without looking too hard, and not even having the hardware, I've found
+> two paths where the "catching" was incomplete:
+> 
+> 	1. sendfile(), which you've patched
+> 	2. sendto(), which you haven't patched
+> 
+> > either your quick and dirty patch was too dirty (e.g. not accounting
+> > for possible races between make_accessible/make_inaccessible), or
+> > some of the functions in the trace you provided should do
+> > pin_user_page instead of get_user_page (or both)  
+> 
+> I looked in the traces for any races.  For sendto(), at least, the
+> make_accessible() never happened before the process exited.  That's
+> entirely consistent with the theory that it entirely missed being
+> caught.  I can't find any evidence that there were races.
+> 
+> Go ahead and try it.  You have the patch!  I mean, I found a bug in
+> about 10 minutes in one tiny little VM.
 
-  if (__rseq_abi.cpu_id !=3D RSEQ_CPU_ID_UNINITIALIZED)
-    __libc_fatal ("glibc fatal error: "
-                  "rseq already initialized for this thread\n");
+I tried your patch, but I could not reproduce the problem. I have a
+Debian 10 x86_64 with the latest kernel from master and your patch on
+top. is there anything I'm missing? which virtual devices are you using?
+any particular .config options?
 
-?
+I could easily get the mm_make_accessible tracepoints, but I never
+manage to trigger the mm_accessible_error ones.
 
-Thanks,
+are you using transparent hugepages by any chance? the
+infrastructure for inaccessible pages is meant only for small pages,
+since on s390x only small pages can ever be used for secure
+guests and therefore become inaccessible.
 
-Mathieu
+> And, yes, you need to get rid of the FOLL_PIN check unless you want to
+> go change a big swath of the remaining get_user_pages*() sites.
 
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
