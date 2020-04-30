@@ -2,150 +2,117 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594D9C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBCC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3547020731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4DC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="P6ml2Iwz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rRg2l8P1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgD3Qz5 (ORCPT
+        id S1726822AbgD3Qz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:55:57 -0400
-Received: from mail.efficios.com ([167.114.26.124]:49564 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgD3Qz4 (ORCPT
+        Thu, 30 Apr 2020 12:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726746AbgD3Qz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:55:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 7276B29019A;
-        Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id R5cw2QtpS93e; Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 23F64290199;
-        Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 23F64290199
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1588265755;
-        bh=Mp2N6YTybV9Yy+BQgTJKnPNXrZLjJEVr2GwPlCCPe5c=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=P6ml2Iwzx7dNVYFLxrkWSsVQThYw2dO3hAxklBIuoMnX1mQB+Y+TkBHjCIh/KOIiK
-         9BF34ObzvD7EE0Hr81wiv7OtYPzdGzJXdgqrla23Pz5l57swsihELEvq3+YXRQClmD
-         81+/l/Fs9ulbqJ73MQSBGcwOfmUe8AbfDdOMlfyXDnaSuFW047vhG9fsmbW+mLtMbc
-         NtgKvA+1/SvxFlG9EBw4mryfTapc5isfKLWecPHz2sww9O0bRpma0OU09IM+lhT1/j
-         ubLuTCXPy4/5jJfn2l/haVyrwneiGLCkA4es97pCEgtPeQk9956ziSJ7+Ktofw3NOA
-         x0OenWRJfbIvw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id GXJtEnICMaN0; Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 0F11629021D;
-        Thu, 30 Apr 2020 12:55:55 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 12:55:54 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1972833271.77975.1588265754974.JavaMail.zimbra@efficios.com>
-In-Reply-To: <878sidkk0z.fsf@oldenburg2.str.redhat.com>
-References: <20200428171513.22926-1-mathieu.desnoyers@efficios.com> <875zdhmaft.fsf@oldenburg2.str.redhat.com> <1287616647.77866.1588263099045.JavaMail.zimbra@efficios.com> <878sidkk0z.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [RFC PATCH glibc 1/3] glibc: Perform rseq(2) registration at C
- startup and thread creation (v18)
+        Thu, 30 Apr 2020 12:55:57 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507E3C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:55:56 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so49458pfw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IkRC+FQqxQAModbwkeMMyhs5RSaTy9rWO/DCP0foYTE=;
+        b=rRg2l8P1/u3mc8/lpCDvRoC7tiQm7zvhfMdHXk4E9lVs+36fbJw2rrgqdexVLR6VTL
+         7/YZZfpJF0hAf9Cr4ZJUFCANK0QU2EymYkq9wuHwkAaBACbOOXsg0+Sw6bzVfBcLkuaW
+         FpKDqmFT5gHvIETNtpNOnMkvk0LiT/wEAQHUYQS0N5nqD/mWbjXxLk4H+5GqZ8Uv/2nO
+         gDmWh/XQtyVLKVmTQN/TpxkgNMUTl6ZfWnq73ssmfJsHiphj3qvQjSvT31frUB84S2LI
+         SUKF1EMw8HFcVekxPOU+N37rC6eN8CsNUYGJmaeQkTViIfFwnE+TGE0pLQbA3e8rzHO+
+         zIRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IkRC+FQqxQAModbwkeMMyhs5RSaTy9rWO/DCP0foYTE=;
+        b=W/6wxX8CP4/6ism1N2faqKGQQp5/CpEozUsDrdEwoQFFpC/P3vWZ0FpwfOPVjl71pQ
+         fySj51suor3rEe7h08Pz8QXwaIj9n/08BTBn2IBpkvbpGlN9YYL5MeOW70vr+YWQT737
+         75ai7mebkotHTT9VMPCMZxQEAmfOoOWWCSPHTG7/Pm78hS+xlrpraWEFZitKOg1yz//5
+         Bk7IFCQUFnA8RWep+yOPU/ZI3kstrQxf+QLvLLbgaWxEP4bF+o+YCH1Wol2YIcUW3tOR
+         D6b0uyu4PAHxPi19s2qODnO7ZgjRfzAdmPrEO7VDFGzLqvpNAPzX+Q2jRhKoZiQ/jazd
+         Zc/A==
+X-Gm-Message-State: AGi0PuaCJ0tx4LMT5XmbG4umBF2zswpTU8ESkUqP8LwERVofA8fd+6Zv
+        UY4Hi7RSrWkaSCBEsb7lspEj
+X-Google-Smtp-Source: APiQypImaqWpQO0pPoEzrFvNS29Qt/uPSBc5P7AZyu76+6F7gYdErHMZWXJRSXTWPQwXwWL3+d1lIg==
+X-Received: by 2002:a62:24a:: with SMTP id 71mr249508pfc.98.1588265755643;
+        Thu, 30 Apr 2020 09:55:55 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6081:946c:419e:a71:7237:1613])
+        by smtp.gmail.com with ESMTPSA id m6sm275649pgm.67.2020.04.30.09.55.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 Apr 2020 09:55:54 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 22:25:48 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     hemantk@codeaurora.org, bbhatt@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] bus: mhi: core: Make sure to powerdown if
+ mhi_sync_power_up fails
+Message-ID: <20200430165548.GE9449@Mani-XPS-13-9360>
+References: <1588003153-13139-1-git-send-email-jhugo@codeaurora.org>
+ <1588003153-13139-2-git-send-email-jhugo@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v18)
-Thread-Index: vkaNGJYbQ5to7FGk5na6JixiLNcPYQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588003153-13139-2-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 30, 2020, at 12:36 PM, Florian Weimer fweimer@redhat.com wrote:
+On Mon, Apr 27, 2020 at 09:59:08AM -0600, Jeffrey Hugo wrote:
+> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
+> clean up the resources.  Otherwise a BUG could be triggered when
+> attempting to clean up MSIs because the IRQ is still active from a
+> request_irq().
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-> * Mathieu Desnoyers:
-> 
-[...]
-> 
->>>> +  if (__rseq_abi.cpu_id == RSEQ_CPU_ID_REGISTRATION_FAILED)
->>>> +    return;
->>>> +  ret = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
->>>> +                              0, RSEQ_SIG);
->>>> +  if (INTERNAL_SYSCALL_ERROR_P (ret) &&
->>>> +      INTERNAL_SYSCALL_ERRNO (ret) != EBUSY)
->>>> +    __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
->>> 
->>> Sorry, I forgot: Please add a comment that the EBUSY error is ignored
->>> because registration may have already happened in a legacy library.
->>
->> Considering that we now disable signals across thread creation, and that
->> glibc's initialization happens before other libraries' constructors
->> (as far as I remember even before LD_PRELOADed library constructors),
->> in which scenario can we expect to have EBUSY here ?
-> 
-> That's a good point.
-> 
->> Not setting __rseq_abi.cpu_id to RSEQ_CPU_ID_REGISTRATION_FAILED in case
->> of EBUSY is more a way to handle "unforeseen" scenarios where somehow the
->> registration would already be done. But I cannot find an "expected"
->> scenario which would lead to this now.
->>
->> So if EBUSY really is unexpected, how should we treat that ? I don't think
->> setting REGISTRATION_FAILED would be appropriate, because then it would
->> break assumption of the prior successful registration that have already
->> been done by this thread.
-> 
-> You could call __libc_fatal with an error message.  ENOSYS is definitely
-> an expected error code here, and EPERM (and perhaps EACCES) can happen
-> with seccomp filters.
-
-If we go this way, I'd also recommend to treat any situation where
-__rseq_abi.cpu_id is already initialized as a fatal error. Does the
-code below seem OK to you ?
-
-static inline void
-rseq_register_current_thread (void)
-{
-  int ret;
-
-  if (__rseq_abi.cpu_id != RSEQ_CPU_ID_UNINITIALIZED)
-    __libc_fatal ("rseq already initialized for this thread\n");
-  ret = INTERNAL_SYSCALL_CALL (rseq, &__rseq_abi, sizeof (struct rseq),
-                              0, RSEQ_SIG);
-  if (INTERNAL_SYSCALL_ERROR_P (ret))
-    {
-      if (INTERNAL_SYSCALL_ERRNO (ret) == EBUSY)
-        __libc_fatal ("rseq already registered for this thread\n");
-      __rseq_abi.cpu_id = RSEQ_CPU_ID_REGISTRATION_FAILED;
-    }
-}
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
+Mani
 
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> ---
+>  drivers/bus/mhi/core/pm.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index 52690cb..dc83d65 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -902,7 +902,11 @@ int mhi_sync_power_up(struct mhi_controller *mhi_cntrl)
+>  			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
+>  			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
+>  
+> -	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+> +	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -ETIMEDOUT;
+> +	if (ret)
+> +		mhi_power_down(mhi_cntrl, false);
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(mhi_sync_power_up);
+>  
+> -- 
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
