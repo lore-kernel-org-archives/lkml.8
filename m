@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A36CC83009
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A7FC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB6C21D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AEA2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588234014;
-	bh=ywMAarf+hIwIAp8Ap6stYGiRmo4nHI7hFwnjfqa79os=;
+	s=default; t=1588234019;
+	bh=kuyAXwOATAjORZINANy8r5DfKQd5TrKERHhwlhi4j8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bMvCqNJjuOdCBHcSOpoTr3W+3/RC5QblwB66dXj7A2wJI0MfT7+HdKGvXZ5yZaPdZ
-	 NOYDNMfio2Fxg942OriV0o4B0VspPV9mnLFFtvZ4WGCVSq7S76XyBALQud5kvy6GoX
-	 /jlVbXLMl7RqGXLZXfmfNlY0goZy65PxbJkp8w/w=
+	b=I8SCYREPG3qyGpsLZoqpj5pnzRQtnZVlRkIhmOlYJKA/X9010HXMz9979+IQxqP92
+	 jjgk0C61AS3GNGgQIbKjhTbW42HjJo6VGsUYGSOA/GYejUUFIGKCdQdyq2UqeTtFiU
+	 E9C9wbzuEL0OT36rGISkkbTVbVuwwlxVt+yQa1Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgD3IGw (ORCPT
+        id S1727073AbgD3IG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbgD3IGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:06:48 -0400
+        id S1727047AbgD3IGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:06:54 -0400
 Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEDF321D7A;
-        Thu, 30 Apr 2020 08:06:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D4321D91;
+        Thu, 30 Apr 2020 08:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588234007;
-        bh=ywMAarf+hIwIAp8Ap6stYGiRmo4nHI7hFwnjfqa79os=;
+        s=default; t=1588234014;
+        bh=kuyAXwOATAjORZINANy8r5DfKQd5TrKERHhwlhi4j8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QD7s7OoRieHIuM6kTekxCrpfF6DLL+lFE0CX0XzvIt1NYgWLHM50RPbLyP9t+wgoB
-         w6TLSdTo9K1aLWK1AxgkvfqZOxW+w9DN6QTbJxiH6+nbQEhjhH5LINv5tGegqUqK6g
-         fboOIfQwLg/gdrR+7KBeFtV0JxkOmE5MKHu35Gok=
+        b=QzprLcgqDEonxaFzNfeojY+EjQDpkCWBj/1wxHIYvSOMaECE5CZRQH7oL6s6aJbSJ
+         iEuNcNWSC+6q+z2UuQxnrNRupWKQBPWG2d15oax68vthdVOIS38AyRVelouP/a4ekg
+         YsYTXeLW3Q1RrACGnl7BY6O9bNvRXsDyKukmDDUM=
 Received: by pali.im (Postfix)
-        id DD10EA19; Thu, 30 Apr 2020 10:06:45 +0200 (CEST)
+        id 60A31A19; Thu, 30 Apr 2020 10:06:52 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
@@ -56,9 +56,9 @@ To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
         Xogium <contact@xogium.me>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH v4 06/12] PCI: aardvark: Add FIXME comment for PCIE_CORE_CMD_STATUS_REG access
-Date:   Thu, 30 Apr 2020 10:06:19 +0200
-Message-Id: <20200430080625.26070-7-pali@kernel.org>
+Subject: [PATCH v4 12/12] arm64: dts: marvell: armada-37xx: Move PCIe max-link-speed property
+Date:   Thu, 30 Apr 2020 10:06:25 +0200
+Message-Id: <20200430080625.26070-13-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
 References: <20200430080625.26070-1-pali@kernel.org>
@@ -70,39 +70,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This register is applicable only when the controller is configured for
-Endpoint mode, which is not the case for the current version of this
-driver.
+Move the max-link-speed property of the PCIe node from board specific
+device tree files to the generic armada-37xx.dtsi.
 
-Attempting to remove this code though caused some ath10k cards to stop
-working, so for some unknown reason it is needed here.
-
-This should be investigated and a comment explaining this should be put
-before the code, so we add a FIXME comment for now.
+Armada 37xx supports only PCIe gen2 speed so max-link-speed property
+should be in the genetic armada-37xx.dtsi file.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 1 -
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi           | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 2ecc79c03ade..8332c71d69fa 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -439,6 +439,13 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+index 15c1cf5c5b69..4cc735899c5d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+@@ -132,7 +132,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+ 	status = "okay";
+-	max-link-speed = <2>;
+ 	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
  
- 	advk_pcie_train_link(pcie);
- 
-+	/*
-+	 * FIXME: The following register update is suspicious. This register is
-+	 * applicable only when the PCI controller is configured for Endpoint
-+	 * mode, not as a Root Complex. But apparently when this code is
-+	 * removed, some cards stop working. This should be investigated and
-+	 * a comment explaining this should be put here.
-+	 */
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+ 	/* enabled by U-Boot if PCIe module is present */
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index 5aaad64a793d..2bbc69b4dc99 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -493,6 +493,7 @@
+ 					<0 0 0 2 &pcie_intc 1>,
+ 					<0 0 0 3 &pcie_intc 2>,
+ 					<0 0 0 4 &pcie_intc 3>;
++			max-link-speed = <2>;
+ 			phys = <&comphy1 0>;
+ 			pcie_intc: interrupt-controller {
+ 				interrupt-controller;
 -- 
 2.20.1
 
