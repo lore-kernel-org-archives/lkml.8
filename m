@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CF1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF29C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8BB3206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30682206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255966;
-	bh=w+CRxr9kY4K+9b8jpYJdkDCWoR7oDk9596EFqhXzsvI=;
+	s=default; t=1588255972;
+	bh=X+8B5r+3ozNjTtxJhR0LgbtW2wp7VlQ+Pb0lz57jQmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fE9Bk5EWwTOkHhVPHWazTXCXUMPJTBRABaZ4aeniR6eBqFxrTzO8GbAUoxbQ7uj3r
-	 ZHdgzr6DFdeU8Gf779A1UFEDYGHIGLErd/rE4RR5gPyAJp0JyJ+GAMn00XVLVxlwyb
-	 uQNhgNynZG9lhdkUf76ADJu48QS+F524dn5dss/8=
+	b=d5vmkRdwG8qgTM7LelANyTGRRULBlkdp7/buwBSmWSfTgopLvxbSixH5k7XWJmdMc
+	 RNxKG8zsUG0qEnxhtVmgU2J+5iqVLQRwvB7AXrkwTAUV13dS1hotY7l9zxVNxcslYy
+	 rEgNSess2IVK4S/7eTULxhN4TVbkpMoBXDsT4LD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgD3OMp (ORCPT
+        id S1729490AbgD3OMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58888 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgD3NvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:02 -0400
+        id S1727856AbgD3NvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D4A520870;
-        Thu, 30 Apr 2020 13:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF4F208D5;
+        Thu, 30 Apr 2020 13:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254662;
-        bh=w+CRxr9kY4K+9b8jpYJdkDCWoR7oDk9596EFqhXzsvI=;
+        s=default; t=1588254661;
+        bh=X+8B5r+3ozNjTtxJhR0LgbtW2wp7VlQ+Pb0lz57jQmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HTomldbZMw4ITCDKM0E/rMvAZO9LypEpJdNriBRsK49UngKy9lnxWDa9DJlAB5Y/o
-         E6igEm3y/Y9WPTY7v2aA0Q4N9WfSneI9oXZYVNqJp2NWrUgpzur6V9wfyZvXlOHefH
-         NWCM0OyW7rri6dGsiBCJ3hu6G7aBN2Is3ZmPYTBs=
+        b=mIEMYHK8k1jV8J6Od2UQdFLxY9/epwe1j/mPxU6JGhqyhhaQagtRmol9ZqaQickAG
+         IBvpneHsuHame9iz7pBkvJTeYPvJ6UCO6Lv6hmQK31ungMbv17qm8iJfDdvi61425D
+         9IyEZRVOLWLhfwd7VJOA2zzQNHcZeaF6fY350PX8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sandipan Das <sandipan@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 15/79] selftests: vm: Do not override definition of ARCH
-Date:   Thu, 30 Apr 2020 09:49:39 -0400
-Message-Id: <20200430135043.19851-15-sashal@kernel.org>
+Cc:     Yihao Wu <wuyihao@linux.alibaba.com>, NeilBrown <neilb@suse.de>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 14/79] SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
+Date:   Thu, 30 Apr 2020 09:49:38 -0400
+Message-Id: <20200430135043.19851-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -60,65 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Yihao Wu <wuyihao@linux.alibaba.com>
 
-[ Upstream commit 24c3f063c57b2a8ae21b259bcfa7690e2eb56dd9 ]
+[ Upstream commit 43e33924c38e8faeb0c12035481cb150e602e39d ]
 
-Independent builds of the vm selftests is currently broken because
-commit 7549b3364201 ("selftests: vm: Build/Run 64bit tests only on
-64bit arch") overrides the value of ARCH with the machine name from
-uname. This does not always match the architecture names used for
-tasks like header installation.
+Deleting list entry within hlist_for_each_entry_safe is not safe unless
+next pointer (tmp) is protected too. It's not, because once hash_lock
+is released, cache_clean may delete the entry that tmp points to. Then
+cache_purge can walk to a deleted entry and tries to double free it.
 
-E.g. for building tests on powerpc64, we need ARCH=powerpc
-and not ARCH=ppc64 or ARCH=ppc64le. Otherwise, the build
-fails as shown below.
+Fix this bug by holding only the deleted entry's reference.
 
-  $ uname -m
-  ppc64le
-
-  $ make -C tools/testing/selftests/vm
-  make: Entering directory '/home/sandipan/linux/tools/testing/selftests/vm'
-  make --no-builtin-rules ARCH=ppc64le -C ../../../.. headers_install
-  make[1]: Entering directory '/home/sandipan/linux'
-  Makefile:653: arch/ppc64le/Makefile: No such file or directory
-  make[1]: *** No rule to make target 'arch/ppc64le/Makefile'.  Stop.
-  make[1]: Leaving directory '/home/sandipan/linux'
-  ../lib.mk:50: recipe for target 'khdr' failed
-  make: *** [khdr] Error 2
-  make: Leaving directory '/home/sandipan/linux/tools/testing/selftests/vm'
-
-Fixes: 7549b3364201 ("selftests: vm: Build/Run 64bit tests only on 64bit arch")
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Suggested-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
+Reviewed-by: NeilBrown <neilb@suse.de>
+[ cel: removed unused variable ]
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/vm/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sunrpc/cache.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
-index 7f9a8a8c31da9..3f2e2f0ccbc9a 100644
---- a/tools/testing/selftests/vm/Makefile
-+++ b/tools/testing/selftests/vm/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for vm selftests
- uname_M := $(shell uname -m 2>/dev/null || echo not)
--ARCH ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
-+MACHINE ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index bd843a81afa0b..d36cea4e270de 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -521,7 +521,6 @@ void cache_purge(struct cache_detail *detail)
+ {
+ 	struct cache_head *ch = NULL;
+ 	struct hlist_head *head = NULL;
+-	struct hlist_node *tmp = NULL;
+ 	int i = 0;
  
- CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
- LDLIBS = -lrt
-@@ -19,7 +19,7 @@ TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += userfaultfd
- 
--ifneq (,$(filter $(ARCH),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
-+ifneq (,$(filter $(MACHINE),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
- TEST_GEN_FILES += va_128TBswitch
- TEST_GEN_FILES += virtual_address_range
- endif
+ 	spin_lock(&detail->hash_lock);
+@@ -533,7 +532,9 @@ void cache_purge(struct cache_detail *detail)
+ 	dprintk("RPC: %d entries in %s cache\n", detail->entries, detail->name);
+ 	for (i = 0; i < detail->hash_size; i++) {
+ 		head = &detail->hash_table[i];
+-		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
++		while (!hlist_empty(head)) {
++			ch = hlist_entry(head->first, struct cache_head,
++					 cache_list);
+ 			sunrpc_begin_cache_remove_entry(ch, detail);
+ 			spin_unlock(&detail->hash_lock);
+ 			sunrpc_end_cache_remove_entry(ch, detail);
 -- 
 2.20.1
 
