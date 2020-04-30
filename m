@@ -2,87 +2,130 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C556C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A67FC8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A02120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B762076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R+EyU5hQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgD3NSP (ORCPT
+        id S1727077AbgD3NUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:18:15 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:43915 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726743AbgD3NSO (ORCPT
+        Thu, 30 Apr 2020 09:20:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57372 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbgD3NUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:18:14 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-8-eqYfVa2uOue2i3Uoab9kpQ-1;
- Thu, 30 Apr 2020 14:18:10 +0100
-X-MC-Unique: eqYfVa2uOue2i3Uoab9kpQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 Apr 2020 14:18:10 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 Apr 2020 14:18:10 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Paolo Bonzini' <pbonzini@redhat.com>,
-        'Jim Mattson' <jmattson@google.com>
-CC:     'LKML' <linux-kernel@vger.kernel.org>,
-        'kvm list' <kvm@vger.kernel.org>,
-        'Sean Christopherson' <sean.j.christopherson@intel.com>,
-        'Joerg Roedel' <joro@8bytes.org>,
-        "'everdox@gmail.com'" <everdox@gmail.com>
-Subject: RE: [PATCH] KVM: x86: handle wrap around 32-bit address space
-Thread-Topic: [PATCH] KVM: x86: handle wrap around 32-bit address space
-Thread-Index: AQHWHPQJ/975q5rp/UiOQx/+1A4bJqiPy+vwgAABnFCAAcI2gIAAFr9g
-Date:   Thu, 30 Apr 2020 13:18:10 +0000
-Message-ID: <47a766451de248718d2a9bec47dda86e@AcuMS.aculab.com>
-References: <20200427165917.31799-1-pbonzini@redhat.com>
- <CALMp9eTBs=deSYu1=CMLwZcO8HTpGM2JsgDxvFR1Y220tdUQ3w@mail.gmail.com>
- <c3ac5f4c9e3a412cb57ea02df19dd2d2@AcuMS.aculab.com>
- <91c76eb0edcd4f1a9d5bc541d35f8ade@AcuMS.aculab.com>
- <2f471fbc-99fb-1a85-8f9f-c276c897f518@redhat.com>
-In-Reply-To: <2f471fbc-99fb-1a85-8f9f-c276c897f518@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 30 Apr 2020 09:20:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UDJLxg114097;
+        Thu, 30 Apr 2020 13:19:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=xy/1qwI9qxwIfg0g+daxb1BAP6f5f0orcFwzrnuEKeM=;
+ b=R+EyU5hQ6Z1iWZncsaPASQfN7CjWDX0os5GShUuFAO4ielQ3zlmcKTKbnhOGV8PTp+CP
+ J50h9B5SGMPy13rBnRGmCxQ6UWpwoziRlUCUmkju51eERgS2+hhGj6lRieycPyLA6usY
+ lF2Z8ly7anYyuvfDHk834tdaWulES4AZn8xcnwjhmIS0FPRiqhELeK4VUqJYArvMN1Hv
+ /KhXIERtNBVnmGWgYScuSQ+Gm6GrvduxBvMfxL/U/fnB7Fgk0PLle1cLFKnuOX/IpuDu
+ ygvFQ0swGAGNNrxybQ0v9h4hwWh9TFHOktQ/3o35Cc48RIq3xS/7S/r49GTuc+Z4JZAZ iA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30p01p1x7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 13:19:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UDGsYb038508;
+        Thu, 30 Apr 2020 13:17:54 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30qtf775gf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 13:17:54 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03UDHqoS020254;
+        Thu, 30 Apr 2020 13:17:53 GMT
+Received: from [10.154.112.177] (/10.154.112.177)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Apr 2020 06:17:52 -0700
+Subject: Re: [PATCH] scsi: qla2xxx: use true,false for need_mpi_reset
+To:     Jason Yan <yanaijie@huawei.com>, njavali@marvell.com,
+        GR-QLogic-Storage-Upstream@marvell.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, aeasi@marvell.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200430121751.15232-1-yanaijie@huawei.com>
+From:   himanshu.madhani@oracle.com
+Organization: Oracle Corporation
+Message-ID: <59d50953-cebe-3dd4-e48e-d3283da923f5@oracle.com>
+Date:   Thu, 30 Apr 2020 08:17:51 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200430121751.15232-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004300108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9606 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 clxscore=1011
+ phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004300108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT4NCj4gU2VudDogMzAgQXBy
-aWwgMjAyMCAxMzo0NQ0KPiBPbiAyOS8wNC8yMCAxMDo1NiwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0K
-PiA+Pj4+ICsgICAgICAgICAgICAgICBpZiAodW5saWtlbHkoKChyaXAgXiBvcmlnX3JpcCkgPj4g
-MzEpID09IDMpICYmICFpc182NF9iaXRfbW9kZSh2Y3B1KSkNCj4gPj4gSXNuJ3QgdGhlIG1vcmUg
-b2J2aW91czoNCj4gPj4gCWlmICgoKHJpcCBeIG9yaWdfcmlwKSAmIDF1bGwgPDwgMzIpIC4uLg0K
-PiA+PiBlcXVpdmFsZW50Pw0KPiANCj4gVGhpcyBvbmUgd291bGQgbm90IChpdCB3b3VsZCBhbHNv
-IGRldGVjdCBjYXJyeSBvbiBoaWdoIG1lbW9yeSBhZGRyZXNzZXMsDQo+IG5vdCBqdXN0IDB4N2Zm
-ZmZmZmYgdG8gMHg4MDAwMDAwMCkuLi4NCg0KU28gd2lsbCB0aGUgcHJvcG9zZWQgb25lIGhhbGYg
-dGhlIHRpbWUuDQpJZiAob3JpZ19yaXAgJiAxIDw8IDMyKSBpcyB6ZXJvIHRoZSBoaWdoIGJpdHMg
-YXJlIGFsbCB1bmNoYW5nZWQNCmFuZCBjYW5jZWwgb3V0Lg0KDQo+ID4gQWN0dWFsbHkgbm90IGV2
-ZW4gYmVpbmcgY2xldmVyLCBob3cgYWJvdXQ6DQo+ID4gCWlmIChvcmlnX3JpcCA8ICgxdWxsIDw8
-IDMyKSAmJiB1bmxpa2VseShyaXAgPj0gKDF1bGwgPDwgMzIpKSAmJiAuLi4NCj4gDQo+IC4uLiBi
-dXQgeWVzIHRoaXMgb25lIHdvdWxkIGJlIGVxdWl2YWxlbnQuDQoNCklmIHN1YiA0RyBhZGRyZXNz
-ZXMgYXJlIGxpa2VseSBvbiA2NGJpdCB5b3UgbWF5IHdhbnQgdG8gZG86DQoJaWYgKHVubGlrZWx5
-KChyaXAgXiBvcmlnX3JpcCkgJiAoMXVsbCA8PCAzMikpICYmIG9yaWdfcmlwIDwgKDF1bGwgPDwg
-MzIpKSAmJiAuLi4NCm9yIHVubGlrZWx5KChyaXAgXiBvcmlnX3JpcCkgPj4gMzIpDQoNCkkgdGhp
-bmsgeW91IGFsd2F5cyB3YW50IHVubGlrZWx5KGEpICYmIGIgcmF0aGVyIHRoYW4gdW5saWtlbHko
-YSAmJiBiKS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
-bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
-cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
+
+On 4/30/20 7:17 AM, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> drivers/scsi/qla2xxx/qla_tmpl.c:1031:6-20: WARNING: Assignment of 0/1 to
+> bool variable
+> drivers/scsi/qla2xxx/qla_tmpl.c:1062:3-17: WARNING: Assignment of 0/1 to
+> bool variable
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>   drivers/scsi/qla2xxx/qla_tmpl.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_tmpl.c b/drivers/scsi/qla2xxx/qla_tmpl.c
+> index 819c46f31c05..281973b317a8 100644
+> --- a/drivers/scsi/qla2xxx/qla_tmpl.c
+> +++ b/drivers/scsi/qla2xxx/qla_tmpl.c
+> @@ -1028,7 +1028,7 @@ void
+>   qla27xx_mpi_fwdump(scsi_qla_host_t *vha, int hardware_locked)
+>   {
+>   	ulong flags = 0;
+> -	bool need_mpi_reset = 1;
+> +	bool need_mpi_reset = true;
+>   
+>   #ifndef __CHECKER__
+>   	if (!hardware_locked)
+> @@ -1059,7 +1059,7 @@ qla27xx_mpi_fwdump(scsi_qla_host_t *vha, int hardware_locked)
+>   			       "-> fwdt1 fwdump residual=%+ld\n",
+>   			       fwdt->dump_size - len);
+>   		} else {
+> -			need_mpi_reset = 0;
+> +			need_mpi_reset = false;
+>   		}
+>   
+>   		vha->hw->mpi_fw_dump_len = len;
+> 
+
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+
+-- 
+Himanshu Madhani
+Oracle Linux Engineering
