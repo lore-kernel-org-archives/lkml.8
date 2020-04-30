@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F3DC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECE0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4687206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18292206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255218;
-	bh=wwgUGUeeVHyww4aUxt7KJKda/A1Wd7zIYeOuDIpcz5g=;
+	s=default; t=1588255226;
+	bh=FoaQyXCTpiF64dTsxTeMg1cZZGMD44nMvDekcFHo3/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTOfATvgAvsaK2XEStG7tRhJRxzTrHE2tw3yo3Cwx2VU0wzI77TCgCgaKr88Umea+
-	 BkXgyU8ZGaVDm3x4AhDf20sX3sZjdgHLNU1wSClU/SURDfrbaJzzFM2fkQ+xSfhp2R
-	 A7I3rGTXtCToVvNOpLIb6lIA4uEjM4ScxlZOHrOs=
+	b=tMrbBuacHeIL1cYMRHWhiOxaQQA6MGjIrs7ptheNCl9slf6CgQHZfU5HsRqvU0TmY
+	 MfvWcBJ/kFTka74sRabTv9wLmOOhZrzKGwVccYc/zDsGb30WVuKYbF0APKb09ssPBN
+	 EQaxbX5bz8ay5g96OQph6hC+xt7XVlvK31s4ccTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgD3OAS (ORCPT
+        id S1729393AbgD3OAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:00:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36620 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgD3NyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:19 -0400
+        id S1728169AbgD3NyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD81B20873;
-        Thu, 30 Apr 2020 13:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A698D20870;
+        Thu, 30 Apr 2020 13:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254858;
-        bh=wwgUGUeeVHyww4aUxt7KJKda/A1Wd7zIYeOuDIpcz5g=;
+        s=default; t=1588254857;
+        bh=FoaQyXCTpiF64dTsxTeMg1cZZGMD44nMvDekcFHo3/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BA1IJpUaIgS3cBRl+A2NsPCtgFFWmZdwlR1zVGoKLqtL5s2igTxIuaWouTcKF1ahD
-         7TwTofW3+ij3PPd2MSqWP2Yy4wcjVEM6+lxZPp6xXvxPhmptDfR0vnw2WwHqJy0Mj6
-         VFn5sh8JK8nq+7O7HQu2IaKm0b7o3rS4tFd6lTlQ=
+        b=ErPAlkiJjMRwgQVa8+JEZb5FvRTpR175631WKN+c6aFz5WT/E1vHUrpIku8VY3uVA
+         GUxBQaO4jS69HQSiULDkKwcMMdnGkL46EyHGAsgFszkI7r61At04OfXj6yHglvh3e5
+         iUCgjh9yB4bpgKQYfQPFqCaO9GWbOxkmVaEE6AL0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Manoj Malviya <manojmalviya@chelsio.com>,
+Cc:     Julien Beraud <julien.beraud@orolia.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/27] cxgb4: fix large delays in PTP synchronization
-Date:   Thu, 30 Apr 2020 09:53:49 -0400
-Message-Id: <20200430135402.20994-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/27] net: stmmac: Fix sub-second increment
+Date:   Thu, 30 Apr 2020 09:53:48 -0400
+Message-Id: <20200430135402.20994-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
 References: <20200430135402.20994-1-sashal@kernel.org>
@@ -60,81 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Julien Beraud <julien.beraud@orolia.com>
 
-[ Upstream commit bd019427bf3623ee3c7d2845cf921bbf4c14846c ]
+[ Upstream commit 91a2559c1dc5b0f7e1256d42b1508935e8eabfbf ]
 
-Fetching PTP sync information from mailbox is slow and can take
-up to 10 milliseconds. Reduce this unnecessary delay by directly
-reading the information from the corresponding registers.
+In fine adjustement mode, which is the current default, the sub-second
+    increment register is the number of nanoseconds that will be added to
+    the clock when the accumulator overflows. At each clock cycle, the
+    value of the addend register is added to the accumulator.
+    Currently, we use 20ns = 1e09ns / 50MHz as this value whatever the
+    frequency of the ptp clock actually is.
+    The adjustment is then done on the addend register, only incrementing
+    every X clock cycles X being the ratio between 50MHz and ptp_clock_rate
+    (addend = 2^32 * 50MHz/ptp_clock_rate).
+    This causes the following issues :
+    - In case the frequency of the ptp clock is inferior or equal to 50MHz,
+      the addend value calculation will overflow and the default
+      addend value will be set to 0, causing the clock to not work at
+      all. (For instance, for ptp_clock_rate = 50MHz, addend = 2^32).
+    - The resolution of the timestamping clock is limited to 20ns while it
+      is not needed, thus limiting the accuracy of the timestamping to
+      20ns.
 
-Fixes: 9c33e4208bce ("cxgb4: Add PTP Hardware Clock (PHC) support")
-Signed-off-by: Manoj Malviya <manojmalviya@chelsio.com>
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+    Fix this by setting sub-second increment to 2e09ns / ptp_clock_rate.
+    It will allow to reach the minimum possible frequency for
+    ptp_clk_ref, which is 5MHz for GMII 1000Mps Full-Duplex by setting the
+    sub-second-increment to a higher value. For instance, for 25MHz, it
+    gives ssinc = 80ns and default_addend = 2^31.
+    It will also allow to use a lower value for sub-second-increment, thus
+    improving the timestamping accuracy with frequencies higher than
+    100MHz, for instance, for 200MHz, ssinc = 10ns and default_addend =
+    2^31.
+
+v1->v2:
+ - Remove modifications to the calculation of default addend, which broke
+ compatibility with clock frequencies for which 2000000000 / ptp_clk_freq
+ is not an integer.
+ - Modify description according to discussions.
+
+Signed-off-by: Julien Beraud <julien.beraud@orolia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/chelsio/cxgb4/cxgb4_ptp.c    | 27 +++++--------------
- drivers/net/ethernet/chelsio/cxgb4/t4_regs.h  |  3 +++
- 2 files changed, 9 insertions(+), 21 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c    | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-index 758f2b8363282..ff7e58a8c90fb 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-@@ -311,32 +311,17 @@ static int cxgb4_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
-  */
- static int cxgb4_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
- {
--	struct adapter *adapter = (struct adapter *)container_of(ptp,
--				   struct adapter, ptp_clock_info);
--	struct fw_ptp_cmd c;
-+	struct adapter *adapter = container_of(ptp, struct adapter,
-+					       ptp_clock_info);
- 	u64 ns;
--	int err;
--
--	memset(&c, 0, sizeof(c));
--	c.op_to_portid = cpu_to_be32(FW_CMD_OP_V(FW_PTP_CMD) |
--				     FW_CMD_REQUEST_F |
--				     FW_CMD_READ_F |
--				     FW_PTP_CMD_PORTID_V(0));
--	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
--	c.u.ts.sc = FW_PTP_SC_GET_TIME;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 41d528fbebb41..ccf7381c8baec 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -36,12 +36,16 @@ static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
+ 	unsigned long data;
+ 	u32 reg_value;
  
--	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), &c);
--	if (err < 0) {
--		dev_err(adapter->pdev_dev,
--			"PTP: %s error %d\n", __func__, -err);
--		return err;
--	}
-+	ns = t4_read_reg(adapter, T5_PORT_REG(0, MAC_PORT_PTP_SUM_LO_A));
-+	ns |= (u64)t4_read_reg(adapter,
-+			       T5_PORT_REG(0, MAC_PORT_PTP_SUM_HI_A)) << 32;
+-	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
+-	 *	formula = (1/ptp_clock) * 1000000000
+-	 * where ptp_clock is 50MHz if fine method is used to update system
++	/* For GMAC3.x, 4.x versions, in "fine adjustement mode" set sub-second
++	 * increment to twice the number of nanoseconds of a clock cycle.
++	 * The calculation of the default_addend value by the caller will set it
++	 * to mid-range = 2^31 when the remainder of this division is zero,
++	 * which will make the accumulator overflow once every 2 ptp_clock
++	 * cycles, adding twice the number of nanoseconds of a clock cycle :
++	 * 2000000000ULL / ptp_clock.
+ 	 */
+ 	if (value & PTP_TCR_TSCFUPDT)
+-		data = (1000000000ULL / 50000000);
++		data = (2000000000ULL / ptp_clock);
+ 	else
+ 		data = (1000000000ULL / ptp_clock);
  
- 	/* convert to timespec*/
--	ns = be64_to_cpu(c.u.ts.tm);
- 	*ts = ns_to_timespec64(ns);
--
--	return err;
-+	return 0;
- }
- 
- /**
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-index dac90837842bf..d3df6962cf433 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-@@ -1810,6 +1810,9 @@
- 
- #define MAC_PORT_CFG2_A 0x818
- 
-+#define MAC_PORT_PTP_SUM_LO_A 0x990
-+#define MAC_PORT_PTP_SUM_HI_A 0x994
-+
- #define MPS_CMN_CTL_A	0x9000
- 
- #define COUNTPAUSEMCRX_S    5
 -- 
 2.20.1
 
