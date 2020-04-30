@@ -2,107 +2,160 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FACBC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7BDC8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1980F2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:32:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VvzkadaB"
+	by mail.kernel.org (Postfix) with ESMTP id C953E2074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgD3NcX (ORCPT
+        id S1727077AbgD3Ncc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:32:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21524 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726692AbgD3NcW (ORCPT
+        Thu, 30 Apr 2020 09:32:32 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.3]:35464 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbgD3Ncc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:32:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588253541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=n+aTxk90D7+j/ZxikiZm7htr7ihgz4RE8XZxOaPVLGY=;
-        b=VvzkadaBT+qn7TSfrLnw0ja+C+Zg/U+re4yRmexhPHXN4FPLB6KTtnM9J3MDyM7Ac0LCNO
-        QEzB3Tym0WQjGwE8H+Ib422K2AXAYtATfOFpQ94/uhpRUCeTSvSkoIrkCSIqF89Y6+eZD0
-        WK4NGETX0aUnv+SkAMq/YhCBeEFEbSI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-ArhEU26BO125W0CCvV0s8A-1; Thu, 30 Apr 2020 09:32:19 -0400
-X-MC-Unique: ArhEU26BO125W0CCvV0s8A-1
-Received: by mail-wm1-f72.google.com with SMTP id w2so858255wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n+aTxk90D7+j/ZxikiZm7htr7ihgz4RE8XZxOaPVLGY=;
-        b=GM+Gip8/Cs+H7bGjKg3x2fuFn25j7ak2CvyzAbmjvNUQddVZrSuxFdMJ4qD+zAMaav
-         P355Pz0f2GlwqOa95NjakLeJ8BFBQLieCG9b3d/VIAcYLZTZh/OWME9OiNZwQTDdEwzZ
-         5LgJOJG5I3ObXBz9/XgQFdHU60CG1Aw+pALAMcexf/OKBqn3S/dsG3dSVB9WFHyAxaV7
-         Ut6xfx3HMqnix2DwRI1r5RI86EtlrGY12w9GrLOlLpz/Cl7K4SM6NSikX9Km7nJeNUcv
-         EnXyLuwroWZfpPSDIEpR+eHx3fCML5PSRRywTTaKBYAVfai3KXz065JqF7lQ/rnotxLw
-         Ntdg==
-X-Gm-Message-State: AGi0PubvanZMAYUVQL1/+W6ZM0pl3d4oZpXImfkqpTqbQYMYH6MJ716n
-        45KaZLWfKBhZgiCwUcjHp2gCJ+ZpWMdz1ovgM+NJs1rsa/CTmHnZo7w36TKJKuY4Bzj1Zra5vQF
-        L/jSJ+TrcoiHTmasvpsDE8rjz
-X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr3164041wml.133.1588253538321;
-        Thu, 30 Apr 2020 06:32:18 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLZwuDOopSSlnP92U8HygTNBmhhTn4PWDpNdu4eD+Pq/bkj6FBcQrWnMY670cOB2vZJ5e/KIA==
-X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr3164026wml.133.1588253538120;
-        Thu, 30 Apr 2020 06:32:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id s6sm12332481wmh.17.2020.04.30.06.32.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 06:32:17 -0700 (PDT)
-Subject: Re: [PATCH v4 5/7] KVM: VMX: Optimize posted-interrupt delivery for
- timer fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
- <1588055009-12677-6-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <66fd6180-8e8b-1f9c-90f1-a55af1467388@redhat.com>
-Date:   Thu, 30 Apr 2020 15:32:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1588055009-12677-6-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 30 Apr 2020 09:32:32 -0400
+Received: from [100.112.131.139] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.us-west-2.aws.symcld.net id 9D/DB-39995-B63DAAE5; Thu, 30 Apr 2020 13:32:27 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRWlGSWpSXmKPExsXi5LtOQDf78qo
+  4g9WPBSx2PdjGZjHlz3Imi83z/zBaXN41h81iY8tWRgdWj8XXbrN67Jx1l93jzrU9bB6fN8kF
+  sESxZuYl5VcksGYs+XKYseCyTkX7rJVsDYwdOl2MnBxCAqsYJfYe8u5i5AKy9zJKLH/6nRUkw
+  SZgKHF33ho2EFtEIEji8r8GFpAiZoG5jBIzmyexdzFycAgLWEr0fwqAqLGSeDJ9FlS9k8SE3a
+  eYQWwWAVWJOWvugsV5BXwlLn09wwSxrJ9JYlP3NRaQBKdAoMTLKSsZQWxGATGJ76fWMIHYzAL
+  iEreezAezJQQEJJbsOc8MYYtKvHz8jxXCVpD48/ERE8g9zAKaEut36UO0KkpM6X7IDrFXUOLk
+  zCcsEA+rSBzr6GOZwCg6C8mGWQjds5B0z0LSvYCRZRWjRVJRZnpGSW5iZo6uoYGBrqGhka6hs
+  YGukYm5XmKVbqJeabFueWpxia6RXmJ5sV5xZW5yTopeXmrJJkZgRKYUNH3fwfhvzXu9Q4ySHE
+  xKorwGF1bFCfEl5adUZiQWZ8QXleakFh9ilOHgUJLg1bsIlBMsSk1PrUjLzAEmB5i0BAePkgh
+  vGUiat7ggMbc4Mx0idYrRkmPCy7mLmDmOzF0KJK+/37uUWYglLz8vVUqcVxqkQQCkIaM0D24c
+  LIFdYpSVEuZlZGBgEOIpSC3KzSxBlX/FKM7BqCTM6wQyhSczrwRu6yugg5iADsoWXg5yUEkiQ
+  kqqgclufTcrzwQWaef9idcy35ne5tvjcH+m7HnmW6unLG5aEJ1TGPFHdRKf1ZakyWsSrWaYxn
+  bofnV8x5tb5OOudWrnhWMm3Gt/mrn8c+HP8jqeJD/Lne3VIf572VFqz/IqW2TVN9abvJJ78Xj
+  Zr32izPtvNyxIyLB/Ou2Y8LR9J9iEt5xN0meMPPn555anZ3eUXH18yme/6gmF26qNW2Ozq0Q0
+  eIxkBA0EjLh52neVc5m+eqmTnXejop09cRl/1TIO7onVGbPW689hmxIuIpdxVsK2dVO6gMo0W
+  0nhrUrXP9+Mr87s2iYxs+/h8Wuh3XvtvpZf+XNVmf18z2KFW2JTbSK7r3NtUtATOu9mkmAmq8
+  RSnJFoqMVcVJwIAOPpBQTbAwAA
+X-Env-Sender: Hector.Bujanda@digi.com
+X-Msg-Ref: server-9.tower-334.messagelabs.com!1588253545!4559525!1
+X-Originating-IP: [66.77.174.16]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 15158 invoked from network); 30 Apr 2020 13:32:27 -0000
+Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
+  by server-9.tower-334.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 30 Apr 2020 13:32:26 -0000
+Received: from DOR-VMS-XCH01.digi.com (10.49.8.98) by MCL-VMS-XCH01.digi.com
+ (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 30 Apr 2020
+ 08:32:25 -0500
+Received: from DOR-SMS-XCH01.digi.com ([fe80::894b:3bdc:74ae:6efc]) by
+ DOR-VMS-XCH01.digi.com ([fe80::c47f:be41:1dc7:5ab8%11]) with mapi id
+ 14.03.0468.000; Thu, 30 Apr 2020 15:32:22 +0200
+From:   "Bujanda, Hector" <Hector.Bujanda@digi.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>
+Subject: RE: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Thread-Topic: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Thread-Index: AQHWHh6gJMEg5Ts3+keUs6HKGkhEuqiP6FOAgAAF9ICAAYs1UA==
+Date:   Thu, 30 Apr 2020 13:32:22 +0000
+Message-ID: <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+In-Reply-To: <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.101.2.152]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/04/20 08:23, Wanpeng Li wrote:
-> -	if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST &&
-> -	    kvm_vcpu_exit_request(vcpu))
-> -		exit_fastpath = EXIT_FASTPATH_NOP;
-> +	if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST) {
-> +		if (!kvm_vcpu_exit_request(vcpu))
-> +			vmx_sync_pir_to_irr(vcpu);
-> +		else
-> +			exit_fastpath = EXIT_FASTPATH_NOP;
-> +	}
-
-This part should be in patch 3; not a big deal, I can reorganize that
-myself.
-
-Paolo
-
+VGhhbmtzIGFsbCBmb3IgeW91ciBndWlkYW5jZSENCg0KRmlyc3Qgc2F5aW5nIHRoYXQgdGhpcyBw
+YXRjaCByZXF1ZXN0IHdhcyBzZW50IGhhdmluZyBvdXIgcGxhdGZvcm1zIGluIGs0LjE0IGluIHRo
+ZSB3YXkgb2YgdXBncmFkaW5nIHRvIGs1LjQuDQpJbiB0aG9zZSB2ZXJzaW9ucyB0aGUgY29tbWl0
+IGU1ODhiYjFlYWUzMWJlNzNmYmVjMmI3MzFiZTk4NmE3YzA5NjM1YTQgImdwaW86IGFkZCBuZXcg
+U0VUX0NPTkZJRyBpb2N0bCgpIHRvIGdwaW8gY2hhcmRldiIgYnkgS2VudCBHaWJzb24gd2FzIG5v
+dCBhdmFpbGFibGUuDQoNCkkgc2VlIHRoYXQgeW91IGNsZWFybHkgdW5kZXJzdGFuZCB0aGUgbmVj
+ZXNzaXR5IG9mIGhhdmluZyBhIHdheSBvZiBjb25maWd1cmluZyBkZWJvdW5jZSBmcm9tIHRoZSB1
+c2Vyc3BhY2UuDQpPdXIgcGxhdGZvcm1zIG1ha2UgdXNlIG9mIGhhcmR3YXJlIGRlYm91bmNpbmcg
+ZmlsdGVyaW5nLiBVcCB0byBub3cgd2Ugd2VyZSB1c2luZyB0aGUgc3lzZmlsZXN5c3RlbSB0byBs
+ZXQgdGhlIHVzZXIgaGFuZGxlIGdwaW9zIChpbmNsdWRpbmcgZGVib3VuY2UgY29uZmlndXJhdGlv
+bikuDQpXZSB3YW50ZWQgbm93IHRvIGdldCByaWQgb2Ygc3lzZmlsZXN5c3RlbSBhbmQgc3RhcnQg
+dXNpbmcgZ3Bpb2xpYi9saWJncGlvZC4uLi4gYnV0IGNvbmZpZ3VyaW5nIGRlYm91bmNlIGlzIGJs
+b2NraW5nIHVzLg0KDQpOb3cgSSBjbGVhcmx5IHNlZSAoYXMgcG9pbnRlZCBieSBCYXJ0b3N6IEdv
+bGFzemV3c2tpKSB0aGF0IG15IHN1Z2dlc3RlZCBHUElPX1NFVF9ERUJPVU5DRV9JT0NUTCBpcyB3
+cm9uZyBhcyBpdCBoaXRzIHRoZSBjaGlwIGZpbGUgZGVzY3JpcHRvciB3aGlsZSAnTW9kaWZ5aW5n
+IGFueSBjb25maWcgc2V0dGluZ3MgY2FuIG9ubHkgaGFwcGVuIG9uIGxpbmVzIHByZXZpb3VzbHkg
+cmVxdWVzdGVkIHRvbyBpbiB1c2VyLXNwYWNlJy4NCg0KSSBhZ3JlZSB3aXRoIGFsbCB0aGF0IGEg
+ZmxhZyBpcyBuZWVkZWQgdG8gYWxsb3cgY29uZmlndXJpbmcgZGVib3VuY2UgdG8gJzAnIHdoaWNo
+IGhhcyBhbHdheXMgbWVhbnQgZGlzYWJsaW5nIGl0Lg0KDQpBbHNvIGFncmVlIHdpdGggJ0tlbnQg
+R2lic29uJyBzdWdnZXN0aW9uIG9mICAnWW91IG1pZ2h0IHdhbnQgdG8gYWRkIGEgZmxhZyB0byB0
+aGUgR1BJT0xJTkVfRkxBR3MgdG8gaW5kaWNhdGUgaWYgZGVib3VuY2UgaXMgc2V0Jy4NCg0KSSBo
+YXZlIG15IGRvdWJ0cyBpZiBpdCBpcyBjb21wdWxzb3J5IHRvIGV4dGVuZCBkZWJvdW5jZSBjb25m
+aWd1cmF0aW9uIHRvIHRoZSBncGlvZXZlbnRfcmVxdWVzdHMgc2luY2UgdGhlIGRlYm91bmNlIHZh
+bHVlIGNvbmZpZ3VyZWQgYnkgYSB1c2VyIGlzIG5vcm1hbGx5IGxpbmtlZCB0byBhIGhhcmR3YXJl
+IG5vaXNlIGluIGEgbGluZTsgYW5kIHRoYXQgZG9lcyBub3QgY2hhbmdlIGZyb20gb25lIGdwaW9l
+dmVudF9yZXF1ZXN0cyB0byBhbm90aGVyLiBTbyBJIHRoaW5rIHRoaXMgY29uZmlndXJhdGlvbiB3
+b3VsZCBiZSB1c2VmdWwgYnV0IG5vdCBjb21wdWxzb3J5Lg0KDQpJIGFncmVlIHdpdGggTGludXMg
+V2FsbGVpaiB0aGF0ICd0aGVyZSBpcyBhIHNlcmlvdXMgdXNlci1mYWNpbmcgcHJvYmxlbSBoZXJl
+IHRob3VnaCwgYmVjYXVzZSBub3QgYWxsIEdQSU8gY29udHJvbGxlcnMgc3VwcG9ydHMgZGVib3Vu
+Y2UnLg0KT3VyIHBsYXRmb3JtcyBoYXZlIG5hdGl2ZSBmcmVlc2NhbGUvTlhQIGdwaW9jaGlwcyBu
+b3Qgc3VwcG9ydGluZyBoYXJkd2FyZSBkZWJvdW5jZSBhbmQgb3VyIG93biBncGlvY2hpcHMgaGF2
+aW5nIGhhcmR3YXJlIGRlYm91bmNlLg0KV2UgaGF2ZSBhbHNvIG5vdGljZWQgdGhhdCAnZHJpdmVy
+cy9pbnB1dC9rZXlib2FyZC9ncGlvX2tleXMuYyBjb250YWlucyBnZW5lcmljIGRlYm91bmNlIGNv
+ZGUgdXNpbmcga2VybmVsIHRpbWVycyBpZiB0aGUgR1BJTyBkcml2ZXIgY2Fubm90IHByb3ZpZGUg
+ZGVib3VuY2luZycuIFRoYXQgZmVhdHVyZSBpcyBub3Qgb2Ygb3VyIGludGVyZXN0IChiZWNhdXNl
+IG9mIGhhdmluZyBoYXJkd2FyZSBkZWJvdW5jZSBmaWx0ZXJzKSBidXQgaXQgd291bGQgY2xlYXJs
+eSBiZSBhIHZlcnkgZ29vZCBvdmVyYWxsIGZ1bmN0aW9uYWxpdHkuDQoNCkhhdmluZyBzYWlkIGFs
+bCBhYm92ZSwgSSB3b25kZXIgaG93IHlvdSB3YW50IHRvIHByb2NlZWQuDQpPdXIgY3VycmVudCBk
+ZXZlbG9wbWVudCBpbiBrNS40IGFuZCBsaWJncGlvZDEuNC4xIGlzIG11Y2ggYmVoaW5kIG1hc3Rl
+ci4uLiB3aGF0IG1ha2VzIGNvbGxhYm9yYXRpb24gKGFuZCByZXVzYWJpbGl0eSkgYSBiaXQgbW9y
+ZSBjb21wbGV4Lg0KQWxzbyBJIHNlZSB0aGUgaW1wbGVtZW50YXRpb24gcmVxdWlyZXMgYSBiaWdn
+ZXIgcGljdHVyZSB0aGFuIEkgaW5pdGlhbGx5IGV4cGVjdGVkLg0KU28gSSB3b25kZXIgaWYgeW91
+IHdhbnQgbWUgdG8gZG8gdGhlIGluaXRpYWwgc3RlcHMgb2YgdGhlIGRldmVsb3BtZW50ICh3aGF0
+IEkgZm9yZXNlZSB3aWxsIHJlcXVpcmUgc29tZSBiYWNrIGFuZCBmb3J0aCkgb3IgeW91IHByZWZl
+ciBpbXBsZW1lbnRpbmcgYWxsIHBpZWNlcy4NCg0KUmVnYXJkcywgSGVjdG9yLg0KDQoNCi0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxicmdsQGJn
+ZGV2LnBsPiANClNlbnQ6IG1pw6lyY29sZXMsIDI5IGRlIGFicmlsIGRlIDIwMjAgMTU6MDANClRv
+OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQpDYzogQnVqYW5kYSwg
+SGVjdG9yIDxIZWN0b3IuQnVqYW5kYUBkaWdpLmNvbT47IG9wZW4gbGlzdDpHUElPIFNVQlNZU1RF
+TSA8bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0
+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgS2VudCBHaWJzb24gPHdhcnRob2c2MThA
+Z21haWwuY29tPg0KU3ViamVjdDogUmU6IFtQQVRDSF0gZ3Bpb2xpYjogYWRkIEdQSU9fU0VUX0RF
+Qk9VTkNFX0lPQ1RMDQoNCsWbci4sIDI5IGt3aSAyMDIwIG8gMTQ6MzggTGludXMgV2FsbGVpaiA8
+bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiBuYXBpc2HFgihhKToNCj4NCj4gT24gV2VkLCBBcHIg
+MjksIDIwMjAgYXQgMjowNiBQTSBCYXJ0b3N6IEdvbGFzemV3c2tpIDxicmdsQGJnZGV2LnBsPiB3
+cm90ZToNCj4NCj4gPiBJIHVuZGVyc3RhbmQgdGhlIG5lZWQgdG8gc2V0IGRlYm91bmNlIHRpbWUg
+dG8gbWFrZSBsaW5lIGV2ZW50cyANCj4gPiByZWxpYWJsZS4gQXMgSSBzZWUgaXQ6IHRoZXJlJ2xs
+IGJlIGEgY291cGxlIHN0ZXBzIHRvIGFkZCB0aGlzLg0KPg0KPiBJIHRoaW5rIHRoZXJlIGlzIGEg
+c2VyaW91cyB1c2VyLWZhY2luZyBwcm9ibGVtIGhlcmUgdGhvdWdoLCBiZWNhdXNlIA0KPiBub3Qg
+YWxsIEdQSU8gY29udHJvbGxlcnMgc3VwcG9ydHMgZGVib3VuY2UsIHNvIHRoZSBjYWxsIG1heSBy
+ZXR1cm4gDQo+ICJub3BlIiAoZXJyb3IgY29kZSkuDQo+DQo+IEkgdGhpbmsgdGhhdCBpcyB1bmF2
+b2lkYWJsZSB3aXRoIHRoaW5ncyBsaWtlIHB1bGwtdXAvZG93biBvciBkcml2ZSANCj4gc3RyZW5n
+dGgsIGJ1dCBmb3IgZGVib3VuY2UgSSB0aGluayB3ZSBjb3VsZCBkbyBiZXR0ZXIuDQoNCkZvciBi
+aWFzIHdlIGRvbid0IHJldHVybiBhbiBlcnJvciBpZiB0aGUgb3BlcmF0aW9uIGlzIG5vdCBzdXBw
+b3J0ZWQgYnkgdGhlIGRyaXZlci4NCg0KPiBkcml2ZXJzL2lucHV0L2tleWJvYXJkL2dwaW9fa2V5
+cy5jIGNvbnRhaW5zIGdlbmVyaWMgZGVib3VuY2UgY29kZSANCj4gdXNpbmcga2VybmVsIHRpbWVy
+cyBpZiB0aGUgR1BJTyBkcml2ZXIgY2Fubm90IHByb3ZpZGUgZGVib3VuY2luZywgYW5kIA0KPiBJ
+IGhhdmUgdGhvdWdodCBmb3IgYSBsb25nIHRpbWUgdGhhdCBpdCB3b3VsZCBiZSBuaWNlIGlmIHdl
+IGNvdWxkIGRvIA0KPiB0aGlzIGdlbmVyaWMsIHNvIHRoYXQgd2UgYWx3YXlzIHByb3ZpZGUgZGVi
+b3VuY2luZyBpZiByZXF1ZXN0ZWQsIGV2ZW4gDQo+IGZvciBpbi1rZXJuZWwgY29uc3VtZXJzIGJ1
+dCBtb3N0IGNlcnRhaW5seSBmb3IgdXNlcnNwYWNlIGNvbnN1bWVycywgDQo+IGVsc2UgdXNlcnNw
+YWNlIHdpbGwganVzdCBzdGFydCB0byByZWludmVudCB0aGlzIHRvby4NCj4NCg0KVGhhbmtzIGZv
+ciBicmluZ2luZyB0aGlzIHRvIG15IGF0dGVudGlvbi4gVGhpcyBkZWZpbml0ZWx5IGxvb2tzIGxp
+a2Ugc29tZXRoaW5nIHdlIGNvdWxkIHB1bGwgaW50byBncGlvbGliIGZvciBvdGhlcnMgdG8gdXNl
+Lg0KDQpCYXJ0DQo=
