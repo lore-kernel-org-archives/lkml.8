@@ -2,190 +2,156 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7634C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831CEC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A68AD24955
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agIJz6xx"
+	by mail.kernel.org (Postfix) with ESMTP id 66BD320836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgD3WG6 (ORCPT
+        id S1728108AbgD3WHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgD3WGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:06:54 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB50BC035494;
-        Thu, 30 Apr 2020 15:06:53 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id gr25so5993830ejb.10;
-        Thu, 30 Apr 2020 15:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=W0fkUJMBdFal40rBs7rtc2OpGG15AYOz1Qr+RHMHFzg=;
-        b=agIJz6xxdv5fpQ00hpqSrhBa7lz7Qbxc7OxLHBljF+YfHjZG3rFWohLZYgWLGtfa8C
-         6a7nOEDuectluGxfouvEMzv2UeStA8voJcIrYcQUMgqIaSdFW5Y/jaUWscafm32ZRvUw
-         /bWgHYlytxX5Dnx636gCPtG4vnrzccV9MJIpbQqNlbh1ljyJ/0Vzmrz4orTflrq1pZcB
-         j5Ml9F3x2QjOFMNSklEwxZUltVX7R30Ffz8m0+xlOcwTkT7EpPNk5qno9RxSb6CMnfN9
-         t/kt0dCXJ3wo1obDzZXSnGa7vHp74TBGJBMEpCD+wLIhIhSYCgbT+GltQmRaGCAy2U0m
-         HrLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=W0fkUJMBdFal40rBs7rtc2OpGG15AYOz1Qr+RHMHFzg=;
-        b=lxY4do22Zhs4nXXHuC4W4k4OILJUnctEUuecluRPgXyVct+EPdG/8V9gJTMe/+5oab
-         AYYLnCKK5SU/686olb5XLwuU/Nz6s8+ovbtenJn7KV00uyV8o6csBVVVHqCuK2tZF5Vv
-         1j61UPUo5laDIlSb9TuWlWb2P+mPABWJMjmnmlw2Qjrbb1g+iO5qXoT5N8+4FYRjNdDd
-         a0DdYG6ultICrr8oAN3ddswTEY5k7Ga0neqJxG9p/cWyogoXaZKyd/0GlitiT5CuJDU9
-         9mfFqFQfTDkqHnbWWZhHxg/mt9c/kPOgZtuRwOWNzxO658S1eXgELBOYHj4ZlgHXT8KW
-         B38g==
-X-Gm-Message-State: AGi0PuY2sITru/kQHi44jYnEYBIoPpyssq42l5CiLDTmpjor/Fmh2l3t
-        aqs17z9TwobWDUUmvA+/e3c=
-X-Google-Smtp-Source: APiQypLOXRJf5iIfx72iQWrXo/VOvuT8bdMzp9X2RxLhB5EEdcb3Ce3il0Zr0B6dBXKgsU+mWsrAfQ==
-X-Received: by 2002:a17:906:6411:: with SMTP id d17mr559183ejm.109.1588284412512;
-        Thu, 30 Apr 2020 15:06:52 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain ([79.37.253.240])
-        by smtp.googlemail.com with ESMTPSA id t17sm54185edq.88.2020.04.30.15.06.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 15:06:51 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, stable@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/11] PCI: qcom: add support for defining some PARF params
-Date:   Fri,  1 May 2020 00:06:14 +0200
-Message-Id: <20200430220619.3169-8-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200430220619.3169-1-ansuelsmth@gmail.com>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+        Thu, 30 Apr 2020 18:07:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23209 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727930AbgD3WGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 18:06:49 -0400
+IronPort-SDR: wFddU0H/qqyEsIFD2VY5QDn1+BVhIPD0+cLTNf1QHwEklus7DOtWRCJNnHk2Z/3pgAPPxq9Soa
+ ZyiuRkl6DnKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 15:06:47 -0700
+IronPort-SDR: EKa0MD1KFBL+6pqaxJP2pWCwCBDSir+lBLyLu+xgV2xbsbFCzrH2Wc2b2lTCwSQqAlfvQPv9WU
+ oJNekRcfvZhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="261926444"
+Received: from dnlloyd-mobl.amr.corp.intel.com (HELO [10.255.231.251]) ([10.255.231.251])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 15:06:46 -0700
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk
+Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+Date:   Thu, 30 Apr 2020 15:06:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Tx De-Emphasis, Tx Swing and Rx equalization definition
-needed on some ipq8064 based device (Netgear R7800 for example). This
-cause a total lock of the system on kernel load.
+I was also wondering if Claudio was right about the debug patch having
+races.  I went to go look how the s390 code avoids races when pages go
+from accessible->inaccessible.
 
-Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Cc: stable@vger.kernel.org # v4.5+
----
- drivers/pci/controller/dwc/pcie-qcom.c | 47 ++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
+Because, if if all of the traps are in place to transform pages from
+inaccessible->accessible, the code *after* those traps is still
+vulnerable.  What *keeps* pages accessible?
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index a4fd5baada34..da8058fd1925 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -46,6 +46,9 @@
- 
- #define PCIE20_PARF_PHY_CTRL			0x40
- #define PCIE20_PARF_PHY_REFCLK			0x4C
-+#define PHY_REFCLK_SSP_EN			BIT(16)
-+#define PHY_REFCLK_USE_PAD			BIT(12)
-+
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
- #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
- #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-@@ -77,6 +80,18 @@
- #define DBI_RO_WR_EN				1
- 
- #define PERST_DELAY_US				1000
-+/* PARF registers */
-+#define PCIE20_PARF_PCS_DEEMPH			0x34
-+#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
-+
-+#define PCIE20_PARF_PCS_SWING			0x38
-+#define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
-+#define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
-+
-+#define PCIE20_PARF_CONFIG_BITS		0x50
-+#define PHY_RX0_EQ(x)				((x) << 24)
- 
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
-@@ -97,6 +112,12 @@ struct qcom_pcie_resources_2_1_0 {
- 	struct reset_control *phy_reset;
- 	struct reset_control *ext_reset;
- 	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
-+	u32 tx_deemph_gen1;
-+	u32 tx_deemph_gen2_3p5db;
-+	u32 tx_deemph_gen2_6db;
-+	u32 tx_swing_full;
-+	u32 tx_swing_low;
-+	u32 rx0_eq;
- };
- 
- struct qcom_pcie_resources_1_0_0 {
-@@ -234,8 +255,21 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	struct device_node *node = dev->of_node;
- 	int ret;
- 
-+	of_property_read_u32(node, "qcom,tx-deemph-gen1",
-+			     &res->tx_deemph_gen1);
-+	of_property_read_u32(node, "qcom,tx-deemph-gen2-3p5db",
-+			     &res->tx_deemph_gen2_3p5db);
-+	of_property_read_u32(node, "qcom,tx-deemph-gen2-6db",
-+			     &res->tx_deemph_gen2_6db);
-+	of_property_read_u32(node, "qcom,tx-swing-full",
-+			     &res->tx_swing_full);
-+	of_property_read_u32(node, "qcom,tx-swing-low",
-+			     &res->tx_swing_low);
-+	of_property_read_u32(node, "qcom,rx0-eq", &res->rx0_eq);
-+
- 	res->supplies[0].supply = "vdda";
- 	res->supplies[1].supply = "vdda_phy";
- 	res->supplies[2].supply = "vdda_refclk";
-@@ -368,9 +402,18 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	/* enable PCIe clocks and resets */
- 	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
- 
-+	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(res->tx_deemph_gen1) |
-+	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(res->tx_deemph_gen2_3p5db) |
-+	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(res->tx_deemph_gen2_6db),
-+	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
-+	writel(PCS_SWING_TX_SWING_FULL(res->tx_swing_full) |
-+	       PCS_SWING_TX_SWING_LOW(res->tx_swing_low),
-+	       pcie->parf + PCIE20_PARF_PCS_SWING);
-+	writel(PHY_RX0_EQ(res->rx0_eq), pcie->parf + PCIE20_PARF_CONFIG_BITS);
-+
- 	/* enable external reference clock */
--	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_REFCLK, 0,
--				 BIT(16));
-+	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_REFCLK,
-+				 PHY_REFCLK_USE_PAD, PHY_REFCLK_SSP_EN;
- 
- 	ret = reset_control_deassert(res->phy_reset);
- 	if (ret) {
--- 
-2.25.1
+The race avoidance is this, basically:
+
+	down_read(&gmap->mm->mmap_sem);
+	lock_page(page);
+        ptep = get_locked_pte(gmap->mm, uaddr, &ptelock);
+...
+>         expected = expected_page_refs(page);
+>         if (!page_ref_freeze(page, expected))
+>                 return -EBUSY;
+>         set_bit(PG_arch_1, &page->flags);
+>         rc = uv_call(0, (u64)uvcb);
+>         page_ref_unfreeze(page, expected);
+
+... up_read(mmap_sem) / unlock_page() / unlock pte
+
+I'm assuming that after the uv_call(), the page is inaccessible and I/O
+devices will go boom if they touch the page.
+
+The page_ref_freeze() ensures that references come between the
+freeze/unfreeze are noticed, but it doesn't actually *stop* new ones for
+users that hold references already.  For the page cache, especially,
+someone could do:
+
+	page = find_get_page();
+	arch_make_page_accessible();
+					lock_page();
+	...				make_secure_pte();
+					unlock_page();
+	get_page();
+	// ^ OK because I have a ref
+	// do DMA on inaccessible page
+
+Because the make_secure_pte() code isn't looking for a *specific*
+'expected' value, it has no way of noticing that the extra ref snuck in
+there.
+
+I _think_ expected actually needs to be checked for having a specific
+(low) value so that if there's a *possibility* of a reference holder
+acquiring additional references, the page is known to be off-limits.
+mm/migrate.c has a few examples of this, but I'm not quite sure how
+bulletproof they are.  Some of it appears to just be optimizations.
+
+
 
