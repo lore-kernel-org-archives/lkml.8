@@ -2,133 +2,159 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA72AC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC7C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3B5520870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:45:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DHkU5SqC"
+	by mail.kernel.org (Postfix) with ESMTP id 1B60120836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgD3RpE (ORCPT
+        id S1726581AbgD3RqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:45:04 -0400
-Received: from mail-bn8nam12on2087.outbound.protection.outlook.com ([40.107.237.87]:13888
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726272AbgD3RpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:45:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M7XVYS5cm6uTZhET1pNr+iTyu3N5tihD8J5pxnWYksi+FeHPVv6FxgfVKs2xT0yatc3lCxAJWF5xBAQOIG9v1p4L4EqG1fgE2Z/XSwsAeIZEzRNz4bMeUin+41B2+0x+S6Kdel0JtHtsCR/My+QnIBh6He6EyR1F+LJgctE4p1222El22zP1qlzgD7wbkunFpkqLoYTZAW94SG1/0vaxsvqQsSmNuKUNyacaP+HhvrkRlKdC36bpYCSgXGBcrGGEIsJGTD87h8Fj6t5E2ycx2Bvtn+EyCrAssSgY112ymA5QuxGe356IUkwXv8KO4oOE8iSpsVqXhB3UfmF+A4s1jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hK2rrzszdIrG6/lBxko//TtVioFYcrRAi5hGPqTgLvU=;
- b=IBfFien8zjN+R7yYxuISiyKTJrsZHQ//maSJX18Q7eRi2AtFYNRh2DQ5AqzwO2Ze1emKsPXs7pQU6yvp71DBzNuhAkwIPU3w3nIqbcVzmYCmhA7xjazC00PZOQqADaVDl1zU2dbI3BHaVpZfg1opBhY+xUTkXtEvRr2PEl3LYK35wQXLkYMuPsjweua01TxyoZjk5NIUw1LpINYK8ZL/4DxSDHAJ7dIbLpMkRNvkc86rZthsXt3aAR3pYgc/W9IWWYcmllpQoZpSaBTDqUor/35OKXmmwI4qzTw+WPoUva5L+4Yt2llab0RjluqCSIbWb5FFbmv9ivawlca1mDB/xQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hK2rrzszdIrG6/lBxko//TtVioFYcrRAi5hGPqTgLvU=;
- b=DHkU5SqCyzwbSzz7vD+of379zAC5yyiiZqHfIaqLt3PnvxMfVvwaNeN2aghuFaxt/XlfPK9Fom3VH798/7sRYIH2U+h7uy3hqpQsDn/CSFtKXHJVE45iMcgvBzKR8fsRutCRJGJ971cZjGPlVXZH9bqqA60nluCEg+cbAZcEIGk=
-Authentication-Results: amazon.com; dkim=none (message not signed)
- header.d=none;amazon.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB1306.namprd12.prod.outlook.com (2603:10b6:3:6c::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Thu, 30 Apr 2020 17:44:59 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2937.023; Thu, 30 Apr 2020
- 17:44:58 +0000
-Subject: Re: [PATCH] KVM: x86: Fixes posted interrupt check for IRQs delivery
- modes
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        Alexander Graf <graf@amazon.com>
-References: <1586239989-58305-1-git-send-email-suravee.suthikulpanit@amd.com>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <a6e74ca3-7807-8c5c-bfa8-6085acea11bb@amd.com>
-Date:   Fri, 1 May 2020 00:44:37 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-In-Reply-To: <1586239989-58305-1-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KU1PR03CA0047.apcprd03.prod.outlook.com
- (2603:1096:802:19::35) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
+        Thu, 30 Apr 2020 13:46:21 -0400
+Received: from muru.com ([72.249.23.125]:52250 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgD3RqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 13:46:20 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 89F038123;
+        Thu, 30 Apr 2020 17:47:06 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Date:   Thu, 30 Apr 2020 10:46:09 -0700
+Message-Id: <20200430174615.41185-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Suravees-MacBook-Pro.local (2403:6200:8862:99e1:28a3:aa38:c6d8:dc69) by KU1PR03CA0047.apcprd03.prod.outlook.com (2603:1096:802:19::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14 via Frontend Transport; Thu, 30 Apr 2020 17:44:55 +0000
-X-Originating-IP: [2403:6200:8862:99e1:28a3:aa38:c6d8:dc69]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 71c17904-84e6-454d-7aae-08d7ed2e3360
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1306:|DM5PR12MB1306:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1306A3931F61DDF301A907D5F3AA0@DM5PR12MB1306.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(8676002)(6666004)(4326008)(16526019)(186003)(2616005)(6512007)(2906002)(53546011)(5660300002)(316002)(6486002)(44832011)(36756003)(478600001)(31686004)(8936002)(66476007)(66556008)(6506007)(86362001)(31696002)(52116002)(66946007)(21314003);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BEtvdpM1/8GtB46Jbjz1cTcFizXBGWzj/7yR2vin/no0bf2W5R582uVjcJ988spiTyw5rdEp2Bde5fAUJsKnBLqvCwmixoTSZVZF+Bpyl6eRcR/AS/t+5TP5vu28C3MkV2DLrAomwNRByNkLn6DzSNxblGAPKolZyh9RzF3pJlMp4RbIJN4CBeCGFDoYVjkqj0dHGMnZz7dIAPs/12VxF5xCzdAqdX0MfyR9FJI5dv2gxMTqyCv2/9boK9DcUVuNXxg2sn6/HkYbFg9zntDKl/lhUpSOjteYNUlLJjzIUW419SicBQ5xGm/xzcZILAj5HMkN/fdNbOa7LsYmFCO2FfwKJp44FXcff1q3T8WGg7rXpgd9iGvwgzranOwCltBF68qXHWGsxGNHV+Be4g3lGStz8gL/Ok8zi5HyJ4vsRJ3V9iXBZUlu/hUhsIyZpFPJGTk6G270sTQ2tmPmaVQqtorLNzTV4P1F1pgl0er7jE0=
-X-MS-Exchange-AntiSpam-MessageData: PAJjbUVIH7IhcXp7OIxJNdhMrpy+Ec06wXfwQIpf3DCRSSbGSSutibTPnpub96AUyceZs7IbvBywyS6YlTyX8RXxtH5SCzg6un2q4q8/stcYNt+wQGTludPGQ0kYkgsgFbHh6eqhT5J69QC5Vc25Q7teA4HWCESWbE9zOgDRyqQ+D6Xcwhde0LlNc/PwmzGl9wvHWpL2GCwc2XWHn6nTh8TKb3+7IZFNkKAM5GHXmXHTmXOUWaVHqQ8Upc0i0NNLJ4ELd+DCHhyxXjBxdDTr9L6ZpIpsn+KETztp4HQAy73vjzk2GXmO0Spm0otm6vga7y/NGnd2Nato/f34it8iN64qIMoHEoZJeyId03Un/MinQmeRv4ahA5Y/fvK2vRj60bGGDcp5FtD/7zh4mSwXYwtyCZPzLknehwmbr2o+N7X5H/qkwttZCOTfLLsKi0caGIGz4FXk9gCh2rzrqPaN3OUlSBBWD3eckca081Ml1xz6uPl4grTVkPhSW8Sp0U/2I5CJhsbkUE3dqSXblFARQ75RM59v2mlbB795j4WHSygKFbMX9OFteSJEl9Jn5TkeZSM4bd/tWJz8gwfVD6EpkwpTK02jWs/3uTu5OdQZFgY8uGpVreyoo9uFDx0/aGR1Ny24yyD2cUNSOPMXSNmx4YTATEDmIkZvY/ue+0HzvqGcNTd7VtSeHuR9jtCwWWR+4+iwnauer07XPLe414+UtqTWNGpiUL/BmhEZ4tpSKmNKK36jK5o2zrNd3aunlumVrvwb8NlzDZoqdeWipInGzkIK7lOevSIjNjx/YrhjIzefjXJza9F13+Vlt1DgKX4zgxNxs84m72m2xK/rxta8NLbnr9px1KNEc0IY0wZ5sV7b5JgoZBwWOks79QOXNxkY
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71c17904-84e6-454d-7aae-08d7ed2e3360
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 17:44:58.4173
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6r7wkAKPRsKxlH4OiHRogfsnxriR/A7ENdmzdhAcdgLgxlaRAgBG14aBZyC43JhxYCMgUJvfiYKelqw+t+0Dig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1306
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.
+Hi all,
 
-Thanks,
-Suravee
+Here's v6 set of these patches fixed up for Johan's earlier comments.
 
-On 4/7/20 1:13 PM, Suravee Suthikulpanit wrote:
-> Current logic incorrectly uses the enum ioapic_irq_destination_types
-> to check the posted interrupt destination types. However, the value was
-> set using APIC_DM_XXX macros, which are left-shifted by 8 bits.
-> 
-> Fixes by using the APIC_DM_FIXED and APIC_DM_LOWEST instead.
-> 
-> Fixes: (fdcf75621375 'KVM: x86: Disable posted interrupts for non-standard IRQs delivery modes')
-> Cc: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> ---
->   arch/x86/include/asm/kvm_host.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 98959e8..f15e5b3 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1664,8 +1664,8 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
->   static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
->   {
->   	/* We can only post Fixed and LowPrio IRQs */
-> -	return (irq->delivery_mode == dest_Fixed ||
-> -		irq->delivery_mode == dest_LowestPrio);
-> +	return (irq->delivery_mode == APIC_DM_FIXED ||
-> +		irq->delivery_mode == APIC_DM_LOWEST);
->   }
->   
->   static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
-> 
+Getting rid of the custom chardev interface, and making things more
+generic also simplified things quite a bit. Thanks a lot Johan :)
+
+This series does the following:
+
+1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+
+2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+   TTY ports configured in devicetree with help of n_gsm.c
+
+3. Allows the use of standard Linux device drivers for dedicated
+   TS 27.010 channels for devices like GNSS and ALSA found on some
+   modems for example
+
+4. Adds a serdev-ngsm consumer driver for the GNSS device found on
+   the Motorola Mapphone MDM6600 modem on devices like droid4
+
+I've placed the serdev-ngsm.c under drivers/tty/serdev as it still
+seems to make most sense with no better places available. It's no
+longer an MFD driver as it really does not need to care what channel
+specific consumer drivers might be configured. So it now just uses
+of_platform_populate() to probe whatever child nodes it might find.
+
+I'm not attached having the driver in drivers/tty/serdev. I just
+don't have any better locations in mind. So jsing Johan's earlier
+i2c example, the drivers/tty/serdev/serdev-ngsm.c driver is now a
+generic protocol and bus driver, so it's getting closer to the
+maybe the drivers/i2c/busses analogy :) Please do suggest better
+locations other than MFD and misc if you have better ideas.
+
+Now without the chardev support, the /dev/gsmtty* using apps need
+to use "U1234AT+CFUN?" format for the packets. The advantage is
+less kernel code, and we keep the existing /dev/gsmtty* interface.
+
+If we still really need the custom chardev support, that can now
+be added as needed with the channel specific consumer driver(s).
+
+My guess is that at least with the pending ofono patches, we just
+want to use the raw interface for /dev/gsmtty* interface and stop
+pretending we have a modem that is AT compatible.
+
+Regards,
+
+Tony
+
+
+Changes since v5:
+- Based on comments from Johan, moved back to using the existing
+  TS 27.010 TTYs created by n_gsm.c instaed of adding custom chardev
+  support to deal with the Motorola custom protocol
+
+- Based on comments from Johan, made the serdev-ngsm driver generic
+  with just minimal quirk handling for the Motorola modem
+
+- Dropped the Motorola custom protocol on top of TS 27.010 handling
+  from serdev-ngsm.c as this can now be easily handled by the channel
+  specific drivers as needed
+
+- Added few more helpers to n_gsm.c for serdev-ngsm.c to use
+
+- Added the channel specific GNSS driver for the Motorola modem
+
+Changes since v4:
+- Use drivers/tty/serdev/protocol directory for the driver instead of
+  drivers/mfd as discussed on the lists for v3 set of patches
+- Fix remove to call kfree only after removing device from the list
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (6):
+  tty: n_gsm: Add support for serdev drivers
+  dt-bindings: serdev: ngsm: Add binding for serdev-ngsm
+  serdev: ngsm: Add generic serdev-ngsm driver
+  dt-bindings: gnss: Add binding for Motorola Mapphone MDM6600 GNSS
+  gnss: motmdm: Add support for Motorola Mapphone MDM6600 modem
+  ARM: dts: omap4-droid4: Configure modem for serdev-ngsm
+
+ .../devicetree/bindings/gnss/motmdm.yaml      |  29 ++
+ .../bindings/serdev/serdev-ngsm.yaml          |  64 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |  14 +
+ drivers/gnss/Kconfig                          |   8 +
+ drivers/gnss/Makefile                         |   3 +
+ drivers/gnss/motmdm.c                         | 419 ++++++++++++++++
+ drivers/tty/n_gsm.c                           | 428 +++++++++++++++++
+ drivers/tty/serdev/Kconfig                    |  10 +
+ drivers/tty/serdev/Makefile                   |   1 +
+ drivers/tty/serdev/serdev-ngsm.c              | 449 ++++++++++++++++++
+ include/linux/serdev-gsm.h                    | 163 +++++++
+ 12 files changed, 1590 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gnss/motmdm.yaml
+ create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+ create mode 100644 drivers/gnss/motmdm.c
+ create mode 100644 drivers/tty/serdev/serdev-ngsm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.26.2
