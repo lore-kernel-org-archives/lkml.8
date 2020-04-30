@@ -7,77 +7,106 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6580C8300D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538F2C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DFD20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D537214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588236560;
-	bh=J8dfL1puxygVx/IlBM6DbxBoxp2B2lbaeh0Jyf/zt5I=;
+	s=default; t=1588236614;
+	bh=ghrQEmeIlI+g1P6iSZ6DPBPbRnUsSttZWP+GFYy29mo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wBjWz1kjtK8QHgvXQOnkAx1lGmjVM7hZIeW05UlYfig3ZHHRZuF4ConNqvXLyr+f0
-	 uTzbe+qzBIJh4/1/L7eNPBZL1GR5AMg/QT5lBYvZ7McOmf9FWn1sJh/GcQMDoW1ZAL
-	 8vH6XLkHZFt5k1MF83wxrdazgBZyDSaCJDIuq6Jk=
+	b=QCJbk7D7XJ6GV7FbRi32wPhxr9JeUHL/zX8fOebWOp3EBNw/3oYKZh+otbB+WAr7c
+	 FzZYa6VfG4jtkVsRh9TNH79tYXrWBsjtLu9Ve3ZTXJk+spDPPXg05gpiCorXSU//Sr
+	 Li42Aer1PVkM4B1dpM6oDC7/ZWOhvsBA2xdod84U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgD3ItU (ORCPT
+        id S1726661AbgD3IuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:50:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgD3ItT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:49:19 -0400
+        id S1726412AbgD3IuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:50:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6931920787;
-        Thu, 30 Apr 2020 08:49:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9D6E20787;
+        Thu, 30 Apr 2020 08:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588236557;
-        bh=J8dfL1puxygVx/IlBM6DbxBoxp2B2lbaeh0Jyf/zt5I=;
+        s=default; t=1588236612;
+        bh=ghrQEmeIlI+g1P6iSZ6DPBPbRnUsSttZWP+GFYy29mo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lUgdFv3A3wy6Cj/P0sEaQQmV4uf/6P3kcXZ8rX9/GDr5VkbFPSBo+sRbDzL50gNvz
-         grVtyzjVTf4taIT/s9ZbxFgeIWE/UgM3KvPoEqaZgNvvKbvgdFMBTVC0D/3hRe0Veu
-         aC2Yxj5t8OI6L5lOXN3ZVg3JqAV+B9c2CZXqn2p0=
-Date:   Thu, 30 Apr 2020 10:49:15 +0200
+        b=KaqhsY86LNEksszvxHtMCCMJEREzCEgFGgqb0u5DpNO5Dv36tLHp1jXriMGXRhM6g
+         0IQfo4XYD7e8ikcmo5LrxJpxAG57PPiEbMIZrBHCTsBbTMMLAlK3QtxxjXDdsIS1PV
+         0We4M0prTxcdZvZteHR81YOQBz0OW3xRfgcS5GXM=
+Date:   Thu, 30 Apr 2020 10:50:10 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH] tty: xilinx_uartps: Add the id to the console
-Message-ID: <20200430084915.GD2496467@kroah.com>
-References: <06195dc0effe2fb82e264e4faefcfdd6ebc00516.1588234277.git.michal.simek@xilinx.com>
+To:     Frankie Chang <Frankie.Chang@mediatek.com>
+Cc:     Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+Subject: Re: [PATCH v3 1/1] binder: transaction latency tracking for user
+ build
+Message-ID: <20200430085010.GE2496467@kroah.com>
+References: <1586929044-12708-2-git-send-email-Frankie.Chang@mediatek.com>
+ <1588234439-7959-1-git-send-email-Frankie.Chang@mediatek.com>
+ <1588234439-7959-2-git-send-email-Frankie.Chang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06195dc0effe2fb82e264e4faefcfdd6ebc00516.1588234277.git.michal.simek@xilinx.com>
+In-Reply-To: <1588234439-7959-2-git-send-email-Frankie.Chang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:11:21AM +0200, Michal Simek wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Thu, Apr 30, 2020 at 04:13:59PM +0800, Frankie Chang wrote:
+> Record start/end timestamp for binder transaction.
+> When transaction is completed or transaction is free,
+> it would be checked if transaction latency over threshold (2 sec),
+> if yes, printing related information for tracing.
 > 
-> Update the console index. Once the serial node is found update it to the
-> console index.
+> /* Implement details */
+> - Add tracepoint/trace at free transaction.
+>   Since the original trace_binder_transaction_received cannot
+>   precisely present the real finished time of transaction, adding a
+>   trace_binder_free_transaction at the point of free transaction
+>   may be more close to it.
 > 
-> Fixes: 18cc7ac8a28e ("Revert "serial: uartps: Register own uart console and driver structures"")
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> - Add latency tracer module to monitor slow transaction.
+>   The trace_binder_free_transaction would not be enabled
+>   by default. Monitoring which transaction is too slow to
+>   cause some of exceptions is important. So we hook the
+>   tracepoint to call the monitor function.
+> 
+> - Move some struct from core file to header file.
+>   Need some struct defined in core file in latency trace module
+>   In addition, moving all structs to header file makes module
+>   more extendable, and make all these strcuts to be defined
+>   in the same file.
+> 
+> Signed-off-by: Frankie Chang <Frankie.Chang@mediatek.com>
 > ---
-> 
-> Greg: Would be good if you can take this patch to 5.7 and also to stable
-> trees.
+>  drivers/android/Kconfig                 |    8 +
+>  drivers/android/Makefile                |    1 +
+>  drivers/android/binder.c                |  408 +-----------------------------
+>  drivers/android/binder_internal.h       |  416 +++++++++++++++++++++++++++++++
+>  drivers/android/binder_latency_tracer.c |  105 ++++++++
+>  drivers/android/binder_trace.h          |   49 ++++
+>  6 files changed, 583 insertions(+), 404 deletions(-)
+>  create mode 100644 drivers/android/binder_latency_tracer.c
 
-WHy?  I don't understand what bug this fixes/resolves, please be much
-more descriptive in your changelog text showing this if you wish for it
-to be backported to a stable tree.  As it is, this just looks like you
-are adding a new feature.
+What changed from previous versions?  That always needs to go below the
+--- line, as is documented in the kernel documentation.
+
+Please fix that up and resend a v4.
 
 thanks,
 
