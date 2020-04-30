@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AF6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9142C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D2B206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AC4206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255761;
-	bh=z/SAI+WxyxCRvHGGrJbBNLw73UFuYbefK523W+/YLqI=;
+	s=default; t=1588255766;
+	bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOQoLiQSAT76tqlxBjTXYjLYnNtUKI4b51//Gt5NF9gXSyJyO2h8VoG5T2zWf4Ilf
-	 zcvEEOvWRashjn49xa5D2bcMTOBVQLmfTx/KwT998EzIhnfouH4SdcREbd9qsy4kxD
-	 LruTt5wy4+Hr0FVk/GBu/fV5P344Tp3S8CYGpmT0=
+	b=eCC8Uhf27EL+z0bG6OSSTlnse9U1kvL8vw8X6JUGZTgjLGRlQxbeBCr2y8xknIM8G
+	 QXZg71vcv1Wf82hf7ESb92pktiaCJqOp6GZlHsBlc4LDzvdKwxDYjQzcj6o1fsHMnv
+	 ffAvdqe7ogNvGRKTgeccnuQaqsyUWfAhQVEwGUws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgD3OJT (ORCPT
+        id S1728854AbgD3OJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60712 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbgD3Nvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:54 -0400
+        id S1728206AbgD3Nvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1531208CA;
-        Thu, 30 Apr 2020 13:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E7E62137B;
+        Thu, 30 Apr 2020 13:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254714;
-        bh=z/SAI+WxyxCRvHGGrJbBNLw73UFuYbefK523W+/YLqI=;
+        s=default; t=1588254710;
+        bh=f3rOv7jXSBRKwhcH/xi8Az3LAJfn4iVHQU1B6aVHB9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B+DqQVzJRh5PZRwPgAmq9/54yM3KLu28GNusBKTveA3Gd6i23UAvoQxy0cq6CRf1S
-         JtJbLwrjYT3HCiUbLE6oRtyrEoirpE5NiKM3Zhveycf/TNZ3f3LsuRuU+Iy4JVy9is
-         CGmyQUoyYU6IsTIyAAY+321qgocVE71XA17JzWp8=
+        b=IY30U2oh9MrEZihzty+OrwogRcmoRZkLZZbMnPCctwIStG6MhnEq9U8n73kr1MXOT
+         4Wjq5UcsigCa0i2LIclqkeHrHVdeBKV/7Ac1mvw5EIaGVE9anC17HS2eW0Fi+HXYCe
+         ZJ8ENhDd79MniQtOxVjRoJ1666GADxsOmqKl0Rtg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>, KP Singh <kpsingh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 62/79] perf/core: fix parent pid/tid in task exit events
-Date:   Thu, 30 Apr 2020 09:50:26 -0400
-Message-Id: <20200430135043.19851-62-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 58/79] blk-iocost: Fix error on iocost_ioc_vrate_adj
+Date:   Thu, 30 Apr 2020 09:50:22 -0400
+Message-Id: <20200430135043.19851-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,61 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit f3bed55e850926614b9898fe982f66d2541a36a5 ]
+[ Upstream commit d6c8e949a35d6906d6c03a50e9a9cdf4e494528a ]
 
-Current logic yields the child task as the parent.
+Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
+argument of the iocost_ioc_vrate_adj trace entry defined in
+include/trace/events/iocost.h leading to the following error:
 
-Before:
-$ perf record bash -c "perf list > /dev/null"
-$ perf script -D |grep 'FORK\|EXIT'
-4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
-                                                   ^
-  Note the repeated values here -------------------/
+  /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
+  error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
+   , u32[]* __tracepoint_arg_missed_ppm
 
-After:
-383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
+That argument type is indeed rather complex and hard to read. Looking
+at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
+the argument to a simple "u32 *missed_ppm" and adjusting the trace
+entry accordingly, the compilation error was gone.
 
-Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
-Reported-by: KP Singh <kpsingh@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ block/blk-iocost.c            | 4 ++--
+ include/trace/events/iocost.h | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 533c193481899..29ace472f9168 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7278,10 +7278,17 @@ static void perf_event_task_output(struct perf_event *event,
- 		goto out;
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 9a599cc28c290..2dc5dc54e257f 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1594,7 +1594,7 @@ skip_surplus_transfers:
+ 				      vrate_min, vrate_max);
+ 		}
  
- 	task_event->event_id.pid = perf_event_pid(event, task);
--	task_event->event_id.ppid = perf_event_pid(event, current);
--
- 	task_event->event_id.tid = perf_event_tid(event, task);
--	task_event->event_id.ptid = perf_event_tid(event, current);
-+
-+	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
-+		task_event->event_id.ppid = perf_event_pid(event,
-+							task->real_parent);
-+		task_event->event_id.ptid = perf_event_pid(event,
-+							task->real_parent);
-+	} else {  /* PERF_RECORD_FORK */
-+		task_event->event_id.ppid = perf_event_pid(event, current);
-+		task_event->event_id.ptid = perf_event_tid(event, current);
-+	}
+-		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
++		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
+ 					   nr_lagging, nr_shortages,
+ 					   nr_surpluses);
  
- 	task_event->event_id.time = perf_event_clock(event);
+@@ -1603,7 +1603,7 @@ skip_surplus_transfers:
+ 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
+ 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
+ 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
+-					   &missed_ppm, rq_wait_pct, nr_lagging,
++					   missed_ppm, rq_wait_pct, nr_lagging,
+ 					   nr_shortages, nr_surpluses);
+ 	}
  
+diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
+index 7ecaa65b7106e..c2f580fd371b1 100644
+--- a/include/trace/events/iocost.h
++++ b/include/trace/events/iocost.h
+@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
+ 
+ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 
+-	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
++	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
+ 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
+ 		int nr_surpluses),
+ 
+@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
+ 		__entry->new_vrate = new_vrate;
+ 		__entry->busy_level = ioc->busy_level;
+-		__entry->read_missed_ppm = (*missed_ppm)[READ];
+-		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
++		__entry->read_missed_ppm = missed_ppm[READ];
++		__entry->write_missed_ppm = missed_ppm[WRITE];
+ 		__entry->rq_wait_pct = rq_wait_pct;
+ 		__entry->nr_lagging = nr_lagging;
+ 		__entry->nr_shortages = nr_shortages;
 -- 
 2.20.1
 
