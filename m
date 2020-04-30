@@ -2,153 +2,170 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6928C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47848C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831552083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27094208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A5Qkn+RO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ougCJz6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgD3ETp (ORCPT
+        id S1726404AbgD3EYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:19:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32300 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725280AbgD3ETp (ORCPT
+        Thu, 30 Apr 2020 00:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725280AbgD3EYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588220383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y3qA5YQectFk94IrJZbga3NnhiVolyAIIRBNdV0hWko=;
-        b=A5Qkn+RO7hxZUJdkSw7uQ5LZ1xv+ju6V9HI4RXaPKLWhKhkTodnTK1QEb7224umh5Cvitt
-        cPSGVTVEMrQQt7s3Bgkkw+/ynRxBSsnj09U3ZrRnROOF85TKxI1IFNdqzB55n4yKBzJbu5
-        mOI3mEdw5YzfoQzCi/sV/vbdYaRMQWI=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-MvezKSFdNsaAZwOF5Ug5Sw-1; Thu, 30 Apr 2020 00:19:41 -0400
-X-MC-Unique: MvezKSFdNsaAZwOF5Ug5Sw-1
-Received: by mail-qk1-f198.google.com with SMTP id a18so5219710qkl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 21:19:41 -0700 (PDT)
+        Thu, 30 Apr 2020 00:24:05 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F92C035494;
+        Wed, 29 Apr 2020 21:24:04 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x15so2295711pfa.1;
+        Wed, 29 Apr 2020 21:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KhvM5Pbwqp4GHCCKH1JQ77gi57Z5QMqOiW7fGw8B1mk=;
+        b=ougCJz6naTbrpT5mDHZs3oj9O89lX1RVKtVzjutjexVrgQFKbXfrr3g7/aG2ZhQg9P
+         8HLm1eP/clniAjyoanFTKE1ucc+f16h2oe2g0bHr8UrhTJlyUX3jkrjITRFef3foN45z
+         EeNdIeApf5gtXGvcR2jPNPJgegRYTrCdDbD22zLGTyFL/KnCsJ6Q17GIrESmFl1i5Bpf
+         bRB6RRTNfVcAdNdsIN6RO3F/sPmGbfVxlfW3AakD7MXJlA0xNFVk1wvV0OOJbsJLafih
+         wzB3xpV0cnyn7HxZ+MwkLk1TT1xw4Y1LUZOI4vxBuliIaCYcs+U2mTkF9HeWw8pkTUmr
+         4uMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y3qA5YQectFk94IrJZbga3NnhiVolyAIIRBNdV0hWko=;
-        b=C8X0sGDah+Jf8RFETjcLYss2NFNGxCaXNIHyhaNHVrvET3mRROKAYLpFwpYU1tc3Ss
-         Wen3P/izr19exX0F/GJGXRYsXDZthUR4viBOTurbMCPeCHaQ3BEZREj75CO32U+QHQqX
-         J/dFtGWdLs2pZ2G1Lociue1gSj1AuOInQkQLrPR7TsCzPF7TaUbsnl0JYF+VnB0G5Brl
-         bPxtytBaZKBJMHb0MKYAKzmF8lLgEWiYG9Cp4U0T04GjuROjXmYRf72TGTYsdf021h1y
-         1CpN5c34gvabKPOSMt7719uprnqCnTg2cD9W14ekq1Rpqdx3oAhHHiFhrqrYfjKguRWW
-         iZxg==
-X-Gm-Message-State: AGi0PubkG3YeUfA5hYEQjR4gmPh/JRQTITg6W1XtTZAxhWXxD2hsqJID
-        YuZjtf04goyWDinASYbhrLj3H/fTJXmdPymXSYwT1Dxg5XWnHJ7SaJL0+YJ9gy5zY0HdwX3sLvD
-        2q5JZWg1MHT7ckNAmXv58Teh35Nf0dzE9+09MeZ1y
-X-Received: by 2002:ac8:4a06:: with SMTP id x6mr1781017qtq.163.1588220381014;
-        Wed, 29 Apr 2020 21:19:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIIKuSa5A+bA3rxaYpbMr2qY1S5iFmZ3KbqmvVuXVRobXja+joDUE5FfWMDx8MBIFnGysBfmL5Fe5CK6jPRK2U=
-X-Received: by 2002:ac8:4a06:: with SMTP id x6mr1780995qtq.163.1588220380778;
- Wed, 29 Apr 2020 21:19:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KhvM5Pbwqp4GHCCKH1JQ77gi57Z5QMqOiW7fGw8B1mk=;
+        b=LLmZ/6NQlOq+OBundSmZ6wFvMl5IAT6l3rMEP9sVgaLFXlGjnheKFdHVRuYZqJvJkY
+         JDUJs+5jyvUcoVZNGgy+UmE1WdlW8o8vjalK6/vOfAKu/R+0GDJeZIBnqGhBPgVuwjaz
+         sK4c2h4k5caID7cDCOWkh5f6/6qyBUWC06kI4oQ8cWAXqXymi5HrusALqR0HGh4EHmWq
+         u1s/DUGZgeJBlZUKMrYKL71VAdf+BibKWvq+5S+TR/gRGQOk61xhbU98Hy0HqapZxAkL
+         bHGOrTXKhd5Oe1VxNbArsRYch0oqE//eF9oJJP3tVfEd0/UO0HLWl0C/vO6nuFXhxZcC
+         j18w==
+X-Gm-Message-State: AGi0PubkO+1N3oPRqZEHfmBmic2IdcoJpqvPKKP0eKNj/1Oap0+qGof4
+        dvGrNXmR00gkzC7D19+AFeQ=
+X-Google-Smtp-Source: APiQypKlNI45ZENLkeN/qowZIMetyD/iTF9kI3byHgLbMxnedtufJ3lV/pnskfqTkAx9mA76FUvslg==
+X-Received: by 2002:a62:aa04:: with SMTP id e4mr219156pff.317.1588220644254;
+        Wed, 29 Apr 2020 21:24:04 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:c108])
+        by smtp.gmail.com with ESMTPSA id j23sm614197pjz.13.2020.04.29.21.24.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 21:24:03 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 21:24:00 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, bpf@vger.kernel.org,
+        daniel@iogearbox.net
+Subject: Re: BPF vs objtool again
+Message-ID: <20200430042400.45vvqx4ocwwogp3j@ast-mbp.dhcp.thefacebook.com>
+References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
+ <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+ <20200429215159.eah6ksnxq6g5adpx@treble>
+ <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
+ <20200430001300.k3pgq2minrowstbs@treble>
+ <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
+ <20200430035315.tc74v5twfdxv2goh@treble>
 MIME-Version: 1.0
-References: <1588063937-5744-1-git-send-email-bhsharma@redhat.com> <20200428100745.GA15300@C02TD0UTHF1T.local>
-In-Reply-To: <20200428100745.GA15300@C02TD0UTHF1T.local>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Thu, 30 Apr 2020 09:49:27 +0530
-Message-ID: <CACi5LpM9_O6gRgMgfAXrmZuaO111xJk3=xtjYXK5rKhTF7Znsg@mail.gmail.com>
-Subject: Re: [PATCH] hw_breakpoint: Remove unused '__register_perf_hw_breakpoint'
- declaration
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430035315.tc74v5twfdxv2goh@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Wed, Apr 29, 2020 at 10:53:15PM -0500, Josh Poimboeuf wrote:
+> On Wed, Apr 29, 2020 at 07:10:52PM -0700, Alexei Starovoitov wrote:
+> > > For example:
+> > > 
+> > > #define GOTO    ({ goto *jumptable[insn->code]; })
+> > > 
+> > > and then replace all 'goto select_insn' with 'GOTO;'
+> > > 
+> > > The problem is that with RETPOLINE=y, the function text size grows from
+> > > 5k to 7k, because for each of the 160+ retpoline JMPs, GCC (stupidly)
+> > > reloads the jump table register into a scratch register.
+> > 
+> > that would be a tiny change, right?
+> > I'd rather go with that and gate it with 'ifdef CONFIG_FRAME_POINTER'
+> > Like:
+> > #ifndef CONFIG_FRAME_POINTER
+> > #define CONT     ({ insn++; goto select_insn; })
+> > #define CONT_JMP ({ insn++; goto select_insn; })
+> > #else
+> > #define CONT     ({ insn++; goto *jumptable[insn->code]; })
+> > #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
+> > #endif
+> > 
+> > The reason this CONT and CONT_JMP macros are there because a combination
+> > of different gcc versions together with different cpus make branch predictor
+> > behave 'unpredictably'.
+> > 
+> > I've played with CONT and CONT_JMP either both doing direct goto or
+> > indirect goto and observed quite different performance characteristics
+> > from the interpreter.
+> > What you see right now was the best tune I could get from a set of cpus
+> > I had to play with and compilers. If I did the same tuning today the outcome
+> > could have been different.
+> > So I think it's totally fine to use above code. I think some cpus may actually
+> > see performance gains with certain versions of gcc.
+> > The retpoline text increase is unfortunate but when retpoline is on
+> > other security knobs should be on too. In particular CONFIG_BPF_JIT_ALWAYS_ON
+> > should be on as well. Which will remove interpreter from .text completely.
+> 
+> This would actually be contingent on RETPOLINE, not FRAME_POINTER.
+> 
+> (FRAME_POINTER was the other issue with the "optimize" attribute, which
+> we're reverting so it'll no longer be a problem.)
+> 
+> So if you're not concerned about the retpoline text growth, it could be
+> as simple as:
+> 
+> #define CONT     ({ insn++; goto *jumptable[insn->code]; })
+> #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
+> 
+> 
+> Or, if you wanted to avoid the text growth, it could be:
+> 
+> #ifdef CONFIG_RETPOLINE
 
-Thanks for the review.
+I'm a bit lost. So objtool is fine with the asm when retpoline is on?
+Then pls do:
+#if defined(CONFIG_RETPOLINE) || !defined(CONFIG_X86)
 
-On Tue, Apr 28, 2020 at 3:37 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi Bhupesh,
->
-> On Tue, Apr 28, 2020 at 02:22:17PM +0530, Bhupesh Sharma wrote:
-> > commit b326e9560a28 ("hw-breakpoints: Use overflow handler instead of
-> > the event callback") removed '__register_perf_hw_breakpoint' function
-> > usage and replaced it with 'register_perf_hw_breakpoint' function.
-> >
-> > Remove the left-over unused '__register_perf_hw_breakpoint' declaration
-> > from 'hw_breakpoint.h' as well.
-> >
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
->
-> This is generic code, so I'm a bit confused as to why you've sent it to
-> us. I'd expect this to go via the perf core maintainers (cc'd).
+since there is no need to mess with other archs.
 
-Oops, my bad. Seems my git patch sending script messed up while
-picking up the perf maintainers (who should have been Cc'ed on the
-patch) :(
+> /*
+>  * Avoid a 40% increase in function text size by getting GCC to generate a
+>  * single retpoline jump instead of 160+.
+>  */
+> #define CONT	 ({ insn++; goto select_insn; })
+> #define CONT_JMP ({ insn++; goto select_insn; })
+> 
+> select_insn:
+> 	goto *jumptable[insn->code];
+> 
+> #else /* !CONFIG_RETPOLINE */
+> #define CONT	 ({ insn++; goto *jumptable[insn->code]; })
+> #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
+> #endif /* CONFIG_RETPOLINE */
+> 
+> 
+> But since this is legacy path, I think the first one is much nicer.
+> 
+> 
+> Also, JMP_TAIL_CALL has a "goto select_insn", is it ok to convert that
+> to CONT?
 
-Thanks for adding them in the Cc list.
-
-Hi Peter, Frederic, Ingo - Kindly help review this patch and help
-apply the patch (if suitable).
-
-Thanks,
-Bhupesh
-
-> FWIW, this looks sane to me, so:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
-> Mark.
->
-> > ---
-> >  include/linux/hw_breakpoint.h | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >
-> > diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-> > index 6058c3844a76..fe1302da8e0f 100644
-> > --- a/include/linux/hw_breakpoint.h
-> > +++ b/include/linux/hw_breakpoint.h
-> > @@ -72,7 +72,6 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
-> >                           void *context);
-> >
-> >  extern int register_perf_hw_breakpoint(struct perf_event *bp);
-> > -extern int __register_perf_hw_breakpoint(struct perf_event *bp);
-> >  extern void unregister_hw_breakpoint(struct perf_event *bp);
-> >  extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
-> >
-> > @@ -115,8 +114,6 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
-> >                           void *context)              { return NULL; }
-> >  static inline int
-> >  register_perf_hw_breakpoint(struct perf_event *bp)   { return -ENOSYS; }
-> > -static inline int
-> > -__register_perf_hw_breakpoint(struct perf_event *bp)         { return -ENOSYS; }
-> >  static inline void unregister_hw_breakpoint(struct perf_event *bp)   { }
-> >  static inline void
-> >  unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)      { }
-> > --
-> > 2.7.4
-> >
->
-
+yep
