@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A734C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F3DC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC5920870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4687206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255213;
-	bh=0x3kQkUa8Zh85K1c8F16CnNNrJ+HlYowwG8mn5Ij7sw=;
+	s=default; t=1588255218;
+	bh=wwgUGUeeVHyww4aUxt7KJKda/A1Wd7zIYeOuDIpcz5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CbHc3wtfWRnln6sT4zEGo39RpuG93AUKwXZWPL3WhAP8pleDEDrpaTtNvny7JNMpF
-	 2JqTJvz6dY9kRS59zN3VTADfiVWsOocMUCDDRzL+VXn0ew6CEKi1Xe/d49zY09LWMH
-	 7Qu3JUwpL3eRFqY3lW1u2hSvMinPNMe4NRuwp3Sk=
+	b=TTOfATvgAvsaK2XEStG7tRhJRxzTrHE2tw3yo3Cwx2VU0wzI77TCgCgaKr88Umea+
+	 BkXgyU8ZGaVDm3x4AhDf20sX3sZjdgHLNU1wSClU/SURDfrbaJzzFM2fkQ+xSfhp2R
+	 A7I3rGTXtCToVvNOpLIb6lIA4uEjM4ScxlZOHrOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgD3OAM (ORCPT
+        id S1729389AbgD3OAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36702 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgD3NyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:20 -0400
+        id S1728944AbgD3NyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7FF920870;
-        Thu, 30 Apr 2020 13:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD81B20873;
+        Thu, 30 Apr 2020 13:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254860;
-        bh=0x3kQkUa8Zh85K1c8F16CnNNrJ+HlYowwG8mn5Ij7sw=;
+        s=default; t=1588254858;
+        bh=wwgUGUeeVHyww4aUxt7KJKda/A1Wd7zIYeOuDIpcz5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Od148ftRp1ZKyr4+NlSylbFc2C8FxuE+t27JTV0ebIKX/gXNMV5dUDMf3ZlcFZ4Br
-         R2pXPx/vFGnUaSzvkunphldzi+Ra6xJPCjjaeWsODOIWPK7scGnI9nkoVWo0g41p54
-         e/hKUqX7CyiP6lKCCMKu3xJsMY8C/Lb235hlpVYA=
+        b=BA1IJpUaIgS3cBRl+A2NsPCtgFFWmZdwlR1zVGoKLqtL5s2igTxIuaWouTcKF1ahD
+         7TwTofW3+ij3PPd2MSqWP2Yy4wcjVEM6+lxZPp6xXvxPhmptDfR0vnw2WwHqJy0Mj6
+         VFn5sh8JK8nq+7O7HQu2IaKm0b7o3rS4tFd6lTlQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.14 16/27] cifs: protect updating server->dstaddr with a spinlock
-Date:   Thu, 30 Apr 2020 09:53:51 -0400
-Message-Id: <20200430135402.20994-16-sashal@kernel.org>
+Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        Manoj Malviya <manojmalviya@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/27] cxgb4: fix large delays in PTP synchronization
+Date:   Thu, 30 Apr 2020 09:53:49 -0400
+Message-Id: <20200430135402.20994-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
 References: <20200430135402.20994-1-sashal@kernel.org>
@@ -61,37 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit fada37f6f62995cc449b36ebba1220594bfe55fe ]
+[ Upstream commit bd019427bf3623ee3c7d2845cf921bbf4c14846c ]
 
-We use a spinlock while we are reading and accessing the destination address for a server.
-We need to also use this spinlock to protect when we are modifying this address from
-reconn_set_ipaddr().
+Fetching PTP sync information from mailbox is slow and can take
+up to 10 milliseconds. Reduce this unnecessary delay by directly
+reading the information from the corresponding registers.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 9c33e4208bce ("cxgb4: Add PTP Hardware Clock (PHC) support")
+Signed-off-by: Manoj Malviya <manojmalviya@chelsio.com>
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/ethernet/chelsio/cxgb4/cxgb4_ptp.c    | 27 +++++--------------
+ drivers/net/ethernet/chelsio/cxgb4/t4_regs.h  |  3 +++
+ 2 files changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 697edc92dff27..58e7288e5151c 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -348,8 +348,10 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
- 		return rc;
- 	}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+index 758f2b8363282..ff7e58a8c90fb 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+@@ -311,32 +311,17 @@ static int cxgb4_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
+  */
+ static int cxgb4_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ {
+-	struct adapter *adapter = (struct adapter *)container_of(ptp,
+-				   struct adapter, ptp_clock_info);
+-	struct fw_ptp_cmd c;
++	struct adapter *adapter = container_of(ptp, struct adapter,
++					       ptp_clock_info);
+ 	u64 ns;
+-	int err;
+-
+-	memset(&c, 0, sizeof(c));
+-	c.op_to_portid = cpu_to_be32(FW_CMD_OP_V(FW_PTP_CMD) |
+-				     FW_CMD_REQUEST_F |
+-				     FW_CMD_READ_F |
+-				     FW_PTP_CMD_PORTID_V(0));
+-	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
+-	c.u.ts.sc = FW_PTP_SC_GET_TIME;
  
-+	spin_lock(&cifs_tcp_ses_lock);
- 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
- 				  strlen(ipaddr));
-+	spin_unlock(&cifs_tcp_ses_lock);
- 	kfree(ipaddr);
+-	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), &c);
+-	if (err < 0) {
+-		dev_err(adapter->pdev_dev,
+-			"PTP: %s error %d\n", __func__, -err);
+-		return err;
+-	}
++	ns = t4_read_reg(adapter, T5_PORT_REG(0, MAC_PORT_PTP_SUM_LO_A));
++	ns |= (u64)t4_read_reg(adapter,
++			       T5_PORT_REG(0, MAC_PORT_PTP_SUM_HI_A)) << 32;
  
- 	return !rc ? -1 : 0;
+ 	/* convert to timespec*/
+-	ns = be64_to_cpu(c.u.ts.tm);
+ 	*ts = ns_to_timespec64(ns);
+-
+-	return err;
++	return 0;
+ }
+ 
+ /**
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
+index dac90837842bf..d3df6962cf433 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
+@@ -1810,6 +1810,9 @@
+ 
+ #define MAC_PORT_CFG2_A 0x818
+ 
++#define MAC_PORT_PTP_SUM_LO_A 0x990
++#define MAC_PORT_PTP_SUM_HI_A 0x994
++
+ #define MPS_CMN_CTL_A	0x9000
+ 
+ #define COUNTPAUSEMCRX_S    5
 -- 
 2.20.1
 
