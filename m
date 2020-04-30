@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528D2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B102C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 288CB2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59799208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254683;
-	bh=vEhVLLwSFyJhdLX9Pt2w9y/nEjjsIQJj5jJiyTA4d3g=;
+	s=default; t=1588254687;
+	bh=NCEMTGfWpoYFw/KeMl/To3iZwdhBGM7JjgTt34Xc6Y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XtDbbFaNyhclJKsZIVZtQb2sFQS+Wafva2PhuKEY4CCvMbbwChGktQfp58moV7QO
-	 w5AezhHbOQp4FelqhAl1N6SNvBf7RueWhw+6mzihKBfqKMZ0yVo+5Cr4cMSmZ+blUP
-	 /0jBd/pIAspN9AepJBEWkxzhVpi6HQ5DWqOjYaKU=
+	b=0NaDspyGJjO105KKfLdcFBGfGA/esZv7C2ULUZM/1+nxh67LGp8tZrIiuSVUqPdAN
+	 b6bki3loXpdRVpmyA8GP/Vt3khWrv1+6g7ed2L9d3NAwN2tx97ETVodbGTFYQmb2rR
+	 1rLQAIkuRKtQ6LIsglK7/AprpbN5OKnMinJbNRMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgD3NvW (ORCPT
+        id S1728059AbgD3Nv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:51:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:51:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgD3NvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:09 -0400
+        id S1727961AbgD3NvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 316D02082E;
-        Thu, 30 Apr 2020 13:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7514220873;
+        Thu, 30 Apr 2020 13:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254668;
-        bh=vEhVLLwSFyJhdLX9Pt2w9y/nEjjsIQJj5jJiyTA4d3g=;
+        s=default; t=1588254673;
+        bh=NCEMTGfWpoYFw/KeMl/To3iZwdhBGM7JjgTt34Xc6Y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZC7Efpt9apFX702Y0V8UEt2Ayn67snqlZjCmjpiQ5NhwQDmOu0XVv03yEVWwV+8/M
-         JNZxyou7QX1zUJ0tWYYzlgqHVQRg3q5T0IOsQMtipY5br+Pznqh63lU+ORTtahk9Sf
-         dXonyuomrPB7hOFWGyuGLizGQoYwg5OxlZ45AcR8=
+        b=S1AEHnA8IH2DtG6TyeAMspRKXkDakmgkB+oAhZAXv4wmv76QQcJlVk9mAeI/OBdS2
+         MEmCBVGc6n/OBrsgpND4F8kVUObILV8RQx46ua+Gw8o4NilvE1Xj85Rc7n+tnH6IoZ
+         Nejk6087bmMnzYiWN0quKsIPH4iy2N/xgTW6l8CA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wu Bo <wubo40@huawei.com>, Douglas Gilbert <dgilbert@interlog.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 21/79] scsi: sg: add sg_remove_request in sg_write
-Date:   Thu, 30 Apr 2020 09:49:45 -0400
-Message-Id: <20200430135043.19851-21-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 25/79] ASoC: q6dsp6: q6afe-dai: add missing channels to MI2S DAIs
+Date:   Thu, 30 Apr 2020 09:49:49 -0400
+Message-Id: <20200430135043.19851-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -59,38 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 83c6f2390040f188cc25b270b4befeb5628c1aee ]
+[ Upstream commit 0c824ec094b5cda766c80d88c2036e28c24a4cb1 ]
 
-If the __copy_from_user function failed we need to call sg_remove_request
-in sg_write.
+For some reason, the MI2S DAIs do not have channels_min/max defined.
+This means that snd_soc_dai_stream_valid() returns false,
+i.e. the DAIs have neither valid playback nor capture stream.
 
-Link: https://lore.kernel.org/r/610618d9-e983-fd56-ed0f-639428343af7@huawei.com
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+It's quite surprising that this ever worked correctly,
+but in 5.7-rc1 this is now failing badly: :)
+
+Commit 0e9cf4c452ad ("ASoC: pcm: check if cpu-dai supports a given stream")
+introduced a check for snd_soc_dai_stream_valid() before calling
+hw_params(), which means that the q6i2s_hw_params() function
+was never called, eventually resulting in:
+
+    qcom-q6afe aprsvc:q6afe:4:4: no line is assigned
+
+... even though "qcom,sd-lines" is set in the device tree.
+
+Commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
+now even avoids creating PCM devices if the stream is not supported,
+which means that it is failing even earlier with e.g.:
+
+    Primary MI2S: ASoC: no backend playback stream
+
+Avoid all that trouble by adding channels_min/max for the MI2S DAIs.
+
+Fixes: 24c4cbcfac09 ("ASoC: qdsp6: q6afe: Add q6afe dai driver")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200415150050.616392-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/qcom/qdsp6/q6afe-dai.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 9c0ee192f0f9c..20472aaaf630a 100644
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -685,8 +685,10 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
- 	hp->flags = input_size;	/* structure abuse ... */
- 	hp->pack_id = old_hdr.pack_id;
- 	hp->usr_ptr = NULL;
--	if (copy_from_user(cmnd, buf, cmd_size))
-+	if (copy_from_user(cmnd, buf, cmd_size)) {
-+		sg_remove_request(sfp, srp);
- 		return -EFAULT;
-+	}
- 	/*
- 	 * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
- 	 * but is is possible that the app intended SG_DXFER_TO_DEV, because there
+diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
+index c1a7624eaf175..2a5302f1db98a 100644
+--- a/sound/soc/qcom/qdsp6/q6afe-dai.c
++++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
+@@ -902,6 +902,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -917,6 +919,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -931,6 +935,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -946,6 +952,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -960,6 +968,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -975,6 +985,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -989,6 +1001,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
+@@ -1004,6 +1018,8 @@ static struct snd_soc_dai_driver q6afe_dais[] = {
+ 				 SNDRV_PCM_RATE_16000,
+ 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 				   SNDRV_PCM_FMTBIT_S24_LE,
++			.channels_min = 1,
++			.channels_max = 8,
+ 			.rate_min =     8000,
+ 			.rate_max =     48000,
+ 		},
 -- 
 2.20.1
 
