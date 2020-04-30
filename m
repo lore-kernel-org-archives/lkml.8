@@ -2,107 +2,156 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35830C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51395C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 048F92070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588285446;
-	bh=U2wS06jC9o9pM52AkSococGuM+XgTOL9WOXR44wwwmQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RHCq7ZdXIROfehfJt7M26k1NDicQWbnwLMxmP6ygvCKKRtOd6RlBoJZRSNlCZNo8F
-	 fWA4NUUhJ9DXgTDDBeXcBRri6zx6ECy1cMpCOP3cQMSxfDkgPK5wHJjrAshdJLv6tp
-	 qJXeyhDwVa9NAmjtc/Oh9qeeGxA/xFP5FFYY2lhc=
+	by mail.kernel.org (Postfix) with ESMTP id 39340206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgD3WYF (ORCPT
+        id S1727832AbgD3W0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgD3WYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:24:04 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94AC1206D9;
-        Thu, 30 Apr 2020 22:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588285444;
-        bh=U2wS06jC9o9pM52AkSococGuM+XgTOL9WOXR44wwwmQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nB8mUJ6Pr+ljhrNsFLIKSdctC/llz+t2pcx7JDOh0oPr8VKQWeTBxDI7E+xMeStLC
-         YJG+PTTpUS++FiCEfMHnakKMR5tEwypkxH9WzJR3NY+WaET9iOTNnwJL1dKYZQ2hQo
-         n2b6cYRnfH+6fRINH9l/gw+LAzU9FuEWW69YHNxU=
-Date:   Thu, 30 Apr 2020 15:24:03 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-Message-Id: <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
-In-Reply-To: <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
-        <20200430102908.10107-3-david@redhat.com>
-        <87pnbp2dcz.fsf@x220.int.ebiederm.org>
-        <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
-        <871ro52ary.fsf@x220.int.ebiederm.org>
-        <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
-        <875zdg26hp.fsf@x220.int.ebiederm.org>
-        <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Apr 2020 18:26:08 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:38806 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgD3W0I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 18:26:08 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 97FEC1C0208; Fri,  1 May 2020 00:26:05 +0200 (CEST)
+Date:   Fri, 1 May 2020 00:26:05 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200430222605.GA10922@duo.ucw.cz>
+References: <20200430174615.41185-1-tony@atomide.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Disposition: inline
+In-Reply-To: <20200430174615.41185-1-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 20:43:39 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-> > 
-> > Why does the firmware map support hotplug entries?
-> 
-> I assume:
-> 
-> The firmware memmap was added primarily for x86-64 kexec (and still, is
-> mostly used on x86-64 only IIRC). There, we had ACPI hotplug. When DIMMs
-> get hotplugged on real HW, they get added to e820. Same applies to
-> memory added via HyperV balloon (unless memory is unplugged via
-> ballooning and you reboot ... the the e820 is changed as well). I assume
-> we wanted to be able to reflect that, to make kexec look like a real reboot.
-> 
-> This worked for a while. Then came dax/kmem. Now comes virtio-mem.
-> 
-> 
-> But I assume only Andrew can enlighten us.
-> 
-> @Andrew, any guidance here? Should we really add all memory to the
-> firmware memmap, even if this contradicts with the existing
-> documentation? (especially, if the actual firmware memmap will *not*
-> contain that memory after a reboot)
-
-For some reason that patch is misattributed - it was authored by
-Shaohui Zheng <shaohui.zheng@intel.com>, who hasn't been heard from in
-a decade.  I looked through the email discussion from that time and I'm
-not seeing anything useful.  But I wasn't able to locate Dave Hansen's
-review comments.
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
+> My guess is that at least with the pending ofono patches, we just
+> want to use the raw interface for /dev/gsmtty* interface and stop
+> pretending we have a modem that is AT compatible.
+
+I tried to get it to work... it was not fun and I did not get far.
+
+I pushed my results...
+
+user@devuan:/my/ofono$ git push
+Counting objects: 10, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (10/10), 1.17 KiB | 0 bytes/s, done.
+Total 10 (delta 8), reused 0 (delta 0)
+remote: Resolving deltas: 100% (8/8), completed with 8 local objects.
+To github.com:pavelmachek/ofono.git
+   fd34ca20..9042014b  mux-v1.29-1 -> mux-v1.29-1
+
+Best regards,
+								Pavel
+
+ofonod[12922]: drivers/atmodem/network-registration.c:at_netreg_probe() Pro=
+bing creg
+Have command of length 9 (AT+CREG=3D?)
+ or ^z=20
+ofonod[12922]: Voice: > U0000AT+FOO\r
+ofonod[12922]: InSMS: > U0000AT+FOO\r
+ofonod[12922]: OutSMS: > U0000AT+FOO\r
+ofonod[12922]: Voice: < U0000+FOO:ERROR=3D9\n
+new bytes 18
+Have line: U0000+FOO:ERROR=3D9
+Last character is 13
+command response: U0000+FOO:ERROR=3D9
+ofonod[12922]: plugins/motmdm.c:foo_cb()=20
+handle command response
+ofonod[12922]: Voice: > U0000AT+SCRN=3D0\r
+ofonod[12922]: OutSMS: < U0000+FOO:ERROR=3D9\n
+new bytes 18
+Have line: U0000+FOO:ERROR=3D9
+Last character is 13
+command response: U0000+FOO:ERROR=3D9
+ofonod[12922]: plugins/motmdm.c:foo_cb()=20
+handle command response
+ofonod[12922]: InSMS: < U0000+FOO:ERROR=3D9\n
+new bytes 18
+Have line: U0000+FOO:ERROR=3D9
+Last character is 13
+command response: U0000+FOO:ERROR=3D9
+ofonod[12922]: plugins/motmdm.c:foo_cb()=20
+ofonod[12922]: plugins/motmdm.c:foo_cb() All channels working
+handle command response
+ofonod[12922]: Voice: < U0000+SCRN:OK\n
+new bytes 14
+Have line: U0000+SCRN:OK
+Last character is 13
+command response: U0000+SCRN:OK
+ofonod[12922]: plugins/motmdm.c:scrn_cb()=20
+handle command response
+ofonod[12922]: Voice: > U0000AT+CFUN=3D1\r
+ofonod[12922]: Voice: < U0000+CFUN:OK\n
+new bytes 14
+Have line: U0000+CFUN:OK
+Last character is 13
+command response: U0000+CFUN:OK
+ofonod[12922]: plugins/motmdm.c:cfun_cb()=20
+handle command response
+ofonod[12922]: Voice: > U0000AT+CLIP=3D1\r
+ofonod[12922]: Voice: < U0000+CLIP:OK\n
+new bytes 14
+Have line: U0000+CLIP:OK
+Last character is 13
+command response: U0000+CLIP:OK
+handle command response
+ofonod[12922]: Voice: > U0000AT+CCWA=3D1\r
+ofonod[12922]: Voice: < U0000+CCWA:OK\n
+new bytes 14
+Have line: U0000+CCWA:OK
+Last character is 13
+command response: U0000+CCWA:OK
+ofonod[12922]: drivers/motorolamodem/voicecall.c:motorola_voicecall_initial=
+ized() voicecall_init: registering to notifications
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqtQfQAKCRAw5/Bqldv6
+8l9jAJ9KvU0iNyw/Yt+4+ZYHCB1gEmP9+gCfReEBIYsa33Y8sy9hW9AUNr8xq7M=
+=MkB7
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
