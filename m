@@ -2,118 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C35CC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967ECC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49FC52137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E982076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255273;
-	bh=bZgjp+pRE/vGlH0B5qlNg+/CZHrjuHxxB2hCd/EaJQc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKDOTqMGvojCGYygucw2LxGW6SiD11I9zmc6EMXY9dV1xQdmDyBBGrKd8P6LFSJde
-	 ekexSJKAktvBSz6EVHzuMVYYVZaAzDRFnSzYdswPqh6K2+BNCVrjxlt8i3ZwTWqnH9
-	 aLkkqvU6hN0expVm/j9CHa5ojc7boGGRMNb2SyMo=
+	s=default; t=1588255278;
+	bh=9FbFTTlnbKLjAAIPjJx6YuYxhy4pirQW6SAhcXe/fIM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VlOS+1ZSDiYMM0xTx3njYhFR2sgunFrkJn7CTViAJViK2LIAk5RESImTWgg3a2WPu
+	 Ux1D2Ca1LdrrT4WnSqors8cj4W9fjlJ+aALkHcptHDeO8cXyRdiAckPIm6UT73mPnh
+	 9G2bpFeHZEJ1PJkpsGL8lpGUxIGVpHfEK98sfvm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgD3OBM (ORCPT
+        id S1729409AbgD3OBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:01:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36058 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:01:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgD3NyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:00 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729405AbgD3OBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:01:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BB920873;
-        Thu, 30 Apr 2020 13:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49EE5206D9;
+        Thu, 30 Apr 2020 14:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254839;
-        bh=bZgjp+pRE/vGlH0B5qlNg+/CZHrjuHxxB2hCd/EaJQc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NvAsRYftw4OXe/IU7lplZ3CSAi4SbwwMLKk3eMkJamUEzbc6LwbROg87KLZqC56BZ
-         8/lEGU9xNJPDOW/Tku1xCJDVYxlE5eOcKnR9vFX5wuNeUaHT1tnkukg3PUgsoLvAdW
-         VeW3PJ3eJIX4HOySjJ4WDfGLYM+T64/rZJhktu5s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Wang YanQing <udknight@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/30] bpf, x86_32: Fix incorrect encoding in BPF_LDX zero-extension
-Date:   Thu, 30 Apr 2020 09:53:25 -0400
-Message-Id: <20200430135325.20762-30-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
-References: <20200430135325.20762-1-sashal@kernel.org>
+        s=default; t=1588255270;
+        bh=9FbFTTlnbKLjAAIPjJx6YuYxhy4pirQW6SAhcXe/fIM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VMXtb8vhEM+n2AJtnnYWEg28q2MQfNCnhDqtmDeZp2Nn/BQEuu67JEdPdGFmLHEaJ
+         dwgVN7ndgB6NkDsFbVa5YTi4BZjE8Nt0aODE8LeOisc/N76gGKBUeeJ+SpojTHueHC
+         cJ1QIpegAUWyaw3A+SFIZePzFTZr2pc7ojL2dN38=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jU9kS-0083fU-Nk; Thu, 30 Apr 2020 15:01:08 +0100
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Apr 2020 15:01:08 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 09/18] ARM: dts: r8a7742: Add IRQC support
+In-Reply-To: <CAMuHMdWUYU6-S+EhzTKE4JeS2ExLQcsg_Bpy7RKD+cwhg55M8g@mail.gmail.com>
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWUYU6-S+EhzTKE4JeS2ExLQcsg_Bpy7RKD+cwhg55M8g@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.3
+Message-ID: <0002cb9c8b1f0f7a308dea06af14bb37@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: geert@linux-m68k.org, prabhakar.mahadev-lad.rj@bp.renesas.com, magnus.damm@gmail.com, robh+dt@kernel.org, vkoul@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, tglx@linutronix.de, jason@lakedaemon.net, gregkh@linuxfoundation.org, linux@armlinux.org.uk, prabhakar.csengg@gmail.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+On 2020-04-30 14:54, Geert Uytterhoeven wrote:
+> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>> Describe the IRQC interrupt controller in the r8a7742 device tree.
+>> 
+>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>> Reviewed-by: Marian-Cristian Rotariu 
+>> <marian-cristian.rotariu.rb@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 5fa9a98fb10380e48a398998cd36a85e4ef711d6 ]
+Can I safely assume that the irqchip DT updates will be routed via
+the arm-soc tree? If so, feel free to add my
 
-The current JIT uses the following sequence to zero-extend into the
-upper 32 bits of the destination register for BPF_LDX BPF_{B,H,W},
-when the destination register is not on the stack:
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-  EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
+to these patches.
 
-The problem is that C7 /0 encodes a MOV instruction that requires a 4-byte
-immediate; the current code emits only 1 byte of the immediate. This
-means that the first 3 bytes of the next instruction will be treated as
-the rest of the immediate, breaking the stream of instructions.
+Thanks,
 
-This patch fixes the problem by instead emitting "xor dst_hi,dst_hi"
-to clear the upper 32 bits. This fixes the problem and is more efficient
-than using MOV to load a zero immediate.
-
-This bug may not be currently triggerable as BPF_REG_AX is the only
-register not stored on the stack and the verifier uses it in a limited
-way, and the verifier implements a zero-extension optimization. But the
-JIT should avoid emitting incorrect encodings regardless.
-
-Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Acked-by: Wang YanQing <udknight@gmail.com>
-Link: https://lore.kernel.org/bpf/20200422173630.8351-1-luke.r.nels@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/net/bpf_jit_comp32.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index 24d573bc550d9..21df0b6d7be6e 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -1830,7 +1830,9 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 					      STACK_VAR(dst_hi));
- 					EMIT(0x0, 4);
- 				} else {
--					EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
-+					/* xor dst_hi,dst_hi */
-+					EMIT2(0x33,
-+					      add_2reg(0xC0, dst_hi, dst_hi));
- 				}
- 				break;
- 			case BPF_DW:
+         M.
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
