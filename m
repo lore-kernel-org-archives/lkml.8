@@ -2,290 +2,122 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6FC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BB8C83002
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF572076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0290D20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 05:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QeUOH2T0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgD3FBH (ORCPT
+        id S1726511AbgD3FCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 01:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
+        Thu, 30 Apr 2020 01:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3FBH (ORCPT
+        by vger.kernel.org with ESMTP id S1726180AbgD3FCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 01:01:07 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AFC9C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:01:07 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jU1Jk-0005Iw-SY; Thu, 30 Apr 2020 07:01:00 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jU1Ji-0005mJ-Uo; Thu, 30 Apr 2020 07:00:58 +0200
-Date:   Thu, 30 Apr 2020 07:00:58 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY
- master/slave configuration.
-Message-ID: <20200430050058.cetxv76pyboanbkz@pengutronix.de>
-References: <20200428075308.2938-1-o.rempel@pengutronix.de>
- <20200428075308.2938-2-o.rempel@pengutronix.de>
- <20200429195222.GA17581@lion.mk-sys.cz>
+        Thu, 30 Apr 2020 01:02:23 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70F8C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:02:23 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ms17so237869pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 22:02:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/x+rzFhqL8qq/IbAbhJvN4V9t4Lz3kP/p46lFDN1LPU=;
+        b=QeUOH2T0toOL6FXdkhKq+g+r/NoRVo1i2zlq/dnOlDFJ7Qg3JgS5yBug89VdkBBuXJ
+         uIwAth6iHY+LFOy85L2+cBK/fyvKlE6++yw6wsviDaoMtG//30Iq79W3dCFahjhHej5m
+         bsyu7z3tWK77hkQZEtJyGjU+mVA97ThGY/dMIESgne0XoachFQI/glwM066JniYC5Yjv
+         jiyuJbGAgCgs0avenlhmD3u3Q0MDjNA/wPRb0I+kaLNcjDHYng4SUtXkqg1iIbklShcT
+         u/OmWS2O17Fbavnp7f8ERKiwbf5WesDEha3GK1DB5/91dT7HOZIt04oibLGSAW2F2BL3
+         VI1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/x+rzFhqL8qq/IbAbhJvN4V9t4Lz3kP/p46lFDN1LPU=;
+        b=Judf7f2Mg7EnX7ggMqTtb8p53EuT2pmzoqzL3mSfunz28pLFTIdwH3R9V4Pr3T5oEG
+         q06rk9N9e5QlRC2LKRcRHBTPkNbVksW7GsMMr40nrTCwp9V99NB3tFXdUNCot4U+gwgL
+         Xj1t1/q8BYZsa3Ih3gSbFHAIxmuH9SEpMfsWRiCIYUCds5C3XHnPjSHvQLynwC0xWKX1
+         GsUpEVS5xqlks97AZhV220T+0xAKX28Td95siDkwm/LYJ4zfG8flH5BvhALedlBHtB21
+         lBPtpv99fV6YlZbVU0hLFLxF+BRZUTktUjZ24tGT3i4ci24OcnJMM0iW88hsk2I9eO8S
+         ZFtw==
+X-Gm-Message-State: AGi0PuZKNyxf6rU+1e8t6TXVoaXxLMpO7NaI0Q/1zoftPrUMT7i6/6kz
+        1+kNyJDdiPZbA11i7PS9+Py+kw==
+X-Google-Smtp-Source: APiQypJzR7a0kCiE/1VDTmkgBdSYfEHsJ0JsARDvEUXhRCY3bEJHo7Os1dih7PRmqQ2XQpmx9ywNJw==
+X-Received: by 2002:a17:90b:1104:: with SMTP id gi4mr937970pjb.115.1588222943125;
+        Wed, 29 Apr 2020 22:02:23 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o9sm671869pje.47.2020.04.29.22.02.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 22:02:22 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 22:02:59 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: [PATCH] misc: fastrpc: fix memory leak
+Message-ID: <20200430050259.GB2166963@builder.lan>
+References: <20200429152951.18504-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ozd5iai3oo5bf5xh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429195222.GA17581@lion.mk-sys.cz>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:41:45 up 166 days, 20:00, 163 users,  load average: 0.02, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200429152951.18504-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 29 Apr 08:29 PDT 2020, Srinivas Kandagatla wrote:
 
---ozd5iai3oo5bf5xh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> if misc_register() fails, previously allocated data is left without freeing,
+> this could result in memory leak.
 
-Hi Michal,
+s/could/will/
 
-On Wed, Apr 29, 2020 at 09:52:22PM +0200, Michal Kubecek wrote:
-> On Tue, Apr 28, 2020 at 09:53:07AM +0200, Oleksij Rempel wrote:
-> > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
-> > auto-negotiation support, we needed to be able to configure the
-> > MASTER-SLAVE role of the port manually or from an application in user
-> > space.
-> >=20
-> > The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
-> > force MASTER or SLAVE role. See IEEE 802.3-2018:
-> > 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
-> > 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
-> > 40.5.2 MASTER-SLAVE configuration resolution
-> > 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
-> > 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
-> >=20
-> > The MASTER-SLAVE role affects the clock configuration:
-> >=20
-> > -----------------------------------------------------------------------=
---------
-> > When the  PHY is configured as MASTER, the PMA Transmit function shall
-> > source TX_TCLK from a local clock source. When configured as SLAVE, the
-> > PMA Transmit function shall source TX_TCLK from the clock recovered from
-> > data stream provided by MASTER.
-> >=20
-> > iMX6Q                     KSZ9031                XXX
-> > ------\                /-----------\        /------------\
-> >       |                |           |        |            |
-> >  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
-> >       |<--- 125 MHz ---+-<------/  |        | \          |
-> > ------/                \-----------/        \------------/
-> >                                                ^
-> >                                                 \-TX_TCLK
-> >=20
-> > -----------------------------------------------------------------------=
---------
-> >=20
-> > Since some clock or link related issues are only reproducible in a
-> > specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
-> > to provide generic (not 100BASE-T1 specific) interface to the user space
-> > for configuration flexibility and trouble shooting.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> [...]
-> > diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> > index 72c69a9c8a98a..a6a774beb2f90 100644
-> > --- a/drivers/net/phy/phy.c
-> > +++ b/drivers/net/phy/phy.c
-> > @@ -285,6 +285,9 @@ int phy_ethtool_ksettings_set(struct phy_device *ph=
-ydev,
-> >  	      duplex !=3D DUPLEX_FULL)))
-> >  		return -EINVAL;
-> > =20
-> > +	if (!ethtool_validate_master_slave_cfg(cmd->base.master_slave_cfg))
-> > +		return -EINVAL;
-> > +
->=20
-> Unless we can/want to pass extack down here, I would prefer to have the
-> sanity check in ethtool_update_linkmodes() or ethtool_set_linkmodes() so
-> that we can set meaningful error message and offending attribute in
-> extack. (It could be even part of the policy.) Also, with the check only
-> here, drivers/devices not calling phy_ethtool_set_link_ksettings()
-> (directly or via phy_ethtool_set_link_ksettings()) and not handling the
-> new members themselves would silently ignore any value from userspace.
+> 
+> So fix it!
+> 
 
-ok
+As Markus pointed out, a Fixes: tag would be in order to make sure this
+is backported properly.
 
-> >  	phydev->autoneg =3D autoneg;
-> > =20
-> >  	phydev->speed =3D speed;
-> [...]
-> > +static int genphy_setup_master_slave(struct phy_device *phydev)
-> > +{
-> > +	u16 ctl =3D 0;
-> > +
-> > +	if (!phydev->is_gigabit_capable)
-> > +		return 0;
->=20
-> Shouldn't we rather return -EOPNOTSUPP if value different from
-> CFG_UNKNOWN was requested?
 
-sounds plausible.
-
-> > +
-> > +	switch (phydev->master_slave_set) {
-> > +	case PORT_MODE_CFG_MASTER_PREFERRED:
-> > +		ctl |=3D CTL1000_PREFER_MASTER;
-> > +		break;
-> > +	case PORT_MODE_CFG_SLAVE_PREFERRED:
-> > +		break;
-> > +	case PORT_MODE_CFG_MASTER_FORCE:
-> > +		ctl |=3D CTL1000_AS_MASTER;
-> > +		/* fallthrough */
-> > +	case PORT_MODE_CFG_SLAVE_FORCE:
-> > +		ctl |=3D CTL1000_ENABLE_MASTER;
-> > +		break;
-> > +	case PORT_MODE_CFG_UNKNOWN:
-> > +		return 0;
-> > +	default:
-> > +		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
-> > +		return 0;
-> > +	}
-> [...]
-> > diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> > index 92f737f101178..eb680e3d6bda5 100644
-> > --- a/include/uapi/linux/ethtool.h
-> > +++ b/include/uapi/linux/ethtool.h
-> > @@ -1666,6 +1666,31 @@ static inline int ethtool_validate_duplex(__u8 d=
-uplex)
-> >  	return 0;
-> >  }
-> > =20
-> > +/* Port mode */
-> > +#define PORT_MODE_CFG_UNKNOWN		0
-> > +#define PORT_MODE_CFG_MASTER_PREFERRED	1
-> > +#define PORT_MODE_CFG_SLAVE_PREFERRED	2
-> > +#define PORT_MODE_CFG_MASTER_FORCE	3
-> > +#define PORT_MODE_CFG_SLAVE_FORCE	4
-> > +#define PORT_MODE_STATE_UNKNOWN		0
-> > +#define PORT_MODE_STATE_MASTER		1
-> > +#define PORT_MODE_STATE_SLAVE		2
-> > +#define PORT_MODE_STATE_ERR		3
->=20
-> You have "MASTER_SLAVE" or "master_slave" everywhere but "PORT_MODE" in
-> these constants which is inconsistent.
-
-What will be preferred name?
-
-> > +
-> > +static inline int ethtool_validate_master_slave_cfg(__u8 cfg)
-> > +{
-> > +	switch (cfg) {
-> > +	case PORT_MODE_CFG_MASTER_PREFERRED:
-> > +	case PORT_MODE_CFG_SLAVE_PREFERRED:
-> > +	case PORT_MODE_CFG_MASTER_FORCE:
-> > +	case PORT_MODE_CFG_SLAVE_FORCE:
-> > +	case PORT_MODE_CFG_UNKNOWN:
-> > +		return 1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
->=20
-> Should we really allow CFG_UNKNOWN in client requests? As far as I can
-> see, this value is handled as no-op which should be rather expressed by
-> absence of the attribute. Allowing the client to request a value,
-> keeping current one and returning 0 (success) is IMHO wrong.
-
-ok
-
-> Also, should this function be in UAPI header?
-
-It is placed together with other validate functions:
-ethtool_validate_duplex
-ethtool_validate_speed
-
-Doing it in a different place, would be inconsistent.
-
-> [...]
-> > @@ -119,7 +123,12 @@ static int linkmodes_fill_reply(struct sk_buff *sk=
-b,
-> >  	}
-> > =20
-> >  	if (nla_put_u32(skb, ETHTOOL_A_LINKMODES_SPEED, lsettings->speed) ||
-> > -	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
-> > +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex) ||
-> > +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
-> > +		       lsettings->master_slave_cfg) ||
-> > +	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE,
-> > +		       lsettings->master_slave_state))
-> > +
-> >  		return -EMSGSIZE;
->=20
-> From the two handlers you introduced, it seems we only get CFG_UNKNOWN
-> or STATE_UNKNOWN if driver or device does not support the feature at all
-> so it would be IMHO more appropriate to omit the attribute in such case.
-
-STATE_UNKNOWN is returned if link is not active.
+PS: although unlikely, if of_platform_populate() where to fail we're
+leaking both the contet and the misc device.
 
 Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Bjorn
 
---ozd5iai3oo5bf5xh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6qW4IACgkQ4omh9DUa
-UbMW6BAAvgl7UtjAUh2IOL/8TkPA1gr3AEo/DMbY5sDi1EEf03GXGLxo4L481es8
-KJe7FSfkmI5Nn/mXu3zM3phxvA3E6BoBpD+JXPiJdwsfOvqCHU/7u16LxUuK5SBH
-8QFm884aBs4441xaiPKYKshOF/wyP8QeStIAi71LEiiBvFDsYnijGBQ0LCmgoaN3
-22RVSz0hQvgFbYEY8B9Nygw0SEjA+IEREkutJnI2AXDPlJyVlWyfAOovKM9+0UuP
-WaK2HcHoInL/g8PCBS2hm98m5r0eeIls9UvJrQySyd4Qm/p7nnOsgc2x3OhYRyrP
-osUAwbI28A1AGyQNgjuJ4t6isRetE9hvp7yXNN8weXmH+o5jL7AJ0/urJkIHtuyX
-nHQXNQDuBn/R2Hzr9XRMYXR0WakD/qR3gJCfssLrWqlTSl8d/ppgSQqxNRxcLyoj
-E9fm7eNzdXiLZ3+2jd8hkdkcIJd2Pvvi0GLHMqUsBQbD3zfH4Cp69VGypRc8Rbiv
-tvmgdPft8/gRM/ziXz+8VjzadjPcd921E1tZDwK79NDhHKibX7/glRf0/3fyUjnD
-gIVFu/cP6IDSXjyyeD77eg5A6S0WBrCyxFw7L7+tU1rRPpGUoTHWlCkG3KliupAn
-/hIqM9pmlKhGBbvyn2ZeSU1mLUAf625L87paPE+xFEeDQv+b9Ao=
-=oSOt
------END PGP SIGNATURE-----
-
---ozd5iai3oo5bf5xh--
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/misc/fastrpc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index e3e085e33d46..9065d3e71ff7 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -1613,8 +1613,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  					    domains[domain_id]);
+>  	data->miscdev.fops = &fastrpc_fops;
+>  	err = misc_register(&data->miscdev);
+> -	if (err)
+> +	if (err) {
+> +		kfree(data);
+>  		return err;
+> +	}
+>  
+>  	kref_init(&data->refcount);
+>  
+> -- 
+> 2.21.0
+> 
