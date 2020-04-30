@@ -2,69 +2,160 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6254C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EFFC83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1AAA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5D020733
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:51:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcSieJrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgD3Cn1 (ORCPT
+        id S1726431AbgD3CvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:43:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3344 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726180AbgD3Cn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:43:27 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 68B728F3430251F25FA2;
-        Thu, 30 Apr 2020 10:43:25 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 30 Apr 2020 10:43:17 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <ccaulfie@redhat.com>, <teigland@redhat.com>
-CC:     <cluster-devel@redhat.com>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] dlm: Remove unneeded semicolon
-Date:   Thu, 30 Apr 2020 10:49:32 +0800
-Message-ID: <1588214972-50988-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Wed, 29 Apr 2020 22:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726309AbgD3CvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:51:09 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB5DC035494;
+        Wed, 29 Apr 2020 19:51:08 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l78so4330326qke.7;
+        Wed, 29 Apr 2020 19:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gcb22CoM1BKj6UuzEDSUucJ6OH1JzdhT0xclshPmx0Q=;
+        b=WcSieJrBHge5UFApclx0pHGgVRD8ofAyr5C3TErHchgTZvl6zKcYvzMQEFBYwWO7tf
+         Z1poxpWIgm2vxZhZUzIUdHIQ62yg+n8wdrzUWn3AOv0UyEYQPzudoZIUiDUUSuikTKOC
+         sWP9naXE1vams9sDCwW4imVLKgPjT/76a6zCpPnS/TqF8s53vuvMnWhOwH1QnhYBbJmo
+         vZHoJ5HjpHvTeTsBRWpAVyKfKlU0qkdyR2wnEgKFzNoMlOrRiYnrY6zC8W34op5TgQZi
+         nrFRWfm9UUDXhWzCS3qd4wFG0aJ5d7FNgQFym92SnhthDCSX0YdWbnb3zu7fVAK2MOeq
+         KV1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gcb22CoM1BKj6UuzEDSUucJ6OH1JzdhT0xclshPmx0Q=;
+        b=SN/tRXNJVQytjiLuKJPLzFVxnrckB0EW6x8jpp2Bi/70nPCT9Pa9+FrSKEOM8OIqas
+         EEoSr3HDQVxiux8U5mqdMt2PLRWVOSGXxy8f6/LUWr+O+WKFScbldKWNT2gE99WeqxGp
+         hnHgMJnWecFCVhcMgXAyyXS9psNLAPMGfSPWsubzcqvYBeEDHh24XU1mqq0A2vfrjG3e
+         yq9ygR1sz6WT5CSgdykpdZBsSAgqYd5pGSpsTMhRVei4Qnk4jTS3UdQd+g1LNxYrszMg
+         7FklkvqN97/ddTB1hwJl6YEf+wZhbcK7NDK+1UFHpozAbHT0itRFxXaUyqXt8RvCruAg
+         IL8w==
+X-Gm-Message-State: AGi0PuYn8FrVZEnpgZ++lMUMmcqmngEKWhHruHKgF3EjlDf4i6majkcY
+        3VU2f9szgqOjjbLXx1MR1zp0yhc4PCXyTc/BrbM=
+X-Google-Smtp-Source: APiQypLWXPG9CeboheBCgGYAP4+yqKwc/KL3ZgrfZdgHy87JhcdGS9gN5OXL5bexOGYvqeV3VezNpi5MYjvElXb2rlI=
+X-Received: by 2002:a37:414a:: with SMTP id o71mr1495469qka.141.1588215068093;
+ Wed, 29 Apr 2020 19:51:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+References: <1588079622-423774-1-git-send-email-wubo40@huawei.com>
+ <e89bd817c69422c85f1945041dd83fbe8d534805.camel@kernel.org> <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
+In-Reply-To: <6c99072a-f92b-b7e8-9aef-509d1a9ee985@huawei.com>
+From:   "Yan, Zheng" <ukernel@gmail.com>
+Date:   Thu, 30 Apr 2020 10:50:57 +0800
+Message-ID: <CAAM7YA=OU2jJ9F_p1fAknaxZCDWMY7w9yiRE0z0uqxDNYPG5Mg@mail.gmail.com>
+Subject: Re: [PATCH V2] fs/ceph:fix double unlock in handle_cap_export()
+To:     Wu Bo <wubo40@huawei.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        liuzhiqiang26@huawei.com, linfeilong@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On Wed, Apr 29, 2020 at 8:49 AM Wu Bo <wubo40@huawei.com> wrote:
+>
+> On 2020/4/28 22:48, Jeff Layton wrote:
+> > On Tue, 2020-04-28 at 21:13 +0800, Wu Bo wrote:
+> >> if the ceph_mdsc_open_export_target_session() return fails,
+> >> should add a lock to avoid twice unlocking.
+> >> Because the lock will be released at the retry or out_unlock tag.
+> >>
+> >
+> > The problem looks real, but...
+> >
+> >> --
+> >> v1 -> v2:
+> >> add spin_lock(&ci->i_ceph_lock) before goto out_unlock tag.
+> >>
+> >> Signed-off-by: Wu Bo <wubo40@huawei.com>
+> >> ---
+> >>   fs/ceph/caps.c | 27 +++++++++++++++------------
+> >>   1 file changed, 15 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> >> index 185db76..414c0e2 100644
+> >> --- a/fs/ceph/caps.c
+> >> +++ b/fs/ceph/caps.c
+> >> @@ -3731,22 +3731,25 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+> >>
+> >>      /* open target session */
+> >>      tsession = ceph_mdsc_open_export_target_session(mdsc, target);
+> >> -    if (!IS_ERR(tsession)) {
+> >> -            if (mds > target) {
+> >> -                    mutex_lock(&session->s_mutex);
+> >> -                    mutex_lock_nested(&tsession->s_mutex,
+> >> -                                      SINGLE_DEPTH_NESTING);
+> >> -            } else {
+> >> -                    mutex_lock(&tsession->s_mutex);
+> >> -                    mutex_lock_nested(&session->s_mutex,
+> >> -                                      SINGLE_DEPTH_NESTING);
+> >> -            }
+> >> -            new_cap = ceph_get_cap(mdsc, NULL);
+> >> -    } else {
+> >> +    if (IS_ERR(tsession)) {
+> >>              WARN_ON(1);
+> >>              tsession = NULL;
+> >>              target = -1;
+> >> +            mutex_lock(&session->s_mutex);
+> >> +            spin_lock(&ci->i_ceph_lock);
+> >> +            goto out_unlock;
+> >
+> > Why did you make this case goto out_unlock instead of retrying as it did
+> > before?
+> >
+>
+> If the problem occurs, target = -1, and goto retry lable, you need to
+> call __get_cap_for_mds() or even call __ceph_remove_cap(), and then jump
+> to out_unlock lable. All I think is unnecessary, goto out_unlock instead
+> of retrying directly.
+>
 
-fs/dlm/rcom.c:566:2-3: Unneeded semicolon
+__ceph_remove_cap() must be called even if opening target session
+failed. I think adding a mutex_lock(&session->s_mutex) to the
+IS_ERR(tsession) block should be enough.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- fs/dlm/rcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dlm/rcom.c b/fs/dlm/rcom.c
-index e3d9f72..4daf5dc 100644
---- a/fs/dlm/rcom.c
-+++ b/fs/dlm/rcom.c
-@@ -563,7 +563,7 @@ void dlm_receive_rcom(struct dlm_ls *ls, struct dlm_rcom *rc, int nodeid)
- 		lock = 1;
- 		reply = 1;
- 		break;
--	};
-+	}
- 
- 	spin_lock(&ls->ls_recover_lock);
- 	status = ls->ls_recover_status;
--- 
-2.6.2
-
+> Thanks.
+> Wu Bo
+>
+> >> +    }
+> >> +
+> >> +    if (mds > target) {
+> >> +            mutex_lock(&session->s_mutex);
+> >> +            mutex_lock_nested(&tsession->s_mutex,
+> >> +                                    SINGLE_DEPTH_NESTING);
+> >> +    } else {
+> >> +            mutex_lock(&tsession->s_mutex);
+> >> +            mutex_lock_nested(&session->s_mutex,
+> >> +                                    SINGLE_DEPTH_NESTING);
+> >>      }
+> >> +    new_cap = ceph_get_cap(mdsc, NULL);
+> >>      goto retry;
+> >>
+> >>   out_unlock:
+> >
+>
+>
