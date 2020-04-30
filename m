@@ -2,132 +2,88 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8668C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE5EC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2F20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:58:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oC6w8QwR"
+	by mail.kernel.org (Postfix) with ESMTP id 402AF24DD1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgD3K6o (ORCPT
+        id S1726799AbgD3LAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:58:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52057 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgD3K6o (ORCPT
+        Thu, 30 Apr 2020 07:00:46 -0400
+Received: from m176148.mail.qiye.163.com ([59.111.176.148]:4973 "EHLO
+        m176148.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgD3LAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:58:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588244323; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=za6HroLULClL4klxf9rlWjn/dFf4z8nu70MmHfSuj6U=; b=oC6w8QwRDsOF4vkajidY4nTaxh2D0WhqpmFLd3lhwAQcrV0xyrU5KKooM+ivThosEOc7OZa+
- Z6UaP3TDN/smRDc4Kjxu1WkxgFIvxtPIeTWTCoTKoFme6Gnc/HCT7CMq5uPYLA6q7UNV+IFO
- JyfhVc0XzzzjOzNOxrf86H0dE6k=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaaaf63.7f19c4f07b58-smtp-out-n04;
- Thu, 30 Apr 2020 10:58:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0669FC432C2; Thu, 30 Apr 2020 10:58:43 +0000 (UTC)
-Received: from sayalil-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sayalil)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E8DBC433CB;
-        Thu, 30 Apr 2020 10:58:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E8DBC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
-From:   Sayali Lokhande <sayalil@codeaurora.org>
-To:     jaegeuk@kernel.org, yuchao0@huawei.com,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     stummala@codeaurora.org, linux-kernel@vger.kernel.org,
-        Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
-Date:   Thu, 30 Apr 2020 16:28:29 +0530
-Message-Id: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 Apr 2020 07:00:46 -0400
+Received: from vivo.com (wm-8.qy.internal [127.0.0.1])
+        by m176148.mail.qiye.163.com (Hmail) with ESMTP id B636B1A41B7;
+        Thu, 30 Apr 2020 19:00:11 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AO2AmAAQCPm7TNcK3aT264ov.3.1588244411605.Hmail.bernard@vivo.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gZHJtL3JhZGVvbjogY2xlYW51cCBjb2Rpbmcgc3R5bGUgYSBiaXQ=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <ae65a955251bd43ac71b7a162320bbc1fe220a67.camel@perches.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 30 Apr 2020 19:00:11 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Thu, 30 Apr 2020 19:00:11 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVITktCQkJDSElKTkhISVlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMT05IQ0hKQkpIN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6NEk6Fjo6KjgrFkwvNRgwSBovSU1PFA1VSFVKTkNDSU9PT0pKQ0tLVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBT01DTjcG
+X-HM-Tid: 0a71cabe75699394kuwsb636b1a41b7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There could be a scenario where f2fs_sync_node_pages gets
-called during checkpoint, which in turn tries to flush
-inline data and calls iput(). This results in deadlock as
-iput() tries to hold cp_rwsem, which is already held at the
-beginning by checkpoint->block_operations().
-
-Call stack :
-
-Thread A		Thread B
-f2fs_write_checkpoint()
-- block_operations(sbi)
- - f2fs_lock_all(sbi);
-  - down_write(&sbi->cp_rwsem);
-
-                        - open()
-                         - igrab()
-                        - write() write inline data
-                        - unlink()
-- f2fs_sync_node_pages()
- - if (is_inline_node(page))
-  - flush_inline_data()
-   - ilookup()
-     page = f2fs_pagecache_get_page()
-     if (!page)
-      goto iput_out;
-     iput_out:
-			-close()
-			-iput()
-       iput(inode);
-       - f2fs_evict_inode()
-        - f2fs_truncate_blocks()
-         - f2fs_lock_op()
-           - down_read(&sbi->cp_rwsem);
-
-Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
----
- fs/f2fs/checkpoint.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 5ba649e..97b6378 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1219,21 +1219,19 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		goto retry_flush_quotas;
- 	}
- 
--retry_flush_nodes:
- 	down_write(&sbi->node_write);
- 
- 	if (get_pages(sbi, F2FS_DIRTY_NODES)) {
- 		up_write(&sbi->node_write);
-+		up_write(&sbi->node_change);
-+		f2fs_unlock_all(sbi);
- 		atomic_inc(&sbi->wb_sync_req[NODE]);
- 		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
- 		atomic_dec(&sbi->wb_sync_req[NODE]);
--		if (err) {
--			up_write(&sbi->node_change);
--			f2fs_unlock_all(sbi);
-+		if (err)
- 			goto out;
--		}
- 		cond_resched();
--		goto retry_flush_nodes;
-+		goto retry_flush_quotas;
- 	}
- 
- 	/*
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cgrlj5Hku7bkurrvvJpKb2UgUGVyY2hlcyA8am9lQHBlcmNoZXMuY29tPgrlj5HpgIHml6XmnJ/v
+vJoyMDIwLTA0LTI3IDAxOjUzOjA2CuaUtuS7tuS6uu+8miJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hy
+aXN0aWFuLmtvZW5pZ0BhbWQuY29tPixCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+LEFs
+ZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbT4sIkRhdmlkIChDaHVuTWluZykg
+WmhvdSIgPERhdmlkMS5aaG91QGFtZC5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5p
+ZT4sRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZyxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnLGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmcK5oqE6YCB5Lq677yab3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20K5Li76aKY
+77yaUmU6IFtQQVRDSF0gZHJtL3JhZGVvbjogY2xlYW51cCBjb2Rpbmcgc3R5bGUgYSBiaXQ+T24g
+U3VuLCAyMDIwLTA0LTI2IGF0IDE1OjE4ICswMjAwLCBDaHJpc3RpYW4gS8O2bmlnIHdyb3RlOgo+
+PiBBbSAyNi4wNC4yMCB1bSAxNToxMiBzY2hyaWViIEJlcm5hcmQgWmhhbzoKPj4gPiBNYXliZSBu
+byBuZWVkIHRvIGNoZWNrIHdzIGJlZm9yZSBrbWFsbG9jLCBrbWFsbG9jIHdpbGwgY2hlY2sKPj4g
+PiBpdHNlbGYsIGttYWxsb2NgcyBsb2dpYyBpcyBpZiBwdHIgaXMgTlVMTCwga21hbGxvYyB3aWxs
+IGp1c3QKPj4gPiByZXR1cm4KPj4gPiAKPj4gPiBTaWduZWQtb2ZmLWJ5OiBCZXJuYXJkIFpoYW8g
+PGJlcm5hcmRAdml2by5jb20+Cj4+IAo+PiBSZXZpZXdlZC1ieTogQ2hyaXN0aWFuIEvDtm5pZyA8
+Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPgo+PiAKPj4gSSdtIHdvbmRlcmluZyB3aHkgdGhlIGF1
+dG9tYXRlZCBzY3JpcHRzIGhhdmVuJ3QgZm91bmQgdGhhdCBvbmUgYmVmb3JlLgo+Cj5iZWNhdXNl
+IHRoaXMgcGF0dGVybiBpcwo+Cj4JaWYgKGZvbykKPgkJa2ZyZWUoYmFyKTsKPgo+YW5kIHRoZSBw
+YXR0ZXJuIGxvb2tlZCBmb3IgaXM6Cj4KPglpZiAoZm9vKQo+CQlrZnJlZShmb28pOwo+Cj4+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yYWRlb24vYXRvbS5jIGIvZHJpdmVycy9ncHUv
+ZHJtL3JhZGVvbi9hdG9tLmMKPltdCj4+ID4gQEAgLTEyMTEsOCArMTIxMSw3IEBAIHN0YXRpYyBp
+bnQgYXRvbV9leGVjdXRlX3RhYmxlX2xvY2tlZChzdHJ1Y3QgYXRvbV9jb250ZXh0ICpjdHgsIGlu
+dCBpbmRleCwgdWludDMyCj4+ID4gICAJU0RFQlVHKCI8PFxuIik7Cj4+ID4gICAKPj4gPiAgIGZy
+ZWU6Cj4+ID4gLQlpZiAod3MpCj4+ID4gLQkJa2ZyZWUoZWN0eC53cyk7Cj4+ID4gKwlrZnJlZShl
+Y3R4LndzKTsKPj4gPiAgIAlyZXR1cm4gcmV0Owo+PiA+ICAgfQo+Cj5JJ20gd29uZGVyaW5nIGlm
+IHRoaXMgcmVtb3ZhbCBpcyBjb3JyZWN0IGFzIHRoZSBmdW5jdGlvbgo+aXMgbmFtZWQgX2xvY2tl
+ZCBhbmQgaXQgbWF5IGJlIHJlY3Vyc2l2ZSBvciBjYWxsZWQgdW5kZXIKPnNvbWUgZXh0ZXJuYWwg
+bG9jay4KPgpIaQpJIGFtIGEgbGl0dGxlIGNvbmZ1c2VkIGFib3V0IHRoaXMuIEkgdW5kZXJzdGFu
+ZCB0aGF0IHRoZSBjYWxsZXIgZ3VhcmFudGVlcyB0aGUgbG9jayBwcm90ZWN0aW9uCnRoYXQgd2Ug
+d2lsbCBub3QgcmVsZWFzZSB0aGUgd3JvbmcgcG9pbnRlci4gQW5kIHRoZSBOVUxMIGNoZWNrIGlz
+IHRoZSBzYW1lIHdpdGggdGhlIGZpcnN0IGNoZWNrIGluIGtmcmVlPwpNYXliZSB3ZSBkbyBub3Qg
+bmVlZCBjaGVjayB0d2ljaC4KClJlZ2FyZHMsCkJlcm5hcmQKCg0KDQo=
