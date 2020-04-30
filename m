@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDACC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8BBC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC8120873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4C02063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255846;
-	bh=KwvOtP+4R0a2cE5+I9etc0/2e14g3dLBY2UduyDPhZo=;
+	s=default; t=1588255850;
+	bh=dCReHOxYxOTh3PI23Yj+n0lzVjU5bcXojq6bDVitLKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gy2ujlW1TXZTsi8/CM9pBEjJIjrA79IKfwyP9JSLlsjJZtxNTFHIaooMQEptau78L
-	 8MohVSPMvn1z+IE7nSUZH5ebZJtSwxT5ZH/kNuyMoW28opRxHvvbIbrWVqmZFjiU0+
-	 zNFWncThy6E/qOZM4PNn1IWUeg4GwiE4hyz06b54=
+	b=WqLCpDKObWqaQelMEkHTD0GLe6vMkvv+ppPRf6qBeNsff3McRKYVqBQSHI+tWZ7N4
+	 jp6hesla+jsQwFIoGnk7o6Hy24FiTsQK8i6ohZAnTnjowCA2leuWorBA3terPcdqZA
+	 SxZWZ3rqwrfVNeKm7tSZZ2BMggVxWfCrI0ZJKZZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgD3Nve (ORCPT
+        id S1728595AbgD3OKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgD3NvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:20 -0400
+        id S1728096AbgD3Nve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 329CA20774;
-        Thu, 30 Apr 2020 13:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 454DD24965;
+        Thu, 30 Apr 2020 13:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254679;
-        bh=KwvOtP+4R0a2cE5+I9etc0/2e14g3dLBY2UduyDPhZo=;
+        s=default; t=1588254693;
+        bh=dCReHOxYxOTh3PI23Yj+n0lzVjU5bcXojq6bDVitLKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xj6KlA/smrZDRdUtHDIGWcb//4W5Dk13ZGYT3PmZSL/kW1d8KNqG0ZGoIdxdO6w5
-         Uu8okiRpKyH3/g41qxXfRzqJTZn3+MpBI019AKJlk8HH1a3Jjkh4xIQFllPlf2SD17
-         26LdF6KABFKsVY9AwEkcu5S1NbsSSBmPxWv9xWLU=
+        b=mx7Az5uYb152ffy9c63bwFFrnQWF2zm7a5F5LKW53AoFMkQDBK/sX53SyJWnV/9wW
+         rNjuZ1lJ3yXnHSEVtwoNFLnK/U/j05clmmlY0HlQuDc99+Rq4yoAZomYuPKEG5eSJt
+         celbLtegTJPAnZGAJpjhRxU/Y/3CzgGw68vcsato=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.6 31/79] ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
-Date:   Thu, 30 Apr 2020 09:49:55 -0400
-Message-Id: <20200430135043.19851-31-sashal@kernel.org>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 43/79] netfilter: nat: fix error handling upon registering inet hook
+Date:   Thu, 30 Apr 2020 09:50:07 -0400
+Message-Id: <20200430135043.19851-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,44 +64,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Hillf Danton <hdanton@sina.com>
 
-[ Upstream commit 326b509238171d37402dbe308e154cc234ed1960 ]
+[ Upstream commit b4faef1739dd1f3b3981b8bf173a2266ea86b1eb ]
 
-If we don't find any pcm, pcm will point at address at an offset from
-the the list head and not a meaningful structure. Fix this by returning
-correct pcm if found and NULL if not. Found with coccinelle.
+A case of warning was reported by syzbot.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20200415162849.308-1-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 19934 at net/netfilter/nf_nat_core.c:1106
+nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 19934 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
+Code: ff df 48 c1 ea 03 80 3c 02 00 75 75 48 8b 44 24 10 4c 89 ef 48 c7 00 00 00 00 00 e8 e8 f8 53 fb e9 4d fe ff ff e8 ee 9c 16 fb <0f> 0b e9 41 fe ff ff e8 e2 45 54 fb e9 b5 fd ff ff 48 8b 7c 24 20
+RSP: 0018:ffffc90005487208 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: 0000000000000004 RCX: ffffc9001444a000
+RDX: 0000000000040000 RSI: ffffffff865c94a2 RDI: 0000000000000005
+RBP: ffff88808b5cf000 R08: ffff8880a2620140 R09: fffffbfff14bcd79
+R10: ffffc90005487208 R11: fffffbfff14bcd78 R12: 0000000000000000
+R13: 0000000000000001 R14: 0000000000000001 R15: 0000000000000000
+ nf_nat_ipv6_unregister_fn net/netfilter/nf_nat_proto.c:1017 [inline]
+ nf_nat_inet_register_fn net/netfilter/nf_nat_proto.c:1038 [inline]
+ nf_nat_inet_register_fn+0xfc/0x140 net/netfilter/nf_nat_proto.c:1023
+ nf_tables_register_hook net/netfilter/nf_tables_api.c:224 [inline]
+ nf_tables_addchain.constprop.0+0x82e/0x13c0 net/netfilter/nf_tables_api.c:1981
+ nf_tables_newchain+0xf68/0x16a0 net/netfilter/nf_tables_api.c:2235
+ nfnetlink_rcv_batch+0x83a/0x1610 net/netfilter/nfnetlink.c:433
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+and to quiesce it, unregister NFPROTO_IPV6 hook instead of NFPROTO_INET
+in case of failing to register NFPROTO_IPV4 hook.
+
+Reported-by: syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>
+Fixes: d164385ec572 ("netfilter: nat: add inet family nat support")
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nf_nat_proto.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index e6558475e006d..f0f689ddbefe8 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -142,14 +142,14 @@ static struct hdac_hdmi_pcm *
- hdac_hdmi_get_pcm_from_cvt(struct hdac_hdmi_priv *hdmi,
- 			   struct hdac_hdmi_cvt *cvt)
- {
--	struct hdac_hdmi_pcm *pcm = NULL;
-+	struct hdac_hdmi_pcm *pcm;
- 
- 	list_for_each_entry(pcm, &hdmi->pcm_list, head) {
- 		if (pcm->cvt == cvt)
--			break;
-+			return pcm;
- 	}
- 
--	return pcm;
-+	return NULL;
+diff --git a/net/netfilter/nf_nat_proto.c b/net/netfilter/nf_nat_proto.c
+index 64eedc17037ad..3d816a1e5442e 100644
+--- a/net/netfilter/nf_nat_proto.c
++++ b/net/netfilter/nf_nat_proto.c
+@@ -1035,8 +1035,8 @@ int nf_nat_inet_register_fn(struct net *net, const struct nf_hook_ops *ops)
+ 	ret = nf_nat_register_fn(net, NFPROTO_IPV4, ops, nf_nat_ipv4_ops,
+ 				 ARRAY_SIZE(nf_nat_ipv4_ops));
+ 	if (ret)
+-		nf_nat_ipv6_unregister_fn(net, ops);
+-
++		nf_nat_unregister_fn(net, NFPROTO_IPV6, ops,
++					ARRAY_SIZE(nf_nat_ipv6_ops));
+ 	return ret;
  }
- 
- static void hdac_hdmi_jack_report(struct hdac_hdmi_pcm *pcm,
+ EXPORT_SYMBOL_GPL(nf_nat_inet_register_fn);
 -- 
 2.20.1
 
