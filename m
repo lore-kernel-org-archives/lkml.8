@@ -2,88 +2,113 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE23C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76F8C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3276B2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942CE2072A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:47:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nbxQst+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgD3Vog (ORCPT
+        id S1727044AbgD3Vr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:44:36 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:60459 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgD3Vof (ORCPT
+        Thu, 30 Apr 2020 17:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726336AbgD3Vr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:44:35 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MJEpp-1jimlN0NSd-00Khm9; Thu, 30 Apr 2020 23:44:34 +0200
-Received: by mail-qk1-f178.google.com with SMTP id s9so4748399qkm.6;
-        Thu, 30 Apr 2020 14:44:33 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZghjhx/xayLprs8SLRh1slG58kMxKQ2L1E4Zrvs+TJooOskv55
-        wYYqOHCuTuBgWS+b0WwgUoKO/19OG/B9CKSQ/MU=
-X-Google-Smtp-Source: APiQypJG61UgX2jVL3xX+glRo4MMKBEeabgc3GqvItqPEIiPOYIHTXVB0ewjzbQUwQBm4qyJilYhp6OqGHyHSKdeL8Q=
-X-Received: by 2002:a37:63d0:: with SMTP id x199mr594389qkb.3.1588283072801;
- Thu, 30 Apr 2020 14:44:32 -0700 (PDT)
+        Thu, 30 Apr 2020 17:47:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA16C035494;
+        Thu, 30 Apr 2020 14:47:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x2so569625pfx.7;
+        Thu, 30 Apr 2020 14:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VEoKjaxo4U/H7kyegfaqsoRet1MtFuSswC0UEQ4BGR4=;
+        b=nbxQst+Vtu3ZTqPSC6mNSEZiYn4TaBwPFH1Cm9loSUDn0Cx4uD9L6qTjQJW2wDaBpe
+         kOdXjfwrvhcDUIu4FmnufwEAmTUW/ojO1BI7gdzDrhOivb3PeoZLBPImO19WiedKgIOc
+         PY8VxGUt+gb82ydshSG3lAwaux9OPL47OB3tXOLykmO6eeZ3tAi0FPitnsfVNNVfxjjH
+         xvs1o9S3M4wWVV4vs1/kEr234iwPmYJixT5ZIL34ivF9hTIXf7DVbX+alwr2+h4OhtbS
+         DCNMA0eTr4zcCzsJB+3bY9JJUxWQ8IaCBmVsYr3jKjJxyo22EzkCG1e7e/7+GmGyYnFw
+         AvTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=VEoKjaxo4U/H7kyegfaqsoRet1MtFuSswC0UEQ4BGR4=;
+        b=U1BK4Fe0UebhUvd+M04VC9snPMp5dfRQNMKbcRO1qOtVus5MRyZqzGzDZOfPG1Q6Fz
+         EQ6G4yZIt/gdWc5Cua3KiNMgSKyInemub3ugHCmhDgazlzp7a1aqdJMJcRybGesrgB15
+         P+l5mNLsaJSVNlhDKBAKagIrjjsESCQdh1dfphXc2O7+szsaM/DPKpifeL5zfmKYYKDb
+         Bc57YQapfaL1YxmyTsiOVzUb+YaHK6EyJVsuIoLHDh1WFmlmqcZ0KiWgXadh22iWxBjV
+         DjCzK6R9OrLSZ+rn05nF9W9dUDx3DGV6U32smbbAZf6Qaf9wZMDv6kDxQt3RhF82Oecr
+         KFTQ==
+X-Gm-Message-State: AGi0Puar0hhqEhXF7JdcEZq7ceBMBg3Yuhg/jK6orrnfxBr9oJS+vmpI
+        kIHM2Vzqm0j+6wmcBLFFVWs=
+X-Google-Smtp-Source: APiQypJLBHCI0Je+tTdRicNw26y1+Ew484sXuohXU4E0SDVCVIZZQM+F5FstoyxkeZxW8D7rvXbsmg==
+X-Received: by 2002:a63:da02:: with SMTP id c2mr1027206pgh.22.1588283247850;
+        Thu, 30 Apr 2020 14:47:27 -0700 (PDT)
+Received: from sultan-box.localdomain ([104.200.129.62])
+        by smtp.gmail.com with ESMTPSA id c2sm625854pfp.118.2020.04.30.14.47.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 14:47:26 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>, stable@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915: Don't enable WaIncreaseLatencyIPCEnabled when IPC is disabled
+Date:   Thu, 30 Apr 2020 14:46:54 -0700
+Message-Id: <20200430214654.51314-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200430213101.135134-1-arnd@arndb.de> <20200430213101.135134-5-arnd@arndb.de>
- <49831bca-b9cf-4b9a-1a60-f4289e9c83c0@embeddedor.com>
-In-Reply-To: <49831bca-b9cf-4b9a-1a60-f4289e9c83c0@embeddedor.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Apr 2020 23:44:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0y0JTrsjFx1XRh7A6YdSZ=aJ1V3-Eajfsbz3HtQOEu7A@mail.gmail.com>
-Message-ID: <CAK8P3a0y0JTrsjFx1XRh7A6YdSZ=aJ1V3-Eajfsbz3HtQOEu7A@mail.gmail.com>
-Subject: Re: [PATCH 04/15] ath10k: fix gcc-10 zero-length-bounds warnings
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Kazior <michal.kazior@tieto.com>,
-        Kalle Valo <kvalo@qca.qualcomm.com>,
-        Maharaja Kennadyrajan <mkenna@codeaurora.org>,
-        Wen Gong <wgong@codeaurora.org>,
-        Erik Stromdahl <erik.stromdahl@gmail.com>,
-        ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:UzqWa1uTx+8qlS57U8rov8c8CfYZsP5wisVZbCwro749WkrbXdK
- 0cV6I4ErTSyxR50khFsv5dK2Qa5SPh+/eDNZLi/Az7qv6cPL3BM1YfmQ6fX+460XHHB33Vj
- I+hvKmYefNAW1DnDXSpYy3qtOp6BcXt6qNdNKgt3WB31bXgVC2X/V55SJg5IVlhwktVcPvn
- gMS2w0/Rpd0FDqaHt1Lcw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AffdSqvvlvY=:2+GBVTlK354dDFmmZnrEkl
- M5pB+N7FiY+DIwhiGS/NIZS4Q9MEIhO7sgPEC6R+iz5kPSvJAJ8FPfNf195oLq2reuRyd1GrD
- hijlBApvjh//G2bw+HeRCmcslf7QCWtJzg85Wbmx8SQTCBtbjFlnjQCzvZDQ6BtxO9U4qggTA
- 6HNud3R4LmHMN7mK1yVCNFfUUgtGglT8n0oxfBTLluh3kr90cta/XH9rayjvEQ7TgkmYyn4G7
- 6nU8q8dZ4A6YkgpRvyNVuCce4ONFlfHfAQ34cY/o24kLYVe9vyi1nDKorzSjJio6+FQC6auDw
- ou6xFlch0fN/xniowavN1QR2VJ3nvr1CtctWiFqWjOaGir1QXVgNoVvHJ9TxZwNu3LrcUMdz2
- 4aBh7kttMZWJMLPijwHl4BAO+1G1BrHmyJ/FF1NHARdLVU4z2ffZI1mvu1Hfh19j5t6Qq6S41
- KEa7adNCtIgI42364dQA3Y4iOrdlqyr//oIA4Ua3m1rG35s58MgER3fvQ2liTGJmEzZXzMtgo
- xSNrkaS407eMaktZfdVjgwRXhrfcBd0sRguIOghxGkBWb4/1p0UZgOkQbv1yBVzBQyqbn2iS3
- I3z/C3HjgQ85rnCJogdO7EpfHhi+VWr/Dbdgkh6Capx0tPKqQfMPp2rB+MCpq2xqfx3M8QNsr
- DlHWUdEkZ5aPKY5dhmVnJo50BN5dSt9AVk/wwMkKUql04VrY41mglfxMuVF1OwvZsTOKt/yBs
- gzDpH2dV6uyB4j32Sn2KXv6X4lV3t0Wh+PYQItub43mcAaTx6mXJ3p6UvR93ZCl8AqEhXa2Hm
- X2j3c5qoM9H1RG5xbeLdY0k2+9QZMgcR+UUwIluqSgWjKes5IM=
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:41 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
-> On 4/30/20 16:30, Arnd Bergmann wrote:
-> > gcc-10 started warning about out-of-bounds access for zero-length
-> > arrays:
-> The treewide patch is an experimental change and, as this change only applies
-> to my -next tree, I will carry this patch in it, so other people don't have
-> to worry about this at all.
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-Ok, thanks!
+In commit 5a7d202b1574, a logical AND was erroneously changed to an OR,
+causing WaIncreaseLatencyIPCEnabled to be enabled unconditionally for
+kabylake and coffeelake, even when IPC is disabled. Fix the logic so
+that WaIncreaseLatencyIPCEnabled is only used when IPC is enabled.
 
-       Arnd
+Fixes: 5a7d202b1574 ("drm/i915: Drop WaIncreaseLatencyIPCEnabled/1140 for cnl")
+Cc: stable@vger.kernel.org # 5.3.x+
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+ drivers/gpu/drm/i915/intel_pm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+index 8375054ba27d..a52986a9e7a6 100644
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -4992,7 +4992,7 @@ static void skl_compute_plane_wm(const struct intel_crtc_state *crtc_state,
+ 	 * WaIncreaseLatencyIPCEnabled: kbl,cfl
+ 	 * Display WA #1141: kbl,cfl
+ 	 */
+-	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) ||
++	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) &&
+ 	    dev_priv->ipc_enabled)
+ 		latency += 4;
+ 
+-- 
+2.26.2
+
