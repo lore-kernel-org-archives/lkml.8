@@ -2,131 +2,138 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A31C8300D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B55C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A3F20757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B232078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jh9fqjv2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ljs9rQYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgD3LIL (ORCPT
+        id S1726790AbgD3LKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3LIL (ORCPT
+        Thu, 30 Apr 2020 07:10:19 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36476 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgD3LKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:08:11 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30DE4C035494;
-        Thu, 30 Apr 2020 04:08:11 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so2704728pfc.12;
-        Thu, 30 Apr 2020 04:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3YzQNid97kqBggOZQ18C1LhT5mfiq53k4mzAIfsUnLE=;
-        b=Jh9fqjv2seVUJxCv/tidEAfVPLwykN/tjVlbnkkjoSUllix6GJx0sA1bkBpuDMvlg8
-         Q26m7CUN6bKkMgtjL86m1BCF8Gd8EvabNZKCXtk77FTpf/A0sJDw9TKOoYhv7HrHcdJ2
-         pG4VMzVF899pxXlvXpLkrpZ0IJmjVU7flM6DhEdsEqcahH3ACQD09mK+PVh3Vva4jHFy
-         vzZ/1NlcqM9bMNbr78wcol1D//PW0CV16tqheLsPDJR2f57Ab+trEX4DN2eJi9RugWY8
-         +7VKtJ+PRVH4wewh/r0X4LgLhMNkxE52CpT0xWSVGt5pSb+QFFkj46k6hYQPtXwxU8hX
-         GG/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3YzQNid97kqBggOZQ18C1LhT5mfiq53k4mzAIfsUnLE=;
-        b=ObrWDDR+WW4xbw2vSbnPzz55ywjXzzWZtBjRSk1y3F8BcOjK49wllnay9jPjvztKKG
-         wO2mviefs3xTwCK8T6xzSu/Z/Gq08LM6e+Mfn1wcI5gWe5g+GEYNMATC7OyCEQ9YCPOF
-         hK9JqRv/l0WQmrm7VTGsE12PREVsd5FN3ybbgUPHt1QXxp2kACSVADsXv18TjKLSUflN
-         B97qHz9J5ZflIY06XiSDhn3KP1x3Z4IVOJOWi8Vd6yt2PQGGyPaps0crA2vU31Jn5G9m
-         t0fJBYoi2P/mtx+mc6t6LQu1UiZ407Ijg6ynsUhNy3oQ4QWIxDpgk/f7jzQUKGtG4UIE
-         Inig==
-X-Gm-Message-State: AGi0PuYqgxFE4b5m2/fkwfzJ5fHKDwLSnCCFZeAgtBjM3SFFoO6vgN+3
-        VkxepNmlECoAqYtd+03Sa8GwCSNS34k/cuDQShPlZCgW
-X-Google-Smtp-Source: APiQypKoZgytgfpRIRcYTrUfB53T910MQX77K+M78+bkpG732U7uQjhCU+J1dF6vFKP8u87Fp6FhwxUKKz1hRMXWsJw=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr3119423pfr.36.1588244890479;
- Thu, 30 Apr 2020 04:08:10 -0700 (PDT)
+        Thu, 30 Apr 2020 07:10:19 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C30D8321;
+        Thu, 30 Apr 2020 13:10:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588245015;
+        bh=vzoIGymqMDr4/e03h5JjVx/KZIHtnmQaHGQ9XNk5uK4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ljs9rQYOPJA0aSO47jOEwAPJoY6ZuSjAu026tsgjxuc9vkCtysBW18J5kqOZAxv72
+         be88In7eRKa+ZDqolmSVj2xqY9pmLpNNRDoXUZDFyyppR6Bo/ih1syTJl3ZwYpk/tj
+         hLxDAnk+T3/s3GvhNMjl9JNM0mr+DLiTbnP6FU+k=
+Date:   Thu, 30 Apr 2020 14:10:14 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
+Message-ID: <20200430111014.GD5856@pendragon.ideasonboard.com>
+References: <20200414200151.80089-1-daniel@qtec.com>
+ <20200414200151.80089-2-daniel@qtec.com>
+ <20200430094233.GE867@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-References: <20200415162030.16414-1-sravanhome@gmail.com> <20200415162030.16414-3-sravanhome@gmail.com>
- <20200424071822.GM3612@dell> <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
- <20200424093720.GA3542@dell> <864eb6ad-a605-c0a0-c3e7-23c0c70f5ede@gmail.com>
- <20200424105319.GD8414@dell> <c62cd5f2-6d82-0a2a-5ee5-a3e99e188a05@gmail.com>
- <20200427085149.GF3559@dell> <6063ad6e-444c-b905-b858-d8f94d700748@gmail.com> <4585179d-826b-6240-38a2-18fe757bc810@gmail.com>
-In-Reply-To: <4585179d-826b-6240-38a2-18fe757bc810@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Apr 2020 14:07:59 +0300
-Message-ID: <CAHp75Vf_PUQdcOVdao0KUjiLapicMOFHK6f5+gf-bi-k6hVgkA@mail.gmail.com>
-Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430094233.GE867@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 1:39 PM saravanan sekar <sravanhome@gmail.com> wrote:
-> On 27/04/20 11:30 am, saravanan sekar wrote:
-> > On 27/04/20 10:51 am, Lee Jones wrote:
-> >> On Fri, 24 Apr 2020, saravanan sekar wrote:
-> >>> On 24/04/20 12:53 pm, Lee Jones wrote:
-> >>>> On Fri, 24 Apr 2020, saravanan sekar wrote:
-> >>>>> On 24/04/20 11:37 am, Lee Jones wrote:
-> >>>>>> On Fri, 24 Apr 2020, saravanan sekar wrote:
+Hello,
 
-...
+On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
+> Hi Daniel,
+> 
+> Thanks for the patchset.
+> 
+> I'm also cc'ing Laurent who I think could be interested in this one.
+> 
+> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
+> > Add min and max structures to the v4l2-subdev callback in order to allow
+> > the subdev to return a range of valid frame intervals.
+> > 
+> > This would operate similar to the struct v4l2_subdev_frame_size_enum and
+> > its max and min values for the width and the height. In this case, the
+> > possibility to return a frame interval range is added to the v4l2-subdev level
+> > whenever the v4l2 device operates in step-wise or continuous mode.
+> 
+> The current API only allows providing a list of enumerated values. That is
+> limiting indeed, especially on register list based sensor drivers where
+> vertical blanking is configurable.
+> 
+> I guess this could be extended to cover what V4L2, more or less. If we tell
+> it's a range, is it assumed to be contiguous? We don't have try operation
+> for the frame interval, but I guess set is good enough. The fraction is
+> probably best for TV standards but it's not what camera sensors natively
+> use. (But for a register list based driver, the established practice
+> remains to use frame interval.)
+> 
+> I'm also wondering the effect on existing user space; if a driver gives a
+> range, how will the existing programs work with such a driver?
+> 
+> I'd add an anonymous union with the interval field, the other field being
+> min_interval. Then the current applications would get the minimum interval
+> and still continue to function. I guess compilers are modern enough these
+> days we can have an anonymous union in the uAPI?
 
-> >>>>>> Then how about using 'simple-mfd' and 'syscon'?
-> >>>>>>
-> >>>>>> Then you can omit this driver completely.
-> >>>>> The exception is to support for non device tree platform as well,
-> >>>>> but I have
-> >>>>> tested only for ARM device tree platform.
-> >>>> Is that a reality though?
-> >>>>
-> >>>> How else do you see this realistically being registered?
-> >>>>
-> >>> I understand that acpi related device table are not covered here,
-> >>> well I
-> >>> don't have to platform to test so.
-> >>> If you ask me to cover acpi related table, I can do but hard to test.
-> >> I don't know of any reasons why syscon can't be used by ACPI.
-> >>
-> >> Please try to solve this issue using 'simple-mfd' and 'syscon'.
-> > Well the simple-mfd and syscon topic recommended by you when Device
-> > tree alone is used.
-> > I wounder still I receive review/improvements comments for this mfd
-> > patch and also another
-> > to omit this driver using simple-mfd (rework the series).
-> > Confused, not sure which is valid and will be accepted at the end.
->
-> I had look into syscon, as far my understanding syscon is supported only
-> for memory mapped IO. MP2629
-> device is over I2C bus, could you share your thought about syscon for
-> this device?
+We can discuss all this, but given patch 3/3 in this series, I think
+this isn't the right API :-) The sensor driver should not expose the
+frame interval enumeration API. It should instead expose control of the
+frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
+V4L2_CID_VBLANK.
 
-My understanding too, but I didn't dug into it.
-Something like general regmap support is missing (or I am missing the
-way how to pass it to syscon).
+> > Signed-off-by: Daniel Gomez <daniel@qtec.com>
+> > ---
+> >  include/uapi/linux/v4l2-subdev.h | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/uapi/linux/v4l2-subdev.h b/include/uapi/linux/v4l2-subdev.h
+> > index 03970ce30741..ee15393c58cd 100644
+> > --- a/include/uapi/linux/v4l2-subdev.h
+> > +++ b/include/uapi/linux/v4l2-subdev.h
+> > @@ -117,6 +117,8 @@ struct v4l2_subdev_frame_interval {
+> >   * @code: format code (MEDIA_BUS_FMT_ definitions)
+> >   * @width: frame width in pixels
+> >   * @height: frame height in pixels
+> > + * @min_interval: min frame interval in seconds
+> > + * @max_interval: max frame interval in seconds
+> >   * @interval: frame interval in seconds
+> >   * @which: format type (from enum v4l2_subdev_format_whence)
+> >   */
+> > @@ -126,9 +128,11 @@ struct v4l2_subdev_frame_interval_enum {
+> >  	__u32 code;
+> >  	__u32 width;
+> >  	__u32 height;
+> > +	struct v4l2_fract min_interval;
+> > +	struct v4l2_fract max_interval;
+> 
+> This changes the memory layout of the struct and breaks the ABI. Any new
+> fields in the struct may only replace reserved fields while the rest must
+> stay unchanged.
+> 
+> >  	struct v4l2_fract interval;
+> >  	__u32 which;
+> > -	__u32 reserved[8];
+> > +	__u32 reserved[4];
+> >  };
+> >  
+> >  /**
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+
+Laurent Pinchart
