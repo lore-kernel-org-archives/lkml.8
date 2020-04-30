@@ -2,217 +2,345 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2665FC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C34C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A3A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EA920757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:43:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7I7Q+7V"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oCcIzpj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgD3Ins (ORCPT
+        id S1727109AbgD3Iny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbgD3Inr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:43:47 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24BEC035494;
-        Thu, 30 Apr 2020 01:43:47 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id e18so1100052oot.9;
-        Thu, 30 Apr 2020 01:43:47 -0700 (PDT)
+        Thu, 30 Apr 2020 04:43:54 -0400
+Received: from mail-mw2nam10on2088.outbound.protection.outlook.com ([40.107.94.88]:6064
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726420AbgD3Inx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:43:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bVqjhxVLtiiBbnfQg29LliWknvSO4J+YiIhSQS56UbQefzZ2DzLZyQqh5+UNwOGVRHPmussgVpKdVVkks8sOYjeiSGTm5RgtrkPPrHjfAX1RRjvkDJhuJaYvDg7KRlidFXPrqoJI1eL9BqWvNoLAqHwgsaJPsiVnzuh6SxAu13+3B2CtqS23qEAMULYs2GiisKfx5KIgKGX7jal7oLtwDNpxxi5hgmbqvzxk4dRqmjl6Eq34lnpynzj+lZIvRWa5Cgeaz0bTxS+jx1VyoCuryYNDtS+vA0GEMJIxsTYXQl6/IFXSz1wI3jJB1nK3JsFH7Vvm8VhPAu3KqF2wEoBTQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2jLb5iLrusH1EUXdHjpvbBVaxCR+QjOausPk4SriTzc=;
+ b=BVy/ksvXUBscBO4wJfgW0Ib8M4jE+ZvUh9X5sJCDvrJisclI4kw4n3h4Gib3FnYYw9i6Yy05b+JHWFTQ/AXeDCrls5anGktEW5MeKIL5KmkB18fkkZM0vcZfjDcWt/K9STdo2k8h1G/7VFhwy2KCj2rTt+aMB6iAM5kEVKRL/9IrwUi7hwrCEHsFYcMvLUeHTyySwuY75xQgeLhUJWj0oe4u/76kka3ngFDFg0v8r5qMU2B32UUyHRMzpkh2PMQYT6m5HW9UeGQh1bk0XO0/NBne1tdSkZ9zZhRRne+pdfABTqWNSIt4WF8GFsJqF/bw52ttoDl+pEcr19iC8oFVQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RJfi8YEQRUQ7Nx9/zDtTwBKV3TKprwuNVW7KwyjiUoc=;
-        b=e7I7Q+7VKNBFCc1ou225/A0eOoID6/aWYUAFnRX/+iDZKw7DSHwIPwW1x5AgKniBbb
-         jjiRPiLT0bfCFJCEIeXzYQaLiByhMHFrojdlukrxCxJHfJvRxD2JLRwY0Kw4GcWzKgpv
-         KyJIdFjDrHQsaWD3gm7ISrflX9rpalM8JsR1CWNzYHpTtOI+KW0+JOQR8C+opcFQXjF6
-         S/c6OobDxj2DTU96pUr/bL0pQIjEijtQXxGdF8RHIG5kuPZ4fALdJeOBf6CUQYRwB8+l
-         wjZc0cjh7D9rXMdwkVPY5DweLztFSz83g67f1JnSombDq/ads5UK12j7sNeq5Hwuqqsr
-         8JFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RJfi8YEQRUQ7Nx9/zDtTwBKV3TKprwuNVW7KwyjiUoc=;
-        b=NuS8gXY6Li3+V9zsGtYMZSi0op4nTQ3hhTh3r5PBBGB4EtnQdrM3zmJpZwRGgtWmgP
-         7a/F/kxZthf//VK22wKK9N16gDDHIQPi5pckcuERksfL52liYnBTbvQP3FOYcL+nsnI/
-         4j7A3QMyJtOf7AcOIiyHhZ/da2bzjzCXKnRYCc9osLxsphTdzq/1oCj3O7uCr1161wUl
-         ZAeJDOyjFwvZZ2LavCLHOI8MfD503/hsaeVJbU3yc4XgQ+GnISlojgAWGgOoOm/JB/Gp
-         Ama9YJg43e/HB54dRwS+KUtH3PfVPDk7y3+DJaqelRt9MZREMMONI1Qgpc9cvOmdZs3Z
-         g+Zw==
-X-Gm-Message-State: AGi0PuYJDnujA47fVGTS/G9mR8GRcoY4kybaRf1h+rl5u+gXiUk0HsMa
-        C7LeYLKxRuYagRr+vT3GhHIUher0iStZtTp5XEk=
-X-Google-Smtp-Source: APiQypLSZyNqZBc6As1bQvkl0M72z9Bu+wI/WiD4xkyor99UzGV3HeSXzgXCRuS0Ua8uSVnQTYGN2BiezF0okRKwwuY=
-X-Received: by 2002:a4a:a209:: with SMTP id m9mr1879725ool.62.1588236226990;
- Thu, 30 Apr 2020 01:43:46 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2jLb5iLrusH1EUXdHjpvbBVaxCR+QjOausPk4SriTzc=;
+ b=oCcIzpj+mJt7+BCj54b44gZqFRcT3wrWu50UxEptSJ1MTpX1G9AS/VmoaxhJ4Z6BAc9c6KAqNTJ0OWc3h9ffL+MlUayS9kO05eBRhk0meb2Bk6nqLHYJkhykelB4tkpmKbVm2P51v+MfB+Q84qy62Unl5SNx/PiS0/gwX4Pfi0Q=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1883.namprd12.prod.outlook.com (2603:10b6:3:113::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2937.13; Thu, 30 Apr 2020 08:43:50 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
+ 08:43:50 +0000
+From:   Ashish Kalra <Ashish.Kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srutherford@google.com, rientjes@google.com,
+        venu.busireddy@oracle.com, brijesh.singh@amd.com
+Subject: [PATCH v7 09/18] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+Date:   Thu, 30 Apr 2020 08:43:40 +0000
+Message-Id: <4f4246c58ab1ee7e61b72b0ef0a3b023d7976803.1588234824.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR08CA0032.namprd08.prod.outlook.com
+ (2603:10b6:805:66::45) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-References: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1587666159-6035-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 30 Apr 2020 09:43:20 +0100
-Message-ID: <CA+V-a8u1rEF1DMAVkZ1=-d_MjLa_49X2Nny_VaEN0Y398GOJhw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/8] Add endpoint driver for R-Car PCIe controller
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN6PR08CA0032.namprd08.prod.outlook.com (2603:10b6:805:66::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:43:49 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 23cb389d-ad7f-4aa5-5b67-08d7ece29ae2
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1883:|DM5PR12MB1883:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18834D5AE97A99A5654CE39E8EAA0@DM5PR12MB1883.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 0389EDA07F
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(136003)(376002)(39860400002)(478600001)(86362001)(956004)(8936002)(26005)(2906002)(2616005)(6916009)(8676002)(36756003)(6486002)(7416002)(4326008)(16526019)(186003)(66574012)(7696005)(66476007)(5660300002)(66946007)(6666004)(52116002)(66556008)(316002)(136400200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cs4ONKTSZatzbWxtrFY3cOu1H2Tloa4Be1MFBHxVGvaLK36aprlcqemPb/5r5AEQk0aHFNUtfB3jvlcvBrJ/HGvJFWXW8bP11qz4yQVkTa2rV7iXIQoXpug6fczX7R+dcuHE5hgvnxZAG7x8CiaOMkUNM3Np/rYXE1BSuA42jga/5XYzZPEdP6R7yW8+9cvAtoaxAwqgNfLOyqFQwU3VpX5OzQBxmGg4ZmkOK6xBOjhu+KAMLoXtverJ61bDO//fRKT7oiTffwKubLTqTmE6haNCo3GN5YfdkIoEKHl03HEporgqErzNaYnz+YdIfCiK7/45cyeY8F7R4yCyCNgDdxWNof5yLy7+VRqhsdpuoTNJ2Ecb7VYrYmo1Y1apDvEhr3gdVTTHAPFHN6w4ThnwIhUrSydj7jrZQExoVrTGN7UXxL6rH/F5MlUtA7sVQudPkTifkBFz/1FrOHNVbzHWTo6LB15djqE/cwwUrUbITrON3S71A38qeYRxzhCcV739
+X-MS-Exchange-AntiSpam-MessageData: C8fcHq5PcQQiLAuzeFVfKgVhArk/79Rkj8gzx7Oxh/exkIDFkjXe0hIVdVDrE87bvUbCExym7FZtaAvEPtnr7iG2Ye7x7cxecDfpztV5DFNeXU7TTNPYaonjtQLS8MI6yC1BfUIN2I/3nu+ToN7y06WY2tDytOXmmuqvoay+n4gpiGwiDL6mlPe+hH2cX923UeY4360Qcz58QPMYAcozZ2881GtOKFvs2o/v4YB0roETD5E0okPgKd9KYRLkjHzCkP1N788i8OAAA2ZTgMLaqcPiDgz45PYnTqSvDoxv/GCGXs4Po79NbZyEfRRHCgZvaWGjAbfY8EgsKXKmxxzA6l8QyMqDeOiSVTwE0sThGXb+Q85xyVN4PLvemQPNOgMr+rGaTklmvOUXHM0Sx1BjhUX9gfsYmYxoQ96e5L33zymWJ6Itf2YgTQuacTBkyH5UfuYf856ER9X9Bj4f4We8zDOtuXwYZK6cS1+vWoFdAt5TLbi45Ekm7j+J3a+4bvDJPKKTEbLLdXp7P4rDmaOh9bkGn85zqBsYBJ0wNcd6ghIZ2zcDaaQbOhf3M5T5Wzy7cZQrWiGe430WEk/faNrIzLkkIxjKhfWCHjfv06+dYGGDYuK+kg/JJNBv+wOu5niB9UtJQG13ulFyc0RDDV0KkfzXEiNZ4OtNOIMBWAf8+FCu6Qnsl6x00OwsShitcvJH0XjWxcAoKxcYK+7g+Q6OxuIlCioiUhqCpQkKynL/7CdqM9TErOBIrYIWY3N/LJDpfu1L7hfYh1yW6rGYeVGoBpFeTTRFkYwEO4nXprunOao=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23cb389d-ad7f-4aa5-5b67-08d7ece29ae2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:43:50.3253
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dtqzgzLad4FRzy77yoFc0xqbLU/tStLcdFFP5mIwnX4m2YL3Sm5EaHpOg78EbCOGH0248SzDT1urArZO+9NWnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1883
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
+From: Brijesh Singh <Brijesh.Singh@amd.com>
 
-On Thu, Apr 23, 2020 at 7:23 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi All,
->
-> This patch series adds support for endpoint driver for R-Car PCIe controller on
-> R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
-> supported by the controller for mapping PCI address locally.
->
-> Note:
-> The cadence/rockchip/designware endpoint drivers are build tested only.
->
-> Changes for v9 (Re-spun this series as there were minimal changes requested):
-> * Rebased patches on top of v5.7.rc1
-> * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
-> * Added a check for max_functions read from DT to restrict with
->   RCAR_EPC_MAX_FUNCTIONS
-> * Replaced MSICAP0_MMENUM with MSICAP0_MMESE
-> * Retry ioremap for other windows on failure in pci_epc_mem_alloc_addr()
-> * Fixed looping for number windows in pci_epc_mem_exit()
-> * Set maximum to 1 for max-functions in DT binding (I have restored the acks
->   from  Rob and Shimoda-san)
-> * Sorted the entry in MAINTAINERS
->
-> Changes for v8:
-> * Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
-> * Fixed typo in commit message for patch 2/8
-> * Reworded commit message for patch 5/8 as suggested by Bjorn
-> * Split up patch to add pci_epc_mem_init() interface to add page_size argument
->   as suggested by Bjorn.
->
-> Changes for v7:
-> * Fixed review comments pointed by Shimoda-san
->   1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
->      the example as its built with #{address,size}-cells = <1>. I have still
->      restored the Ack from Rob and Shimoda-san with these changes.
->   2] Split up the patches so that they can be picked up by respective subsystem
->      patches 1/4-9/11 are now part of this series.
->   3] Dropped altering a comment in pci-epc.h
->   4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
->      variable doesn't get overwritten in the loop.
->   5] Replaced i-=1 with i--
->   6] Replaced rcar with R-Car in patch subject and description.
->   7] Set MACCTLR in init() callback
->
-> Changes for v6:
-> 1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
->    scm/linux/kernel/git/lpieralisi/pci.git/
-> 2] Fixed review comments from Shimoda-san
->    a] Made sure defconfig changes were in separate patch
->    b] Created rcar_pcie_host/rcar_pcie_ep structures
->    c] Added pci-id for R8A774C0
->    d] Added entry in MAINTAINERS for dt-binding
->    e] Dropped unnecessary braces
-> 3] Added support for msi.
->
-> Changes for v5:
-> 1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
->    linux/kernel/git/helgaas/pci.git
-> 2] Fixed review comments reported by Kishon while fetching the matching
->    window in function pci_epc_get_matching_window()
-> 3] Fixed review comments reported by Bjorn
->    a] Split patch up first patch so that its easier to review and incremental
->    b] Fixed typos
-> 4] Included Reviewed tag from Rob for the dt-binding patch
-> 5] Fixed issue reported by Nathan for assigning variable to itself
->
-> Changes for v4:
-> 1] Fixed dtb_check error reported by Rob
-> 2] Fixed review comments reported by Kishon
->    a] Dropped pci_epc_find_best_fit_window()
->    b] Fixed initializing mem ptr in __pci_epc_mem_init()
->    c] Dropped map_size from pci_epc_mem_window structure
->
-> Changes for v3:
-> 1] Fixed review comments from Bjorn and Kishon.
-> 3] Converted to DT schema
->
-> Changes for v2:
-> 1] Fixed review comments from Biju for dt-bindings to include an example
->    for a tested platform.
-> 2] Fixed review comments from Kishon to extend the features of outbound
->    regions in epf framework.
-> 3] Added support to parse outbound-ranges in OF.
->
-> Lad Prabhakar (8):
->   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
->   PCI: rcar: Move shareable code to a common file
->   PCI: rcar: Fix calculating mask for PCIEPAMR register
->   PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
->   PCI: endpoint: Add support to handle multiple base for mapping
->     outbound memory
-Could you please do the needy for the above two patches, so that this
-can be picked up by Lorenzo.
+The ioctl can be used to retrieve page encryption bitmap for a given
+gfn range.
 
-Cheers,
---Prabhakar
+Return the correct bitmap as per the number of pages being requested
+by the user. Ensure that we only copy bmap->num_pages bytes in the
+userspace buffer, if bmap->num_pages is not byte aligned we read
+the trailing bits from the userspace and copy those bits as is.
 
->   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
->     controller
->   PCI: rcar: Add endpoint mode support
->   MAINTAINERS: Add file patterns for rcar PCI device tree bindings
->
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 ++
->  MAINTAINERS                                   |    1 +
->  drivers/pci/controller/Kconfig                |   18 +
->  drivers/pci/controller/Makefile               |    3 +-
->  .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
->  drivers/pci/controller/pcie-rcar-ep.c         |  557 ++++++++
->  drivers/pci/controller/pcie-rcar-host.c       | 1065 +++++++++++++++
->  drivers/pci/controller/pcie-rcar.c            | 1206 +----------------
->  drivers/pci/controller/pcie-rcar.h            |  140 ++
->  drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
->  drivers/pci/endpoint/pci-epc-mem.c            |  204 ++-
->  include/linux/pci-epc.h                       |   38 +-
->  13 files changed, 2078 insertions(+), 1251 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
->
-> --
-> 2.17.1
->
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ Documentation/virt/kvm/api.rst  | 27 +++++++++++++
+ arch/x86/include/asm/kvm_host.h |  2 +
+ arch/x86/kvm/svm/sev.c          | 70 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c          |  1 +
+ arch/x86/kvm/svm/svm.h          |  1 +
+ arch/x86/kvm/x86.c              | 12 ++++++
+ include/uapi/linux/kvm.h        | 12 ++++++
+ 7 files changed, 125 insertions(+)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index efbbe570aa9b..e2f0dd105b5c 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -4636,6 +4636,33 @@ This ioctl resets VCPU registers and control structures according to
+ the clear cpu reset definition in the POP. However, the cpu is not put
+ into ESA mode. This reset is a superset of the initial reset.
+ 
++4.125 KVM_GET_PAGE_ENC_BITMAP (vm ioctl)
++---------------------------------------
++
++:Capability: basic
++:Architectures: x86
++:Type: vm ioctl
++:Parameters: struct kvm_page_enc_bitmap (in/out)
++:Returns: 0 on success, -1 on error
++
++/* for KVM_GET_PAGE_ENC_BITMAP */
++struct kvm_page_enc_bitmap {
++	__u64 start_gfn;
++	__u64 num_pages;
++	union {
++		void __user *enc_bitmap; /* one bit per page */
++		__u64 padding2;
++	};
++};
++
++The encrypted VMs have concept of private and shared pages. The private
++page is encrypted with the guest-specific key, while shared page may
++be encrypted with the hypervisor key. The KVM_GET_PAGE_ENC_BITMAP can
++be used to get the bitmap indicating whether the guest page is private
++or shared. The bitmap can be used during the guest migration, if the page
++is private then userspace need to use SEV migration commands to transmit
++the page.
++
+ 
+ 4.125 KVM_S390_PV_COMMAND
+ -------------------------
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 4a8ee22f4f5b..9e428befb6a4 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1256,6 +1256,8 @@ struct kvm_x86_ops {
+ 	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+ 	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+ 				  unsigned long sz, unsigned long mode);
++	int (*get_page_enc_bitmap)(struct kvm *kvm,
++				struct kvm_page_enc_bitmap *bmap);
+ };
+ 
+ struct kvm_x86_init_ops {
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 7dc68db70405..73bbbffb3487 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -1434,6 +1434,76 @@ int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+ 	return 0;
+ }
+ 
++int svm_get_page_enc_bitmap(struct kvm *kvm,
++				   struct kvm_page_enc_bitmap *bmap)
++{
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++	unsigned long gfn_start, gfn_end;
++	unsigned long sz, i, sz_bytes;
++	unsigned long *bitmap;
++	int ret, n;
++
++	if (!sev_guest(kvm))
++		return -ENOTTY;
++
++	gfn_start = bmap->start_gfn;
++	gfn_end = gfn_start + bmap->num_pages;
++
++	sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / BITS_PER_BYTE;
++	bitmap = kmalloc(sz, GFP_KERNEL);
++	if (!bitmap)
++		return -ENOMEM;
++
++	/* by default all pages are marked encrypted */
++	memset(bitmap, 0xff, sz);
++
++	mutex_lock(&kvm->lock);
++	if (sev->page_enc_bmap) {
++		i = gfn_start;
++		for_each_clear_bit_from(i, sev->page_enc_bmap,
++				      min(sev->page_enc_bmap_size, gfn_end))
++			clear_bit(i - gfn_start, bitmap);
++	}
++	mutex_unlock(&kvm->lock);
++
++	ret = -EFAULT;
++
++	n = bmap->num_pages % BITS_PER_BYTE;
++	sz_bytes = ALIGN(bmap->num_pages, BITS_PER_BYTE) / BITS_PER_BYTE;
++
++	/*
++	 * Return the correct bitmap as per the number of pages being
++	 * requested by the user. Ensure that we only copy bmap->num_pages
++	 * bytes in the userspace buffer, if bmap->num_pages is not byte
++	 * aligned we read the trailing bits from the userspace and copy
++	 * those bits as is.
++	 */
++
++	if (n) {
++		unsigned char *bitmap_kernel = (unsigned char *)bitmap;
++		unsigned char bitmap_user;
++		unsigned long offset, mask;
++
++		offset = bmap->num_pages / BITS_PER_BYTE;
++		if (copy_from_user(&bitmap_user, bmap->enc_bitmap + offset,
++				sizeof(unsigned char)))
++			goto out;
++
++		mask = GENMASK(n - 1, 0);
++		bitmap_user &= ~mask;
++		bitmap_kernel[offset] &= mask;
++		bitmap_kernel[offset] |= bitmap_user;
++	}
++
++	if (copy_to_user(bmap->enc_bitmap, bitmap, sz_bytes))
++		goto out;
++
++	ret = 0;
++out:
++	kfree(bitmap);
++	return ret;
++}
++
+ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_sev_cmd sev_cmd;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 1013ef0f4ce2..588709a9f68e 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4016,6 +4016,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+ 	.check_nested_events = svm_check_nested_events,
+ 
+ 	.page_enc_status_hc = svm_page_enc_status_hc,
++	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
+ };
+ 
+ static struct kvm_x86_init_ops svm_init_ops __initdata = {
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 6a562f5928a2..f087fa7b380c 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -404,6 +404,7 @@ int svm_check_nested_events(struct kvm_vcpu *vcpu);
+ int nested_svm_exit_special(struct vcpu_svm *svm);
+ int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+ 				  unsigned long npages, unsigned long enc);
++int svm_get_page_enc_bitmap(struct kvm *kvm, struct kvm_page_enc_bitmap *bmap);
+ 
+ /* avic.c */
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5f5ddb5765e2..937797cfaf9a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5208,6 +5208,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 	case KVM_SET_PMU_EVENT_FILTER:
+ 		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
+ 		break;
++	case KVM_GET_PAGE_ENC_BITMAP: {
++		struct kvm_page_enc_bitmap bitmap;
++
++		r = -EFAULT;
++		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
++			goto out;
++
++		r = -ENOTTY;
++		if (kvm_x86_ops.get_page_enc_bitmap)
++			r = kvm_x86_ops.get_page_enc_bitmap(kvm, &bitmap);
++		break;
++	}
+ 	default:
+ 		r = -ENOTTY;
+ 	}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 0fe1d206d750..af62f2afaa5d 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -505,6 +505,16 @@ struct kvm_dirty_log {
+ 	};
+ };
+ 
++/* for KVM_GET_PAGE_ENC_BITMAP */
++struct kvm_page_enc_bitmap {
++	__u64 start_gfn;
++	__u64 num_pages;
++	union {
++		void __user *enc_bitmap; /* one bit per page */
++		__u64 padding2;
++	};
++};
++
+ /* for KVM_CLEAR_DIRTY_LOG */
+ struct kvm_clear_dirty_log {
+ 	__u32 slot;
+@@ -1518,6 +1528,8 @@ struct kvm_pv_cmd {
+ /* Available with KVM_CAP_S390_PROTECTED */
+ #define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
+ 
++#define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
++
+ /* Secure Encrypted Virtualization command */
+ enum sev_cmd_id {
+ 	/* Guest initialization commands */
+-- 
+2.17.1
+
