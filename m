@@ -2,162 +2,140 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B4C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EDDC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF0242073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ii1k25Ep"
+	by mail.kernel.org (Postfix) with ESMTP id 012B22083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgD3ENs (ORCPT
+        id S1726412AbgD3EQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3ENs (ORCPT
+        Thu, 30 Apr 2020 00:16:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725280AbgD3EQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:13:48 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062B1C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 21:13:47 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id o139so2459534ybc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 21:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nCPU1gorl1WvKPs1iOzqt5NnAoZZ0QjF1DsfHjpy8kM=;
-        b=Ii1k25Ep82LJUh9M/ERKSLRZZMHzCZJcAt1rSs48NIWvUSPIXd3KhGWlVDHwrm5Huf
-         DZ3WA2/yrmDAKjQVyP7BVi/sT24Qys5QhodRggUD/ZFgNVQ+9SuBtohrETk5cm1T2k07
-         bwu9aGGLxLtJt7z9Q5kECnBm4yy1dQppTyeJbcIAPnvqj7oX3AF36w737sJV9FJdNkUk
-         u9WorZUm7UmGWo2Vp6eoWQH+zM3looOdqR2BUBjj935PPz+gcOTehJxmrKIV0BFnIb/6
-         voEB5HXLF96MrHmV+MtIVLoT/M+A1//If9kYfDokBjfBacPK31PLHp/C72neuG2ioqlv
-         m9Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nCPU1gorl1WvKPs1iOzqt5NnAoZZ0QjF1DsfHjpy8kM=;
-        b=JmHTqTCigZTDo25x64kXTiQyRHTmUsu686NlclRXbIj04/gOaeh4QJcla5vcACgqbd
-         +1QJp/SdDdYDWJG3tLJmnnBMPMZoA7HN5CrfbylfiXJY+4I/ijh3fOUPm7GAaU6ogjbD
-         RihZ/aFiOMgJ6+AjbVTGDL7s4TvCTy2hSUmP+6kb5CGWgp1CNSzG3iZyLGQNh0rDb1EC
-         FxT3LtN1MzlAo0tPMlxxzF7AAXyaJXFzm9CjrofleL9K8dPRXTmdffICUKiuOPT6/BTa
-         UHTmxtpofUTcWPC9tsTmUvGL86caap9IdbWql2IKr7fACqgty/qMDBiYmp4G5sr0f6YT
-         sznQ==
-X-Gm-Message-State: AGi0PuaEpCdPkXD2D5sAcIU9nvTsIB2IpCF1U+PkizRXjZNptKjGPhQj
-        EDnkD4EyXJsjtQXgZO0Boet7QDrLrxtaFridY20=
-X-Google-Smtp-Source: APiQypJ+S/o2UH998viYT0pSpKOLZuxf89e5j2PIAZQncI/FHYU5+W9PA0cNSif2Ta7PceldqOcWJlZm7TxLCyUqKLc=
-X-Received: by 2002:a25:8b02:: with SMTP id i2mr2565409ybl.283.1588220027294;
- Wed, 29 Apr 2020 21:13:47 -0700 (PDT)
+        Thu, 30 Apr 2020 00:16:27 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U420Zk051394;
+        Thu, 30 Apr 2020 00:16:20 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30me46yreg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 00:16:20 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U4EowQ010028;
+        Thu, 30 Apr 2020 04:16:19 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 30mcu751g2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 04:16:19 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U4GHHq21168586
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 04:16:17 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 43DA87805C;
+        Thu, 30 Apr 2020 04:16:18 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B47367805E;
+        Thu, 30 Apr 2020 04:16:17 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.199.60.232])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 04:16:17 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 1B1262E2DE5; Thu, 30 Apr 2020 09:46:13 +0530 (IST)
+Date:   Thu, 30 Apr 2020 09:46:13 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/5] Track and expose idle PURR and SPURR ticks
+Message-ID: <20200430041612.GA25522@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
+ <04b5e2fa-089f-93c9-cde9-33a930455bb2@linux.ibm.com>
+ <20200423100213.GA23192@in.ibm.com>
+ <871ro5g0qb.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200416075428.25521-1-tiwai@suse.de>
-In-Reply-To: <20200416075428.25521-1-tiwai@suse.de>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Thu, 30 Apr 2020 14:13:36 +1000
-Message-ID: <CACAvsv7pZX+h_JqWeu=0yK1u2nwzDGODKWpHarzB-80u89JLZg@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] drm/nouveau: Fix regression by audio component transition
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Ben Skeggs <bskeggs@redhat.com>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871ro5g0qb.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_01:2020-04-30,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good catch!  The OR is definitely a far better choice than the head
-here, as it's what we use to select the GPU-side HDA registers too.
+Hello Michael,
 
-Merged.
+On Thu, Apr 30, 2020 at 12:34:52PM +1000, Michael Ellerman wrote:
+> Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
+> > On Mon, Apr 20, 2020 at 03:46:35PM -0700, Tyrel Datwyler wrote:
+> >> On 4/7/20 1:47 AM, Gautham R. Shenoy wrote:
+> >> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >> > 
+> >> > Hi,
+> >> > 
+> >> > This is the fifth version of the patches to track and expose idle PURR
+> >> > and SPURR ticks. These patches are required by tools such as lparstat
+> >> > to compute system utilization for capacity planning purposes.
+> ...
+> >> > 
+> >> > Gautham R. Shenoy (5):
+> >> >   powerpc: Move idle_loop_prolog()/epilog() functions to header file
+> >> >   powerpc/idle: Store PURR snapshot in a per-cpu global variable
+> >> >   powerpc/pseries: Account for SPURR ticks on idle CPUs
+> >> >   powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
+> >> >   Documentation: Document sysfs interfaces purr, spurr, idle_purr,
+> >> >     idle_spurr
+> >> > 
+> >> >  Documentation/ABI/testing/sysfs-devices-system-cpu | 39 +++++++++
+> >> >  arch/powerpc/include/asm/idle.h                    | 93 ++++++++++++++++++++++
+> >> >  arch/powerpc/kernel/sysfs.c                        | 82 ++++++++++++++++++-
+> >> >  arch/powerpc/platforms/pseries/setup.c             |  8 +-
+> >> >  drivers/cpuidle/cpuidle-pseries.c                  | 39 ++-------
+> >> >  5 files changed, 224 insertions(+), 37 deletions(-)
+> >> >  create mode 100644 arch/powerpc/include/asm/idle.h
+> >> > 
+> >> 
+> >> Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+> >
+> > Thanks for reviewing the patches.
+> >
+> >> 
+> >> Any chance this is going to be merged in the near future? There is a patchset to
+> >> update lparstat in the powerpc-utils package to calculate PURR/SPURR cpu
+> >> utilization that I would like to merge, but have been holding off to make sure
+> >> we are synced with this proposed patchset.
+> >
+> > Michael, could you please consider this for 5.8 ?
+> 
+> Yes. Has it been tested on KVM at all?
 
-On Thu, 16 Apr 2020 at 17:54, Takashi Iwai <tiwai@suse.de> wrote:
->
-> Since the commit 742db30c4ee6 ("drm/nouveau: Add HD-audio component
-> notifier support"), the nouveau driver notifies and pokes the HD-audio
-> HPD and ELD via audio component, but this seems broken.  The culprit
-> is the naive assumption that crtc->index corresponds to the HDA pin.
-> Actually this rather corresponds to the MST dev_id (alias "pipe" in
-> the audio component framework) while the actual port number is given
-> from the output ior id number.
->
-> This patch corrects the assignment of port and dev_id arguments in the
-> audio component ops to recover from the HDMI/DP audio regression.
->
-> Fixes: 742db30c4ee6 ("drm/nouveau: Add HD-audio component notifier support")
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207223
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> ---
->  drivers/gpu/drm/nouveau/dispnv50/disp.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> index a3dc2ba19fb2..3a9fd565079d 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> @@ -481,15 +481,16 @@ nv50_dac_create(struct drm_connector *connector, struct dcb_output *dcbe)
->   * audio component binding for ELD notification
->   */
->  static void
-> -nv50_audio_component_eld_notify(struct drm_audio_component *acomp, int port)
-> +nv50_audio_component_eld_notify(struct drm_audio_component *acomp, int port,
-> +                               int dev_id)
->  {
->         if (acomp && acomp->audio_ops && acomp->audio_ops->pin_eld_notify)
->                 acomp->audio_ops->pin_eld_notify(acomp->audio_ops->audio_ptr,
-> -                                                port, -1);
-> +                                                port, dev_id);
->  }
->
->  static int
-> -nv50_audio_component_get_eld(struct device *kdev, int port, int pipe,
-> +nv50_audio_component_get_eld(struct device *kdev, int port, int dev_id,
->                              bool *enabled, unsigned char *buf, int max_bytes)
->  {
->         struct drm_device *drm_dev = dev_get_drvdata(kdev);
-> @@ -505,7 +506,8 @@ nv50_audio_component_get_eld(struct device *kdev, int port, int pipe,
->                 nv_encoder = nouveau_encoder(encoder);
->                 nv_connector = nouveau_encoder_connector_get(nv_encoder);
->                 nv_crtc = nouveau_crtc(encoder->crtc);
-> -               if (!nv_connector || !nv_crtc || nv_crtc->index != port)
-> +               if (!nv_connector || !nv_crtc || nv_encoder->or != port ||
-> +                   nv_crtc->index != dev_id)
->                         continue;
->                 *enabled = drm_detect_monitor_audio(nv_connector->edid);
->                 if (*enabled) {
-> @@ -599,7 +601,8 @@ nv50_audio_disable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc)
->
->         nvif_mthd(&disp->disp->object, 0, &args, sizeof(args));
->
-> -       nv50_audio_component_eld_notify(drm->audio.component, nv_crtc->index);
-> +       nv50_audio_component_eld_notify(drm->audio.component, nv_encoder->or,
-> +                                       nv_crtc->index);
->  }
->
->  static void
-> @@ -633,7 +636,8 @@ nv50_audio_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
->         nvif_mthd(&disp->disp->object, 0, &args,
->                   sizeof(args.base) + drm_eld_size(args.data));
->
-> -       nv50_audio_component_eld_notify(drm->audio.component, nv_crtc->index);
-> +       nv50_audio_component_eld_notify(drm->audio.component, nv_encoder->or,
-> +                                       nv_crtc->index);
->  }
->
->  /******************************************************************************
-> --
-> 2.16.4
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+No. I haven't tested this on KVM. Will do that today.
+
+
+> 
+> cheers
+
+--
+Thanks and Regards
+gautham.
