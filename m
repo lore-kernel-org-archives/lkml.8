@@ -2,317 +2,142 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28222C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBC7C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDD3520787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7EE20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jS5U1SmA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KzR2HT/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgD3Ipg (ORCPT
+        id S1726858AbgD3Ipt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:45:36 -0400
-Received: from mail-mw2nam10on2062.outbound.protection.outlook.com ([40.107.94.62]:52607
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbgD3Ipf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:45:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ajeyfw9D+ZxfFiNLToKFzGpMQTJCfHTklh9RqJ3XLPDvN320m9h9SafRxYUsdkvmWc3FUdU2I/iuJjg2R6VO8tKDtnSBxEo29usn/9xnnN8WVLx6zXGfyQGB8KJoGUCrnauUOAyBDstDPymIoJvLgI/4iVbGzyKfe3SH6oqVCkPw0u3GyjiswMQR9nOAAR0NdOr0dmBmbIIrCHiE13wJZLRuD0GHYNfRSVwk+uJLxkFTCtQ52Z1mpCcjhtDTOe8YYj+Co5ho8Zpy32D8HKrsjJacaBfSrOGhI5mfKUYvchQ4AtVnAOFCjUAWzo5HbfSeDJVXKGRuj6iP0RZRko+j9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dGc+4NNuqOeQw8l5bUjqXtWiVGPKR4A0/3wOmAcBaGY=;
- b=dk9vhJTidepIzu6yeSrpiwtAKCWuRby9Bnwf87hjPKqL992gTeCntpS/B7/SRibyOKktafRgZBxElJpkJ3tGrwFrMgIUwwFOPyhQYpV1iewcu1ypVlKmTicGm9bHiSHxMYIzvKPqbZgQisrLZi/hKR7VLf8Q5Za+yqTVyfCw5HTB9Z3OjwQdlrhV6dMWDG1IUsjTG/ePJD8JDtUgh2r+FswLWSMFGc6pTQKYlLo0Kv2SofGLKVOjTE5IqI3jDvZMjL9TPeqgFFHHlTE28HTkEW0TEKzXmKEjQRqI82S7/4xwzfluJ4/sfqD8wI0cOx2zrNKuKQHhzJkPACyW7OSuhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dGc+4NNuqOeQw8l5bUjqXtWiVGPKR4A0/3wOmAcBaGY=;
- b=jS5U1SmAkpCMY8VcsyrGh50J/9kqDSGiL9z5LrydBx77sB3iOvXoFzZgGM7mZM1x56pNYhC9T16ChUWXTB9LrqPDiyEnz+N68iO9ahsxRl56zXIvJE0PtC/7f9AnfPGcpiJxKvei2K0F0TakyeeknhFTPFP1GqmNCp3XL4Lq1oc=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1883.namprd12.prod.outlook.com (2603:10b6:3:113::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Thu, 30 Apr 2020 08:45:31 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 08:45:31 +0000
-From:   Ashish Kalra <Ashish.Kalra@amd.com>
-To:     pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srutherford@google.com, rientjes@google.com,
-        venu.busireddy@oracle.com, brijesh.singh@amd.com
-Subject: [PATCH v7 11/18] mm: x86: Invoke hypercall when page encryption status is changed
-Date:   Thu, 30 Apr 2020 08:45:22 +0000
-Message-Id: <c167e7191cb8f9c7635f5d8cfecb1157cc96cf6b.1588234824.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0401CA0014.namprd04.prod.outlook.com
- (2603:10b6:803:21::24) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Thu, 30 Apr 2020 04:45:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24236 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgD3Ips (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:45:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588236347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZzTxE6KURiJFVV0CKCAzn9c9oUCjh4xSOPyYt4wCu8w=;
+        b=KzR2HT/FG8Q0F5mno/CUiHG7+hL25pFqHIa+cdPxnE/hWww2HDiG08q1osQX9NIsUF7zT2
+        F+Wc4QaBYBlwfv/sTvPH5JgYkhhLX1fQ5b9EspHL2r7XnMhWiE36FhAzxKCmzHQTwdTuW8
+        BFqsTKpUKBCV4pswnZtifzwNbQQZZx8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-0HWIZ2qGNEWcdz4yQGFVUQ-1; Thu, 30 Apr 2020 04:45:42 -0400
+X-MC-Unique: 0HWIZ2qGNEWcdz4yQGFVUQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40C9D107ACF4;
+        Thu, 30 Apr 2020 08:45:40 +0000 (UTC)
+Received: from krava (unknown [10.40.192.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 682155D9FC;
+        Thu, 30 Apr 2020 08:45:35 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 10:45:29 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH] perf parse-events: Use strcmp to compare the PMU name
+Message-ID: <20200430084529.GC1681583@krava>
+References: <20200430003618.17002-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN4PR0401CA0014.namprd04.prod.outlook.com (2603:10b6:803:21::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Thu, 30 Apr 2020 08:45:30 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 67b929f0-3678-4ca5-e54d-08d7ece2d745
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1883:|DM5PR12MB1883:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1883A781DEA4E2FD2F745A438EAA0@DM5PR12MB1883.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 0389EDA07F
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(136003)(376002)(39860400002)(478600001)(86362001)(956004)(8936002)(26005)(2906002)(2616005)(6916009)(8676002)(36756003)(6486002)(7416002)(4326008)(16526019)(186003)(66574012)(7696005)(66476007)(5660300002)(66946007)(6666004)(52116002)(66556008)(316002)(136400200001);DIR:OUT;SFP:1101;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3Vg8mt3VIP5rW2C3gRPQSzzARK1hMBZNHjdNcKshgTK3fQlT8DukaYCjHSp8y4oTkGxpsxkI8gmQCyK+EDgsMEdBrwRZ/KNDikGVeXAMfyzoIBRPGmQ/akdoa7M3/ZD03eb5ChcVkAveb/FHUFE6QOBA6iVIAst4QPbV7Ocs1x2oAy1usLjGN3KHPoILNoTC8Kj8rdfnW3gbtGpql8YAG/S9+HrsujnEyz92JKYAi5jJ+B4GCWqpPLvuWlSB7aKTaYRxWZd9BYj/NZYdvG2EkkRdZUpvTnSPm1I83D15taEsyzs7vHgwqGZnjNWoGe5Nu1BJjjJfNSsKN7n7g+jL7sRnCCk1p+Y+9Jp3LpQaYBIvPSKKeFlfhHdJAa5Z42pUso36B+zrJULi/ZxGGJcaAGaMa4bpzKwvvqCs5HxbDA2afx3e+sPOw8f452sv/h1Beacphsc4n5ufAGVRIJJpZsc6ZM5s5zRlmpmFH0uPT0zzeSo+dPJ1ZbnTGxNPQfPB
-X-MS-Exchange-AntiSpam-MessageData: QfKTJjf4o9A9IAyYjEKdaDiSgCX8QknrfM3ZdjFDAkxBCEW01NTUYf2/vIXsxBeb7ZC+qK3iDME2ZTl0LOrA7OGjwKqqNG38uqat+iD1SiJXxr6f8A4qMRG+VnIa5xD6aFMG2tPTH6NnFk9t8qWnypFvA1vlrkse8X1FKH3TVERArZn0Kn+USmCdHgAp/ZYNSl5gVdDEPKc3i6ak1cBaaeO46IKU4/a/uCg5uoTGxAhmFpZLbDiRHjIrLn2I0x/Fjpz8vVfs3Vumj+WGzDDhaBOufVF6Nm3488RzT3wYvGlS3aqz4E5OIIpYxQNTYbXTLDjvywk6KDuWygHuSznAoLPBG54WKWLolwAgNcErUGH3KCBm88Uwn3/g9APtrtuY+D817NKFDLhwSW+wUGJqvMSjUkZbtnLJTE1FH//OrtApvzS0BLLX5OcV8Lmk7MpWbtLSUD8dkI3/ouc//yccgUC0ApXNfvEjd3T1maRX5V/CndDRJ4dlb8fGvE69fQFyo6Edr/mzvvDi/Vlr9xG20en+/zKr3W7RWQzio0wErCmJMKrQgob4p6eKSJhB9bd+3LPRrAnzVDoOBFwlGYjxHCh+6C6DqymMwO63hewqYKWhppXkvLp0OxTQZhPcoJe/wiX5bcFezLHBHC+QAnzq0vig341aG94Ywr1FTOyRxcrnv+1KzbmMo0h4OVjZFuaV6xxkdstES3p0XLdV3iYNcjcAYKXQORc0OKshIFfg1YrSava0rtwgVZoYONhDXhr6tub84PF3Ds/K4yKVeWEiBE18lFPPADtZiACwKQjKT18=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67b929f0-3678-4ca5-e54d-08d7ece2d745
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 08:45:31.6559
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DNuT1N/MrHIWhOWAP+M7PQXF4veW83s1dOKqpmeKlzmb3ety0Hx3uAmzVN8J90C5FES0JhOT5cCRnFpe/wK8DQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1883
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430003618.17002-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brijesh Singh <Brijesh.Singh@amd.com>
+On Thu, Apr 30, 2020 at 08:36:18AM +0800, Jin Yao wrote:
+> A big uncore event group is split into multiple small groups which
+> only include the uncore events from the same PMU. This has been
+> supported in the commit 3cdc5c2cb924a ("perf parse-events: Handle
+> uncore event aliases in small groups properly").
+> 
+> If the event's PMU name starts to repeat, it must be a new event.
+> That can be used to distinguish the leader from other members.
+> But now it only compares the pointer of pmu_name
+> (leader->pmu_name == evsel->pmu_name).
+> 
+> If we use "perf stat -M LLC_MISSES.PCIE_WRITE -a" on cascadelakex,
+> the event list is:
+> 
+> evsel->name					evsel->pmu_name
+> ---------------------------------------------------------------
+> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_4 (as leader)
+> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_2
+> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_0
+> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_5
+> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_3
+> unc_iio_data_req_of_cpu.mem_write.part0		uncore_iio_1
+> unc_iio_data_req_of_cpu.mem_write.part1		uncore_iio_4
+> ......
+> 
+> For the event "unc_iio_data_req_of_cpu.mem_write.part1" with
+> "uncore_iio_4", it should be the event from PMU "uncore_iio_4".
+> It's not a new leader for this PMU.
+> 
+> But if we use "(leader->pmu_name == evsel->pmu_name)", the check
+> would be failed and the event is stored to leaders[] as a new
+> PMU leader.
+> 
+> So this patch uses strcmp to compare the PMU name between events.
+> 
+> Fixes: 3cdc5c2cb924a ("perf parse-events: Handle uncore event aliases in small groups properly")
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 
-Invoke a hypercall when a memory region is changed from encrypted ->
-decrypted and vice versa. Hypervisor needs to know the page encryption
-status during the guest migration.
+looks good, any chance we could have automated test
+for this uncore leader setup logic? like maybe the way
+John did the pmu-events tests? like test will trigger
+only when there's the pmu/events in the system
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86@kernel.org
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/include/asm/paravirt.h       | 10 +++++
- arch/x86/include/asm/paravirt_types.h |  2 +
- arch/x86/kernel/paravirt.c            |  1 +
- arch/x86/mm/mem_encrypt.c             | 58 ++++++++++++++++++++++++++-
- arch/x86/mm/pat/set_memory.c          |  7 ++++
- 5 files changed, 77 insertions(+), 1 deletion(-)
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 694d8daf4983..8127b9c141bf 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -78,6 +78,12 @@ static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
- 	PVOP_VCALL1(mmu.exit_mmap, mm);
- }
- 
-+static inline void page_encryption_changed(unsigned long vaddr, int npages,
-+						bool enc)
-+{
-+	PVOP_VCALL3(mmu.page_encryption_changed, vaddr, npages, enc);
-+}
-+
- #ifdef CONFIG_PARAVIRT_XXL
- static inline void load_sp0(unsigned long sp0)
- {
-@@ -946,6 +952,10 @@ static inline void paravirt_arch_dup_mmap(struct mm_struct *oldmm,
- static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
- {
- }
-+
-+static inline void page_encryption_changed(unsigned long vaddr, int npages, bool enc)
-+{
-+}
- #endif
- #endif /* __ASSEMBLY__ */
- #endif /* _ASM_X86_PARAVIRT_H */
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index 732f62e04ddb..03bfd515c59c 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -215,6 +215,8 @@ struct pv_mmu_ops {
- 
- 	/* Hook for intercepting the destruction of an mm_struct. */
- 	void (*exit_mmap)(struct mm_struct *mm);
-+	void (*page_encryption_changed)(unsigned long vaddr, int npages,
-+					bool enc);
- 
- #ifdef CONFIG_PARAVIRT_XXL
- 	struct paravirt_callee_save read_cr2;
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index c131ba4e70ef..840c02b23aeb 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -367,6 +367,7 @@ struct paravirt_patch_template pv_ops = {
- 			(void (*)(struct mmu_gather *, void *))tlb_remove_page,
- 
- 	.mmu.exit_mmap		= paravirt_nop,
-+	.mmu.page_encryption_changed	= paravirt_nop,
- 
- #ifdef CONFIG_PARAVIRT_XXL
- 	.mmu.read_cr2		= __PV_IS_CALLEE_SAVE(native_read_cr2),
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index f4bd4b431ba1..603f5abf8a78 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -19,6 +19,7 @@
- #include <linux/kernel.h>
- #include <linux/bitops.h>
- #include <linux/dma-mapping.h>
-+#include <linux/kvm_para.h>
- 
- #include <asm/tlbflush.h>
- #include <asm/fixmap.h>
-@@ -29,6 +30,7 @@
- #include <asm/processor-flags.h>
- #include <asm/msr.h>
- #include <asm/cmdline.h>
-+#include <asm/kvm_para.h>
- 
- #include "mm_internal.h"
- 
-@@ -196,6 +198,48 @@ void __init sme_early_init(void)
- 		swiotlb_force = SWIOTLB_FORCE;
- }
- 
-+static void set_memory_enc_dec_hypercall(unsigned long vaddr, int npages,
-+					bool enc)
-+{
-+	unsigned long sz = npages << PAGE_SHIFT;
-+	unsigned long vaddr_end, vaddr_next;
-+
-+	vaddr_end = vaddr + sz;
-+
-+	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
-+		int psize, pmask, level;
-+		unsigned long pfn;
-+		pte_t *kpte;
-+
-+		kpte = lookup_address(vaddr, &level);
-+		if (!kpte || pte_none(*kpte))
-+			return;
-+
-+		switch (level) {
-+		case PG_LEVEL_4K:
-+			pfn = pte_pfn(*kpte);
-+			break;
-+		case PG_LEVEL_2M:
-+			pfn = pmd_pfn(*(pmd_t *)kpte);
-+			break;
-+		case PG_LEVEL_1G:
-+			pfn = pud_pfn(*(pud_t *)kpte);
-+			break;
-+		default:
-+			return;
-+		}
-+
-+		psize = page_level_size(level);
-+		pmask = page_level_mask(level);
-+
-+		if (x86_platform.hyper.sev_migration_hcall)
-+			x86_platform.hyper.sev_migration_hcall(pfn << PAGE_SHIFT,
-+							       psize >> PAGE_SHIFT,
-+							       enc);
-+		vaddr_next = (vaddr & pmask) + psize;
-+	}
-+}
-+
- static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
- {
- 	pgprot_t old_prot, new_prot;
-@@ -253,12 +297,13 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
- static int __init early_set_memory_enc_dec(unsigned long vaddr,
- 					   unsigned long size, bool enc)
- {
--	unsigned long vaddr_end, vaddr_next;
-+	unsigned long vaddr_end, vaddr_next, start;
- 	unsigned long psize, pmask;
- 	int split_page_size_mask;
- 	int level, ret;
- 	pte_t *kpte;
- 
-+	start = vaddr;
- 	vaddr_next = vaddr;
- 	vaddr_end = vaddr + size;
- 
-@@ -313,6 +358,8 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
- 
- 	ret = 0;
- 
-+	set_memory_enc_dec_hypercall(start, PAGE_ALIGN(size) >> PAGE_SHIFT,
-+					enc);
- out:
- 	__flush_tlb_all();
- 	return ret;
-@@ -451,6 +498,15 @@ void __init mem_encrypt_init(void)
- 	if (sev_active())
- 		static_branch_enable(&sev_enable_key);
- 
-+#ifdef CONFIG_PARAVIRT
-+	/*
-+	 * With SEV, we need to make a hypercall when page encryption state is
-+	 * changed.
-+	 */
-+	if (sev_active())
-+		pv_ops.mmu.page_encryption_changed = set_memory_enc_dec_hypercall;
-+#endif
-+
- 	pr_info("AMD %s active\n",
- 		sev_active() ? "Secure Encrypted Virtualization (SEV)"
- 			     : "Secure Memory Encryption (SME)");
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 59eca6a94ce7..9aaf1b6f5a1b 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -27,6 +27,7 @@
- #include <asm/proto.h>
- #include <asm/memtype.h>
- #include <asm/set_memory.h>
-+#include <asm/paravirt.h>
- 
- #include "../mm_internal.h"
- 
-@@ -2003,6 +2004,12 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
- 	 */
- 	cpa_flush(&cpa, 0);
- 
-+	/* Notify hypervisor that a given memory range is mapped encrypted
-+	 * or decrypted. The hypervisor will use this information during the
-+	 * VM migration.
-+	 */
-+	page_encryption_changed(addr, numpages, enc);
-+
- 	return ret;
- }
- 
--- 
-2.17.1
+thanks,
+jirka
+
+
+> ---
+>  tools/perf/util/parse-events.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 10107747b361..786eddb6a097 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1629,12 +1629,11 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+>  		 * event. That can be used to distinguish the leader from
+>  		 * other members, even they have the same event name.
+>  		 */
+> -		if ((leader != evsel) && (leader->pmu_name == evsel->pmu_name)) {
+> +		if ((leader != evsel) &&
+> +		    !strcmp(leader->pmu_name, evsel->pmu_name)) {
+>  			is_leader = false;
+>  			continue;
+>  		}
+> -		/* The name is always alias name */
+> -		WARN_ON(strcmp(leader->name, evsel->name));
+>  
+>  		/* Store the leader event for each PMU */
+>  		leaders[nr_pmu++] = (uintptr_t) evsel;
+> -- 
+> 2.17.1
+> 
 
