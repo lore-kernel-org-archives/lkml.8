@@ -2,109 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB4FC83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFECC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34AD520787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC0F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rylan.coffee header.i=@rylan.coffee header.b="I9Rl+wyc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nj/QXmBs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPwVE+Bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgD3Bb5 (ORCPT
+        id S1726565AbgD3BcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:31:57 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:51611 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726291AbgD3Bb5 (ORCPT
+        Wed, 29 Apr 2020 21:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgD3BcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:31:57 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id DDF925C00A0;
-        Wed, 29 Apr 2020 21:31:55 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 29 Apr 2020 21:31:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rylan.coffee; h=
-        date:from:to:subject:message-id:mime-version:content-type; s=
-        fm3; bh=SYK7O3pWETptKlBHEnGL7d2b/hjrdjwGHndWnjpBIYc=; b=I9Rl+wyc
-        wAmq++yMiOioQj+oWaq9nyXI0XsLaqEES0VZqiZwG3prd4qZiNH07Q145rQ02dNq
-        hiLZJ6vBIMkLZ2ndPBKwbqopvZdd6zvQY6vIbd5CGzWXB8MQPZXo3IJGiz2sxYEH
-        jEWLbfFBRRoXGB3avlx202U5BnmawUUsOJzYvFaXNo9CnkQs1LeZA+ul2U79Gx+C
-        YR/tYQJUGn89eRpeqo9C9aZ5QzVUl8RZbUM6wKXIli0Nk8dnqRQrQMqNvv4ubNt6
-        iASUhkOAh2Fc3GpsjNZ150ToHv9MC05eTZ13wdMxMXg/Iu93TTSsCBuxANMkhbUM
-        ua3TxhhdnZ/dbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm2; bh=SYK7O3pWETptKlBHEnGL7d2b/hjrd
-        jwGHndWnjpBIYc=; b=nj/QXmBskjFwJjZz1SEW1HTzdX8C72xA7b4qZZetuwHhN
-        PhYYmRuYS1q3NXxGVLmOQPNBVgH9Nwqd0fzzHSZE5j2S37tLeO5EInEUUr/PMT4Q
-        /VwbstVRlh3+Te5/QOaSsRpOzg3jxqiclLh5JMtyPtbXm1/MhOSI345DWRT6NiY+
-        Re6AGEKQvpx3TxC1FNlmHfv0KC2ps7kTtnDCJMH4oNayw2OEyCshrwzW45YuDnCt
-        FcpKcLPcyN3llXYe4dHj7CAI3/8ym5xPdnFRKa8RLzo8vxmEpVtrfNCGURjxSj+L
-        knem6Dwzvlf9Jwiu0XWft13qK+4rNWSxN+ep0XHPQ==
-X-ME-Sender: <xms:iyqqXnUN-2jG3K83g1OHzb59grIIIjZflxFff9n6CzTX6jxhYluwHA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieeggdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkgggtugesthdtredttddtjeenucfhrhhomheptfihlhgrnhcuffhm
-    vghllhhouceomhgrihhlsehrhihlrghnrdgtohhffhgvvgeqnecuggftrfgrthhtvghrnh
-    epledukefggeevtdffjeduieefiedtuddufeeuvdehkeeuieelleeigfdvledufeelnecu
-    kfhppedutdekrdegledrudehkedrkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepmhgrihhlsehrhihlrghnrdgtohhffhgvvg
-X-ME-Proxy: <xmx:iyqqXk_bOnBPMdhsAuA9Cx8DiMD_JJOWdmohjdJXLx9qsCThNAbYQQ>
-    <xmx:iyqqXmfyNvhFEl-sZyw_u2rBq3rgtfHICqzKdd_fECy43MKqgILAxg>
-    <xmx:iyqqXm-z82upvot94bBLUozn0b478f_YHZyc91ghnR9gelwOL-PtIA>
-    <xmx:iyqqXoIpOUQVVdgBIbxjt6b_6umq_MMSUQE4voGi_jjtSKIaejryQw>
-Received: from athena (pool-108-49-158-84.bstnma.fios.verizon.net [108.49.158.84])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 59DB73065EBD;
-        Wed, 29 Apr 2020 21:31:55 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 21:31:54 -0400
-From:   Rylan Dmello <mail@rylan.coffee>
-To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Subject: [PATCH v2 0/7] staging: qlge: Checkpatch.pl indentation fixes in
- qlge_main.c
-Message-ID: <cover.1588209862.git.mail@rylan.coffee>
+        Wed, 29 Apr 2020 21:32:00 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89986C035494;
+        Wed, 29 Apr 2020 18:32:00 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id k18so3568639ion.0;
+        Wed, 29 Apr 2020 18:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0w8kJY9j/FEki6CAhMOKe13kIgQ0o8hCyo6pGzmOYdc=;
+        b=MPwVE+Bkz9CcDJalk+jgqmR3yxPIKUJC9RYNqy7zduk8OZljggsMW54Iu0DIGQxaKG
+         fdbwsrCCpogT+InOFKVy82EoAxMwVggL1RJOkUH2Q02y1wlfKbCrlNbt5CcaVv20Z+FL
+         vtJXW1aC5Aw5Wz4IGBUkzIkcsn6XtJeWsA8S0Z8MAX9Zv5uI6T42mM0xogcGR76LyuCH
+         2geNetHgdjA7o06cI3ZjVvsDPq/TlwcYzBJL9HfhiTot/9NI/D+pT2RhoTnJblRugKJo
+         kqomD+/oVM6lCXM4NUSGp/oVrh5MHBenNP42ujYcZQF7JDZ/4qmFgrnvvnD4lCrrwxyd
+         J1kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0w8kJY9j/FEki6CAhMOKe13kIgQ0o8hCyo6pGzmOYdc=;
+        b=aujRmef9ltzCJaHiqw/F2B1KHkjvVlk75X8kmKlFmpvyrca3ktFa5Zj3TLV/rkDR3k
+         3rEaUOKgp2k76JDN3Y/Dzgw5m8pj0SMk/wqo+OraEcb/5Ns7Y0Yzii8zPIHW1zXmA7TJ
+         QXsYU6luczLXiQNBdvzJ5STZ0mCXcJCwZ9M/v5xNfEUdkpuSA5vN1K/XP6kd8onHhXmf
+         9Dvp/zue2svPauAqD+u9We+GP6KsVLvwpdvgkxhcEWDZlqimaCqtQsZ5uvHMNkx8Y7KE
+         p7KsssPwLuNMguWHUuFBug6mU8MfXMGmRrB9MrA58vVyAMzNAAYtxO/xInes2hjtxC6t
+         wrUg==
+X-Gm-Message-State: AGi0PubrWQjzcwaTnzcj3X+XC9FOl5ZIRscgaQIqitZkRtZUptK06HwM
+        JyrUOgAsSjFNCq2lbcuxEq5gBNg5+ZSrXlH9Bu8=
+X-Google-Smtp-Source: APiQypLz8FaqWq2KOraprYF34ICk96Epr8NTd6xyOTTliXByvTRhVsnLYttoWEeIb2tqNvg6vtoysi3FjHUndN+hZtw=
+X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr1002541iob.10.1588210319908;
+ Wed, 29 Apr 2020 18:31:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <CALOAHbCotD1-+o_XZPU_4_i8Nn98r5F_5NpGVd=z6UG=rUcCmA@mail.gmail.com> <20200430011626.GA2754277@chrisdown.name>
+In-Reply-To: <20200430011626.GA2754277@chrisdown.name>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 30 Apr 2020 09:31:23 +0800
+Message-ID: <CALOAHbCL_JJgcy9r99Kn81-o_t-fs_nQ+n7aKMHO-02QMCufEw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset fixes some indentation- and style-related issues in qlge_main.c
-reported by checkpatch.pl, such as:
+On Thu, Apr 30, 2020 at 9:16 AM Chris Down <chris@chrisdown.name> wrote:
+>
+> Hi Yafang,
+>
+> Yafang Shao writes:
+> >Would you pls. add some comments above these newly added WRITE_ONCE() ?
+> >E.g.
+> >What does them mean to fix ?
+> >Why do we must add WRITE_ONCE() and READ_ONCE here and there all over
+> >the memcg protection ?
+> >Otherwise, it may be harder to understand by the others.
+>
+> There is already discussion in the changelogs for previous store tear
+> improvements. For example, b3a7822e5e75 ("mm, memcg: prevent
+> mem_cgroup_protected store tearing").
+>
 
-  WARNING: Avoid multiple line dereference
-  WARNING: line over 80 characters
-  WARNING: suspect code indent for conditional statements
+I'm sorry that I missed the changelog in the other one.
+So you'd better add these commit log or comment to this one again.
 
-v2:
- - Addressed feedback from Joe Perches by unindenting
-   ql_set_mac_addr_reg and by replacing goto statements with break
-   statements in the function.
+> WRITE_ONCE and READ_ONCE are standard compiler barriers, in this case, to avoid
+> store tears from writes in another thread (effective protection caching is
+> designed by its very nature to permit racing, but tearing is non-ideal).
+>
+> You can find out more about them in the "COMPILER BARRIER" section in
+> Documentation/memory-barriers.txt. I'm not really seeing the value of adding an
+> extra comment about this specific use of them, unless you have some more
+> explicit concern.
 
-Rylan Dmello (7):
-  staging: qlge: Fix indentation in ql_set_mac_addr_reg
-  staging: qlge: Remove gotos from ql_set_mac_addr_reg
-  staging: qlge: Fix indentation in ql_get_mac_addr_reg
-  staging: qlge: Remove goto statements from ql_get_mac_addr_reg
-  staging: qlge: Remove multi-line dereference from ql_request_irq
-  staging: qlge: Fix suspect code indent warning in ql_init_device
-  staging: qlge: Fix function argument alignment warning in
-    ql_init_device
+My concern is why we add these barriers to memcg protection
+specifically but don't add these barriers to the other memebers like
+memcg->oom_group which has the same issue ?
+What is the difference between these members and that members ?
 
- drivers/staging/qlge/qlge_main.c | 258 ++++++++++++++-----------------
- 1 file changed, 120 insertions(+), 138 deletions(-)
 
 -- 
-2.26.2
-
+Thanks
+Yafang
