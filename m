@@ -2,183 +2,141 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6A0C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4822BC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBCA22073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ftYR3vvy"
+	by mail.kernel.org (Postfix) with ESMTP id 321FC2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgD3S6d (ORCPT
+        id S1726783AbgD3S7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgD3S6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:58:30 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A268C08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:58:30 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id s9so5587212eju.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:58:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VO82Y+ddPqwVbejb8yp1YADHo+TiaduERH1aUXgFNdU=;
-        b=ftYR3vvy7y4XQUHnig2EWsnYgRjVl+CPW2em4ftSq034hx6ZoqSueCcso+RG9w8AGa
-         w0/+YALKEw0FIaP05V+9C0XKOYuOmd59KAW1siA/r09GzwZUf48N8GmxNx1dxSbliixs
-         CuBWjC2ORmo5GZgQNulH0b+ykeGy5IQzQog4ZcfdBGWxbr/kGwbKqiBi3jZCbBsGvnNW
-         Q5W2E6yv533qZlcTHc6rxcPndCCEwjOVK0cZ2rz6LGVrs0kCEepYAF9z3xs1VIBjMZtf
-         A5p7YNgqSxKHyCub+EuUXAZ2xuX50SSxRFhOGGuo9nNwQKHccsh0XWdv0oNDM0uH1ryy
-         dbvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VO82Y+ddPqwVbejb8yp1YADHo+TiaduERH1aUXgFNdU=;
-        b=lKtwqhDlDrPt6pqGkcvIMJd47OvKpvOQghDv32WlxT3r2aBCb2UlDdkKx69IXBESHN
-         PZwyGykdXdFy6mSDomdMxkEI9TLJvcsXKkAlhDrJa5O7iTvc6Gq4X4faP88ZzNWKGgZd
-         98AUaEz3yLnPxfWPxSlSzjae8hcqSl88CTatgmnKO3Jkx7yAhrbfuIrGOxf8vR91l8M/
-         Mawass0z+cEEXzo670TaSvnm4A1yp/gf3EPp+bfmzpGCGDN5oYQyZG6PYslywQCG1DsM
-         htpNyZul0QSIQi2aZEiEIF1W8j7kxr9x3cWxVM0XwMxd5us2XN4D7nquDC8+bMIcgAlz
-         nSbA==
-X-Gm-Message-State: AGi0PubRXzgaaz70RQ1vnfRpqH2pq3Xd2kqHSahsTVW+LS15UAoOnB2A
-        GQbi83dhWtVn+hG5J9+IIr7YGICtvSJuK9k2Hx5sjw==
-X-Google-Smtp-Source: APiQypLtO6lmgP+/t4n/a1LprqtsF2znfD77bnYaqHJRks9KFzncsFlKVdj99iACRR541U4ie6ERYFDj3Eno6uEUPdw=
-X-Received: by 2002:a17:906:855a:: with SMTP id h26mr4305126ejy.56.1588273108788;
- Thu, 30 Apr 2020 11:58:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200430102908.10107-1-david@redhat.com> <20200430102908.10107-3-david@redhat.com>
- <87pnbp2dcz.fsf@x220.int.ebiederm.org> <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
- <871ro52ary.fsf@x220.int.ebiederm.org> <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
- <875zdg26hp.fsf@x220.int.ebiederm.org> <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
-In-Reply-To: <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 30 Apr 2020 11:58:16 -0700
-Message-ID: <CAPcyv4j33bwbrFMu2L0knRGRN1RDiC5kbknMNEwo-OFmPSw47w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Apr 2020 14:59:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41232 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgD3S7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:59:39 -0400
+IronPort-SDR: iK43XeTadTuU2G1WX+2mVIxrfOq1IYLXCYsz8ShB72Y3MLc3R1UwXaOYj/DNqzUXvrY/z8L656
+ QlYdWleMrmdg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 11:59:38 -0700
+IronPort-SDR: Ed+FWXPB3/MF2qsCgTd4joebR2FBMhxVdTEyzI/OAOvXfeDcNp7KT2BZTm4cXqjJfPT7ZdCKVg
+ OutbuaWtcmcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="303360005"
+Received: from unknown (HELO nsgsw-wilsonpoint.lm.intel.com) ([10.232.116.102])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Apr 2020 11:59:37 -0700
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     <linux-pci@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
+Date:   Thu, 30 Apr 2020 12:46:07 -0600
+Message-Id: <1588272369-2145-1-git-send-email-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:44 AM David Hildenbrand <david@redhat.com> wrote:
->
->  >>> If the class of memory is different then please by all means let's mark
-> >>> it differently in struct resource so everyone knows it is different.
-> >>> But that difference needs to be more than hotplug.
-> >>>
-> >>> That difference needs to be the hypervisor loaned us memory and might
-> >>> take it back at any time, or this memory is persistent and so it has
-> >>> these different characteristics so don't use it as ordinary ram.
-> >>
-> >> Yes, and I think kmem took an excellent approach of explicitly putting
-> >> that "System RAM" into a resource hierarchy. That "System RAM" won't
-> >> show up as a root node under /proc/iomem (see patch #3), which already
-> >> results in kexec-tools to treat it in a special way. I am thinking about
-> >> doing the same for virtio-mem.
-> >
-> > Reading this and your patch cover letters again my concern is that
-> > the justification seems to be letting the tail wag the dog.
-> >
-> > You want kexec-tools to behave in a certain way so you are changing the
-> > kernel.
-> >
-> > Rather it should be change the kernel to clearly reflect reality and if
-> > you can get away without a change to kexec-tools that is a bonus.
-> >
->
-> Right, because user space has to have a way to figure out what to do.
->
-> But talking about the firmware memmap, indicating something via a "raw
-> firmware-provided memory map", that is not actually in the "raw
-> firmware-provided memory map" feels wrong to me. (below)
->
->
-> >>> That information is also useful to other people looking at the system
-> >>> and seeing what is going on.
-> >>>
-> >>> Just please don't muddle the concepts, or assume that whatever subset of
-> >>> hotplug memory you are dealing with is the only subset.
-> >>
-> >> I can certainly rephrase the subject/description/comment, stating that
-> >> this is not to be used for ordinary hotplugged DIMMs - only when the
-> >> device driver is under control to decide what to do with that memory -
-> >> especially when kexec'ing.
-> >>
-> >> (previously, I called this flag MHP_DRIVER_MANAGED, but I think
-> >> MHP_NO_FIRMWARE_MEMMAP is clearer, we just need a better description)
-> >>
-> >> Would that make it clearer?
-> >
-> > I am not certain, but Andrew Morton deliberately added that
-> > firmware_map_add_hotplug call.  Which means that there is a reason
-> > for putting hotplugged memory in the firmware map.
-> >
-> > So the justification needs to take that reason into account.  The
-> > justification can not be it is hotplugged therefore it should not belong
-> > in the firmware memory map.  Unless you can show that
-> > firmware_map_add_hotplug that was actually a bug and should be removed.
-> > But as it has been that way since 2010 that seems like a long shot.
-> >
-> > So my question is what is right for the firmware map?
->
-> We have documentation for that since 2008. Andrews patch is from 2010.
->
-> Documentation/ABI/testing/sysfs-firmware-memmap
->
-> It clearly talks about "raw firmware-provided memory map" and why the
-> interface was introduced at all ("on most architectures that
-> firmware-provided memory map is modified afterwards by the kernel itself").
->
-> >
-> > Why does the firmware map support hotplug entries?
->
-> I assume:
->
-> The firmware memmap was added primarily for x86-64 kexec (and still, is
-> mostly used on x86-64 only IIRC). There, we had ACPI hotplug. When DIMMs
-> get hotplugged on real HW, they get added to e820. Same applies to
-> memory added via HyperV balloon (unless memory is unplugged via
-> ballooning and you reboot ... the the e820 is changed as well). I assume
-> we wanted to be able to reflect that, to make kexec look like a real reboot.
+Hi Bjorn & Kuppuswamy,
 
-I can at least say that this breakdown makes sense to me. Traditional
-memory hotplug results in permanent change to the raw firmware memory
-map reported by the host at next reboot. These device-driver-owned
-memory regions really want a hotplug policy per-kernel boot instance
-and should fall back to the default reserved state at reboot (kexec or
-otherwise). When I say hotplug-policy I mean whether the current
-kernel wants to treat the device range as System RAM or leave it as
-device-managed. The intent is that the follow-on kernel needs to
-re-decide the device policy.
+I see a problem in the DPC ECN [1] to _OSC in that it doesn't give us a way to
+determine if firmware supports _OSC DPC negotation, and therefore how to handle
+DPC.
 
->
-> This worked for a while. Then came dax/kmem. Now comes virtio-mem.
->
+Here is the wording of the ECN that implies that Firmware without _OSC DPC
+negotiation support should have the OSPM rely on _OSC AER negotiation when
+determining DPC control:
+
+  PCIe Base Specification suggests that Downstream Port Containment may be
+  controlled either by the Firmware or the Operating System. It also suggests
+  that the Firmware retain ownership of Downstream Port Containment if it also
+  owns AER. When the Firmware owns Downstream Port Containment, it is expected
+  to use the new "Error Disconnect Recover" notification to alert OSPM of a
+  Downstream Port Containment event.
+
+In legacy platforms, as bits in _OSC are reserved prior to implementation, ACPI
+Root Bus enumeration will mark these Host Bridges as without Native DPC
+support, even though the specification implies it's expected that AER _OSC
+negotiation determines DPC control for these platforms. There seems to be a
+need for a way to determine if the DPC control bit in _OSC is supported and
+fallback on AER otherwise.
+
+
+Currently portdrv assumes DPC control if the port has Native AER services:
+
+static int get_port_device_capability(struct pci_dev *dev)
+...
+	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+	    pci_aer_available() &&
+	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+		services |= PCIE_PORT_SERVICE_DPC;
+
+Newer firmware may not grant OSPM DPC control, if for instance, it expects to
+use Error Disconnect Recovery. However it looks like ACPI will use DPC services
+via the EDR driver, without binding the full DPC port service driver.
+
+
+If we change portdrv to probe based on host->native_dpc and not AER, then we
+break instances with legacy firmware where OSPM will clear host->native_dpc
+solely due to _OSC bits being reserved:
+
+struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+...
+	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+		host_bridge->native_dpc = 0;
+
+
+
+So my assumption instead is that host->native_dpc can be 0 and expect Native
+DPC services if AER is used. In other words, if and only if DPC probe is
+invoked from portdrv, then it needs to rely on the AER dependency. Otherwise it
+should be assumed that ACPI set up DPC via EDR. This covers legacy firmware.
+
+However it seems like that could be trouble with newer firmware that might give
+OSPM control of AER but not DPC, and would result in both Native DPC and EDR
+being in effect.
+
+
+Anyways here are two patches that give control of AER and DPC on the results of
+_OSC. They don't mess with the HEST parser as I expect those to be removed at
+some point. I need these for VMD support which doesn't even rely on _OSC, but I
+suspect this won't be the last effort as we detangle Firmware First.
+
+[1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+
+
+Jon Derrick (2):
+  PCI/AER: Use _OSC to determine Firmware First before HEST
+  PCI/DPC: Use _OSC to determine DPC support
+
+ drivers/pci/pcie/aer.c          | 3 +++
+ drivers/pci/pcie/dpc.c          | 3 ---
+ drivers/pci/pcie/portdrv_core.c | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+-- 
+1.8.3.1
+
