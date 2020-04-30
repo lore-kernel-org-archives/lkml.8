@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16D9C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B74C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0106208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8A02495A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254723;
-	bh=4ixHUeGpe00TRaEH2g0lDSvOlSg909bS7BXXCPO/Xqo=;
+	s=default; t=1588254727;
+	bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jrP60MD6XAU8NduifMUe1g4XM8tpqrV4NsJvO5ZYlMcj/7N7DOwu1EtXuDsYmPCoN
-	 zSnNWgd46xya9OoSbHmcJn6/vsa/+8rO2voLn9hOYv9f4poJ8yZP+dXyNFnOK3qa1s
-	 AeLOOYravZ9iUPJMBY6l2rRUpvLUokA5vnfvM3eA=
+	b=CACz/6JnB5xc9R8OYpjC3LkWTqKQo9cb+mudetGXBEuxnoW3VQ3loO0Aq0ZjD/Fd+
+	 44AUWzLc519RWXjNp1XMyLNzRudoObu1xgeceioQCJeiRkShBoOJ9yRwW5wQJz91vW
+	 g+/UaKLU+qnMPFjAXgHsl2bFj2okyY/k3a22LfZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgD3NwC (ORCPT
+        id S1728283AbgD3NwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgD3Nvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:49 -0400
+        id S1728215AbgD3Nvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52DE824953;
-        Thu, 30 Apr 2020 13:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35BE20873;
+        Thu, 30 Apr 2020 13:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254709;
-        bh=4ixHUeGpe00TRaEH2g0lDSvOlSg909bS7BXXCPO/Xqo=;
+        s=default; t=1588254712;
+        bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZK//3buUZBjLO4O7Ip26l6XAvO9Np8hX3O95bdvu4PsevT+M+Lx13W2w2Q4Oi3RCE
-         dZacoYg80Y8S1q6tJUv1B6YgpK2UFoNCqiLTYCu+4kjzAIBFWU4qc0KCqWAxQC/jU2
-         RflGRCpnUZiR7tM46j8SNfWZ9WwIKUv+BVuQmoIQ=
+        b=Vkx1xsPSwD8B+uMkprymH0QGeQi5o86kl4pzGmTf6Tiz25U52HGS3NrBEY4JYn8JE
+         yDXBfXvwdyPMy4tFPpYizrlSe5Ffh/SuRc3QMqW0CQUnxaZFajS7l4sLXytVwMljbs
+         NAO/HfCaExKcLT8ovi3ZILhEA4ImSWKU2mnDe4m8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 5.6 57/79] cifs: protect updating server->dstaddr with a spinlock
-Date:   Thu, 30 Apr 2020 09:50:21 -0400
-Message-Id: <20200430135043.19851-57-sashal@kernel.org>
+Cc:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 60/79] scripts/config: allow colons in option strings for sed
+Date:   Thu, 30 Apr 2020 09:50:24 -0400
+Message-Id: <20200430135043.19851-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -61,37 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
 
-[ Upstream commit fada37f6f62995cc449b36ebba1220594bfe55fe ]
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-We use a spinlock while we are reading and accessing the destination address for a server.
-We need to also use this spinlock to protect when we are modifying this address from
-reconn_set_ipaddr().
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
+
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 4804d1df8c1cf..d4a23b48e24d8 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -375,8 +375,10 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
- 		return rc;
- 	}
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
  
-+	spin_lock(&cifs_tcp_ses_lock);
- 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
- 				  strlen(ipaddr));
-+	spin_unlock(&cifs_tcp_ses_lock);
- 	kfree(ipaddr);
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
  
- 	return !rc ? -1 : 0;
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
 -- 
 2.20.1
 
