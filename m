@@ -2,147 +2,103 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2A5C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218EBC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D493206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCC5206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255460;
-	bh=+QqqH5MT7BwEnbX5kEA/4xZ+tEoa0+EXodEJiUAAEBw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GmbdH4blmiEyzOYFOTt05dEp4McV20q974bRc9u+2Q9VDT602XdBEJprOygWw63ZO
-	 vXKmU9OM/pEOMtPFXnrhZF6GCsKiFeqqWv8DCmoXSBl8HjxEor9JduR0hm1GFrbbbA
-	 Xd2V2RCcvIbQvkm58ltVJ1UuF+hQ9+KQ71dfkT6E=
+	s=default; t=1588255464;
+	bh=taLdJCQv5r2Rr6dabxuHs7+lFJKQzoONrB/y4VXGayU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BpmOGtSGYq5nF1AaACxBvHfLPZj1fddqUTEecpxJODWpI9hwee7FOovtN1xX4GHqi
+	 FD0wx2W3k+y0iEia5Gc2TaYxvpg/MVpy2vEDXn/HRZcfF3LaIXI0R18Bzp41ZCOL6o
+	 fymzc0YBaxG52s181mWU6dpP2eIaA6P2PyPSvJzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgD3NxS (ORCPT
+        id S1729505AbgD3OEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:53:18 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:26111 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgD3Nwo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:52:44 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 03UDqPGZ032676;
-        Thu, 30 Apr 2020 22:52:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 03UDqPGZ032676
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588254745;
-        bh=9ltjNZ8e4vrC7cBbZIWrYc76JCI/RhItJRQkfkK98AE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R86dw4zvy/H/eesDgAJVTUk+Cc3K8OruRnFRIPPbqkF2uwBuu/wY+B+V4UjIWmLhN
-         BQFyZu3SzNgetMRDO4PIKfSKHbINrQWqRo3hNRs2MLPN3rFP519zMJ87heGncNA4o1
-         2BZbh2kq+XE44vTGGI1CD1F6ahvvJCL6kUuMqp+Jv8kSWC8WhxEr2FbhhY0x1eiR1y
-         Y6U1XLNZterOCcl9k5ZEgrBhTS8u/6Jq5QwrOkH8xwVn6qglGcc/Q1r25LRylvhKTB
-         z7HetM64+oxIMuFXv+euF7Q++/ouE4u8b274o+t26rFsiXltG005+jS/GUfObL905B
-         ywdYixoSH1poA==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id e10so1273031vsp.12;
-        Thu, 30 Apr 2020 06:52:25 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYjcm1oxK+UPt+X8xsEf1IA2SyrBwikPi9VuZyICQ5e/0Tj+Jul
-        GA8SSD4zn6GoyHT40duoD+pdBPPjESdRfGYrbLE=
-X-Google-Smtp-Source: APiQypIy9756CPvWD3ER84r/D6PmKnL8yZmjLBInKlAqsGjqLulysxLmU7+IFcPqJmEmIY/ijlBjOyjjXpQdbOHVeZc=
-X-Received: by 2002:a05:6102:240f:: with SMTP id j15mr3325751vsi.155.1588254744247;
- Thu, 30 Apr 2020 06:52:24 -0700 (PDT)
+        Thu, 30 Apr 2020 10:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbgD3NxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:19 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A262324959;
+        Thu, 30 Apr 2020 13:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254799;
+        bh=taLdJCQv5r2Rr6dabxuHs7+lFJKQzoONrB/y4VXGayU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oBrMf3UE1yKoG8eSYKOxawNXTD9y213T+dInmaD3eUdtGbGvJY2lZeebJ4uayiCTU
+         yZ+3niQNsesNJZvxLs/4Gl9rRcKfseT3T3svbd0AwST1bRKKJ9UEUy+X6jiZ0YDjPE
+         /o+Ln6xua1nOtHlVvOcJk0scl/VHBZ+iQxvJX+gQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 54/57] net: systemport: suppress warnings on failed Rx SKB allocations
+Date:   Thu, 30 Apr 2020 09:52:15 -0400
+Message-Id: <20200430135218.20372-54-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200430131715.32c1a1f6@coco.lan>
-In-Reply-To: <20200430131715.32c1a1f6@coco.lan>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 30 Apr 2020 22:51:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASmVoZequqaj6MTimeZ0MG0fk7Wb5-9haFhgG03kDBpxg@mail.gmail.com>
-Message-ID: <CAK7LNASmVoZequqaj6MTimeZ0MG0fk7Wb5-9haFhgG03kDBpxg@mail.gmail.com>
-Subject: Re: bug: Kbuild seems to require "make prepare-objtool" in order to
- use (some) new config vars
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+From: Doug Berger <opendmb@gmail.com>
 
+[ Upstream commit 3554e54a46125030c534820c297ed7f6c3907e24 ]
 
-On Thu, Apr 30, 2020 at 8:17 PM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> Hi Masahiro,
->
-> Not sure if this was already reported (or eventually fixed) upstream.
->
-> While doing a Kconfig reorg on media, I noticed a few weird things,
-> requiring me to call, on a few situations, "make modules_prepare"
-> manually after some changes.
->
-> I'm now working on a patchset to yet to be merged upstream aiming to
-> resurrect a driver from staging. It is currently on this tree
-> (with is based at the media development tree, on the top of 5.7-rc1):
->
->         https://git.linuxtv.org/mchehab/experimental.git/log/?h=atomisp_v2
->
-> There, I was able to identify a misbehavior that it is probably
-> what forced me to need calling "make modules_prepare".
->
-> The atomisp driver is on a very bad shape. Among its problems, it has a
-> set of header definitions that should be different for two different
-> variants of the supported devices. In order to be able to compile for
-> either one of the variants, I added a new config var:
-> CONFIG_VIDEO_ATOMISP_ISP2401.
->
-> The problem is that calling just
->
->         ./scripts/config -e CONFIG_VIDEO_ATOMISP_ISP2401
->
-> or
->         ./scripts/config -d CONFIG_VIDEO_ATOMISP_ISP2401
+The driver is designed to drop Rx packets and reclaim the buffers
+when an allocation fails, and the network interface needs to safely
+handle this packet loss. Therefore, an allocation failure of Rx
+SKBs is relatively benign.
 
+However, the output of the warning message occurs with a high
+scheduling priority that can cause excessive jitter/latency for
+other high priority processing.
 
-scripts/config does not take the dependency into consideration
-at all.
+This commit suppresses the warning messages to prevent scheduling
+problems while retaining the failure count in the statistics of
+the network interface.
 
-You need to enable/disable other options that it depends on.
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/bcmsysport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
-./scripts/config -e STAGING -e STAGING_MEDIA -e MEDIA_SUPPORT -e
-MEDIA_CONTROLLER -e INTEL_ATOMISP -e VIDEOBUF_VMALLOC -e VIDEO_ATOMISP
--d MEDIA_SUPPORT_FILTER -e VIDEO_DEV -e VIDEO_V4L2 -e
-VIDEO_ATOMISP_ISP2401
-
-allows me to enable VIDEO_ATOMISP_ISP2401.
-
-
-It is painful to debug such complicated dependency graph, though.
-
-
->
-> is not enough anymore for the build to actually use the new config value.
->
-> It just keeps silently using the old config value.
->
-> I double-checked it by adding this macro at the Makefile:
->
->         $(info ************ ISP2401: $(CONFIG_VIDEO_ATOMISP_ISP2401) ************)
->
-> The Makefile doesn't see the change, except if I explicitly call
-> "make modules_prepare" or "make prepare-objtool".
->
-> Even calling "make oldconfig" doesn't make it use the new CONFIG_*
-
-
-I do not know.
-
-I cannot look into it without detailed steps to reproduce it.
-
-
-
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index ad86a186ddc5f..4dfdb5a58025b 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -666,7 +666,8 @@ static struct sk_buff *bcm_sysport_rx_refill(struct bcm_sysport_priv *priv,
+ 	dma_addr_t mapping;
+ 
+ 	/* Allocate a new SKB for a new packet */
+-	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
++	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
++				 GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!skb) {
+ 		priv->mib.alloc_rx_buff_failed++;
+ 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
