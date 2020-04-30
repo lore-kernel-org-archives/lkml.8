@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79055C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A59C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6422220787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CADE20836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgD3REn (ORCPT
+        id S1727918AbgD3REs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:04:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:59262 "EHLO foss.arm.com"
+        Thu, 30 Apr 2020 13:04:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:59224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgD3REk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:04:40 -0400
+        id S1726534AbgD3REg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 13:04:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C355B1045;
-        Thu, 30 Apr 2020 10:04:39 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE753113E;
+        Thu, 30 Apr 2020 10:04:35 -0700 (PDT)
 Received: from melchizedek.cambridge.arm.com (melchizedek.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 748003F73D;
-        Thu, 30 Apr 2020 10:04:38 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FCDB3F73D;
+        Thu, 30 Apr 2020 10:04:34 -0700 (PDT)
 From:   James Morse <james.morse@arm.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org
 Cc:     Fenghua Yu <fenghua.yu@intel.com>,
@@ -34,9 +34,9 @@ Cc:     Fenghua Yu <fenghua.yu@intel.com>,
         H Peter Anvin <hpa@zytor.com>,
         Babu Moger <Babu.Moger@amd.com>,
         James Morse <james.morse@arm.com>
-Subject: [PATCH v2 10/10] cacheinfo: Move resctrl's get_cache_id() to the cacheinfo header file
-Date:   Thu, 30 Apr 2020 18:04:00 +0100
-Message-Id: <20200430170400.21501-11-james.morse@arm.com>
+Subject: [PATCH v2 08/10] x86/resctrl: Merge AMD/Intel parse_bw() calls
+Date:   Thu, 30 Apr 2020 18:03:58 +0100
+Message-Id: <20200430170400.21501-9-james.morse@arm.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20200430170400.21501-1-james.morse@arm.com>
 References: <20200430170400.21501-1-james.morse@arm.com>
@@ -47,105 +47,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-resctrl/core.c defines get_cache_id() for use in its cpu-hotplug
-callbacks. This gets the id attribute of the cache at the corresponding
-level of a cpu.
+Now that we've explained arch_needs_linear to resctrl, the parse_bw()
+calls are almost the same between AMD and Intel.
 
-Later rework means this private function needs to be shared. Move
-it to the header file.
+The difference is '!is_mba_sc()', which is not checked on AMD. This
+will always be true on AMD CPUs as mba_sc cannot be enabled as
+is_mba_linear() is false.
 
-The name conflicts with a different definition in intel_cacheinfo.c,
-name it get_cpu_cacheinfo_id() to show its relation with
-get_cpu_cacheinfo().
+Removing this duplication means user-space visible behaviour and
+error messages are not validated or generated in different places.
 
-Now this is visible on other architectures, check the id attribute
-has actually been set.
-
+CC: Babu Moger <Babu.Moger@amd.com>
 Signed-off-by: James Morse <james.morse@arm.com>
 ---
- arch/x86/kernel/cpu/resctrl/core.c | 17 ++---------------
- include/linux/cacheinfo.h          | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+), 15 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c        |  3 +-
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 57 +----------------------
+ arch/x86/kernel/cpu/resctrl/internal.h    |  6 +--
+ 3 files changed, 5 insertions(+), 61 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 00c88f42742c..f6458cefcac3 100644
+index 40186c54b05d..7a6a6303fc05 100644
 --- a/arch/x86/kernel/cpu/resctrl/core.c
 +++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -350,19 +350,6 @@ static void rdt_get_cdp_l2_config(void)
- 	rdt_get_cdp_config(RDT_RESOURCE_L2, RDT_RESOURCE_L2CODE);
+@@ -168,6 +168,7 @@ struct rdt_resource rdt_resources_all[] = {
+ 		.name			= "MB",
+ 		.domains		= domain_init(RDT_RESOURCE_MBA),
+ 		.cache_level		= 3,
++		.parse_ctrlval		= parse_bw,
+ 		.format_str		= "%d=%*u",
+ 		.fflags			= RFTYPE_RES_MB,
+ 	},
+@@ -926,7 +927,6 @@ static __init void rdt_init_res_defs_intel(void)
+ 		else if (r->rid == RDT_RESOURCE_MBA) {
+ 			r->msr_base = MSR_IA32_MBA_THRTL_BASE;
+ 			r->msr_update = mba_wrmsr_intel;
+-			r->parse_ctrlval = parse_bw_intel;
+ 		}
+ 	}
  }
+@@ -946,7 +946,6 @@ static __init void rdt_init_res_defs_amd(void)
+ 		else if (r->rid == RDT_RESOURCE_MBA) {
+ 			r->msr_base = MSR_IA32_MBA_BW_BASE;
+ 			r->msr_update = mba_wrmsr_amd;
+-			r->parse_ctrlval = parse_bw_amd;
+ 		}
+ 	}
+ }
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index db8e6c0cadb1..c983efddb537 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -21,59 +21,6 @@
+ #include <linux/slab.h>
+ #include "internal.h"
  
--static int get_cache_id(int cpu, int level)
+-/*
+- * Check whether MBA bandwidth percentage value is correct. The value is
+- * checked against the minimum and maximum bandwidth values specified by
+- * the hardware. The allocated bandwidth percentage is rounded to the next
+- * control step available on the hardware.
+- */
+-static bool bw_validate_amd(char *buf, unsigned long *data,
+-			    struct rdt_resource *r)
 -{
--	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
--	int i;
+-	unsigned long bw;
+-	int ret;
 -
--	for (i = 0; i < ci->num_leaves; i++) {
--		if (ci->info_list[i].level == level)
--			return ci->info_list[i].id;
+-	/* temporary: always false on AMD */
+-	if (!r->membw.delay_linear && r->membw.arch_needs_linear) {
+-		rdt_last_cmd_puts("No support for non-linear MB domains\n");
+-		return false;
 -	}
 -
--	return -1;
+-	ret = kstrtoul(buf, 10, &bw);
+-	if (ret) {
+-		rdt_last_cmd_printf("Non-decimal digit in MB value %s\n", buf);
+-		return false;
+-	}
+-
+-	if (bw < r->membw.min_bw || bw > r->default_ctrl) {
+-		rdt_last_cmd_printf("MB value %ld out of range [%d,%d]\n", bw,
+-				    r->membw.min_bw, r->default_ctrl);
+-		return false;
+-	}
+-
+-	*data = roundup(bw, (unsigned long)r->membw.bw_gran);
+-	return true;
 -}
 -
- static void
- mba_wrmsr_amd(struct rdt_domain *d, struct msr_param *m, struct rdt_resource *r)
+-int parse_bw_amd(struct rdt_parse_data *data, struct rdt_resource *r,
+-		 struct rdt_domain *d)
+-{
+-	unsigned long bw_val;
+-
+-	if (d->have_new_ctrl) {
+-		rdt_last_cmd_printf("Duplicate domain %d\n", d->id);
+-		return -EINVAL;
+-	}
+-
+-	if (!bw_validate_amd(data->buf, &bw_val, r))
+-		return -EINVAL;
+-
+-	d->new_ctrl = bw_val;
+-	d->have_new_ctrl = true;
+-
+-	return 0;
+-}
+-
+ /*
+  * Check whether MBA bandwidth percentage value is correct. The value is
+  * checked against the minimum and max bandwidth values specified by the
+@@ -110,8 +57,8 @@ static bool bw_validate(char *buf, unsigned long *data, struct rdt_resource *r)
+ 	return true;
+ }
+ 
+-int parse_bw_intel(struct rdt_parse_data *data, struct rdt_resource *r,
+-		   struct rdt_domain *d)
++int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
++	     struct rdt_domain *d)
  {
-@@ -560,7 +547,7 @@ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_domain *d)
-  */
- static void domain_add_cpu(int cpu, struct rdt_resource *r)
- {
--	int id = get_cache_id(cpu, r->cache_level);
-+	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
- 	struct list_head *add_pos = NULL;
- 	struct rdt_domain *d;
+ 	unsigned long bw_val;
  
-@@ -606,7 +593,7 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 215be9957acf..c8d84aec62d3 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -462,10 +462,8 @@ struct rdt_resource {
  
- static void domain_remove_cpu(int cpu, struct rdt_resource *r)
- {
--	int id = get_cache_id(cpu, r->cache_level);
-+	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
- 	struct rdt_domain *d;
+ int parse_cbm(struct rdt_parse_data *data, struct rdt_resource *r,
+ 	      struct rdt_domain *d);
+-int parse_bw_intel(struct rdt_parse_data *data, struct rdt_resource *r,
+-		   struct rdt_domain *d);
+-int parse_bw_amd(struct rdt_parse_data *data, struct rdt_resource *r,
+-		 struct rdt_domain *d);
++int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
++	     struct rdt_domain *d);
  
- 	d = rdt_find_domain(r, id, NULL);
-diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-index 46b92cd61d0c..4f72b47973c3 100644
---- a/include/linux/cacheinfo.h
-+++ b/include/linux/cacheinfo.h
-@@ -3,6 +3,7 @@
- #define _LINUX_CACHEINFO_H
+ extern struct mutex rdtgroup_mutex;
  
- #include <linux/bitops.h>
-+#include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/smp.h>
- 
-@@ -119,4 +120,24 @@ int acpi_find_last_cache_level(unsigned int cpu);
- 
- const struct attribute_group *cache_get_priv_group(struct cacheinfo *this_leaf);
- 
-+/*
-+ * Get the id of the cache associated with @cpu at level @level.
-+ * cpuhp lock must be held.
-+ */
-+static inline int get_cpu_cacheinfo_id(int cpu, int level)
-+{
-+	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
-+	int i;
-+
-+	for (i = 0; i < ci->num_leaves; i++) {
-+		if (ci->info_list[i].level == level) {
-+			if (ci->info_list[i].attributes & CACHE_ID)
-+				return ci->info_list[i].id;
-+			return -1;
-+		}
-+	}
-+
-+	return -1;
-+}
-+
- #endif /* _LINUX_CACHEINFO_H */
 -- 
 2.26.1
 
