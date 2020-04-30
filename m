@@ -2,286 +2,518 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1FAC83007
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C533AC83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA562082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A902082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:04:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ewodhdp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgD3BC4 (ORCPT
+        id S1726616AbgD3BEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:02:56 -0400
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:58736 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgD3BC4 (ORCPT
+        Wed, 29 Apr 2020 21:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726279AbgD3BEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:02:56 -0400
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 03U0ROcm022639;
-        Wed, 29 Apr 2020 20:28:48 -0400
-Received: from pbmxdp03.intersil.corp (pbmxdp03.pb.intersil.com [132.158.200.224])
-        by pbmsgap02.intersil.com with ESMTP id 30mfccj8cw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 20:28:48 -0400
-Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp03.intersil.corp (132.158.200.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Wed, 29 Apr 2020 20:28:47 -0400
-Received: from localhost (132.158.202.109) by pbmxdp01.intersil.corp
- (132.158.200.222) with Microsoft SMTP Server id 15.1.1531.3 via Frontend
- Transport; Wed, 29 Apr 2020 20:28:46 -0400
-From:   <vincent.cheng.xh@renesas.com>
-To:     <richardcochran@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: [PATCH net-next 3/3] ptp: ptp_clockmatrix: Add adjphase() to support PHC write phase mode.
-Date:   Wed, 29 Apr 2020 20:28:25 -0400
-Message-ID: <1588206505-21773-4-git-send-email-vincent.cheng.xh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
-References: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
-X-TM-AS-MML: disable
+        Wed, 29 Apr 2020 21:04:11 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20913C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:04:11 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ms17so11634pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/d+2FXYYJQin+PulyZilQ2dQwezL2L3EuBnOgOmYOXU=;
+        b=Ewodhdp6D51A5Y1bW4IJFsnO1Z3d3n42Sqi6MHYa6M+vzXCN7TyZj2IfR8qivmqych
+         aauF1ST07yGo2mEHtXd+ChT6MDxE3eldmilJI2V6V4RORGyCrMF4hNEx98zx/AmPfoB5
+         jEYqb+hD6dCrUKahj0eZzXy98h5968mpVK0Iga/HZO97Vt6nhYYsRG9Esd7R0i/iWTbD
+         QTtenxUoHZHjVLjakTfC1FkgtpWY0DzztdGHMrxI13/o6yg3GRiwBElkiFldLPxoBfuH
+         onNyYnbe8Q/Q0aPvOLYRTY9QpDvTj62nelso/aNS+c+DpfvmOdmRDJ4aV7iOs2u4dE86
+         gJzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/d+2FXYYJQin+PulyZilQ2dQwezL2L3EuBnOgOmYOXU=;
+        b=cj+tAStBIL8a2pf4ngdEAwO7g2SonPebirqMbKaXf/AoynNfkUP3PL4MRVjBQj6o4F
+         jpvGT3ESw3BVkIDq2DbeVwOvbuV4jhYIYt7+d2ZXtxtBKtSTzVU6tB0MmLtDxR+7y+No
+         2RtHwi9CiXypz002eOq65NUjNI1NQVITOPIihVWX3dpKLd3hqkHKVD9RGnMelwZrwqdC
+         yl5rjn5lE9cUyqd28vpXr+Kc+rAsNNCd1x5VC6+DB6wYDYIIYxfQLixpPl5CyriI9Y4w
+         nkVSfHdCp19EXcQf7HjqwWZb6wdXnLxj0AwaNsiJ+/EwxfGeWKHeo3c6nYYo2OeCOwAH
+         zADg==
+X-Gm-Message-State: AGi0PuYlFreCHLD+haWVCZDsiYNsoVY6aA17bRbJcKfdrKZLlR2E9lfE
+        Xk7egqAyqQPrMI/6LiZvvIGLBw==
+X-Google-Smtp-Source: APiQypJhxvGiZIL3YYFpAGL8fLlGKuLpnj8WD3W75MeXiSsjsbtLWYlhNtdrd1nFCOPgGkL6Ht7ocw==
+X-Received: by 2002:a17:902:8218:: with SMTP id x24mr1203763pln.192.1588208649031;
+        Wed, 29 Apr 2020 18:04:09 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:202:2523:d194:de3b:636f])
+        by smtp.gmail.com with ESMTPSA id gv24sm365131pjb.6.2020.04.29.18.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 18:04:07 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 18:04:05 -0700
+From:   Michel Lespinasse <walken@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, dave@stgolabs.net, mingo@kernel.org,
+        tglx@linutronix.de, oleg@redhat.com, irogers@google.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org
+Subject: Re: [RFC][PATCH 1/7] rbtree: Add generic add and find helpers
+Message-ID: <20200430010405.GA237715@google.com>
+References: <20200429153258.563269446@infradead.org>
+ <20200429153549.006661686@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_11:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2002250000 definitions=main-2004300000
-X-Proofpoint-Spam-Reason: mlx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429153549.006661686@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+Hi Peter,
 
-Add idtcm_adjphase() to support PHC write phase mode.
+On Wed, Apr 29, 2020 at 05:32:59PM +0200, Peter Zijlstra wrote:
+> I've always been bothered by the endless (fragile) boilerplate for
+> rbtree, and I recently wrote some rbtree helpers for objtool and
+> figured I should lift them into the kernel and use them more widely.
+> 
+> Provide:
+> 
+> partial-order; less() based:
+>  - rb_add(): add a new entry to the rbtree
+>  - rb_add_cached(): like rb_add(), but for a rb_root_cached
+> 
+> total-order; cmp() based:
+>  - rb_find(): find an entry in an rbtree
+>  - rb_find_first(): find the first (leftmost) matching entry
+>  - rb_next_match(): continue from rb_find_first()
+>  - rb_for_each(): for loop with rb_find_first() / rb_next_match()
+> 
+> Also make rb_add_cached() / rb_erase_cached() return true when
+> leftmost.
+> 
+> Inlining and constant propagation should see the compiler inline the
+> whole thing, including the various compare functions.
 
-Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
----
- drivers/ptp/ptp_clockmatrix.c | 123 ++++++++++++++++++++++++++++++++++++++++++
- drivers/ptp/ptp_clockmatrix.h |  11 +++-
- 2 files changed, 132 insertions(+), 2 deletions(-)
+I really like the idea of this change. Also,I think it opens avenues
+for converting some users which had previously been avoiding raw rbtrees
+seemingly only because they didn't want to write this boilerplate.
 
-diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
-index a3f6088..07b13c3 100644
---- a/drivers/ptp/ptp_clockmatrix.c
-+++ b/drivers/ptp/ptp_clockmatrix.c
-@@ -24,6 +24,15 @@ MODULE_LICENSE("GPL");
- 
- #define SETTIME_CORRECTION (0)
- 
-+static void set_write_phase_ready(struct kthread_work *work)
-+{
-+	struct idtcm_channel *ch = container_of(work,
-+						struct idtcm_channel,
-+						write_phase_ready_work.work);
-+
-+	ch->write_phase_ready = 1;
-+}
-+
- static int char_array_to_timespec(u8 *buf,
- 				  u8 count,
- 				  struct timespec64 *ts)
-@@ -871,6 +880,69 @@ static int idtcm_set_pll_mode(struct idtcm_channel *channel,
- 
- /* PTP Hardware Clock interface */
- 
-+/**
-+ * @brief Maximum absolute value for write phase offset in picoseconds
-+ *
-+ * Destination signed register is 32-bit register in resolution of 50ps
-+ *
-+ * 0x7fffffff * 50 =  2147483647 * 50 = 107374182350
-+ */
-+static int _idtcm_adjphase(struct idtcm_channel *channel, s32 deltaNs)
-+{
-+	struct idtcm *idtcm = channel->idtcm;
-+
-+	int err;
-+	u8 i;
-+	u8 buf[4] = {0};
-+	s32 phaseIn50Picoseconds;
-+	s64 phaseOffsetInPs;
-+
-+	if (channel->pll_mode != PLL_MODE_WRITE_PHASE) {
-+
-+		kthread_cancel_delayed_work_sync(
-+			&channel->write_phase_ready_work);
-+
-+		err = idtcm_set_pll_mode(channel, PLL_MODE_WRITE_PHASE);
-+
-+		if (err)
-+			return err;
-+
-+		channel->write_phase_ready = 0;
-+
-+		kthread_queue_delayed_work(channel->kworker,
-+					   &channel->write_phase_ready_work,
-+					   msecs_to_jiffies(WR_PHASE_SETUP_MS));
-+	}
-+
-+	if (!channel->write_phase_ready)
-+		deltaNs = 0;
-+
-+	phaseOffsetInPs = (s64)deltaNs * 1000;
-+
-+	/*
-+	 * Check for 32-bit signed max * 50:
-+	 *
-+	 * 0x7fffffff * 50 =  2147483647 * 50 = 107374182350
-+	 */
-+	if (phaseOffsetInPs > MAX_ABS_WRITE_PHASE_PICOSECONDS)
-+		phaseOffsetInPs = MAX_ABS_WRITE_PHASE_PICOSECONDS;
-+	else if (phaseOffsetInPs < -MAX_ABS_WRITE_PHASE_PICOSECONDS)
-+		phaseOffsetInPs = -MAX_ABS_WRITE_PHASE_PICOSECONDS;
-+
-+	phaseIn50Picoseconds = DIV_ROUND_CLOSEST(div64_s64(phaseOffsetInPs, 50),
-+						 1);
-+
-+	for (i = 0; i < 4; i++) {
-+		buf[i] = phaseIn50Picoseconds & 0xff;
-+		phaseIn50Picoseconds >>= 8;
-+	}
-+
-+	err = idtcm_write(idtcm, channel->dpll_phase, DPLL_WR_PHASE,
-+			  buf, sizeof(buf));
-+
-+	return err;
-+}
-+
- static int idtcm_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
- {
- 	struct idtcm_channel *channel =
-@@ -977,6 +1049,24 @@ static int idtcm_adjtime(struct ptp_clock_info *ptp, s64 delta)
- 	return err;
- }
- 
-+static int idtcm_adjphase(struct ptp_clock_info *ptp, s32 delta)
-+{
-+	struct idtcm_channel *channel =
-+		container_of(ptp, struct idtcm_channel, caps);
-+
-+	struct idtcm *idtcm = channel->idtcm;
-+
-+	int err;
-+
-+	mutex_lock(&idtcm->reg_lock);
-+
-+	err = _idtcm_adjphase(channel, delta);
-+
-+	mutex_unlock(&idtcm->reg_lock);
-+
-+	return err;
-+}
-+
- static int idtcm_enable(struct ptp_clock_info *ptp,
- 			struct ptp_clock_request *rq, int on)
- {
-@@ -1055,6 +1145,7 @@ static const struct ptp_clock_info idtcm_caps = {
- 	.owner		= THIS_MODULE,
- 	.max_adj	= 244000,
- 	.n_per_out	= 1,
-+	.adjphase	= &idtcm_adjphase,
- 	.adjfreq	= &idtcm_adjfreq,
- 	.adjtime	= &idtcm_adjtime,
- 	.gettime64	= &idtcm_gettime,
-@@ -1062,6 +1153,21 @@ static const struct ptp_clock_info idtcm_caps = {
- 	.enable		= &idtcm_enable,
- };
- 
-+static int write_phase_worker_setup(struct idtcm_channel *channel, int index)
-+{
-+	channel->kworker = kthread_create_worker(0, "channel%d", index);
-+
-+	if (IS_ERR(channel->kworker))
-+		return PTR_ERR(channel->kworker);
-+
-+	channel->write_phase_ready = 0;
-+
-+	kthread_init_delayed_work(&channel->write_phase_ready_work,
-+				  set_write_phase_ready);
-+
-+	return 0;
-+}
-+
- static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
- {
- 	struct idtcm_channel *channel;
-@@ -1146,6 +1252,10 @@ static int idtcm_enable_channel(struct idtcm *idtcm, u32 index)
- 	if (!channel->ptp_clock)
- 		return -ENOTSUPP;
- 
-+	err = write_phase_worker_setup(channel, index);
-+	if (err)
-+		return err;
-+
- 	dev_info(&idtcm->client->dev, "PLL%d registered as ptp%d\n",
- 		 index, channel->ptp_clock->index);
- 
-@@ -1284,6 +1394,19 @@ static int idtcm_remove(struct i2c_client *client)
- {
- 	struct idtcm *idtcm = i2c_get_clientdata(client);
- 
-+	int i;
-+	struct idtcm_channel *channel;
-+
-+	for (i = 0; i < MAX_PHC_PLL; i++) {
-+		channel = &idtcm->channel[i];
-+
-+		if (channel->kworker) {
-+			kthread_cancel_delayed_work_sync(
-+				&channel->write_phase_ready_work);
-+			kthread_destroy_worker(channel->kworker);
-+		}
-+	}
-+
- 	ptp_clock_unregister_all(idtcm);
- 
- 	mutex_destroy(&idtcm->reg_lock);
-diff --git a/drivers/ptp/ptp_clockmatrix.h b/drivers/ptp/ptp_clockmatrix.h
-index 6c1f93a..36e133d 100644
---- a/drivers/ptp/ptp_clockmatrix.h
-+++ b/drivers/ptp/ptp_clockmatrix.h
-@@ -15,6 +15,8 @@
- #define FW_FILENAME	"idtcm.bin"
- #define MAX_PHC_PLL	4
- 
-+#define MAX_ABS_WRITE_PHASE_PICOSECONDS (107374182350LL)
-+
- #define PLL_MASK_ADDR		(0xFFA5)
- #define DEFAULT_PLL_MASK	(0x04)
- 
-@@ -33,8 +35,9 @@
- 
- #define POST_SM_RESET_DELAY_MS		(3000)
- #define PHASE_PULL_IN_THRESHOLD_NS	(150000)
--#define TOD_WRITE_OVERHEAD_COUNT_MAX    (5)
--#define TOD_BYTE_COUNT                  (11)
-+#define TOD_WRITE_OVERHEAD_COUNT_MAX	(5)
-+#define TOD_BYTE_COUNT			(11)
-+#define WR_PHASE_SETUP_MS		(5000)
- 
- /* Values of DPLL_N.DPLL_MODE.PLL_MODE */
- enum pll_mode {
-@@ -77,6 +80,10 @@ struct idtcm_channel {
- 	u16			hw_dpll_n;
- 	enum pll_mode		pll_mode;
- 	u16			output_mask;
-+	int			write_phase_ready;
-+
-+	struct kthread_worker		*kworker;
-+	struct kthread_delayed_work	write_phase_ready_work;
- };
- 
- struct idtcm {
+Few questions:
+
+- Adding the rb_add_cached() / rb_erase_cached() return value looks
+  like it almost belongs to a separate patch. Is this only used in
+  patch 3/7 (sched/deadline) or did I miss other uses ? Not objecting
+  to it, but it wasn't obvious to me when reading the patch what the
+  return value was for.
+
+- Have you considered passing a cmp() function to rb_add() and
+  rb_add_cached(), and having these test cmp() < 0 rather than less() ?
+  I figure every user will need to have a cmp() function, so it'd be
+  nicer if they didn't also need a less() function, if the generated
+  code is similar (if you checked and rejected it because of bad code,
+  please just say so).
+
+Reviewed-by: Michel Lespinasse <walken@google.com>
+
+I also looked at the other commits in the series, making use of the
+helpers, and they seem very reasonable but I did not give them as
+thorough a look at this one.
+
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/rbtree.h       |  127 +++++++++++++++++++++++++++++++++++++++++-
+>  tools/include/linux/rbtree.h |  129 ++++++++++++++++++++++++++++++++++++++++++-
+>  tools/objtool/elf.c          |   63 ++-------------------
+>  3 files changed, 257 insertions(+), 62 deletions(-)
+> 
+> --- a/include/linux/rbtree.h
+> +++ b/include/linux/rbtree.h
+> @@ -141,12 +141,18 @@ static inline void rb_insert_color_cache
+>  	rb_insert_color(node, &root->rb_root);
+>  }
+>  
+> -static inline void rb_erase_cached(struct rb_node *node,
+> +static inline bool rb_erase_cached(struct rb_node *node,
+>  				   struct rb_root_cached *root)
+>  {
+> -	if (root->rb_leftmost == node)
+> +	bool leftmost = false;
+> +
+> +	if (root->rb_leftmost == node) {
+>  		root->rb_leftmost = rb_next(node);
+> +		leftmost = true;
+> +	}
+>  	rb_erase(node, &root->rb_root);
+> +
+> +	return leftmost;
+>  }
+>  
+>  static inline void rb_replace_node_cached(struct rb_node *victim,
+> @@ -158,4 +164,121 @@ static inline void rb_replace_node_cache
+>  	rb_replace_node(victim, new, &root->rb_root);
+>  }
+>  
+> +static inline bool rb_add_cached(struct rb_root_cached *tree, struct rb_node *node,
+> +				 bool (*less)(struct rb_node *, const struct rb_node *))
+> +{
+> +	struct rb_node **link = &tree->rb_root.rb_node;
+> +	struct rb_node *parent = NULL;
+> +	bool leftmost = true;
+> +
+> +	while (*link) {
+> +		parent = *link;
+> +		if (less(node, parent)) {
+> +			link = &parent->rb_left;
+> +		} else {
+> +			link = &parent->rb_right;
+> +			leftmost = false;
+> +		}
+> +	}
+> +
+> +	rb_link_node(node, parent, link);
+> +	rb_insert_color_cached(node, tree, leftmost);
+> +
+> +	return leftmost;
+> +}
+> +
+> +static inline void rb_add(struct rb_root *tree, struct rb_node *node,
+> +			  bool (*less)(struct rb_node *, const struct rb_node *))
+> +{
+> +	struct rb_node **link = &tree->rb_node;
+> +	struct rb_node *parent = NULL;
+> +
+> +	while (*link) {
+> +		parent = *link;
+> +		if (less(node, parent))
+> +			link = &parent->rb_left;
+> +		else
+> +			link = &parent->rb_right;
+> +	}
+> +
+> +	rb_link_node(node, parent, link);
+> +	rb_insert_color(node, tree);
+> +}
+> +
+> +static inline struct rb_node *rb_find_add(struct rb_root *tree, struct rb_node *node,
+> +			  int (*cmp)(struct rb_node *, const struct rb_node *))
+> +{
+> +	struct rb_node **link = &tree->rb_node;
+> +	struct rb_node *parent = NULL;
+> +	int c;
+> +
+> +	while (*link) {
+> +		parent = *link;
+> +		c = cmp(node, parent);
+> +
+> +		if (c < 0)
+> +			link = &parent->rb_left;
+> +		else if (c > 0)
+> +			link = &parent->rb_right;
+> +		else
+> +			return parent;
+> +	}
+> +
+> +	rb_link_node(node, parent, link);
+> +	rb_insert_color(node, tree);
+> +	return NULL;
+> +}
+> +
+> +static inline struct rb_node *rb_find(struct rb_root *tree, const void *key,
+> +				      int (*cmp)(const void *key, const struct rb_node *))
+> +{
+> +	struct rb_node *node = tree->rb_node;
+> +
+> +	while (node) {
+> +		int c = cmp(key, node);
+> +		if (c < 0) {
+> +			node = node->rb_left;
+> +		} else if (c > 0) {
+> +			node = node->rb_right;
+> +		} else
+> +			return node;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static inline struct rb_node *rb_find_first(struct rb_root *tree, const void *key,
+> +					    int (*cmp)(const void *key, const struct rb_node *))
+> +{
+> +	struct rb_node *node = tree->rb_node;
+> +	struct rb_node *match = NULL;
+> +
+> +	while (node) {
+> +		int c = cmp(key, node);
+> +		if (c <= 0) {
+> +			if (!c)
+> +				match = node;
+> +			node = node->rb_left;
+> +		} else if (c > 0) {
+> +			node = node->rb_right;
+> +		}
+> +	}
+> +
+> +	return match;
+> +}
+> +
+> +static inline struct rb_node *rb_next_match(struct rb_node *node, const void *key,
+> +					    int (*cmp)(const void *key, const struct rb_node *))
+> +{
+> +	node = rb_next(node);
+> +	if (node && cmp(key, node))
+> +		node = NULL;
+> +	return node;
+> +}
+> +
+> +#define rb_for_each(tree, node, key, cmp) \
+> +	for ((node) = rb_find_first((tree), (key), (cmp)); \
+> +	     (node); (node) = rb_next_match((node), (key), (cmp)))
+> +
+> +
+>  #endif	/* _LINUX_RBTREE_H */
+> --- a/tools/include/linux/rbtree.h
+> +++ b/tools/include/linux/rbtree.h
+> @@ -135,12 +135,18 @@ static inline void rb_insert_color_cache
+>  	rb_insert_color(node, &root->rb_root);
+>  }
+>  
+> -static inline void rb_erase_cached(struct rb_node *node,
+> +static inline bool rb_erase_cached(struct rb_node *node,
+>  				   struct rb_root_cached *root)
+>  {
+> -	if (root->rb_leftmost == node)
+> +	bool leftmost = false;
+> +
+> +	if (root->rb_leftmost == node) {
+>  		root->rb_leftmost = rb_next(node);
+> +		leftmost = true;
+> +	}
+>  	rb_erase(node, &root->rb_root);
+> +
+> +	return leftmost;
+>  }
+>  
+>  static inline void rb_replace_node_cached(struct rb_node *victim,
+> @@ -152,4 +158,121 @@ static inline void rb_replace_node_cache
+>  	rb_replace_node(victim, new, &root->rb_root);
+>  }
+>  
+> -#endif /* __TOOLS_LINUX_PERF_RBTREE_H */
+> +static inline bool rb_add_cached(struct rb_root_cached *tree, struct rb_node *node,
+> +				 bool (*less)(struct rb_node *, const struct rb_node *))
+> +{
+> +	struct rb_node **link = &tree->rb_root.rb_node;
+> +	struct rb_node *parent = NULL;
+> +	bool leftmost = true;
+> +
+> +	while (*link) {
+> +		parent = *link;
+> +		if (less(node, parent)) {
+> +			link = &parent->rb_left;
+> +		} else {
+> +			link = &parent->rb_right;
+> +			leftmost = false;
+> +		}
+> +	}
+> +
+> +	rb_link_node(node, parent, link);
+> +	rb_insert_color_cached(node, tree, leftmost);
+> +
+> +	return leftmost;
+> +}
+> +
+> +static inline void rb_add(struct rb_root *tree, struct rb_node *node,
+> +			  bool (*less)(struct rb_node *, const struct rb_node *))
+> +{
+> +	struct rb_node **link = &tree->rb_node;
+> +	struct rb_node *parent = NULL;
+> +
+> +	while (*link) {
+> +		parent = *link;
+> +		if (less(node, parent))
+> +			link = &parent->rb_left;
+> +		else
+> +			link = &parent->rb_right;
+> +	}
+> +
+> +	rb_link_node(node, parent, link);
+> +	rb_insert_color(node, tree);
+> +}
+> +
+> +static inline struct rb_node *rb_find_add(struct rb_root *tree, struct rb_node *node,
+> +			  int (*cmp)(struct rb_node *, const struct rb_node *))
+> +{
+> +	struct rb_node **link = &tree->rb_node;
+> +	struct rb_node *parent = NULL;
+> +	int c;
+> +
+> +	while (*link) {
+> +		parent = *link;
+> +		c = cmp(node, parent);
+> +
+> +		if (c < 0)
+> +			link = &parent->rb_left;
+> +		else if (c > 0)
+> +			link = &parent->rb_right;
+> +		else
+> +			return parent;
+> +	}
+> +
+> +	rb_link_node(node, parent, link);
+> +	rb_insert_color(node, tree);
+> +	return NULL;
+> +}
+> +
+> +static inline struct rb_node *rb_find(struct rb_root *tree, const void *key,
+> +				      int (*cmp)(const void *key, const struct rb_node *))
+> +{
+> +	struct rb_node *node = tree->rb_node;
+> +
+> +	while (node) {
+> +		int c = cmp(key, node);
+> +		if (c < 0) {
+> +			node = node->rb_left;
+> +		} else if (c > 0) {
+> +			node = node->rb_right;
+> +		} else
+> +			return node;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static inline struct rb_node *rb_find_first(struct rb_root *tree, const void *key,
+> +					    int (*cmp)(const void *key, const struct rb_node *))
+> +{
+> +	struct rb_node *node = tree->rb_node;
+> +	struct rb_node *match = NULL;
+> +
+> +	while (node) {
+> +		int c = cmp(key, node);
+> +		if (c <= 0) {
+> +			if (!c)
+> +				match = node;
+> +			node = node->rb_left;
+> +		} else if (c > 0) {
+> +			node = node->rb_right;
+> +		}
+> +	}
+> +
+> +	return match;
+> +}
+> +
+> +static inline struct rb_node *rb_next_match(struct rb_node *node, const void *key,
+> +					    int (*cmp)(const void *key, const struct rb_node *))
+> +{
+> +	node = rb_next(node);
+> +	if (node && cmp(key, node))
+> +		node = NULL;
+> +	return node;
+> +}
+> +
+> +#define rb_for_each(tree, node, key, cmp) \
+> +	for ((node) = rb_find_first((tree), (key), (cmp)); \
+> +	     (node); (node) = rb_next_match((node), (key), (cmp)))
+> +
+> +
+> +#endif	/* _LINUX_RBTREE_H */
+> --- a/tools/objtool/elf.c
+> +++ b/tools/objtool/elf.c
+> @@ -43,75 +43,24 @@ static void elf_hash_init(struct hlist_h
+>  #define elf_hash_for_each_possible(name, obj, member, key)			\
+>  	hlist_for_each_entry(obj, &name[hash_min(key, elf_hash_bits())], member)
+>  
+> -static void rb_add(struct rb_root *tree, struct rb_node *node,
+> -		   int (*cmp)(struct rb_node *, const struct rb_node *))
+> -{
+> -	struct rb_node **link = &tree->rb_node;
+> -	struct rb_node *parent = NULL;
+> -
+> -	while (*link) {
+> -		parent = *link;
+> -		if (cmp(node, parent) < 0)
+> -			link = &parent->rb_left;
+> -		else
+> -			link = &parent->rb_right;
+> -	}
+> -
+> -	rb_link_node(node, parent, link);
+> -	rb_insert_color(node, tree);
+> -}
+> -
+> -static struct rb_node *rb_find_first(struct rb_root *tree, const void *key,
+> -			       int (*cmp)(const void *key, const struct rb_node *))
+> -{
+> -	struct rb_node *node = tree->rb_node;
+> -	struct rb_node *match = NULL;
+> -
+> -	while (node) {
+> -		int c = cmp(key, node);
+> -		if (c <= 0) {
+> -			if (!c)
+> -				match = node;
+> -			node = node->rb_left;
+> -		} else if (c > 0) {
+> -			node = node->rb_right;
+> -		}
+> -	}
+> -
+> -	return match;
+> -}
+> -
+> -static struct rb_node *rb_next_match(struct rb_node *node, const void *key,
+> -				    int (*cmp)(const void *key, const struct rb_node *))
+> -{
+> -	node = rb_next(node);
+> -	if (node && cmp(key, node))
+> -		node = NULL;
+> -	return node;
+> -}
+> -
+> -#define rb_for_each(tree, node, key, cmp) \
+> -	for ((node) = rb_find_first((tree), (key), (cmp)); \
+> -	     (node); (node) = rb_next_match((node), (key), (cmp)))
+> -
+> -static int symbol_to_offset(struct rb_node *a, const struct rb_node *b)
+> +static bool symbol_to_offset(struct rb_node *a, const struct rb_node *b)
+>  {
+>  	struct symbol *sa = rb_entry(a, struct symbol, node);
+>  	struct symbol *sb = rb_entry(b, struct symbol, node);
+>  
+>  	if (sa->offset < sb->offset)
+> -		return -1;
+> +		return true;
+>  	if (sa->offset > sb->offset)
+> -		return 1;
+> +		return false;
+>  
+>  	if (sa->len < sb->len)
+> -		return -1;
+> +		return true;
+>  	if (sa->len > sb->len)
+> -		return 1;
+> +		return false;
+>  
+>  	sa->alias = sb;
+>  
+> -	return 0;
+> +	return false;
+>  }
+>  
+>  static int symbol_by_offset(const void *key, const struct rb_node *node)
+> 
+> 
+
 -- 
-2.7.4
-
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
