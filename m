@@ -2,225 +2,154 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECF6C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF6AC47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76338207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBED206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oc4ISMOV"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="frQcDQ4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgD3VRY (ORCPT
+        id S1727062AbgD3VR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40502 "EHLO
+        Thu, 30 Apr 2020 17:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726430AbgD3VRX (ORCPT
+        by vger.kernel.org with ESMTP id S1726699AbgD3VRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 17:17:23 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 118EBC035494;
-        Thu, 30 Apr 2020 14:17:23 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t11so2459863lfe.4;
-        Thu, 30 Apr 2020 14:17:22 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE1DC035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:17:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x18so9057227wrq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ulSnjrVahD3ngtDTBqJ4GqWuIHf55OLXY1bECTxDS44=;
-        b=oc4ISMOVLP5hvC3AL+ELmDB6d1Vldyb8K8cjoSkEGiCH2rfArMnvs44iETFALx+qdK
-         /rbI06jovJK7dDH1ey5rcRxBd0BfrzycbzEi8RZxjNh8JFUsMfe6I1BINQYjJUSgkfhO
-         AYAAivfMm+DHPVzwQpJVpr7V/Pbg5l021AtYwc1HFUuUGn0m1ePhePFQsWisP7WInlum
-         /3ARFJQk4lMIDb5Vit1tNUUm5JSrDEVwpVXXTq0TeOgIL8FoN7weeimkJKprspg3SFZH
-         80rfpFrhT1y9sQr1g8LIuP7U2EljqpAszIyfflg8TeJaB3wup6U+XrCeX8eMb6zq0keV
-         6ylQ==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8WL5+R63j920S0bt22y/MPX2pfyBeTnA7YIOS7PRZKQ=;
+        b=frQcDQ4WCQVLv5/aD12Lmk0nCBUbfuzzI+xShWJ0lmfghfmg7u5Nyib31+KLW4DWf6
+         emuYWTL/tu7itw/WxmjNCM6SVWPFLDFvZQ7ZVwNJ8cWZ/IQGEw25HZT3j5HnFP/80pEI
+         bXwkKq1SaFh6ohPsp1ttXqes/+ik4IqrL5Kdo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ulSnjrVahD3ngtDTBqJ4GqWuIHf55OLXY1bECTxDS44=;
-        b=lr+Ko41d/Ej4CM7wP/C9OiQnIbGUagMrihzMwptdqQ/gO4n1O2b2zT/GZdXpwf18r7
-         ACih/s/1yxprxoYCVNYhM9nnYr6Ilh00mIraS3mqFYpV1PcVhr5AZ0EqPRIZ1cYQE4yd
-         MyCTvpp4EUegK9l9V4XzJGlUmf0GFJ7Zyjdtr5a0dTWx1783lQgSCGGCuImxey7emZLW
-         YEPxVxIJl2NABRMZJWSPjP9k3taB6mBWq2PNnw27rP/eVjL6z44v3j9gzh3pHEFowE9U
-         HylA6N6E9P2dJGx27hyZiBCSBjAy/fAauHLQEO9pfXm54yzVL48yywKo/cwHEOfG0TEk
-         D7ww==
-X-Gm-Message-State: AGi0PuatBSnhi25yAXpo4HUXW8u/AEzoOOpCpvQxSlSYjKuVKzb8E19U
-        BMdyZpth5R9S98sX6MjQBQSxj5fF
-X-Google-Smtp-Source: APiQypKwVKpc68og19f2tP6BDvbtFM8V8QGSMRaDDyTLi9qHIctnxsKr9M+orYSlTHW5xaLOAQchhA==
-X-Received: by 2002:a19:e20b:: with SMTP id z11mr403737lfg.156.1588281441041;
-        Thu, 30 Apr 2020 14:17:21 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id k18sm827670lfg.81.2020.04.30.14.17.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 14:17:20 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
- <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
- <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
- <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
- <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
- <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
- <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
-Date:   Fri, 1 May 2020 00:17:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8WL5+R63j920S0bt22y/MPX2pfyBeTnA7YIOS7PRZKQ=;
+        b=YAvNiwlijFMe03azwyA2PNDJIp+yGh5lpkqngcrWc6ebIOYLT0nCGE1VuKDI1QnL3+
+         CY6JgtwTYfvQEiJrSP/5oSdyeCMD0kjGpwh9EaS7bNMPOLwgTPmoZ2HrdLJnp1mApSAr
+         s8QvgNQi1hvfOKM7pOkijf5j3MHZtM7QQqnN1caLjQyEaL02Y04Pc4Tk4n2Vu3nLfSnK
+         iBn1XAN53r7B+dv43uaEVIoqNGL8HEbhk92P43r66F7F7rqfoccTLCa/hCoa+vK8UGDB
+         5swnkwDL40He8FCxZiRpr/RyH9NV8Vfu3W3KpaYKiZDsLyXqweDLQ9dmK2WgdnvU2zKJ
+         SQRA==
+X-Gm-Message-State: AGi0PuYxaduFyrBY9Vsfh/ULITcr91QatmZj+fEwpWgBN1/eViHtKZzt
+        yiRvlbJoTFq3hfloek2RHYQwLrT+xYhEfktdWjSk8w==
+X-Google-Smtp-Source: APiQypIrbs9SeynjYCjcsyxd3tGq+jY5BQu3eRy4jVk1GxW92FiZ1RNN0wUrj73yIHP4rSrPXj6fVWi+Iva7Qb24Nhw=
+X-Received: by 2002:adf:f74f:: with SMTP id z15mr491830wrp.297.1588281441827;
+ Thu, 30 Apr 2020 14:17:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200430185522.4116-5-james.quinlan@broadcom.com> <20200430204017.GA62947@bjorn-Precision-5520>
+In-Reply-To: <20200430204017.GA62947@bjorn-Precision-5520>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 30 Apr 2020 17:17:10 -0400
+Message-ID: <CA+-6iNzwxL0T130Bww-TkoVWhn_2--a1URu4JktGb6aD6qGjbA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] PCI: brcmstb: disable L0s component of ASPM by default
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.04.2020 23:02, Sowjanya Komatineni пишет:
-> 
-> On 4/30/20 12:53 PM, Sowjanya Komatineni wrote:
->>
->> On 4/30/20 12:46 PM, Sowjanya Komatineni wrote:
->>>
->>> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
->>>> 30.04.2020 22:09, Sowjanya Komatineni пишет:
->>>>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
->>>>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
->>>>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
->>>>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->>>>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->>>>>>>>>> 30.04.2020 17:02, Dmitry Osipenko пишет:
->>>>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko пишет:
->>>>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni пишет:
->>>>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
->>>>>>>>>>>>> +{
->>>>>>>>>>>>> +    struct tegra_vi_channel *chan = data;
->>>>>>>>>>>>> +    struct tegra_channel_buffer *buf;
->>>>>>>>>>>>> +
->>>>>>>>>>>>> +    set_freezable();
->>>>>>>>>>>>> +
->>>>>>>>>>>>> +    while (1) {
->>>>>>>>>>>>> +        try_to_freeze();
->>>>>>>>>>>> I guess it won't be great to freeze in the middle of a capture
->>>>>>>>>>>> process, so:
->>>>>>>>>>>>          if (list_empty(&chan->done))
->>>>>>>>>>>>              try_to_freeze();
->>>>>>>>>>> And here should be some locking protection in order not race
->>>>>>>>>>> with
->>>>>>>>>>> the
->>>>>>>>>>> chan_capture_kthread_start because kthread_finish could freeze
->>>>>>>>>>> before
->>>>>>>>>>> kthread_start.
->>>>>>>>>> Or maybe both start / finish threads should simply be allowed to
->>>>>>>>>> freeze
->>>>>>>>>> only when both capture and done lists are empty.
->>>>>>>>>>
->>>>>>>>>> if (list_empty(&chan->capture) &&
->>>>>>>>>>       list_empty(&chan->done))
->>>>>>>>>>      try_to_freeze();
->>>>>>>>> good to freeze when not in middle of the frame capture but why
->>>>>>>>> should we not allow freeze in between captures?
->>>>>>>>>
->>>>>>>>> Other drivers do allow freeze in between frame captures.
->>>>>>>>>
->>>>>>>>> I guess we can freeze before dequeue for capture and in finish
->>>>>>>>> thread we can freeze after capture done. This also don't need to
->>>>>>>>> check for list_empty with freeze to allow between frame captures.
->>>>>>>>>
->>>>>>>> Also if we add check for both lists empty, freeze is not allowed as
->>>>>>>> long as streaming is going on and in case of continuous streaming
->>>>>>>> freeze will never happen.
->>>>>> To allow freeze b/w frames (but not in middle of a frame),
->>>>>>
->>>>>> for capture_start thread, probably we can do unconditional
->>>>>> try_to_freeze()
->>>> Is it possible to use wait_event_freezable()?
->>>>
->>>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
->>>>
->>>> Will the wait_event_interruptible() be woken up when system freezes?
->>>
->>> Based on wait_event_freezable implementation, looks like it similar
->>> to wait_event_interruptible + try_to_free() as it does
->>> freezable_schedule unlike schedule with wait_event_interruptible.
->>>
->>> So using this for capture_start may be ok to allow freeze before
->>> start of frame. But can't use for capture_finish as this is same as
->>> wait_event_interruptible followed by unconditional try_to_freeze.
->>>
->>>>
->>>>>> for capture_finish thread, at end of capture done we can do
->>>>>> try_to_freeze() only when done list is empty
->>>> This doesn't prevent situation where the done-list is empty and the
->>>> "finish" thread freezes, in the same time the "start" thread issues new
->>>> capture and then freezes too.
->>>>
->>>> 1. "start" thread issues capture
->>>>
->>>> 2. "finish" thread wakes and waits for the capture to complete
->>>>
->>>> 3. "start" thread begins another capture, waits for FRAME_START
->>>>
->>>> 4. system freezing activates
->>>>
->>>> 5. "finish" thread completes the capture and freezes because done-list
->>>> is empty
->>>>
->>>> 6. "start" thread gets FRAME_START, issues another capture and freezes
->>>
->>> This will not happen as we allow double buffering done list will not
->>> be empty till stream stop happens
->>>
->>> There will always be 1 outstanding frame in done list
->>
->> Correction, there will always be 1 outstanding buffer except beginning
->> during beginning of stream.
->>
->> Except during beginning frames, done list will not be empty for all
->> subsequent streaming process
-> 
-> Also to be clear, hardware sees next frame start event prior to previous
-> frame mw_ack event as mw_ack event happens after frame end. So once
-> initial buffer got queued to done list to finish processes, while
-> waiting for mw_ack next frame start happens and pushes next buffer to
-> done list.
-
-What about this variant:
-
-1. "start" thread wakes up to start capture
-
-2. system freezing activates
-
-3. "finish" thread wakes up and freezes
-
-4. "start" thread issues capture and freezes
-
-And again, I assume that system's freezing should wake
-wait_event_interruptible(), otherwise it won't be possible to freeze
-idling threads at all and freezing should fail (IIUC).
-
-And in this case synchronization between start/finish threads should be
-needed in regards to freezing.
-
-Note that this could be a wrong assumption, I'm not closely familiar
-with how freezer works.
+On Thu, Apr 30, 2020 at 4:40 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 02:55:22PM -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Some informal internal experiments has shown that the BrcmSTB ASPM L0s
+> > savings may introduce an undesirable noise signal on some customers'
+> > boards.  In addition, L0s was found lacking in realized power savings,
+> > especially relative to the L1 ASPM component.  This is BrcmSTB's
+> > experience and may not hold for others.  At any rate, we disable L0s
+> > savings by default unless the DT node has the 'brcm,aspm-en-l0s'
+> > property.
+>
+> I assume this works by writing the PCIe Link Capabilities register,
+> which is read-only via the config space path used by the generic ASPM
+> code, so that code thinks the device doesn't support L0s at all.
+Correct.
+>
+> Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt includes
+> an "aspm-no-l0s" property.  It'd be nice if this could use the same
+> property.
+I'd like to use the existing "aspm-no-l0s" but we'd really like to
+have it disabled by default.  I'll probably switch but let me dwell on
+it a little.
+Thanks, Jim
+>
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index 2bc913c0262c..bc1d514b19e4 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -44,6 +44,9 @@
+> >  #define PCIE_RC_CFG_PRIV1_ID_VAL3                    0x043c
+> >  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK   0xffffff
+> >
+> > +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
+> > +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
+> > +
+> >  #define PCIE_RC_DL_MDIO_ADDR                         0x1100
+> >  #define PCIE_RC_DL_MDIO_WR_DATA                              0x1104
+> >  #define PCIE_RC_DL_MDIO_RD_DATA                              0x1108
+> > @@ -696,7 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >       int num_out_wins = 0;
+> >       u16 nlw, cls, lnksta;
+> >       int i, ret;
+> > -     u32 tmp;
+> > +     u32 tmp, aspm_support;
+> >
+> >       /* Reset the bridge */
+> >       brcm_pcie_bridge_sw_init_set(pcie, 1);
+> > @@ -806,6 +809,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >               num_out_wins++;
+> >       }
+> >
+> > +     /* Only support ASPM L1 unless L0s is explicitly desired */
+> > +     aspm_support = PCIE_LINK_STATE_L1;
+> > +     if (of_property_read_bool(pcie->np, "brcm,aspm-en-l0s"))
+> > +             aspm_support |= PCIE_LINK_STATE_L0S;
+> > +     tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> > +     u32p_replace_bits(&tmp, aspm_support,
+> > +             PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> > +     writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> > +
+> >       /*
+> >        * For config space accesses on the RC, show the right class for
+> >        * a PCIe-PCIe bridge (the default setting is to be EP mode).
+> > --
+> > 2.17.1
+> >
