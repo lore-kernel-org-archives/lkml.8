@@ -2,106 +2,136 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFCEC83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14393C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A6320757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4B920757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="LxmFwU7T"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="U/bgW78L";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="jpEXcJur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgD3B7h (ORCPT
+        id S1726550AbgD3B7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgD3B7g (ORCPT
+        Wed, 29 Apr 2020 21:59:52 -0400
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:51728 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgD3B7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:59:36 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8702DC035495
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:59:36 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w29so3776249qtv.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 18:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fVFXHIsh0/YRSKtqr5ljSmMbeR52DAiwA44HTGSUEYs=;
-        b=LxmFwU7TGw7y9TAZafLVzvatQZ0gZjRW65fHnG9mih+vMFlq42rxUunxAOoL/uGZwV
-         b5K/FJ8TlMReE9NuZwdRSN6JlWVx8OuU2m6gEcAXGPHBij943y09p3qom6ajQqpAGCDL
-         DkgvAmBO0xKju/EuTeKYhKvfU/Vh10jMxTnMlNsbKhjkRYiFRaS9DB/KBcYIG1mCBMbw
-         C5iSVrlzItgv9jyBA+YiqNlUYGLVHSg4H1/08Bcf6R2/x3tcYJFHZ+r/5kUSPSwN+Wts
-         /0wnxrhLKsD/Orm3kO/tYZVEOjnATZK4APJk6ZCQ2tof62k6ScOI5t0iHP4HngekMbhA
-         fsCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fVFXHIsh0/YRSKtqr5ljSmMbeR52DAiwA44HTGSUEYs=;
-        b=WD4ii8IB9YlF56jeNdXtH0QnMGYD8RKGMmrO8DL5JFLIeuEnDwfO5zAOpCu7EDiLTR
-         OMSL//w+527wyE3QBHUUm6Ds0WGJOcczxF22ltzPGp0MUmJxdNU51FJFUXlziNAyv9v8
-         IIsbJQGDFq8MEuJwhaiOHUc/sxVCsrpYU4PWF/tyruwXZOUzSkI9YVIk8E6GXOs2nnd5
-         0SJi1vrGVVOrDrg0Tz5250hrY3L8459K7sjFH33Au8iWiTnMmfuenXO1OSKyCQ+5dZ8R
-         qtz67hwEmjN2OJ22ONLrKo95+1h7vnZeOZmeefzohmZ4qzRqJ1HovNySHVomMDRa7PXq
-         FOGw==
-X-Gm-Message-State: AGi0Pub8owrsd2rAt3AkKQvrVafSmMH4MonhLiQM9f/EI/8mwy3iMcix
-        Uw4sASn/cXH7qxV2X1891tMHaw==
-X-Google-Smtp-Source: APiQypJoSfYUsyxQnQO9ATp9PPbiyFH/GL856p8ztpAhtz6K1Fy0hNXDM3D+1FjMDNceAVO1N+vsvA==
-X-Received: by 2002:ac8:51cb:: with SMTP id d11mr1332622qtn.370.1588211975468;
-        Wed, 29 Apr 2020 18:59:35 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id l24sm836378qtp.8.2020.04.29.18.59.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 18:59:35 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] dma-buf: Documentation: fix: `make htmldocs` warnings
-Date:   Wed, 29 Apr 2020 22:59:30 -0300
-Message-Id: <20200430015930.32224-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 29 Apr 2020 21:59:51 -0400
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id F416F4999C;
+        Wed, 29 Apr 2020 21:59:47 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=ErazowRay1P/AwFSRhYIU6Y2Vtg=; b=U/bgW7
+        8LRuDwed7cFJI+OLHcNjS2azezYw4bDECsXxOtmXzamJa8j9tAdCdRFr37MXprd5
+        ErxVxpe2KVIBpAKAVf2dKTwzyPiZ3RDGm+EfMP70RzW2Zf/0ARTOupK3h0F1z+hz
+        mQJPY4L14N4+MX2vB7h1kvD7/e18IFTZLuIv8=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id EA42A4999B;
+        Wed, 29 Apr 2020 21:59:47 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=OH9QgA1zs57t3X+399BRoLLVjiVfyd9x67bP0Lvx9VY=; b=jpEXcJureDScwgQSTF9eHzcwhmQuFrOHxRs892SZDNVkINIFS5TbHDpabFpo7Gs7IHlBnmskokz8D4i2YY5ViibSy+NBswTJ776BfV1BmS29V/WPbozOzfLFQDTEEXWotrT//LfOGQVTKKoMRDg2y4UW+ua6jfMPr/mLDlS+tJQ=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 6E06D4999A;
+        Wed, 29 Apr 2020 21:59:47 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 91EAD2DA0A91;
+        Wed, 29 Apr 2020 21:59:46 -0400 (EDT)
+Date:   Wed, 29 Apr 2020 21:59:46 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        Christophe Lyon <christophe.lyon@linaro.org>
+Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
+ properly in there
+In-Reply-To: <20200429215620.GM1551@shell.armlinux.org.uk>
+Message-ID: <nycvar.YSQ.7.76.2004292153090.2671@knanqh.ubzr>
+References: <20200429214954.44866-1-jannh@google.com> <20200429215620.GM1551@shell.armlinux.org.uk>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 44EB08B6-8A86-11EA-B6B5-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missed ":" on kernel-doc function parameter.
+On Wed, 29 Apr 2020, Russell King - ARM Linux admin wrote:
 
-This patch fixes this warnings from `make htmldocs`:
-./drivers/dma-buf/dma-buf.c:678: warning: Function parameter or member 'importer_ops' not described in 'dma_buf_dynamic_attach'
-./drivers/dma-buf/dma-buf.c:678: warning: Function parameter or member 'importer_priv' not described in 'dma_buf_dynamic_attach'
+> On Wed, Apr 29, 2020 at 11:49:49PM +0200, Jann Horn wrote:
+> > At the moment, we have that rather ugly mmget_still_valid() helper to
+> > work around <https://crbug.com/project-zero/1790>: ELF core dumping
+> > doesn't take the mmap_sem while traversing the task's VMAs, and if
+> > anything (like userfaultfd) then remotely messes with the VMA tree,
+> > fireworks ensue. So at the moment we use mmget_still_valid() to bail
+> > out in any writers that might be operating on a remote mm's VMAs.
+> > 
+> > With this series, I'm trying to get rid of the need for that as
+> > cleanly as possible.
+> > In particular, I want to avoid holding the mmap_sem across unbounded
+> > sleeps.
+> > 
+> > 
+> > Patches 1, 2 and 3 are relatively unrelated cleanups in the core
+> > dumping code.
+> > 
+> > Patches 4 and 5 implement the main change: Instead of repeatedly
+> > accessing the VMA list with sleeps in between, we snapshot it at the
+> > start with proper locking, and then later we just use our copy of
+> > the VMA list. This ensures that the kernel won't crash, that VMA
+> > metadata in the coredump is consistent even in the presence of
+> > concurrent modifications, and that any virtual addresses that aren't
+> > being concurrently modified have their contents show up in the core
+> > dump properly.
+> > 
+> > The disadvantage of this approach is that we need a bit more memory
+> > during core dumping for storing metadata about all VMAs.
+> > 
+> > After this series has landed, we should be able to rip out
+> > mmget_still_valid().
+> > 
+> > 
+> > Testing done so far:
+> > 
+> >  - Creating a simple core dump on X86-64 still works.
+> >  - The created coredump on X86-64 opens in GDB, and both the stack and the
+> >    exectutable look vaguely plausible.
+> >  - 32-bit ARM compiles with FDPIC support, both with MMU and !MMU config.
+> > 
+> > I'm CCing some folks from the architectures that use FDPIC in case
+> > anyone wants to give this a spin.
+> 
+> I've never had any reason to use FDPIC, and I don't have any binaries
+> that would use it.  Nicolas Pitre added ARM support, so I guess he
+> would be the one to talk to about it.  (Added Nicolas.)
 
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
----
- drivers/dma-buf/dma-buf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It's been a while since I worked with it. However Christophe Lyon (in 
+CC) added support for ARM FDPIC to mainline gcc recently, so hopefully 
+he might still be set up and able to help.
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index ccc9eda1bc28..0756d2155745 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -655,8 +655,8 @@ EXPORT_SYMBOL_GPL(dma_buf_put);
-  * calls attach() of dma_buf_ops to allow device-specific attach functionality
-  * @dmabuf:		[in]	buffer to attach device to.
-  * @dev:		[in]	device to be attached.
-- * @importer_ops	[in]	importer operations for the attachment
-- * @importer_priv	[in]	importer private pointer for the attachment
-+ * @importer_ops:	[in]	importer operations for the attachment
-+ * @importer_priv:	[in]	importer private pointer for the attachment
-  *
-  * Returns struct dma_buf_attachment pointer for this attachment. Attachments
-  * must be cleaned up by calling dma_buf_detach().
--- 
-2.25.1
 
+Nicolas
