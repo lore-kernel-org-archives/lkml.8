@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAB8C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9432BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459DE2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683222063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255431;
-	bh=G+XhWuodZsxbLJtlCk/40wVd2/t6S+dPVSqrfZJM3wY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRjQ2d/mKTeN2qsqIFbkhfbFQvO0Zb7bsPe1xVR9eSKsYscRkrXBnLraI8ZmlQueQ
-	 pmkCA6nl3fwrhUBPgTH9jR1zA/fSGmqauubV8wf3f3yFQLbTqCPUXZzuS4SMWiAXsc
-	 MwJmcLtazm7oRf6gOFYdXks0sb0dmU9EZ1cz09Nc=
+	s=default; t=1588255435;
+	bh=LnRKxRdBBHi+iOcOHrjj/xv8agSdNOIgGHqJnMpCSqM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DMuvi19Qg1Bhsd2eFKB/s5L4p8g04+0GHV+fWIM5X/7+1mzCJr0417P++iz2O76Ah
+	 A7BPK2xTB83TSi93ddSVF0DqCApPLklWeAQe5eOv1TIY8NzRuu1dEA0qitPwKD1OTZ
+	 Ugnz7TPc2NCu7ZpsLpcRjx9J/QXfe9SC1dHFS69U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgD3ODt (ORCPT
+        id S1729274AbgD3ODx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:03:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbgD3Nx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:29 -0400
+        id S1728515AbgD3Nx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1540B20870;
-        Thu, 30 Apr 2020 13:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3A42208DB;
+        Thu, 30 Apr 2020 13:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254808;
-        bh=G+XhWuodZsxbLJtlCk/40wVd2/t6S+dPVSqrfZJM3wY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W0mrmZYFZiy3TjsZhbiQCeM4NBUgX+nBzFJiG/zMPFGs3uME9bl/LSCPW8vaeAoZv
-         +F8UOW74+YS8ZauxriTTwc9eY2wTqlVUTT+gIJqNFux7vZxp33Nb7CMHJpB2JHLDYq
-         aX2aO0fk268nOanFHKDO5Ub8fG6ftIEM8FRYSsZ0=
+        s=default; t=1588254807;
+        bh=LnRKxRdBBHi+iOcOHrjj/xv8agSdNOIgGHqJnMpCSqM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cqpsjiMlWPxWEwf81cteVVsuSaxLtq4nI79KZK4C7Ql2rohivZaahUXrARoRDWMmW
+         VMsYItGqS7kP7PY3orWNq8dygfvTUfO/weWboFu/wlVUF9W1x8JWD1Z0Usbrb5oFXW
+         shXaSZSKyJ7kXme7ERJLzwKY2wdAaxGyqQc40k3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 02/30] ASoC: topology: Check return value of pcm_new_ver
-Date:   Thu, 30 Apr 2020 09:52:57 -0400
-Message-Id: <20200430135325.20762-2-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/30] iio:ad7797: Use correct attribute_group
+Date:   Thu, 30 Apr 2020 09:52:56 -0400
+Message-Id: <20200430135325.20762-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
-References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,38 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b3677fc3d68dd942c92de52f0bd9dd8b472a40e6 ]
+[ Upstream commit 28535877ac5b2b84f0d394fd67a5ec71c0c48b10 ]
 
-Function pcm_new_ver can fail, so we should check it's return value and
-handle possible error.
+It should use ad7797_attribute_group in ad7797_info,
+according to commit ("iio:ad7793: Add support for the ad7796 and ad7797").
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200327204729.397-6-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Scale is fixed for the ad7796 and not programmable, hence
+should not have the scale_available attribute.
+
+Fixes: fd1a8b912841 ("iio:ad7793: Add support for the ad7796 and ad7797")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/adc/ad7793.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 756dd23031063..2c6598e07dde3 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1923,7 +1923,9 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
- 			_pcm = pcm;
- 		} else {
- 			abi_match = false;
--			pcm_new_ver(tplg, pcm, &_pcm);
-+			ret = pcm_new_ver(tplg, pcm, &_pcm);
-+			if (ret < 0)
-+				return ret;
- 		}
+diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+index d4bbe5b533189..23a6e7baa396b 100644
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -542,7 +542,7 @@ static const struct iio_info ad7797_info = {
+ 	.read_raw = &ad7793_read_raw,
+ 	.write_raw = &ad7793_write_raw,
+ 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
+-	.attrs = &ad7793_attribute_group,
++	.attrs = &ad7797_attribute_group,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ };
  
- 		/* create the FE DAIs and DAI links */
 -- 
 2.20.1
 
