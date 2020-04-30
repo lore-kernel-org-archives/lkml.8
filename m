@@ -2,118 +2,106 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C43C8300D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD76AC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB31120575
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B942082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgD3KMI (ORCPT
+        id S1726683AbgD3KOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:12:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726626AbgD3KMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:12:07 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0899C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:12:06 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jU6Ah-000826-Ty; Thu, 30 Apr 2020 12:11:59 +0200
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jU6Af-00047P-AG; Thu, 30 Apr 2020 12:11:57 +0200
-Date:   Thu, 30 Apr 2020 12:11:57 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200430101157.GD2188@pengutronix.de>
-References: <20200429162437.2025699-1-robert.foss@linaro.org>
- <20200429162437.2025699-3-robert.foss@linaro.org>
- <20200430093524.GB2188@pengutronix.de>
- <20200430094549.GF867@valkosipuli.retiisi.org.uk>
- <20200430095332.GC2188@pengutronix.de>
- <20200430095907.GG867@valkosipuli.retiisi.org.uk>
+        Thu, 30 Apr 2020 06:14:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:51880 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgD3KOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:14:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B9A61063;
+        Thu, 30 Apr 2020 03:14:11 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 188DE3F68F;
+        Thu, 30 Apr 2020 03:14:09 -0700 (PDT)
+References: <20200428050242.17717-1-swood@redhat.com> <jhjzhatdgxh.mognet@arm.com> <CAKfTPtDktpTB7d6qhmcX0HtryezzFygk4kOC22Qf=OM77QpLYg@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Scott Wood <swood@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] newidle_balance() latency mitigation
+In-reply-to: <CAKfTPtDktpTB7d6qhmcX0HtryezzFygk4kOC22Qf=OM77QpLYg@mail.gmail.com>
+Date:   Thu, 30 Apr 2020 11:14:05 +0100
+Message-ID: <jhjy2qdcmc2.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430095907.GG867@valkosipuli.retiisi.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:00:34 up 68 days, 21:17, 162 users,  load average: 1.44, 7.88,
- 6.50
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-04-30 12:59, Sakari Ailus wrote:
-> Hi Marco,
-> 
-> On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
-> > Hi Sakari,
-> > 
-> > On 20-04-30 12:45, Sakari Ailus wrote:
-> > > Hi Marco,
-> > > 
-> > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
 
-...
+On 30/04/20 08:44, Vincent Guittot wrote:
+> On Thu, 30 Apr 2020 at 01:13, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+>>
+>>
+>> On 28/04/20 06:02, Scott Wood wrote:
+>> > These patches mitigate latency caused by newidle_balance() on large
+>> > systems, by enabling interrupts when the lock is dropped, and exiting
+>> > early at various points if an RT task is runnable on the current CPU.
+>> >
+>> > When applied to an RT kernel on a 72-core machine (2 threads per core), I
+>> > saw significant reductions in latency as reported by rteval -- from
+>> > over 500us to around 160us with hyperthreading disabled, and from
+>> > over 1400us to around 380us with hyperthreading enabled.
+>> >
+>> > This isn't the first time something like this has been tried:
+>> > https://lore.kernel.org/lkml/20121222003019.433916240@goodmis.org/
+>> > That attempt ended up being reverted:
+>> > https://lore.kernel.org/lkml/5122CD9C.9070702@oracle.com/
+>> >
+>> > The problem in that case was the failure to keep BH disabled, and the
+>> > difficulty of fixing that when called from the post_schedule() hook.
+>> > This patchset uses finish_task_switch() to call newidle_balance(), which
+>> > enters in non-atomic context so we have full control over what we disable
+>> > and when.
+>> >
+>> > There was a note at the end about wanting further discussion on the matter --
+>> > does anyone remember if that ever happened and what the conclusion was?
+>> > Are there any other issues with enabling interrupts here and/or moving
+>> > the newidle_balance() call?
+>> >
+>>
+>> Random thought that just occurred to me; in the grand scheme of things,
+>> with something in the same spirit as task-stealing (i.e. don't bother with
+>> a full fledged balance at newidle, just pick one spare task somewhere),
+>> none of this would be required.
+>
+> newly idle load balance already stops after picking 1 task
 
-> > > > > -	if (mclk != OV8856_MCLK) {
-> > > > > -		dev_err(dev, "external clock %d is not supported", mclk);
-> > > > > -		return -EINVAL;
-> > > > > +	if (!is_acpi_node(fwnode)) {
-> > > > > +		ov8856->xvclk = devm_clk_get(dev, "xvclk");
-> > > > > +		if (IS_ERR(ov8856->xvclk)) {
-> > > > > +			dev_err(dev, "could not get xvclk clock (%pe)\n",
-> > > > > +					ov8856->xvclk);
-> > > > > +			return PTR_ERR(ov8856->xvclk);
-> > > > > +		}
-> > > > > +
-> > > > > +		clk_set_rate(ov8856->xvclk, xvclk_rate);
-> > > > > +		xvclk_rate = clk_get_rate(ov8856->xvclk);
-> > > > >  	}
-> > > > 
-> > > > Why do we handle the clock only in DT case? Is there a problem with the
-> > > > clock handling and ACPI?
-> > > 
-> > > Not really, it's just that ACPI does not provide an interface to the clocks
-> > > as such.
-> > 
-> > But you will get a clk by devm_clk_get()?
-> 
-> No, because ACPI does not expose one to drivers. Effectively the entire
-> power sequences are implemented in ACPI, not in the driver.
-> 
+Mph, I had already forgotten your changes there. Is that really always the
+case for newidle? In e.g. the busiest->group_type == group_fully_busy case,
+I think we can pull more than one task.
 
-Ah okay, thanks for the explanation. I'm really not into the ACPI
-stuff.. So this means the __power_off / power_on should only be done if
-we are using DT's?
+> Now if your proposal is to pick one random task on one random cpu, I'm
+> clearly not sure that's a good idea
+>
 
-Regards,
-  Marco
+IIRC Steve's implementation was to "simply" pull one task from any CPU
+within the LLC domain that had > 1 runnable tasks. I quite like this since
+picking any one task is almost always better than switching to the idle
+task, but it wasn't a complete newidle_balance() replacement just yet.
+
+>
+>>
+>> Sadly I don't think anyone has been looking at it any recently.
