@@ -2,116 +2,193 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E63C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7862C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE72208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5752083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588212814;
+	bh=dzZ31V6EEB/CWj1THYM8Yre8ShwzePM0rxShMvYQe50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KzDLSlwgNEuJt8ACqBhCEcBGAEk5KCDsp6oRISoVT2h7Z+cek0bd1xhqeby7y/w1D
+	 U0Kzy3GZsgzbhpttHzomlSFjx14I7FFe9jmZY+7mdOxxlskEvoiFOJVxSYJL7/w95x
+	 w+GVziL/Q6nPE4FINpJ38x6t8H4biKG8EFOC7gM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgD3CN0 (ORCPT
+        id S1726847AbgD3CNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:13:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:47702 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3CN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:13:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C31E61063;
-        Wed, 29 Apr 2020 19:13:25 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2019D3F68F;
-        Wed, 29 Apr 2020 19:13:22 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kaly.Xin@arm.com, Jia He <justin.he@arm.com>
-Subject: [PATCH] vhost: vsock: don't send pkt when vq is not started
-Date:   Thu, 30 Apr 2020 10:13:14 +0800
-Message-Id: <20200430021314.6425-1-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Apr 2020 22:13:33 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46319 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgD3CNb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:13:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z25so3589407otq.13;
+        Wed, 29 Apr 2020 19:13:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kv25T34DmFJSTkCcpG3EkQ4F91aBPygfe37SiYRfZ1w=;
+        b=fVDH2Oo059qF65Wx8It7HCH3TQwtsSrirCcCVWA52hsi+9bNOAQ247eVnHPFMokcDs
+         wXyzZwlM3s0OyB30ALKLU19jReo+2NU81ghZkyvUe32RiwpUpxIRBbHNk0lH0hZm8h6E
+         D0703fA7TXbYrtXTDGQNcK4o8B/qJ/fHG/zJ0Gk+PAeiGTONC/wDIWHJcI7AJ1TQmh0t
+         upg0dH0kq0zauEchL99MuVxgKls5JFMLrPhc0pCsDDcR1WJkKY0Gcw49Jxbhz3cROeLe
+         EcZl3QgExCyGzv0sDx2gWEy11QJnaEy9orxQNOCLIhIBM+MMb8g/XUukFcfNaibvy3f1
+         Q0QA==
+X-Gm-Message-State: AGi0PuaBkP/4k/mRgTmQiQiPhYbty0J+Vhvsd6zkfA4fEAiFgjiz5lOq
+        D/Up0auzUaRs10KgS3kLDQ==
+X-Google-Smtp-Source: APiQypKCVHjHs9J7+JAq/qDUcEL9ABy6N/M3B+18ySskwV1Nxa/XGc71ZP1EJkAjD4Yq5SIhFutpbA==
+X-Received: by 2002:a9d:810:: with SMTP id 16mr772676oty.56.1588212810207;
+        Wed, 29 Apr 2020 19:13:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z13sm884559oth.10.2020.04.29.19.13.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 19:13:29 -0700 (PDT)
+Received: (nullmailer pid 21985 invoked by uid 1000);
+        Thu, 30 Apr 2020 02:13:28 -0000
+Date:   Wed, 29 Apr 2020 21:13:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/14] dt-bindings: PCI: Add EP mode dt-bindings for
+ TI's J721E SoC
+Message-ID: <20200430021327.GA18326@bogus>
+References: <20200417125753.13021-1-kishon@ti.com>
+ <20200417125753.13021-12-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417125753.13021-12-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
-The unconditional timeout is caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
-connect at client side. The vhost vsock client tries to connect an
-initlizing virtio vsock server.
+On Fri, Apr 17, 2020 at 06:27:50PM +0530, Kishon Vijay Abraham I wrote:
+> Add PCIe EP mode dt-bindings for TI's J721E SoC.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> new file mode 100644
+> index 000000000000..cb25c45d5a96
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> @@ -0,0 +1,89 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI J721E PCI EP (PCIe Wrapper)
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +allOf:
+> +  - $ref: "cdns-pcie-ep.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +      enum:
+> +          - ti,j721e-pcie-ep
 
-The abnormal flow looks like:
-host-userspace           vhost vsock                       guest vsock
-==============           ===========                       ============
-connect()     -------->  vhost_transport_send_pkt_work()   initializing
-   |                     vq->private_data==NULL
-   |                     will not be queued
-   V
-schedule_timeout(2s)
-                         vhost_vsock_start()  <---------   device ready
-                         set vq->private_data
+Wrong indentation.
 
-wait for 2s and failed
+Otherwise,
 
-connect() again          vq->private_data!=NULL          recv connecting pkt
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-1. host userspace sends a connect pkt, at that time, guest vsock is under
-initializing, hence the vhost_vsock_start has not been called. So
-vq->private_data==NULL, and the pkt is not been queued to send to guest.
-2. then it sleeps for 2s
-3. after guest vsock finishes initializing, vq->private_data is set.
-4. When host userspace wakes up after 2s, send connecting pkt again,
-everything is fine.
-
-This fixes it by checking vq->private_data in vhost_transport_send_pkt,
-and return at once if !vq->private_data. This makes user connect()
-be returned with ECONNREFUSED.
-
-After this patch, kata-runtime (with vsock enabled) boottime reduces from
-3s to 1s on ThunderX2 arm64 server.
-
-[1] https://github.com/kata-containers/runtime/issues/1917
-
-Reported-by: Ning Bo <n.b@live.com>
-Signed-off-by: Jia He <justin.he@arm.com>
----
- drivers/vhost/vsock.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index e36aaf9ba7bd..67474334dd88 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -241,6 +241,7 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt *pkt)
- {
- 	struct vhost_vsock *vsock;
- 	int len = pkt->len;
-+	struct vhost_virtqueue *vq;
- 
- 	rcu_read_lock();
- 
-@@ -252,6 +253,13 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt *pkt)
- 		return -ENODEV;
- 	}
- 
-+	vq = &vsock->vqs[VSOCK_VQ_RX];
-+	if (!vq->private_data) {
-+		rcu_read_unlock();
-+		virtio_transport_free_pkt(pkt);
-+		return -ECONNREFUSED;
-+	}
-+
- 	if (pkt->reply)
- 		atomic_inc(&vsock->queued_replies);
- 
--- 
-2.17.1
-
+> +
+> +  reg:
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    items:
+> +      - const: intd_cfg
+> +      - const: user_cfg
+> +      - const: reg
+> +      - const: mem
+> +
+> +  ti,syscon-pcie-ctrl:
+> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
+> +                 and link speed.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: clock-specifier to represent input to the PCIe
+> +
+> +  clock-names:
+> +    items:
+> +      - const: fck
+> +
+> +  dma-coherent:
+> +    description: Indicates that the PCIe IP block can ensure the coherency
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - ti,syscon-pcie-ctrl
+> +  - max-link-speed
+> +  - num-lanes
+> +  - power-domains
+> +  - clocks
+> +  - clock-names
+> +  - cdns,max-outbound-regions
+> +  - dma-coherent
+> +  - max-functions
+> +  - phys
+> +  - phy-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +     pcie0_ep: pcie-ep@d000000 {
+> +            compatible = "ti,j721e-pcie-ep";
+> +            reg = <0x00 0x02900000 0x00 0x1000>,
+> +                  <0x00 0x02907000 0x00 0x400>,
+> +                  <0x00 0x0d000000 0x00 0x00800000>,
+> +                  <0x00 0x10000000 0x00 0x08000000>;
+> +            reg-names = "intd_cfg", "user_cfg", "reg", "mem";
+> +            ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
+> +            max-link-speed = <3>;
+> +            num-lanes = <2>;
+> +            power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
+> +            clocks = <&k3_clks 239 1>;
+> +            clock-names = "fck";
+> +            cdns,max-outbound-regions = <16>;
+> +            max-functions = /bits/ 8 <6>;
+> +            dma-coherent;
+> +            phys = <&serdes0_pcie_link>;
+> +            phy-names = "pcie-phy";
+> +    };
+> -- 
+> 2.17.1
+> 
