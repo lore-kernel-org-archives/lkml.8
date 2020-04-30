@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A97EC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271EFC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEFFD20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B0620870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254880;
-	bh=5UUaHL/T+MNhOlEAM9Bbtuz7oEuaCC3NVlwW6aTI8t4=;
+	s=default; t=1588254883;
+	bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=faw7lpljJ6cpYnkyWkers0CQjwo7MEIjJQCMcmaka1vveY2Qq9KCAbf3Txdlr2V7A
-	 w8rO1r46du1r5tp4KmGP/a78AHUXZAQVMz3/PBLtswUND5cnaVPyAK3ywmUWvdmqv5
-	 nuWvKTOh5ZLbYqE7ZZUK31lrbRhy9m0pKvvjkBnM=
+	b=IEjOCVqRO9wyu+OJMBSPjA3ISiRk8qOM8yTsyGu6JAWsVQ8RX7Y1kigM8Hi6aHBXq
+	 ldqPqI8NKjVwxnvdGOsgjnBWh8Csn5j42usSz8oZ44pFeUlxokaPMlpq/Lqyf7lR2N
+	 rif3DXWZZn2tXTVXoI5USTAvExMTOp66erzF4Il0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgD3Nyi (ORCPT
+        id S1729028AbgD3Nyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728821AbgD3Nxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:52 -0400
+        id S1728840AbgD3Nxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 136BF20873;
-        Thu, 30 Apr 2020 13:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F05724953;
+        Thu, 30 Apr 2020 13:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254831;
-        bh=5UUaHL/T+MNhOlEAM9Bbtuz7oEuaCC3NVlwW6aTI8t4=;
+        s=default; t=1588254833;
+        bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTTtXEnaHf7kMpxtDWjFEcC1RoHqnm/IzQI+yTDN3DCQNcoh7Muk7xVR50A1lTn1V
-         uIL9LasIMIpUwQhlDI8b+Qi4MuMxdBkkkLHpEiHuSH3jLrzHnWLuuVrqFoKcAVUR4a
-         nmBFBn8uyS+G1uvqjA6OXRAP6pnaz9FjH1y/hyMA=
+        b=MeJusWDcwnwFMI+MsMV5ZHa9rQcluQiU2lElOvZN2MuRSzM7Iy9fhgdjn1Eh9/Ktp
+         w4kojSytj4pb0dt+wOhCGB617AxeCQkKSrSDuYeOv1HjQIvsRrHnUTFfpd1Ee+ePXS
+         01TZ6hpE6QTQorvaVgnERJwT1gsuyhXNvDcrFIjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.19 23/30] cifs: protect updating server->dstaddr with a spinlock
-Date:   Thu, 30 Apr 2020 09:53:18 -0400
-Message-Id: <20200430135325.20762-23-sashal@kernel.org>
+Cc:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 25/30] scripts/config: allow colons in option strings for sed
+Date:   Thu, 30 Apr 2020 09:53:20 -0400
+Message-Id: <20200430135325.20762-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
 References: <20200430135325.20762-1-sashal@kernel.org>
@@ -61,37 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
 
-[ Upstream commit fada37f6f62995cc449b36ebba1220594bfe55fe ]
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-We use a spinlock while we are reading and accessing the destination address for a server.
-We need to also use this spinlock to protect when we are modifying this address from
-reconn_set_ipaddr().
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
+
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 975f800b9dd4d..9e569d60c636b 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -353,8 +353,10 @@ static int reconn_set_ipaddr(struct TCP_Server_Info *server)
- 		return rc;
- 	}
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
  
-+	spin_lock(&cifs_tcp_ses_lock);
- 	rc = cifs_convert_address((struct sockaddr *)&server->dstaddr, ipaddr,
- 				  strlen(ipaddr));
-+	spin_unlock(&cifs_tcp_ses_lock);
- 	kfree(ipaddr);
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
  
- 	return !rc ? -1 : 0;
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
 -- 
 2.20.1
 
