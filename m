@@ -2,89 +2,154 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9B3C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2B0C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA6A6208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588265283;
-	bh=axoYz9ubvidu6Q4qb8tE1iZySwHLJ5aESX8frhVyuiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=neadj2oKAh1Tv4ACAITaci+EI86iVcOYchFiYf48p6hT+TIHH7c8o2Q697OOwv+Oj
-	 CWbGTxmJR1xEbEMjGBmN31KYWPg8CZbLw6ibJFabQpJhmhtVCw4uVSYgo3l6L3KS8/
-	 /h8XVfmPRI3geyK3hjEYbmfLPXZBMzNpw8TsZufs=
+	by mail.kernel.org (Postfix) with ESMTP id A993C2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:48:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jw5yKumE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgD3QsC (ORCPT
+        id S1726804AbgD3Qs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:48:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbgD3QsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:48:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 30 Apr 2020 12:48:57 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58193 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726756AbgD3Qs5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:48:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588265336;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UgVjFCJwaouzvkK0dn35A9btGjej8ciWHT2ZVw/i0gk=;
+        b=Jw5yKumEUqzNEzFDMtAbri6PLE0DP3SY6EjQp39UFrd2XGwXIGT6vXPwkXJEp+oRAssNZE
+        Z2BDfvvNpcRPVddCr+YMeCyGay4UwtiXpUQ35ujaGM6InbkiTUtP9rtF+2aqm+tjnyR0Pk
+        UdxXAeoDjGCpEuL0M995XvhTyIqwqjw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-ViOsnzjLPOCJ23Q5FFmw-w-1; Thu, 30 Apr 2020 12:48:52 -0400
+X-MC-Unique: ViOsnzjLPOCJ23Q5FFmw-w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB7332070B;
-        Thu, 30 Apr 2020 16:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588265281;
-        bh=axoYz9ubvidu6Q4qb8tE1iZySwHLJ5aESX8frhVyuiE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ca/g0WoiwN4MNpRo23zI84MuVdc3f57axAaaKLI+X0I8yCH2/jidRQBKHbK8Kj0le
-         p0ifJPTxniAeJNPxdDSQ3sL1FcGdRO8dvdmXF6bViBXQY+Fl9+SUzjn0eh/2hXocYc
-         SNXgDN/8PRduyw3CCDEyv20e7Bjs+BAm0Et0exUw=
-Date:   Thu, 30 Apr 2020 17:47:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        mark.rutland@arm.com, maz@kernel.org, suzuki.poulose@arm.com,
-        James Morse <james.morse@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 00/16] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1,
- ID_MMFR5 and other changes
-Message-ID: <20200430164756.GH25258@willie-the-truck>
-References: <1586857710-17154-1-git-send-email-anshuman.khandual@arm.com>
- <6749304e-8a4d-f4b9-eb40-91f0dd13166e@arm.com>
- <20200429212614.GD8604@willie-the-truck>
- <da15c0f0-f8ec-c2bc-bd5b-907a75119dc1@arm.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2FC280B71F;
+        Thu, 30 Apr 2020 16:48:50 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7234960C84;
+        Thu, 30 Apr 2020 16:48:44 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 11:48:42 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+Message-ID: <20200430164842.bvkrh5fz24ro7ye2@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+ <20200422164037.7edd21ea@thinkpad>
+ <20200422172126.743908f5@thinkpad>
+ <20200422194605.n77t2wtx5fomxpyd@treble>
+ <20200423141834.234ed0bc@thinkpad>
+ <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
+ <20200423141228.sjvnxwdqlzoyqdwg@treble>
+ <20200423181030.b5mircvgc7zmqacr@treble>
+ <20200430143821.GA10092@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <da15c0f0-f8ec-c2bc-bd5b-907a75119dc1@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200430143821.GA10092@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 08:29:44AM +0530, Anshuman Khandual wrote:
-> On 04/30/2020 02:56 AM, Will Deacon wrote:
-> > On Wed, Apr 29, 2020 at 03:07:15PM +0530, Anshuman Khandual wrote:
-> >> On 04/14/2020 03:18 PM, Anshuman Khandual wrote:
-> >>> Changes in V2:
-> >>>
-> >>> - Added Suggested-by tag from Mark Rutland for all changes he had proposed
-> >>> - Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
-> >>> - Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
-> >>> - Added ID_DFR1 and ID_MMFR5 system register definitions per Will
-> >>> - Added remaining features bits for relevant 64 bit system registers per Will
-> >>> - Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
-> >>> - Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
-> >>> - Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
-> >>> - Changed some commit messages
-> >>
-> >> Just a gentle ping. I am wondering if you had a chance to glance
-> >> through this updated series.
+On Thu, Apr 30, 2020 at 10:38:21AM -0400, Joe Lawrence wrote:
+> On Thu, Apr 23, 2020 at 01:10:30PM -0500, Josh Poimboeuf wrote:
+> > On Thu, Apr 23, 2020 at 09:12:28AM -0500, Josh Poimboeuf wrote:
+> > > > > this is strange. While I would have expected an exception similar to
+> > > > > this, it really should have happened on the "sturg" instruction which
+> > > > > does the DAT-off store in s390_kernel_write(), and certainly not with
+> > > > > an ID of 0004 (protection). However, in your case, it happens on a
+> > > > > normal store instruction, with 0004 indicating a protection exception.
+> > > > > 
+> > > > > This is more like what I would expect e.g. in the case where you do
+> > > > > _not_ use the s390_kernel_write() function for RO module text patching,
+> > > > > but rather normal memory access. So I am pretty sure that this is not
+> > > > > related to the s390_kernel_write(), but some other issue, maybe some
+> > > > > place left where you still use normal memory access?
+> > > > 
+> > > > The call trace above also suggests that it is not a late relocation, no? 
+> > > > The path is from KLP module init function through klp_enable_patch. It should 
+> > > > mean that the to-be-patched object is loaded (it must be a module thanks 
+> > > > to a check klp_init_object_loaded(), vmlinux relocations were processed 
+> > > > earlier in apply_relocations()).
+> > > > 
+> > > > However, the KLP module state here must be COMING, so s390_kernel_write() 
+> > > > should be used. What are we missing?
+> > > 
+> > > I'm also scratching my head.  It _should_ be using s390_kernel_write()
+> > > based on the module state, but I don't see that on the stack trace.
+> > > 
+> > > This trace (and Gerald's comment) seem to imply it's using
+> > > __builtin_memcpy(), which might expected for UNFORMED state.
+> > > 
+> > > Weird...
 > > 
-> > Please can you resend based on for-next/cpufeature?
+> > Mystery solved:
+> > 
+> >   $ CROSS_COMPILE=s390x-linux-gnu- scripts/faddr2line vmlinux apply_rela+0x16a/0x520
+> >   apply_rela+0x16a/0x520:
+> >   apply_rela at arch/s390/kernel/module.c:336
+> > 
+> > which corresponds to the following code in apply_rela():
+> > 
+> > 
+> > 	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
+> > 		if (info->plt_initialized == 0) {
+> > 			unsigned int *ip;
+> > 			ip = me->core_layout.base + me->arch.plt_offset +
+> > 				info->plt_offset;
+> > 			ip[0] = 0x0d10e310;	/* basr 1,0  */
+> > 			ip[1] = 0x100a0004;	/* lg	1,10(1) */
+> > 
+> > 
+> > Notice how it's writing directly to text... oops.
+> > 
 > 
-> Sure, will do.
+> This is more of note for the future, but when/if we add livepatch
+> support on arm64 we'll need to make the very same adjustment there as
+> well.  See the following pattern:
+> 
+> arch/arm64/kernel/module.c:
+> 
+>   reloc_insn_movw()
+>   reloc_insn_imm()
+>   reloc_insn_adrp()
+> 
+>     *place = cpu_to_le32(insn);
+> 
+> maybe something like aarch64_insn_patch_text_nosync() could be used
+> there, I dunno. (It looks like ftrace and jump_labels are using that
+> interface.)
+> 
+> This is outside the scope of the patchset, but I thought I'd mention it
+> as I was curious to see how other arches were currently handling their
+> relocation updates.
 
-Thanks. I'll keep an eye out for them.
+True... I suspect your klp-convert selftests will catch that?
 
-Will
+-- 
+Josh
+
