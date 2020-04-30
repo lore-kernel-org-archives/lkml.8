@@ -2,44 +2,43 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538F2C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87056C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D537214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BCA20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588236614;
-	bh=ghrQEmeIlI+g1P6iSZ6DPBPbRnUsSttZWP+GFYy29mo=;
+	s=default; t=1588236669;
+	bh=B25IdFkSF/Xe5nfhCVFQRFDEhKUayIXoiR5sj0+5jMs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QCJbk7D7XJ6GV7FbRi32wPhxr9JeUHL/zX8fOebWOp3EBNw/3oYKZh+otbB+WAr7c
-	 FzZYa6VfG4jtkVsRh9TNH79tYXrWBsjtLu9Ve3ZTXJk+spDPPXg05gpiCorXSU//Sr
-	 Li42Aer1PVkM4B1dpM6oDC7/ZWOhvsBA2xdod84U=
+	b=RlIyG6mXl7XTJxuooirBcqZbpdC1raI6ddxCBPbvwqM/pEOx8ylhoEtdKtfLLOLwo
+	 kl3T/e5ERfGsn1Y/OnXsmIWh379zQFBb3ehQqgLFIwVrPYHcI1WLp6zTqIVedqSeHE
+	 vE0BEqYOxw3A4joqKvqtRlLRBHQtYIv0MClnlujY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgD3IuN (ORCPT
+        id S1726736AbgD3IvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:50:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 04:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbgD3IuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:50:12 -0400
+        id S1726412AbgD3IvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:51:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9D6E20787;
-        Thu, 30 Apr 2020 08:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E54920787;
+        Thu, 30 Apr 2020 08:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588236612;
-        bh=ghrQEmeIlI+g1P6iSZ6DPBPbRnUsSttZWP+GFYy29mo=;
+        s=default; t=1588236667;
+        bh=B25IdFkSF/Xe5nfhCVFQRFDEhKUayIXoiR5sj0+5jMs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KaqhsY86LNEksszvxHtMCCMJEREzCEgFGgqb0u5DpNO5Dv36tLHp1jXriMGXRhM6g
-         0IQfo4XYD7e8ikcmo5LrxJpxAG57PPiEbMIZrBHCTsBbTMMLAlK3QtxxjXDdsIS1PV
-         0We4M0prTxcdZvZteHR81YOQBz0OW3xRfgcS5GXM=
-Date:   Thu, 30 Apr 2020 10:50:10 +0200
+        b=CQpj6MdPRT8b93Oyrn50O5QctFKfv7EG0MoIOkqp4mdOlo8hcVYXd65sWdV1zHoQt
+         Os3vgxS45zA62gjVSPdyQVLKG9ePdxlAr9m9/oAGrrJKjpRWBilACWjfAhQ6z+pXO8
+         4Cnih2x/4oppwN83J/SciohdcrFoxsblbuWuope8=
+Date:   Thu, 30 Apr 2020 10:51:05 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Frankie Chang <Frankie.Chang@mediatek.com>
 Cc:     Todd Kjos <tkjos@google.com>,
@@ -54,7 +53,7 @@ Cc:     Todd Kjos <tkjos@google.com>,
         Jian-Min Liu <Jian-Min.Liu@mediatek.com>
 Subject: Re: [PATCH v3 1/1] binder: transaction latency tracking for user
  build
-Message-ID: <20200430085010.GE2496467@kroah.com>
+Message-ID: <20200430085105.GF2496467@kroah.com>
 References: <1586929044-12708-2-git-send-email-Frankie.Chang@mediatek.com>
  <1588234439-7959-1-git-send-email-Frankie.Chang@mediatek.com>
  <1588234439-7959-2-git-send-email-Frankie.Chang@mediatek.com>
@@ -91,22 +90,10 @@ On Thu, Apr 30, 2020 at 04:13:59PM +0800, Frankie Chang wrote:
 >   In addition, moving all structs to header file makes module
 >   more extendable, and make all these strcuts to be defined
 >   in the same file.
-> 
-> Signed-off-by: Frankie Chang <Frankie.Chang@mediatek.com>
-> ---
->  drivers/android/Kconfig                 |    8 +
->  drivers/android/Makefile                |    1 +
->  drivers/android/binder.c                |  408 +-----------------------------
->  drivers/android/binder_internal.h       |  416 +++++++++++++++++++++++++++++++
->  drivers/android/binder_latency_tracer.c |  105 ++++++++
->  drivers/android/binder_trace.h          |   49 ++++
->  6 files changed, 583 insertions(+), 404 deletions(-)
->  create mode 100644 drivers/android/binder_latency_tracer.c
 
-What changed from previous versions?  That always needs to go below the
---- line, as is documented in the kernel documentation.
-
-Please fix that up and resend a v4.
+Also, this should be split up into a patch series, the first moving
+things around, and the rest of the patches each adding a single feature.
+As it is, this patch is almost impossible to review.
 
 thanks,
 
