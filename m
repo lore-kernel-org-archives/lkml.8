@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48280C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248B5C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249BD2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEF12076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255614;
-	bh=t4pVoz7J8jkAn/McnyM5UibjHvcOHSChe4RvxUmvIPw=;
+	s=default; t=1588255618;
+	bh=FDZY+s+wCtA2hrGYGuRdyfgJiqpSlmXqbgsFOKZZSPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOGKpbgiCNgBi7QmGV56tw1eV3T18GuRK7LMUtQXNuT0psTcvDZZdCvHBhWBKhsoY
-	 r3z/VMdm87dtPwSJQh81/Cd0+w7uC3qiERiQnzOO5RfkigLJz00T4fgFlXyhMQ2j+S
-	 Lu1RgdHqSR4fnc5eD8jTkljO/C+5X8U4rbY+gXCk=
+	b=li/TMok94+bJ/ejH8Ir3HlYXmA/SnASZMEC8MTXQDLcG2y+eDe8z5YxBxR3nMiqlQ
+	 QkoorUVe8fwlL/X5tsTO/pTWkWk0I4Ou+XvMnD7SvzzsmUT16514h0dRk7Q9wBu6Yz
+	 +9mOBXpNDm3FiuDomTHxHMriUDHASeik5P7894kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgD3OGw (ORCPT
+        id S1728506AbgD3Nwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbgD3Nwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 09:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728366AbgD3NwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 650C924962;
-        Thu, 30 Apr 2020 13:52:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B5B22137B;
+        Thu, 30 Apr 2020 13:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254766;
-        bh=t4pVoz7J8jkAn/McnyM5UibjHvcOHSChe4RvxUmvIPw=;
+        s=default; t=1588254743;
+        bh=FDZY+s+wCtA2hrGYGuRdyfgJiqpSlmXqbgsFOKZZSPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i1L6XItPMQGZH89D+v6QbeY1nfH0wyMvryGUwysLP/B97McMSDTa1fEutjt+Ila9L
-         yOPej5OSjhQ36zq09htXXXGJioy4MugVn+571FryCSS61nJpHtWn1C+rq/CTrysm1y
-         IG0gJZf9xFYGt3d710OHYqMbReluO+Lbmk5Hfdcw=
+        b=apdE4DwCalqSFFEh6H/41dmMxZkMLHLFQZHSD/M2VzFAyPJBn4WemAAVKoTYAs8gR
+         9jzJuKmFmITdnuviv3NM4zL++o5B4Tzsd0OPY0bcYvCKjXnA+lzEoFc9T16RUWZ6dX
+         WgNeyO0oQNqKQaLBS9WHMnQWcDCjiiHy4WN4OXek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 24/57] ASoC: SOF: Intel: add min/max channels for SSP on Baytrail/Broadwell
-Date:   Thu, 30 Apr 2020 09:51:45 -0400
-Message-Id: <20200430135218.20372-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 03/57] ASoC: topology: Check return value of soc_tplg_create_tlv
+Date:   Thu, 30 Apr 2020 09:51:24 -0400
+Message-Id: <20200430135218.20372-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,139 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 8c05246c0b58cbe80580ea4be05f6d51228af8a9 ]
+[ Upstream commit 482db55ae87f3749db05810a38b1d618dfd4407c ]
 
-Major regressions were detected by SOF CI on CherryTrail and Broadwell:
+Function soc_tplg_create_tlv can fail, so we should check if it succeded
+or not and proceed appropriately.
 
-[   25.705750]  SSP2-Codec: ASoC: no backend playback stream
-[   27.923378]  SSP2-Codec: ASoC: no users playback at close - state
-
-This is root-caused to the introduction of the DAI capability checks
-with snd_soc_dai_stream_valid(). Its use in soc-pcm.c makes it a
-requirement for all DAIs to report at least a non-zero min_channels
-field.
-
-For some reason the SSP structures used for SKL+ did provide this
-information but legacy platforms didn't.
-
-Fixes: 9b5db059366ae2 ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200417172014.11760-1-pierre-louis.bossart@linux.intel.com
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200327204729.397-3-amadeuszx.slawinski@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/intel/bdw.c | 16 +++++++++++++
- sound/soc/sof/intel/byt.c | 48 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 64 insertions(+)
+ sound/soc/soc-topology.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sof/intel/bdw.c b/sound/soc/sof/intel/bdw.c
-index 80e2826fb447b..8ede5fd0d0c0f 100644
---- a/sound/soc/sof/intel/bdw.c
-+++ b/sound/soc/sof/intel/bdw.c
-@@ -520,9 +520,25 @@ static int bdw_probe(struct snd_sof_dev *sdev)
- static struct snd_soc_dai_driver bdw_dai[] = {
- {
- 	.name = "ssp0-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- {
- 	.name = "ssp1-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- };
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 17556a47f7274..c2901652a6d04 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -893,7 +893,13 @@ static int soc_tplg_dmixer_create(struct soc_tplg *tplg, unsigned int count,
+ 		}
  
-diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
-index 41008c974ac6c..cdffdc5d40759 100644
---- a/sound/soc/sof/intel/byt.c
-+++ b/sound/soc/sof/intel/byt.c
-@@ -366,21 +366,69 @@ static int byt_reset(struct snd_sof_dev *sdev)
- static struct snd_soc_dai_driver byt_dai[] = {
- {
- 	.name = "ssp0-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- {
- 	.name = "ssp1-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- {
- 	.name = "ssp2-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	}
- },
- {
- 	.name = "ssp3-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- {
- 	.name = "ssp4-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- {
- 	.name = "ssp5-port",
-+	.playback = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
-+	.capture = {
-+		.channels_min = 1,
-+		.channels_max = 8,
-+	},
- },
- };
+ 		/* create any TLV data */
+-		soc_tplg_create_tlv(tplg, &kc, &mc->hdr);
++		err = soc_tplg_create_tlv(tplg, &kc, &mc->hdr);
++		if (err < 0) {
++			dev_err(tplg->dev, "ASoC: failed to create TLV %s\n",
++				mc->hdr.name);
++			kfree(sm);
++			continue;
++		}
  
+ 		/* pass control to driver for optional further init */
+ 		err = soc_tplg_init_kcontrol(tplg, &kc,
+@@ -1354,7 +1360,13 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
+ 		}
+ 
+ 		/* create any TLV data */
+-		soc_tplg_create_tlv(tplg, &kc[i], &mc->hdr);
++		err = soc_tplg_create_tlv(tplg, &kc[i], &mc->hdr);
++		if (err < 0) {
++			dev_err(tplg->dev, "ASoC: failed to create TLV %s\n",
++				mc->hdr.name);
++			kfree(sm);
++			continue;
++		}
+ 
+ 		/* pass control to driver for optional further init */
+ 		err = soc_tplg_init_kcontrol(tplg, &kc[i],
 -- 
 2.20.1
 
