@@ -2,82 +2,110 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C69C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0613C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB0622076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B6D207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:18:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fba1VIoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgD3MSF (ORCPT
+        id S1726924AbgD3MSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 08:18:07 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54772 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbgD3MSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 08:18:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50036 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbgD3MSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:18:04 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D86A06C30710E0D82DAD;
-        Thu, 30 Apr 2020 20:18:02 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
- 20:17:53 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <satishkh@cisco.com>, <sebaddel@cisco.com>, <kartilak@cisco.com>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <yanaijie@huawei.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] scsi: fnic: use true,false for fnic->internal_reset_inprogress
-Date:   Thu, 30 Apr 2020 20:17:18 +0800
-Message-ID: <20200430121718.14970-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03UCHfEm094635;
+        Thu, 30 Apr 2020 07:17:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588249061;
+        bh=2760Yo1AKc3mP3fvGFHPMjiwBzw8xIguNCDLvnnh1ms=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=Fba1VIoUSzAO9O42yqqZqnx8s6p68o3IbJPWB7DQ7+oM1uWdB4owDcI1J5tZiyXBE
+         XdmsYQZF38oDYcRdVkv5335936BRJ+D0wl7UsWhzIzVZTbDPi21mxjhn2WxH/zec39
+         GH6wnA1J8G80tKugvOqd7CNHci5UV5GfdWMtzVgw=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03UCHeMZ126557
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Apr 2020 07:17:40 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Apr 2020 07:17:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Apr 2020 07:17:40 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UCHdgn101368;
+        Thu, 30 Apr 2020 07:17:40 -0500
+Date:   Thu, 30 Apr 2020 17:47:39 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v4 02/16] spi: atmel-quadspi: reject DTR ops
+Message-ID: <20200430121737.37dghomlluzqcxxi@ti.com>
+References: <20200424184410.8578-1-p.yadav@ti.com>
+ <20200424184410.8578-3-p.yadav@ti.com>
+ <20200430113243.GB4633@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200430113243.GB4633@sirena.org.uk>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
+On 30/04/20 12:32PM, Mark Brown wrote:
+> On Sat, Apr 25, 2020 at 12:13:56AM +0530, Pratyush Yadav wrote:
+> 
+> > Double Transfer Rate (DTR) ops are added in spi-mem. But this controller
+> > doesn't support DTR transactions. Since we don't use the default
+> > supports_op(), which rejects all DTR ops, do that explicitly in our
+> > supports_op().
+> 
+> It's not ideal that we'd need to explicitly add checks in individual
+> controller drivers - are we sure that all the others do?
 
-drivers/scsi/fnic/fnic_scsi.c:2627:5-36: WARNING: Comparison of 0/1 to
-bool variable
+Most other controllers either don't specify a supports_op function at 
+all, in which case spi_mem_default_supports_op() is called, or do their 
+custom logic and then call spi_mem_default_supports_op(). In both those 
+cases, DTR ops would get rejected because of the call to 
+spi_mem_default_supports_op(). So they do not need to add the check 
+explicitly there.
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/scsi/fnic/fnic_scsi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The two exceptions are atmel-quadspi and spi-mtk-nor (which I missed 
+updating). They don't call the default supports_op, so they need to be 
+updated to explicitly to reject DTR ops.
 
-diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-index b60795893994..27535c90b248 100644
---- a/drivers/scsi/fnic/fnic_scsi.c
-+++ b/drivers/scsi/fnic/fnic_scsi.c
-@@ -2624,8 +2624,8 @@ int fnic_host_reset(struct scsi_cmnd *sc)
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&fnic->fnic_lock, flags);
--	if (fnic->internal_reset_inprogress == 0) {
--		fnic->internal_reset_inprogress = 1;
-+	if (!fnic->internal_reset_inprogress) {
-+		fnic->internal_reset_inprogress = true;
- 	} else {
- 		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
- 		FNIC_SCSI_DBG(KERN_DEBUG, fnic->lport->host,
-@@ -2654,7 +2654,7 @@ int fnic_host_reset(struct scsi_cmnd *sc)
- 	}
- 
- 	spin_lock_irqsave(&fnic->fnic_lock, flags);
--	fnic->internal_reset_inprogress = 0;
-+	fnic->internal_reset_inprogress = false;
- 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
- 	return ret;
- }
+Earlier versions of this series discovered the DTR capability from 
+devicetree. In that case, no change would be required at all, but review 
+comments suggested I drop those changes. Instead, the controllers should 
+accept/reject DTR ops in their supports_op hooks.
+
 -- 
-2.21.1
-
+Regards,
+Pratyush Yadav
+Texas Instruments India
