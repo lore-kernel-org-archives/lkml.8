@@ -2,159 +2,128 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-16.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D669C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877B7C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D092076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0952076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:07:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="trOhVudw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgD3NEp (ORCPT
+        id S1726766AbgD3NHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:04:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50858 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727086AbgD3NEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:04:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5E59EACA1;
-        Thu, 30 Apr 2020 13:04:40 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     mbrugger@suse.com, u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        marex@denx.de, linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 1/2] arm: rpi: Add function to trigger VL805's firmware load
-Date:   Thu, 30 Apr 2020 15:04:32 +0200
-Message-Id: <20200430130433.11248-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200430130433.11248-1-nsaenzjulienne@suse.de>
-References: <20200430130433.11248-1-nsaenzjulienne@suse.de>
+        Thu, 30 Apr 2020 09:07:46 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48114 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbgD3NHq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:07:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03UD7ir6027536;
+        Thu, 30 Apr 2020 08:07:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588252064;
+        bh=CCBvsCnbnKVyCy8qZajezdDs+LtdF+rrN8tIlu5hi+4=;
+        h=From:To:CC:Subject:Date;
+        b=trOhVudwBohlx2hlVlj735Z/efjQ1eEeqtV2lU/Ap6VwlDh4oOitLOpHyRpjy/eHG
+         OnpN9Yoq+H2PCmCVMMGYlvXpRxGrmgFWNKFkpGuLvzBk2SX8/D8o64p6b87iWEoZI+
+         9vt2/IGBAqGuf54hp0eSSRCxjfBbFmbihoF3cseo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UD7iNN070882;
+        Thu, 30 Apr 2020 08:07:44 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Apr 2020 08:07:43 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Apr 2020 08:07:44 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03UD7ffY036041;
+        Thu, 30 Apr 2020 08:07:42 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>
+Subject: [GIT PULL] PHY: For 5.7 -rc
+Date:   Thu, 30 Apr 2020 18:37:41 +0530
+Message-ID: <20200430130741.2396-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's (a xHCI chip) firmware
-may either be loaded directly from an EEPROM or, if not present, by the
-SoC's VideoCore (the SoC's co-processor). Introduce the function that
-informs VideoCore that VL805 may need its firmware loaded.
+Hi Greg,
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Please find the PHY pull request for 5.7 -rc below.
 
----
-Changes since v1:
- - Rename function so it's not mistaken with regular firmware loading
+Vinod Koul has kindly agreed to co-maintain PHY subsystem. So we are
+also moving linux-phy to a shared repository. I've included a patch
+to update MAINTAINER file to reflect both these changes in the pull
+request.
 
- arch/arm/mach-bcm283x/include/mach/mbox.h | 13 +++++++
- arch/arm/mach-bcm283x/include/mach/msg.h  |  7 ++++
- arch/arm/mach-bcm283x/msg.c               | 43 +++++++++++++++++++++++
- 3 files changed, 63 insertions(+)
+Other than that it includes couple of Qualcomm driver fixes and Kconfig
+depenecy fix in Tegra PHY. For the full list of changes see tag message
+below.
 
-diff --git a/arch/arm/mach-bcm283x/include/mach/mbox.h b/arch/arm/mach-bcm283x/include/mach/mbox.h
-index 60e226ce1d..2ae2d3d97c 100644
---- a/arch/arm/mach-bcm283x/include/mach/mbox.h
-+++ b/arch/arm/mach-bcm283x/include/mach/mbox.h
-@@ -491,6 +491,19 @@ struct bcm2835_mbox_tag_set_palette {
- 	} body;
- };
- 
-+#define BCM2835_MBOX_TAG_NOTIFY_XHCI_RESET          0x00030058
-+
-+struct bcm2835_mbox_tag_pci_dev_addr {
-+	struct bcm2835_mbox_tag_hdr tag_hdr;
-+	union {
-+		struct {
-+			u32 dev_addr;
-+		} req;
-+		struct {
-+		} resp;
-+	} body;
-+};
-+
- /*
-  * Pass a raw u32 message to the VC, and receive a raw u32 back.
-  *
-diff --git a/arch/arm/mach-bcm283x/include/mach/msg.h b/arch/arm/mach-bcm283x/include/mach/msg.h
-index 4afb08631b..e45c1bf010 100644
---- a/arch/arm/mach-bcm283x/include/mach/msg.h
-+++ b/arch/arm/mach-bcm283x/include/mach/msg.h
-@@ -48,4 +48,11 @@ int bcm2835_set_video_params(int *widthp, int *heightp, int depth_bpp,
- 			     int pixel_order, int alpha_mode, ulong *fb_basep,
- 			     ulong *fb_sizep, int *pitchp);
- 
-+/**
-+ * bcm2711_load_vl805_firmware() - get vl805's firmware loaded
-+ *
-+ * @return 0 if OK, -EIO on error
-+ */
-+int bcm2711_notify_vl805_reset(void);
-+
- #endif
-diff --git a/arch/arm/mach-bcm283x/msg.c b/arch/arm/mach-bcm283x/msg.c
-index 94b75283f8..a338190d33 100644
---- a/arch/arm/mach-bcm283x/msg.c
-+++ b/arch/arm/mach-bcm283x/msg.c
-@@ -40,6 +40,12 @@ struct msg_setup {
- 	u32 end_tag;
- };
- 
-+struct msg_notify_vl805_reset {
-+	struct bcm2835_mbox_hdr hdr;
-+	struct bcm2835_mbox_tag_pci_dev_addr dev_addr;
-+	u32 end_tag;
-+};
-+
- int bcm2835_power_on_module(u32 module)
- {
- 	ALLOC_CACHE_ALIGN_BUFFER(struct msg_set_power_state, msg_pwr, 1);
-@@ -151,3 +157,40 @@ int bcm2835_set_video_params(int *widthp, int *heightp, int depth_bpp,
- 
- 	return 0;
- }
-+
-+/*
-+ * On the Raspberry Pi 4, after a PCI reset, VL805's (the xHCI chip) firmware
-+ * may either be loaded directly from an EEPROM or, if not present, by the
-+ * SoC's VideoCore. This informs VideoCore that VL805 needs its firmware
-+ * loaded.
-+ */
-+int bcm2711_notify_vl805_reset(void)
-+{
-+	ALLOC_CACHE_ALIGN_BUFFER(struct msg_notify_vl805_reset,
-+				 msg_notify_vl805_reset, 1);
-+	int ret;
-+
-+	BCM2835_MBOX_INIT_HDR(msg_notify_vl805_reset);
-+	BCM2835_MBOX_INIT_TAG(&msg_notify_vl805_reset->dev_addr,
-+			      NOTIFY_XHCI_RESET);
-+
-+	/*
-+	 * The pci device address is expected like this:
-+	 *
-+	 *   PCI_BUS << 20 | PCI_SLOT << 15 | PCI_FUNC << 12
-+	 *
-+	 * But since RPi4's PCIe setup is hardwired, we know the address in
-+	 * advance.
-+	 */
-+	msg_notify_vl805_reset->dev_addr.body.req.dev_addr = 0x100000;
-+
-+	ret = bcm2835_mbox_call_prop(BCM2835_MBOX_PROP_CHAN,
-+				     &msg_notify_vl805_reset->hdr);
-+	if (ret) {
-+		printf("bcm2711: Faild to load vl805's firmware, %d\n", ret);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
+Consider merging this for the upcoming -rc cycle and let me know if
+I have to make any changes.
+
+Thanks
+Kishon
+
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git tags/phy-for-5.7-rc
+
+for you to fetch changes up to 820eeb9de62f1f479c04fc6575d874611b1e2095:
+
+  phy: qualcomm: usb-hs-28nm: Prepare clocks in init (2020-04-30 12:10:49 +0530)
+
+----------------------------------------------------------------
+phy: for 5.7 -rc
+
+*) Update MAINTAINER to include Vinod Koul as co-maintainer of PHY
+*) Fix Kconfig dependencies in seen with PHY_TEGRA_XUSB
+*) Re-add "qcom,sdm845-qusb2-phy" compatible in phy-qcom-qusb2.c to
+   make it work with existing dtbs
+*) Move clock enable from ->poweron() to ->init() in Qualcomm
+   usb-hs-28nm driver to initialize HW in ->init()
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+----------------------------------------------------------------
+Bjorn Andersson (1):
+      phy: qualcomm: usb-hs-28nm: Prepare clocks in init
+
+John Stultz (1):
+      phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+
+Kishon Vijay Abraham I (1):
+      MAINTAINERS: Add Vinod Koul as Generic PHY co-maintainer
+
+Thierry Reding (1):
+      phy: tegra: Select USB_COMMON for usb_get_maximum_speed()
+
+ MAINTAINERS                                 |  3 ++-
+ drivers/phy/qualcomm/phy-qcom-qusb2.c       |  7 +++++++
+ drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c | 32 +++++++++++++++++++++-----------
+ drivers/phy/tegra/Kconfig                   |  3 ++-
+ 4 files changed, 32 insertions(+), 13 deletions(-)
 -- 
-2.26.2
+2.17.1
 
