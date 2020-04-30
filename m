@@ -2,211 +2,151 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E5BC83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC26C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7748E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:24:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NlihTNgy"
+	by mail.kernel.org (Postfix) with ESMTP id 136F02082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588217167;
+	bh=z3pTkIFBVNr+3ZsQm78UbryBpZKNfoi08jEr0PDPxjo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T5hWZKwHqOToD24iYPjRR9EYWsWqFyEV1XsxUs6Yz2uygK9UOfzjFBcA5HYMAJryN
+	 IsqlUl83Au/ba+r+JYvhexVu7E/K4IYDCWayomPxwOmlijZCwn17EgO/ETcJx7yYpO
+	 MmmVgLYgpx7Y6Zz6iT+miW/4LuL2g9kQSRwDgY1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgD3DYT (ORCPT
+        id S1726531AbgD3D0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:24:19 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17787 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726431AbgD3DYT (ORCPT
+        Wed, 29 Apr 2020 23:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbgD3D0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:24:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1588217013; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=GIo2wREN+iNYh7ww3JMjajB8fxE2ua7+9eAs2AL5CT7kU1kY9mZDvCKr6NgwxprjtHBiWDPTiQU771eFHpC+DpbEuxNXXS+sP75I2jBMdaSp1LltXrRti87iOZN8BJPS5cWGdUiVVLaeJe7FrDCQos0NGBLxxGg23EJvizq7dYM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1588217013; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=eLjXJXbz1KqXBB+PX8paWXxS+pm36WZwqQB5RB0gzc4=; 
-        b=kU35dfu1ZfVQUBXZZYa/xnUZyK7EXz20woVjX7+YcIbjQLoSpDdwOvBT9+u6lOMjaYaFA1JZCY/PN60O5Fx7NF0jzGgYPzOrvgVcHa5lEYXcwpGhSTtjzuele+/aawHieY6gLrYbllkD46vSC+Z+EMXu176E8c1rJ4D3TIhFwAM=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1588217013;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=eLjXJXbz1KqXBB+PX8paWXxS+pm36WZwqQB5RB0gzc4=;
-        b=NlihTNgyqLczwA1v+v1MFrPx1/vo9MoD705bQsciEhRGnl7foAbLiH/TLwUNZ9Hk
-        P6egaA6nD1FXiwLWLiHztFWMKVQ5DAes5SX0myXg/8RZLNg4F4yqmHhWeMhUb5JnSWj
-        rkj8EjijCQzYuML/KpfT/MhrqgaJhl1rM9QZ8cKE=
-Received: from [127.0.0.1] (115.205.241.207 [115.205.241.207]) by mx.zoho.com.cn
-        with SMTPS id 1588217010321100.41453220362018; Thu, 30 Apr 2020 11:23:30 +0800 (CST)
-Date:   Thu, 30 Apr 2020 11:23:25 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v6] MIPS: Loongson: Add DMA support for LS7A
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <E8789D5E-1CBB-4D11-A4B9-16F20A0BE111@flygoat.com>
+        Wed, 29 Apr 2020 23:26:05 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F46C035494
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:26:05 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 188so3483574lfa.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rep5Pfyn5wwxEy4YRJRyifa2EtharymFjZwIOhhAhjI=;
+        b=hxPz/T6gnizicMHSps1pqHyi5LPdmmZAEZZ6ZvmYNNumXDosb4mxFs185exk2bmlag
+         MzcTztnXTDRN0IqPCvpeFPqLrBVxtw2iaUxPXXHLeyci2LAR7IKzylYEMDPIi/x5ZIy+
+         Ni65GjbEcyASwyPX8s3S6S7ZKWXPtR2caNdDo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rep5Pfyn5wwxEy4YRJRyifa2EtharymFjZwIOhhAhjI=;
+        b=NJmUqqi2dfrVtE5Hlh2+hcehHeaHz+602o+RZDAqyqTj0h7h03hLjA3rAKMwcQegjV
+         g/6HC+l/mijrswRDeiLaT2T2xm375ocuow51rUPKQI3Y66IvMMV0NbHzzO1UJ86XOWh5
+         A39X44P/jdouJtcPyPetRZfcETTqhikvtqwdgWFGFAiPqAWbb0h3IbU7zyApXxI6ekJa
+         TF8871vxKaGC9DrCvM6X+U9TSarNSJurp0CKr215+0RGNQPnMm9Z8NztEUPlQn48y7hJ
+         NTxJ+4rzHISjYG/PvKxrX5i7/EJxzpRutI0gRL8821NV7sWOYDuNvbTgN0DjY0ZxHbZ6
+         c1gA==
+X-Gm-Message-State: AGi0PuZREzYru2aJzjrYk8mHj07ixj0oW3q0otUQdFGOIQ0jXTxnFnmD
+        NbwmiJeKPVkJOE0W1vT1bqEMD70XSJs=
+X-Google-Smtp-Source: APiQypKrbkwwWgLwYM1J9rsuN4rYBBU28xIcbkfuxveLPwwlAfnUenaG84Fx5MaWG5c7IcS915Igcg==
+X-Received: by 2002:a05:6512:695:: with SMTP id t21mr653024lfe.158.1588217163039;
+        Wed, 29 Apr 2020 20:26:03 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id u3sm4021639lff.26.2020.04.29.20.26.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Apr 2020 20:26:01 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id j3so4868341ljg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:26:01 -0700 (PDT)
+X-Received: by 2002:a2e:8512:: with SMTP id j18mr791220lji.201.1588217161107;
+ Wed, 29 Apr 2020 20:26:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
+ <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+ <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
+ <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
+ <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
+ <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
+ <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
+ <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
+ <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
+ <CAHk-=wjUZLybZBJgOtD2gng=FS7USrbQQ1-tn5M+UP5DbCWdzw@mail.gmail.com>
+ <CAG48ez0FL3i4eGFYryOwG2nnS+JigfKYAVSV9ogVHjmjOWzsrA@mail.gmail.com>
+ <AM6PR03MB5170C5D02C6FCB6D69DFE3ADE4AA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg6oKSLkVhY5oqOFyzCCSr9eYPGK2SHJfgCXF_QOmPKog@mail.gmail.com> <CAG48ez25=6qrCU51dEAV_ciyU2jvPuRFWfFOAAT22kmeAZccuQ@mail.gmail.com>
+In-Reply-To: <CAG48ez25=6qrCU51dEAV_ciyU2jvPuRFWfFOAAT22kmeAZccuQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 29 Apr 2020 20:25:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com>
+Message-ID: <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Jann Horn <jannh@google.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-0:31:07, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->In the current market, the most used bridge chip on the Loongson
->platform are RS780E and LS7A, the RS780E bridge chip is already
->supported by the mainline kernel=2E
+On Wed, Apr 29, 2020 at 8:00 PM Jann Horn <jannh@google.com> wrote:
 >
->In order to use the default implementation of __phys_to_dma() and
->__dma_to_phys() in dma-direct=2Eh, remove CONFIG_ARCH_HAS_PHYS_TO_DMA
->and then set the bus's DMA limit to 36 bit for RS780E to maintain
->downward compatibility=2E
->
->Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
->---
->
->Hi Christoph and Jiaxun,
->
->Thank you very much for your suggestions=2E
+> But if we go with Bernd's approach together with your restart
+> suggestion,
 
-I'm probably going to refine this before we implement full devicetree boot=
-,
-but that's in far future=2E
+So repeat after me: Bernd's approach _without_ the restart is unacceptable.
 
-LGTM to me for now=2E
+It's unacceptable because it breaks things that currently work, and
+returns EAGAIN in situations where that is simple not a valid error
+code.
 
-Thanks=2E
+His original patch also happens to be unacceptable because it's an
+unmaintainable mess, but that's independent of the bug it introduced.
 
-Reviewed-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+That bug has nothing to do with ptrace(). It's literally a "write()"
+to a file in /proc.
 
->
->v5:
->  - use the default implementation of __phys_to_dma()
->    and __dma_to_phys() in dma-direct=2Eh
->
->v6:
->  - make loongson_dma_config() static
->  - put ls7a things before rs780 things
->
-> arch/mips/Kconfig                                  |  1 -
-> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  5 +++++
-> arch/mips/loongson64/dma=2Ec                         | 22 +++++++++++---=
---------
-> arch/mips/loongson64/env=2Ec                         |  2 ++
-> 4 files changed, 18 insertions(+), 12 deletions(-)
->
->diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->index 9f15539=2E=2E12b6bdb 100644
->--- a/arch/mips/Kconfig
->+++ b/arch/mips/Kconfig
->@@ -1454,7 +1454,6 @@ choice
-> config CPU_LOONGSON64
-> 	bool "Loongson 64-bit CPU"
-> 	depends on SYS_HAS_CPU_LOONGSON64
->-	select ARCH_HAS_PHYS_TO_DMA
-> 	select CPU_MIPSR2
-> 	select CPU_HAS_PREFETCH
-> 	select CPU_SUPPORTS_64BIT_KERNEL
->diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh b/arch/=
-mips/include/asm/mach-loongson64/boot_param=2Eh
->index f082d87=2E=2E0c07a96 100644
->--- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->+++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->@@ -197,6 +197,7 @@ enum loongson_bridge_type {
-> 	RS780E =3D 2
-> };
->=20
->+struct pci_dev;
-> struct loongson_system_configuration {
-> 	u32 nr_cpus;
-> 	u32 nr_nodes;
->@@ -221,9 +222,13 @@ struct loongson_system_configuration {
-> 	u32 nr_sensors;
-> 	struct sensor_device sensors[MAX_SENSORS];
-> 	u64 workarounds;
->+	void (*dma_config)(struct pci_dev *pdev);
-> };
->=20
-> extern struct efi_memory_map_loongson *loongson_memmap;
-> extern struct loongson_system_configuration loongson_sysconf;
->=20
->+extern void ls7a_dma_config(struct pci_dev *pdev);
->+extern void rs780e_dma_config(struct pci_dev *pdev);
->+
-> #endif
->diff --git a/arch/mips/loongson64/dma=2Ec b/arch/mips/loongson64/dma=2Ec
->index 5e86635=2E=2Eef40b0d 100644
->--- a/arch/mips/loongson64/dma=2Ec
->+++ b/arch/mips/loongson64/dma=2Ec
->@@ -1,24 +1,24 @@
-> // SPDX-License-Identifier: GPL-2=2E0
->-#include <linux/dma-direct=2Eh>
->+#include <linux/pci=2Eh>
-> #include <linux/init=2Eh>
-> #include <linux/swiotlb=2Eh>
->=20
->-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
->+void ls7a_dma_config(struct pci_dev *pdev)
-> {
->-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
->-	 * Loongson-3's 48bit address space and embed it into 40bit */
->-	long nid =3D (paddr >> 44) & 0x3;
->-	return ((nid << 44) ^ paddr) | (nid << 37);
-> }
->=20
->-phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
->+void rs780e_dma_config(struct pci_dev *pdev)
-> {
->-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
->-	 * Loongson-3's 48bit address space and embed it into 40bit */
->-	long nid =3D (daddr >> 37) & 0x3;
->-	return ((nid << 37) ^ daddr) | (nid << 44);
->+	pdev->dev=2Ebus_dma_limit =3D DMA_BIT_MASK(36);
-> }
->=20
->+static void loongson_dma_config(struct pci_dev *pdev)
->+{
->+	loongson_sysconf=2Edma_config(pdev);
->+}
->+
->+DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, loongson_dma_config);
->+
-> void __init plat_swiotlb_setup(void)
-> {
-> 	swiotlb_init(1);
->diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=2Ec
->index 71f4aaf=2E=2E496f401 100644
->--- a/arch/mips/loongson64/env=2Ec
->+++ b/arch/mips/loongson64/env=2Ec
->@@ -192,8 +192,10 @@ void __init prom_init_env(void)
-> 	if (vendor =3D=3D PCI_VENDOR_ID_LOONGSON && device =3D=3D 0x7a00) {
-> 		pr_info("The bridge chip is LS7A\n");
-> 		loongson_sysconf=2Ebridgetype =3D LS7A;
->+		loongson_sysconf=2Edma_config =3D ls7a_dma_config;
-> 	} else {
-> 		pr_info("The bridge chip is RS780E or SR5690\n");
-> 		loongson_sysconf=2Ebridgetype =3D RS780E;
->+		loongson_sysconf=2Edma_config =3D rs780e_dma_config;
-> 	}
-> }
+What is so hard to get about this basic thing?
 
---=20
-Jiaxun Yang
+> then simply doing PTRACE_ATTACH on two threads A and B
+> would be enough to livelock, right?
+
+The same case that just causes a recursive wait. Yes. No worse off than we were.
+
+And the fact is, *THAT* case looks truly trivial to work around.
+
+Just make the ptrace() code - but not the fs/proc/base.c code - do
+something like
+
+        if (lock_exec_creds(tsk))
+                return -EINTR;
+
+and now ptrace() doesn't repeat (simply because it doesn't return that
+ERESTARTNOINTR. It would go through that "return through signal
+handling code" in the kernel, but it wouldn't actually retry the
+system call).
+
+But I'm getting less and less interested in trying to "fix" this
+problem, when people don't seem to realize that the important case is
+to not break _good_ programs, and the pointless buggy garbage
+test-case is entirely uninteresting. It's buggy user code. If it
+causes a wait or a livelock, nobody sane should care in the least. Fix
+the bug in user space.
+
+Introducing new bugs in the kernel where they didn't exist before - in
+order to try to work around buggy user-space that has never ever
+worked - is not acceptable.
+
+                       Linus
