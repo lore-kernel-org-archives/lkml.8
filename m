@@ -6,118 +6,101 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656E7C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF3CC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4485D2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153DD2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgD3Vdo (ORCPT
+        id S1728070AbgD3Vdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:33:44 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:52689 "EHLO
+        Thu, 30 Apr 2020 17:33:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:40667 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgD3Vdn (ORCPT
+        with ESMTP id S1726752AbgD3Vdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:33:43 -0400
+        Thu, 30 Apr 2020 17:33:47 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MOz8O-1jp8650rV6-00PM3H; Thu, 30 Apr 2020 23:32:29 +0200
+ 1M6DnM-1jWUnr12TI-006ihr; Thu, 30 Apr 2020 23:33:23 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     linux-kernel@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>, Joe Perches <joe@perches.com>,
-        netdev@vger.kernel.org
-Subject: [PATCH 07/15] drop_monitor: work around gcc-10 stringop-overflow warning
-Date:   Thu, 30 Apr 2020 23:30:49 +0200
-Message-Id: <20200430213101.135134-8-arnd@arndb.de>
+To:     linux-kernel@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <m.chehab@samsung.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH 12/15] media: s5k5baf: avoid gcc-10 zero-length-bounds warning
+Date:   Thu, 30 Apr 2020 23:30:54 +0200
+Message-Id: <20200430213101.135134-13-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200430213101.135134-1-arnd@arndb.de>
 References: <20200430213101.135134-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Jvut3fuVCUJStyT2q/5j1FYj+ej7s7opv8+9Oq4TJu02Tw+aA3n
- fymY+dPKzN4cscCrfqeujzfQhh7XUAPiYqE+axWnneSN6KYsU808BNL/FpTLvtEcsV0uZJH
- Q7FfUhb0HrUA671OUFRqaXIObfmoYffIkQ8W1hmkSEnKz3TKdQ30AdFaPxU5u2mFU1i5Ghv
- xUAw6yB8Hm+dnqJJeoDzQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c9XiUSyQeWo=:GT4r7caaWoRR/d1E5gTP0x
- G3xIjNlLitaH8+kRIOy1cEJzYv9OGYAIO6hwLIEA78jvm0bRI4ZDOMnXkmfnnMSVYmHpC2wNr
- 4fq/J4ZZwXxADMJa7eKdtWCpT2qteOG2m5u50ed0V43EojNydrh2UauJdC0KMOfNKm0/Nkzuc
- 2Qk9z4l+aK+9UFYkZPpRPXs2vhUeTHB+2WZ1hPbn/FuJo5mRAh1foc6+mckjXCadKSMygsdbZ
- leVT7V6RkouzTxFzxgGDgCIUeelR/BHY4i1uTTB7ybytngHZi0ODLbJwt56+1S7YlwpQ8HRKn
- CcyDx87UJ/EK2MEu2pa62OnkRl3+4abtC+S/yfTT5ZSjqunvxET4pDMYsC4PjGNw1pceL+oy/
- Un+gWCFzLv3gKsDTpWih6NHb5LPBAhyBW2Nz8/M7Pbk464PKvn2FVCFoyV8SeCqFdoiR0wCFe
- qeBtZC4PGZDAnTwJydK323R+83VNWuxbQji7SQbO+bvkp8glDT3QjcHUHFu6bNScJaziosGwq
- 143pJ3bo8bEE+sEkVfX426YmU2g50KFuGKQfXbfttJItke93T6z30h2oVjKdTP6f6VrMffNNP
- dcXCCDv7oXM+qEpLEDPUFXRqoJsydwTg45ddaxAApal9T7uTb/H1x8bmjv/pKO0l9Ipn+QjoE
- ONZA8QkND0UV4SZbtI6iFJan0OjoVRU80gK690hdAQHZLbFn6f4A+AeAzIsynJl0Y4TDQfhlG
- 7c9/da+A5uMxRiXme95Fuq8Gw0br+44FSXyeY9JXU/nuUj99FpsLi8uUsgG7qBkHsxa2ld5O5
- FjhYyOcCP9AJ7peLoaZIz523vofjuuou/y3DUZ5NIriwq6HMHA=
+X-Provags-ID: V03:K1:KLa+rD8CoNAYi1ja+1cMv6oVML/pmJteDWSgGx6n0lvW5TeF+Sd
+ WhfntbdPGehPEaiQn5QGq9jx56PFRwuHHr3QfGfXlZD28ebSfM9FIX3TOzrGL6rp32Rko9L
+ bjEXBN2ZuhJ3wMgUPS1gypShti4frgAFndPlDAyLFAtTXD34WV0DcyYTTllhK23rUEhRfg2
+ hk19XP9j7T9ssEZO68epA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c1fC5qyOv2Q=:aAaK7HctWIdNrY8ihPk8uw
+ Y+8nA5DUNUdmjjXAfkesxv9zH4K+eJcANDd1QRosLs81MmCnCBkFfU5D+Nm+8oMavVyqRp6/W
+ CmSx+l8cGtEe76yGWF6IWj3xqXn6S3c4L1butBkMIPpqp0lrnUuhk+AY+SmsKUECyYKNbMSA0
+ 04DtQCXlPAQpwgxYo+B5/ShBGh9Ix8Jq8e863CGXiUKnHhCDL584Ij+DWXQX1D8g33Xc6R47J
+ TvAWfmxCeqiGygA4Kyofy/ZiRilMuhUiOuWhAMdQZVU5OFgjDDGmaf0Jdws714VEnOnjxOYmG
+ Q1wuJIMIdaty9XbyLo++/hkUDp0KruaDDN9ay+zmDPk8nIRHoZejaF/o040NL74VAYbdqvpEQ
+ zcKoHm933mcBslwq3K4/G6NUPwjqeBaCzObcLtCRLRw5YwKT9WFcqxyFjZR+amloQK+Am1wrX
+ lQP+0wUTZ5tzrUvfhDDsUrsUHbLhzMfzbwrNROEzAW6qG2M0+7H5LWwt+8JW/z/b/CaPYiSfl
+ /pmFLYHrdEFe9pp7swGC3N/NEdUbvgi3qa3+PawyCuAnmfJq4n6Vja73FuXAxEqGzgobwOwsB
+ Y7sDPISDTolXBxEsQhSYe41uhgtBbM9zcUC5n5Uu/oapCTVdtqz6zK0qVA3jrNlDHKWX9XJmI
+ ILCxgLBP7x2nhk14fxwEms/7zM8cDmXxZ38OdsE6IHHw7Ggz9Nqg0tDuZgbqEPCxq+ixS1fJn
+ caauaDcWhJzbn/4daprYLZGDn7laZysu9lUsxkeJGlNCr494weP68f/pKKtgbBhlTv2q8J3Z6
+ 3IjqW/0Yk+DTQra5UG90QQ52Z1byMTfYPposxX5o2U/o80KdG0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current gcc-10 snapshot produces a false-positive warning:
+gcc-10 warns about accessing a zero-length struct member:
 
-net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
-cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
-In file included from net/core/drop_monitor.c:23:
-include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
-   36 |  __u32 entries;
-      |        ^~~~~~~
+drivers/media/i2c/s5k5baf.c: In function 's5k5baf_load_setfile':
+drivers/media/i2c/s5k5baf.c:390:13: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct <anonymous>[0]' [-Wzero-length-bounds]
+  390 |   if (f->seq[i].offset + d <= end)
+      |       ~~~~~~^~~
 
-I reported this in the gcc bugzilla, but in case it does not get
-fixed in the release, work around it by using a temporary variable.
+This should really be a flexible-array member, but the structure
+already has one. I experimentally confirmed that swapping the two
+avoids the warning, as the 'data[]' array is not accessed like this.
 
-Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
+Fixes: 3ba225b506a2 ("treewide: Replace zero-length array with flexible-array member")
+Fixes: 7d459937dc09 ("[media] Add driver for Samsung S5K5BAF camera sensor")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- net/core/drop_monitor.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/media/i2c/s5k5baf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 8e33cec9fc4e..2ee7bc4c9e03 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -213,6 +213,7 @@ static void sched_send_work(struct timer_list *t)
- static void trace_drop_common(struct sk_buff *skb, void *location)
- {
- 	struct net_dm_alert_msg *msg;
-+	struct net_dm_drop_point *point;
- 	struct nlmsghdr *nlh;
- 	struct nlattr *nla;
- 	int i;
-@@ -231,11 +232,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	nlh = (struct nlmsghdr *)dskb->data;
- 	nla = genlmsg_data(nlmsg_data(nlh));
- 	msg = nla_data(nla);
-+	point = msg->points;
- 	for (i = 0; i < msg->entries; i++) {
--		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
--			msg->points[i].count++;
-+		if (!memcmp(&location, &point->pc, sizeof(void *))) {
-+			point->count++;
- 			goto out;
- 		}
-+		point++;
- 	}
- 	if (msg->entries == dm_hit_limit)
- 		goto out;
-@@ -244,8 +247,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 	 */
- 	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
- 	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
--	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
--	msg->points[msg->entries].count = 1;
-+	memcpy(point->pc, &location, sizeof(void *));
-+	point->count = 1;
- 	msg->entries++;
+diff --git a/drivers/media/i2c/s5k5baf.c b/drivers/media/i2c/s5k5baf.c
+index 42584a088273..0b1ddedcf7dc 100644
+--- a/drivers/media/i2c/s5k5baf.c
++++ b/drivers/media/i2c/s5k5baf.c
+@@ -277,11 +277,11 @@ enum {
  
- 	if (!timer_pending(&data->send_timer)) {
+ struct s5k5baf_fw {
+ 	u16 count;
++	u16 data[0];
+ 	struct {
+ 		u16 id;
+ 		u16 offset;
+-	} seq[0];
+-	u16 data[];
++	} seq[];
+ };
+ 
+ struct s5k5baf {
 -- 
 2.26.0
 
