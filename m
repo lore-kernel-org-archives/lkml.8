@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBA0C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52E3C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28CA206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B463A206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255693;
-	bh=rEJ6H4/AJvOgw2t1KU/iZXtjapKGf5UoV2N8eG7umdQ=;
+	s=default; t=1588255696;
+	bh=b2QdKOeAuXxVphJVniePs7dMgcY5GW7kcKW3nlDsHuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L3G8vcYYkAX+rVAWqoSV+sAfi5b6cU22Sr/nI0RTIy/hlf6XZSq8zwNh2kJEW+sQU
-	 oCljhTcNiWpkbWv0+t0VE9qCv/Xed0jjsWdWm3G0UGU6kijjd025tkPyJagDtoNQYI
-	 ITj/95GhZDgcPqQexUVXqJMdMZL48x2bwW0UDH4k=
+	b=KWMci3YoTNuqfWDmHxqEWE4rjeUFtd2hXsCp5zGdT5pp4lBSP+UWPEwvf6fYFfWYW
+	 ZFoZYuvjjCa8VKKOgXGOnjhTIwHzPhm0uA3LRlYKksJO+kfHI3AiBIcL8TmakjTqCC
+	 k62EctpqpNHKxpcfNPrN48ankL0RY+3Gg4VgX9nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgD3NwW (ORCPT
+        id S1728344AbgD3NwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbgD3Nv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:59 -0400
+        id S1728239AbgD3Nv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42AFE208DB;
-        Thu, 30 Apr 2020 13:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C14D920873;
+        Thu, 30 Apr 2020 13:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254718;
-        bh=rEJ6H4/AJvOgw2t1KU/iZXtjapKGf5UoV2N8eG7umdQ=;
+        s=default; t=1588254715;
+        bh=b2QdKOeAuXxVphJVniePs7dMgcY5GW7kcKW3nlDsHuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9y5IkW3I4fOBjLT6kQfJJ8CDH95QTRWuvwPeIx6/WS1oO9StvIdXOKp94rT+892A
-         gxRpDMyrR+CtKbDQ7gqOlx6j2hCcpejrquzAZAfz9FA/7njWqwJma8Pl4JjyF2cRFV
-         7rYo7Z8Mp5vHzEjEhYpbVqx+RpkDtL92LMpEVOQM=
+        b=Puz9FCESQ1C2Wav2lcfWu+xLcVl8Ohw2i3tnmuHoUBpRGV3ZTy8M3uyr93EZ/l3WH
+         ie1fwK7mNTEZ1TcQ7+A2IgsHun9j173VSiGbFHG437gJZfucQoEOj1QjwXMULlfFYG
+         8a5CHlZbgWn41mMLeMFp+hlEDL8FkbeKeZIITvcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 66/79] ftrace: Fix memory leak caused by not freeing entry in unregister_ftrace_direct()
-Date:   Thu, 30 Apr 2020 09:50:30 -0400
-Message-Id: <20200430135043.19851-66-sashal@kernel.org>
+Cc:     Paulo Alcantara <pc@cjr.nz>, Aurelien Aptel <aaptel@suse.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.6 63/79] cifs: do not share tcons with DFS
+Date:   Thu, 30 Apr 2020 09:50:27 -0400
+Message-Id: <20200430135043.19851-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -58,47 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Paulo Alcantara <pc@cjr.nz>
 
-[ Upstream commit 353da87921a5ec654e7e9024e083f099f1b33c97 ]
+[ Upstream commit 65303de829dd6d291a4947c1a31de31896f8a060 ]
 
-kmemleak reported the following:
+This disables tcon re-use for DFS shares.
 
-unreferenced object 0xffff90d47127a920 (size 32):
-  comm "modprobe", pid 1766, jiffies 4294792031 (age 162.568s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 22 01 00 00 00 00 ad de  ........".......
-    00 78 12 a7 ff ff ff ff 00 00 b6 c0 ff ff ff ff  .x..............
-  backtrace:
-    [<00000000bb79e72e>] register_ftrace_direct+0xcb/0x3a0
-    [<00000000295e4f79>] do_one_initcall+0x72/0x340
-    [<00000000873ead18>] do_init_module+0x5a/0x220
-    [<00000000974d9de5>] load_module+0x2235/0x2550
-    [<0000000059c3d6ce>] __do_sys_finit_module+0xc0/0x120
-    [<000000005a8611b4>] do_syscall_64+0x60/0x230
-    [<00000000a0cdc49e>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+tcon->dfs_path stores the path that the tcon should connect to when
+doing failing over.
 
-The entry used to save the direct descriptor needs to be freed
-when unregistering.
+If that tcon is used multiple times e.g. 2 mounts using it with
+different prefixpath, each will need a different dfs_path but there is
+only one tcon. The other solution would be to split the tcon in 2
+tcons during failover but that is much harder.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+tcons could not be shared with DFS in cifs.ko because in a
+DFS namespace like:
+
+          //domain/dfsroot -> /serverA/dfsroot, /serverB/dfsroot
+
+          //serverA/dfsroot/link -> /serverA/target1/aa/bb
+
+          //serverA/dfsroot/link2 -> /serverA/target1/cc/dd
+
+you can see that link and link2 are two DFS links that both resolve to
+the same target share (/serverA/target1), so cifs.ko will only contain a
+single tcon for both link and link2.
+
+The problem with that is, if we (auto)mount "link" and "link2", cifs.ko
+will only contain a single tcon for both DFS links so we couldn't
+perform failover or refresh the DFS cache for both links because
+tcon->dfs_path was set to either "link" or "link2", but not both --
+which is wrong.
+
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/connect.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index fd81c7de77a70..63089c70adbb6 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5155,6 +5155,7 @@ int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
- 			list_del_rcu(&direct->next);
- 			synchronize_rcu_tasks();
- 			kfree(direct);
-+			kfree(entry);
- 			ftrace_direct_func_count--;
- 		}
- 	}
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index d4a23b48e24d8..9c614d6916c2d 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3419,6 +3419,10 @@ cifs_find_tcon(struct cifs_ses *ses, struct smb_vol *volume_info)
+ 	spin_lock(&cifs_tcp_ses_lock);
+ 	list_for_each(tmp, &ses->tcon_list) {
+ 		tcon = list_entry(tmp, struct cifs_tcon, tcon_list);
++#ifdef CONFIG_CIFS_DFS_UPCALL
++		if (tcon->dfs_path)
++			continue;
++#endif
+ 		if (!match_tcon(tcon, volume_info))
+ 			continue;
+ 		++tcon->tc_count;
 -- 
 2.20.1
 
