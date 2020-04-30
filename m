@@ -2,111 +2,107 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331CFC8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE40C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15FA82076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EE52076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B58UEQQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgD3NWK (ORCPT
+        id S1727054AbgD3NXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:22:10 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:37933 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgD3NWJ (ORCPT
+        Thu, 30 Apr 2020 09:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726770AbgD3NXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:22:09 -0400
-Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MxDgs-1jEX1a3Y1g-00xYq2 for <linux-kernel@vger.kernel.org>; Thu, 30 Apr
- 2020 15:22:07 +0200
-Received: by mail-qv1-f54.google.com with SMTP id v38so2928626qvf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:22:06 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYnk3OhaRd7IypGWvuIdgiHhwdggiDqv/xx14+X7Q/rhEEGB5Ey
-        vpZTT6nKQJ+le+mZuY9/e8+T5SxrhFLc9BM4NHM=
-X-Google-Smtp-Source: APiQypLuqw7/v6Gh8dAGdkb3SrT/lgJqjVQEkm7oovSCJMnVMwaKvPbW2WJQKu+eMQVtBvXDbWBidCWN2fMbtSmOSbU=
-X-Received: by 2002:a0c:ea43:: with SMTP id u3mr2739084qvp.211.1588252925601;
- Thu, 30 Apr 2020 06:22:05 -0700 (PDT)
+        Thu, 30 Apr 2020 09:23:05 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC56C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:23:05 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id 71so4836113qtc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=adQodhe8IpLisINRvWr4Jh5dPMBs2vc5JvfCsLBz4ng=;
+        b=B58UEQQ8J1CXw8XEf9Ec6IMh/jCFduA9BxKZId1+QDKqS8IETNOmANJzc6rdKSVrKG
+         TkN5MrXdhRqS1XbwzhyPfV0XMo849Vm7rsZK81VZ9TK+alobVzBN7sm1kE7Pbcd+BLOq
+         wFdb3rgmXqbUOwNR0r3scDY0eqmGtwqPH2790q9g55ytnOSD8F1IsGwXKS4NaJEdCQIB
+         NdNT/NlmvBq62MXCbM286w03bkzD92V3PuCZ42HwYwoIUW9iQzC1Y15NqPgc/caQWoJq
+         HMAsVpVE2Y/dCscOTNneErXhcOOJByVKfrFpgOeUwbFIxoNORub91Gnr3zjIiTsC05Ab
+         HNmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=adQodhe8IpLisINRvWr4Jh5dPMBs2vc5JvfCsLBz4ng=;
+        b=OH0t9Dh4f0c9IsrPo61iqn9fUMEr+dpGGaAEIiq2jzsgQdTMXelqqEOalzxHzZZDp0
+         Wvm3h9GN9Rtt3V2BahCeRvZYTuDpMWL0kmrYHX2pm+5lSX1PNN/qUgOag4ayf5XFir6s
+         bMv2keXCBLpPJlZjwFzpnzH699p/g7m/8jucKPeELWLKIk0RGFGDOq5AwNhtnS3klFea
+         hG/CkEcUNQ+3nSIqgyyq8Xtyy2gi/Ao2E7joOqtFrJmcV7xtMShdlCf55PD9ksI2nGoL
+         RSnwGGGByazRvRNJoq8sdfaRTQepbxTulfiYWA+h0GOZyRWNndSsbqQ0Xokt9w7jtcT3
+         T6vw==
+X-Gm-Message-State: AGi0Pua4GhLvYLgCv5HA2HjClW8lS0vgpe0ro0aNAJfsH7S0oBlJ0RIG
+        ApCpRrPFN59Dwn/mcA6F4Y4=
+X-Google-Smtp-Source: APiQypKrYMtcUAq4vJj+b8Yloxsqqz+Hx/gkUunkNsj0uNP0bCjbth8rPVfdnOQC43gjMYAuzPg5xw==
+X-Received: by 2002:aed:2943:: with SMTP id s61mr3674041qtd.299.1588252984165;
+        Thu, 30 Apr 2020 06:23:04 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id s14sm2148497qts.70.2020.04.30.06.23.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 06:23:03 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0D08D409A3; Thu, 30 Apr 2020 10:23:01 -0300 (-03)
+Date:   Thu, 30 Apr 2020 10:23:00 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2] perf mem2node: avoid double free related to realloc
+Message-ID: <20200430132300.GI30487@kernel.org>
+References: <20200320182347.87675-1-irogers@google.com>
+ <20200430081541.GA1681583@krava>
 MIME-Version: 1.0
-References: <20200429142119.1735196-1-arnd@arndb.de> <3943343.tW1xmJHsB6@pc-42>
- <CAK8P3a1e=-H_b8_GPJW5-uufye5_6OJ6f+ZWErjKPWkxSRSigw@mail.gmail.com> <3063047.NHY2raB2sq@pc-42>
-In-Reply-To: <3063047.NHY2raB2sq@pc-42>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Apr 2020 15:21:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Per2f3noAzgN7brQ3g_4EN-vNLcv40k7_vtH+qZG4wA@mail.gmail.com>
-Message-ID: <CAK8P3a3Per2f3noAzgN7brQ3g_4EN-vNLcv40k7_vtH+qZG4wA@mail.gmail.com>
-Subject: Re: [PATCH] staging: wfx: avoid compiler warning on empty array
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Z4gsk05gIMp0as8i2ysNFlhuuNJL43gpbTlAmnMJRyBYK27lGyC
- gOkFiXKCvdT6ih7VTOwv/0Zn5RP/8l0F5zkEdkfTYNtygSZoewKDNFsA99EHKuc7wYINL7W
- 7afOMRI8KQYdV7QaLdq2KvXxfYygaaQWuYj8N6zLnpzrD6Iqd2n5RFp1wtChY2g8E7RySuG
- LKKLlqQgzI6ixyY63OXFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hAVG9Yq1+GE=:DjNNyxwJ8r3124YJi6UNwW
- oFjsDHPsF9GypxcdNAzPy2hCTe+Y9p4gqKhQACjSaG5OwRnQtYdig2wbAVT15KZb2D1JHxjn4
- eax4tNFFfzSzQ2bO1Xd/QEOBSUv1wbdLBsARhHz/uAvj30vUS1LdlrHWlieBskC0GBsqLTYOK
- QsqeGm39hPdQo+ERZbPPufWSIkJU97dCai+H1sfixJNfu5sxwpcTkQmHYG53IpruPvW5ll50p
- shzi0KdJGHi+Um25r0AeBcZzyuRIwR7aN343QtlIht7Weth39Q7qcfMPlFk7YyYGCHBEmeeGX
- pMENr1ivAWG+PiW0DqsS+qE8sPNjDt/ocsnLEsO0kaQ9r0erl6OgTNHzYl0FpDx9Wwzze5Bsj
- cRpWrEZat0rvpDPFULJRgLspVAiDLoaO2IrWgiiQTzcn8Nac0FaVpC7NOKZG9P6Qs/neRf76i
- MQuYJjWRzH4e1e99hZ2zgEwAzqRrxbB9QyXAcKv8HMOmn0hsoQHAaqhL0mVpElbg0d6eztWy/
- xETKetKybSHu6WhCBLRtuve9L72qQ/NkP5m7rfoExT3VDllM8nzcUH7goC2wqUbQhzqedL9ao
- W7OyqwSHnVaRWwilwxM2SYJTxcZicSkhb/leJ8jv3eaxca0gx0/A8GzsQoRQmVVrg5omMg0De
- rOn/fUob6ojECTTQlCAni/87yzqNA/W6HAaMUlCR4UDVxD9VU+pIJUoRz9d5kFbBu7g2GMdQl
- sMzXtQvh+2+C70N8kwbP772uAWiAuKoBRtsC4wI/a3ELZ+FlsukzmkdSctXpHlj//71J8QVIB
- kVxxtpML2YOH2Xhnm70mx7YQRZPnSelYb8dnraqTEtCuU+vvXY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430081541.GA1681583@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:42 AM Jerome Pouiller
-<Jerome.Pouiller@silabs.com> wrote:
-> On Wednesday 29 April 2020 22:34:56 CEST Arnd Bergmann wrote:
-> > On Wed, Apr 29, 2020 at 6:04 PM Jerome Pouiller
-> > <Jerome.Pouiller@silabs.com> wrote:
-> > > On Wednesday 29 April 2020 16:21:09 CEST Arnd Bergmann wrote:
-> > > >
-> > > > -static const struct of_device_id wfx_sdio_of_match[];
-> > > > +static const struct of_device_id wfx_sdio_of_match[] = {
-> > > > +       { .compatible = "silabs,wfx-sdio" },
-> > > > +       { .compatible = "silabs,wf200" },
-> > > > +       { },
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(of, wfx_sdio_of_match);
-> > >
-> > > I suggest to keep the '#ifdef CONFIG_OF' around this definition. If
-> > > CONFIG_OF is undefined, of_match_ptr() and of_match_node() will be NULL
-> > > and it should compile.
-> >
-> > I would generally always go for fewer #ifdef instead of more when the result
-> > is the same. Are you worried about wasting 600 bytes of object code size for
-> > the array on systems that need this driver but not CONFIG_OF, or something
-> > else?
->
-> I am not very concerned about the size of the object. However, I think
-> that all the modules should apply the same policy regarding the device
-> tables. With a few greps, I found 3954 struct of_device_id. About 500 are
-> inside #ifdef and about 1000 use of_match_ptr().
->
-> Should we consider that the structs of_device_id have to be defined even
-> if CONFIG_OF is not defined? And In this case, should we drop
-> of_match_ptr()?
->
-> Or in contrary, when kernel is compiled without CONFIG_OF, no modules
-> should contains OF entries in its device table?
+Em Thu, Apr 30, 2020 at 10:15:41AM +0200, Jiri Olsa escreveu:
+> On Fri, Mar 20, 2020 at 11:23:47AM -0700, Ian Rogers wrote:
+> > Realloc of size zero is a free not an error, avoid this causing a double
+> > free. Caught by clang's address sanitizer:
 
-I think the drivers that use an #ifdef here just do so for historic reasons.
-In the linux-2.6 days, this caused build failures, but just leaving them
-defined has worked for a long time.
+> > ==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
+> >     #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
 
-       Arnd
+> > v2: add a WARN_ON_ONCE when the free condition arises.
+
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+
+> I overlooked v2 for this, sry
+
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+Thanks, applied,
+
+- Arnaldo
