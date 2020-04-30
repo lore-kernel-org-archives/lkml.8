@@ -2,133 +2,224 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA0EC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007DAC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA7E20731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:36:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N03tROzm"
+	by mail.kernel.org (Postfix) with ESMTP id D6E0120731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 17:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgD3Rgb (ORCPT
+        id S1726495AbgD3Ric (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 13:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726285AbgD3Rga (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 13:36:30 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340B5C035494;
-        Thu, 30 Apr 2020 10:36:29 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f8so2499693plt.2;
-        Thu, 30 Apr 2020 10:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4K4QcAglqQHIVHuLYS6DjBHUlRjOBcFG0F/ETfmLQWg=;
-        b=N03tROzm8pumHw1JUBD7EiC5oQJEswsiNzomuy7OpbRaSiKHk2QTN9f+q7w4sQSQe7
-         fJy8T967jYwbfdR+88fl9XcFSj/miRIKv7/uFlVCJsQMc404QrlQXITn/JWTETl5Bm71
-         WPdN9AP1+qU/FbOht0rP/BMs5kRFcMEecvGwmw0fGBsXKz9lSXY2pQD4W3dtCrjJwFog
-         gDu/4TfsuXoHZ6Vs+VkQbDp3l/EyeA0cm0E0zJxNafRJzpLgo+y8JII6oljiWhDrmV+q
-         mnw3EDm2Ziq8feN9f+chh/5S+ks2kqhfoQz7rVNgkvMcMyLv7Z+IhDFrikvWrHI2GrwC
-         3BOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4K4QcAglqQHIVHuLYS6DjBHUlRjOBcFG0F/ETfmLQWg=;
-        b=nwYNYhImWL9iRI/iMMo7H+GyhZPnQBWJnXZqJGa6Za0DriLG45BCokwyuB26iJ2Vvt
-         JS4NKXJoXwKeMyqy9QmYkk05y2jSWmMbO0AOYCr93doRXTRlM6YkmtqgeEPex5wqejRb
-         LFfEQVM2Q4GhBOsjs98ujVbYCse4VAxAUyxqnACSt1Buodzpqe/YX7sFG3HedZlVuGK1
-         cs6byb/SVZHRXzICPU6B0C5qUSmBwpreycRNU9xPFeBkOn9XqQJRnKCcnLkLu1sT5pB3
-         fAYrPS7fchRR7GzpUMEniuyJWw7c2WbCtvepcWSOiIl1SEO4msGTX3JzpDzeeSsG+3I5
-         TZIw==
-X-Gm-Message-State: AGi0PubduTLD8DsVGFDi1ZJIWpE8USMHKhxjVUqYytlSnQjCX7yTjsPR
-        FfjEBXhFb8tg7R+VZIjW/oXquuM=
-X-Google-Smtp-Source: APiQypIpNnaMBruMNCU96VU9Vfk7isUuz5/L9xxODbz2kzqcpR2dMgbsqjWbTd1c/xhsSPmtI+Siog==
-X-Received: by 2002:a17:902:8643:: with SMTP id y3mr64696plt.149.1588268188682;
-        Thu, 30 Apr 2020 10:36:28 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d32:dd79:2591:468a:ee81:9c85])
-        by smtp.gmail.com with ESMTPSA id l30sm337331pgu.29.2020.04.30.10.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 10:36:27 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     pbonzini@redhat.com, cai@lca.pw
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paulmck@kernel.org, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] kvm: Fix false-positive RCU list related warnings
-Date:   Thu, 30 Apr 2020 23:06:08 +0530
-Message-Id: <20200430173608.14663-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 13:38:32 -0400
+Received: from mail-oln040092253095.outbound.protection.outlook.com ([40.92.253.95]:20033
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726285AbgD3Rib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 13:38:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P7rDD7N4o9QI2Hfusl4+WdNI2uvezdLESk5LR+Lw5vA/Ftho4otEwsPgiNHOnzNkSFl9V8Jd0OftfxN2vTZ7NebYj7E+2Qu26qp4b8uM+B215SiJJ2mnOCIuCuRIbgUfUufEdQxmzEzfGNP6X+v1p8sD6SWYjhNYOjcIBc50z58FrKhyYHDtQWW7eDfgv3kWFg8FQx4T4p0xfmCvJ0/PsJdHKzd61bn6aTHrxjPffwfkxpkSmq4xRXYuwcxP/qxChru3uAW/mkwWCyeEQfcNC419pwYOrnzl0Re4CMAONjyTH6vHesX78yVb6kSlXgdV76qOCizzJJ5m9lvx4Pc/Vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bzIuUgqA5lv2eIO7ylE2Tt56JnJ8MLsc2AjlCtzf/Cs=;
+ b=SQeMoEa3Tk4fvPpiSrksQ/PvmfnfINDoN95l+DjPyhtZPFF2jFtdSUy7fEbnTOp+wsC4RYwXm5tqgAB7UwVuRHjMCBKVEi7iIg+8hgLV6QdNutD6KqqOl5jW1WmgH3xh1ZCzkfgiYb5AcrDiPFOT1D/ZzpjrTfPw1RgYSFarAzpfCdnZvBy5kAmbRbx8yKNHL+6efkPZ0W+1j91kK9np2zyImx99GJEz9YduCnXzkM/Kjc8MhDIdeZsXmwci1OkFOHVUBOkD0tE0PG5FP+9jNcu/DPyJLcpmTAbgmSpEKr3FcmBNQUe136hJbRca2/9LlWJs6opu4Kwprj2pqKB3tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=outlook.com.au; dmarc=pass action=none
+ header.from=outlook.com.au; dkim=pass header.d=outlook.com.au; arc=none
+Received: from HK2APC01FT029.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebc::4b) by
+ HK2APC01HT178.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::450)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Thu, 30 Apr
+ 2020 17:38:25 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.56) by
+ HK2APC01FT029.mail.protection.outlook.com (10.152.248.195) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 17:38:25 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:53D3960472DA9B8161EA586CED5AF6C6DAABAC76F588CB0891ED34CD3FE0D8EF;UpperCasedChecksum:4CC799EA92E72E3C6DDE1BF9CD75E970320F0486A1C93FAD96FCD6719F63665A;SizeAsReceived:8606;Count:48
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::21f1:20fb:d1f:8e25]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::21f1:20fb:d1f:8e25%7]) with mapi id 15.20.2958.020; Thu, 30 Apr 2020
+ 17:38:25 +0000
+Date:   Fri, 1 May 2020 01:38:16 +0800
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+Message-ID: <PSXP216MB04381A30909F66867E6B6BCC80AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <s5hv9lkm49n.wl-tiwai@suse.de>
+ <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <s5ha72ulp2y.wl-tiwai@suse.de>
+ <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+ <s5h1ro6jn0v.wl-tiwai@suse.de>
+ <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+ <s5hwo5xj98v.wl-tiwai@suse.de>
+ <PSXP216MB0438FE3E1CA577805BEC23C880AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <s5hh7x0kiwb.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hh7x0kiwb.wl-tiwai@suse.de>
+X-ClientProxiedBy: ME2PR01CA0121.ausprd01.prod.outlook.com
+ (2603:10c6:201:2e::13) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+X-Microsoft-Original-Message-ID: <20200430173816.GA2619@nicholas-dell-linux>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from nicholas-dell-linux (2001:44b8:605f:11:45ec:d37e:a989:bf24) by ME2PR01CA0121.ausprd01.prod.outlook.com (2603:10c6:201:2e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Thu, 30 Apr 2020 17:38:22 +0000
+X-Microsoft-Original-Message-ID: <20200430173816.GA2619@nicholas-dell-linux>
+X-TMN:  [SiXQG89bdHCeQStL9A0xI/u+4PzU18hzFZiW8eAQxiutKRhaGYCAcSm4kFq71B7C]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: c9fc70b7-36b6-4c3d-9988-08d7ed2d48c0
+X-MS-TrafficTypeDiagnostic: HK2APC01HT178:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Bm5/m/VTQGHxNtxJwcpEXdrzqtNfQULa3+lIK/judTNrqY5qTI7vrPPXxuKdsuJMx8nHanvvRqNHmq4PGMCczNEqs8zJ3zs4YOtIzGVKKIEqBS1v/dVzNJqv+ufM8wtzqx2WLHivFgQKjHPLrih0bN+DUpQvRcsEjTb3+4lq9zDxOE28zm4hx2S75OBq9laPLMMz1M/1zFgFzrtL9NG+KQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:PSXP216MB0438.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: yNecnxRMtBGqVhScep5VuA6Rxgj33hufS2iOL86sSHYDVqfm9HslTdBm4EUTZX8hwoa8eHF0SwzG+eVUvOAEFDW79n8G9yhZLJcTT3WoBfaUr2Kye6sOD5SkospQBaoCQ7z/ENZ+J2ppDakVe/fsQXSZhhYHczTRoa7s2yNeutBGwcnv0go33n87qCIyvEyvsu/lNe0urJtShU1qVy4ToQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9fc70b7-36b6-4c3d-9988-08d7ed2d48c0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2020 17:38:25.2394
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Thu, Apr 30, 2020 at 07:01:08PM +0200, Takashi Iwai wrote:
+> On Thu, 30 Apr 2020 18:52:20 +0200,
+> Nicholas Johnson wrote:
+> > 
+> > On Thu, Apr 30, 2020 at 05:14:56PM +0200, Takashi Iwai wrote:
+> > > On Wed, 29 Apr 2020 18:19:57 +0200,
+> > > Alex Deucher wrote:
+> > > > 
+> > > > On Wed, Apr 29, 2020 at 12:05 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > Well, but the code path there is the runtime PM resume of the audio
+> > > > > device and it means that GPU must have been runtime-resumed again
+> > > > > beforehand via the device link.  So, it should have worked from the
+> > > > > beginning but in reality not -- that is, apparently some inconsistency
+> > > > > is found in the initial attempt of the runtime resume...
+> > > > 
+> > > > Yeah, it should be covered, but I wonder if there is something in the
+> > > > ELD update sequence that needs to call pm_runtime_get_sync()?  The ELD
+> > > > sequence on AMD GPUs doesn't work the same as on other vendors.  The
+> > > > GPU driver has a backdoor into the HDA device's verbs to set update
+> > > > the audio state rather than doing it via an ELD buffer update.  We
+> > > > still update the ELD buffer for consistency.  Maybe when the GPU
+> > > > driver sets the audio state at monitor detection time that triggers an
+> > > > interrupt or something on the HDA side which races with the CPU and
+> > > > the power down of the GPU.  That still seems unlikely though since the
+> > > > runtime pm on the GPU side defaults to a 5 second suspend timer.
+> > > 
+> > > I'm not sure whether it's the race between runtime suspend of GPU vs
+> > > runtime resume of audio.  My wild guess is rather that it's the timing
+> > > GPU notifies to the audio; then the audio driver notifies to
+> > > user-space and user-space opens the stream, which in turn invokes the
+> > > runtime resume of GPU. But in GPU side, it's still under processing,
+> > > so it proceeds before the GPU finishes its initialization job.
+> > > 
+> > > Nicholas, could you try the patch below and see whether the problem
+> > > still appears?  The patch artificially delays the notification and ELD
+> > > update for 300msec.  If this works, it means the timing problem.
+> > The bug still occurred after applying the patch.
+> > 
+> > But you were absolutely correct - it just needed to be increased to 
+> > 3000ms - then the bug stopped.
+> 
+> Interesting.  3 seconds are too long, but I guess 1 second would work
+> as well?
+1000ms indeed worked as well.
 
-This patch fixes the following warning and other usage of
-RCU list in eventfd.c
+> 
+> In anyway, the success with a long delay means that the sound setup
+> after the full runtime resume of GPU seems working.
+> 
+> > Now the question is, what do we do now that we know this?
+> > 
+> > Also, are you still interested in the contents of the ELD# files? I can 
+> > dump them all into a file at some specific moment in time which you 
+> > request, if needed.
+> 
+> Yes, please take the snapshot before plugging, right after plugging
+> and right after enabling.  I'm not sure whether your monitor supports
+> the audio, and ELD contents should show that, at least.
+The monitor supports the audio. There is 3.5mm audio out jack. No 
+inbuilt speakers, although Samsung did sell a sound bar to suit it. The 
+sound bar, which I do not own, presumably attaches via 3.5mm jack.
 
-[29179.937976][T75781] WARNING: suspicious RCU usage
-[29179.942789][T75781] 5.7.0-rc3-next-20200429 #1 Tainted: G           O L
-[29179.949752][T75781] -----------------------------
-[29179.954498][T75781] arch/x86/kvm/../../../virt/kvm/eventfd.c:472 RCU-list traversed in non-reader section!!
+I am not sure if by plugging, you mean hot-adding Thunderbolt GPU or 
+plugging the monitor to the GPU, so I have covered extra cases to be 
+sure. I have taken the eld# files with the 1000ms patch applied, so the 
+error is not triggered.
 
-Pass srcu_read_lock_held() as cond to list_for_each_entry_rcu().
+####
+Before hot-adding the Thunderbolt GPU:
+/proc/asound/card1 not present
+####
+####
+After hot-adding the GPU with no monitor attached:
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- virt/kvm/eventfd.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+/proc/asound/card1 contains:
+eld#0.0  eld#0.1  eld#0.2  eld#0.3  eld#0.4  eld#0.5
 
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 67b6fc153e9c..a23787693127 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -77,7 +77,8 @@ irqfd_resampler_ack(struct kvm_irq_ack_notifier *kian)
- 
- 	idx = srcu_read_lock(&kvm->irq_srcu);
- 
--	list_for_each_entry_rcu(irqfd, &resampler->list, resampler_link)
-+	list_for_each_entry_rcu(irqfd, &resampler->list, resampler_link,
-+				 srcu_read_lock_held(&kvm->irq_srcu))
- 		eventfd_signal(irqfd->resamplefd, 1);
- 
- 	srcu_read_unlock(&kvm->irq_srcu, idx);
-@@ -452,7 +453,7 @@ bool kvm_irq_has_notifier(struct kvm *kvm, unsigned irqchip, unsigned pin)
- 	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
- 	if (gsi != -1)
- 		hlist_for_each_entry_rcu(kian, &kvm->irq_ack_notifier_list,
--					 link)
-+					 link, srcu_read_lock_held(&kvm->irq_srcu))
- 			if (kian->gsi == gsi) {
- 				srcu_read_unlock(&kvm->irq_srcu, idx);
- 				return true;
-@@ -469,7 +470,7 @@ void kvm_notify_acked_gsi(struct kvm *kvm, int gsi)
- 	struct kvm_irq_ack_notifier *kian;
- 
- 	hlist_for_each_entry_rcu(kian, &kvm->irq_ack_notifier_list,
--				 link)
-+				 link, srcu_read_lock_held(&kvm->irq_srcu))
- 		if (kian->gsi == gsi)
- 			kian->irq_acked(kian);
- }
-@@ -960,3 +961,4 @@ kvm_ioeventfd(struct kvm *kvm, struct kvm_ioeventfd *args)
- 
- 	return kvm_assign_ioeventfd(kvm, args);
- }
-+
--- 
-2.17.1
+All of the above have the same contents:
 
+monitor_present         0
+eld_valid               0
+####
+####
+Monitor attached to Fiji GPU but not enabled:
+
+Same as above
+####
+####
+Monitor enabled:
+
+All files with same contents except for eld#0.1 which looks like:
+
+monitor_present         1
+eld_valid               1
+monitor_name            U32E850
+connection_type         DisplayPort
+eld_version             [0x2] CEA-861D or below
+edid_version            [0x3] CEA-861-B, C or D
+manufacture_id          0x2d4c
+product_id              0xce3
+port_id                 0x0
+support_hdcp            0
+support_ai              0
+audio_sync_delay        0
+speakers                [0x1] FL/FR
+sad_count               1
+sad0_coding_type        [0x1] LPCM
+sad0_channels           2
+sad0_rates              [0xe0] 32000 44100 48000
+sad0_bits               [0xe0000] 16 20 24
+####
+
+Cheers.
+Regards, Nicholas.
+
+> 
+> 
+> thanks,
+> 
+> Takashi
