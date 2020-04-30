@@ -2,98 +2,95 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DEAR_SOMETHING,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761A4C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F5BC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55BE4207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7AF2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588274245;
+	bh=rXMzlXWT/NZzWMEeZB4ZaKgn2FdWRyMIUrUb81WLeOI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=b/TpUyJQU6dd1OWCGUIjwNoTAiA9B8xEESoHlpH7IHRU1XJlWyTJgffIkLZMF0r0e
+	 uR/gugQYV+fwt+60Az88fANKjtg3+RHbw+U35epZKh7eMeu6zxd+b1duHkyaya6HNJ
+	 zT0i4xLzDpEJMhtJFfuEGyOCz1Ru2n30JpdyBbLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgD3TOj (ORCPT
+        id S1726579AbgD3TRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:14:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43872 "EHLO mx2.suse.de"
+        Thu, 30 Apr 2020 15:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgD3TOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:14:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B3C4DABC2;
-        Thu, 30 Apr 2020 19:14:36 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 21:14:34 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before text_poke()
-Message-ID: <20200430191434.GC8135@suse.de>
-References: <20200429054857.66e8e333@oasis.local.home>
- <20200429105941.GQ30814@suse.de>
- <20200429082854.6e1796b5@oasis.local.home>
- <20200429100731.201312a9@gandalf.local.home>
- <20200430141120.GA8135@suse.de>
- <20200430121136.6d7aeb22@gandalf.local.home>
+        id S1726272AbgD3TRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:17:24 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09D3F2070B;
+        Thu, 30 Apr 2020 19:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588274244;
+        bh=rXMzlXWT/NZzWMEeZB4ZaKgn2FdWRyMIUrUb81WLeOI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=iDwp/kRmMh4wy3d9/eB3mnGdLNtderr+co7U1mV/vB1IUK1XRy58Jhhxf3HfU+TO7
+         eV+TrwacTeVc8RHyR/kkhe6cGCicO/KBwP4lY55hPy3pHlXtdNxTuVbhkip9CECM//
+         IddI4OHeVmUOD5DoaUw3lNWyDzlZMP4vwRtmEoy4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D28C63522697; Thu, 30 Apr 2020 12:17:23 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 12:17:23 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Atul Kulkarni <Atul.Kulkarni@katerra.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Need help on "Self Detected Stall on CPU"
+Message-ID: <20200430191723.GX7560@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <BY5PR11MB4118B89CB3FAEB897AFC3819E0AA0@BY5PR11MB4118.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430121136.6d7aeb22@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BY5PR11MB4118B89CB3FAEB897AFC3819E0AA0@BY5PR11MB4118.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:11:36PM -0400, Steven Rostedt wrote:
-> bool trace_event_ignore_this_pid(struct trace_event_file *trace_file)
-> {
-> 	struct trace_array *tr = trace_file->tr;
-> 	struct trace_array_cpu *data;
-> 	struct trace_pid_list *no_pid_list;
-> 	struct trace_pid_list *pid_list;
+On Thu, Apr 30, 2020 at 06:47:20PM +0000, Atul Kulkarni wrote:
+> Dear Sir,
 > 
-> 	pid_list = rcu_dereference_raw(tr->filtered_pids);
-> 	no_pid_list = rcu_dereference_raw(tr->filtered_no_pids);
+> Hope you are doing well.  I have watched your various conference videos and have read technical papers.
+> We are facing an issue with CPU stall on our systems and I felt like there is no one better who can guide us on how we can deal with it.
 > 
-> 	if (!pid_list && !no_pid_list)
-> 		return false;
-> 
-> 	data = this_cpu_ptr(tr->array_buffer.data);
-> 
-> 	return data->ignore_pid;
-> }
->
-> [...]
-> 
-> tl;dr; It's not an issue with the vmalloc, it's an issue with per_cpu
-> allocations!
+> I have attached logs for your reference. Towards end I have run couple of sysreq commands and have taken crash dump using sysreq which may help provide additional information.
+> Could you please guide us on how we could fix  this issue or identify what is going wrong here?
 
-Yes, looks like you are right, it faults on the return statement, so the
-data-pointer seems not to be mapped. I looked at another instance:
+Let's focus on the first few lines of your console message:
 
-The trapping instruction is:
+[20526.345089] INFO: rcu_preempt self-detected stall on CPU
+[20526.351110]  0-...: (1051 ticks this GP) idle=1fe/140000000000002/0 softirq=146268/146268 fqs=0
+[20526.360163]   (t=2101 jiffies g=96468 c=96467 q=2)
+[20526.365535] rcu_preempt kthread starved for 2101 jiffies! g96468 c96467 f0x0 RCU_GP_WAIT_FQS(3) ->state=0x402 ->cpu=0
 
-	movzbl 0x7c(%rax),%eax
+The last line contains the hint, namely "rcu_preempt kthread starved for
+2101 jiffies!"  If you don't let RCU's kernel threads run, then RCU CPU
+stall warnings are expected behavior.
 
-Which is a pointer-dereference, with %rax=0xffffe8ffffccc870. The 'data'
-pointer is allocated with alloc_percpu().
+The "RCU_GP_WAIT_FQS(3)" means that this kthread's last act was to sleep
+for three jiffies.  As you can see from earlier in that same line, that
+was 2101 jiffies ago.  The "->state=0x402" means that the scheduler
+believes that this kthread is blocked, that is not yet runnable.
 
-And alloc_percpu() calls down into pcpu_alloc(), which allocates new
-percpu chunks using vmalloc() on x86. And there we are again in the
-vmalloc area.
+The usual way this sort of thing happens is a timer problem, be it a
+hardware configuration problem, a timer-driver bug, an interrupt-handling
+problem, and so on.  This sort of problem is especially common when
+bringing up new hardware or when modifying timer code or when modifying
+code on the interrupt/exception paths.
 
-Regards,
+So the question to ask yourself is "Why is the timer wakeup not reaching
+this kthread?", with special attention to changed code and new hardware.
 
-	Joerg
+							Thanx, Paul
