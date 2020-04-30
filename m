@@ -2,105 +2,145 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F730C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1A5C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAB72063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95DD2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255244;
-	bh=x5czH2AzTGz++J/ka8Lv3Vap6frh2sjcJMcok6Ci0hQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MkxCTFq2T2XJ7Xv9UjRQZ8fas/c8WUMXvXgwYrU5IIexF0d8P2Rx/ncDLoFyneg1
-	 Ft6UYjQEPpCWnW981gMjaVbXvRbW5VEmwsW2j2ts70Sn4P1SjUbYrtU+4+4cHaGn5x
-	 WIDKgWewJyU1z9YuY1NjAB7n+wkPQOBYxWFSFSPk=
+	s=default; t=1588255248;
+	bh=YlQS0JWm1kZ1bcJMVHBPFuI7i/sHKcm81FIe/NwSwj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FZwjC51ZFTelI/13VaWE1Cy1r4ACsv8fZcE5mqqKPiGrMsBBfFibzsWECizDY6ZOQ
+	 yzX6sAUTQzi6oM9fhU/pOE6B4ekWgBiDhOr/caTtPdzx9WErTmtFar15Kk5ldpFh+k
+	 xP0+AslarW+Kj7YlLhMFnIqnZGYpNmrY5aD054hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgD3OAn (ORCPT
+        id S1729278AbgD3OAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 30 Apr 2020 10:00:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35035 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbgD3OAn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 10:00:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728740AbgD3NyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:12 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D5F20870;
-        Thu, 30 Apr 2020 13:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254851;
-        bh=x5czH2AzTGz++J/ka8Lv3Vap6frh2sjcJMcok6Ci0hQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L61D5dIj7wlHDr12AY6j/VGimYOXNBvBIHLiS3xv+rzHjV6JgHu/+R4ud+hJrTBB2
-         UJBfmQntLExn9vGh1RkIpQZ1yOo0oUWxQ79f5vQi6OR1z7Y5STWbL65nvXj2ahWbWq
-         vq7l4IhuvFDVPgV8X8F7Mqmkq5CQHPbSeAAqFKr0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Blankertz <matthias.blankertz@cetitec.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 08/27] ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-Date:   Thu, 30 Apr 2020 09:53:43 -0400
-Message-Id: <20200430135402.20994-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
-References: <20200430135402.20994-1-sashal@kernel.org>
+Received: by mail-oi1-f193.google.com with SMTP id o7so5292733oif.2;
+        Thu, 30 Apr 2020 07:00:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4SqKDcgFBHx1L7Er/7o6lUHlh3wWzthDwvJZwo5hrJU=;
+        b=QyHss8qcgQyLccmUxMGK7EApLeAiW3/3iykKdJiIOU3pytBtLQreG1zD8jJ/osRaD1
+         OWi7ggHOWxUnCKRUStcWiCp3YU2h4RLn+K/afjcbEAwT0BoPDqfXOI/GqIfeC542vLS4
+         hFNDlBn2oe/4WqL9tEk8xWMn1qMxKYECNJMjIHPmKsj9l7JnLiHJ/8DEdZOPxYHctfjh
+         NW1jlrZzQJAmt5XHzD6WXnICdzRdU+XU8uCdXJju0eQgZNJGbNxRJiZjLozars3rVELi
+         Hr1qn+7431iZ5bRbzjdaZVrFoE9uROl4/S2hzHbzjllvm4lfb7veQyczd+Shv9MmnrY9
+         XTgQ==
+X-Gm-Message-State: AGi0PuaPA9FSTj3JLI/HqpvsxzbRoFDsDSrtYwsxW3pw74BYgtOH6h+F
+        UV+4l2aVqGYNdyrkKtBJlg==
+X-Google-Smtp-Source: APiQypK+NEro6nmq5Ju0kr11u0dYdZk562OwLmfEc6Rdsg37blDy9Pox4kBxZ7K1FWgojRgFDGj0HA==
+X-Received: by 2002:aca:d684:: with SMTP id n126mr1810974oig.173.1588255242401;
+        Thu, 30 Apr 2020 07:00:42 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h137sm2698oib.33.2020.04.30.07.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:00:41 -0700 (PDT)
+Received: (nullmailer pid 20979 invoked by uid 1000);
+        Thu, 30 Apr 2020 14:00:40 -0000
+Date:   Thu, 30 Apr 2020 09:00:40 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
+ and clocksource support
+Message-ID: <20200430140040.GA8363@bogus>
+References: <20200417165519.4979-1-tony@atomide.com>
+ <20200417165519.4979-3-tony@atomide.com>
+ <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+ <20200427143144.GQ37466@atomide.com>
+ <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
+ <20200427152329.GR37466@atomide.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427152329.GR37466@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Blankertz <matthias.blankertz@cetitec.com>
+On Mon, Apr 27, 2020 at 08:23:29AM -0700, Tony Lindgren wrote:
+> * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 15:03]:
+> > On 27/04/2020 16:31, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
+> > >> On 17/04/2020 18:55, Tony Lindgren wrote:
+> > >>> --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > >>> +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > >>> @@ -14,6 +14,8 @@ Required properties:
+> > >>>  			ti,omap5430-timer (applicable to OMAP543x devices)
+> > >>>  			ti,am335x-timer	(applicable to AM335x devices)
+> > >>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
+> > >>> +			ti,dmtimer-clockevent (when used as for clockevent)
+> > >>> +			ti,dmtimer-clocksource (when used as for clocksource)
+> > >>
+> > >> Please, submit a separate patch for this.
+> > >>
+> > >> Before you resend as is, this will be nacked as clocksource / clockevent
+> > >> is not a hardware description but a Linux thing.
+> > >>
+> > >> Finding a way to characterize that from the DT is an endless discussion
+> > >> since years, so I suggest to use a single property for the timer eg
+> > >> <ti,dmtimer> and initialize the clocksource and the clockevent in the
+> > >> driver.
+> > > 
+> > > Hmm good point. We still need to specify which timer is a clocksource
+> > > and which one a clockevent somehow.
+> > > 
+> > > Maybe we could have a generic properties like the clock framework such as:
+> > > 
+> > > assigned-system-clocksource
+> > > assigned-system-clockevent
+> > 
+> > I think that will be the same problem :/
+> 
+> Seems like other SoCs have the same issue too with multiple timers
+> to configure.
+> 
+> > Is it possible to check the interrupt for the clockevent ? A timer node
+> > with the interrrupt is the clockevent, without it is a clocksource.
+> 
+> OK let's try that. So the configuration would become then:
+> 
+> compatible = "ti,dmtimer;	/* reserved for system timers */
+> /delete-property/interrupts;	/* ok so it's a clocksource */
+> /delete-property/interrupts-extended;
 
-[ Upstream commit b94e164759b82d0c1c80d4b1c8f12c9bee83f11d ]
+That's not really what was meant.
 
-The HDMI?_SEL register maps up to four stereo SSI data lanes onto the
-sdata[0..3] inputs of the HDMI output block. The upper half of the
-register contains four blocks of 4 bits, with the most significant
-controlling the sdata3 line and the least significant the sdata0 line.
+Let's say you have N timers. Either every timer is exactly the same and 
+the OS can just assign them however it wants or there is some difference 
+in the h/w making certain timer better for certain functions. Describe 
+that difference. It could be clock rate, number of counter bits, always 
+on, secure mode access only, has or doesn't have output compare or input 
+capture, etc.
 
-The shift calculation has an off-by-one error, causing the parent SSI to
-be mapped to sdata3, the first multi-SSI child to sdata0 and so forth.
-As the parent SSI transmits the stereo L/R channels, and the HDMI core
-expects it on the sdata0 line, this causes no audio to be output when
-playing stereo audio on a multichannel capable HDMI out, and
-multichannel audio has permutated channels.
-
-Fix the shift calculation to map the parent SSI to sdata0, the first
-child to sdata1 etc.
-
-Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200415141017.384017-3-matthias.blankertz@cetitec.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/sh/rcar/ssiu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sh/rcar/ssiu.c b/sound/soc/sh/rcar/ssiu.c
-index 4d948757d300d..5e5ed54754739 100644
---- a/sound/soc/sh/rcar/ssiu.c
-+++ b/sound/soc/sh/rcar/ssiu.c
-@@ -172,7 +172,7 @@ static int rsnd_ssiu_init_gen2(struct rsnd_mod *mod,
- 			i;
- 
- 		for_each_rsnd_mod_array(i, pos, io, rsnd_ssi_array) {
--			shift	= (i * 4) + 16;
-+			shift	= (i * 4) + 20;
- 			val	= (val & ~(0xF << shift)) |
- 				rsnd_mod_id(pos) << shift;
- 		}
--- 
-2.20.1
-
+Rob
