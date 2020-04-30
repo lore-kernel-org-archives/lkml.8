@@ -2,142 +2,397 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB95C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9C4C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2D52173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588235379;
-	bh=onr2ezsqhSwSBf7Quz0lL5N9zMZKFWEXv6ZeY7ZIb9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M557/VQuFweQ9pg8rVSC229x7O4s5XsoicEJ494+qhQy7/wRldVgdHzn1vo47A2Ca
-	 zEXoHaPDZHrXIEQATKiS/tBoiMeeywVqiKL74vd3rQzn569DInamO7wv0ggab63b6I
-	 4ezvZXpVg4RMmpgC1vOGOjHuTUxGusUI8cTSWr44=
+	by mail.kernel.org (Postfix) with ESMTP id F221720838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:30:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LbAX5IPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgD3I3i (ORCPT
+        id S1726852AbgD3IaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgD3I3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:29:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E058E20838;
-        Thu, 30 Apr 2020 08:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588235377;
-        bh=onr2ezsqhSwSBf7Quz0lL5N9zMZKFWEXv6ZeY7ZIb9M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhXeMJ0oWGKxPahGSs7koYRzrkGLBxK5K/sKeQboCc/b2p8n6cwbTf9Sr+GZ+pIk4
-         rRFVN73kuf10XTpXGBpLiLU72SuPb6wk4Vyk5xKIbm3q+QpEFT1iFr1dKbuKvsXP1y
-         peJMk6/zFG8MHlDUDNC8wuM3+aZvQ2rUXtsSN08g=
-Date:   Thu, 30 Apr 2020 09:29:28 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        James Morse <james.morse@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: kvm: fix gcc-10 shift warning
-Message-ID: <20200430082927.GA18615@willie-the-truck>
-References: <20200429185657.4085975-1-arnd@arndb.de>
- <20200430090251.715f6bf0@why>
+        Thu, 30 Apr 2020 04:30:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21498 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726531AbgD3IaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 04:30:15 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U8MVPW011011;
+        Thu, 30 Apr 2020 10:30:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=OE0tp6+X5tTQDJZQL0I8xkm+cC1qOOa0U5/6s5K6JSc=;
+ b=LbAX5IPlMwEthnL1IMzKAwbxsekznfCygV9FG2jz+zj6MqCUWGZoTSl2iYao4NSWMXbI
+ 3jMd0Lzy4cFCMptZCqA9K5QrzPRQq+65sLeuRNgxcPjI3zqByopW31dEBU/PA2ZjvHjh
+ stzKbtiWhnXeDqh977pXtpZHOjusFBWuSQvICykzi5++xuK6umwEdzeo9ZUscVlL82UM
+ buBddmrVhmkAG76Fjj6uvB9rf+wANywSG5TvBe5t8Z7nvv4FvOGQQY4TNb/XQF/6vx4U
+ 4BCPkvDbc9+sIO7lqBBFybM7i9ONVrs4fJpxuN0K0xrnTGkoFPfx3k18d3zK/0yC4Rai SA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhq6ayw2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 10:30:07 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B1B2F10002A;
+        Thu, 30 Apr 2020 10:30:05 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 961AF2AD2DD;
+        Thu, 30 Apr 2020 10:30:05 +0200 (CEST)
+Received: from lmecxl0889.tpe.st.com (10.75.127.49) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
+ 2020 10:30:04 +0200
+Subject: Re: [PATCH v3 1/2] remoteproc: Add remoteproc character device
+ interface
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <bjorn.andersson@linaro.org>, <mathieu.poirier@linaro.org>,
+        <ohad@wizery.com>, <tsoni@codeaurora.org>,
+        <psodagud@codeaurora.org>, <sidgup@codeaurora.org>
+References: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
+ <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <d72ead5a-b25a-d4e2-4bbf-1790d2a64fb8@st.com>
+Date:   Thu, 30 Apr 2020 10:30:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430090251.715f6bf0@why>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_03:2020-04-30,2020-04-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:02:51AM +0100, Marc Zyngier wrote:
-> On Wed, 29 Apr 2020 20:56:20 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Rishabh,
+
+
+On 4/21/20 8:10 PM, Rishabh Bhatnagar wrote:
+> Add the character device interface into remoteproc framework.
+> This interface can be used in order to boot/shutdown remote
+> subsystems and provides a basic ioctl based interface to implement
+> supplementary functionality. An ioctl call is implemented to enable
+> the shutdown on release feature which will allow remote processors to
+> be shutdown when the controlling userpsace application crashes or hangs.
 > 
-> > gcc-10 warns that the 32-bit zero cannot be shifted more than
-> > 32 bits to the right:
-> > 
-> > arch/arm64/kvm/../../../virt/kvm/arm/mmu.c: In function 'clear_hyp_p4d_entry':
-> > arch/arm64/include/asm/pgtable.h:630:35: error: right shift count >= width of type [-Werror=shift-count-overflow]
-> >   630 | #define pud_index(addr)  (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-> >       |                                   ^~
-> > arch/arm64/include/asm/memory.h:271:45: note: in definition of macro '__phys_to_virt'
-> >   271 | #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
-> >       |                                             ^
-> > arch/arm64/include/asm/pgtable.h:633:42: note: in expansion of macro '__va'
-> >   633 | #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> >       |                                          ^~~~
-> > arch/arm64/include/asm/pgtable.h:632:73: note: in expansion of macro 'pud_index'
-> >   632 | #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir))) + pud_index(addr) * sizeof(pud_t))
-> >       |                                                                         ^~~~~~~~~
-> > arch/arm64/include/asm/pgtable.h:633:47: note: in expansion of macro 'pud_offset_phys'
-> >   633 | #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> >       |                                               ^~~~~~~~~~~~~~~
-> > arch/arm64/kvm/../../../virt/kvm/arm/mmu.c:510:36: note: in expansion of macro 'pud_offset'
-> >   510 |  pud_t *pud_table __maybe_unused = pud_offset(p4d, 0);
-> >       |                                    ^~~~~~~~~~
-> > 
-> > This is harmless, and the warning is a little bit silly for
-> > a zero constant, but it's trivial to fix by making it an
-> > unsigned long, so do that.
-> > 
-> > Fixes: 22998131ab33 ("arm64: add support for folded p4d page tables")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  virt/kvm/arm/mmu.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> > index 48d4288c5f1b..534d9798c3cb 100644
-> > --- a/virt/kvm/arm/mmu.c
-> > +++ b/virt/kvm/arm/mmu.c
-> > @@ -507,7 +507,7 @@ static void clear_hyp_pgd_entry(pgd_t *pgd)
-> >  
-> >  static void clear_hyp_p4d_entry(p4d_t *p4d)
-> >  {
-> > -	pud_t *pud_table __maybe_unused = pud_offset(p4d, 0);
-> > +	pud_t *pud_table __maybe_unused = pud_offset(p4d, 0UL);
-> >  	VM_BUG_ON(p4d_huge(*p4d));
-> >  	p4d_clear(p4d);
-> >  	pud_free(NULL, pud_table);
+
+Thanks for intruducing Ioctl, this will help for future evolutions.
+
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>  Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
+>  drivers/remoteproc/Kconfig                         |   9 ++
+>  drivers/remoteproc/Makefile                        |   1 +
+>  drivers/remoteproc/remoteproc_cdev.c               | 143 +++++++++++++++++++++
+>  drivers/remoteproc/remoteproc_internal.h           |  21 +++
+>  include/linux/remoteproc.h                         |   3 +
+>  include/uapi/linux/remoteproc_cdev.h               |  20 +++
+>  7 files changed, 198 insertions(+)
+>  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
+>  create mode 100644 include/uapi/linux/remoteproc_cdev.h
 > 
-> Acked-by: Marc Zyngier <maz@kernel.org>
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index 2e91370..412b2a0 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -337,6 +337,7 @@ Code  Seq#    Include File                                           Comments
+>  0xB4  00-0F  linux/gpio.h                                            <mailto:linux-gpio@vger.kernel.org>
+>  0xB5  00-0F  uapi/linux/rpmsg.h                                      <mailto:linux-remoteproc@vger.kernel.org>
+>  0xB6  all    linux/fpga-dfl.h
+> +0xB7  all    uapi/linux/remoteproc_cdev.h			     <mailto:linux-remoteproc@vger.kernel.org>
+>  0xC0  00-0F  linux/usb/iowarrior.h
+>  0xCA  00-0F  uapi/misc/cxl.h
+>  0xCA  10-2F  uapi/misc/ocxl.h
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index de3862c..6374b79 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -14,6 +14,15 @@ config REMOTEPROC
+>  
+>  if REMOTEPROC
+>  
+> +config REMOTEPROC_CDEV
+> +	bool "Remoteproc character device interface"
+> +	help
+> +	  Say y here to have a character device interface for Remoteproc
+> +	  framework. Userspace can boot/shutdown remote processors through
+> +	  this interface.
+> +
+> +	  It's safe to say N if you don't want to use this interface.
+> +
+>  config IMX_REMOTEPROC
+>  	tristate "IMX6/7 remoteproc support"
+>  	depends on ARCH_MXC
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b1..b7d4f77 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
+>  remoteproc-y				+= remoteproc_sysfs.o
+>  remoteproc-y				+= remoteproc_virtio.o
+>  remoteproc-y				+= remoteproc_elf_loader.o
+> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
+>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+>  obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
+>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+> diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
+> new file mode 100644
+> index 0000000..65142ec
+> --- /dev/null
+> +++ b/drivers/remoteproc/remoteproc_cdev.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Character device interface driver for Remoteproc framework.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cdev.h>
+> +#include <linux/fs.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/remoteproc.h>
+> +#include <uapi/linux/remoteproc_cdev.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "remoteproc_internal.h"
+> +
+> +#define NUM_RPROC_DEVICES	64
+> +static dev_t rproc_major;
+> +
+> +static ssize_t rproc_cdev_write(struct file *filp, const char __user *buf,
+> +				 size_t len, loff_t *pos)
+> +{
+> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
+> +					   struct rproc, char_dev);
+> +	int ret = 0;
+> +	char cmd[10];
+> +
+> +	if (!len || len > sizeof(cmd))
+> +		return -EINVAL;
+> +
+> +	ret = copy_from_user(cmd, buf, sizeof(cmd));
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	if (sysfs_streq(cmd, "start")) {
+> +		if (rproc->state == RPROC_RUNNING)
+> +			return -EBUSY;
+> +
+> +		ret = rproc_boot(rproc);
+> +		if (ret)
+> +			dev_err(&rproc->dev, "Boot failed:%d\n", ret);
+> +	} else if (sysfs_streq(cmd, "stop")) {
+> +		if (rproc->state == RPROC_OFFLINE)
+> +			return -ENXIO;
 
-Happy to queue via arm64 for 5.8. Does that work for you, Arnd, or were you
-planning to get this in sooner than that?
+returning ENXIO in this case seems to me no appropriate , what about EPERM or
+EINVAL (rproc_sysfs) ?
 
-Cheers,
+> +
+> +		rproc_shutdown(rproc);
+> +	} else {
+> +		dev_err(&rproc->dev, "Unrecognized option\n");
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	return ret ? ret : len;
+> +}
+> +
+> +static long rproc_device_ioctl(struct file *filp, unsigned int ioctl,
+> +				unsigned long arg)
+> +{
+> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
+> +					   struct rproc, char_dev);
+> +	void __user *argp = (void __user *)arg;
+> +	int ret;
+> +	bool param;
+> +
+> +	switch (ioctl) {
+> +	case RPROC_SET_SHUTDOWN_ON_RELEASE:
+> +		ret = copy_from_user(&param, argp, sizeof(bool));
+> +		if (ret) {
+> +			dev_err(&rproc->dev, "Data copy from userspace failed\n");
+> +			return -EINVAL;
+> +		}
+> +		rproc->cdev_put_on_release = param;
 
-Will
+argp is an void value, where cdev_put_on_release is a bool a check or a conversion  seems
+missing
+
+> +		break;
+> +	case RPROC_GET_SHUTDOWN_ON_RELEASE:
+> +		ret = copy_to_user(argp, &rproc->cdev_put_on_release,
+> +				   sizeof(bool));
+> +		if (ret) {
+> +			dev_err(&rproc->dev, "Data copy to userspace failed\n");
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	default:
+> +		dev_err(&rproc->dev, "Unsupported ioctl\n");
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int rproc_cdev_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct rproc *rproc = container_of(inode->i_cdev, struct rproc,
+> +					   char_dev);
+> +
+> +	if (rproc->cdev_put_on_release && rproc->state != RPROC_OFFLINE)
+> +		rproc_shutdown(rproc);
+> +
+> +	return 0;
+> +}
+> +
+> +
+> +static const struct file_operations rproc_fops = {
+> +	.write = rproc_cdev_write,
+> +	.unlocked_ioctl = rproc_device_ioctl,
+> +	.release = rproc_cdev_release,
+> +};
+> +
+> +int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	int ret;
+> +	dev_t cdevt;
+> +
+> +	cdev_init(&rproc->char_dev, &rproc_fops);
+> +	rproc->char_dev.owner = THIS_MODULE;
+> +
+> +	cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
+> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	rproc->dev.devt = cdevt;
+> +out:
+> +	return ret;
+> +}
+> +
+> +void rproc_char_device_remove(struct rproc *rproc)
+> +{
+> +	__unregister_chrdev(MAJOR(rproc->dev.devt), rproc->index, 1, "rproc");
+> +}
+> +
+> +void __init rproc_init_cdev(void)
+> +{
+> +	int ret;
+> +
+> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "rproc");
+
+"remoteproc"instead of "rproc" (in line with sysfs and debugfs naming) .
+
+> +	if (ret < 0)
+> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+> +}
+> +
+> +void __exit rproc_exit_cdev(void)
+> +{
+> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_major), 0),
+> +				 NUM_RPROC_DEVICES);
+> +}
+> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> index 493ef92..fb9d891 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char *name, struct rproc *rproc,
+>  int rproc_init_sysfs(void);
+>  void rproc_exit_sysfs(void);
+>  
+> +#ifdef CONFIG_REMOTEPROC_CDEV
+> +void rproc_init_cdev(void);
+> +void rproc_exit_cdev(void);
+> +int rproc_char_device_add(struct rproc *rproc);
+> +void rproc_char_device_remove(struct rproc *rproc);
+> +#else
+> +static inline void rproc_init_cdev(void)
+> +{
+> +}
+> +static inline void rproc_exit_cdev(void)
+> +{
+> +}
+> +static inline int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	return 0;
+> +}
+> +static inline void  rproc_char_device_remove(struct rproc *rproc)
+> +{
+> +}
+> +#endif
+> +
+>  void rproc_free_vring(struct rproc_vring *rvring);
+>  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+>  
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad666..9bd2ff5 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -40,6 +40,7 @@
+>  #include <linux/virtio.h>
+>  #include <linux/completion.h>
+>  #include <linux/idr.h>
+> +#include <linux/cdev.h>
+>  #include <linux/of.h>
+>  
+>  /**
+> @@ -514,6 +515,8 @@ struct rproc {
+>  	bool auto_boot;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+> +	struct cdev char_dev;
+> +	bool cdev_put_on_release;
+>  };
+
+These parameters are local variables of rproc_cdev. Could be defined in a separate structure.
+with a pointer in rproc to this structure.
+
+>  
+>  /**
+> diff --git a/include/uapi/linux/remoteproc_cdev.h b/include/uapi/linux/remoteproc_cdev.h
+> new file mode 100644
+> index 0000000..3975120
+> --- /dev/null
+> +++ b/include/uapi/linux/remoteproc_cdev.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+> +/*
+> + * IOCTLs for Remoteproc's character device interface.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +
+> +#ifndef _UAPI_REMOTEPROC_CDEV_H_
+> +#define _UAPI_REMOTEPROC_CDEV_H_
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +#define RPROC_MAGIC	0xB7
+> +
+> +#define RPROC_SET_SHUTDOWN_ON_RELEASE _IOW(RPROC_MAGIC, 1, int)
+> +#define RPROC_GET_SHUTDOWN_ON_RELEASE _IOR(RPROC_MAGIC, 2, int)
+> +
+> +#endif
+> 
+IOCTLs should probaly be documented.
+
+Thanks,
+Arnaud
