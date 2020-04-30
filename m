@@ -6,68 +6,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493ECC83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6254C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23CB52083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AAA2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgD3Clv (ORCPT
+        id S1726783AbgD3Cn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 22:41:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:47946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3Clv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 22:41:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 742771063;
-        Wed, 29 Apr 2020 19:41:50 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.138.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D915F3F68F;
-        Wed, 29 Apr 2020 19:41:47 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kaly.Xin@arm.com, Jia He <justin.he@arm.com>
-Subject: [PATCH] vhost: add mutex_lock/unlock for vhost_vq_reset
-Date:   Thu, 30 Apr 2020 10:41:40 +0800
-Message-Id: <20200430024140.42065-1-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Apr 2020 22:43:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3344 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726180AbgD3Cn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:43:27 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 68B728F3430251F25FA2;
+        Thu, 30 Apr 2020 10:43:25 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 30 Apr 2020 10:43:17 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <ccaulfie@redhat.com>, <teigland@redhat.com>
+CC:     <cluster-devel@redhat.com>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] dlm: Remove unneeded semicolon
+Date:   Thu, 30 Apr 2020 10:49:32 +0800
+Message-ID: <1588214972-50988-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vq->mutex is to protect any vq accessing, hence adding mutex_lock/unlock
-makes sense to avoid potential race condition.
+Fixes coccicheck warning:
 
-Signed-off-by: Jia He <justin.he@arm.com>
+fs/dlm/rcom.c:566:2-3: Unneeded semicolon
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
 ---
- drivers/vhost/vhost.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/dlm/rcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index d450e16c5c25..622bfba2e5ab 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -297,6 +297,7 @@ static void vhost_vq_meta_reset(struct vhost_dev *d)
- static void vhost_vq_reset(struct vhost_dev *dev,
- 			   struct vhost_virtqueue *vq)
- {
-+	mutex_lock(&vq->mutex);
- 	vq->num = 1;
- 	vq->desc = NULL;
- 	vq->avail = NULL;
-@@ -323,6 +324,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
- 	vq->umem = NULL;
- 	vq->iotlb = NULL;
- 	__vhost_vq_meta_reset(vq);
-+	mutex_unlock(&vq->mutex);
- }
+diff --git a/fs/dlm/rcom.c b/fs/dlm/rcom.c
+index e3d9f72..4daf5dc 100644
+--- a/fs/dlm/rcom.c
++++ b/fs/dlm/rcom.c
+@@ -563,7 +563,7 @@ void dlm_receive_rcom(struct dlm_ls *ls, struct dlm_rcom *rc, int nodeid)
+ 		lock = 1;
+ 		reply = 1;
+ 		break;
+-	};
++	}
  
- static int vhost_worker(void *data)
+ 	spin_lock(&ls->ls_recover_lock);
+ 	status = ls->ls_recover_status;
 -- 
-2.17.1
+2.6.2
 
