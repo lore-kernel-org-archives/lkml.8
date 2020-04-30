@@ -2,156 +2,141 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF9BC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD7C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E557A20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A3D20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgD3PO7 (ORCPT
+        id S1727821AbgD3PPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:14:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48040 "EHLO mx2.suse.de"
+        Thu, 30 Apr 2020 11:15:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48064 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgD3PO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:14:58 -0400
+        id S1726764AbgD3PO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:14:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DA1E2AD31;
-        Thu, 30 Apr 2020 15:14:55 +0000 (UTC)
-Subject: Re: [RESEND 1/2] drm/client: Dual licence the header in GPL-2 and MIT
-To:     Emmanuel Vadot <manu@FreeBSD.org>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, matthew.d.roper@intel.com,
-        noralf@tronnes.org, kraxel@redhat.com, tglx@linutronix.de
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20200430145439.31257-1-manu@FreeBSD.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <d4f1695b-256f-1985-af8a-ff2544fbaf99@suse.de>
-Date:   Thu, 30 Apr 2020 17:14:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200430145439.31257-1-manu@FreeBSD.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="GcX2OMJVvid5mJfQIblAToBdkLRli4mUE"
+        by mx2.suse.de (Postfix) with ESMTP id 4D3B8AE39;
+        Thu, 30 Apr 2020 15:14:56 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 17:14:56 +0200
+Message-ID: <s5hwo5xj98v.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+References: <PSXP216MB0438D2AF96CE0D4F83F48C4D80AE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <MN2PR12MB4488E4909C1488FB507E0BF5F7AF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+        <s5ho8rdnems.wl-tiwai@suse.de>
+        <PSXP216MB04387BF6B5F8DA84749E5D6F80AF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_M=QEqxuCKjb_qZvFSvwM5eLEFfsepxYYXoouFoe5bn7A@mail.gmail.com>
+        <s5h4kt4ojrf.wl-tiwai@suse.de>
+        <CADnq5_MMQ5_MjEg=bkJJGMJP53RjB3yxvOW0nUDeWxzg3Q0pVQ@mail.gmail.com>
+        <s5hv9lkm49n.wl-tiwai@suse.de>
+        <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5ha72ulp2y.wl-tiwai@suse.de>
+        <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+        <s5h1ro6jn0v.wl-tiwai@suse.de>
+        <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GcX2OMJVvid5mJfQIblAToBdkLRli4mUE
-Content-Type: multipart/mixed; boundary="vRDjqSKFAYgJoZbQ26meYrfX5QkHuZLsT";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Emmanuel Vadot <manu@FreeBSD.org>, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
- matthew.d.roper@intel.com, noralf@tronnes.org, kraxel@redhat.com,
- tglx@linutronix.de
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Daniel Vetter <daniel.vetter@ffwll.ch>
-Message-ID: <d4f1695b-256f-1985-af8a-ff2544fbaf99@suse.de>
-Subject: Re: [RESEND 1/2] drm/client: Dual licence the header in GPL-2 and MIT
-References: <20200430145439.31257-1-manu@FreeBSD.org>
-In-Reply-To: <20200430145439.31257-1-manu@FreeBSD.org>
+On Wed, 29 Apr 2020 18:19:57 +0200,
+Alex Deucher wrote:
+> 
+> On Wed, Apr 29, 2020 at 12:05 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > Well, but the code path there is the runtime PM resume of the audio
+> > device and it means that GPU must have been runtime-resumed again
+> > beforehand via the device link.  So, it should have worked from the
+> > beginning but in reality not -- that is, apparently some inconsistency
+> > is found in the initial attempt of the runtime resume...
+> 
+> Yeah, it should be covered, but I wonder if there is something in the
+> ELD update sequence that needs to call pm_runtime_get_sync()?  The ELD
+> sequence on AMD GPUs doesn't work the same as on other vendors.  The
+> GPU driver has a backdoor into the HDA device's verbs to set update
+> the audio state rather than doing it via an ELD buffer update.  We
+> still update the ELD buffer for consistency.  Maybe when the GPU
+> driver sets the audio state at monitor detection time that triggers an
+> interrupt or something on the HDA side which races with the CPU and
+> the power down of the GPU.  That still seems unlikely though since the
+> runtime pm on the GPU side defaults to a 5 second suspend timer.
 
---vRDjqSKFAYgJoZbQ26meYrfX5QkHuZLsT
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+I'm not sure whether it's the race between runtime suspend of GPU vs
+runtime resume of audio.  My wild guess is rather that it's the timing
+GPU notifies to the audio; then the audio driver notifies to
+user-space and user-space opens the stream, which in turn invokes the
+runtime resume of GPU. But in GPU side, it's still under processing,
+so it proceeds before the GPU finishes its initialization job.
 
-
-
-Am 30.04.20 um 16:54 schrieb Emmanuel Vadot:
-> Source file was dual licenced but the header was omitted, fix that.
-> Contributors for this file are:
-> Daniel Vetter <daniel.vetter@ffwll.ch>
-> Matt Roper <matthew.d.roper@intel.com>
-> Maxime Ripard <mripard@kernel.org>
-> Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> Thomas Zimmermann <tzimmermann@suse.de>
->=20
-> Acked-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> Acked-by: Matt Roper <matthew.d.roper@intel.com>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->  include/drm/drm_client.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/drm/drm_client.h b/include/drm/drm_client.h
-> index 7402f852d3c4..eb259c2547af 100644
-> --- a/include/drm/drm_client.h
-> +++ b/include/drm/drm_client.h
-> @@ -1,4 +1,4 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> +/* SPDX-License-Identifier: GPL-2.0 or MIT */
-> =20
->  #ifndef _DRM_CLIENT_H_
->  #define _DRM_CLIENT_H_
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+Nicholas, could you try the patch below and see whether the problem
+still appears?  The patch artificially delays the notification and ELD
+update for 300msec.  If this works, it means the timing problem.
 
 
---vRDjqSKFAYgJoZbQ26meYrfX5QkHuZLsT--
+thanks,
 
---GcX2OMJVvid5mJfQIblAToBdkLRli4mUE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Takashi
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6q62wACgkQaA3BHVML
-eiOexgf+I7u9pEn9RDmjltV3FvMKjKkrPOemf9TBugAKfIq7uhwnLsPNBukyow4G
-qYtCI0gohyTwHRpvE+XNonP8CeMWTX+wEtqKabatEbf2sEaNnMspLFfHS6C2cTIo
-WidsJ3Xgek5Q1tPwPMjn6VXo0gpSQe3ZwC8On2HkqCBNqHfUc8ITml7af0WqbXdC
-jn08ZYL8RQT5yPqF5oIivigobARHfm/HhuIvAyA2fLQ9YkkjNqt2p2L3RnEA++YS
-ShJBsu0Ja1TCmJ7SaIFNP83onm0BqkBX9F6jF8msAwKOIw/l37d2idbzNH9vO2KB
-dBwjnlV8cqov5TQwm34enj6fEgbTbQ==
-=8dmm
------END PGP SIGNATURE-----
-
---GcX2OMJVvid5mJfQIblAToBdkLRli4mUE--
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -767,6 +767,7 @@ static void check_presence_and_report(struct hda_codec *codec, hda_nid_t nid,
+ 	if (pin_idx < 0)
+ 		return;
+ 	mutex_lock(&spec->pcm_lock);
++	get_pin(spec, pin_idx)->repoll_count = 1;
+ 	hdmi_present_sense(get_pin(spec, pin_idx), 1);
+ 	mutex_unlock(&spec->pcm_lock);
+ }
+@@ -1647,7 +1648,10 @@ static void sync_eld_via_acomp(struct hda_codec *codec,
+ 				      per_pin->dev_id, &eld->monitor_present,
+ 				      eld->eld_buffer, ELD_MAX_SIZE);
+ 	eld->eld_valid = (eld->eld_size > 0);
+-	update_eld(codec, per_pin, eld, 0);
++	if (per_pin->repoll_count)
++		schedule_delayed_work(&per_pin->work, msecs_to_jiffies(300));
++	else
++		update_eld(codec, per_pin, eld, 0);
+ 	mutex_unlock(&per_pin->lock);
+ }
+ 
+@@ -1669,6 +1673,11 @@ static void hdmi_repoll_eld(struct work_struct *work)
+ 	struct hdmi_spec *spec = codec->spec;
+ 	struct hda_jack_tbl *jack;
+ 
++	if (codec_has_acomp(codec)) {
++		per_pin->repoll_count = 0;
++		goto check;
++	}
++
+ 	jack = snd_hda_jack_tbl_get_mst(codec, per_pin->pin_nid,
+ 					per_pin->dev_id);
+ 	if (jack)
+@@ -1677,6 +1686,7 @@ static void hdmi_repoll_eld(struct work_struct *work)
+ 	if (per_pin->repoll_count++ > 6)
+ 		per_pin->repoll_count = 0;
+ 
++ check:
+ 	mutex_lock(&spec->pcm_lock);
+ 	hdmi_present_sense(per_pin, per_pin->repoll_count);
+ 	mutex_unlock(&spec->pcm_lock);
