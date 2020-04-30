@@ -2,93 +2,198 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DDCC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C76C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8ADE2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C453020774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255820;
-	bh=lCkkjbTRKnupktbhhwm1QNoArUgsPT25OPIGy+WhnWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s5HSM902lFM8bsfWgoEM0IPEhmnFqvxiCjhjOREBaaXIKfqrW9s5Pti6AHDhVEtzk
-	 24zm3SvmQCjiNMprd+PakAu/5UjuJBFROauSu+hpD2LC5JUJJpSyO4SJMMPMFLAJgj
-	 1Msu2/h9RgvEImpJ3sc/EYtHUHGI19O7n///xvhk=
+	s=default; t=1588255824;
+	bh=QGgBuhCejrKHWkiFI7PYpRXxjE0O37C7d1JbVO32/Jk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KTNES9Kmy6KiEInZwNbPncLcv91cQpShThQOLOXERJH1CXI4nRidCdEVLd1KnPdfl
+	 TEegTt3FDPjoArm9Q1jZ4jwcwsWun6prTQMGj76t91dR3DhG4C26DV52052OaCChOG
+	 CROrcF8u5kYLPPI8CN/A1WEDAhhYIbZgsBGieqq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgD3OKQ (ORCPT
+        id S1728147AbgD3Nvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:10:16 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:45620 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgD3OKN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:10:13 -0400
-Received: by mail-oo1-f67.google.com with SMTP id 190so1297688ooa.12;
-        Thu, 30 Apr 2020 07:10:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6aiOkcIgJAWhCqfCs33Rhe1wkSnQyKwXVAe/pUh2Rrw=;
-        b=tEabOy9KM9d7LRpLuowDfHa3grtUQXFhRb2NhOXb1jC+n25OcJI/CPHVJ2hoGBL0AV
-         bQZW/AEkMCJJJCJmbkLjqJSybjjF39nfoDb+1zec5tQY2YDd/+HUyVb1PL/mb8Vy6g1j
-         k3EFVdk01IO5HzTctxpG1qfP8Pm7Dc2uipe9q82d6X9Y4QKiPcXp77XC5ODDIE4KEAXT
-         byEjM2RxzePIllwIxe4Bk5jUIcELo27BI1dF9gwuR8D7SY0pK/5nqvf/kLmEKBInWM82
-         0X5jY3D2PEsJODv7obzXkopLojx4QLHNArVJVGf2lGAz9wzugmwebeYGTKC7bFTBlPfk
-         ZhcQ==
-X-Gm-Message-State: AGi0PubzrAtthmqGA7SayY2TyG7N3vGebiIiJPT3tEW3YuyDOG3CVyfw
-        zo/nZN/nKzfzwvMzoL0ez6hLSPE=
-X-Google-Smtp-Source: APiQypIlZrdNDKXt4h5JYSoYrTTeKI8v+e+CVvcep7L1dYna5MbvAQ/q4ekiXc5lL7JJyjUKWiE5Xg==
-X-Received: by 2002:a4a:390b:: with SMTP id m11mr2952624ooa.2.1588255811640;
-        Thu, 30 Apr 2020 07:10:11 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m16sm1304134oou.44.2020.04.30.07.10.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 07:10:10 -0700 (PDT)
-Received: (nullmailer pid 4677 invoked by uid 1000);
-        Thu, 30 Apr 2020 14:10:10 -0000
-Date:   Thu, 30 Apr 2020 09:10:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] of_graph: add of_graph_get_local_port()
-Message-ID: <20200430141010.GA4602@bogus>
-References: <20200418170703.1583-1-digetx@gmail.com>
- <20200418170703.1583-2-digetx@gmail.com>
+        Thu, 30 Apr 2020 09:51:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727100AbgD3Nv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0AA8208DB;
+        Thu, 30 Apr 2020 13:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254686;
+        bh=QGgBuhCejrKHWkiFI7PYpRXxjE0O37C7d1JbVO32/Jk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NdS40gdu+saW+Ys2C9NiJfSTepvNtJiJn6gbvzpJdhp+YCid/6risoYpgftm8UC+A
+         OrspS5T1njaMHlueskVr8w4iJuAXicJj017dNAG2Ud2daE60aNMpkoXjkeQZLT1qyY
+         8MXf21LSK6CTEWkxRkW9QCH3rAsRT1IwQP1t0Wb8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.6 37/79] ASoC: SOF: Intel: add min/max channels for SSP on Baytrail/Broadwell
+Date:   Thu, 30 Apr 2020 09:50:01 -0400
+Message-Id: <20200430135043.19851-37-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
+References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418170703.1583-2-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 20:06:58 +0300, Dmitry Osipenko wrote:
-> In some case, like a DRM display code for example, it's useful to silently
-> check whether port node exists at all in a device-tree before proceeding
-> with parsing the graph.
-> 
-> This patch adds of_graph_get_local_port() which returns pointer to a local
-> port node, or NULL if graph isn't specified in a device-tree for a given
-> device node.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/of/property.c    | 32 +++++++++++++++++++++++---------
->  include/linux/of_graph.h |  7 +++++++
->  2 files changed, 30 insertions(+), 9 deletions(-)
-> 
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[ Upstream commit 8c05246c0b58cbe80580ea4be05f6d51228af8a9 ]
+
+Major regressions were detected by SOF CI on CherryTrail and Broadwell:
+
+[   25.705750]  SSP2-Codec: ASoC: no backend playback stream
+[   27.923378]  SSP2-Codec: ASoC: no users playback at close - state
+
+This is root-caused to the introduction of the DAI capability checks
+with snd_soc_dai_stream_valid(). Its use in soc-pcm.c makes it a
+requirement for all DAIs to report at least a non-zero min_channels
+field.
+
+For some reason the SSP structures used for SKL+ did provide this
+information but legacy platforms didn't.
+
+Fixes: 9b5db059366ae2 ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200417172014.11760-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/sof/intel/bdw.c | 16 +++++++++++++
+ sound/soc/sof/intel/byt.c | 48 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+
+diff --git a/sound/soc/sof/intel/bdw.c b/sound/soc/sof/intel/bdw.c
+index 6c23c57693309..a32a3ef78ec5d 100644
+--- a/sound/soc/sof/intel/bdw.c
++++ b/sound/soc/sof/intel/bdw.c
+@@ -567,9 +567,25 @@ static void bdw_set_mach_params(const struct snd_soc_acpi_mach *mach,
+ static struct snd_soc_dai_driver bdw_dai[] = {
+ {
+ 	.name = "ssp0-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ {
+ 	.name = "ssp1-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ };
+ 
+diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
+index f84391294f12c..29fd1d86156ce 100644
+--- a/sound/soc/sof/intel/byt.c
++++ b/sound/soc/sof/intel/byt.c
+@@ -459,21 +459,69 @@ static void byt_set_mach_params(const struct snd_soc_acpi_mach *mach,
+ static struct snd_soc_dai_driver byt_dai[] = {
+ {
+ 	.name = "ssp0-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ {
+ 	.name = "ssp1-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ {
+ 	.name = "ssp2-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	}
+ },
+ {
+ 	.name = "ssp3-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ {
+ 	.name = "ssp4-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ {
+ 	.name = "ssp5-port",
++	.playback = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
++	.capture = {
++		.channels_min = 1,
++		.channels_max = 8,
++	},
+ },
+ };
+ 
+-- 
+2.20.1
+
