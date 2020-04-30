@@ -2,102 +2,211 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB36C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E5BC83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543112082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7748E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NlihTNgy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgD3DXj (ORCPT
+        id S1726616AbgD3DYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:23:39 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:58797 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726435AbgD3DXj (ORCPT
+        Wed, 29 Apr 2020 23:24:19 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17787 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726431AbgD3DYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:23:39 -0400
-X-IronPort-AV: E=Sophos;i="5.73,333,1583164800"; 
-   d="scan'208";a="90801342"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 30 Apr 2020 11:23:37 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 9166650A996E;
-        Thu, 30 Apr 2020 11:23:34 +0800 (CST)
-Received: from [10.167.220.84] (10.167.220.84) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 30 Apr 2020 11:23:35 +0800
-Subject: Re: [LTP] [PATCH v4 3/3] syscalls/pipe2_03: Add new test for pipe2
- O_DIRECT flag
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Li Wang <liwang@redhat.com>
-CC:     LTP List <ltp@lists.linux.it>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-References: <1587552329-21738-1-git-send-email-xuyang2018.jy@cn.fujitsu.com>
- <1587552329-21738-3-git-send-email-xuyang2018.jy@cn.fujitsu.com>
- <CAEemH2ea_CtRyP9KtpJDjpEzobRyhrodiycDCAxhLbCjuOwhCQ@mail.gmail.com>
- <662aa817-04ff-e924-6880-7c23fa1cfe31@cn.fujitsu.com>
- <CAEemH2cF-kziNEHuN1GayTtzwdxFFzsu0wRGB85yJ=LaKS-XBw@mail.gmail.com>
- <3268f153-6730-708f-ed93-19ca4cf85fdd@cn.fujitsu.com>
- <CAEemH2ee7c55=EQb5qohpu40XMACSOCrSStwWt7u=_GyqjrxLw@mail.gmail.com>
- <CAHk-=wg7u4AjZQd49VjrZXikDMfK-HchOKHYqoUFwcXjsbJ3XQ@mail.gmail.com>
-From:   Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Message-ID: <36bd1e20-414b-ec24-f7e3-16ef7e2395d9@cn.fujitsu.com>
-Date:   Thu, 30 Apr 2020 11:23:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 29 Apr 2020 23:24:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1588217013; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=GIo2wREN+iNYh7ww3JMjajB8fxE2ua7+9eAs2AL5CT7kU1kY9mZDvCKr6NgwxprjtHBiWDPTiQU771eFHpC+DpbEuxNXXS+sP75I2jBMdaSp1LltXrRti87iOZN8BJPS5cWGdUiVVLaeJe7FrDCQos0NGBLxxGg23EJvizq7dYM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1588217013; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=eLjXJXbz1KqXBB+PX8paWXxS+pm36WZwqQB5RB0gzc4=; 
+        b=kU35dfu1ZfVQUBXZZYa/xnUZyK7EXz20woVjX7+YcIbjQLoSpDdwOvBT9+u6lOMjaYaFA1JZCY/PN60O5Fx7NF0jzGgYPzOrvgVcHa5lEYXcwpGhSTtjzuele+/aawHieY6gLrYbllkD46vSC+Z+EMXu176E8c1rJ4D3TIhFwAM=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1588217013;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=eLjXJXbz1KqXBB+PX8paWXxS+pm36WZwqQB5RB0gzc4=;
+        b=NlihTNgyqLczwA1v+v1MFrPx1/vo9MoD705bQsciEhRGnl7foAbLiH/TLwUNZ9Hk
+        P6egaA6nD1FXiwLWLiHztFWMKVQ5DAes5SX0myXg/8RZLNg4F4yqmHhWeMhUb5JnSWj
+        rkj8EjijCQzYuML/KpfT/MhrqgaJhl1rM9QZ8cKE=
+Received: from [127.0.0.1] (115.205.241.207 [115.205.241.207]) by mx.zoho.com.cn
+        with SMTPS id 1588217010321100.41453220362018; Thu, 30 Apr 2020 11:23:30 +0800 (CST)
+Date:   Thu, 30 Apr 2020 11:23:25 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Huacai Chen <chenhc@lemote.com>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v6] MIPS: Loongson: Add DMA support for LS7A
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1588213867-32274-1-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <E8789D5E-1CBB-4D11-A4B9-16F20A0BE111@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wg7u4AjZQd49VjrZXikDMfK-HchOKHYqoUFwcXjsbJ3XQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.220.84]
-X-ClientProxiedBy: G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) To
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
-X-yoursite-MailScanner-ID: 9166650A996E.AB31D
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus
 
 
-> On Sun, Apr 26, 2020 at 4:59 AM Li Wang <liwang@redhat.com> wrote:
->>
->>  From kernel code seems you are right. The pipe indeed takes use of PAGE_SIZE(ppc64le: 64kB) to split the writes data in the packetized mode (marked by O_DIRECT). But in the manual page, O_DIRECT indicates us the PIPE_BUF is the correct atomic unit.
-> 
-> The manual is correct.
-> 
-> PIPE_BUF is the size we _guarantee_ can be used atomically.
-> 
-> The fact that in practice we do have bigger buffers on some platforms
-> is an implementation detail.
-> 
-> Yes, that implementation detail can be visible, but basically any test
-> code that tries to test for "what if we use a bigger bug that
-> PIPE_BUF" is buggy. It's simply not guaranteed to work any more.
-> 
-> O_DIRECT is kind of immaterial, except it's just one of those things
-> where the atomic size is slightly more visible. But basically,
-> packetized pipes with bigger packets than PIPE_BUF is random behavior.
-> It may work. It may not.
-Thanks for your explanation. I am more curious about the user scene of 
-this flag.
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+0:31:07, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>In the current market, the most used bridge chip on the Loongson
+>platform are RS780E and LS7A, the RS780E bridge chip is already
+>supported by the mainline kernel=2E
+>
+>In order to use the default implementation of __phys_to_dma() and
+>__dma_to_phys() in dma-direct=2Eh, remove CONFIG_ARCH_HAS_PHYS_TO_DMA
+>and then set the bus's DMA limit to 36 bit for RS780E to maintain
+>downward compatibility=2E
+>
+>Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
+>---
+>
+>Hi Christoph and Jiaxun,
+>
+>Thank you very much for your suggestions=2E
 
-@Li, so how to design this test? In this test, we don't have complex 
-scene to test this automic unit.
+I'm probably going to refine this before we implement full devicetree boot=
+,
+but that's in far future=2E
 
-Best Regards
-Yang Xu
-> 
->                  Linus
-> 
-> 
+LGTM to me for now=2E
 
+Thanks=2E
 
+Reviewed-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+
+>
+>v5:
+>  - use the default implementation of __phys_to_dma()
+>    and __dma_to_phys() in dma-direct=2Eh
+>
+>v6:
+>  - make loongson_dma_config() static
+>  - put ls7a things before rs780 things
+>
+> arch/mips/Kconfig                                  |  1 -
+> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  5 +++++
+> arch/mips/loongson64/dma=2Ec                         | 22 +++++++++++---=
+--------
+> arch/mips/loongson64/env=2Ec                         |  2 ++
+> 4 files changed, 18 insertions(+), 12 deletions(-)
+>
+>diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>index 9f15539=2E=2E12b6bdb 100644
+>--- a/arch/mips/Kconfig
+>+++ b/arch/mips/Kconfig
+>@@ -1454,7 +1454,6 @@ choice
+> config CPU_LOONGSON64
+> 	bool "Loongson 64-bit CPU"
+> 	depends on SYS_HAS_CPU_LOONGSON64
+>-	select ARCH_HAS_PHYS_TO_DMA
+> 	select CPU_MIPSR2
+> 	select CPU_HAS_PREFETCH
+> 	select CPU_SUPPORTS_64BIT_KERNEL
+>diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh b/arch/=
+mips/include/asm/mach-loongson64/boot_param=2Eh
+>index f082d87=2E=2E0c07a96 100644
+>--- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>+++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>@@ -197,6 +197,7 @@ enum loongson_bridge_type {
+> 	RS780E =3D 2
+> };
+>=20
+>+struct pci_dev;
+> struct loongson_system_configuration {
+> 	u32 nr_cpus;
+> 	u32 nr_nodes;
+>@@ -221,9 +222,13 @@ struct loongson_system_configuration {
+> 	u32 nr_sensors;
+> 	struct sensor_device sensors[MAX_SENSORS];
+> 	u64 workarounds;
+>+	void (*dma_config)(struct pci_dev *pdev);
+> };
+>=20
+> extern struct efi_memory_map_loongson *loongson_memmap;
+> extern struct loongson_system_configuration loongson_sysconf;
+>=20
+>+extern void ls7a_dma_config(struct pci_dev *pdev);
+>+extern void rs780e_dma_config(struct pci_dev *pdev);
+>+
+> #endif
+>diff --git a/arch/mips/loongson64/dma=2Ec b/arch/mips/loongson64/dma=2Ec
+>index 5e86635=2E=2Eef40b0d 100644
+>--- a/arch/mips/loongson64/dma=2Ec
+>+++ b/arch/mips/loongson64/dma=2Ec
+>@@ -1,24 +1,24 @@
+> // SPDX-License-Identifier: GPL-2=2E0
+>-#include <linux/dma-direct=2Eh>
+>+#include <linux/pci=2Eh>
+> #include <linux/init=2Eh>
+> #include <linux/swiotlb=2Eh>
+>=20
+>-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+>+void ls7a_dma_config(struct pci_dev *pdev)
+> {
+>-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+>-	 * Loongson-3's 48bit address space and embed it into 40bit */
+>-	long nid =3D (paddr >> 44) & 0x3;
+>-	return ((nid << 44) ^ paddr) | (nid << 37);
+> }
+>=20
+>-phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
+>+void rs780e_dma_config(struct pci_dev *pdev)
+> {
+>-	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+>-	 * Loongson-3's 48bit address space and embed it into 40bit */
+>-	long nid =3D (daddr >> 37) & 0x3;
+>-	return ((nid << 37) ^ daddr) | (nid << 44);
+>+	pdev->dev=2Ebus_dma_limit =3D DMA_BIT_MASK(36);
+> }
+>=20
+>+static void loongson_dma_config(struct pci_dev *pdev)
+>+{
+>+	loongson_sysconf=2Edma_config(pdev);
+>+}
+>+
+>+DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, loongson_dma_config);
+>+
+> void __init plat_swiotlb_setup(void)
+> {
+> 	swiotlb_init(1);
+>diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=2Ec
+>index 71f4aaf=2E=2E496f401 100644
+>--- a/arch/mips/loongson64/env=2Ec
+>+++ b/arch/mips/loongson64/env=2Ec
+>@@ -192,8 +192,10 @@ void __init prom_init_env(void)
+> 	if (vendor =3D=3D PCI_VENDOR_ID_LOONGSON && device =3D=3D 0x7a00) {
+> 		pr_info("The bridge chip is LS7A\n");
+> 		loongson_sysconf=2Ebridgetype =3D LS7A;
+>+		loongson_sysconf=2Edma_config =3D ls7a_dma_config;
+> 	} else {
+> 		pr_info("The bridge chip is RS780E or SR5690\n");
+> 		loongson_sysconf=2Ebridgetype =3D RS780E;
+>+		loongson_sysconf=2Edma_config =3D rs780e_dma_config;
+> 	}
+> }
+
+--=20
+Jiaxun Yang
