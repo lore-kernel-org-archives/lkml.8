@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9434DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE9DC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 735D32074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A588020870
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 22:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ks5peESQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="efQJcaoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgD3WNe (ORCPT
+        id S1727948AbgD3WNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 18:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49330 "EHLO
+        Thu, 30 Apr 2020 18:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgD3WNc (ORCPT
+        with ESMTP id S1727865AbgD3WNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:13:32 -0400
+        Thu, 30 Apr 2020 18:13:33 -0400
 Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E4AC035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id s9so4831922qkm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EC6C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:33 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 23so7571231qkf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1eX7WSK+5t5gndojFUhLnWThbbKlBFG3tYGdIpF55Xw=;
-        b=ks5peESQSMAP6mY2kYfPMOd79E2Eo9HhU4hymwuP408laGbs3/CSQho1C9UKZzUJes
-         Xs8/wUEc+G9aBGnCSbiqbZoESQNDCLqPLTja+Hu3cGlcX+hku+LAUUltTeC6NbbpWPum
-         EAYB541Wf5S0wAd/yy1xuCAqH04URkMgJYpvUTkeT8AYzYTifFCwEiYPtAKL7okAgT3O
-         EBJMFjVOlXTPfuF9yFFXYXa0U5Az+idqTbj0CbyPYkOWrQ3TRmMpeveUDFkmKS1cG4Nb
-         3tBr4zb6muxFs8j2yI6yuJNH50PjfkDVWpSYzf9J9WtICxJgJcuuAvCErYB6mO/kLE+1
-         zD2Q==
+        bh=gN/TqDhg8bNL/QeGTI+szQXKqV9fUbqEbuIp2Eu9bQs=;
+        b=efQJcaoasuYbZGC9B1Cx8MFELGozCD/WNm7f4tVvAxGMZbLr5cQowkmZoWV8bT33aa
+         V+8vumksqodYEmlLzoPh9MvJBtSuJ19WPed3OYWZdoVaJtNF9ILpLbShTGjhiJurVbZS
+         ZFtGEMFF4bs4XMlq6hG2XanW6HJICjTYTkljQ/qI7dWwgeg09VTX7aJYS9qiaudiM0x0
+         +QUhsE1kg1TEdxICFtVFmprmr3gVjgjVvs9o0NHi3sKaUSsOpJSXDNhMGoHnALu3g33g
+         N7i0wHbn0whEjzqsVPtWA837n0VOU6AJWgwwxtrRvycCbaJgQCz8YaEMOP3Vl8OQ+Pfk
+         0Xxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1eX7WSK+5t5gndojFUhLnWThbbKlBFG3tYGdIpF55Xw=;
-        b=Y/jCrfeftRKC0MAc9RW5vdI2+PeLu8iwxKtmdNgbICF64Gdvi2UJAhDP1YI9F3ZNNc
-         Axoz97IjmfQg67i033ecsZIVwrSCBvyGtj2RVeBbJKaQtZKU19+TGdmkiIyKU+niAER7
-         xD4wO9xDXuJCUF38V/qQ98FHQl7tsMe9T7j7iliVZtAXnr6mKtv6lBHphy+yeUMSVD2D
-         4LP0GC8HJY44QLpGXuoDuMBwnNyg+UCXFeODvC3W8gAz9qi0AD/2+yYBnastm+8zm3Co
-         nnl40o06lzyMVWv6aNvzNr3oKF925LAL2t7MF9ZZLJqWMHMf45hRV4/jWu1qUL2CaKfb
-         G+3w==
-X-Gm-Message-State: AGi0PuYI5iHtNt4K3hbEtMdqCfX+YITeNYmSGEaNDnlrYfNlrFyROoL7
-        sz4GKdr+9pfq37cJgTJQ6CpWqFVEsXM=
-X-Google-Smtp-Source: APiQypI8kggB1A0qQmfq8hwvIIINcSUXJaqfoU3LwqJLGrR9yx3XKlkQsTZfYm2YLsiturKSmp7T2Q==
-X-Received: by 2002:a05:620a:c8c:: with SMTP id q12mr781886qki.74.1588284811293;
-        Thu, 30 Apr 2020 15:13:31 -0700 (PDT)
+        bh=gN/TqDhg8bNL/QeGTI+szQXKqV9fUbqEbuIp2Eu9bQs=;
+        b=t3uacbqC4jbVKyy9VnLWn62QE3maHTXntTRA0AySr1/OWuNjzJec+sCtCMF9Ld2nSf
+         v3ad3x8IxERqAWuN6nF8ke9E2yoZ4jRF8+4ByANJZVQuZxHV5f5rNQ8lOkNkTVVKmRK/
+         pXBdkbd+069sBEcTVMaZWlVv6YxmiAHU+KDXZ7vcrq9rVzr6vE86ASWiB31+yG8Gpjjt
+         qw366NdQCL8yriyDlPZDk3WH6E+e7kw08OjX4tsvH7M0OGbjgql+qGNoWWGPBJ6wCaIB
+         gQ8X9c64sY7CLIc7N//WSgqVeIrAX458+/kzdxXbt2+73lJ+5eSFAC2KjMnrBdBiwmMj
+         Qzkg==
+X-Gm-Message-State: AGi0PuZqPVC6oeTOE/wBXE71qoVM6+rAPK/L35NUEMh4Wwgq7Bvbn2j/
+        saXIX6p86iUaI6f4qoaN5lcfnE/1sn0=
+X-Google-Smtp-Source: APiQypIMKneW4EY2z2hCYzqlrFH8vXgyuwASAjiN2i/Dm7XHyah3kzMKKNW8h1QpwFM9PnSlvOcM0g==
+X-Received: by 2002:a37:bd81:: with SMTP id n123mr717459qkf.57.1588284812686;
+        Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
 Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id w42sm957028qtj.63.2020.04.30.15.13.29
+        by smtp.gmail.com with ESMTPSA id w42sm957028qtj.63.2020.04.30.15.13.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 15:13:30 -0700 (PDT)
+        Thu, 30 Apr 2020 15:13:32 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net
 Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/2] net: ipa: pass channel pointer to gsi_channel_state()
-Date:   Thu, 30 Apr 2020 17:13:22 -0500
-Message-Id: <20200430221323.5449-2-elder@linaro.org>
+Subject: [PATCH net-next 2/2] net: ipa: do not cache channel state
+Date:   Thu, 30 Apr 2020 17:13:23 -0500
+Message-Id: <20200430221323.5449-3-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430221323.5449-1-elder@linaro.org>
 References: <20200430221323.5449-1-elder@linaro.org>
@@ -77,53 +77,250 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass a channel pointer rather than a GSI pointer and channel ID to
-gsi_channel_state().
+It is possible for a GSI channel's state to be changed as a result
+of an action by a different execution environment.  Specifically,
+the modem is able to issue a GSI generic command that causes a state
+change on a GSI channel associated with the AP.
+
+A channel's state only needs to be known when a channel is allocated
+or deallocaed, started or stopped, or reset.  So there is little
+value in caching the state anyway.
+
+Stop recording a copy of the channel's last known state, and instead
+fetch the true state from hardware whenever it's needed.  In such
+cases, *do* record the state in a local variable, in case an error
+message reports it (so the value reported is the value seen).
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/gsi.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ipa/gsi.c | 87 +++++++++++++++++++++++++++----------------
+ drivers/net/ipa/gsi.h |  3 +-
+ 2 files changed, 55 insertions(+), 35 deletions(-)
 
 diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
-index 845478a19a4f..6946c39b664a 100644
+index 6946c39b664a..8184d34124b7 100644
 --- a/drivers/net/ipa/gsi.c
 +++ b/drivers/net/ipa/gsi.c
-@@ -416,12 +416,13 @@ static void gsi_evt_ring_de_alloc_command(struct gsi *gsi, u32 evt_ring_id)
+@@ -415,7 +415,7 @@ static void gsi_evt_ring_de_alloc_command(struct gsi *gsi, u32 evt_ring_id)
+ 			evt_ring->state);
  }
  
- /* Return the hardware's notion of the current state of a channel */
--static enum gsi_channel_state
--gsi_channel_state(struct gsi *gsi, u32 channel_id)
-+static enum gsi_channel_state gsi_channel_state(struct gsi_channel *channel)
+-/* Return the hardware's notion of the current state of a channel */
++/* Fetch the current state of a channel from hardware */
+ static enum gsi_channel_state gsi_channel_state(struct gsi_channel *channel)
  {
-+	u32 channel_id = gsi_channel_id(channel);
-+	void *virt = channel->gsi->virt;
+ 	u32 channel_id = gsi_channel_id(channel);
+@@ -433,16 +433,18 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
+ {
+ 	struct completion *completion = &channel->completion;
+ 	u32 channel_id = gsi_channel_id(channel);
++	struct gsi *gsi = channel->gsi;
  	u32 val;
  
--	val = ioread32(gsi->virt + GSI_CH_C_CNTXT_0_OFFSET(channel_id));
-+	val = ioread32(virt + GSI_CH_C_CNTXT_0_OFFSET(channel_id));
+ 	val = u32_encode_bits(channel_id, CH_CHID_FMASK);
+ 	val |= u32_encode_bits(opcode, CH_OPCODE_FMASK);
  
- 	return u32_get_bits(val, CHSTATE_FMASK);
+-	if (gsi_command(channel->gsi, GSI_CH_CMD_OFFSET, val, completion))
++	if (gsi_command(gsi, GSI_CH_CMD_OFFSET, val, completion))
+ 		return 0;	/* Success! */
+ 
+-	dev_err(channel->gsi->dev, "GSI command %u to channel %u timed out "
+-		"(state is %u)\n", opcode, channel_id, channel->state);
++	dev_err(gsi->dev,
++		"GSI command %u to channel %u timed out (state is %u)\n",
++		opcode, channel_id, gsi_channel_state(channel));
+ 
+ 	return -ETIMEDOUT;
  }
-@@ -453,7 +454,7 @@ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
+@@ -451,18 +453,21 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
+ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
+ {
+ 	struct gsi_channel *channel = &gsi->channel[channel_id];
++	enum gsi_channel_state state;
  	int ret;
  
  	/* Get initial channel state */
--	channel->state = gsi_channel_state(gsi, channel_id);
-+	channel->state = gsi_channel_state(channel);
- 
- 	if (channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
+-	channel->state = gsi_channel_state(channel);
+-
+-	if (channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
++	state = gsi_channel_state(channel);
++	if (state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
  		return -EINVAL;
-@@ -940,7 +941,7 @@ static void gsi_isr_chan_ctrl(struct gsi *gsi)
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_ALLOCATE);
+-	if (!ret && channel->state != GSI_CHANNEL_STATE_ALLOCATED) {
++
++	/* Channel state will normally have been updated */
++	state = gsi_channel_state(channel);
++	if (!ret && state != GSI_CHANNEL_STATE_ALLOCATED) {
+ 		dev_err(gsi->dev, "bad channel state (%u) after alloc\n",
+-			channel->state);
++			state);
+ 		ret = -EIO;
+ 	}
+ 
+@@ -472,18 +477,21 @@ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
+ /* Start an ALLOCATED channel */
+ static int gsi_channel_start_command(struct gsi_channel *channel)
+ {
+-	enum gsi_channel_state state = channel->state;
++	enum gsi_channel_state state;
+ 	int ret;
+ 
++	state = gsi_channel_state(channel);
+ 	if (state != GSI_CHANNEL_STATE_ALLOCATED &&
+ 	    state != GSI_CHANNEL_STATE_STOPPED)
+ 		return -EINVAL;
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_START);
+-	if (!ret && channel->state != GSI_CHANNEL_STATE_STARTED) {
++
++	/* Channel state will normally have been updated */
++	state = gsi_channel_state(channel);
++	if (!ret && state != GSI_CHANNEL_STATE_STARTED) {
+ 		dev_err(channel->gsi->dev,
+-			"bad channel state (%u) after start\n",
+-			channel->state);
++			"bad channel state (%u) after start\n", state);
+ 		ret = -EIO;
+ 	}
+ 
+@@ -493,23 +501,27 @@ static int gsi_channel_start_command(struct gsi_channel *channel)
+ /* Stop a GSI channel in STARTED state */
+ static int gsi_channel_stop_command(struct gsi_channel *channel)
+ {
+-	enum gsi_channel_state state = channel->state;
++	enum gsi_channel_state state;
+ 	int ret;
+ 
++	state = gsi_channel_state(channel);
+ 	if (state != GSI_CHANNEL_STATE_STARTED &&
+ 	    state != GSI_CHANNEL_STATE_STOP_IN_PROC)
+ 		return -EINVAL;
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_STOP);
+-	if (ret || channel->state == GSI_CHANNEL_STATE_STOPPED)
++
++	/* Channel state will normally have been updated */
++	state = gsi_channel_state(channel);
++	if (ret || state == GSI_CHANNEL_STATE_STOPPED)
+ 		return ret;
+ 
+ 	/* We may have to try again if stop is in progress */
+-	if (channel->state == GSI_CHANNEL_STATE_STOP_IN_PROC)
++	if (state == GSI_CHANNEL_STATE_STOP_IN_PROC)
+ 		return -EAGAIN;
+ 
+-	dev_err(channel->gsi->dev, "bad channel state (%u) after stop\n",
+-		channel->state);
++	dev_err(channel->gsi->dev,
++		"bad channel state (%u) after stop\n", state);
+ 
+ 	return -EIO;
+ }
+@@ -517,41 +529,49 @@ static int gsi_channel_stop_command(struct gsi_channel *channel)
+ /* Reset a GSI channel in ALLOCATED or ERROR state. */
+ static void gsi_channel_reset_command(struct gsi_channel *channel)
+ {
++	enum gsi_channel_state state;
+ 	int ret;
+ 
+ 	msleep(1);	/* A short delay is required before a RESET command */
+ 
+-	if (channel->state != GSI_CHANNEL_STATE_STOPPED &&
+-	    channel->state != GSI_CHANNEL_STATE_ERROR) {
++	state = gsi_channel_state(channel);
++	if (state != GSI_CHANNEL_STATE_STOPPED &&
++	    state != GSI_CHANNEL_STATE_ERROR) {
+ 		dev_err(channel->gsi->dev,
+-			"bad channel state (%u) before reset\n",
+-			channel->state);
++			"bad channel state (%u) before reset\n", state);
+ 		return;
+ 	}
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_RESET);
+-	if (!ret && channel->state != GSI_CHANNEL_STATE_ALLOCATED)
++
++	/* Channel state will normally have been updated */
++	state = gsi_channel_state(channel);
++	if (!ret && state != GSI_CHANNEL_STATE_ALLOCATED)
+ 		dev_err(channel->gsi->dev,
+-			"bad channel state (%u) after reset\n",
+-			channel->state);
++			"bad channel state (%u) after reset\n", state);
+ }
+ 
+ /* Deallocate an ALLOCATED GSI channel */
+ static void gsi_channel_de_alloc_command(struct gsi *gsi, u32 channel_id)
+ {
+ 	struct gsi_channel *channel = &gsi->channel[channel_id];
++	enum gsi_channel_state state;
+ 	int ret;
+ 
+-	if (channel->state != GSI_CHANNEL_STATE_ALLOCATED) {
+-		dev_err(gsi->dev, "bad channel state (%u) before dealloc\n",
+-			channel->state);
++	state = gsi_channel_state(channel);
++	if (state != GSI_CHANNEL_STATE_ALLOCATED) {
++		dev_err(gsi->dev,
++			"bad channel state (%u) before dealloc\n", state);
+ 		return;
+ 	}
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_DE_ALLOC);
+-	if (!ret && channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
+-		dev_err(gsi->dev, "bad channel state (%u) after dealloc\n",
+-			channel->state);
++
++	/* Channel state will normally have been updated */
++	state = gsi_channel_state(channel);
++	if (!ret && state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
++		dev_err(gsi->dev,
++			"bad channel state (%u) after dealloc\n", state);
+ }
+ 
+ /* Ring an event ring doorbell, reporting the last entry processed by the AP.
+@@ -778,6 +798,7 @@ int gsi_channel_start(struct gsi *gsi, u32 channel_id)
+ int gsi_channel_stop(struct gsi *gsi, u32 channel_id)
+ {
+ 	struct gsi_channel *channel = &gsi->channel[channel_id];
++	enum gsi_channel_state state;
+ 	u32 retries;
+ 	int ret;
+ 
+@@ -787,7 +808,8 @@ int gsi_channel_stop(struct gsi *gsi, u32 channel_id)
+ 	 * STOP command timed out.  We won't stop a channel if stopping it
+ 	 * was successful previously (so we still want the freeze above).
+ 	 */
+-	if (channel->state == GSI_CHANNEL_STATE_STOPPED)
++	state = gsi_channel_state(channel);
++	if (state == GSI_CHANNEL_STATE_STOPPED)
+ 		return 0;
+ 
+ 	/* RX channels might require a little time to enter STOPPED state */
+@@ -941,7 +963,6 @@ static void gsi_isr_chan_ctrl(struct gsi *gsi)
  		channel_mask ^= BIT(channel_id);
  
  		channel = &gsi->channel[channel_id];
--		channel->state = gsi_channel_state(gsi, channel_id);
-+		channel->state = gsi_channel_state(channel);
+-		channel->state = gsi_channel_state(channel);
  
  		complete(&channel->completion);
  	}
+diff --git a/drivers/net/ipa/gsi.h b/drivers/net/ipa/gsi.h
+index 0698ff1ae7a6..19471017fadf 100644
+--- a/drivers/net/ipa/gsi.h
++++ b/drivers/net/ipa/gsi.h
+@@ -113,8 +113,7 @@ struct gsi_channel {
+ 	u16 tre_count;
+ 	u16 event_count;
+ 
+-	struct completion completion;	/* signals channel state changes */
+-	enum gsi_channel_state state;
++	struct completion completion;	/* signals channel command completion */
+ 
+ 	struct gsi_ring tre_ring;
+ 	u32 evt_ring_id;
 -- 
 2.20.1
 
