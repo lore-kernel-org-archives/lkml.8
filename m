@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5519C28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A03C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5FDE206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6D12063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255488;
-	bh=EturXDdmuhBBBinF/mcrRmdf5FdYX9aTc5Zb5f3bQPE=;
+	s=default; t=1588255500;
+	bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfDFrBJrq5aw1y7D9JiAS/sBM7g2HOahSSW5yAibTdnSHB2uE23miaSToPJeFEz28
-	 C4Ga+lVp+zVN4nMvAcdDWJ1RlI9vTSjD6SY+Z5lErgNd7dTEqDbNPwo2XiuCcOlTfA
-	 Fjhk0XCTN8U1NWipJO45yjLAGUq+2fAWakgLWq/o=
+	b=sMwqdQVgYOTaoIz8rBdHgVQuwAyQZs4SlVDTqFRxDKS0W9iLr6OPVT2K9geT4COfw
+	 IBg85Ign0Clg977mqZUPvMSA5RlenwPP1wdWJoSuW9xIgnS6VtQ6PK5UTQ/BLim6bb
+	 0tJFck73ylMeX6deeE2+aXM053hT/Smc7xwXH4/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgD3OEr (ORCPT
+        id S1729413AbgD3OE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34900 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbgD3NxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:13 -0400
+        id S1728630AbgD3NxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A26D2137B;
-        Thu, 30 Apr 2020 13:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B4E24959;
+        Thu, 30 Apr 2020 13:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254793;
-        bh=EturXDdmuhBBBinF/mcrRmdf5FdYX9aTc5Zb5f3bQPE=;
+        s=default; t=1588254787;
+        bh=xUP8nxxbfEiFVfmUm/ZNgJa028UtvfzI9OYN6ITAbVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Az2be7myn6ZV37jfiIFLevr4PGUcVSsQ4XMgpa0F42iMTPcYnGRuAVodkoeutxwxc
-         EbJ8qaCKgwRYn/Dl+Gn1l53InIhvepoKTe7AQfKJI3WLayGcWMNBqvKHY7dr7haF4N
-         +2mAIwfqSM8tpMHoiE2JWDKIvooIJTye441I5R4o=
+        b=w1c91Srg5MJOQh+DNkVI6dzuZeY4MbGeIpeQlvB1Q99cw6xUw4WgEhUWo+th3mvLa
+         DKCqCZxWrk5BbG+sWq4oYPIHAu4ieL1Y/PM8eg0qLtQ+vNeRhdGHbh6WiFFaqUzZ19
+         5MxepPPaEPDh9ClLCkYbkhCeGFH3L0Y8tzCFFKrk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        Theodore Ts'o <tytso@mit.edu>,
+Cc:     "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        user-mode-linux-devel@lists.sourceforge.net,
-        user-mode-linux-user@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 48/57] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
-Date:   Thu, 30 Apr 2020 09:52:09 -0400
-Message-Id: <20200430135218.20372-48-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 43/57] scripts/config: allow colons in option strings for sed
+Date:   Thu, 30 Apr 2020 09:52:04 -0400
+Message-Id: <20200430135218.20372-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -63,60 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitor Massaru Iha <vitor@massaru.org>
+From: "Jeremie Francois (on alpha)" <jeremie.francois@gmail.com>
 
-[ Upstream commit 63ec90f18204f2fe072df108de8a021b28b1b173 ]
+[ Upstream commit e461bc9f9ab105637b86065d24b0b83f182d477c ]
 
-In this workflow:
+Sed broke on some strings as it used colon as a separator.
+I made it more robust by using \001, which is legit POSIX AFAIK.
 
-$ make ARCH=um defconfig && make ARCH=um -j8
-  [snip]
-$ make ARCH=um mrproper
-  [snip]
-$ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
-  [snip]
-  CC      scripts/mod/empty.o
-In file included from ../include/linux/types.h:6,
-                 from ../include/linux/mod_devicetable.h:12,
-                 from ../scripts/mod/devicetable-offsets.c:3:
-../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
-    5 | #include <asm/types.h>
-      |          ^~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
-make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
-make: *** [Makefile:180: sub-make] Error 2
+E.g. ./config --set-str CONFIG_USBNET_DEVADDR "de:ad:be:ef:00:01"
+failed with: sed: -e expression #1, char 55: unknown option to `s'
 
-The cause of the error was because arch/$(SUBARCH)/include/generated files
-weren't properly cleaned by `make ARCH=um mrproper`.
-
-Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
-Reported-by: Theodore Ts'o <tytso@mit.edu>
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
-Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
+Signed-off-by: Jeremie Francois (on alpha) <jeremie.francois@gmail.com>
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/config | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index d2daa206872da..275f5ffdf6f0a 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE)
- # When cleaning we don't include .config, so we don't include
- # TT or skas makefiles and don't clean skas_ptregs.h.
- CLEAN_FILES += linux x.i gmon.out
-+MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
+diff --git a/scripts/config b/scripts/config
+index e0e39826dae90..eee5b7f3a092a 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -7,6 +7,9 @@ myname=${0##*/}
+ # If no prefix forced, use the default CONFIG_
+ CONFIG_="${CONFIG_-CONFIG_}"
  
- archclean:
- 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
++# We use an uncommon delimiter for sed substitutions
++SED_DELIM=$(echo -en "\001")
++
+ usage() {
+ 	cat >&2 <<EOL
+ Manipulate options in a .config file from the command line.
+@@ -83,7 +86,7 @@ txt_subst() {
+ 	local infile="$3"
+ 	local tmpfile="$infile.swp"
+ 
+-	sed -e "s:$before:$after:" "$infile" >"$tmpfile"
++	sed -e "s$SED_DELIM$before$SED_DELIM$after$SED_DELIM" "$infile" >"$tmpfile"
+ 	# replace original file with the edited one
+ 	mv "$tmpfile" "$infile"
+ }
 -- 
 2.20.1
 
