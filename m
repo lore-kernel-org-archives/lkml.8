@@ -2,137 +2,98 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EDDC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBB8C8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7EB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5D32076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:02:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CfAOSB/T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgD3NBc (ORCPT
+        id S1726910AbgD3NCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:01:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47716 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgD3NBb (ORCPT
+        Thu, 30 Apr 2020 09:02:52 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41984 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726858AbgD3NCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:01:31 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0FBF32726E2;
-        Thu, 30 Apr 2020 14:01:28 +0100 (BST)
-Date:   Thu, 30 Apr 2020 15:01:24 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
-        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
-        brendanhiggins@google.com, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        tglx@linutronix.de, qi-ming.wu@intel.com,
-        andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200430150124.7856d112@collabora.com>
-In-Reply-To: <20200430143600.27031639@collabora.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-        <20200429164832.6800fc70@collabora.com>
-        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-        <20200429173107.5c6d2f55@collabora.com>
-        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
-        <20200430102114.29b6552f@collabora.com>
-        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
-        <20200430103658.4b0b979e@collabora.com>
-        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
-        <20200430143600.27031639@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Apr 2020 09:02:51 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UCud98000602;
+        Thu, 30 Apr 2020 15:02:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=G7h8AzfZwKdIVVqnwoi+7u4RZDwQmbncb62w6zU4zF4=;
+ b=CfAOSB/TtODRLdUy16Dhpptqdw/dVCiwq13NrLdtyKGHs8oJ2Hp3HwYN96yXTBDMpUL/
+ CtHPSwJqbAxu8QCBi+vS5ftIVP1B/uZhzI9Dklcmk+WCjxdkMvc3q0+iHL+56Sw7TDBs
+ oojL2srpfO3DPFwwmHFUdJxbrRxJTZ0PZLezEOxHFacRIaG9lUiICbdfMdamFQ1VW8AO
+ FUf2mv35I9wKMcuhgXIDi5UB6dynRABQO8sRO4x4jT/ORaLvKMISbazFs9yvQOsVd/bW
+ xxk3fS18naeBVXLKjfJHsfG4ex1u8YAnCMEJAXSLPY0n0Qwfp70+YOcZPWtOy1Qly0i7 pg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30mhjx4h13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 15:02:37 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EC46C10002A;
+        Thu, 30 Apr 2020 15:02:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B23CB2D377A;
+        Thu, 30 Apr 2020 15:02:36 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 30 Apr 2020 15:02:36
+ +0200
+From:   Pascal Paillet <p.paillet@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <p.paillet@st.com>
+Subject: [PATCH] ARM: dts: stm32: Enable thermal sensor support on stm32mp15xx-dkx
+Date:   Thu, 30 Apr 2020 15:02:35 +0200
+Message-ID: <20200430130235.23979-1-p.paillet@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_08:2020-04-30,2020-04-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 14:36:00 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Enable STM32 Digital Thermal Sensor driver for stm32mp15xx-dkx boards.
 
-> On Thu, 30 Apr 2020 17:07:03 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
-> > >>> The question is, is it the same value we have in nand_pa or it is
-> > >>> different?
-> > >>>        
-> > >> Different address which is 0xE1400000 NAND_BASE_PHY address.    
-> > > 
-> > > Then why didn't you tell me they didn't match when I suggested to pass    
-> > 
-> > sorry, because you keep asking nand_pa after that only I realized that.
-> >   
-> > > nand_pa? So now the question is, what does this address represent?    
-> > 
-> >                 EBU-MODULE
-> >   _________     _______________________
-> > |         |   |            |NAND CTRL  |
-> > | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
-> > |_________|   |_CS1(0x17C)_|__________ |
-> > 
-> > EBU_CONRTROLLER_BASE : 0xE0F0_0000
-> > HSNAND_BASE: 0xE100_0000
-> > NAND_CS0: 0xE140_0000
-> > NAND_CS1: 0xE1C0_0000
-> > 
-> > MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
-> > MEM_REGION_BASE_CS1: 0x17C00
-> >   
-> 
-> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
-> address translation. Something like
-> 
-> 	ebu@xxx {
-> 		ranges = <0x17400000 0xe1400000 0x1000>,
-> 			 <0x17c00000 0xe1c00000 0x1000>;
-> 		reg = <0x17400000>, <0x17c00000>;
-> 		reg-names = "cs-0", "cs-1";
-> 	}
-> 
-> The translated address (0xE1X00000) will be available in res->start,
-> and the non-translated one (0x17X00000) can be retrieved with
-> of_get_address(). All you'd have to do then would be calculate the
-> mask:
-> 
-> 	mask = (translated_address & original_address) >> 22;
-> 	num_comp_bits = fls(mask);
-> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
-> 
-> Which allows you to properly set the ADDR_SEL() register without
-> relying on some hardcoded values:
-> 
-> 	writel(original_address | EBU_ADDR_SEL_REGEN |
-> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
-> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
-> 
-> That's quite important if we want to merge the xway NAND driver with
-> this one.
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
+---
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Looks like the translation is done at the FPI bus declaration level (see
-[1]). We really need to see the big picture to take a wise decision
-about the bindings. Would you mind pasting your dsti/dts files
-somewhere? It feels like the NAND controller is a sub-part of a more
-generic 'memory' controller, in which case the NAND controller should be
-declared as a child of this generic memory bus (called localbus in [1],
-but maybe EBU is more accurate).
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index f6672e87aef3..203f7742e054 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -116,6 +116,10 @@
+ 	status = "okay";
+ };
+ 
++&dts {
++	status = "okay";
++};
++
+ &ethernet0 {
+ 	status = "okay";
+ 	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+-- 
+2.17.1
 
-[1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162
