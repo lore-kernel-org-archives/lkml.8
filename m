@@ -2,271 +2,237 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DED2C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D99C8300D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61EE20757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:08:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="hGDtEUGT"
+	by mail.kernel.org (Postfix) with ESMTP id 77E6C20757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588248506;
+	bh=YyBLLWLpFjb7adMOuHtpkyiUlOgZgh/648rPnhjJOGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Pl92NPgkSqEoLUGc5/t9QDtn0AO+4MMMtq5buKUf+NV3lUtXpVF60pbUFaykJJYX/
+	 UEzHkNezT2QFVQTnNbyNOX7yRRgFgxK5e9ylP4w8VvhDTTksnaRobY6sWaOLfkpIR8
+	 3GQmhCE8xbaBIzOwgB8olbtHSR8yUxrZvfAiZcxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgD3MIU (ORCPT
+        id S1726907AbgD3MIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:08:20 -0400
-Received: from mail-eopbgr20099.outbound.protection.outlook.com ([40.107.2.99]:43550
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbgD3MIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:08:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hpxxX63AxUX8TJG9HwHSrgGlB4eMpmzuMws/5SlNAALUtO0/hAmnLM776/nqBK2LRoWFh9ivTtXNT5BiAQiqetmBRg5aqd/zbJiqyBkoRcruWeszhaQAj4q1D0Hks5f1ZY3jqUwr7j6TdH67ML54RcVaxwFS0O2ej8NyKMIiI85wwxivam1Mc7csKNlxadhamH9TIFwB8B3n0iVNum4cxmvcOHGM/+Ig5bS5SLjzns5GaW3VugA3YAgvHZshPYpz6N6gPw9LcqXCjnn67VHFcW22sLX4qaN6eB92O1s1yNhYv1HOS2tOUFDkK125sr+mMvXO5pLEgsXzdelCqydUgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OEMfe4hYHuBOKEQdWTH0jSbeLPEoFZO3toXxt1GUlCE=;
- b=BlcBNcMdlXyuAu06k8RHZAJrB4YJkB1xe455C/bEVvlr9ZQhZyzdjnVo5pDUvS8gLt7Rt9RgpDKNz84uTQWE1TIjAVlrUBTXjHCfYuN+1YtmJOM4xb9iJD6r4Evby8UbTflsH/8EjNRXoU4tXQnA+fA0/lRsZA0uR2qc0nz6zxvygQcwtxU0zD04JkZpJb2B/VwlBzuCaKkkOD5993sftlHFKuR1cAakg1dzywXo2/t9rxpiJw6EPZrJvvQOcjZohv6Ia2gpo7N9bQspoEcNpcXMfYASL7z8dzN5PH89aljk44Q67+118nPQhP1iYEYv+2cxjPXb9OqgQq0myEZGNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OEMfe4hYHuBOKEQdWTH0jSbeLPEoFZO3toXxt1GUlCE=;
- b=hGDtEUGT94GOE12oSGZmqo6mNH3mWulKMaDvA2PMjHFw1iyDL3SpDJSeW79Rqikr/F/kAaWGVt/0mWb1msuMy+Cjzai/ka0qWmDzEZouwzp47T4IV34Gj0FBdEkFf/PpWOYey8nHkejufR3txyvLL4VAUXxqPMniEHh2x0Ov8Sk=
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
- by AM6PR05MB6406.eurprd05.prod.outlook.com (2603:10a6:20b:ba::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 30 Apr
- 2020 12:08:13 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::d8d3:ead7:9f42:4289]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::d8d3:ead7:9f42:4289%6]) with mapi id 15.20.2937.026; Thu, 30 Apr 2020
- 12:08:12 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "dillon.minfei@gmail.com" <dillon.minfei@gmail.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/4] add dts node for drm panel driver ili9341 add dts
- i2c3 for stmpe touch add dts spi5 for gyro & ili9341
-Thread-Topic: [PATCH 1/4] add dts node for drm panel driver ili9341 add dts
- i2c3 for stmpe touch add dts spi5 for gyro & ili9341
-Thread-Index: AQHWHtPQcu2Kwv/dlEOyNcbWh0jzrqiRkmIA
-Date:   Thu, 30 Apr 2020 12:08:12 +0000
-Message-ID: <ff10728da646106d54182ce6db93a77f32b592d5.camel@toradex.com>
-References: <1588239802-11442-1-git-send-email-dillon.minfei@gmail.com>
-In-Reply-To: <1588239802-11442-1-git-send-email-dillon.minfei@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.2 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=toradex.com;
-x-originating-ip: [51.154.7.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 06b9d916-73a4-4629-edd3-08d7ecff2818
-x-ms-traffictypediagnostic: AM6PR05MB6406:
-x-microsoft-antispam-prvs: <AM6PR05MB6406CA0BE9D0FC55EBF9E1B5F4AA0@AM6PR05MB6406.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0389EDA07F
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(39850400004)(376002)(396003)(366004)(36756003)(26005)(8936002)(110136005)(6512007)(478600001)(6506007)(316002)(8676002)(66446008)(86362001)(2616005)(2906002)(64756008)(54906003)(5660300002)(186003)(4326008)(76116006)(66476007)(71200400001)(7416002)(44832011)(66556008)(91956017)(66946007)(6486002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ewpakj5Hy26ceOazffNrNejg0PvAAR/lOd+fBywkkf5LNKjPXIt60RAPIemDOMi9b3PaPns/XyttiIkr7AHCM+wC5Y+DDCzmgUrY5EZvFtNgR2qQTaSzVxq8NbU7C+D9lkv64NN9WLFQPix8sYOzmYzBqF3vIk6DBYiVuNXkPx4drfaTUmyEsPC3mfVZDf6u2zgsdW3+PG4tVkDNEDJOTVv1g83Y/mmfR3y7RMWnVtKFgYx+igIdJfLiInkHyPq0xNT/N8DyN9N+adGHlkRSiGl8vqd5CSWR6eIERa6d3IB2hCK8I3HWNG3RZiRm5BiGG664ff/zGLgEDL2XVCd+kk/Z2FpK6y4lY5jTPU5MSk0De+kyhyiTyNXTcIPMy5aHFu7YavR5fUftz/fA9mO1KSVJwMPkMjx5hbji0jbHcRPkC/6001ooFqLXqqEYPWhs
-x-ms-exchange-antispam-messagedata: VPcYmqj7Izub7yb29Q8jqyNb5aZ3T4gDXYPbF3wNPmXPKrleYt2Iow+BidFrDKUOqzt+F6OI3I39wA2hb4w4JTW5Deh3RuVHArA5F3HiLkMxrWb6SPXf/XTe25Qaek/zJYrQrjU8Cy2VZGxK5C01GhIEIZzMYmFAVUDnNeHYarEe5tqHiOXr1ORC/Pts/r6rSov8MFX/HEVMZTTZ3loGjusKsrWhbcskuh0Aog387azeyfoQEqwVZRDouhRDieWzN+eE3VwQvcJs7n+8WTiQ3tIknCmJzA//ZKkS7wCiJPZDPfC12IIweeVMe/SQeU0K5rAUFQ1hHlke6ldb/aPEh0e1ZYD8IdRCkhvTFsLimd+Y4RR9vWL9vv/xzWTxjj7RZeSZ3EC2Q33K5+zKM20g0MftEndezWL5Qyp884rAF8UL0Df1r2dzUHcE3vf9Yr/v9+sIpg+wJNNLdB4pCpFnTejs15wzA9hb07rPVvJ+R3fZzRIVk1Z8pZdypriA4dIe0EEsV/JtHx273W9HBAMziyuGjVdYrSxKhBu7iHYJOSPgMz1yKNdweWSk07avZa5y60V1eOCDybPbO05MaiR+myHnF5rTXe601Ai1S10vTmuJsC8saUXORLog78qvrzcmyTSNLguNU6zQMiC3gBkR+H3gwfh8rbLGmiLx/V63ZlhzKiaOkVkCtHlLvUVuEXLHqfc7eX+Q0O8gyyUenGmqeyNFP3OTaTgdvUTYKvuM4VLFxn4ree5MiwUE/6ADT3uq5a9kut2QcBkuIzE/7U7qwYRBFhn9195zUH7j3cCymMs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B9CA1CB242C5374AAD10B4CD3E211379@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 30 Apr 2020 08:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726866AbgD3MIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:08:21 -0400
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBEA820870;
+        Thu, 30 Apr 2020 12:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588248499;
+        bh=YyBLLWLpFjb7adMOuHtpkyiUlOgZgh/648rPnhjJOGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sEX6q1UkT3HN9nlruFzlJJZNe9xdFvRODgAJawo+DfQqdzQ/fU12etNbcah/xTMX5
+         xH1TbyVgFPQgs8i3GCB30Oz7vhLSj949dh0ULxtLorhAP6kFQ8xYjk+DIBLctKpMqW
+         g8IGHzbVHjQqclIKcxk1HO2GgW8DsmQndBLU/BJg=
+Received: by mail-io1-f41.google.com with SMTP id b12so1156171ion.8;
+        Thu, 30 Apr 2020 05:08:19 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY4CCfd6hW1W1WAzyyVKoc1t570gga/NG8BVbzBAPton/G8g//f
+        scw332gyPXbbLLyNdOqdShUN2s1u2LI1TcxddEM=
+X-Google-Smtp-Source: APiQypKe0inqW34wBlLScBwFhjM3coQkERVQcuEwJdUDy41iqDLa5MVALB/56aNH0jT/ZkFBLYzUNbyfwy+VnBdkxaY=
+X-Received: by 2002:a02:6a1e:: with SMTP id l30mr807847jac.98.1588248499222;
+ Thu, 30 Apr 2020 05:08:19 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06b9d916-73a4-4629-edd3-08d7ecff2818
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 12:08:12.8823
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VIL4t0SdBNPrwFBveL3uuHMhKDCTB25pq+G0FtGdm4CUZLIqN30Vh0UtactTTyf/6Fr3ehKUl8zvzffLjpmcqNuVzRnD8XmMIK08MteJGkU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6406
+References: <20200427085242.2380614-1-punit1.agrawal@toshiba.co.jp>
+In-Reply-To: <20200427085242.2380614-1-punit1.agrawal@toshiba.co.jp>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 30 Apr 2020 14:08:08 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFvaA0k7fZmWcWrjDEPu3rKUt2SM6y3pdROLQztjPKM=A@mail.gmail.com>
+Message-ID: <CAMj1kXFvaA0k7fZmWcWrjDEPu3rKUt2SM6y3pdROLQztjPKM=A@mail.gmail.com>
+Subject: Re: [PATCH] efi: cper: Add support for printing Firmware Error Record Reference
+To:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Borislav Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>, linux-acpi@vger.kernel.org,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTMwIGF0IDE3OjQzICswODAwLCBkaWxsb24ubWluZmVpQGdtYWlsLmNv
-bSB3cm90ZToNCj4gRnJvbTogZGlsbG9uIG1pbiA8ZGlsbG9uLm1pbmZlaUBnbWFpbC5jb20+DQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBkaWxsb24gbWluIDxkaWxsb24ubWluZmVpQGdtYWlsLmNvbT4N
-Cj4gLS0tDQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbGl0ZWssaWxpOTM0MS50eHQg
-ICAgICB8IDQyICsrKysrKysrKysrDQo+ICBhcmNoL2FybS9ib290L2R0cy9zdG0zMmY0LXBpbmN0
-cmwuZHRzaSAgICAgICAgICAgICB8IDc5DQo+ICsrKysrKysrKysrKysrKysrKysNCj4gIGFyY2gv
-YXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS1kaXNjby5kdHMgICAgICAgICAgICAgIHwgODgNCj4gKysr
-KysrKysrKysrKysrKysrKysrKw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LmR0c2kg
-ICAgICAgICAgICAgICAgICAgfCAxMiArKysNCj4gIDQgZmlsZXMgY2hhbmdlZCwgMjIxIGluc2Vy
-dGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbGl0ZWssaWxpOTM0MS50eHQNCj4gDQo+IGRpZmYg
-LS1naXQNCj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9pbGl0ZWssaWxpOTM0MS50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9pbGl0ZWssaWxpOTM0MS50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQNCj4gaW5kZXggMDAwMDAwMC4uZjVhNGU1NQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKw0KPiBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lsaXRlayxp
-bGk5MzQxLnR4dA0KPiBAQCAtMCwwICsxLDQyIEBADQo+ICtJbGl0ZWsgSUxJOTM0MSBURlQgcGFu
-ZWwgZHJpdmVyIHdpdGggU1BJIGNvbnRyb2wgYnVzDQo+ICsNCj4gK1RoaXMgaXMgYSBkcml2ZXIg
-Zm9yIDI0MHgzMjAgVEZUIHBhbmVscywgYWNjZXB0aW5nIGEgcmdiIGlucHV0DQo+ICtzdHJlYW1z
-IHRoYXQgZ2V0IGFkYXB0ZWQgYW5kIHNjYWxlZCB0byB0aGUgcGFuZWwuDQo+ICsNCj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6DQo+ICsgIC0gY29tcGF0aWJsZTogInN0bTMyZjQyOS1kaXNjbyxsdGRj
-LXBhbmVsIiwgImlsaXRlayxpbGk5MzQxIg0KPiArICAgIChmdWxsIHN5c3RlbS1zcGVjaWZpYyBj
-b21wYXRpYmxlIGlzIGFsd2F5cyByZXF1aXJlZCB0byBsb29rIHVwDQo+IGNvbmZpZ3VyYXRpb24p
-DQo+ICsgIC0gcmVnOiBhZGRyZXNzIG9mIHRoZSBwYW5lbCBvbiB0aGUgU1BJIGJ1cw0KPiArDQo+
-ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiArICAtIHJlc2V0LWdwaW9zOiBhIEdQSU8gc3BlYyBm
-b3IgdGhlIHJlc2V0IHBpbiwgc2VlIGdwaW8vZ3Bpby50eHQNCj4gKyAgLSBkYy1ncGlvczogYSBH
-UElPIHNwZWMgZm9yIHRoZSBkYyBwaW4sIHNlZSBncGlvL2dwaW8udHh0DQo+ICsNCj4gKyAgVGhl
-IGZvbGxvd2luZyBvcHRpb25hbCBwcm9wZXJ0aWVzIG9ubHkgYXBwbHkgdG8gUkdCIGlucHV0IG1v
-ZGU6DQo+ICsNCj4gKyAgLSBwaXhlbGNsay1hY3RpdmU6IHNlZSBkaXNwbGF5L3BhbmVsL2Rpc3Bs
-YXktdGltaW5nLnR4dA0KPiArICAtIGRlLWFjdGl2ZTogc2VlIGRpc3BsYXkvcGFuZWwvZGlzcGxh
-eS10aW1pbmcudHh0DQo+ICsgIC0gaHN5bmMtYWN0aXZlOiBzZWUgZGlzcGxheS9wYW5lbC9kaXNw
-bGF5LXRpbWluZy50eHQNCj4gKyAgLSB2c3luYy1hY3RpdmU6IHNlZSBkaXNwbGF5L3BhbmVsL2Rp
-c3BsYXktdGltaW5nLnR4dA0KPiArDQo+ICtUaGUgcGFuZWwgbXVzdCBvYmV5IHRoZSBydWxlcyBm
-b3IgYSBTUEkgc2xhdmUgZGV2aWNlIGFzIHNwZWNpZmllZCBpbg0KPiArc3BpL3NwaS1idXMudHh0
-DQo+ICsNCj4gK1RoZSBkZXZpY2Ugbm9kZSBjYW4gY29udGFpbiBvbmUgJ3BvcnQnIGNoaWxkIG5v
-ZGUgd2l0aCBvbmUgY2hpbGQNCj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBi
-aW5kaW5ncyBkZWZpbmVkIGluDQo+ICttZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gVGhpcyBu
-b2RlIHNob3VsZCBkZXNjcmliZSBwYW5lbCdzIHZpZGVvDQo+IGJ1cy4NCj4gKw0KPiArRXhhbXBs
-ZToNCj4gKw0KPiArcGFuZWw6IGRpc3BsYXlAMCB7DQo+ICsJY29tcGF0aWJsZSA9ICJzdG0zMmY0
-MjktZGlzY28sbHRkYy1wYW5lbCIsICJpbGl0ZWssaWxpOTM0MSI7DQo+ICsJcmVnID0gPDA+Ow0K
-PiArCXNwaS0zd2lyZTsNCj4gKwlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAwMDAwMD47DQo+ICsJ
-ZGMtZ3Bpb3MgPSA8JmdwaW9kIDEzIDA+Ow0KPiArCXBvcnQgew0KPiArCQlwYW5lbF9pbjogZW5k
-cG9pbnQgew0KPiArCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkaXNwbGF5X291dD47DQo+ICsJCX07
-DQo+ICsJfTsNCj4gK307DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0
-LXBpbmN0cmwuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQtcGluY3RybC5kdHNp
-DQo+IGluZGV4IDM5MmZhMTQuLjQ1YjY4ZjQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N0bTMyZjQtcGluY3RybC5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMy
-ZjQtcGluY3RybC5kdHNpDQo+IEBAIC0zMTYsNiArMzE2LDg1IEBADQo+ICAJCQkJfTsNCj4gIAkJ
-CX07DQo+ICANCj4gKwkJCWx0ZGNfcGluc19mNDI5X2Rpc2NvOiBsdGRjLTEgew0KPiArCQkJCXBp
-bnMgew0KPiArCQkJCQlwaW5tdXggPSA8U1RNMzJfUElOTVVYKCdDJywNCj4gNiwgIEFGMTQpPiwN
-Cj4gKwkJCQkJCS8qIExDRF9IU1lOQyAqLw0KPiArCQkJCQkJIDxTVE0zMl9QSU5NVVgoJ0EnLA0K
-PiA0LCAgQUYxNCk+LA0KPiArCQkJCQkJIC8qIExDRF9WU1lOQyAqLw0KPiArCQkJCQkJIDxTVE0z
-Ml9QSU5NVVgoJ0cnLA0KPiA3LCAgQUYxNCk+LA0KPiArCQkJCQkJIC8qIExDRF9DTEsgKi8NCj4g
-KwkJCQkJCSA8U1RNMzJfUElOTVVYKCdDJywgMTAsDQo+IEFGMTQpPiwNCj4gKwkJCQkJCSAvKiBM
-Q0RfUjIgKi8NCj4gKwkJCQkJCSA8U1RNMzJfUElOTVVYKCdCJywNCj4gMCwgIEFGOSk+LA0KPiAr
-CQkJCQkJIC8qIExDRF9SMyAqLw0KPiArCQkJCQkJIDxTVE0zMl9QSU5NVVgoJ0EnLCAxMSwNCj4g
-QUYxNCk+LA0KPiArCQkJCQkJIC8qIExDRF9SNCAqLw0KPiArCQkJCQkJIDxTVE0zMl9QSU5NVVgo
-J0EnLCAxMiwNCj4gQUYxNCk+LA0KPiArCQkJCQkJIC8qIExDRF9SNSAqLw0KPiArCQkJCQkJIDxT
-VE0zMl9QSU5NVVgoJ0InLA0KPiAxLCAgQUY5KT4sDQo+ICsJCQkJCQkgLyogTENEX1I2Ki8NCj4g
-KwkJCQkJCSA8U1RNMzJfUElOTVVYKCdHJywNCj4gNiwgIEFGMTQpPiwNCj4gKwkJCQkJCSAvKiBM
-Q0RfUjcgKi8NCj4gKwkJCQkJCSA8U1RNMzJfUElOTVVYKCdBJywNCj4gNiwgIEFGMTQpPiwNCj4g
-KwkJCQkJCSAvKiBMQ0RfRzIgKi8NCj4gKwkJCQkJCSA8U1RNMzJfUElOTVVYKCdHJywgMTAsDQo+
-IEFGOSk+LA0KPiArCQkJCQkJIC8qIExDRF9HMyAqLw0KPiArCQkJCQkJIDxTVE0zMl9QSU5NVVgo
-J0InLCAxMCwNCj4gQUYxNCk+LA0KPiArCQkJCQkJIC8qIExDRF9HNCAqLw0KPiArCQkJCQkJIDxT
-VE0zMl9QSU5NVVgoJ0QnLA0KPiA2LCAgQUYxNCk+LA0KPiArCQkJCQkJIC8qIExDRF9CMiAqLw0K
-PiArCQkJCQkJIDxTVE0zMl9QSU5NVVgoJ0cnLCAxMSwNCj4gQUYxNCk+LA0KPiArCQkJCQkJIC8q
-IExDRF9CMyovDQo+ICsJCQkJCQkgPFNUTTMyX1BJTk1VWCgnQicsIDExLA0KPiBBRjE0KT4sDQo+
-ICsJCQkJCQkgLyogTENEX0c1ICovDQo+ICsJCQkJCQkgPFNUTTMyX1BJTk1VWCgnQycsDQo+IDcs
-ICBBRjE0KT4sDQo+ICsJCQkJCQkgLyogTENEX0c2ICovDQo+ICsJCQkJCQkgPFNUTTMyX1BJTk1V
-WCgnRCcsDQo+IDMsICBBRjE0KT4sDQo+ICsJCQkJCQkgLyogTENEX0c3ICovDQo+ICsJCQkJCQkg
-PFNUTTMyX1BJTk1VWCgnRycsIDEyLA0KPiBBRjkpPiwNCj4gKwkJCQkJCSAvKiBMQ0RfQjQgKi8N
-Cj4gKwkJCQkJCSA8U1RNMzJfUElOTVVYKCdBJywNCj4gMywgIEFGMTQpPiwNCj4gKwkJCQkJCSAv
-KiBMQ0RfQjUgKi8NCj4gKwkJCQkJCSA8U1RNMzJfUElOTVVYKCdCJywNCj4gOCwgIEFGMTQpPiwN
-Cj4gKwkJCQkJCSAvKiBMQ0RfQjYgKi8NCj4gKwkJCQkJCSA8U1RNMzJfUElOTVVYKCdCJywNCj4g
-OSwgIEFGMTQpPiwNCj4gKwkJCQkJCSAvKiBMQ0RfQjcgKi8NCj4gKwkJCQkJCSA8U1RNMzJfUElO
-TVVYKCdGJywgMTAsDQo+IEFGMTQpPjsNCj4gKwkJCQkJCSAvKiBMQ0RfREUgKi8NCj4gKwkJCQkJ
-c2xldy1yYXRlID0gPDI+Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQlpMmMzX3Bp
-bnM6IGkyYzMtMCB7DQo+ICsJCQkJcGlucyB7DQo+ICsJCQkJCXBpbm11eCA9IDxTVE0zMl9QSU5N
-VVgoJ0MnLCA5LA0KPiBBRjQpPiwNCj4gKwkJCQkJCS8qIEkyQzNfU0RBICovDQo+ICsJCQkJCQkg
-PFNUTTMyX1BJTk1VWCgnQScsIDgsDQo+IEFGNCk+Ow0KPiArCQkJCQkJLyogSTJDM19TQ0wgKi8N
-Cj4gKwkJCQkJYmlhcy1kaXNhYmxlOw0KPiArCQkJCQlkcml2ZS1vcGVuLWRyYWluOw0KPiArCQkJ
-CQlzbGV3LXJhdGUgPSA8Mz47DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsNCj4gKwkJCXNwaTVf
-cGluczogc3BpNS0wIHsNCj4gKwkJCQlwaW5zMSB7DQo+ICsJCQkJCXBpbm11eCA9IDxTVE0zMl9Q
-SU5NVVgoJ0YnLCA3LA0KPiBBRjUpPiwNCj4gKwkJCQkJCS8qIFNQSTVfQ0xLICovDQo+ICsJCQkJ
-CQkgPFNUTTMyX1BJTk1VWCgnRicsIDksDQo+IEFGNSk+Ow0KPiArCQkJCQkJLyogU1BJNV9NT1NJ
-ICovDQo+ICsJCQkJCWJpYXMtZGlzYWJsZTsNCj4gKwkJCQkJZHJpdmUtcHVzaC1wdWxsOw0KPiAr
-CQkJCQlzbGV3LXJhdGUgPSA8MD47DQo+ICsJCQkJfTsNCj4gKwkJCQlwaW5zMiB7DQo+ICsJCQkJ
-CXBpbm11eCA9IDxTVE0zMl9QSU5NVVgoJ0YnLCA4LA0KPiBBRjUpPjsNCj4gKwkJCQkJCS8qIFNQ
-STVfTUlTTyAqLw0KPiArCQkJCQliaWFzLWRpc2FibGU7DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+
-ICsNCj4gIAkJCWRjbWlfcGluczogZGNtaS0wIHsNCj4gIAkJCQlwaW5zIHsNCj4gIAkJCQkJcGlu
-bXV4ID0gPFNUTTMyX1BJTk1VWCgnQScsIDQsDQo+IEFGMTMpPiwgLyogRENNSV9IU1lOQyAqLw0K
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LWRpc2NvLmR0cw0KPiBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS1kaXNjby5kdHMNCj4gaW5kZXggMzBjMGY2Ny4u
-NTVlZWQwNSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LWRpc2Nv
-LmR0cw0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjktZGlzY28uZHRzDQo+IEBA
-IC00OSw2ICs0OSw4IEBADQo+ICAjaW5jbHVkZSAic3RtMzJmNDI5LmR0c2kiDQo+ICAjaW5jbHVk
-ZSAic3RtMzJmNDI5LXBpbmN0cmwuZHRzaSINCj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnB1
-dC9pbnB1dC5oPg0KPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVy
-L2lycS5oPg0KPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPg0KPiAgDQo+ICAv
-IHsNCj4gIAltb2RlbCA9ICJTVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzJGNDI5aS1ESVNDTyBib2Fy
-ZCI7DQo+IEBAIC05OCw2ICsxMDAsMTQgQEANCj4gIAkJcmVndWxhdG9yLW5hbWUgPSAidmNjNV9o
-b3N0MSI7DQo+ICAJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ICAJfTsNCj4gKw0KPiArCXJlZ18z
-cDN2OiByZWd1bGF0b3ItM3AzdiB7DQo+ICsJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVk
-IjsNCj4gKwkJcmVndWxhdG9yLW5hbWUgPSAiM1AzViI7DQo+ICsJCXJlZ3VsYXRvci1taW4tbWlj
-cm92b2x0ID0gPDMzMDAwMDA+Ow0KPiArCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAw
-MDAwPjsNCj4gKwkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gKwl9Ow0KPiAgfTsNCj4gIA0KPiAg
-JmNsa19oc2Ugew0KPiBAQCAtMTI3LDMgKzEzNyw4MSBAQA0KPiAgCXBpbmN0cmwtbmFtZXMgPSAi
-ZGVmYXVsdCI7DQo+ICAJc3RhdHVzID0gIm9rYXkiOw0KPiAgfTsNCj4gKw0KPiArJmx0ZGMgew0K
-PiArCXN0YXR1cyA9ICJva2F5IjsNCj4gKwlwaW5jdHJsLTAgPSA8Jmx0ZGNfcGluc19mNDI5X2Rp
-c2NvPjsNCj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiArDQo+ICsJcG9ydCB7DQo+
-ICsJCWx0ZGNfb3V0X3JnYjogZW5kcG9pbnQgew0KPiArCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZw
-YW5lbF9pbl9yZ2I+Ow0KPiArCQl9Ow0KPiArCX07DQo+ICt9Ow0KPiArDQo+ICsmc3BpNSB7DQo+
-ICsJc3RhdHVzID0gIm9rYXkiOw0KPiArCXBpbmN0cmwtMCA9IDwmc3BpNV9waW5zPjsNCj4gKwlw
-aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiArCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAr
-CSNzaXplLWNlbGxzID0gPDA+Ow0KPiArCWNzLWdwaW9zID0gPCZncGlvYyAxIEdQSU9fQUNUSVZF
-X0xPVz4sPCZncGlvYyAyDQo+IEdQSU9fQUNUSVZFX0xPVz47DQo+ICsJZG1hcyA9IDwmZG1hMiAz
-IDIgMHg0MDAgMHgwPiwNCj4gKwkgICAgICAgPCZkbWEyIDQgMiAweDQwMCAweDA+Ow0KPiArCWRt
-YS1uYW1lcyA9ICJyeCIsICJ0eCI7DQo+ICsJbDNnZDIwOiBsM2dkMjBAMCB7DQo+ICsJCWNvbXBh
-dGlibGUgPSAic3QsbDNnZDIwLWd5cm8iOw0KPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAw
-MDAwMD47DQo+ICsJCXN0LGRyZHktaW50LXBpbiA9IDwyPjsNCj4gKwkJaW50ZXJydXB0LXBhcmVu
-dCA9IDwmZ3Bpb2E+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfRURHRV9SSVNJTkc+
-LA0KPiArCQkJCTwyIElSUV9UWVBFX0VER0VfUklTSU5HPjsNCj4gKwkJcmVnID0gPDA+Ow0KPiAr
-CQl2ZGRpbyA9IDwmcmVnXzNwM3Y+Ow0KPiArCQl2ZGQgPSA8JnJlZ18zcDN2PjsNCj4gKwkJc3Rh
-dHVzID0gIm9rYXkiOw0KPiArCX07DQo+ICsJZGlzcGxheTogZGlzcGxheUAxew0KPiArCQkvKiBD
-b25uZWN0IHBhbmVsLWlsaXRlay05MzQxIHRvIGx0ZGMgKi8NCj4gKwkJY29tcGF0aWJsZSA9ICJz
-dG0zMmY0MjktZGlzY28sbHRkYy1wYW5lbCIsDQo+ICJpbGl0ZWssaWxpOTM0MSI7DQo+ICsJCXJl
-ZyA9IDwxPjsNCj4gKwkJc3BpLTN3aXJlOw0KPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAw
-MDAwMD47DQo+ICsJCWRjLWdwaW9zID0gPCZncGlvZCAxMyAwPjsNCj4gKwkJcG9ydCB7DQo+ICsJ
-CQlwYW5lbF9pbl9yZ2I6IGVuZHBvaW50IHsNCj4gKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHRk
-Y19vdXRfcmdiPjsNCj4gKwkJCX07DQo+ICsJCX07DQo+ICsJfTsNCj4gK307DQo+ICsNCj4gKyZp
-MmMzIHsNCj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiArCXBpbmN0cmwtMCA9IDwm
-aTJjM19waW5zPjsNCj4gKwlzdGF0dXMgPSAib2theSI7DQo+ICsNCj4gKwl0b3VjaDogc3RtcGU4
-MTFANDEgew0KPiArCQljb21wYXRpYmxlID0gInN0LHN0bXBlODExIjsNCj4gKwkJcmVnID0gPDB4
-NDE+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPDE1IElSUV9UWVBFX0VER0VfRkFMTElORz47DQo+ICsJ
-CWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW9hPjsNCj4gKwkJdmlvID0gPCZyZWdfM3Azdj47DQo+
-ICsJCXZjYyA9IDwmcmVnXzNwM3Y+Ow0KPiArCQlzdGF0dXMgPSAib2theSI7DQo+ICsNCj4gKwkJ
-c3RtcGVfdG91Y2hzY3JlZW4gew0KPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdG1wZS10cyI7DQo+
-ICsJCQlzdCxzYW1wbGUtdGltZSA9IDw0PjsNCj4gKwkJCXN0LG1vZC0xMmIgPSA8MT47DQo+ICsJ
-CQlzdCxyZWYtc2VsID0gPDA+Ow0KPiArCQkJc3QsYWRjLWZyZXEgPSA8MT47DQoNClRoZSBhYm92
-ZSBBREMgcmVsYXRlZCBzZXR0aW5ncyBzaG91bGQgZ28gaW50byB0aGUgTUZEIGRldmljZSB3aXRo
-DQpjb21wYXRpYmxlICJzdCxzdG1wZTgxMSIuIFRoZSB1c2Ugb2YgdGhvc2UgaW4gdG91Y2hzY3Jl
-ZW4gaXMgZGVwcmVjYXRlZC4NCg0KUGxlYXNlIGNoZWNrIHRoZSBiaW5kaW5nczoNCkRvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHMNCmNyZWVuL3N0bXBlLnR4dA0K
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdG1wZS50eHQNCg0KQmVzdCBS
-ZWdhcmRzLA0KUGhpbGlwcGUNCg0KPiArCQkJc3QsYXZlLWN0cmwgPSA8MT47DQo+ICsJCQlzdCx0
-b3VjaC1kZXQtZGVsYXkgPSA8Mj47DQo+ICsJCQlzdCxzZXR0bGluZyA9IDwyPjsNCj4gKwkJCXN0
-LGZyYWN0aW9uLXogPSA8Nz47DQo+ICsJCQlzdCxpLWRyaXZlID0gPDE+Ow0KPiArCQl9Ow0KPiAr
-CX07DQo+ICt9Ow0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LmR0
-c2kNCj4gYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRzaQ0KPiBpbmRleCBkNzc3MDY5
-Li4yNTdiODQzIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRz
-aQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0MjkuZHRzaQ0KPiBAQCAtNDAyLDYg
-KzQwMiwxOCBAQA0KPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gIAkJfTsNCj4gIA0KPiAr
-CQlpMmMzOiBpMmNANDAwMDVjMDAgew0KPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMmY0LWky
-YyI7DQo+ICsJCQlyZWcgPSA8MHg0MDAwNWMwMCAweDQwMD47DQo+ICsJCQlpbnRlcnJ1cHRzID0g
-PDcyPiwNCj4gKwkJCQkgICAgIDw3Mz47DQo+ICsJCQlyZXNldHMgPSA8JnJjYyBTVE0zMkY0X0FQ
-QjFfUkVTRVQoSTJDMyk+Ow0KPiArCQkJY2xvY2tzID0gPCZyY2MgMCBTVE0zMkY0X0FQQjFfQ0xP
-Q0soSTJDMyk+Ow0KPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsNCj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsJCX07DQo+ICsNCj4gIAkJ
-ZGFjOiBkYWNANDAwMDc0MDAgew0KPiAgCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMmY0LWRhYy1j
-b3JlIjsNCj4gIAkJCXJlZyA9IDwweDQwMDA3NDAwIDB4NDAwPjsNCg==
+Hello Punit,
+
+On Mon, 27 Apr 2020 at 11:03, Punit Agrawal
+<punit1.agrawal@toshiba.co.jp> wrote:
+>
+> While debugging a boot failure, the following unknown error record was
+> seen in the boot logs.
+>
+>     <...>
+>     BERT: Error records from previous boot:
+>     [Hardware Error]: event severity: fatal
+>     [Hardware Error]:  Error 0, type: fatal
+>     [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
+>     [Hardware Error]:   section length: 0x290
+>     [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
+>     [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
+>     [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
+>     [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
+>     <...>
+>
+> On further investigation, it was found that the error record with
+> UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
+> UEFI Specification at least since v2.4 and has recently had additional
+> fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
+>
+> Add support for parsing and printing the defined fields to give users
+> a chance to figure out what's went wrong.
+>
+> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-efi@vger.kernel.org
+> ---
+>
+> Hi,
+>
+> I ran into this while debugging a boot failure on an end product
+> device. Parsing known record types can help the user narrow down the
+> investigation quickly to the failing components - firmware error in
+> this case.
+>
+> It would be good to support the record types specified in the
+> standard.
+>
+> Feedback welcome.
+>
+> Thanks,
+> Punit
+> ---
+>  drivers/firmware/efi/cper.c | 49 +++++++++++++++++++++++++++++++++++++
+>  include/linux/cper.h        | 11 +++++++++
+>  2 files changed, 60 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 9d2512913d25..153b95257e23 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -407,6 +407,46 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+>         }
+>  }
+>
+> +static const char * const fw_err_rec_type_strs[] = {
+> +       "IPF SAL Error Record",
+> +       "SOC Firmware Error Record Type1 (Legacy CrashLog Support)",
+> +       "SOC Firmware Error Record Type2",
+> +};
+> +
+> +static void cper_print_fw_err(const char *pfx,
+> +                             struct acpi_hest_generic_data *gdata,
+> +                             const struct cper_sec_fw_err_rec_ref *fw_err)
+> +{
+> +       void *buf = acpi_hest_get_payload(gdata);
+> +       u32 offset, length = gdata->error_data_length;
+> +
+> +       printk("%s""Firmware Error Record Type: %s\n", pfx,
+> +              fw_err->record_type < ARRAY_SIZE(fw_err_rec_type_strs) ?
+> +              fw_err_rec_type_strs[fw_err->record_type] : "unknown");
+> +
+> +       /* Record Type based on UEFI 2.7 */
+> +       if (fw_err->revision == 0)
+> +               printk("%s""Record Identifier: %08llx\n", pfx,
+> +                      fw_err->record_identifier);
+> +       else if (fw_err->revision == 2)
+> +               printk("%s""Record Identifier: %pUl\n", pfx,
+> +                      &fw_err->record_identifier_guid);
+> +
+
+Please use {} for multi-line statements between the ifs
+
+> +       if (fw_err->revision == 0)
+> +               offset = offsetof(struct cper_sec_fw_err_rec_ref,
+> +                                 record_identifier_guid);
+> +       else if (fw_err->revision == 1)
+> +               offset = offsetof(struct cper_sec_fw_err_rec_ref,
+> +                                 record_identifier);
+> +       else
+> +               offset = sizeof(*fw_err);
+> +
+
+This logic is slightly confusing, so it could do with a comment
+regarding which part of the structure is being dumped and why.
+
+
+> +       buf += offset;
+> +       length -= offset;
+> +
+> +       print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, buf, length, true);
+> +}
+> +
+>  static void cper_print_tstamp(const char *pfx,
+>                                    struct acpi_hest_generic_data_v300 *gdata)
+>  {
+> @@ -494,6 +534,15 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
+>                 else
+>                         goto err_section_too_small;
+>  #endif
+> +       } else if (guid_equal(sec_type, &CPER_SEC_FW_ERR_REC_REF)) {
+> +               struct cper_sec_fw_err_rec_ref *fw_err = acpi_hest_get_payload(gdata);
+> +
+> +               printk("%ssection_type: Firmware Error Record Reference\n",
+> +                      newpfx);
+> +               if (gdata->error_data_length >= sizeof(*fw_err))
+> +                       cper_print_fw_err(newpfx, gdata, fw_err);
+
+This doesn't work for revision 0 structures unless they happen to have
+some trailing data, which is not necessarily the case, right?
+
+> +               else
+> +                       goto err_section_too_small;
+>         } else {
+>                 const void *err = acpi_hest_get_payload(gdata);
+>
+> diff --git a/include/linux/cper.h b/include/linux/cper.h
+> index 4f005d95ce88..5cb57e69df70 100644
+> --- a/include/linux/cper.h
+> +++ b/include/linux/cper.h
+> @@ -521,6 +521,17 @@ struct cper_sec_pcie {
+>         u8      aer_info[96];
+>  };
+>
+> +/* Firmware Error Record Reference, UEFI v2.7 sec N.2.10  */
+> +struct cper_sec_fw_err_rec_ref {
+> +       u8 record_type;
+> +       union {
+> +               u8 revision;
+> +               u8 reserved[7];
+> +       };
+
+Even though the spec is slightly silly here, I think we can avoid the
+union, and just have
+
+  u8 record_type;
+  u8 revision;
+  u8 reserved[6];
+
+as the leading fields.
+
+
+> +       u64 record_identifier;
+> +       guid_t record_identifier_guid;
+> +};
+> +
+>  /* Reset to default packing */
+>  #pragma pack()
+>
+> --
+> 2.26.2
+>
