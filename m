@@ -2,134 +2,105 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4518C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC174C47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C159420836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588279221;
-	bh=5Snw5Ucaj8rYXrTv7rmk42pJX+ytZh64Y19B+5t8ZUU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2GgWsDoWpPj+LviWdzUgC96/dcrRiKISKHQlHlXsNbQl8d5onbfCEZEH421ZLpovX
-	 KdBSEE3ac+RWgiZLh3KgSoxA7RqBqKnGE6T5ZXn1mRNJQq5flMYPNwLxPhq/2aA76Z
-	 F66gnrHFJQTPbp5kHawNB4i4qLODCRQ0y5CDSv+I=
+	by mail.kernel.org (Postfix) with ESMTP id C9D6A206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYuOYdv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgD3UkV (ORCPT
+        id S1727961AbgD3Ukp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgD3UkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:40:20 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BFEF206C0;
-        Thu, 30 Apr 2020 20:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588279219;
-        bh=5Snw5Ucaj8rYXrTv7rmk42pJX+ytZh64Y19B+5t8ZUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QQEcW57aBZptdf4jpOft/n3IKmo0zDugFzHwKTWq/Y2GcQ7r1C23c5kd2fISfvG+M
-         HkGzyX5fzulrTCYiTUXYSwvpM/24r4Sq7SBY9lt0Atc1ZQSDUtNVdk1hQnUJbwkYPK
-         ND3uH56xSkxeZT0Bch/NYTzZtMkCULqOh0dOlS4I=
-Date:   Thu, 30 Apr 2020 15:40:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] PCI: brcmstb: disable L0s component of ASPM by
- default
-Message-ID: <20200430204017.GA62947@bjorn-Precision-5520>
+        Thu, 30 Apr 2020 16:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgD3Ukp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 16:40:45 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1256C035494;
+        Thu, 30 Apr 2020 13:40:44 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c63so7275660qke.2;
+        Thu, 30 Apr 2020 13:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2wXB9P7L6VKnvrEKDuVZ8Fz1x78dwH0yzpQ7LI1qBdQ=;
+        b=nYuOYdv7i3bBXGdXg/0tRS14pcT5A/jnwkPsmkk7D2/iEGPitWHtu2SSm4fBYB72uz
+         LEJYj/5tICP1sWA5mpc6tpGeHNQpUEv63D2kgZMEkoV16sCqRd0DmxYIa2VrMlGjlx4k
+         J3MaAYrzCAyGYMYWDg00z3zuWehzrdx/Tl7/1HxNZWDPnlMX94qfGN9CCcLlqzKiFykZ
+         iYHLT7L9R8ZFfjsuhbC25FepzOh5QLLwR7hgvRe1BraJvLRtTlut50bu2Nnhkugus2BD
+         HMPaCPRgOHN0mxAwh6YcpzPeOb/o+22/bJ3Uys5gJDP9n25p3bCb0BxkUG4J92e+ADeB
+         yvhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2wXB9P7L6VKnvrEKDuVZ8Fz1x78dwH0yzpQ7LI1qBdQ=;
+        b=DB6eCqP6MxQrG2wSBCxhEHFh5yFZRuFMw6MMeFRps1L2fuIwLQe0jRTlbw5ihAt36/
+         Jyfdzyj3EGUJhUvBjRtJ80EaD8WigM6g4n6M3S9pRWM1dY+TYYXAPHWfQ4083amL4Bw0
+         ZHMsUWaFZC6Nr72NzF/hH9xGkv6bFnsSYT3AZCRPp8HGjfu4Z53dVLBgqQRYmgdPayiu
+         WeFrYFeXZB0/cuSWAss2Myj/6FFtZ2qFk720MjKK72vtCXRYOcfNUhXkVeqm98IlR17e
+         GSrBO9Jof25XI+JUCXtpnepv7tyH+vTS8qXVIDHyLFWBJhidkUftg5TOCRMASKX5vSCx
+         nCFA==
+X-Gm-Message-State: AGi0PuZinGCLYQMMEjQowOAsL3ulBO3dz+oi4C+6CR8RSz18Lbrgr4cG
+        hr1uXLo9LgZsziWj7JLi/Eg=
+X-Google-Smtp-Source: APiQypK2X+EbL4/u6yuToTVoXvzdrYETv1gNeyOhrBY1Iwa28a1bEOJ2lPZub08UxLUQHzoVu2aD2g==
+X-Received: by 2002:a05:620a:1347:: with SMTP id c7mr396651qkl.246.1588279244010;
+        Thu, 30 Apr 2020 13:40:44 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l9sm674497qth.60.2020.04.30.13.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 13:40:43 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 30 Apr 2020 16:40:41 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 1/2] efi/libstub: efi_info/efi_err message neatening
+Message-ID: <20200430204041.GA2579913@rani.riverdale.lan>
+References: <20200430182843.2510180-1-nivedita@alum.mit.edu>
+ <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
+ <CAMj1kXGMnTfYiU_vMDYG0uy7Na7wy=5DRHERTzZQeb4UBusn0g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200430185522.4116-5-james.quinlan@broadcom.com>
+In-Reply-To: <CAMj1kXGMnTfYiU_vMDYG0uy7Na7wy=5DRHERTzZQeb4UBusn0g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:55:22PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Thu, Apr 30, 2020 at 09:29:46PM +0200, Ard Biesheuvel wrote:
+> On Thu, 30 Apr 2020 at 21:12, Joe Perches <joe@perches.com> wrote:
+> >
+> > Use a standard style for these output logging messages.
+> >
+> > Miscellanea:
+> >
+> > o Use more common macro #defines with fmt, ##__VA_ARGS__
+> > 0 Remove trailing messages periods and odd ' uses
+> > o Remove embedded function names and use %s, __func__
+> >
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >
+> > Perhaps these trivialities on top of this series?
+> >
 > 
-> Some informal internal experiments has shown that the BrcmSTB ASPM L0s
-> savings may introduce an undesirable noise signal on some customers'
-> boards.  In addition, L0s was found lacking in realized power savings,
-> especially relative to the L1 ASPM component.  This is BrcmSTB's
-> experience and may not hold for others.  At any rate, we disable L0s
-> savings by default unless the DT node has the 'brcm,aspm-en-l0s'
-> property.
-
-I assume this works by writing the PCIe Link Capabilities register,
-which is read-only via the config space path used by the generic ASPM
-code, so that code thinks the device doesn't support L0s at all.
-
-Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt includes
-an "aspm-no-l0s" property.  It'd be nice if this could use the same
-property.
-
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> The EFI printing routines don't actually support format strings.
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 2bc913c0262c..bc1d514b19e4 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -44,6 +44,9 @@
->  #define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
->  #define  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK	0xffffff
->  
-> +#define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
-> +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
-> +
->  #define PCIE_RC_DL_MDIO_ADDR				0x1100
->  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
->  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-> @@ -696,7 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	int num_out_wins = 0;
->  	u16 nlw, cls, lnksta;
->  	int i, ret;
-> -	u32 tmp;
-> +	u32 tmp, aspm_support;
->  
->  	/* Reset the bridge */
->  	brcm_pcie_bridge_sw_init_set(pcie, 1);
-> @@ -806,6 +809,15 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  		num_out_wins++;
->  	}
->  
-> +	/* Only support ASPM L1 unless L0s is explicitly desired */
-> +	aspm_support = PCIE_LINK_STATE_L1;
-> +	if (of_property_read_bool(pcie->np, "brcm,aspm-en-l0s"))
-> +		aspm_support |= PCIE_LINK_STATE_L0S;
-> +	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +	u32p_replace_bits(&tmp, aspm_support,
-> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> +
->  	/*
->  	 * For config space accesses on the RC, show the right class for
->  	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
-> -- 
-> 2.17.1
-> 
+
+The x86 real-mode bootup code actually has a printf.o that clocks in at
+under 2k. We could add it in, and it would also be nice to move it into
+lib or something, since at least alpha and powerpc implement something
+very similar for boot-time messages.
