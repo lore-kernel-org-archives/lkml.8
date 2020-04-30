@@ -2,100 +2,131 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E579C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B436DC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449CD214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9375B214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 06:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mHGWABDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgD3Gzq (ORCPT
+        id S1726531AbgD3G5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 02:55:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36956 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgD3Gzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 02:55:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DADBBAB76;
-        Thu, 30 Apr 2020 06:55:43 +0000 (UTC)
-Subject: Re: [PATCH v3 5/7] tty: Add NOKERNINFO lflag to termios
-To:     Arseny Maslennikov <ar@cs.msu.ru>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rob Landley <rob@landley.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-api@vger.kernel.org,
-        "Vladimir D. Seleznev" <vseleznv@altlinux.org>
-References: <20200430064301.1099452-1-ar@cs.msu.ru>
- <20200430064301.1099452-6-ar@cs.msu.ru>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <323be592-b614-907d-e9be-4748f159fb07@suse.cz>
-Date:   Thu, 30 Apr 2020 08:55:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 30 Apr 2020 02:57:01 -0400
+Received: from mailgw01.mediatek.com ([216.200.240.184]:58815 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbgD3G5A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 02:57:00 -0400
+X-Greylist: delayed 302 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Apr 2020 02:57:00 EDT
+X-UUID: 890afbba71374a1788c031df98bde511-20200429
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=s2dkEOMGbr8zmnRl4873RwL4QHEhugqZDl7HL1k+ZTg=;
+        b=mHGWABDsM1tx4gU6tNElmsxKjMk5PfejytxRcMxEuSG1XUJiQG116Nkb9RlcG+ngwTpbqik2rI192R0qqdTEUuOwQfOyMlbKu0BKlSwPMjZ3rxzYKVOF+DsmK1wrsx3W2I8R5wPkouWlwa4psDcvr0uIQ7PmWL7GItcI7UladqY=;
+X-UUID: 890afbba71374a1788c031df98bde511-20200429
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1995040796; Wed, 29 Apr 2020 22:51:52 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Apr 2020 23:41:52 -0700
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Apr 2020 14:41:53 +0800
+Message-ID: <1588228913.3817.6.camel@mtkswgap22>
+Subject: Re: [PATCH] pinctrl: mediatek: fix mtk_eint link error
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 30 Apr 2020 14:41:53 +0800
+In-Reply-To: <20200429132443.1295194-1-arnd@arndb.de>
+References: <20200429132443.1295194-1-arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200430064301.1099452-6-ar@cs.msu.ru>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30. 04. 20, 8:42, Arseny Maslennikov wrote:
-> The termios lflag is off by default.
+T24gV2VkLCAyMDIwLTA0LTI5IGF0IDE1OjI0ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
+PiBJbiBhIGNvbmZpZ3VyYXRpb24gd2l0aCBDT05GSUdfUElOQ1RSTF9NVEtfTU9PUkU9eSBhbmQg
+Q09ORklHX1BJTkNUUkxfTVRLX1BBUklTPW0sDQo+IHdlIGVuZCB1cCB3aXRoIHRoZSBtdGtfZWlu
+dCBkcml2ZXIgYXMgYSBsb2FkYWJsZSBtb2R1bGUgdGhhdCBjYW5ub3QgYmUNCj4gbGlua2VkIGZy
+b20gYnVpbHQtaW4gY29kZToNCg0KSG93IGRpZCB5b3Ugc2V0IGFsbCBNVEstcmVsYXRlZCBQSU5D
+VFJMIGNvbmZpZ3M/DQphbmQgd2hhdCBpcyB0aGUgZ2VuZXJhdGVkIHJlc3VsdCBvZiAuY29uZmln
+Pw0KDQoNCg0KPiBhYXJjaDY0LWxpbnV4LWxkOiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
+Y3RybC1tdGstY29tbW9uLXYyLm86IGluIGZ1bmN0aW9uIGBtdGtfYnVpbGRfZWludCc6DQo+ICgu
+dGV4dCsweDMwNCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG10a19laW50X2RvX2luaXQnDQo+
+IGFhcmNoNjQtbGludXgtbGQ6IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW1vb3Jl
+Lm86IGluIGZ1bmN0aW9uIGBtdGtfZ3Bpb19zZXRfY29uZmlnJzoNCj4gcGluY3RybC1tb29yZS5j
+OigudGV4dCsweGY4MCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG10a19laW50X3NldF9kZWJv
+dW5jZScNCj4gYWFyY2g2NC1saW51eC1sZDogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0
+cmwtbW9vcmUubzogaW4gZnVuY3Rpb24gYG10a19ncGlvX3RvX2lycSc6DQo+IHBpbmN0cmwtbW9v
+cmUuYzooLnRleHQrMHgxMDI4KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbXRrX2VpbnRfZmlu
+ZF9pcnEnDQo+IA0KPiBTaW1wbGlmeSB0aGUgS2NvbmZpZyBsb2dpYyB0byBhbHdheXMgc2VsZWN0
+IEVJTlRfTVRLIHdoZW4gaXQgaXMgbmVlZGVkLCBhbmQNCj4gcmVtb3ZlIHRoZSAnZGVmYXVsdCcg
+c3RhdGVtZW50cy4NCj4gDQo+IEZpeGVzOiA4MTc0YTg1MTJlM2UgKCJwaW5jdHJsOiBtZWRpYXRl
+azogbWFrZSBNZWRpYVRlayBwaW5jdHJsIHYyIGRyaXZlciByZWFkeSBmb3IgYnVpZGxpbmcgbG9h
+ZGFibGUgbW9kdWxlIikNCj4gU2lnbmVkLW9mZi1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5k
+Yi5kZT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZyAgICB8ICA0
+ICstLS0NCj4gIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5oIHwgMjggLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KSwgMzEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21l
+ZGlhdGVrL0tjb25maWcgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZw0KPiBpbmRl
+eCBmMzJkMzY0NGM1MDkuLmI2YThkOTFmNDg4NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5j
+dHJsL21lZGlhdGVrL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tj
+b25maWcNCj4gQEAgLTcsOCArNyw2IEBAIGNvbmZpZyBFSU5UX01USw0KPiAgCWRlcGVuZHMgb24g
+UElOQ1RSTF9NVEsgfHwgUElOQ1RSTF9NVEtfTU9PUkUgfHwgUElOQ1RSTF9NVEtfUEFSSVMgfHwg
+Q09NUElMRV9URVNUDQo+ICAJc2VsZWN0IEdQSU9MSUINCj4gIAlzZWxlY3QgSVJRX0RPTUFJTg0K
+PiAtCWRlZmF1bHQgeSBpZiBQSU5DVFJMX01USyB8fCBQSU5DVFJMX01US19NT09SRQ0KPiAtCWRl
+ZmF1bHQgUElOQ1RSTF9NVEtfUEFSSVMNCj4gIA0KPiAgY29uZmlnIFBJTkNUUkxfTVRLDQo+ICAJ
+Ym9vbA0KPiBAQCAtMjAsNiArMTgsNyBAQCBjb25maWcgUElOQ1RSTF9NVEsNCj4gIAlzZWxlY3Qg
+T0ZfR1BJTw0KPiAgDQo+ICBjb25maWcgUElOQ1RSTF9NVEtfVjINCj4gKwlzZWxlY3QgRUlOVF9N
+VEsNCj4gIAl0cmlzdGF0ZQ0KPiAgDQo+ICBjb25maWcgUElOQ1RSTF9NVEtfTU9PUkUNCj4gQEAg
+LTM4LDcgKzM3LDYgQEAgY29uZmlnIFBJTkNUUkxfTVRLX1BBUklTDQo+ICAJc2VsZWN0IFBJTk1V
+WA0KPiAgCXNlbGVjdCBHRU5FUklDX1BJTkNPTkYNCj4gIAlzZWxlY3QgR1BJT0xJQg0KPiAtCXNl
+bGVjdCBFSU5UX01USw0KPiAgCXNlbGVjdCBPRl9HUElPDQo+ICAJc2VsZWN0IFBJTkNUUkxfTVRL
+X1YyDQoNCldpdGggdGhpcyBtb2RpZmljYXRpb24sUElOQ1RSS19NVEtfTU9PUkUgYWx3YXlzIHNl
+bGVjdCBFSU5UX01USw0KKGluZGlyZWN0bHkgdmlhIHNlbGVjdCBQSU5DVFJMX01US19WMikuDQpI
+b3dldmVyLCBpbiBwcmV2aW91cyByZXZpZXcsIFNlYW4gV2FuZyBzYWlkIHRoYXQgUElOQ1RSTF9N
+VEtfTU9PUkUgZG9lcw0Kbm90IGFsd2F5cyB1c2UgRUlOVF9NVEsgc28gUElOQ1RSTF9NVEtfTU9P
+UkUgc2hhbGwgbm90IHNlbGVjdCBFSU5UX01USw0KdW4tY29uZGl0aW9uYWxseS4NCg0KDQo+ICAN
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5oIGIvZHJp
+dmVycy9waW5jdHJsL21lZGlhdGVrL210ay1laW50LmgNCj4gaW5kZXggNDg0NjhkMGZhZTY4Li5m
+NDBkYWI1MGE1ZjMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGst
+ZWludC5oDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5oDQo+IEBA
+IC02OCw3ICs2OCw2IEBAIHN0cnVjdCBtdGtfZWludCB7DQo+ICAJY29uc3Qgc3RydWN0IG10a19l
+aW50X3h0ICpncGlvX3hsYXRlOw0KPiAgfTsNCj4gIA0KPiAtI2lmIElTX0VOQUJMRUQoQ09ORklH
+X0VJTlRfTVRLKQ0KPiAgaW50IG10a19laW50X2RvX2luaXQoc3RydWN0IG10a19laW50ICplaW50
+KTsNCj4gIGludCBtdGtfZWludF9kb19zdXNwZW5kKHN0cnVjdCBtdGtfZWludCAqZWludCk7DQo+
+ICBpbnQgbXRrX2VpbnRfZG9fcmVzdW1lKHN0cnVjdCBtdGtfZWludCAqZWludCk7DQo+IEBAIC03
+NiwzMSArNzUsNCBAQCBpbnQgbXRrX2VpbnRfc2V0X2RlYm91bmNlKHN0cnVjdCBtdGtfZWludCAq
+ZWludCwgdW5zaWduZWQgbG9uZyBlaW50X24sDQo+ICAJCQkgIHVuc2lnbmVkIGludCBkZWJvdW5j
+ZSk7DQo+ICBpbnQgbXRrX2VpbnRfZmluZF9pcnEoc3RydWN0IG10a19laW50ICplaW50LCB1bnNp
+Z25lZCBsb25nIGVpbnRfbik7DQo+ICANCj4gLSNlbHNlDQo+IC1zdGF0aWMgaW5saW5lIGludCBt
+dGtfZWludF9kb19pbml0KHN0cnVjdCBtdGtfZWludCAqZWludCkNCj4gLXsNCj4gLQlyZXR1cm4g
+LUVPUE5PVFNVUFA7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyBpbmxpbmUgaW50IG10a19laW50X2Rv
+X3N1c3BlbmQoc3RydWN0IG10a19laW50ICplaW50KQ0KPiAtew0KPiAtCXJldHVybiAtRU9QTk9U
+U1VQUDsNCj4gLX0NCj4gLQ0KPiAtc3RhdGljIGlubGluZSBpbnQgbXRrX2VpbnRfZG9fcmVzdW1l
+KHN0cnVjdCBtdGtfZWludCAqZWludCkNCj4gLXsNCj4gLQlyZXR1cm4gLUVPUE5PVFNVUFA7DQo+
+IC19DQo+IC0NCj4gLXN0YXRpYyBpbmxpbmUgaW50IG10a19laW50X3NldF9kZWJvdW5jZShzdHJ1
+Y3QgbXRrX2VpbnQgKmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9uLA0KPiAtCQkJICB1bnNpZ25l
+ZCBpbnQgZGVib3VuY2UpDQo+IC17DQo+IC0JcmV0dXJuIC1FT1BOT1RTVVBQOw0KPiAtfQ0KPiAt
+DQo+IC1zdGF0aWMgaW5saW5lIGludCBtdGtfZWludF9maW5kX2lycShzdHJ1Y3QgbXRrX2VpbnQg
+KmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9uKQ0KPiAtew0KPiAtCXJldHVybiAtRU9QTk9UU1VQ
+UDsNCj4gLX0NCj4gLSNlbmRpZg0KPiAgI2VuZGlmIC8qIF9fTVRLX0VJTlRfSCAqLw0KDQo=
 
-This commit message is too poor. Describing the intended use would help.
-
-thanks,
--- 
-js
-suse labs
