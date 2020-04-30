@@ -2,136 +2,126 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14393C83003
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA47C83003
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4B920757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="U/bgW78L";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="jpEXcJur"
+	by mail.kernel.org (Postfix) with ESMTP id D281D20757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 02:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgD3B7w (ORCPT
+        id S1726587AbgD3CBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:59:52 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:51728 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgD3B7v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:59:51 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id F416F4999C;
-        Wed, 29 Apr 2020 21:59:47 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=ErazowRay1P/AwFSRhYIU6Y2Vtg=; b=U/bgW7
-        8LRuDwed7cFJI+OLHcNjS2azezYw4bDECsXxOtmXzamJa8j9tAdCdRFr37MXprd5
-        ErxVxpe2KVIBpAKAVf2dKTwzyPiZ3RDGm+EfMP70RzW2Zf/0ARTOupK3h0F1z+hz
-        mQJPY4L14N4+MX2vB7h1kvD7/e18IFTZLuIv8=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id EA42A4999B;
-        Wed, 29 Apr 2020 21:59:47 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=OH9QgA1zs57t3X+399BRoLLVjiVfyd9x67bP0Lvx9VY=; b=jpEXcJureDScwgQSTF9eHzcwhmQuFrOHxRs892SZDNVkINIFS5TbHDpabFpo7Gs7IHlBnmskokz8D4i2YY5ViibSy+NBswTJ776BfV1BmS29V/WPbozOzfLFQDTEEXWotrT//LfOGQVTKKoMRDg2y4UW+ua6jfMPr/mLDlS+tJQ=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 6E06D4999A;
-        Wed, 29 Apr 2020 21:59:47 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 91EAD2DA0A91;
-        Wed, 29 Apr 2020 21:59:46 -0400 (EDT)
-Date:   Wed, 29 Apr 2020 21:59:46 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-cc:     Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        Christophe Lyon <christophe.lyon@linaro.org>
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
- properly in there
-In-Reply-To: <20200429215620.GM1551@shell.armlinux.org.uk>
-Message-ID: <nycvar.YSQ.7.76.2004292153090.2671@knanqh.ubzr>
-References: <20200429214954.44866-1-jannh@google.com> <20200429215620.GM1551@shell.armlinux.org.uk>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 29 Apr 2020 22:01:31 -0400
+Received: from mx22.baidu.com ([220.181.50.185]:38918 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726282AbgD3CBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 22:01:30 -0400
+Received: from BC-Mail-Ex16.internal.baidu.com (unknown [172.31.51.56])
+        by Forcepoint Email with ESMTPS id 7AD7E984D2F571FACB69;
+        Thu, 30 Apr 2020 09:45:30 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BC-Mail-Ex16.internal.baidu.com (172.31.51.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1531.3; Thu, 30 Apr 2020 09:45:30 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Thu, 30 Apr 2020 09:45:30 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3YyXSBrdm06IHg4NjogZW11bGF0ZSBBUEVSRi9N?=
+ =?utf-8?Q?PERF_registers?=
+Thread-Topic: [PATCH][v2] kvm: x86: emulate APERF/MPERF registers
+Thread-Index: AQHWHgPRaxq7VoyE2kqvmC7wjQtzhaiPXbuAgAGG2mA=
+Date:   Thu, 30 Apr 2020 01:45:30 +0000
+Message-ID: <bea20279850d48848e0b21f7cbb39bdb@baidu.com>
+References: <1588139196-23802-1-git-send-email-lirongqing@baidu.com>
+ <20200429085440.GG13592@hirez.programming.kicks-ass.net>
+ <201824a4-6b0f-9061-ec21-26d71fa11bc4@redhat.com>
+In-Reply-To: <201824a4-6b0f-9061-ec21-26d71fa11bc4@redhat.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.11]
+x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex16_2020-04-30 09:45:30:295
+x-baidu-bdmsfe-viruscheck: BC-Mail-Ex16_GRAY_Inside_WithoutAtta_2020-04-30
+ 09:45:30:186
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 44EB08B6-8A86-11EA-B6B5-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020, Russell King - ARM Linux admin wrote:
-
-> On Wed, Apr 29, 2020 at 11:49:49PM +0200, Jann Horn wrote:
-> > At the moment, we have that rather ugly mmget_still_valid() helper to
-> > work around <https://crbug.com/project-zero/1790>: ELF core dumping
-> > doesn't take the mmap_sem while traversing the task's VMAs, and if
-> > anything (like userfaultfd) then remotely messes with the VMA tree,
-> > fireworks ensue. So at the moment we use mmget_still_valid() to bail
-> > out in any writers that might be operating on a remote mm's VMAs.
-> > 
-> > With this series, I'm trying to get rid of the need for that as
-> > cleanly as possible.
-> > In particular, I want to avoid holding the mmap_sem across unbounded
-> > sleeps.
-> > 
-> > 
-> > Patches 1, 2 and 3 are relatively unrelated cleanups in the core
-> > dumping code.
-> > 
-> > Patches 4 and 5 implement the main change: Instead of repeatedly
-> > accessing the VMA list with sleeps in between, we snapshot it at the
-> > start with proper locking, and then later we just use our copy of
-> > the VMA list. This ensures that the kernel won't crash, that VMA
-> > metadata in the coredump is consistent even in the presence of
-> > concurrent modifications, and that any virtual addresses that aren't
-> > being concurrently modified have their contents show up in the core
-> > dump properly.
-> > 
-> > The disadvantage of this approach is that we need a bit more memory
-> > during core dumping for storing metadata about all VMAs.
-> > 
-> > After this series has landed, we should be able to rip out
-> > mmget_still_valid().
-> > 
-> > 
-> > Testing done so far:
-> > 
-> >  - Creating a simple core dump on X86-64 still works.
-> >  - The created coredump on X86-64 opens in GDB, and both the stack and the
-> >    exectutable look vaguely plausible.
-> >  - 32-bit ARM compiles with FDPIC support, both with MMU and !MMU config.
-> > 
-> > I'm CCing some folks from the architectures that use FDPIC in case
-> > anyone wants to give this a spin.
-> 
-> I've never had any reason to use FDPIC, and I don't have any binaries
-> that would use it.  Nicolas Pitre added ARM support, so I guess he
-> would be the one to talk to about it.  (Added Nicolas.)
-
-It's been a while since I worked with it. However Christophe Lyon (in 
-CC) added support for ARM FDPIC to mainline gcc recently, so hopefully 
-he might still be set up and able to help.
-
-
-Nicolas
+DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFBhb2xvIEJvbnppbmkg
+W21haWx0bzpwYm9uemluaUByZWRoYXQuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ05pyI
+Mjnml6UgMTg6MjENCj4g5pS25Lu25Lq6OiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVh
+ZC5vcmc+OyBMaSxSb25ncWluZw0KPiA8bGlyb25ncWluZ0BiYWlkdS5jb20+DQo+IOaKhOmAgTog
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsga3ZtQHZnZXIua2VybmVsLm9yZzsgeDg2QGtl
+cm5lbC5vcmc7DQo+IGhwYUB6eXRvci5jb207IGJwQGFsaWVuOC5kZTsgbWluZ29AcmVkaGF0LmNv
+bTsgdGdseEBsaW51dHJvbml4LmRlOw0KPiBqb3JvQDhieXRlcy5vcmc7IGptYXR0c29uQGdvb2ds
+ZS5jb207IHdhbnBlbmdsaUB0ZW5jZW50LmNvbTsNCj4gdmt1em5ldHNAcmVkaGF0LmNvbTsgc2Vh
+bi5qLmNocmlzdG9waGVyc29uQGludGVsLmNvbQ0KPiDkuLvpopg6IFJlOiBbUEFUQ0hdW3YyXSBr
+dm06IHg4NjogZW11bGF0ZSBBUEVSRi9NUEVSRiByZWdpc3RlcnMNCj4gDQo+IE9uIDI5LzA0LzIw
+IDEwOjU0LCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gPiBPbiBXZWQsIEFwciAyOSwgMjAyMCBh
+dCAwMTo0NjozNlBNICswODAwLCBMaSBSb25nUWluZyB3cm90ZToNCj4gPj4gR3Vlc3Qga2VybmVs
+IHJlcG9ydHMgYSBmaXhlZCBjcHUgZnJlcXVlbmN5IGluIC9wcm9jL2NwdWluZm8sIHRoaXMgaXMN
+Cj4gPj4gY29uZnVzZWQgdG8gdXNlciB3aGVuIHR1cmJvIGlzIGVuYWJsZSwgYW5kIGFwZXJmL21w
+ZXJmIGNhbiBiZSB1c2VkIHRvDQo+ID4+IHNob3cgY3VycmVudCBjcHUgZnJlcXVlbmN5IGFmdGVy
+IDdkNTkwNWRjMTRhDQo+ID4+ICIoeDg2IC8gQ1BVOiBBbHdheXMgc2hvdyBjdXJyZW50IENQVSBm
+cmVxdWVuY3kgaW4gL3Byb2MvY3B1aW5mbykiDQo+ID4+IHNvIHdlIHNob3VsZCBlbXVsYXRlIGFw
+ZXJmIG1wZXJmIHRvIGFjaGlldmUgaXQNCj4gPj4NCj4gPj4gdGhlIHBlcmlvZCBvZiBhcGVyZi9t
+cGVyZiBpbiBndWVzdCBtb2RlIGFyZSBhY2N1bXVsYXRlZCBhcyBlbXVsYXRlZA0KPiA+PiB2YWx1
+ZSwgYW5kIGFkZCBwZXItVk0ga25vZCB0byBlbmFibGUgZW11bGF0ZSBtcGVyZmFwZXJmDQo+ID4+
+DQo+ID4+IGRpZmYgdjE6DQo+ID4+IDEuIHN1cHBvcnQgQU1EDQo+ID4+IDIuIHN1cHBvcnQgcGVy
+LXZtIGNhcGFiaWxpdHkgdG8gZW5hYmxlDQo+ID4gV291bGQgaXQgbWFrZSBzZW5zZSB0byBwcm92
+aWRlIGEgcGFzcy10aHJvdWdoIEFQRVJGL01QRVJGIGZvcg0KPiA+IEtWTV9ISU5UU19SRUFMVElN
+RSA/IEJlY2F1c2UgdGhhdCBoaW50IGd1YXJhbnRlZXMgd2UgaGF2ZSBhIDE6MQ0KPiA+IHZDUFU6
+Q1BVIGJpbmRpbmcgYW5kIGd1YXJhbnRlZWQgbm8gb3Zlci1jb21taXQuDQo+ID4NCj4gDQo+IFll
+cyBidXQgdGhhdCdzIHVwIHRvIHVzZXJzcGFjZS4NCj4gDQo+IFBhb2xvDQoNClNlZW0ga2VybmVs
+IHNob3VsZCBnaXZlIHRoZSBjYXBhYmlsaXR5IHRvIHVzZXJzcGFjZSB0byBkaXNhYmxlIHRoZSBp
+bnRlcmNlcHQgbXBlcmYvYXBlcmYgZm9yIEtWTV9ISU5UU19SRUFMVElNRQ0KDQpTbyBJIHdpbGwg
+Y2hhbmdlIHRoaXMgcGF0Y2ggdG8gc3VwcG9ydCB0aHJlZSBtb2RlIG1wZXJmYXBlcmY6ICBub25l
+LCBzb2Z0d2FyZSBlbXVsYXRlLCBhbmQgcHQNCg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3Zt
+L3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQppbmRleCAxZDE1N2E4ZGJhNDYuLjZiMDVmNzhi
+ZGU3OCAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2t2bS9zdm0uYw0KKysrIGIvYXJjaC94ODYva3Zt
+L3N2bS5jDQpAQCAtMTY1Nyw5ICsxNjU3LDExIEBAIHN0YXRpYyB2b2lkIGluaXRfdm1jYihzdHJ1
+Y3QgdmNwdV9zdm0gKnN2bSkNCiAgICAgICAgc2V0X2ludGVyY2VwdChzdm0sIElOVEVSQ0VQVF9T
+S0lOSVQpOw0KICAgICAgICBzZXRfaW50ZXJjZXB0KHN2bSwgSU5URVJDRVBUX1dCSU5WRCk7DQog
+ICAgICAgIHNldF9pbnRlcmNlcHQoc3ZtLCBJTlRFUkNFUFRfWFNFVEJWKTsNCi0gICAgICAgc2V0
+X2ludGVyY2VwdChzdm0sIElOVEVSQ0VQVF9SRFBSVSk7DQogICAgICAgIHNldF9pbnRlcmNlcHQo
+c3ZtLCBJTlRFUkNFUFRfUlNNKTsNCiANCisgICAgICAgaWYgKCFndWVzdF9tcGVyZmFwZXJmX3B0
+KHN2bS0+dmNwdS5rdm0pKQ0KKyAgICAgICAgICAgICAgIHNldF9pbnRlcmNlcHQoc3ZtLCBJTlRF
+UkNFUFRfUkRQUlUpOw0KKw0KICAgICAgICBpZiAoIWt2bV9td2FpdF9pbl9ndWVzdChzdm0tPnZj
+cHUua3ZtKSkgew0KICAgICAgICAgICAgICAgIHNldF9pbnRlcmNlcHQoc3ZtLCBJTlRFUkNFUFRf
+TU9OSVRPUik7DQogICAgICAgICAgICAgICAgc2V0X2ludGVyY2VwdChzdm0sIElOVEVSQ0VQVF9N
+V0FJVCk7DQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3ZteC92bXguYyBiL2FyY2gveDg2L2t2
+bS92bXgvdm14LmMNCmluZGV4IGIwNWUyNzZlMjYyYi4uMjMxNzMyOTI0YzUwIDEwMDY0NA0KLS0t
+IGEvYXJjaC94ODYva3ZtL3ZteC92bXguYw0KKysrIGIvYXJjaC94ODYva3ZtL3ZteC92bXguYw0K
+QEAgLTY3NjUsNiArNjc2NSwxMiBAQCBzdGF0aWMgaW50IHZteF9jcmVhdGVfdmNwdShzdHJ1Y3Qg
+a3ZtX3ZjcHUgKnZjcHUpDQogICAgICAgICAgICAgICAgdm14X2Rpc2FibGVfaW50ZXJjZXB0X2Zv
+cl9tc3IobXNyX2JpdG1hcCwgTVNSX0NPUkVfQzZfUkVTSURFTkNZLCBNU1JfVFlQRV9SKTsNCiAg
+ICAgICAgICAgICAgICB2bXhfZGlzYWJsZV9pbnRlcmNlcHRfZm9yX21zcihtc3JfYml0bWFwLCBN
+U1JfQ09SRV9DN19SRVNJREVOQ1ksIE1TUl9UWVBFX1IpOw0KICAgICAgICB9DQorDQorICAgICAg
+IGlmIChndWVzdF9tcGVyZmFwZXJmX3B0KHZjcHUtPmt2bSkpIHsNCisgICAgICAgICAgICAgICB2
+bXhfZGlzYWJsZV9pbnRlcmNlcHRfZm9yX21zcihtc3JfYml0bWFwLCBNU1JfSUEzMl9NUEVSRiwg
+TVNSX1RZUEVfUik7DQorICAgICAgICAgICAgICAgdm14X2Rpc2FibGVfaW50ZXJjZXB0X2Zvcl9t
+c3IobXNyX2JpdG1hcCwgTVNSX0lBMzJfQVBFUkYsIE1TUl9UWVBFX1IpOw0KKyAgICAgICB9DQor
+DQogICAgICAgIHZteC0+bXNyX2JpdG1hcF9tb2RlID0gMDsNCiANCiAgICAgICAgdm14LT5sb2Fk
+ZWRfdm1jcyA9ICZ2bXgtPnZtY3MwMTsNCg0KDQotTGkNCg==
