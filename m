@@ -6,185 +6,61 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6915DC83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B24EC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 501E821D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C482082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD3Huh (ORCPT
+        id S1726526AbgD3Hum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:50:37 -0400
-Received: from mga09.intel.com ([134.134.136.24]:43971 "EHLO mga09.intel.com"
+        Thu, 30 Apr 2020 03:50:42 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60596 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgD3Huh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:50:37 -0400
-IronPort-SDR: ps9NXfVYePlf0ibOADvMPJ7UTwDNiwKjcPKpSfvatYRjsD9+n08HyWeyu5oWS6bGEVzW4NVRaz
- EZYS796XkCgw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 00:50:36 -0700
-IronPort-SDR: bwERHQ8g+/+9Phkljugxc4OGg+gtyL9Qml3tgy9+bus/HWZ/3wkEhyYTBTwHOaf2wxxKxS054S
- ybV4ETUGQTIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
-   d="scan'208";a="247110447"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 30 Apr 2020 00:50:35 -0700
-Received: from [10.215.169.74] (vramuthx-mobl1.gar.corp.intel.com [10.215.169.74])
-        by linux.intel.com (Postfix) with ESMTP id 761155805EB;
-        Thu, 30 Apr 2020 00:50:31 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        richard@nod.at, brendanhiggins@google.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        miquel.raynal@bootlin.com, tglx@linutronix.de,
-        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
- <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
- <20200429164832.6800fc70@collabora.com>
- <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
- <20200429173107.5c6d2f55@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
-Date:   Thu, 30 Apr 2020 15:50:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726358AbgD3Hul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:50:41 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jU3w4-0007Ws-Bk; Thu, 30 Apr 2020 17:48:45 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 30 Apr 2020 17:49:41 +1000
+Date:   Thu, 30 Apr 2020 17:49:41 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
+Message-ID: <20200430074941.GA12529@gondor.apana.org.au>
+References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com>
+ <1587987364-4566-2-git-send-email-hadar.gat@arm.com>
+ <20200427150658.GA26305@gondor.apana.org.au>
+ <DB7PR08MB3003E1459755B853B41490D6E9AC0@DB7PR08MB3003.eurprd08.prod.outlook.com>
+ <20200428123007.GA3969@gondor.apana.org.au>
+ <AM6PR08MB2999F52B99066C321837144DE9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429173107.5c6d2f55@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR08MB2999F52B99066C321837144DE9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Thu, Apr 30, 2020 at 07:39:14AM +0000, Hadar Gat wrote:
+>
+> Yes, it builds, but it is useless.
 
-   Thank you very much for keep reviewing the patches and more queries...
-
-On 29/4/2020 11:31 pm, Boris Brezillon wrote:
-> On Wed, 29 Apr 2020 23:18:31 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> Hi Boris,
->>
->> On 29/4/2020 10:48 pm, Boris Brezillon wrote:
->>> On Wed, 29 Apr 2020 22:33:37 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> Hi Boris,
->>>>
->>>> On 29/4/2020 10:22 pm, Boris Brezillon wrote:
->>>>> On Wed, 29 Apr 2020 18:42:05 +0800
->>>>> "Ramuthevar, Vadivel MuruganX"
->>>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>>>       
->>>>>> +
->>>>>> +#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
->>>>>> +#define EBU_ADDR_MASK		(5 << 4)
->>>>>
->>>>> It's still unclear what ADDR_MASK is for. Can you add a comment
->>>>> explaining what it does?
->>>>
->>>> Thank you Boris, keep review and giving inputs, will update.
->>>
->>> Can you please explain it here before sending a new version?
->>
->> Memory Region Address Mask:
->> Specifies the number of right-most bits in the base address that should
->> be included in the address comparison. bits positions(7:4).
-> 
-> Okay, then the macro should be
-> 
-> #define EBU_ADDR_MASK(x)	((x) << 4)
-> 
-> And now I'd like you to explain why 5 is the right value for that field
-> (I guess that has to do with the position of the CS/ALE/CLE pins).
-
-5 : bit 26, 25, 24, 23, 22 to be included for comparison in the 
-ADDR_SELx , it compares only 5 bits.
-
-> 
->>
->>>>>       
->>>>>> +#define EBU_ADDR_SEL_REGEN	0x1
->>>>>
->>>>>       
->>>>>> +
->>>>>> +	writel(lower_32_bits(ebu_host->cs[ebu_host->cs_num].nand_pa) |
->>>>>> +	       EBU_ADDR_SEL_REGEN | EBU_ADDR_MASK,
->>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
-> 
-> You set EBU_ADDR_SEL(reg) once here...
-> 
->>>>>> +
->>>>>> +	writel(EBU_MEM_BASE_CS_0 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
->>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(0));
->>>>>> +	writel(EBU_MEM_BASE_CS_1 | EBU_ADDR_MASK | EBU_ADDR_SEL_REGEN,
->>>>>> +	       ebu_host->ebu + EBU_ADDR_SEL(reg));
-> 
-> ... and a second time here. That sounds like overwriting the
-> EBU_ADDR_SEL(reg) register to me.
-> 
->>>>>
->>>>> That's super weird. You seem to set EBU_ADDR_SEL(reg) twice. Are you
->>>>> sure that's needed, and are we setting EBU_ADDR_SEL(0) here?
->>>>
->>>> You are right, its weird only, but we need it, since different chip
->>>> select has different memory region access address.
->>>
->>> Well, that doesn't make any sense, the second write to
->>> EBU_ADDR_SEL(reg) overrides the first one, meaning that nand_pa is
->>> actually never written to ADDR_SEL(reg).
->>
->> it will not overwrite the first one, since two different registers
->> EBU_ADDR_SEL_0 EBU_ADDR_SEL  20H
->> EBU_ADDR_SEL_1 EBU_ADDR_SEL  24H
-> 
-> See my above.
-> 
->>
->> it is an internal address selection w.r.t chip select for nand physical
->> address update.
->>
->>
->>>    
->>>>
->>>> Yes , we are setting both CS0 and CS1 memory access region, if you have
->>>> any concern to optimize, please suggest me, Thanks!
->>>
->>> If you want to setup both CS, and the address written in EBU_ADDR_SEL(x)
->>> is really related to the nand_pa address, then retrieve resources for
->>> all CS ranges.
->> If it's not related, please explain what those
->>> EBU_MEM_BASE_CS_X values encode.
->>
->> Memory Region Base Address
->> FPI Bus addresses are compared to this base address in conjunction with
->> the mask control(EBU_ADDR_MASK). Driver need to program this field!
-> 
-> That's not explaining what the base address should be. Is 'nand_pa' the
-> value we should have there?
-
-The one prorgrammed in the addr_sel register is used by the HW 
-controller, it remaps to  0x174XX-> CS0 and 0x17CXX->CS1.
-The hardware itself, decodes only for 1740xx/17c0xx, other random values 
-cannot be programmed
-
-Regards
-Vadivel
-> 
+But that's the whole point of COMPILE_TEST.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
