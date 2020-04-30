@@ -2,114 +2,106 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD6C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D75BC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7AD120775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="raszGkcn"
+	by mail.kernel.org (Postfix) with ESMTP id D978520661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgD3PMp (ORCPT
+        id S1727098AbgD3PNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:12:45 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33338 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726626AbgD3PMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:12:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588259564; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=+Elf3SEuakpHyKtLd2fhgPxNApOMvDXgdZ23op/04/o=; b=raszGkcn6qzpFgcSrQbSvrgY/iEOabQmzBBmLRQhTams+tp+FfwXWwXzO+prVVv3AzyVHSoq
- 3HY47lRAoDFRBtQVyoA+BhZ+LYMlw7ks9R+d47ORvox+7XTsUu61Dkma6T4cffOSsaCx8IRQ
- CxA6UIBJfdtSDirts/HSgy5i1HA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaaeae7.7f2dc00b1998-smtp-out-n03;
- Thu, 30 Apr 2020 15:12:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 38A40C433CB; Thu, 30 Apr 2020 15:12:39 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA60CC432C2;
-        Thu, 30 Apr 2020 15:12:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA60CC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 9/9] bus: mhi: core: Ensure non-zero session or
- sequence ID values
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>, mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org
-References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
- <1588193551-31439-10-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <e609031b-33a1-2db6-21b9-8ebadafba509@codeaurora.org>
-Date:   Thu, 30 Apr 2020 09:12:35 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 30 Apr 2020 11:13:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:57228 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgD3PNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:13:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 114D31FB;
+        Thu, 30 Apr 2020 08:13:30 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E8B33F68F;
+        Thu, 30 Apr 2020 08:13:28 -0700 (PDT)
+References: <20200424041832.11364-1-hdanton@sina.com> <20200424043650.14940-1-hdanton@sina.com> <20200430121301.3460-1-hdanton@sina.com> <da5bf72d-1d50-5c5c-3bdb-113ed555dd10@arm.com> <jhjv9lhcb0e.mognet@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/4] sched: set new prio after checking schedule policy
+In-reply-to: <jhjv9lhcb0e.mognet@arm.com>
+Date:   Thu, 30 Apr 2020 16:13:26 +0100
+Message-ID: <jhjsgglc8h5.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1588193551-31439-10-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
-> While writing any sequence or session identifiers, it is possible that
-> the host could write a zero value, whereas only non-zero values are
-> supported writes to those registers. Ensure that host does not write a
-> non-zero value for those cases.
-> 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
->   drivers/bus/mhi/core/boot.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-> index 0bc9c50..c9971d4 100644
-> --- a/drivers/bus/mhi/core/boot.c
-> +++ b/drivers/bus/mhi/core/boot.c
-> @@ -199,6 +199,9 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
->   	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
->   
->   	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
-> +	if (unlikely(!sequence_id))
-> +		sequence_id = 1;
 
-Seems like you could use prandom_u32_max(), and add 1 to the result to 
-eliminate the conditional.  What do you think?
+On 30/04/20 15:18, Valentin Schneider wrote:
+> On 30/04/20 15:06, Dietmar Eggemann wrote:
+>>>>> +		newprio = NICE_TO_PRIO(attr->sched_nice);
+>>>>
+>>>> This is new, however AFAICT it doesn't change anything for CFS (or about to
+>>>> be) tasks since what matters is calling check_class_changed() further down.
+>>>
+>>> Yes it's only used by rt_effective_prio().
+>>>
+>>
+>> Looks like changing a SCHED_NORMAL to a SCHED_BATCH task will create a different
+>> queue_flags value.
+>>
+>> # chrt -p $$
+>> pid 2803's current scheduling policy: SCHED_OTHER
+>> pid 2803's current scheduling priority: 0
+>>
+>> # chrt -b -p 0 $$
+>>
+>> ...
+>> [bash 2803] policy=3 oldprio=120 newprio=[99->120] new_effective_prio=[99->120] queue_flags=[0xe->0xa]
+>> [bash 2803] queued=0 running=0
+>> ...
+>>
+>> But since in this example 'queued=0' it has no further effect here.
+>>
+>> Why is SCHED_NORMAL/SCHED_BATCH (fair_policy()) now treated differently than SCHED_IDLE?
+>>
+>> # chrt -i -p 0 $$
+>>
+>> ...
+>> [bash 2803] policy=5 newprio=99 oldprio=120 new_effective_prio=99 queue_flags=0xe
+>> [bash 2803] queued=0 running=0
+>> ...
+>
+>
+> Good catch; I suppose we'll want to special case SCHED_IDLE (IIRC should
+> map to nice 20).
+>
+> As you pointed out, right now the newprio computation for CFS tasks is
+> kinda bonkers, so it seems we'll almost always clear DEQUEUE_MOVE from
+> queue_flags for them.
+>
 
-> +
->   	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
->   			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
->   			    sequence_id);
-> @@ -254,6 +257,9 @@ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
->   		      lower_32_bits(dma_addr));
->   	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
->   	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
-> +	if (unlikely(!session_id))
-> +		session_id = 1;
-> +
->   	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
->   	read_unlock_bh(pm_lock);
->   
-> 
+Of course I misread that, it's the other way around: since newprio is
+always 99 for SCHED_OTHER/BATCH/IDLE tasks, we'll never have
+new_effective_prio == oldprio (unless pi involves a FIFO 99 task), thus
+will never clear DEQUEUE_MOVE.
 
-
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+> For CFS, not having DEQUEUE_MOVE here would lead to not calling
+> update_min_vruntime() on the dequeue. I'm not sure how much it matters in
+> this one case - I don't expect sched_setscheduler() calls to be *too*
+> frequent, and that oughta be fixed by the next entity_tick()) - but that is
+> an actual change.
