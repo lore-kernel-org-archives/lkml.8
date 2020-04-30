@@ -2,123 +2,298 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E44C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B96C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0E492082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c9Jlcl1r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rZ2vf5bZ"
+	by mail.kernel.org (Postfix) with ESMTP id D2D9720775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgD3PG5 (ORCPT
+        id S1727884AbgD3PHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:06:57 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:45539 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726501AbgD3PG4 (ORCPT
+        Thu, 30 Apr 2020 11:07:42 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:57539 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbgD3PHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:06:56 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id AEF9C3D7;
-        Thu, 30 Apr 2020 11:06:54 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 30 Apr 2020 11:06:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=3HOldL8M8SMhSFP04OdXihjEBtT
-        HltI1ljKcZAb+nkU=; b=c9Jlcl1rGAZQZsRZokJHWuF0zB9rfxpkoH4HQ0LusyR
-        4nzRuVu05bhdqG6EeL0AK4+0TJFJr/EeRET0GCJ77nt+u1LPbsJWaTu5FzgvhI46
-        E2rCO2tfd2R7S8/kKw4YWvEhX42I+hzTTv397UEOwilQmjqqOyRWELvAbV0x8CLy
-        mSIEHlu9c5rCKsZng3/oUZsomDllS4UlRujAQtmZdb8UPqPyGw/042FzVNphKdya
-        5/90seI+WvLVSrr8fAKaFh2yyYCvY2Svq0LIZQaElMZcL7l4bgvx9ynqiOgwEP4w
-        G2rHw+hLBDwurMLmtmHOVOB2QChDH88nKBGS7nelrBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3HOldL
-        8M8SMhSFP04OdXihjEBtTHltI1ljKcZAb+nkU=; b=rZ2vf5bZBWVwnMklpPl8Bd
-        vO4YGW/TMVENltc1XyknpsxocwyldTOFsWluFkN561NHL9YUCn70oZY/alr6SrtN
-        pFdiKHWfGtUxViftRrtmq1cYItYknbwWxhZSJFdi7eQFua0SoiXrqqojOGdGZC8t
-        M1n5892MNX0XyVW8kSMh3R377sPxR5AKTw4w8rtkKcVQTdRpM+TSLJwPr6+nL8W3
-        PXqmOuZCM7L8fJE23iupC5S9ABIxjvf7dTWts4ysvfeDgmzwYjB44iL+utgFkvwa
-        lQYFim8If+13p8gU8JFuktA725TBysPhZkLeBgtdaKuOapyYs2TrP4+d55kbKKFQ
-        ==
-X-ME-Sender: <xms:jemqXkhoKUgqmlZFMxeK0cDa90kpmrp0xhAsS7J2naiy7HyM4OgTTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdekgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdejvdfg
-    veenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:jemqXkpnDXrjC4V69PI-XyVp3mJnYjhF-ntNPpfbLCqrGOu7a4mCKw>
-    <xmx:jemqXjeFFLdSCxpHmpzKYVvqadSK37vzz52J1EUYSByc8KglZIAsow>
-    <xmx:jemqXvwPR3RTFuBwdbZCpRNQfFY508PK6h6eWtbbnsUtt_lUSdCq0Q>
-    <xmx:jumqXgB-mzVQpjHwawS_NrFP-SQU-PYGNf_1_-qDDRQoXNpWTFuyrBItnEo>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5A3D23280069;
-        Thu, 30 Apr 2020 11:06:53 -0400 (EDT)
-Date:   Thu, 30 Apr 2020 17:06:52 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Emmanuel Vadot <manu@freebsd.org>
-Cc:     maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        airlied@linux.ie, daniel@ffwll.ch, matthew.d.roper@intel.com,
-        noralf@tronnes.org, kraxel@redhat.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [RESEND 1/2] drm/client: Dual licence the header in GPL-2 and MIT
-Message-ID: <20200430150652.7rhh7zn2lqhzy4bs@gilmour.lan>
-References: <20200430145439.31257-1-manu@FreeBSD.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tjombykybepmtpey"
-Content-Disposition: inline
-In-Reply-To: <20200430145439.31257-1-manu@FreeBSD.org>
+        Thu, 30 Apr 2020 11:07:41 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jUAoz-0007qc-UN; Thu, 30 Apr 2020 15:09:54 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v9 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
+Date:   Thu, 30 Apr 2020 08:07:25 -0700
+Message-Id: <1588259247-15536-2-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588259247-15536-1-git-send-email-tharvey@gateworks.com>
+References: <1588259247-15536-1-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds documentation of device-tree bindings for the
+Gateworks System Controller (GSC).
 
---tjombykybepmtpey
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v9:
+ - added Reviewed-by: Rob Herring <robh@kernel.org>
+ - remove allOf: see https://lkml.org/lkml/2020/4/15/1930
+ - encorporate Lee's review comments for item descriptions
 
-On Thu, Apr 30, 2020 at 04:54:38PM +0200, Emmanuel Vadot wrote:
-> Source file was dual licenced but the header was omitted, fix that.
-> Contributors for this file are:
-> Daniel Vetter <daniel.vetter@ffwll.ch>
-> Matt Roper <matthew.d.roper@intel.com>
-> Maxime Ripard <mripard@kernel.org>
-> Noralf Tr=F8nnes <noralf@tronnes.org>
-> Thomas Zimmermann <tzimmermann@suse.de>
->=20
-> Acked-by: Noralf Tr=F8nnes <noralf@tronnes.org>
-> Acked-by: Matt Roper <matthew.d.roper@intel.com>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
+v8:
+ - add register to fan-controller node name
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+v7:
+ - change divider from mili-ohms to ohms
+ - add constraints for voltage divider and offset
+ - remove unnecessary ref for offset
+ - renamed fan to fan-controller and changed base prop to reg
 
-Maxime
+v6:
+ - fix typo
+ - drop invalid description from #interrupt-cells property
+ - fix adc pattern property
+ - add unit suffix
+ - replace hwmon/adc with adc/channel
+ - changed adc type to mode and enum int
+ - add unit suffix and drop ref for voltage-divider
+ - moved fan to its own subnode with base register
 
---tjombykybepmtpey
-Content-Type: application/pgp-signature; name="signature.asc"
+v5:
+ - resolve dt_binding_check issues
 
------BEGIN PGP SIGNATURE-----
+v4:
+ - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - remove unncessary resolution/scaling properties for ADCs
+ - update to yaml
+ - remove watchdog
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqrpjAAKCRDj7w1vZxhR
-xXGwAP9Ki8H1vsg5ATj+ZH/wRTiLKXRb3PQC/kGD5BF/AvIVIgD/XC7nOwVt3iuT
-6ZFDx1vpZM6X92tW1fMSxk5/v/OIQQU=
-=yUcS
------END PGP SIGNATURE-----
+v3:
+ - replaced _ with -
+ - remove input bindings
+ - added full description of hwmon
+ - fix unit address of hwmon child nodes
+---
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 196 +++++++++++++++++++++
+ 1 file changed, 196 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 
---tjombykybepmtpey--
+diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+new file mode 100644
+index 00000000..487a844
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+@@ -0,0 +1,196 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Gateworks System Controller
++
++description: |
++  The Gateworks System Controller (GSC) is a device present across various
++  Gateworks product families that provides a set of system related features
++  such as the following (refer to the board hardware user manuals to see what
++  features are present)
++   - Watchdog Timer
++   - GPIO
++   - Pushbutton controller
++   - Hardware monitor with ADC's for temperature and voltage rails and
++     fan controller
++
++maintainers:
++  - Tim Harvey <tharvey@gateworks.com>
++  - Robert Jones <rjones@gateworks.com>
++
++properties:
++  $nodename:
++    pattern: "gsc@[0-9a-f]{1,2}"
++  compatible:
++    const: gw,gsc
++
++  reg:
++    description: I2C device address
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  adc:
++    type: object
++    description: Optional hardware monitoring module
++
++    properties:
++      compatible:
++        const: gw,gsc-adc
++
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    patternProperties:
++      "^channel@[0-9]+$":
++        type: object
++        description: |
++          Properties for a single ADC which can report cooked values
++          (i.e. temperature sensor based on thermister), raw values
++          (i.e. voltage rail with a pre-scaling resistor divider).
++
++        properties:
++          reg:
++            description: Register of the ADC
++            maxItems: 1
++
++          label:
++            description: Name of the ADC input
++
++          gw,mode:
++            description: |
++              conversion mode:
++                0 - temperature, in C*10
++                1 - pre-scaled voltage value
++                2 - scaled voltage based on an optional resistor divider
++                    and optional offset
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [0, 1, 2]
++
++          gw,voltage-divider-ohms:
++            description: Values of resistors for divider on raw ADC input
++            maxItems: 2
++            items:
++             minimum: 1000
++             maximum: 1000000
++
++          gw,voltage-offset-microvolt:
++            description: |
++              A positive voltage offset to apply to a raw ADC
++              (i.e. to compensate for a diode drop).
++            minimum: 0
++            maximum: 1000000
++
++        required:
++          - gw,mode
++          - reg
++          - label
++
++    required:
++      - compatible
++      - "#address-cells"
++      - "#size-cells"
++
++patternProperties:
++  "^fan-controller@[0-9a-f]+$":
++    type: object
++    description: Optional fan controller
++
++    properties:
++      compatible:
++        const: gw,gsc-fan
++
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      reg:
++        description: The fan controller base address
++        maxItems: 1
++
++    required:
++      - compatible
++      - reg
++      - "#address-cells"
++      - "#size-cells"
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        gsc@20 {
++            compatible = "gw,gsc";
++            reg = <0x20>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <4 GPIO_ACTIVE_LOW>;
++            interrupt-controller;
++            #interrupt-cells = <1>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            adc {
++                compatible = "gw,gsc-adc";
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                channel@0 { /* A0: Board Temperature */
++                    reg = <0x00>;
++                    label = "temp";
++                    gw,mode = <0>;
++                };
++
++                channel@2 { /* A1: Input Voltage (raw ADC) */
++                    reg = <0x02>;
++                    label = "vdd_vin";
++                    gw,mode = <1>;
++                    gw,voltage-divider-ohms = <22100 1000>;
++                    gw,voltage-offset-microvolt = <800000>;
++                };
++
++                channel@b { /* A2: Battery voltage */
++                    reg = <0x0b>;
++                    label = "vdd_bat";
++                    gw,mode = <1>;
++                };
++            };
++
++            fan-controller@2c {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                compatible = "gw,gsc-fan";
++                reg = <0x2c>;
++            };
++        };
++    };
+-- 
+2.7.4
+
