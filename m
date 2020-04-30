@@ -2,114 +2,101 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FE4C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD9C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F08E214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588241679;
-	bh=K4iRN3zCPNFjbTseot6WcbvyRWpaRNNyZ8e0DoLGw0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rnvhQH/wchGyrLlmIJzUolO9DwUQeXu/68quu904LjF7OEFcLoN01He/c7Cu6iB57
-	 0OHcwtSF9Th7NddiN/0cHZ144JZj49/g5n94hB1uJgiMWpcdn3mSA0e0tWQotXG8x1
-	 7YVR4Xps09nN+UyYkZQJUXyU1J7dR0jiZ/9J3ZO8=
+	by mail.kernel.org (Postfix) with ESMTP id 705B62137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:17:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IGqjm8Bu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgD3KOi (ORCPT
+        id S1726791AbgD3KRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgD3KOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:14:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 546C52082E;
-        Thu, 30 Apr 2020 10:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588241677;
-        bh=K4iRN3zCPNFjbTseot6WcbvyRWpaRNNyZ8e0DoLGw0E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JvlDRD0fualhnU0GtkqaCGYeK0Ta5RV7QlJMm+JXxK6sJpn+Ba3M4ZH+1i92mJL0x
-         heHHfzv8MWGQl/ku3fbX8+JeRaDczFuoMJh77a7aya9Z2AA2yQdeG6kk2+w4pu21MY
-         nx67itkvi/2CXKxGbdHb5la8yWUNEL0Nqkcfe3pc=
-Date:   Thu, 30 Apr 2020 11:14:32 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Srivatsa Vaddagiri <vatsa@codeaurora.org>
-Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
-        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
-        pratikp@codeaurora.org, christoffer.dall@arm.com,
-        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC/PATCH 1/1] virtio: Introduce MMIO ops
-Message-ID: <20200430101431.GD19932@willie-the-truck>
-References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
- <1588240976-10213-2-git-send-email-vatsa@codeaurora.org>
+        Thu, 30 Apr 2020 06:17:11 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29128 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726546AbgD3KRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:17:10 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UAGZUt020402;
+        Thu, 30 Apr 2020 12:16:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=qH2niGVO8C1BeTnQ7Oe306OijojtPE7/RcJ+6sOZsQU=;
+ b=IGqjm8BuEM3mXncZUDSzDMP/Lmn/LDtP0RV2YIqFSJ2+t4Xq6nHLIdZ2eYQ6i4TcaoyU
+ MwCQYyh9/C6g38RalXELQgxJcE4862DXCkDowpr7+KcpOYw+udM2bswNM/yRuTSNf+7m
+ 6Gv1/xYDAb71WGIXYBlFHsYA6dPpTYjNANColkckebqnWLDQsaCHCfcp6FBcUMnbsIw0
+ WSUcAylk6Qnl7okgyORLkZpLZo9oQfMXm6BUHMr4GJH019r/mwwJnRBbjFc51ZdLwVZP
+ PAZPlVy8b6aGOIRx6JKAYc0WM5NcgxBuqGdDa9Ws6T1KGNJo8DZ9oX3Yw4nLF+Due92p Ng== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30qst09622-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 12:16:58 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 43E6910002A;
+        Thu, 30 Apr 2020 12:16:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3611E2B690C;
+        Thu, 30 Apr 2020 12:16:58 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr 2020 12:16:57
+ +0200
+From:   Yann Gautier <yann.gautier@st.com>
+To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Yann Gautier <yann.gautier@st.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH] ARM: dts: stm32: add sd-uhs properties in SD-card node for stm32mp157c-ed1
+Date:   Thu, 30 Apr 2020 12:16:49 +0200
+Message-ID: <20200430101649.29381-1-yann.gautier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588240976-10213-2-git-send-email-vatsa@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_06:2020-04-30,2020-04-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 03:32:56PM +0530, Srivatsa Vaddagiri wrote:
-> Some hypervisors may not support MMIO transport i.e trap config
-> space access and have it be handled by backend driver. They may
-> allow other ways to interact with backend such as message-queue
-> or doorbell API. This patch allows for hypervisor specific
-> methods for config space IO.
-> 
-> Signed-off-by: Srivatsa Vaddagiri <vatsa@codeaurora.org>
-> ---
->  drivers/virtio/virtio_mmio.c | 131 ++++++++++++++++++++++++++-----------------
->  include/linux/virtio.h       |  14 +++++
->  2 files changed, 94 insertions(+), 51 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> index 97d5725..69bfa35 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -100,7 +100,35 @@ struct virtio_mmio_vq_info {
->  	struct list_head node;
->  };
->  
-> +#ifdef CONFIG_VIRTIO_MMIO_OPS
->  
-> +static struct virtio_mmio_ops *mmio_ops;
-> +
-> +#define virtio_readb(a)		mmio_ops->mmio_readl((a))
-> +#define virtio_readw(a)		mmio_ops->mmio_readl((a))
-> +#define virtio_readl(a)		mmio_ops->mmio_readl((a))
-> +#define virtio_writeb(val, a)	mmio_ops->mmio_writeb((val), (a))
-> +#define virtio_writew(val, a)	mmio_ops->mmio_writew((val), (a))
-> +#define virtio_writel(val, a)	mmio_ops->mmio_writel((val), (a))
+The sdmmc1 peripheral is connected on SD-card on STM32MP1-ED1 board.
+Add the UHS features the controller is able to manage.
+Those features require a level shifter on the board, and the support of
+the voltage switch in driver, which is done in Linux v5.7.
 
-How exactly are these ops hooked up? I'm envisaging something like:
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Yann Gautier <yann.gautier@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-	ops = spec_compliant_ops;
-	[...]
-	if (firmware_says_hypervisor_is_buggy())
-		ops = magic_qcom_ops;
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 9d2592db630c..1d7dfe97b160 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -320,6 +320,10 @@
+ 	bus-width = <4>;
+ 	vmmc-supply = <&vdd_sd>;
+ 	vqmmc-supply = <&sd_switch>;
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-ddr50;
+ 	status = "okay";
+ };
+ 
+-- 
+2.17.1
 
-am I wrong?
-
-> +int register_virtio_mmio_ops(struct virtio_mmio_ops *ops)
-> +{
-> +	pr_info("Registered %s as mmio ops\n", ops->name);
-> +	mmio_ops = ops;
-
-Not looking good, and really defeats the point of standardising this stuff
-imo.
-
-Will
