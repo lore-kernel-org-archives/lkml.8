@@ -2,109 +2,151 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B72C83007
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E115C83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4438620787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB58A20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqZlXLKl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIi2K8RB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgD3AKF (ORCPT
+        id S1726419AbgD3ANM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:10:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726282AbgD3AKF (ORCPT
+        Wed, 29 Apr 2020 20:13:12 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45181 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726180AbgD3ANL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:10:05 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2656AC03C1AE;
-        Wed, 29 Apr 2020 17:10:05 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w65so1951267pfc.12;
-        Wed, 29 Apr 2020 17:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X0Uv2a8SpWt1dTnmxZxhtVMKOvjS4ym5W5xsfvNLKFk=;
-        b=cqZlXLKlr6kvQbC0dL7m42EaWEosWMCnT7t7YFh0HujWAh492foEsN/2JJdJimAx8K
-         LxZnPhu35w27UkiJt9ED7pUXUn/0g1kU+yfHaKM9xmMM5+dRu9eJnuAyLKWUilRUZq9z
-         YI9LEhBrx++jmdHpvoAtuqS5kzvCKtcXaJIUwxiiTvlQvXN7xR0haNkjar7AaS9xIWNz
-         fXq0lyWucBs4aaToG16hy0cII4NBeMDuFXuMvadKDI3M9LXbgTby23hUpN5ZupHs3lML
-         dtHI2yMxi9K9QnP34MaE9OBy2zk5JuoTTE20Yu8Xi1PPCFEB7nObb2eAd6LxvNdvArjX
-         dJfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X0Uv2a8SpWt1dTnmxZxhtVMKOvjS4ym5W5xsfvNLKFk=;
-        b=UbHswpBIlvw+SXm7zYCDquPWknQD0rakW+UqPiDJyCkzCIXgV0ayd2yb+5I4g1btx7
-         yC1V59BtK7jt2kSA8wyQv0wYuATR1qUapvFI9ao5awCpgFAJGV19YDf8uOOiiI4kuHn5
-         k9qK2mX4VZABlm6WVc2GwLOGVEveC/Er5S2MGDohbxHWsGONlMTmMJjvUICETOLfxbg2
-         XKdxUzp2BV9EN454zMehPVF8ocWzEDmZ1FphDv9KuoJyA0j5a2aOdeeymfHmoFhLl+fO
-         fyTj6YYkNCKNDKnAJycf21L3hTpASsQup/SYkSSHWgg0JzI23bz9IzKIs/D4PZ51A9xd
-         U4wQ==
-X-Gm-Message-State: AGi0PuZIdsS5kS616/7t9v0LHSxcno1aaoplRffHvV1ADvNPbS74z+un
-        wh9XiYdqObxTMjVQ/MPcymahZ2TlFW8=
-X-Google-Smtp-Source: APiQypJYC8zD0qmO6c5Eh+Bv6Kzb/PYjHbxkvWbKcN7HSvcRqN/lpkh1qWyU7W2Dk48DP3vixKD1yw==
-X-Received: by 2002:a63:c443:: with SMTP id m3mr803622pgg.262.1588205404045;
-        Wed, 29 Apr 2020 17:10:04 -0700 (PDT)
-Received: from sol.lan (220-235-85-217.dyn.iinet.net.au. [220.235.85.217])
-        by smtp.gmail.com with ESMTPSA id 207sm1840592pgh.34.2020.04.29.17.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2020 17:10:03 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] tools/gpio: add bias flags to lsgpio
-Date:   Thu, 30 Apr 2020 08:09:16 +0800
-Message-Id: <20200430000916.8880-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 29 Apr 2020 20:13:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588205590;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g2Zuhq9wkoTTmKJmVFQegMyeSsShX7zXR1RrdrJ3tZM=;
+        b=VIi2K8RBLv02pjdezh/7PdgrfuwzQ7Mss93kiJ+JjHJ3dsU44UsXyFzaFvrUB4glu2kn5m
+        yKiqdvyWt1MqZpsf0YMPD8/p3xGXPHeEuXbaHPMxRWuniyaGDP8/5FYL+GB1yVSeqAH5DS
+        +LVbZy3/5lU6SKJdjcKx1WitZ1Ki1Mk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-BDaNqZLONMuApgCNw_ceug-1; Wed, 29 Apr 2020 20:13:07 -0400
+X-MC-Unique: BDaNqZLONMuApgCNw_ceug-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71779801503;
+        Thu, 30 Apr 2020 00:13:05 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2609066071;
+        Thu, 30 Apr 2020 00:13:03 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 19:13:00 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, bpf@vger.kernel.org,
+        daniel@iogearbox.net
+Subject: Re: BPF vs objtool again
+Message-ID: <20200430001300.k3pgq2minrowstbs@treble>
+References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
+ <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+ <20200429215159.eah6ksnxq6g5adpx@treble>
+ <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add display of the bias flags.
+On Wed, Apr 29, 2020 at 04:41:59PM -0700, Alexei Starovoitov wrote:
+> On Wed, Apr 29, 2020 at 04:51:59PM -0500, Josh Poimboeuf wrote:
+> > On Thu, Jul 18, 2019 at 12:14:08PM -0700, tip-bot for Josh Poimboeuf wrote:
+> > > Commit-ID:  3193c0836f203a91bef96d88c64cccf0be090d9c
+> > > Gitweb:     https://git.kernel.org/tip/3193c0836f203a91bef96d88c64cccf0be090d9c
+> > > Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+> > > AuthorDate: Wed, 17 Jul 2019 20:36:45 -0500
+> > > Committer:  Thomas Gleixner <tglx@linutronix.de>
+> > > CommitDate: Thu, 18 Jul 2019 21:01:06 +0200
+> > > 
+> > > bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
+> > 
+> > For some reason, this
+> > 
+> >   __attribute__((optimize("-fno-gcse")))
+> > 
+> > is disabling frame pointers in ___bpf_prog_run().  If you compile with
+> > CONFIG_FRAME_POINTER it'll show something like:
+> > 
+> >   kernel/bpf/core.o: warning: objtool: ___bpf_prog_run.cold()+0x7: call without frame pointer save/setup
+> 
+> you mean it started to disable frame pointers from some version of gcc?
+> It wasn't doing this before, since objtool wasn't complaining, right?
+> Sounds like gcc bug?
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/lsgpio.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I actually think this warning has been around for a while.  I just only
+recently looked at it.  I don't think anything changed in GCC, it's just
+that almost nobody uses CONFIG_FRAME_POINTER, so it wasn't really
+noticed.
 
-diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
-index e1430f504c13..8a71ad36f83b 100644
---- a/tools/gpio/lsgpio.c
-+++ b/tools/gpio/lsgpio.c
-@@ -49,6 +49,18 @@ struct gpio_flag flagnames[] = {
- 		.name = "open-source",
- 		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
- 	},
-+	{
-+		.name = "pull-up",
-+		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
-+	},
-+	{
-+		.name = "pull-down",
-+		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
-+	},
-+	{
-+		.name = "bias-disabled",
-+		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
-+	},
- };
- 
- void print_flags(unsigned long flags)
+> > Also, since GCC 9.1, the GCC docs say "The optimize attribute should be
+> > used for debugging purposes only. It is not suitable in production
+> > code."  That doesn't sound too promising.
+> > 
+> > So it seems like this commit should be reverted. But then we're back to
+> > objtool being broken again in the RETPOLINE=n case, which means no ORC
+> > coverage in this function.  (See above commit for the details)
+> > 
+> > Some ideas:
+> > 
+> > - Skip objtool checking of that func/file (at least for RETPOLINE=n) --
+> >   but then it won't have ORC coverage.
+> > 
+> > - Get rid of the "double goto" in ___bpf_prog_run(), which simplifies it
+> >   enough for objtool to understand -- but then the text explodes for
+> >   RETPOLINE=y.
+> 
+> How that will look like?
+> That could be the best option.
+
+For example:
+
+#define GOTO    ({ goto *jumptable[insn->code]; })
+
+and then replace all 'goto select_insn' with 'GOTO;'
+
+The problem is that with RETPOLINE=y, the function text size grows from
+5k to 7k, because for each of the 160+ retpoline JMPs, GCC (stupidly)
+reloads the jump table register into a scratch register.
+
+> > - Add -fno-gfcse to the Makefile for kernel/bpf/core.c -- but then that
+> >   affects the optimization of other functions in the file.  However I
+> >   don't think the impact is significant.
+> > 
+> > - Move ___bpf_prog_run() to its own file with the -fno-gfcse flag.  I'm
+> >   thinking this could be the least bad option.  Alexei?
+> 
+> I think it would be easier to move some of the hot path
+> functions out of core.c instead.
+> Like *ksym*, BPF_CALL*, bpf_jit*, bpf_prog*.
+> I think resulting churn will be less.
+> imo it's more important to keep git blame history for interpreter
+> than for the other funcs.
+> Sounds like it's a fix that needs to be sent for the next RC ?
+> Please send a patch for bpf tree then.
+
+I can make a patch, what file would you recommend moving those hot path
+functions to?
+
 -- 
-2.26.2
+Josh
 
