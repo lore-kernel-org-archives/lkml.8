@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039D7C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3413CC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09D72078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E7D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="Pzng54RT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="QkPepq9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgD3L5q (ORCPT
+        id S1726974AbgD3L5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:57:46 -0400
-Received: from plaes.org ([188.166.43.21]:37078 "EHLO plaes.org"
+        Thu, 30 Apr 2020 07:57:50 -0400
+Received: from plaes.org ([188.166.43.21]:37082 "EHLO plaes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgD3L5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:57:45 -0400
+        id S1726907AbgD3L5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:57:46 -0400
 Received: from localhost (unknown [IPv6:2001:1530:1000:d397:940e:6b9e:3deb:3])
-        by plaes.org (Postfix) with ESMTPSA id 318D840774;
-        Thu, 30 Apr 2020 11:57:12 +0000 (UTC)
+        by plaes.org (Postfix) with ESMTPSA id D017B4092D;
+        Thu, 30 Apr 2020 11:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1588247832; bh=vozgkxdGukZkw97VZxaA46SLq3vMd9Wmn6ITkjlRwzM=;
+        t=1588247834; bh=vMo2TanI9GatNd59nOo9RI6zU3bToC+1dQv+F9Smax0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pzng54RTQjI9fC292U4VQj3hoLs4JvLd08JqmAYuJFI68IoP3RsYXyQQyKs5XoE1s
-         KXyFZS80zUmUhih+dFToXFlTYSTr/ssTL3EYBzRDM1DyNXm544MdIg2ge3xf5/Srqc
-         M99cDk1y0oKds9ZeOq+JWo4aYzzTZcIQkolNStBKeisSMPjveyNheJr4sEORZ9/i0l
-         Zs+8jGZ89oO+U1i+LmLCSho8B3mHf0GYTDzTax/f6eI3DeyDP8roAkW8zibaR7FLbf
-         vZgoh4doBfYAXJ0QVP+KtToeM4XK3AM0tqgPII/YRrsWds5S2Ev0A8xZpcudckDVv3
-         wmgy5+DsF7I5Q==
+        b=QkPepq9jRIHzXYSDHzmANJ+RqWrN2Do7/VE3yhAEqeTTI/ddCGQF3C5E55wE/Wpk6
+         ETVZ7nf+ZlG6jVnqeNNpbWJwCHZpcjzVkNXa9YEK6Aeirv272bl10ne4TgEan1X9tU
+         6UZnTnma0bOmJP7Ls8Vb3PcNVMfP1uoPkHI9GROJnbK7St8rcR+sqPwSUShjQTxLeC
+         eFpwtNQGmlpsoQtfbI+6x9rhEZ1k3+24xq9FxVr0rU18bdHgSlYQ32YaS13OhL1qmx
+         5e8Zuz6RWT9bMmIPwXynHtWIu4Ip167IeoVqKE2Dy34d4Ff+Gjv+pK5IupeH0i5raY
+         XSkvGP8QXQ4jw==
 From:   Priit Laes <plaes@plaes.org>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
 Cc:     Priit Laes <plaes@plaes.org>
-Subject: [PATCH v3 3/6] net: stmmac: dwmac-sunxi: Implement syscon-based clock handling
-Date:   Thu, 30 Apr 2020 14:56:59 +0300
-Message-Id: <20200430115702.5768-4-plaes@plaes.org>
+Subject: [PATCH v3 4/6] dt-bindings: net: sun7i-gmac: Add syscon support
+Date:   Thu, 30 Apr 2020 14:57:00 +0300
+Message-Id: <20200430115702.5768-5-plaes@plaes.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200430115702.5768-1-plaes@plaes.org>
 References: <20200430115702.5768-1-plaes@plaes.org>
@@ -53,214 +53,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the sun7i-gmac driver to use a regmap-based driver,
-instead of relying on the custom clock implementation.
-
-This allows to get rid of the last custom clock in the sun7i
-device tree making the sun7i fully CCU-compatible.
-
-Compatibility with existing devicetrees is retained.
+Now that driver supports syscon-based regmap access, document also the
+devicetree binding.
 
 Signed-off-by: Priit Laes <plaes@plaes.org>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-sunxi.c | 130 ++++++++++++++++--
- 1 file changed, 122 insertions(+), 8 deletions(-)
+ .../bindings/net/allwinner,sun7i-a20-gmac.yaml    | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-index 0e1ca2cba3c7..206398f7a2af 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -12,8 +12,11 @@
- #include <linux/module.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
-+#include <linux/of_device.h>
- #include <linux/of_net.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+index 703d0d886884..c41d7c598c19 100644
+--- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
++++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+@@ -29,17 +29,26 @@ properties:
+   clocks:
+     items:
+       - description: GMAC main clock
++
++      # Deprecated
+       - description: TX clock
  
- #include "stmmac_platform.h"
+   clock-names:
+     items:
+       - const: stmmaceth
++
++      # Deprecated
+       - const: allwinner_gmac_tx
  
-@@ -22,11 +25,23 @@ struct sunxi_priv_data {
- 	int clk_enabled;
- 	struct clk *tx_clk;
- 	struct regulator *regulator;
-+	struct regmap_field *regmap_field;
-+};
-+
-+/* EMAC clock register @ 0x164 in the CCU address range */
-+static const struct reg_field ccu_reg_field = {
-+	.reg = 0x164,
-+	.lsb = 0,
-+	.msb = 31,
- };
+   phy-supply:
+     description:
+       PHY regulator
  
- #define SUN7I_GMAC_GMII_RGMII_RATE	125000000
- #define SUN7I_GMAC_MII_RATE		25000000
++  syscon:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Phandle to the device containing the GMAC clock register
++
+ required:
+   - compatible
+   - reg
+@@ -48,6 +57,7 @@ required:
+   - clocks
+   - clock-names
+   - phy-mode
++  - syscon
  
-+#define SUN7I_A20_CLK_MASK		GENMASK(2, 0)
-+#define SUN7I_A20_RGMII_CLK		(BIT(2) | BIT(1))
-+#define SUN7I_A20_MII_CLK		0
-+
- static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- {
- 	struct sunxi_priv_data *gmac = priv;
-@@ -38,7 +53,20 @@ static int sun7i_gmac_init(struct platform_device *pdev, void *priv)
- 			return ret;
- 	}
+ unevaluatedProperties: false
  
--	/* Set GMAC interface port mode
-+	if (gmac->regmap_field) {
-+		if (phy_interface_mode_is_rgmii(gmac->interface)) {
-+			regmap_field_update_bits(gmac->regmap_field,
-+						 SUN7I_A20_CLK_MASK,
-+						 SUN7I_A20_RGMII_CLK);
-+			return clk_prepare_enable(gmac->tx_clk);
-+		}
-+		regmap_field_update_bits(gmac->regmap_field,
-+					 SUN7I_A20_CLK_MASK,
-+					 SUN7I_A20_MII_CLK);
-+		return clk_enable(gmac->tx_clk);
-+	}
-+
-+	/* Legacy devicetree clock (allwinner,sun7i-a20-gmac-clk) support:
- 	 *
- 	 * The GMAC TX clock lines are configured by setting the clock
- 	 * rate, which then uses the auto-reparenting feature of the
-@@ -62,9 +90,16 @@ static void sun7i_gmac_exit(struct platform_device *pdev, void *priv)
- {
- 	struct sunxi_priv_data *gmac = priv;
+@@ -55,11 +65,12 @@ examples:
+   - |
+     gmac: ethernet@1c50000 {
+         compatible = "allwinner,sun7i-a20-gmac";
++        syscon = <&syscon>;
+         reg = <0x01c50000 0x10000>;
+         interrupts = <0 85 1>;
+         interrupt-names = "macirq";
+-        clocks = <&ahb_gates 49>, <&gmac_tx>;
+-        clock-names = "stmmaceth", "allwinner_gmac_tx";
++        clocks = <&ahb_gates 49>;
++        clock-names = "stmmaceth";
+         phy-mode = "mii";
+     };
  
--	if (gmac->clk_enabled) {
-+	if (gmac->regmap_field) {
-+		regmap_field_update_bits(gmac->regmap_field,
-+					 SUN7I_A20_CLK_MASK, 0);
- 		clk_disable(gmac->tx_clk);
--		gmac->clk_enabled = 0;
-+	} else {
-+		/* Handle legacy devicetree clock (sun7i-a20-gmac-clk) */
-+		if (gmac->clk_enabled) {
-+			clk_disable(gmac->tx_clk);
-+			gmac->clk_enabled = 0;
-+		}
- 	}
- 	clk_unprepare(gmac->tx_clk);
- 
-@@ -72,10 +107,55 @@ static void sun7i_gmac_exit(struct platform_device *pdev, void *priv)
- 		regulator_disable(gmac->regulator);
- }
- 
-+static struct regmap *sun7i_gmac_get_syscon_from_dev(struct device_node *node)
-+{
-+	struct device_node *syscon_node;
-+	struct platform_device *syscon_pdev;
-+	struct regmap *regmap = NULL;
-+
-+	syscon_node = of_parse_phandle(node, "syscon", 0);
-+	if (!syscon_node)
-+		return ERR_PTR(-ENODEV);
-+
-+	syscon_pdev = of_find_device_by_node(syscon_node);
-+	if (!syscon_pdev) {
-+		/* platform device might not be probed yet */
-+		regmap = ERR_PTR(-EPROBE_DEFER);
-+		goto out_put_node;
-+	}
-+
-+	/* If no regmap is found then the other device driver is at fault */
-+	regmap = dev_get_regmap(&syscon_pdev->dev, NULL);
-+	if (!regmap)
-+		regmap = ERR_PTR(-EINVAL);
-+
-+	platform_device_put(syscon_pdev);
-+out_put_node:
-+	of_node_put(syscon_node);
-+	return regmap;
-+}
-+
- static void sun7i_fix_speed(void *priv, unsigned int speed)
- {
- 	struct sunxi_priv_data *gmac = priv;
- 
-+	if (gmac->regmap_field) {
-+		clk_disable(gmac->tx_clk);
-+		clk_unprepare(gmac->tx_clk);
-+		if (speed == 1000)
-+			regmap_field_update_bits(gmac->regmap_field,
-+						 SUN7I_A20_CLK_MASK,
-+						 SUN7I_A20_RGMII_CLK);
-+		else
-+			regmap_field_update_bits(gmac->regmap_field,
-+						 SUN7I_A20_CLK_MASK,
-+						 SUN7I_A20_MII_CLK);
-+		clk_prepare_enable(gmac->tx_clk);
-+		return;
-+	}
-+
-+	/* Handle legacy devicetree clock (sun7i-a20-gmac-clk) */
-+
- 	/* only GMII mode requires us to reconfigure the clock lines */
- 	if (gmac->interface != PHY_INTERFACE_MODE_GMII)
- 		return;
-@@ -102,6 +182,8 @@ static int sun7i_gmac_probe(struct platform_device *pdev)
- 	struct stmmac_resources stmmac_res;
- 	struct sunxi_priv_data *gmac;
- 	struct device *dev = &pdev->dev;
-+	struct device_node *syscon_node;
-+	struct regmap *regmap = NULL;
- 	int ret;
- 
- 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-@@ -124,11 +206,43 @@ static int sun7i_gmac_probe(struct platform_device *pdev)
- 		goto err_remove_config_dt;
- 	}
- 
--	gmac->tx_clk = devm_clk_get(dev, "allwinner_gmac_tx");
--	if (IS_ERR(gmac->tx_clk)) {
--		dev_err(dev, "could not get tx clock\n");
--		ret = PTR_ERR(gmac->tx_clk);
--		goto err_remove_config_dt;
-+	/* Attempt to fetch syscon node... */
-+	syscon_node = of_parse_phandle(dev->of_node, "syscon", 0);
-+	if (syscon_node) {
-+		gmac->tx_clk = devm_clk_get(dev, "stmmaceth");
-+		if (IS_ERR(gmac->tx_clk)) {
-+			dev_err(dev, "Could not get TX clock\n");
-+			ret = PTR_ERR(gmac->tx_clk);
-+			goto err_remove_config_dt;
-+		}
-+
-+		regmap = sun7i_gmac_get_syscon_from_dev(pdev->dev.of_node);
-+		if (IS_ERR(regmap))
-+			regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+								 "syscon");
-+		if (IS_ERR(regmap)) {
-+			ret = PTR_ERR(regmap);
-+			dev_err(&pdev->dev, "Unable to map syscon: %d\n", ret);
-+			goto err_remove_config_dt;
-+		}
-+
-+		gmac->regmap_field = devm_regmap_field_alloc(dev, regmap,
-+							     ccu_reg_field);
-+
-+		if (IS_ERR(gmac->regmap_field)) {
-+			ret = PTR_ERR(gmac->regmap_field);
-+			dev_err(dev, "Unable to map syscon register: %d\n", ret);
-+			goto err_remove_config_dt;
-+		}
-+	/* ...or fall back to legacy clock setup */
-+	} else {
-+		gmac->tx_clk = devm_clk_get(dev, "allwinner_gmac_tx");
-+		if (IS_ERR(gmac->tx_clk)) {
-+			dev_err(dev, "could not get tx clock\n");
-+			ret = PTR_ERR(gmac->tx_clk);
-+			goto err_remove_config_dt;
-+		}
-+		dev_info(dev, "allwinner_gmac_tx support is deprecated!\n");
- 	}
- 
- 	/* Optional regulator for PHY */
 -- 
 2.26.2
 
