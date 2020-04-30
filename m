@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E992C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C80C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 574F020775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075CC20757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262902;
-	bh=xBaOvA6HtzXvTRzX0qB7Mk2jjhXinG2Aw/XAQw989vo=;
+	s=default; t=1588262922;
+	bh=/BdKHFSNyDbHVw0vpNwfTVV9aP7/cQNWyPNxpQEngRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n3kWEGgCWqT7jB2D/tHxXLM7OQAcFCPtvFFijD3a+0AAJjhd2/86xFsGTndU2NmSB
-	 4j9gK6/GBtR5CsKMSanixT8MF5ZT8EHTkwYCK6uR2HNSXVe5AUB95k6wAgSX18BV4A
-	 e2zboT6l7sFJ9cjsdYZKg7id4BW05jfBTA0w773Y=
+	b=UdYXN0wACgwLcG/I7Jek6/VtlJ2G2X1/povDoRVbUukfugteJ1xA63TxKMaUeEGe3
+	 GYLske4uhccvGcPsrodZMXqaCgZgklEazxDt78cRJTMhV/npcDtVK+In1Zxmo47yRX
+	 uTgNz8QWB2BUnCEsx4q+Fa1jyEyUVsDqzwj7tfcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgD3QIH (ORCPT
+        id S1728162AbgD3QIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:08:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgD3QEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726631AbgD3QEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:37 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E160B2137B;
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB172076D;
         Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588262676;
-        bh=xBaOvA6HtzXvTRzX0qB7Mk2jjhXinG2Aw/XAQw989vo=;
+        s=default; t=1588262675;
+        bh=/BdKHFSNyDbHVw0vpNwfTVV9aP7/cQNWyPNxpQEngRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wmnoe1ZCZDPowTaXBupFLU8m0sITPTVHmtR+qd3gZ5jYAiaawVp5P3/r7UX0So1SD
-         nf1WYuVBn+rL0YoLOe4qFyUWoKEaeHDASPeIMBMqw5BOUhLy4pARCesjgP37rLlHro
-         IxzUMsf19wjOWSA0bPSr1N+yWGABy7DlY4x4CKQw=
+        b=TnzOnpNhxy52GvCuYqXJJByjrVzgoNe9uvMDhvOhWPzJxfC8d3KNyetfZwMVv6sC0
+         sa6STxUrXALFH9pNqbFIo7Qcfe5AMjdwkOz/ra7yV1ABaYO6KqyJt0XzpLDAZzCvun
+         irMJ8miuGe8X8mKMgWTxGN9aLs+zO2ePQoDXVZiA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxEY-4i; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxEB-01; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 06/37] docs: networking: convert multiqueue.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:01 +0200
-Message-Id: <d28a323c1d4d309d3dbf68d5d61f9b997fcc1773.1588261997.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 01/37] docs: networking: convert l2tp.txt to ReST
+Date:   Thu, 30 Apr 2020 18:03:56 +0200
+Message-Id: <157b3aa863c15a4b8feeeb0cdd5475c2596c5dde.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -62,134 +62,247 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust titles and chapters, adding proper markups;
-- mark code blocks and literals as such;
-- use :field: markup;
+- add a document title;
+- mark tables as such;
 - adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/bonding.rst          |  2 +-
- Documentation/networking/index.rst            |  1 +
- .../{multiqueue.txt => multiqueue.rst}        | 41 +++++++++----------
- 3 files changed, 22 insertions(+), 22 deletions(-)
- rename Documentation/networking/{multiqueue.txt => multiqueue.rst} (76%)
+ Documentation/networking/index.rst            |   1 +
+ .../networking/{l2tp.txt => l2tp.rst}         | 145 ++++++++++--------
+ 2 files changed, 80 insertions(+), 66 deletions(-)
+ rename Documentation/networking/{l2tp.txt => l2tp.rst} (79%)
 
-diff --git a/Documentation/networking/bonding.rst b/Documentation/networking/bonding.rst
-index dd49f95d28d3..24168b0d16bd 100644
---- a/Documentation/networking/bonding.rst
-+++ b/Documentation/networking/bonding.rst
-@@ -1639,7 +1639,7 @@ can safely be sent over either interface.  Such configurations may be achieved
- using the traffic control utilities inherent in linux.
- 
- By default the bonding driver is multiqueue aware and 16 queues are created
--when the driver initializes (see Documentation/networking/multiqueue.txt
-+when the driver initializes (see Documentation/networking/multiqueue.rst
- for details).  If more or less queues are desired the module parameter
- tx_queues can be used to change this value.  There is no sysfs parameter
- available as the allocation is done at module init time.
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index a751cda83c3d..492658bf7c0d 100644
+index e1ff08b94d90..0c5d7a037983 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -79,6 +79,7 @@ Contents:
-    ltpc
-    mac80211-injection
-    mpls-sysctl
-+   multiqueue
+@@ -74,6 +74,7 @@ Contents:
+    ipvlan
+    ipvs-sysctl
+    kcm
++   l2tp
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/multiqueue.txt b/Documentation/networking/multiqueue.rst
-similarity index 76%
-rename from Documentation/networking/multiqueue.txt
-rename to Documentation/networking/multiqueue.rst
-index 4caa0e314cc2..0a576166e9dd 100644
---- a/Documentation/networking/multiqueue.txt
-+++ b/Documentation/networking/multiqueue.rst
-@@ -1,17 +1,17 @@
+diff --git a/Documentation/networking/l2tp.txt b/Documentation/networking/l2tp.rst
+similarity index 79%
+rename from Documentation/networking/l2tp.txt
+rename to Documentation/networking/l2tp.rst
+index 9bc271cdc9a8..a48238a2ec09 100644
+--- a/Documentation/networking/l2tp.txt
++++ b/Documentation/networking/l2tp.rst
+@@ -1,3 +1,9 @@
 +.. SPDX-License-Identifier: GPL-2.0
++
++====
++L2TP
++====
++
+ This document describes how to use the kernel's L2TP drivers to
+ provide L2TP functionality. L2TP is a protocol that tunnels one or
+ more sessions over an IP tunnel. It is commonly used for VPNs
+@@ -121,14 +127,16 @@ Userspace may control behavior of the tunnel or session using
+ setsockopt and ioctl on the PPPoX socket. The following socket
+ options are supported:-
  
--		HOWTO for multiqueue network device support
--		===========================================
-+===========================================
-+HOWTO for multiqueue network device support
-+===========================================
+-DEBUG     - bitmask of debug message categories. See below.
+-SENDSEQ   - 0 => don't send packets with sequence numbers
+-            1 => send packets with sequence numbers
+-RECVSEQ   - 0 => receive packet sequence numbers are optional
+-            1 => drop receive packets without sequence numbers
+-LNSMODE   - 0 => act as LAC.
+-            1 => act as LNS.
+-REORDERTO - reorder timeout (in millisecs). If 0, don't try to reorder.
++=========   ===========================================================
++DEBUG       bitmask of debug message categories. See below.
++SENDSEQ     - 0 => don't send packets with sequence numbers
++	    - 1 => send packets with sequence numbers
++RECVSEQ     - 0 => receive packet sequence numbers are optional
++	    - 1 => drop receive packets without sequence numbers
++LNSMODE     - 0 => act as LAC.
++	    - 1 => act as LNS.
++REORDERTO   reorder timeout (in millisecs). If 0, don't try to reorder.
++=========   ===========================================================
  
- Section 1: Base driver requirements for implementing multiqueue support
-+=======================================================================
+ Only the DEBUG option is supported by the special tunnel management
+ PPPoX socket.
+@@ -177,20 +185,22 @@ setsockopt on the PPPoX socket to set a debug mask.
  
- Intro: Kernel support for multiqueue devices
- ---------------------------------------------------------
+ The following debug mask bits are available:
  
- Kernel support for multiqueue devices is always present.
++================  ==============================
+ L2TP_MSG_DEBUG    verbose debug (if compiled in)
+ L2TP_MSG_CONTROL  userspace - kernel interface
+ L2TP_MSG_SEQ      sequence numbers handling
+ L2TP_MSG_DATA     data packets
++================  ==============================
  
--Section 1: Base driver requirements for implementing multiqueue support
-------------------------------------------------------------------------
--
- Base drivers are required to use the new alloc_etherdev_mq() or
- alloc_netdev_mq() functions to allocate the subqueues for the device.  The
- underlying kernel API will take care of the allocation and deallocation of
-@@ -26,8 +26,7 @@ comes online or when it's completely shut down (unregister_netdev(), etc.).
+ If enabled, files under a l2tp debugfs directory can be used to dump
+ kernel state about L2TP tunnels and sessions. To access it, the
+-debugfs filesystem must first be mounted.
++debugfs filesystem must first be mounted::
+ 
+-# mount -t debugfs debugfs /debug
++	# mount -t debugfs debugfs /debug
+ 
+-Files under the l2tp directory can then be accessed.
++Files under the l2tp directory can then be accessed::
+ 
+-# cat /debug/l2tp/tunnels
++	# cat /debug/l2tp/tunnels
+ 
+ The debugfs files should not be used by applications to obtain L2TP
+ state information because the file format is subject to change. It is
+@@ -211,14 +221,14 @@ iproute2's ip utility to support this.
+ 
+ To create an L2TPv3 ethernet pseudowire between local host 192.168.1.1
+ and peer 192.168.1.2, using IP addresses 10.5.1.1 and 10.5.1.2 for the
+-tunnel endpoints:-
++tunnel endpoints::
+ 
+-# ip l2tp add tunnel tunnel_id 1 peer_tunnel_id 1 udp_sport 5000 \
+-  udp_dport 5000 encap udp local 192.168.1.1 remote 192.168.1.2
+-# ip l2tp add session tunnel_id 1 session_id 1 peer_session_id 1
+-# ip -s -d show dev l2tpeth0
+-# ip addr add 10.5.1.2/32 peer 10.5.1.1/32 dev l2tpeth0
+-# ip li set dev l2tpeth0 up
++	# ip l2tp add tunnel tunnel_id 1 peer_tunnel_id 1 udp_sport 5000 \
++	  udp_dport 5000 encap udp local 192.168.1.1 remote 192.168.1.2
++	# ip l2tp add session tunnel_id 1 session_id 1 peer_session_id 1
++	# ip -s -d show dev l2tpeth0
++	# ip addr add 10.5.1.2/32 peer 10.5.1.1/32 dev l2tpeth0
++	# ip li set dev l2tpeth0 up
+ 
+ Choose IP addresses to be the address of a local IP interface and that
+ of the remote system. The IP addresses of the l2tpeth0 interface can be
+@@ -228,75 +238,78 @@ Repeat the above at the peer, with ports, tunnel/session ids and IP
+ addresses reversed.  The tunnel and session IDs can be any non-zero
+ 32-bit number, but the values must be reversed at the peer.
+ 
++========================       ===================
+ Host 1                         Host2
++========================       ===================
+ udp_sport=5000                 udp_sport=5001
+ udp_dport=5001                 udp_dport=5000
+ tunnel_id=42                   tunnel_id=45
+ peer_tunnel_id=45              peer_tunnel_id=42
+ session_id=128                 session_id=5196755
+ peer_session_id=5196755        peer_session_id=128
++========================       ===================
+ 
+ When done at both ends of the tunnel, it should be possible to send
+-data over the network. e.g.
++data over the network. e.g.::
+ 
+-# ping 10.5.1.1
++	# ping 10.5.1.1
  
  
- Section 2: Qdisc support for multiqueue devices
--
-------------------------------------------------
-+===============================================
+ Sample Userspace Code
+ =====================
  
- Currently two qdiscs are optimized for multiqueue devices.  The first is the
- default pfifo_fast qdisc.  This qdisc supports one qdisc per hardware queue.
-@@ -46,22 +45,22 @@ will be queued to the band associated with the hardware queue.
+-1. Create tunnel management PPPoX socket
++1. Create tunnel management PPPoX socket::
  
+-        kernel_fd = socket(AF_PPPOX, SOCK_DGRAM, PX_PROTO_OL2TP);
+-        if (kernel_fd >= 0) {
+-                struct sockaddr_pppol2tp sax;
+-                struct sockaddr_in const *peer_addr;
++	kernel_fd = socket(AF_PPPOX, SOCK_DGRAM, PX_PROTO_OL2TP);
++	if (kernel_fd >= 0) {
++		struct sockaddr_pppol2tp sax;
++		struct sockaddr_in const *peer_addr;
  
- Section 3: Brief howto using MULTIQ for multiqueue devices
-----------------------------------------------------------------
-+==========================================================
+-                peer_addr = l2tp_tunnel_get_peer_addr(tunnel);
+-                memset(&sax, 0, sizeof(sax));
+-                sax.sa_family = AF_PPPOX;
+-                sax.sa_protocol = PX_PROTO_OL2TP;
+-                sax.pppol2tp.fd = udp_fd;       /* fd of tunnel UDP socket */
+-                sax.pppol2tp.addr.sin_addr.s_addr = peer_addr->sin_addr.s_addr;
+-                sax.pppol2tp.addr.sin_port = peer_addr->sin_port;
+-                sax.pppol2tp.addr.sin_family = AF_INET;
+-                sax.pppol2tp.s_tunnel = tunnel_id;
+-                sax.pppol2tp.s_session = 0;     /* special case: mgmt socket */
+-                sax.pppol2tp.d_tunnel = 0;
+-                sax.pppol2tp.d_session = 0;     /* special case: mgmt socket */
++		peer_addr = l2tp_tunnel_get_peer_addr(tunnel);
++		memset(&sax, 0, sizeof(sax));
++		sax.sa_family = AF_PPPOX;
++		sax.sa_protocol = PX_PROTO_OL2TP;
++		sax.pppol2tp.fd = udp_fd;       /* fd of tunnel UDP socket */
++		sax.pppol2tp.addr.sin_addr.s_addr = peer_addr->sin_addr.s_addr;
++		sax.pppol2tp.addr.sin_port = peer_addr->sin_port;
++		sax.pppol2tp.addr.sin_family = AF_INET;
++		sax.pppol2tp.s_tunnel = tunnel_id;
++		sax.pppol2tp.s_session = 0;     /* special case: mgmt socket */
++		sax.pppol2tp.d_tunnel = 0;
++		sax.pppol2tp.d_session = 0;     /* special case: mgmt socket */
  
- The userspace command 'tc,' part of the iproute2 package, is used to configure
- qdiscs.  To add the MULTIQ qdisc to your network device, assuming the device
--is called eth0, run the following command:
-+is called eth0, run the following command::
+-                if(connect(kernel_fd, (struct sockaddr *)&sax, sizeof(sax) ) < 0 ) {
+-                        perror("connect failed");
+-                        result = -errno;
+-                        goto err;
+-                }
+-        }
++		if(connect(kernel_fd, (struct sockaddr *)&sax, sizeof(sax) ) < 0 ) {
++			perror("connect failed");
++			result = -errno;
++			goto err;
++		}
++	}
  
--# tc qdisc add dev eth0 root handle 1: multiq
-+    # tc qdisc add dev eth0 root handle 1: multiq
+-2. Create session PPPoX data socket
++2. Create session PPPoX data socket::
  
- The qdisc will allocate the number of bands to equal the number of queues that
- the device reports, and bring the qdisc online.  Assuming eth0 has 4 Tx
--queues, the band mapping would look like:
-+queues, the band mapping would look like::
+-        struct sockaddr_pppol2tp sax;
+-        int fd;
++	struct sockaddr_pppol2tp sax;
++	int fd;
  
--band 0 => queue 0
--band 1 => queue 1
--band 2 => queue 2
--band 3 => queue 3
-+    band 0 => queue 0
-+    band 1 => queue 1
-+    band 2 => queue 2
-+    band 3 => queue 3
+-        /* Note, the target socket must be bound already, else it will not be ready */
+-        sax.sa_family = AF_PPPOX;
+-        sax.sa_protocol = PX_PROTO_OL2TP;
+-        sax.pppol2tp.fd = tunnel_fd;
+-        sax.pppol2tp.addr.sin_addr.s_addr = addr->sin_addr.s_addr;
+-        sax.pppol2tp.addr.sin_port = addr->sin_port;
+-        sax.pppol2tp.addr.sin_family = AF_INET;
+-        sax.pppol2tp.s_tunnel  = tunnel_id;
+-        sax.pppol2tp.s_session = session_id;
+-        sax.pppol2tp.d_tunnel  = peer_tunnel_id;
+-        sax.pppol2tp.d_session = peer_session_id;
++	/* Note, the target socket must be bound already, else it will not be ready */
++	sax.sa_family = AF_PPPOX;
++	sax.sa_protocol = PX_PROTO_OL2TP;
++	sax.pppol2tp.fd = tunnel_fd;
++	sax.pppol2tp.addr.sin_addr.s_addr = addr->sin_addr.s_addr;
++	sax.pppol2tp.addr.sin_port = addr->sin_port;
++	sax.pppol2tp.addr.sin_family = AF_INET;
++	sax.pppol2tp.s_tunnel  = tunnel_id;
++	sax.pppol2tp.s_session = session_id;
++	sax.pppol2tp.d_tunnel  = peer_tunnel_id;
++	sax.pppol2tp.d_session = peer_session_id;
  
- Traffic will begin flowing through each queue based on either the simple_tx_hash
- function or based on netdev->select_queue() if you have it defined.
-@@ -69,11 +68,11 @@ function or based on netdev->select_queue() if you have it defined.
- The behavior of tc filters remains the same.  However a new tc action,
- skbedit, has been added.  Assuming you wanted to route all traffic to a
- specific host, for example 192.168.0.3, through a specific queue you could use
--this action and establish a filter such as:
-+this action and establish a filter such as::
+-        /* session_fd is the fd of the session's PPPoL2TP socket.
+-         * tunnel_fd is the fd of the tunnel UDP socket.
+-         */
+-        fd = connect(session_fd, (struct sockaddr *)&sax, sizeof(sax));
+-        if (fd < 0 )    {
+-                return -errno;
+-        }
+-        return 0;
++	/* session_fd is the fd of the session's PPPoL2TP socket.
++	 * tunnel_fd is the fd of the tunnel UDP socket.
++	 */
++	fd = connect(session_fd, (struct sockaddr *)&sax, sizeof(sax));
++	if (fd < 0 )    {
++		return -errno;
++	}
++	return 0;
  
--tc filter add dev eth0 parent 1: protocol ip prio 1 u32 \
--	match ip dst 192.168.0.3 \
--	action skbedit queue_mapping 3
-+    tc filter add dev eth0 parent 1: protocol ip prio 1 u32 \
-+	    match ip dst 192.168.0.3 \
-+	    action skbedit queue_mapping 3
- 
--Author: Alexander Duyck <alexander.h.duyck@intel.com>
--Original Author: Peter P. Waskiewicz Jr. <peter.p.waskiewicz.jr@intel.com>
-+:Author: Alexander Duyck <alexander.h.duyck@intel.com>
-+:Original Author: Peter P. Waskiewicz Jr. <peter.p.waskiewicz.jr@intel.com>
+ Internal Implementation
+ =======================
 -- 
 2.25.4
 
