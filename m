@@ -2,101 +2,92 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEDEC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7729C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D302074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58112074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgD3O1S (ORCPT
+        id S1728176AbgD3O1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:27:18 -0400
-Received: from smtp-42a8.mail.infomaniak.ch ([84.16.66.168]:60817 "EHLO
-        smtp-42a8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727822AbgD3O1S (ORCPT
+        Thu, 30 Apr 2020 10:27:54 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40803 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbgD3O1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:27:18 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Cd436GZyzlhyrF;
-        Thu, 30 Apr 2020 16:26:43 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49Cd4261cTzlndDX;
-        Thu, 30 Apr 2020 16:26:42 +0200 (CEST)
-Subject: Re: [PATCH 2/2] ima: add policy support for the new file open
- MAY_OPENEXEC flag
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        kbuild test robot <lkp@intel.com>,
-        linux-integrity@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Steve Grubb <sgrubb@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588167523-7866-3-git-send-email-zohar@linux.ibm.com>
- <202004300526.H4rF1lW2%lkp@intel.com>
- <1588254156.5167.32.camel@linux.ibm.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <48e67766-89ad-0b55-baa6-761ef09298bd@digikod.net>
-Date:   Thu, 30 Apr 2020 16:26:42 +0200
-User-Agent: 
+        Thu, 30 Apr 2020 10:27:54 -0400
+Received: by mail-qk1-f194.google.com with SMTP id l78so5851460qke.7;
+        Thu, 30 Apr 2020 07:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O/0HPBsHNU1Zz63ikLSaiq1tEsUfgo674JZFS5/Kd2o=;
+        b=uBtuzKpeFF8JpOG5cdUp4saRLGn1bxt4ywT1Fnfcl+F6ZFHI6g8Go0hMHDlgRH+EAr
+         kTLoYyzkjcO6DlQrj9Wdc0oC6vews6BcvI5DKQac8LEJGt6FNGaucWjo9lbMdIRqjcms
+         fnCrZo6nwNLL8/RB8/7RF+LbnV0cYK178eLTZNTd4JpGvPVYcfGy5zGRw1QJc4zp02v+
+         IXuayvyCLUT6QWOABTcbeSJmy2Y/q3pXR9tVXj0PO9hdJm50VjybRDdTM4lIbBFJnajX
+         y+aWD2OxzthVoaW1te6/X2L/NMOAxz7ucW7z3AneGA1w0K0w3lq+8ASFVr/WdkGrjKMO
+         GLMA==
+X-Gm-Message-State: AGi0PuZ5oaXAOXe+6XvJWCTjlJ2r+ArfUKSxkKYDvOu1Cad0XIWrxibW
+        oVmdmrm5gwQGVqguEc3z3JtSNrEfd0ttSV4G+3AVgWOM
+X-Google-Smtp-Source: APiQypJ0wnfqNBtvV5DRJQ7B2RPuH0aK38BLyizTr8I4v1YozRfr0aHWKl2U/Ir3VfckqinVYAjVYSuNmzb4FyxwrlE=
+X-Received: by 2002:a37:a212:: with SMTP id l18mr3494398qke.428.1588256872560;
+ Thu, 30 Apr 2020 07:27:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1588254156.5167.32.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 16:27:40 +0200
+Message-ID: <CAMuHMdX=Y49D+zP4-6oxsu7c1gsMbQC-Wb34uJqrPmxRxZp7JA@mail.gmail.com>
+Subject: Re: [PATCH 16/18] ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OK, I'll add it to the next series.
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Describe [H]SCIF{|A|B} ports in the R8A7742 device tree.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-On 30/04/2020 15:42, Mimi Zohar wrote:
-> Hi Mickaël,
-> 
-> On Thu, 2020-04-30 at 05:24 +0800, kbuild test robot wrote:
->> Hi Mimi,
->>
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on integrity/next-integrity]
->> [also build test ERROR on linus/master v5.7-rc3 next-20200429]
->> [cannot apply to security/next-testing]
->> [if your patch is applied to the wrong git tree, please drop us a note to help
->> improve the system. BTW, we also suggest to use '--base' option to specify the
->> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> To prevent this sort of message, in the future could you include this
-> patch (2/2) with your patch set?  Please include the "Reviewed-by:
-> Lakshmi Ramasubramanian <nramas@linux.microsoft.com>" tag.
-> 
-> thanks,
-> 
-> Mimi
-> 
->>
->> url:    https://github.com/0day-ci/linux/commits/Mimi-Zohar/ima-extending-IMA-policy-to-support-interpreters/20200430-030608
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
->> config: arc-allyesconfig (attached as .config)
->> compiler: arc-elf-gcc (GCC) 9.3.0
->> reproduce:
->>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         # save the attached .config to linux build tree
->>         COMPILER_INSTALL_PATH=$HOME/0day GCC_VERSION=9.3.0 make.cross ARCH=arc 
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kbuild test robot <lkp@intel.com>
->>
->> All error/warnings (new ones prefixed by >>):
->>
->>    security/integrity/ima/ima_main.c: In function 'ima_file_check':
->>>> security/integrity/ima/ima_main.c:442:20: error: 'MAY_OPENEXEC' undeclared (first use in this function); did you mean 'MAY_OPEN'?
->>      442 |         MAY_EXEC | MAY_OPENEXEC |
->>          |                    ^~~~~~~~~~~~
->>          |                    MAY_OPEN
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
