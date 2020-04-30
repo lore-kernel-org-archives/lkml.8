@@ -2,101 +2,113 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C2FC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438D2C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC09206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4B92063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588255542;
+	bh=FkZ2zWP2/Oyz4STjhptqv0efeZOSnOKK3FTECYENSnQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QMiVtN/FZDmFZxoWQkY3Ipvn/khHhGOQXBpkftTeZ1nQUE1JHiFVc8cMucuP/v15A
+	 BvmpiI+rc23WJxcNDiVhPCrnuPepZyXBMIit4Mz8E1bDLBIcQ3mDQ86d7WPFNEGHcv
+	 WY5TIXj5GpvMBdKe09FOh2wqusvdibughCLEabjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgD3OFd (ORCPT
+        id S1729443AbgD3OFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:05:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:46833 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbgD3OF2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:05:28 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MvsN5-1jDBA202Rr-00suuU for <linux-kernel@vger.kernel.org>; Thu, 30 Apr
- 2020 16:05:25 +0200
-Received: by mail-qk1-f174.google.com with SMTP id t3so5786419qkg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:05:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PuandLSXWv9b+G4/hyCTHc3yVwXn1I1KIycMzt0hkm/02jmmZPpw
-        rhuT5yUFx9ZW2l8+RgK78/qrBVUcOaNh3G1Wo+c=
-X-Google-Smtp-Source: APiQypKfiuTQyZkimGUZuhVN/2iNyzi11875kCfR0We9GVut/dOFNKlobiXEVN3wKCduUp9kiEhAMWifibP/eeqhm+U=
-X-Received: by 2002:ae9:f712:: with SMTP id s18mr3753225qkg.394.1588255523610;
- Thu, 30 Apr 2020 07:05:23 -0700 (PDT)
+        Thu, 30 Apr 2020 10:05:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728574AbgD3Nw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:52:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC914208D5;
+        Thu, 30 Apr 2020 13:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254779;
+        bh=FkZ2zWP2/Oyz4STjhptqv0efeZOSnOKK3FTECYENSnQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ipqwwLhxIoqdEzGr4dLLIPMtZUozEj3LC7j0sXLd3zaTTGN8LuRtVsR0iJ5vfEl9l
+         jDDX8B133jwJrctp6I6gIqg1jOdvltk9KIv2YYZODErNJMqxx4wXI9SRIPFWbAz6K9
+         i7YP48A02vBb7xgtRyXNKE6LbquqXqoq4zerOWOM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhu Yanjun <yanjunz@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 36/57] net/mlx5e: Get the latest values from counters in switchdev mode
+Date:   Thu, 30 Apr 2020 09:51:57 -0400
+Message-Id: <20200430135218.20372-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Apr 2020 16:05:07 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
-Message-ID: <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:cEKfAJqGGwRbsuWNFp4ylaRDRdTLvS34qZ28WQ+Mnmy4XjDGHI/
- 2d2MFMx2qQnvRAMkDTc63efM+SAo4AqGXxk5MK4ty7bQ7ErRa6LKMYlYGgW3MpZwDrbKi8O
- clnZWSl7BwbzNIpr9R3wjV161YpbepvK/HI1xz+Gs0kN9m1LWaGEeotIxVI2n0oyYUHw9NB
- 35MGhge8G4CvBV/vL7z4Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DVEXobJtqlY=:PD1V5Jmy0vIiBrLAScz97K
- IWx+Z5pXyVuHnM68XlXKjawkWQz8NMEnqX0NWrkAGf8hYJ0TYvHK9+oR+muar/Y0TKk80ex9/
- zHJ8NmyHSHFM3WLup8l7sFmXQyfJjlvanyPuPrKWTVooO+dlYFy8z4Ht0tqbAmC/PG4Uu3e6S
- rUOXznfmAOtHMezP69+yWzl+IYOrNjErO/GfNW/AA2AG8TVVMVu4jr6W0mOFAbOy0WBSg1b5g
- c0YSoCZ0++u9Y1bUmL3oDFH54aBP7UaS94o/MoZEmwO9H36o9PDvCu90gnOomvHi2VfzVpRjS
- ZdLD3gBYT//xGGQWUKMHUTYM3nlHsctXNgkU3GXl3v976mbQZnPvI5HgCgubFgIYSVG/xc/xD
- x7LcIjPBszj58avhVDL4EC4Hjmhv4xPbIYUfRFlTTnxepEGAxOTJ9Wov60JmFhPdyBuGYXS9N
- HwAiJ6zg/FS1sI/kQYZu6olRqbPnzUZY2eVH8MYvMDgZhfopcpPQulTW/k1RTwmhDLmayM7zo
- olSNTzq2vtUMxhOI8cu379T0uVgzvEOunDJwIgbAqL3T4BOIaO0FjEDSX/FO7xtM9QxD4QCGQ
- KxIydu3K8JzH0XWcD8CU3j1kmb5Mhevzp4bQ1IAKrz+7AUItomMKWvRGh5EMzwcIuGT3FPGPF
- cWiICRrOPK3oSXecOOY2TTiEwTMw5mQpXNbaJQPuVVSrsBrw3bVd8wd/rly2WgoxUbL5tVD3S
- VG9LKgB5bi1DaOwfHnO5kx3pIDzXPNyMhD4hUQio/D8wZgUyS/YHEI13K4Y/LyomWBvTY2f3D
- W2Mn86JQqNMoD6joo7k9+snj/2pFtL52g5Tc32c/lcXMIEa9t4=
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 4:49 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I noticed the number of objtool warnings in randconfig kernels have gone down
->  recently, maybe it's possible to eliminate the remaining ones?
->
-> Here are the ones I ran into recently, using gcc-9.3:
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-I now cross-checked with gcc-10.0, which leads to a few additional warnings
-for randconfig builds:
+[ Upstream commit dcdf4ce0ff4ba206fc362e149c8ae81d6a2f849c ]
 
-drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool:
-vmw_port_hb_in()+0x12f: stack state mismatch: cfa1=6+16 cfa2=7+8
-drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool:
-vmw_port_hb_in()+0xca: return with modified stack frame
-drivers/media/dvb-frontends/rtl2832_sdr.o: warning: objtool:
-.text.unlikely: unexpected end of section
-drivers/media/dvb-frontends/rtl2832_sdr.o: warning: objtool:
-rtl2832_sdr_try_fmt_sdr_cap() falls through to next function
-rtl2832_sdr_s_fmt_sdr_cap.cold()
-kernel/kexec_core.o: warning: objtool: crash_kexec()+0x2b: unreachable
-instruction
-lib/locking-selftest.o: warning: objtool: locking_selftest()+0x117f:
-PUSHF stack exhausted
-lib/locking-selftest.o: warning: objtool: ww_tests()+0x1083: PUSHF
-stack exhausted
-lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x133:
-call to do_strncpy_from_user() with UACCESS enabled
-lib/strnlen_user.o: warning: objtool: strnlen_user()+0x122: call to
-do_strnlen_user() with UACCESS enabled
+In the switchdev mode, when running "cat
+/sys/class/net/NIC/statistics/tx_packets", the ppcnt register is
+accessed to get the latest values. But currently this command can
+not get the correct values from ppcnt.
 
-I uploaded these as well now, see
-https://drive.google.com/open?id=1k10cO9OkFKaMVnK7uX-prplY-13CAvW1
+From firmware manual, before getting the 802_3 counters, the 802_3
+data layout should be set to the ppcnt register.
 
-       Arnd
+When the command "cat /sys/class/net/NIC/statistics/tx_packets" is
+run, before updating 802_3 data layout with ppcnt register, the
+monitor counters are tested. The test result will decide the
+802_3 data layout is updated or not.
+
+Actually the monitor counters do not support to monitor rx/tx
+stats of 802_3 in switchdev mode. So the rx/tx counters change
+will not trigger monitor counters. So the 802_3 data layout will
+not be updated in ppcnt register. Finally this command can not get
+the latest values from ppcnt register with 802_3 data layout.
+
+Fixes: 5c7e8bbb0257 ("net/mlx5e: Use monitor counters for update stats")
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 88ea279c29bb8..0e340893ca002 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3579,7 +3579,12 @@ mlx5e_get_stats(struct net_device *dev, struct rtnl_link_stats64 *stats)
+ 	struct mlx5e_vport_stats *vstats = &priv->stats.vport;
+ 	struct mlx5e_pport_stats *pstats = &priv->stats.pport;
+ 
+-	if (!mlx5e_monitor_counter_supported(priv)) {
++	/* In switchdev mode, monitor counters doesn't monitor
++	 * rx/tx stats of 802_3. The update stats mechanism
++	 * should keep the 802_3 layout counters updated
++	 */
++	if (!mlx5e_monitor_counter_supported(priv) ||
++	    mlx5e_is_uplink_rep(priv)) {
+ 		/* update HW stats in background for next time */
+ 		mlx5e_queue_update_stats(priv);
+ 	}
+-- 
+2.20.1
+
