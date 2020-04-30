@@ -6,134 +6,144 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473B2C83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33133C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAD12073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588218637;
-	bh=wfIdrIEXr1or4hfuICK8UJBf3WKPHigLEldc4x4mu4E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ylmGidDw4rjwbvmoDtQkJdwv8ttjOfe40A4gToxCQ7XL6lCwEFvJJvVUx7j2KRahg
-	 O8gx4IqTbUnl7MTfU7yqeGq9MBK+M7A/3gjsu4nmAkBEwg1BnW7K3k63K71wijQw55
-	 wENGgBRvTRFZr74hehkXHGLuUflmrjvxHD17paK0=
+	by mail.kernel.org (Postfix) with ESMTP id 03A032073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 03:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dj4Gjnwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgD3Dug (ORCPT
+        id S1726550AbgD3Dx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 23:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgD3Duf (ORCPT
+        Wed, 29 Apr 2020 23:53:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54880 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726405AbgD3DxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 23:50:35 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B06BC035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:50:35 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g4so4953912ljl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CW8PCDHX5ISW2m5CWeKILZiugDKRQ2m6b+cmxgYThRo=;
-        b=EQ6Y8f6aQgHJ88x1ieqtoWLU7/jMzgTNfBam7Ryk3WqBeXaTQQnn7xG/d1iVGkWW6A
-         QjcgmqeJQt2VR0u30g0+la4Py8bom784g9pKxA/iWUHJ/LxCuucyYOBWuiVQrswtOeha
-         /rN2oG6KngkxYb87Yjs0LTAFKM6E2LTBqBg2c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CW8PCDHX5ISW2m5CWeKILZiugDKRQ2m6b+cmxgYThRo=;
-        b=fY1ejUWN6CCcfzW0JHJ2XTPpaLXxnTODa98Z6RAX0KncdqGufZJLIUSTRUSXqW+SxU
-         4yG8DpcZISsyi+bvrTxFSZv772oUZ0RhPLClvD3EpkLhHkrZKoxWWryhK1dzU2IYXLMA
-         X1bsUyufiuWfkWPzi5f4VhysouofW8S9h11drpU53KjkVaTNXvT6K6A8jhOejotindpp
-         dFT6CCAC0tgZbBN6MImAme2AVLEo3Rjx06nEUpIEAkdoC75c/TyQxtnOpO/2tuUuSr3l
-         DNZNgZ+hfdt7VBbmJhUl2Uepw26UVAA306FwKzmm2g0Ge8t9NeKQpmw01UtxkYJVDUXV
-         Lmaw==
-X-Gm-Message-State: AGi0PubFvw8FdGKsFEBE58Adxn5xmq4dTp66QtWSYahyZHc1dzNg58n/
-        rO5w9RUkr0ysfMg+y8REPgIUThCHnTM=
-X-Google-Smtp-Source: APiQypJZwqTtzjMz2Jb0REx/vweFy5aW2tV5czo5aXNodN14ZS85UEm3pgCwMI2xy+FrCny2d//xrQ==
-X-Received: by 2002:a2e:8719:: with SMTP id m25mr861780lji.268.1588218633074;
-        Wed, 29 Apr 2020 20:50:33 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id e25sm3929058lfb.89.2020.04.29.20.50.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2020 20:50:32 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id f8so3510604lfe.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 20:50:31 -0700 (PDT)
-X-Received: by 2002:a05:6512:405:: with SMTP id u5mr677432lfk.192.1588218631345;
- Wed, 29 Apr 2020 20:50:31 -0700 (PDT)
+        Wed, 29 Apr 2020 23:53:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588218804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZufJCVAcrddU2HlFIrpCmkEVQ7zG0wH3RUMx2nRv1lg=;
+        b=Dj4GjnwtYEgLaTu6eCM13Nfk2jQUFwfvuia3vXa69KKeQ+n0YR5aVIA0zKhH4xDg4zG3ew
+        8lD68Q3jlPTtz6Nmt0reZO3MGFepHxStOJkFBllhPRXnNwFIVVR5frp6l5/D6WWsKa5jhQ
+        PuPP3VPu05qXperMMO6FnTpdDwi+PZ4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-40-40vepxlRNWyw2n7pMye9iA-1; Wed, 29 Apr 2020 23:53:21 -0400
+X-MC-Unique: 40vepxlRNWyw2n7pMye9iA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8148A45F;
+        Thu, 30 Apr 2020 03:53:19 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7436E6606B;
+        Thu, 30 Apr 2020 03:53:17 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 22:53:15 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, bpf@vger.kernel.org,
+        daniel@iogearbox.net
+Subject: Re: BPF vs objtool again
+Message-ID: <20200430035315.tc74v5twfdxv2goh@treble>
+References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
+ <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+ <20200429215159.eah6ksnxq6g5adpx@treble>
+ <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
+ <20200430001300.k3pgq2minrowstbs@treble>
+ <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
- <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
- <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
- <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
- <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
- <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
- <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
- <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
- <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
- <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
- <CAHk-=wjUZLybZBJgOtD2gng=FS7USrbQQ1-tn5M+UP5DbCWdzw@mail.gmail.com>
- <CAG48ez0FL3i4eGFYryOwG2nnS+JigfKYAVSV9ogVHjmjOWzsrA@mail.gmail.com>
- <AM6PR03MB5170C5D02C6FCB6D69DFE3ADE4AA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg6oKSLkVhY5oqOFyzCCSr9eYPGK2SHJfgCXF_QOmPKog@mail.gmail.com>
- <CAG48ez25=6qrCU51dEAV_ciyU2jvPuRFWfFOAAT22kmeAZccuQ@mail.gmail.com>
- <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com> <CAG48ez0yLF4KAK5uMi1_b9woC7NYy0NamYD1jP7BOPJkpKR7Mw@mail.gmail.com>
-In-Reply-To: <CAG48ez0yLF4KAK5uMi1_b9woC7NYy0NamYD1jP7BOPJkpKR7Mw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 29 Apr 2020 20:50:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh-sm0WHmfyz21w_BzFrDPqfXiaWZzE_8hqhxax-G2f8g@mail.gmail.com>
-Message-ID: <CAHk-=wh-sm0WHmfyz21w_BzFrDPqfXiaWZzE_8hqhxax-G2f8g@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Jann Horn <jannh@google.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 8:41 PM Jann Horn <jannh@google.com> wrote:
->
-> | So a ptrace() user (or [...] wouldn't even see the impossible EAGAIN error.
->
-> So I assumed you explicitly wanted ptrace() to restart, too. I was
-> just pointing out that that didn't make sense to me.
+On Wed, Apr 29, 2020 at 07:10:52PM -0700, Alexei Starovoitov wrote:
+> > For example:
+> > 
+> > #define GOTO    ({ goto *jumptable[insn->code]; })
+> > 
+> > and then replace all 'goto select_insn' with 'GOTO;'
+> > 
+> > The problem is that with RETPOLINE=y, the function text size grows from
+> > 5k to 7k, because for each of the 160+ retpoline JMPs, GCC (stupidly)
+> > reloads the jump table register into a scratch register.
+> 
+> that would be a tiny change, right?
+> I'd rather go with that and gate it with 'ifdef CONFIG_FRAME_POINTER'
+> Like:
+> #ifndef CONFIG_FRAME_POINTER
+> #define CONT     ({ insn++; goto select_insn; })
+> #define CONT_JMP ({ insn++; goto select_insn; })
+> #else
+> #define CONT     ({ insn++; goto *jumptable[insn->code]; })
+> #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
+> #endif
+> 
+> The reason this CONT and CONT_JMP macros are there because a combination
+> of different gcc versions together with different cpus make branch predictor
+> behave 'unpredictably'.
+> 
+> I've played with CONT and CONT_JMP either both doing direct goto or
+> indirect goto and observed quite different performance characteristics
+> from the interpreter.
+> What you see right now was the best tune I could get from a set of cpus
+> I had to play with and compilers. If I did the same tuning today the outcome
+> could have been different.
+> So I think it's totally fine to use above code. I think some cpus may actually
+> see performance gains with certain versions of gcc.
+> The retpoline text increase is unfortunate but when retpoline is on
+> other security knobs should be on too. In particular CONFIG_BPF_JIT_ALWAYS_ON
+> should be on as well. Which will remove interpreter from .text completely.
 
-I'm actually ok with the restart option, simply because I continue to
-maintain that the program is buggy. "Anything goes".
+This would actually be contingent on RETPOLINE, not FRAME_POINTER.
 
-To not be buggy, the program needs to install a SIGCHLD handler so
-that it can reap its (pseudo-)children.
+(FRAME_POINTER was the other issue with the "optimize" attribute, which
+we're reverting so it'll no longer be a problem.)
 
-At which point it doesn't actually make any difference whether we fix
-the kernel or not, because then the non-buggy program will just work -
-even with a non-modified kernel.
+So if you're not concerned about the retpoline text growth, it could be
+as simple as:
 
-Honestly, the main argument for the kernel doing anything different at
-all is that from a user-mode perspective, silently hanging in the
-kernel waiting for something to happen is likely the least easy to
-debug.
+#define CONT     ({ insn++; goto *jumptable[insn->code]; })
+#define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
 
-But if you do a return to user space - even if it's to just rinse and
-repeat - it's at least not "silent" any more, even if the main noise
-it makes is just to waste 100% CPU time. At least that's a big hint to
-somebody to take a look.
 
-But yes, we can make ptrace() - and _only_ ptrace() - then not repeat,
-and return a new error code that it has never returned before. Like
-EAGAIN. Mainly because in that case we're only breaking semantics of
-something that was already broken - unlike "write()", which has
-perfectly well-defined semantics and wasn't broken.
+Or, if you wanted to avoid the text growth, it could be:
 
-                 Linus
+#ifdef CONFIG_RETPOLINE
+/*
+ * Avoid a 40% increase in function text size by getting GCC to generate a
+ * single retpoline jump instead of 160+.
+ */
+#define CONT	 ({ insn++; goto select_insn; })
+#define CONT_JMP ({ insn++; goto select_insn; })
+
+select_insn:
+	goto *jumptable[insn->code];
+
+#else /* !CONFIG_RETPOLINE */
+#define CONT	 ({ insn++; goto *jumptable[insn->code]; })
+#define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
+#endif /* CONFIG_RETPOLINE */
+
+
+But since this is legacy path, I think the first one is much nicer.
+
+
+Also, JMP_TAIL_CALL has a "goto select_insn", is it ok to convert that
+to CONT?
+
+-- 
+Josh
+
