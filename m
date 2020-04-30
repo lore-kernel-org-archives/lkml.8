@@ -2,109 +2,80 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF5EC83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5812C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89EA22073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rrqXwBJv"
+	by mail.kernel.org (Postfix) with ESMTP id 82DD82073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgD3EAK (ORCPT
+        id S1726669AbgD3EAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:00:10 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:44586 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726354AbgD3EAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:00:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588219209; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=h4kCJNETn7m8Ad7wR1nijxpoOjZhXlKIL1/i8b1sVbg=; b=rrqXwBJvDIijschYUKJr9fL6THeehog8PxYLGpLz0EtIUKE4a6A17IAB/WKgtWVS2X7EdcUY
- lOqDpiUTduxFbWlxB5aO69E4iUU0+fEZcYLRk4Mdlaz+Wiadj0pcEX87Zn0NRow7VXC2tbL+
- Uc7BBn7i42Elv8myjMixRxMVqwE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaa4d44.7f3fcc4e6d18-smtp-out-n03;
- Thu, 30 Apr 2020 04:00:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3C370C43637; Thu, 30 Apr 2020 04:00:03 +0000 (UTC)
-Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B895DC433D2;
-        Thu, 30 Apr 2020 03:59:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B895DC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-From:   Sharat Masetty <smasetty@codeaurora.org>
-To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, robh@kernel.org, robin.murphy@arm.com,
-        saiprakash.ranjan@codeaurora.org, jcrouse@codeaurora.org,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH v2] dt-bindings: arm-smmu: Add sc7180 compatible string and mem_iface clock
-Date:   Thu, 30 Apr 2020 09:29:47 +0530
-Message-Id: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 Apr 2020 00:00:49 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17334 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbgD3EAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 00:00:48 -0400
+IronPort-SDR: yj8TmLWwsReHG7GSMisHqz8qQxN9UgmsjVFCm+9i+ITXNwGI2Ia98G1veCLs3In1ea1CLkgAfz
+ 10eAswiE8XXw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 21:00:48 -0700
+IronPort-SDR: sNz80AeppAXBoljxGVY/kL4RfiCytDXDWrKQuUVh9PAEvJaIEdaCuxfnhhn2s0EOSt9Ims/Xg0
+ xJgVnmF7tD2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="432812986"
+Received: from aanderso-mobl3.amr.corp.intel.com (HELO localhost) ([10.252.52.101])
+  by orsmga005.jf.intel.com with ESMTP; 29 Apr 2020 21:00:39 -0700
+Date:   Thu, 30 Apr 2020 07:00:38 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+        Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
+Message-ID: <20200430040038.GD31820@linux.intel.com>
+References: <20200429190119.43595-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429190119.43595-1-arnd@arndb.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new compatible string for sc7180 and also an
-additional clock listing needed to power the TBUs and the TCU.
+On Wed, Apr 29, 2020 at 09:01:08PM +0200, Arnd Bergmann wrote:
+> Building with gcc-10 causes a harmless warning about a section mismatch:
+> 
+> WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+> The function tpm2_calc_event_log_size() references
+> the function __init early_memunmap().
+> This is often because tpm2_calc_event_log_size lacks a __init
+> annotation or the annotation of early_memunmap is wrong.
+> 
+> Add the missing annotation.
+> 
+> Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
----
-v2: Addressed review comments from Doug
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index 6515dbe..ba5dba4 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -28,6 +28,7 @@ properties:
-           - enum:
-               - qcom,msm8996-smmu-v2
-               - qcom,msm8998-smmu-v2
-+              - qcom,sc7180-smmu-v2
-               - qcom,sdm845-smmu-v2
-           - const: qcom,smmu-v2
-
-@@ -113,16 +114,23 @@ properties:
-       present in such cases.
-
-   clock-names:
-+    minItems: 2
-+    maxItems: 3
-     items:
-       - const: bus
-       - const: iface
-+      - const: mem_iface
-
-   clocks:
-+    minItems: 2
-+    maxItems: 3
-     items:
-       - description: bus clock required for downstream bus access and for the
-           smmu ptw
-       - description: interface clock required to access smmu's registers
-           through the TCU's programming interface.
-+      - description: clock required for the inner working of SMMU TBUs and the
-+          TCU like the pagetable walks and the TLB flushes.
-
-   power-domains:
-     maxItems: 1
---
-1.9.1
+/Jarkko
