@@ -2,100 +2,58 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7669AC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F74FC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3A5207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588249408;
-	bh=s+u4WbOI6jCW0oIE7DyFq3VAR+Yi4wx9kBa1D0/SdQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F5+1e7ljh17ZI5p/vECYXA0J0UD11MRtXdbVS1unEDP81Zx8zdldhkJ5doa7tDKeW
-	 8LVC85/OEuxj8vgSYG4B8bA4geCLtCF0HS2WcIj28ubCTMSVgseJS/DDikxQwPDh1f
-	 +XSkeBkTsplfGFWirQDV+/sbdCSTKfA+N76b5e64=
+	by mail.kernel.org (Postfix) with ESMTP id 0460B20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgD3MX1 (ORCPT
+        id S1726837AbgD3MXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57980 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 08:23:37 -0400
+Received: from 8bytes.org ([81.169.241.247]:40718 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbgD3MX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:23:27 -0400
-Received: from linux-8ccs.fritz.box (p3EE2CE96.dip0.t-ipconnect.de [62.226.206.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE382076D;
-        Thu, 30 Apr 2020 12:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588249406;
-        bh=s+u4WbOI6jCW0oIE7DyFq3VAR+Yi4wx9kBa1D0/SdQg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhgOxvO5SzP0qyFjlsPvJqJqqlCQC1gkhUSEE3PFUKNYiTehOjao3zPe8AbRfqp1p
-         uJiP7AjcSpDq+dUZMmPVdH79vT+q5tiO7b+IbSfVTv+dC5g7SI3LJy21McqaopMJt4
-         sDh98PHeCpSs7Vvx+ngCX2xBesWFf71Lv+vwgw+c=
-Date:   Thu, 30 Apr 2020 14:23:22 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v4 11/11] module: Make module_enable_ro() static again
-Message-ID: <20200430122321.GA16620@linux-8ccs.fritz.box>
-References: <cover.1588173720.git.jpoimboe@redhat.com>
- <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
- <20200430111032.GA4436@linux-8ccs>
- <alpine.LSU.2.21.2004301334560.8465@pobox.suse.cz>
- <20200430114055.GA15426@linux-8ccs.fritz.box>
+        id S1726500AbgD3MXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:23:36 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 85D3A3E2; Thu, 30 Apr 2020 14:23:35 +0200 (CEST)
+Date:   Thu, 30 Apr 2020 14:23:32 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH] drivers/iommu: properly export iommu_group_get_for_dev
+Message-ID: <20200430122332.GP21900@8bytes.org>
+References: <20200430120120.2948448-1-gregkh@linuxfoundation.org>
+ <20200430121753.GA22842@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430114055.GA15426@linux-8ccs.fritz.box>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+In-Reply-To: <20200430121753.GA22842@willie-the-truck>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Jessica Yu [30/04/20 13:40 +0200]:
->+++ Miroslav Benes [30/04/20 13:35 +0200]:
->>On Thu, 30 Apr 2020, Jessica Yu wrote:
->>
->>>+++ Josh Poimboeuf [29/04/20 10:24 -0500]:
->>>>Now that module_enable_ro() has no more external users, make it static
->>>>again.
->>>>
->>>>Suggested-by: Jessica Yu <jeyu@kernel.org>
->>>>Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
->>>
->>>Thanks! Since this patch is separate from the rest and it's based on
->>>modules-next, I can just take this last patch through the modules tree.
->>
->>It depends on 8/11 of the series.
->>
->>Acked-by: Miroslav Benes <mbenes@suse.cz>
->>
->>for the patch.
->
->Ah yeah, you are right (you meant patch 9/11 right)? Will take both
->through modules-next.
+On Thu, Apr 30, 2020 at 01:17:53PM +0100, Will Deacon wrote:
+> Thanks, not sure how I managed to screw this up in the original patch!
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> 
+> Joerg -- can you pick this one up please?
 
-So I'm speaking nonsense apparently. I suggested taking them because
-the module patches were based on modules-next. But Miroslav correctly
-pointed out that these patches still depend on livepatch removing
-module_disable_ro() usage before we can even remove them from
-module.c.
+Yes, will send it as a fix for 5.7, but note that this function will be
+unexported in 5.8.
 
-So ignore what I said earlier, the whole patchset should be applied
-together (I'm assuming the livepatching for-next branch). In any case,
-should there be any conflicts with modules-next they should be easy to
-resolve. Sorry for the noise!
 
-Jessica
+Regards,
+
+	Joerg
+
