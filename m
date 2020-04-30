@@ -2,114 +2,167 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6573C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C275C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877C92186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA112137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0uFxMCc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nKYxepLp";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="fUvjuy6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgD3H4F (ORCPT
+        id S1726692AbgD3H4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgD3H4D (ORCPT
+        Thu, 30 Apr 2020 03:56:41 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:18025 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgD3H4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:56:03 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88342C035494;
-        Thu, 30 Apr 2020 00:56:01 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id i16so2707501ybq.9;
-        Thu, 30 Apr 2020 00:56:01 -0700 (PDT)
+        Thu, 30 Apr 2020 03:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1588233440; x=1619769440;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=AHpPHIdSCuLujDbRlpm1jzx8b1L8Cgq7g9RvAvcpuwc=;
+  b=nKYxepLpMPhR/vMQEJ+qNxfK8c0zilJohL1Rbdc2zif1miFxzO77mfeu
+   ZiyrroifoH6H4XKkoX6s3jtO6/3LP6MhJ3GrvP65g8RUEhEH/TQHnbCrX
+   P7KU2NQeAsiVVdUyesGEwN8pKiF+WpF6fjtTC6UdVD56W8R30T00nRqji
+   3WbnKMQ/AWg5Zwh64KXT/IRpM3RGQ20+VdAvLmD510wtXICnhz/NZy932
+   eA9QEQrByfT/IMGT/mLfgQ2E7ysrTAWuD4MRr3zJ0jPzFkxwivKIrbti+
+   QGDyWr+NNRz/8pejkjzdVguYUqtusVYv9Tr0sHXLGb+Mvy1E69metgs5b
+   A==;
+IronPort-SDR: 3F5NKtOXOCF0x5VCuKwTzGSrAIB0TbZwCAEDqiSro+5QL0zZ78L687QAsBK0Ui0gHGkRThezYP
+ GsjFFs+SKNGmaPmiS5FE2mNujx+QXZY1OAHOo/OA82udAbRnbt5J65rKlReOE9eoN4nbvQ4vYV
+ wZtgup+okvgSYkkoXMj05fJM0+1S9iRNr5UUR/OkhxRnGAb2eg+xCJDOic59+fY0DbS0yYchsj
+ PGbg1SXnSC7fvmB3imCK5V4jAnaXUncVu8761BSmrlXbiznGVEMSV7dac8LdFb9waPcuZLK1iR
+ UeM=
+X-IronPort-AV: E=Sophos;i="5.73,334,1583164800"; 
+   d="scan'208";a="239114168"
+Received: from mail-mw2nam12lp2046.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.46])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Apr 2020 15:57:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M1HqH13wKTwyRsRTI8HcfBEczLRJzIXgTdlcxfvWDI2uGvHdNPiD65LUNoxOBA5hAATRgDjwNPuCn91bZey4qaOKmL0m+W9RT3w+LkWOAkb9f6PeE3aQELkEPeVoW3Fwf0HwNb0Y+ZWFer6E5AKtt7e/3Y9LpE3CigapnieRyqA/0BkqaeARJY1SNuij0zaFY73tJTzeOvMWHDFTafghld95XlWg/CoRzJACRIHxcIjk/piLyz4QGgCHK07CkBqYDIgDdDIrq0xLs3nJItSfMdZFOriuunGkK64XpFKPmnnQ0DqGe1bKc9P+adNRszOuLIoiO0nfGSCbTOhbZ4/BnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D8UElqIP+1Ir7J7JyIb7PNo8qhgPJylq0O8p+oEqkSo=;
+ b=X/cByvFiCIjeyNi7OGAkRESAvLHdYKN99ptYxUJyqDJR97aroRpcDyco1q6fSFcdDpyjI2RKV5NM+4Izl4A0iRzS8uJ7N26tqCF80QgALDdD+cY/iZbQ1i1veTICTI+pOJnbPNWEDmp19XCvIUFPglAZE0cd91UBDtzAE9F2LUYMA8qvCdLwNNxXD/mzZN2VnDf1ZO/LuBMAHn3idNCKxfwCdkTzfDLzIq6m+Vi2s8w6ghZ31dixKVVwlY4fonka6ihp/tg9oGmRjhURoWUVK5NELaHBcHpBBHtpFwwZbrA22VAVm1vrf5oN4ISdpTkhTWUSe9KqTme/jMg8dkYpdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=niS1lYC7PeJRfKiA0LkBJ0AjWmjRNXbULNT5s9yDbmg=;
-        b=b0uFxMCcUOu+UKVq2cT5YgabZJAPo/fDcBjEXk+cSKEeRAG22tjX3jVOWO+ZroquVd
-         W9bUt5rw6VnC0eEduCX0Zzs6W90YBy7LJ0rjVk+g+GcOpiAQnkXc69wVui4Gy+dulxQO
-         H5Z5KXF4B6cpy8K7KhLSKDH0KYMcEcL+2NUrtH8JsbDCdfzgBMJML0K7OXfwPmA1FRKc
-         VITGeiylsb2lDaavq7fbUtacVTtXdduADHsYgIyt7gfdAFHiUt8UfbRUyTtefrOXG8OE
-         5uwsD+bm910DqlFmSchYMiarOTh/C0Ddrjqe9AqCfDgxbEjax5Oz2jDIxvhFfRAxHlQL
-         8RRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=niS1lYC7PeJRfKiA0LkBJ0AjWmjRNXbULNT5s9yDbmg=;
-        b=KpY9Iwzjm4nfkNaB0vhRvyHtGXqpEajpJTwU28T5hH0FsXETqoKiny7zX7Z4rJizsE
-         NYnRPn4L37XLrrv7Gnl4UdcA/b/ZDruvcscM19swf5TQqKStc536BUBxkGIA8+spryGp
-         QW9opBN+nRjT1F/JixzbQadIkTnxr/uivr2zzydWBSFseBFzL14JPskDMBXHB7AXZOop
-         vt1xpKQ+6ruQbA+FR7PkrtzdqIMa2a6uZ52+qLown91EHCl795d22+agPg/ha27MX9Qf
-         /Dr3WPLHkCelUhFNGOM0bxoFrV33jvCVetOxynv1OAwktg11XXQsZI3bbC0sMI59tSZ3
-         20LA==
-X-Gm-Message-State: AGi0PuaY1i7x181+jc87eaE9Cyd2iDvyJC/FRwhnAdalXEVHSGW3aH0/
-        Ff9g8CnyepSjdmEw440vGjLpobYcO6Mwa/q11Yc=
-X-Google-Smtp-Source: APiQypJW6Wl4fp6m3eGWIxmzUP0iVI32e5m23IE4bncxZ3oeAhUC4jfaQIKSfz7yzxcYIc7LPFYDXzjybUfztGgMj68=
-X-Received: by 2002:a25:b8f:: with SMTP id 137mr3875233ybl.21.1588233360816;
- Thu, 30 Apr 2020 00:56:00 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D8UElqIP+1Ir7J7JyIb7PNo8qhgPJylq0O8p+oEqkSo=;
+ b=fUvjuy6DBl6rnJuTEa3zLMBL2JS4U1QQ8J0v7mFywJgUTaygVVf6/lW77g4egk/oNxrHk0/TfKyD5sTR/cx3NoPOXyQ6+PyoaF1Fyigy/N29F3K9FApXF30DBEQfXmHGWCPiTGeuBIxMq09CWWjZzfl3gm/1/gmfjDq36S42Ew8=
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com (2603:10b6:a03:14::14)
+ by BYAPR04MB4662.namprd04.prod.outlook.com (2603:10b6:a03:14::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Thu, 30 Apr
+ 2020 07:56:38 +0000
+Received: from BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1]) by BYAPR04MB4629.namprd04.prod.outlook.com
+ ([fe80::75ba:5d7d:364c:5ae1%6]) with mapi id 15.20.2958.019; Thu, 30 Apr 2020
+ 07:56:38 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v2 2/5] scsi: ufs: add "index" in parameter list of
+ ufshcd_query_flag()
+Thread-Topic: [PATCH v2 2/5] scsi: ufs: add "index" in parameter list of
+ ufshcd_query_flag()
+Thread-Index: AQHWHi3/YyJYvbtdE0K1lTCqV5rChKiRTEmA
+Date:   Thu, 30 Apr 2020 07:56:37 +0000
+Message-ID: <BYAPR04MB46296FE5C0C4AE0CE7B24478FCAA0@BYAPR04MB4629.namprd04.prod.outlook.com>
+References: <20200429135610.23750-1-stanley.chu@mediatek.com>
+ <20200429135610.23750-3-stanley.chu@mediatek.com>
+In-Reply-To: <20200429135610.23750-3-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 494f130f-cf2c-4200-2bcb-08d7ecdc02e5
+x-ms-traffictypediagnostic: BYAPR04MB4662:
+x-microsoft-antispam-prvs: <BYAPR04MB466236CAA33BF86F8D8DC0D2FCAA0@BYAPR04MB4662.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0389EDA07F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4629.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(7416002)(5660300002)(66476007)(64756008)(55016002)(66446008)(71200400001)(4326008)(66556008)(26005)(76116006)(9686003)(316002)(4744005)(8936002)(66946007)(54906003)(478600001)(2906002)(33656002)(6506007)(86362001)(110136005)(52536014)(8676002)(186003)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Iqq0kXZHFiTy0cTKwArrfJ37mABwagaCB/ATPWYFhUz2wC1m2AGU7i+HSb8WPp9K4kQecXdzPHbDnpVKuEU5zkBnijHd0LtbIGt1OL4xG6lUI8RS7/FnYxZVQVrIOFfOewBkeWUi2P5Vw/GFe1/0mV0rZvqEg+Ys0kOA28a/YbIwEAi6QVf3npIVltjsUpPv4l9cpHWbq89V9Ksacibur+lS5RNFSPixhHD5WmOzWHJditUSdO3UyBqG81C0j1Wx4YDv2Ylb3weyTb3ZJugi6Ub+UwjCTMQGt6hFA4cTlFY/9X+Fm2kKwzwZYYYWRCtUEvs3lOY9EQEse6VlLP/MROAMrF1JvTqYRvsgQpUu2+4hYrU+Sof6pW5Sf4q8on3GAsTGlBn264NWe1wJ56CPDuCk9wTByIIlAKvWlzWZlU2R4UH+e8L3ZmAToJToOYFM
+x-ms-exchange-antispam-messagedata: BDGB7Tv8st4gCOAxIvuBOwea+iI++TnjB6H1IImfuOHXE6Zp7y9qh63oazGiuQy3westxCKNff2EsoefhfjHa22imzGN83y8Ks1W7rO5ULA1yzOMcxvmrMtyaBhJHiw0vjRHcIt6NJE95NQQSoqSOXuOhG1Xt2PnMIv1CxWNd/3ZNxUhQ/0/sbuK5PFZqpMTpawpxvjbTW1IDZcc0V3SDwi4rYB3kpZJ5DpbOG8g9BryV5ZyK3PhNn47O3JnB+SMkbGqGspajQ24yJzSyVmVMmKkaI3jORYDN/nDk9iDRlRhTBn/sCBEgQsqcHMpSlh7iX+cjflMcKKeMCBGcqVMEYzxuMrn3z417HlBULDqeXn6qBtljYoyl9PqJsvO7Z9f99i9l1dJHlInKboHR+SRGRi6+KTIdQW3WcMneLDQpxGX4uu12dtk87LwOA3DV/Kjbq2N2Szq4RveViIqQDbTIV67QMjySKyDpgwCbYr1aeeF2Qvtns0cMMmJ2ni4QwYuW/+7h+6tcAOmIdTN+0/Gka2PPiT3gnR3vT4ZR4nFmH+XaeMQjaCXrIr38wbaK5HlbbCM3/0TTs+pgwnWdmaCY6UmdrutKRH+L9PNhfmIaFk7NRztJu/CfCPnHsxDWmmUtiLYtFX/A9aUOlqfJ+iSjvCYaLVF0zBW2oU3ZVVEsztY7pKedSMTFKGSH0z6e+j69i4UF+dYE3k1yiEA33oN8EESaHgLasa+lr3GxdVk768bVhiDKr4UzO+N7mDvA60g5lhh5Wm2p8CC08uauAjuJDdlxUTY4w8hTWk0v/45Auc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1588227169-83237-1-git-send-email-wubo40@huawei.com>
-In-Reply-To: <1588227169-83237-1-git-send-email-wubo40@huawei.com>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Thu, 30 Apr 2020 15:55:49 +0800
-Message-ID: <CAAM7YA=BDutG7sOxHDYDcg141vsTRqQCr5pXOxqmOo9JdXjwsw@mail.gmail.com>
-Subject: Re: [PATCH V3] fs/ceph:fix double unlock in handle_cap_export()
-To:     Wu Bo <wubo40@huawei.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        liuzhiqiang26@huawei.com, linfeilong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 494f130f-cf2c-4200-2bcb-08d7ecdc02e5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 07:56:38.0558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c0flrD3Yb0gkolSR6+ug0FXokJIY+mtas+EOkooCHuNfMiZ2OerK/cyvW0jZhuHlz0Z0L74onz7+gUixf8cYlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 2:13 PM Wu Bo <wubo40@huawei.com> wrote:
->
-> If the ceph_mdsc_open_export_target_session() return fails,
-> we should add mutex_lock(&session->s_mutex) on IS_ERR(tsession) block
-> to avoid twice unlocking. because the session->s_mutex will be unlock
-> at the out_unlock lable.
->
-> --
-> v2 -> v3:
->   - Rewrite solution, adding a mutex_lock(&session->s_mutex)
->     to the IS_ERR(tsession) block.
->   - Modify the comment more clearly.
-> v1 -> v2:
->   - add spin_lock(&ci->i_ceph_lock) before goto out_unlock lable
->
->
-> Signed-off-by: Wu Bo <wubo40@huawei.com>
-> ---
->  fs/ceph/caps.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> index 185db76..d27d778 100644
-> --- a/fs/ceph/caps.c
-> +++ b/fs/ceph/caps.c
-> @@ -3746,6 +3746,7 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
->                 WARN_ON(1);
->                 tsession = NULL;
->                 target = -1;
-> +               mutex_lock(&session->s_mutex);
->         }
->         goto retry;
->
-> --
-> 1.8.3.1
->
 
- Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+>=20
+> For preparation of LU Dedicated buffer mode support on WriteBooster
+> feature, "index" parameter shall be added and allowed to be specified
+> by callers.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+> ---
+>  drivers/scsi/ufs/ufs-sysfs.c |  2 +-
+>  drivers/scsi/ufs/ufshcd.c    | 28 +++++++++++++++-------------
+>  drivers/scsi/ufs/ufshcd.h    |  2 +-
+>  3 files changed, 17 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
+> index 93484408bc40..b86b6a40d7e6 100644
+> --- a/drivers/scsi/ufs/ufs-sysfs.c
+> +++ b/drivers/scsi/ufs/ufs-sysfs.c
+> @@ -631,7 +631,7 @@ static ssize_t _name##_show(struct device *dev,
+> \
+>         struct ufs_hba *hba =3D dev_get_drvdata(dev);                    =
+ \
+>         pm_runtime_get_sync(hba->dev);                                  \
+>         ret =3D ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,      =
+ \
+> -               QUERY_FLAG_IDN##_uname, &flag);                         \
+> +               QUERY_FLAG_IDN##_uname, 0, &flag);                      \
+The sysfs entries for flags needs to get an _index argument now
