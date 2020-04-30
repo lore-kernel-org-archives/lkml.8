@@ -2,93 +2,70 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB2DC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0B9C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C46FC20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0962076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgD3NES (ORCPT
+        id S1727094AbgD3NEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:04:18 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42487 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgD3NER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:04:17 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so4786277otq.9;
-        Thu, 30 Apr 2020 06:04:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8uSpmhwBDQ1U9t+PlYqOYkuJzr7dXp1+naCrrRJGfY=;
-        b=slOtTPldluIQvsCBZyrXip9p3qdoe/Qe6+WmHWW+5XCDnXAIatIHcrSjh/w/2DMF4s
-         HUyS/y8TR3GlnTJcy5m7z7m9UnxNz+st7KYGoN2x86fDNE+5uZdTnJf0T+VWWZff/Au0
-         vEBmr9nxd9emLIKPil7TqVYap1rwMFMPMcefelm6jdrz52zy/ZLT6bQxWebdblAo9L5i
-         GNG2Wyh/oYzab3lfdSb3jPhpNLjMOk6h1YtTLXdaa3Jg9BJ2QxFHDlG35Okr32FHY1sc
-         x4jkm15WxCkZvwNJO4y9FyfVTx+xyCDiV4Q7VrHYaXFBF3o6+G0kWbznH1MGzai2I5PY
-         0Zpw==
-X-Gm-Message-State: AGi0PuYWk4x5oc8GPgH+u77ECUzIV7MrnpEoSfOE5b0hzxwo0h4zSl2r
-        7Dd4GZ47ZZU5uGIDUVk14Q3CQXcs/mQk1w88tv0=
-X-Google-Smtp-Source: APiQypJM8NPdDbTWm6Iu7eFmwUmgJfrZdKrQ+XkEkbx+p2+b3lqy3IQKLn2ouBNMfjTTCkDtqDWWS/OEgjBAfo04W0E=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr2433669otw.250.1588251856441;
- Thu, 30 Apr 2020 06:04:16 -0700 (PDT)
+        Thu, 30 Apr 2020 09:04:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50826 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgD3NEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:04:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A2F3CAC85;
+        Thu, 30 Apr 2020 13:04:39 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     mbrugger@suse.com, u-boot@lists.denx.de, bmeng.cn@gmail.com,
+        marex@denx.de, linux-kernel@vger.kernel.org
+Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 0/2] Raspberry Pi 4 VL805 firmware load
+Date:   Thu, 30 Apr 2020 15:04:31 +0200
+Message-Id: <20200430130433.11248-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 15:04:05 +0200
-Message-ID: <CAMuHMdWDFDEYtD6kW5x96j-fwpkxXeaoOvXZdF1Ex-zaT+zANw@mail.gmail.com>
-Subject: Re: [PATCH 05/18] dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document PFC support for the RZ/G1H (R8A7742) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to be
+loaded explicitly. Earlier versions didn't need that as they where using
+an EEPROM for that purpose. This series takes care of setting up the
+relevant infrastructure and run the firmware loading routine at the
+right moment.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in sh-pfc-for-v5.8.
+Note that this builds on top of Sylwester Nawrocki's "USB host support
+for Raspberry Pi 4 board" series.
 
-Gr{oetje,eeting}s,
+---
 
-                        Geert
+Changes since v1:
+ - Rename function
+ - Use callback in xhci-pci.c
+
+Nicolas Saenz Julienne (2):
+  arm: rpi: Add function to trigger VL805's firmware load
+  usb: xhci: Load Raspberry Pi 4 VL805's firmware
+
+ arch/arm/mach-bcm283x/include/mach/mbox.h | 13 +++++++
+ arch/arm/mach-bcm283x/include/mach/msg.h  |  7 ++++
+ arch/arm/mach-bcm283x/msg.c               | 43 +++++++++++++++++++++++
+ board/raspberrypi/rpi/rpi.c               | 12 +++++++
+ drivers/usb/host/xhci-pci.c               |  6 ++++
+ include/usb/xhci.h                        |  3 ++
+ 6 files changed, 84 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
