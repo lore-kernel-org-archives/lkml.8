@@ -2,491 +2,76 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9081EC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64785C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F52208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IPR3mru5"
+	by mail.kernel.org (Postfix) with ESMTP id 4DB7D20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 19:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgD3Tqv (ORCPT
+        id S1727830AbgD3TrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 15:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbgD3Tqc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:46:32 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B77C08ED7D
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:46:32 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so370956pfv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 12:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sdrg4L+6qE8ef/0rMbsMXP8n/wx8xW3roLKK/ezUvnk=;
-        b=IPR3mru5odH8IH8JtJGVfjFqmoI7EykfHBnBKGKkNvL1wskBBBEhukgsM7Uu3fs7lT
-         mlE6Cavs8C1UYBm72lKgh3aoBXy1UMa6UNPCGBQy+hKpAB0W7hT669HPcz97oVuXtj0U
-         JWooQN64D4d1lKY4OIjJgpMHBSWp89pdlBf2Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sdrg4L+6qE8ef/0rMbsMXP8n/wx8xW3roLKK/ezUvnk=;
-        b=nGlk3GJPyCmxhlkl0vzbULfQQ0OOS6PFlWor/CadLRUtdLItEe7/79DzjaewgSmMvc
-         TgRe7EuLkhgzeTMn64T/5Gkk4nhTX8AK/Izz7eN3u7LQIgJX0bNg0hbf7A+Gsaz7ZyP8
-         DFxJWT4/ZGjKl9jkszD9Hp6YiZMHKfXfYtv9T/2e+ej3c2ztTxK099tH9u8Ezd4dgnhl
-         vTWnVG4Q4+kpcG0sC7sfifvdBuf/42MpFoR8mmjk80BmVgTwhAFJbAJkC4970jWxk/Dg
-         spkbXruUl8apQIAZX74/XXjkBiDvIlkI2b4V+i6C43fn3EGk9fd/7AxVzIxufh4YaTA2
-         P7XQ==
-X-Gm-Message-State: AGi0PuYxtuskgJU6nTM9J7dFDm/w/70qLs9bm1z1APTpnl8b/JDvtlYZ
-        K6HxB8UIcAesyJQW5STmXB5r8g==
-X-Google-Smtp-Source: APiQypI3t6eeEH4NGbq4IrT0uz3oir1BusxXopSbA4gC+XU1X6T3q2P0HBzZash+S1FE0TqFj43uZA==
-X-Received: by 2002:a63:c44d:: with SMTP id m13mr602021pgg.314.1588275992083;
-        Thu, 30 Apr 2020 12:46:32 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id u3sm495993pfb.105.2020.04.30.12.46.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 12:46:31 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
-Cc:     linux-gpio@vger.kernel.org, jonas@kwiboo.se,
-        robdclark@chromium.org, bjorn.andersson@linaro.org,
-        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/6] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-Date:   Thu, 30 Apr 2020 12:46:15 -0700
-Message-Id: <20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-In-Reply-To: <20200430194617.197510-1-dianders@chromium.org>
-References: <20200430194617.197510-1-dianders@chromium.org>
+        Thu, 30 Apr 2020 15:47:07 -0400
+Received: from ms.lwn.net ([45.79.88.28]:57848 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgD3TrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 15:47:06 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id B33096E3;
+        Thu, 30 Apr 2020 19:47:05 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 13:47:04 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     linux-doc@vger.kernel.org, hubcap@omnibond.com,
+        martin@omnibond.com, devel@lists.orangefs.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] docs: filesystems: fix `make htmldocs` warning
+Message-ID: <20200430134704.236c612b@lwn.net>
+In-Reply-To: <20200430190737.80950-1-vitor@massaru.org>
+References: <20200430190737.80950-1-vitor@massaru.org>
+Organization: LWN.net
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This moves the bindings over, based a lot on toshiba,tc358768.yaml.
-Unless there's someone known to be better, I've set the maintainer in
-the yaml as the first person to submit bindings.
+On Thu, 30 Apr 2020 16:07:37 -0300
+Vitor Massaru Iha <vitor@massaru.org> wrote:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
+> make htmldocs
+> Documentation/filesystems/orangefs.rst:124: WARNING: Literal block expected; none found.
+> 
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> ---
+>  Documentation/filesystems/orangefs.rst | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/orangefs.rst b/Documentation/filesystems/orangefs.rst
+> index e41369709c5b..628dc220567e 100644
+> --- a/Documentation/filesystems/orangefs.rst
+> +++ b/Documentation/filesystems/orangefs.rst
+> @@ -119,9 +119,7 @@ it comes to that question::
+>  
+>      /opt/ofs/bin/pvfs2-genconfig /etc/pvfs2.conf
+>  
+> -Create an /etc/pvfs2tab file::
+> -
+> -Localhost is fine for your pvfs2tab file:
+> +Create an /etc/pvfs2tab file. Localhost is fine for your pvfs2tab file::
+>  
+>      echo tcp://localhost:3334/orangefs /pvfsmnt pvfs2 defaults,noauto 0 0 > \
+>  	/etc/pvfs2tab
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- specification => specifier.
-- power up => power.
-- Added back missing suspend-gpios.
-- data-lanes and lane-polarities are are the right place now.
-- endpoints don't need to be patternProperties.
-- Specified more details for data-lanes and lane-polarities.
-- Added old example back in, fixing bugs in it.
-- Example i2c bus is just called "i2c", not "i2c1" now.
+Thanks, but this has already been fixed in docs-next.
 
- .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
- .../bindings/display/bridge/ti,sn65dsi86.yaml | 279 ++++++++++++++++++
- 2 files changed, 279 insertions(+), 87 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-deleted file mode 100644
-index 8ec4a7f2623a..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-+++ /dev/null
-@@ -1,87 +0,0 @@
--SN65DSI86 DSI to eDP bridge chip
----------------------------------
--
--This is the binding for Texas Instruments SN65DSI86 bridge.
--http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
--
--Required properties:
--- compatible: Must be "ti,sn65dsi86"
--- reg: i2c address of the chip, 0x2d as per datasheet
--- enable-gpios: gpio specification for bridge_en pin (active high)
--
--- vccio-supply: A 1.8V supply that powers up the digital IOs.
--- vpll-supply: A 1.8V supply that powers up the displayport PLL.
--- vcca-supply: A 1.2V supply that powers up the analog circuits.
--- vcc-supply: A 1.2V supply that powers up the digital core.
--
--Optional properties:
--- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
--
--- gpio-controller: Marks the device has a GPIO controller.
--- #gpio-cells    : Should be two. The first cell is the pin number and
--                   the second cell is used to specify flags.
--                   See ../../gpio/gpio.txt for more information.
--- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
--               the cell formats.
--
--- clock-names: should be "refclk"
--- clocks: Specification for input reference clock. The reference
--	  clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
--
--- data-lanes: See ../../media/video-interface.txt
--- lane-polarities: See ../../media/video-interface.txt
--
--- suspend-gpios: specification for GPIO1 pin on bridge (active low)
--
--Required nodes:
--This device has two video ports. Their connections are modelled using the
--OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--- Video port 0 for DSI input
--- Video port 1 for eDP output
--
--Example
---------
--
--edp-bridge@2d {
--	compatible = "ti,sn65dsi86";
--	#address-cells = <1>;
--	#size-cells = <0>;
--	reg = <0x2d>;
--
--	enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
--	suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
--
--	interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
--
--	vccio-supply = <&pm8916_l17>;
--	vcca-supply = <&pm8916_l6>;
--	vpll-supply = <&pm8916_l17>;
--	vcc-supply = <&pm8916_l6>;
--
--	clock-names = "refclk";
--	clocks = <&input_refclk>;
--
--	ports {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		port@0 {
--			reg = <0>;
--
--			edp_bridge_in: endpoint {
--				remote-endpoint = <&dsi_out>;
--			};
--		};
--
--		port@1 {
--			reg = <1>;
--
--			edp_bridge_out: endpoint {
--				data-lanes = <2 1 3 0>;
--				lane-polarities = <0 1 0 1>;
--				remote-endpoint = <&edp_panel_in>;
--			};
--		};
--	};
--}
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-new file mode 100644
-index 000000000000..6d7d40ad45ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-@@ -0,0 +1,279 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SN65DSI86 DSI to eDP bridge chip
-+
-+maintainers:
-+  - Sandeep Panda <spanda@codeaurora.org>
-+
-+description: |
-+  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
-+  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-+
-+properties:
-+  compatible:
-+    const: ti,sn65dsi86
-+
-+  reg:
-+    const: 0x2d
-+
-+  enable-gpios:
-+    maxItems: 1
-+    description: GPIO specifier for bridge_en pin (active high).
-+
-+  suspend-gpios:
-+    maxItems: 1
-+    description: GPIO specifier for GPIO1 pin on bridge (active low).
-+
-+  vccio-supply:
-+    description: A 1.8V supply that powers the digital IOs.
-+
-+  vpll-supply:
-+    description: A 1.8V supply that powers the DisplayPort PLL.
-+
-+  vcca-supply:
-+    description: A 1.2V supply that powers the analog circuits.
-+
-+  vcc-supply:
-+    description: A 1.2V supply that powers the digital core.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Clock specifier for input reference clock. The reference clock rate must
-+      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
-+
-+  clock-names:
-+    const: refclk
-+
-+  gpio-controller: true
-+  '#gpio-cells':
-+    const: 2
-+    description:
-+      First cell is pin number, second cell is flags.  GPIO pin numbers are
-+      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
-+      information.
-+
-+  '#pwm-cells':
-+    const: 1
-+    description: See ../../pwm/pwm.yaml for description of the cell formats.
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        additionalProperties: false
-+
-+        description:
-+          Video port for MIPI DSI input
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+              data-lanes:
-+                minItems: 1
-+                maxItems: 4
-+                items:
-+                  enum:
-+                    - 0
-+                    - 1
-+                    - 2
-+                    - 3
-+                description: See ../../media/video-interface.txt
-+
-+              lane-polarities:
-+                minItems: 1
-+                maxItems: 4
-+                items:
-+                  enum:
-+                    - 0
-+                    - 1
-+                description: See ../../media/video-interface.txt
-+
-+            dependencies:
-+              data-lanes: [lane-polarities]
-+
-+        required:
-+          - reg
-+
-+      port@1:
-+        type: object
-+        additionalProperties: false
-+
-+        description:
-+          Video port for eDP output (panel or connector).
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+              data-lanes:
-+                minItems: 1
-+                maxItems: 4
-+                items:
-+                  enum:
-+                    - 0
-+                    - 1
-+                    - 2
-+                    - 3
-+                description: See ../../media/video-interface.txt
-+
-+              lane-polarities:
-+                minItems: 1
-+                maxItems: 4
-+                items:
-+                  enum:
-+                    - 0
-+                    - 1
-+                description: See ../../media/video-interface.txt
-+
-+            dependencies:
-+              data-lanes: [lane-polarities]
-+
-+        required:
-+          - reg
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - enable-gpios
-+  - vccio-supply
-+  - vpll-supply
-+  - vcca-supply
-+  - vcc-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bridge@2d {
-+        compatible = "ti,sn65dsi86";
-+        reg = <0x2d>;
-+
-+        interrupt-parent = <&tlmm>;
-+        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        enable-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+
-+        vpll-supply = <&src_pp1800_s4a>;
-+        vccio-supply = <&src_pp1800_s4a>;
-+        vcca-supply = <&src_pp1200_l2a>;
-+        vcc-supply = <&src_pp1200_l2a>;
-+
-+        clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
-+        clock-names = "refclk";
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+            endpoint {
-+              remote-endpoint = <&dsi0_out>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+            endpoint {
-+              remote-endpoint = <&panel_in_edp>;
-+            };
-+          };
-+        };
-+      };
-+    };
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bridge@2d {
-+        compatible = "ti,sn65dsi86";
-+        reg = <0x2d>;
-+
-+        enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
-+        suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
-+
-+        interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
-+
-+        vccio-supply = <&pm8916_l17>;
-+        vcca-supply = <&pm8916_l6>;
-+        vpll-supply = <&pm8916_l17>;
-+        vcc-supply = <&pm8916_l6>;
-+
-+        clock-names = "refclk";
-+        clocks = <&input_refclk>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+
-+            edp_bridge_in: endpoint {
-+              remote-endpoint = <&dsi_out>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+
-+            edp_bridge_out: endpoint {
-+              data-lanes = <2 1 3 0>;
-+              lane-polarities = <0 1 0 1>;
-+              remote-endpoint = <&edp_panel_in>;
-+            };
-+          };
-+        };
-+      };
-+    };
--- 
-2.26.2.526.g744177e7f7-goog
-
+jon
