@@ -2,108 +2,98 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295B4C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A9DC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0825E206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588290215;
-	bh=tcVuwn/92vSjcQAzqrthgtCxQ2DLozN5xuLXK9tbIYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JT4exwhVJOqs2Oop/C8fnSyQkIsMOmmrATLMNbfdT5zJmRbHlwxOTvEtHynBmwj5r
-	 FcKSXX54nxFBnDVYIfnirFy7zgIiNMV1zc9y237hN5CeKJIo7haqniKcFFahBJ1CVp
-	 PjsTcCFwCjDgLwXSDeXuUX12l68376ZVTNLQfVoA=
+	by mail.kernel.org (Postfix) with ESMTP id F31A5206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 23:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4X8EDtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgD3Xne (ORCPT
+        id S1727923AbgD3Xnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 19:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35052 "EHLO
+        Thu, 30 Apr 2020 19:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726473AbgD3Xnd (ORCPT
+        by vger.kernel.org with ESMTP id S1726473AbgD3Xnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 19:43:33 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D255EC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 16:43:31 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id v28so2710807lfp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 16:43:31 -0700 (PDT)
+        Thu, 30 Apr 2020 19:43:52 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BDFC035494;
+        Thu, 30 Apr 2020 16:43:52 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 19so1319076oiy.8;
+        Thu, 30 Apr 2020 16:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=05oH2K+vg7L8+W/HnHl99DKxppRnrgZq0ok6k+htQb4=;
-        b=XzR5U2YYxGN3xRIy/aE1u4RGhXZsY5P7C3x/9LAExW27SSRvRKmF6+7yld5rqLUCv5
-         M+dioQa6yfzUT++eQic0svhLMLCzka1EJVAEfccNUEanl2fjcKkS8eyuWdKS+/VR23fR
-         Rs2nhDJNGyWO2uVcPFWhrX9jZNEPFduLjHMXU=
+        bh=0aGv0fmrEJ3JJMEKSeFGrmFzZQ6kdpuZGzPNRlg6rjs=;
+        b=C4X8EDtceCxZshXONhK22Wegzl24zM8hjRGgow9ZuAZ2Awgl7NFJxzLZFZ3uKQCqNv
+         sjx1JWmFZZETWsxJB+JaVPL6Mj5RyUH512ZAiB7Q85piO+GOKz77YotMgdftEPPiLnGx
+         IK01bAvAbAVGOqZkf40dI7V2BKmIcby0u1dru/Bow9eqcP5z+EMO/wuw2gxOJMoH84K7
+         Gx5na7rvaCwehKr1Qp66oRR49wAmxZboy01aZaGZagKUZSl74hfomJtfEQBH0KeOJh2V
+         pyfIL9yW5JNRne4k5+YwMvK/rk2aErJJcCtQTEDCtGMcEQajArGhUF2WZCLESk0xY6aP
+         EGKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=05oH2K+vg7L8+W/HnHl99DKxppRnrgZq0ok6k+htQb4=;
-        b=ngeGCHDx7mMW/5R4B7bdz2XpjW+4iaOWIMFesPtY9iV3mhxicQDi+7wf62XBeQYMIl
-         PUNtRCVZs+ddOnbmdAmuYj7rHfiZaLKZpzR+duT1ehw+6ZcOo7uc1NkuB2XlxyIKgtDI
-         kQrUmxaj7x7YZIk0en239Dxk9npNvBUgaX1cAdqGPqRkjfBQ3i1fkRgjX58Hhge+bGIq
-         tOYCEbShYTlISPvhvPxNiufSMfSlopdnfen3LpmUATuD5961WLpaL3e4PBpbllEWEPTo
-         aFflRixsZQX4WKnrSUGWhswCEH8a+AMohEotnRRZBK8jCa9y9Pz4ylLHEEmb1dIC88bg
-         ypRg==
-X-Gm-Message-State: AGi0PuahTEf0cHtYa0hXvnaFUCSL++f7+PGg85/whSUqNx1k1ZgT1D7n
-        pclOEtsJ1u+Np9CaXkXwvQiExqYKiQY=
-X-Google-Smtp-Source: APiQypL48f2/6xQxSUofwMKSqAeTXru/hlvUFFDJRRb0yUr/MarRmaonCbr5JJPdmm5tTG+KnT0RBQ==
-X-Received: by 2002:a19:6b03:: with SMTP id d3mr681406lfa.209.1588290209667;
-        Thu, 30 Apr 2020 16:43:29 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id a10sm856570ljp.16.2020.04.30.16.43.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 16:43:28 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id d25so2708403lfi.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 16:43:28 -0700 (PDT)
-X-Received: by 2002:ac2:4da1:: with SMTP id h1mr692273lfe.152.1588290208226;
- Thu, 30 Apr 2020 16:43:28 -0700 (PDT)
+        bh=0aGv0fmrEJ3JJMEKSeFGrmFzZQ6kdpuZGzPNRlg6rjs=;
+        b=euePuV+RX16Eqt0+gsYdwPmC4uwg3m8wgR0qAOXLyqicgzthd2YuqmtSelGAbI+kh/
+         eiXyb7dmqaNKr87IxyBZcVOunbjw8XLi/INY5WG+XPf9epPdYtZE4ijFcwiI/PuhqXO0
+         yoVJQIWs9ZeHKjOzk3C6YkaSogWCSo7iwW4BqnPLiUs35EswFaCwyDdtVQatJbFu3WOX
+         f/kVv3Mkfh1WadrKK+leZgwhwMIsX/2ZGlEf36qNlDK2S1QC4nB4YWspCDqn8p4qAmmq
+         D+3RRZUXlXVmprAU3vk2csIjmrT3loEjEqvXSHO6wYV0neZmWiyykbgSqdVRlobw8ERt
+         1cAA==
+X-Gm-Message-State: AGi0PuauwfpEKY8SP3V1gkEhouESzQFr13qrXz0/M5wRtqPLkiH0f1Vu
+        aITCDJ6A7/PXvkiM7n6NewIWBsuE1V8t6K4bB6w=
+X-Google-Smtp-Source: APiQypINoCIP865Z1PjWDIxHES1z1ui7oERxj+R2/nSdMVlMel/fZqfjvxZlD3onMnJE8wogYdPogvuFxE9ly4cP6ik=
+X-Received: by 2002:aca:2801:: with SMTP id 1mr1156134oix.141.1588290231959;
+ Thu, 30 Apr 2020 16:43:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHC9VhTu3YWPmwtA7RERHDRhQt0wAkmN4GJCmaRY7KSFRwtACQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhTu3YWPmwtA7RERHDRhQt0wAkmN4GJCmaRY7KSFRwtACQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 30 Apr 2020 16:43:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whGjVLwTnYT8euAb_Lzqxd=-TFnJU-k2uu+Fn_hBfMc+w@mail.gmail.com>
-Message-ID: <CAHk-=whGjVLwTnYT8euAb_Lzqxd=-TFnJU-k2uu+Fn_hBfMc+w@mail.gmail.com>
-Subject: Re: [GIT PULL] SELinux fixes for v5.7 (#2)
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
+ <1588055009-12677-6-git-send-email-wanpengli@tencent.com> <66fd6180-8e8b-1f9c-90f1-a55af1467388@redhat.com>
+In-Reply-To: <66fd6180-8e8b-1f9c-90f1-a55af1467388@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Fri, 1 May 2020 07:43:40 +0800
+Message-ID: <CANRm+Cz_nxVXmBoHU6NQGRGKbK+MWtZ476376AMJtoWvH=Kbgw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] KVM: VMX: Optimize posted-interrupt delivery for
+ timer fastpath
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 2:24 PM Paul Moore <paul@paul-moore.com> wrote:
+On Thu, 30 Apr 2020 at 21:32, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
-> Two more SELinux patches to fix problems in the v5.7-rcX releases.
-> Wei Yongjun's patch fixes a return code in an error path, and my patch
-> fixes a problem where we were not correctly applying access controls
-> to all of the netlink messages in the netlink_send LSM hook.
+> On 28/04/20 08:23, Wanpeng Li wrote:
+> > -     if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST &&
+> > -         kvm_vcpu_exit_request(vcpu))
+> > -             exit_fastpath = EXIT_FASTPATH_NOP;
+> > +     if (exit_fastpath == EXIT_FASTPATH_REENTER_GUEST) {
+> > +             if (!kvm_vcpu_exit_request(vcpu))
+> > +                     vmx_sync_pir_to_irr(vcpu);
+> > +             else
+> > +                     exit_fastpath = EXIT_FASTPATH_NOP;
+> > +     }
+>
+> This part should be in patch 3; not a big deal, I can reorganize that
+> myself.
 
-Side note: could we plan on (not for 5.7, but future) moving the "for
-each message" part of that patch into the generic security layer (ie
-security_netlink_send()), so that if/when other security subsystems
-start doing that netlink thing, they won't have to duplicate that
-code?
+Great, thanks.
 
-Obviously the "for each message" thing should only be done if there is
-any security  hook at all..
-
-Right now selinux is the only one that does this, so there's no
-duplication of effort, but it seems a mistake to do this at the
-low-level security level.
-
-Or is there some fundamental reason why a security hook would want to
-look at a single skb rather than the individual messages?
-
-                Linus
+    Wanpeng
