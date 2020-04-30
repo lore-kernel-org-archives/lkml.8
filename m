@@ -2,58 +2,58 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E05C83006
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14473C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B29821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79B121D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgD3Efq (ORCPT
+        id S1726819AbgD3Efk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:35:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38502 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgD3Efk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 00:35:40 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U4WMh2126473;
-        Thu, 30 Apr 2020 00:35:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52538 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726777AbgD3Efe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 00:35:34 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U4WJFt122525;
+        Thu, 30 Apr 2020 00:35:12 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30me4705ye-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr8vg1c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 00:35:15 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03U4WMkb126395;
-        Thu, 30 Apr 2020 00:35:15 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30me4705xb-1
+        Thu, 30 Apr 2020 00:35:12 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03U4ZBWC129737;
+        Thu, 30 Apr 2020 00:35:11 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr8vg0f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 00:35:14 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U4OmnS008377;
-        Thu, 30 Apr 2020 04:35:12 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5srra-1
+        Thu, 30 Apr 2020 00:35:11 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U4P9DG011143;
+        Thu, 30 Apr 2020 04:35:08 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 30mcu7x9ba-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 04:35:12 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U4Z9Y757934054
+        Thu, 30 Apr 2020 04:35:08 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U4Z5ak22741040
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 04:35:09 GMT
+        Thu, 30 Apr 2020 04:35:05 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C803C42041;
-        Thu, 30 Apr 2020 04:35:09 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D3AF042045;
+        Thu, 30 Apr 2020 04:35:05 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 384724204C;
-        Thu, 30 Apr 2020 04:35:06 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6D16A42041;
+        Thu, 30 Apr 2020 04:35:02 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.59.105])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Apr 2020 04:35:05 +0000 (GMT)
+        Thu, 30 Apr 2020 04:35:02 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, mikey@neuling.org
 Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
@@ -62,9 +62,9 @@ Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
         fweisbec@gmail.com, mingo@kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         ravi.bangoria@linux.ibm.com
-Subject: [PATCH v4 11/16] powerpc/watchpoint: Introduce is_ptrace_bp() function
-Date:   Thu, 30 Apr 2020 10:04:12 +0530
-Message-Id: <20200430043417.30948-12-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v4 10/16] powerpc/watchpoint: Use loop for thread_struct->ptrace_bps
+Date:   Thu, 30 Apr 2020 10:04:11 +0530
+Message-Id: <20200430043417.30948-11-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.25.3
 In-Reply-To: <20200430043417.30948-1-ravi.bangoria@linux.ibm.com>
 References: <20200430043417.30948-1-ravi.bangoria@linux.ibm.com>
@@ -73,50 +73,142 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-30_01:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- spamscore=0 malwarescore=0 mlxlogscore=944 clxscore=1015 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300030
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 phishscore=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004300030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce is_ptrace_bp() function and move the check inside the
-function. We will utilize it more in later set of patches.
+ptrace_bps is already an array of size HBP_NUM_MAX. But we use
+hardcoded index 0 while fetching/updating it. Convert such code
+to loop over array.
+
+ptrace interface to use multiple watchpoint remains same. eg:
+two PPC_PTRACE_SETHWDEBUG calls will create two watchpoint if
+hw underneath supports it.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Reviewed-by: Michael Neuling <mikey@neuling.org>
 ---
- arch/powerpc/kernel/hw_breakpoint.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/hw_breakpoint.c       |  7 ++++--
+ arch/powerpc/kernel/process.c             |  6 ++++-
+ arch/powerpc/kernel/ptrace/ptrace-noadv.c | 28 +++++++++++++++++------
+ 3 files changed, 31 insertions(+), 10 deletions(-)
 
 diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 772b2c953220..319a761b7412 100644
+index 5826f1f2cab9..772b2c953220 100644
 --- a/arch/powerpc/kernel/hw_breakpoint.c
 +++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -90,6 +90,11 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
- 	hw_breakpoint_disable();
+@@ -419,10 +419,13 @@ NOKPROBE_SYMBOL(hw_breakpoint_exceptions_notify);
+  */
+ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+ {
++	int i;
+ 	struct thread_struct *t = &tsk->thread;
+ 
+-	unregister_hw_breakpoint(t->ptrace_bps[0]);
+-	t->ptrace_bps[0] = NULL;
++	for (i = 0; i < nr_wp_slots(); i++) {
++		unregister_hw_breakpoint(t->ptrace_bps[i]);
++		t->ptrace_bps[i] = NULL;
++	}
  }
  
-+static bool is_ptrace_bp(struct perf_event *bp)
+ void hw_breakpoint_pmu_read(struct perf_event *bp)
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 6d1b7cede900..41a59a37383b 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1604,6 +1604,9 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+ 	void (*f)(void);
+ 	unsigned long sp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+ 	struct thread_info *ti = task_thread_info(p);
++#ifdef CONFIG_HAVE_HW_BREAKPOINT
++	int i;
++#endif
+ 
+ 	klp_init_thread_info(p);
+ 
+@@ -1663,7 +1666,8 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+ 	p->thread.ksp_limit = (unsigned long)end_of_stack(p);
+ #endif
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+-	p->thread.ptrace_bps[0] = NULL;
++	for (i = 0; i < nr_wp_slots(); i++)
++		p->thread.ptrace_bps[i] = NULL;
+ #endif
+ 
+ 	p->thread.fp_save_area = NULL;
+diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+index 0dbb35392dd2..08cb8c1b504c 100644
+--- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
++++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+@@ -168,6 +168,19 @@ int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned l
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_HAVE_HW_BREAKPOINT
++static int find_empty_ptrace_bp(struct thread_struct *thread)
 +{
-+	return bp->overflow_handler == ptrace_triggered;
-+}
++	int i;
 +
- /*
-  * Perform cleanup of arch-specific counters during unregistration
-  * of the perf-event
-@@ -324,7 +329,7 @@ int hw_breakpoint_handler(struct die_args *args)
- 	 * one-shot mode. The ptrace-ed process will receive the SIGTRAP signal
- 	 * generated in do_dabr().
- 	 */
--	if (bp->overflow_handler == ptrace_triggered) {
-+	if (is_ptrace_bp(bp)) {
- 		perf_bp_event(bp, regs);
- 		rc = NOTIFY_DONE;
- 		goto out;
++	for (i = 0; i < nr_wp_slots(); i++) {
++		if (!thread->ptrace_bps[i])
++			return i;
++	}
++	return -1;
++}
++#endif
++
+ static int find_empty_hw_brk(struct thread_struct *thread)
+ {
+ 	int i;
+@@ -217,8 +230,9 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
+ 		len = 1;
+ 	else
+ 		return -EINVAL;
+-	bp = thread->ptrace_bps[0];
+-	if (bp)
++
++	i = find_empty_ptrace_bp(thread);
++	if (i < 0)
+ 		return -ENOSPC;
+ 
+ 	/* Create a new breakpoint request if one doesn't exist already */
+@@ -228,13 +242,13 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
+ 	arch_bp_generic_fields(brk.type, &attr.bp_type);
+ 
+ 	bp = register_user_hw_breakpoint(&attr, ptrace_triggered, NULL, child);
+-	thread->ptrace_bps[0] = bp;
++	thread->ptrace_bps[i] = bp;
+ 	if (IS_ERR(bp)) {
+-		thread->ptrace_bps[0] = NULL;
++		thread->ptrace_bps[i] = NULL;
+ 		return PTR_ERR(bp);
+ 	}
+ 
+-	return 1;
++	return i + 1;
+ #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+ 
+ 	if (bp_info->addr_mode != PPC_BREAKPOINT_MODE_EXACT)
+@@ -263,10 +277,10 @@ long ppc_del_hwdebug(struct task_struct *child, long data)
+ 		return -EINVAL;
+ 
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+-	bp = thread->ptrace_bps[0];
++	bp = thread->ptrace_bps[data - 1];
+ 	if (bp) {
+ 		unregister_hw_breakpoint(bp);
+-		thread->ptrace_bps[0] = NULL;
++		thread->ptrace_bps[data - 1] = NULL;
+ 	} else {
+ 		ret = -ENOENT;
+ 	}
 -- 
 2.21.1
 
