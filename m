@@ -2,113 +2,120 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71FEC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC33FC83000
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C140620774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0264206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgD3OPZ (ORCPT
+        id S1726844AbgD3OQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:15:25 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:59711 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgD3OPY (ORCPT
+        Thu, 30 Apr 2020 10:16:02 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:60608 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgD3OQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:15:24 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D1D30240003;
-        Thu, 30 Apr 2020 14:15:20 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 16:15:20 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Thu, 30 Apr 2020 10:16:01 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 94044634C8F;
+        Thu, 30 Apr 2020 17:15:52 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jU9yi-0000Sj-F6; Thu, 30 Apr 2020 17:15:52 +0300
+Date:   Thu, 30 Apr 2020 17:15:52 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on
- MAX77620
-Message-ID: <20200430141520.GA101194@piout.net>
-References: <20200417170825.2551367-1-thierry.reding@gmail.com>
- <20200430140701.GA21776@bogus>
+Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
+Message-ID: <20200430141552.GO867@valkosipuli.retiisi.org.uk>
+References: <20200414200151.80089-1-daniel@qtec.com>
+ <20200414200151.80089-2-daniel@qtec.com>
+ <20200430094233.GE867@valkosipuli.retiisi.org.uk>
+ <20200430111014.GD5856@pendragon.ideasonboard.com>
+ <20200430133125.GL867@valkosipuli.retiisi.org.uk>
+ <20200430135904.GI5856@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430140701.GA21776@bogus>
+In-Reply-To: <20200430135904.GI5856@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2020 09:07:01-0500, Rob Herring wrote:
-> On Fri, Apr 17, 2020 at 07:08:23PM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> > 
-> > The RTC present on MAX77620 can be used to generate an alarm at a given
-> > time, which in turn can be used as a wakeup source for the system if it
-> > is properly wired up.
-> > 
-> > Document how to enable the RTC to act as a wakeup source.
-> > 
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> >  .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> > index 5a642a51d58e..f05005b0993e 100644
-> > --- a/Documentation/devicetree/bindings/mfd/max77620.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> > @@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
-> >  			control) then, GPIO1/nRST_IO goes LOW.
-> >  			this property is valid for max20024 only.
-> >  
-> > +Realtime Clock
-> > +--------------
-> > +The MAX77620 family of power management ICs contain a realtime clock block
-> > +that can be used to keep track of time even when the system is powered off.
-> > +
-> > +The realtime clock can also be programmed to trigger alerts, which can be
-> > +used to wake the system up from sleep. In order to configure the RTC to act
-> > +as a wakeup source, add an "rtc" child node and add the "wakeup-source"
-> > +property.
-> > +
-> > +
-> >  For DT binding details of different sub modules like GPIO, pincontrol,
-> >  regulator, power, please refer respective device-tree binding document
-> >  under their respective sub-system directories.
-> > @@ -159,4 +170,8 @@ max77620@3c {
-> >  			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
-> >  		};
-> >  	};
-> > +
-> > +	rtc {
-> > +		wakeup-source;
-> 
-> Is the RTC really the only thing that could wake the system in this 
-> PMIC?
-> 
-> I don't think it's really valid to have 'wakeup-source' without 
-> 'interrupts' unless the wakeup mechanism is somehow not an interrupt. So 
-> I think this belongs in the parent node.
-> 
+Hi Laurent,
 
-I don't think this is true because in the case of a discrete RTC, its
-interrupt pin can be connected directly to a PMIC to power up a board
-instead of being connected to the SoC. In that case we don't have an
-interrupt property but the RTC is still a wakeup source. This is the
-usual use case for wakeup-source in the RTC subsystem. Else, if there is
-an interrupt, then we assume the RTC is a wakeup source and there is no
-need to have the wakeup-source property.
+On Thu, Apr 30, 2020 at 04:59:04PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Thu, Apr 30, 2020 at 04:31:25PM +0300, Sakari Ailus wrote:
+> > On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
+> > > On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
+> > >> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
+> > >>> Add min and max structures to the v4l2-subdev callback in order to allow
+> > >>> the subdev to return a range of valid frame intervals.
+> > >>> 
+> > >>> This would operate similar to the struct v4l2_subdev_frame_size_enum and
+> > >>> its max and min values for the width and the height. In this case, the
+> > >>> possibility to return a frame interval range is added to the v4l2-subdev level
+> > >>> whenever the v4l2 device operates in step-wise or continuous mode.
+> > >> 
+> > >> The current API only allows providing a list of enumerated values. That is
+> > >> limiting indeed, especially on register list based sensor drivers where
+> > >> vertical blanking is configurable.
+> > >> 
+> > >> I guess this could be extended to cover what V4L2, more or less. If we tell
+> > >> it's a range, is it assumed to be contiguous? We don't have try operation
+> > >> for the frame interval, but I guess set is good enough. The fraction is
+> > >> probably best for TV standards but it's not what camera sensors natively
+> > >> use. (But for a register list based driver, the established practice
+> > >> remains to use frame interval.)
+> > >> 
+> > >> I'm also wondering the effect on existing user space; if a driver gives a
+> > >> range, how will the existing programs work with such a driver?
+> > >> 
+> > >> I'd add an anonymous union with the interval field, the other field being
+> > >> min_interval. Then the current applications would get the minimum interval
+> > >> and still continue to function. I guess compilers are modern enough these
+> > >> days we can have an anonymous union in the uAPI?
+> > > 
+> > > We can discuss all this, but given patch 3/3 in this series, I think
+> > > this isn't the right API :-) The sensor driver should not expose the
+> > > frame interval enumeration API. It should instead expose control of the
+> > > frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
+> > > V4L2_CID_VBLANK.
+> > > 
+> > 
+> > That would require also exposing the size of the pixel array (and the
+> > analogue crop), in order to provide all the necessary information to
+> > calculate the frame rate. No objections there; this is a new driver.
+> > 
+> > There are however existing drivers that implement s_frame_interval subdev
+> > ioctl; those might benefit from this one. Or would you implement the pixel
+> > rate based control as well, and effectively deprecate the s_frame_interval
+> > on those?
+> 
+> That's what I would recommend, yes. I would only keep
+> .s_frame_interval() for sensors that expose that concept at the hardware
+> level (for instance with an integrated ISP whose firmware exposes a
+> frame interval or frame rate control).
+
+Sounds good to me.
+
+Jacopo's set exposing read-only subdevs completes the puzzle so the user
+space should have all it needs, right?
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+
+Sakari Ailus
