@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4986DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E5AC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C50324953
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FEE20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254732;
-	bh=MyBj4qtov3HG2b8+oAL8ufv3SgQnm24ehJlL9VKrxsU=;
+	s=default; t=1588254738;
+	bh=EturXDdmuhBBBinF/mcrRmdf5FdYX9aTc5Zb5f3bQPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iyacxC/wj6j/YpfQL4MuYoebKbcgcRetpFasUzi1g1hfO9Bi5aT/EUA3GoxiEsCwr
-	 aFu55JacN8pzKCTFKDYvY73/0rcRtIaN4c3JW0DQ6qH5k+zn/mAXCqjy/M2R5M5Bvr
-	 Q7LqyhkUVcWwX/7MLrWS2qNZUwSr6TDW6JtLfkoE=
+	b=lTX5vfQFrpcEljZON5uQF3uoEIrwOOd5wo+mC9NjAlMM8FUNVQID8JSPDfAliH8nX
+	 cwb4Knj9NuFm8EEH0qLKiffhNvcNJ1qCZQL4OvhmcFTsawhp4cffMkD77uKfl/rvWO
+	 +n2RNEFvbkua1cwLxRzl8Q2R3LjfwAcEu1zhPPXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgD3NwL (ORCPT
+        id S1728353AbgD3NwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:52:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbgD3Nvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:53 -0400
+        id S1728246AbgD3Nv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A624208D5;
-        Thu, 30 Apr 2020 13:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F11E6208D5;
+        Thu, 30 Apr 2020 13:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254713;
-        bh=MyBj4qtov3HG2b8+oAL8ufv3SgQnm24ehJlL9VKrxsU=;
+        s=default; t=1588254717;
+        bh=EturXDdmuhBBBinF/mcrRmdf5FdYX9aTc5Zb5f3bQPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2C7WagK/52zOTcEsd7IY/XNvZedELvFw3EsBD9ua+wB7CSU+0m9Ut7bTBihEzmjD
-         cnFr8PEp/V+cNXKQhp6QEJThSzJTd5+jbdgtENT3v5o12gCbYisD2mEQmUQ9PXlSco
-         fpxwoAARYeeFv4KJPidNkJ77Lu8Jz+ZzPJSeNVhQ=
+        b=vQj5DzH6BBn77RpFmhClJnt6hPa6z40xK6GI8Tl13fuPFK9vLK+5TTVX/D0ABongs
+         YEgK5ZwliAui/fcV+y3gXR1YqYS1hxT+eQ1MJRHcDFiZEM/AiAMbS8SVXaIBpSOmV+
+         tWZam9EXm62FexpRTQYgb30+qm1nHReaysiQNbek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quentin Perret <qperret@google.com>,
-        Chitti Babu Theegala <ctheegal@codeaurora.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 61/79] sched/core: Fix reset-on-fork from RT with uclamp
-Date:   Thu, 30 Apr 2020 09:50:25 -0400
-Message-Id: <20200430135043.19851-61-sashal@kernel.org>
+Cc:     Vitor Massaru Iha <vitor@massaru.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        user-mode-linux-devel@lists.sourceforge.net,
+        user-mode-linux-user@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.6 65/79] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
+Date:   Thu, 30 Apr 2020 09:50:29 -0400
+Message-Id: <20200430135043.19851-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
 References: <20200430135043.19851-1-sashal@kernel.org>
@@ -62,53 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Perret <qperret@google.com>
+From: Vitor Massaru Iha <vitor@massaru.org>
 
-[ Upstream commit eaf5a92ebde5bca3bb2565616115bd6d579486cd ]
+[ Upstream commit 63ec90f18204f2fe072df108de8a021b28b1b173 ]
 
-uclamp_fork() resets the uclamp values to their default when the
-reset-on-fork flag is set. It also checks whether the task has a RT
-policy, and sets its uclamp.min to 1024 accordingly. However, during
-reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
-hence leading to an erroneous uclamp.min setting for the new task if it
-was forked from RT.
+In this workflow:
 
-Fix this by removing the unnecessary check on rt_task() in
-uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
-set.
+$ make ARCH=um defconfig && make ARCH=um -j8
+  [snip]
+$ make ARCH=um mrproper
+  [snip]
+$ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
+  [snip]
+  CC      scripts/mod/empty.o
+In file included from ../include/linux/types.h:6,
+                 from ../include/linux/mod_devicetable.h:12,
+                 from ../scripts/mod/devicetable-offsets.c:3:
+../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
+    5 | #include <asm/types.h>
+      |          ^~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
+make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
+make: *** [Makefile:180: sub-make] Error 2
 
-Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
-Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
-Signed-off-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Link: https://lkml.kernel.org/r/20200416085956.217587-1-qperret@google.com
+The cause of the error was because arch/$(SUBARCH)/include/generated files
+weren't properly cleaned by `make ARCH=um mrproper`.
+
+Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
+Reported-by: Theodore Ts'o <tytso@mit.edu>
+Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/um/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index da8a194702185..3dd6756973013 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1239,13 +1239,8 @@ static void uclamp_fork(struct task_struct *p)
- 		return;
+diff --git a/arch/um/Makefile b/arch/um/Makefile
+index d2daa206872da..275f5ffdf6f0a 100644
+--- a/arch/um/Makefile
++++ b/arch/um/Makefile
+@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE)
+ # When cleaning we don't include .config, so we don't include
+ # TT or skas makefiles and don't clean skas_ptregs.h.
+ CLEAN_FILES += linux x.i gmon.out
++MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
  
- 	for_each_clamp_id(clamp_id) {
--		unsigned int clamp_value = uclamp_none(clamp_id);
--
--		/* By default, RT tasks always get 100% boost */
--		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			clamp_value = uclamp_none(UCLAMP_MAX);
--
--		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
-+		uclamp_se_set(&p->uclamp_req[clamp_id],
-+			      uclamp_none(clamp_id), false);
- 	}
- }
- 
+ archclean:
+ 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
 -- 
 2.20.1
 
