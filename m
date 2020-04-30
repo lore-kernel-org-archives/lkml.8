@@ -2,65 +2,113 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B24EC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A256C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C482082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EC22082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kqSSjeZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgD3Hum (ORCPT
+        id S1726554AbgD3HvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:50:42 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60596 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgD3Hul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:50:41 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jU3w4-0007Ws-Bk; Thu, 30 Apr 2020 17:48:45 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 30 Apr 2020 17:49:41 +1000
-Date:   Thu, 30 Apr 2020 17:49:41 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH v3 1/3] hwrng: cctrng - Add dependency on OF
-Message-ID: <20200430074941.GA12529@gondor.apana.org.au>
-References: <1587987364-4566-1-git-send-email-hadar.gat@arm.com>
- <1587987364-4566-2-git-send-email-hadar.gat@arm.com>
- <20200427150658.GA26305@gondor.apana.org.au>
- <DB7PR08MB3003E1459755B853B41490D6E9AC0@DB7PR08MB3003.eurprd08.prod.outlook.com>
- <20200428123007.GA3969@gondor.apana.org.au>
- <AM6PR08MB2999F52B99066C321837144DE9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
+        Thu, 30 Apr 2020 03:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgD3HvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 03:51:17 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC76C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:17 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id e16so496037ybn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 00:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pLDutk4wbmpMCH/umkH9WAYAlTySTFnkRecmVU+0E0s=;
+        b=kqSSjeZ+rI8gARW5nI9FUaRItjm5CqM0fjB5XI6W+lEAOiIkavNEQoguWYtY1vtJTE
+         tSQg1dAfckJKYYcqEmELyk7FoGt4b5fHt2oVsRrBVT+CV39NIQwRObSDJwV/hTaGh9C3
+         pjqB2w6Uk4Ax3XPNbh5hczFlpH7xshwCWI0i2X7/S2lduFTY/PRHRtV4ZY3Rjl3Okj9a
+         3g0Z685XhVwmIO6Y5Mhu9JJrKzHuf2I9EEIShxkLltG1anSirqdZOvQaUUTVfNdQlCLS
+         hZI5GleQ5MLfCOHux7SHLBKKGdc4bMHLzbBTPVlolyXibu61qM5jWF/2xaJBSFvG2KIW
+         80nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pLDutk4wbmpMCH/umkH9WAYAlTySTFnkRecmVU+0E0s=;
+        b=tKyitpxaqoXMZc4Whgj6bG/oyf4Qx5/w7SJlY0eGDiQEzeT7177dnrFAwHDhTv70Pf
+         LwLJBsPSYqDtlS2HbcZyEKrnsQsqdeBx/Hm38VBmxLPGQnfmXKQKbp/dzV1YQJkvwk5v
+         GqDzPPwQ+lOSUhkIRQeajdSkfKB4QmPafUniA33OyaK/BOPpXTx8lFIQNiZWw9rq1w96
+         pb0CfE+hArJMGzpLmGDgh2BFv45CmXjo//srXS4nQqA5rCKeiq31iuwN3rK+a+8iW2zj
+         HQWXmYzXMb0Z+8YNUrkTmwnprQj7du81uOuqcj6FrJhMAlKg6cSnQ6581ZvjEPB3XZ/y
+         6c3A==
+X-Gm-Message-State: AGi0PuapmXx/Jr2vbqVlDXKPMWsqUlYgcj5MkF4kcO5UzLl5+1W+5QHB
+        SeW8Ky1QKpQcITpBxpjIKiSsRlTFfk2B+lRS3qXj2Q==
+X-Google-Smtp-Source: APiQypL9xoaDexzU2qRGlah8MaT3KWLw5PWZgxIrA3ayldIjYdnzEP3H/kY4CliMPoeXPlv8gEqDrkGjpTPHpNgFYoo=
+X-Received: by 2002:a25:cc48:: with SMTP id l69mr3629847ybf.459.1588233075137;
+ Thu, 30 Apr 2020 00:51:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR08MB2999F52B99066C321837144DE9AA0@AM6PR08MB2999.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200429153258.563269446@infradead.org> <20200429153549.006661686@infradead.org>
+ <20200430072847.GA68379@localhost.localdomain>
+In-Reply-To: <20200430072847.GA68379@localhost.localdomain>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 30 Apr 2020 00:51:02 -0700
+Message-ID: <CANN689FBczsBm=bYPfs1saUEeUq+oxLWnr8xfwtOstQkvJmwOA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/7] rbtree: Add generic add and find helpers
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>, irogers@google.com,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 07:39:14AM +0000, Hadar Gat wrote:
+On Thu, Apr 30, 2020 at 12:28 AM Juri Lelli <juri.lelli@redhat.com> wrote:
+> > --- a/include/linux/rbtree.h
+> > +++ b/include/linux/rbtree.h
+> > @@ -141,12 +141,18 @@ static inline void rb_insert_color_cache
+> >       rb_insert_color(node, &root->rb_root);
+> >  }
+> >
+> > -static inline void rb_erase_cached(struct rb_node *node,
+> > +static inline bool rb_erase_cached(struct rb_node *node,
+> >                                  struct rb_root_cached *root)
+> >  {
+> > -     if (root->rb_leftmost == node)
+> > +     bool leftmost = false;
+> > +
+> > +     if (root->rb_leftmost == node) {
+> >               root->rb_leftmost = rb_next(node);
 >
-> Yes, it builds, but it is useless.
+> Think we need
+>
+>  if (root->rb_leftmost)
+>
+> > +             leftmost = true;
+>
+> DEADLINE crashes w/o that.
 
-But that's the whole point of COMPILE_TEST.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I think Peter's code is correct; after removing the only node in an
+rbtree rb_leftmost should be NULL.
+
+The issue appears to be in dequeue_pushable_dl_task unconditionally
+dereferencing the pointer returned by rb_first_cached(), which may be
+NULL. I'm not sure what the correct behavior is though, i.e. what
+dl_rq->earliest_dl.next should be set to if the rbtree ends up empty.
+Current code (before Peter's changes) preserves the existing
+dl_rq->earliest_dl.next value in that case, which seems very weird to
+me (and worthy of a comment if it's correct).
