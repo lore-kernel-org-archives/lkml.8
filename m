@@ -2,147 +2,181 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADAEC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC1FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA24C20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA0420774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ashNi4iv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J6emRK3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgD3UL1 (ORCPT
+        id S1726927AbgD3UMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:11:27 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14216 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgD3UL1 (ORCPT
+        Thu, 30 Apr 2020 16:12:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41466 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgD3UMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:11:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab30720000>; Thu, 30 Apr 2020 13:09:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 13:11:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 13:11:26 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 20:11:26 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 20:11:25 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <eadf3a5a-f305-4561-10e1-1b9241b9c5c2@gmail.com>
- <bfd82642-9648-96f1-737d-4b9a869d34a3@nvidia.com>
-Message-ID: <52b98347-4b78-f637-04f4-cc730ad336f3@nvidia.com>
-Date:   Thu, 30 Apr 2020 13:09:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 30 Apr 2020 16:12:24 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UK8uKo084446;
+        Thu, 30 Apr 2020 20:11:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=Tj/Vywbax7ksJzdV9zU97xcEcZuvaW8/vJFBwr0+2HY=;
+ b=J6emRK3n6GSyEW/Ez+VBqaZB2kI73fz1NgKjCoMTaNu+sd634ykdV3UamEznaT/VMELp
+ JLDp4Rn44RpioaFNFHQAilUalaiCVAaP/FjTFd4hztLBmvRI1/DgiR2t37Y5TXothwrm
+ xFlWD5yhjYkyocd82HEIRN/EdOu/uwrk70ZNL15UjmOok7/v1voc2/DMW7LGkx0j7aAT
+ 7XTjm7OcKjDKNtE+j98NWYoyEO4mOlahmE+SS9KduMyNzA6QNqP1EdAKdz/5naQHdil0
+ 9kSW5GZM7yI56BQDIHvIcGLu0pjQ/gl903ozdlpZY6vzOtZyyGf2BqFYCPDh82sSxt21 qw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30nucgdkpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 20:11:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03UK7Oma095747;
+        Thu, 30 Apr 2020 20:11:39 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30qtjy23kn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 20:11:39 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03UKBV5O026651;
+        Thu, 30 Apr 2020 20:11:31 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Apr 2020 13:11:31 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 0/7] padata: parallelize deferred page init
+Date:   Thu, 30 Apr 2020 16:11:18 -0400
+Message-Id: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <bfd82642-9648-96f1-737d-4b9a869d34a3@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588277362; bh=KUYq48abhJkd8ZVPLEcyM2FZjGIskbxNUttIp0WPjzk=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ashNi4ivzUfGGFMK/QS2UgeBL7ggdCBCB6zUn0NLfqSpCQNhd070KlZz2MMZ0Yn8d
-         E5xb/4u3nUkcnAW+7E3yGNTKSg/ruhzouo+HUcFdX02BajCQsHyN7UTa8iVEGDFffL
-         GTsJEPrqd4sea+EimqDLKEvpTzsSNHmz2k17kRX0WQSwMSSLycs7s2VBW7s45Nc8cD
-         ZqaGLiSpT9RmUJb7A8W8fDLz/5wLjHrUAulxsRXxRDfxIOfiUPmhk3KJdxE+Vy1qIb
-         Tqq1304C4UCIok34Gw4Hs/eGSp8LjI5NgJ5ao6/QKzYckzJt9KTVGyZaf3jQ+BncyK
-         ebjysIeQh4/HA==
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sometimes the kernel doesn't take full advantage of system memory
+bandwidth, leading to a single CPU spending excessive time in
+initialization paths where the data scales with memory size.
 
-On 4/30/20 1:08 PM, Sowjanya Komatineni wrote:
->
-> On 4/30/20 1:06 PM, Dmitry Osipenko wrote:
->> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> +static int chan_capture_kthread_start(void *data)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
->>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>> +=C2=A0=C2=A0=C2=A0 int err =3D 0;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>> +
->>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Source is not strea=
-ming if error is non-zero.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * So, do not dequeue =
-buffers on error and let the thread=20
->>> sleep
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * till kthread stop s=
-ignal is received.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wait_event_interruptible(ch=
-an->start_wait,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kthread_should_stop() |=
-|
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (!list_empty(&chan->cap=
-ture) &&
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !err));
->> ...
->>> +static void tegra_channel_buffer_queue(struct vb2_buffer *vb)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D vb2_get_drv_priv(=
-vb->vb2_queue);
->>> +=C2=A0=C2=A0=C2=A0 struct vb2_v4l2_buffer *vbuf =3D to_vb2_v4l2_buffer=
-(vb);
->>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf =3D to_tegra_chann=
-el_buffer(vbuf);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /* put buffer into the capture queue */
->>> +=C2=A0=C2=A0=C2=A0 spin_lock(&chan->start_lock);
->>> +=C2=A0=C2=A0=C2=A0 list_add_tail(&buf->queue, &chan->capture);
->>> +=C2=A0=C2=A0=C2=A0 spin_unlock(&chan->start_lock);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 /* wait up kthread for capture */
->>> +=C2=A0=C2=A0=C2=A0 wake_up_interruptible(&chan->start_wait);
->>> +}
->> The V4L doc says that buffers could be enqueued before streaming is
->> started. I guess it should be a trouble here, shouldn't it?
->>
->> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/media/videobuf2=
--core.h#L379=20
->>
->
-> what trouble are you referring here?
->
-> I dont think so as we set min buffers needed as 2 always there will be=20
-> 2 per-queued buffers.
-typo* pre-queued buffers before streaming start
->
-> But buffers from this queue will be dequeued only when ready to=20
-> processes in the capture thread
->
+Multithreading naturally addresses this problem, and this series is the
+first step.
+
+It extends padata, a framework that handles many parallel singlethreaded
+jobs, to handle multithreaded jobs as well by adding support for
+splitting up the work evenly, specifying a minimum amount of work that's
+appropriate for one helper thread to do, load balancing between helpers,
+and coordinating them.  More documentation in patches 4 and 7.
+
+The first user is deferred struct page init, a large bottleneck in
+kernel boot--actually the largest for us and likely others too.  This
+path doesn't require concurrency limits, resource control, or priority
+adjustments like future users will (vfio, hugetlb fallocate, munmap)
+because it happens during boot when the system is otherwise idle and
+waiting on page init to finish.
+
+This has been tested on a variety of x86 systems and speeds up kernel
+boot by 6% to 49% by making deferred init 63% to 91% faster.  Patch 6
+has detailed numbers.  Test results from other systems appreciated.
+
+This series is based on v5.6 plus these three from mmotm:
+
+  mm-call-touch_nmi_watchdog-on-max-order-boundaries-in-deferred-init.patch
+  mm-initialize-deferred-pages-with-interrupts-enabled.patch
+  mm-call-cond_resched-from-deferred_init_memmap.patch
+
+All of the above can be found in this branch:
+
+  git://oss.oracle.com/git/linux-dmjordan.git padata-mt-definit-v1
+  https://oss.oracle.com/git/gitweb.cgi?p=linux-dmjordan.git;a=shortlog;h=refs/heads/padata-mt-definit-v1
+
+The future users and related features are available as work-in-progress
+here:
+
+  git://oss.oracle.com/git/linux-dmjordan.git padata-mt-wip-v0.3
+  https://oss.oracle.com/git/gitweb.cgi?p=linux-dmjordan.git;a=shortlog;h=refs/heads/padata-mt-wip-v0.3
+
+Thanks to everyone who commented on the last version of this[0],
+including Alex Williamson, Jason Gunthorpe, Jonathan Corbet, Michal
+Hocko, Pavel Machek, Peter Zijlstra, Randy Dunlap, Robert Elliott, Tejun
+Heo, and Zi Yan.
+
+RFC v4 -> padata v1:
+ - merged with padata (Peter)
+ - got rid of the 'task' nomenclature (Peter, Jon)
+
+future work branch:
+ - made lockdep-aware (Jason, Peter)
+ - adjust workqueue worker priority with renice_or_cancel() (Tejun)
+ - fixed undo problem in VFIO (Alex)
+
+The remaining feedback, mainly resource control awareness (cgroup etc),
+is TODO for later series.
+
+[0] https://lore.kernel.org/linux-mm/20181105165558.11698-1-daniel.m.jordan@oracle.com/
+
+Daniel Jordan (7):
+  padata: remove exit routine
+  padata: initialize earlier
+  padata: allocate work structures for parallel jobs from a pool
+  padata: add basic support for multithreaded jobs
+  mm: move zone iterator outside of deferred_init_maxorder()
+  mm: parallelize deferred_init_memmap()
+  padata: document multithreaded jobs
+
+ Documentation/core-api/padata.rst |  41 +++--
+ include/linux/padata.h            |  43 ++++-
+ init/main.c                       |   2 +
+ kernel/padata.c                   | 277 ++++++++++++++++++++++++------
+ mm/Kconfig                        |   6 +-
+ mm/page_alloc.c                   | 118 ++++++-------
+ 6 files changed, 355 insertions(+), 132 deletions(-)
+
+
+base-commit: 7111951b8d4973bda27ff663f2cf18b663d15b48
+prerequisite-patch-id: 4ad522141e1119a325a9799dad2bd982fbac8b7c
+prerequisite-patch-id: 169273327e56f5461101a71dfbd6b4cfd4570cf0
+prerequisite-patch-id: 0f34692c8a9673d4c4f6a3545cf8ec3a2abf8620
+-- 
+2.26.2
+
