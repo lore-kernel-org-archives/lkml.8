@@ -2,98 +2,111 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBB8C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4CCC8300E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC5D32076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CfAOSB/T"
+	by mail.kernel.org (Postfix) with ESMTP id 72FA62076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgD3NCw (ORCPT
+        id S1726962AbgD3NDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:02:52 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41984 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726858AbgD3NCv (ORCPT
+        Thu, 30 Apr 2020 09:03:16 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40933 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgD3NDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:02:51 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UCud98000602;
-        Thu, 30 Apr 2020 15:02:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=G7h8AzfZwKdIVVqnwoi+7u4RZDwQmbncb62w6zU4zF4=;
- b=CfAOSB/TtODRLdUy16Dhpptqdw/dVCiwq13NrLdtyKGHs8oJ2Hp3HwYN96yXTBDMpUL/
- CtHPSwJqbAxu8QCBi+vS5ftIVP1B/uZhzI9Dklcmk+WCjxdkMvc3q0+iHL+56Sw7TDBs
- oojL2srpfO3DPFwwmHFUdJxbrRxJTZ0PZLezEOxHFacRIaG9lUiICbdfMdamFQ1VW8AO
- FUf2mv35I9wKMcuhgXIDi5UB6dynRABQO8sRO4x4jT/ORaLvKMISbazFs9yvQOsVd/bW
- xxk3fS18naeBVXLKjfJHsfG4ex1u8YAnCMEJAXSLPY0n0Qwfp70+YOcZPWtOy1Qly0i7 pg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30mhjx4h13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 15:02:37 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EC46C10002A;
-        Thu, 30 Apr 2020 15:02:36 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B23CB2D377A;
-        Thu, 30 Apr 2020 15:02:36 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 30 Apr 2020 15:02:36
- +0200
-From:   Pascal Paillet <p.paillet@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <p.paillet@st.com>
-Subject: [PATCH] ARM: dts: stm32: Enable thermal sensor support on stm32mp15xx-dkx
-Date:   Thu, 30 Apr 2020 15:02:35 +0200
-Message-ID: <20200430130235.23979-1-p.paillet@st.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Apr 2020 09:03:15 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i27so4803899ota.7;
+        Thu, 30 Apr 2020 06:03:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hPxWzD7KDAoXAsEKx6r6DlSZdVX/2/j3BmdPPiNmmUk=;
+        b=CiKWp0DZgoX4z60sobkRIZPYTjm3kWHmbZsdYvuhsC+3t3vE2hRk41EvOMGvw6wsZ2
+         D5tIV/mtPQg7sHVrorwgNDH1bcrqIC0Hs1+yCpg8I4ONXvEzMBuoie7nCor1g3yK/RT6
+         7/uYdY3UWS1izXsTeC7D5b/02yVQZjhLopH0ZJlQ8fEqOUKtXMLBPGKveEG45w3uMGTZ
+         FISy1cEHBLv7W78uPTjr8oaES+4Bb0i204DpLpMIPvtOzQmGCjOUmItBqd/xMGI+BpJr
+         lD4mqQcAItvoWMNhnNDYGk1clpEtF7EY4pF/yBgXeORyTc4ai8zsK1wEls13C02Xjdrc
+         bjKg==
+X-Gm-Message-State: AGi0PubSMAO5u4wq6F5PZxgZejotumZmZtY05BW/kpvMXH781HuyXSd5
+        WhaVNzauWBVdocmCb1ZK1X91cvnGpCRdHwakMfI=
+X-Google-Smtp-Source: APiQypLffzvlZkntNwieMuPXx5W5WCKlm898qoNdXGpbuVMWO5D2B4Wdg+zmy4m1OurTy544WOAOJHj9HDm1I+Pxav8=
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr2340643otm.145.1588251793175;
+ Thu, 30 Apr 2020 06:03:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_08:2020-04-30,2020-04-30 signatures=0
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 15:03:02 +0200
+Message-ID: <CAMuHMdXEu0i8APM+g3TWbkfkLbYtCzi7uJABvMscS0a_j030tg@mail.gmail.com>
+Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable STM32 Digital Thermal Sensor driver for stm32mp15xx-dkx boards.
+Hi Prabhakar,
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Enable low-level debugging support for RZ/G1H (R8A7742). RZ/G1H uses
+> SCIFA2 for the debug console.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-index f6672e87aef3..203f7742e054 100644
---- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-@@ -116,6 +116,10 @@
- 	status = "okay";
- };
- 
-+&dts {
-+	status = "okay";
-+};
-+
- &ethernet0 {
- 	status = "okay";
- 	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+Thanks for your patch!
+
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -976,6 +976,13 @@ choice
+>                   Say Y here if you want kernel low-level debugging support
+>                   via SCIF4 on Renesas RZ/G1E (R8A7745).
+>
+> +       config DEBUG_RCAR_GEN2_SCIFA2
+> +               bool "Kernel low-level debugging messages via SCIFA2 on ARCH_R8A7742"
+
+R8A7742 (without "ARCH_"-prefix)
+
+I can fix that (and the sorting issue) while applying, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.8.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
