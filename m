@@ -2,104 +2,130 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E28C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01677C47257
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39633214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29F921775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="DrKIrrdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgD3VV2 (ORCPT
+        id S1726698AbgD3VWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:21:28 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:47175 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgD3VV2 (ORCPT
+        Thu, 30 Apr 2020 17:22:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726549AbgD3VWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:21:28 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MuDPf-1jBNG71Vt7-00uWP3; Thu, 30 Apr 2020 23:21:26 +0200
-Received: by mail-qk1-f172.google.com with SMTP id f83so5308qke.13;
-        Thu, 30 Apr 2020 14:21:25 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZLjELzTWCpsdZK53t3PU6uDx+0RdnkSuBI+ycvrTkqjrc4KS01
-        EMSKSmL3OMm3z5QIdkfBKs9CpxYC0G2jpkkQEXY=
-X-Google-Smtp-Source: APiQypIM11fY5RukZEVskEhyZDGMXYivz+/2X4b8sNT4+8pTwghkf6LXKjfZLRy0kYFGgiYsJ6BjS/duAU2Haf7MBAg=
-X-Received: by 2002:a37:63d0:: with SMTP id x199mr510171qkb.3.1588281684906;
- Thu, 30 Apr 2020 14:21:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200429190119.43595-1-arnd@arndb.de> <20200430211516.gkwaefjrzj2dypmr@cantor>
-In-Reply-To: <20200430211516.gkwaefjrzj2dypmr@cantor>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 Apr 2020 23:21:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
-Message-ID: <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
-To:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Thu, 30 Apr 2020 17:22:13 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E75C08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:22:12 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id s30so6410736qth.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=mv1U7YozJfnchal4lfvuT60duHRfjYBO+uZmYOeQypI=;
+        b=DrKIrrdWt/QtIh54BbVwtdHACJ3lbs49nTlxebUUCaoR+47bYBQ/s4uvEGAbiFkB6F
+         HmBMPXuWqqmCaHaEmtaRIxDRWhX0BWsQmUHAheQJfy/SeKcRSWvjuo6yRfkpwDUeZC6I
+         Yh7rMhslY9sgpTbAPiOvZwi+w1gfYzvSMUay3JD/oFNp9QM2PMzRKAsc5/E1UivG/8KK
+         74HbMo5ZgYHw3sN3kdxKHXJ3Xx/bh98ylG3my/XBpO6msDvM0vNYN3yeQfQiGw/obTYH
+         9cKsSuw+10PZADEHyF2QMdAoaH9DNcM2/MSInKc+JIxZUz29BbUwT4Lp2sQ1hVRY/9Rv
+         fBWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=mv1U7YozJfnchal4lfvuT60duHRfjYBO+uZmYOeQypI=;
+        b=r6yXHBhWCrR7UPAjL+xQlQjEOpiLuyIXEkMK1TBOuIJtHi8ZeI2XZChBHrx5KFRcNZ
+         Zl764VgaMSd0JxcI5T5A0nwFuCIu87Kc+A1Hy5R9TK5zSk9EgYQpCObC6JdneKAzkd4W
+         K7oZPuG4yAyKseXmKGztMhlkOnQLJH0LS4v0TIp/Nh9JNA9zPRhlrB9Q87HUmSMiUAi8
+         G9HFRbHXA2CuUuuWJHwOSQ/NdXvPtvn7mIHFkhSVKTpzypzdL/5WsyN6YHATvieM/jzq
+         eLt5LF7eCExG4re3CQOeGpMpNpPQgt0ZIQOjUlf0o64D5QrdNxD87kc+kReGXtbf1JmB
+         5VnQ==
+X-Gm-Message-State: AGi0PuajmV0wrpKpI/nYxbCLMQB1nPqQQmMu02FeHokZuy0h43PnWSQk
+        bMsH38QXAoyyY17VF/cIZDi63A==
+X-Google-Smtp-Source: APiQypIQSsVNMioIQvXaPh5z2c/PTy/NnMZw0fklX9quel/4zViXOJ0hWUDelyHRVpwkeeL3yeIAJA==
+X-Received: by 2002:ac8:7552:: with SMTP id b18mr532486qtr.312.1588281730917;
+        Thu, 30 Apr 2020 14:22:10 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id m12sm829008qtu.42.2020.04.30.14.22.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 14:22:10 -0700 (PDT)
+Message-ID: <e8a65498cfad063b011c342ae2a6b81bfd470e93.camel@massaru.org>
+Subject: Re: [PATCH] Documentation: fix `make htmldocs ` warning
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, pbonzini@redhat.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Thu, 30 Apr 2020 18:22:07 -0300
+In-Reply-To: <20200430150501.033bfa20@lwn.net>
+References: <20200430205447.93458-1-vitor@massaru.org>
+         <20200430150501.033bfa20@lwn.net>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:cr9KKu2LzmYO4FyXYSmEGdwrhb3TUuPv7wwpXok6SayZxWAEtpW
- Kg7fXrBcjPhPDwtYLYxsj6ck4avLe4TULZjN5nfoVet9GIOS9bwvQAYTcDl9Ed6VzSFyD0p
- +Q4TfY6necup2e5iyPCZct2+pXX4AVp/znnntHGuV8Hqdzcjs4zD/wIHPtN0clCdtb5OBs0
- SsrwgmG9k42Se6oBdh4nQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kiT/7gSypmQ=:AXmJggU5tYltmKHVgans+n
- DFN0z8QNYROJEbdlU5d9AI5drTeTKYNiPKZ5s1dA/0q2EBFUqm5amVd0u/4bV7wTBeWu/KqF9
- IJIGxXKUFB8HvM/aD6YNFZpNTwZGOyjTn7P2yEYiGGx38pvzMNxNEkhufYopIzGaV5KQ3E28G
- Qdzzg04YCVF9w/27Bj+x1oAW9NHIP8qAtSTcJEq0wHLZe4R3ofrSbAaZfWhq55YibpxDvSiMu
- Z9FjSnytPAbCMW28ZoVt/Bosvxgp6OMT+BIFiKhMK6ek/uqLCIohL6Cstbm//HZ0y4mKKavv3
- h5rT9dYGiv+UCmGiSv9EtgvZUFVqzg+d8VBf1J8JRFB9EXSuVD2nPrI19EmbqginKm0/+ZQgW
- UvrHHDJxiYCWsK84p314tqJqIWPnEpsVLjZcwKrAujkffPGleWwxbpQlG5PX2vu+VVvZFUWL+
- b614eK7/sIdvz30uukGsAc3GSSHDdH4DEx7CrdIn9Yn3A7TW1vhMk7ktntxrwKcmQ3/yL8Old
- BZb+HrSDDqqffjiuRoiDvGNA3cd9EinPfOud6yZwHOFsAuDKEj8Bm4Xpk+DuJUlK0nUcuONwS
- EWhaTH90QwPiS2HIh/ilA1s9bgQniqT4KelvuM7rHQMEsGosolcSovCMrlN2ylmq0svhQwAAS
- e/bgfpP7y0+RdO3CNnI9Du7LejaM7Dqoou5N78dIdHXHBXmerZLnfyhtF3p7koInrO2vJSOAD
- XqZcGQy3rAvDyXMG1hSC231/Q+omomanjqR2AC56rycMaFIO6+NaQiT1zQmOh8gq0BD/XiEUD
- 1BD7Gu6BKWhCNuq4F68rvxSxBqoOqg9P2psWAfif+8YCJhHZvI=
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:15 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
->
-> On Wed Apr 29 20, Arnd Bergmann wrote:
-> >Building with gcc-10 causes a harmless warning about a section mismatch:
-> >
-> >WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
-> >The function tpm2_calc_event_log_size() references
-> >the function __init early_memunmap().
-> >This is often because tpm2_calc_event_log_size lacks a __init
-> >annotation or the annotation of early_memunmap is wrong.
-> >
-> >Add the missing annotation.
-> >
-> >Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
-> >Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Minor thing, but should the Fixes be c46f3405692d ("tpm: Reserve the TPM final events table")? Or what am I missing
-> about e658c82be556 that causes this? Just trying to understand what I did. :)
+On Thu, 2020-04-30 at 15:05 -0600, Jonathan Corbet wrote:
+> On Thu, 30 Apr 2020 17:54:47 -0300
+> Vitor Massaru Iha <vitor@massaru.org> wrote:
+> 
+> > Fix 'make htmldocs' warning:
+> > Documentation/virt/kvm/amd-memory-encryption.rst:76: WARNING:
+> > Inline literal start-string without end-string.
+> > 
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > ---
+> >  Documentation/virt/kvm/amd-memory-encryption.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst
+> > b/Documentation/virt/kvm/amd-memory-encryption.rst
+> > index c3129b9ba5cb..57c01f531e61 100644
+> > --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> > +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> > @@ -74,7 +74,7 @@ should point to a file descriptor that is opened
+> > on the ``/dev/sev``
+> >  device, if needed (see individual commands).
+> >  
+> >  On output, ``error`` is zero on success, or an error code.  Error
+> > codes
+> > -are defined in ``<linux/psp-dev.h>`.
+> > +are defined in ``<linux/psp-dev.h>``.
+> 
+> This one, too, is already fixed in docs-next.  If you're doing
+> documentation work, please work against that tree.
+> 
+> Also, "fix a warning" is almost never an appropriate subject line for
+> any
+> kernel patch.  You're not fixing a warning, you're fixing some broken
+> RST
+> in the file.  The subject line on the patch I merged fixing this
+> problem
+> reads:
+> 
+> 	docs: virt/kvm: close inline string literal
+> 
+> ...which describes what is really going on.
 
-You are right, I misread the git history. Can you fix it up when applying the
-patch, or should I resend it?
+Sorry. Thanks by the review.
 
-       Arnd
+> 
+> Thanks,
+> 
+> jon
+
