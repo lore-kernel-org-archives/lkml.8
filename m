@@ -2,198 +2,108 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A4BC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EBBC83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E92E21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2B121D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 04:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IMBroTwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgD3EiJ (ORCPT
+        id S1726443AbgD3EnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 00:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726430AbgD3EiH (ORCPT
+        Thu, 30 Apr 2020 00:43:21 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21704 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726391AbgD3EnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 00:38:07 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7F8C035494
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Apr 2020 21:38:07 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jU0xS-0001ne-Lx; Thu, 30 Apr 2020 06:37:58 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jU0xL-0004yF-Jz; Thu, 30 Apr 2020 06:37:51 +0200
-Date:   Thu, 30 Apr 2020 06:37:51 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Michal Kubecek <mkubecek@suse.cz>, Marek Vasut <marex@denx.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        mkl@pengutronix.de, kernel@pengutronix.de,
-        David Jander <david@protonic.nl>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Herber <christian.herber@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next v3 1/2] ethtool: provide UAPI for PHY
- master/slave configuration.
-Message-ID: <20200430043751.ojvcgtubkbfunolb@pengutronix.de>
-References: <20200428075308.2938-1-o.rempel@pengutronix.de>
- <20200428075308.2938-2-o.rempel@pengutronix.de>
- <20200429181614.GL30459@lunn.ch>
+        Thu, 30 Apr 2020 00:43:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588221800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=L5n4gtXTehbFEMm9+vNyemjrQTYFiG9C1+7VDPD2ZDM=;
+        b=IMBroTwGUtmQmZKi/XHboKgMFYzKClflZaLB6VAAZ87Q2LneKPC7TZtIpBJhQlUcpFTnbm
+        /JiGOfY1pU6tD2HG4vLeBhMGQqPl5kcDy2/giX9Z/gsE7ulVwPa8+qMl81caACipRLbQcD
+        ll0mlms3Qt0v5LcOtdf5Mhu5VS0q3Ks=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-165-u5tkPwroN5-ug1W3-b0i_w-1; Thu, 30 Apr 2020 00:43:15 -0400
+X-MC-Unique: u5tkPwroN5-ug1W3-b0i_w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9C9C18FF660;
+        Thu, 30 Apr 2020 04:43:13 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74C815EDE0;
+        Thu, 30 Apr 2020 04:43:11 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 23:43:08 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, ast@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, bpf@vger.kernel.org,
+        daniel@iogearbox.net
+Subject: Re: BPF vs objtool again
+Message-ID: <20200430044308.kkniqb7pnpn4bovg@treble>
+References: <30c3ca29ba037afcbd860a8672eef0021addf9fe.1563413318.git.jpoimboe@redhat.com>
+ <tip-3193c0836f203a91bef96d88c64cccf0be090d9c@git.kernel.org>
+ <20200429215159.eah6ksnxq6g5adpx@treble>
+ <20200429234159.gid6ht74qqmlpuz7@ast-mbp.dhcp.thefacebook.com>
+ <20200430001300.k3pgq2minrowstbs@treble>
+ <20200430021052.k47qzm63kpcn32pg@ast-mbp.dhcp.thefacebook.com>
+ <20200430035315.tc74v5twfdxv2goh@treble>
+ <20200430042400.45vvqx4ocwwogp3j@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fwcyervo5zssj2lh"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200429181614.GL30459@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:28:59 up 166 days, 19:47, 163 users,  load average: 0.03, 0.04,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200430042400.45vvqx4ocwwogp3j@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 09:24:00PM -0700, Alexei Starovoitov wrote:
+> > This would actually be contingent on RETPOLINE, not FRAME_POINTER.
+> > 
+> > (FRAME_POINTER was the other issue with the "optimize" attribute, which
+> > we're reverting so it'll no longer be a problem.)
+> > 
+> > So if you're not concerned about the retpoline text growth, it could be
+> > as simple as:
+> > 
+> > #define CONT     ({ insn++; goto *jumptable[insn->code]; })
+> > #define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
+> > 
+> > 
+> > Or, if you wanted to avoid the text growth, it could be:
+> > 
+> > #ifdef CONFIG_RETPOLINE
+> 
+> I'm a bit lost. So objtool is fine with the asm when retpoline is on?
 
---fwcyervo5zssj2lh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah, it's confusing... this has been quite an adventure with GCC.
 
-Hi Andrew,
+Objtool is fine with the RETPOLINE double goto.  It's only the
+!RETPOLINE double goto which is the problem, because that triggers
+more GCC weirdness (see 3193c0836f20).
 
-On Wed, Apr 29, 2020 at 08:16:14PM +0200, Andrew Lunn wrote:
-> On Tue, Apr 28, 2020 at 09:53:07AM +0200, Oleksij Rempel wrote:
->=20
-> Hi Oleksij
->=20
-> Sorry for taking a while to review this. I was busy fixing the FEC
-> driver which i broke :-(
+> Then pls do:
+> #if defined(CONFIG_RETPOLINE) || !defined(CONFIG_X86)
+> 
+> since there is no need to mess with other archs.
 
-Not problem.
-Interesting, what is wrong with FEC? We use it a lot.
+Getting rid of select_insn altogether would make the code a lot simpler,
+but it's your call.  I'll make a patch soon.
 
-> > --- a/Documentation/networking/ethtool-netlink.rst
-> > +++ b/Documentation/networking/ethtool-netlink.rst
-> > @@ -399,6 +399,8 @@ Kernel response contents:
-> >    ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
-> >    ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
-> >    ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
-> > +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG``  u8      Master/slave port =
-mode
-> > +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE``  u8      Master/slave por=
-t mode
-> >    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> I've not used Sphinx for a while. But it used to be, tables had to be
-> correctly aligned. I think you need to pad the other rows with spaces.
->
-> Also, the comments should differ. The first is how we want it
-> configured, the second is the current state.
+-- 
+Josh
 
-ok
-
-> > =20
-> >  For ``ETHTOOL_A_LINKMODES_OURS``, value represents advertised modes an=
-d mask
-> > @@ -421,6 +423,7 @@ Request contents:
-> >    ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
-> >    ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
-> >    ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
-> > +  ``ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG``  u8      Master/slave port =
-mode
-> >    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D  =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Same table cleanup needed here.
->=20
-> > +static int genphy_read_master_slave(struct phy_device *phydev)
-> > +{
-> > +	int cfg, state =3D 0;
-> > +	u16 val;
-> > +
-> > +	phydev->master_slave_get =3D 0;
-> > +	phydev->master_slave_state =3D 0;
->=20
-> Could you use the _UNKNOWN #defined here?
-
-ok
-
-> > diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> > index 92f737f101178..eb680e3d6bda5 100644
-> > --- a/include/uapi/linux/ethtool.h
-> > +++ b/include/uapi/linux/ethtool.h
-> > @@ -1666,6 +1666,31 @@ static inline int ethtool_validate_duplex(__u8 d=
-uplex)
-> >  	return 0;
-> >  }
-> > =20
-> > +static inline int ethtool_validate_master_slave_cfg(__u8 cfg)
-> > +{
-> > +	switch (cfg) {
-> > +	case PORT_MODE_CFG_MASTER_PREFERRED:
-> > +	case PORT_MODE_CFG_SLAVE_PREFERRED:
-> > +	case PORT_MODE_CFG_MASTER_FORCE:
-> > +	case PORT_MODE_CFG_SLAVE_FORCE:
-> > +	case PORT_MODE_CFG_UNKNOWN:
-> > +		return 1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
->=20
-> Does this need to be an inline function?=20
-
-Yes, otherwise we get a lot of "defined but not used " warnings.
-
-
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---fwcyervo5zssj2lh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6qVhsACgkQ4omh9DUa
-UbNsaRAAgpvXXG1Cv1zCv9M/hxQhnTtifA8Q06Xx3G19QNul0DDTqlWIWfWs3mZh
-4bxq6NhdzLVlXHHvRMUVjYARsHDD19bmfpspTMMC9Z8Z6BEOLEv885XRFZa+9Goi
-wBHDJvr40q0LmcftXcmnjYje2eS9shKQMiBwT4j2MEzHSKTyHD5LZmxXsjv8JoIP
-tOqgq4kYb5dXm5joMo4SNQieegfadtAwAtVqYSVkoWxKi3ljVXWgdiqD2a7iW5G6
-wpXuUHYDq+G+wajc4mPRMMTy9hug5eXDel5OgaSqwHUEJSZmGS4loMUjUjR148Ij
-HdwjwenAHRX8hFxN16zpC+Ml5gSm8zvl9Z4Uwh70/adzs+eJrnqyT3jgl2RKL3jN
-wxcQsWue9y4tbx5IIlSrVyVB4iXRUP+6wK1+njkWGajIyl7i6d7rU6PJEbx5BE3l
-DttVdjKZGXfZLTheb9eV8ZUCN/FRTyv3+PtVWrjfjnZqn2go8dJypvLj84kQUV8p
-Ec0kaVggHfGEuJQvMZigJaaOX0ZRt3nLMVUS/1ciRBD3ov1wJO4Q72v2+IuwlBwV
-iNc2KLNURTgsADlrBDpr2xlBQvx+wVlXoxGP9Gq/f8ZnYmQCTEfzR7JHP7NJfny4
-v18LUWY8yYWtRLQteSkJUhwr6mpKx0GtacSF4hettXs48nFB1W8=
-=ZGcl
------END PGP SIGNATURE-----
-
---fwcyervo5zssj2lh--
