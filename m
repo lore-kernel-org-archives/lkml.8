@@ -2,86 +2,168 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE084C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B497FC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877E22076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9285720775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588258662;
+	bh=iITLkeVLvUEDVyYHfQOPsO5Y1j+DKWd5cn5U8Zr0ScM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WXxsNdVvrH6Yv8tiUcsTX7RhXQznJYDP4GrXaWY7kXlqM/U4Ap/DpW2Yo28DRkBUN
+	 u72uD9iXi2+KsWOzDaBa64zrkL0RwhkGdI8NVa8SK3qbfYSHZFfvJ8UnwLrNelLFet
+	 dQc1OLZjBMiAM1tiWqsvZbcFeKItIiwbSpCRcIlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgD3Ozp (ORCPT
+        id S1726777AbgD3O5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:55:45 -0400
-Received: from mx2.freebsd.org ([96.47.72.81]:16249 "EHLO mx2.freebsd.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726432AbgD3Ozp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:55:45 -0400
-Received: from mx1.freebsd.org (mx1.freebsd.org [96.47.72.80])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id 2472A74D45;
-        Thu, 30 Apr 2020 14:55:44 +0000 (UTC)
-        (envelope-from manu@FreeBSD.org)
-Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id 49CdjW6TRmz4trR;
-        Thu, 30 Apr 2020 14:55:43 +0000 (UTC)
-        (envelope-from manu@FreeBSD.org)
-Received: from tails.home (lfbn-idf2-1-900-181.w86-238.abo.wanadoo.fr [86.238.131.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: manu)
-        by smtp.freebsd.org (Postfix) with ESMTPSA id 9A0C419F4E;
-        Thu, 30 Apr 2020 14:55:42 +0000 (UTC)
-        (envelope-from manu@FreeBSD.org)
-From:   Emmanuel Vadot <manu@FreeBSD.org>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        matthew.d.roper@intel.com, noralf@tronnes.org, kraxel@redhat.com,
-        tglx@linutronix.de
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Emmanuel Vadot <manu@FreeBSD.org>
-Subject: [RESEND 2/2] drm/format_helper: Dual licence the header in GPL-2 and MIT
-Date:   Thu, 30 Apr 2020 16:55:37 +0200
-Message-Id: <20200430145537.31474-1-manu@FreeBSD.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 30 Apr 2020 10:57:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39387 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgD3O5Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:57:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b11so7310940wrs.6;
+        Thu, 30 Apr 2020 07:57:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v2KXeJSGOxCLOqzZkZj8Dvo069WYxW+Vtn6eKg9tlBc=;
+        b=n0+5AMvaXwqlZgIbw9lEMVJx/hFkZjiRjmbUax79APlGhjiCXxBNgk2nK//4CXr5Bj
+         1Sdvy4Q6h41Ey453v3h/jiQ4QejYYiNHDDBVjX7yl3EVXPk1n/uDRWoHLsqZfVpI1NE1
+         afpwuIQxv3aFpQhpycPX5i+e+yhDCSc7re85OLKs87xNoHMZJ4WGnW0U4vl1pmbl5hBj
+         1Q+vawu5LPbvRi7sFDoHGGOWI/InwvUdw51yqcm9KpalH1Sg22YOa/rxgOyj/h5z+SwC
+         aneKde02qhjjNA+d31B+PKkQjxnB0uDGxIbkM6yjuGc/XEqWz/hxrKb8RzjLUGArLzH5
+         Lyhw==
+X-Gm-Message-State: AGi0PublSnNH18JyZ6Abls56+5LPTzCO2mXC3DVFJHhfHDSZmXRptMAV
+        N6Wo9+2TUzZppKO7DG56d3Q=
+X-Google-Smtp-Source: APiQypLyWBXOMWcM+U9JdSkAcZTAgQc1udSZa6plGTugiQm7hdsGILpSL6SjvdwK93UEObl5KKxM2w==
+X-Received: by 2002:a5d:6107:: with SMTP id v7mr4171383wrt.270.1588258644136;
+        Thu, 30 Apr 2020 07:57:24 -0700 (PDT)
+Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
+        by smtp.gmail.com with ESMTPSA id 74sm4681829wrk.30.2020.04.30.07.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 07:57:22 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 16:57:21 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
+ is above protection
+Message-ID: <20200430145721.GF12655@dhcp22.suse.cz>
+References: <cover.1588092152.git.chris@chrisdown.name>
+ <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
+ <20200429101510.GA28637@dhcp22.suse.cz>
+ <20200429140330.GA5054@cmpxchg.org>
+ <20200429150414.GI28637@dhcp22.suse.cz>
+ <20200429165627.GA24768@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429165627.GA24768@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Source file was dual licenced but the header was omitted, fix that.
-Contributors for this file are:
-Noralf Trønnes <noralf@tronnes.org>
-Gerd Hoffmann <kraxel@redhat.com>
-Thomas Gleixner <tglx@linutronix.de>
+On Wed 29-04-20 12:56:27, Johannes Weiner wrote:
+[...]
+> I think to address this, we need a more comprehensive solution and
+> introduce some form of serialization. I'm not sure yet how that would
+> look like yet.
 
-Acked-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Noralf Trønnes <noralf@tronnes.org>
-Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
----
- include/drm/drm_format_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah, that is what I've tried to express earlier and that is why I would
+rather go with an uglier workaround for now and think about a more
+robust effective values calculation on top.
+ 
+> I'm still not sure it's worth having a somewhat ugly workaround in
+> mem_cgroup_protection() to protect against half of the bug. If you
+> think so, the full problem should at least be documented and marked
+> XXX or something.
 
-diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
-index ac220aa1a245..7c5d4ffb2af2 100644
---- a/include/drm/drm_format_helper.h
-+++ b/include/drm/drm_format_helper.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* SPDX-License-Identifier: GPL-2.0 or MIT */
- /*
-  * Copyright (C) 2016 Noralf Trønnes
-  */
+Yes, this makes sense to me. What about the following?
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 1b4150ff64be..50ffbc17cdd8 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -350,6 +350,42 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
+ 	if (mem_cgroup_disabled())
+ 		return 0;
+ 
++	/*
++	 * There is no reclaim protection applied to a targeted reclaim.
++	 * We are special casing this specific case here because
++	 * mem_cgroup_protected calculation is not robust enough to keep
++	 * the protection invariant for calculated effective values for
++	 * parallel reclaimers with different reclaim target. This is
++	 * especially a problem for tail memcgs (as they have pages on LRU)
++	 * which would want to have effective values 0 for targeted reclaim
++	 * but a different value for external reclaim.
++	 *
++	 * Example
++	 * Let's have global and A's reclaim in parallel:
++	 *  |
++	 *  A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
++	 *  |\
++	 *  | C (low = 1G, usage = 2.5G)
++	 *  B (low = 1G, usage = 0.5G)
++	 *
++	 * For the global reclaim
++	 * A.elow = A.low
++	 * B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
++	 * C.elow = min(C.usage, C.low)
++	 *
++	 * With the effective values resetting we have A reclaim
++	 * A.elow = 0
++	 * B.elow = B.low
++	 * C.elow = C.low
++	 *
++	 * If the global reclaim races with A's reclaim then
++	 * B.elow = C.elow = 0 because children_low_usage > A.elow)
++	 * is possible and reclaiming B would be violating the protection.
++	 *
++	 */
++	if (memcg == root)
++		return 0;
++
+ 	if (in_low_reclaim)
+ 		return READ_ONCE(memcg->memory.emin);
+ 
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 05b4ec2c6499..df88a22f09bc 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6385,6 +6385,14 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 
+ 	if (!root)
+ 		root = root_mem_cgroup;
++
++	/*
++	 * Effective values of the reclaim targets are ignored so they
++	 * can be stale. Have a look at mem_cgroup_protection for more
++	 * details.
++	 * TODO: calculation should be more robust so that we do not need
++	 * that special casing.
++	 */
+ 	if (memcg == root)
+ 		return MEMCG_PROT_NONE;
+ 
+
+> In practice, I doubt this matters all that much because limit reclaim
+> and global reclaim tend to occur in complementary
+> containerization/isolation strategies, not heavily simultaneously.
+
+I would expect that as well but this is always hard to tell.
+
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
