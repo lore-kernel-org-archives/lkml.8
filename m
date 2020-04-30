@@ -2,106 +2,99 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C703CC83001
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E99C83001
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E1E21974
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FA42073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgD3IHn (ORCPT
+        id S1727789AbgD3IH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgD3IHj (ORCPT
+        Thu, 30 Apr 2020 04:07:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37501 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgD3IHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:07:39 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A6EC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 01:07:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AD6532A0221;
-        Thu, 30 Apr 2020 09:07:35 +0100 (BST)
-Date:   Thu, 30 Apr 2020 10:07:33 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
-        <pgaj@cadence.com>, <linux-i3c@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
-        <praneeth@ti.com>
-Subject: Re: [PATCH v6 3/8] i3c: master: i3c mastership request and handover
-Message-ID: <20200430100733.4e0dc578@collabora.com>
-In-Reply-To: <1587140462-30209-1-git-send-email-pthombar@cadence.com>
-References: <1587140398-29473-1-git-send-email-pthombar@cadence.com>
-        <1587140462-30209-1-git-send-email-pthombar@cadence.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Apr 2020 04:07:55 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jU4EW-0000NO-1I; Thu, 30 Apr 2020 08:07:48 +0000
+Date:   Thu, 30 Apr 2020 10:07:46 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] Add support for RESOLVE_MAYEXEC
+Message-ID: <20200430080746.n26fja2444w6i2db@wittgenstein>
+References: <20200428175129.634352-1-mic@digikod.net>
+ <20200430015429.wuob7m5ofdewubui@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430015429.wuob7m5ofdewubui@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 18:21:02 +0200
-Parshuram Thombare <pthombar@cadence.com> wrote:
+On Thu, Apr 30, 2020 at 11:54:29AM +1000, Aleksa Sarai wrote:
+> On 2020-04-28, Mickaël Salaün <mic@digikod.net> wrote:
+> > The goal of this patch series is to enable to control script execution
+> > with interpreters help.  A new RESOLVE_MAYEXEC flag, usable through
+> > openat2(2), is added to enable userspace script interpreter to delegate
+> > to the kernel (and thus the system security policy) the permission to
+> > interpret/execute scripts or other files containing what can be seen as
+> > commands.
+> > 
+> > This third patch series mainly differ from the previous one by relying
+> > on the new openat2(2) system call to get rid of the undefined behavior
+> > of the open(2) flags.  Thus, the previous O_MAYEXEC flag is now replaced
+> > with the new RESOLVE_MAYEXEC flag and benefits from the openat2(2)
+> > strict check of this kind of flags.
+> 
+> My only strong upfront objection is with this being a RESOLVE_ flag.
+> 
+> RESOLVE_ flags have a specific meaning (they generally apply to all
+> components, and affect the rules of path resolution). RESOLVE_MAYEXEC
+> does neither of these things and so seems out of place among the other
+> RESOLVE_ flags.
+> 
+> I would argue this should be an O_ flag, but not supported for the
 
-> +
-> +/* This function is expected to be called with normaluse_lock */
-> +int i3c_master_acquire_bus(struct i3c_master_controller *master)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!master->this || master->this != master->bus.cur_master) {
+I agree.
 
-Let's limit the number of indentations by doing
-
-	if (master->this == master->bus.cur_master)
-		return 0;
-
-
-> +		if (master->mr_state == I3C_MR_IDLE) {
-> +			master->mr_state = I3C_MR_WAIT_DA;
-> +			init_completion(&master->mr_comp);
-> +			queue_work(master->wq, &master->sec_mst_work);
-> +			/*
-> +			 * Bus acquire procedure may need write lock
-> +			 * so release read lock before yielding
-> +			 * to bus acquire state machine
-> +			 */
-> +			i3c_bus_normaluse_unlock(&master->bus);
-> +			wait_for_completion(&master->mr_comp);
-> +			i3c_bus_normaluse_lock(&master->bus);
-
-Is that really enough? I remember we had something a bit more complex
-to handle the case where bus is acquired to send a message to a device,
-and another master on the bus re-acquires it before we have a chance to
-send this message message. i3c_master_acquire_bus_ownership() was
-dealing with that in Przemek series. It seems you've rewritten a lot of
-these things. Would you mind explaining why, and how that works?
-
-> +			if (master->mr_state != I3C_MR_DONE)
-> +				ret = -EAGAIN;
-> +			master->mr_state = I3C_MR_IDLE;
-> +		} else {
-> +			/*
-> +			 * MR request is already in process for
-> +			 * this master
-> +			 */
-> +			ret = -EAGAIN;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(i3c_master_acquire_bus);
-
-
+Christian
