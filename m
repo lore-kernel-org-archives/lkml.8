@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B776C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A523C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5259E2072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058C820873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254843;
-	bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
+	s=default; t=1588254847;
+	bh=A79yTIEIgZyFXKXDxg707Ot1cK7Ju0UZF8cSjotjnTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Er3FEXz++RmhJIXXEQOzx72+IFqG7qbObO67a+yOYdcpiFEGXyFKCN0dqTKThNyXb
-	 /1BG0+mR+OVLRQtcPO5DjaTcWOfATdM2Xng4+ndYpRS+gNhB/x2NV7KPs0wavtPRw1
-	 yCTTmiu6kAQ0Q3Hm9JcmJ8C5ksQU8jjf4M47ZH7s=
+	b=QfzqTp2+jht3QmrY6QxC8a1G5clk784pbd+I8ZN0F3roA83Tauj2YuNPRCPuFArjb
+	 54icrfamE18yGMTfM0P5ZdfE9MYIyMEviLqo7XBsAhVaj0jMS9eoyyhxEy56pjWkzk
+	 OaJQZ+b+oTjEOGN+B/hGydKhCtBhqg5kT5lywTpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgD3NyC (ORCPT
+        id S1728883AbgD3NyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35012 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:54:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727844AbgD3NxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:18 -0400
+        id S1728698AbgD3NxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E42124955;
-        Thu, 30 Apr 2020 13:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16E35208CA;
+        Thu, 30 Apr 2020 13:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254798;
-        bh=sedaMORXTg8SDgtVuzUu8r2cikdARwNP5LlB0uU0aaQ=;
+        s=default; t=1588254802;
+        bh=A79yTIEIgZyFXKXDxg707Ot1cK7Ju0UZF8cSjotjnTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hz/+/Nxjubc/9B8DHww8AD1pu+SoSeXLDD85qendC5cUyA1969tez6eVYpTvYLuFc
-         veCp8KaHl08/Fm1+0/5szBhC0nXpiQgyYibEL+Axc/mVFzb/ZP//C33Q46umMPkUXx
-         PJdPdtG6dHKlgS7lsIHYr7fW5rLqXjd4lD9a83Xk=
+        b=WyeisUpsdYnRUzHKhphicBI7nsS2fYeItsCuHK2xL65rgX5R11VKJCh7K0Y6xNlOc
+         CcWLHA4OWE+JcaMrvL2YSCdSCygk4bQevmTZ5PmgCXkGWTT8aIxV8wa7TzlhN/sBHQ
+         Z1PZoteyFHgSQ2FWUFSVcF5k0PfwwLFZ1NTsTSG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Luke Nelson <lukenels@cs.washington.edu>,
+        Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Wang YanQing <udknight@gmail.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 53/57] net: bcmgenet: suppress warnings on failed Rx SKB allocations
-Date:   Thu, 30 Apr 2020 09:52:14 -0400
-Message-Id: <20200430135218.20372-53-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 56/57] bpf, x86_32: Fix clobbering of dst for BPF_JSET
+Date:   Thu, 30 Apr 2020 09:52:17 -0400
+Message-Id: <20200430135218.20372-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
 References: <20200430135218.20372-1-sashal@kernel.org>
@@ -60,45 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit ecaeceb8a8a145d93c7e136f170238229165348f ]
+[ Upstream commit 50fe7ebb6475711c15b3397467e6424e20026d94 ]
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+The current JIT clobbers the destination register for BPF_JSET BPF_X
+and BPF_K by using "and" and "or" instructions. This is fine when the
+destination register is a temporary loaded from a register stored on
+the stack but not otherwise.
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
+This patch fixes the problem (for both BPF_K and BPF_X) by always loading
+the destination register into temporaries since BPF_JSET should not
+modify the destination register.
 
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
+This bug may not be currently triggerable as BPF_REG_AX is the only
+register not stored on the stack and the verifier uses it in a limited
+way.
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Wang YanQing <udknight@gmail.com>
+Link: https://lore.kernel.org/bpf/20200422173630.8351-2-luke.r.nels@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/net/bpf_jit_comp32.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index ff09ee777b2bf..6f01f4e03cef1 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1697,7 +1697,8 @@ static struct sk_buff *bcmgenet_rx_refill(struct bcmgenet_priv *priv,
- 	dma_addr_t mapping;
+diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
+index cc9ad3892ea6b..ba7d9ccfc6626 100644
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -2015,8 +2015,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 		case BPF_JMP | BPF_JSET | BPF_X:
+ 		case BPF_JMP32 | BPF_JSET | BPF_X: {
+ 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
+-			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
+-			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
++			u8 dreg_lo = IA32_EAX;
++			u8 dreg_hi = IA32_EDX;
+ 			u8 sreg_lo = sstk ? IA32_ECX : src_lo;
+ 			u8 sreg_hi = sstk ? IA32_EBX : src_hi;
  
- 	/* Allocate a new Rx skb */
--	skb = netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT);
-+	skb = __netdev_alloc_skb(priv->dev, priv->rx_buf_len + SKB_ALIGNMENT,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, priv->dev,
+@@ -2028,6 +2028,13 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 					      add_2reg(0x40, IA32_EBP,
+ 						       IA32_EDX),
+ 					      STACK_VAR(dst_hi));
++			} else {
++				/* mov dreg_lo,dst_lo */
++				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
++				if (is_jmp64)
++					/* mov dreg_hi,dst_hi */
++					EMIT2(0x89,
++					      add_2reg(0xC0, dreg_hi, dst_hi));
+ 			}
+ 
+ 			if (sstk) {
+@@ -2052,8 +2059,8 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 		case BPF_JMP | BPF_JSET | BPF_K:
+ 		case BPF_JMP32 | BPF_JSET | BPF_K: {
+ 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
+-			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
+-			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
++			u8 dreg_lo = IA32_EAX;
++			u8 dreg_hi = IA32_EDX;
+ 			u8 sreg_lo = IA32_ECX;
+ 			u8 sreg_hi = IA32_EBX;
+ 			u32 hi;
+@@ -2066,6 +2073,13 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 					      add_2reg(0x40, IA32_EBP,
+ 						       IA32_EDX),
+ 					      STACK_VAR(dst_hi));
++			} else {
++				/* mov dreg_lo,dst_lo */
++				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
++				if (is_jmp64)
++					/* mov dreg_hi,dst_hi */
++					EMIT2(0x89,
++					      add_2reg(0xC0, dreg_hi, dst_hi));
+ 			}
+ 
+ 			/* mov ecx,imm32 */
 -- 
 2.20.1
 
