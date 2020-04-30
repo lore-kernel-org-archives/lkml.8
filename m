@@ -2,87 +2,101 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575C1C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F09AC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325AC207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588248103;
-	bh=QHBgJX+bF1tiYlvZ2bwMjSrr69d3qjVxEKw5dkxCP/c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Soffy9FycIyX3xXmUXoswx18cUOZ4I6E9EbIDEKnMLu19JZ0c07dBJTs2CL5ejuf4
-	 3KNZxp6pnrSiHaO/iXRXbqUfRduyx4L3l3byoheepgnWjD/PVhHLuu7QNw7aWKV9eV
-	 uY2plFRun3c8HglVefh1YMt9Dx68bullXhUIu+9k=
+	by mail.kernel.org (Postfix) with ESMTP id 319E320757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 12:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgD3MBm (ORCPT
+        id S1726766AbgD3MDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 08:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgD3MBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 08:01:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9265320775;
-        Thu, 30 Apr 2020 12:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588248101;
-        bh=QHBgJX+bF1tiYlvZ2bwMjSrr69d3qjVxEKw5dkxCP/c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NZLQpPWef+GBjsg/pN3t91fyQ94VxV5o0/gImgoefZVdSqi5qzHAkNIJfTy7hZb/w
-         X+VKGviFUl66UjhteoPhSeCjnWfpymRRCmjtS8nO1/jauLy64+H1VTorW01zC3fh+o
-         UXjEWNgcdD3lfdgLnHTsbwBBefKMUZpryGU/LrzU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH] drivers/iommu: properly export iommu_group_get_for_dev
-Date:   Thu, 30 Apr 2020 14:01:20 +0200
-Message-Id: <20200430120120.2948448-1-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 30 Apr 2020 08:03:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62434 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbgD3MDR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 08:03:17 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UBWBFT146592;
+        Thu, 30 Apr 2020 08:03:14 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggwuwbh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 08:03:13 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UBjbL0005767;
+        Thu, 30 Apr 2020 12:03:11 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu72gwb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 12:03:11 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UC20Y349938938
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 12:02:00 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3DCE0A4040;
+        Thu, 30 Apr 2020 12:03:09 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F346AA4055;
+        Thu, 30 Apr 2020 12:03:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Apr 2020 12:03:08 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Leon Romanovsky <leon@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 0/1] net/mlx5: Call pci_disable_sriov() on remove
+Date:   Thu, 30 Apr 2020 14:03:07 +0200
+Message-Id: <20200430120308.92773-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_07:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
+ mlxlogscore=672 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit a7ba5c3d008d ("drivers/iommu: Export core IOMMU API symbols to
-permit modular drivers") a bunch of iommu symbols were exported, all
-with _GPL markings except iommu_group_get_for_dev().  That export should
-also be _GPL like the others.
+Hello,
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: John Garry <john.garry@huawei.com>
-Fixes: a7ba5c3d008d ("drivers/iommu: Export core IOMMU API symbols to permit modular drivers")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/iommu/iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm currently working on improvements in PF-VF handling on s390. One thing that
+may be a bit special for us is that the s390 hotplug code supports shutting
+down a single PF of a multi-function device such as a ConnectX-5.
+During testing I found that the mlx5_core driver does not call
+pci_disable_sriov() in its remove handler which is called on the PF via
+pci_stop_and_remove_bus_device() on an orderly hot unplug.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 2b471419e26c..1ecbc8788fe7 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1428,7 +1428,7 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
- 
- 	return group;
- }
--EXPORT_SYMBOL(iommu_group_get_for_dev);
-+EXPORT_SYMBOL_GPL(iommu_group_get_for_dev);
- 
- struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
- {
+Following is a patch to fix this, I want to point out however that I'm not
+entirely sure about the effect of clear_vfs that distinguishes
+mlx5_sriov_detach() from mlx5_sriov_disable() only that the former is called
+from the remove handler and it doesn't call pci_disable_sriov().
+That however is required according to Documentation/PCI/pci-iov-howto.rst
+
+I've only tested this on top of my currently still internal PF-VF rework so
+I might also be totally missing something here in that case excuse my
+ignorance.
+
+Best regards,
+Niklas Schnelle
+
+Niklas Schnelle (1):
+  net/mlx5: Call pci_disable_sriov() on remove
+
+ drivers/net/ethernet/mellanox/mlx5/core/sriov.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
 -- 
-2.26.2
+2.17.1
 
