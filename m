@@ -2,185 +2,157 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B106C83002
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0EDC83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 780C620784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D2920838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 07:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k9p0pKH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD3HSn (ORCPT
+        id S1726572AbgD3HTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 03:18:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36212 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726337AbgD3HSn (ORCPT
+        Thu, 30 Apr 2020 03:19:09 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:29355 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbgD3HTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 03:18:43 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U721bb087920;
-        Thu, 30 Apr 2020 03:18:28 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30me474bvn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 03:18:28 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U7AIWg001869;
-        Thu, 30 Apr 2020 07:18:26 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03fra.de.ibm.com with ESMTP id 30mcu5af33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 07:18:25 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U7IN5349086470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 07:18:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F9CB52051;
-        Thu, 30 Apr 2020 07:18:23 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 8974252050;
-        Thu, 30 Apr 2020 07:18:21 +0000 (GMT)
-Date:   Thu, 30 Apr 2020 12:48:20 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200430071820.GF19958@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
- <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
- <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
- <20200429014145.GD19958@linux.vnet.ibm.com>
- <20200429122211.GD28637@dhcp22.suse.cz>
+        Thu, 30 Apr 2020 03:19:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588231148; x=1619767148;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=49aIoMJfZD48Zv0jPVQLv85WcEcgrU7KH5esWay/qvU=;
+  b=k9p0pKH4TREqaVe8zrqwDzlFUwLiLxKchOuetK7CF0J//NCXcamDuCm8
+   ZR2BGIg8ehrmuh0zk0zLpyTGyGZjJtxBgmr5xE9Ms1xSNbM0WgbLerhDb
+   0HvCbGwk0WzvsX485Q+AkQf9zMhx56uR12aoKT7GkDyhcYZP4qB5UTb/t
+   0=;
+IronPort-SDR: IlHjtA3eOb1l09Nb+e8NXZtuMd9Wiq/R1iYFI7f9hxls5nYp7ejSi19bXNpDrn8BE53sgkv4uZ
+ 5KZImaeRH56Q==
+X-IronPort-AV: E=Sophos;i="5.73,334,1583193600"; 
+   d="scan'208";a="28239627"
+Subject: RE: [PATCH] net: ena: fix gcc-4.8 missing-braces warning
+Thread-Topic: [PATCH] net: ena: fix gcc-4.8 missing-braces warning
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 30 Apr 2020 07:18:55 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 86C5FA1D38;
+        Thu, 30 Apr 2020 07:18:52 +0000 (UTC)
+Received: from EX13D08EUC003.ant.amazon.com (10.43.164.232) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Apr 2020 07:18:51 +0000
+Received: from EX13D11EUC003.ant.amazon.com (10.43.164.153) by
+ EX13D08EUC003.ant.amazon.com (10.43.164.232) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 30 Apr 2020 07:18:50 +0000
+Received: from EX13D11EUC003.ant.amazon.com ([10.43.164.153]) by
+ EX13D11EUC003.ant.amazon.com ([10.43.164.153]) with mapi id 15.00.1497.006;
+ Thu, 30 Apr 2020 07:18:50 +0000
+From:   "Jubran, Samih" <sameehj@amazon.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "Belgazal, Netanel" <netanel@amazon.com>,
+        "Kiyanovski, Arthur" <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Jesper Dangaard Brouer" <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+CC:     "Tzalik, Guy" <gtzalik@amazon.com>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "Machulsky, Zorik" <zorik@amazon.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Thread-Index: AQHWHadH74VL29pWn0eLulmochhjwKiRPQvg
+Date:   Thu, 30 Apr 2020 07:18:47 +0000
+Deferred-Delivery: Thu, 30 Apr 2020 07:17:49 +0000
+Message-ID: <03f3568ec8c646cdb7c767b16d19525a@EX13D11EUC003.ant.amazon.com>
+References: <20200428215131.3948527-1-arnd@arndb.de>
+In-Reply-To: <20200428215131.3948527-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.46]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200429122211.GD28637@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_01:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michal Hocko <mhocko@kernel.org> [2020-04-29 14:22:11]:
 
-> On Wed 29-04-20 07:11:45, Srikar Dronamraju wrote:
-> > > > 
-> > > > By marking, N_ONLINE as NODE_MASK_NONE, lets stop assuming that Node 0 is
-> > > > always online.
-> > > > 
-> > > > ...
-> > > >
-> > > > --- a/mm/page_alloc.c
-> > > > +++ b/mm/page_alloc.c
-> > > > @@ -116,8 +116,10 @@ EXPORT_SYMBOL(latent_entropy);
-> > > >   */
-> > > >  nodemask_t node_states[NR_NODE_STATES] __read_mostly = {
-> > > >  	[N_POSSIBLE] = NODE_MASK_ALL,
-> > > > +#ifdef CONFIG_NUMA
-> > > > +	[N_ONLINE] = NODE_MASK_NONE,
-> > > > +#else
-> > > >  	[N_ONLINE] = { { [0] = 1UL } },
-> > > > -#ifndef CONFIG_NUMA
-> > > >  	[N_NORMAL_MEMORY] = { { [0] = 1UL } },
-> > > >  #ifdef CONFIG_HIGHMEM
-> > > >  	[N_HIGH_MEMORY] = { { [0] = 1UL } },
-> > > 
-> > > So on all other NUMA machines, when does node 0 get marked online?
-> > > 
-> > > This change means that for some time during boot, such machines will
-> > > now be running with node 0 marked as offline.  What are the
-> > > implications of this?  Will something break?
-> > 
-> > Till the nodes are detected, marking Node 0 as online tends to be redundant.
-> > Because the system doesn't know if its a NUMA or a non-NUMA system.
-> > Once we detect the nodes, we online them immediately. Hence I don't see any
-> > side-effects or negative implications of this change.
-> > 
-> > However if I am missing anything, please do let me know.
-> > 
-> > >From my part, I have tested this on
-> > 1. Non-NUMA Single node but CPUs and memory coming from zero node.
-> > 2. Non-NUMA Single node but CPUs and memory coming from non-zero node.
-> > 3. NUMA Multi node but with CPUs and memory from node 0.
-> > 4. NUMA Multi node but with no CPUs and memory from node 0.
-> 
-> Have you tested on something else than ppc? Each arch does the NUMA
-> setup separately and this is a big mess. E.g. x86 marks even memory less
-> nodes (see init_memory_less_node) as online.
-> 
+> -----Original Message-----
+> From: Arnd Bergmann <arnd@arndb.de>
+> Sent: Wednesday, April 29, 2020 12:51 AM
+> To: Belgazal, Netanel <netanel@amazon.com>; Kiyanovski, Arthur
+> <akiyano@amazon.com>; David S. Miller <davem@davemloft.net>; Alexei
+> Starovoitov <ast@kernel.org>; Daniel Borkmann <daniel@iogearbox.net>;
+> Jakub Kicinski <kuba@kernel.org>; Jesper Dangaard Brouer
+> <hawk@kernel.org>; John Fastabend <john.fastabend@gmail.com>; Jubran,
+> Samih <sameehj@amazon.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>; Tzalik, Guy <gtzalik@amazon.com>;
+> Bshara, Saeed <saeedb@amazon.com>; Machulsky, Zorik
+> <zorik@amazon.com>; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; bpf@vger.kernel.org
+> Subject: [EXTERNAL] [PATCH] net: ena: fix gcc-4.8 missing-braces warning
+>=20
+> CAUTION: This email originated from outside of the organization. Do not c=
+lick
+> links or open attachments unless you can confirm the sender and know the
+> content is safe.
+>=20
+>=20
+>=20
+> Older compilers warn about initializers with incorrect curly
+> braces:
+>=20
+> drivers/net/ethernet/amazon/ena/ena_netdev.c: In function
+> 'ena_xdp_xmit_buff':
+> drivers/net/ethernet/amazon/ena/ena_netdev.c:311:2: error: expected ','
+> or ';' before 'struct'
+>   struct ena_tx_buffer *tx_info;
+>   ^~~~~~
+> drivers/net/ethernet/amazon/ena/ena_netdev.c:321:2: error: 'tx_info'
+> undeclared (first use in this function)
+>   tx_info =3D &xdp_ring->tx_buffer_info[req_id];
+>   ^~~~~~~
+> drivers/net/ethernet/amazon/ena/ena_netdev.c:321:2: note: each
+> undeclared identifier is reported only once for each function it appears =
+in
+>=20
+> Use the GNU empty initializer extension to avoid this.
+>=20
+> Fixes: 31aa9857f173 ("net: ena: enable negotiating larger Rx ring size")
+Please use the correct fixes, it should be XDP TX commit.
+Otherwise looks good,
+Thanks!
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c
+> b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+> index 2cc765df8da3..ad385652ca24 100644
+> --- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
+> +++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+> @@ -307,7 +307,7 @@ static int ena_xdp_xmit_buff(struct net_device *dev,
+>                              struct ena_rx_buffer *rx_info)  {
+>         struct ena_adapter *adapter =3D netdev_priv(dev);
+> -       struct ena_com_tx_ctx ena_tx_ctx =3D {0};
+> +       struct ena_com_tx_ctx ena_tx_ctx =3D { };
+>         struct ena_tx_buffer *tx_info;
+>         struct ena_ring *xdp_ring;
+>         u16 next_to_use, req_id;
+> --
+> 2.26.0
 
-while I have predominantly tested on ppc, I did test on X86 with CONFIG_NUMA
-enabled/disabled on both single node and multi node machines.
-However, I dont have a cpuless/memoryless x86 system.
-
-> Honestly I have hard time to evaluate the effect of this patch. It makes
-> some sense to assume all nodes offline before they get online but this
-> is a land mine territory.
-> 
-> I am also not sure what kind of problem this is going to address. You
-> have mentioned numa balancing without many details.
-
-1. On a machine with just one node with node number not being 0,
-the current setup will end up showing 2 online nodes. And when there are
-more than one online nodes, numa_balancing gets enabled.
-
-Without patch
-$ grep numa /proc/vmstat
-numa_hit 95179
-numa_miss 0
-numa_foreign 0
-numa_interleave 3764
-numa_local 95179
-numa_other 0
-numa_pte_updates 1206973                 <----------
-numa_huge_pte_updates 4654                 <----------
-numa_hint_faults 19560                 <----------
-numa_hint_faults_local 19560                 <----------
-numa_pages_migrated 0
-
-
-With patch
-$ grep numa /proc/vmstat 
-numa_hit 322338756
-numa_miss 0
-numa_foreign 0
-numa_interleave 3790
-numa_local 322338756
-numa_other 0
-numa_pte_updates 0                 <----------
-numa_huge_pte_updates 0                 <----------
-numa_hint_faults 0                 <----------
-numa_hint_faults_local 0                 <----------
-numa_pages_migrated 0
-
-So we have a redundant page hinting numa faults which we can avoid.
-
-2. Few people have complained about existence of this dummy node when
-parsing lscpu and numactl o/p. They somehow start to think that the tools
-are reporting incorrectly or the kernel is not able to recognize resources
-connected to the node.
-
--- 
-Thanks and Regards
-Srikar Dronamraju
