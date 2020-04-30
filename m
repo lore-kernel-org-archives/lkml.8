@@ -2,310 +2,129 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954A4C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF53BC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDA52073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588272588;
-	bh=Z6DECa7N8G4+bwjZsfqnOxuuzgQZyt8hmyoOawef5xs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHWpaEqJqgwsJKdJEa2HH7mA1kEkkd0UPijP/6e96UnIqZm3y/s+xP5NgxxcgwT5f
-	 Y/E5mzTlxfAMbUJ0n39WxI0Uj3H7Pre6j81adMic+LrbDoOGUZtgc4hMuoJGGixMG7
-	 myC2OE/TDwDP1gIKUzHLqbWWsp2buIyk/Rj40/QM=
+	by mail.kernel.org (Postfix) with ESMTP id A98222073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 18:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k942Q6I6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgD3Str (ORCPT
+        id S1726625AbgD3Sx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 14:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbgD3Stq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 14:49:46 -0400
-Received: from localhost.localdomain (unknown [157.46.61.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC87F2082E;
-        Thu, 30 Apr 2020 18:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588272585;
-        bh=Z6DECa7N8G4+bwjZsfqnOxuuzgQZyt8hmyoOawef5xs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FpLxQ6NR39VtsF7sVE7koAHKegDdLo317LgxLx6dQHfz5lvwHPrTqQ3So9NUuLaSE
-         76TfWZBSHsdO4MfDUu0PZNOgir/Fy/OxSwocrA00jYrJlUEx5Oez0kDqcmPGu/9rLz
-         8S75MG8mWvu65KDHrBoipBMLFdVybMw6KUbstnaA=
-From:   mani@kernel.org
-To:     johan@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com, Manivannan Sadhasivam <mani@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v3 2/2] usb: serial: xr_serial: Add gpiochip support
-Date:   Fri,  1 May 2020 00:19:24 +0530
-Message-Id: <20200430184924.31690-3-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430184924.31690-1-mani@kernel.org>
-References: <20200430184924.31690-1-mani@kernel.org>
+        Thu, 30 Apr 2020 14:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgD3Sx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:53:57 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AAD1C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:53:57 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 18so266539pfv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 11:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tCdxst5tczlIzqff4W9H4F8TmPvPw2gnTPXXKU2ofDs=;
+        b=k942Q6I67iXZpEDFUoY2vP1Z0MQr4CFIWM41c8k6HZI0NszRzd6CMjjvwyTEV6spMf
+         eZpRvIhTtI66G3uAlRd/OS3SJxrkGODFyqCokrKBWZxnInabbAejkY+Z3UuvtIwNHM/3
+         TAoeSX8dogOXWvCVG5g5roNH9ZaGGVmvwi7K+5e7oLEzrSyRu98d2hJMa9h5Nx9Af+Yy
+         ezUv0L/4M0cwPJBAGJmRVLVwjDJ1w3lH/Sy5dCfTSF6QMDMybvJm37W/1u6zTG3oBjbP
+         vNTjcUNIJbLhJsySvKF+BUJWEJomMXcQPWVkjQVlz+I98YvYLovpe2oM1eDJHlmcmmSh
+         MXZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tCdxst5tczlIzqff4W9H4F8TmPvPw2gnTPXXKU2ofDs=;
+        b=CshTRHm2dlF+CvtZn97+fmKdjoxw+M2A8QcdKAe8Gv/09En4r2+olJ3iwrb1+UWcD0
+         eik892FXnGcY8mw53GR6JE67FlLLmXw6r8nIRV44/IsF2pGcDFtSso6tEC3w3C9/3nWJ
+         BW/q95QVIgqlO3gpjUHPABE+FFGbacMAkha6OkUdil1RBArvzrmyuchPA0BIXzWF1VMn
+         YjBzPhsRqt0KBQudUsws0cjh3aLnMKZlEvpJ5TuZTUPQjNExKDkg777Zm6DHt/79lnsb
+         5b/OCwQshCUxtGSS45BUhmH1mIQhsjQ+kVa5bfLuf5xOuOuTuWayXkMrSGt45L3CYmrg
+         BZqA==
+X-Gm-Message-State: AGi0Puauh0/PZ7ACe+iLLcYni4Tsfhzopj/pJDgGsZ2bPDajsZg0sjU6
+        7Ue+iQkfcZEJBgePQ6s7suw=
+X-Google-Smtp-Source: APiQypJER8e+1f4K+e2eafBOds4s7QWdgQ8n+CkJbZ7ST7hs/yoSGxN2U2EYAeOCM1ljLV1AFCuy2Q==
+X-Received: by 2002:a63:f960:: with SMTP id q32mr295612pgk.357.1588272836781;
+        Thu, 30 Apr 2020 11:53:56 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([122.167.43.171])
+        by smtp.gmail.com with ESMTPSA id g25sm427775pfo.150.2020.04.30.11.53.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Apr 2020 11:53:56 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        rdunlap@infradead.org, Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] mm/gup.c: Corrected document reference path
+Date:   Fri,  1 May 2020 00:31:54 +0530
+Message-Id: <1588273314-3790-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+Document path Documentation/vm/pin_user_pages.rst is not a correct
+reference and it should be Documentation/core-api/pin_user_pages.rst.
 
-Add gpiochip support for Maxlinear/Exar USB to serial converter
-for controlling the available gpios.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
- drivers/usb/serial/xr_serial.c | 199 ++++++++++++++++++++++++++++++++-
- 1 file changed, 198 insertions(+), 1 deletion(-)
+ mm/gup.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
-index fdb9ddf8bd95..255a30540b52 100644
---- a/drivers/usb/serial/xr_serial.c
-+++ b/drivers/usb/serial/xr_serial.c
-@@ -7,6 +7,7 @@
-  * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
+diff --git a/mm/gup.c b/mm/gup.c
+index 7ce796c..4952f12 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2864,10 +2864,10 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+  * the arguments here are identical.
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+- * see Documentation/vm/pin_user_pages.rst for further details.
++ * see Documentation/core-api/pin_user_pages.rst for further details.
+  *
+- * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
++ * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst.
++ * It is NOT intended for Case 2 (RDMA: long-term pins).
   */
- 
-+#include <linux/gpio/driver.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -32,6 +33,11 @@ struct xr_uart_regs {
- };
- 
- struct xr_port_private {
-+#ifdef CONFIG_GPIOLIB
-+	struct gpio_chip gc;
-+	bool gpio_registered;
-+	u8 gpio_altfunc;
-+#endif
- 	const struct xr_uart_regs *regs;
- };
- 
-@@ -562,6 +568,196 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
- 		   state);
- }
- 
-+#ifdef CONFIG_GPIOLIB
-+
-+static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+
-+	/* Check if the requested GPIO is occupied */
-+	if (port_priv->gpio_altfunc & BIT(offset))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int xr_gpio_get(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u8 gpio_status;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_status, &gpio_status);
-+	if (ret)
-+		return ret;
-+
-+	return !!(gpio_status & BIT(gpio));
-+}
-+
-+static void xr_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+
-+	if (val)
-+		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			   port_priv->regs->gpio_set, BIT(gpio));
-+	else
-+		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			   port_priv->regs->gpio_clr, BIT(gpio));
-+}
-+
-+static int xr_gpio_direction_get(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u8 gpio_dir;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, &gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	/* Logic 0 = input and Logic 1 = output */
-+	return !(gpio_dir & BIT(gpio));
-+}
-+
-+static int xr_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u8 gpio_dir;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, &gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	gpio_dir &= ~BIT(gpio);
-+
-+	return xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			  port_priv->regs->gpio_dir, gpio_dir);
-+}
-+
-+static int xr_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio,
-+				    int val)
-+{
-+	struct usb_serial_port *port = gpiochip_get_data(gc);
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u8 gpio_dir;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, &gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	gpio_dir |= BIT(gpio);
-+
-+	ret = xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_dir, gpio_dir);
-+	if (ret)
-+		return ret;
-+
-+	xr_gpio_set(gc, gpio, val);
-+
-+	return 0;
-+}
-+
-+static int xr21v141x_gpio_init(struct usb_serial_port *port)
-+{
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	int ret;
-+	u8 gpio_mode;
-+
-+	port_priv->gc.ngpio = 6;
-+
-+	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
-+			 port_priv->regs->gpio_mode, &gpio_mode);
-+	if (ret)
-+		return ret;
-+
-+	/* Mark all pins which are not in GPIO mode */
-+	if (gpio_mode & UART_MODE_RTS_CTS)
-+		port_priv->gpio_altfunc |= (BIT(4) | BIT(5));
-+	else if (gpio_mode & UART_MODE_DTR_DSR)
-+		port_priv->gpio_altfunc |= (BIT(2) | BIT(3));
-+	else if (gpio_mode & UART_MODE_RS485)
-+		port_priv->gpio_altfunc |= BIT(5);
-+	else if (gpio_mode & UART_MODE_RS485_ADDR)
-+		port_priv->gpio_altfunc |= BIT(5);
-+	else
-+		port_priv->gpio_altfunc = 0; /* All GPIOs are available */
-+
-+	return ret;
-+}
-+
-+static int xr_gpio_init(struct usb_serial_port *port)
-+{
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+	struct usb_serial *serial = port->serial;
-+	int ret = 0;
-+	u16 pid;
-+
-+	/* Don't register gpiochip for interface 0 */
-+	if (port->minor == 0)
-+		return ret;
-+
-+	pid = le16_to_cpu(serial->dev->descriptor.idProduct);
-+
-+	ret = xr21v141x_gpio_init(port);
-+	if (ret < 0)
-+		return ret;
-+
-+	port_priv->gc.label = devm_kasprintf(&port->dev, GFP_KERNEL, "XR%04x",
-+					     pid);
-+	port_priv->gc.request = xr_gpio_request;
-+	port_priv->gc.get_direction = xr_gpio_direction_get;
-+	port_priv->gc.direction_input = xr_gpio_direction_input;
-+	port_priv->gc.direction_output = xr_gpio_direction_output;
-+	port_priv->gc.get = xr_gpio_get;
-+	port_priv->gc.set = xr_gpio_set;
-+	port_priv->gc.owner = THIS_MODULE;
-+	port_priv->gc.parent = &port->dev;
-+	port_priv->gc.base = -1;
-+	port_priv->gc.can_sleep = true;
-+
-+	ret = gpiochip_add_data(&port_priv->gc, port);
-+	if (!ret)
-+		port_priv->gpio_registered = true;
-+
-+	return ret;
-+}
-+
-+static void xr_gpio_remove(struct usb_serial_port *port)
-+{
-+	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-+
-+	if (port_priv->gpio_registered) {
-+		gpiochip_remove(&port_priv->gc);
-+		port_priv->gpio_registered = false;
-+	}
-+}
-+
-+#else
-+
-+static int xr_gpio_init(struct usb_serial_port *port)
-+{
-+	return 0;
-+}
-+
-+static void xr_gpio_remove(struct usb_serial_port *port)
-+{
-+	/* Nothing to do */
-+}
-+
-+#endif
-+
- static int xr_port_probe(struct usb_serial_port *port)
- {
- 	struct xr_port_private *port_priv;
-@@ -575,13 +771,14 @@ static int xr_port_probe(struct usb_serial_port *port)
- 
- 	usb_set_serial_port_data(port, port_priv);
- 
--	return 0;
-+	return xr_gpio_init(port);
- }
- 
- static int xr_port_remove(struct usb_serial_port *port)
- {
- 	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
- 
-+	xr_gpio_remove(port);
- 	kfree(port_priv);
- 
- 	return 0;
+ int pin_user_pages_fast(unsigned long start, int nr_pages,
+ 			unsigned int gup_flags, struct page **pages)
+@@ -2904,10 +2904,10 @@ int pin_user_pages_fast(unsigned long start, int nr_pages,
+  * the arguments here are identical.
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+- * see Documentation/vm/pin_user_pages.rst for details.
++ * see Documentation/core-api/pin_user_pages.rst for details.
+  *
+- * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
++ * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst.
++ * It is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+ 			   unsigned long start, unsigned long nr_pages,
+@@ -2940,10 +2940,10 @@ long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+  * FOLL_PIN is set.
+  *
+  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
+- * see Documentation/vm/pin_user_pages.rst for details.
++ * see Documentation/core-api/pin_user_pages.rst for details.
+  *
+- * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
+- * is NOT intended for Case 2 (RDMA: long-term pins).
++ * This is intended for Case 1 (DIO) in Documentation/core-api/pin_user_pages.rst.
++ * It is NOT intended for Case 2 (RDMA: long-term pins).
+  */
+ long pin_user_pages(unsigned long start, unsigned long nr_pages,
+ 		    unsigned int gup_flags, struct page **pages,
 -- 
-2.17.1
+1.9.1
 
