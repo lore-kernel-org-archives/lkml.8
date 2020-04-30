@@ -2,137 +2,208 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E67C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE13C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB7520661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A6420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="dHa6nXhA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJBIxD+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgD3QNi (ORCPT
+        id S1727068AbgD3QOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:13:38 -0400
-Received: from mail-db8eur05on2062.outbound.protection.outlook.com ([40.107.20.62]:4801
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726544AbgD3QNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:13:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=juKpiW0+HLCEBm2oN3gqhVHyPunJRDewgcTnXiTvIWJmSliqYQUogZGuJBnhG2s1KbXjB0yOEbO3YwLb2dX6lK6ESqomvslZOx6BPd0gly1ZuJK5DP0i4ImRyWzj5BOcK1vxuo9ZQiDM9mvgnmtQ2D4WLVNNTuf0Vhk1RddXlXmmp61iIV0zsSYk26bA+ir9PvhOGm6EJgikEAkOTAvH19X2zndKbFaka4dtWkmUOs1BOUftg2omq2kph9ykwohhlf2IqiJUKlrAelnoimFcXtrdrZ2K2TjflF/F86IRS/9qKfGWy3itOOaWrvlqwvONEgIWxFvDCo87grbM5d1F2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qud8TRMLf+2JulsCbgOvq+1C2Lke/Cr+w1aelFpz47c=;
- b=nrNMbugjn1aOAk9Lbi7ExHY+cbonphltZ6gb3nGgdyqgm5eMlfhb5TdOCHUXy4PFUny4bIsQsbp0MhJSAq+GvLsmPC37hetuPxLXaPpX96CZOTtFxBtHLqUYYVDIY+3zESeYoPS6NxkrOOhzz/mfKtKA1N8HFwXMtalXpSUL4JlsRdGIZArRotgdCbCHzDthauBdWstMn6ty6hMX9ej7aMheNt0hpgkip5SvmJw6gYI4uXulg4gLEbLZgvI5414rqa9SAyIiy/k1n7Uee7PTjLP+LFOZUamvGg2JeojX4zQVtGg7K4goGIVwAI/JogCecOnlXhmwJEY/SDlE0hlsNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qud8TRMLf+2JulsCbgOvq+1C2Lke/Cr+w1aelFpz47c=;
- b=dHa6nXhAvxKhgvPLMYu+hAztxUakhvGi5nh9kUio69och7liVIxFbJ1BEqi+nLaP72Ken5sMpjoXPo8ybrizVebZJqQMYFemNR8OsjvDW/ji4Sv1KaEZfsRz/Zx9/Hjg5nqhlocxuyT82/uY8QTJIHyr8Bd6jIGvEyfkvNgQNsw=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB6366.eurprd05.prod.outlook.com (2603:10a6:803:f6::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 30 Apr
- 2020 16:13:34 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2937.028; Thu, 30 Apr 2020
- 16:13:34 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        "schnelle@linux.ibm.com" <schnelle@linux.ibm.com>,
-        Moshe Shemesh <moshe@mellanox.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [PATCH 0/1] net/mlx5: Call pci_disable_sriov() on remove
-Thread-Topic: [PATCH 0/1] net/mlx5: Call pci_disable_sriov() on remove
-Thread-Index: AQHWHudVHMHIKrrNNEKlZqYQXDY+FKiR1scA
-Date:   Thu, 30 Apr 2020 16:13:34 +0000
-Message-ID: <08d0c332f3cfa034dddc2e3321bf7649ab718701.camel@mellanox.com>
-References: <20200430120308.92773-1-schnelle@linux.ibm.com>
-In-Reply-To: <20200430120308.92773-1-schnelle@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: mellanox.com; dkim=none (message not signed)
- header.d=none;mellanox.com; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 23098d61-62fd-4fe3-abab-08d7ed216ebb
-x-ms-traffictypediagnostic: VI1PR05MB6366:|VI1PR05MB6366:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB63663CED3CE2A8CC44D8A64CBEAA0@VI1PR05MB6366.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0389EDA07F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CVevMzX20wxBKcdOKlLNtixmh6PxRtFwWp1eFsMDotIk5jcaXQwqj/QxKNV92/Dao0ami+WIG7He6GWj0p/GydKCD0t55JrcRGV7TIL0gSgDE0GBxfjCTqGku6ter++HRfugVelzlxoY6RrJCCowJNlBRAbrRrCDUIVKGmrR47H6C8ENQ8oo7U8S++F1q7QbUIc2AYxWZp8/PAm1ViV/kaPLilGoiscZEguWIpIKbyhUbutVdMC4aw7ujGp0lGk7H0DO7P3R/sJtoTt29N9Cpkk/dvQUcKDyk86jEP7wgc19SAasC1p6hU5zwUb4n7wUZ71++UaVJ+Au4ig63hDJGeZpMf8uvDf2w7UuUE/Gq2UOqKaeL9M4OkxZKLmSPNzQvT1jn3Ln8J1A8NySzUCNq0mtTxIMD4RNY09euUGCU55x2E0EQBtgssPc/hqgPsau
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(8936002)(66556008)(66476007)(6506007)(76116006)(26005)(186003)(110136005)(54906003)(4326008)(91956017)(86362001)(36756003)(8676002)(6636002)(66946007)(66446008)(64756008)(2616005)(6486002)(6512007)(71200400001)(498600001)(2906002)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: dO/gU7KH9i8gdZ2i+9+/9cy9qV2yGQAJxdn5gvuxFUA36KAt9VX0U6B9sU6cwKi3eGNaq2R8rXh/obA0bcxkpw9Y6TnXn60RqNVTQRO2amBfAy3UMiEAhQWZUk5wSOP4++AhlYwpESuRRoF2WdTczIOJRJ81hSqoipk/Bjx8Nby/bgwYHOtTgjVhxltzMt/pW2ViD09y/LX5sscz5RGli+auQem7fFDN04uLdHxnDLcLr92jUuCX+yGwp+TxNus/ThDhwXDx6C5crl9/K7ZH9GLAZ1IiGZXNl3mbFSWiljduQ+Tk52wx144Wv7dHKHTIIArW9maOnHrFrlNAjRNRc/vE2sePg3naEpXTK7wfSdWBCsNFQxyQHrFZJUoKdcrFBK2NelDfLYrv4lISbVDmm5uLEWIu1CX7dDTMHo4beu3nlewHpGiUCexPEksJlZdUOm7FMqHBG1wM4jq+6FB8VA86Bw8jfjTQ6J+asAJ54LkwSoXQ6e2dc36XqiISPKCPZ2yTPX/Pmf40ohrIFgkxACTLgVzFgqDlex+BaBOmmoi5h+x4yxjxU02i5N0WzAuOtLTabIKNLIFuYWm3o1NnlCVNY2igJmpqu9YN9BpLWWKcbENx3GvCtgNVKCr9//jzU7rYFeEueGrNS5VEFUOoz/gL6+HkX782CzXRjc18NVYVTuaJd4YYwm0JhzPp+0oeNK9teZw3r99B+O7ek9Vj4QwpSceU78gmn3xddQz05F3TtfjJlxs5dZYACYZqmybLel6DpGi5coCqf18n5pVPCg1ov7cJvCGDxzmTOmHL+mQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <89DB04ACE1780142871FF08FF69CDCF1@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 30 Apr 2020 12:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726486AbgD3QOR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:14:17 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C298C035494;
+        Thu, 30 Apr 2020 09:14:17 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id i19so2042800ioh.12;
+        Thu, 30 Apr 2020 09:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9tMKgUNiVkUhpbJNhAr0hm95irgxD28lhjeV8PkyOXw=;
+        b=lJBIxD+U8h9JNWqczpIHYOA2edcOylANhJNLxX7tesOutIKTPAgFimaA71Q4BN3lFt
+         CGdE71ndDyan0ElbnjdpXRfFAeM3FaoZUuZy4QwOiG6H2+Ms9wxfrmq86ne2Ncxduo2s
+         o3oH8+ZOcyM+mE6+HP4hWSsipRphFTDlHJjDks7AcSYXE7geDz7xu6toAZaAdZAWGs7u
+         doCtqwvkh1wxfWlI/hclqWa5WNI/PUHzg9W1oPax2zCgrBJN8THiWO9T/BRkfG7p5sQ6
+         6byMtoOITdG3H87AkEiMJfkj6f+yvBrPZTtUnw30mdJTdGYwy75RtSWnREdZmACd4nAs
+         pzPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9tMKgUNiVkUhpbJNhAr0hm95irgxD28lhjeV8PkyOXw=;
+        b=hE7+3GxazZ/mropwvjK/2OVLfR+5oEaXbgeEOlysbHPnWID3LO8CiuN8LHIsYOFOTy
+         JsIgFDwb3lORkSkUdSbaw6NN/KxS7Qo0okOJjbo6A3RKZQNfr5i47oEOYt29zVI55fjl
+         Dpn/tUlZKYSv/HRb7yO6YgtDLPPTZZwLDtk1AGyEXIW3F8QuWRflHiUpAn+Gd61R7bjM
+         p9P7XW4/US9Hgk8etGw8i/pC0h6Qac//YLCpJT8AtfPv4fqFLsmQ6rwB29lfxci03W8Q
+         i1jj/xON+jdtMhH5Z7mcMpVXZEmLZ5A4G8qDvLKOlEiz19p4+Exo8vby4G3zFt9IzDlH
+         zm1Q==
+X-Gm-Message-State: AGi0PuYdyVIMQFAImMCf5KF8vMWYOj9Jw3e9C2jzAFEJrRLGBkWrft/6
+        H0rAmZHtrpZLnb0CwW5WDmwoS5wD53VdOEyahIGpAml3
+X-Google-Smtp-Source: APiQypJNNe1JlSiWqNAvYCGbEyLo6QHM5ubwp0R2i0yMPOBM1qvYMgIWqO2AKVPK+ePUbVGYtX9sAhF9NavoFEScekM=
+X-Received: by 2002:a6b:5904:: with SMTP id n4mr2693593iob.142.1588263256671;
+ Thu, 30 Apr 2020 09:14:16 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23098d61-62fd-4fe3-abab-08d7ed216ebb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2020 16:13:34.2541
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sljk5lJ7ckM6PWytoKQYuNb8G3ostwKD/+JxqPp9lbFXG7oulgDE6y04RxeCTmtmWIVyH9OqjcLLS9ocRwgRSQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6366
+References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
+ <20200430124602.14463-2-frieder.schrempf@kontron.de> <5e1f804c4c27927d10b2283747c1cae6606abe7c.camel@pengutronix.de>
+ <6a5fbb8a-bf28-9c8e-53c7-7a3e5f338a2c@kontron.de>
+In-Reply-To: <6a5fbb8a-bf28-9c8e-53c7-7a3e5f338a2c@kontron.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Thu, 30 Apr 2020 11:14:02 -0500
+Message-ID: <CAHCN7x+sA9cGF6oqvZLKBdhRdZcxgW=U98uB81_R3iq_-Ok9=w@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe time
+ on i.MX8MM
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTMwIGF0IDE0OjAzICswMjAwLCBOaWtsYXMgU2NobmVsbGUgd3JvdGU6
-DQo+IEhlbGxvLA0KPiANCj4gSSdtIGN1cnJlbnRseSB3b3JraW5nIG9uIGltcHJvdmVtZW50cyBp
-biBQRi1WRiBoYW5kbGluZyBvbiBzMzkwLiBPbmUNCj4gdGhpbmcgdGhhdA0KPiBtYXkgYmUgYSBi
-aXQgc3BlY2lhbCBmb3IgdXMgaXMgdGhhdCB0aGUgczM5MCBob3RwbHVnIGNvZGUgc3VwcG9ydHMN
-Cj4gc2h1dHRpbmcNCj4gZG93biBhIHNpbmdsZSBQRiBvZiBhIG11bHRpLWZ1bmN0aW9uIGRldmlj
-ZSBzdWNoIGFzIGEgQ29ubmVjdFgtNS4NCj4gRHVyaW5nIHRlc3RpbmcgSSBmb3VuZCB0aGF0IHRo
-ZSBtbHg1X2NvcmUgZHJpdmVyIGRvZXMgbm90IGNhbGwNCj4gcGNpX2Rpc2FibGVfc3Jpb3YoKSBp
-biBpdHMgcmVtb3ZlIGhhbmRsZXIgd2hpY2ggaXMgY2FsbGVkIG9uIHRoZSBQRg0KPiB2aWENCj4g
-cGNpX3N0b3BfYW5kX3JlbW92ZV9idXNfZGV2aWNlKCkgb24gYW4gb3JkZXJseSBob3QgdW5wbHVn
-Lg0KDQpBY3R1YWxseSB3aGF0IGhhcHBlbnMgaWYgeW91IGNhbGwgcGNpX2Rpc2FibGVfc3Jpb3Yo
-KSB3aGVuIHRoZXJlIGFyZQ0KVkZzIGF0dGFjaGVkIHRvIFZNcyA/IA0KDQo+IA0KPiBGb2xsb3dp
-bmcgaXMgYSBwYXRjaCB0byBmaXggdGhpcywgSSB3YW50IHRvIHBvaW50IG91dCBob3dldmVyIHRo
-YXQNCj4gSSdtIG5vdA0KPiBlbnRpcmVseSBzdXJlIGFib3V0IHRoZSBlZmZlY3Qgb2YgY2xlYXJf
-dmZzIHRoYXQgZGlzdGluZ3Vpc2hlcw0KPiBtbHg1X3NyaW92X2RldGFjaCgpIGZyb20gbWx4NV9z
-cmlvdl9kaXNhYmxlKCkgb25seSB0aGF0IHRoZSBmb3JtZXIgaXMNCj4gY2FsbGVkDQo+IGZyb20g
-dGhlIHJlbW92ZSBoYW5kbGVyIGFuZCBpdCBkb2Vzbid0IGNhbGwgcGNpX2Rpc2FibGVfc3Jpb3Yo
-KS4NCj4gVGhhdCBob3dldmVyIGlzIHJlcXVpcmVkIGFjY29yZGluZyB0byBEb2N1bWVudGF0aW9u
-L1BDSS9wY2ktaW92LQ0KPiBob3d0by5yc3QNCj4gDQoNClRoZSBEb2MgZG9lc24ndCBzYXkgInJl
-cXVpcmVkIiwgc28gdGhlIHF1ZXN0aW9uIGlzLCBpcyBpdCByZWFsbHkNCnJlcXVpcmVkID8gDQoN
-CmJlY2F1c2UgdGhlIHdheSBpIHNlZSBpdCwgaXQgaXMgdGhlIGFkbWluIHJlc3BvbnNpYmlsaXR5
-IHRvIGNsZWFyIG91dA0KdmZzIGJlZm9yZSBzaHV0dGluZyBkb3duIHRoZSBQRiBkcml2ZXIuDQoN
-CmFzIGV4cGxhaW5lZCBpbiB0aGUgcGF0Y2ggcmV2aWV3LCBtbHg1IHZmIGRyaXZlciBpcyByZXNp
-bGllbnQgb2Ygc3VjaA0KYmVoYXZpb3IgYW5kIG9uY2UgdGhlIGRldmljZSBpcyBiYWNrIG9ubGlu
-ZSB0aGUgdmYgZHJpdmVyIHF1aWNrbHkNCnJlY292ZXJzLCBzbyBpdCBpcyBhY3R1YWxseSBhIGZl
-YXR1cmUgYW5kIG5vdCBhIGJ1ZyA6KQ0KDQpUaGVyZSBhcmUgbWFueSByZWFzb25zIHdoeSB0aGUg
-YWRtaW4gd291bGQgd2FudCB0byBkbyB0aGlzOg0KDQoxKSBGYXN0IEZpcm13YXJlIHVwZ3JhZGUN
-CjIpIEZhc3QgSHlwZXItdmlzb3IgdXBncmFkZS9yZWZyZXNoDQozKSBQRiBkZWJ1Z2dpbmcgDQoN
-ClNvIHlvdSBjYW4gcXVpY2tseSByZXNldCB0aGUgUEYgZHJpdmVyIHdpdGhvdXQgdGhlIG5lZWQg
-dG8gd2FpdCBmb3IgYWxsDQpWRnMgb3IgbWFudWFsbHkgZGV0YWNoLWF0dGFjaCB0aGVtLg0KDQoN
-Cj4gSSd2ZSBvbmx5IHRlc3RlZCB0aGlzIG9uIHRvcCBvZiBteSBjdXJyZW50bHkgc3RpbGwgaW50
-ZXJuYWwgUEYtVkYNCj4gcmV3b3JrIHNvDQo+IEkgbWlnaHQgYWxzbyBiZSB0b3RhbGx5IG1pc3Np
-bmcgc29tZXRoaW5nIGhlcmUgaW4gdGhhdCBjYXNlIGV4Y3VzZSBteQ0KPiBpZ25vcmFuY2UuDQo+
-IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IE5pa2xhcyBTY2huZWxsZQ0KPiANCj4gTmlrbGFzIFNjaG5l
-bGxlICgxKToNCj4gICBuZXQvbWx4NTogQ2FsbCBwY2lfZGlzYWJsZV9zcmlvdigpIG9uIHJlbW92
-ZQ0KPiANCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9zcmlvdi5j
-IHwgMyArKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
-LSkNCj4gDQo=
+On Thu, Apr 30, 2020 at 10:31 AM Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
+>
+> Hi Lucas,
+>
+> On 30.04.20 16:32, Lucas Stach wrote:
+> > Hi Frieder,
+> >
+> > Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
+> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >>
+> >> On i.MX8MM there is an interrupt getting triggered immediately after
+> >> requesting the IRQ, which leads to a stall as the handler accesses
+> >> the GPU registers whithout the clock being enabled.
+> >>
+> >> Enabling the clocks briefly seems to clear the IRQ state, so we do
+> >> this before requesting the IRQ.
+> >
+> > This is most likely caused by improper power-up sequencing. Normally
+> > the GPC will trigger a hardware reset of the modules inside a power
+> > domain when the domain is powered on. This requires the clocks to be
+> > running at this point, as those resets are synchronous, so need clock
+> > pulses to propagate through the hardware.
+>
+> Ok, I was suspecting something like that and your explanation makes
+> total sense to me.
+>
+> >
+> >  From what I see the i.MX8MM is still missing the power domain
+> > controller integration, but I'm pretty confident that this problem
+> > should be solved in the power domain code, instead of the GPU driver.
+>
+> Ok. I was hoping that GPU support could be added without power domain
+> control, but I now see that this is probably not reasonable at all.
+> So I will keep on hoping that NXP comes up with an upstreamable solution
+> for the power domain handling.
+
+
+There was a patch for upstream power-domain control from NXP a few days ago:
+
+https://patchwork.kernel.org/cover/10904511/
+
+Can these be somehow tested to see if it helps the issue with the GPU?
+
+adam
+>
+> Thanks,
+> Frieder
+>
+> >
+> > Regards,
+> > Lucas
+> >
+> >> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> >> ---
+> >>   drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 29 ++++++++++++++++++++-----
+> >> --
+> >>   1 file changed, 22 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> index a31eeff2b297..23877c1f150a 100644
+> >> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+> >> @@ -1775,13 +1775,6 @@ static int etnaviv_gpu_platform_probe(struct
+> >> platform_device *pdev)
+> >>              return gpu->irq;
+> >>      }
+> >>
+> >> -    err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> >> -                           dev_name(gpu->dev), gpu);
+> >> -    if (err) {
+> >> -            dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq,
+> >> err);
+> >> -            return err;
+> >> -    }
+> >> -
+> >>      /* Get Clocks: */
+> >>      gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
+> >>      DBG("clk_reg: %p", gpu->clk_reg);
+> >> @@ -1805,6 +1798,28 @@ static int etnaviv_gpu_platform_probe(struct
+> >> platform_device *pdev)
+> >>              gpu->clk_shader = NULL;
+> >>      gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
+> >>
+> >> +    /*
+> >> +     * On i.MX8MM there is an interrupt getting triggered
+> >> immediately
+> >> +     * after requesting the IRQ, which leads to a stall as the
+> >> handler
+> >> +     * accesses the GPU registers whithout the clock being enabled.
+> >> +     * Enabling the clocks briefly seems to clear the IRQ state, so
+> >> we do
+> >> +     * this here before requesting the IRQ.
+> >> +     */
+> >> +    err = etnaviv_gpu_clk_enable(gpu);
+> >> +    if (err)
+> >> +            return err;
+> >> +
+> >> +    err = etnaviv_gpu_clk_disable(gpu);
+> >> +    if (err)
+> >> +            return err;
+> >> +
+> >> +    err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
+> >> +                           dev_name(gpu->dev), gpu);
+> >> +    if (err) {
+> >> +            dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq,
+> >> err);
+> >> +            return err;
+> >> +    }
+> >> +
+> >>      /* TODO: figure out max mapped size */
+> >>      dev_set_drvdata(dev, gpu);
+> >>
+> >
