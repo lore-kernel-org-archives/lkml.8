@@ -2,208 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE13C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4525FC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A6420661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2162D20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJBIxD+U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VuaBogpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgD3QOS (ORCPT
+        id S1726960AbgD3QPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
+        Thu, 30 Apr 2020 12:15:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbgD3QOR (ORCPT
+        by vger.kernel.org with ESMTP id S1726482AbgD3QP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:14:17 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C298C035494;
-        Thu, 30 Apr 2020 09:14:17 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i19so2042800ioh.12;
-        Thu, 30 Apr 2020 09:14:17 -0700 (PDT)
+        Thu, 30 Apr 2020 12:15:29 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EFCC035494;
+        Thu, 30 Apr 2020 09:15:29 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id u22so2400606plq.12;
+        Thu, 30 Apr 2020 09:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9tMKgUNiVkUhpbJNhAr0hm95irgxD28lhjeV8PkyOXw=;
-        b=lJBIxD+U8h9JNWqczpIHYOA2edcOylANhJNLxX7tesOutIKTPAgFimaA71Q4BN3lFt
-         CGdE71ndDyan0ElbnjdpXRfFAeM3FaoZUuZy4QwOiG6H2+Ms9wxfrmq86ne2Ncxduo2s
-         o3oH8+ZOcyM+mE6+HP4hWSsipRphFTDlHJjDks7AcSYXE7geDz7xu6toAZaAdZAWGs7u
-         doCtqwvkh1wxfWlI/hclqWa5WNI/PUHzg9W1oPax2zCgrBJN8THiWO9T/BRkfG7p5sQ6
-         6byMtoOITdG3H87AkEiMJfkj6f+yvBrPZTtUnw30mdJTdGYwy75RtSWnREdZmACd4nAs
-         pzPA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ohe0w2oqgXjSgHTpxKWLVpHjCPyoN0t0/3ExT/Ew+K4=;
+        b=VuaBogpL2YFhEFVc9AQbn0eky1wbDGzkUtCWbCmcnp0R1bB1IRDCslhlVdcg9YPnQu
+         fu5ifDguLmSeDujMNFpVcFTqdgVr8VVnpMDF3wIsEFJHYiv6MbkXcq8R3EDVziIVV6iU
+         /IsZY5yA23UwE0/SAKYNbhDSUD1sxu+OPr2qQiA6P0Eu+XW4w/EaSvMfhtuy05WdBXtA
+         X5Uml1oXzvwEBxH98XSlYDf54/eaMANlNcciA3Q7Ku2NHkUVsHbOT6fb2SHLzsfF8dYn
+         BrDNEMwHsV/XVTd18TsGUIN+i77tFkgb24YLd77edW7RD8V6ZepGBK6YXXfCQmOFVzI8
+         QFFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9tMKgUNiVkUhpbJNhAr0hm95irgxD28lhjeV8PkyOXw=;
-        b=hE7+3GxazZ/mropwvjK/2OVLfR+5oEaXbgeEOlysbHPnWID3LO8CiuN8LHIsYOFOTy
-         JsIgFDwb3lORkSkUdSbaw6NN/KxS7Qo0okOJjbo6A3RKZQNfr5i47oEOYt29zVI55fjl
-         Dpn/tUlZKYSv/HRb7yO6YgtDLPPTZZwLDtk1AGyEXIW3F8QuWRflHiUpAn+Gd61R7bjM
-         p9P7XW4/US9Hgk8etGw8i/pC0h6Qac//YLCpJT8AtfPv4fqFLsmQ6rwB29lfxci03W8Q
-         i1jj/xON+jdtMhH5Z7mcMpVXZEmLZ5A4G8qDvLKOlEiz19p4+Exo8vby4G3zFt9IzDlH
-         zm1Q==
-X-Gm-Message-State: AGi0PuYdyVIMQFAImMCf5KF8vMWYOj9Jw3e9C2jzAFEJrRLGBkWrft/6
-        H0rAmZHtrpZLnb0CwW5WDmwoS5wD53VdOEyahIGpAml3
-X-Google-Smtp-Source: APiQypJNNe1JlSiWqNAvYCGbEyLo6QHM5ubwp0R2i0yMPOBM1qvYMgIWqO2AKVPK+ePUbVGYtX9sAhF9NavoFEScekM=
-X-Received: by 2002:a6b:5904:: with SMTP id n4mr2693593iob.142.1588263256671;
- Thu, 30 Apr 2020 09:14:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ohe0w2oqgXjSgHTpxKWLVpHjCPyoN0t0/3ExT/Ew+K4=;
+        b=eUu8MYvW7oYwO1fgXiKdb2AINj9Znym5MUbft9VtxitEE8OGFTBmiOV61vjxxKZD+q
+         5vOJ5bDEdJhaJ02hLcvGxlE3fGA4Ii9jlQi99slJLSg3f3buFBkgAAKwvFddqY1h8B1L
+         V5F1PFkTDyeWG6OUtAkbaj+A/rNJH7vqiVDTr1I+FwRUSfbBvGgtYXxyvP1F38xcedUL
+         7X6ByGyl2koHClkKnqMEyVQ5XP9d2ciiM9dDN28vZxzpvg3zO44XTUUStqVZ6ej7bNuf
+         jG9OnguTHcAak+tvdYBf0k9fj4oyDlGKWspuVtfKVqLDdoJt3/4TpNJV3F/oZzmavDx7
+         BTew==
+X-Gm-Message-State: AGi0PuaUqAMeveKVmWCB2k5fIfkxInuduYsroqqpjgxuoDve851K26y7
+        f/eyixELgjtyr7ox4kjC41A=
+X-Google-Smtp-Source: APiQypIjLOWeSYVNJv746Q8IVmk/zvFvPh6VnpGR7Dk9xsPCjPPTMMIa+9W3XRJmNz7RPBm7/1O8gw==
+X-Received: by 2002:a17:90a:c481:: with SMTP id j1mr3800867pjt.5.1588263329136;
+        Thu, 30 Apr 2020 09:15:29 -0700 (PDT)
+Received: from syed ([106.210.97.7])
+        by smtp.gmail.com with ESMTPSA id q19sm235805pfh.34.2020.04.30.09.15.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Apr 2020 09:15:28 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 21:45:14 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+Message-ID: <20200430161514.GA7107@syed>
+References: <cover.1588112714.git.syednwaris@gmail.com>
+ <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
+ <20200429102114.GF185537@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
- <20200430124602.14463-2-frieder.schrempf@kontron.de> <5e1f804c4c27927d10b2283747c1cae6606abe7c.camel@pengutronix.de>
- <6a5fbb8a-bf28-9c8e-53c7-7a3e5f338a2c@kontron.de>
-In-Reply-To: <6a5fbb8a-bf28-9c8e-53c7-7a3e5f338a2c@kontron.de>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Thu, 30 Apr 2020 11:14:02 -0500
-Message-ID: <CAHCN7x+sA9cGF6oqvZLKBdhRdZcxgW=U98uB81_R3iq_-Ok9=w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] drm/etnaviv: Prevent IRQ triggering at probe time
- on i.MX8MM
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429102114.GF185537@smile.fi.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:31 AM Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
->
-> Hi Lucas,
->
-> On 30.04.20 16:32, Lucas Stach wrote:
-> > Hi Frieder,
-> >
-> > Am Donnerstag, den 30.04.2020, 12:46 +0000 schrieb Schrempf Frieder:
-> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> >>
-> >> On i.MX8MM there is an interrupt getting triggered immediately after
-> >> requesting the IRQ, which leads to a stall as the handler accesses
-> >> the GPU registers whithout the clock being enabled.
-> >>
-> >> Enabling the clocks briefly seems to clear the IRQ state, so we do
-> >> this before requesting the IRQ.
-> >
-> > This is most likely caused by improper power-up sequencing. Normally
-> > the GPC will trigger a hardware reset of the modules inside a power
-> > domain when the domain is powered on. This requires the clocks to be
-> > running at this point, as those resets are synchronous, so need clock
-> > pulses to propagate through the hardware.
->
-> Ok, I was suspecting something like that and your explanation makes
-> total sense to me.
->
-> >
-> >  From what I see the i.MX8MM is still missing the power domain
-> > controller integration, but I'm pretty confident that this problem
-> > should be solved in the power domain code, instead of the GPU driver.
->
-> Ok. I was hoping that GPU support could be added without power domain
-> control, but I now see that this is probably not reasonable at all.
-> So I will keep on hoping that NXP comes up with an upstreamable solution
-> for the power domain handling.
+On Wed, Apr 29, 2020 at 01:21:14PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 29, 2020 at 04:39:47AM +0530, Syed Nayyar Waris wrote:
+> > This patch reimplements the xgpio_set_multiple function in
+> > drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
+> > Instead of looping for each bit in xgpio_set_multiple
+> > function, now we can check each channel at a time and save cycles.
+> 
+> > +	const unsigned long state_size = BITS_PER_TYPE(*state);
+> 
+> This '*state' is unneeded complication, use BITS_PER_U32.
+> 
+> > +#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
+> 
+> This macro makes code uglier, besides the fact of absence of #undef.
+> And also see above.
 
+Thank you for your review comments. Just want to clarify, you want
+ a new macro to be created - 'BITS_PER_U32' ?  
+Also, don't you think that with BITS_PER_TYPE(), in case later the type
+of 'state' changes, it will be reflected in this code without any code
+change?
 
-There was a patch for upstream power-domain control from NXP a few days ago:
+Let me know if I have misunderstood something.
 
-https://patchwork.kernel.org/cover/10904511/
-
-Can these be somehow tested to see if it helps the issue with the GPU?
-
-adam
->
-> Thanks,
-> Frieder
->
-> >
-> > Regards,
-> > Lucas
-> >
-> >> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> >> ---
-> >>   drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 29 ++++++++++++++++++++-----
-> >> --
-> >>   1 file changed, 22 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> >> b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> >> index a31eeff2b297..23877c1f150a 100644
-> >> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> >> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> >> @@ -1775,13 +1775,6 @@ static int etnaviv_gpu_platform_probe(struct
-> >> platform_device *pdev)
-> >>              return gpu->irq;
-> >>      }
-> >>
-> >> -    err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
-> >> -                           dev_name(gpu->dev), gpu);
-> >> -    if (err) {
-> >> -            dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq,
-> >> err);
-> >> -            return err;
-> >> -    }
-> >> -
-> >>      /* Get Clocks: */
-> >>      gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
-> >>      DBG("clk_reg: %p", gpu->clk_reg);
-> >> @@ -1805,6 +1798,28 @@ static int etnaviv_gpu_platform_probe(struct
-> >> platform_device *pdev)
-> >>              gpu->clk_shader = NULL;
-> >>      gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
-> >>
-> >> +    /*
-> >> +     * On i.MX8MM there is an interrupt getting triggered
-> >> immediately
-> >> +     * after requesting the IRQ, which leads to a stall as the
-> >> handler
-> >> +     * accesses the GPU registers whithout the clock being enabled.
-> >> +     * Enabling the clocks briefly seems to clear the IRQ state, so
-> >> we do
-> >> +     * this here before requesting the IRQ.
-> >> +     */
-> >> +    err = etnaviv_gpu_clk_enable(gpu);
-> >> +    if (err)
-> >> +            return err;
-> >> +
-> >> +    err = etnaviv_gpu_clk_disable(gpu);
-> >> +    if (err)
-> >> +            return err;
-> >> +
-> >> +    err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
-> >> +                           dev_name(gpu->dev), gpu);
-> >> +    if (err) {
-> >> +            dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq,
-> >> err);
-> >> +            return err;
-> >> +    }
-> >> +
-> >>      /* TODO: figure out max mapped size */
-> >>      dev_set_drvdata(dev, gpu);
-> >>
-> >
+> 
+> > +	DECLARE_BITMAP(old, TOTAL_BITS);
+> > +	DECLARE_BITMAP(new, TOTAL_BITS);
+> > +	DECLARE_BITMAP(changed, TOTAL_BITS);
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
