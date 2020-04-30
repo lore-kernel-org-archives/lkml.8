@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFCEC47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C678AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8F132082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6B92063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255370;
-	bh=jLd/m6vXXjMduVePN9+R0gj6Wj03nfzM/HiOjiE5sA4=;
+	s=default; t=1588255378;
+	bh=ZeQ+nsfG34bCl5uEds18kIJEKqqdj1c0qRK1uyLut8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v18/LJk9McV8R7FGmNLgqeQie746B0ZIPj1yFiUHtDT68xZ13/2/eDSJoXQUZe6NO
-	 SwZUYJhi4wrmSGos6roYfbIaOEhWmApUQkDmMVsGHp3+g03gMlQ7a4HgxUXsrlY0nP
-	 kwWl44qB24xWeaM/mo17GDFfu82AUWi+lSQhhY8E=
+	b=wlBChHhJRwdkWnV5v/7/ku9RAm6tAYeN32tgRiiPKDaoX6SmZypqmlmBkPZk1FpOT
+	 7WpvHUDw2npBrzr76Pk/IF9lB2IsLIPmUYj6B7oJmJNrKXZIN0lHruJ4wqlz0Q2yQx
+	 h27faJZUejZ6Y0T+lLWU7lTSP12ApCfKkpyMRihk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729450AbgD3OCt (ORCPT
+        id S1728753AbgD3OC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35510 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728765AbgD3Nxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:38 -0400
+        id S1728747AbgD3Nxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 117E520870;
-        Thu, 30 Apr 2020 13:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF37E24959;
+        Thu, 30 Apr 2020 13:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254818;
-        bh=jLd/m6vXXjMduVePN9+R0gj6Wj03nfzM/HiOjiE5sA4=;
+        s=default; t=1588254815;
+        bh=ZeQ+nsfG34bCl5uEds18kIJEKqqdj1c0qRK1uyLut8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QiW3dpIUSAlsiKw+yKeCFCwWTkGdKsmzPMcFuKBgYyOEKaVskqxqFXorj17hBLtoa
-         KF6dHKjgAD+QltwJUMSshBbdJPE/khwFaLUn2gIjG2WOdhDoF7TnEL9HL0IfzG06yl
-         UbOTDW0XkgCbQtWsdTtibzV5q/1sZQMItnT68blc=
+        b=CkloH/vru3NPp6yh0HeYo8YWd6sxIKafNuAb6wx6tBjEqFgo5rRnjHA5SoIlVivI9
+         U+Q2pYwKd+3adiVm77awOi8W3SbZsr9a0GaqVjRp6vPfTdGHj1kHo8ia6s5Tx8ktwJ
+         4c48vy/1fwUqqby81ybTufjVa2c63KmP47mK05bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 11/30] ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
-Date:   Thu, 30 Apr 2020 09:53:06 -0400
-Message-Id: <20200430135325.20762-11-sashal@kernel.org>
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/30] usb: dwc3: gadget: Do link recovery for SS and SSP
+Date:   Thu, 30 Apr 2020 09:53:03 -0400
+Message-Id: <20200430135325.20762-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
 References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,44 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 326b509238171d37402dbe308e154cc234ed1960 ]
+[ Upstream commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 ]
 
-If we don't find any pcm, pcm will point at address at an offset from
-the the list head and not a meaningful structure. Fix this by returning
-correct pcm if found and NULL if not. Found with coccinelle.
+The controller always supports link recovery for device in SS and SSP.
+Remove the speed limit check. Also, when the device is in RESUME or
+RESET state, it means the controller received the resume/reset request.
+The driver must send the link recovery to acknowledge the request. They
+are valid states for the driver to send link recovery.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Link: https://lore.kernel.org/r/20200415162849.308-1-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/dwc3/gadget.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index be2473166bfaf..4594b1447900a 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -148,14 +148,14 @@ static struct hdac_hdmi_pcm *
- hdac_hdmi_get_pcm_from_cvt(struct hdac_hdmi_priv *hdmi,
- 			   struct hdac_hdmi_cvt *cvt)
- {
--	struct hdac_hdmi_pcm *pcm = NULL;
-+	struct hdac_hdmi_pcm *pcm;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 50d2481041c85..99f6a5aa01095 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1577,7 +1577,6 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
+ 	u32			reg;
  
- 	list_for_each_entry(pcm, &hdmi->pcm_list, head) {
- 		if (pcm->cvt == cvt)
--			break;
-+			return pcm;
- 	}
+ 	u8			link_state;
+-	u8			speed;
  
--	return pcm;
-+	return NULL;
- }
+ 	/*
+ 	 * According to the Databook Remote wakeup request should
+@@ -1587,16 +1586,13 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
+ 	 */
+ 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
  
- static void hdac_hdmi_jack_report(struct hdac_hdmi_pcm *pcm,
+-	speed = reg & DWC3_DSTS_CONNECTSPD;
+-	if ((speed == DWC3_DSTS_SUPERSPEED) ||
+-	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
+-		return 0;
+-
+ 	link_state = DWC3_DSTS_USBLNKST(reg);
+ 
+ 	switch (link_state) {
++	case DWC3_LINK_STATE_RESET:
+ 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
+ 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
++	case DWC3_LINK_STATE_RESUME:
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.20.1
 
