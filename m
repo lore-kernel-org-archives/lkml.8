@@ -2,203 +2,182 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7FAC47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F04C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A3620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B736320873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ut+QscvU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O+Alrd3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgD3QQp (ORCPT
+        id S1728071AbgD3QRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
+        Thu, 30 Apr 2020 12:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726405AbgD3QQo (ORCPT
+        by vger.kernel.org with ESMTP id S1726420AbgD3QRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:16:44 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9976C035494;
-        Thu, 30 Apr 2020 09:16:43 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f18so7082972lja.13;
-        Thu, 30 Apr 2020 09:16:43 -0700 (PDT)
+        Thu, 30 Apr 2020 12:17:15 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 798B8C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:17:15 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id k12so5481874qtm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8h7c5xM9KdrcmFCqTV2onQc6DhtZm7K0Uq18xje81Wc=;
-        b=ut+QscvUUbBbBNa/WL+wGEGeS6FwdRtAH9e4SF8KFy4VBSOrFqJ7zF/QgHmMzpquyc
-         7CR59WjbtwZirwn2GLq2Wz6GF4iMjx9ppczRswAzNIMwPkj47IDPxOTuo7nq8G2mlScm
-         T9FwkRpWpepH2OiJr4yWdMyxWG/LaBUF9uL/fX66XeNyl0OTjgguO4n1Hmv7LvqxZHMA
-         Vb6aIV4J7iOtlCX7z0bV+4neuEiA3GZ0D6BLmZEkDyOXcPEONZe0+m/vdScwgOjsqJrl
-         LIYQjWZ63bLItDsp59jL9XwLoR9O8yLfuSLPU6F7gLJml0zo9qWzMqOQxtCMg1/sj+K2
-         BHNg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1ywhvVtyaBoKC3XFG8v7uMK9P4ingTUxeVNCtR26SJM=;
+        b=O+Alrd3ANyUNfJgulqXODq31NAax7hf0J5B9ih1dwg8jTcUqlXwl3faP2rQE6s4bkS
+         foEmGBVV6mHEPsIKcA60YL2ovTfFzjVfBUgUSyme7jYnRbm4+meB3JyMVoJnZSUFa620
+         ce4m7nMBlWaqs0h9AZ6Vu+DY9rO/Ap9Xr8Bno=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8h7c5xM9KdrcmFCqTV2onQc6DhtZm7K0Uq18xje81Wc=;
-        b=nZBOw927Bv4PHOHPWiq0rkRVEoD0Dl6pl3jU4eUQsG/hvphZq9vkS65Mq1YZWHpgwP
-         yFZK6ou4fDrl+XJ1mIt1Lgd2h0wC9r2ggehvhxN3/o+6nauiAySfqEmUTuHTSw2pljTe
-         tQD87Ql8mAwvi/jGvyLn8O4U5O2ffCcCAY4vWeSkngR0bFj20ixwAPX7sNlrmzn/VMAf
-         bAVIAVU3rprZsg8LqWZyagzpy+ngh5zVLQg2sVjOTUwAzkduOs9rGsf86HQCgX82fA18
-         0oyZlJaFKhusYWejW5YJOcXX4eBVga3HXYcZnRSMpsni/zKUnfyFeoZrpAJFC6mt9aRT
-         Ihyw==
-X-Gm-Message-State: AGi0PuZl+1O0wZK8lW6j7W0oVC8LqT8YzJIUi+Zi0us7nn53xXeSdrAu
-        7L+6xv1MyDei+ntAKmVPbGQ=
-X-Google-Smtp-Source: APiQypLVsApo9iHgMhuxkN2ZlgYWUMp4fhV4J7W4bsnT2jgzRR8RuWaxI89+qS7fAKHE8DyFsSWe0Q==
-X-Received: by 2002:a2e:96cd:: with SMTP id d13mr18383ljj.219.1588263402185;
-        Thu, 30 Apr 2020 09:16:42 -0700 (PDT)
-Received: from localhost.localdomain ([178.233.178.9])
-        by smtp.gmail.com with ESMTPSA id k6sm60638lfm.91.2020.04.30.09.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 09:16:41 -0700 (PDT)
-From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 3/3] printk: Preset tty0 as a pseudo-preferred console
-Date:   Thu, 30 Apr 2020 19:14:37 +0300
-Message-Id: <20200430161438.17640-4-alpernebiyasak@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200430161438.17640-1-alpernebiyasak@gmail.com>
-References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1ywhvVtyaBoKC3XFG8v7uMK9P4ingTUxeVNCtR26SJM=;
+        b=cknLU58uapVPI9u/q09K+s3J7JupFtegvpKyNH3CCvFI8HdZZNb0BH35tGD/Vp6xgh
+         tkSqtR3eGV9MyW3vPseGfZEgR4lKSm/mTPRE71QVjyHo1zaLMyYZBa6swYAMlL/vypBK
+         71OH119/r4a1eymJn2v1GnNod//S7llCDKddXR4XM2noEKaHdj5XkEUGmJk2DIFGGqBM
+         QeR7oNTHnkG2X4yLvJUmBe6FMwEVccSZoYp+0sfu3AEEjWOv/lizUinV9aWUkDnbD59h
+         eKqWGuwLz9ydtm6O9K6zCk/Z8htripURx1FIpdd3QJDBMTpjmUzv36WSJ8137Px/WW7c
+         WtSw==
+X-Gm-Message-State: AGi0PuY3zHXr6s2+dvXemMpo1YG1Tl9h9sg2G2D7WgrbkOglzFOl8LMr
+        fMlnA8TxPjeFVP+s4GdQfx6ONc3hpkF+0IaaG/hIwg==
+X-Google-Smtp-Source: APiQypIm2Hb2/agRq2f7sDN4r842PYER25oTmM7J4V78IP9RhtXqiptcwBYdCZgABrIxIPRtcnObIL8eG0gr3gS59no=
+X-Received: by 2002:ac8:746:: with SMTP id k6mr2290106qth.141.1588263434577;
+ Thu, 30 Apr 2020 09:17:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200428110253.1.I926f6741079cafb04ecb592130aef75b24ad31ae@changeid>
+ <c57b0892-d68d-f0f2-3cc1-b8549983227e@collabora.com> <CAONX=-dLVBpz+p1si4cWGHEmQ_toO8kW=fCPcdUuX2KLc-o=2A@mail.gmail.com>
+ <CAONX=-dDWjMQDGncSgXNf86Bt3C5OUtFqh=Pe2HToGPSv5qa4A@mail.gmail.com>
+ <CACeCKacoEjQm0_VfZGYNEZVhKubPyqspNZupQk+7piJOsVzH+Q@mail.gmail.com> <fc7901ff-9e67-d6d5-f084-70233fd8344c@collabora.com>
+In-Reply-To: <fc7901ff-9e67-d6d5-f084-70233fd8344c@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Thu, 30 Apr 2020 09:17:03 -0700
+Message-ID: <CACeCKafnrMk_=Udg-roEbrkDzZe6m3mUk14OOVVROmn-agfpDA@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Handle NULL EC pointer
+ during probe.
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Daniil Lunev <dlunev@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACPI SPCR (Serial Port Console Redirection) table from a machine's
-firmware can specify a serial console which can be used for earlycon.
-However, in at least ARM64 systems the same device is also set up as the
-preferred console.  Presumably due to the order of acpi_parse_spcr and
-VT's register_device calls, setting the specified console as the
-preferred one can prevent registering VT as a console.
+Hi Enric,
 
-This might look appropriate for machines which do not have or need
-working graphics and whose users most likely have access to a serial
-port. However, the use of SPCR tables may not be limited these. For
-example, ARM64 QEMU virtual machines include a SPCR table regardless of
-the existence of a graphics output or even the nonexistence of a serial
-console. Or server hardware which has a SPCR table can be repurposed
-into a workstation with the addition of a graphics card. As a result,
-boot messages and early userspace prompts can go to an unexpected
-console.
+On Thu, Apr 30, 2020 at 8:26 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Prashant,
+>
+> On 30/4/20 2:43, Prashant Malani wrote:
+> > On Wed, Apr 29, 2020 at 5:38 PM Daniil Lunev <dlunev@chromium.org> wrot=
+e:
+> >>
+> >> [to make it appear on the mailing list as I didn't realize I was in
+> >> hypertext sending mode]
+> >>
+> >> On Thu, Apr 30, 2020 at 10:11 AM Daniil Lunev <dlunev@chromium.org> wr=
+ote:
+> >>>
+> >>> Hi Enric.
+> >>> I encountered the issue on a Hatch device when trying running 5.4 ker=
+nel on that. After talking to Prashant it seems that any device with corebo=
+ot built before a certain point (a particular fix for device hierarchy in A=
+CPI tables of Chrome devices which happened in mid-April) will not be able =
+to correctly initialize the driver and will get a kernel panic trying to do=
+ so.
+> >
+> > A clarifying detail here: This should not be seen in any current
+> > *production* device. No prod device firmware will carry the erroneous
+> > ACPI device entry.
+> >
+>
+> Thanks for the clarification. Then, I don't think we need to upstream thi=
+s. This
+> kind of "defensive-programming" it's not something that should matter to =
+upstream.
 
-This patch presets tty0 as a pseudo-preferred console at compile-time to
-ensure that CONFIG_VT_CONSOLE always results in the VT console getting
-registered. With this, VT can get registered, these other consoles are
-preferred when VT is a dummy, but we can also bump up VTs preference
-when working graphics are available.
+Actually, on second thought, I am not 100% sure about this:
+Daniil, is the erroneous ACPI device on a *production* firmware for
+this device (I'm not sure about the vintage of that device's BIOS)?
 
-Without this patch, an ARM64 QEMU virtual machine has roughly the
-following order of console events and consoles:
+My apologies for the confusion, Enric and Daniil; but would be good to
+get clarification from Daniil.
 
-	# Without earlycon:
-	$ sudo dmesg | grep -i "console\|printk\|tty[0-9a-z]" | grep -v systemd
-	[    0.000000] ACPI: SPCR: console: pl011,mmio,0x9000000,9600
-	[    0.000250] Console: colour dummy device 80x25
-	[    0.140955] ARMH0011:00: ttyAMA0 at MMIO 0x9000000 (irq = 4, base_baud = 0) is a SBSA
-	[    0.317189] printk: console [ttyAMA0] enabled
-	[    3.540272] Console: switching to colour frame buffer device 150x42
-
-	$ cat /proc/consoles
-	ttyAMA0              -W- (EC p a)  204:64
-
-	# With earlycon:
-	$ sudo dmesg | grep -i "console\|printk\|tty[0-9a-z]" | grep -v systemd
-	[    0.000000] ACPI: SPCR: console: pl011,mmio,0x9000000,9600
-	[    0.000000] printk: bootconsole [pl11] enabled
-	[    0.002064] Console: colour dummy device 80x25
-	[    0.324415] ARMH0011:00: ttyAMA0 at MMIO 0x9000000 (irq = 4, base_baud = 0) is a SBSA
-	[    0.327047] printk: console [ttyAMA0] enabled
-	[    0.329139] printk: bootconsole [pl11] disabled
-	[    3.704937] Console: switching to colour frame buffer device 150x42
-
-	$ cat /proc/consoles
-	ttyAMA0              -W- (EC   a)  204:64
-
-In addition, boot messages aren't printed to the framebuffer (as tty0 is
-not registered). With this patch, boot messages are visible on the
-framebuffer and the information above becomes:
-
-	# Without earlycon:
-	$ sudo dmesg | grep -i "console\|printk\|tty[0-9a-z]" | grep -v systemd
-	[    0.000000] ACPI: SPCR: console: pl011,mmio,0x9000000,9600
-	[    0.000058] Console: colour dummy device 80x25
-	[    0.000266] printk: console [tty0] enabled
-	[    0.144615] ARMH0011:00: ttyAMA0 at MMIO 0x9000000 (irq = 4, base_baud = 0) is a SBSA
-	[    0.299031] printk: console [ttyAMA0] enabled
-	[    3.320333] Console: switching to colour frame buffer device 150x42
-	[    3.329386] printk: switching to console [tty0]
-
-	$ cat /proc/consoles
-	tty0                 -WU (EC p  )    4:7
-	ttyAMA0              -W- (E  p a)  204:64
-
-	# With earlycon:
-	$ sudo dmesg | grep -i "console\|printk\|tty[0-9a-z]" | grep -v systemd
-	[    0.000000] ACPI: SPCR: console: pl011,mmio,0x9000000,9600
-	[    0.000000] printk: bootconsole [pl11] enabled
-	[    0.002326] Console: colour dummy device 80x25
-	[    0.003545] printk: console [tty0] enabled
-	[    0.236824] ARMH0011:00: ttyAMA0 at MMIO 0x9000000 (irq = 4, base_baud = 0) is a SBSA
-	[    0.239243] printk: console [ttyAMA0] enabled
-	[    0.241324] printk: bootconsole [pl11] disabled
-	[    3.715086] Console: switching to colour frame buffer device 150x42
-	[    3.742923] printk: switching to console [tty0]
-
-	$ cat /proc/consoles
-	tty0                 -WU (EC p  )    4:7
-	ttyAMA0              -W- (E    a)  204:64
-
-Signed-off-by: Alper Nebi Yasak <alpernebiyasak@gmail.com>
-
----
-
-Changes in v2:
-- Fix #elif to #else (Reported-by: kbuild test robot <lkp@intel.com>)
-- Refresh dmesg outputs with/without earlycon for next-20200430
-
- kernel/printk/printk.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index efda422203e4..aa9f9f16860f 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -277,7 +277,19 @@ static struct console *exclusive_console;
- 
- #define MAX_CMDLINECONSOLES 8
- 
-+/*
-+ * The preferred_console and has_preferred_console variables are
-+ * intentionally not modified to reflect this so that the first
-+ * registered console is still used as the preferred console.
-+ */
-+#ifdef CONFIG_VT_CONSOLE
-+static struct console_cmdline console_cmdline[MAX_CMDLINECONSOLES] = {
-+	[0].name = "tty",
-+	[0].index = 0,
-+};
-+#else
- static struct console_cmdline console_cmdline[MAX_CMDLINECONSOLES];
-+#endif
- 
- static int preferred_console = -1;
- static bool has_preferred_console;
--- 
-2.26.2
-
+Best regards,
+>
+> Thanks,
+>  Enric
+>
+>
+> >>> Thanks,
+> >>> Daniil
+> >>>
+> >>> On Thu, Apr 30, 2020 at 7:58 AM Enric Balletbo i Serra <enric.balletb=
+o@collabora.com> wrote:
+> >>>>
+> >>>> Hi Daniil,
+> >>>>
+> >>>> Thank you for the patch.
+> >>>>
+> >>>> On 28/4/20 3:02, Daniil Lunev wrote:
+> >>>>> Missing EC in device hierarchy causes NULL pointer to be returned t=
+o the
+> >>>>> probe function which leads to NULL pointer dereference when trying =
+to
+> >>>>> send a command to the EC. This can be the case if the device is mis=
+sing
+> >>>>> or incorrectly configured in the firmware blob. Even if the situati=
+on
+> >>>>
+> >>>> There is any production device with a buggy firmware outside? Or thi=
+s is just
+> >>>> for defensive programming while developing the firmware? Which devic=
+e is
+> >>>> affected for this issue?
+> >>>>
+> >>>> Thanks,
+> >>>>  Enric
+> >>>>
+> >>>>> occures, the driver shall not cause a kernel panic as the condition=
+ is
+> >>>>> not critical for the system functions.
+> >>>>>
+> >>>>> Signed-off-by: Daniil Lunev <dlunev@chromium.org>
+> >>>>> ---
+> >>>>>
+> >>>>>  drivers/platform/chrome/cros_ec_typec.c | 5 +++++
+> >>>>>  1 file changed, 5 insertions(+)
+> >>>>>
+> >>>>> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/plat=
+form/chrome/cros_ec_typec.c
+> >>>>> index 874269c07073..30d99c930445 100644
+> >>>>> --- a/drivers/platform/chrome/cros_ec_typec.c
+> >>>>> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> >>>>> @@ -301,6 +301,11 @@ static int cros_typec_probe(struct platform_de=
+vice *pdev)
+> >>>>>
+> >>>>>       typec->dev =3D dev;
+> >>>>>       typec->ec =3D dev_get_drvdata(pdev->dev.parent);
+> >>>>> +     if (!typec->ec) {
+> >>>>> +             dev_err(dev, "Failed to get Cros EC data\n");
+> >>>>> +             return -EINVAL;
+> >>>>> +     }
+> >>>>> +
+> >>>>>       platform_set_drvdata(pdev, typec);
+> >>>>>
+> >>>>>       ret =3D cros_typec_get_cmd_version(typec);
+> >>>>>
