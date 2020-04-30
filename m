@@ -2,99 +2,127 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27D5C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F76C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941D4206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8E7206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgD3OSq (ORCPT
+        id S1727073AbgD3OS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:18:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:55924 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgD3OSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:18:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 387BC1063;
-        Thu, 30 Apr 2020 07:18:45 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1CAD3F68F;
-        Thu, 30 Apr 2020 07:18:43 -0700 (PDT)
-References: <20200424041832.11364-1-hdanton@sina.com> <20200424043650.14940-1-hdanton@sina.com> <20200430121301.3460-1-hdanton@sina.com> <da5bf72d-1d50-5c5c-3bdb-113ed555dd10@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Phil Auld <pauld@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/4] sched: set new prio after checking schedule policy
-In-reply-to: <da5bf72d-1d50-5c5c-3bdb-113ed555dd10@arm.com>
-Date:   Thu, 30 Apr 2020 15:18:41 +0100
-Message-ID: <jhjv9lhcb0e.mognet@arm.com>
+        Thu, 30 Apr 2020 10:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgD3OS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:18:58 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69013C035494;
+        Thu, 30 Apr 2020 07:18:58 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 2A84D634C90;
+        Thu, 30 Apr 2020 17:18:50 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jUA1a-0000Ss-0D; Thu, 30 Apr 2020 17:18:50 +0300
+Date:   Thu, 30 Apr 2020 17:18:49 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Gomez <daniel@qtec.com>, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] media: v4l2-subdev.h: Add min and max enum
+Message-ID: <20200430141849.GP867@valkosipuli.retiisi.org.uk>
+References: <20200414200151.80089-1-daniel@qtec.com>
+ <20200414200151.80089-2-daniel@qtec.com>
+ <20200430094233.GE867@valkosipuli.retiisi.org.uk>
+ <20200430111014.GD5856@pendragon.ideasonboard.com>
+ <20200430133125.GL867@valkosipuli.retiisi.org.uk>
+ <20200430135904.GI5856@pendragon.ideasonboard.com>
+ <20200430141552.GO867@valkosipuli.retiisi.org.uk>
+ <20200430141753.GJ5856@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430141753.GJ5856@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 05:17:53PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Thu, Apr 30, 2020 at 05:15:52PM +0300, Sakari Ailus wrote:
+> > On Thu, Apr 30, 2020 at 04:59:04PM +0300, Laurent Pinchart wrote:
+> > > On Thu, Apr 30, 2020 at 04:31:25PM +0300, Sakari Ailus wrote:
+> > > > On Thu, Apr 30, 2020 at 02:10:14PM +0300, Laurent Pinchart wrote:
+> > > > > On Thu, Apr 30, 2020 at 12:42:33PM +0300, Sakari Ailus wrote:
+> > > > >> On Tue, Apr 14, 2020 at 10:01:49PM +0200, Daniel Gomez wrote:
+> > > > >>> Add min and max structures to the v4l2-subdev callback in order to allow
+> > > > >>> the subdev to return a range of valid frame intervals.
+> > > > >>> 
+> > > > >>> This would operate similar to the struct v4l2_subdev_frame_size_enum and
+> > > > >>> its max and min values for the width and the height. In this case, the
+> > > > >>> possibility to return a frame interval range is added to the v4l2-subdev level
+> > > > >>> whenever the v4l2 device operates in step-wise or continuous mode.
+> > > > >> 
+> > > > >> The current API only allows providing a list of enumerated values. That is
+> > > > >> limiting indeed, especially on register list based sensor drivers where
+> > > > >> vertical blanking is configurable.
+> > > > >> 
+> > > > >> I guess this could be extended to cover what V4L2, more or less. If we tell
+> > > > >> it's a range, is it assumed to be contiguous? We don't have try operation
+> > > > >> for the frame interval, but I guess set is good enough. The fraction is
+> > > > >> probably best for TV standards but it's not what camera sensors natively
+> > > > >> use. (But for a register list based driver, the established practice
+> > > > >> remains to use frame interval.)
+> > > > >> 
+> > > > >> I'm also wondering the effect on existing user space; if a driver gives a
+> > > > >> range, how will the existing programs work with such a driver?
+> > > > >> 
+> > > > >> I'd add an anonymous union with the interval field, the other field being
+> > > > >> min_interval. Then the current applications would get the minimum interval
+> > > > >> and still continue to function. I guess compilers are modern enough these
+> > > > >> days we can have an anonymous union in the uAPI?
+> > > > > 
+> > > > > We can discuss all this, but given patch 3/3 in this series, I think
+> > > > > this isn't the right API :-) The sensor driver should not expose the
+> > > > > frame interval enumeration API. It should instead expose control of the
+> > > > > frame rate through V4L2_CID_PIXEL_RATE, V4L2_CID_HBLANK and
+> > > > > V4L2_CID_VBLANK.
+> > > > > 
+> > > > 
+> > > > That would require also exposing the size of the pixel array (and the
+> > > > analogue crop), in order to provide all the necessary information to
+> > > > calculate the frame rate. No objections there; this is a new driver.
+> > > > 
+> > > > There are however existing drivers that implement s_frame_interval subdev
+> > > > ioctl; those might benefit from this one. Or would you implement the pixel
+> > > > rate based control as well, and effectively deprecate the s_frame_interval
+> > > > on those?
+> > > 
+> > > That's what I would recommend, yes. I would only keep
+> > > .s_frame_interval() for sensors that expose that concept at the hardware
+> > > level (for instance with an integrated ISP whose firmware exposes a
+> > > frame interval or frame rate control).
+> > 
+> > Sounds good to me.
+> > 
+> > Jacopo's set exposing read-only subdevs completes the puzzle so the user
+> > space should have all it needs, right?
+> 
+> Until we run into the next missing piece :-)
 
-On 30/04/20 15:06, Dietmar Eggemann wrote:
->>>> +		newprio = NICE_TO_PRIO(attr->sched_nice);
->>>
->>> This is new, however AFAICT it doesn't change anything for CFS (or about to
->>> be) tasks since what matters is calling check_class_changed() further down.
->>
->> Yes it's only used by rt_effective_prio().
->>
->
-> Looks like changing a SCHED_NORMAL to a SCHED_BATCH task will create a different
-> queue_flags value.
->
-> # chrt -p $$
-> pid 2803's current scheduling policy: SCHED_OTHER
-> pid 2803's current scheduling priority: 0
->
-> # chrt -b -p 0 $$
->
-> ...
-> [bash 2803] policy=3 oldprio=120 newprio=[99->120] new_effective_prio=[99->120] queue_flags=[0xe->0xa]
-> [bash 2803] queued=0 running=0
-> ...
->
-> But since in this example 'queued=0' it has no further effect here.
->
-> Why is SCHED_NORMAL/SCHED_BATCH (fair_policy()) now treated differently than SCHED_IDLE?
->
-> # chrt -i -p 0 $$
->
-> ...
-> [bash 2803] policy=5 newprio=99 oldprio=120 new_effective_prio=99 queue_flags=0xe
-> [bash 2803] queued=0 running=0
-> ...
+I was thinking of the frame rate configuration. Can you confirm that?
 
-
-Good catch; I suppose we'll want to special case SCHED_IDLE (IIRC should
-map to nice 20).
-
-As you pointed out, right now the newprio computation for CFS tasks is
-kinda bonkers, so it seems we'll almost always clear DEQUEUE_MOVE from
-queue_flags for them.
-
-For CFS, not having DEQUEUE_MOVE here would lead to not calling
-update_min_vruntime() on the dequeue. I'm not sure how much it matters in
-this one case - I don't expect sched_setscheduler() calls to be *too*
-frequent, and that oughta be fixed by the next entity_tick()) - but that is
-an actual change.
+-- 
+Sakari Ailus
