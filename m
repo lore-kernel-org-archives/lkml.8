@@ -2,95 +2,135 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51318C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1974CC47247
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31636208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588263590;
-	bh=vXe/HdnbSuZfJl9OidYv3Q/hs+GyVRE+klxJQ69rx54=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jk9BhnGvGSNptiO8gA/MnMrVYFXemAWC1f+zos3DF+q27bB+9mMpsvvc4+/K+AQsQ
-	 pvblHccx6wU7sBf1s1ezFXVjNL1QaYUbozBrdiZB/b3ZfPJmjl7BfIBZ5yvb3gj8Fg
-	 2HYmu0LmBWr80+qqBreE08UBHCm9H/HOHAvG50XY=
+	by mail.kernel.org (Postfix) with ESMTP id F3F6F208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgD3QTs (ORCPT
+        id S1728447AbgD3QTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 12:19:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56094 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbgD3QSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:18:39 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 261532495C;
-        Thu, 30 Apr 2020 16:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588263518;
-        bh=vXe/HdnbSuZfJl9OidYv3Q/hs+GyVRE+klxJQ69rx54=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wtx3SnHRHrNTNhfhf/04l0NCxiEXknPK2Y0GvSr1HfNNbhpY9CHlVFIBFPRDW91zJ
-         gjEjLrax6+FHaoCaZe0LF7DPDdhp5+rLZAvuL0dnYmprsIpMz/DZQ+tuz/GUo1HQ7b
-         8ceo1n9nyAthKiPwlMWed6E+M04fImfODWeHXCZ8=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jUBtU-00Axi1-Dy; Thu, 30 Apr 2020 18:18:36 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: [PATCH v4 18/19] docs: kvm: get read of devices/README
-Date:   Thu, 30 Apr 2020 18:18:32 +0200
-Message-Id: <83e4aa5a0574babcbce0a3ed8b4242cf1c8faa3b.1588263270.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588263270.git.mchehab+huawei@kernel.org>
-References: <cover.1588263270.git.mchehab+huawei@kernel.org>
+        id S1728121AbgD3QTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:19:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 68804ACC4;
+        Thu, 30 Apr 2020 16:19:43 +0000 (UTC)
+Message-ID: <0f7f2350cebdbd6904274e6a4e8da6e0a6c72102.camel@suse.de>
+Subject: Re: [PATCH v2 05/91] clk: bcm: rpi: Allow the driver to be probed
+ by DT
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Thu, 30 Apr 2020 18:19:41 +0200
+In-Reply-To: <0f5319caa4d1b9ba8a83a094abcb681d4be6eb1c.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+         <0f5319caa4d1b9ba8a83a094abcb681d4be6eb1c.1587742492.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-q7dZwA3wemW7oWhPS4wd"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the information there inside devices/index.rst
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/virt/kvm/devices/README    | 1 -
- Documentation/virt/kvm/devices/index.rst | 3 +++
- 2 files changed, 3 insertions(+), 1 deletion(-)
- delete mode 100644 Documentation/virt/kvm/devices/README
+--=-q7dZwA3wemW7oWhPS4wd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/virt/kvm/devices/README b/Documentation/virt/kvm/devices/README
-deleted file mode 100644
-index 34a69834124a..000000000000
---- a/Documentation/virt/kvm/devices/README
-+++ /dev/null
-@@ -1 +0,0 @@
--This directory contains specific device bindings for KVM_CAP_DEVICE_CTRL.
-diff --git a/Documentation/virt/kvm/devices/index.rst b/Documentation/virt/kvm/devices/index.rst
-index 192cda7405c8..cbadafc0e36e 100644
---- a/Documentation/virt/kvm/devices/index.rst
-+++ b/Documentation/virt/kvm/devices/index.rst
-@@ -4,6 +4,9 @@
- Devices
- =======
- 
-+The following documentation contains specific device bindings
-+for KVM_CAP_DEVICE_CTRL.
-+
- .. toctree::
-    :maxdepth: 2
- 
--- 
-2.25.4
+On Fri, 2020-04-24 at 17:33 +0200, Maxime Ripard wrote:
+> The current firmware clock driver for the RaspberryPi can only be probed =
+by
+> manually registering an associated platform_device.
+>=20
+> While this works fine for cpufreq where the device gets attached a clkdev
+> lookup, it would be tedious to maintain a table of all the devices using
+> one of the clocks exposed by the firmware.
+>=20
+> Since the DT on the other hand is the perfect place to store those
+> associations, make the firmware clocks driver probe-able through the devi=
+ce
+> tree so that we can represent it as a node.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  drivers/clk/bcm/clk-raspberrypi.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
+> raspberrypi.c
+> index 1654fd0eedc9..aedeaaf2f66b 100644
+> --- a/drivers/clk/bcm/clk-raspberrypi.c
+> +++ b/drivers/clk/bcm/clk-raspberrypi.c
+> @@ -255,15 +255,22 @@ static int raspberrypi_clk_probe(struct platform_de=
+vice
+> *pdev)
+>  	struct raspberrypi_clk *rpi;
+>  	int ret;
+> =20
+> -	firmware_node =3D of_find_compatible_node(NULL, NULL,
+> -					"raspberrypi,bcm2835-firmware");
+> +	/*
+> +	 * We can be probed either through the an old-fashioned
+> +	 * platform device registration or through a DT node that is a
+> +	 * child of the firmware node. Handle both cases.
+> +	 */
+> +	if (dev->of_node)
+> +		firmware_node =3D of_get_parent(dev->of_node);
+> +	else
+> +		firmware_node =3D of_find_compatible_node(NULL, NULL,
+> +							"raspberrypi,bcm2835-
+> firmware");
+>  	if (!firmware_node) {
+>  		dev_err(dev, "Missing firmware node\n");
+>  		return -ENOENT;
+>  	}
+> =20
+>  	firmware =3D rpi_firmware_get(firmware_node);
+> -	of_node_put(firmware_node);
+
+Why remove this? I think it's still needed after your changes.
+
+Regards,
+Nicolas
+
+
+--=-q7dZwA3wemW7oWhPS4wd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6q+p0ACgkQlfZmHno8
+x/5Aewf/fIRt353bQjRQPXHvnCWvme3juReNuol1emq3w4qxjIbYk/3z6mE5Xqik
+N6cAGO+Hf35L5nhpW9qXpVTT3vbylYXIZ/OW5weQzIN+oKmUvJh+7FUwzl790OiU
+y2LJVs53mnmGErmkoTOkyoJNmDeft+FMuQ+105YbheOsgDY3XKDscjlwQgsk/Vx7
+/ELAtNxaNwm0lU2V6TfIgDaIDysRbkao9DtA1c97wG1O6lZAanouAfuIFR+8+xrz
+AYKm8KnHJXi4wRSh2BAjm0e3qX+/RaI9RNeT7Xq68tsLl4jbz673IXTuyETjVc0s
+Csb4+I6CCUbczBNHzKUO2UntZvTpdQ==
+=fDu0
+-----END PGP SIGNATURE-----
+
+--=-q7dZwA3wemW7oWhPS4wd--
 
