@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E376C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8A7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0450820873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9E1208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588254935;
-	bh=yHeiB67tW2XIZJMzXUe4enYchdDsqXbZcv1tiZPJtvc=;
+	s=default; t=1588254938;
+	bh=oD+Qj7cvbsuEjS5IqfZnYrkYyui6T2TUA+zaiHzpKDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A1ohZqEdDqjBsa14+bkutBdmGhAMq3xWSGpa/hxklb1cUY3hJC0h1cd4nOC/LBLCe
-	 /r5KYLAKVkU0lm8MybOcIzIWqGKNQmnAG6VrCYkyVdMWmD7q9/8Tdvq99S/j9wRkOu
-	 jJ22eSkXfDKYw0IxIh05ckS6Wg6u9g0KJw3q1ftA=
+	b=2gyFmHBNHLFH+kPybUDplvqKF2fxEssL7cn9sG3pG0v02Mz5IXdeiGfnw4JQ1Ba8M
+	 CEWmXcTnFU4aARYLEY8NjyPhdtjpJCLWi54kRnAKgD93F1Q7AjzYWD+/l2+R4VUEld
+	 tL5X0BYfldd8NNc2UdwQIsHAEmh9x3hibI5k4ecU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgD3Nze (ORCPT
+        id S1728032AbgD3Nzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37622 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729066AbgD3Nyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:51 -0400
+        id S1729089AbgD3Ny6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9D49208DB;
-        Thu, 30 Apr 2020 13:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFB11208DB;
+        Thu, 30 Apr 2020 13:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254890;
-        bh=yHeiB67tW2XIZJMzXUe4enYchdDsqXbZcv1tiZPJtvc=;
+        s=default; t=1588254897;
+        bh=oD+Qj7cvbsuEjS5IqfZnYrkYyui6T2TUA+zaiHzpKDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjMknSh+jpAuzCIy3AxRN+iuhpZZPf1Ge9dcnhVsz8xP5pNQZy/s72LPwuQsucOB2
-         aw/KzLVETh/3KDTAoKBy4YIHAQ+CmJ1WXMP0vU2oiSRIwhcVnI61401/Se/MQn4dBK
-         dD2ZdpjWmjFz1F4vR1mx+sZsKlYrOKOz5K44M8/s=
+        b=kuuY1vxWcFoIg0ByUmKx+r+zs+wVcKKJnYTxHcPtdJS7wTdFqSrTEquIb0UqRNmlb
+         YV2ViEOmk7fUvWjiUUfVkRY7wJelA5PCRX+kzZgm6VFSLYVoVe3EwQ0VMVkZc1X+Ot
+         i8yAAj3Lpw6iLLKCgyZ9zbDkRn7Wn/eqquf6f2bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/17] macsec: avoid to set wrong mtu
-Date:   Thu, 30 Apr 2020 09:54:31 -0400
-Message-Id: <20200430135433.21204-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 03/11] wimax/i2400m: Fix potential urb refcnt leak
+Date:   Thu, 30 Apr 2020 09:54:45 -0400
+Message-Id: <20200430135453.21353-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135433.21204-1-sashal@kernel.org>
-References: <20200430135433.21204-1-sashal@kernel.org>
+In-Reply-To: <20200430135453.21353-1-sashal@kernel.org>
+References: <20200430135453.21353-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,67 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 7f327080364abccf923fa5a5b24e038eb0ba1407 ]
+[ Upstream commit 7717cbec172c3554d470023b4020d5781961187e ]
 
-When a macsec interface is created, the mtu is calculated with the lower
-interface's mtu value.
-If the mtu of lower interface is lower than the length, which is needed
-by macsec interface, macsec's mtu value will be overflowed.
-So, if the lower interface's mtu is too low, macsec interface's mtu
-should be set to 0.
+i2400mu_bus_bm_wait_for_ack() invokes usb_get_urb(), which increases the
+refcount of the "notif_urb".
 
-Test commands:
-    ip link add dummy0 mtu 10 type dummy
-    ip link add macsec0 link dummy0 type macsec
-    ip link show macsec0
+When i2400mu_bus_bm_wait_for_ack() returns, local variable "notif_urb"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
-Before:
-    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 4294967274
-After:
-    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 0
+The issue happens in all paths of i2400mu_bus_bm_wait_for_ack(), which
+forget to decrease the refcnt increased by usb_get_urb(), causing a
+refcnt leak.
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Fix this issue by calling usb_put_urb() before the
+i2400mu_bus_bm_wait_for_ack() returns.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/wimax/i2400m/usb-fw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index da8bf327a3e98..df2ee65a33e35 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -3209,11 +3209,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 			  struct nlattr *tb[], struct nlattr *data[])
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
-+	rx_handler_func_t *rx_handler;
-+	u8 icv_len = DEFAULT_ICV_LEN;
- 	struct net_device *real_dev;
--	int err;
-+	int err, mtu;
- 	sci_t sci;
--	u8 icv_len = DEFAULT_ICV_LEN;
--	rx_handler_func_t *rx_handler;
+diff --git a/drivers/net/wimax/i2400m/usb-fw.c b/drivers/net/wimax/i2400m/usb-fw.c
+index e74664b84925e..4e4167976acf6 100644
+--- a/drivers/net/wimax/i2400m/usb-fw.c
++++ b/drivers/net/wimax/i2400m/usb-fw.c
+@@ -354,6 +354,7 @@ out:
+ 		usb_autopm_put_interface(i2400mu->usb_iface);
+ 	d_fnend(8, dev, "(i2400m %p ack %p size %zu) = %ld\n",
+ 		i2400m, ack, ack_size, (long) result);
++	usb_put_urb(&notif_urb);
+ 	return result;
  
- 	if (!tb[IFLA_LINK])
- 		return -EINVAL;
-@@ -3229,7 +3229,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
- 
- 	if (data && data[IFLA_MACSEC_ICV_LEN])
- 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
--	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
-+	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
-+	if (mtu < 0)
-+		dev->mtu = 0;
-+	else
-+		dev->mtu = mtu;
- 
- 	rx_handler = rtnl_dereference(real_dev->rx_handler);
- 	if (rx_handler && rx_handler != macsec_handle_frame)
+ error_exceeded:
 -- 
 2.20.1
 
