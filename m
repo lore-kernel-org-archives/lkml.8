@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EDFC83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89661C83006
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3E720787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F4120787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgD3Bkz (ORCPT
+        id S1726677AbgD3Bky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:40:55 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:25994 "EHLO
+        Wed, 29 Apr 2020 21:40:54 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:29267 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726282AbgD3Bkw (ORCPT
+        by vger.kernel.org with ESMTP id S1726526AbgD3Bkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Apr 2020 21:40:52 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 29 Apr 2020 18:40:50 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 29 Apr 2020 18:40:50 -0700
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 29 Apr 2020 18:40:49 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 138B64D38; Wed, 29 Apr 2020 18:40:50 -0700 (PDT)
+        id D58E54D3D; Wed, 29 Apr 2020 18:40:49 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v14 10/11] clk: pwm: Use 64-bit division function
-Date:   Wed, 29 Apr 2020 18:40:46 -0700
-Message-Id: <6c4bf80524c9ce0dac96f9a9ab8612861468a4ff.1588208650.git.gurus@codeaurora.org>
+Subject: [PATCH v14 06/11] pwm: imx27: Use 64-bit division macro and function
+Date:   Wed, 29 Apr 2020 18:40:42 -0700
+Message-Id: <72e4dcdde37461ed7f9490a4742b65204787e687.1588208650.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1588208650.git.gurus@codeaurora.org>
 References: <cover.1588208650.git.gurus@codeaurora.org>
@@ -53,37 +53,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by using div64_u64() to handle a
+Since the PWM framework is switching struct pwm_state.period's
+datatype to u64, prepare for this transition by using
+DIV_ROUND_UP_ULL to handle a 64-bit dividend, and div64_u64 to handle a
 64-bit divisor.
 
-Also ensure that divide-by-zero (with fixed_rate as denominator) does
-not happen with an explicit check with probe failure as a consequence.
+Also handle a possible overflow in the calculation of period_cycles when
+both clk_rate and period are large numbers. This logic was unit-tested
+out by calculating period_cycles using both the existing logic and the
+proposed one, and the results are as below.
+
+----------------------------------------------------------------------------
+ clk_rate            period           existing            proposed
+----------------------------------------------------------------------------
+1000000000   18446744073709551615    18446744072    18446744073000000000
+                   (U64_MAX)
+----------------------------------------------------------------------------
+1000000000        4294967291         4294967291         4294967291
+----------------------------------------------------------------------------
+
+Overflow occurs in the first case with the existing logic, whereas the
+proposed logic handles it better, sacrificing some precision in a best-effort
+attempt to handle overflow. As for the second case where there are
+more typical values of period, the proposed logic handles that correctly
+too.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk-pwm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-imx27.c | 53 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 45 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-index 87fe0b0e..86f2e2d 100644
---- a/drivers/clk/clk-pwm.c
-+++ b/drivers/clk/clk-pwm.c
-@@ -89,7 +89,12 @@ static int clk_pwm_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index a6e40d4..164cb65 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -203,7 +203,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 	sr = readl(imx->mmio_base + MX3_PWMSR);
+ 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+ 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
+-		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
++		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+ 					 NSEC_PER_MSEC);
+ 		msleep(period_ms);
  
- 	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
--		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-+		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
+@@ -213,6 +213,45 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 	}
+ }
+ 
++static int pwm_imx27_calc_period_cycles(const struct pwm_state *state,
++					unsigned long clk_rate,
++					unsigned long *period_cycles)
++{
++	u64 c = 0, c1, c2;
 +
-+	if (!clk_pwm->fixed_rate) {
-+		dev_err(&pdev->dev, "fixed_rate cannot be zero\n");
++	c1 = clk_rate;
++	c2 = state->period;
++	if (c2 > c1) {
++		c2 = c1;
++		c1 = state->period;
++	}
++
++	if (!c1 || !c2) {
++		pr_err("clk rate and period should be nonzero\n");
 +		return -EINVAL;
 +	}
++
++	if (c2 <= div64_u64(U64_MAX, c1)) {
++		c = c1 * c2;
++		do_div(c, 1000000000);
++	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
++		do_div(c1, 1000);
++		c = c1 * c2;
++		do_div(c, 1000000);
++	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
++		do_div(c1, 1000000);
++		c = c1 * c2;
++		do_div(c, 1000);
++	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
++		do_div(c1, 1000000000);
++		c = c1 * c2;
++	}
++
++	*period_cycles = c;
++
++	return 0;
++}
++
+ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			   const struct pwm_state *state)
+ {
+@@ -225,18 +264,16 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  
- 	if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
- 	    pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
+ 	pwm_get_state(pwm, &cstate);
+ 
+-	c = clk_get_rate(imx->clk_per);
+-	c *= state->period;
+-
+-	do_div(c, 1000000000);
+-	period_cycles = c;
++	ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
++					   &period_cycles);
++	if (ret)
++		return ret;
+ 
+ 	prescale = period_cycles / 0x10000 + 1;
+ 
+ 	period_cycles /= prescale;
+ 	c = (unsigned long long)period_cycles * state->duty_cycle;
+-	do_div(c, state->period);
+-	duty_cycles = c;
++	duty_cycles = div64_u64(c, state->period);
+ 
+ 	/*
+ 	 * according to imx pwm RM, the real period value should be PERIOD
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
