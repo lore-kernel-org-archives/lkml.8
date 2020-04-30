@@ -2,163 +2,70 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADE4C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C92C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894B220775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nkeJRNcZ"
+	by mail.kernel.org (Postfix) with ESMTP id B363F2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD3LeS (ORCPT
+        id S1726809AbgD3LfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726130AbgD3LeS (ORCPT
+        Thu, 30 Apr 2020 07:35:02 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33831 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgD3LfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:34:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232D9C035494;
-        Thu, 30 Apr 2020 04:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dyL6CCvk+6z2bvZF+me9CZLQe+A3yK/IUAfcG9BA9aA=; b=nkeJRNcZDFtWI/Wyf48nt+KWKw
-        z/HOtayvUc3ToTXSmrm0t6WugyUzCnabW9uu8iM3q90NThDLJaQbqs4SkXrPAHb4fLlYucPremGru
-        i8OiVdFxkbSp0dAyTMBd/AZRAE0cllim3Iu0W4E5RrvJODzyoy1WLm8T+hSq20O6GKQ8ZV/Wxi2pW
-        SzDrnd8P5eFJS6lktSTRW37rKgaXeWyplJi8yHmCqtdKbdo6j4fR2FzmsqQ49xRLd8TegDbE95bDm
-        E3WLE8lWEs4U4c7rTSGJ7USbaHjprELm5gSr5M5RcM7zhRcwqrjKZmlsu5hCbimV71Wb2ZsIkIR3A
-        gGE8pwlA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jU7SJ-0004av-FS; Thu, 30 Apr 2020 11:34:15 +0000
-Date:   Thu, 30 Apr 2020 04:34:15 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] Large pages in the page cache
-Message-ID: <20200430113415.GW29705@bombadil.infradead.org>
-References: <20200429133657.22632-1-willy@infradead.org>
+        Thu, 30 Apr 2020 07:35:02 -0400
+X-Originating-IP: 87.231.134.186
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A23DF1C0006;
+        Thu, 30 Apr 2020 11:35:00 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH 0/3] TTY improve n_gsm support
+Date:   Thu, 30 Apr 2020 13:34:29 +0200
+Message-Id: <20200430113433.2162886-1-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429133657.22632-1-willy@infradead.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 06:36:32AM -0700, Matthew Wilcox wrote:
-> This patch set does not pass xfstests.  Test at your own risk.  It is
-> based on the readahead rewrite which is in Andrew's tree.  The large
-> pages somehow manage to fall off the LRU, so the test VM quickly runs
-> out of memory and freezes.
+Hello,
 
-Kirill was right; that was not exactly the bug.  It did lead to the
-realisation that this could be avoided by simply not splitting the page
-if the filesystem knows how to write back large pages.  So this is
-the current diff.
+This series if patch improve n_gms support especially with TELIT
+LE910. However the fix should benefit to any modem supporting cmux.
 
-I just hit the bug in clear_inode() that i_data.nrpages is not 0, so
-there's clearly at least one remaining problem to fix (and I suspect
-about half a dozen).
+The first patch is just about improving debugging output.
 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 184c8b516543..d511504d07af 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -235,7 +235,7 @@ static int pmem_rw_page(struct block_device *bdev, sector_t sector,
- 	blk_status_t rc;
- 
- 	if (op_is_write(op))
--		rc = pmem_do_write(pmem, page, 0, sector, tmp_size(page));
-+		rc = pmem_do_write(pmem, page, 0, sector, thp_size(page));
- 	else
- 		rc = pmem_do_read(pmem, page, 0, sector, thp_size(page));
- 	/*
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 7eb54f5c403b..ce978ed4f0cd 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -116,6 +116,11 @@ static inline void mapping_set_gfp_mask(struct address_space *m, gfp_t mask)
- 	m->gfp_mask = mask;
- }
- 
-+static inline bool mapping_large_pages(struct address_space *mapping)
-+{
-+	return mapping->host->i_sb->s_type->fs_flags & FS_LARGE_PAGES;
-+}
-+
- void release_pages(struct page **pages, int nr);
- 
- /*
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index ebaf649aa28d..e78686b628ae 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2654,7 +2654,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 
- int total_mapcount(struct page *page)
- {
--	int i, compound, ret;
-+	int i, compound, nr, ret;
- 
- 	VM_BUG_ON_PAGE(PageTail(page), page);
- 
-@@ -2662,16 +2662,17 @@ int total_mapcount(struct page *page)
- 		return atomic_read(&page->_mapcount) + 1;
- 
- 	compound = compound_mapcount(page);
-+	nr = compound_nr(page);
- 	if (PageHuge(page))
- 		return compound;
- 	ret = compound;
--	for (i = 0; i < HPAGE_PMD_NR; i++)
-+	for (i = 0; i < nr; i++)
- 		ret += atomic_read(&page[i]._mapcount) + 1;
- 	/* File pages has compound_mapcount included in _mapcount */
- 	if (!PageAnon(page))
--		return ret - compound * HPAGE_PMD_NR;
-+		return ret - compound * nr;
- 	if (PageDoubleMap(page))
--		ret -= HPAGE_PMD_NR;
-+		ret -= nr;
- 	return ret;
- }
- 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index e2493189e832..ac16e96a8828 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -458,7 +458,7 @@ static bool page_cache_readahead_order(struct readahead_control *rac,
- 	int err = 0;
- 	gfp_t gfp = readahead_gfp_mask(mapping);
- 
--	if (!(mapping->host->i_sb->s_type->fs_flags & FS_LARGE_PAGES))
-+	if (!mapping_large_pages(mapping))
- 		return false;
- 
- 	limit = min(limit, index + ra->size - 1);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b06868fc4926..51e6c135575d 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1271,9 +1271,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 				/* Adding to swap updated mapping */
- 				mapping = page_mapping(page);
- 			}
--		} else if (unlikely(PageTransHuge(page))) {
-+		} else if (PageTransHuge(page)) {
- 			/* Split file THP */
--			if (split_huge_page_to_list(page, page_list))
-+			if (!mapping_large_pages(mapping) &&
-+			    split_huge_page_to_list(page, page_list))
- 				goto keep_locked;
- 		}
- 
+The second one removes a tty optimization which make the LE910 hang.
+
+The last one fixes an issue observed on the LE910 but should benefit
+to all the modem. We observed that pretty quickly the transfer done
+using the virtual tty were blocked. We found that it was due of a
+wakeup to the real tty. Without this fix, the real tty wait for
+indefinitely.
+
+Gregory
+
+Gregory CLEMENT (3):
+  tty: n_gsm: Improve debug output
+  tty: n_gsm: Fix SOF skipping
+  tty: n_gsm: Fix waking up upper tty layer when room available
+
+ drivers/tty/n_gsm.c | 59 +++++++++++++++++++++++++++------------------
+ 1 file changed, 35 insertions(+), 24 deletions(-)
+
+-- 
+2.26.1
 
