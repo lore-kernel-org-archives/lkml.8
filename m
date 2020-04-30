@@ -2,120 +2,137 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8CEC83004
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BE5C83007
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7489120787
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD512083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 00:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgD3Az2 (ORCPT
+        id S1726545AbgD3A6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 20:55:28 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21869 "EHLO mga01.intel.com"
+        Wed, 29 Apr 2020 20:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgD3Az2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:55:28 -0400
-IronPort-SDR: Yf20lfQHPwm6r+jBqapudIdjMW3i/G39/i6RmS3Iib2G0bB0OaJju6CBBZ//VcB6iOqAxp1SLe
- E+iqfClPvOSQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 17:55:27 -0700
-IronPort-SDR: +gRX2R/WV/4QXJPPo6djRHcjf8PsJ1DwkfropLFEC/MLZ7TCqHkGV7ms5qWKqZXcpf0RzixPXC
- dDGi/gCLRJ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="249600406"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Apr 2020 17:55:21 -0700
-Date:   Wed, 29 Apr 2020 20:45:38 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Eric Blake <eblake@redhat.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Zeng, Xin" <xin.zeng@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200430004537.GO12879@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200422073628.GA12879@joy-OptiPlex-7040>
- <20200424191049.GU3106@work-vm>
- <20200426013628.GC12879@joy-OptiPlex-7040>
- <20200427153743.GK2923@work-vm>
- <20200428005429.GJ12879@joy-OptiPlex-7040>
- <20200428141437.GG2794@work-vm>
- <20200429072616.GL12879@joy-OptiPlex-7040>
- <20200429082201.GA2834@work-vm>
- <20200429093555.GM12879@joy-OptiPlex-7040>
- <94cd58d2-0580-53cd-6ca2-2c33146e0f2c@redhat.com>
+        id S1726279AbgD3A6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 20:58:03 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF92E20787;
+        Thu, 30 Apr 2020 00:58:02 +0000 (UTC)
+Date:   Wed, 29 Apr 2020 20:58:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] docs: sysctl/kernel: document ftrace entries
+Message-ID: <20200429205801.5ce95ab3@oasis.local.home>
+In-Reply-To: <20200429205757.8677-1-steve@sk2.org>
+References: <20200429205757.8677-1-steve@sk2.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94cd58d2-0580-53cd-6ca2-2c33146e0f2c@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:13:01PM +0800, Eric Blake wrote:
-> [meta-comment]
-> 
-> On 4/29/20 4:35 AM, Yan Zhao wrote:
-> > On Wed, Apr 29, 2020 at 04:22:01PM +0800, Dr. David Alan Gilbert wrote:
-> [...]
-> >>>>>>>>>>>>>>>>> This patchset introduces a migration_version attribute under sysfs
-> >>>>>>>>>>> of VFIO
-> >>>>>>>>>>>>>>>>> Mediated devices.
-> 
-> Hmm, several pages with up to 16 levels of quoting, with editors making 
-> the lines ragged, all before I get to the real meat of the email. 
-> Remember, it's okay to trim content,...
-> 
-> >> So why don't we split the difference; lets say that it should start with
-> >> the hex PCI Vendor ID.
-> >>
-> > The problem is for mdev devices, if the parent devices are not PCI devices,
-> > they don't have PCI vendor IDs.
-> 
-> ...to just what you are replying to.
->
-sorry for that. next time I'll try to make a better balance between
-keeping conversation background and leaving the real meat of the email.
+On Wed, 29 Apr 2020 22:57:56 +0200
+Stephen Kitt <steve@sk2.org> wrote:
 
-Thanks for reminding.
-Yan
+> Based on the ftrace documentation, the tp_printk boot parameter
+> documentation, and the implementation in kernel/trace/trace.c.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+> Changes since v2:
+>   - spelling and grammar fixes in ftrace_dump_on_oops ("outputing it"
+>     -> "outputting them")  
+>   - "and::" in a single line in tracepoint_printk
+
+I didn't re-read or compare this patch with v1, but if the only changes
+were the above:
+
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+
+> 
+> Documentation/admin-guide/sysctl/kernel.rst | 48 +++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 82bfd5892663..b1ad4c86274d 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -265,6 +265,27 @@ domain names are in general different. For a detailed discussion
+>  see the ``hostname(1)`` man page.
+>  
+>  
+> +ftrace_dump_on_oops
+> +===================
+> +
+> +Determines whether ``ftrace_dump()`` should be called on an oops (or
+> +kernel panic). This will output the contents of the ftrace buffers to
+> +the console.  This is very useful for capturing traces that lead to
+> +crashes and outputting them to a serial console.
+> +
+> += ===================================================
+> +0 Disabled (default).
+> +1 Dump buffers of all CPUs.
+> +2 Dump the buffer of the CPU that triggered the oops.
+> += ===================================================
+> +
+> +
+> +ftrace_enabled, stack_tracer_enabled
+> +====================================
+> +
+> +See :doc:`/trace/ftrace`.
+> +
+> +
+>  hardlockup_all_cpu_backtrace
+>  ============================
+>  
+> @@ -1191,6 +1212,33 @@ If a value outside of this range is written to ``threads-max`` an
+>  ``EINVAL`` error occurs.
+>  
+>  
+> +traceoff_on_warning
+> +===================
+> +
+> +When set, disables tracing (see :doc:`/trace/ftrace`) when a
+> +``WARN()`` is hit.
+> +
+> +
+> +tracepoint_printk
+> +=================
+> +
+> +When tracepoints are sent to printk() (enabled by the ``tp_printk``
+> +boot parameter), this entry provides runtime control::
+> +
+> +    echo 0 > /proc/sys/kernel/tracepoint_printk
+> +
+> +will stop tracepoints from being sent to printk(), and::
+> +
+> +    echo 1 > /proc/sys/kernel/tracepoint_printk
+> +
+> +will send them to printk() again.
+> +
+> +This only works if the kernel was booted with ``tp_printk`` enabled.
+> +
+> +See :doc:`/admin-guide/kernel-parameters` and
+> +:doc:`/trace/boottime-trace`.
+> +
+> +
+>  unknown_nmi_panic
+>  =================
+>  
+
