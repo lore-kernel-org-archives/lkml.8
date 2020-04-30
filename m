@@ -2,99 +2,147 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC8C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35507C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFA82076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123352076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 20:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gcaVyYdy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3ZIOPf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgD3UUZ (ORCPT
+        id S1727776AbgD3UVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 16:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
+        Thu, 30 Apr 2020 16:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgD3UUY (ORCPT
+        with ESMTP id S1726377AbgD3UVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 16:20:24 -0400
+        Thu, 30 Apr 2020 16:21:11 -0400
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C64C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:20:24 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h4so683048ljg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 13:20:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E662C035494;
+        Thu, 30 Apr 2020 13:21:11 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f18so674027lja.13;
+        Thu, 30 Apr 2020 13:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=guKhKwrXEiDwgQzNFnO6v/2/mR5PiCzsUtQ3eT/ji4A=;
-        b=gcaVyYdy32+4klv0m7W2u51o7lyTPuxVavEx8YwwdS2ENTcJOhovS0+Av7iXHFQVaW
-         0DkmLQyPVheQfV0yVq4/ZjJ45Sm4cgzctg6kflk4xvDPRrCz9H4ctmEhZ7rU/ru60hBr
-         5GNSJ3glyv1H/QAIx+KBjmCRwKhXWNzFHz1I5byQDnFd7QYuRsaizyq0/JvpuuF3vJBs
-         sznI+dhDToDpZ8UYWzDkrEUWudNUnX2Au2DdObfHIzf0dkRHz9gnaCDhJiK/f0xcrvQq
-         j69cVNJu7Ta/ldmUGyk+fln1PTh2sTsRPZdyYGbDCCdEisLWPib9t2fJl2bYdT22T2p4
-         6sDg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hNallrmyHiWRjLA+2PQXq4kI/iicsWOXi2ASu8MjjYg=;
+        b=f3ZIOPf2IkINkW2rusSM4SPow1WfmR0rKgFEpPTi5Z/lmVORwTJCh1JyuIamwljsa9
+         +Iq4G+nk/nNYTMNkD4TWJLXcPEuKwO9YfJaRMb02VA1v6op+7UoU6xMPSCby2nYuslRo
+         qmpVu3t27HugLeyXQNaDvgLNO3SZpZSLUvPfzDT5lQIed6evOKNSIjNJK11scvJifQ7z
+         QabHii7fnJfn8dLvqO8igOY34etl2IpNl7Ll0VHKC+IaParS7HJtAme1Yzv1R/fpGA5J
+         5ae/eiS8WOpbFtHH0oF512sRX83TOhGCK3BOZy02T7Jx9iBxXD3x/BB3P+Y2o/mf4uoV
+         5OYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=guKhKwrXEiDwgQzNFnO6v/2/mR5PiCzsUtQ3eT/ji4A=;
-        b=P4TDXdQjKu4sfcr7/8UPu8z2bysppVEFXP2lynD5XRA+b2/hJOaXHBe4/aK/bprjte
-         j9+cOvVurNUK7DCsacWA1IazAbtEeoWcFCeXM8nOrWn+6/UblEX8WoHvOv8YC4b4bXku
-         OjpK4LOmERRq3u+V7tUcWwjhhiPvo17fKIpTWpjBMjsMNKC335ptMWWrhT53SdwILPpT
-         kHMZNY8JCAP3gUyf2XHTxr6EJAgfbA4nDhMiNq67JovlLk3pzdK2zkPaP4o5LwKRJDqy
-         6qRze23ajO/G1hPd7F33qUp65mCe+NbdrCbkIF6ECccnEkIyIUhFhg0llvD7uegCmQ9O
-         Ju4w==
-X-Gm-Message-State: AGi0PuZ9Be/sK4Jjh6mnRk9JHSe9lNuNuhlocU+5CGd2xTS9fkw5E5Mc
-        vmpZsVZKP9p1FJFgy2o3O7TttT8E2d001mLuTjl8ww==
-X-Google-Smtp-Source: APiQypIN1pXroLJgB0zigxp45+sMYFPb32PYYNnPovYQfEX4qVKgGdnnsiT3h2XmdfDD/SQlJTrtw3sUQJsp6N9FWGI=
-X-Received: by 2002:a2e:9a4a:: with SMTP id k10mr366782ljj.115.1588278022286;
- Thu, 30 Apr 2020 13:20:22 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hNallrmyHiWRjLA+2PQXq4kI/iicsWOXi2ASu8MjjYg=;
+        b=uoB/JVywNM5dFP2JME6TaptRMbHXSEx0h9vrydTO3xR+Av6TaQjUbjfFlTeAEbZr3/
+         h5OYx+LMTRCX26teCZQ5d1JAYIdKFTV0gTaqAWRZTFfK2+MYBb0xu+n24u/Ba4y2FfwP
+         UVmGLagt93n+CVZYxcvipsl1O9wVYvv7oYfyA/YQGJ0IJA1sIJikr9CZreyNQQ0EiACb
+         c9NdVjJF6DQZLNpIdI7FT0xiU2goxuROpJ5yBtmoMinAV1isZZMg/xc2xTrQYI7uT1QF
+         kOvptb51YPlKZScg8IgV5JQsb+/ayXqjrkYYVTeTLpLD7Tor82IrOhUCFSM8+Nxnzdgk
+         R/SQ==
+X-Gm-Message-State: AGi0PubIO/cbkQiWlrnfDUEH/LRPVR7a7CIRJBaU3bhlKZFFS2y/rdVh
+        V/PqweMEOoChTw8MF6phX6wI55Rp
+X-Google-Smtp-Source: APiQypKU2oxF6oMqsC+ACBiHDWQd6VRGAGt/G87OyQumekfBPfJ/xHt0A1sHD1WgXJfttkSWtlwnfw==
+X-Received: by 2002:a2e:97d3:: with SMTP id m19mr376917ljj.136.1588278069490;
+        Thu, 30 Apr 2020 13:21:09 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id s8sm535240lfd.61.2020.04.30.13.21.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 13:21:08 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <eadf3a5a-f305-4561-10e1-1b9241b9c5c2@gmail.com>
+ <bfd82642-9648-96f1-737d-4b9a869d34a3@nvidia.com>
+ <52b98347-4b78-f637-04f4-cc730ad336f3@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8da0929d-4a58-75b8-381c-511ce66f8d9d@gmail.com>
+Date:   Thu, 30 Apr 2020 23:21:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200430182712.237526-1-shakeelb@google.com> <20200430192907.GA2436@cmpxchg.org>
-In-Reply-To: <20200430192907.GA2436@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 30 Apr 2020 13:20:10 -0700
-Message-ID: <CALvZod6Gatw+sX7_hsVPB-O2yMt-ygXUSweQbHwxZHgwdEth4Q@mail.gmail.com>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <52b98347-4b78-f637-04f4-cc730ad336f3@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:29 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Thu, Apr 30, 2020 at 11:27:12AM -0700, Shakeel Butt wrote:
-> > Lowering memory.max can trigger an oom-kill if the reclaim does not
-> > succeed. However if oom-killer does not find a process for killing, it
-> > dumps a lot of warnings.
-> >
-> > Deleting a memcg does not reclaim memory from it and the memory can
-> > linger till there is a memory pressure. One normal way to proactively
-> > reclaim such memory is to set memory.max to 0 just before deleting the
-> > memcg. However if some of the memcg's memory is pinned by others, this
-> > operation can trigger an oom-kill without any process and thus can log a
-> > lot un-needed warnings. So, ignore all such warnings from memory.max.
->
-> Can't you set memory.high=0 instead? It does the reclaim portion of
-> memory.max, without the actual OOM killing that causes you problems.
+30.04.2020 23:09, Sowjanya Komatineni пишет:
+> 
+> On 4/30/20 1:08 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/30/20 1:06 PM, Dmitry Osipenko wrote:
+>>> 30.04.2020 01:00, Sowjanya Komatineni пишет:
+>>>> +static int chan_capture_kthread_start(void *data)
+>>>> +{
+>>>> +    struct tegra_vi_channel *chan = data;
+>>>> +    struct tegra_channel_buffer *buf;
+>>>> +    int err = 0;
+>>>> +
+>>>> +    set_freezable();
+>>>> +
+>>>> +    while (1) {
+>>>> +        try_to_freeze();
+>>>> +
+>>>> +        /*
+>>>> +         * Source is not streaming if error is non-zero.
+>>>> +         * So, do not dequeue buffers on error and let the thread
+>>>> sleep
+>>>> +         * till kthread stop signal is received.
+>>>> +         */
+>>>> +        wait_event_interruptible(chan->start_wait,
+>>>> +                     kthread_should_stop() ||
+>>>> +                     (!list_empty(&chan->capture) &&
+>>>> +                     !err));
+>>> ...
+>>>> +static void tegra_channel_buffer_queue(struct vb2_buffer *vb)
+>>>> +{
+>>>> +    struct tegra_vi_channel *chan = vb2_get_drv_priv(vb->vb2_queue);
+>>>> +    struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
+>>>> +    struct tegra_channel_buffer *buf = to_tegra_channel_buffer(vbuf);
+>>>> +
+>>>> +    /* put buffer into the capture queue */
+>>>> +    spin_lock(&chan->start_lock);
+>>>> +    list_add_tail(&buf->queue, &chan->capture);
+>>>> +    spin_unlock(&chan->start_lock);
+>>>> +
+>>>> +    /* wait up kthread for capture */
+>>>> +    wake_up_interruptible(&chan->start_wait);
+>>>> +}
+>>> The V4L doc says that buffers could be enqueued before streaming is
+>>> started. I guess it should be a trouble here, shouldn't it?
+>>>
+>>> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/media/videobuf2-core.h#L379
+>>>
+>>
+>> what trouble are you referring here?
+>>
+>> I dont think so as we set min buffers needed as 2 always there will be
+>> 2 per-queued buffers.
+> typo* pre-queued buffers before streaming start
+>>
+>> But buffers from this queue will be dequeued only when ready to
+>> processes in the capture thread
 
-Yes that would work but remote charging concerns me. Remote charging
-can still happen after the memcg is offlined and at the moment, high
-reclaim does not work for remote memcg and the usage can go till max
-or global pressure. This is most probably a misconfiguration and we
-might not receive the warnings in the log ever. Setting memory.max to
-0 will definitely give such warnings.
+I see now that the threads won't be running until start_streaming() is
+invoked, should be okay then.
