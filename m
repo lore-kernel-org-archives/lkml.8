@@ -2,282 +2,131 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E67C47254
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23EDC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C93020731
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1EA20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QUkm9BsY"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0YJweBxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgD3VzQ (ORCPT
+        id S1727895AbgD3Vze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:55:16 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16014 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgD3VzP (ORCPT
+        Thu, 30 Apr 2020 17:55:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgD3Vzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:55:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eab49360000>; Thu, 30 Apr 2020 14:55:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Apr 2020 14:55:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Apr 2020 14:55:14 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 21:55:14 +0000
-Received: from [10.2.165.152] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Apr
- 2020 21:55:13 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
- <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
- <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
- <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
- <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
- <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
- <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
- <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
- <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
- <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
-Message-ID: <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
-Date:   Thu, 30 Apr 2020 14:53:44 -0700
+        Thu, 30 Apr 2020 17:55:33 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096C3C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:55:33 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v2so2847996plp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 14:55:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rYEprxh5hRkyIRk0SZJ1yYwJF2zaPFW1K1pdxuC7Zuc=;
+        b=0YJweBxdqRGXk8CKADPYZT2TDMDjlejyhecZFIP6Pdqu2Rol0vua+RkjawOc6lW+4C
+         uye8FqmbkqGQFahJuYyZ/sVkYDn8YKcognO7HZN5LGsmML6yIXlmeCxIkANnyZNQ1gTG
+         /9xSR/dOm1broZSmXWyPapxeqpe3M9DwJQedEjQkHUFGZC4OxPB9a94qfaCo8FkfLTG2
+         z4UdgSMg6xqZqbdaMkkKFbSj8MCsvkht1TJbHhLVLcwEjDr92euBMUJXifl8yCQybF3i
+         0VWB+PK6QrXPrkeZTzbIW4Ds0P1gdgZDHzx3P27ENgTnRXQIqNtK/jjJtTG7opYmGATG
+         kgeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rYEprxh5hRkyIRk0SZJ1yYwJF2zaPFW1K1pdxuC7Zuc=;
+        b=fHRPwt4ZW/lhKMJ0cPPY40CI0qEtK31hy6HpvewNt3ey8tn5EsBzPbs/UzEClHqZH1
+         3f2NjIotUWFuojABxiwyK4LvGjnbFfNv8mrk4KZ82gljz1809zCDzQJXOJQKAeCyzEBi
+         ydcRAoBP2KshS49G8+1jROAj2InD5tEddLEAtiAjsLAAbPazk4wywrE/JPhOTEo4WnYq
+         3Bb+0NXr3K8FueCfLLZBWfeWni7ExY8GkkAKG6/h0zX4nGFEPhx0Jv8BKm1+8PwvoaeB
+         Os3vebM29cA5S/T7fzFTP0iocqXb8EboY8AhKDISzPfynLets0tDh/2Igx3E1xRXtkeo
+         z5kw==
+X-Gm-Message-State: AGi0PuZeDNd+5TtSF2DGwD3Q+aG8kRXLH6DsiPb6pXRfd03pC+6ohnMV
+        ghI/NMJreePsWt9JlprqmOjqRA==
+X-Google-Smtp-Source: APiQypKZKsYx7E2CGdgFsbEsXPiGTeppVxcKMSgLFPw/aX5eOiEu/pEAX05ugbUD8BcvAoby192kSA==
+X-Received: by 2002:a17:902:7b94:: with SMTP id w20mr1140125pll.8.1588283732465;
+        Thu, 30 Apr 2020 14:55:32 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id i25sm601473pfo.196.2020.04.30.14.55.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 14:55:31 -0700 (PDT)
+Subject: Re: [PATCHSET v2 block/for-5.8] iocost: improve use_delay and latency
+ target handling
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org, newella@fb.com,
+        josef@toxicpanda.com, asml.silence@gmail.com, ming.lei@redhat.com,
+        bvanassche@acm.org
+References: <20200413162758.97252-1-tj@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6ee6360e-1a35-874c-2263-6fb21da66591@kernel.dk>
+Date:   Thu, 30 Apr 2020 15:55:30 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200413162758.97252-1-tj@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588283702; bh=di+O2jLI16ikEh7mcZPdM1oOPlVh7YwvDEgl3ofBFFY=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=QUkm9BsYCzLjJC9wwWzUoammOxqJhoV75L5/vcRflEVZPOAmDXeGeYyPX8t4Q0t9N
-         unLxyTkfHHBU6p7GATpa6hKDaGo78v7c1LsKi5j6aDNjH8IGqSkfwBPNIj0VWhYK8Q
-         luD033P9ilP9FZaXkIuNBi/TWP0iAjmR1S25VWwr4XMwZtNLlQCe1Ncvp6i2qvTcy7
-         zjDsMUAvSnIcAkJGahkgKcBdPFveWDPZfj4uMjGtQjUuKxFLlb1pqKApFtkoXzvNa4
-         E+qTYIIDdsLi3nBDGO4wUctaBZHV/IE8YNDXLcR1veA8JvHH58NOyYJn4EoYjlJgue
-         8aTMXmeLnFy9w==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/13/20 10:27 AM, Tejun Heo wrote:
+> Changes from v1[1]
+> 
+> * Dropped 0002-block-add-request-io_data_len.patch and updated to use
+>   rq->stats_sectors instead as suggested by Pavel Begunkov.
+> 
+> This patchset improves the following two iocost control behaviors.
+> 
+> * iocost was failing to punish heavy shared IO generators (file metadata, memory
+>   reclaim) through use_delay mechanism - use_delay automatically decays which
+>   works well for iolatency but doesn't match how iocost behaves. This led to
+>   e.g. memory bombs which generate a lot of swap IOs to use over their allotted
+>   amount. This is fixed by adding non-decaying use_delay mechanism.
+> 
+> * The same latency targets were being applied regardless of the IO sizes. While
+>   this works fine for loose targets, it gets in the way when trying to tigthen
+>   them - a latency target adequate for a 4k IO is too short for a 1 meg IO.
+>   iocost now discounts the size portion of cost when testing whether a given IO
+>   met or missed its latency target.
+> 
+> While at it, it also makes minor changse to iocost_monitor.py.
+> 
+> This patchset contains the following five patches.
+> 
+>  0001-blk-iocost-switch-to-fixed-non-auto-decaying-use_del.patch
+>  0002-blk-iocost-account-for-IO-size-when-testing-latencie.patch
+>  0003-iocost_monitor-exit-successfully-if-interval-is-zero.patch
+>  0004-iocost_monitor-drop-string-wrap-around-numbers-when-.patch
+> 
+> and is also available in the following git branch.
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git iocost-delay-latency-v2
+> 
+> diffstat follows. Thanks.
+> 
+>  block/Kconfig                  |    1 
+>  block/blk-cgroup.c             |    6 ++++
+>  block/blk-iocost.c             |   56 +++++++++++++++++++++++++++++------------
+>  include/linux/blk-cgroup.h     |   43 ++++++++++++++++++++++++-------
+>  tools/cgroup/iocost_monitor.py |   48 +++++++++++++++++++----------------
+>  5 files changed, 106 insertions(+), 48 deletions(-)
 
-On 4/30/20 2:37 PM, Sowjanya Komatineni wrote:
->
-> On 4/30/20 2:26 PM, Sowjanya Komatineni wrote:
->>
->> On 4/30/20 2:17 PM, Dmitry Osipenko wrote:
->>> 30.04.2020 23:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On 4/30/20 12:53 PM, Sowjanya Komatineni wrote:
->>>>> On 4/30/20 12:46 PM, Sowjanya Komatineni wrote:
->>>>>> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
->>>>>>> 30.04.2020 22:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> On 4/30/20 11:18 AM, Sowjanya Komatineni wrote:
->>>>>>>>> On 4/30/20 10:06 AM, Sowjanya Komatineni wrote:
->>>>>>>>>> On 4/30/20 9:29 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>> On 4/30/20 9:04 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>>> On 4/30/20 7:13 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>> 30.04.2020 17:02, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>>>>>> 30.04.2020 16:56, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>>>>>> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>>> +static int chan_capture_kthread_finish(void *data)
->>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data=
-;
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 try_to_freeze(=
-);
->>>>>>>>>>>>>>> I guess it won't be great to freeze in the middle of a=20
->>>>>>>>>>>>>>> capture
->>>>>>>>>>>>>>> process, so:
->>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
-list_empty(&chan->done))
->>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 try_to_freeze();
->>>>>>>>>>>>>> And here should be some locking protection in order not race
->>>>>>>>>>>>>> with
->>>>>>>>>>>>>> the
->>>>>>>>>>>>>> chan_capture_kthread_start because kthread_finish could=20
->>>>>>>>>>>>>> freeze
->>>>>>>>>>>>>> before
->>>>>>>>>>>>>> kthread_start.
->>>>>>>>>>>>> Or maybe both start / finish threads should simply be=20
->>>>>>>>>>>>> allowed to
->>>>>>>>>>>>> freeze
->>>>>>>>>>>>> only when both capture and done lists are empty.
->>>>>>>>>>>>>
->>>>>>>>>>>>> if (list_empty(&chan->capture) &&
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_empty(&chan->done))
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0try_to_freeze();
->>>>>>>>>>>> good to freeze when not in middle of the frame capture but why
->>>>>>>>>>>> should we not allow freeze in between captures?
->>>>>>>>>>>>
->>>>>>>>>>>> Other drivers do allow freeze in between frame captures.
->>>>>>>>>>>>
->>>>>>>>>>>> I guess we can freeze before dequeue for capture and in finish
->>>>>>>>>>>> thread we can freeze after capture done. This also don't=20
->>>>>>>>>>>> need to
->>>>>>>>>>>> check for list_empty with freeze to allow between frame=20
->>>>>>>>>>>> captures.
->>>>>>>>>>>>
->>>>>>>>>>> Also if we add check for both lists empty, freeze is not=20
->>>>>>>>>>> allowed as
->>>>>>>>>>> long as streaming is going on and in case of continuous=20
->>>>>>>>>>> streaming
->>>>>>>>>>> freeze will never happen.
->>>>>>>>> To allow freeze b/w frames (but not in middle of a frame),
->>>>>>>>>
->>>>>>>>> for capture_start thread, probably we can do unconditional
->>>>>>>>> try_to_freeze()
->>>>>>> Is it possible to use wait_event_freezable()?
->>>>>>>
->>>>>>> https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.tx=
-t=20
->>>>>>>
->>>>>>>
->>>>>>> Will the wait_event_interruptible() be woken up when system=20
->>>>>>> freezes?
->>>>>> Based on wait_event_freezable implementation, looks like it similar
->>>>>> to wait_event_interruptible + try_to_free() as it does
->>>>>> freezable_schedule unlike schedule with wait_event_interruptible.
->>>>>>
->>>>>> So using this for capture_start may be ok to allow freeze before
->>>>>> start of frame. But can't use for capture_finish as this is same as
->>>>>> wait_event_interruptible followed by unconditional try_to_freeze.
->>>>>>
->>>>>>>>> for capture_finish thread, at end of capture done we can do
->>>>>>>>> try_to_freeze() only when done list is empty
->>>>>>> This doesn't prevent situation where the done-list is empty and the
->>>>>>> "finish" thread freezes, in the same time the "start" thread=20
->>>>>>> issues new
->>>>>>> capture and then freezes too.
->>>>>>>
->>>>>>> 1. "start" thread issues capture
->>>>>>>
->>>>>>> 2. "finish" thread wakes and waits for the capture to complete
->>>>>>>
->>>>>>> 3. "start" thread begins another capture, waits for FRAME_START
->>>>>>>
->>>>>>> 4. system freezing activates
->>>>>>>
->>>>>>> 5. "finish" thread completes the capture and freezes because=20
->>>>>>> done-list
->>>>>>> is empty
->>>>>>>
->>>>>>> 6. "start" thread gets FRAME_START, issues another capture and=20
->>>>>>> freezes
->>>>>> This will not happen as we allow double buffering done list will not
->>>>>> be empty till stream stop happens
->>>>>>
->>>>>> There will always be 1 outstanding frame in done list
->>>>> Correction, there will always be 1 outstanding buffer except=20
->>>>> beginning
->>>>> during beginning of stream.
->>>>>
->>>>> Except during beginning frames, done list will not be empty for all
->>>>> subsequent streaming process
->>>> Also to be clear, hardware sees next frame start event prior to=20
->>>> previous
->>>> frame mw_ack event as mw_ack event happens after frame end. So once
->>>> initial buffer got queued to done list to finish processes, while
->>>> waiting for mw_ack next frame start happens and pushes next buffer to
->>>> done list.
->>> What about this variant:
->>>
->>> 1. "start" thread wakes up to start capture
->>>
->>> 2. system freezing activates
->>>
->>> 3. "finish" thread wakes up and freezes
->>
->> finish thread will wake up only when done list is not=20
->> empty/kthread_stop/wake even from capture start thread.
->>
->> Also when I said will allow try_to_free when done list is empty I=20
->> meant to have this at end of capture_done() in finish thread
->>
->>>
->>> 4. "start" thread issues capture and freezes
->>>
->>> And again, I assume that system's freezing should wake
->>> wait_event_interruptible(), otherwise it won't be possible to freeze
->>> idling threads at all and freezing should fail (IIUC).
->>
->> Based on kernel doc on freezing, looks like when we mark thread as=20
->> freezable, freeze state happens when we explicitly call try_to_freeze.
->>
->> I don't think its other way where freeze causes=20
->> wait_event_interruptible to wake up.
+Applied, thanks Tejun.
 
-Based on my understanding when we mark thread as freezable,
+-- 
+Jens Axboe
 
-with wait_event_freezable() - after wait event, it invokes=20
-try_to_freeze(). So frozen state enters unconditionally with this.
-
-with wait_event_interruptible - we do try_to_freeze when its safe to=20
-enter frozen state.
-
-https://www.kernel.org/doc/Documentation/power/freezing-of-tasks.txt
-
-
->>
->>> And in this case synchronization between start/finish threads should be
->>> needed in regards to freezing.
->>
->> Was thinking to have counter to track outstanding frame w.r.t single=20
->> shot issue b/w start and finish and allow to freeze only when no=20
->> outstanding frames in process.
->>
->> This will make sure freeze will not happen when any buffers are in=20
->> progress
->>
->>> Note that this could be a wrong assumption, I'm not closely familiar
->>> with how freezer works.
->
-> kthread_start can unconditionally allow try_to_freeze before start of=20
-> frame capture
->
-> We can compute captures inflight w.r.t single shot issued during=20
-> capture start and finished frames by kthread_finish and allow=20
-> kthread_finish to freeze only when captures inflight is 0.
->
-> This allows freeze to happen b/w frames but not in middle of frame
->
->
