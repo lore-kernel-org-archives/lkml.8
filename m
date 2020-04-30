@@ -2,140 +2,123 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B1DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B051C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17C0A2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZPBurWYB"
+	by mail.kernel.org (Postfix) with ESMTP id 7AF642173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588265682;
+	bh=2YZPpc7VWyggscv2iNRM1OFSHVpzZWxN9/Z5ZQ1kypQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CWKpME+62uN14vSZmhJ2o68zrUvNcHtQsfn9lZtTfZEtfDWbUic8xYlCm5Pq/Bd8A
+	 KzeOYrbkuAoCiYuw5t+58SBHyoGr8RtV56TR4xkeV5HyC8hm3ivSztZLVj7KHjjrnO
+	 ujswFOfAPkVRrdAmWfx/9YP5Swl3L/Bg6R0/GeLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgD3Qx2 (ORCPT
+        id S1726577AbgD3Qyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55200 "EHLO
+        Thu, 30 Apr 2020 12:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726333AbgD3Qx1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726272AbgD3Qyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:53:27 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3732BC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:53:27 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so91914otu.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:53:27 -0700 (PDT)
+        Thu, 30 Apr 2020 12:54:40 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5F8C035494;
+        Thu, 30 Apr 2020 09:54:40 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i68so5590670qtb.5;
+        Thu, 30 Apr 2020 09:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L1yc3aiS2aa72MaQjHCirx/9BP7xAuIw9ECEzmtVIsI=;
-        b=ZPBurWYBXORgZDIV17o1am4RGcfdkLOoI+K5fC68nY+u4bbVd/WJBEYIRhMu+fRJge
-         L+gspegsNCOmHy6vWRfPmvAibdyVV0j/A44AZCZe/Ho009FgQQPq5QH7l627AnH1WvUB
-         hIbSzS4B33PC47tx8og1TQJrQB51fFFKW3NyR+sEtvtc7O2A7Nxg7D6ysQg/veHjw+OD
-         v94WHYzlAjd56on25IzjMugBL5gOevb7RY9vdkH0flIX/HrO0CT09fEsCVQGcpcjV+V8
-         VrHKiyNbcn7At5DoOIogPUENHdkTZdb+l3v2Z7L4gtw/zNJOIOpjLWvMcCWxhQ7zgink
-         C1vQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=u0otRQ4HRB+YKeilmTal/RUC4w+MjwFliS0R169CA7s=;
+        b=O/5SFX3PPa5GnoITINqhhqhgSQx66i9Vr9eYEtt/dHcuqLd/AOHvW3QLuX+7DeqG31
+         GslwjmCdLPuQneMgsHDTtJ/bnlSZ25zwDS0MsgunToxCICZR7/uk8UTaNwv6JpUmQ805
+         YgJR0Nl0vne392X5jSeHJa6URY2mqfdOcK1I69vww560N54VbCYjt71K8PrUM7f0Chxa
+         YWL4h4KBf+zi8iWhtQoWQUc2/C1a8+HpHg9fYZAkMfYGpIVzg/iVmbJZ4gAG/DgWUISS
+         qEWHbunlq8x7yS0U1Io7sm1VB9nPh3mjwbzhr0uIbiaCo3pmRIOJ/0opojQU34prGTh+
+         q7UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L1yc3aiS2aa72MaQjHCirx/9BP7xAuIw9ECEzmtVIsI=;
-        b=S27sLnrgDU6f3Tsr5DT1PbJC2TKGnE7RJlAa7YoiHlHlIcnBK4LpCISBhfvWS0+yY1
-         2uvGgCRpQ1vgJm0UVmaumiS2I46uGBCA6FpNlz0bp6VDxlTv2G+JIuVHWsZSpuJYOYsX
-         xk6AiMDRXNb9Fc9QoMNjOo/9gcSTkHchA6RDqShDg6HjXV2cZ6+WZfTvvYGljrdkcwaO
-         D/fC86jpwSLKePT39HfpdqhPZmfoJSCiviZcqC4LGanUs/SfJrhcBelf0m6SGRxMP+yu
-         8bSdZyKvSEDfd/47IXBnRaU/dLQjYvKzEmrAqxhdeY9VKbvKeXYUFs1xkQF4MNlKK/2P
-         z3aw==
-X-Gm-Message-State: AGi0PubSWWm1n5wPXgdX9A+z8Id3aR2lrqRxG0xlidtHKn1uqjkmrQ6S
-        5yUzINhsUtIRsH4AxChStmPGxVOPHyrC53gh8dA4Jg==
-X-Google-Smtp-Source: APiQypJ8t3/XkLVbT5o3BxszJHl5XBeeWLeT/ycZ9X+0ZU0M/P/075GxaYt9V0upGxVcm/4CiJPt/DRDAYJo05RzVmw=
-X-Received: by 2002:a05:6830:10da:: with SMTP id z26mr85039oto.139.1588265600483;
- Thu, 30 Apr 2020 09:53:20 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=u0otRQ4HRB+YKeilmTal/RUC4w+MjwFliS0R169CA7s=;
+        b=h3jlXj0PCLBo/hbIJof0pPCT51BeSbeL9FQ3uoxgCDDL1fzVKigV6CWtMHQqEWsuHD
+         ctdholj+A0yq6JJ/JMo8p5AjNFZ+pHWmC0qb+2Wq76g9Dat8InyzY34P91th2aajdG67
+         cwySnuYEiGbNVE5ealZceaeGt5bm/eSw6LpBtmQPsFF5aBtwqOLdApZal6QH0dtTO4mH
+         VvY0rz5GmBavLw6on61uzxloCG5SpxYACKTr/uSc/15gquD/ZQ7NPz7cKi6culphyDjY
+         QwM6jw75IKFvWMZ6k+yQU+mnfH/aK6aOLTyCdx6c9prAkYdRNfz7gwpEHFc1hkH9z/27
+         Lj+A==
+X-Gm-Message-State: AGi0PuakFk6tnGkf952NugjKQwb5g7iTk7eN8paMX6AOuai8p9ijGLD6
+        4XjrX+f88tyn06wbiitrPps=
+X-Google-Smtp-Source: APiQypJQTeHAEnS3J65bj3d5lEQgh6haVB0NClBsAbTwosD6YRCd9HZoVfbdmACo+8rNsGkAqoy3Zw==
+X-Received: by 2002:ac8:fee:: with SMTP id f43mr4727473qtk.376.1588265679714;
+        Thu, 30 Apr 2020 09:54:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:f989])
+        by smtp.gmail.com with ESMTPSA id i6sm414723qkk.123.2020.04.30.09.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 09:54:39 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 12:54:37 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     fdmanana@kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        dennis@kernel.org, cl@linux.com, akpm@linux-foundation.org,
+        linux-btrfs@vger.kernel.org, Filipe Manana <fdmanana@suse.com>
+Subject: Re: [PATCH] percpu: make pcpu_alloc() aware of current gfp context
+Message-ID: <20200430165437.GF5462@mtj.thefacebook.com>
+References: <20200430164356.15543-1-fdmanana@kernel.org>
 MIME-Version: 1.0
-References: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
- <CADBw62pmiguVmuq334eskLAZ5CkrjxohW_fXNjNev+O1U15=OQ@mail.gmail.com>
- <bd800f7b-05fd-b393-fba6-1965ba89e1b3@linaro.org> <CAGETcx9da-U+dXA6sreTKJQiS3brYh3Hfh_qVYt06=3UOSmT_g@mail.gmail.com>
- <429da47b-ad51-30eb-ff36-b05780c941ba@linaro.org> <CAGETcx9sc6oWSPK=aWJ+39i9eHAyg6iOf+Xf2oVECO+g1pFjtQ@mail.gmail.com>
- <573b7d9e-fb5d-5c81-a981-6d965db933f3@linaro.org> <20200427221752.GA166576@google.com>
- <7c508403-3b53-8285-5724-c2bca221b77a@linaro.org> <CAGETcx_peaPtmjF4s0iR6ObZ=f76EjaMOokyBYM3a7AX-8_ong@mail.gmail.com>
- <da25dc33-addb-298d-103a-fcf1cf0e6793@linaro.org> <CAPDyKFrDSqnkhCVweaA0D-d+KWN_8=OiXW74tDM1DhnCZAgPww@mail.gmail.com>
-In-Reply-To: <CAPDyKFrDSqnkhCVweaA0D-d+KWN_8=OiXW74tDM1DhnCZAgPww@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 30 Apr 2020 09:52:44 -0700
-Message-ID: <CAGETcx-TRhRDiWX40n_RJPqWcrjKjabocGhU-wyEzEePv2cP+w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers/clocksource/timer-of: Remove __init markings
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sandeep Patil <sspatil@android.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430164356.15543-1-fdmanana@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 5:57 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Tue, 28 Apr 2020 at 20:55, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> >
-> > On 28/04/2020 20:23, Saravana Kannan wrote:
-> > > On Tue, Apr 28, 2020 at 12:02 AM Daniel Lezcano
-> > > <daniel.lezcano@linaro.org> wrote:
-> > >>
-> > >>
-> > >> Hi Saravana,
-> > >
-> > > You were replying to Sandeep :)
-> >
-> > Oh, right :)
-> >
-> > Sorry Sandeep. Thanks for taking the time to elaborate a clear statement
-> > of the GKI.
-> >
-> > [ ... ]
-> >
-> > >> That was my understanding of the GKI, thanks for confirming.
-> > >>
-> > >> Putting apart the non-technical aspect of these changes, the benefit I
-> > >> see is the memory usage optimization regarding the single kernel image.
-> > >>
-> > >> With the ARM64 defconfig, multiple platforms and their corresponding
-> > >> drivers are compiled-in. It results in a big kernel image which fails to
-> > >> load because of overlapping on DT load address (or something else). When
-> > >> that is detected, it is fine to adjust the load addresses, otherwise it
-> > >> is painful to narrow down the root cause.
-> > >>
-> > >> In order to prevent this, we have to customize the defconfig each
-> > >> version release.
-> > >
-> > > Sorry, I'm not sure I understand where you are going with this. Are
-> > > you agreeing to pick up this change?
-> >
-> > Right. I agree with the change but I would like to have Thomas opinion
-> > on this before picking the patch.
-> >
-> > Thomas ?
->
-> I am not Thomas :-) But just wanted to provide some feedback from my side.
->
-> In general we are careful when deciding to export symbols. And at
-> least, I think at least we should require one user of it before
-> allowing it to be exported (I assume that is what is happening in
-> patch2/2 - I couldn't find it)
+On Thu, Apr 30, 2020 at 05:43:56PM +0100, fdmanana@kernel.org wrote:
+> From: Filipe Manana <fdmanana@suse.com>
+> 
+> Since 5.7-rc1, on btrfs we have a percpu counter initialization for which
+> we always pass a GFP_KERNEL gfp_t argument (this happens since commit
+> 2992df73268f78 ("btrfs: Implement DREW lock")).  That is safe in some
+> contextes but not on others where allowing fs reclaim could lead to a
+> deadlock because we are either holding some btrfs lock needed for a
+> transaction commit or holding a btrfs transaction handle open.  Because
+> of that we surround the call to the function that initializes the percpu
+> counter with a NOFS context using memalloc_nofs_save() (this is done at
+> btrfs_init_fs_root()).
+> 
+> However it turns out that this is not enough to prevent a possible
+> deadlock because percpu_alloc() determines if it is in an atomic context
+> by looking exclusively at the gfp flags passed to it (GFP_KERNEL in this
+> case) and it is not aware that a NOFS context is set.  Because it thinks
+> it is in a non atomic context it locks the pcpu_alloc_mutex, which can
+> result in a btrfs deadlock when pcpu_balance_workfn() is running, has
+> acquired that mutex and is waiting for reclaim, while the btrfs task that
+> called percpu_counter_init() (and therefore percpu_alloc()) is holding
+> either the btrfs commit_root semaphore or a transaction handle (done at
+> fs/btrfs/backref.c:iterate_extent_inodes()), which prevents reclaim from
+> finishing as an attempt to commit the current btrfs transaction will
+> deadlock.
+...
+> This could be fixed by making btrfs pass GFP_NOFS instead of GFP_KERNEL to
+> percpu_counter_init() in contextes where it is not reclaim safe, however
+> that type of approach is discouraged since memalloc_[nofs|noio]_save()
+> were introduced.  Therefore this change makes pcpu_alloc() look up into
+> an existing nofs/noio context before deciding whether it is in an atomic
+> context or not.
+> 
+> Signed-off-by: Filipe Manana <fdmanana@suse.com>
 
-I believe it is done in Patch 2/2, but I think you don't see them in
-the diff because they are already called from the driver, but the
-driver won't compile as a module due to the removal of __init markings
-in the driver.
-https://lore.kernel.org/lkml/182aae1ed5e5d2b124f1a32686e5566c9a27c980.1585021186.git.baolin.wang7@gmail.com/
+Acked-by: Tejun Heo <tj@kernel.org>
 
--Saravana
+Thanks.
+
+-- 
+tejun
