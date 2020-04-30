@@ -2,166 +2,205 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8044C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1ADC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64B32082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilIpKR0x"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6CB2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD3JoJ (ORCPT
+        id S1726929AbgD3JoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726453AbgD3JoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:44:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DF1C035494;
-        Thu, 30 Apr 2020 02:44:06 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 18so2632950pfx.6;
-        Thu, 30 Apr 2020 02:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3iE0ENs3U+fv2Eqqm2Bnr8UjitFetI73gpHRJaYjHKU=;
-        b=ilIpKR0xTF1aZ/g6hXsNtlH3zf2fYi/M9PCp7dr2ymfF41Gje6JPtrCXmX6Ir7fFP7
-         y7qqJ/RCU4YiWlYTmQssquDtdWptfOGfVr01IPJMz1T64/t3/0YFMipsXm7bYT0KCcFZ
-         GhADDDtSWZTUOnrTm5tUIsXalg4P/SZnHluKCIi4CdUM5eD8B0d7t5hSp8A0t4t26jmY
-         uloL2KYSNp8+DnGusiFvAl9oN03NT3HybGOP0+DcaHLXIMxliA8T6x6SvVMHfkPdyIHa
-         KfgeQtAiVtD/pWNA+gbzxrrbs8eK2VInhgKwjmKTULw91A6+qT2hIhoDD9qPyiEP/xPt
-         TfOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3iE0ENs3U+fv2Eqqm2Bnr8UjitFetI73gpHRJaYjHKU=;
-        b=nFb6Rtg5raKhoXeuji4mIpi/PYRaoud7neePf6B0La2jlSje530gBQNKeM3Wfufn6w
-         H3B18RobaCQ1z/GndvHThlload3Ac7i0QHcJGQJXLc/3T8ZC6tVBqf0S3tvYWYMcRyaE
-         rMfBnV+SS+dxQaD+68ohDOPIIHXXkzsqMq7j/6SRdO4zcR6X3TKK1l/X9DDUXzLhis7I
-         jAbUwuq3T3vhbzVB7rm5OzbSHbRVcwc1KHS4hEzhzeSnNvix9Jr/I+yQA0Koi4hzrAM+
-         NdSj+7IJk21xOWG532EVxJ8fkB2cAjSyew3nQgSGzIPrezlrEJ//iopOne2ZtbHBuaSA
-         n7Cw==
-X-Gm-Message-State: AGi0Pub2f73ZCSyXGZ6WyGEttqlTXDJ2NSnPGlH37IjFLDde8H7N6dHW
-        UA1fp1cW9ahVmWtNe3xglFk=
-X-Google-Smtp-Source: APiQypKnHvgqqqAo0U6w7NfYRJ1g2+uwUdHqCvqsCYwfXM+SnrqOWtoCuCALu+75Kg/qIGU36FZMOg==
-X-Received: by 2002:a62:1a46:: with SMTP id a67mr2493063pfa.284.1588239846437;
-        Thu, 30 Apr 2020 02:44:06 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([137.59.101.138])
-        by smtp.gmail.com with ESMTPSA id cp22sm1288431pjb.28.2020.04.30.02.44.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Apr 2020 02:44:05 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     alexandre.torgue@st.com
-Cc:     broonie@kernel.org, mcoquelin.stm32@gmail.com,
-        p.zabel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dillon.minfei@gmail.com
-Subject: [PATCH 4/4] add SPI_SIMPLEX_RX/SPI_3WIRE_RX support for spi-stm32f4
+        Thu, 30 Apr 2020 05:44:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48400 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726453AbgD3JoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:44:13 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4B94FCD1098734C8882D;
+        Thu, 30 Apr 2020 17:44:09 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.120) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 30 Apr 2020
+ 17:44:02 +0800
+Subject: Re: [PATCH] arm64: panic on synchronous external abort in kernel
+ context
+To:     James Morse <james.morse@arm.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <tglx@linutronix.de>, <tanxiaofei@huawei.com>,
+        <wangxiongfeng2@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200410015245.23230-1-xiexiuqi@huawei.com>
+ <20200414105923.GA2486@C02TD0UTHF1T.local>
+ <adc93578-5cfc-09c3-0b88-b265e310ef97@arm.com>
+ <21997719-c521-c39a-f521-54feae16fc45@huawei.com>
+ <60131aba-4e09-7824-17b2-a6fc711c150b@arm.com>
+From:   Xie XiuQi <xiexiuqi@huawei.com>
+Message-ID: <483792fd-5b01-8cf7-7687-abe513cd3474@huawei.com>
 Date:   Thu, 30 Apr 2020 17:44:00 +0800
-Message-Id: <1588239840-11582-1-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <60131aba-4e09-7824-17b2-a6fc711c150b@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.120]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+Hi James,
 
-add SPI_SIMPLEX_RX/SPI_3WIRE_RX in spi-stm32f4.c
-for SPI_SIMPLEX_RX , as we running kernel in sdram, so
-that the performance is not as good as internal flash,
-need add send dummy data out while in rx,
-otherwise will get many overrun errors.
+Sorry for reply late.
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- drivers/spi/spi-stm32.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+On 2020/4/14 22:53, James Morse wrote:
+> Hi Xie,
+> 
+> On 14/04/2020 13:39, Xie XiuQi wrote:
+>> On 2020/4/14 20:16, James Morse wrote:
+>>> On 14/04/2020 11:59, Mark Rutland wrote:
+>>>> On Fri, Apr 10, 2020 at 09:52:45AM +0800, Xie XiuQi wrote:
+>>>>> We should panic even panic_on_oops is not set, when we can't recover
+>>>>> from synchronous external abort in kernel context.
+>>>
+>>> Hmm, fault-from-kernel-context doesn't mean the fault affects the kernel. If the kernel is
+>>> reading or writing from user-space memory for a syscall, its the user-space memory that is
+>>> affected. This thread can't make progress, so we kill it.
+>>> If its a kernel thread or we were in irq context, we panic().
+>>>
+>>> I don't think you really want all faults that happen as a result of a kernel access to be
+>>> fatal!
+> 
+>> Yes, you're right. I just want to fix a hung up when ras error inject testing.
+>>
+>> panic_on_oops is not set in the kernel image for testing. When receiving a sea in kernel
+>> context, the PE trap in do_exit(), and can't return any more.
+> 
+> trap? gets trapped, (or gets stuck, to prevent confusion with the architectures use of the
+> word 'trap'!)
+> 
+> 
+>> I analyze the source code, the call trace might like this:
+>>    do_mem_abort
+>>      -> arm64_notify_die
+>>         -> die                    # kernel context, call die() directly;
+>>            -> do_exit             # kernel process context, call do_exit(SIGSEGV);
+>>               -> do_task_dead()   # call do_task_dead(), and hung up this core;
+> 
+> Thanks for the trace. This describes a corrected error in your I-cache, that occurred
+> while the kernel was executing a kernel thread. These shouldn't be fatal, because it was
+> corrected ... but the kernel doesn't know that because it doesn't know how to parse those
+> records.
+> 
+> There are two things wrong here:
+> 1. it locks up while trying to kill the thread.
+> 2. it tried to kill the thread in the first place!
+> 
+> For 1, does your l1l2_inject module take any spinlocks or tinker with the pre-empt counter?
+> 
+> I suspect this is some rarely-tested path in do_task_dead() that sleeps, but can't from
+> your l1l2_inject module because the pre-empt counter has been raised.
+> 
+> CONFIG_DEBUG_ATOMIC_SLEEP may point at the function to blame.
+> 
+> It may be accessing some thread data that kthreads don't have, taking a second exception
+> and blocking on the die_lock. LOCKDEP should catch this one.
+> 
+> We should fix this one first.
+> 
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 44ac6eb3..680cede 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -388,6 +388,10 @@ static int stm32h7_spi_get_fifo_size(struct stm32_spi *spi)
- 	return count;
- }
- 
-+static void stm32f4_spi_tx_dummy(struct stm32_spi *spi)
-+{
-+	writeb_relaxed(0x55, spi->base + STM32F4_SPI_DR);
-+}
- /**
-  * stm32f4_spi_get_bpw_mask - Return bits per word mask
-  * @spi: pointer to the spi controller data structure
-@@ -811,7 +815,9 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
- 		mask |= STM32F4_SPI_SR_TXE;
- 	}
- 
--	if (!spi->cur_usedma && spi->cur_comm == SPI_FULL_DUPLEX) {
-+	if (!spi->cur_usedma && (spi->cur_comm == SPI_FULL_DUPLEX ||
-+				 spi->cur_comm == SPI_SIMPLEX_RX ||
-+				 spi->cur_comm == SPI_3WIRE_RX)) {
- 		/* TXE flag is set and is handled when RXNE flag occurs */
- 		sr &= ~STM32F4_SPI_SR_TXE;
- 		mask |= STM32F4_SPI_SR_RXNE | STM32F4_SPI_SR_OVR;
-@@ -850,8 +856,10 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
- 		stm32f4_spi_read_rx(spi);
- 		if (spi->rx_len == 0)
- 			end = true;
--		else /* Load data for discontinuous mode */
-+		else if (spi->tx_buf)/* Load data for discontinuous mode */
- 			stm32f4_spi_write_tx(spi);
-+		else if (spi->cur_comm == SPI_SIMPLEX_RX)
-+			stm32f4_spi_tx_dummy(spi);
- 	}
- 
- end_irq:
-@@ -1151,7 +1159,9 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- 	/* Enable the interrupts relative to the current communication mode */
- 	if (spi->cur_comm == SPI_SIMPLEX_TX || spi->cur_comm == SPI_3WIRE_TX) {
- 		cr2 |= STM32F4_SPI_CR2_TXEIE;
--	} else if (spi->cur_comm == SPI_FULL_DUPLEX) {
-+	} else if (spi->cur_comm == SPI_FULL_DUPLEX ||
-+				spi->cur_comm == SPI_SIMPLEX_RX ||
-+				spi->cur_comm == SPI_3WIRE_RX) {
- 		/* In transmit-only mode, the OVR flag is set in the SR register
- 		 * since the received data are never read. Therefore set OVR
- 		 * interrupt only when rx buffer is available.
-@@ -1170,6 +1180,8 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- 	/* starting data transfer when buffer is loaded */
- 	if (spi->tx_buf)
- 		stm32f4_spi_write_tx(spi);
-+	else if (spi->cur_comm == SPI_SIMPLEX_RX)
-+		stm32f4_spi_tx_dummy(spi);
- 
- 	spin_unlock_irqrestore(&spi->lock, flags);
- 
-@@ -1462,9 +1474,15 @@ static int stm32f4_spi_set_mode(struct stm32_spi *spi, unsigned int comm_type)
- 		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIMODE |
- 					STM32F4_SPI_CR1_BIDIOE);
--	} else if (comm_type == SPI_FULL_DUPLEX) {
-+	} else if (comm_type == SPI_FULL_DUPLEX ||
-+				comm_type == SPI_SIMPLEX_RX) {
- 		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIMODE |
-+					STM32F4_SPI_CR1_RXONLY);
-+	} else if (comm_type == SPI_3WIRE_RX) {
-+		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
-+					STM32F4_SPI_CR1_BIDIMODE);
-+		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIOE);
- 	} else {
- 		return -EINVAL;
--- 
-2.7.4
+I analyze the l1l2_inject module, there is a kworker thread used to inject error.
+do_sea() try to kill the kworker thread, so the work(s) queued on this kworker
+is blocked.
+
+panic_on_oops option is usually set on production environment, so if someone
+unset this option for testing, he should take his own risk. Is it right?
+
+> 
+> 2 is a bit more complicated. Today, this is fatal because the arch code assumes this was
+> probably a memory error, and if it returns to user-space it can't avoid getting stuck in a
+> loop until the scheduled memory_failure() work runs. Instead it unconditionally signals
+> the process.
+> 
+> [0] fixes this up for memory errors. But in this case it will assume all the work has been
+> done by APEI, (or will be before we get back to user-space). APEI ignored the processor
+> error you fed it, because it doesn't know what they are, they are just printed out.
+> 
+> This is fine for corrected errors, but were are reliant on your firmware describing
+> uncorrected errors with a 'fatal' severity... which might be too heavy a hammer. (Ideally
+> that would mean 'uncontained', and the kernel should handle, or detect it can't, any other
+> errror...)
+> 
+> We can discuss the right thing to do here when support for parsing these 'arm processor
+> errors' is posted.
+> (If you think I need to do something different in [0] because of this, please shout!)
+
+For some errors which could be recoverable or corrected, do_sea() should not kill process
+or die() unconditionally. It's better detect this situation.
+
+> 
+> 
+>> [  387.740609] {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 9
+>> [  387.748837] {1}[Hardware Error]: event severity: recoverable
+>> [  387.754470] {1}[Hardware Error]:  Error 0, type: recoverable
+> 
+>> [  387.760103] {1}[Hardware Error]:   section_type: ARM processor error
+> 
+> et voila! Case 2. Linux doesn't handle these 'ARM processor error' things, because it
+> doesn't know what they are. It just prints them out.
+> 
+> 
+>> [  387.766425] {1}[Hardware Error]:   MIDR: 0x00000000481fd010
+>> [  387.771972] {1}[Hardware Error]:   Multiprocessor Affinity Register (MPIDR): 0x0000000081080000
+>> [  387.780628] {1}[Hardware Error]:   error affinity level: 0
+>> [  387.786088] {1}[Hardware Error]:   running state: 0x1
+>> [  387.791115] {1}[Hardware Error]:   Power State Coordination Interface state: 0
+>> [  387.798301] {1}[Hardware Error]:   Error info structure 0:
+>> [  387.803761] {1}[Hardware Error]:   num errors: 1
+>> [  387.808356] {1}[Hardware Error]:    error_type: 0, cache error
+>> [  387.814160] {1}[Hardware Error]:    error_info: 0x0000000024400017
+>> [  387.820311] {1}[Hardware Error]:     transaction type: Instruction
+>> [  387.826461] {1}[Hardware Error]:     operation type: Generic error (type cannot be determined)
+>> [  387.835031] {1}[Hardware Error]:     cache level: 1
+> 
+>> [  387.839878] {1}[Hardware Error]:     the error has been corrected
+> 
+> As this is corrected, I think the bug is a deadlock somewhere in do_task_dead().
+> 
+> 
+>> [  387.845942] {1}[Hardware Error]:    physical fault address: 0x00000027caf50770
+> 
+> (and your firmware gives you the physical address, excellent, the kernel can do something
+> with this!)
+> 
+> 
+>> [  388.021037] Call trace:
+>> [  388.023475]  lsu_inj_ue+0x58/0x70 [l1l2_inject]
+>> [  388.029019]  error_inject+0x64/0xb0 [l1l2_inject]
+>> [  388.033707]  process_one_work+0x158/0x4b8
+>> [  388.037699]  worker_thread+0x50/0x498
+>> [  388.041348]  kthread+0xfc/0x128
+>> [  388.044480]  ret_from_fork+0x10/0x1c
+>> [  388.048042] Code: b2790000 d519f780 f9800020 d5033f9f (58001001)
+>> [  388.054109] ---[ end trace 39d51c21b0e42ba6 ]---
+>>
+>> core 0 hung up at here.
+> 
+> DEBUG_ATOMIC_SLEEP and maybe LOCKDEP should help you pin down where the kernel is getting
+> stuck. It looks like a bug in the core code.
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> [0] https://lore.kernel.org/linux-acpi/20200228174817.74278-4-james.morse@arm.com/
+> .
+> 
 
