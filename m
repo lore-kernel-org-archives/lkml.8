@@ -2,119 +2,156 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D89C47253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF9BC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0499F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588259663;
-	bh=KMGeU6nz29vrM1uYO0a3kTVAV4cJFx0s+w9L3Ywf0pI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NNhdReYfiGkqILupPgt3HTEp2XatWcTKgvOKfDallXtdmSVhvHjTvYxNHKb1KX2C3
-	 idp0Pcofic011XYcXIUOCs/WnR16KLZIx3KG4pl1a6U32iZ5n8eXxrdqQf84ADagDp
-	 HWgo61xnvC/TVJeAZM30qb6ZzJfPJPWnLA9b7ApQ=
+	by mail.kernel.org (Postfix) with ESMTP id E557A20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgD3POW (ORCPT
+        id S1727786AbgD3PO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 11:14:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48040 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgD3POV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:14:21 -0400
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE1B320661;
-        Thu, 30 Apr 2020 15:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588259661;
-        bh=KMGeU6nz29vrM1uYO0a3kTVAV4cJFx0s+w9L3Ywf0pI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TT7oatkHmj3/y+HBS5xZ+Qb8BlnZyRCmMd01I/Fi4IGDRianFaX2gJjieNuIOmDC8
-         zkgA6dPqNohx+byuPdjelqKTvqVCfOXa7jel5IBYvHPG9OHCSGRKmC3Z0YFhpcFUVs
-         KdRlWEddm8YUeJZT4UxoO6CCDl1cPPxmnhdsM1zg=
-Received: by mail-io1-f53.google.com with SMTP id b12so1826687ion.8;
-        Thu, 30 Apr 2020 08:14:20 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaUlK6QwYD4xVFCEM7LS23VU52o2JbWtsh1DjuX/mTvzT82lCG5
-        l00xQmlcL9QO6eL+QYpuVBsVAQv6DC0Fxq3bf8Q=
-X-Google-Smtp-Source: APiQypISgwQ0ge6OQUtXTqQAtwh9HUtZQ4CGAaRQizRfjz+lvojsquMeqkYNr8DKAedRWB3z3tEWNdRBHjK1qZCKbiM=
-X-Received: by 2002:a5d:9b8a:: with SMTP id r10mr2356911iom.171.1588259660396;
- Thu, 30 Apr 2020 08:14:20 -0700 (PDT)
+        id S1726524AbgD3PO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:14:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DA1E2AD31;
+        Thu, 30 Apr 2020 15:14:55 +0000 (UTC)
+Subject: Re: [RESEND 1/2] drm/client: Dual licence the header in GPL-2 and MIT
+To:     Emmanuel Vadot <manu@FreeBSD.org>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch, matthew.d.roper@intel.com,
+        noralf@tronnes.org, kraxel@redhat.com, tglx@linutronix.de
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+References: <20200430145439.31257-1-manu@FreeBSD.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <d4f1695b-256f-1985-af8a-ff2544fbaf99@suse.de>
+Date:   Thu, 30 Apr 2020 17:14:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
- <20200429174120.1497212-5-nivedita@alum.mit.edu> <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
- <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
- <20200429214332.GC1621173@rani.riverdale.lan> <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
- <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com> <20200429222057.GA1645040@rani.riverdale.lan>
-In-Reply-To: <20200429222057.GA1645040@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 30 Apr 2020 17:14:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGCetKOZ86JmTbPUL9koq7=n8fRcWtctf7Xzi5mWaP2Bg@mail.gmail.com>
-Message-ID: <CAMj1kXGCetKOZ86JmTbPUL9koq7=n8fRcWtctf7Xzi5mWaP2Bg@mail.gmail.com>
-Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Joe Perches <joe@perches.com>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200430145439.31257-1-manu@FreeBSD.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="GcX2OMJVvid5mJfQIblAToBdkLRli4mUE"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 at 00:21, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, Apr 29, 2020 at 11:55:04PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 29 Apr 2020 at 23:53, Joe Perches <joe@perches.com> wrote:
-> > >
-> > > On Wed, 2020-04-29 at 17:43 -0400, Arvind Sankar wrote:
-> > > > On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
-> > > > > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
-> > > > > > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
-> > > > > > > Use pr_efi_err instead of bare efi_printk for error messages.
-> > > > > >
-> > > > > > Perhaps it'd be better to rename pr_efi_err to eri_err
-> > > > > > so it's clearer it's a typical efi_ logging function.
-> > > > > >
-> > > > > > $ git grep -w --name-only pr_efi_err | \
-> > > > > >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
-> > > > > >
-> > > > >
-> > > > > Yeah, pr_efi_err() is probably not the best name
-> > > >
-> > > > Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
-> > >
-> > > Perhaps not use pr_ in the name at all.
-> > >
-> > > I suggest:
-> > >
-> > > pr_efi          -> efi_info (or efi_debug or efi_dbg)
-> > >                    (it is guarded by an efi_quiet flag, default: on)
-> > > pr_efi_err      -> efi_err
-> > >
-> >
-> > Agreed. Shorter is better if there is no risk of confusion..
->
-> Ok, I'll use efi_info/efi_err. We could add debugging output as
-> efi_debug later, enabled if efi=debug is specified.
->
-> While we're here: most of the existing cases of pr_efi look like notice
-> or info level, except maybe these two, which probably should be at least
-> warnings?
->
-> drivers/firmware/efi/libstub/arm64-stub.c
-> 62: pr_efi("EFI_RNG_PROTOCOL unavailable, no randomness supplied\n");
->
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GcX2OMJVvid5mJfQIblAToBdkLRli4mUE
+Content-Type: multipart/mixed; boundary="vRDjqSKFAYgJoZbQ26meYrfX5QkHuZLsT";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Emmanuel Vadot <manu@FreeBSD.org>, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+ matthew.d.roper@intel.com, noralf@tronnes.org, kraxel@redhat.com,
+ tglx@linutronix.de
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Daniel Vetter <daniel.vetter@ffwll.ch>
+Message-ID: <d4f1695b-256f-1985-af8a-ff2544fbaf99@suse.de>
+Subject: Re: [RESEND 1/2] drm/client: Dual licence the header in GPL-2 and MIT
+References: <20200430145439.31257-1-manu@FreeBSD.org>
+In-Reply-To: <20200430145439.31257-1-manu@FreeBSD.org>
 
-This should not be a warning. KASLR is enabled by default by the
-distros, and many systems don't implement this protocol at all.
+--vRDjqSKFAYgJoZbQ26meYrfX5QkHuZLsT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> drivers/firmware/efi/libstub/efi-stub.c
-> 254: pr_efi("Ignoring DTB from command line.\n");
 
-That could be upgraded to an error.
+
+Am 30.04.20 um 16:54 schrieb Emmanuel Vadot:
+> Source file was dual licenced but the header was omitted, fix that.
+> Contributors for this file are:
+> Daniel Vetter <daniel.vetter@ffwll.ch>
+> Matt Roper <matthew.d.roper@intel.com>
+> Maxime Ripard <mripard@kernel.org>
+> Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> Thomas Zimmermann <tzimmermann@suse.de>
+>=20
+> Acked-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> Acked-by: Matt Roper <matthew.d.roper@intel.com>
+> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Emmanuel Vadot <manu@FreeBSD.org>
+
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+> ---
+>  include/drm/drm_client.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/include/drm/drm_client.h b/include/drm/drm_client.h
+> index 7402f852d3c4..eb259c2547af 100644
+> --- a/include/drm/drm_client.h
+> +++ b/include/drm/drm_client.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> +/* SPDX-License-Identifier: GPL-2.0 or MIT */
+> =20
+>  #ifndef _DRM_CLIENT_H_
+>  #define _DRM_CLIENT_H_
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--vRDjqSKFAYgJoZbQ26meYrfX5QkHuZLsT--
+
+--GcX2OMJVvid5mJfQIblAToBdkLRli4mUE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6q62wACgkQaA3BHVML
+eiOexgf+I7u9pEn9RDmjltV3FvMKjKkrPOemf9TBugAKfIq7uhwnLsPNBukyow4G
+qYtCI0gohyTwHRpvE+XNonP8CeMWTX+wEtqKabatEbf2sEaNnMspLFfHS6C2cTIo
+WidsJ3Xgek5Q1tPwPMjn6VXo0gpSQe3ZwC8On2HkqCBNqHfUc8ITml7af0WqbXdC
+jn08ZYL8RQT5yPqF5oIivigobARHfm/HhuIvAyA2fLQ9YkkjNqt2p2L3RnEA++YS
+ShJBsu0Ja1TCmJ7SaIFNP83onm0BqkBX9F6jF8msAwKOIw/l37d2idbzNH9vO2KB
+dBwjnlV8cqov5TQwm34enj6fEgbTbQ==
+=8dmm
+-----END PGP SIGNATURE-----
+
+--GcX2OMJVvid5mJfQIblAToBdkLRli4mUE--
