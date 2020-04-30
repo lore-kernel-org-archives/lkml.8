@@ -2,129 +2,167 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04923C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C5DC47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9AEA20757
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C8A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnR8JGqi"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eRjy/X/c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F0Q4+cQN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgD3O6w (ORCPT
+        id S1726688AbgD3PAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726380AbgD3O6v (ORCPT
+        Thu, 30 Apr 2020 11:00:52 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:47127 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726519AbgD3PAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:58:51 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD439C035494;
-        Thu, 30 Apr 2020 07:58:51 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l20so2849822pgb.11;
-        Thu, 30 Apr 2020 07:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NFYSfA/3764WrnouY0loV6hglNFNiP/lp/p+4dXkwLs=;
-        b=gnR8JGqi6ExZ8eVYHErJr8bXlK8lxA/47DM1lBduLpbJt5HsVjZDsJbtxHJ6VW2/D7
-         mwAvUFmDG+4Opyz1XMXsfhV3V8gGHxFj9eu0zbRprCctVYZiXzKu9Pjqcti1H+JwN7XA
-         9MflhWFoYRKuA3A2R4IIk6PCTKV4V9X1eDt1bjOoSrIRd8zFHGFdvpD8lFUU/FE5EBKv
-         41J6RkMMKQ2ht6afAGzP2eEm/0OURhxRLYtroJ2GW2Qm/OD8A07TzRTxAzwset5X5It/
-         UmMxsIfvXVorGDXrC42NDeiOrOzEJFWbSwbI9XPSAsAULogotNegbJhnSaOOVNcxosy2
-         bWmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NFYSfA/3764WrnouY0loV6hglNFNiP/lp/p+4dXkwLs=;
-        b=sScsvJy/Jkqel7pVxjvSe3IZH90K8dD4TM3lYxUmZ/N0ITlfWy0mi9wmSxXBEy/kER
-         lG5C5mYFcRp+5NPtkgixACZB90ULQkklwKLv1LExnxo23hhDC5tmnN370Ql2UOHsdIN/
-         6w9XKPvkrwjxgRY48CP2Ag2swGqZBpT5PS8sphqTu9UQ/IQ23+czAXbz1pU5Zq5fvjuo
-         i1dQRMWzdiJAAxobBX4QcY+gMLQ3quRT4FIllr9Z0VcTKIJxcbu4IQB610OkeKj/9sW/
-         OBwq8VaMCjqU7i8Or9Qhk/KUBCpgo3WQU5Isa8EaeStBgfH9Kbi7mvN0eUJlSLYMeGuu
-         n/OA==
-X-Gm-Message-State: AGi0PuZGKMrGwbcRnDdNlRXLTaTeLH4eXXPf33QIDfckYGa8jELHXPo2
-        X1TYGvmvDEpM3sydS0vMSaOcMJknQIM=
-X-Google-Smtp-Source: APiQypLUbA28K7rJdyqHeyLYfd3Z4yuLMi0EkduRaXjMwn5RPKUauV7cMtEFMzJ1kUN+265YercDow==
-X-Received: by 2002:aa7:9484:: with SMTP id z4mr4053092pfk.144.1588258731268;
-        Thu, 30 Apr 2020 07:58:51 -0700 (PDT)
-Received: from sol (220-235-85-217.dyn.iinet.net.au. [220.235.85.217])
-        by smtp.gmail.com with ESMTPSA id c1sm101548pfc.94.2020.04.30.07.58.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Apr 2020 07:58:50 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 22:58:44 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     "Bujanda, Hector" <Hector.Bujanda@digi.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-Message-ID: <20200430145844.GA28588@sol>
-References: <20200419001858.105281-1-hector.bujanda@digi.com>
- <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
- <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
- <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
- <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+        Thu, 30 Apr 2020 11:00:51 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id B10A78D5;
+        Thu, 30 Apr 2020 11:00:50 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 30 Apr 2020 11:00:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=wL1V4tEUZLHoYkqrxr+Oa2YFwHa
+        SxUnLHe2fYo122cQ=; b=eRjy/X/c9rApVN5yi3uYKaqPzwMsOtlHhuAPrrF9B0i
+        iQHRl9Hq3IoeKZnDpKXdUVukJFX4edjbAyw+PrWeL72xFgDS3d0VnDgD8vRomIHk
+        jHqHPb9GspYzXbr3/BFZykLjhgF85nlTBjs5l/y18Gw6PKaH2vp9kZCOjHZk+J/f
+        R9980fuYOFWW9Bm7XzlDnGQn3k/8or+kEj/WABQZmjjPRSbrXCjAgvySy5eSIc51
+        9roQF9ZR8AUC8j3NgSFrwg4dVBRFMGY9R5Qw8aC91OEv6jk3GTl0K8FqbtBmf/LF
+        uijbza0qqx+UuXw3zUf6xhLY0I9rgdgKyePp0M2VI7Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wL1V4t
+        EUZLHoYkqrxr+Oa2YFwHaSxUnLHe2fYo122cQ=; b=F0Q4+cQNnzFq6/khK4e0qg
+        /uk03HpDnjPjU69ImFsyOKvOUS5AT/EC3QOa+tZYvOBm3mp4t+wx9z4gzvDwl2LQ
+        gZJJvJAopHBtdg+gkElykoUiHQpX2C7uJPicjRck/hinYcfmpCGGUHEx+peQabh2
+        ZwAZ0kC60GiGdkbZkylblzzI/40ka8SI7jPpf0VkUv0MnhTn8+BwSDzfXJKl14fO
+        Cnj5XVcE26Y/kPKjfgusmQnp0p/q0eEao12kMqXGmYlCmHe+4Ngr4vtPMC0pluxx
+        HpscKjJZMHw/U/birRicLdmQXrbBku75D2qVzyBDRXf/dbQxdRyhLXgr3AFzyE2Q
+        ==
+X-ME-Sender: <xms:IOiqXstmmURRV0ZP7DmZQjTMi5sQQs2YJOKJg-9cVB14fX8rdv6YqQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrieehgdekfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:IeiqXgSZ82gBjRU5ofAh50ol90uhIKkhV4SvCizrBlbVQHMBUTyJaw>
+    <xmx:IeiqXo-y_KKfB6E-DGBL2WXPZ-FyCk90DGsGXLiFLt0W3Zdalko_ZA>
+    <xmx:IeiqXs_b7h9AdXlQrkqHgOKF51RQ1HbbJQ_Xx1EGnyKu71VSFPy1lg>
+    <xmx:IuiqXmZ0KdB4UONcdqNrdb_ratIO2QL61zscAKDpLU2RJwAOtLiPQw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B2E543065F2B;
+        Thu, 30 Apr 2020 11:00:48 -0400 (EDT)
+Date:   Thu, 30 Apr 2020 17:00:46 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Priit Laes <plaes@plaes.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 4/6] dt-bindings: net: sun7i-gmac: Add syscon support
+Message-ID: <20200430150046.theqniqcrfjiokyo@gilmour.lan>
+References: <20200430115702.5768-1-plaes@plaes.org>
+ <20200430115702.5768-5-plaes@plaes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="efw2ihuaxv6irv3b"
 Content-Disposition: inline
-In-Reply-To: <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200430115702.5768-5-plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 01:32:22PM +0000, Bujanda, Hector wrote:
-> Thanks all for your guidance!
-> 
-> First saying that this patch request was sent having our platforms in k4.14 in the way of upgrading to k5.4.
-> In those versions the commit e588bb1eae31be73fbec2b731be986a7c09635a4 "gpio: add new SET_CONFIG ioctl() to gpio chardev" by Kent Gibson was not available.
-> 
-> I see that you clearly understand the necessity of having a way of configuring debounce from the userspace.
-> Our platforms make use of hardware debouncing filtering. Up to now we were using the sysfilesystem to let the user handle gpios (including debounce configuration).
-> We wanted now to get rid of sysfilesystem and start using gpiolib/libgpiod.... but configuring debounce is blocking us.
-> 
-> Now I clearly see (as pointed by Bartosz Golaszewski) that my suggested GPIO_SET_DEBOUNCE_IOCTL is wrong as it hits the chip file descriptor while 'Modifying any config settings can only happen on lines previously requested too in user-space'.
-> 
-> I agree with all that a flag is needed to allow configuring debounce to '0' which has always meant disabling it.
-> 
-> Also agree with 'Kent Gibson' suggestion of  'You might want to add a flag to the GPIOLINE_FLAGs to indicate if debounce is set'.
-> 
-> I have my doubts if it is compulsory to extend debounce configuration to the gpioevent_requests since the debounce value configured by a user is normally linked to a hardware noise in a line; and that does not change from one gpioevent_requests to another. So I think this configuration would be useful but not compulsory.
-> 
 
-Just to clarify on this point, the reason the SET_CONFIG would have to
-be extended to events is not to alter the debounce on the fly but to set
-it at all.  Lines are requested as either handles (for outputs or polled inputs) 
-or events (for asynchronous edge events on inputs). We cannot extend
-either the handle or event request ioctls themselves as there is no provision 
-in their data structures for future expansion.  There is in the
-SET_CONFIG ioctl - but that doesn't apply to event requests yet...
+--efw2ihuaxv6irv3b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 30, 2020 at 02:57:00PM +0300, Priit Laes wrote:
+> Now that driver supports syscon-based regmap access, document also the
+> devicetree binding.
+>=20
+> Signed-off-by: Priit Laes <plaes@plaes.org>
+> ---
+>  .../bindings/net/allwinner,sun7i-a20-gmac.yaml    | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gm=
+ac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.ya=
+ml
+> index 703d0d886884..c41d7c598c19 100644
+> --- a/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+> @@ -29,17 +29,26 @@ properties:
+>    clocks:
+>      items:
+>        - description: GMAC main clock
+> +
+> +      # Deprecated
+>        - description: TX clock
+> =20
+>    clock-names:
+>      items:
+>        - const: stmmaceth
+> +
+> +      # Deprecated
+>        - const: allwinner_gmac_tx
 
-> I agree with Linus Walleij that 'there is a serious user-facing problem here though, because not all GPIO controllers supports debounce'.
-> Our platforms have native freescale/NXP gpiochips not supporting hardware debounce and our own gpiochips having hardware debounce.
-> We have also noticed that 'drivers/input/keyboard/gpio_keys.c contains generic debounce code using kernel timers if the GPIO driver cannot provide debouncing'. That feature is not of our interest (because of having hardware debounce filters) but it would clearly be a very good overall functionality.
-> 
-> Having said all above, I wonder how you want to proceed.
-> Our current development in k5.4 and libgpiod1.4.1 is much behind master... what makes collaboration (and reusability) a bit more complex.
-> Also I see the implementation requires a bigger picture than I initially expected.
-> So I wonder if you want me to do the initial steps of the development (what I foresee will require some back and forth) or you prefer implementing all pieces.
-> 
+That would be deprecated: true
 
-I totally agree with you on the widening scope.
+Also, you still require to have two clocks here?
 
-Bart - how do you want to go forward with this?  I'm available to work
-on it, in part or full.
+> =20
+>    phy-supply:
+>      description:
+>        PHY regulator
+> =20
+> +  syscon:
+> +    $ref: /schemas/types.yaml#definitions/phandle
+> +    description:
+> +      Phandle to the device containing the GMAC clock register
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -48,6 +57,7 @@ required:
+>    - clocks
+>    - clock-names
+>    - phy-mode
+> +  - syscon
 
-Cheers,
-Kent.
+You can't do that though, this changes the binding in a non-backward compat=
+ible
+way
+
+I guess you could add an if clause to require it if clocks has a single mem=
+ber.
+
+Maxime
+
+--efw2ihuaxv6irv3b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqroHgAKCRDj7w1vZxhR
+xaUUAP9VjkAn7iLXVy4t1HqW05/RoWbJVdFH3BGNDFaVLw0YZAD/Zj1MU1dV2h5E
+VoTak9i1lQOKrH5HLCG+yUEjfZKZCQU=
+=aG3C
+-----END PGP SIGNATURE-----
+
+--efw2ihuaxv6irv3b--
