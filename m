@@ -2,220 +2,168 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9FBC83014
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA21AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2F0D2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnYKe19f"
+	by mail.kernel.org (Postfix) with ESMTP id 918D32082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588253893;
+	bh=QOVrxYcw/KtkynvgseuYHrW5JtbhUgcK/5+t6HAA4z8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=It5owmB682XLo7V8QeA1AU+zw0pkfYLejCe5fGzcQmUS/eE17au3Yzm8FPkTgDHON
+	 Tio85n2lDqXI6uMfBUpmozVwPZbkkNV+vPjwrPW8j+FbGbFcbh4MQazMP4N04snL22
+	 czk1m4Csjbp60UerZejZjVGCfKreR5+rj23IWFGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgD3Nhs (ORCPT
+        id S1727100AbgD3NiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52654 "EHLO
+        Thu, 30 Apr 2020 09:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgD3Nhr (ORCPT
+        with ESMTP id S1726577AbgD3NiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:37:47 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D47C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:37:47 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e17so4900940qtp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:37:47 -0700 (PDT)
+        Thu, 30 Apr 2020 09:38:12 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91752C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:38:11 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f18so6478454lja.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:38:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bCxKlbHJaTEyAh+t90Uz2r+RNa6TsPTGNQeXGObtATE=;
-        b=YnYKe19fVMzlvt09cdbRMbtg7AJgWf4r+vmQNBRHLOAkMjzPaGthVJ88ZCGAuehE3G
-         rD4tUe/kZ9oY1gI8oStWos7LiJwsz9+r/jDN38r6EqPm7334+uqXwlaCnjlDAOMDCRlU
-         laoBjaG5PFouW1qDaFbx5BXiDUmgyXq6Cw1H5X2dpGx6QEflb89GjJ/3Mq4Jn/EHQaD1
-         2hhuP5604ScwkmNf5LRIqwpX89MIufZ1PZkCaxetNbUC9IAjJhHsuOXE/SphJz9JcNy4
-         DFf+OUhNm92JV3Vz6pxtdkHW2MhBuxgTXHbTr2GBEXpec6zCF1kLkkQPdlnNNQjHw5JZ
-         oUTA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8pRCZ6kZWfVJxdxP6p9p7StOMMTYz2dP0EbXo5rgjQU=;
+        b=EyGdH4vIo8rZD2dWljfyuvofwLAScuy9MrePCPLMC5SLAN0uCqQgWU8hOATGY8NIUG
+         LwU5XqtrSsASECVWVUS0kqmaNFOJ+f7Gt60Rs46vskb78lwJIYXW+VaB0yoC9jwiDxnd
+         eeFKa6lM8p9a1iPOaT8z276Ht3zSOkERrFaNY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bCxKlbHJaTEyAh+t90Uz2r+RNa6TsPTGNQeXGObtATE=;
-        b=qjwI4Pfn9hwuZqed79RGDlFOIHGKP7sjWYLgQ1Dm62++7bI3jWaccGqhVQ1Y6yc8Nc
-         M0a3PRjgiYkhmg0fCIFvGlGT04u+IqdafQTsAY87jyeu45kGNO6D14H9eIXGHA15mfmb
-         ZosTMocBlukhxfm8XnmUQSFujI4szjMawRd0dtU09oEUREacEyyuW3QvxB0Xq8YTAUYW
-         L16v7bt81nwrARsVYkJn7Zx5dB+o+us6Zz4mchFGLEGdNwV8s1c2C3oAhPEIIzl11xQo
-         TGtALVkjLCuVmp/gotBkXeBL5B+AzYTkPIko/rcGN0ciAbi/nXsNQHHbBfRUBrYsXxlk
-         0kDA==
-X-Gm-Message-State: AGi0PuZACAIu6U9kmxXT/2oCLvdP/UdfQFw9hGA/nzTnGMPri8/EwfZ6
-        /gpvN54ABEZSJaEk1tBhWro=
-X-Google-Smtp-Source: APiQypLT9+cPc/TqAiXv3wpy/3/S37kYFDZtOXxTqf8uat6m1pxp+AHoMzekGHoT2LWIVKDGqVA2GA==
-X-Received: by 2002:ac8:5302:: with SMTP id t2mr3820799qtn.124.1588253866263;
-        Thu, 30 Apr 2020 06:37:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id x194sm1855954qkb.131.2020.04.30.06.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 06:37:45 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E4E02409A3; Thu, 30 Apr 2020 10:37:42 -0300 (-03)
-Date:   Thu, 30 Apr 2020 10:37:42 -0300
-To:     Konstantin Khlebnikov <koct9i@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH v2 2/3] perf tool: fix detecting smt at machines with
- more than 32 cpus
-Message-ID: <20200430133742.GK30487@kernel.org>
-References: <158817718710.747528.11009278875028211991.stgit@buzz>
- <158817735893.747933.15107805593224835078.stgit@buzz>
- <20200429181346.GF30487@kernel.org>
- <CALYGNiPcicchqKr4+a8QT=mm20ReGMv5-V605RzCAHP8-2vN3g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8pRCZ6kZWfVJxdxP6p9p7StOMMTYz2dP0EbXo5rgjQU=;
+        b=hMXeURv8z4cyB0eZUy50K+ysKxwuTT33EUlHIJF1CsoUmsNAYcmYll1U8eGcc+qdmO
+         aU7qxo4acM7VJi0+Dle6Hrtk6M76Q6S3Q3R2BblRzqm8GX7s2tT5LyVf1bM4Gs8cpsC/
+         yALael7WDDPrgU9yMfSO0vwp9/+GqV4MifHSgXk7xAw1bAIB6IntQURsPHZoGI9bpG0Q
+         rXT041HENVjFjxNHfOl+Py6YKwQMT76r0IjO4ZqmVSosoxS2xN/RA8Nih/E/SNPK26mV
+         Z5N2s+3feBA0YNOr4qvaB4waVzOKF6QGYbY0d2y8FQe0Jj1d8YhkE8FWx6M/fd6jjajt
+         9LOQ==
+X-Gm-Message-State: AGi0PuZDdPwjb7SSHpRmM0b3cH3jVw/PLdVmtrNxgQvgjE0c9CpN42pr
+        ahN7rQFA8EOZ/CqT6bo+JsfYFw/1L2s=
+X-Google-Smtp-Source: APiQypLe7WijtuskdrwKkYkSURtdiQHLf3zYc2QMtuE1gWGiztiCSqGp44sXXp3b3RPyWyroJ4TArA==
+X-Received: by 2002:a2e:b885:: with SMTP id r5mr2223539ljp.118.1588253889516;
+        Thu, 30 Apr 2020 06:38:09 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id u2sm4994076lfk.67.2020.04.30.06.38.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 06:38:08 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id u10so1228135lfo.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 06:38:08 -0700 (PDT)
+X-Received: by 2002:a19:9109:: with SMTP id t9mr2305493lfd.10.1588253887778;
+ Thu, 30 Apr 2020 06:38:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALYGNiPcicchqKr4+a8QT=mm20ReGMv5-V605RzCAHP8-2vN3g@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <CAHk-=whJttTNFQn1fMYp91LZ90iHE7B2THZ8NjQ7fBwmWX9k6w@mail.gmail.com>
+ <CAHk-=wi_zr9dwX3UBYvgkmm6eVQfRP50orryJ6ZVAxuFqdSG5A@mail.gmail.com>
+ <20200428190836.GC29960@redhat.com> <CAHk-=wi03QRcUR1DfbEr+Pw-DAMENzY-FuRcGawtj9p597=p2w@mail.gmail.com>
+ <CAG48ez03ABTa-KbCtFHqB1hOT7dgAM96c3kiw-e80B+utSEwYw@mail.gmail.com>
+ <CAHk-=wjTLnMuZmBO2foeHhsLAoUTpUi7oBVJ67F4XKB+tdEDbQ@mail.gmail.com>
+ <CAG48ez3EQOvdbzu9aO-cEAJwF_=fJzn1Cg0LMs3ruc=5r1ie5w@mail.gmail.com>
+ <CAHk-=whTgFbjGTP=CqMWs_LOkY7bWvLQGYKwKx86amdbMovAkw@mail.gmail.com>
+ <CAG48ez2-Nu2ALN6VEUZL-prtR_Kk8QYBHcnvuh0aU2e4zf37RA@mail.gmail.com>
+ <CAHk-=wh=G47oD2F1CgOrvGFbEPh2ddMKLV4_wV_bs6S=98aZ5A@mail.gmail.com>
+ <AM6PR03MB5170A6AA240D2E8F5E88B911E4AD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wguiKq8yf11WJjgSL4ADKZ5sLe_Qbd7vHEqAkTvZJ+d+Q@mail.gmail.com>
+ <CAHk-=wjUZLybZBJgOtD2gng=FS7USrbQQ1-tn5M+UP5DbCWdzw@mail.gmail.com>
+ <CAG48ez0FL3i4eGFYryOwG2nnS+JigfKYAVSV9ogVHjmjOWzsrA@mail.gmail.com>
+ <AM6PR03MB5170C5D02C6FCB6D69DFE3ADE4AA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg6oKSLkVhY5oqOFyzCCSr9eYPGK2SHJfgCXF_QOmPKog@mail.gmail.com>
+ <CAG48ez25=6qrCU51dEAV_ciyU2jvPuRFWfFOAAT22kmeAZccuQ@mail.gmail.com> <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjE_YJ4SFJUasF=tW0jMr6zg+rkRNuNt2hdODPu_LLTVw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 30 Apr 2020 06:37:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjcyDkW_eQ_f4j82dci6jteSgOZ_ONRh9nzs9ykWELQng@mail.gmail.com>
+Message-ID: <CAHk-=wjcyDkW_eQ_f4j82dci6jteSgOZ_ONRh9nzs9ykWELQng@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Jann Horn <jannh@google.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 29, 2020 at 09:38:52PM +0300, Konstantin Khlebnikov escreveu:
-> On Wed, Apr 29, 2020 at 9:16 PM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> > Em Wed, Apr 29, 2020 at 07:22:43PM +0300, Konstantin Khlebnikov escreveu:
-> > > Cpu bitmap is split into 32 bit words. For system with more than 32 cores
-> > > threads are always in different words thus first word never has two bits:
-> > > cpu0: "0000,00000100,00000001", cpu 79: "8000,00000080,00000000".
-> > >
-> > > Instead of parsing bitmap read "core_cpus_list" or "thread_siblings_list"
-> > > and simply check presence of ',' or '-' in it.
-> > >
-> > > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> > > Fixes: de5077c4e38f ("perf tools: Add utility function to detect SMT status")
-> > > ---
-> > >  tools/perf/util/smt.c |   37 +++++++++++++++++--------------------
-> > >  1 file changed, 17 insertions(+), 20 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-> > > index 8481842e9edb..dc37b5abd1c3 100644
-> > > --- a/tools/perf/util/smt.c
-> > > +++ b/tools/perf/util/smt.c
-> > > @@ -1,6 +1,7 @@
-> > >  #include <stdio.h>
-> > >  #include <stdlib.h>
-> > >  #include <unistd.h>
-> > > +#include <string.h>
-> > >  #include <linux/bitops.h>
-> > >  #include "api/fs/fs.h"
-> > >  #include "smt.h"
-> > > @@ -9,39 +10,35 @@ int smt_on(void)
-> > >  {
-> > >       static bool cached;
-> > >       static int cached_result;
-> > > +     int active;
-> > >       int cpu;
-> > >       int ncpu;
-> > > +     char *str = NULL;
-> > > +     size_t strlen;
-> >
-> > Try not to use as the name of a variable the well known name of a
-> > standard C library function, there are cases where some of those names
-> > are used as #define directives and then all hell break loose...
-> 
-> You mean "strlen"? Yeah, that's weird name for variable
-> but it was here before me thus I haven't noticed.
+On Wed, Apr 29, 2020 at 8:25 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Bernd's approach _without_ the restart is unacceptable.
+>
+> It's unacceptable because it breaks things that currently work, and
+> returns EAGAIN in situations where that is simple not a valid error
+> code.
 
-Sorry, I saw it in a + prefixed line so from a quick look I thought you
-were introducing it, my bad.
- 
-> >
-> > Also doing first the change that makes the use of that new file would
-> > allow me to have processed that patch first, which is way simpler than
-> > this one, i.e. try to leave the more involved changes to the end of the
-> > patchkit, that helps cherry-picking the less complex/smaller parts of
-> > your patchkit.
-> 
-> Hmm. Common sense tells to put cleanups and bugfixes before new features.
+Looking at my restart thing, I think it's a hack, and I don't think
+that's acceptable either.
 
-Well, in this case on up-to-date machines that code is not even used,
-its a fallback.
+I was pleased with how clever it was, but it's one of those "clever
+hacks" that is in the end more "hack" than "clever".
 
-If you don't have the time I'll eventually adjust the patch to what I
-have now in my perf/core branch, since I've reordered them,
+The basic issue is that releasing a lock in the middle just
+fundamentally defeats the purpose of the lock unless you have a way to
+redo the operation after fixing whatever caused the drop.
 
-Thanks,
+And the system call restart thing is dodgy, because there's none of
+that "fixing".
 
-- Arnaldo
- 
-> > I've applied the first one, thanks!
-> >
-> > - Arnaldo
-> >
-> > >       if (cached)
-> > >               return cached_result;
-> > >
-> > >       ncpu = sysconf(_SC_NPROCESSORS_CONF);
-> > >       for (cpu = 0; cpu < ncpu; cpu++) {
-> > > -             unsigned long long siblings;
-> > > -             char *str;
-> > > -             size_t strlen;
-> > >               char fn[256];
-> > >
-> > > -             snprintf(fn, sizeof fn,
-> > > -                     "devices/system/cpu/cpu%d/topology/core_cpus", cpu);
-> > > -             if (sysfs__read_str(fn, &str, &strlen) < 0) {
-> > > -                     snprintf(fn, sizeof fn,
-> > > -                             "devices/system/cpu/cpu%d/topology/thread_siblings",
-> > > -                             cpu);
-> > > -                     if (sysfs__read_str(fn, &str, &strlen) < 0)
-> > > -                             continue;
-> > > -             }
-> > > -             /* Entry is hex, but does not have 0x, so need custom parser */
-> > > -             siblings = strtoull(str, NULL, 16);
-> > > -             free(str);
-> > > -             if (hweight64(siblings) > 1) {
-> > > -                     cached_result = 1;
-> > > -                     cached = true;
-> > > +             snprintf(fn, sizeof(fn), "devices/system/cpu/cpu%d/topology/%s",
-> > > +                      cpu, "core_cpus_list");
-> > > +             if (sysfs__read_str(fn, &str, &strlen) > 0)
-> > > +                     break;
-> > > +
-> > > +             snprintf(fn, sizeof(fn), "devices/system/cpu/cpu%d/topology/%s",
-> > > +                      cpu, "thread_siblings_list");
-> > > +             if (sysfs__read_str(fn, &str, &strlen) > 0)
-> > >                       break;
-> > > -             }
-> > >       }
-> > > +
-> > > +     active = str && (strchr(str, ',') != NULL || strchr(str, '-') != NULL);
-> > > +     free(str);
-> > > +
-> > >       if (!cached) {
-> > > -             cached_result = 0;
-> > > +             cached_result = active;
-> > >               cached = true;
-> > >       }
-> > >       return cached_result;
-> > >
-> >
-> > --
-> >
-> > - Arnaldo
+It can cause that "write()" call to do the CPU busy loop too if it
+hits that "execve() in process" situation.
 
--- 
+The only difference with the "write()" case vs "ptrace()" is that
+nobody has ever written an insane test-case that doesn't wait for
+children, and then does a "write()" to the /proc file that can then
+require zombie children to be reaped.
 
-- Arnaldo
+So I don't think the approach is valid even with the restart. Not
+restarting isn't acceptable for write(), but restarting doesn't really
+work either.
+
+I guess we could have a very special lock that does something like
+
+    int lock_exec_cred_mutex(struct task_struct *task)
+    {
+        if (mutex_trylock(&task->signal->cred_guard_mutex))
+                return 0;
+
+        if (lock_can_deadlock(task))
+                return -EDEADLK;
+
+        return mutex_lock_interruptible(&task->signal->cred_guard_mutex);
+    }
+
+might work. But that "lock_can_deadlock()" needs some kind of oracle
+or heuristic.
+
+And I can't come up with a perfect one, although I can come up with
+things like "if the target has threads, and those threads have a
+reaoer that is you, then you have to have SIGCHLD enabled". But it
+gets ugly and hacky.
+
+But I think actually releasing the lock in the middle of execve()
+before it's done with is worse than ugly and hacky - it's
+fundamentally broken.
+
+Moving things around? Sure - like waiting for the threads _after_ the
+lock and having done all the cred calculations. So I think Oleg's
+patch works.
+
+                 Linus
