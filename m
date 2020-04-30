@@ -2,182 +2,86 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EDAC8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946BDC8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A321C214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588238273;
-	bh=u6tbeYdCysZTKvCddp61M5PPIVhI7wlanjgxY5jjmvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HP9Dx5uywq6sXLoPpiqzZDPOFZjv7JsaGeOqGhtX5P8Gq68aYB61MQUZXs/VGrQaz
-	 ss8j5NwvAAMCesytFjYxLLCGUiOhh8jhsDb97utE1flLcHUoJcFAgUIQlWdsseG1KE
-	 vQZ9Pw6y2/sZBoX9pgKHn13WEcGeNnZpkcrqpcoI=
+	by mail.kernel.org (Postfix) with ESMTP id 7125E2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgD3JRx (ORCPT
+        id S1726788AbgD3JS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 05:18:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52408 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgD3JRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:17:52 -0400
-Received: from localhost (unknown [122.182.217.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEA4E2137B;
-        Thu, 30 Apr 2020 09:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588238272;
-        bh=u6tbeYdCysZTKvCddp61M5PPIVhI7wlanjgxY5jjmvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N1LViV+3PXY8ydGA2ugK8Ve24zMTRWS0ijTfQMOFuW0fvXTcwCEWd0g5tLZ8K+0gU
-         qjAIerB6dx+IB9SA2Z1K72VNfAhmALILto17JXL1FDRYoKjqfBVh7YZQobUq7kOcy4
-         ZAA74UIor1LMQt/nv29kkAu4wTcrsLWHBrPb8tD8=
-Date:   Thu, 30 Apr 2020 14:47:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 4/5] usb: renesas-xhci: Add ROM loader for uPD720201
-Message-ID: <20200430091747.GH948789@vkoul-mobl.Dlink>
-References: <20200424101410.2364219-1-vkoul@kernel.org>
- <20200424101410.2364219-5-vkoul@kernel.org>
- <94266bc2-ae44-d7a2-61e9-4e09c29bd18d@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94266bc2-ae44-d7a2-61e9-4e09c29bd18d@linux.intel.com>
+        id S1726127AbgD3JS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 05:18:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6D2E0ABC7;
+        Thu, 30 Apr 2020 09:18:26 +0000 (UTC)
+Message-ID: <1588238283.16510.11.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in usblp_bulk_read
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, zaitcev@redhat.com
+Date:   Thu, 30 Apr 2020 11:18:03 +0200
+In-Reply-To: <00000000000046503905a3cec366@google.com>
+References: <00000000000046503905a3cec366@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-04-20, 17:39, Mathias Nyman wrote:
-> On 24.4.2020 13.14, Vinod Koul wrote:
-> > uPD720201 supports ROM and allows software to program the ROM and boot
-> > from it. Add support for detecting if ROM is present, if so load the ROM
-> > if not programmed earlier.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Cc: Christian Lamparter <chunkeey@googlemail.com>
-> > ---
-> >  drivers/usb/host/xhci-pci-renesas.c | 342 +++++++++++++++++++++++++++-
-> >  1 file changed, 341 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-> > index 402e86912c9f..6bb537999754 100644
-> > --- a/drivers/usb/host/xhci-pci-renesas.c
-> > +++ b/drivers/usb/host/xhci-pci-renesas.c
-> > @@ -50,6 +50,22 @@
-> >  #define RENESAS_RETRY	10000
-> >  #define RENESAS_DELAY	10
-> >  
-> > +#define ROM_VALID_01 0x2013
-> > +#define ROM_VALID_02 0x2026
-> > +
-> > +static int renesas_verify_fw_version(struct pci_dev *pdev, u32 version)
-> > +{
-> > +	switch (version) {
-> > +	case ROM_VALID_01:
-> > +	case ROM_VALID_02:
-> > +		return 0;
-> > +	default:
-> > +		dev_err(&pdev->dev, "FW has invalid version :%d\n", version);
-> > +		return 1;
-> > +	}
-> > +	return -EINVAL;
+Am Dienstag, den 21.04.2020, 08:35 -0700 schrieb syzbot:
+> Hello,
 > 
-> This never returns -EINVAL
-> Maybe just get rid of the default case and print
-> the error message before returning
-
-Correct, this seems to be leftover, have cleaned it up now.
-
-> > +static bool renesas_download_rom(struct pci_dev *pdev,
-> > +				 const u32 *fw, size_t step)
-> > +{
-> > +	bool data0_or_data1;
-> > +	u8 fw_status;
-> > +	size_t i;
-> > +	int err;
-> > +
-> > +	/*
-> > +	 * The hardware does alternate between two 32-bit pages.
-> > +	 * (This is because each row of the firmware is 8 bytes).
-> > +	 *
-> > +	 * for even steps we use DATA0, for odd steps DATA1.
-> > +	 */
-> > +	data0_or_data1 = (step & 1) == 1;
-> > +
-> > +	/* Read "Set DATAX" and confirm it is cleared. */
-> > +	for (i = 0; i < RENESAS_RETRY; i++) {
-> > +		err = pci_read_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-> > +					   &fw_status);
-> > +		if (err) {
-> > +			dev_err(&pdev->dev, "Read ROM Status failed: %d\n",
-> > +				pcibios_err_to_errno(err));
-> > +			return false;
-> > +		}
-> > +		if (!(fw_status & BIT(data0_or_data1)))
-> > +			break;
-> > +
-> > +		udelay(RENESAS_DELAY);
-> > +	}
-> > +	if (i == RENESAS_RETRY) {
-> > +		dev_err(&pdev->dev, "Timeout for Set DATAX step: %zd\n", step);
-> > +		return false;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Write FW data to "DATAX".
-> > +	 * "LSB is left" => force little endian
-> > +	 */
-> > +	err = pci_write_config_dword(pdev, data0_or_data1 ?
-> > +				     RENESAS_DATA1 : RENESAS_DATA0,
-> > +				     (__force u32)cpu_to_le32(fw[step]));
-> > +	if (err) {
-> > +		dev_err(&pdev->dev, "Write to DATAX failed: %d\n",
-> > +			pcibios_err_to_errno(err));
-> > +		return false;
-> > +	}
-> > +
-> > +	udelay(100);
-> > +
-> > +	/* Set "Set DATAX". */
-> > +	err = pci_write_config_byte(pdev, RENESAS_ROM_STATUS_MSB,
-> > +				    BIT(data0_or_data1));
-> > +	if (err) {
-> > +		dev_err(&pdev->dev, "Write config for DATAX failed: %d\n",
-> > +			pcibios_err_to_errno(err));
-> > +		return false;
-> > +	}
-> > +
-> > +	return true;
-> > +}
+> syzbot found the following crash on:
 > 
-> The above function is almost identical to renesas_fw_download_image() added in a 
-> previous patch.
-> To avoid code duplication I'm sure one function that handles both cases would be possible. 
+> HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=126f75d7e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=be5b5f86a162a6c281e6
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+> 
+> usblp0: nonzero read bulk status received: -71
 
-The registers are different, but that doesn't mean it can't be done. I
-have added additional argument for rom and select the register to use
-(ROM/RAM) and reused the rest of the fn
+OK, we have this report and nobody understands it. If I may summarize:
 
-Thanks
--- 
-~Vinod
+1. We do not conclusively know how the URB was submitted
+2. We are clear about which memory was freed and accessed
+3. We agree that the URB should have been unlinked
+
+Do we agree on what we agree on?
+
+Theories:
+
+A. There is a race that would allow disconnect() and resume() to run
+concurrently
+
+B. There is a race in usblp which affects 'used'
+
+C. There is a bug in the virtual driver that can make unlinking an URB
+fail
+
+What do you think? How to investigate this further and is it worth it?
+Do we have documentation on what KASAN does?
+
+	Regards
+		Oliver
+
