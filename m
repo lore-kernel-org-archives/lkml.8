@@ -2,98 +2,147 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C786CC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DB8C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE3207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACF9207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="ptSca4hV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgD3L53 (ORCPT
+        id S1726906AbgD3L5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:57:29 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:50136 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgD3L52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:57:28 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jU7ok-0001YZ-9E; Thu, 30 Apr 2020 05:57:26 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jU7oj-0006ms-9J; Thu, 30 Apr 2020 05:57:26 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-        <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-        <20200424173927.GB26802@redhat.com>
-        <87mu6ymkea.fsf_-_@x220.int.ebiederm.org>
-        <875zdmmj4y.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=whvktUC9VbzWLDw71BHbV4ofkkuAYsrB5Rmxnhc-=kSeQ@mail.gmail.com>
-        <878sihgfzh.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjSM9mgsDuX=ZTy2L+S7wGrxZMcBn054As_Jyv8FQvcvQ@mail.gmail.com>
-        <87sggnajpv.fsf_-_@x220.int.ebiederm.org>
-        <20200428180540.GB29960@redhat.com>
-        <87mu6v70in.fsf_-_@x220.int.ebiederm.org>
-Date:   Thu, 30 Apr 2020 06:54:08 -0500
-In-Reply-To: <87mu6v70in.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Tue, 28 Apr 2020 16:39:44 -0500")
-Message-ID: <87h7x142an.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 Apr 2020 07:57:41 -0400
+Received: from plaes.org ([188.166.43.21]:37072 "EHLO plaes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbgD3L5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:57:41 -0400
+Received: from localhost (unknown [IPv6:2001:1530:1000:d397:940e:6b9e:3deb:3])
+        by plaes.org (Postfix) with ESMTPSA id 13D554036D;
+        Thu, 30 Apr 2020 11:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
+        t=1588247829; bh=bh7o9ZhtcwUOEzy3WygVte7TJMzYuXaXlcYI721k4f8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ptSca4hVYlVlD+EeQS36HhT/dPaEy5pyiigz/Kfbl3GOJ5Bo8KfOzvXrIQg8VPoDM
+         Fy66ScCGvpCkDjyVF7rM4ZeaugaTacGRw/4GkvtaW1BVIBvsEjU65L3VKl/wPP/VR5
+         oZFUBNSMdNsFEaFK9deqPJztaNHnS4X5yrYD6J2OprwfG/3GF+oScP+TI0uyLARkDH
+         OUqgKKPngJlu71n6BqlE/UvnR+NKfdlb/nTR2IFBFOTAoIU02LI49ZndUolk5ENMII
+         GAu/vY4jxfDLRiUBPUQC7Is3FUR141vs9/XhICwZ0uulGWwApMclmREtUICFh7PAAF
+         w67FZ6Gbh76jw==
+From:   Priit Laes <plaes@plaes.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc:     Priit Laes <plaes@plaes.org>
+Subject: [PATCH v3 1/6] clk: sunxi-ng: a20: Register regmap for sun7i CCU
+Date:   Thu, 30 Apr 2020 14:56:57 +0300
+Message-Id: <20200430115702.5768-2-plaes@plaes.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200430115702.5768-1-plaes@plaes.org>
+References: <20200430115702.5768-1-plaes@plaes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jU7oj-0006ms-9J;;;mid=<87h7x142an.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX192GiFafHOXLspxUPv1pRaacxDAcMcpddE=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v1 0/3] posix-cpu-timers: Use pids not tasks in lookup
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On sun7i, the gmac clock is handled by the dwmac-sunxi driver, but
+its configuration register is located in the CCU register range,
+requiring proper regmap setup.
 
-The current posix-cpu-timer code uses pids when holding persistent
-references in timers.  However the lookups from clockid_t still return
-tasks that need to be converted into pids for use.
+In order to do that, we use CLK_OF_DECLARE_DRIVER to initialize
+sun7i ccu, which clears the OF_POPULATED flag, allowing the
+platform device to probe the same resource with proper device node.
 
-This results in usage being pid->task->pid and that can race with
-release_task and de_thread.  This can lead to some not wrong but
-surprising results.  Surprising enough that Oleg and I both thought
-there were some bugs in the code for a while.
-
-This set of changes modifies the code to just lookup, verify, and return
-pids from the clockid_t lookups to remove those potentialy troublesome
-races.
-
-Eric W. Biederman (3):
-      posix-cpu-timers: Extend rcu_read_lock removing task_struct references
-      posix-cpu-timers: Replace cpu_timer_pid_type with clock_pid_type
-      posix-cpu-timers: Replace __get_task_for_clock with pid_for_clock
-
- kernel/time/posix-cpu-timers.c | 102 ++++++++++++++++++-----------------------
- 1 file changed, 45 insertions(+), 57 deletions(-)
-
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
+Signed-off-by: Priit Laes <plaes@plaes.org>
 ---
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.c | 62 +++++++++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 2 deletions(-)
 
-The changes can also be found here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git proc-testing
+diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+index f32366d9336e..fa147b8ce705 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
++++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+@@ -8,6 +8,8 @@
+ #include <linux/clk-provider.h>
+ #include <linux/io.h>
+ #include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
+ 
+ #include "ccu_common.h"
+ #include "ccu_reset.h"
+@@ -1478,5 +1480,61 @@ static void __init sun7i_a20_ccu_setup(struct device_node *node)
+ {
+ 	sun4i_ccu_init(node, &sun7i_a20_ccu_desc);
+ }
+-CLK_OF_DECLARE(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
+-	       sun7i_a20_ccu_setup);
++CLK_OF_DECLARE_DRIVER(sun7i_a20_ccu, "allwinner,sun7i-a20-ccu",
++		      sun7i_a20_ccu_setup);
++
++/*
++ * Regmap for the GMAC driver (dwmac-sunxi) to allow access to
++ * GMAC configuration register.
++ */
++#define SUN7I_A20_GMAC_CFG_REG 0x164
++static bool sun7i_a20_ccu_regmap_accessible_reg(struct device *dev,
++						unsigned int reg)
++{
++	if (reg == SUN7I_A20_GMAC_CFG_REG)
++		return true;
++	return false;
++}
++
++static struct regmap_config sun7i_a20_ccu_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= 0x1f4, /* clk_out_b */
++
++	.readable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
++	.writeable_reg	= sun7i_a20_ccu_regmap_accessible_reg,
++};
++
++static int sun7i_a20_ccu_probe_regmap(struct platform_device *pdev)
++{
++	void __iomem *reg;
++	struct resource *res;
++	struct regmap *regmap;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	regmap = devm_regmap_init_mmio(&pdev->dev, reg,
++				       &sun7i_a20_ccu_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return 0;
++}
++
++static const struct of_device_id sun7i_a20_ccu_ids[] = {
++	{ .compatible = "allwinner,sun7i-a20-ccu"},
++	{ }
++};
++
++static struct platform_driver sun7i_a20_ccu_driver = {
++	.probe = sun7i_a20_ccu_probe_regmap,
++	.driver = {
++		.name = "sun7i-a20-ccu",
++		.of_match_table = sun7i_a20_ccu_ids,
++	},
++};
++builtin_platform_driver(sun7i_a20_ccu_driver);
+-- 
+2.26.2
 
