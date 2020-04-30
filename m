@@ -2,132 +2,111 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C6EC8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CF5C8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4371520838
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A0520838
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrG3sTnN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lx1tODra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD3KeT (ORCPT
+        id S1726829AbgD3Kez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:34:19 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52785 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgD3KeS (ORCPT
+        Thu, 30 Apr 2020 06:34:55 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:12248 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgD3Kez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:34:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588242857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O6Ku2Z3+7Gg0z8xz3T+AzovdxSe8hvidTw18x0PtX7U=;
-        b=WrG3sTnNjgquDP/5Wo8Rk0EOd2bDn5X6o79hO6JNT2uKWJ1KLHFG4NmUE5G6oU0lzzAak5
-        yq+zSHMSpvnaXM4a2nYl4PvZtgODtfu4vwpE927FPakk/LD6IFH148SdjFbxramjK63oc+
-        EpE0UH4entWQgV3I0FzQsVFi7TDc6Os=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-377-40pVYTubOYql3QZcJuO05A-1; Thu, 30 Apr 2020 06:34:13 -0400
-X-MC-Unique: 40pVYTubOYql3QZcJuO05A-1
-Received: by mail-wr1-f71.google.com with SMTP id v9so3637376wrt.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:34:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O6Ku2Z3+7Gg0z8xz3T+AzovdxSe8hvidTw18x0PtX7U=;
-        b=JHq3zcFUEPksgOoJvmmdx2N67qnP1OEoVc2ZprRu9QrwOfQQ6DKLV/bnYeLU/0rK+j
-         sVNslBQ4sbs+WNwPzRStDLEXfmUPgrvH42TEyvqoFXdUO+h9UofHtNogcy7+5rwM7kvS
-         t1AruZWFHqGXAISsuLNAVbcxqfm/klq82qE7AS7ISDTJx5Ty0iRz0jJaO+2gaMBtMTab
-         gXBoJAaDXhcWaTeesaWAtieV5YnDx1hJnQN8GTjNoBF2U6+2Ir5ewVRG2Wb9jECFg1Qa
-         NJ5+qqpRD+yVJ4K0C1aKCTxwZ7m254pss8sh7vd8kW4peFK75/kPkxHuLP++CYtfEF/t
-         Bagg==
-X-Gm-Message-State: AGi0Pub7qTJy4Wo59h851HHB7ZCkM9A3iR9inSTiyjkAbvaI2x8x5O5R
-        vCdLB1E8ldmpN+Q2wV8IiciCbc92i9cFbMcxfQc0Lz3ZhGw0a3VrerGtZXKmhFewJVXIB1FZ+Nv
-        FeeBmFvPp4ma+QvLB+G1oAlub
-X-Received: by 2002:a1c:2dc7:: with SMTP id t190mr2134813wmt.129.1588242852576;
-        Thu, 30 Apr 2020 03:34:12 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ8JsQg/OP5zAqqUR3nxYzLoB/7jOFw1DIV0upZ3g5xdHI4OwLaHIfuoLdosbs8ImUknyql+g==
-X-Received: by 2002:a1c:2dc7:: with SMTP id t190mr2134792wmt.129.1588242852364;
-        Thu, 30 Apr 2020 03:34:12 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac19:d1fb:3f5f:d54f? ([2001:b07:6468:f312:ac19:d1fb:3f5f:d54f])
-        by smtp.gmail.com with ESMTPSA id z22sm11673533wma.20.2020.04.30.03.34.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 03:34:11 -0700 (PDT)
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-To:     Alexander Graf <graf@amazon.com>,
-        "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
- <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
- <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
- <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
- <0467ce02-92f3-8456-2727-c4905c98c307@redhat.com>
- <5f8de7da-9d5c-0115-04b5-9f08be0b34b0@amazon.com>
- <095e3e9d-c9e5-61d0-cdfc-2bb099f02932@redhat.com>
- <602565db-d9a6-149a-0e1a-fe9c14a90ce7@amazon.com>
- <fb0bfd95-4732-f3c6-4a59-7227cf50356c@redhat.com>
- <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0c919928-00ed-beda-e984-35f7b6ca42fb@redhat.com>
-Date:   Thu, 30 Apr 2020 12:34:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 30 Apr 2020 06:34:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588242894; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Reply-To: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=FacaeX+QW3gZe3CsWw46u78war6rqHZGj6J6LKrNjcs=; b=Lx1tODratd2FPN/DnDoLP6n+swOCkWbIEz/z/q+bg1Yy5CvxyoiTgObDBHoE/4OQxgv++uU2
+ GB6NSZo9NS8sB+BowTugIt+gsV3/WTCdcRXtc5CTrR/gBMGlEm9+7EmmJI6kuj//mkWd5QX7
+ jFXkHUsO2ev7C+Dt39nj1ENb/4U=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaaa9ce.7f386b0530a0-smtp-out-n01;
+ Thu, 30 Apr 2020 10:34:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 29249C432C2; Thu, 30 Apr 2020 10:34:54 +0000 (UTC)
+Received: from quicinc.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: svaddagi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 73383C433CB;
+        Thu, 30 Apr 2020 10:34:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 73383C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vatsa@codeaurora.org
+Date:   Thu, 30 Apr 2020 16:04:46 +0530
+From:   Srivatsa Vaddagiri <vatsa@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     konrad.wilk@oracle.com, mst@redhat.com, jasowang@redhat.com,
+        jan.kiszka@siemens.com, stefano.stabellini@xilinx.com,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, tsoni@codeaurora.org,
+        pratikp@codeaurora.org, christoffer.dall@arm.com,
+        alex.bennee@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC/PATCH 1/1] virtio: Introduce MMIO ops
+Message-ID: <20200430103446.GH5097@quicinc.com>
+Reply-To: Srivatsa Vaddagiri <vatsa@codeaurora.org>
+References: <1588240976-10213-1-git-send-email-vatsa@codeaurora.org>
+ <1588240976-10213-2-git-send-email-vatsa@codeaurora.org>
+ <20200430101431.GD19932@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <0a4c7a95-af86-270f-6770-0a283cec30df@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200430101431.GD19932@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/04/20 17:07, Alexander Graf wrote:
+* Will Deacon <will@kernel.org> [2020-04-30 11:14:32]:
+
+> > +#ifdef CONFIG_VIRTIO_MMIO_OPS
+> >  
+> > +static struct virtio_mmio_ops *mmio_ops;
+> > +
+> > +#define virtio_readb(a)		mmio_ops->mmio_readl((a))
+> > +#define virtio_readw(a)		mmio_ops->mmio_readl((a))
+> > +#define virtio_readl(a)		mmio_ops->mmio_readl((a))
+> > +#define virtio_writeb(val, a)	mmio_ops->mmio_writeb((val), (a))
+> > +#define virtio_writew(val, a)	mmio_ops->mmio_writew((val), (a))
+> > +#define virtio_writel(val, a)	mmio_ops->mmio_writel((val), (a))
 > 
-> Why don't we build something like the following instead?
+> How exactly are these ops hooked up? I'm envisaging something like:
 > 
->   vm = ne_create(vcpus = 4)
->   ne_set_memory(vm, hva, len)
->   ne_load_image(vm, addr, len)
->   ne_start(vm)
+> 	ops = spec_compliant_ops;
+> 	[...]
+> 	if (firmware_says_hypervisor_is_buggy())
+> 		ops = magic_qcom_ops;
 > 
-> That way we would get the EIF loading into kernel space. "LOAD_IMAGE"
-> would only be available in the time window between set_memory and start.
-> It basically implements a memcpy(), but it would completely hide the
-> hidden semantics of where an EIF has to go, so future device versions
-> (or even other enclave implementers) could change the logic.
+> am I wrong?
 
-Can we add a file format argument and flags to ne_load_image, to avoid
-having a v2 ioctl later?
+If CONFIG_VIRTIO_MMIO_OPS is defined, then I expect this to be unconditionally
+set to 'magic_qcom_ops' that uses hypervisor-supported interface for IO (for
+example: message_queue_send() and message_queue_recevie() hypercalls).
 
-Also, would you consider a mode where ne_load_image is not invoked and
-the enclave starts in real mode at 0xffffff0?
+> > +int register_virtio_mmio_ops(struct virtio_mmio_ops *ops)
+> > +{
+> > +	pr_info("Registered %s as mmio ops\n", ops->name);
+> > +	mmio_ops = ops;
+> 
+> Not looking good, and really defeats the point of standardising this stuff
+> imo.
 
-Thanks,
+Ok. I guess the other option is to standardize on a new virtio transport (like
+ivshmem2-virtio)?
 
-Paolo
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
