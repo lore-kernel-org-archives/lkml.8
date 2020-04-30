@@ -2,120 +2,101 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1492DC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BC0C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F169920873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0EC2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgD3VeM (ORCPT
+        id S1728128AbgD3VeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:34:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:58935 "EHLO
+        Thu, 30 Apr 2020 17:34:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:37219 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgD3VeI (ORCPT
+        with ESMTP id S1726697AbgD3VeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:34:08 -0400
+        Thu, 30 Apr 2020 17:34:23 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MekrN-1iw23r0YOj-00apFq; Thu, 30 Apr 2020 23:33:54 +0200
+ 1M9FX5-1jYxeY344d-006SWG; Thu, 30 Apr 2020 23:34:01 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     linux-kernel@vger.kernel.org,
-        Intel SCU Linux support <intel-linux-scu@intel.com>,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org
-Subject: [PATCH 14/15] isci: avoid gcc-10 zero-length-bounds warning
-Date:   Thu, 30 Apr 2020 23:30:56 +0200
-Message-Id: <20200430213101.135134-15-arnd@arndb.de>
+        James Smart <james.smart@broadcom.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org
+Subject: [PATCH 15/15] nvme: avoid gcc-10 zero-length-bounds warning
+Date:   Thu, 30 Apr 2020 23:30:57 +0200
+Message-Id: <20200430213101.135134-16-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200430213101.135134-1-arnd@arndb.de>
 References: <20200430213101.135134-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7STMyUCnzNFORsOTFhBk+QO1wMd0aCQREYl9i/6g5djgitDUpZ6
- d1Cx+C01pHvqZt+aQoS8ab5L853K/yBtfnhyeugGSlvh7HKQ0PL0VPWymc4AUUryftBYEso
- OUGbikus/NGt12kseU7xwabsGAmxqrTKLyaGQy3cjPJ43HXWsVNNnuwv8J52mfRiGUTqkiy
- p2VouWvfbNWfatj6Qx9KA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bSMgVGjYJbk=:e3OoHoNyVrETSsb4hMOhs/
- AS0ivt9Xcb53jajnQRqZgv28gM4KSUsPE4/o60hKXktudnmPzwv7RW8Kj4AuCquc4xriwDklb
- xKB4Dxt0vhsg9WTFIyTiatKW/x6/E+2Nk8pLmNKGMItbeiWHT43Hwq6qvUgQzpoxRSAtI8K+c
- AbFuuj3Oam60e+HhGtj5h/CXSHXFlomhGukqvM1te61faABhg4P98Ria19e5qoPauXLU31Ir7
- uyL1FS3S/Pki/1dKyCc7sM6Ze1PWMD8JL99fDJsTBP/GpBfhDzFTAdNrCaOkVW4p63C2XUS1b
- csL4aTU4V1v07Popcn2+JRSVN/QvEmL1z9z+73jfAP3H4oshS/HrD1Ttx26cgkbqiV823bAPX
- ZhkZbjdTbcPzcEB/fsZEHN5B27L5aSM9MkkOVUbub1Ihc+pylki8sChmoY4/67R7FSVVwByPd
- J8Nz/BCBgevzfXFncJ4UPzc9CbgwT3Cbu8rokQWb9XVFywpOkgnas+iJg2fL949baMrHLRuV8
- xV3WIiGzMWBZQFDW8Ac3Ix3EbrfgS1K01zPWZNZFeF+3kf+l8QQ9HsgqFXQbOQ6mx+3uwTYYx
- /ol12IcZtrb7B6wpmHD1NPPwpwrDydQTJ8Dn+CHU4DYt3/OjzXb/4/KvoKwHe3/tLjE7iM6pt
- hrd1WgsjuRO9ZM5+aPlpnjsWOH/mx90oUd8XFgynTRngF97dbGjgqqiobJW+pvbZIV5+ZTjc4
- PM8Qk89cI6yabSO1NdqEAs9oCr5xwcoXbbP27xCCOsgQ1TG8rKyt8vvnm4wbtXZwD607vZvx2
- zUHvdw7DVW21QES1ntvMt/CqXvDLFzW6Q3TYBwZKF6Xm0K41d4=
+X-Provags-ID: V03:K1:ZiRf4NHy8XQdJ0MYFrHfnPlaQWVkKn55groeh3SGJDg2G6j+ai/
+ I0pcRNLPA3tssWEBLLaFPtsMonAIEX+vxcub9bDblZMmmYc7zUnxGsOX+9b6bExxaOmrvgw
+ W4obT5PWbdarZi4z3cPFQUdI+MLKaL6Xv/pqI9q9NCY4AohwRyFmyph2p/E9//3zJ+w96Wh
+ ptEV1jb5JkCC6T5O0OoCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:v95riZ+TqS8=:150R5/f64arOjLP8fwFubM
+ XwtgizIru2CUgqiEo6TeHDdrDXTqak3HMJHdQi9qoENwknwnEC9yzONOL2F9dIvxRmvG/IkB8
+ ImMfUITMtswMe06/Kub/Zvkk95YC/WGw3YUEzZA2c20iKeVQ70yY6akO48/g3QodSXiWbVyTG
+ zgF7KowdpC+QdD901XFJ+Nh5//wH0OEBE0fmDPho31nw/OEJuRXaNQWgNsRN+ZU3HImyIilvI
+ gciKoBi2g8eqGVWasqNyuj6WOk9Fg9dEdUPMoFp5ELMvwYMs7mhetALQvvA4Fw5jyOgn9W7rn
+ jccJ/pRe5t/VxIa3oA1haWYaFnt65Ff2FWuRg6RzMoAPFmNWBtj1X8krj+FqZXH9dcW41KKi4
+ nj8hgaNGKa6e87952Yx2HfKkHauWQNw0EoGMzSWhO9iFm//nXBTWC35SVm4a835kbI/niuV9m
+ tKfeZdF391OlPDiYBY1x6dntZwouHEkafrbz91js5ngyUGTIm8JEAYKW/rc12yfNls4s2mREf
+ jTuLMQuUFxjX+vp7gH8OE0uL5GX7TKoiEhz36Gd2i7EFmGg7bGweHauvO3eLizFwBMto7rXQq
+ k40wZv0F4sAuX1rxzbOxn2aDczG/tqbS55BpnM+CLcBoMTTLVTs6FZ4KldDq8rDa0SSinVYAS
+ cnd2E5Rd3XOsVja0GabkD7FMnbkR0uNYbM++CUhoixmRGodgQ3D8v0ltbrSaNgeABdyGY3SRs
+ GpK/5YszJDnpSMQzKLffITtvmeZ30/a8Y+wXTgIJ6I1eIvAktpM0Cks7jbDP+8eOiODXsIeqA
+ PkVL43RsxXAswxvb3fiP77OZhJmbrf97sjeybX9KAiRIaZ/IeQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc-10 warns about accesses to zero-length arrays:
+When CONFIG_ARCH_NO_SG_CHAIN is set, op->sgl[0] cannot be dereferenced,
+as gcc-10 now points out:
 
-drivers/scsi/isci/task.h:125:31: error: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Werror=zero-length-bounds]
-  125 |    tmf->resp.resp_iu.resp_data[0],
-      |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
-include/linux/dynamic_debug.h:143:2: note: in expansion of macro '__dynamic_func_call'
-  143 |  __dynamic_func_call(__UNIQUE_ID(ddebug), fmt, func, ##__VA_ARGS__)
-      |  ^~~~~~~~~~~~~~~~~~~
-include/linux/dynamic_debug.h:157:2: note: in expansion of macro '_dynamic_func_call'
-  157 |  _dynamic_func_call(fmt,__dynamic_dev_dbg,   \
-      |  ^~~~~~~~~~~~~~~~~~
-include/linux/dev_printk.h:115:2: note: in expansion of macro 'dynamic_dev_dbg'
-  115 |  dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-      |  ^~~~~~~~~~~~~~~
-drivers/scsi/isci/task.h:111:3: note: in expansion of macro 'dev_dbg'
-  111 |   dev_dbg(&ihost->pdev->dev,
-      |   ^~~~~~~
-In file included from include/scsi/libsas.h:15,
-                 from drivers/scsi/isci/task.c:59:
-include/scsi/sas.h:326:9: note: while referencing 'resp_data'
-  326 |  u8     resp_data[0];
-      |         ^~~~~~~~~
+drivers/nvme/host/fc.c: In function 'nvme_fc_init_request':
+drivers/nvme/host/fc.c:1774:29: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct scatterlist[0]' [-Wzero-length-bounds]
+ 1774 |  op->op.fcp_req.first_sgl = &op->sgl[0];
+      |                             ^~~~~~~~~~~
+drivers/nvme/host/fc.c:98:21: note: while referencing 'sgl'
+   98 |  struct scatterlist sgl[NVME_INLINE_SG_CNT];
+      |                     ^~~
 
-This instance is not a bug, so just work around the warning by
-adding a temporary pointer.
+I don't know if this is a legitimate warning or a false-positive.
+If this is just a false alarm, the warning is easily suppressed
+by interpreting the array as a pointer.
 
+Fixes: b1ae1a238900 ("nvme-fc: Avoid preallocating big SGL for data")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/scsi/isci/task.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/nvme/host/fc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/isci/task.h b/drivers/scsi/isci/task.h
-index 8f4531f22ac2..2d556d7b5292 100644
---- a/drivers/scsi/isci/task.h
-+++ b/drivers/scsi/isci/task.h
-@@ -98,6 +98,8 @@ struct isci_tmf {
- 
- static inline void isci_print_tmf(struct isci_host *ihost, struct isci_tmf *tmf)
- {
-+	u8 *resp = tmf->resp.resp_iu.resp_data;
-+
- 	if (SAS_PROTOCOL_SATA == tmf->proto)
- 		dev_dbg(&ihost->pdev->dev,
- 			"%s: status = %x\n"
-@@ -122,10 +124,7 @@ static inline void isci_print_tmf(struct isci_host *ihost, struct isci_tmf *tmf)
- 			tmf->resp.resp_iu.datapres,
- 			tmf->resp.resp_iu.status,
- 			be32_to_cpu(tmf->resp.resp_iu.response_data_len),
--			tmf->resp.resp_iu.resp_data[0],
--			tmf->resp.resp_iu.resp_data[1],
--			tmf->resp.resp_iu.resp_data[2],
--			tmf->resp.resp_iu.resp_data[3]);
-+			resp[0], resp[1], resp[2], resp[3]);
- }
- 
- 
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 887537d1243f..b7ecda48d597 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -1771,7 +1771,7 @@ nvme_fc_init_request(struct blk_mq_tag_set *set, struct request *rq,
+ 	res = __nvme_fc_init_request(ctrl, queue, &op->op, rq, queue->rqcnt++);
+ 	if (res)
+ 		return res;
+-	op->op.fcp_req.first_sgl = &op->sgl[0];
++	op->op.fcp_req.first_sgl = op->sgl;
+ 	op->op.fcp_req.private = &op->priv[0];
+ 	nvme_req(rq)->ctrl = &ctrl->ctrl;
+ 	return res;
 -- 
 2.26.0
 
