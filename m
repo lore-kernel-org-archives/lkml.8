@@ -2,106 +2,119 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D75BC4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D89C47253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D978520661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0499F20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588259663;
+	bh=KMGeU6nz29vrM1uYO0a3kTVAV4cJFx0s+w9L3Ywf0pI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NNhdReYfiGkqILupPgt3HTEp2XatWcTKgvOKfDallXtdmSVhvHjTvYxNHKb1KX2C3
+	 idp0Pcofic011XYcXIUOCs/WnR16KLZIx3KG4pl1a6U32iZ5n8eXxrdqQf84ADagDp
+	 HWgo61xnvC/TVJeAZM30qb6ZzJfPJPWnLA9b7ApQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgD3PNb (ORCPT
+        id S1726857AbgD3POW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:13:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:57228 "EHLO foss.arm.com"
+        Thu, 30 Apr 2020 11:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgD3PNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:13:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 114D31FB;
-        Thu, 30 Apr 2020 08:13:30 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E8B33F68F;
-        Thu, 30 Apr 2020 08:13:28 -0700 (PDT)
-References: <20200424041832.11364-1-hdanton@sina.com> <20200424043650.14940-1-hdanton@sina.com> <20200430121301.3460-1-hdanton@sina.com> <da5bf72d-1d50-5c5c-3bdb-113ed555dd10@arm.com> <jhjv9lhcb0e.mognet@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Phil Auld <pauld@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/4] sched: set new prio after checking schedule policy
-In-reply-to: <jhjv9lhcb0e.mognet@arm.com>
-Date:   Thu, 30 Apr 2020 16:13:26 +0100
-Message-ID: <jhjsgglc8h5.mognet@arm.com>
+        id S1726661AbgD3POV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:14:21 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE1B320661;
+        Thu, 30 Apr 2020 15:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588259661;
+        bh=KMGeU6nz29vrM1uYO0a3kTVAV4cJFx0s+w9L3Ywf0pI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TT7oatkHmj3/y+HBS5xZ+Qb8BlnZyRCmMd01I/Fi4IGDRianFaX2gJjieNuIOmDC8
+         zkgA6dPqNohx+byuPdjelqKTvqVCfOXa7jel5IBYvHPG9OHCSGRKmC3Z0YFhpcFUVs
+         KdRlWEddm8YUeJZT4UxoO6CCDl1cPPxmnhdsM1zg=
+Received: by mail-io1-f53.google.com with SMTP id b12so1826687ion.8;
+        Thu, 30 Apr 2020 08:14:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaUlK6QwYD4xVFCEM7LS23VU52o2JbWtsh1DjuX/mTvzT82lCG5
+        l00xQmlcL9QO6eL+QYpuVBsVAQv6DC0Fxq3bf8Q=
+X-Google-Smtp-Source: APiQypISgwQ0ge6OQUtXTqQAtwh9HUtZQ4CGAaRQizRfjz+lvojsquMeqkYNr8DKAedRWB3z3tEWNdRBHjK1qZCKbiM=
+X-Received: by 2002:a5d:9b8a:: with SMTP id r10mr2356911iom.171.1588259660396;
+ Thu, 30 Apr 2020 08:14:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200429174120.1497212-1-nivedita@alum.mit.edu>
+ <20200429174120.1497212-5-nivedita@alum.mit.edu> <f74fe4ad56c0471f863ce550869391c8811f9893.camel@perches.com>
+ <CAMj1kXGn70BmapKe=6sA17gMCcWRLCebQJFnyObwRbAefOcEng@mail.gmail.com>
+ <20200429214332.GC1621173@rani.riverdale.lan> <31b23951ee2b8e2391f3208b60a7132df18be74e.camel@perches.com>
+ <CAMj1kXFJfK=tspytknqdABRfYMhA23FWOs8QoasX1jZ6z=F3Gg@mail.gmail.com> <20200429222057.GA1645040@rani.riverdale.lan>
+In-Reply-To: <20200429222057.GA1645040@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 30 Apr 2020 17:14:09 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGCetKOZ86JmTbPUL9koq7=n8fRcWtctf7Xzi5mWaP2Bg@mail.gmail.com>
+Message-ID: <CAMj1kXGCetKOZ86JmTbPUL9koq7=n8fRcWtctf7Xzi5mWaP2Bg@mail.gmail.com>
+Subject: Re: [PATCH 03/10] efi/x86: Use pr_efi_err for error messages
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Joe Perches <joe@perches.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 30 Apr 2020 at 00:21, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Wed, Apr 29, 2020 at 11:55:04PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 29 Apr 2020 at 23:53, Joe Perches <joe@perches.com> wrote:
+> > >
+> > > On Wed, 2020-04-29 at 17:43 -0400, Arvind Sankar wrote:
+> > > > On Wed, Apr 29, 2020 at 08:49:21PM +0200, Ard Biesheuvel wrote:
+> > > > > On Wed, 29 Apr 2020 at 20:47, Joe Perches <joe@perches.com> wrote:
+> > > > > > On Wed, 2020-04-29 at 13:41 -0400, Arvind Sankar wrote:
+> > > > > > > Use pr_efi_err instead of bare efi_printk for error messages.
+> > > > > >
+> > > > > > Perhaps it'd be better to rename pr_efi_err to eri_err
+> > > > > > so it's clearer it's a typical efi_ logging function.
+> > > > > >
+> > > > > > $ git grep -w --name-only pr_efi_err | \
+> > > > > >   xargs sed -i 's/\bpr_efi_err\b/efi_err/g'
+> > > > > >
+> > > > >
+> > > > > Yeah, pr_efi_err() is probably not the best name
+> > > >
+> > > > Should I rename pr_efi/pr_efi_err to, say, efi_pr_info/efi_pr_error?
+> > >
+> > > Perhaps not use pr_ in the name at all.
+> > >
+> > > I suggest:
+> > >
+> > > pr_efi          -> efi_info (or efi_debug or efi_dbg)
+> > >                    (it is guarded by an efi_quiet flag, default: on)
+> > > pr_efi_err      -> efi_err
+> > >
+> >
+> > Agreed. Shorter is better if there is no risk of confusion..
+>
+> Ok, I'll use efi_info/efi_err. We could add debugging output as
+> efi_debug later, enabled if efi=debug is specified.
+>
+> While we're here: most of the existing cases of pr_efi look like notice
+> or info level, except maybe these two, which probably should be at least
+> warnings?
+>
+> drivers/firmware/efi/libstub/arm64-stub.c
+> 62: pr_efi("EFI_RNG_PROTOCOL unavailable, no randomness supplied\n");
+>
 
-On 30/04/20 15:18, Valentin Schneider wrote:
-> On 30/04/20 15:06, Dietmar Eggemann wrote:
->>>>> +		newprio = NICE_TO_PRIO(attr->sched_nice);
->>>>
->>>> This is new, however AFAICT it doesn't change anything for CFS (or about to
->>>> be) tasks since what matters is calling check_class_changed() further down.
->>>
->>> Yes it's only used by rt_effective_prio().
->>>
->>
->> Looks like changing a SCHED_NORMAL to a SCHED_BATCH task will create a different
->> queue_flags value.
->>
->> # chrt -p $$
->> pid 2803's current scheduling policy: SCHED_OTHER
->> pid 2803's current scheduling priority: 0
->>
->> # chrt -b -p 0 $$
->>
->> ...
->> [bash 2803] policy=3 oldprio=120 newprio=[99->120] new_effective_prio=[99->120] queue_flags=[0xe->0xa]
->> [bash 2803] queued=0 running=0
->> ...
->>
->> But since in this example 'queued=0' it has no further effect here.
->>
->> Why is SCHED_NORMAL/SCHED_BATCH (fair_policy()) now treated differently than SCHED_IDLE?
->>
->> # chrt -i -p 0 $$
->>
->> ...
->> [bash 2803] policy=5 newprio=99 oldprio=120 new_effective_prio=99 queue_flags=0xe
->> [bash 2803] queued=0 running=0
->> ...
->
->
-> Good catch; I suppose we'll want to special case SCHED_IDLE (IIRC should
-> map to nice 20).
->
-> As you pointed out, right now the newprio computation for CFS tasks is
-> kinda bonkers, so it seems we'll almost always clear DEQUEUE_MOVE from
-> queue_flags for them.
->
+This should not be a warning. KASLR is enabled by default by the
+distros, and many systems don't implement this protocol at all.
 
-Of course I misread that, it's the other way around: since newprio is
-always 99 for SCHED_OTHER/BATCH/IDLE tasks, we'll never have
-new_effective_prio == oldprio (unless pi involves a FIFO 99 task), thus
-will never clear DEQUEUE_MOVE.
+> drivers/firmware/efi/libstub/efi-stub.c
+> 254: pr_efi("Ignoring DTB from command line.\n");
 
-> For CFS, not having DEQUEUE_MOVE here would lead to not calling
-> update_min_vruntime() on the dequeue. I'm not sure how much it matters in
-> this one case - I don't expect sched_setscheduler() calls to be *too*
-> frequent, and that oughta be fixed by the next entity_tick()) - but that is
-> an actual change.
+That could be upgraded to an error.
