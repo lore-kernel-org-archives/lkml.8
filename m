@@ -2,196 +2,93 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070B1C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F33CC4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76F520873
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gbHXr1KR"
+	by mail.kernel.org (Postfix) with ESMTP id 79211208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588263503;
+	bh=5R1P59XWFriRjxe5e4BwtfyFc/8B5tCSKlTVbm120WY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=09aguq7vqZEi2yYDeUcpmqsrHNtHjkodksVdb3GmneRQoG6i9jf5csdUILldPge/k
+	 TNsLKo/D3Srq9ViUs09MnDJggnnuIuVjReA34gCYYkqJiBPVSfHxYtIMOEKMUtZ+MK
+	 zrJR4YrhwkZDnaHOoU8Mb8GHSqDsrHztr2FwFR8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgD3QSJ (ORCPT
+        id S1728089AbgD3QSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726420AbgD3QSI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:18:08 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786E3C035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:18:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id r26so2626208wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 09:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5bAsvHqWCwGkT9CQd5T/W8xxkcoMDs4/cE7bMjlYKe0=;
-        b=gbHXr1KRjKzHoWccXlTIFlKA6SNRGpxXOO+JrrqgTvF8sYDdJfErPMiJJXwfzBd82v
-         +Bp0Fn/5Bb8Gtwik2V1YrWSCqY7eslqiV5SJZQSfWPtOaDewmOSMtwJ7Bzs9PFtODxoR
-         RH7O/FjGUW8detzTpo+wXVG3U2QUMlLmWBYXJF5Eyzv2rUOCusSe4RelyEqOkdYzr16H
-         13FPv5lrfR0iidWprYTw97a8ojDJa0Zj30usR+mgFPxUKVVsrJ226gWyB4GvZHeCPtwn
-         AEmL2ybLlvTiEIWqjII/JOaclnZlhSDE4LV+MfUFikvplidy4TPP4nHQM016g7+PbXmc
-         6Q4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5bAsvHqWCwGkT9CQd5T/W8xxkcoMDs4/cE7bMjlYKe0=;
-        b=XzgTr3ZmajG5LOh5uLFLfBSQ7vhOkI7HXpV8xViCoQRzphOxW3TjMKXV+l+CqqYjjX
-         iKfrWgU3DLSP1x6fOIXFLYH71d1+i6tAPqLaREAThZSZ+KWGQLMVtSN3j5VP/nUz+OOl
-         mdZcTtrn5EqZoI8lv2N6RdyiLrqgQNZcoJmFvNNf0VjRqBiBzrDpURxEElnKJZpXtASF
-         R8DHgxEk4EjwTuE/HlwAQdo6MtpShpWan7jqomZMBCY/Ctvw/75bHi5Dpo8LddOSQ4FA
-         eYXMDCOmnkacSIM2Ye6k+ReMNkVjdXdSsudTpcunMe/M4izNWMqyRx9iodSQvl5zoAVS
-         jnOw==
-X-Gm-Message-State: AGi0PuYeDk+Ejc4synnZDsh6UYsPNEyVd+HrQnxIybenAEvtKwGm5wio
-        UkZUhiYJZm8NbyAqW6iusTMIdw==
-X-Google-Smtp-Source: APiQypLdCkOL76wT2MKicI01rEncdS8lGfzgse247Irn4tIefaTYWYzAtLZod6xQ+/HXO2xHj/xMhA==
-X-Received: by 2002:a1c:1b88:: with SMTP id b130mr3766023wmb.75.1588263486041;
-        Thu, 30 Apr 2020 09:18:06 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id y18sm160634wmc.45.2020.04.30.09.18.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 09:18:05 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patches@linaro.org
-Subject: [PATCH v2] serial: kgdboc: Allow earlycon initialization to be deferred
-Date:   Thu, 30 Apr 2020 17:17:41 +0100
-Message-Id: <20200430161741.1832050-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200429170804.880720-1-daniel.thompson@linaro.org>
-References: <20200429170804.880720-1-daniel.thompson@linaro.org>
+        Thu, 30 Apr 2020 12:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbgD3QSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:18:22 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE94220873;
+        Thu, 30 Apr 2020 16:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588263501;
+        bh=5R1P59XWFriRjxe5e4BwtfyFc/8B5tCSKlTVbm120WY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FWbHYicdfPDjjYeJPc0wx5uyaSBePyMtYHG2jq9/y3Rlj3rPkum04ZiSQO0BYAPhV
+         G23qhA6RGP/lsaiuQobgqfndHcI8FOhOFgn7t8uKNyIQHmNPGohnUTGMARV8YBFbd6
+         Cvzu10wcz3BXUOIM4uUTYofcgbV5A4wsexskA3rI=
+Date:   Thu, 30 Apr 2020 17:18:15 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>,
+        tglx@linutronix.de
+Subject: Re: [PATCH] arm64: perf_event: Fix time_offset for arch timer
+Message-ID: <20200430161815.GE25258@willie-the-truck>
+References: <20200320093545.28227-1-leo.yan@linaro.org>
+ <20200430145823.GA25258@willie-the-truck>
+ <4d924f705245c797a19d3a73eb0c1ba0@kernel.org>
+ <20200430160436.GC13575@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430160436.GC13575@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is no guarantee that an earlycon will be initialized
-before kgdboc tries to adopt it. Almost the opposite: on systems
-with ACPI then if earlycon has no arguments then it is guaranteed that
-earlycon will not be initialized.
+On Thu, Apr 30, 2020 at 06:04:36PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 30, 2020 at 04:29:23PM +0100, Marc Zyngier wrote:
+> 
+> > I wonder if we could/should make __sched_clock_offset available even when
+> > CONFIG_HAVE_UNSTABLE_SCHED_CLOCK isn't defined. It feels like it would
+> > help with this particular can or worm...
+> 
+> Errrgh. __sched_clock_offset is only needed on x86 because we transition
+> from one clock device to another on boot. It really shouldn't exist on
+> anything sane.
 
-This patch mitigates the problem by giving kgdboc_earlycon a second
-chance during console_init(). This isn't quite as good as stopping during
-early parameter parsing but it is still early in the kernel boot.
+I think we still transition from jiffies on arm64, because we don't register
+with sched_clock until the timer driver probes. Marc, is that right?
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
+> Let me try and understand your particular problem better.
 
-Notes:
-    v2: Simplified, more robust, runs earlier, still has Doug's
-        recent patchset as a prerequisite. What's not to like?
-    
-    More specifically, based on feedback from Doug Anderson, I
-    have replaced the initial hacky implementation with a console
-    initcall.
-    
-    I also made it defer more aggressively after realizing that both
-    earlycon and kgdboc_earlycon are handled as early parameters
-    (meaning I think the current approach relies on the ordering
-    of drivers/tty/serial/Makefile to ensure the earlycon is enabled
-    before kgdboc tries to adopt it).
-    
-    Finally, my apologies to Jason and kgdb ML folks, who are seeing
-    this patch for the first time. I copied the original circulation
-    list from a patch that wasn't kgdb related and forgot to update.
+I think the long and short of it is that userspace needs a way to convert
+the raw counter cycles into a ns value that can be compared against values
+coming out of sched_clock. To do this accurately, I think it needs the
+cycles value at the point when sched_clock was initialised.
 
- drivers/tty/serial/kgdboc.c | 41 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 39 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 7aca0a67fc0b..596213272ec3 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -509,6 +509,10 @@ static struct kgdb_io kgdboc_earlycon_io_ops = {
- 	.is_console		= true,
- };
-
-+#define MAX_CONSOLE_NAME_LEN (sizeof((struct console *) 0)->name)
-+static char kgdboc_earlycon_param[MAX_CONSOLE_NAME_LEN] __initdata;
-+static bool kgdboc_earlycon_late_enable __initdata;
-+
- static int __init kgdboc_earlycon_init(char *opt)
- {
- 	struct console *con;
-@@ -529,7 +533,24 @@ static int __init kgdboc_earlycon_init(char *opt)
- 	console_unlock();
-
- 	if (!con) {
--		pr_info("Couldn't find kgdb earlycon\n");
-+		/*
-+		 * Both earlycon and kgdboc_earlycon are initialized during
-+		 * early parameter parsing. We cannot guarantee earlycon gets
-+		 * in first and, in any case, on ACPI systems earlycon may
-+		 * defer its own initialization (usually to somewhere within
-+		 * setup_arch() ). To cope with either of these situations
-+		 * we can defer our own initialization to a little later in
-+		 * the boot.
-+		 */
-+		if (!kgdboc_earlycon_late_enable) {
-+			pr_info("No suitable earlycon yet, will try later\n");
-+			if (opt)
-+				strscpy(kgdboc_earlycon_param, opt,
-+					sizeof(kgdboc_earlycon_param));
-+			kgdboc_earlycon_late_enable = true;
-+		} else {
-+			pr_info("Couldn't find kgdb earlycon\n");
-+		}
- 		return 0;
- 	}
-
-@@ -543,8 +564,24 @@ static int __init kgdboc_earlycon_init(char *opt)
-
- 	return 0;
- }
--
- early_param("kgdboc_earlycon", kgdboc_earlycon_init);
-+
-+/*
-+ * This is only intended for the late adoption of an early console.
-+ *
-+ * It is not a reliable way to adopt regular consoles because
-+ * we can not control what order console initcalls are made and
-+ * many regular consoles are registered much later in the boot
-+ * process than the console initcalls!
-+ */
-+static int __init kgdboc_earlycon_late_init(void)
-+{
-+	if (kgdboc_earlycon_late_enable)
-+		kgdboc_earlycon_init(kgdboc_earlycon_param);
-+	return 0;
-+}
-+console_initcall(kgdboc_earlycon_late_init);
-+
- #endif /* CONFIG_KGDB_SERIAL_CONSOLE */
-
- module_init(init_kgdboc);
-
-base-commit: 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c
-prerequisite-patch-id: cbaa70eb783f1f34aec7f5839d1fecbc7616a9f6
-prerequisite-patch-id: d7543cdd19fb194ded3361d52818970083efdb06
-prerequisite-patch-id: 2238d976451dac9e3ee1bf02a077d633e342aa0c
-prerequisite-patch-id: 9e4296261b608ee172060d04b3de431a5e370096
-prerequisite-patch-id: 2b008e0e14a212072874ecb483d9c6844d161b08
-prerequisite-patch-id: f5b692b89c997d828832e3ab27fffb8f770d7b6f
-prerequisite-patch-id: 851d6f4874aa24540db9d765275ae736e8b2955b
-prerequisite-patch-id: d3969c2fb7cd320eafebe63d7da270dac5a82fc9
-prerequisite-patch-id: e1fc1478b7f75094d263ffc64a9f3528151831cf
-prerequisite-patch-id: 45fb53996a9f5993e03673c10eebf2834c58307f
-prerequisite-patch-id: 50ac1ddb52c3cce8b712036f212fdd67d7493112
---
-2.25.1
-
+Will
