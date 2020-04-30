@@ -2,130 +2,135 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364E3C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5875DC8300A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1359D2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588237448;
-	bh=Tdze56rm9Kb6AWKcsvq4L0khH80Bd7O66LekOsspEVQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HyUIgRERGXLav0mElz7V27C4f8bmfwQB1+8TNvNHVt+xcPlatH7VLwoOSG5t3IS6+
-	 E6Cyv9+0zYdoffyiks8nimD3T3lHVu29zFVl880txw961maqGR5WTd4JEBw6+BM66n
-	 GiOIPnDCpeOg+4cv40YBuXICxR3OoRaZ2yv53HTU=
+	by mail.kernel.org (Postfix) with ESMTP id 3333820787
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gZvDzBMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgD3JEH (ORCPT
+        id S1726809AbgD3JEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 05:04:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36475 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgD3JEH (ORCPT
+        Thu, 30 Apr 2020 05:04:36 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42464 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726420AbgD3JEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 05:04:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s202so4609412oih.3;
-        Thu, 30 Apr 2020 02:04:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IPIctqtbjHbN+c6WsGMnZ4aDcQr0Dn9FvwQoBcXdb4k=;
-        b=cWEchaky38a6ftNwmFGRftCwazWO2LC1n86PfbcJIlICh5bPgybL+cuaO+Egs4hFI1
-         7yLX88FQS8BIrL8l8+f8+9Dx3OWcoosY/YTK3mBu6O4O6zQswgKAwi2PIOhysFur6Ccb
-         8n5IStch8nTA4R42ojueTOudcJY0TMtdiYwasCBVRMCuFK4J8uR4SGg5oBBQTFHFvdQH
-         hzFTcj7XvyrzuC5YlraFT/28Z7I+19DhIONeOG6CAHnOv+K/og/8ix7ig/5RnRcfamGg
-         c+ik8DIFF62oR7nUNqfSU10IdwsKlGx1+57Z17QpSC52Z93v5E/G/oa7bogjp/76syTL
-         o0fA==
-X-Gm-Message-State: AGi0PuYlWhPme+BGipgKJv47SeWTe9R83Rqr49Bqvp2T/QD3giPinJhd
-        tt6M52sYai/e6JnCIdlszVH7RwkXcyU5nBix1KU=
-X-Google-Smtp-Source: APiQypJD2+GdHPcXAjdJ2otz/vhbS/df9CkF9oCL8wWT9gqhtZ1UAebHm6B/NCfiC2qhRAGhImTD5b2woCc+kgQvvjQ=
-X-Received: by 2002:aca:aa8c:: with SMTP id t134mr1027807oie.103.1588237445928;
- Thu, 30 Apr 2020 02:04:05 -0700 (PDT)
+        Thu, 30 Apr 2020 05:04:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588237474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K5VA5nptcg85tchI7teO0oY9ADEbHwiXdXDYuDNBW5A=;
+        b=gZvDzBMptJfgQvNI63/AqAEm7KOjKtNvre910/TzX6MsDwXCHJa0ke+5GIrg0ycKomh0Eo
+        uRBic7PiAsY7IufVdUT1nVVbW5KNj4VJfhRZFV6fM7z6SMdhy/a+5B9e3FsI9Voc2KwoiZ
+        s/YZs4kACfJ2FFymOtcNhemuI39Ii9o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399-u5POqqToMiujtPHEqmEwRw-1; Thu, 30 Apr 2020 05:04:30 -0400
+X-MC-Unique: u5POqqToMiujtPHEqmEwRw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 364558014D5;
+        Thu, 30 Apr 2020 09:04:29 +0000 (UTC)
+Received: from krava (unknown [10.40.192.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 979E610013BD;
+        Thu, 30 Apr 2020 09:04:26 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 11:04:23 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH 3/8] perf bpf: Decouple creating the evlist from adding
+ the SB event
+Message-ID: <20200430090423.GD1681583@krava>
+References: <20200429131106.27974-1-acme@kernel.org>
+ <20200429131106.27974-4-acme@kernel.org>
 MIME-Version: 1.0
-References: <20200424114058.21199-1-benjamin.gaignard@st.com>
- <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
- <70e743cf-b88e-346a-5114-939b8724c83d@arm.com> <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
-In-Reply-To: <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Apr 2020 11:03:54 +0200
-Message-ID: <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
-Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429131106.27974-4-acme@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 9:53 AM Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
->
->
->
-> On 4/29/20 6:12 PM, Valentin Schneider wrote:
-> > On 29/04/2020 16:57, Benjamin GAIGNARD wrote:
-> >>
-> >> On 4/29/20 5:50 PM, Rafael J. Wysocki wrote:
-> >>> On Friday, April 24, 2020 1:40:55 PM CEST Benjamin Gaignard wrote:
-> >>>> When start streaming from the sensor the CPU load could remain very low
-> >>>> because almost all the capture pipeline is done in hardware (i.e. without
-> >>>> using the CPU) and let believe to cpufreq governor that it could use lower
-> >>>> frequencies. If the governor decides to use a too low frequency that
-> >>>> becomes a problem when we need to acknowledge the interrupt during the
-> >>>> blanking time.
-> >>>> The delay to ack the interrupt and perform all the other actions before
-> >>>> the next frame is very short and doesn't allow to the cpufreq governor to
-> >>>> provide the required burst of power. That led to drop the half of the frames.
-> >>>>
-> >>>> To avoid this problem, DCMI driver informs the cpufreq governors by adding
-> >>>> a cpufreq minimum load QoS resquest.
-> >>> This seems to be addressing a use case that can be addressed with the help of
-> >>> utilization clamps with less power overhead.
-> >> Do mean clamping the policy frequencies ? I may have miss the API to do
-> >> that...
-> > IIUC Rafael is referring to uclamp, i.e. scheduler utilization clamping, see:
-> >
-> >    https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#cpu
-> >
-> > The above describes the cgroup interface, note that you can also set clamps
-> > per task (via sched_setattr()).
-> >
-> > One thing that comes to mind however is that schedutil only "sees" the clamps
-> > of runnable tasks, and from reading your changelog you may not have moments
-> > without any (i.e. gears are grinding in HW). You'd have to try boosting
-> > (setting a high uclamp.min) whatever tasks you have on the software side and
-> > see how it all behaves.
->
-> Relying on userland side means that various applications need to be aware
-> of this specific hardware case and fix it. I was hoping to find a
-> solution in side the kernel
-> to not impact the software side.
+On Wed, Apr 29, 2020 at 10:11:01AM -0300, Arnaldo Carvalho de Melo wrote:
 
-That's not what I meant.
+SNIP
 
-I suppose that the interrupt processing in question takes place in
-process context and so you may set the lower clamp on the utilization
-of the task carrying that out.
+> -int perf_evlist__add_sb_event(struct evlist **evlist,
+> +int perf_evlist__add_sb_event(struct evlist *evlist,
+>  			      struct perf_event_attr *attr,
+>  			      perf_evsel__sb_cb_t cb,
+>  			      void *data)
+>  {
+>  	struct evsel *evsel;
+> -	bool new_evlist = (*evlist) == NULL;
+> -
+> -	if (*evlist == NULL)
+> -		*evlist = evlist__new();
+> -	if (*evlist == NULL)
+> -		return -1;
+>  
+>  	if (!attr->sample_id_all) {
+>  		pr_warning("enabling sample_id_all for all side band events\n");
+>  		attr->sample_id_all = 1;
+>  	}
+>  
+> -	evsel = perf_evsel__new_idx(attr, (*evlist)->core.nr_entries);
+> +	evsel = perf_evsel__new_idx(attr, evlist->core.nr_entries);
+>  	if (!evsel)
+>  		goto out_err;
 
-Alternatively, that task may be a deadline one.
+we can return -1 right here
+
+jirka
+
+>  
+>  	evsel->side_band.cb = cb;
+>  	evsel->side_band.data = data;
+> -	evlist__add(*evlist, evsel);
+> +	evlist__add(evlist, evsel);
+>  	return 0;
+> -
+>  out_err:
+> -	if (new_evlist) {
+> -		evlist__delete(*evlist);
+> -		*evlist = NULL;
+> -	}
+>  	return -1;
+>  }
+>  
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index f5bd5c386df1..0f02408fff3e 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -107,7 +107,7 @@ int __perf_evlist__add_default_attrs(struct evlist *evlist,
+>  
+>  int perf_evlist__add_dummy(struct evlist *evlist);
+>  
+> -int perf_evlist__add_sb_event(struct evlist **evlist,
+> +int perf_evlist__add_sb_event(struct evlist *evlist,
+>  			      struct perf_event_attr *attr,
+>  			      perf_evsel__sb_cb_t cb,
+>  			      void *data);
+> -- 
+> 2.21.1
+> 
+
