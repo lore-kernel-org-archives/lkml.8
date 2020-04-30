@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B509C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F566C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 041AB206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB9D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 13:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255186;
-	bh=2TuD1BdNfL17dvqExBVMYhhTKHsJwV5yIeNj/xAlBi4=;
+	s=default; t=1588255193;
+	bh=Z/2kThsrIUdaBeMiovI4HEPKPp2VcWA9SpoOHsJnMiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ELFDoc/BcVhbHAO5xyGOIfiugtdXyXYSt/ypKwGp/L8PgTHYn0ptskanSy6dYlN3R
-	 XGonvo0kfg+HeT5cdld2BSKkmGU/kWddHYz2TXnHMGvEQpLklWXL15cFsQVwv1Zq3D
-	 tquXh8UaaJlrp5FAp6htHRstcg8BH4g6DGWsGcb8=
+	b=vnygpY2bsDRbXXjSKZ6UzM+p1dsziBsfybvlGYr1No5aogPeTnm914FrIHbsIVfzz
+	 9Kv/PuONq98CbNDpCJoP8inkTeSOlYu+gtQwEEE705qULxF78EzgCSbvhn0MiP/pTY
+	 N/UAOqJAGO0/gg+VTTqU5pn0AEAc1rDRZ2Fgp9I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgD3N7p (ORCPT
+        id S1729373AbgD3N7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 09:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36882 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 09:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbgD3Ny0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:54:26 -0400
+        id S1728964AbgD3NyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:54:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 534B420661;
-        Thu, 30 Apr 2020 13:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24B4624959;
+        Thu, 30 Apr 2020 13:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254866;
-        bh=2TuD1BdNfL17dvqExBVMYhhTKHsJwV5yIeNj/xAlBi4=;
+        s=default; t=1588254864;
+        bh=Z/2kThsrIUdaBeMiovI4HEPKPp2VcWA9SpoOHsJnMiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1vzcpD+B5u5AWYAIjJOWGelGEozv7JJ8XcoBOJSKUXxDMgXydX40QoOzljjukXdl7
-         BKGfzmrkf1SFBgS8eGc8Y1KOYqNG5wPb8okZ3xJfhJ5tOIKj8RKh0PzMh0pGwwHfJG
-         eyhlsD353rV3j6S5id+3pNIiKcGVyUv3O1R2gkJk=
+        b=jwcOqPeInug2PzDN4qHDpBjRLUtSu6jNaIlr6xvwoVNTcA6JzGA4mAx0m/3VCHEMv
+         jVlDVMKcgogfhrpdBQb28K7DhIWGz+Gm1eg9duFeJ9TuFevGHLasTSizcayiQ8EPvD
+         l8CKKFfVEsJW7SY2Vwr1X5GdphhsxHWaty0wbFE4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 21/27] net: dsa: b53: Rework ARL bin logic
-Date:   Thu, 30 Apr 2020 09:53:56 -0400
-Message-Id: <20200430135402.20994-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/27] net: dsa: b53: Fix ARL register definitions
+Date:   Thu, 30 Apr 2020 09:53:55 -0400
+Message-Id: <20200430135402.20994-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135402.20994-1-sashal@kernel.org>
 References: <20200430135402.20994-1-sashal@kernel.org>
@@ -61,115 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 6344dbde6a27d10d16246d734b968f84887841e2 ]
+[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
 
-When asking the ARL to read a MAC address, we will get a number of bins
-returned in a single read. Out of those bins, there can essentially be 3
-states:
-
-- all bins are full, we have no space left, and we can either replace an
-  existing address or return that full condition
-
-- the MAC address was found, then we need to return its bin index and
-  modify that one, and only that one
-
-- the MAC address was not found and we have a least one bin free, we use
-  that bin index location then
-
-The code would unfortunately fail on all counts.
+The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
+which means that when we read/wrote from/to ARL bin index 0, we were
+actually accessing the ARLA_RWCTRL register.
 
 Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_common.c | 30 ++++++++++++++++++++++++++----
- drivers/net/dsa/b53/b53_regs.h   |  3 +++
- 2 files changed, 29 insertions(+), 4 deletions(-)
+ drivers/net/dsa/b53/b53_regs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 434e6dced6b7f..274d369151107 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1094,6 +1094,7 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
- 			u16 vid, struct b53_arl_entry *ent, u8 *idx,
- 			bool is_valid)
- {
-+	DECLARE_BITMAP(free_bins, B53_ARLTBL_MAX_BIN_ENTRIES);
- 	unsigned int i;
- 	int ret;
- 
-@@ -1101,6 +1102,8 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
- 	if (ret)
- 		return ret;
- 
-+	bitmap_zero(free_bins, dev->num_arl_entries);
-+
- 	/* Read the bins */
- 	for (i = 0; i < dev->num_arl_entries; i++) {
- 		u64 mac_vid;
-@@ -1112,13 +1115,21 @@ static int b53_arl_read(struct b53_device *dev, u64 mac,
- 			   B53_ARLTBL_DATA_ENTRY(i), &fwd_entry);
- 		b53_arl_to_entry(ent, mac_vid, fwd_entry);
- 
--		if (!(fwd_entry & ARLTBL_VALID))
-+		if (!(fwd_entry & ARLTBL_VALID)) {
-+			set_bit(i, free_bins);
- 			continue;
-+		}
- 		if ((mac_vid & ARLTBL_MAC_MASK) != mac)
- 			continue;
- 		*idx = i;
-+		return 0;
- 	}
- 
-+	if (bitmap_weight(free_bins, dev->num_arl_entries) == 0)
-+		return -ENOSPC;
-+
-+	*idx = find_first_bit(free_bins, dev->num_arl_entries);
-+
- 	return -ENOENT;
- }
- 
-@@ -1148,10 +1159,21 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
- 	if (op)
- 		return ret;
- 
--	/* We could not find a matching MAC, so reset to a new entry */
--	if (ret) {
-+	switch (ret) {
-+	case -ENOSPC:
-+		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
-+			addr, vid);
-+		return is_valid ? ret : 0;
-+	case -ENOENT:
-+		/* We could not find a matching MAC, so reset to a new entry */
-+		dev_dbg(dev->dev, "{%pM,%.4d} not found, using idx: %d\n",
-+			addr, vid, idx);
- 		fwd_entry = 0;
--		idx = 1;
-+		break;
-+	default:
-+		dev_dbg(dev->dev, "{%pM,%.4d} found, using idx: %d\n",
-+			addr, vid, idx);
-+		break;
- 	}
- 
- 	memset(&ent, 0, sizeof(ent));
 diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index 1b2a337d673dd..247aef92b7594 100644
+index e5c86d44667af..1b2a337d673dd 100644
 --- a/drivers/net/dsa/b53/b53_regs.h
 +++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -313,6 +313,9 @@
- #define   ARLTBL_STATIC			BIT(15)
- #define   ARLTBL_VALID			BIT(16)
+@@ -294,7 +294,7 @@
+  *
+  * BCM5325 and BCM5365 share most definitions below
+  */
+-#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
++#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
+ #define   ARLTBL_MAC_MASK		0xffffffffffffULL
+ #define   ARLTBL_VID_S			48
+ #define   ARLTBL_VID_MASK_25		0xff
+@@ -306,7 +306,7 @@
+ #define   ARLTBL_VALID_25		BIT(63)
  
-+/* Maximum number of bin entries in the ARL for all switches */
-+#define B53_ARLTBL_MAX_BIN_ENTRIES	4
-+
- /* ARL Search Control Register (8 bit) */
- #define B53_ARL_SRCH_CTL		0x50
- #define B53_ARL_SRCH_CTL_25		0x20
+ /* ARL Table Data Entry N Registers (32 bit) */
+-#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
++#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
+ #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
+ #define   ARLTBL_TC(tc)			((3 & tc) << 11)
+ #define   ARLTBL_AGE			BIT(14)
 -- 
 2.20.1
 
