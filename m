@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E414BC47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A81C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DC62063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6862063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255305;
-	bh=jlxp6bHqaL5SLGNE4+p8W1vuvAGZv7qXffR7022qqeU=;
+	s=default; t=1588255313;
+	bh=3FxBxd6RbLR/y/VY5tEmtjodrdoYxlguQHxCm+Pu6lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zLp4VWdbkxG8HLPbTIz0v7NIF192mYTb+orrhLiKDgaVsNfIr0wyfaOX0LdAnq+dM
-	 jUKtwbRLr2ZEDAXCNnqZnHYF11KqqHQlclZJCFpaXQZ/9upElSdj206GdDefg7Woqs
-	 3k55gFeEbdHEfAGZ3JiBcZIxXucp/TAe07jTmXPs=
+	b=zlo6cvN+Hksk8RJXogEHRqGz+UIXzbi0UlFioeHz7XJPKXkdtky1ZilZK6IVlSROh
+	 tqsh9K1Ts+SeN3kk8nUYe/mtex20Zy8ddynQ1ypN3mqsnbdJLgrw/cC0gdzkkXRxwI
+	 VmP4mHdm8Gwh7zL8dCw9aGbNWiGukp5VO6PBMU3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgD3OBo (ORCPT
+        id S1728934AbgD3OBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
+        Thu, 30 Apr 2020 10:01:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbgD3Nxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:53 -0400
+        id S1728813AbgD3Nxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE622063A;
-        Thu, 30 Apr 2020 13:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1DD32072A;
+        Thu, 30 Apr 2020 13:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254833;
-        bh=jlxp6bHqaL5SLGNE4+p8W1vuvAGZv7qXffR7022qqeU=;
+        s=default; t=1588254830;
+        bh=3FxBxd6RbLR/y/VY5tEmtjodrdoYxlguQHxCm+Pu6lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9wfXrY01SXVQljBfVr5OZ3anAfjHWJ0ZpCVJdyQjmg10b5TX5NrT75C3R103HzCZ
-         zbW+/vWqbZHdC4cTDiIvLarf+62WuajRhKOjoZkAWuA0lkYTHWJ/X4srcKqIX6swhN
-         CO19Oxu6me/dCRKSJAbZCnLWyhrjJXkJQvyjZ3t0=
+        b=t2f/bvlayQVZ1Etvpx5ymYdaTk+rjBJ27ulf94oU15vJpVXPutUZ0k4uSQJCF55uS
+         mwHwLMy4rr/d2YZEFl7SyUeEbTbm0rYGfeeiYc9MgGtUICjt2qGDJHiyyeWhV/tL2s
+         2SCETs+HRjQrWNJ7/+7SpKib43E9euTIGWHIwU4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Rudo <prudo@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/30] s390/ftrace: fix potential crashes when switching tracers
-Date:   Thu, 30 Apr 2020 09:53:19 -0400
-Message-Id: <20200430135325.20762-24-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        patches@opensource.wolfsonmicro.com, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 22/30] ASoC: wm8960: Fix wrong clock after suspend & resume
+Date:   Thu, 30 Apr 2020 09:53:17 -0400
+Message-Id: <20200430135325.20762-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
 References: <20200430135325.20762-1-sashal@kernel.org>
@@ -59,76 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 ]
+[ Upstream commit 1e060a453c8604311fb45ae2f84f67ed673329b4 ]
 
-Switching tracers include instruction patching. To prevent that a
-instruction is patched while it's read the instruction patching is done
-in stop_machine 'context'. This also means that any function called
-during stop_machine must not be traced. Thus add 'notrace' to all
-functions called within stop_machine.
+After suspend & resume, wm8960_hw_params may be called when
+bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
+is not called. But if sample rate is changed at that time, then
+the output clock rate will be not correct.
 
-Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
-Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
-Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
+is not necessary and it causes above issue.
+
+Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/diag.c  | 2 +-
- arch/s390/kernel/smp.c   | 4 ++--
- arch/s390/kernel/trace.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/codecs/wm8960.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index 35c842aa87058..4c7cf8787a848 100644
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -128,7 +128,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
- }
- EXPORT_SYMBOL(diag_stat_inc);
+diff --git a/sound/soc/codecs/wm8960.c b/sound/soc/codecs/wm8960.c
+index 8dc1f3d6a988e..c4c00297ada6e 100644
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+@@ -863,8 +863,7 @@ static int wm8960_hw_params(struct snd_pcm_substream *substream,
  
--void diag_stat_inc_norecursion(enum diag_stat_enum nr)
-+void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
- {
- 	this_cpu_inc(diag_stat.counter[nr]);
- 	trace_s390_diagnose_norecursion(diag_map[nr].code);
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index ecd24711f3aa9..8e31dfd85de32 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -393,7 +393,7 @@ int smp_find_processor_id(u16 address)
- 	return -1;
- }
+ 	wm8960->is_stream_in_use[tx] = true;
  
--bool arch_vcpu_is_preempted(int cpu)
-+bool notrace arch_vcpu_is_preempted(int cpu)
- {
- 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
- 		return false;
-@@ -403,7 +403,7 @@ bool arch_vcpu_is_preempted(int cpu)
- }
- EXPORT_SYMBOL(arch_vcpu_is_preempted);
+-	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
+-	    !wm8960->is_stream_in_use[!tx])
++	if (!wm8960->is_stream_in_use[!tx])
+ 		return wm8960_configure_clocking(component);
  
--void smp_yield_cpu(int cpu)
-+void notrace smp_yield_cpu(int cpu)
- {
- 	if (MACHINE_HAS_DIAG9C) {
- 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
-diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
-index 490b52e850145..11a669f3cc93c 100644
---- a/arch/s390/kernel/trace.c
-+++ b/arch/s390/kernel/trace.c
-@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
- 
- static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
- 
--void trace_s390_diagnose_norecursion(int diag_nr)
-+void notrace trace_s390_diagnose_norecursion(int diag_nr)
- {
- 	unsigned long flags;
- 	unsigned int *depth;
+ 	return 0;
 -- 
 2.20.1
 
