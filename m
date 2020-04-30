@@ -2,124 +2,149 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF86C8300C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B722C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D11D20575
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:09:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t49vxaG1"
+	by mail.kernel.org (Postfix) with ESMTP id E02D82186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 10:10:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588241437;
+	bh=QxTKssTy8RcoD/O4MDjqi+FIIiejOXh7+oJmdEK3lI8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PfiSLHEQx+1meeQWkHozgKtp+prnxdqu0t/SghWAcjQBA40XVMGLW7wEylQDwDzMm
+	 LZGB6qbsgyaFQPoT+1dJxxXtDsjxel+VLQP8RDPAkgw1n5iyfjMUfPNGlOXXHRTcqJ
+	 5llvaZHp2AI2igW5syfyuxcJ88ZxKuc89/sBltJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgD3KJi (ORCPT
+        id S1726770AbgD3KKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 06:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726127AbgD3KJh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:09:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2059FC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:09:37 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so6156578wrq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 03:09:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3HsF1h0CUb6ZIwcELngTnPN65Z4Ft11y60QYjfOQPSU=;
-        b=t49vxaG1b7bhYqwwP1Xm0juuQ8u6cz2ywZMFDoUn58CPRGTL2h/Tk/zBjDHjVRLXVp
-         jO2wMYW7Enn7qCu30n1KVwjb75wHPPJzFhof7n02PoCncR2G0XaTgo6q/7MMLEZ9ULM/
-         UlrrIIDZTlYsetBI3M3kAw8OTK2TgPshgcB4rt4MwtzWF+xu4dbFQ2ZipdEO3jBGd6cm
-         WyZg1ETxIpLVq8cOsi3QmfQwnKzAeAE5iuLXc9KHQ0x4/jhJ7vKGzQFV01eI6zl3pgap
-         7vl5niDqPu9+txexT3qjlNcQGlPx2m5PaVOacNJiDbaNTUYtTk0jI4gmiqbtcs2iYer4
-         kStw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3HsF1h0CUb6ZIwcELngTnPN65Z4Ft11y60QYjfOQPSU=;
-        b=mTDv9qX+bdr7bqoYGZtEiG6NQgAXUSskxSeL35ll7L09lJdtIzJlf9vkolKHo02OMn
-         SZhezeFb2FPT8jhRPAZUlfBX7t+UoSpBvkX+UOr3u4fhTD9JWKCcHufW4ac19EKk97oV
-         HVxdzPrWstrBTrIp/foDNR0m3boDiV2UV5vt63Z1HIe35qd6r8x5HYXV5lCZbc0JSP4Q
-         qslF+cAA6K9f+c7fcvlkyf7Ze1hGz/LGm2Hqe9AcjpnnjZBBMC9gPq89d3gO8chsgcSB
-         VuXNWIxd52QNYF6sIm2pPFGTpHhpIu1Bt3D5d5vDs+5SDAWpOAy0t70W+nKvt9lRt742
-         F1SA==
-X-Gm-Message-State: AGi0PuaxJN+ZzAM0SDXt9FkWjT87fre8gbS4PP8wjGOsnqUucnLcEnhB
-        zEUsNuzqjJankf3fuLtPUyizM4U9N5w=
-X-Google-Smtp-Source: APiQypJbuuShSqw4bzCv+LyaadxHKFAIJlNvA7pIqJkPxlKX/BmHox0nLe6xR2oR++6NgjMfaeXu3w==
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr3239337wrq.14.1588241375856;
-        Thu, 30 Apr 2020 03:09:35 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id g186sm11889535wme.7.2020.04.30.03.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 03:09:35 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 11:09:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
-        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [PATCH v7 0/3] Add Intel ComboPhy driver
-Message-ID: <20200430100933.GA298816@dell>
-References: <cover.1588230494.git.eswara.kota@linux.intel.com>
- <20200430082503.GA3118@dell>
- <cbeeda50-1ac8-7b4e-2df5-94049b1cf6b9@linux.intel.com>
+        Thu, 30 Apr 2020 06:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgD3KKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 06:10:37 -0400
+Received: from localhost.localdomain (unknown [122.182.217.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA2C20575;
+        Thu, 30 Apr 2020 10:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588241436;
+        bh=QxTKssTy8RcoD/O4MDjqi+FIIiejOXh7+oJmdEK3lI8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BMgG8YpmdRVEi/22yd2m4gmcVgOS0aqto7vSxZrvsLtsQQb7uhhMbnFmpEwQIRSbF
+         oag4a2UhIzD6yMdwjqyX04KOE9Lyc86nqauw6f/s6pJliPkjwZKWzuj/ufmh4pQngO
+         gR+R11RLyO8ePnwmFXIhMGxMxSheLfIO2s6EdCN0=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Andreas=20B=C3=B6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 0/5] usb: xhci: Add support for Renesas USB controllers
+Date:   Thu, 30 Apr 2020 15:40:14 +0530
+Message-Id: <20200430101019.1130956-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cbeeda50-1ac8-7b4e-2df5-94049b1cf6b9@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020, Dilip Kota wrote:
+This series add support for Renesas USB controllers uPD720201 and uPD720202.
+These require firmware to be loaded and in case devices have ROM those can
+also be programmed if empty. If ROM is programmed, it runs from ROM as well.
 
-> 
-> On 4/30/2020 4:25 PM, Lee Jones wrote:
-> > On Thu, 30 Apr 2020, Dilip Kota wrote:
-> > 
-> > > This patch series adds Intel ComboPhy driver, respective yaml schemas
-> > > 
-> > > Changes on v7:
-> > >    As per System control driver maintainer's inputs remove
-> > >      fwnode_to_regmap() definition and use device_node_get_regmap()
-> > > Changes on v6:
-> > >    Rebase patches on the latest maintainer's branch
-> > >    https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
-> > > Dilip Kota (3):
-> > >    dt-bindings: phy: Add PHY_TYPE_XPCS definition
-> > >    dt-bindings: phy: Add YAML schemas for Intel ComboPhy
-> > >    phy: intel: Add driver support for ComboPhy
-> > > 
-> > >   .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
-> > >   drivers/phy/intel/Kconfig                          |  14 +
-> > >   drivers/phy/intel/Makefile                         |   1 +
-> > >   drivers/phy/intel/phy-intel-combo.c                | 627 +++++++++++++++++++++
-> > >   include/dt-bindings/phy/phy.h                      |   1 +
-> > Why have you sent this to me?
+This includes patches from Christian which supported these controllers w/o
+ROM and later my patches for ROM support and debugfs hook for rom erase and
+export of xhci-pci functions.
 
-> The main reason for this patch series is removing fwnode_to_regmap() and
-> using device_node_get_regmap() compared to previous patch series.
-> This has been done as per your review comments.
+Changes in v10:
+  - update xhci->quirks and use that in remove function
+  - remove error return renesas_verify_fw_version()
+  - remove renesas_download_rom() and modify renesas_fw_download_image() for
+  reuse
+Changes in v10:
+  remove renesas_xhci_pci_probe and call renesas_xhci_check_request_fw and
+  also cleanup exit code along with it.
 
-I see.  Yes, dropping fwnode_to_regmap() was the right thing to do.
+Changes in v9:
+ Make fw load a sync call and have single instance of probe execute,
+   elimating probe/remove races
+ Add quirk for renesas and use that for loading
 
-> To keep you updated that changes are done as per your review comments, sent
-> to you along with PHY maintainers.
+Changes in v8:
+ Fix compile error reported by Kbuild-bot by making usb_hcd_pci_probe() take
+ const struct hc_driver * as argument
+
+Changes in v7:
+ Make a single module which removes issues with module loading
+ Keep the renesas code in renesas file
+ Add hc_driver as argument for usb_hcd_pci_probe and modify hdc drivers to
+   pass this and not use driver_data
+ Use driver data for fw name
+ Remove code to check if we need to load firmware or not
+ remove multiple fw version support, we can do that with symlink in
+   userspace
+
+Changes in v6:
+ Move the renesas code into a separate driver which invokes xhci-pci functions.
+
+Changes in v5:
+ Added a debugfs rom erase patch, helps in debugging
+ Squashed patch 1 & 2 as requested by Mathias
+
+Changes in v4:
+ Rollback the delay values as we got device failures
+
+Changes in v3:
+  Dropped patch 2 as discussed with Christian
+  Removed aligned 8 bytes check
+  Change order for firmware search from highest version to lowest
+  Added entry for new firmware for device 0x14 as well
+  Add tested by Christian
+
+Changes in v2:
+  used macros for timeout count and delay
+  removed renesas_fw_alive_check
+  cleaned renesas_fw_callback
+  removed recurion for renesas_fw_download
+  added MODULE_FIRMWARE
+  added comment for multiple fw order
+
+Christian Lamparter (1):
+  usb: renesas-xhci: Add the renesas xhci driver
+
+Vinod Koul (4):
+  usb: hci: add hc_driver as argument for usb_hcd_pci_probe
+  usb: xhci: Add support for Renesas controller with memory
+  usb: renesas-xhci: Add ROM loader for uPD720201
+  usb: xhci: provide a debugfs hook for erasing rom
+
+ drivers/usb/core/hcd-pci.c          |   7 +-
+ drivers/usb/host/Makefile           |   3 +-
+ drivers/usb/host/ehci-pci.c         |   6 +-
+ drivers/usb/host/ohci-pci.c         |   9 +-
+ drivers/usb/host/uhci-pci.c         |   8 +-
+ drivers/usb/host/xhci-pci-renesas.c | 674 ++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-pci.c         |  47 +-
+ drivers/usb/host/xhci-pci.h         |  16 +
+ drivers/usb/host/xhci.h             |   1 +
+ include/linux/usb/hcd.h             |   3 +-
+ 10 files changed, 751 insertions(+), 23 deletions(-)
+ create mode 100644 drivers/usb/host/xhci-pci-renesas.c
+ create mode 100644 drivers/usb/host/xhci-pci.h
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.3
+
