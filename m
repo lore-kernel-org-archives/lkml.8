@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2072C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344B4C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941552082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1444220873
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 16:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588262808;
-	bh=mwXQTjF7850lNOTbqQXXAQp2gqoDNDy9E2jrpxLqrgg=;
+	s=default; t=1588262814;
+	bh=kwLf545ZLLKl4cDNQVW1Q3oZtALV8Rc5ZHCSwPCR5Ng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ivOB85FKSx1L1+rv0Btk4VfPBuKxVLsJ+Cwq89QeeErLGAGCJQLe3V65OBxaDhiij
-	 YRcws4At8tXeD+Ly7dNeJLIjbdHnjZ1y2JYEFZ3DcnBdz/BR86abaplYKYhmSaZPae
-	 xfNT65zRSwDm78Yr/8grMtelV9pX4wPLjecAUJF8=
+	b=JCORlzsfp7TngyvACLUmEihTqI0ZHCpoQuLm+OYZGmx7RwHwXON94m/35POnQOnUL
+	 BroesV17yKxwfkEvHtH9FeBmKA6wJnXb8ZlMxhXUu4K1Koucb2hxuUcyOrcrbd0D0S
+	 NziZyWX0gfOYRbI+CCKm+BN8UXVbSKTz2In2ifWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgD3QGr (ORCPT
+        id S1727812AbgD3QEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 12:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgD3QEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Apr 2020 12:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgD3QEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:04:36 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828CB2498C;
-        Thu, 30 Apr 2020 16:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEF3420775;
+        Thu, 30 Apr 2020 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588262676;
-        bh=mwXQTjF7850lNOTbqQXXAQp2gqoDNDy9E2jrpxLqrgg=;
+        s=default; t=1588262675;
+        bh=kwLf545ZLLKl4cDNQVW1Q3oZtALV8Rc5ZHCSwPCR5Ng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yB8ol5IgG7UroXTG2SVA7rWHMrtG995xZoXka+QB8+UxaIP/9uI6F6nToa51TzyYd
-         878WdFKxDgov9pvpNZTtd90JsrriVTFj7+3v1L/P26S3jnpqNS9oy2x7oDeFOmhF8/
-         SHgYgm5NCCOM1n9b42ArrtjVuV6p2M+WL4eKeVN8=
+        b=F9ovvL+5dz7imvEp73G2FjBuKbniXBnBMIKtI4d9elsbHrE1UUt+FzZpOrn37PSO+
+         nBWW4Ee5nxtZ9iU0NIL+oRH8wC7P1d0G55vIa3LWdDlXuEynayk6+qNL8oqvTIchaC
+         HvaP/bdqo+axBzq/a/8HQ/laEsPCtjA5OuBycePk=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUBfu-00AxGb-Qq; Thu, 30 Apr 2020 18:04:34 +0200
+        id 1jUBfu-00AxEJ-1p; Thu, 30 Apr 2020 18:04:34 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 31/37] docs: networking: convert strparser.txt to ReST
-Date:   Thu, 30 Apr 2020 18:04:26 +0200
-Message-Id: <ebd753137781aa0d28d6eda54d31d8072d56daea.1588261997.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 03/37] docs: networking: convert ltpc.txt to ReST
+Date:   Thu, 30 Apr 2020 18:03:58 +0200
+Message-Id: <6e495bae2c1b7804fd7ff0d3462c1d15b5c0dc3d.1588261997.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588261997.git.mchehab+huawei@kernel.org>
 References: <cover.1588261997.git.mchehab+huawei@kernel.org>
@@ -62,226 +62,179 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust title markup;
+- add a document title;
 - mark code blocks and literals as such;
 - mark tables as such;
-- adjust identation, whitespaces and blank lines where needed;
+- adjust identation, whitespaces and blank lines;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/networking/index.rst            |  1 +
- .../{strparser.txt => strparser.rst}          | 85 +++++++++++++------
- 2 files changed, 60 insertions(+), 26 deletions(-)
- rename Documentation/networking/{strparser.txt => strparser.rst} (80%)
+ .../networking/{ltpc.txt => ltpc.rst}         | 45 ++++++++++++-------
+ drivers/net/appletalk/Kconfig                 |  2 +-
+ 3 files changed, 31 insertions(+), 17 deletions(-)
+ rename Documentation/networking/{ltpc.txt => ltpc.rst} (86%)
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index d19ddcbe66e5..e5a705024c6a 100644
+index acd2567cf0d4..b3608b177a8b 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -104,6 +104,7 @@ Contents:
-    secid
-    seg6-sysctl
-    skfp
-+   strparser
+@@ -76,6 +76,7 @@ Contents:
+    kcm
+    l2tp
+    lapb-module
++   ltpc
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/strparser.txt b/Documentation/networking/strparser.rst
-similarity index 80%
-rename from Documentation/networking/strparser.txt
-rename to Documentation/networking/strparser.rst
-index a7d354ddda7b..6cab1f74ae05 100644
---- a/Documentation/networking/strparser.txt
-+++ b/Documentation/networking/strparser.rst
-@@ -1,4 +1,8 @@
+diff --git a/Documentation/networking/ltpc.txt b/Documentation/networking/ltpc.rst
+similarity index 86%
+rename from Documentation/networking/ltpc.txt
+rename to Documentation/networking/ltpc.rst
+index a005a73b76d0..0ad197fd17ce 100644
+--- a/Documentation/networking/ltpc.txt
++++ b/Documentation/networking/ltpc.rst
+@@ -1,3 +1,9 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=========================
- Stream Parser (strparser)
-+=========================
- 
- Introduction
- ============
-@@ -34,8 +38,10 @@ that is called when a full message has been completed.
- Functions
- =========
- 
--strp_init(struct strparser *strp, struct sock *sk,
--	  const struct strp_callbacks *cb)
-+     ::
++===========
++LTPC Driver
++===========
 +
-+	strp_init(struct strparser *strp, struct sock *sk,
-+		const struct strp_callbacks *cb)
+ This is the ALPHA version of the ltpc driver.
  
-      Called to initialize a stream parser. strp is a struct of type
-      strparser that is allocated by the upper layer. sk is the TCP
-@@ -43,31 +49,41 @@ strp_init(struct strparser *strp, struct sock *sk,
-      callback mode; in general mode this is set to NULL. Callbacks
-      are called by the stream parser (the callbacks are listed below).
+ In order to use it, you will need at least version 1.3.3 of the
+@@ -15,7 +21,7 @@ yourself.  (see "Card Configuration" below for how to determine or
+ change the settings on your card)
  
--void strp_pause(struct strparser *strp)
-+     ::
+ When the driver is compiled into the kernel, you can add a line such
+-as the following to your /etc/lilo.conf:
++as the following to your /etc/lilo.conf::
+ 
+  append="ltpc=0x240,9,1"
+ 
+@@ -25,13 +31,13 @@ the driver will try to determine them itself.
+ 
+ If you load the driver as a module, you can pass the parameters "io=",
+ "irq=", and "dma=" on the command line with insmod or modprobe, or add
+-them as options in a configuration file in /etc/modprobe.d/ directory:
++them as options in a configuration file in /etc/modprobe.d/ directory::
+ 
+  alias lt0 ltpc # autoload the module when the interface is configured
+  options ltpc io=0x240 irq=9 dma=1
+ 
+ Before starting up the netatalk demons (perhaps in rc.local), you
+-need to add a line such as:
++need to add a line such as::
+ 
+  /sbin/ifconfig lt0 127.0.0.42
+ 
+@@ -42,7 +48,7 @@ The appropriate netatalk configuration depends on whether you are
+ attached to a network that includes AppleTalk routers or not.  If,
+ like me, you are simply connecting to your home Macintoshes and
+ printers, you need to set up netatalk to "seed".  The way I do this
+-is to have the lines
++is to have the lines::
+ 
+  dummy -seed -phase 2 -net 2000 -addr 2000.26 -zone "1033"
+  lt0 -seed -phase 1 -net 1033 -addr 1033.27 -zone "1033"
+@@ -57,13 +63,13 @@ such.
+ 
+ If you are attached to an extended AppleTalk network, with routers on
+ it, then you don't need to fool around with this -- the appropriate
+-line in atalkd.conf is
++line in atalkd.conf is::
+ 
+  lt0 -phase 1
+ 
+---------------------------------------
+ 
+-Card Configuration:
++Card Configuration
++==================
+ 
+ The interrupts and so forth are configured via the dipswitch on the
+ board.  Set the switches so as not to conflict with other hardware.
+@@ -73,26 +79,32 @@ board.  Set the switches so as not to conflict with other hardware.
+        original documentation refers to IRQ2.  Since you'll be running
+        this on an AT (or later) class machine, that really means IRQ9.
+ 
++       ===     ===========================================================
+        SW1     IRQ 4
+        SW2     IRQ 3
+        SW3     IRQ 9 (2 in original card documentation only applies to XT)
++       ===     ===========================================================
+ 
+ 
+        DMA -- choose DMA 1 or 3, and set both corresponding switches.
+ 
++       ===     =====
+        SW4     DMA 3
+        SW5     DMA 1
+        SW6     DMA 3
+        SW7     DMA 1
++       ===     =====
+ 
+ 
+        I/O address -- choose one.
+ 
++       ===     =========
+        SW8     220 / 240
++       ===     =========
+ 
+---------------------------------------
+ 
+-IP:
++IP
++==
+ 
+ Yes, it is possible to do IP over LocalTalk.  However, you can't just
+ treat the LocalTalk device like an ordinary Ethernet device, even if
+@@ -102,9 +114,9 @@ Instead, you follow the same procedure as for doing IP in EtherTalk.
+ See Documentation/networking/ipddp.rst for more information about the
+ kernel driver and userspace tools needed.
+ 
+---------------------------------------
+ 
+-BUGS:
++Bugs
++====
+ 
+ IRQ autoprobing often doesn't work on a cold boot.  To get around
+ this, either compile the driver as a module, or pass the parameters
+@@ -120,12 +132,13 @@ It may theoretically be possible to use two LTPC cards in the same
+ machine, but this is unsupported, so if you really want to do this,
+ you'll probably have to hack the initialization code a bit.
+ 
+-______________________________________
+ 
+-THANKS:
+-	Thanks to Alan Cox for helpful discussions early on in this
++Thanks
++======
 +
-+	void strp_pause(struct strparser *strp)
++Thanks to Alan Cox for helpful discussions early on in this
+ work, and to Denis Hainsworth for doing the bleeding-edge testing.
  
-      Temporarily pause a stream parser. Message parsing is suspended
-      and no new messages are delivered to the upper layer.
+--- Bradford Johnson <bradford@math.umn.edu>
++Bradford Johnson <bradford@math.umn.edu>
  
--void strp_unpause(struct strparser *strp)
-+     ::
-+
-+	void strp_unpause(struct strparser *strp)
+--- Updated 11/09/1998 by David Huggins-Daines <dhd@debian.org>
++Updated 11/09/1998 by David Huggins-Daines <dhd@debian.org>
+diff --git a/drivers/net/appletalk/Kconfig b/drivers/net/appletalk/Kconfig
+index ccde6479050c..10589a82263b 100644
+--- a/drivers/net/appletalk/Kconfig
++++ b/drivers/net/appletalk/Kconfig
+@@ -48,7 +48,7 @@ config LTPC
+ 	  If you are in doubt, this card is the one with the 65C02 chip on it.
+ 	  You also need version 1.3.3 or later of the netatalk package.
+ 	  This driver is experimental, which means that it may not work.
+-	  See the file <file:Documentation/networking/ltpc.txt>.
++	  See the file <file:Documentation/networking/ltpc.rst>.
  
-      Unpause a paused stream parser.
- 
--void strp_stop(struct strparser *strp);
-+     ::
-+
-+	void strp_stop(struct strparser *strp);
- 
-      strp_stop is called to completely stop stream parser operations.
-      This is called internally when the stream parser encounters an
-      error, and it is called from the upper layer to stop parsing
-      operations.
- 
--void strp_done(struct strparser *strp);
-+     ::
-+
-+	void strp_done(struct strparser *strp);
- 
-      strp_done is called to release any resources held by the stream
-      parser instance. This must be called after the stream processor
-      has been stopped.
- 
--int strp_process(struct strparser *strp, struct sk_buff *orig_skb,
--		 unsigned int orig_offset, size_t orig_len,
--		 size_t max_msg_size, long timeo)
-+     ::
-+
-+	int strp_process(struct strparser *strp, struct sk_buff *orig_skb,
-+			 unsigned int orig_offset, size_t orig_len,
-+			 size_t max_msg_size, long timeo)
- 
-     strp_process is called in general mode for a stream parser to
-     parse an sk_buff. The number of bytes processed or a negative
-@@ -75,7 +91,9 @@ int strp_process(struct strparser *strp, struct sk_buff *orig_skb,
-     consume the sk_buff. max_msg_size is maximum size the stream
-     parser will parse. timeo is timeout for completing a message.
- 
--void strp_data_ready(struct strparser *strp);
-+    ::
-+
-+	void strp_data_ready(struct strparser *strp);
- 
-     The upper layer calls strp_tcp_data_ready when data is ready on
-     the lower socket for strparser to process. This should be called
-@@ -83,7 +101,9 @@ void strp_data_ready(struct strparser *strp);
-     maximum messages size is the limit of the receive socket
-     buffer and message timeout is the receive timeout for the socket.
- 
--void strp_check_rcv(struct strparser *strp);
-+    ::
-+
-+	void strp_check_rcv(struct strparser *strp);
- 
-     strp_check_rcv is called to check for new messages on the socket.
-     This is normally called at initialization of a stream parser
-@@ -94,7 +114,9 @@ Callbacks
- 
- There are six callbacks:
- 
--int (*parse_msg)(struct strparser *strp, struct sk_buff *skb);
-+    ::
-+
-+	int (*parse_msg)(struct strparser *strp, struct sk_buff *skb);
- 
-     parse_msg is called to determine the length of the next message
-     in the stream. The upper layer must implement this function. It
-@@ -107,14 +129,16 @@ int (*parse_msg)(struct strparser *strp, struct sk_buff *skb);
- 
-     The return values of this function are:
- 
--    >0 : indicates length of successfully parsed message
--    0  : indicates more data must be received to parse the message
--    -ESTRPIPE : current message should not be processed by the
--          kernel, return control of the socket to userspace which
--          can proceed to read the messages itself
--    other < 0 : Error in parsing, give control back to userspace
--          assuming that synchronization is lost and the stream
--          is unrecoverable (application expected to close TCP socket)
-+    =========    ===========================================================
-+    >0           indicates length of successfully parsed message
-+    0            indicates more data must be received to parse the message
-+    -ESTRPIPE    current message should not be processed by the
-+		 kernel, return control of the socket to userspace which
-+		 can proceed to read the messages itself
-+    other < 0    Error in parsing, give control back to userspace
-+		 assuming that synchronization is lost and the stream
-+		 is unrecoverable (application expected to close TCP socket)
-+    =========    ===========================================================
- 
-     In the case that an error is returned (return value is less than
-     zero) and the parser is in receive callback mode, then it will set
-@@ -123,7 +147,9 @@ int (*parse_msg)(struct strparser *strp, struct sk_buff *skb);
-     the current message, then the error set on the attached socket is
-     ENODATA since the stream is unrecoverable in that case.
- 
--void (*lock)(struct strparser *strp)
-+    ::
-+
-+	void (*lock)(struct strparser *strp)
- 
-     The lock callback is called to lock the strp structure when
-     the strparser is performing an asynchronous operation (such as
-@@ -131,14 +157,18 @@ void (*lock)(struct strparser *strp)
-     function is to lock_sock for the associated socket. In general
-     mode the callback must be set appropriately.
- 
--void (*unlock)(struct strparser *strp)
-+    ::
-+
-+	void (*unlock)(struct strparser *strp)
- 
-     The unlock callback is called to release the lock obtained
-     by the lock callback. In receive callback mode the default
-     function is release_sock for the associated socket. In general
-     mode the callback must be set appropriately.
- 
--void (*rcv_msg)(struct strparser *strp, struct sk_buff *skb);
-+    ::
-+
-+	void (*rcv_msg)(struct strparser *strp, struct sk_buff *skb);
- 
-     rcv_msg is called when a full message has been received and
-     is queued. The callee must consume the sk_buff; it can
-@@ -152,7 +182,9 @@ void (*rcv_msg)(struct strparser *strp, struct sk_buff *skb);
-     the length of the message. skb->len - offset may be greater
-     then full_len since strparser does not trim the skb.
- 
--int (*read_sock_done)(struct strparser *strp, int err);
-+    ::
-+
-+	int (*read_sock_done)(struct strparser *strp, int err);
- 
-      read_sock_done is called when the stream parser is done reading
-      the TCP socket in receive callback mode. The stream parser may
-@@ -160,7 +192,9 @@ int (*read_sock_done)(struct strparser *strp, int err);
-      to occur when exiting the loop. If the callback is not set (NULL
-      in strp_init) a default function is used.
- 
--void (*abort_parser)(struct strparser *strp, int err);
-+     ::
-+
-+	void (*abort_parser)(struct strparser *strp, int err);
- 
-      This function is called when stream parser encounters an error
-      in parsing. The default function stops the stream parser and
-@@ -204,4 +238,3 @@ Author
- ======
- 
- Tom Herbert (tom@quantonium.net)
--
+ config COPS
+ 	tristate "COPS LocalTalk PC support"
 -- 
 2.25.4
 
