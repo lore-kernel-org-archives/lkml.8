@@ -2,215 +2,116 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB51C4724C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A90C47254
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 905802076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588261853;
-	bh=AWlUUUEQmtBP6tJdyVBdRVvYUBKUIGdA1MEl0dfcZ1c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RVJFvOLbHG8Ec8IX6u7BFNtxZMlfJChSFpJuKunod2EDEQt3B02jfdlUHo6n2Uome
-	 w/IM5OxTXRb9t6jFaCI6MSqPvRClTpidSa8LR0NGnA+/h6FdRjW4FSAQGjFrzIOAYe
-	 mpnXtnRBuJgq++d/01iAuWQCZk8V3zXtXcrfjJOk=
+	by mail.kernel.org (Postfix) with ESMTP id D4F682076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 15:52:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ew1UPCIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgD3Puw (ORCPT
+        id S1726955AbgD3Pws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 11:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgD3Puw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:50:52 -0400
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A7392137B
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 15:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588261851;
-        bh=AWlUUUEQmtBP6tJdyVBdRVvYUBKUIGdA1MEl0dfcZ1c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=blFWQQqDR5s9d3ZEJt7rWSG47Ui51YmWTKkh3itQ/Sp3SU0kVuXu63FPnOk2WS56J
-         zW77QmZcKSZJszbq/CKFhEiS+PSGTxjHBYA2jEAYMkYU/coTMAB0qLBIOeZbeo9tlb
-         28HbThPQWnva6dMg986HdyvMzNJmd6p02ghaf77g=
-Received: by mail-ed1-f41.google.com with SMTP id a8so4951712edv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:50:51 -0700 (PDT)
-X-Gm-Message-State: AGi0PuajhhFXFOumtIWRpwjhKP5NnE5eWgot6vkGOgcBynYQl4dvfNJC
-        M1N+tmXvg0NU9uWBjhgyi6dENPp3fXZdgjJQfA==
-X-Google-Smtp-Source: APiQypLNtAe4WGt202vWspF3DK8VQGAkLi64NfyhwMTDL4r2HZtxav6S7QTWNUTBLfZims+Y6t3pKABbZl+n/V80byk=
-X-Received: by 2002:a05:6402:48b:: with SMTP id k11mr3417709edv.47.1588261849430;
- Thu, 30 Apr 2020 08:50:49 -0700 (PDT)
+        Thu, 30 Apr 2020 11:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726764AbgD3Pwr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 11:52:47 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F541C08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:52:47 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b11so7557896wrs.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 08:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AZo6TuIE/5CcefbKGNzYSvkrg5IwPl6ltYNRWOcMaDk=;
+        b=ew1UPCIe8ZacX7ovq7/6qUDJlJ+5LH1pYI4Qv9R/87Ys89GVuota9rIBbMd+Td5GWP
+         8srIJ0cNMt9MTgjfWwAgBPDSbyGXi2rTY+X8LXmJodhZf7wgiI/EEWIy8gdcw6riIP5z
+         fHQPkxuMdWBZXVn52OJZXfEr54kzDCckCz0FI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AZo6TuIE/5CcefbKGNzYSvkrg5IwPl6ltYNRWOcMaDk=;
+        b=tj4XoqW/EOFCU7gUC5N8L+M4c1ethhbjORhgB/iwp4t+iNV3X/Ex6G3mlAkzFsFdRk
+         yerJfzgIz2XEjr7YD3siSkAKMxkDQf4CTaIUHqzE2SxXlSdHS28HvolL7eSz8V6Yqn4m
+         //OUJfGFEWMFZL2naQyXekQYAK//f79zyem/WaqK1axlJziHaqLBwKcZ4Uzc7uU+7zrq
+         KaY3uI4U1S+8OVM5iTZJOu//ykhwTuy3vlBbrD72mbmsrriIfcQXnPjptjFBNzEMQIM+
+         hH73tfBEr1Lgk1ePa2D8IyJLLCW97GG8Vp4LuJKTUy/yp+n3tp7qrtkjk6QAHYddbSMb
+         aEZw==
+X-Gm-Message-State: AGi0PuYlkI60dwIeVgdIsTOtCNAzSt1mWL94df/MhEg+7G/N/vuDFo9y
+        YvQ1yAyRgRh7DR6voG6WK9eop5hwmZU=
+X-Google-Smtp-Source: APiQypKcObnvK7/azf9dwTI9MsY5sG6t8DBheJsjVNGF56u65EmqYwLcS0U3EwbjygZUPfHV+1Q/fg==
+X-Received: by 2002:adf:9d85:: with SMTP id p5mr4800271wre.101.1588261965505;
+        Thu, 30 Apr 2020 08:52:45 -0700 (PDT)
+Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id a125sm123421wme.3.2020.04.30.08.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 08:52:44 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Mikko Ylinen <mikko.ylinen@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+Subject: [PATCH bpf] security: Fix the default value of fs_context_parse_param hook
+Date:   Thu, 30 Apr 2020 17:52:40 +0200
+Message-Id: <20200430155240.68748-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-References: <CAAOTY_86d-UryKQrLy8-zjTbrTRrHL4k3x=bx1KqvWxPL5jj2Q@mail.gmail.com>
- <AOsApgASCAa7imxfuvZwXqq0.3.1588228291133.Hmail.bernard@vivo.com>
-In-Reply-To: <AOsApgASCAa7imxfuvZwXqq0.3.1588228291133.Hmail.bernard@vivo.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Thu, 30 Apr 2020 23:50:38 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8o239n_y4LJiyU5978e87knZmNRJwSHZbEDxLLasiJjw@mail.gmail.com>
-Message-ID: <CAAOTY_8o239n_y4LJiyU5978e87knZmNRJwSHZbEDxLLasiJjw@mail.gmail.com>
-Subject: Re: Re: [PATCH] drm/mediatek: cleanup coding style in mediatek a bit
-To:     Bernard <bernard@vivo.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        opensource.kernel@vivo.com, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bernard:
+From: KP Singh <kpsingh@google.com>
 
-Bernard <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8830=E6=97=A5 =E9=
-=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:32=E5=AF=AB=E9=81=93=EF=BC=9A
->
->
->
-> =E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=9AChun-Kuang Hu <chunkuang.hu@kernel.or=
-g>
-> =E5=8F=91=E9=80=81=E6=97=A5=E6=9C=9F=EF=BC=9A2020-04-29 22:22:50
-> =E6=94=B6=E4=BB=B6=E4=BA=BA=EF=BC=9ABernard Zhao <bernard@vivo.com>
-> =E6=8A=84=E9=80=81=E4=BA=BA=EF=BC=9AChun-Kuang Hu <chunkuang.hu@kernel.or=
-g>,Philipp Zabel <p.zabel@pengutronix.de>,David Airlie <airlied@linux.ie>,D=
-aniel Vetter <daniel@ffwll.ch>,Matthias Brugger <matthias.bgg@gmail.com>,DR=
-I Development <dri-devel@lists.freedesktop.org>,Linux ARM <linux-arm-kernel=
-@lists.infradead.org>,"moderated list:ARM/Mediatek SoC support" <linux-medi=
-atek@lists.infradead.org>,linux-kernel <linux-kernel@vger.kernel.org>,opens=
-ource.kernel@vivo.com
-> =E4=B8=BB=E9=A2=98=EF=BC=9ARe: [PATCH] drm/mediatek: cleanup coding style=
- in mediatek a bit>Hi, Bernard:
-> >
-> >Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8827=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:53=E5=AF=AB=E9=81=93=EF=BC=9A
-> >>
-> >> This code change is to make code bit more readable.
-> >> Optimise array size align to HDMI macro define.
-> >> Add check if len is overange.
-> >
-> >One patch should just do one thing, but this do three things.
-> >So break this into three patches.
-> >
-> >Regards,
-> >Chun-Kuang.
->
-> Hi
-> This optimization is mainly to make the code a bit readable.
-> These modifications are related, main in several related function calls i=
-n the same file.
-> I was a bit confused that if it is really necessary to change to three se=
-parate patch submissions?
->
-> Regards
-> Bernard
->
-> >>
-> >> Signed-off-by: Bernard Zhao <bernard@vivo.com>
-> >> ---
-> >>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 22 +++++++++++-----------
-> >>  1 file changed, 11 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/med=
-iatek/mtk_hdmi.c
-> >> index ff43a3d80410..40fb5154ed5d 100644
-> >> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> >> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> >> @@ -311,15 +311,15 @@ static void mtk_hdmi_hw_send_info_frame(struct m=
-tk_hdmi *hdmi, u8 *buffer,
-> >>         u8 checksum;
-> >>         int ctrl_frame_en =3D 0;
-> >>
-> >> -       frame_type =3D *buffer;
-> >> -       buffer +=3D 1;
-> >> -       frame_ver =3D *buffer;
-> >> -       buffer +=3D 1;
-> >> -       frame_len =3D *buffer;
-> >> -       buffer +=3D 1;
-> >> -       checksum =3D *buffer;
-> >> -       buffer +=3D 1;
-> >> +       frame_type =3D *buffer++;
-> >> +       frame_ver =3D *buffer++;
-> >> +       frame_len =3D *buffer++;
-> >> +       checksum =3D *buffer++;
+security_fs_context_parse_param is called by vfs_parse_fs_param and
+a succussful return value (i.e 0) implies that a parameter will be
+consumed by the LSM framework. This stops all further parsing of the
+parmeter by VFS. Furthermore, if an LSM hook returns a success, the
+remaining LSM hooks are not invoked for the parameter.
 
-This part looks like cleanup, so keep in this patch.
+The current default behavior of returning success means that all the
+parameters are expected to be parsed by the LSM hook and none of them
+end up being populated by vfs in fs_context
 
-> >>         frame_data =3D buffer;
-> >> +       if ((frame_len + HDMI_INFOFRAME_HEADER_SIZE) > len) {
-> >> +               dev_err(hdmi->dev, "Wrong frame len: %d\n", frame_len;
-> >> +               return;
+This was noticed when lsm=bpf is supplied on the command line before any
+other LSM. As the bpf lsm uses this default value to implement a default
+hook, this resulted in a failure to parse any fs_context parameters and
+a failure to mount the root filesystem.
 
-This is error checking, not cleanup the coding style, so move this to
-another patch.
+Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+Reported-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
+Signed-off-by: KP Singh <kpsingh@google.com>
+---
+ include/linux/lsm_hook_defs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >> +       }
-> >>
-> >>         dev_dbg(hdmi->dev,
-> >>                 "frame_type:0x%x,frame_ver:0x%x,frame_len:0x%x,checksu=
-m:0x%x\n",
-> >> @@ -982,7 +982,7 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk=
-_hdmi *hdmi,
-> >>                                         struct drm_display_mode *mode)
-> >>  {
-> >>         struct hdmi_avi_infoframe frame;
-> >> -       u8 buffer[17];
-> >> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE=
-];
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index 9cd4455528e5..1bdd027766d4 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -55,7 +55,7 @@ LSM_HOOK(void, LSM_RET_VOID, bprm_committing_creds, struct linux_binprm *bprm)
+ LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
+ LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
+ 	 struct fs_context *src_sc)
+-LSM_HOOK(int, 0, fs_context_parse_param, struct fs_context *fc,
++LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
+ 	 struct fs_parameter *param)
+ LSM_HOOK(int, 0, sb_alloc_security, struct super_block *sb)
+ LSM_HOOK(void, LSM_RET_VOID, sb_free_security, struct super_block *sb)
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
-This is to symbolize the number, symbolization is more than cleanup.
-
-Regards,
-Chun-Kuang.
-
-> >>         ssize_t err;
-> >>
-> >>         err =3D drm_hdmi_avi_infoframe_from_display_mode(&frame,
-> >> @@ -1008,7 +1008,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct m=
-tk_hdmi *hdmi,
-> >>                                         const char *product)
-> >>  {
-> >>         struct hdmi_spd_infoframe frame;
-> >> -       u8 buffer[29];
-> >> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE=
-];
-> >>         ssize_t err;
-> >>
-> >>         err =3D hdmi_spd_infoframe_init(&frame, vendor, product);
-> >> @@ -1031,7 +1031,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct m=
-tk_hdmi *hdmi,
-> >>  static int mtk_hdmi_setup_audio_infoframe(struct mtk_hdmi *hdmi)
-> >>  {
-> >>         struct hdmi_audio_infoframe frame;
-> >> -       u8 buffer[14];
-> >> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AUDIO_INFOFRAME_SI=
-ZE];
-> >>         ssize_t err;
-> >>
-> >>         err =3D hdmi_audio_infoframe_init(&frame);
-> >> --
-> >> 2.26.2
-> >>
-> >>
-> >> _______________________________________________
-> >> Linux-mediatek mailing list
-> >> Linux-mediatek@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
