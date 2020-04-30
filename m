@@ -2,170 +2,109 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B01C83000
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487DAC83004
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117042083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2887C2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 01:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vB4VPh0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgD3ByG (ORCPT
+        id S1726770AbgD3Byb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Apr 2020 21:54:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46312 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgD3ByF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Apr 2020 21:54:05 -0400
-IronPort-SDR: 0MK2kr1nrAQJY3Izuit+fha58oC6tRm8u8+4zk9qV5z7IPe5WkkHXbhUp1Illj4PFnZuE3n3Iv
- THtbrYfljxgw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 18:54:05 -0700
-IronPort-SDR: JRfWvi/0Lcjk+7j12JjYQo0hWQ5eYjyLSlU4cFSiJd/P/ifnC+GnHASJKmi6QfUIwfb5/lw5Is
- uUZvwQBM3SGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="432783861"
-Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
-  by orsmga005.jf.intel.com with ESMTP; 29 Apr 2020 18:54:01 -0700
-Date:   Thu, 30 Apr 2020 10:04:16 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Mao Wenan <maowenan@huawei.com>, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH bpf-next 1/2] bpf: Change error code when ops is NULL
-Message-ID: <20200430020416.GE15540@xsang-OptiPlex-9020>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422083010.28000-2-maowenan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 29 Apr 2020 21:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgD3Byb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Apr 2020 21:54:31 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8540C035494;
+        Wed, 29 Apr 2020 18:54:30 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id l11so3398028lfc.5;
+        Wed, 29 Apr 2020 18:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6IdL3BAcEz7abiV3g4YHEMCO9WXnls6KQ2pdHBxgwww=;
+        b=vB4VPh0Syzb1zOX3vCVy9aTmDEvNRDG4JWKAOCurlhM2NNg1xvtsdEt8WjAiN2CVu5
+         cgIpLkOscWzQT222s35toq3cpsLZk5HaLa0INMlT8gRS74V9HQhQbrFt5Fmy1YTbmRac
+         RLG3pk6JIWjpVcTKCGBS7O13XX5GwqFVtbSthQKNPxBMNdMz5p1qTbuxmKLyXa6I7nJ8
+         fBJdvkQO79G7Li/YpzsCygEapfpxxsnMh2q6AslCabuBSQal5qqkUTAS4efcFb0Nvsni
+         I6wTJF6uCKkiuEjwF8+1wLqhXTY9A7v7poWjpgwx8y1xs1t5ZRsm/0iLhUiI5/SISr4C
+         yIaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6IdL3BAcEz7abiV3g4YHEMCO9WXnls6KQ2pdHBxgwww=;
+        b=gs3NhhOmB+AR1EG9G2MpLRpUF32cSrErxbsxbZ+Bmq8xBatWEnyuFLQHcxGpzZRn51
+         Xl+UxFdSoYZN4kKMMq5Ux+YfFpj7TK7a8Q4oZxUIcGHtY8KUEv4o0Wm1ZfiHWvfbhMun
+         Pqesip0w4G2/YUOeguHU6yxi2qnW/O6+K+SymkvQKkAmfF6l5Q30eWFZY8lIYpGSVn+C
+         VEqJla7vZP4Am82w+zJ5+HVjEdhsARXXKOKEfmvjynAnSv9MuxZtAKtM8hbt2zPnYbWp
+         En1FKmzMj32x7wPQKAb/Tn8AOgKa6UK10q3HaR0mK9sP3DK6abwoBfgh25HpShurKoZC
+         OnJA==
+X-Gm-Message-State: AGi0Pua1p2t4fgR5UgaOUev+By6yOwpFYadv+4IaW54r/+nYE2dvRwmU
+        HP8Rbo9DP68unyre8KFeOT2fckE2
+X-Google-Smtp-Source: APiQypIBbHrp4/2F2tJ4OpI6yrP0A2W2YCxYGDZG8ts8NryaGS4elN+6cmeSxBdo5jMf7GZu8d1axQ==
+X-Received: by 2002:ac2:505a:: with SMTP id a26mr127711lfm.177.1588211669250;
+        Wed, 29 Apr 2020 18:54:29 -0700 (PDT)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id x24sm3215886lji.52.2020.04.29.18.54.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Apr 2020 18:54:28 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH 0/6] arm64: dts: meson-gx: add initial playback support
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <20200421163935.775935-1-jbrunet@baylibre.com>
+Date:   Thu, 30 Apr 2020 05:54:24 +0400
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4F65325B-9B07-4798-869E-7BA0E3E66E13@gmail.com>
+References: <20200421163935.775935-1-jbrunet@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mao,
 
-Thank you for the patch! Perhaps something to improve:
+> On 21 Apr 2020, at 8:39 pm, Jerome Brunet <jbrunet@baylibre.com> =
+wrote:
+>=20
+> This patchset is adding the aiu support in DT and well as basic card
+> support for the p230/q200 and libretech boards
+>=20
+> I was hoping to provide the internal codec support with this series =
+but
+> this is still blocked on the reset dt-bindings of the DAC [0].
+>=20
+> So far, things are fairly stable on these boards. I have experienced
+> a few glitches on rare occasions. I have not been able to precisely =
+found
+> out why. It seems to be linked the AIU resets and 8ch support. Maybe =
+more
+> eyes (and ears) on this will help. If things get annoying and no =
+solution
+> is found, I'll submit a change to restrict the output to i2s 2ch.
+>=20
+> [0]: =
+https://lore.kernel.org/r/20200122092526.2436421-1-jbrunet@baylibre.com
 
-[auto build test WARNING on bpf-next/master]
-[also build test WARNING on bpf/master net/master net-next/master ipvs/master v5.7-rc2 next-20200423]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+I have a reproducible way to provoke one glitch using Kodi but we can =
+talk
+about that off-list. Overall the series (and changes in [0] above) work
+well and it=E2=80=99s great to see progress.
 
-url:    https://github.com/0day-ci/linux/commits/Mao-Wenan/Change-return-code-if-failed-to-load-object/20200424-025339
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-191-gc51a0382-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-:::::: branch date: 19 hours ago
-:::::: commit date: 19 hours ago
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> kernel/bpf/syscall.c:117:0: sparse: sparse: missing terminating " character
-   kernel/bpf/syscall.c:118:0: sparse: sparse: missing terminating " character
->> kernel/bpf/syscall.c:686:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:772:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:979:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1046:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1111:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1164:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1341:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1442:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1504:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1548:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1550:1: sparse: sparse: directive in macro's argument list
-   kernel/bpf/syscall.c:1551:1: sparse: sparse: directive in macro's argument list
->> kernel/bpf/syscall.c:116:17: sparse: sparse: macro "pr_warn" passed 2 arguments, but takes just 2
->> include/linux/bpf_types.h:7:1: sparse: sparse: No right hand side of ','-expression
-   include/linux/bpf_types.h:7:1: sparse: sparse: Expected ; at end of statement
-   include/linux/bpf_types.h:7:1: sparse: sparse: got [
-   include/linux/bpf_types.h:121:0: sparse: sparse: Expected } at end of compound statement
-   include/linux/bpf_types.h:121:0: sparse: sparse: got end-of-input
-   include/linux/bpf_types.h:121:0: sparse: sparse: Expected } at end of function
-   include/linux/bpf_types.h:121:0: sparse: sparse: got end-of-input
-   kernel/bpf/syscall.c:116:17: sparse: sparse: undefined identifier 'pr_warn'
-   kernel/bpf/syscall.c:1560:21: sparse: sparse: undefined identifier 'bpf_prog_types'
-   kernel/bpf/syscall.c:1560:21: sparse: sparse: undefined identifier 'bpf_prog_types'
-   kernel/bpf/syscall.c:1562:16: sparse: sparse: undefined identifier 'bpf_prog_types'
-   kernel/bpf/syscall.c:1562:16: sparse: sparse: undefined identifier 'bpf_prog_types'
-   kernel/bpf/syscall.c:1562:16: sparse: sparse: undefined identifier 'bpf_prog_types'
-   kernel/bpf/syscall.c:1562:16: sparse: sparse: undefined identifier 'bpf_prog_types'
->> kernel/bpf/syscall.c:1562:16: sparse: sparse: cannot size expression
-   kernel/bpf/syscall.c:1563:15: sparse: sparse: undefined identifier 'bpf_prog_types'
-   kernel/bpf/syscall.c:1797:27: sparse: sparse: undefined identifier 'bpf_dummy_read'
-   kernel/bpf/syscall.c:1798:27: sparse: sparse: undefined identifier 'bpf_dummy_write'
-   kernel/bpf/syscall.c:2293:27: sparse: sparse: undefined identifier 'bpf_dummy_read'
-   kernel/bpf/syscall.c:2294:27: sparse: sparse: undefined identifier 'bpf_dummy_write'
-   kernel/bpf/syscall.c:2870:23: sparse: sparse: undefined identifier '__bpf_map_inc_not_zero'
-   kernel/bpf/syscall.c:3538:15: sparse: sparse: undefined identifier 'map_get_sys_perms'
-   kernel/bpf/syscall.c:3544:15: sparse: sparse: undefined identifier 'map_get_sys_perms'
-   kernel/bpf/syscall.c:3685:23: sparse: sparse: undefined identifier 'map_create'
-   kernel/bpf/syscall.c:3688:23: sparse: sparse: undefined identifier 'map_lookup_elem'
-   kernel/bpf/syscall.c:3691:23: sparse: sparse: undefined identifier 'map_update_elem'
-   kernel/bpf/syscall.c:3694:23: sparse: sparse: undefined identifier 'map_delete_elem'
-   kernel/bpf/syscall.c:3697:23: sparse: sparse: undefined identifier 'map_get_next_key'
-   kernel/bpf/syscall.c:3700:23: sparse: sparse: undefined identifier 'map_freeze'
-   kernel/bpf/syscall.c:3757:23: sparse: sparse: undefined identifier 'map_lookup_and_delete_elem'
-
-# https://github.com/0day-ci/linux/commit/45c88e856945c443c39e3f519ad9740b8e487d8d
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 45c88e856945c443c39e3f519ad9740b8e487d8d
-vim +117 kernel/bpf/syscall.c
-
-a38845729ea398 Jakub Kicinski     2018-01-11  103  
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  104  static struct bpf_map *find_and_alloc_map(union bpf_attr *attr)
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  105  {
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  106  	const struct bpf_map_ops *ops;
-9ef09e35e521bf Mark Rutland       2018-05-03  107  	u32 type = attr->map_type;
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  108  	struct bpf_map *map;
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  109  	int err;
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  110  
-9ef09e35e521bf Mark Rutland       2018-05-03  111  	if (type >= ARRAY_SIZE(bpf_map_types))
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  112  		return ERR_PTR(-EINVAL);
-9ef09e35e521bf Mark Rutland       2018-05-03  113  	type = array_index_nospec(type, ARRAY_SIZE(bpf_map_types));
-9ef09e35e521bf Mark Rutland       2018-05-03  114  	ops = bpf_map_types[type];
-45c88e856945c4 Mao Wenan          2020-04-22  115  	if (!ops) {
-45c88e856945c4 Mao Wenan          2020-04-22 @116  		pr_warn("map type %d not supported or
-45c88e856945c4 Mao Wenan          2020-04-22 @117  			 kernel config not opened\n", type);
-45c88e856945c4 Mao Wenan          2020-04-22  118  		return ERR_PTR(-EOPNOTSUPP);
-45c88e856945c4 Mao Wenan          2020-04-22  119  	}
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  120  	if (ops->map_alloc_check) {
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  121  		err = ops->map_alloc_check(attr);
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  122  		if (err)
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  123  			return ERR_PTR(err);
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  124  	}
-a38845729ea398 Jakub Kicinski     2018-01-11  125  	if (attr->map_ifindex)
-a38845729ea398 Jakub Kicinski     2018-01-11  126  		ops = &bpf_map_offload_ops;
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  127  	map = ops->map_alloc(attr);
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  128  	if (IS_ERR(map))
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  129  		return map;
-1110f3a9bcf394 Jakub Kicinski     2018-01-11  130  	map->ops = ops;
-9ef09e35e521bf Mark Rutland       2018-05-03  131  	map->map_type = type;
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  132  	return map;
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  133  }
-99c55f7d47c0dc Alexei Starovoitov 2014-09-26  134  
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
+Tested-by: Christian Hewitt <christianshewitt@gmail.com>=
