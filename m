@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AA3C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409F8C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D0120774
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8F12082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SX3I6hB7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eAxFbpbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgD3OtE (ORCPT
+        id S1726660AbgD3OtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35648 "EHLO
+        Thu, 30 Apr 2020 10:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728117AbgD3OtB (ORCPT
+        by vger.kernel.org with ESMTP id S1728184AbgD3OtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:49:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEBAC035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:49:00 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id v8so7668350wma.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:48:59 -0700 (PDT)
+        Thu, 30 Apr 2020 10:49:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD7EC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:49:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r26so2247654wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 07:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vZpgAl6fMrlc5u+7N0e4lNcYAQFE8vx0PX4usrIn+P0=;
-        b=SX3I6hB788ySFMgbr/rM3LkF68Ci9qfXsIghXpFwqbnIH5nqpq4tpqhp72dFsDspFP
-         l3UFPrIPLeudxatMwxGS+EsPPq37dfq1qOA9g8BADdDSNvNbCQ6Tgj0o3HYMT/pfJr2n
-         kjwzSr65zRs8e76mtma+2iOjxmNAqybrXTDO804duu7l4n9plmTelyLuXUUCe6sRu42M
-         MYaJbo8/Ha38meP4QbbajReufb5yeOWUsELqwh1tn+PVW6WIXZraVWNMZ1bs+E2Z60C3
-         +JmhUPO2s7Vwn7ONG6jWg3NNl8tbN77Lo1ZxZaQB3W9u3TvvpATnYJsAqQHKzXn7ar71
-         pvvQ==
+        bh=ckUwu7M7JnKxYtp4YcyrixRVYD5P7zPGk5W5SBVtZIc=;
+        b=eAxFbpbB88WAkJkK/l0R+gS1GNcXp/5WU1ermJF6JaRu8CL7y0KBxwF4rYpBJNoqEk
+         uMBG0Mpd+54DfMHAEtG/netau4iRLtv9gAkLhVv2kyThzDUxxAxVFo7cyC8504ipYelv
+         YKbPwQJpptOmlug7glvf9oRPsbp7MPzoaJsX5bSwCLI3IWYG5qaTIW8K3M/XgVbLdUmE
+         hnwvr6onUFwMvoaDI6rVs5OMSydrUpoUcZ3Md2u6jQ8rs1eY3nd6u5fvRnDbjEl49A3B
+         SYcYGodJJG8djLsJa7mJ/Hix99bwtyGQp/KA/CCqEb+Iaplo8npFdAfbPwYKja+PD4nZ
+         FXig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vZpgAl6fMrlc5u+7N0e4lNcYAQFE8vx0PX4usrIn+P0=;
-        b=LubMQbGXbxThJCRM52o+5ctStUKc2lTepctie5jIPf1+IzYz8ykajDovPn1vcMXM/l
-         V9GA7l+ed/7MHY4/lWm4BK95PvFHaQfYBQuiwyK+0HiownrAqUb3c/en9hVhelx8pCjh
-         PEv+QzZX6xBvMg80ha5bBZi9pAorojtcmMUgJTqRIQSEhUuK/uticAnNSIFVtfgapzf6
-         NL0pjC+GWH0RvPmmXqEsoxAWNGVOIyFqm/NlHaFhj9kjp2tVz7J8RV5nKP/Az//Iejzf
-         44vSnVqOtXqkD1kSIiBCSxneQNLAYMfwtPDx8fFYy9R6lI4pKhOEmQIVwcTP+ZRDXDye
-         PQpw==
-X-Gm-Message-State: AGi0PuaNwR04nWxkWGQjxpzRS118jV230HoYT3Mi1+zBKx+G2DX0BFIL
-        2uuyYjEBaQDnK1/iUxwo9PH5Sw==
-X-Google-Smtp-Source: APiQypLW6Nig0UV3UxPwMQWsDextdgKl/RgP7EjE2YYldolo5oR0wfSM+K/XSQ+tU3/0TJN/EhOlAQ==
-X-Received: by 2002:a1c:bd89:: with SMTP id n131mr3334436wmf.3.1588258138333;
-        Thu, 30 Apr 2020 07:48:58 -0700 (PDT)
+        bh=ckUwu7M7JnKxYtp4YcyrixRVYD5P7zPGk5W5SBVtZIc=;
+        b=IujE3vYsUyeELKjpMe58EMd6wXSfojlD0G7DZBSPWSTq/3fBh1+OteFUuNEuzBTBwV
+         gFmDq6Uk3BTRfoQmwlyGOKNpm1qQa8Fd9Ge2JFcMUCsolBU6Mtinri755PjChpw6s21W
+         vccCUNPwoR5eNou+KtdaS1etke18fSl9kksXrynfhJaqNXDdovxL9JxDUIk0XTkHesBB
+         PtrIgT5q/ucJ+XNAMbl4bws07QULT1tDWpQF678O/4efzQwZc+Oo77iygQsIta7CxcSI
+         UBm24FzCaavegQv1ZxDpUK+YVAZ+DCxaepCtHkCuvqcaQIoK/euvKltscXfjZUrz/uTo
+         3bUw==
+X-Gm-Message-State: AGi0PuaMO95uAKACP53oHcHJWj8oeMu2xcja5SKB8obS+c9xp2FpEvqy
+        254KxWrFFm08ZejztPaXQ6CdTA==
+X-Google-Smtp-Source: APiQypJQWNduwzltaDXtimSwwlg/dZj+fSo++nsFEKtvMxqxIiImB5DCuDmEuHuiKTNz9McXBvQpuw==
+X-Received: by 2002:a1c:2d02:: with SMTP id t2mr3395070wmt.98.1588258144030;
+        Thu, 30 Apr 2020 07:49:04 -0700 (PDT)
 Received: from localhost ([2a01:4b00:8523:2d03:d4b6:9828:8bd2:ce6f])
-        by smtp.gmail.com with ESMTPSA id a1sm4278392wrn.80.2020.04.30.07.48.56
+        by smtp.gmail.com with ESMTPSA id j22sm1317015wre.84.2020.04.30.07.49.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 07:48:57 -0700 (PDT)
+        Thu, 30 Apr 2020 07:49:03 -0700 (PDT)
 From:   David Brazdil <dbrazdil@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         James Morse <james.morse@arm.com>,
@@ -69,9 +69,9 @@ To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
 Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH 07/15] arm64: kvm: Split hyp/tlb.c to VHE/nVHE
-Date:   Thu, 30 Apr 2020 15:48:23 +0100
-Message-Id: <20200430144831.59194-8-dbrazdil@google.com>
+Subject: [PATCH 10/15] arm64: kvm: Split hyp/sysreg-sr.c to VHE/nVHE
+Date:   Thu, 30 Apr 2020 15:48:26 +0100
+Message-Id: <20200430144831.59194-11-dbrazdil@google.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200430144831.59194-1-dbrazdil@google.com>
 References: <20200430144831.59194-1-dbrazdil@google.com>
@@ -85,482 +85,670 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This patch is part of a series which builds KVM's non-VHE hyp code separately
 from VHE and the rest of the kernel.
 
-tlb.c contains code for flushing the TLB, with parts shared between VHE/nVHE.
-These common routines are moved into a header file tlb.h, VHE-specific code
-remains in tlb.c and nVHE-specific code is moved to nvhe/tlb.c.
+sysreg-sr.c contains KVM's code for saving/restoring system registers, with
+some parts shared between VHE/nVHE. These common routines are moved to
+sysreg-sr.h, VHE-specific code is left in sysreg-sr.c and nVHE-specific code is
+moved to nvhe/sysreg-sr.c.
 
-The header file expects its users to implement two helper functions declared
-at the top of the file.
+Naming of helper functions is simplified as VHE/nVHE symbol names cannot clash
+anymore.
 
 Signed-off-by: David Brazdil <dbrazdil@google.com>
 ---
- arch/arm64/kernel/image-vars.h   |   8 +-
- arch/arm64/kvm/hyp/nvhe/Makefile |   2 +-
- arch/arm64/kvm/hyp/nvhe/tlb.c    |  69 +++++++++++++
- arch/arm64/kvm/hyp/tlb.c         | 170 +++----------------------------
- arch/arm64/kvm/hyp/tlb.h         | 129 +++++++++++++++++++++++
- 5 files changed, 216 insertions(+), 162 deletions(-)
- create mode 100644 arch/arm64/kvm/hyp/nvhe/tlb.c
- create mode 100644 arch/arm64/kvm/hyp/tlb.h
+ arch/arm64/include/asm/kvm_asm.h    |   4 +
+ arch/arm64/include/asm/kvm_host.h   |   4 +-
+ arch/arm64/include/asm/kvm_hyp.h    |   4 +
+ arch/arm64/kernel/image-vars.h      |   5 -
+ arch/arm64/kvm/hyp/nvhe/Makefile    |   2 +-
+ arch/arm64/kvm/hyp/nvhe/sysreg-sr.c |  56 +++++++
+ arch/arm64/kvm/hyp/sysreg-sr.c      | 227 +---------------------------
+ arch/arm64/kvm/hyp/sysreg-sr.h      | 218 ++++++++++++++++++++++++++
+ 8 files changed, 290 insertions(+), 230 deletions(-)
+ create mode 100644 arch/arm64/kvm/hyp/nvhe/sysreg-sr.c
+ create mode 100644 arch/arm64/kvm/hyp/sysreg-sr.h
 
+diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+index 0cb229b9e148..646201a6576e 100644
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -88,6 +88,10 @@ extern void __kvm_timer_set_cntvoff(u32 cntvoff_low, u32 cntvoff_high);
+ 
+ extern int __kvm_vcpu_run(struct kvm_vcpu *vcpu);
+ 
++#ifdef __HYPERVISOR__
++extern void __kvm_enable_ssbs(void);
++#endif
++
+ extern u64 __vgic_v3_get_ich_vtr_el2(void);
+ extern u64 __vgic_v3_read_vmcr(void);
+ extern void __vgic_v3_write_vmcr(u32 vmcr);
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 5dec3b06f2b7..e4abe9d759bc 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -547,8 +547,6 @@ static inline void kvm_init_host_cpu_context(struct kvm_cpu_context *cpu_ctxt)
+ 	cpu_ctxt->sys_regs[MPIDR_EL1] = read_cpuid_mpidr();
+ }
+ 
+-void __kvm_enable_ssbs(void);
+-
+ static inline void __cpu_init_hyp_mode(phys_addr_t pgd_ptr,
+ 				       unsigned long hyp_stack_ptr,
+ 				       unsigned long vector_ptr)
+@@ -577,7 +575,7 @@ static inline void __cpu_init_hyp_mode(phys_addr_t pgd_ptr,
+ 	 */
+ 	if (!has_vhe() && this_cpu_has_cap(ARM64_SSBS) &&
+ 	    arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE) {
+-		kvm_call_hyp(__kvm_enable_ssbs);
++		kvm_call_hyp_nvhe(__kvm_enable_ssbs);
+ 	}
+ }
+ 
+diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+index b5895040c16a..c2bcd5dea030 100644
+--- a/arch/arm64/include/asm/kvm_hyp.h
++++ b/arch/arm64/include/asm/kvm_hyp.h
+@@ -67,12 +67,16 @@ int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
+ void __timer_enable_traps(struct kvm_vcpu *vcpu);
+ void __timer_disable_traps(struct kvm_vcpu *vcpu);
+ 
++#ifdef __HYPERVISOR__
+ void __sysreg_save_state_nvhe(struct kvm_cpu_context *ctxt);
+ void __sysreg_restore_state_nvhe(struct kvm_cpu_context *ctxt);
++#else
+ void sysreg_save_host_state_vhe(struct kvm_cpu_context *ctxt);
+ void sysreg_restore_host_state_vhe(struct kvm_cpu_context *ctxt);
+ void sysreg_save_guest_state_vhe(struct kvm_cpu_context *ctxt);
+ void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt);
++#endif
++
+ void __sysreg32_save_state(struct kvm_vcpu *vcpu);
+ void __sysreg32_restore_state(struct kvm_vcpu *vcpu);
+ 
 diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 59c53566eceb..c0a0ec238854 100644
+index 0e9ede9c473a..c4ff4a61eb5d 100644
 --- a/arch/arm64/kernel/image-vars.h
 +++ b/arch/arm64/kernel/image-vars.h
-@@ -62,14 +62,11 @@ __efistub__ctype		= _ctype;
-  */
- 
+@@ -66,13 +66,8 @@ __hyp_text___fpsimd_save_state = __fpsimd_save_state;
+ __hyp_text___guest_enter = __guest_enter;
  __hyp_text___guest_exit = __guest_exit;
-+__hyp_text___icache_flags = __icache_flags;
- __hyp_text___kvm_enable_ssbs = __kvm_enable_ssbs;
--__hyp_text___kvm_flush_vm_context = __kvm_flush_vm_context;
- __hyp_text___kvm_get_mdcr_el2 = __kvm_get_mdcr_el2;
+ __hyp_text___icache_flags = __icache_flags;
+-__hyp_text___kvm_enable_ssbs = __kvm_enable_ssbs;
  __hyp_text___kvm_handle_stub_hvc = __kvm_handle_stub_hvc;
  __hyp_text___kvm_timer_set_cntvoff = __kvm_timer_set_cntvoff;
--__hyp_text___kvm_tlb_flush_local_vmid = __kvm_tlb_flush_local_vmid;
--__hyp_text___kvm_tlb_flush_vmid = __kvm_tlb_flush_vmid;
--__hyp_text___kvm_tlb_flush_vmid_ipa = __kvm_tlb_flush_vmid_ipa;
- __hyp_text___kvm_vcpu_run_nvhe = __kvm_vcpu_run_nvhe;
- __hyp_text___vgic_v3_get_ich_vtr_el2 = __vgic_v3_get_ich_vtr_el2;
- __hyp_text___vgic_v3_init_lrs = __vgic_v3_init_lrs;
-@@ -79,8 +76,11 @@ __hyp_text___vgic_v3_save_aprs = __vgic_v3_save_aprs;
- __hyp_text___vgic_v3_write_vmcr = __vgic_v3_write_vmcr;
- __hyp_text_abort_guest_exit_end = abort_guest_exit_end;
- __hyp_text_abort_guest_exit_start = abort_guest_exit_start;
-+__hyp_text_arm64_const_caps_ready = arm64_const_caps_ready;
- __hyp_text_arm64_enable_wa2_handling = arm64_enable_wa2_handling;
- __hyp_text_arm64_ssbd_callback_required = arm64_ssbd_callback_required;
-+__hyp_text_cpu_hwcap_keys = cpu_hwcap_keys;
-+__hyp_text_cpu_hwcaps = cpu_hwcaps;
- __hyp_text_hyp_panic = hyp_panic;
- __hyp_text_kimage_voffset = kimage_voffset;
- __hyp_text_kvm_host_data = kvm_host_data;
+-__hyp_text___sysreg32_restore_state = __sysreg32_restore_state;
+-__hyp_text___sysreg32_save_state = __sysreg32_save_state;
+-__hyp_text___sysreg_restore_state_nvhe = __sysreg_restore_state_nvhe;
+-__hyp_text___sysreg_save_state_nvhe = __sysreg_save_state_nvhe;
+ __hyp_text___timer_disable_traps = __timer_disable_traps;
+ __hyp_text___timer_enable_traps = __timer_enable_traps;
+ __hyp_text___vgic_v2_perform_cpuif_access = __vgic_v2_perform_cpuif_access;
 diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index fa20b2723652..0da836cb5580 100644
+index bca3b862927c..cfb55c01b3ff 100644
 --- a/arch/arm64/kvm/hyp/nvhe/Makefile
 +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
 @@ -7,7 +7,7 @@ asflags-y := -D__HYPERVISOR__
  ccflags-y := -D__HYPERVISOR__ -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
  	     $(DISABLE_STACKLEAK_PLUGIN)
  
--obj-y := host_hypercall.o ../hyp-entry.o
-+obj-y := tlb.o host_hypercall.o ../hyp-entry.o
+-obj-y := debug-sr.o switch.o tlb.o host_hypercall.o ../hyp-entry.o
++obj-y := sysreg-sr.o debug-sr.o switch.o tlb.o host_hypercall.o ../hyp-entry.o
  
  obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
  extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
-diff --git a/arch/arm64/kvm/hyp/nvhe/tlb.c b/arch/arm64/kvm/hyp/nvhe/tlb.c
+diff --git a/arch/arm64/kvm/hyp/nvhe/sysreg-sr.c b/arch/arm64/kvm/hyp/nvhe/sysreg-sr.c
 new file mode 100644
-index 000000000000..1b8f4000f98c
+index 000000000000..55ab924d841a
 --- /dev/null
-+++ b/arch/arm64/kvm/hyp/nvhe/tlb.c
-@@ -0,0 +1,69 @@
++++ b/arch/arm64/kvm/hyp/nvhe/sysreg-sr.c
+@@ -0,0 +1,56 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (C) 2015 - ARM Ltd
++ * Copyright (C) 2012-2015 - ARM Ltd
 + * Author: Marc Zyngier <marc.zyngier@arm.com>
 + */
 +
-+#include <linux/irqflags.h>
++#include <linux/compiler.h>
++#include <linux/kvm_host.h>
 +
++#include <asm/kprobes.h>
++#include <asm/kvm_asm.h>
++#include <asm/kvm_emulate.h>
 +#include <asm/kvm_hyp.h>
-+#include <asm/kvm_mmu.h>
-+#include <asm/tlbflush.h>
 +
-+#include "../tlb.h"
++#include "../sysreg-sr.h"
 +
-+static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
-+					     struct tlb_inv_context *cxt)
++/*
++ * Non-VHE: Both host and guest must save everything.
++ */
++
++void __hyp_text __sysreg_save_state_nvhe(struct kvm_cpu_context *ctxt)
 +{
-+	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE)) {
-+		u64 val;
-+
-+		/*
-+		 * For CPUs that are affected by ARM 1319367, we need to
-+		 * avoid a host Stage-1 walk while we have the guest's
-+		 * VMID set in the VTTBR in order to invalidate TLBs.
-+		 * We're guaranteed that the S1 MMU is enabled, so we can
-+		 * simply set the EPD bits to avoid any further TLB fill.
-+		 */
-+		val = cxt->tcr = read_sysreg_el1(SYS_TCR);
-+		val |= TCR_EPD1_MASK | TCR_EPD0_MASK;
-+		write_sysreg_el1(val, SYS_TCR);
-+		isb();
-+	}
-+
-+	__load_guest_stage2(kvm);
-+	isb();
++	__sysreg_save_el1_state(ctxt);
++	__sysreg_save_common_state(ctxt);
++	__sysreg_save_user_state(ctxt);
++	__sysreg_save_el2_return_state(ctxt);
 +}
 +
-+static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
-+					    struct tlb_inv_context *cxt)
++void __hyp_text __sysreg_restore_state_nvhe(struct kvm_cpu_context *ctxt)
 +{
-+	write_sysreg(0, vttbr_el2);
-+
-+	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE)) {
-+		/* Ensure write of the host VMID */
-+		isb();
-+		/* Restore the host's TCR_EL1 */
-+		write_sysreg_el1(cxt->tcr, SYS_TCR);
-+	}
++	__sysreg_restore_el1_state(ctxt);
++	__sysreg_restore_common_state(ctxt);
++	__sysreg_restore_user_state(ctxt);
++	__sysreg_restore_el2_return_state(ctxt);
 +}
 +
-+void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
++void __hyp_text __sysreg32_save_state(struct kvm_vcpu *vcpu)
 +{
-+	__tlb_flush_vmid_ipa(kvm, ipa);
++	___sysreg32_save_state(vcpu);
 +}
 +
-+void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
++void __hyp_text __sysreg32_restore_state(struct kvm_vcpu *vcpu)
 +{
-+	__tlb_flush_vmid(kvm);
++	___sysreg32_restore_state(vcpu);
 +}
 +
-+void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
++void __hyp_text __kvm_enable_ssbs(void)
 +{
-+	__tlb_flush_local_vmid(vcpu);
-+}
++	u64 tmp;
 +
-+void __hyp_text __kvm_flush_vm_context(void)
-+{
-+	__tlb_flush_vm_context();
++	asm volatile(
++	"mrs	%0, sctlr_el2\n"
++	"orr	%0, %0, %1\n"
++	"msr	sctlr_el2, %0"
++	: "=&r" (tmp) : "L" (SCTLR_ELx_DSSBS));
 +}
-diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
-index ceaddbe4279f..ab55b0c4a80c 100644
---- a/arch/arm64/kvm/hyp/tlb.c
-+++ b/arch/arm64/kvm/hyp/tlb.c
-@@ -10,14 +10,10 @@
- #include <asm/kvm_mmu.h>
- #include <asm/tlbflush.h>
+diff --git a/arch/arm64/kvm/hyp/sysreg-sr.c b/arch/arm64/kvm/hyp/sysreg-sr.c
+index 7a261ace2405..7d4b946739e9 100644
+--- a/arch/arm64/kvm/hyp/sysreg-sr.c
++++ b/arch/arm64/kvm/hyp/sysreg-sr.c
+@@ -12,9 +12,9 @@
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
  
--struct tlb_inv_context {
--	unsigned long	flags;
--	u64		tcr;
--	u64		sctlr;
--};
-+#include "tlb.h"
++#include "sysreg-sr.h"
++
+ /*
+- * Non-VHE: Both host and guest must save everything.
+- *
+  * VHE: Host and guest must save mdscr_el1 and sp_el0 (and the PC and pstate,
+  * which are handled as part of the el2 return state) on every switch.
+  * tpidr_el0 and tpidrro_el0 only need to be switched when going
+@@ -23,66 +23,6 @@
+  * classes are handled as part of kvm_arch_vcpu_load and kvm_arch_vcpu_put.
+  */
  
--static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
--						 struct tlb_inv_context *cxt)
-+static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
-+					     struct tlb_inv_context *cxt)
- {
- 	u64 val;
- 
-@@ -60,40 +56,8 @@ static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
- 	isb();
- }
- 
--static void __hyp_text __tlb_switch_to_guest_nvhe(struct kvm *kvm,
--						  struct tlb_inv_context *cxt)
+-static void __hyp_text __sysreg_save_common_state(struct kvm_cpu_context *ctxt)
 -{
--	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE)) {
--		u64 val;
+-	ctxt->sys_regs[MDSCR_EL1]	= read_sysreg(mdscr_el1);
 -
+-	/*
+-	 * The host arm64 Linux uses sp_el0 to point to 'current' and it must
+-	 * therefore be saved/restored on every entry/exit to/from the guest.
+-	 */
+-	ctxt->gp_regs.regs.sp		= read_sysreg(sp_el0);
+-}
+-
+-static void __hyp_text __sysreg_save_user_state(struct kvm_cpu_context *ctxt)
+-{
+-	ctxt->sys_regs[TPIDR_EL0]	= read_sysreg(tpidr_el0);
+-	ctxt->sys_regs[TPIDRRO_EL0]	= read_sysreg(tpidrro_el0);
+-}
+-
+-static void __hyp_text __sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
+-{
+-	ctxt->sys_regs[CSSELR_EL1]	= read_sysreg(csselr_el1);
+-	ctxt->sys_regs[SCTLR_EL1]	= read_sysreg_el1(SYS_SCTLR);
+-	ctxt->sys_regs[ACTLR_EL1]	= read_sysreg(actlr_el1);
+-	ctxt->sys_regs[CPACR_EL1]	= read_sysreg_el1(SYS_CPACR);
+-	ctxt->sys_regs[TTBR0_EL1]	= read_sysreg_el1(SYS_TTBR0);
+-	ctxt->sys_regs[TTBR1_EL1]	= read_sysreg_el1(SYS_TTBR1);
+-	ctxt->sys_regs[TCR_EL1]		= read_sysreg_el1(SYS_TCR);
+-	ctxt->sys_regs[ESR_EL1]		= read_sysreg_el1(SYS_ESR);
+-	ctxt->sys_regs[AFSR0_EL1]	= read_sysreg_el1(SYS_AFSR0);
+-	ctxt->sys_regs[AFSR1_EL1]	= read_sysreg_el1(SYS_AFSR1);
+-	ctxt->sys_regs[FAR_EL1]		= read_sysreg_el1(SYS_FAR);
+-	ctxt->sys_regs[MAIR_EL1]	= read_sysreg_el1(SYS_MAIR);
+-	ctxt->sys_regs[VBAR_EL1]	= read_sysreg_el1(SYS_VBAR);
+-	ctxt->sys_regs[CONTEXTIDR_EL1]	= read_sysreg_el1(SYS_CONTEXTIDR);
+-	ctxt->sys_regs[AMAIR_EL1]	= read_sysreg_el1(SYS_AMAIR);
+-	ctxt->sys_regs[CNTKCTL_EL1]	= read_sysreg_el1(SYS_CNTKCTL);
+-	ctxt->sys_regs[PAR_EL1]		= read_sysreg(par_el1);
+-	ctxt->sys_regs[TPIDR_EL1]	= read_sysreg(tpidr_el1);
+-
+-	ctxt->gp_regs.sp_el1		= read_sysreg(sp_el1);
+-	ctxt->gp_regs.elr_el1		= read_sysreg_el1(SYS_ELR);
+-	ctxt->gp_regs.spsr[KVM_SPSR_EL1]= read_sysreg_el1(SYS_SPSR);
+-}
+-
+-static void __hyp_text __sysreg_save_el2_return_state(struct kvm_cpu_context *ctxt)
+-{
+-	ctxt->gp_regs.regs.pc		= read_sysreg_el2(SYS_ELR);
+-	ctxt->gp_regs.regs.pstate	= read_sysreg_el2(SYS_SPSR);
+-
+-	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN))
+-		ctxt->sys_regs[DISR_EL1] = read_sysreg_s(SYS_VDISR_EL2);
+-}
+-
+-void __hyp_text __sysreg_save_state_nvhe(struct kvm_cpu_context *ctxt)
+-{
+-	__sysreg_save_el1_state(ctxt);
+-	__sysreg_save_common_state(ctxt);
+-	__sysreg_save_user_state(ctxt);
+-	__sysreg_save_el2_return_state(ctxt);
+-}
+-
+ void sysreg_save_host_state_vhe(struct kvm_cpu_context *ctxt)
+ {
+ 	__sysreg_save_common_state(ctxt);
+@@ -96,116 +36,6 @@ void sysreg_save_guest_state_vhe(struct kvm_cpu_context *ctxt)
+ }
+ NOKPROBE_SYMBOL(sysreg_save_guest_state_vhe);
+ 
+-static void __hyp_text __sysreg_restore_common_state(struct kvm_cpu_context *ctxt)
+-{
+-	write_sysreg(ctxt->sys_regs[MDSCR_EL1],	  mdscr_el1);
+-
+-	/*
+-	 * The host arm64 Linux uses sp_el0 to point to 'current' and it must
+-	 * therefore be saved/restored on every entry/exit to/from the guest.
+-	 */
+-	write_sysreg(ctxt->gp_regs.regs.sp,	  sp_el0);
+-}
+-
+-static void __hyp_text __sysreg_restore_user_state(struct kvm_cpu_context *ctxt)
+-{
+-	write_sysreg(ctxt->sys_regs[TPIDR_EL0],		tpidr_el0);
+-	write_sysreg(ctxt->sys_regs[TPIDRRO_EL0],	tpidrro_el0);
+-}
+-
+-static void __hyp_text __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
+-{
+-	write_sysreg(ctxt->sys_regs[MPIDR_EL1],		vmpidr_el2);
+-	write_sysreg(ctxt->sys_regs[CSSELR_EL1],	csselr_el1);
+-
+-	if (!cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE)) {
+-		write_sysreg_el1(ctxt->sys_regs[SCTLR_EL1],	SYS_SCTLR);
+-		write_sysreg_el1(ctxt->sys_regs[TCR_EL1],	SYS_TCR);
+-	} else	if (!ctxt->__hyp_running_vcpu) {
 -		/*
--		 * For CPUs that are affected by ARM 1319367, we need to
--		 * avoid a host Stage-1 walk while we have the guest's
--		 * VMID set in the VTTBR in order to invalidate TLBs.
--		 * We're guaranteed that the S1 MMU is enabled, so we can
--		 * simply set the EPD bits to avoid any further TLB fill.
+-		 * Must only be done for guest registers, hence the context
+-		 * test. We're coming from the host, so SCTLR.M is already
+-		 * set. Pairs with nVHE's __activate_traps().
 -		 */
--		val = cxt->tcr = read_sysreg_el1(SYS_TCR);
--		val |= TCR_EPD1_MASK | TCR_EPD0_MASK;
--		write_sysreg_el1(val, SYS_TCR);
+-		write_sysreg_el1((ctxt->sys_regs[TCR_EL1] |
+-				  TCR_EPD1_MASK | TCR_EPD0_MASK),
+-				 SYS_TCR);
 -		isb();
 -	}
 -
--	__load_guest_stage2(kvm);
--	isb();
--}
+-	write_sysreg(ctxt->sys_regs[ACTLR_EL1],		actlr_el1);
+-	write_sysreg_el1(ctxt->sys_regs[CPACR_EL1],	SYS_CPACR);
+-	write_sysreg_el1(ctxt->sys_regs[TTBR0_EL1],	SYS_TTBR0);
+-	write_sysreg_el1(ctxt->sys_regs[TTBR1_EL1],	SYS_TTBR1);
+-	write_sysreg_el1(ctxt->sys_regs[ESR_EL1],	SYS_ESR);
+-	write_sysreg_el1(ctxt->sys_regs[AFSR0_EL1],	SYS_AFSR0);
+-	write_sysreg_el1(ctxt->sys_regs[AFSR1_EL1],	SYS_AFSR1);
+-	write_sysreg_el1(ctxt->sys_regs[FAR_EL1],	SYS_FAR);
+-	write_sysreg_el1(ctxt->sys_regs[MAIR_EL1],	SYS_MAIR);
+-	write_sysreg_el1(ctxt->sys_regs[VBAR_EL1],	SYS_VBAR);
+-	write_sysreg_el1(ctxt->sys_regs[CONTEXTIDR_EL1],SYS_CONTEXTIDR);
+-	write_sysreg_el1(ctxt->sys_regs[AMAIR_EL1],	SYS_AMAIR);
+-	write_sysreg_el1(ctxt->sys_regs[CNTKCTL_EL1],	SYS_CNTKCTL);
+-	write_sysreg(ctxt->sys_regs[PAR_EL1],		par_el1);
+-	write_sysreg(ctxt->sys_regs[TPIDR_EL1],		tpidr_el1);
 -
--static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
--					     struct tlb_inv_context *cxt)
--{
--	if (has_vhe())
--		__tlb_switch_to_guest_vhe(kvm, cxt);
--	else
--		__tlb_switch_to_guest_nvhe(kvm, cxt);
--}
--
--static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm,
--						struct tlb_inv_context *cxt)
-+static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
-+					    struct tlb_inv_context *cxt)
- {
- 	/*
- 	 * We're done with the TLB operation, let's restore the host's
-@@ -112,130 +76,22 @@ static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm,
- 	local_irq_restore(cxt->flags);
- }
- 
--static void __hyp_text __tlb_switch_to_host_nvhe(struct kvm *kvm,
--						 struct tlb_inv_context *cxt)
-+void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
- {
--	write_sysreg(0, vttbr_el2);
--
--	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE)) {
--		/* Ensure write of the host VMID */
+-	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE) &&
+-	    ctxt->__hyp_running_vcpu) {
+-		/*
+-		 * Must only be done for host registers, hence the context
+-		 * test. Pairs with nVHE's __deactivate_traps().
+-		 */
 -		isb();
--		/* Restore the host's TCR_EL1 */
--		write_sysreg_el1(cxt->tcr, SYS_TCR);
+-		/*
+-		 * At this stage, and thanks to the above isb(), S2 is
+-		 * deconfigured and disabled. We can now restore the host's
+-		 * S1 configuration: SCTLR, and only then TCR.
+-		 */
+-		write_sysreg_el1(ctxt->sys_regs[SCTLR_EL1],	SYS_SCTLR);
+-		isb();
+-		write_sysreg_el1(ctxt->sys_regs[TCR_EL1],	SYS_TCR);
 -	}
-+	__tlb_flush_vmid_ipa(kvm, ipa);
- }
- 
--static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
--					    struct tlb_inv_context *cxt)
-+void __kvm_tlb_flush_vmid(struct kvm *kvm)
- {
--	if (has_vhe())
--		__tlb_switch_to_host_vhe(kvm, cxt);
--	else
--		__tlb_switch_to_host_nvhe(kvm, cxt);
-+	__tlb_flush_vmid(kvm);
- }
- 
--void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
-+void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
- {
--	struct tlb_inv_context cxt;
 -
--	dsb(ishst);
--
--	/* Switch to requested VMID */
--	kvm = kern_hyp_va(kvm);
--	__tlb_switch_to_guest(kvm, &cxt);
--
--	/*
--	 * We could do so much better if we had the VA as well.
--	 * Instead, we invalidate Stage-2 for this IPA, and the
--	 * whole of Stage-1. Weep...
--	 */
--	ipa >>= 12;
--	__tlbi(ipas2e1is, ipa);
--
--	/*
--	 * We have to ensure completion of the invalidation at Stage-2,
--	 * since a table walk on another CPU could refill a TLB with a
--	 * complete (S1 + S2) walk based on the old Stage-2 mapping if
--	 * the Stage-1 invalidation happened first.
--	 */
--	dsb(ish);
--	__tlbi(vmalle1is);
--	dsb(ish);
--	isb();
--
--	/*
--	 * If the host is running at EL1 and we have a VPIPT I-cache,
--	 * then we must perform I-cache maintenance at EL2 in order for
--	 * it to have an effect on the guest. Since the guest cannot hit
--	 * I-cache lines allocated with a different VMID, we don't need
--	 * to worry about junk out of guest reset (we nuke the I-cache on
--	 * VMID rollover), but we do need to be careful when remapping
--	 * executable pages for the same guest. This can happen when KSM
--	 * takes a CoW fault on an executable page, copies the page into
--	 * a page that was previously mapped in the guest and then needs
--	 * to invalidate the guest view of the I-cache for that page
--	 * from EL1. To solve this, we invalidate the entire I-cache when
--	 * unmapping a page from a guest if we have a VPIPT I-cache but
--	 * the host is running at EL1. As above, we could do better if
--	 * we had the VA.
--	 *
--	 * The moral of this story is: if you have a VPIPT I-cache, then
--	 * you should be running with VHE enabled.
--	 */
--	if (!has_vhe() && icache_is_vpipt())
--		__flush_icache_all();
--
--	__tlb_switch_to_host(kvm, &cxt);
-+	__tlb_flush_local_vmid(vcpu);
- }
- 
--void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
-+void __kvm_flush_vm_context(void)
- {
--	struct tlb_inv_context cxt;
--
--	dsb(ishst);
--
--	/* Switch to requested VMID */
--	kvm = kern_hyp_va(kvm);
--	__tlb_switch_to_guest(kvm, &cxt);
--
--	__tlbi(vmalls12e1is);
--	dsb(ish);
--	isb();
--
--	__tlb_switch_to_host(kvm, &cxt);
+-	write_sysreg(ctxt->gp_regs.sp_el1,		sp_el1);
+-	write_sysreg_el1(ctxt->gp_regs.elr_el1,		SYS_ELR);
+-	write_sysreg_el1(ctxt->gp_regs.spsr[KVM_SPSR_EL1],SYS_SPSR);
 -}
 -
--void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
+-static void __hyp_text
+-__sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
 -{
--	struct kvm *kvm = kern_hyp_va(kern_hyp_va(vcpu)->kvm);
--	struct tlb_inv_context cxt;
--
--	/* Switch to requested VMID */
--	__tlb_switch_to_guest(kvm, &cxt);
--
--	__tlbi(vmalle1);
--	dsb(nsh);
--	isb();
--
--	__tlb_switch_to_host(kvm, &cxt);
--}
--
--void __hyp_text __kvm_flush_vm_context(void)
--{
--	dsb(ishst);
--	__tlbi(alle1is);
+-	u64 pstate = ctxt->gp_regs.regs.pstate;
+-	u64 mode = pstate & PSR_AA32_MODE_MASK;
 -
 -	/*
--	 * VIPT and PIPT caches are not affected by VMID, so no maintenance
--	 * is necessary across a VMID rollover.
+-	 * Safety check to ensure we're setting the CPU up to enter the guest
+-	 * in a less privileged mode.
 -	 *
--	 * VPIPT caches constrain lookup and maintenance to the active VMID,
--	 * so we need to invalidate lines with a stale VMID to avoid an ABA
--	 * race after multiple rollovers.
--	 *
+-	 * If we are attempting a return to EL2 or higher in AArch64 state,
+-	 * program SPSR_EL2 with M=EL2h and the IL bit set which ensures that
+-	 * we'll take an illegal exception state exception immediately after
+-	 * the ERET to the guest.  Attempts to return to AArch32 Hyp will
+-	 * result in an illegal exception return because EL2's execution state
+-	 * is determined by SCR_EL3.RW.
 -	 */
--	if (icache_is_vpipt())
--		asm volatile("ic ialluis");
+-	if (!(mode & PSR_MODE32_BIT) && mode >= PSR_MODE_EL2t)
+-		pstate = PSR_MODE_EL2h | PSR_IL_BIT;
 -
--	dsb(ish);
-+	__tlb_flush_vm_context();
+-	write_sysreg_el2(ctxt->gp_regs.regs.pc,		SYS_ELR);
+-	write_sysreg_el2(pstate,			SYS_SPSR);
+-
+-	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN))
+-		write_sysreg_s(ctxt->sys_regs[DISR_EL1], SYS_VDISR_EL2);
+-}
+-
+-void __hyp_text __sysreg_restore_state_nvhe(struct kvm_cpu_context *ctxt)
+-{
+-	__sysreg_restore_el1_state(ctxt);
+-	__sysreg_restore_common_state(ctxt);
+-	__sysreg_restore_user_state(ctxt);
+-	__sysreg_restore_el2_return_state(ctxt);
+-}
+-
+ void sysreg_restore_host_state_vhe(struct kvm_cpu_context *ctxt)
+ {
+ 	__sysreg_restore_common_state(ctxt);
+@@ -219,48 +49,14 @@ void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt)
  }
-diff --git a/arch/arm64/kvm/hyp/tlb.h b/arch/arm64/kvm/hyp/tlb.h
+ NOKPROBE_SYMBOL(sysreg_restore_guest_state_vhe);
+ 
+-void __hyp_text __sysreg32_save_state(struct kvm_vcpu *vcpu)
++void __sysreg32_save_state(struct kvm_vcpu *vcpu)
+ {
+-	u64 *spsr, *sysreg;
+-
+-	if (!vcpu_el1_is_32bit(vcpu))
+-		return;
+-
+-	spsr = vcpu->arch.ctxt.gp_regs.spsr;
+-	sysreg = vcpu->arch.ctxt.sys_regs;
+-
+-	spsr[KVM_SPSR_ABT] = read_sysreg(spsr_abt);
+-	spsr[KVM_SPSR_UND] = read_sysreg(spsr_und);
+-	spsr[KVM_SPSR_IRQ] = read_sysreg(spsr_irq);
+-	spsr[KVM_SPSR_FIQ] = read_sysreg(spsr_fiq);
+-
+-	sysreg[DACR32_EL2] = read_sysreg(dacr32_el2);
+-	sysreg[IFSR32_EL2] = read_sysreg(ifsr32_el2);
+-
+-	if (has_vhe() || vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY)
+-		sysreg[DBGVCR32_EL2] = read_sysreg(dbgvcr32_el2);
++	___sysreg32_save_state(vcpu);
+ }
+ 
+-void __hyp_text __sysreg32_restore_state(struct kvm_vcpu *vcpu)
++void __sysreg32_restore_state(struct kvm_vcpu *vcpu)
+ {
+-	u64 *spsr, *sysreg;
+-
+-	if (!vcpu_el1_is_32bit(vcpu))
+-		return;
+-
+-	spsr = vcpu->arch.ctxt.gp_regs.spsr;
+-	sysreg = vcpu->arch.ctxt.sys_regs;
+-
+-	write_sysreg(spsr[KVM_SPSR_ABT], spsr_abt);
+-	write_sysreg(spsr[KVM_SPSR_UND], spsr_und);
+-	write_sysreg(spsr[KVM_SPSR_IRQ], spsr_irq);
+-	write_sysreg(spsr[KVM_SPSR_FIQ], spsr_fiq);
+-
+-	write_sysreg(sysreg[DACR32_EL2], dacr32_el2);
+-	write_sysreg(sysreg[IFSR32_EL2], ifsr32_el2);
+-
+-	if (has_vhe() || vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY)
+-		write_sysreg(sysreg[DBGVCR32_EL2], dbgvcr32_el2);
++	___sysreg32_restore_state(vcpu);
+ }
+ 
+ /**
+@@ -329,14 +125,3 @@ void kvm_vcpu_put_sysregs(struct kvm_vcpu *vcpu)
+ 
+ 	vcpu->arch.sysregs_loaded_on_cpu = false;
+ }
+-
+-void __hyp_text __kvm_enable_ssbs(void)
+-{
+-	u64 tmp;
+-
+-	asm volatile(
+-	"mrs	%0, sctlr_el2\n"
+-	"orr	%0, %0, %1\n"
+-	"msr	sctlr_el2, %0"
+-	: "=&r" (tmp) : "L" (SCTLR_ELx_DSSBS));
+-}
+diff --git a/arch/arm64/kvm/hyp/sysreg-sr.h b/arch/arm64/kvm/hyp/sysreg-sr.h
 new file mode 100644
-index 000000000000..f62ed96cb896
+index 000000000000..f667d3fb680f
 --- /dev/null
-+++ b/arch/arm64/kvm/hyp/tlb.h
-@@ -0,0 +1,129 @@
++++ b/arch/arm64/kvm/hyp/sysreg-sr.h
+@@ -0,0 +1,218 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (C) 2015 - ARM Ltd
++ * Copyright (C) 2012-2015 - ARM Ltd
 + * Author: Marc Zyngier <marc.zyngier@arm.com>
 + */
 +
-+#include <linux/irqflags.h>
++#include <linux/compiler.h>
++#include <linux/kvm_host.h>
 +
++#include <asm/kprobes.h>
++#include <asm/kvm_asm.h>
++#include <asm/kvm_emulate.h>
 +#include <asm/kvm_hyp.h>
-+#include <asm/kvm_mmu.h>
-+#include <asm/tlbflush.h>
-+
-+struct tlb_inv_context {
-+	unsigned long	flags;
-+	u64		tcr;
-+	u64		sctlr;
-+};
-+
-+static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
-+					     struct tlb_inv_context *cxt);
-+static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
-+					    struct tlb_inv_context *cxt);
 +
 +static inline void __hyp_text
-+__tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
++__sysreg_save_common_state(struct kvm_cpu_context *ctxt)
 +{
-+	struct tlb_inv_context cxt;
-+
-+	dsb(ishst);
-+
-+	/* Switch to requested VMID */
-+	kvm = kern_hyp_va(kvm);
-+	__tlb_switch_to_guest(kvm, &cxt);
++	ctxt->sys_regs[MDSCR_EL1]	= read_sysreg(mdscr_el1);
 +
 +	/*
-+	 * We could do so much better if we had the VA as well.
-+	 * Instead, we invalidate Stage-2 for this IPA, and the
-+	 * whole of Stage-1. Weep...
++	 * The host arm64 Linux uses sp_el0 to point to 'current' and it must
++	 * therefore be saved/restored on every entry/exit to/from the guest.
 +	 */
-+	ipa >>= 12;
-+	__tlbi(ipas2e1is, ipa);
-+
-+	/*
-+	 * We have to ensure completion of the invalidation at Stage-2,
-+	 * since a table walk on another CPU could refill a TLB with a
-+	 * complete (S1 + S2) walk based on the old Stage-2 mapping if
-+	 * the Stage-1 invalidation happened first.
-+	 */
-+	dsb(ish);
-+	__tlbi(vmalle1is);
-+	dsb(ish);
-+	isb();
-+
-+	/*
-+	 * If the host is running at EL1 and we have a VPIPT I-cache,
-+	 * then we must perform I-cache maintenance at EL2 in order for
-+	 * it to have an effect on the guest. Since the guest cannot hit
-+	 * I-cache lines allocated with a different VMID, we don't need
-+	 * to worry about junk out of guest reset (we nuke the I-cache on
-+	 * VMID rollover), but we do need to be careful when remapping
-+	 * executable pages for the same guest. This can happen when KSM
-+	 * takes a CoW fault on an executable page, copies the page into
-+	 * a page that was previously mapped in the guest and then needs
-+	 * to invalidate the guest view of the I-cache for that page
-+	 * from EL1. To solve this, we invalidate the entire I-cache when
-+	 * unmapping a page from a guest if we have a VPIPT I-cache but
-+	 * the host is running at EL1. As above, we could do better if
-+	 * we had the VA.
-+	 *
-+	 * The moral of this story is: if you have a VPIPT I-cache, then
-+	 * you should be running with VHE enabled.
-+	 */
-+	if (!has_vhe() && icache_is_vpipt())
-+		__flush_icache_all();
-+
-+	__tlb_switch_to_host(kvm, &cxt);
++	ctxt->gp_regs.regs.sp		= read_sysreg(sp_el0);
 +}
 +
-+static inline void __hyp_text __tlb_flush_vmid(struct kvm *kvm)
++static inline void __hyp_text
++__sysreg_save_user_state(struct kvm_cpu_context *ctxt)
 +{
-+	struct tlb_inv_context cxt;
-+
-+	dsb(ishst);
-+
-+	/* Switch to requested VMID */
-+	kvm = kern_hyp_va(kvm);
-+	__tlb_switch_to_guest(kvm, &cxt);
-+
-+	__tlbi(vmalls12e1is);
-+	dsb(ish);
-+	isb();
-+
-+	__tlb_switch_to_host(kvm, &cxt);
++	ctxt->sys_regs[TPIDR_EL0]	= read_sysreg(tpidr_el0);
++	ctxt->sys_regs[TPIDRRO_EL0]	= read_sysreg(tpidrro_el0);
 +}
 +
-+static inline void __hyp_text __tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
++static inline void __hyp_text
++__sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
 +{
-+	struct kvm *kvm = kern_hyp_va(kern_hyp_va(vcpu)->kvm);
-+	struct tlb_inv_context cxt;
++	ctxt->sys_regs[CSSELR_EL1]	= read_sysreg(csselr_el1);
++	ctxt->sys_regs[SCTLR_EL1]	= read_sysreg_el1(SYS_SCTLR);
++	ctxt->sys_regs[ACTLR_EL1]	= read_sysreg(actlr_el1);
++	ctxt->sys_regs[CPACR_EL1]	= read_sysreg_el1(SYS_CPACR);
++	ctxt->sys_regs[TTBR0_EL1]	= read_sysreg_el1(SYS_TTBR0);
++	ctxt->sys_regs[TTBR1_EL1]	= read_sysreg_el1(SYS_TTBR1);
++	ctxt->sys_regs[TCR_EL1]		= read_sysreg_el1(SYS_TCR);
++	ctxt->sys_regs[ESR_EL1]		= read_sysreg_el1(SYS_ESR);
++	ctxt->sys_regs[AFSR0_EL1]	= read_sysreg_el1(SYS_AFSR0);
++	ctxt->sys_regs[AFSR1_EL1]	= read_sysreg_el1(SYS_AFSR1);
++	ctxt->sys_regs[FAR_EL1]		= read_sysreg_el1(SYS_FAR);
++	ctxt->sys_regs[MAIR_EL1]	= read_sysreg_el1(SYS_MAIR);
++	ctxt->sys_regs[VBAR_EL1]	= read_sysreg_el1(SYS_VBAR);
++	ctxt->sys_regs[CONTEXTIDR_EL1]	= read_sysreg_el1(SYS_CONTEXTIDR);
++	ctxt->sys_regs[AMAIR_EL1]	= read_sysreg_el1(SYS_AMAIR);
++	ctxt->sys_regs[CNTKCTL_EL1]	= read_sysreg_el1(SYS_CNTKCTL);
++	ctxt->sys_regs[PAR_EL1]		= read_sysreg(par_el1);
++	ctxt->sys_regs[TPIDR_EL1]	= read_sysreg(tpidr_el1);
 +
-+	/* Switch to requested VMID */
-+	__tlb_switch_to_guest(kvm, &cxt);
-+
-+	__tlbi(vmalle1);
-+	dsb(nsh);
-+	isb();
-+
-+	__tlb_switch_to_host(kvm, &cxt);
++	ctxt->gp_regs.sp_el1		= read_sysreg(sp_el1);
++	ctxt->gp_regs.elr_el1		= read_sysreg_el1(SYS_ELR);
++	ctxt->gp_regs.spsr[KVM_SPSR_EL1]= read_sysreg_el1(SYS_SPSR);
 +}
 +
-+static inline void __hyp_text __tlb_flush_vm_context(void)
++static inline void __hyp_text
++__sysreg_save_el2_return_state(struct kvm_cpu_context *ctxt)
 +{
-+	dsb(ishst);
-+	__tlbi(alle1is);
++	ctxt->gp_regs.regs.pc		= read_sysreg_el2(SYS_ELR);
++	ctxt->gp_regs.regs.pstate	= read_sysreg_el2(SYS_SPSR);
++
++	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN))
++		ctxt->sys_regs[DISR_EL1] = read_sysreg_s(SYS_VDISR_EL2);
++}
++
++static inline void __hyp_text
++__sysreg_restore_common_state(struct kvm_cpu_context *ctxt)
++{
++	write_sysreg(ctxt->sys_regs[MDSCR_EL1],	  mdscr_el1);
 +
 +	/*
-+	 * VIPT and PIPT caches are not affected by VMID, so no maintenance
-+	 * is necessary across a VMID rollover.
-+	 *
-+	 * VPIPT caches constrain lookup and maintenance to the active VMID,
-+	 * so we need to invalidate lines with a stale VMID to avoid an ABA
-+	 * race after multiple rollovers.
-+	 *
++	 * The host arm64 Linux uses sp_el0 to point to 'current' and it must
++	 * therefore be saved/restored on every entry/exit to/from the guest.
 +	 */
-+	if (icache_is_vpipt())
-+		asm volatile("ic ialluis");
++	write_sysreg(ctxt->gp_regs.regs.sp,	  sp_el0);
++}
 +
-+	dsb(ish);
++static inline void __hyp_text
++__sysreg_restore_user_state(struct kvm_cpu_context *ctxt)
++{
++	write_sysreg(ctxt->sys_regs[TPIDR_EL0],		tpidr_el0);
++	write_sysreg(ctxt->sys_regs[TPIDRRO_EL0],	tpidrro_el0);
++}
++
++static inline void __hyp_text
++__sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
++{
++	write_sysreg(ctxt->sys_regs[MPIDR_EL1],		vmpidr_el2);
++	write_sysreg(ctxt->sys_regs[CSSELR_EL1],	csselr_el1);
++
++	if (!cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE)) {
++		write_sysreg_el1(ctxt->sys_regs[SCTLR_EL1],	SYS_SCTLR);
++		write_sysreg_el1(ctxt->sys_regs[TCR_EL1],	SYS_TCR);
++	} else	if (!ctxt->__hyp_running_vcpu) {
++		/*
++		 * Must only be done for guest registers, hence the context
++		 * test. We're coming from the host, so SCTLR.M is already
++		 * set. Pairs with nVHE's __activate_traps().
++		 */
++		write_sysreg_el1((ctxt->sys_regs[TCR_EL1] |
++				  TCR_EPD1_MASK | TCR_EPD0_MASK),
++				 SYS_TCR);
++		isb();
++	}
++
++	write_sysreg(ctxt->sys_regs[ACTLR_EL1],		actlr_el1);
++	write_sysreg_el1(ctxt->sys_regs[CPACR_EL1],	SYS_CPACR);
++	write_sysreg_el1(ctxt->sys_regs[TTBR0_EL1],	SYS_TTBR0);
++	write_sysreg_el1(ctxt->sys_regs[TTBR1_EL1],	SYS_TTBR1);
++	write_sysreg_el1(ctxt->sys_regs[ESR_EL1],	SYS_ESR);
++	write_sysreg_el1(ctxt->sys_regs[AFSR0_EL1],	SYS_AFSR0);
++	write_sysreg_el1(ctxt->sys_regs[AFSR1_EL1],	SYS_AFSR1);
++	write_sysreg_el1(ctxt->sys_regs[FAR_EL1],	SYS_FAR);
++	write_sysreg_el1(ctxt->sys_regs[MAIR_EL1],	SYS_MAIR);
++	write_sysreg_el1(ctxt->sys_regs[VBAR_EL1],	SYS_VBAR);
++	write_sysreg_el1(ctxt->sys_regs[CONTEXTIDR_EL1],SYS_CONTEXTIDR);
++	write_sysreg_el1(ctxt->sys_regs[AMAIR_EL1],	SYS_AMAIR);
++	write_sysreg_el1(ctxt->sys_regs[CNTKCTL_EL1],	SYS_CNTKCTL);
++	write_sysreg(ctxt->sys_regs[PAR_EL1],		par_el1);
++	write_sysreg(ctxt->sys_regs[TPIDR_EL1],		tpidr_el1);
++
++	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT_NVHE) &&
++	    ctxt->__hyp_running_vcpu) {
++		/*
++		 * Must only be done for host registers, hence the context
++		 * test. Pairs with nVHE's __deactivate_traps().
++		 */
++		isb();
++		/*
++		 * At this stage, and thanks to the above isb(), S2 is
++		 * deconfigured and disabled. We can now restore the host's
++		 * S1 configuration: SCTLR, and only then TCR.
++		 */
++		write_sysreg_el1(ctxt->sys_regs[SCTLR_EL1],	SYS_SCTLR);
++		isb();
++		write_sysreg_el1(ctxt->sys_regs[TCR_EL1],	SYS_TCR);
++	}
++
++	write_sysreg(ctxt->gp_regs.sp_el1,		sp_el1);
++	write_sysreg_el1(ctxt->gp_regs.elr_el1,		SYS_ELR);
++	write_sysreg_el1(ctxt->gp_regs.spsr[KVM_SPSR_EL1],SYS_SPSR);
++}
++
++static inline void __hyp_text
++__sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
++{
++	u64 pstate = ctxt->gp_regs.regs.pstate;
++	u64 mode = pstate & PSR_AA32_MODE_MASK;
++
++	/*
++	 * Safety check to ensure we're setting the CPU up to enter the guest
++	 * in a less privileged mode.
++	 *
++	 * If we are attempting a return to EL2 or higher in AArch64 state,
++	 * program SPSR_EL2 with M=EL2h and the IL bit set which ensures that
++	 * we'll take an illegal exception state exception immediately after
++	 * the ERET to the guest.  Attempts to return to AArch32 Hyp will
++	 * result in an illegal exception return because EL2's execution state
++	 * is determined by SCR_EL3.RW.
++	 */
++	if (!(mode & PSR_MODE32_BIT) && mode >= PSR_MODE_EL2t)
++		pstate = PSR_MODE_EL2h | PSR_IL_BIT;
++
++	write_sysreg_el2(ctxt->gp_regs.regs.pc,		SYS_ELR);
++	write_sysreg_el2(pstate,			SYS_SPSR);
++
++	if (cpus_have_final_cap(ARM64_HAS_RAS_EXTN))
++		write_sysreg_s(ctxt->sys_regs[DISR_EL1], SYS_VDISR_EL2);
++}
++
++static inline void __hyp_text ___sysreg32_save_state(struct kvm_vcpu *vcpu)
++{
++	u64 *spsr, *sysreg;
++
++	if (!vcpu_el1_is_32bit(vcpu))
++		return;
++
++	spsr = vcpu->arch.ctxt.gp_regs.spsr;
++	sysreg = vcpu->arch.ctxt.sys_regs;
++
++	spsr[KVM_SPSR_ABT] = read_sysreg(spsr_abt);
++	spsr[KVM_SPSR_UND] = read_sysreg(spsr_und);
++	spsr[KVM_SPSR_IRQ] = read_sysreg(spsr_irq);
++	spsr[KVM_SPSR_FIQ] = read_sysreg(spsr_fiq);
++
++	sysreg[DACR32_EL2] = read_sysreg(dacr32_el2);
++	sysreg[IFSR32_EL2] = read_sysreg(ifsr32_el2);
++
++	if (has_vhe() || vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY)
++		sysreg[DBGVCR32_EL2] = read_sysreg(dbgvcr32_el2);
++}
++
++static inline void __hyp_text ___sysreg32_restore_state(struct kvm_vcpu *vcpu)
++{
++	u64 *spsr, *sysreg;
++
++	if (!vcpu_el1_is_32bit(vcpu))
++		return;
++
++	spsr = vcpu->arch.ctxt.gp_regs.spsr;
++	sysreg = vcpu->arch.ctxt.sys_regs;
++
++	write_sysreg(spsr[KVM_SPSR_ABT], spsr_abt);
++	write_sysreg(spsr[KVM_SPSR_UND], spsr_und);
++	write_sysreg(spsr[KVM_SPSR_IRQ], spsr_irq);
++	write_sysreg(spsr[KVM_SPSR_FIQ], spsr_fiq);
++
++	write_sysreg(sysreg[DACR32_EL2], dacr32_el2);
++	write_sysreg(sysreg[IFSR32_EL2], ifsr32_el2);
++
++	if (has_vhe() || vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY)
++		write_sysreg(sysreg[DBGVCR32_EL2], dbgvcr32_el2);
 +}
 -- 
 2.26.1
