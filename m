@@ -2,131 +2,107 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C7C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7EEC8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8474820784
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 08:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8FF20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 09:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588237221;
+	bh=6KQACPLN/GZpi+FYGmYG62Ze5DkTEi4wV710+OZY2aQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=061VJtkI1ErYpRDC624NdnZx9Eq1EX+TMSOMlm3VQnDurudV9TINSswz3MklQ6GAy
+	 GOdeSFga7WfBat3uw27ajJ7sgwiZVbrMMV7vUQzu5STHBXlcB/h3BLEX/NHrRX4CxJ
+	 qbP/zNabEgJhAU3uyR6eDb4IU62QvdasfQ2hjJfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgD3I7J (ORCPT
+        id S1726794AbgD3JAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 04:59:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44468 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbgD3I7J (ORCPT
+        Thu, 30 Apr 2020 05:00:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33853 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgD3JAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 04:59:09 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03U81lLM143892;
-        Thu, 30 Apr 2020 04:58:41 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mfhgdwx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 04:58:41 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03U8tf2h005040;
-        Thu, 30 Apr 2020 08:58:39 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5t5xu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 08:58:38 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03U8waux35061774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 08:58:36 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C623011C050;
-        Thu, 30 Apr 2020 08:58:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F4CE11C058;
-        Thu, 30 Apr 2020 08:58:35 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.201.165])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 30 Apr 2020 08:58:35 +0000 (GMT)
-Date:   Thu, 30 Apr 2020 11:58:33 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] initramfs: fix another section mismatch
-Message-ID: <20200430085833.GB342687@linux.ibm.com>
-References: <20200429190135.66411-1-arnd@arndb.de>
+        Thu, 30 Apr 2020 05:00:18 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 72so4306278otu.1;
+        Thu, 30 Apr 2020 02:00:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6KQACPLN/GZpi+FYGmYG62Ze5DkTEi4wV710+OZY2aQ=;
+        b=H3Jrnez4+57h4GGsGlUKjBUCzgCWRyEy6JDWuCmKOCUwez6SKQkM17Y0T4lZYkM+3/
+         U4vZQnqImo3eBrs+Ia2oUL/dju4W8ziszY+cnBNYNA47hbTjvd9X0eS6zcQFYB4QTHF0
+         o+msu24phfMWs/i/Rb9SoKhf1O/TMa12x79vd1Msgn42LseBhvKVz+TbJaJu8uNgpFSL
+         AoZiHg7TzuKitI1VP7RIjEtRs7qV5Y5iQjbDxYfF3Cu/mXxUsL2wzB5TFO/AtqcoWRPG
+         Gv2InbBZN8+ZURT3Kek0CDOPH7tpWuSYn8S9AhwB8MaZg33w6ypVtCqokvlSp4qLKRMP
+         25EQ==
+X-Gm-Message-State: AGi0PuZ/6WYvKDfchk5YdRNXQF+OKEYiYpF+ah6eQ9rFZ3kCPO0QYV0r
+        ENSw71cjgK1fJsovF8cELACBs1r5AYHNIpCuL0qQDA==
+X-Google-Smtp-Source: APiQypION7scbqEm7NDh6Gggg+1C2ij+NE18vee8aBc9XS9X5f4dFoPNeOl0elV99+hw6k1aQNEtvFSivkjKAlKGNyw=
+X-Received: by 2002:a9d:112:: with SMTP id 18mr1274967otu.167.1588237217674;
+ Thu, 30 Apr 2020 02:00:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429190135.66411-1-arnd@arndb.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_02:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=5
- phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300061
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
+ <7657495.QyJl4BcWH5@kreacher> <CAKfTPtBNH8x=83RVQajgK859qQGjMTyvEdP4GioMONEZp9t-NA@mail.gmail.com>
+In-Reply-To: <CAKfTPtBNH8x=83RVQajgK859qQGjMTyvEdP4GioMONEZp9t-NA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 Apr 2020 11:00:05 +0200
+Message-ID: <CAJZ5v0g+9DYuGS8URoXYecOxcnu5-kC-D=gvYTuMvxMZbYXR9w@mail.gmail.com>
+Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>, hugues.fruchet@st.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 09:01:29PM +0200, Arnd Bergmann wrote:
-> Building with gcc-10 causes a harmless warning, similar to the
-> gcc-4.6 warning that Geert fixed last year:
-> 
-> WARNING: modpost: vmlinux.o(.text.unlikely+0xe69): Section mismatch in reference from the function kexec_free_initrd() to the function .init.text:free_initrd_mem()
-> The function kexec_free_initrd() references
-> the function __init free_initrd_mem().
-> This is often because kexec_free_initrd lacks a __init
-> annotation or the annotation of free_initrd_mem is wrong.
-> 
-> Add the missing __init annotations.
-> 
-> Fixes: 4ada1e810038 ("initramfs: fix populate_initrd_image() section mismatch")
-> Fixes: 23091e287355 ("initramfs: cleanup initrd freeing")
->  Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, Apr 29, 2020 at 7:08 PM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> On Wed, 29 Apr 2020 at 17:50, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Friday, April 24, 2020 1:40:55 PM CEST Benjamin Gaignard wrote:
+> > > When start streaming from the sensor the CPU load could remain very low
+> > > because almost all the capture pipeline is done in hardware (i.e. without
+> > > using the CPU) and let believe to cpufreq governor that it could use lower
+> > > frequencies. If the governor decides to use a too low frequency that
+> > > becomes a problem when we need to acknowledge the interrupt during the
+> > > blanking time.
+> > > The delay to ack the interrupt and perform all the other actions before
+> > > the next frame is very short and doesn't allow to the cpufreq governor to
+> > > provide the required burst of power. That led to drop the half of the frames.
+> > >
+> > > To avoid this problem, DCMI driver informs the cpufreq governors by adding
+> > > a cpufreq minimum load QoS resquest.
+> >
+> > This seems to be addressing a use case that can be addressed with the help of
+> > utilization clamps with less power overhead.
+>
+> Can't freq_qos_update_request() be also used if you don't have cgroup
+> enabled on your system ?
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+It can.
 
-> ---
->  init/initramfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/init/initramfs.c b/init/initramfs.c
-> index 8ec1be4d7d51..bda77a6c8e50 100644
-> --- a/init/initramfs.c
-> +++ b/init/initramfs.c
-> @@ -542,7 +542,7 @@ void __weak free_initrd_mem(unsigned long start, unsigned long end)
->  }
->  
->  #ifdef CONFIG_KEXEC_CORE
-> -static bool kexec_free_initrd(void)
-> +static bool __init kexec_free_initrd(void)
->  {
->  	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
->  	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
-> @@ -565,7 +565,7 @@ static bool kexec_free_initrd(void)
->  	return true;
->  }
->  #else
-> -static inline bool kexec_free_initrd(void)
-> +static inline bool __init kexec_free_initrd(void)
->  {
->  	return false;
->  }
-> -- 
-> 2.26.0
-> 
+The problem here is that imposing a global minimum frequency limit
+generally causes the power draw of the system to increase regardless
+of what is going on, including the CPUs that are not involved in the
+handling of the interrupt in question.
 
--- 
-Sincerely yours,
-Mike.
+That seems a bit excessive ...
