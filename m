@@ -2,109 +2,86 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D17C8300B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBD8C8300C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1757C20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916D52078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588246860;
+	bh=dFK5BA/3XELie2QyZAN3A+reesHvuM/84wvUzjlEXjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CHCPtrwfULO5ksXj9QsWnaEmZF1gsL+FsJN4ncWqSwCC8/xkRIhDBor3kk6Lmgbux
+	 kROYdQWBp4mOFZm2aBYPSvNqKa3EgcNZFr51NeGPAXIB8hAKqF2U5Lr+SnRO/ymmZF
+	 1iYUj7V3ADkxKVgJgP1Ylp0JNUycZdJnIcUgb6Qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgD3LkZ (ORCPT
+        id S1726845AbgD3LlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:40:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:53028 "EHLO foss.arm.com"
+        Thu, 30 Apr 2020 07:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgD3LkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:40:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 782E1106F;
-        Thu, 30 Apr 2020 04:40:24 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8B883F305;
-        Thu, 30 Apr 2020 04:40:22 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] cpu/hotplug: Remove __freeze_secondary_cpus()
-Date:   Thu, 30 Apr 2020 12:40:04 +0100
-Message-Id: <20200430114004.17477-2-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430114004.17477-1-qais.yousef@arm.com>
-References: <20200430114004.17477-1-qais.yousef@arm.com>
+        id S1726481AbgD3Lk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:40:59 -0400
+Received: from linux-8ccs.fritz.box (p3EE2CE96.dip0.t-ipconnect.de [62.226.206.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7DD62076D;
+        Thu, 30 Apr 2020 11:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588246859;
+        bh=dFK5BA/3XELie2QyZAN3A+reesHvuM/84wvUzjlEXjc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oJ4vqlhY9q6mW0qaJe33gktp4qfSReNIRP0NffZ1fV0NhvKpNzX2KdeK4p8uNboQB
+         0Wbbf1HDJV8lRESWG9GcD2SqxXScTe53oQmYrQj9MDmVgWNRPa87HGh8yM+x6JEbXP
+         69CfnTSEyai536ZC6PxTgj6+ywFAhvySsZV/B/ZM=
+Date:   Thu, 30 Apr 2020 13:40:55 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v4 11/11] module: Make module_enable_ro() static again
+Message-ID: <20200430114055.GA15426@linux-8ccs.fritz.box>
+References: <cover.1588173720.git.jpoimboe@redhat.com>
+ <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
+ <20200430111032.GA4436@linux-8ccs>
+ <alpine.LSU.2.21.2004301334560.8465@pobox.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2004301334560.8465@pobox.suse.cz>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The refactored function is no longer required as the codepaths that call
-freeze_secondary_cpus() are all suspend/resume related now.
++++ Miroslav Benes [30/04/20 13:35 +0200]:
+>On Thu, 30 Apr 2020, Jessica Yu wrote:
+>
+>> +++ Josh Poimboeuf [29/04/20 10:24 -0500]:
+>> >Now that module_enable_ro() has no more external users, make it static
+>> >again.
+>> >
+>> >Suggested-by: Jessica Yu <jeyu@kernel.org>
+>> >Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>>
+>> Thanks! Since this patch is separate from the rest and it's based on
+>> modules-next, I can just take this last patch through the modules tree.
+>
+>It depends on 8/11 of the series.
+>
+>Acked-by: Miroslav Benes <mbenes@suse.cz>
+>
+>for the patch.
 
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC: Len Brown <len.brown@intel.com>
-CC: Pavel Machek <pavel@ucw.cz>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: x86@kernel.org
-CC: Todd E Brandt <todd.e.brandt@linux.intel.com>
-CC: linux-pm@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- include/linux/cpu.h | 7 +------
- kernel/cpu.c        | 4 ++--
- 2 files changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 9d34dc3b859f..52692587f7fe 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -144,12 +144,7 @@ static inline void get_online_cpus(void) { cpus_read_lock(); }
- static inline void put_online_cpus(void) { cpus_read_unlock(); }
- 
- #ifdef CONFIG_PM_SLEEP_SMP
--int __freeze_secondary_cpus(int primary, bool suspend);
--static inline int freeze_secondary_cpus(int primary)
--{
--	return __freeze_secondary_cpus(primary, true);
--}
--
-+extern int freeze_secondary_cpus(int primary);
- extern void thaw_secondary_cpus(void);
- 
- static inline int suspend_disable_secondary_cpus(void)
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 10c60e9f58b7..8d57c3cfe862 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1327,7 +1327,7 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
- #ifdef CONFIG_PM_SLEEP_SMP
- static cpumask_var_t frozen_cpus;
- 
--int __freeze_secondary_cpus(int primary, bool suspend)
-+int freeze_secondary_cpus(int primary)
- {
- 	int cpu, error = 0;
- 
-@@ -1352,7 +1352,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
- 		if (cpu == primary)
- 			continue;
- 
--		if (suspend && pm_wakeup_pending()) {
-+		if (pm_wakeup_pending()) {
- 			pr_info("Wakeup pending. Abort CPU freeze\n");
- 			error = -EBUSY;
- 			break;
--- 
-2.17.1
+Ah yeah, you are right (you meant patch 9/11 right)? Will take both
+through modules-next.
 
