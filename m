@@ -2,115 +2,94 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C678AC28CBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FCFC28CBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6B92063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588255378;
-	bh=ZeQ+nsfG34bCl5uEds18kIJEKqqdj1c0qRK1uyLut8M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wlBChHhJRwdkWnV5v/7/ku9RAm6tAYeN32tgRiiPKDaoX6SmZypqmlmBkPZk1FpOT
-	 7WpvHUDw2npBrzr76Pk/IF9lB2IsLIPmUYj6B7oJmJNrKXZIN0lHruJ4wqlz0Q2yQx
-	 h27faJZUejZ6Y0T+lLWU7lTSP12ApCfKkpyMRihk=
+	by mail.kernel.org (Postfix) with ESMTP id D28E12063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgD3OC5 (ORCPT
+        id S1728353AbgD3ODB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgD3Nxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF37E24959;
-        Thu, 30 Apr 2020 13:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254815;
-        bh=ZeQ+nsfG34bCl5uEds18kIJEKqqdj1c0qRK1uyLut8M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CkloH/vru3NPp6yh0HeYo8YWd6sxIKafNuAb6wx6tBjEqFgo5rRnjHA5SoIlVivI9
-         U+Q2pYwKd+3adiVm77awOi8W3SbZsr9a0GaqVjRp6vPfTdGHj1kHo8ia6s5Tx8ktwJ
-         4c48vy/1fwUqqby81ybTufjVa2c63KmP47mK05bg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/30] usb: dwc3: gadget: Do link recovery for SS and SSP
-Date:   Thu, 30 Apr 2020 09:53:03 -0400
-Message-Id: <20200430135325.20762-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
-References: <20200430135325.20762-1-sashal@kernel.org>
+        Thu, 30 Apr 2020 10:03:01 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37029 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729452AbgD3OC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 10:02:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r25so5294160oij.4;
+        Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sJs/ccRnc3IpftOPmZxsp+U77POq5aMrgerBg7OaDG4=;
+        b=C6sAA3TNK9HOmmQw7lHiHuhS/WEUUHmBnOScvuDjny8G++cyYWIag1+p4NiPy6WG3P
+         1gYfqbxN81AFs4ooqm57N8efmbU6C9UJskl4+qcNm+HklRkKYDpSNyMRK16XY4FaT6nI
+         FPIQ6oIRn2iLIqMRQZ0T9y8QI1hKzEG5lq8ihPLaLOtUAKQW1bqFF0R0Tc+0Nv0f6DUI
+         LQ1FslT5nd60Y9kxFjpspqxTjCMYVXjkQF0MIx8DbkLMBBAwkeabPuzweix5Yc2Yauhl
+         bVxmtHXd4W8bqdEAnmAp/Z6MiTZDU/Neq2VT+trnfpURueKAjGWPktEQE5duQzhSrF4J
+         jOrA==
+X-Gm-Message-State: AGi0PuaGncbbJi8W0MI02FBWyPoL4N0Q7sglndjRU5SBp+8cw3v4Ae5y
+        rPuxthl0VD6vnyzPDm+lgKSzGFriPIymPAs7S+psr4rH
+X-Google-Smtp-Source: APiQypJ0gb+RTtB2XK9qYeGrvR6ZbhTKXtAi0sTZFb9b/YKzwx/yPxkzE6lCQbIOJJ/J3ynAVkE1ekKFQSCnJOLDnKM=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr1887761oig.54.1588255375518;
+ Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Apr 2020 16:02:44 +0200
+Message-ID: <CAMuHMdU4zynHLhxte4gHRc=G9SvcX0ghwZtFFOdN2Vp5x1=hnw@mail.gmail.com>
+Subject: Re: [PATCH 13/18] dt-bindings: serial: renesas,scifa: Document
+ r8a7742 bindings
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
+> so document the SoC specific bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-[ Upstream commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 ]
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The controller always supports link recovery for device in SS and SSP.
-Remove the speed limit check. Also, when the device is in RESUME or
-RESET state, it means the controller received the resume/reset request.
-The driver must send the link recovery to acknowledge the request. They
-are valid states for the driver to send link recovery.
+Gr{oetje,eeting}s,
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/dwc3/gadget.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+                        Geert
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 50d2481041c85..99f6a5aa01095 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1577,7 +1577,6 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
- 	u32			reg;
- 
- 	u8			link_state;
--	u8			speed;
- 
- 	/*
- 	 * According to the Databook Remote wakeup request should
-@@ -1587,16 +1586,13 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
- 	 */
- 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
- 
--	speed = reg & DWC3_DSTS_CONNECTSPD;
--	if ((speed == DWC3_DSTS_SUPERSPEED) ||
--	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
--		return 0;
--
- 	link_state = DWC3_DSTS_USBLNKST(reg);
- 
- 	switch (link_state) {
-+	case DWC3_LINK_STATE_RESET:
- 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
- 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
-+	case DWC3_LINK_STATE_RESUME:
- 		break;
- 	default:
- 		return -EINVAL;
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
