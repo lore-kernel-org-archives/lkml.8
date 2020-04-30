@@ -2,369 +2,129 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EB4C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04923C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21EF20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AEA20757
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 14:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnR8JGqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgD3O6g (ORCPT
+        id S1727772AbgD3O6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 10:58:36 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:45709 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726436AbgD3O6e (ORCPT
+        Thu, 30 Apr 2020 10:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbgD3O6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 10:58:34 -0400
-Received: (qmail 32428 invoked by uid 500); 30 Apr 2020 10:58:33 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 30 Apr 2020 10:58:33 -0400
-Date:   Thu, 30 Apr 2020 10:58:33 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-In-Reply-To: <000000000000927dcc05a476bb41@google.com>
-Message-ID: <Pine.LNX.4.44L0.2004301050190.27217-100000@netrider.rowland.org>
+        Thu, 30 Apr 2020 10:58:51 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD439C035494;
+        Thu, 30 Apr 2020 07:58:51 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l20so2849822pgb.11;
+        Thu, 30 Apr 2020 07:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NFYSfA/3764WrnouY0loV6hglNFNiP/lp/p+4dXkwLs=;
+        b=gnR8JGqi6ExZ8eVYHErJr8bXlK8lxA/47DM1lBduLpbJt5HsVjZDsJbtxHJ6VW2/D7
+         mwAvUFmDG+4Opyz1XMXsfhV3V8gGHxFj9eu0zbRprCctVYZiXzKu9Pjqcti1H+JwN7XA
+         9MflhWFoYRKuA3A2R4IIk6PCTKV4V9X1eDt1bjOoSrIRd8zFHGFdvpD8lFUU/FE5EBKv
+         41J6RkMMKQ2ht6afAGzP2eEm/0OURhxRLYtroJ2GW2Qm/OD8A07TzRTxAzwset5X5It/
+         UmMxsIfvXVorGDXrC42NDeiOrOzEJFWbSwbI9XPSAsAULogotNegbJhnSaOOVNcxosy2
+         bWmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NFYSfA/3764WrnouY0loV6hglNFNiP/lp/p+4dXkwLs=;
+        b=sScsvJy/Jkqel7pVxjvSe3IZH90K8dD4TM3lYxUmZ/N0ITlfWy0mi9wmSxXBEy/kER
+         lG5C5mYFcRp+5NPtkgixACZB90ULQkklwKLv1LExnxo23hhDC5tmnN370Ql2UOHsdIN/
+         6w9XKPvkrwjxgRY48CP2Ag2swGqZBpT5PS8sphqTu9UQ/IQ23+czAXbz1pU5Zq5fvjuo
+         i1dQRMWzdiJAAxobBX4QcY+gMLQ3quRT4FIllr9Z0VcTKIJxcbu4IQB610OkeKj/9sW/
+         OBwq8VaMCjqU7i8Or9Qhk/KUBCpgo3WQU5Isa8EaeStBgfH9Kbi7mvN0eUJlSLYMeGuu
+         n/OA==
+X-Gm-Message-State: AGi0PuZGKMrGwbcRnDdNlRXLTaTeLH4eXXPf33QIDfckYGa8jELHXPo2
+        X1TYGvmvDEpM3sydS0vMSaOcMJknQIM=
+X-Google-Smtp-Source: APiQypLUbA28K7rJdyqHeyLYfd3Z4yuLMi0EkduRaXjMwn5RPKUauV7cMtEFMzJ1kUN+265YercDow==
+X-Received: by 2002:aa7:9484:: with SMTP id z4mr4053092pfk.144.1588258731268;
+        Thu, 30 Apr 2020 07:58:51 -0700 (PDT)
+Received: from sol (220-235-85-217.dyn.iinet.net.au. [220.235.85.217])
+        by smtp.gmail.com with ESMTPSA id c1sm101548pfc.94.2020.04.30.07.58.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 Apr 2020 07:58:50 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 22:58:44 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     "Bujanda, Hector" <Hector.Bujanda@digi.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Message-ID: <20200430145844.GA28588@sol>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+ <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020, syzbot wrote:
-
-> Hello,
+On Thu, Apr 30, 2020 at 01:32:22PM +0000, Bujanda, Hector wrote:
+> Thanks all for your guidance!
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered crash:
-> WARNING in usbhid_raw_request/usb_submit_urb
+> First saying that this patch request was sent having our platforms in k4.14 in the way of upgrading to k5.4.
+> In those versions the commit e588bb1eae31be73fbec2b731be986a7c09635a4 "gpio: add new SET_CONFIG ioctl() to gpio chardev" by Kent Gibson was not available.
+> 
+> I see that you clearly understand the necessity of having a way of configuring debounce from the userspace.
+> Our platforms make use of hardware debouncing filtering. Up to now we were using the sysfilesystem to let the user handle gpios (including debounce configuration).
+> We wanted now to get rid of sysfilesystem and start using gpiolib/libgpiod.... but configuring debounce is blocking us.
+> 
+> Now I clearly see (as pointed by Bartosz Golaszewski) that my suggested GPIO_SET_DEBOUNCE_IOCTL is wrong as it hits the chip file descriptor while 'Modifying any config settings can only happen on lines previously requested too in user-space'.
+> 
+> I agree with all that a flag is needed to allow configuring debounce to '0' which has always meant disabling it.
+> 
+> Also agree with 'Kent Gibson' suggestion of  'You might want to add a flag to the GPIOLINE_FLAGs to indicate if debounce is set'.
+> 
+> I have my doubts if it is compulsory to extend debounce configuration to the gpioevent_requests since the debounce value configured by a user is normally linked to a hardware noise in a line; and that does not change from one gpioevent_requests to another. So I think this configuration would be useful but not compulsory.
+> 
 
-Ugh.  I forgot that usbhid also uses usb_control_msg() and 
-usb_interrupt_msg().  Those things can't be protected by a spinlock; 
-I'll have to add a semaphore.  (A mutex won't work either, because it 
-has to be locked in hid_pre_reset() and unlocked in hid_post_reset().)
+Just to clarify on this point, the reason the SET_CONFIG would have to
+be extended to events is not to alter the debounce on the fly but to set
+it at all.  Lines are requested as either handles (for outputs or polled inputs) 
+or events (for asynchronous edge events on inputs). We cannot extend
+either the handle or event request ioctls themselves as there is no provision 
+in their data structures for future expansion.  There is in the
+SET_CONFIG ioctl - but that doesn't apply to event requests yet...
 
-Alan Stern
 
-#syz test: https://github.com/google/kasan.git 0fa84af8
+> I agree with Linus Walleij that 'there is a serious user-facing problem here though, because not all GPIO controllers supports debounce'.
+> Our platforms have native freescale/NXP gpiochips not supporting hardware debounce and our own gpiochips having hardware debounce.
+> We have also noticed that 'drivers/input/keyboard/gpio_keys.c contains generic debounce code using kernel timers if the GPIO driver cannot provide debouncing'. That feature is not of our interest (because of having hardware debounce filters) but it would clearly be a very good overall functionality.
+> 
+> Having said all above, I wonder how you want to proceed.
+> Our current development in k5.4 and libgpiod1.4.1 is much behind master... what makes collaboration (and reusability) a bit more complex.
+> Also I see the implementation requires a bigger picture than I initially expected.
+> So I wonder if you want me to do the initial steps of the development (what I foresee will require some back and forth) or you prefer implementing all pieces.
+> 
 
-Index: usb-devel/drivers/hid/usbhid/hid-core.c
-===================================================================
---- usb-devel.orig/drivers/hid/usbhid/hid-core.c
-+++ usb-devel/drivers/hid/usbhid/hid-core.c
-@@ -87,6 +87,7 @@ static int hid_start_in(struct hid_devic
- 	if (test_bit(HID_IN_POLLING, &usbhid->iofl) &&
- 	    !test_bit(HID_DISCONNECTED, &usbhid->iofl) &&
- 	    !test_bit(HID_SUSPENDED, &usbhid->iofl) &&
-+	    !test_bit(HID_RESET_PENDING, &usbhid->iofl) &&
- 	    !test_and_set_bit(HID_IN_RUNNING, &usbhid->iofl)) {
- 		rc = usb_submit_urb(usbhid->urbin, GFP_ATOMIC);
- 		if (rc != 0) {
-@@ -339,6 +340,9 @@ static int hid_submit_out(struct hid_dev
- 	struct usbhid_device *usbhid = hid->driver_data;
- 	int r;
- 
-+	if (test_bit(HID_RESET_PENDING, &usbhid->iofl))
-+		return -EAGAIN;
-+
- 	report = usbhid->out[usbhid->outtail].report;
- 	raw_report = usbhid->out[usbhid->outtail].raw_report;
- 
-@@ -370,6 +374,9 @@ static int hid_submit_ctrl(struct hid_de
- 	int len, r;
- 	struct usbhid_device *usbhid = hid->driver_data;
- 
-+	if (test_bit(HID_RESET_PENDING, &usbhid->iofl))
-+		return -EAGAIN;
-+
- 	report = usbhid->ctrl[usbhid->ctrltail].report;
- 	raw_report = usbhid->ctrl[usbhid->ctrltail].raw_report;
- 	dir = usbhid->ctrl[usbhid->ctrltail].dir;
-@@ -654,26 +661,37 @@ static int usbhid_wait_io(struct hid_dev
- 	return 0;
- }
- 
--static int hid_set_idle(struct usb_device *dev, int ifnum, int report, int idle)
-+static int hid_set_idle(struct hid_device *hid,
-+		struct usb_device *dev, int ifnum, int report, int idle)
- {
--	return usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
-+	struct usbhid_device *usbhid = hid->driver_data;
-+	int rc;
-+
-+	down(&usbhid->sem);
-+	rc = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
- 		HID_REQ_SET_IDLE, USB_TYPE_CLASS | USB_RECIP_INTERFACE, (idle << 8) | report,
- 		ifnum, NULL, 0, USB_CTRL_SET_TIMEOUT);
-+	up(&usbhid->sem);
-+	return rc;
- }
- 
--static int hid_get_class_descriptor(struct usb_device *dev, int ifnum,
-+static int hid_get_class_descriptor(struct hid_device *hid,
-+		struct usb_device *dev, int ifnum,
- 		unsigned char type, void *buf, int size)
- {
-+	struct usbhid_device *usbhid = hid->driver_data;
- 	int result, retries = 4;
- 
- 	memset(buf, 0, size);
- 
-+	down(&usbhid->sem);
- 	do {
- 		result = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
- 				USB_REQ_GET_DESCRIPTOR, USB_RECIP_INTERFACE | USB_DIR_IN,
- 				(type << 8), ifnum, buf, size, USB_CTRL_GET_TIMEOUT);
- 		retries--;
- 	} while (result < size && retries);
-+	up(&usbhid->sem);
- 	return result;
- }
- 
-@@ -682,16 +700,21 @@ static int usbhid_open(struct hid_device
- 	struct usbhid_device *usbhid = hid->driver_data;
- 	int res;
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	set_bit(HID_OPENED, &usbhid->iofl);
- 
--	if (hid->quirks & HID_QUIRK_ALWAYS_POLL)
--		return 0;
-+	if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
-+		res = 0;
-+		goto Done;
-+	}
- 
- 	res = usb_autopm_get_interface(usbhid->intf);
- 	/* the device must be awake to reliably request remote wakeup */
- 	if (res < 0) {
- 		clear_bit(HID_OPENED, &usbhid->iofl);
--		return -EIO;
-+		res = -EIO;
-+		goto Done;
- 	}
- 
- 	usbhid->intf->needs_remote_wakeup = 1;
-@@ -725,6 +748,9 @@ static int usbhid_open(struct hid_device
- 		msleep(50);
- 
- 	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
-+
-+ Done:
-+	mutex_unlock(&usbhid->mutex);
- 	return res;
- }
- 
-@@ -732,6 +758,8 @@ static void usbhid_close(struct hid_devi
- {
- 	struct usbhid_device *usbhid = hid->driver_data;
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	/*
- 	 * Make sure we don't restart data acquisition due to
- 	 * a resumption we no longer care about by avoiding racing
-@@ -743,12 +771,13 @@ static void usbhid_close(struct hid_devi
- 		clear_bit(HID_IN_POLLING, &usbhid->iofl);
- 	spin_unlock_irq(&usbhid->lock);
- 
--	if (hid->quirks & HID_QUIRK_ALWAYS_POLL)
--		return;
-+	if (!(hid->quirks & HID_QUIRK_ALWAYS_POLL)) {
-+		hid_cancel_delayed_stuff(usbhid);
-+		usb_kill_urb(usbhid->urbin);
-+		usbhid->intf->needs_remote_wakeup = 0;
-+	}
- 
--	hid_cancel_delayed_stuff(usbhid);
--	usb_kill_urb(usbhid->urbin);
--	usbhid->intf->needs_remote_wakeup = 0;
-+	mutex_unlock(&usbhid->mutex);
- }
- 
- /*
-@@ -877,12 +906,14 @@ static int usbhid_get_raw_report(struct
- 		count--;
- 		skipped_report_id = 1;
- 	}
-+	down(&usbhid->sem);
- 	ret = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
- 		HID_REQ_GET_REPORT,
- 		USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_INTERFACE,
- 		((report_type + 1) << 8) | report_number,
- 		interface->desc.bInterfaceNumber, buf, count,
- 		USB_CTRL_SET_TIMEOUT);
-+	up(&usbhid->sem);
- 
- 	/* count also the report id */
- 	if (ret > 0 && skipped_report_id)
-@@ -914,12 +945,14 @@ static int usbhid_set_raw_report(struct
- 		skipped_report_id = 1;
- 	}
- 
-+	down(&usbhid->sem);
- 	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
- 			HID_REQ_SET_REPORT,
- 			USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE,
- 			((rtype + 1) << 8) | reportnum,
- 			interface->desc.bInterfaceNumber, buf, count,
- 			USB_CTRL_SET_TIMEOUT);
-+	up(&usbhid->sem);
- 	/* count also the report id, if this was a numbered report. */
- 	if (ret > 0 && skipped_report_id)
- 		ret++;
-@@ -943,9 +976,11 @@ static int usbhid_output_report(struct h
- 		skipped_report_id = 1;
- 	}
- 
-+	down(&usbhid->sem);
- 	ret = usb_interrupt_msg(dev, usbhid->urbout->pipe,
- 				buf, count, &actual_length,
- 				USB_CTRL_SET_TIMEOUT);
-+	up(&usbhid->sem);
- 	/* return the number of bytes transferred */
- 	if (ret == 0) {
- 		ret = actual_length;
-@@ -1024,9 +1059,10 @@ static int usbhid_parse(struct hid_devic
- 	if (!rdesc)
- 		return -ENOMEM;
- 
--	hid_set_idle(dev, interface->desc.bInterfaceNumber, 0, 0);
-+	hid_set_idle(hid, dev, interface->desc.bInterfaceNumber, 0, 0);
- 
--	ret = hid_get_class_descriptor(dev, interface->desc.bInterfaceNumber,
-+	ret = hid_get_class_descriptor(hid, dev,
-+			interface->desc.bInterfaceNumber,
- 			HID_DT_REPORT, rdesc, rsize);
- 	if (ret < 0) {
- 		dbg_hid("reading report descriptor failed\n");
-@@ -1057,6 +1093,8 @@ static int usbhid_start(struct hid_devic
- 	unsigned int n, insize = 0;
- 	int ret;
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	clear_bit(HID_DISCONNECTED, &usbhid->iofl);
- 
- 	usbhid->bufsize = HID_MIN_BUFFER_SIZE;
-@@ -1177,6 +1215,8 @@ static int usbhid_start(struct hid_devic
- 		usbhid_set_leds(hid);
- 		device_set_wakeup_enable(&dev->dev, 1);
- 	}
-+
-+	mutex_unlock(&usbhid->mutex);
- 	return 0;
- 
- fail:
-@@ -1187,6 +1227,7 @@ fail:
- 	usbhid->urbout = NULL;
- 	usbhid->urbctrl = NULL;
- 	hid_free_buffers(dev, hid);
-+	mutex_unlock(&usbhid->mutex);
- 	return ret;
- }
- 
-@@ -1202,6 +1243,8 @@ static void usbhid_stop(struct hid_devic
- 		usbhid->intf->needs_remote_wakeup = 0;
- 	}
- 
-+	mutex_lock(&usbhid->mutex);
-+
- 	clear_bit(HID_STARTED, &usbhid->iofl);
- 	spin_lock_irq(&usbhid->lock);	/* Sync with error and led handlers */
- 	set_bit(HID_DISCONNECTED, &usbhid->iofl);
-@@ -1222,6 +1265,8 @@ static void usbhid_stop(struct hid_devic
- 	usbhid->urbout = NULL;
- 
- 	hid_free_buffers(hid_to_usb_dev(hid), hid);
-+
-+	mutex_unlock(&usbhid->mutex);
- }
- 
- static int usbhid_power(struct hid_device *hid, int lvl)
-@@ -1279,7 +1324,7 @@ static int usbhid_idle(struct hid_device
- 	if (reqtype != HID_REQ_SET_IDLE)
- 		return -EINVAL;
- 
--	return hid_set_idle(dev, ifnum, report, idle);
-+	return hid_set_idle(hid, dev, ifnum, report, idle);
- }
- 
- struct hid_ll_driver usb_hid_driver = {
-@@ -1382,6 +1427,8 @@ static int usbhid_probe(struct usb_inter
- 	INIT_WORK(&usbhid->reset_work, hid_reset);
- 	timer_setup(&usbhid->io_retry, hid_retry_timeout, 0);
- 	spin_lock_init(&usbhid->lock);
-+	mutex_init(&usbhid->mutex);
-+	sema_init(&usbhid->sem, 1);
- 
- 	ret = hid_add_device(hid);
- 	if (ret) {
-@@ -1470,6 +1517,8 @@ static int hid_pre_reset(struct usb_inte
- 	spin_unlock_irq(&usbhid->lock);
- 	hid_cease_io(usbhid);
- 
-+	down(&usbhid->sem);	/* released in hid_post_reset */
-+
- 	return 0;
- }
- 
-@@ -1483,6 +1532,8 @@ static int hid_post_reset(struct usb_int
- 	int status;
- 	char *rdesc;
- 
-+	up(&usbhid->sem);	/* acquired in hid_pre_reset */
-+
- 	/* Fetch and examine the HID report descriptor. If this
- 	 * has changed, then rebind. Since usbcore's check of the
- 	 * configuration descriptors passed, we already know that
-@@ -1492,7 +1543,7 @@ static int hid_post_reset(struct usb_int
- 	if (!rdesc)
- 		return -ENOMEM;
- 
--	status = hid_get_class_descriptor(dev,
-+	status = hid_get_class_descriptor(hid, dev,
- 				interface->desc.bInterfaceNumber,
- 				HID_DT_REPORT, rdesc, hid->dev_rsize);
- 	if (status < 0) {
-@@ -1512,7 +1563,7 @@ static int hid_post_reset(struct usb_int
- 	clear_bit(HID_RESET_PENDING, &usbhid->iofl);
- 	clear_bit(HID_CLEAR_HALT, &usbhid->iofl);
- 	spin_unlock_irq(&usbhid->lock);
--	hid_set_idle(dev, intf->cur_altsetting->desc.bInterfaceNumber, 0, 0);
-+	hid_set_idle(hid, dev, intf->cur_altsetting->desc.bInterfaceNumber, 0, 0);
- 
- 	hid_restart_io(hid);
- 
-Index: usb-devel/drivers/hid/usbhid/usbhid.h
-===================================================================
---- usb-devel.orig/drivers/hid/usbhid/usbhid.h
-+++ usb-devel/drivers/hid/usbhid/usbhid.h
-@@ -19,6 +19,7 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <linux/input.h>
-+#include <linux/semaphore.h>
- 
- /*  API provided by hid-core.c for USB HID drivers */
- void usbhid_init_reports(struct hid_device *hid);
-@@ -80,6 +81,9 @@ struct usbhid_device {
- 	dma_addr_t outbuf_dma;                                          /* Output buffer dma */
- 	unsigned long last_out;							/* record of last output for timeouts */
- 
-+	struct mutex mutex;						/* start/stop/open/close */
-+	struct semaphore sem;						/* submit/pre_reset/post_reset */
-+
- 	spinlock_t lock;						/* fifo spinlock */
- 	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
- 	struct timer_list io_retry;                                     /* Retry timer */
+I totally agree with you on the widening scope.
 
+Bart - how do you want to go forward with this?  I'm available to work
+on it, in part or full.
+
+Cheers,
+Kent.
