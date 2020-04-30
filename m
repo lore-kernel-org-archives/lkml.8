@@ -2,90 +2,104 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF21C47247
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E28C4724C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9260E20836
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39633214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 21:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgD3VTY (ORCPT
+        id S1726846AbgD3VV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 17:19:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:33902 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgD3VTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:19:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6D241FB;
-        Thu, 30 Apr 2020 14:19:23 -0700 (PDT)
-Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DF1733F68F;
-        Thu, 30 Apr 2020 14:19:23 -0700 (PDT)
-From:   Jeremy Linton <jeremy.linton@arm.com>
-To:     linux-usb@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
-        git@thegavinli.com, jarkko.sakkinen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH] usb: usbfs: correct kernel->user page attribute mismatch
-Date:   Thu, 30 Apr 2020 16:19:22 -0500
-Message-Id: <20200430211922.929165-1-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 30 Apr 2020 17:21:28 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:47175 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgD3VV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 17:21:28 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MuDPf-1jBNG71Vt7-00uWP3; Thu, 30 Apr 2020 23:21:26 +0200
+Received: by mail-qk1-f172.google.com with SMTP id f83so5308qke.13;
+        Thu, 30 Apr 2020 14:21:25 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZLjELzTWCpsdZK53t3PU6uDx+0RdnkSuBI+ycvrTkqjrc4KS01
+        EMSKSmL3OMm3z5QIdkfBKs9CpxYC0G2jpkkQEXY=
+X-Google-Smtp-Source: APiQypIM11fY5RukZEVskEhyZDGMXYivz+/2X4b8sNT4+8pTwghkf6LXKjfZLRy0kYFGgiYsJ6BjS/duAU2Haf7MBAg=
+X-Received: by 2002:a37:63d0:: with SMTP id x199mr510171qkb.3.1588281684906;
+ Thu, 30 Apr 2020 14:21:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200429190119.43595-1-arnd@arndb.de> <20200430211516.gkwaefjrzj2dypmr@cantor>
+In-Reply-To: <20200430211516.gkwaefjrzj2dypmr@cantor>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 30 Apr 2020 23:21:08 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
+Message-ID: <CAK8P3a1xk9b9Ntsf302EUP2Sp+yWe5UEsbf973=xmYRkiN1KuQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/tpm: fix section mismatch warning
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:cr9KKu2LzmYO4FyXYSmEGdwrhb3TUuPv7wwpXok6SayZxWAEtpW
+ Kg7fXrBcjPhPDwtYLYxsj6ck4avLe4TULZjN5nfoVet9GIOS9bwvQAYTcDl9Ed6VzSFyD0p
+ +Q4TfY6necup2e5iyPCZct2+pXX4AVp/znnntHGuV8Hqdzcjs4zD/wIHPtN0clCdtb5OBs0
+ SsrwgmG9k42Se6oBdh4nQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kiT/7gSypmQ=:AXmJggU5tYltmKHVgans+n
+ DFN0z8QNYROJEbdlU5d9AI5drTeTKYNiPKZ5s1dA/0q2EBFUqm5amVd0u/4bV7wTBeWu/KqF9
+ IJIGxXKUFB8HvM/aD6YNFZpNTwZGOyjTn7P2yEYiGGx38pvzMNxNEkhufYopIzGaV5KQ3E28G
+ Qdzzg04YCVF9w/27Bj+x1oAW9NHIP8qAtSTcJEq0wHLZe4R3ofrSbAaZfWhq55YibpxDvSiMu
+ Z9FjSnytPAbCMW28ZoVt/Bosvxgp6OMT+BIFiKhMK6ek/uqLCIohL6Cstbm//HZ0y4mKKavv3
+ h5rT9dYGiv+UCmGiSv9EtgvZUFVqzg+d8VBf1J8JRFB9EXSuVD2nPrI19EmbqginKm0/+ZQgW
+ UvrHHDJxiYCWsK84p314tqJqIWPnEpsVLjZcwKrAujkffPGleWwxbpQlG5PX2vu+VVvZFUWL+
+ b614eK7/sIdvz30uukGsAc3GSSHDdH4DEx7CrdIn9Yn3A7TW1vhMk7ktntxrwKcmQ3/yL8Old
+ BZb+HrSDDqqffjiuRoiDvGNA3cd9EinPfOud6yZwHOFsAuDKEj8Bm4Xpk+DuJUlK0nUcuONwS
+ EWhaTH90QwPiS2HIh/ilA1s9bgQniqT4KelvuM7rHQMEsGosolcSovCMrlN2ylmq0svhQwAAS
+ e/bgfpP7y0+RdO3CNnI9Du7LejaM7Dqoou5N78dIdHXHBXmerZLnfyhtF3p7koInrO2vJSOAD
+ XqZcGQy3rAvDyXMG1hSC231/Q+omomanjqR2AC56rycMaFIO6+NaQiT1zQmOh8gq0BD/XiEUD
+ 1BD7Gu6BKWhCNuq4F68rvxSxBqoOqg9P2psWAfif+8YCJhHZvI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On arm64, and possibly other architectures, requesting
-IO coherent memory may return Normal-NC if the underlying
-hardware isn't coherent. If these pages are then
-remapped into userspace as Normal, that defeats the
-purpose of getting Normal-NC, as well as resulting in
-mappings with differing cache attributes.
+On Thu, Apr 30, 2020 at 11:15 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+>
+> On Wed Apr 29 20, Arnd Bergmann wrote:
+> >Building with gcc-10 causes a harmless warning about a section mismatch:
+> >
+> >WARNING: modpost: vmlinux.o(.text.unlikely+0x5e191): Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+> >The function tpm2_calc_event_log_size() references
+> >the function __init early_memunmap().
+> >This is often because tpm2_calc_event_log_size lacks a __init
+> >annotation or the annotation of early_memunmap is wrong.
+> >
+> >Add the missing annotation.
+> >
+> >Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after successful event log parsing")
+> >Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Minor thing, but should the Fixes be c46f3405692d ("tpm: Reserve the TPM final events table")? Or what am I missing
+> about e658c82be556 that causes this? Just trying to understand what I did. :)
 
-In particular this happens with libusb, when it attempts
-to create zero-copy buffers as is used by rtl-sdr, and
-maybe other applications. The result is usually
-application death.
+You are right, I misread the git history. Can you fix it up when applying the
+patch, or should I resend it?
 
-If dma_mmap_attr() is used instead of remap_pfn_range,
-the page cache/etc attributes can be matched between the
-kernel and userspace.
-
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
----
- drivers/usb/core/devio.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 6833c918abce..1e7458dd6e5d 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	struct usb_memory *usbm = NULL;
- 	struct usb_dev_state *ps = file->private_data;
-+	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
- 	size_t size = vma->vm_end - vma->vm_start;
- 	void *mem;
- 	unsigned long flags;
-@@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
- 	usbm->vma_use_count = 1;
- 	INIT_LIST_HEAD(&usbm->memlist);
- 
--	if (remap_pfn_range(vma, vma->vm_start,
--			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
--			size, vma->vm_page_prot) < 0) {
-+	if (dma_mmap_attrs(hcd->self.sysdev, vma, mem, dma_handle, size, 0)) {
- 		dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
- 		return -EAGAIN;
- 	}
--- 
-2.24.1
-
+       Arnd
