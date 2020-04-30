@@ -2,103 +2,99 @@ Return-Path: <SRS0=SogR=6O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF97C8300A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84CBC8300B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7CB2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588245441;
-	bh=yWtbilunzsxo7xtZWR1/a83wu91pcqoLS8Bvylbv1hk=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=NhVahuRE2Y9AP4KirxBj5z87TehVRVPTl0b1Y5g1M/1oE74g+yy/UtVFG7up9Bjco
-	 n/wRl1340ctid9cmEo46kHBqGPpP8qBiWcyiCxDxrj83438+dQBoa98qPNo481uIfp
-	 2IHZtb5ksQa/nHyHBh3ItxtiOEkY/XADPHnkAQ48=
+	by mail.kernel.org (Postfix) with ESMTP id D23DD20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Apr 2020 11:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgD3LRU (ORCPT
+        id S1726929AbgD3LSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 07:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgD3LRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:17:20 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E012076D;
-        Thu, 30 Apr 2020 11:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588245439;
-        bh=yWtbilunzsxo7xtZWR1/a83wu91pcqoLS8Bvylbv1hk=;
-        h=Date:From:To:Subject:From;
-        b=DW0Kr5Cgs1hv+JYaJeZtv+nPgxnYZTe7aZIf8uxlGA772zeF1oO1kpGTeBqb5W/Mq
-         6xAVYNGdce2V/U2gDeZfY+6jgJYHDzN1K47OgsRRwnbYAo8vSKAbeExPVYUEysG6aS
-         WhhdoIWpoVHayYEpFi9RcrLypb3is6vx5inSDBAs=
-Date:   Thu, 30 Apr 2020 13:17:15 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: bug: Kbuild seems to require "make prepare-objtool" in order to use
- (some) new config vars
-Message-ID: <20200430131715.32c1a1f6@coco.lan>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Apr 2020 07:18:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28634 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgD3LSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:18:04 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UB3CQN140103;
+        Thu, 30 Apr 2020 07:18:00 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30me47b9cp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 07:18:00 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UBG6BG013757;
+        Thu, 30 Apr 2020 11:17:58 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 30mcu5aknm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 11:17:57 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UBHtKL65012140
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 11:17:55 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EF6FAE058;
+        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B0E5AE055;
+        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id B233BE0260; Thu, 30 Apr 2020 13:17:54 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     axboe@kernel.dk, hch@lst.de
+Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] remove ioclt_by_bdev from DASD
+Date:   Thu, 30 Apr 2020 13:17:53 +0200
+Message-Id: <20200430111754.98508-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_07:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=751 clxscore=1015 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+Hi Christoph and Jens,
 
-Not sure if this was already reported (or eventually fixed) upstream.
+here I have a different proposal how to remove the ioctl_by_bdev calls
+from the DASD device driver. The patch is tested and from my perspective
+OK to be integrated.
+If you find it acceptable please feel free to integrate it into your tree.
+Otherwise I am open for suggestions.
 
-While doing a Kconfig reorg on media, I noticed a few weird things,
-requiring me to call, on a few situations, "make modules_prepare"
-manually after some changes.
+Regards,
+Stefan
 
-I'm now working on a patchset to yet to be merged upstream aiming to
-resurrect a driver from staging. It is currently on this tree
-(with is based at the media development tree, on the top of 5.7-rc1):
+Stefan Haberland (1):
+  s390/dasd: remove ioctl_by_bdev from DASD driver
 
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=atomisp_v2
+ block/partitions/ibm.c           | 67 ++++++++++++++++++--------------
+ drivers/s390/block/dasd_devmap.c | 17 +++++++-
+ drivers/s390/block/dasd_diag.c   | 10 +++++
+ drivers/s390/block/dasd_eckd.c   | 10 +++++
+ drivers/s390/block/dasd_fba.c    |  8 ++++
+ drivers/s390/block/dasd_genhd.c  |  1 +
+ drivers/s390/block/dasd_int.h    | 10 +++++
+ 7 files changed, 91 insertions(+), 32 deletions(-)
 
-There, I was able to identify a misbehavior that it is probably
-what forced me to need calling "make modules_prepare".
+-- 
+2.17.1
 
-The atomisp driver is on a very bad shape. Among its problems, it has a 
-set of header definitions that should be different for two different
-variants of the supported devices. In order to be able to compile for
-either one of the variants, I added a new config var:
-CONFIG_VIDEO_ATOMISP_ISP2401.
-
-The problem is that calling just
-
-	./scripts/config -e CONFIG_VIDEO_ATOMISP_ISP2401
-
-or
-	./scripts/config -d CONFIG_VIDEO_ATOMISP_ISP2401
-
-is not enough anymore for the build to actually use the new config value.
-
-It just keeps silently using the old config value.
-
-I double-checked it by adding this macro at the Makefile:
-
-	$(info ************ ISP2401: $(CONFIG_VIDEO_ATOMISP_ISP2401) ************)
-
-The Makefile doesn't see the change, except if I explicitly call
-"make modules_prepare" or "make prepare-objtool".
-
-Even calling "make oldconfig" doesn't make it use the new CONFIG_*
-value.
-
-Thanks,
-Mauro
