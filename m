@@ -2,52 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D96C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EC92173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D3D208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340461;
-	bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
+	s=default; t=1588340466;
+	bh=vvE3TtarqiqFcQ9034O6c6gzuzlgyDUK67pLiVR1O8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dlIa9CwjXczc8xVWZfTtFK37bhnOFiDtaGKRYRnwvmwK8VAz2Yrf/8hLGHmxAnt0
-	 FCRdRUAzXOo27fvI9tJJZIEwbuELy7WCpe/e9b83AP+R9GMxHq1dBsV0+O+MvOMkqx
-	 TQAuaMXmYfVlPiies9+eyXHKRBpiBMWwp3wgt8RM=
+	b=tOKACwntSBuoyAJbf3VBoJFJS7S3+zrS+u9hKRwxfxczcvc1cOPd6jHnUR5V42Erf
+	 4P4Uvfva1v5jYDtAyTfBIC+sLAEk1nsSBMCwgcQ2+ImLmOFm/+MosB8/14+PskA1rb
+	 gnpgxgETWYKRcFvEk5/rRCrH0hg/q29y5eHxACQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731383AbgEANlA (ORCPT
+        id S1731388AbgEANlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41136 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbgEANk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:57 -0400
+        id S1731378AbgEANlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:41:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D466D20757;
-        Fri,  1 May 2020 13:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79410208DB;
+        Fri,  1 May 2020 13:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340457;
-        bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
+        s=default; t=1588340459;
+        bh=vvE3TtarqiqFcQ9034O6c6gzuzlgyDUK67pLiVR1O8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNFY9ujSxZnV2uR2YwnYcmX+Af5NT10ggkpiUqVbVYyWLBSVOrR6rELWZGLltgZee
-         V99E/+KkcB7XQBsppjxcDp6bnlEudp+iWEw9u0jIPR/7DcsuXmUz8xWcBK2iMXNqsE
-         +VdXsyFOm9nAiA7Scoin83suaGxVZpDw1GXkzwh0=
+        b=FuG2KULItIJE4NP05L+Uz/53dk5bRbGb0oKh3aIFFNpRuef+Qz74HiODfcYI/G3L3
+         szPWvV1sWY8bZL0EilLiybLvrTsM4gn/z8xgolQiItErSs6IRE4xZILABdzKjrFZPV
+         B18zutP+10PX21GnqwcKGKV8bW6YSFIiLr3cdrtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 75/83] hwmon: (jc42) Fix name to have no illegal characters
-Date:   Fri,  1 May 2020 15:23:54 +0200
-Message-Id: <20200501131541.978822070@linuxfoundation.org>
+        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 76/83] taprio: do not use BIT() in TCA_TAPRIO_ATTR_FLAG_* definitions
+Date:   Fri,  1 May 2020 15:23:55 +0200
+Message-Id: <20200501131542.110508340@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Eugene Syromiatnikov <esyr@redhat.com>
 
-[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
+commit 673040c3a82a7564423e09c791e242a846591e30 upstream.
 
-The jc42 driver passes I2C client's name as hwmon device name. In case
-of device tree probed devices this ends up being part of the compatible
-string, "jc-42.4-temp". This name contains hyphens and the hwmon core
-doesn't like this:
+BIT() macro definition is internal to the Linux kernel and is not
+to be used in UAPI headers; replace its usage with the _BITUL() macro
+that is already used elsewhere in the header.
 
-jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
+Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This changes the name to "jc42" which doesn't have any illegal
-characters.
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/jc42.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/pkt_sched.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
-index f2d81b0558e56..e3f1ebee71306 100644
---- a/drivers/hwmon/jc42.c
-+++ b/drivers/hwmon/jc42.c
-@@ -506,7 +506,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	}
- 	data->config = config;
+--- a/include/uapi/linux/pkt_sched.h
++++ b/include/uapi/linux/pkt_sched.h
+@@ -1160,8 +1160,8 @@ enum {
+  *       [TCA_TAPRIO_ATTR_SCHED_ENTRY_INTERVAL]
+  */
  
--	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
- 							 data, &jc42_chip_info,
- 							 NULL);
- 	return PTR_ERR_OR_ZERO(hwmon_dev);
--- 
-2.20.1
-
+-#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST	BIT(0)
+-#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	BIT(1)
++#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST	_BITUL(0)
++#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	_BITUL(1)
+ 
+ enum {
+ 	TCA_TAPRIO_ATTR_UNSPEC,
 
 
