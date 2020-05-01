@@ -2,133 +2,96 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCCEC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CCCC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D37F20873
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588298472;
-	bh=TGng++haxmjKEAxWTDMCt+me7RqYg/DPhKnyheMa2+E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DHpBClIgG1Dj9CClgrZEq9hYvH93Cn9aoWk7L32EKDIQoipR/atfYRQn3gHiD5AEm
-	 mVxmXBkZLV0Ih5fXqiotZnRabGlV5eEt1Wgg1NbY6VFe4MQ9/8+K6vFQhDYEfw2lIX
-	 aQQ/2xyygaAVCDDCqH3hVBuZ6YpnmxD0zHyOBHns=
+	by mail.kernel.org (Postfix) with ESMTP id 367422073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="CarECDVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgEACBL (ORCPT
+        id S1727970AbgEACCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgEACBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:01:11 -0400
-Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E21AB2073E;
-        Fri,  1 May 2020 02:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588298470;
-        bh=TGng++haxmjKEAxWTDMCt+me7RqYg/DPhKnyheMa2+E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=URt7r82KCUw4/FpnlqtLK2lwwbKBKLoUccNmriUdGhHDebv21eK1bGHH6DTwRa128
-         67HmXFSGYmNdy9h3gS+T/kIStuMRe1Ls0QxtGSuGO8srfn4PuYocXspwYHUfUQhOXN
-         IYRTXGNcySptZupssYgZE9jnS/sJ9dUIFhp/12iY=
-Date:   Fri, 1 May 2020 11:01:07 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@elte.hu>, Ingo Molnar <mingo@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "bibo,mao" <bibo.mao@intel.com>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCHv2] kretprobe: Prevent triggering kretprobe from within
- kprobe_flush_task
-Message-Id: <20200501110107.bc859c6603704c0bcdb8889a@kernel.org>
-In-Reply-To: <20200428213627.GI1476763@krava>
-References: <20200409184451.GG3309111@krava>
-        <20200409201336.GH3309111@krava>
-        <20200410093159.0d7000a08fd76c2eaf1398f8@kernel.org>
-        <20200414160338.GE208694@krava>
-        <20200415090507.GG208694@krava>
-        <20200416105506.904b7847a1b621b75463076d@kernel.org>
-        <20200416091320.GA322899@krava>
-        <20200416224250.7a53fb581e50aa32df75a0cf@kernel.org>
-        <20200416143104.GA400699@krava>
-        <20200417163810.ffe5c9145eae281fc493932c@kernel.org>
-        <20200428213627.GI1476763@krava>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Apr 2020 22:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727889AbgEACCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 22:02:20 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D4A3C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:02:20 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id r14so971326pfg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cs.washington.edu; s=goo201206;
+        h=from:to:cc:subject:date:message-id;
+        bh=xA0+ztltjFSmlxto0oGrs/28x8dQq3lRcLWb+lb2nnI=;
+        b=CarECDVW+6KLvf/YyEzSNITvnJPj0ybvXe2NxRdC1e07BJ5Wzhrm9MnEpFVjJZX7kE
+         AwSajPjRdMdF0h8zUllcxmIy5i2ceyZbmkevlmDHXGOxVjdaZJuDGWRh8r7k9Ok+Enbz
+         mGPfKsaD8R4c4uSPSv6J5/mxtLCMQpUX6zVHA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xA0+ztltjFSmlxto0oGrs/28x8dQq3lRcLWb+lb2nnI=;
+        b=l9+qog/rNSURHmDBeNpzYJJAMGte7wP0fZx1pPWNIcHkh4r1fmhqOeUGzmqbjPP0Xu
+         3K4/vFPFXwBJgm5xVcooNWdiHjC9j4lpPHkO6Lc1KJuyjNFnFBFrz7U9+rO1FnSFoIBE
+         mUDAk9mk3/SHzLI5KoeDFwxxc2AJItV8N4d/jG6qZE8HfT6WAxW6CQYDP0WQLgEFAhFI
+         VOofODMksRoQlhTkwn/gELWheSNIJZ6azl11wHcaELi7Cr1/SOabRBI6tVwWNGiawATU
+         Emr9r0ZLrPxp10Yw491kSc8uKN9i1c+LqDEiF24RQuHRQFIuFx57d507ErDHq9tTRRKx
+         5fMA==
+X-Gm-Message-State: AGi0PuY2MJwKw+Fha5fyWvie+8M+Q0kx9KTmrtxqdqil8jM6uyUOPYRK
+        4u8S4VULT1q6Z6U/KdbbTuPpIg==
+X-Google-Smtp-Source: APiQypJhA82+WhNBkkgzPwnXofGL1GnfNooa4CgxEhzB9JSc3x78tYjLRLZVYOiIolegraWmwYU2Qg==
+X-Received: by 2002:a65:4645:: with SMTP id k5mr1943443pgr.115.1588298539843;
+        Thu, 30 Apr 2020 19:02:19 -0700 (PDT)
+Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
+        by smtp.gmail.com with ESMTPSA id fy21sm802915pjb.25.2020.04.30.19.02.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 19:02:19 -0700 (PDT)
+From:   Luke Nelson <lukenels@cs.washington.edu>
+X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
+To:     bpf@vger.kernel.org
+Cc:     Luke Nelson <luke.r.nels@gmail.com>,
+        Shubham Bansal <illusionist.neo@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf 0/2] bpf, arm: Small JIT optimizations
+Date:   Thu, 30 Apr 2020 19:02:08 -0700
+Message-Id: <20200501020210.32294-1-luke.r.nels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 23:36:27 +0200
-Jiri Olsa <jolsa@redhat.com> wrote:
+As Daniel suggested to us, we ran our formal verification tool, Serval,
+over the arm JIT. The bugs we found have been patched and applied to the
+bpf tree [1, 2]. This patch series introduces two small optimizations
+that simplify the JIT and use fewer instructions.
 
-> On Fri, Apr 17, 2020 at 04:38:10PM +0900, Masami Hiramatsu wrote:
-> 
-> SNIP
-> 
-> > > 
-> > > The code within the kretprobe handler checks for probe reentrancy,
-> > > so we won't trigger any _raw_spin_lock_irqsave probe in there.
-> > > 
-> > > The problem is in outside kprobe_flush_task, where we call:
-> > > 
-> > >   kprobe_flush_task
-> > >     kretprobe_table_lock
-> > >       raw_spin_lock_irqsave
-> > >         _raw_spin_lock_irqsave
-> > > 
-> > > where _raw_spin_lock_irqsave triggers the kretprobe and installs
-> > > kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-> > > 
-> > > The kretprobe_trampoline handler is then executed with already
-> > > locked kretprobe_table_locks, and first thing it does is to
-> > > lock kretprobe_table_locks ;-) the whole lockup path like:
-> > > 
-> > >   kprobe_flush_task
-> > >     kretprobe_table_lock
-> > >       raw_spin_lock_irqsave
-> > >         _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
-> > > 
-> > >         ---> kretprobe_table_locks locked
-> > > 
-> > >         kretprobe_trampoline
-> > >           trampoline_handler
-> > >             kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-> > > 
-> > > Adding kprobe_busy_begin/end helpers that mark code with fake
-> > > probe installed to prevent triggering of another kprobe within
-> > > this code.
-> > > 
-> > > Using these helpers in kprobe_flush_task, so the probe recursion
-> > > protection check is hit and the probe is never set to prevent
-> > > above lockup.
-> > > 
-> > 
-> > Thanks Jiri!
-> > 
-> > Ingo, could you pick this up?
-> 
-> Ingo, any chance you could take this one?
+[1] https://lore.kernel.org/bpf/20200408181229.10909-1-luke.r.nels@gmail.com/
+[2] https://lore.kernel.org/bpf/20200409221752.28448-1-luke.r.nels@gmail.com/
 
-Hi Ingo,
+Luke Nelson (2):
+  bpf, arm: Optimize emit_a32_arsh_r64 using conditional instruction
+  bpf, arm: Optimize ALU ARSH K using asr immediate instruction
 
-Should I make a pull request for all kprobes related patches to you?
-
-Thank you,
+ arch/arm/net/bpf_jit_32.c | 14 +++++++++-----
+ arch/arm/net/bpf_jit_32.h |  2 ++
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
