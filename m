@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA6C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BDFC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C6D20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF26524953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344324;
-	bh=cJZQdkkcZgxGmcSvlUFKbAy3cxmlobK7jMZcjXiQwkE=;
+	s=default; t=1588344329;
+	bh=TWOT3LI8NQ4YlVM+QpDrfNl+OXQn24thtUBxAlgCXPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lnibPkca16FDyuPEP7fl8isIahgk3JIlnT1Gs9pHxS5NdsKLmNFy8JHEywkQTjwAy
-	 jr3VdiTc+KmTFl88+endKmU7nkGx0jzmn0aXbfaqqNkTDqXD4VNGTfuZsl6oEjv1gg
-	 YDvF5S1YktTNiqTWgUM7eNpCeC6uk/V9hc+Q32Go=
+	b=Um+9Xs5PLcBgrulbS4UK4UmoQEoXwdHwaWLc0KplOM4i6S2DuQSOvOaiuEM2nvJf8
+	 GA3cuyM+WBcgpZVOGi1Yz8nYoZaHaqX8C4XF4mIQCCMGSNvGKSkV+4R35qdUOJeW8A
+	 7VBYvCYuKKLgJRRZWmHzADRDB/Kg2+FtCxtcnp2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgEAOpX (ORCPT
+        id S1729847AbgEAOp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbgEAOpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729598AbgEAOpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:12 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB5AD2496C;
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAF62499F;
         Fri,  1 May 2020 14:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344307;
-        bh=cJZQdkkcZgxGmcSvlUFKbAy3cxmlobK7jMZcjXiQwkE=;
+        bh=TWOT3LI8NQ4YlVM+QpDrfNl+OXQn24thtUBxAlgCXPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=INdMBI9lKCH1ZjDy0dXDi+JfgWVVwnlL1Ufyfsm42udtxtQO1wagftJAudmMVIr5F
-         wAU4JPr4mLSmZR3zgxDpfuCcTpcydOorXwWXB9JTXhNRqiurnXmBu7bzVWVzmJlvNp
-         XoXtqsrq6NhEiAHG/Yu3zxHSXF0cMghvoBSjXfg0=
+        b=zrk38iaMvXHB74TZlZAXezcGwer8XFKrhlgcMqWqlc7JT0rd8PFrJywTiGYEpRXPs
+         uLBPFNjeKuriEGf6XJfCB20cVx39SPNYWICCyklZAlHNVh7ombcId/+ajkubUvUckD
+         5aVIk7908IMaQVg7dC45JLfYVQ8f7jc9Z4grpYHs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuU-00FCfC-38; Fri, 01 May 2020 16:45:02 +0200
+        id 1jUWuT-00FCeY-SQ; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 33/37] docs: networking: device drivers: convert ti/cpsw.txt to ReST
-Date:   Fri,  1 May 2020 16:44:55 +0200
-Message-Id: <4f32de8a9dd94b3784b4f86d0c079f141a75873b.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: [PATCH 25/37] docs: networking: device drivers: convert intel/ipw2200.txt to ReST
+Date:   Fri,  1 May 2020 16:44:47 +0200
+Message-Id: <b7428138935499bec38daf284f222d13c6f4f6b0.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -63,1171 +66,749 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
 - adjust titles and chapters, adding proper markups;
+- comment out text-only TOC from html/pdf output;
+- use copyright symbol;
+- use :field: markup;
 - mark code blocks and literals as such;
+- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  .../networking/device_drivers/index.rst       |   1 +
- .../networking/device_drivers/ti/cpsw.rst     | 587 ++++++++++++++++++
- .../networking/device_drivers/ti/cpsw.txt     | 541 ----------------
- 3 files changed, 588 insertions(+), 541 deletions(-)
- create mode 100644 Documentation/networking/device_drivers/ti/cpsw.rst
- delete mode 100644 Documentation/networking/device_drivers/ti/cpsw.txt
+ .../intel/{ipw2200.txt => ipw2200.rst}        | 410 ++++++++++--------
+ MAINTAINERS                                   |   2 +-
+ drivers/net/wireless/intel/ipw2x00/Kconfig    |   2 +-
+ 4 files changed, 235 insertions(+), 180 deletions(-)
+ rename Documentation/networking/device_drivers/intel/{ipw2200.txt => ipw2200.rst} (64%)
 
 diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index b3c0c473de2b..1d3b664e6921 100644
+index 54ed10f3d1a7..f9ce0089ec7d 100644
 --- a/Documentation/networking/device_drivers/index.rst
 +++ b/Documentation/networking/device_drivers/index.rst
-@@ -48,6 +48,7 @@ Contents:
-    sb1000
-    smsc/smc9
-    ti/cpsw_switchdev
-+   ti/cpsw
+@@ -40,6 +40,7 @@ Contents:
+    freescale/dpaa
+    freescale/gianfar
+    intel/ipw2100
++   intel/ipw2200
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/device_drivers/ti/cpsw.rst b/Documentation/networking/device_drivers/ti/cpsw.rst
-new file mode 100644
-index 000000000000..a88946bd188b
---- /dev/null
-+++ b/Documentation/networking/device_drivers/ti/cpsw.rst
-@@ -0,0 +1,587 @@
+diff --git a/Documentation/networking/device_drivers/intel/ipw2200.txt b/Documentation/networking/device_drivers/intel/ipw2200.rst
+similarity index 64%
+rename from Documentation/networking/device_drivers/intel/ipw2200.txt
+rename to Documentation/networking/device_drivers/intel/ipw2200.rst
+index b7658bed4906..0cb42d2fd7e5 100644
+--- a/Documentation/networking/device_drivers/intel/ipw2200.txt
++++ b/Documentation/networking/device_drivers/intel/ipw2200.rst
+@@ -1,8 +1,15 @@
 +.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
+ 
+-Intel(R) PRO/Wireless 2915ABG Driver for Linux in support of:
++==============================================
++Intel(R) PRO/Wireless 2915ABG Driver for Linux
++==============================================
+ 
+-Intel(R) PRO/Wireless 2200BG Network Connection
+-Intel(R) PRO/Wireless 2915ABG Network Connection
 +
-+======================================
-+Texas Instruments CPSW ethernet driver
-+======================================
++Support for:
 +
-+Multiqueue & CBS & MQPRIO
-+=========================
++- Intel(R) PRO/Wireless 2200BG Network Connection
++- Intel(R) PRO/Wireless 2915ABG Network Connection
+ 
+ Note: The Intel(R) PRO/Wireless 2915ABG Driver for Linux and Intel(R)
+ PRO/Wireless 2200BG Driver for Linux is a unified driver that works on
+@@ -10,37 +17,37 @@ both hardware adapters listed above. In this document the Intel(R)
+ PRO/Wireless 2915ABG Driver for Linux will be used to reference the
+ unified driver.
+ 
+-Copyright (C) 2004-2006, Intel Corporation
++Copyright |copy| 2004-2006, Intel Corporation
+ 
+ README.ipw2200
+ 
+-Version: 1.1.2
+-Date   : March 30, 2006
++:Version: 1.1.2
++:Date: March 30, 2006
+ 
+ 
+-Index
+------------------------------------------------
+-0.   IMPORTANT INFORMATION BEFORE USING THIS DRIVER
+-1.   Introduction
+-1.1. Overview of features
+-1.2. Module parameters
+-1.3. Wireless Extension Private Methods
+-1.4. Sysfs Helper Files
+-1.5. Supported channels
+-2.   Ad-Hoc Networking
+-3.   Interacting with Wireless Tools
+-3.1. iwconfig mode
+-3.2. iwconfig sens
+-4.   About the Version Numbers
+-5.   Firmware installation
+-6.   Support
+-7.   License
++.. Index
+ 
++    0.   IMPORTANT INFORMATION BEFORE USING THIS DRIVER
++    1.   Introduction
++    1.1. Overview of features
++    1.2. Module parameters
++    1.3. Wireless Extension Private Methods
++    1.4. Sysfs Helper Files
++    1.5. Supported channels
++    2.   Ad-Hoc Networking
++    3.   Interacting with Wireless Tools
++    3.1. iwconfig mode
++    3.2. iwconfig sens
++    4.   About the Version Numbers
++    5.   Firmware installation
++    6.   Support
++    7.   License
+ 
+-0.   IMPORTANT INFORMATION BEFORE USING THIS DRIVER
+------------------------------------------------
+ 
+-Important Notice FOR ALL USERS OR DISTRIBUTORS!!!! 
++0. IMPORTANT INFORMATION BEFORE USING THIS DRIVER
++=================================================
++
++Important Notice FOR ALL USERS OR DISTRIBUTORS!!!!
+ 
+ Intel wireless LAN adapters are engineered, manufactured, tested, and
+ quality checked to ensure that they meet all necessary local and
+@@ -56,7 +63,7 @@ product is granted. Intel's wireless LAN's EEPROM, firmware, and
+ software driver are designed to carefully control parameters that affect
+ radio operation and to ensure electromagnetic compliance (EMC). These
+ parameters include, without limitation, RF power, spectrum usage,
+-channel scanning, and human exposure. 
++channel scanning, and human exposure.
+ 
+ For these reasons Intel cannot permit any manipulation by third parties
+ of the software provided in binary format with the wireless WLAN
+@@ -70,7 +77,7 @@ no liability, under any theory of liability for any issues associated
+ with the modified products, including without limitation, claims under
+ the warranty and/or issues arising from regulatory non-compliance, and
+ (iii) Intel will not provide or be required to assist in providing
+-support to any third parties for such modified products.  
++support to any third parties for such modified products.
+ 
+ Note: Many regulatory agencies consider Wireless LAN adapters to be
+ modules, and accordingly, condition system-level regulatory approval
+@@ -78,23 +85,24 @@ upon receipt and review of test data documenting that the antennas and
+ system configuration do not cause the EMC and radio operation to be
+ non-compliant.
+ 
+-The drivers available for download from SourceForge are provided as a 
+-part of a development project.  Conformance to local regulatory 
+-requirements is the responsibility of the individual developer.  As 
+-such, if you are interested in deploying or shipping a driver as part of 
+-solution intended to be used for purposes other than development, please 
++The drivers available for download from SourceForge are provided as a
++part of a development project.  Conformance to local regulatory
++requirements is the responsibility of the individual developer.  As
++such, if you are interested in deploying or shipping a driver as part of
++solution intended to be used for purposes other than development, please
+ obtain a tested driver from Intel Customer Support at:
+ 
+ http://support.intel.com
+ 
+ 
+-1.   Introduction
+------------------------------------------------
+-The following sections attempt to provide a brief introduction to using 
++1. Introduction
++===============
++
++The following sections attempt to provide a brief introduction to using
+ the Intel(R) PRO/Wireless 2915ABG Driver for Linux.
+ 
+-This document is not meant to be a comprehensive manual on 
+-understanding or using wireless technologies, but should be sufficient 
++This document is not meant to be a comprehensive manual on
++understanding or using wireless technologies, but should be sufficient
+ to get you moving without wires on Linux.
+ 
+ For information on building and installing the driver, see the INSTALL
+@@ -102,14 +110,14 @@ file.
+ 
+ 
+ 1.1. Overview of Features
+------------------------------------------------
++-------------------------
+ The current release (1.1.2) supports the following features:
+ 
+ + BSS mode (Infrastructure, Managed)
+ + IBSS mode (Ad-Hoc)
+ + WEP (OPEN and SHARED KEY mode)
+ + 802.1x EAP via wpa_supplicant and xsupplicant
+-+ Wireless Extension support 
+++ Wireless Extension support
+ + Full B and G rate support (2200 and 2915)
+ + Full A rate support (2915 only)
+ + Transmit power control
+@@ -122,102 +130,107 @@ supported:
+ + long/short preamble support
+ + Monitor mode (aka RFMon)
+ 
+-The distinction between officially supported and enabled is a reflection 
++The distinction between officially supported and enabled is a reflection
+ on the amount of validation and interoperability testing that has been
+-performed on a given feature. 
++performed on a given feature.
+ 
+ 
+ 
+ 1.2. Command Line Parameters
+------------------------------------------------
++----------------------------
+ 
+ Like many modules used in the Linux kernel, the Intel(R) PRO/Wireless
+-2915ABG Driver for Linux allows configuration options to be provided 
+-as module parameters.  The most common way to specify a module parameter 
+-is via the command line.  
++2915ABG Driver for Linux allows configuration options to be provided
++as module parameters.  The most common way to specify a module parameter
++is via the command line.
+ 
+-The general form is:
++The general form is::
+ 
+-% modprobe ipw2200 parameter=value
++    % modprobe ipw2200 parameter=value
+ 
+ Where the supported parameter are:
+ 
+   associate
+ 	Set to 0 to disable the auto scan-and-associate functionality of the
+-	driver.  If disabled, the driver will not attempt to scan 
+-	for and associate to a network until it has been configured with 
+-	one or more properties for the target network, for example configuring 
++	driver.  If disabled, the driver will not attempt to scan
++	for and associate to a network until it has been configured with
++	one or more properties for the target network, for example configuring
+ 	the network SSID.  Default is 0 (do not auto-associate)
+-	
++
+ 	Example: % modprobe ipw2200 associate=0
+ 
+   auto_create
+-	Set to 0 to disable the auto creation of an Ad-Hoc network 
+-	matching the channel and network name parameters provided.  
++	Set to 0 to disable the auto creation of an Ad-Hoc network
++	matching the channel and network name parameters provided.
+ 	Default is 1.
+ 
+   channel
+ 	channel number for association.  The normal method for setting
+-        the channel would be to use the standard wireless tools
+-        (i.e. `iwconfig eth1 channel 10`), but it is useful sometimes
++	the channel would be to use the standard wireless tools
++	(i.e. `iwconfig eth1 channel 10`), but it is useful sometimes
+ 	to set this while debugging.  Channel 0 means 'ANY'
+ 
+   debug
+ 	If using a debug build, this is used to control the amount of debug
+ 	info is logged.  See the 'dvals' and 'load' script for more info on
+-	how to use this (the dvals and load scripts are provided as part 
+-	of the ipw2200 development snapshot releases available from the 
++	how to use this (the dvals and load scripts are provided as part
++	of the ipw2200 development snapshot releases available from the
+ 	SourceForge project at http://ipw2200.sf.net)
+-  
++
+   led
+ 	Can be used to turn on experimental LED code.
+ 	0 = Off, 1 = On.  Default is 1.
+ 
+   mode
+-	Can be used to set the default mode of the adapter.  
++	Can be used to set the default mode of the adapter.
+ 	0 = Managed, 1 = Ad-Hoc, 2 = Monitor
+ 
+ 
+ 1.3. Wireless Extension Private Methods
+------------------------------------------------
++---------------------------------------
+ 
+-As an interface designed to handle generic hardware, there are certain 
+-capabilities not exposed through the normal Wireless Tool interface.  As 
+-such, a provision is provided for a driver to declare custom, or 
+-private, methods.  The Intel(R) PRO/Wireless 2915ABG Driver for Linux 
++As an interface designed to handle generic hardware, there are certain
++capabilities not exposed through the normal Wireless Tool interface.  As
++such, a provision is provided for a driver to declare custom, or
++private, methods.  The Intel(R) PRO/Wireless 2915ABG Driver for Linux
+ defines several of these to configure various settings.
+ 
+-The general form of using the private wireless methods is:
++The general form of using the private wireless methods is::
+ 
+ 	% iwpriv $IFNAME method parameters
+ 
+-Where $IFNAME is the interface name the device is registered with 
++Where $IFNAME is the interface name the device is registered with
+ (typically eth1, customized via one of the various network interface
+ name managers, such as ifrename)
+ 
+ The supported private methods are:
+ 
+   get_mode
+-	Can be used to report out which IEEE mode the driver is 
++	Can be used to report out which IEEE mode the driver is
+ 	configured to support.  Example:
+-	
++
+ 	% iwpriv eth1 get_mode
+ 	eth1	get_mode:802.11bg (6)
+ 
+   set_mode
+-	Can be used to configure which IEEE mode the driver will 
+-	support.  
++	Can be used to configure which IEEE mode the driver will
++	support.
++
++	Usage::
++
++	    % iwpriv eth1 set_mode {mode}
+ 
+-	Usage:
+-	% iwpriv eth1 set_mode {mode}
+ 	Where {mode} is a number in the range 1-7:
++
++	==	=====================
+ 	1	802.11a (2915 only)
+ 	2	802.11b
+ 	3	802.11ab (2915 only)
+-	4	802.11g 
++	4	802.11g
+ 	5	802.11ag (2915 only)
+ 	6	802.11bg
+ 	7	802.11abg (2915 only)
++	==	=====================
+ 
+   get_preamble
+ 	Can be used to report configuration of preamble length.
+@@ -225,99 +238,123 @@ The supported private methods are:
+   set_preamble
+ 	Can be used to set the configuration of preamble length:
+ 
+-	Usage:
+-	% iwpriv eth1 set_preamble {mode}
++	Usage::
++
++	    % iwpriv eth1 set_preamble {mode}
++
+ 	Where {mode} is one of:
++
++	==	========================================
+ 	1	Long preamble only
+ 	0	Auto (long or short based on connection)
+-	
++	==	========================================
+ 
+-1.4. Sysfs Helper Files:
+------------------------------------------------
+ 
+-The Linux kernel provides a pseudo file system that can be used to 
++1.4. Sysfs Helper Files
++-----------------------
++
++The Linux kernel provides a pseudo file system that can be used to
+ access various components of the operating system.  The Intel(R)
+ PRO/Wireless 2915ABG Driver for Linux exposes several configuration
+ parameters through this mechanism.
+ 
+-An entry in the sysfs can support reading and/or writing.  You can 
+-typically query the contents of a sysfs entry through the use of cat, 
+-and can set the contents via echo.  For example:
++An entry in the sysfs can support reading and/or writing.  You can
++typically query the contents of a sysfs entry through the use of cat,
++and can set the contents via echo.  For example::
+ 
+-% cat /sys/bus/pci/drivers/ipw2200/debug_level
++    % cat /sys/bus/pci/drivers/ipw2200/debug_level
+ 
+-Will report the current debug level of the driver's logging subsystem 
++Will report the current debug level of the driver's logging subsystem
+ (only available if CONFIG_IPW2200_DEBUG was configured when the driver
+ was built).
+ 
+-You can set the debug level via:
++You can set the debug level via::
+ 
+-% echo $VALUE > /sys/bus/pci/drivers/ipw2200/debug_level
++    % echo $VALUE > /sys/bus/pci/drivers/ipw2200/debug_level
+ 
+-Where $VALUE would be a number in the case of this sysfs entry.  The 
+-input to sysfs files does not have to be a number.  For example, the 
+-firmware loader used by hotplug utilizes sysfs entries for transferring 
++Where $VALUE would be a number in the case of this sysfs entry.  The
++input to sysfs files does not have to be a number.  For example, the
++firmware loader used by hotplug utilizes sysfs entries for transferring
+ the firmware image from user space into the driver.
+ 
+-The Intel(R) PRO/Wireless 2915ABG Driver for Linux exposes sysfs entries 
+-at two levels -- driver level, which apply to all instances of the driver 
+-(in the event that there are more than one device installed) and device 
++The Intel(R) PRO/Wireless 2915ABG Driver for Linux exposes sysfs entries
++at two levels -- driver level, which apply to all instances of the driver
++(in the event that there are more than one device installed) and device
+ level, which applies only to the single specific instance.
+ 
+ 
+ 1.4.1 Driver Level Sysfs Helper Files
+------------------------------------------------
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ For the driver level files, look in /sys/bus/pci/drivers/ipw2200/
+ 
+-  debug_level  
+-	
++  debug_level
+ 	This controls the same global as the 'debug' module parameter
+ 
+ 
+ 
+ 1.4.2 Device Level Sysfs Helper Files
+------------------------------------------------
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++For the device level files, look in::
+ 
+-For the device level files, look in
+-	
+ 	/sys/bus/pci/drivers/ipw2200/{PCI-ID}/
+ 
+-For example:
++For example:::
++
+ 	/sys/bus/pci/drivers/ipw2200/0000:02:01.0
+ 
+ For the device level files, see /sys/bus/pci/drivers/ipw2200:
+ 
+   rf_kill
+-	read - 
+-	0 = RF kill not enabled (radio on)
+-	1 = SW based RF kill active (radio off)
+-	2 = HW based RF kill active (radio off)
+-	3 = Both HW and SW RF kill active (radio off)
++	read -
++
++	==  =========================================
++	0   RF kill not enabled (radio on)
++	1   SW based RF kill active (radio off)
++	2   HW based RF kill active (radio off)
++	3   Both HW and SW RF kill active (radio off)
++	==  =========================================
++
+ 	write -
+-	0 = If SW based RF kill active, turn the radio back on
+-	1 = If radio is on, activate SW based RF kill
+ 
+-	NOTE: If you enable the SW based RF kill and then toggle the HW
+-  	based RF kill from ON -> OFF -> ON, the radio will NOT come back on
+-	
+-  ucode 
++	==  ==================================================
++	0   If SW based RF kill active, turn the radio back on
++	1   If radio is on, activate SW based RF kill
++	==  ==================================================
++
++	.. note::
++
++	   If you enable the SW based RF kill and then toggle the HW
++	   based RF kill from ON -> OFF -> ON, the radio will NOT come back on
++
++  ucode
+ 	read-only access to the ucode version number
+ 
+   led
+ 	read -
+-	0 = LED code disabled
+-	1 = LED code enabled
++
++	==  =================
++	0   LED code disabled
++	1   LED code enabled
++	==  =================
++
+ 	write -
+-	0 = Disable LED code
+-	1 = Enable LED code
+ 
+-	NOTE: The LED code has been reported to hang some systems when 
+-	running ifconfig and is therefore disabled by default.
++	==  ================
++	0   Disable LED code
++	1   Enable LED code
++	==  ================
 +
 +
-+The cpsw has 3 CBS shapers for each external ports. This document
-+describes MQPRIO and CBS Qdisc offload configuration for cpsw driver
-+based on examples. It potentially can be used in audio video bridging
-+(AVB) and time sensitive networking (TSN).
++	.. note::
 +
-+The following examples were tested on AM572x EVM and BBB boards.
-+
-+Test setup
++	   The LED code has been reported to hang some systems when
++	   running ifconfig and is therefore disabled by default.
+ 
+ 
+ 1.5. Supported channels
+------------------------------------------------
++-----------------------
+ 
+ Upon loading the Intel(R) PRO/Wireless 2915ABG Driver for Linux, a
+ message stating the detected geography code and the number of 802.11
+@@ -326,44 +363,59 @@ channels supported by the card will be displayed in the log.
+ The geography code corresponds to a regulatory domain as shown in the
+ table below.
+ 
+-					  Supported channels
+-Code	Geography			802.11bg	802.11a
++	+------+----------------------------+--------------------+
++	|      |			    | Supported channels |
++	| Code |        Geography	    +----------+---------+
++	|      |			    | 802.11bg | 802.11a |
++	+======+============================+==========+=========+
++	| ---  | Restricted 		    |  11      |   0     |
++	+------+----------------------------+----------+---------+
++	| ZZF  | Custom US/Canada 	    |  11      |   8     |
++	+------+----------------------------+----------+---------+
++	| ZZD  | Rest of World 		    |  13      |   0     |
++	+------+----------------------------+----------+---------+
++	| ZZA  | Custom USA & Europe & High |  11      |  13     |
++	+------+----------------------------+----------+---------+
++	| ZZB  | Custom NA & Europe	    |  11      |  13     |
++	+------+----------------------------+----------+---------+
++	| ZZC  | Custom Japan 		    |  11      |   4     |
++	+------+----------------------------+----------+---------+
++	| ZZM  | Custom  		    |  11      |   0     |
++	+------+----------------------------+----------+---------+
++	| ZZE  | Europe 		    |  13      |  19     |
++	+------+----------------------------+----------+---------+
++	| ZZJ  | Custom Japan 		    |  14      |   4     |
++	+------+----------------------------+----------+---------+
++	| ZZR  | Rest of World		    |  14      |   0     |
++	+------+----------------------------+----------+---------+
++	| ZZH  | High Band		    |  13      |   4     |
++	+------+----------------------------+----------+---------+
++	| ZZG  | Custom Europe		    |  13      |   4     |
++	+------+----------------------------+----------+---------+
++	| ZZK  | Europe 		    |  13      |  24     |
++	+------+----------------------------+----------+---------+
++	| ZZL  | Europe 		    |  11      |  13     |
++	+------+----------------------------+----------+---------+
+ 
+----	Restricted			11 	 	 0
+-ZZF	Custom US/Canada		11	 	 8
+-ZZD	Rest of World			13	 	 0
+-ZZA	Custom USA & Europe & High	11		13
+-ZZB	Custom NA & Europe    		11		13
+-ZZC	Custom Japan			11	 	 4
+-ZZM	Custom 				11	 	 0
+-ZZE	Europe				13		19
+-ZZJ	Custom Japan			14	 	 4
+-ZZR	Rest of World			14	 	 0
+-ZZH	High Band			13	 	 4
+-ZZG	Custom Europe			13	 	 4
+-ZZK	Europe 				13		24
+-ZZL	Europe				11		13
++2.  Ad-Hoc Networking
++=====================
+ 
+-
+-2.   Ad-Hoc Networking
+------------------------------------------------
+-
+-When using a device in an Ad-Hoc network, it is useful to understand the 
+-sequence and requirements for the driver to be able to create, join, or 
++When using a device in an Ad-Hoc network, it is useful to understand the
++sequence and requirements for the driver to be able to create, join, or
+ merge networks.
+ 
+-The following attempts to provide enough information so that you can 
+-have a consistent experience while using the driver as a member of an 
++The following attempts to provide enough information so that you can
++have a consistent experience while using the driver as a member of an
+ Ad-Hoc network.
+ 
+ 2.1. Joining an Ad-Hoc Network
+------------------------------------------------
++------------------------------
+ 
+-The easiest way to get onto an Ad-Hoc network is to join one that 
++The easiest way to get onto an Ad-Hoc network is to join one that
+ already exists.
+ 
+ 2.2. Creating an Ad-Hoc Network
+------------------------------------------------
++-------------------------------
+ 
+ An Ad-Hoc networks is created using the syntax of the Wireless tool.
+ 
+@@ -371,21 +423,21 @@ For Example:
+ iwconfig eth1 mode ad-hoc essid testing channel 2
+ 
+ 2.3. Merging Ad-Hoc Networks
+------------------------------------------------
++----------------------------
+ 
+ 
+-3.  Interaction with Wireless Tools
+------------------------------------------------
++3. Interaction with Wireless Tools
++==================================
+ 
+ 3.1 iwconfig mode
+------------------------------------------------
++-----------------
+ 
+ When configuring the mode of the adapter, all run-time configured parameters
+ are reset to the value used when the module was loaded.  This includes
+ channels, rates, ESSID, etc.
+ 
+ 3.2 iwconfig sens
+------------------------------------------------
++-----------------
+ 
+ The 'iwconfig ethX sens XX' command will not set the signal sensitivity
+ threshold, as described in iwconfig documentation, but rather the number
+@@ -394,35 +446,35 @@ to another access point. At the same time, it will set the disassociation
+ threshold to 3 times the given value.
+ 
+ 
+-4.   About the Version Numbers
+------------------------------------------------
++4.  About the Version Numbers
++=============================
+ 
+-Due to the nature of open source development projects, there are 
+-frequently changes being incorporated that have not gone through 
+-a complete validation process.  These changes are incorporated into 
++Due to the nature of open source development projects, there are
++frequently changes being incorporated that have not gone through
++a complete validation process.  These changes are incorporated into
+ development snapshot releases.
+ 
+-Releases are numbered with a three level scheme: 
++Releases are numbered with a three level scheme:
+ 
+ 	major.minor.development
+ 
+ Any version where the 'development' portion is 0 (for example
+-1.0.0, 1.1.0, etc.) indicates a stable version that will be made 
++1.0.0, 1.1.0, etc.) indicates a stable version that will be made
+ available for kernel inclusion.
+ 
+ Any version where the 'development' portion is not a 0 (for
+ example 1.0.1, 1.1.5, etc.) indicates a development version that is
+-being made available for testing and cutting edge users.  The stability 
++being made available for testing and cutting edge users.  The stability
+ and functionality of the development releases are not know.  We make
+ efforts to try and keep all snapshots reasonably stable, but due to the
+-frequency of their release, and the desire to get those releases 
++frequency of their release, and the desire to get those releases
+ available as quickly as possible, unknown anomalies should be expected.
+ 
+ The major version number will be incremented when significant changes
+ are made to the driver.  Currently, there are no major changes planned.
+ 
+-5.  Firmware installation
+-----------------------------------------------
++5. Firmware installation
++========================
+ 
+ The driver requires a firmware image, download it and extract the
+ files under /lib/firmware (or wherever your hotplug's firmware.agent
+@@ -433,40 +485,42 @@ The firmware can be downloaded from the following URL:
+     http://ipw2200.sf.net/
+ 
+ 
+-6.  Support
+------------------------------------------------
++6. Support
 +==========
-+
-+Under consideration two examples with AM572x EVM running cpsw driver
-+in dual_emac mode.
-+
-+Several prerequisites:
-+
-+- TX queues must be rated starting from txq0 that has highest priority
-+- Traffic classes are used starting from 0, that has highest priority
-+- CBS shapers should be used with rated queues
-+- The bandwidth for CBS shapers has to be set a little bit more then
-+  potential incoming rate, thus, rate of all incoming tx queues has
-+  to be a little less
-+- Real rates can differ, due to discreetness
-+- Map skb-priority to txq is not enough, also skb-priority to l2 prio
-+  map has to be created with ip or vconfig tool
-+- Any l2/socket prio (0 - 7) for classes can be used, but for
-+  simplicity default values are used: 3 and 2
-+- only 2 classes tested: A and B, but checked and can work with more,
-+  maximum allowed 4, but only for 3 rate can be set.
-+
-+Test setup for examples
-+=======================
-+
-+::
-+
-+					+-------------------------------+
-+					|--+                            |
-+					|  |      Workstation0          |
-+					|E |  MAC 18:03:73:66:87:42     |
-+    +-----------------------------+  +--|t |                            |
-+    |                    | 1  | E |  |  |h |./tsn_listener -d \         |
-+    |  Target board:     | 0  | t |--+  |0 | 18:03:73:66:87:42 -i eth0 \|
-+    |  AM572x EVM        | 0  | h |     |  | -s 1500                    |
-+    |                    | 0  | 0 |     |--+                            |
-+    |  Only 2 classes:   |Mb  +---|     +-------------------------------+
-+    |  class A, class B  |        |
-+    |                    |    +---|     +-------------------------------+
-+    |                    | 1  | E |     |--+                            |
-+    |                    | 0  | t |     |  |      Workstation1          |
-+    |                    | 0  | h |--+  |E |  MAC 20:cf:30:85:7d:fd     |
-+    |                    |Mb  | 1 |  +--|t |                            |
-+    +-----------------------------+     |h |./tsn_listener -d \         |
-+					|0 | 20:cf:30:85:7d:fd -i eth0 \|
-+					|  | -s 1500                    |
-+					|--+                            |
-+					+-------------------------------+
-+
-+
-+Example 1: One port tx AVB configuration scheme for target board
-+----------------------------------------------------------------
-+
-+(prints and scheme for AM572x evm, applicable for single port boards)
-+
-+- tc - traffic class
-+- txq - transmit queue
-+- p - priority
-+- f - fifo (cpsw fifo)
-+- S - shaper configured
-+
-+::
-+
-+    +------------------------------------------------------------------+ u
-+    | +---------------+  +---------------+  +------+ +------+          | s
-+    | |               |  |               |  |      | |      |          | e
-+    | | App 1         |  | App 2         |  | Apps | | Apps |          | r
-+    | | Class A       |  | Class B       |  | Rest | | Rest |          |
-+    | | Eth0          |  | Eth0          |  | Eth0 | | Eth1 |          | s
-+    | | VLAN100       |  | VLAN100       |  |   |  | |   |  |          | p
-+    | | 40 Mb/s       |  | 20 Mb/s       |  |   |  | |   |  |          | a
-+    | | SO_PRIORITY=3 |  | SO_PRIORITY=2 |  |   |  | |   |  |          | c
-+    | |   |           |  |   |           |  |   |  | |   |  |          | e
-+    | +---|-----------+  +---|-----------+  +---|--+ +---|--+          |
-+    +-----|------------------|------------------|--------|-------------+
-+	+-+     +------------+                  |        |
-+	|       |             +-----------------+     +--+
-+	|       |             |                       |
-+    +---|-------|-------------|-----------------------|----------------+
-+    | +----+ +----+ +----+ +----+                   +----+             |
-+    | | p3 | | p2 | | p1 | | p0 |                   | p0 |             | k
-+    | \    / \    / \    / \    /                   \    /             | e
-+    |  \  /   \  /   \  /   \  /                     \  /              | r
-+    |   \/     \/     \/     \/                       \/               | n
-+    |    |     |             |                        |                | e
-+    |    |     |       +-----+                        |                | l
-+    |    |     |       |                              |                |
-+    | +----+ +----+ +----+                          +----+             | s
-+    | |tc0 | |tc1 | |tc2 |                          |tc0 |             | p
-+    | \    / \    / \    /                          \    /             | a
-+    |  \  /   \  /   \  /                            \  /              | c
-+    |   \/     \/     \/                              \/               | e
-+    |   |      |       +-----+                        |                |
-+    |   |      |       |     |                        |                |
-+    |   |      |       |     |                        |                |
-+    |   |      |       |     |                        |                |
-+    | +----+ +----+ +----+ +----+                   +----+             |
-+    | |txq0| |txq1| |txq2| |txq3|                   |txq4|             |
-+    | \    / \    / \    / \    /                   \    /             |
-+    |  \  /   \  /   \  /   \  /                     \  /              |
-+    |   \/     \/     \/     \/                       \/               |
-+    | +-|------|------|------|--+                  +--|--------------+ |
-+    | | |      |      |      |  | Eth0.100         |  |     Eth1     | |
-+    +---|------|------|------|------------------------|----------------+
-+	|      |      |      |                        |
-+	p      p      p      p                        |
-+	3      2      0-1, 4-7  <- L2 priority        |
-+	|      |      |      |                        |
-+	|      |      |      |                        |
-+    +---|------|------|------|------------------------|----------------+
-+    |   |      |      |      |             |----------+                |
-+    | +----+ +----+ +----+ +----+       +----+                         |
-+    | |dma7| |dma6| |dma5| |dma4|       |dma3|                         |
-+    | \    / \    / \    / \    /       \    /                         | c
-+    |  \S /   \S /   \  /   \  /         \  /                          | p
-+    |   \/     \/     \/     \/           \/                           | s
-+    |   |      |      | +-----            |                            | w
-+    |   |      |      | |                 |                            |
-+    |   |      |      | |                 |                            | d
-+    | +----+ +----+ +----+p            p+----+                         | r
-+    | |    | |    | |    |o            o|    |                         | i
-+    | | f3 | | f2 | | f0 |r            r| f0 |                         | v
-+    | |tc0 | |tc1 | |tc2 |t            t|tc0 |                         | e
-+    | \CBS / \CBS / \CBS /1            2\CBS /                         | r
-+    |  \S /   \S /   \  /                \  /                          |
-+    |   \/     \/     \/                  \/                           |
-+    +------------------------------------------------------------------+
-+
-+
-+1) ::
-+
-+
-+	// Add 4 tx queues, for interface Eth0, and 1 tx queue for Eth1
-+	$ ethtool -L eth0 rx 1 tx 5
-+	rx unmodified, ignoring
-+
-+2) ::
-+
-+	// Check if num of queues is set correctly:
-+	$ ethtool -l eth0
-+	Channel parameters for eth0:
-+	Pre-set maximums:
-+	RX:             8
-+	TX:             8
-+	Other:          0
-+	Combined:       0
-+	Current hardware settings:
-+	RX:             1
-+	TX:             5
-+	Other:          0
-+	Combined:       0
-+
-+3) ::
-+
-+	// TX queues must be rated starting from 0, so set bws for tx0 and tx1
-+	// Set rates 40 and 20 Mb/s appropriately.
-+	// Pay attention, real speed can differ a bit due to discreetness.
-+	// Leave last 2 tx queues not rated.
-+	$ echo 40 > /sys/class/net/eth0/queues/tx-0/tx_maxrate
-+	$ echo 20 > /sys/class/net/eth0/queues/tx-1/tx_maxrate
-+
-+4) ::
-+
-+	// Check maximum rate of tx (cpdma) queues:
-+	$ cat /sys/class/net/eth0/queues/tx-*/tx_maxrate
-+	40
-+	20
-+	0
-+	0
-+	0
-+
-+5) ::
-+
-+	// Map skb->priority to traffic class:
-+	// 3pri -> tc0, 2pri -> tc1, (0,1,4-7)pri -> tc2
-+	// Map traffic class to transmit queue:
-+	// tc0 -> txq0, tc1 -> txq1, tc2 -> (txq2, txq3)
-+	$ tc qdisc replace dev eth0 handle 100: parent root mqprio num_tc 3 \
-+	map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 queues 1@0 1@1 2@2 hw 1
-+
-+5a) ::
-+
-+	// As two interface sharing same set of tx queues, assign all traffic
-+	// coming to interface Eth1 to separate queue in order to not mix it
-+	// with traffic from interface Eth0, so use separate txq to send
-+	// packets to Eth1, so all prio -> tc0 and tc0 -> txq4
-+	// Here hw 0, so here still default configuration for eth1 in hw
-+	$ tc qdisc replace dev eth1 handle 100: parent root mqprio num_tc 1 \
-+	map 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 queues 1@4 hw 0
-+
-+6) ::
-+
-+	// Check classes settings
-+	$ tc -g class show dev eth0
-+	+---(100:ffe2) mqprio
-+	|    +---(100:3) mqprio
-+	|    +---(100:4) mqprio
-+	|
-+	+---(100:ffe1) mqprio
-+	|    +---(100:2) mqprio
-+	|
-+	+---(100:ffe0) mqprio
-+	    +---(100:1) mqprio
-+
-+	$ tc -g class show dev eth1
-+	+---(100:ffe0) mqprio
-+	    +---(100:5) mqprio
-+
-+7) ::
-+
-+	// Set rate for class A - 41 Mbit (tc0, txq0) using CBS Qdisc
-+	// Set it +1 Mb for reserve (important!)
-+	// here only idle slope is important, others arg are ignored
-+	// Pay attention, real speed can differ a bit due to discreetness
-+	$ tc qdisc add dev eth0 parent 100:1 cbs locredit -1438 \
-+	hicredit 62 sendslope -959000 idleslope 41000 offload 1
-+	net eth0: set FIFO3 bw = 50
-+
-+8) ::
-+
-+	// Set rate for class B - 21 Mbit (tc1, txq1) using CBS Qdisc:
-+	// Set it +1 Mb for reserve (important!)
-+	$ tc qdisc add dev eth0 parent 100:2 cbs locredit -1468 \
-+	hicredit 65 sendslope -979000 idleslope 21000 offload 1
-+	net eth0: set FIFO2 bw = 30
-+
-+9) ::
-+
-+	// Create vlan 100 to map sk->priority to vlan qos
-+	$ ip link add link eth0 name eth0.100 type vlan id 100
-+	8021q: 802.1Q VLAN Support v1.8
-+	8021q: adding VLAN 0 to HW filter on device eth0
-+	8021q: adding VLAN 0 to HW filter on device eth1
-+	net eth0: Adding vlanid 100 to vlan filter
-+
-+10) ::
-+
-+	// Map skb->priority to L2 prio, 1 to 1
-+	$ ip link set eth0.100 type vlan \
-+	egress 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
-+
-+11) ::
-+
-+	// Check egress map for vlan 100
-+	$ cat /proc/net/vlan/eth0.100
-+	[...]
-+	INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
-+	EGRESS priority mappings: 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
-+
-+12) ::
-+
-+	// Run your appropriate tools with socket option "SO_PRIORITY"
-+	// to 3 for class A and/or to 2 for class B
-+	// (I took at https://www.spinics.net/lists/netdev/msg460869.html)
-+	./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p3 -s 1500&
-+	./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p2 -s 1500&
-+
-+13) ::
-+
-+	// run your listener on workstation (should be in same vlan)
-+	// (I took at https://www.spinics.net/lists/netdev/msg460869.html)
-+	./tsn_listener -d 18:03:73:66:87:42 -i enp5s0 -s 1500
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39000 kbps
-+
-+14) ::
-+
-+	// Restore default configuration if needed
-+	$ ip link del eth0.100
-+	$ tc qdisc del dev eth1 root
-+	$ tc qdisc del dev eth0 root
-+	net eth0: Prev FIFO2 is shaped
-+	net eth0: set FIFO3 bw = 0
-+	net eth0: set FIFO2 bw = 0
-+	$ ethtool -L eth0 rx 1 tx 1
-+
-+Example 2: Two port tx AVB configuration scheme for target board
-+----------------------------------------------------------------
-+
-+(prints and scheme for AM572x evm, for dual emac boards only)
-+
-+::
-+
-+    +------------------------------------------------------------------+ u
-+    | +----------+  +----------+  +------+  +----------+  +----------+ | s
-+    | |          |  |          |  |      |  |          |  |          | | e
-+    | | App 1    |  | App 2    |  | Apps |  | App 3    |  | App 4    | | r
-+    | | Class A  |  | Class B  |  | Rest |  | Class B  |  | Class A  | |
-+    | | Eth0     |  | Eth0     |  |   |  |  | Eth1     |  | Eth1     | | s
-+    | | VLAN100  |  | VLAN100  |  |   |  |  | VLAN100  |  | VLAN100  | | p
-+    | | 40 Mb/s  |  | 20 Mb/s  |  |   |  |  | 10 Mb/s  |  | 30 Mb/s  | | a
-+    | | SO_PRI=3 |  | SO_PRI=2 |  |   |  |  | SO_PRI=3 |  | SO_PRI=2 | | c
-+    | |   |      |  |   |      |  |   |  |  |   |      |  |   |      | | e
-+    | +---|------+  +---|------+  +---|--+  +---|------+  +---|------+ |
-+    +-----|-------------|-------------|---------|-------------|--------+
-+	+-+     +-------+             |         +----------+  +----+
-+	|       |             +-------+------+             |       |
-+	|       |             |              |             |       |
-+    +---|-------|-------------|--------------|-------------|-------|---+
-+    | +----+ +----+ +----+ +----+          +----+ +----+ +----+ +----+ |
-+    | | p3 | | p2 | | p1 | | p0 |          | p0 | | p1 | | p2 | | p3 | | k
-+    | \    / \    / \    / \    /          \    / \    / \    / \    / | e
-+    |  \  /   \  /   \  /   \  /            \  /   \  /   \  /   \  /  | r
-+    |   \/     \/     \/     \/              \/     \/     \/     \/   | n
-+    |   |      |             |                |             |      |   | e
-+    |   |      |        +----+                +----+        |      |   | l
-+    |   |      |        |                          |        |      |   |
-+    | +----+ +----+ +----+                        +----+ +----+ +----+ | s
-+    | |tc0 | |tc1 | |tc2 |                        |tc2 | |tc1 | |tc0 | | p
-+    | \    / \    / \    /                        \    / \    / \    / | a
-+    |  \  /   \  /   \  /                          \  /   \  /   \  /  | c
-+    |   \/     \/     \/                            \/     \/     \/   | e
-+    |   |      |       +-----+                +-----+      |       |   |
-+    |   |      |       |     |                |     |      |       |   |
-+    |   |      |       |     |                |     |      |       |   |
-+    |   |      |       |     |    E      E    |     |      |       |   |
-+    | +----+ +----+ +----+ +----+ t      t +----+ +----+ +----+ +----+ |
-+    | |txq0| |txq1| |txq4| |txq5| h      h |txq6| |txq7| |txq3| |txq2| |
-+    | \    / \    / \    / \    / 0      1 \    / \    / \    / \    / |
-+    |  \  /   \  /   \  /   \  /  .      .  \  /   \  /   \  /   \  /  |
-+    |   \/     \/     \/     \/   1      1   \/     \/     \/     \/   |
-+    | +-|------|------|------|--+ 0      0 +-|------|------|------|--+ |
-+    | | |      |      |      |  | 0      0 | |      |      |      |  | |
-+    +---|------|------|------|---------------|------|------|------|----+
-+	|      |      |      |               |      |      |      |
-+	p      p      p      p               p      p      p      p
-+	3      2      0-1, 4-7   <-L2 pri->  0-1, 4-7      2      3
-+	|      |      |      |               |      |      |      |
-+	|      |      |      |               |      |      |      |
-+    +---|------|------|------|---------------|------|------|------|----+
-+    |   |      |      |      |               |      |      |      |    |
-+    | +----+ +----+ +----+ +----+          +----+ +----+ +----+ +----+ |
-+    | |dma7| |dma6| |dma3| |dma2|          |dma1| |dma0| |dma4| |dma5| |
-+    | \    / \    / \    / \    /          \    / \    / \    / \    / | c
-+    |  \S /   \S /   \  /   \  /            \  /   \  /   \S /   \S /  | p
-+    |   \/     \/     \/     \/              \/     \/     \/     \/   | s
-+    |   |      |      | +-----                |      |      |      |   | w
-+    |   |      |      | |                     +----+ |      |      |   |
-+    |   |      |      | |                          | |      |      |   | d
-+    | +----+ +----+ +----+p                      p+----+ +----+ +----+ | r
-+    | |    | |    | |    |o                      o|    | |    | |    | | i
-+    | | f3 | | f2 | | f0 |r        CPSW          r| f3 | | f2 | | f0 | | v
-+    | |tc0 | |tc1 | |tc2 |t                      t|tc0 | |tc1 | |tc2 | | e
-+    | \CBS / \CBS / \CBS /1                      2\CBS / \CBS / \CBS / | r
-+    |  \S /   \S /   \  /                          \S /   \S /   \  /  |
-+    |   \/     \/     \/                            \/     \/     \/   |
-+    +------------------------------------------------------------------+
-+    ========================================Eth==========================>
-+
-+1) ::
-+
-+	// Add 8 tx queues, for interface Eth0, but they are common, so are accessed
-+	// by two interfaces Eth0 and Eth1.
-+	$ ethtool -L eth1 rx 1 tx 8
-+	rx unmodified, ignoring
-+
-+2) ::
-+
-+	// Check if num of queues is set correctly:
-+	$ ethtool -l eth0
-+	Channel parameters for eth0:
-+	Pre-set maximums:
-+	RX:             8
-+	TX:             8
-+	Other:          0
-+	Combined:       0
-+	Current hardware settings:
-+	RX:             1
-+	TX:             8
-+	Other:          0
-+	Combined:       0
-+
-+3) ::
-+
-+	// TX queues must be rated starting from 0, so set bws for tx0 and tx1 for Eth0
-+	// and for tx2 and tx3 for Eth1. That is, rates 40 and 20 Mb/s appropriately
-+	// for Eth0 and 30 and 10 Mb/s for Eth1.
-+	// Real speed can differ a bit due to discreetness
-+	// Leave last 4 tx queues as not rated
-+	$ echo 40 > /sys/class/net/eth0/queues/tx-0/tx_maxrate
-+	$ echo 20 > /sys/class/net/eth0/queues/tx-1/tx_maxrate
-+	$ echo 30 > /sys/class/net/eth1/queues/tx-2/tx_maxrate
-+	$ echo 10 > /sys/class/net/eth1/queues/tx-3/tx_maxrate
-+
-+4) ::
-+
-+	// Check maximum rate of tx (cpdma) queues:
-+	$ cat /sys/class/net/eth0/queues/tx-*/tx_maxrate
-+	40
-+	20
-+	30
-+	10
-+	0
-+	0
-+	0
-+	0
-+
-+5) ::
-+
-+	// Map skb->priority to traffic class for Eth0:
-+	// 3pri -> tc0, 2pri -> tc1, (0,1,4-7)pri -> tc2
-+	// Map traffic class to transmit queue:
-+	// tc0 -> txq0, tc1 -> txq1, tc2 -> (txq4, txq5)
-+	$ tc qdisc replace dev eth0 handle 100: parent root mqprio num_tc 3 \
-+	map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 queues 1@0 1@1 2@4 hw 1
-+
-+6) ::
-+
-+	// Check classes settings
-+	$ tc -g class show dev eth0
-+	+---(100:ffe2) mqprio
-+	|    +---(100:5) mqprio
-+	|    +---(100:6) mqprio
-+	|
-+	+---(100:ffe1) mqprio
-+	|    +---(100:2) mqprio
-+	|
-+	+---(100:ffe0) mqprio
-+	    +---(100:1) mqprio
-+
-+7) ::
-+
-+	// Set rate for class A - 41 Mbit (tc0, txq0) using CBS Qdisc for Eth0
-+	// here only idle slope is important, others ignored
-+	// Real speed can differ a bit due to discreetness
-+	$ tc qdisc add dev eth0 parent 100:1 cbs locredit -1470 \
-+	hicredit 62 sendslope -959000 idleslope 41000 offload 1
-+	net eth0: set FIFO3 bw = 50
-+
-+8) ::
-+
-+	// Set rate for class B - 21 Mbit (tc1, txq1) using CBS Qdisc for Eth0
-+	$ tc qdisc add dev eth0 parent 100:2 cbs locredit -1470 \
-+	hicredit 65 sendslope -979000 idleslope 21000 offload 1
-+	net eth0: set FIFO2 bw = 30
-+
-+9) ::
-+
-+	// Create vlan 100 to map sk->priority to vlan qos for Eth0
-+	$ ip link add link eth0 name eth0.100 type vlan id 100
-+	net eth0: Adding vlanid 100 to vlan filter
-+
-+10) ::
-+
-+	// Map skb->priority to L2 prio for Eth0.100, one to one
-+	$ ip link set eth0.100 type vlan \
-+	egress 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
-+
-+11) ::
-+
-+	// Check egress map for vlan 100
-+	$ cat /proc/net/vlan/eth0.100
-+	[...]
-+	INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
-+	EGRESS priority mappings: 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
-+
-+12) ::
-+
-+	// Map skb->priority to traffic class for Eth1:
-+	// 3pri -> tc0, 2pri -> tc1, (0,1,4-7)pri -> tc2
-+	// Map traffic class to transmit queue:
-+	// tc0 -> txq2, tc1 -> txq3, tc2 -> (txq6, txq7)
-+	$ tc qdisc replace dev eth1 handle 100: parent root mqprio num_tc 3 \
-+	map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 queues 1@2 1@3 2@6 hw 1
-+
-+13) ::
-+
-+	// Check classes settings
-+	$ tc -g class show dev eth1
-+	+---(100:ffe2) mqprio
-+	|    +---(100:7) mqprio
-+	|    +---(100:8) mqprio
-+	|
-+	+---(100:ffe1) mqprio
-+	|    +---(100:4) mqprio
-+	|
-+	+---(100:ffe0) mqprio
-+	    +---(100:3) mqprio
-+
-+14) ::
-+
-+	// Set rate for class A - 31 Mbit (tc0, txq2) using CBS Qdisc for Eth1
-+	// here only idle slope is important, others ignored, but calculated
-+	// for interface speed - 100Mb for eth1 port.
-+	// Set it +1 Mb for reserve (important!)
-+	$ tc qdisc add dev eth1 parent 100:3 cbs locredit -1035 \
-+	hicredit 465 sendslope -69000 idleslope 31000 offload 1
-+	net eth1: set FIFO3 bw = 31
-+
-+15) ::
-+
-+	// Set rate for class B - 11 Mbit (tc1, txq3) using CBS Qdisc for Eth1
-+	// Set it +1 Mb for reserve (important!)
-+	$ tc qdisc add dev eth1 parent 100:4 cbs locredit -1335 \
-+	hicredit 405 sendslope -89000 idleslope 11000 offload 1
-+	net eth1: set FIFO2 bw = 11
-+
-+16) ::
-+
-+	// Create vlan 100 to map sk->priority to vlan qos for Eth1
-+	$ ip link add link eth1 name eth1.100 type vlan id 100
-+	net eth1: Adding vlanid 100 to vlan filter
-+
-+17) ::
-+
-+	// Map skb->priority to L2 prio for Eth1.100, one to one
-+	$ ip link set eth1.100 type vlan \
-+	egress 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
-+
-+18) ::
-+
-+	// Check egress map for vlan 100
-+	$ cat /proc/net/vlan/eth1.100
-+	[...]
-+	INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
-+	EGRESS priority mappings: 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
-+
-+19) ::
-+
-+	// Run appropriate tools with socket option "SO_PRIORITY" to 3
-+	// for class A and to 2 for class B. For both interfaces
-+	./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p2 -s 1500&
-+	./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p3 -s 1500&
-+	./tsn_talker -d 20:cf:30:85:7d:fd -i eth1.100 -p2 -s 1500&
-+	./tsn_talker -d 20:cf:30:85:7d:fd -i eth1.100 -p3 -s 1500&
-+
-+20) ::
-+
-+	// run your listener on workstation (should be in same vlan)
-+	// (I took at https://www.spinics.net/lists/netdev/msg460869.html)
-+	./tsn_listener -d 18:03:73:66:87:42 -i enp5s0 -s 1500
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39012 kbps
-+	Receiving data rate: 39000 kbps
-+
-+21) ::
-+
-+	// Restore default configuration if needed
-+	$ ip link del eth1.100
-+	$ ip link del eth0.100
-+	$ tc qdisc del dev eth1 root
-+	net eth1: Prev FIFO2 is shaped
-+	net eth1: set FIFO3 bw = 0
-+	net eth1: set FIFO2 bw = 0
-+	$ tc qdisc del dev eth0 root
-+	net eth0: Prev FIFO2 is shaped
-+	net eth0: set FIFO3 bw = 0
-+	net eth0: set FIFO2 bw = 0
-+	$ ethtool -L eth0 rx 1 tx 1
-diff --git a/Documentation/networking/device_drivers/ti/cpsw.txt b/Documentation/networking/device_drivers/ti/cpsw.txt
-deleted file mode 100644
-index d4d4c0751a09..000000000000
---- a/Documentation/networking/device_drivers/ti/cpsw.txt
-+++ /dev/null
-@@ -1,541 +0,0 @@
--* Texas Instruments CPSW ethernet driver
--
--Multiqueue & CBS & MQPRIO
--=====================================================================
--=====================================================================
--
--The cpsw has 3 CBS shapers for each external ports. This document
--describes MQPRIO and CBS Qdisc offload configuration for cpsw driver
--based on examples. It potentially can be used in audio video bridging
--(AVB) and time sensitive networking (TSN).
--
--The following examples were tested on AM572x EVM and BBB boards.
--
--Test setup
--==========
--
--Under consideration two examples with AM572x EVM running cpsw driver
--in dual_emac mode.
--
--Several prerequisites:
--- TX queues must be rated starting from txq0 that has highest priority
--- Traffic classes are used starting from 0, that has highest priority
--- CBS shapers should be used with rated queues
--- The bandwidth for CBS shapers has to be set a little bit more then
--  potential incoming rate, thus, rate of all incoming tx queues has
--  to be a little less
--- Real rates can differ, due to discreetness
--- Map skb-priority to txq is not enough, also skb-priority to l2 prio
--  map has to be created with ip or vconfig tool
--- Any l2/socket prio (0 - 7) for classes can be used, but for
--  simplicity default values are used: 3 and 2
--- only 2 classes tested: A and B, but checked and can work with more,
--  maximum allowed 4, but only for 3 rate can be set.
--
--Test setup for examples
--=======================
--                                    +-------------------------------+
--                                    |--+                            |
--                                    |  |      Workstation0          |
--                                    |E |  MAC 18:03:73:66:87:42     |
--+-----------------------------+  +--|t |                            |
--|                    | 1  | E |  |  |h |./tsn_listener -d \         |
--|  Target board:     | 0  | t |--+  |0 | 18:03:73:66:87:42 -i eth0 \|
--|  AM572x EVM        | 0  | h |     |  | -s 1500                    |
--|                    | 0  | 0 |     |--+                            |
--|  Only 2 classes:   |Mb  +---|     +-------------------------------+
--|  class A, class B  |        |
--|                    |    +---|     +-------------------------------+
--|                    | 1  | E |     |--+                            |
--|                    | 0  | t |     |  |      Workstation1          |
--|                    | 0  | h |--+  |E |  MAC 20:cf:30:85:7d:fd     |
--|                    |Mb  | 1 |  +--|t |                            |
--+-----------------------------+     |h |./tsn_listener -d \         |
--                                    |0 | 20:cf:30:85:7d:fd -i eth0 \|
--                                    |  | -s 1500                    |
--                                    |--+                            |
--                                    +-------------------------------+
--
--*********************************************************************
--*********************************************************************
--*********************************************************************
--Example 1: One port tx AVB configuration scheme for target board
------------------------------------------------------------------------
--(prints and scheme for AM572x evm, applicable for single port boards)
--
--tc - traffic class
--txq - transmit queue
--p - priority
--f - fifo (cpsw fifo)
--S - shaper configured
--
--+------------------------------------------------------------------+ u
--| +---------------+  +---------------+  +------+ +------+          | s
--| |               |  |               |  |      | |      |          | e
--| | App 1         |  | App 2         |  | Apps | | Apps |          | r
--| | Class A       |  | Class B       |  | Rest | | Rest |          |
--| | Eth0          |  | Eth0          |  | Eth0 | | Eth1 |          | s
--| | VLAN100       |  | VLAN100       |  |   |  | |   |  |          | p
--| | 40 Mb/s       |  | 20 Mb/s       |  |   |  | |   |  |          | a
--| | SO_PRIORITY=3 |  | SO_PRIORITY=2 |  |   |  | |   |  |          | c
--| |   |           |  |   |           |  |   |  | |   |  |          | e
--| +---|-----------+  +---|-----------+  +---|--+ +---|--+          |
--+-----|------------------|------------------|--------|-------------+
--    +-+     +------------+                  |        |
--    |       |             +-----------------+     +--+
--    |       |             |                       |
--+---|-------|-------------|-----------------------|----------------+
--| +----+ +----+ +----+ +----+                   +----+             |
--| | p3 | | p2 | | p1 | | p0 |                   | p0 |             | k
--| \    / \    / \    / \    /                   \    /             | e
--|  \  /   \  /   \  /   \  /                     \  /              | r
--|   \/     \/     \/     \/                       \/               | n
--|    |     |             |                        |                | e
--|    |     |       +-----+                        |                | l
--|    |     |       |                              |                |
--| +----+ +----+ +----+                          +----+             | s
--| |tc0 | |tc1 | |tc2 |                          |tc0 |             | p
--| \    / \    / \    /                          \    /             | a
--|  \  /   \  /   \  /                            \  /              | c
--|   \/     \/     \/                              \/               | e
--|   |      |       +-----+                        |                |
--|   |      |       |     |                        |                |
--|   |      |       |     |                        |                |
--|   |      |       |     |                        |                |
--| +----+ +----+ +----+ +----+                   +----+             |
--| |txq0| |txq1| |txq2| |txq3|                   |txq4|             |
--| \    / \    / \    / \    /                   \    /             |
--|  \  /   \  /   \  /   \  /                     \  /              |
--|   \/     \/     \/     \/                       \/               |
--| +-|------|------|------|--+                  +--|--------------+ |
--| | |      |      |      |  | Eth0.100         |  |     Eth1     | |
--+---|------|------|------|------------------------|----------------+
--    |      |      |      |                        |
--    p      p      p      p                        |
--    3      2      0-1, 4-7  <- L2 priority        |
--    |      |      |      |                        |
--    |      |      |      |                        |
--+---|------|------|------|------------------------|----------------+
--|   |      |      |      |             |----------+                |
--| +----+ +----+ +----+ +----+       +----+                         |
--| |dma7| |dma6| |dma5| |dma4|       |dma3|                         |
--| \    / \    / \    / \    /       \    /                         | c
--|  \S /   \S /   \  /   \  /         \  /                          | p
--|   \/     \/     \/     \/           \/                           | s
--|   |      |      | +-----            |                            | w
--|   |      |      | |                 |                            |
--|   |      |      | |                 |                            | d
--| +----+ +----+ +----+p            p+----+                         | r
--| |    | |    | |    |o            o|    |                         | i
--| | f3 | | f2 | | f0 |r            r| f0 |                         | v
--| |tc0 | |tc1 | |tc2 |t            t|tc0 |                         | e
--| \CBS / \CBS / \CBS /1            2\CBS /                         | r
--|  \S /   \S /   \  /                \  /                          |
--|   \/     \/     \/                  \/                           |
--+------------------------------------------------------------------+
--========================================Eth==========================>
--
--1)
--// Add 4 tx queues, for interface Eth0, and 1 tx queue for Eth1
--$ ethtool -L eth0 rx 1 tx 5
--rx unmodified, ignoring
--
--2)
--// Check if num of queues is set correctly:
--$ ethtool -l eth0
--Channel parameters for eth0:
--Pre-set maximums:
--RX:             8
--TX:             8
--Other:          0
--Combined:       0
--Current hardware settings:
--RX:             1
--TX:             5
--Other:          0
--Combined:       0
--
--3)
--// TX queues must be rated starting from 0, so set bws for tx0 and tx1
--// Set rates 40 and 20 Mb/s appropriately.
--// Pay attention, real speed can differ a bit due to discreetness.
--// Leave last 2 tx queues not rated.
--$ echo 40 > /sys/class/net/eth0/queues/tx-0/tx_maxrate
--$ echo 20 > /sys/class/net/eth0/queues/tx-1/tx_maxrate
--
--4)
--// Check maximum rate of tx (cpdma) queues:
--$ cat /sys/class/net/eth0/queues/tx-*/tx_maxrate
--40
--20
--0
--0
--0
--
--5)
--// Map skb->priority to traffic class:
--// 3pri -> tc0, 2pri -> tc1, (0,1,4-7)pri -> tc2
--// Map traffic class to transmit queue:
--// tc0 -> txq0, tc1 -> txq1, tc2 -> (txq2, txq3)
--$ tc qdisc replace dev eth0 handle 100: parent root mqprio num_tc 3 \
--map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 queues 1@0 1@1 2@2 hw 1
--
--5a)
--// As two interface sharing same set of tx queues, assign all traffic
--// coming to interface Eth1 to separate queue in order to not mix it
--// with traffic from interface Eth0, so use separate txq to send
--// packets to Eth1, so all prio -> tc0 and tc0 -> txq4
--// Here hw 0, so here still default configuration for eth1 in hw
--$ tc qdisc replace dev eth1 handle 100: parent root mqprio num_tc 1 \
--map 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 queues 1@4 hw 0
--
--6)
--// Check classes settings
--$ tc -g class show dev eth0
--+---(100:ffe2) mqprio
--|    +---(100:3) mqprio
--|    +---(100:4) mqprio
--|
--+---(100:ffe1) mqprio
--|    +---(100:2) mqprio
--|
--+---(100:ffe0) mqprio
--     +---(100:1) mqprio
--
--$ tc -g class show dev eth1
--+---(100:ffe0) mqprio
--     +---(100:5) mqprio
--
--7)
--// Set rate for class A - 41 Mbit (tc0, txq0) using CBS Qdisc
--// Set it +1 Mb for reserve (important!)
--// here only idle slope is important, others arg are ignored
--// Pay attention, real speed can differ a bit due to discreetness
--$ tc qdisc add dev eth0 parent 100:1 cbs locredit -1438 \
--hicredit 62 sendslope -959000 idleslope 41000 offload 1
--net eth0: set FIFO3 bw = 50
--
--8)
--// Set rate for class B - 21 Mbit (tc1, txq1) using CBS Qdisc:
--// Set it +1 Mb for reserve (important!)
--$ tc qdisc add dev eth0 parent 100:2 cbs locredit -1468 \
--hicredit 65 sendslope -979000 idleslope 21000 offload 1
--net eth0: set FIFO2 bw = 30
--
--9)
--// Create vlan 100 to map sk->priority to vlan qos
--$ ip link add link eth0 name eth0.100 type vlan id 100
--8021q: 802.1Q VLAN Support v1.8
--8021q: adding VLAN 0 to HW filter on device eth0
--8021q: adding VLAN 0 to HW filter on device eth1
--net eth0: Adding vlanid 100 to vlan filter
--
--10)
--// Map skb->priority to L2 prio, 1 to 1
--$ ip link set eth0.100 type vlan \
--egress 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
--
--11)
--// Check egress map for vlan 100
--$ cat /proc/net/vlan/eth0.100
--[...]
--INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
--EGRESS priority mappings: 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
--
--12)
--// Run your appropriate tools with socket option "SO_PRIORITY"
--// to 3 for class A and/or to 2 for class B
--// (I took at https://www.spinics.net/lists/netdev/msg460869.html)
--./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p3 -s 1500&
--./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p2 -s 1500&
--
--13)
--// run your listener on workstation (should be in same vlan)
--// (I took at https://www.spinics.net/lists/netdev/msg460869.html)
--./tsn_listener -d 18:03:73:66:87:42 -i enp5s0 -s 1500
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39000 kbps
--
--14)
--// Restore default configuration if needed
--$ ip link del eth0.100
--$ tc qdisc del dev eth1 root
--$ tc qdisc del dev eth0 root
--net eth0: Prev FIFO2 is shaped
--net eth0: set FIFO3 bw = 0
--net eth0: set FIFO2 bw = 0
--$ ethtool -L eth0 rx 1 tx 1
--
--*********************************************************************
--*********************************************************************
--*********************************************************************
--Example 2: Two port tx AVB configuration scheme for target board
------------------------------------------------------------------------
--(prints and scheme for AM572x evm, for dual emac boards only)
--
--+------------------------------------------------------------------+ u
--| +----------+  +----------+  +------+  +----------+  +----------+ | s
--| |          |  |          |  |      |  |          |  |          | | e
--| | App 1    |  | App 2    |  | Apps |  | App 3    |  | App 4    | | r
--| | Class A  |  | Class B  |  | Rest |  | Class B  |  | Class A  | |
--| | Eth0     |  | Eth0     |  |   |  |  | Eth1     |  | Eth1     | | s
--| | VLAN100  |  | VLAN100  |  |   |  |  | VLAN100  |  | VLAN100  | | p
--| | 40 Mb/s  |  | 20 Mb/s  |  |   |  |  | 10 Mb/s  |  | 30 Mb/s  | | a
--| | SO_PRI=3 |  | SO_PRI=2 |  |   |  |  | SO_PRI=3 |  | SO_PRI=2 | | c
--| |   |      |  |   |      |  |   |  |  |   |      |  |   |      | | e
--| +---|------+  +---|------+  +---|--+  +---|------+  +---|------+ |
--+-----|-------------|-------------|---------|-------------|--------+
--    +-+     +-------+             |         +----------+  +----+
--    |       |             +-------+------+             |       |
--    |       |             |              |             |       |
--+---|-------|-------------|--------------|-------------|-------|---+
--| +----+ +----+ +----+ +----+          +----+ +----+ +----+ +----+ |
--| | p3 | | p2 | | p1 | | p0 |          | p0 | | p1 | | p2 | | p3 | | k
--| \    / \    / \    / \    /          \    / \    / \    / \    / | e
--|  \  /   \  /   \  /   \  /            \  /   \  /   \  /   \  /  | r
--|   \/     \/     \/     \/              \/     \/     \/     \/   | n
--|   |      |             |                |             |      |   | e
--|   |      |        +----+                +----+        |      |   | l
--|   |      |        |                          |        |      |   |
--| +----+ +----+ +----+                        +----+ +----+ +----+ | s
--| |tc0 | |tc1 | |tc2 |                        |tc2 | |tc1 | |tc0 | | p
--| \    / \    / \    /                        \    / \    / \    / | a
--|  \  /   \  /   \  /                          \  /   \  /   \  /  | c
--|   \/     \/     \/                            \/     \/     \/   | e
--|   |      |       +-----+                +-----+      |       |   |
--|   |      |       |     |                |     |      |       |   |
--|   |      |       |     |                |     |      |       |   |
--|   |      |       |     |    E      E    |     |      |       |   |
--| +----+ +----+ +----+ +----+ t      t +----+ +----+ +----+ +----+ |
--| |txq0| |txq1| |txq4| |txq5| h      h |txq6| |txq7| |txq3| |txq2| |
--| \    / \    / \    / \    / 0      1 \    / \    / \    / \    / |
--|  \  /   \  /   \  /   \  /  .      .  \  /   \  /   \  /   \  /  |
--|   \/     \/     \/     \/   1      1   \/     \/     \/     \/   |
--| +-|------|------|------|--+ 0      0 +-|------|------|------|--+ |
--| | |      |      |      |  | 0      0 | |      |      |      |  | |
--+---|------|------|------|---------------|------|------|------|----+
--    |      |      |      |               |      |      |      |
--    p      p      p      p               p      p      p      p
--    3      2      0-1, 4-7   <-L2 pri->  0-1, 4-7      2      3
--    |      |      |      |               |      |      |      |
--    |      |      |      |               |      |      |      |
--+---|------|------|------|---------------|------|------|------|----+
--|   |      |      |      |               |      |      |      |    |
--| +----+ +----+ +----+ +----+          +----+ +----+ +----+ +----+ |
--| |dma7| |dma6| |dma3| |dma2|          |dma1| |dma0| |dma4| |dma5| |
--| \    / \    / \    / \    /          \    / \    / \    / \    / | c
--|  \S /   \S /   \  /   \  /            \  /   \  /   \S /   \S /  | p
--|   \/     \/     \/     \/              \/     \/     \/     \/   | s
--|   |      |      | +-----                |      |      |      |   | w
--|   |      |      | |                     +----+ |      |      |   |
--|   |      |      | |                          | |      |      |   | d
--| +----+ +----+ +----+p                      p+----+ +----+ +----+ | r
--| |    | |    | |    |o                      o|    | |    | |    | | i
--| | f3 | | f2 | | f0 |r        CPSW          r| f3 | | f2 | | f0 | | v
--| |tc0 | |tc1 | |tc2 |t                      t|tc0 | |tc1 | |tc2 | | e
--| \CBS / \CBS / \CBS /1                      2\CBS / \CBS / \CBS / | r
--|  \S /   \S /   \  /                          \S /   \S /   \  /  |
--|   \/     \/     \/                            \/     \/     \/   |
--+------------------------------------------------------------------+
--========================================Eth==========================>
--
--1)
--// Add 8 tx queues, for interface Eth0, but they are common, so are accessed
--// by two interfaces Eth0 and Eth1.
--$ ethtool -L eth1 rx 1 tx 8
--rx unmodified, ignoring
--
--2)
--// Check if num of queues is set correctly:
--$ ethtool -l eth0
--Channel parameters for eth0:
--Pre-set maximums:
--RX:             8
--TX:             8
--Other:          0
--Combined:       0
--Current hardware settings:
--RX:             1
--TX:             8
--Other:          0
--Combined:       0
--
--3)
--// TX queues must be rated starting from 0, so set bws for tx0 and tx1 for Eth0
--// and for tx2 and tx3 for Eth1. That is, rates 40 and 20 Mb/s appropriately
--// for Eth0 and 30 and 10 Mb/s for Eth1.
--// Real speed can differ a bit due to discreetness
--// Leave last 4 tx queues as not rated
--$ echo 40 > /sys/class/net/eth0/queues/tx-0/tx_maxrate
--$ echo 20 > /sys/class/net/eth0/queues/tx-1/tx_maxrate
--$ echo 30 > /sys/class/net/eth1/queues/tx-2/tx_maxrate
--$ echo 10 > /sys/class/net/eth1/queues/tx-3/tx_maxrate
--
--4)
--// Check maximum rate of tx (cpdma) queues:
--$ cat /sys/class/net/eth0/queues/tx-*/tx_maxrate
--40
--20
--30
--10
--0
--0
--0
--0
--
--5)
--// Map skb->priority to traffic class for Eth0:
--// 3pri -> tc0, 2pri -> tc1, (0,1,4-7)pri -> tc2
--// Map traffic class to transmit queue:
--// tc0 -> txq0, tc1 -> txq1, tc2 -> (txq4, txq5)
--$ tc qdisc replace dev eth0 handle 100: parent root mqprio num_tc 3 \
--map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 queues 1@0 1@1 2@4 hw 1
--
--6)
--// Check classes settings
--$ tc -g class show dev eth0
--+---(100:ffe2) mqprio
--|    +---(100:5) mqprio
--|    +---(100:6) mqprio
--|
--+---(100:ffe1) mqprio
--|    +---(100:2) mqprio
--|
--+---(100:ffe0) mqprio
--     +---(100:1) mqprio
--
--7)
--// Set rate for class A - 41 Mbit (tc0, txq0) using CBS Qdisc for Eth0
--// here only idle slope is important, others ignored
--// Real speed can differ a bit due to discreetness
--$ tc qdisc add dev eth0 parent 100:1 cbs locredit -1470 \
--hicredit 62 sendslope -959000 idleslope 41000 offload 1
--net eth0: set FIFO3 bw = 50
--
--8)
--// Set rate for class B - 21 Mbit (tc1, txq1) using CBS Qdisc for Eth0
--$ tc qdisc add dev eth0 parent 100:2 cbs locredit -1470 \
--hicredit 65 sendslope -979000 idleslope 21000 offload 1
--net eth0: set FIFO2 bw = 30
--
--9)
--// Create vlan 100 to map sk->priority to vlan qos for Eth0
--$ ip link add link eth0 name eth0.100 type vlan id 100
--net eth0: Adding vlanid 100 to vlan filter
--
--10)
--// Map skb->priority to L2 prio for Eth0.100, one to one
--$ ip link set eth0.100 type vlan \
--egress 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
--
--11)
--// Check egress map for vlan 100
--$ cat /proc/net/vlan/eth0.100
--[...]
--INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
--EGRESS priority mappings: 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
--
--12)
--// Map skb->priority to traffic class for Eth1:
--// 3pri -> tc0, 2pri -> tc1, (0,1,4-7)pri -> tc2
--// Map traffic class to transmit queue:
--// tc0 -> txq2, tc1 -> txq3, tc2 -> (txq6, txq7)
--$ tc qdisc replace dev eth1 handle 100: parent root mqprio num_tc 3 \
--map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 queues 1@2 1@3 2@6 hw 1
--
--13)
--// Check classes settings
--$ tc -g class show dev eth1
--+---(100:ffe2) mqprio
--|    +---(100:7) mqprio
--|    +---(100:8) mqprio
--|
--+---(100:ffe1) mqprio
--|    +---(100:4) mqprio
--|
--+---(100:ffe0) mqprio
--     +---(100:3) mqprio
--
--14)
--// Set rate for class A - 31 Mbit (tc0, txq2) using CBS Qdisc for Eth1
--// here only idle slope is important, others ignored, but calculated
--// for interface speed - 100Mb for eth1 port.
--// Set it +1 Mb for reserve (important!)
--$ tc qdisc add dev eth1 parent 100:3 cbs locredit -1035 \
--hicredit 465 sendslope -69000 idleslope 31000 offload 1
--net eth1: set FIFO3 bw = 31
--
--15)
--// Set rate for class B - 11 Mbit (tc1, txq3) using CBS Qdisc for Eth1
--// Set it +1 Mb for reserve (important!)
--$ tc qdisc add dev eth1 parent 100:4 cbs locredit -1335 \
--hicredit 405 sendslope -89000 idleslope 11000 offload 1
--net eth1: set FIFO2 bw = 11
--
--16)
--// Create vlan 100 to map sk->priority to vlan qos for Eth1
--$ ip link add link eth1 name eth1.100 type vlan id 100
--net eth1: Adding vlanid 100 to vlan filter
--
--17)
--// Map skb->priority to L2 prio for Eth1.100, one to one
--$ ip link set eth1.100 type vlan \
--egress 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
--
--18)
--// Check egress map for vlan 100
--$ cat /proc/net/vlan/eth1.100
--[...]
--INGRESS priority mappings: 0:0  1:0  2:0  3:0  4:0  5:0  6:0 7:0
--EGRESS priority mappings: 0:0 1:1 2:2 3:3 4:4 5:5 6:6 7:7
--
--19)
--// Run appropriate tools with socket option "SO_PRIORITY" to 3
--// for class A and to 2 for class B. For both interfaces
--./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p2 -s 1500&
--./tsn_talker -d 18:03:73:66:87:42 -i eth0.100 -p3 -s 1500&
--./tsn_talker -d 20:cf:30:85:7d:fd -i eth1.100 -p2 -s 1500&
--./tsn_talker -d 20:cf:30:85:7d:fd -i eth1.100 -p3 -s 1500&
--
--20)
--// run your listener on workstation (should be in same vlan)
--// (I took at https://www.spinics.net/lists/netdev/msg460869.html)
--./tsn_listener -d 18:03:73:66:87:42 -i enp5s0 -s 1500
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39012 kbps
--Receiving data rate: 39000 kbps
--
--21)
--// Restore default configuration if needed
--$ ip link del eth1.100
--$ ip link del eth0.100
--$ tc qdisc del dev eth1 root
--net eth1: Prev FIFO2 is shaped
--net eth1: set FIFO3 bw = 0
--net eth1: set FIFO2 bw = 0
--$ tc qdisc del dev eth0 root
--net eth0: Prev FIFO2 is shaped
--net eth0: set FIFO3 bw = 0
--net eth0: set FIFO2 bw = 0
--$ ethtool -L eth0 rx 1 tx 1
+ 
+-For direct support of the 1.0.0 version, you can contact 
++For direct support of the 1.0.0 version, you can contact
+ http://supportmail.intel.com, or you can use the open source project
+ support.
+ 
+ For general information and support, go to:
+-	
++
+     http://ipw2200.sf.net/
+ 
+ 
+-7.  License
+------------------------------------------------
++7. License
++==========
+ 
+-  Copyright(c) 2003 - 2006 Intel Corporation. All rights reserved.
++  Copyright |copy| 2003 - 2006 Intel Corporation. All rights reserved.
+ 
+-  This program is free software; you can redistribute it and/or modify it 
+-  under the terms of the GNU General Public License version 2 as 
++  This program is free software; you can redistribute it and/or modify it
++  under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation.
+-  
+-  This program is distributed in the hope that it will be useful, but WITHOUT 
+-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
++
++  This program is distributed in the hope that it will be useful, but WITHOUT
++  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+   more details.
+-  
++
+   You should have received a copy of the GNU General Public License along with
+-  this program; if not, write to the Free Software Foundation, Inc., 59 
++  this program; if not, write to the Free Software Foundation, Inc., 59
+   Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-  
++
+   The full GNU General Public License is included in this distribution in the
+   file called LICENSE.
+-  
++
+   Contact Information:
++
+   James P. Ketrenos <ipw2100-admin@linux.intel.com>
++
+   Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ac9c94ff4f2..62c654308bc8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8763,7 +8763,7 @@ M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
+ L:	linux-wireless@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/networking/device_drivers/intel/ipw2100.rst
+-F:	Documentation/networking/device_drivers/intel/ipw2200.txt
++F:	Documentation/networking/device_drivers/intel/ipw2200.rst
+ F:	drivers/net/wireless/intel/ipw2x00/
+ 
+ INTEL PSTATE DRIVER
+diff --git a/drivers/net/wireless/intel/ipw2x00/Kconfig b/drivers/net/wireless/intel/ipw2x00/Kconfig
+index b0b3cd6296f3..f42b3cdce611 100644
+--- a/drivers/net/wireless/intel/ipw2x00/Kconfig
++++ b/drivers/net/wireless/intel/ipw2x00/Kconfig
+@@ -78,7 +78,7 @@ config IPW2200
+ 	  A driver for the Intel PRO/Wireless 2200BG and 2915ABG Network
+ 	  Connection adapters.
+ 
+-	  See <file:Documentation/networking/device_drivers/intel/ipw2200.txt>
++	  See <file:Documentation/networking/device_drivers/intel/ipw2200.rst>
+ 	  for information on the capabilities currently enabled in this
+ 	  driver and for tips for debugging issues and problems.
+ 
 -- 
 2.25.4
 
