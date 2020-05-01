@@ -2,108 +2,98 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E01C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669ECC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE5D208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588366690;
-	bh=PHAeuAjto7YSPUcW9IpDpIz6jTr+6+rE49PpUYBb17o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AlwpsyQjDRYhouPZUK00qo8m8qZ4Pdp/qhJQrOzQbJFyl7lwaA+igWjmVXcHfrn1L
-	 s8vIG/GKN8HPKn0Nt89cJLYJWfZwaV0O21pBlnp7P7BdytPZ6P1oRDaEtdQA6enpO+
-	 eJkkkbo/gXNKx/bvRA/gX7fFNG9QiWsXjVgEBMiA=
+	by mail.kernel.org (Postfix) with ESMTP id 46745208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgEAU6J (ORCPT
+        id S1726470AbgEAVAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgEAU6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:58:07 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        Fri, 1 May 2020 17:00:43 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:49320 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAVAn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:00:43 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A53E3216FD;
-        Fri,  1 May 2020 20:58:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588366687;
-        bh=PHAeuAjto7YSPUcW9IpDpIz6jTr+6+rE49PpUYBb17o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iBbqAgH/8G5kCVKRHKmsayQJh12Ske4yDZYyRWiSbMac1qjEi90aavUHh0afBsqR2
-         9b2wMVEluTKDUehCxsaBSkmWlBZUqA3R2Tgc4CVEM8Y4zm0ooqXv/G256MzCeXWp/V
-         sn5RY0Y6djNBT/M7VKJ6c65X4E7PnY5aH0OcUQz8=
-Date:   Fri, 1 May 2020 13:58:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-Id: <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
-In-Reply-To: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by asavdk3.altibox.net (Postfix) with ESMTPS id E48FE2002A;
+        Fri,  1 May 2020 23:00:39 +0200 (CEST)
+Date:   Fri, 1 May 2020 23:00:38 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Add support for TM5P5 NT35596 video mode panel
+Message-ID: <20200501210038.GB26726@ravnborg.org>
+References: <20200501204825.146424-1-konradybcio@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501204825.146424-1-konradybcio@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=bAtGagR5AAAA:20 a=7LVGNgU6USOl37Ea4AYA:9
+        a=CjuIK1q_8ugA:10 a=443qOekVpzXbzkAZ2tlV:22 a=pHzHmUro8NiASowvMSCR:22
+        a=Ew2E2A-JSTLzCXPT_086:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 18:08:28 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+Hi Konrad.
 
-> mkfs -t ext4 invoked oom-killer on i386 kernel running on x86_64 device
-> and started happening on linux -next master branch kernel tag next-20200430
-> and next-20200501. We did not bisect this problem.
-
-It would be wonderful if you could do so, please.  I can't immediately see
-any MM change in this area which might cause this.
-
-> metadata
->   git branch: master
->   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->   git commit: e4a08b64261ab411b15580c369a3b8fbed28bbc1
->   git describe: next-20200430
->   make_kernelversion: 5.7.0-rc3
->   kernel-config:
-> https://builds.tuxbuild.com/1YrE_XUQ6odA52tSBM919w/kernel.config
+On Fri, May 01, 2020 at 10:48:21PM +0200, Konrad Dybcio wrote:
+> I am aware of the fact that this is probably not the correct
+> naming of this panel, yet I am unable to retrieve any additional
+> information about it, as it is used in a smartphone to which no
+> schematics are released.
 > 
-> Steps to reproduce: (always reproducible)
+> The driver has been generated with the help of 
+> linux-mdss-dsi-panel-driver-generator [1] and works perfectly
+> on a Asus Zenfone 2 Laser Z00T smartphone, including brighness
+> control and switching on/off.
+> 
+> [1] https://github.com/msm8916-mainline/linux-mdss-dsi-panel-driver-generator
 
-Reproducibility helps!
+Panle driver looks good.
+Will take a closer look tomorrow.
 
-> oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
+Any chance you can work on the TODO in the driver so we can have that
+resolved before we apply it?
 
-> [   34.793430]  pagecache_get_page+0xae/0x260
+Also for a v2 it would be perfect if you could work on top of
+drm-misc-next.
+There is at least one small fix needed to build that I spotted.
 
-> [   34.897923] active_anon:5366 inactive_anon:2172 isolated_anon:0
-> [   34.897923]  active_file:4151 inactive_file:212494 isolated_file:0
-> [   34.897923]  unevictable:0 dirty:16505 writeback:6520 unstable:0
+But wait until I get back on the driver patch before submitting a v2.
 
-> [ 34.987678] Normal free:3948kB min:7732kB low:8640kB high:9548kB
-> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> active_file:1096kB inactive_file:786400kB unevictable:0kB
-> writepending:65432kB present:884728kB managed:845576kB mlocked:0kB
-> kernel_stack:1112kB pagetables:0kB bounce:0kB free_pcp:2908kB
-> local_pcp:500kB free_cma:0kB
+	Sam
 
-ZONE_NORMAL has a huge amount of clean pagecache stuck on the
-inactive list, not being reclaimed.
+> 
+> Konrad Dybcio (2):
+>   drivers: drm: panel: Add TM5P5 NT35596 panel driver
+>   dt-bindings: display: Document TM5P5 NT35596 panel compatible
+> 
+>  .../bindings/display/panel/tm5p5,nt35596.txt  |   7 +
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  drivers/gpu/drm/panel/panel-tm5p5-nt35596.c   | 366 ++++++++++++++++++
+>  4 files changed, 383 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tm5p5,nt35596.txt
+>  create mode 100644 drivers/gpu/drm/panel/panel-tm5p5-nt35596.c
+> 
+> -- 
+> 2.26.1
