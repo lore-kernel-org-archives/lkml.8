@@ -2,98 +2,93 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D2FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8842BC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450D324958
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TtzgkSzr"
+	by mail.kernel.org (Postfix) with ESMTP id 3126B24961
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588347486;
+	bh=Q6vbFSFsvP1/PVPUMh4N6HimvTPIEBmlU6XjmJ+LSx4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uEsCIud5nfZNhNKiwM5NJcDDnYQuCO28mR9cVNT4w2StfzIOFKhvoJQVCwkmz8q7m
+	 Tj3BeME24xk9BjmF4ER3upk7R8LaQAeZPRgoLzhapIMclD+RFMw7/Q4tb06/9rgluY
+	 ZFYjao0zr0uIj9VvjwqyFqFiBiFpJI0aWYiRhnMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgEAPhc (ORCPT
+        id S1729474AbgEAPiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:37:32 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36520 "EHLO vps0.lunn.ch"
+        Fri, 1 May 2020 11:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgEAPhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:37:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=CCW9t2Lcf3ESlVkJ4RGqmi6BmFZgD63tWCVuekoIumU=; b=TtzgkSzrEtfblR+H1wVwLbiwig
-        C8qarQ6oBZtfxDOULpsjFye+/KFqIcIkpqUOeMILNA//s3bR50E1daGGhbT5ptwh1DDApdNwbcOo5
-        sBLN/MpQUJSTzfYQgIEc4qimo/sF9UbZcCWJ9oL3Pg0y09HfCU4f0DqqOiHsHPtyZEJU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jUXjB-000YJL-8M; Fri, 01 May 2020 17:37:25 +0200
-Date:   Fri, 1 May 2020 17:37:25 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 07/11] net: stmmac: dwmac-meson8b: Make the clock
- enabling code re-usable
-Message-ID: <20200501153725.GG128733@lunn.ch>
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-8-martin.blumenstingl@googlemail.com>
+        id S1729370AbgEAPiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:38:03 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB11B24959;
+        Fri,  1 May 2020 15:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588347482;
+        bh=Q6vbFSFsvP1/PVPUMh4N6HimvTPIEBmlU6XjmJ+LSx4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qLXlwnlYM13v2PQiRfNv3a0ERgc+r0tmucBlmapm89I9kUkfrTfYz/KbivrLIxy6y
+         uUBzRXA1jt6z3qIHTGQggdOjo1np+mLLcXbDuRjpw0aBr/njAupmXNWpelBAbPVv3V
+         sQuFKOiPxW5dc1/XkVKZBNZvpPExRbcY2oDM2aGY=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jUXjk-00FE4U-W0; Fri, 01 May 2020 17:38:00 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 02/14] docs: add bus-virt-phys-mapping.txt to core-api
+Date:   Fri,  1 May 2020 17:37:46 +0200
+Message-Id: <ccd32aa5231b0e235a555fdecc4c0d274e5a6161.1588345503.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588345503.git.mchehab+huawei@kernel.org>
+References: <cover.1588345503.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429201644.1144546-8-martin.blumenstingl@googlemail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:16:40PM +0200, Martin Blumenstingl wrote:
-> The timing adjustment clock will need similar logic as the RGMII clock:
-> It has to be enabled in the driver conditionally and when the driver is
-> unloaded it should be disabled again. Extract the existing code for the
-> RGMII clock into a new function so it can be re-used.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 23 +++++++++++++++----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-> index 41f3ef6bea66..d31f79c455de 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-> @@ -266,6 +266,22 @@ static int meson_axg_set_phy_mode(struct meson8b_dwmac *dwmac)
->  	return 0;
->  }
->  
-> +static int meson8b_devm_clk_prepare_enable(struct meson8b_dwmac *dwmac,
-> +					   struct clk *clk)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	devm_add_action_or_reset(dwmac->dev,
-> +				 (void(*)(void *))clk_disable_unprepare,
-> +				 dwmac->rgmii_tx_clk);
-> +
-> +	return 0;
-> +}
+This describes an old interface used prior the new DMA-API
+interfaces. Add it to the core-api guide, just after the
+DMA stuff.
 
-I'm surprised this does not exist in the core. It looks like there was
-some discussion about this, but nothing merged.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../bus-virt-phys-mapping.rst}                                   | 0
+ Documentation/core-api/index.rst                                 | 1 +
+ 2 files changed, 1 insertion(+)
+ rename Documentation/{bus-virt-phys-mapping.txt => core-api/bus-virt-phys-mapping.rst} (100%)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+diff --git a/Documentation/bus-virt-phys-mapping.txt b/Documentation/core-api/bus-virt-phys-mapping.rst
+similarity index 100%
+rename from Documentation/bus-virt-phys-mapping.txt
+rename to Documentation/core-api/bus-virt-phys-mapping.rst
+diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+index c00aef843341..b70039d458a7 100644
+--- a/Documentation/core-api/index.rst
++++ b/Documentation/core-api/index.rst
+@@ -84,6 +84,7 @@ more memory-management documentation in :doc:`/vm/index`.
+    dma-api-howto
+    dma-attributes
+    dma-isa-lpc
++   bus-virt-phys-mapping
+    mm-api
+    genalloc
+    pin_user_pages
+-- 
+2.25.4
 
-    Andrew
