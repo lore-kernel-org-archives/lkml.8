@@ -7,92 +7,100 @@ X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D7CC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0ECC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9098208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C2D2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588367634;
-	bh=3GPOfSU214fB2IVK/PBUOK6y243+87fI2gP8HPvcnNE=;
+	s=default; t=1588367663;
+	bh=ljB/pdJHNBoM+WqBUFtGI0AJ8CyB+TAdLEahHBXhaXw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QxfkqgtcebuOfRZud5CTwwCg5AipeJSLo89lqU1kqEAn5zFQ6vz+opE5JLBBBAvyg
-	 pn4NQalwCKjzJ+36/drvsazbyyoIYBN5Gg7IEupyVd7TqSPgDJHKiMSMF1V4k5IVCP
-	 ORfsUQuxIAT5Nbt1f7hVnSZkxHHx6PhrJ3Gtbdps=
+	b=ScYw7VrdsQubEC6rL7KBkZCdCpEtDva3SQjUiednux0HmRGyVo/IdYIXi1PVlSWdA
+	 wuYx0i68JEcWPcQeuPdJ0+uruGKNlFtVlK8wKF90ZaoL8DZldPphtTdm82VMsUxuxV
+	 ZkkxaeCR4KCgv/R6x+ng1OHBNHEDrPzIfE/qpKA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgEAVNy (ORCPT
+        id S1726519AbgEAVOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:13:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37245 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVNx (ORCPT
+        Fri, 1 May 2020 17:14:22 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40473 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAVOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:13:53 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z17so3647986oto.4;
-        Fri, 01 May 2020 14:13:52 -0700 (PDT)
+        Fri, 1 May 2020 17:14:22 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t199so892767oif.7;
+        Fri, 01 May 2020 14:14:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Saj6I4BoNs+neao0qfUiHG20kfrjWQvvyOv909CPCK0=;
-        b=pfd3VhNGTwHNWRkhlehcwurM6n51xsrvOtLb8Jbq3H0RYI8Xvc1IlwWIj0AzlhuPIZ
-         dhCSb44QAQl1MCM+y+sJCTmrMVBNEH8JOSRwHGXOINY2MDarlUhs58OwV7PgG8fBkTcf
-         UrrTxdT0V6un9eyj68ycA6HcpTZD0dkmoiGVtxpsNLj+OW5WgtBGwi4FglT6G0jL8XjJ
-         89EBKr0cb9vrsZhYuU+6KjMK0SzGJj/leTP/KFwupMe/470P3CS24CASXEDswwu0d6w+
-         78TaT6m3LE8odRTsnPKfeyhlApI+9EIXzAOVO5cEZ2WMacGHwFpRu3lHEJuE3nml+k6o
-         aptQ==
-X-Gm-Message-State: AGi0PuZFqBslSIJBWq9PaexjrQWMiu0BHJoSKjugw0hCI+7fMiSjcVgz
-        Zh4YIujeJ+v4FniewpC8EA==
-X-Google-Smtp-Source: APiQypKU8GglYSJQ5ikLjL/rCKqj6Os0VsBVrmhrxMRWf3Z8anowQqyUhYIb1pZqkiENLwXLO0FMtg==
-X-Received: by 2002:a9d:6207:: with SMTP id g7mr5298118otj.195.1588367632473;
-        Fri, 01 May 2020 14:13:52 -0700 (PDT)
+        bh=ik05HoeIPqSlNhrPs/BOvnuIKtmqZ0C22ZMqbywZOpU=;
+        b=qtzpzXUITZAxz0/sS5glxKHhojaBmAHfY3HUVR62nM4f/mMomcsaIp+8Bj8YBlI/hW
+         OvRxbc4wYmkUUmlEy6NOenttx06Imaq6E4WS7z0XIqEawVRHHq/58gxqSASIkdrizgDu
+         Yzq+7joDZil3fexYs2gGqwNBR7FLoLc9wFXulOa9Q7u3H6BTbsKSUcT0Kk8iYJXjGoB0
+         ThGy6izG5gCLVpOZZSSieodcKQl8Xk9TH6ljjSOvKd3iEPW7Bn1pOH7WTQxkMh25R8Ku
+         TT/bUXoWYwf8HFv/fDW3sKaKwVYu9ChMEK3y+JpbQsx8FDsqh+HehyebT+I84iVdDVbO
+         corg==
+X-Gm-Message-State: AGi0PubmfHE2br+P7OMNTbx7iOGgM5aThEUlgfb3rvo3y1y9N4IGz5un
+        xOvKmLBy5Sb/4ErZYbGDcA==
+X-Google-Smtp-Source: APiQypI0G2h3BKOiqHQMvBjUKar5R03mo3gV6ScSjUqGTQn8Z8zBm2V5G25JUPByqh/xwTOKjVbEog==
+X-Received: by 2002:aca:f182:: with SMTP id p124mr1204914oih.170.1588367661422;
+        Fri, 01 May 2020 14:14:21 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e13sm1102204otj.46.2020.05.01.14.13.51
+        by smtp.gmail.com with ESMTPSA id x82sm247465oig.55.2020.05.01.14.14.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:13:52 -0700 (PDT)
-Received: (nullmailer pid 5949 invoked by uid 1000);
-        Fri, 01 May 2020 21:13:51 -0000
-Date:   Fri, 1 May 2020 16:13:51 -0500
+        Fri, 01 May 2020 14:14:20 -0700 (PDT)
+Received: (nullmailer pid 6858 invoked by uid 1000);
+        Fri, 01 May 2020 21:14:20 -0000
+Date:   Fri, 1 May 2020 16:14:20 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: power: Convert power_supply text to yaml
-Message-ID: <20200501211351.GA4774@bogus>
-References: <20200430151841.17453-1-dmurphy@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 4/6] dt-bindings: gnss: Add binding for Motorola Mapphone
+ MDM6600 GNSS
+Message-ID: <20200501211420.GA6222@bogus>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-5-tony@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430151841.17453-1-dmurphy@ti.com>
+In-Reply-To: <20200430174615.41185-5-tony@atomide.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 10:18:41 -0500, Dan Murphy wrote:
-> Convert the power_supply.txt to power-supply.yaml.
-> This conversion entailed fixing up the binding to being yaml and dt
-> checker compliant.
+On Thu, 30 Apr 2020 10:46:13 -0700, Tony Lindgren wrote:
+> Add a binding document for Motorola Mapphone MDM6600 GNSS driver that
+> can be used with phones such as droid4.
 > 
-> Added a note in the power_supply.txt to reference the power-supply.yaml
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->  .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
->  .../bindings/power/supply/power_supply.txt    | 25 +-----------
->  2 files changed, 42 insertions(+), 23 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/power-supply.yaml
+>  .../devicetree/bindings/gnss/motmdm.yaml      | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gnss/motmdm.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/power/supply/power-supply.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/power/supply/power-supply.yaml#
+Documentation/devicetree/bindings/gnss/motmdm.example.dts:19.11-21: Warning (reg_format): /example-0/gnss@4:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+Documentation/devicetree/bindings/gnss/motmdm.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/gnss/motmdm.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/gnss/motmdm.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/gnss/motmdm.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/gnss/motmdm.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
 
-See https://patchwork.ozlabs.org/patch/1280522
+See https://patchwork.ozlabs.org/patch/1280739
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
