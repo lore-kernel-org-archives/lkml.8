@@ -2,296 +2,197 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3296FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679ACC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F39DA21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588364772;
-	bh=X013ppbIzSl3+DV4yEIiVEG1A5SM/AeuoeMnWsxMbwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ao4bsbc/DyWMvW4eBwz9Cs9c1FUDx3iiOQtjxb+mr0BlfPV1Asn/ll5lGNQevyIii
-	 hTKiyBeTvZBQUJBKtIsPYKUWBUxMsUl8iM7WFkKNTQ1ksVpVPukY9oxuqxkEu/VXCW
-	 9fQF+21/11ZZ1talnQWAFkq0eLa41SD19xZYDXo8=
+	by mail.kernel.org (Postfix) with ESMTP id 3AB1D2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgEAU0L (ORCPT
+        id S1726384AbgEAUas convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:26:11 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39146 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgEAU0K (ORCPT
+        Fri, 1 May 2020 16:30:48 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35637 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAUar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:26:10 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m10so783649oie.6;
-        Fri, 01 May 2020 13:26:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3KGOcilJxikkL+Nmr3AHMzqEO+ivM6wapTQZZpbzgL8=;
-        b=cHzx/D+6hh3oQ2Aoh2VUNhvLlCnKcCmfUZOTTkiOJcIYP6M1SnFXfF2k3zyTcn9VdQ
-         iPKYy2r5GNmm7xGfsp0zBJgDsX1Rb21KJgJEsbqUyDsqfD+e4fAySPjlAikXH378z77k
-         qYHzjSt0g/T8uhavSA2FANNkTCyCePlVG0nZPVOcBvXMzr64DdxtTNYElMQeX3hV1hn/
-         9aw0Du0ED3aUXCf2B2kEMPY7Ys/TkL/Oag3cSgBLG9NwoYihrTVQTer+EPWmOtCZuq9D
-         iXEEiypKhJdus2Td/JFlvWjgaZLjujwbwI8uXPtkWsBLUZI8WgDmhkT9auiqWVFl0q9Z
-         fH2g==
-X-Gm-Message-State: AGi0PuZ/O6PEzKyQ/GFhCwNj6IyBHokj+czZAlzIY7ehL4NMJWhW/nEt
-        ZOirjRLBQ68lSLU3GynJzc9Ejh0=
-X-Google-Smtp-Source: APiQypKuIa2EayO6sRtISWTj8/Remk+FnQ3MtRzI4m9kvti4r3vQ9LWm9cRMPxzpDhc6m14oEPwVGg==
-X-Received: by 2002:aca:c311:: with SMTP id t17mr986175oif.169.1588364769215;
-        Fri, 01 May 2020 13:26:09 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f21sm213498oig.41.2020.05.01.13.26.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:26:08 -0700 (PDT)
-Received: (nullmailer pid 23725 invoked by uid 1000);
-        Fri, 01 May 2020 20:26:07 -0000
-Date:   Fri, 1 May 2020 15:26:07 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v8 07/10] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-Message-ID: <20200501202607.GA13720@bogus>
-References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
- <20200427081952.3536741-8-adrian.ratiu@collabora.com>
+        Fri, 1 May 2020 16:30:47 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXY6b-1jfSqQ0kut-00Z0q4 for <linux-kernel@vger.kernel.org>; Fri, 01 May
+ 2020 22:30:45 +0200
+Received: by mail-qt1-f178.google.com with SMTP id g16so4929286qtp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 13:30:44 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYZ13p8LsNIz+DtlLaSE1jJTwY2lAynRkrVaK0sj80GjIk4De8K
+        o3pITe3m9DFQvAfxkGTn5xfiI897zy/hRqTgzXI=
+X-Google-Smtp-Source: APiQypJtprYFko430qql/hXdVN4hcrw6bhVhXNdrigj1vMHLkxccdqpReLVKoRWzl0oGcVculKuhoTuniXqtw1le3a0=
+X-Received: by 2002:ac8:4c8d:: with SMTP id j13mr5652562qtv.142.1588365043964;
+ Fri, 01 May 2020 13:30:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427081952.3536741-8-adrian.ratiu@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200430213101.135134-1-arnd@arndb.de> <20200430213101.135134-10-arnd@arndb.de>
+ <20200430215450.anfwm4zikvhy2bt5@pali>
+In-Reply-To: <20200430215450.anfwm4zikvhy2bt5@pali>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 1 May 2020 22:30:27 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0_BuKDK7X8dTHyx7t++CGjy3jhDVvL=Jo5=kcUxmtobg@mail.gmail.com>
+Message-ID: <CAK8P3a0_BuKDK7X8dTHyx7t++CGjy3jhDVvL=Jo5=kcUxmtobg@mail.gmail.com>
+Subject: Re: [PATCH 09/15] udf: avoid gcc-10 zero-length-bounds warnings
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Steven J. Magnani" <steve@digidescorp.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:hyYHBsnCjTw2RsqXW0udu3soGToIo8aCsKt5tPa+Z384npvvaUU
+ 0HqAxJMCRma9tqyEPgxdd7qT4P1hSbQ1pRnaORRScMYZ2m4YB6WMvDI4jM7dWoGDSys0mZ3
+ JDMQInd+KKiBGtJvlcQ8KD1bcESxbXQfGt82yWoTGHnDJSmk+IhH33A9j57j28f1lupFbry
+ jzG2Va/Iebfm3qjJ0TLsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1dVNIjVhzy0=:4srgdZGaY/dgKexA0AHZhN
+ ZWHxnYf/BpmnU7y7EKqW5gs9SAZ/UuXmkBdACuX9fHxSoIP3XnDRep3UMsOnmMlVwISTEmiV0
+ +q3x+Vzh9cPUdZzw3g/CKFca9ITXGEq/WQDl88JdFz6n0XYg0he/vBy3aZIG+PSHEnu4XMWUu
+ 9yT0n6RkIbbOP0S8wBgPuVoE0djFl7nz5GQfSCy85w3V0dPFkAZ0hTEl7cnluk+ZWdpOa6JAW
+ olxoSKkJnTU0b7Xu2BWruL0NFNkXyFfhBAenyqwp7pNYC0+VYtkqpoifLzY+nbZAZesSl6KYk
+ gDRIWqnsi1KAhxqhnUtTysEzwMwji3lxE+/gL07WeauStEK0BHGsbzB2sumRdLvIpq6mT1GXC
+ O8Kvw8Hz1j5GN0vUfGuhA/7sEK9rkl3CMnwskqpK5L+ewLR+BDKxjs8Ob63yhr2AHuAS/XlAg
+ zswJ5nIqZkgdlIgwGgz+CHYToAAKGRo9rq6X8xcCE+ceMwsy/k3rWbIP0aYd8vwlDFvIcBgQ4
+ UkzdDM841ktTroF/rBNzYvlrQm+BQypLa7ZxuvtFCE8FlgJY8LVpdA1WQZRcZzFQrZFcMtOsr
+ QovoJn90NIMSW0kJfzXF1TPia4fsuqZENmh9P/c7l38RNMFjPG294lJ82EgISUkbrBvcE+k8h
+ d5im1GDY8NHPxA65qLXcnCOTl6BciRfO/dX7r+7oR/QWNQ3ueLIiRNmCAlO840HDpxbxkQukq
+ E/jkfUyJzTh6L+ls6ITljE2wS/LoUiCaGhfUzeGcJIguXP0YrlJZppo5r/7MZ7/KWsv8NvTfB
+ Nio1sbhqGIWAIwU1ucWD5XZWYvwZ7+1HaiAt4KZQRpKeF4yXtU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:19:49AM +0300, Adrian Ratiu wrote:
-> This provides an example DT binding for the MIPI DSI host controller
-> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: devicetree@vger.kernel.org
-> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
-> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
-> Changes since v7:
->   - Clarified port@0,1 descriptions, marked them as required and
->   added missing port@0 in example (Laurent)
-> 
-> Changes since v6:
->   - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
->   - Moved *-cells properties outside patternProperties (Laurent)
->   - Removed the panel port documentation (Laurent)
->   - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
-> 
-> Changes since v5:
->   - Fixed missing reg warning (Fabio)
->   - Updated dt-schema and fixed warnings (Rob)
-> 
-> Changes since v4:
->   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
->   and addressed received binding feedback (Rob)
-> 
-> Changes since v3:
->   - Added commit message (Neil)
->   - Converted to yaml format (Neil)
->   - Minor dt node + driver fixes (Rob)
->   - Added small panel example to the host controller binding
-> 
-> Changes since v2:
->   - Fixed commit tags (Emil)
-> ---
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 145 ++++++++++++++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> new file mode 100644
-> index 0000000000000..c2c3489e63fa3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> @@ -0,0 +1,145 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX6 DW MIPI DSI Host Controller
-> +
-> +maintainers:
-> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
-> +
-> +description: |
-> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
-> +  IP block with a companion PHY IP.
-> +
-> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-> +  the following device-specific properties.
-> +
-> +allOf:
-> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
-> +
-> +properties:
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  compatible:
-> +    items:
-> +      - const: fsl,imx6q-mipi-dsi
-> +      - const: snps,dw-mipi-dsi
+On Thu, Apr 30, 2020 at 11:54 PM Pali Rohár <pali@kernel.org> wrote:
+>
+> On Thursday 30 April 2020 23:30:51 Arnd Bergmann wrote:
+> > gcc-10 warns about writes to the empty freeSpaceTable[] array, with
+> > many instances like:
+> >
+> > fs/udf/balloc.c: In function 'udf_bitmap_new_block':
+> > fs/udf/balloc.c:101:36: error: array subscript 65535 is outside the bounds of an interior zero-length array '__le32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
+> >   101 |  le32_add_cpu(&lvid->freeSpaceTable[partition], cnt);
+> >       |                ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+> > In file included from fs/udf/udfdecl.h:7,
+> >                  from fs/udf/balloc.c:22:
+> > fs/udf/ecma_167.h:363:11: note: while referencing 'freeSpaceTable'
+> >   363 |  __le32   freeSpaceTable[0];
+> >       |           ^~~~~~~~~~~~~~
+>
+> Hi Arnd! This looks like a false-positive warning.
 
-This schema is going to be applied on any node with 'snps,dw-mipi-dsi'. 
-You'll need a custom 'select' with only 'fsl,imx6q-mipi-dsi'. There's a 
-few examples in the tree.
+Right, sorry for not making that clearer in the changelog.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module Clock
-> +      - description: DSI bus clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref
-> +      - const: pclk
-> +
-> +  fsl,gpr:
-> +    description:
-> +      Phandle to the iomuxc-gpr region containing the multiplexer ctrl register.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +      Documentation/devicetree/bindings/graph.txt
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description:
-> +          DSI input port connected to a parallel RGB LTDC output port.
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI serial RGB output port connected to a panel or bridge input port.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +additionalProperties: false
+> > These can all be avoided by using a flexible array member instead.
+> >
+> > Another warning is a bit more obscure:
+> >
+> > fs/udf/super.c: In function 'udf_count_free':
+> > fs/udf/super.c:2521:26: warning: array subscript '(<unknown>) + 4294967295' is outside the bounds of an interior zero-length array '__le32[0]' {aka 'unsigned int[0]'} [-Wzero-length-bounds]
+> >  2521 |      lvid->freeSpaceTable[part]);
+> >
+> > Work around this one by changing the array access to equivalent
+> > pointer arithmetic, as there cannot be multiple flexible-array
+> > members in a single struct.
+>
 
-When including other schemas, you need 'unevalatedProperties: false' 
-instead. Then you can drop anything here that doesn't have more 
-constraints like the next property:
+> > @@ -360,9 +360,9 @@ struct logicalVolIntegrityDesc {
+> >       uint8_t                 logicalVolContentsUse[32];
+> >       __le32                  numOfPartitions;
+> >       __le32                  lengthOfImpUse;
+> > -     __le32                  freeSpaceTable[0];
+> >       __le32                  sizeTable[0];
+> >       uint8_t                 impUse[0];
+> > +     __le32                  freeSpaceTable[];
+>
+> Please do not change order of members in these structures. Order is
+> strictly defined by ECMA 167 standard and changing them you would just
+> confuse reader. In LVID is free space table before size table.
 
-> +
-> +patternProperties:
-> +  "^panel@[0-3]$":
-> +    type: object
-> +
-> +required:
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - ports
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/clock/imx6qdl-clock.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    dsi: dsi@21e0000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
-> +        reg = <0x021e0000 0x4000>;
-> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-> +        fsl,gpr = <&gpr>;
-> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
-> +        clock-names = "ref", "pclk";
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            port@0 {
-> +                reg = <0>;
-> +                mipi_mux_0: endpoint {
-> +                    remote-endpoint = <&ipu1_di0_mipi>;
-> +                };
-> +            };
-> +            port@1 {
-> +                reg = <1>;
-> +                dsi_out: endpoint {
-> +                    remote-endpoint = <&panel_in>;
-> +                };
-> +            };
-> +        };
-> +
-> +        panel@0 {
-> +            compatible = "sharp,ls032b3sx01";
-> +            reg = <0>;
-> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                port@0 {
-> +                    reg = <0>;
-> +                    panel_in: endpoint {
-> +                        remote-endpoint = <&dsi_out>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.26.0
-> 
+Ok
+
+> If you do not like GNU C extension for zero-length arrays then just
+> replace it by standard C99 flexible arrays. I think that there is no
+> reason to not use standard C99 language constructions, just nobody had
+> motivation or time to change (working) code.
+
+No, the problem is that only the last member can be a flexible array,
+so when impUse[] is the last member, freeSpaceTable has to be a zero
+length array.
+
+[]> Also this file is semi-synchronized with udftools project in which I
+> already replaced all GNU C zero-length arrays by C99 flexible arrays.
+>
+> You can take inspiration what I did with logicalVolIntegrityDesc:
+> https://github.com/pali/udftools/commit/f851d84478ce881d516a76018745fa163f803880#diff-1e1a5b89f620d380f22b973f9449aeaeL381-R384
+
+Right, this is likely the best workaround.
+
+> Anyway, if you have a better idea what to do with such on-disk structure
+> and how to represent it in C struct syntax, let me know as it could be
+> updated also in udftools project.
+
+The trick I used for impUse[] would also work for freeSpaceTable[] to avoid
+the gcc warning, it's still not great, but maybe you like this better:
+
+arnd@threadripper:~/arm-soc$ git diff
+diff --git a/fs/udf/balloc.c b/fs/udf/balloc.c
+index 02f03fadb75b..666d022eb00b 100644
+--- a/fs/udf/balloc.c
++++ b/fs/udf/balloc.c
+@@ -98,7 +98,7 @@ static void udf_add_free_space(struct super_block
+*sb, u16 partition, u32 cnt)
+                return;
+
+        lvid = (struct logicalVolIntegrityDesc *)sbi->s_lvid_bh->b_data;
+-       le32_add_cpu(&lvid->freeSpaceTable[partition], cnt);
++       le32_add_cpu(lvid->freeSpaceTable + partition, cnt);
+        udf_updated_lvid(sb);
+ }
+
+diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
+index 14ffe27342bc..215d97d7edc4 100644
+--- a/fs/udf/ecma_167.h
++++ b/fs/udf/ecma_167.h
+@@ -360,9 +360,9 @@ struct logicalVolIntegrityDesc {
+        uint8_t                 logicalVolContentsUse[32];
+        __le32                  numOfPartitions;
+        __le32                  lengthOfImpUse;
+        __le32                  freeSpaceTable[0];
+        __le32                  sizeTable[0];
+-       uint8_t                 impUse[0];
++       uint8_t                 impUse[];
+ } __packed;
+
+ /* Integrity Type (ECMA 167r3 3/10.10.3) */
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 379867888c36..a1fc51c2261e 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -2517,8 +2517,8 @@ static unsigned int udf_count_free(struct super_block *sb)
+                        (struct logicalVolIntegrityDesc *)
+                        sbi->s_lvid_bh->b_data;
+                if (le32_to_cpu(lvid->numOfPartitions) > part) {
+-                       accum = le32_to_cpu(
+-                                       lvid->freeSpaceTable[part]);
++                       accum = le32_to_cpup(
++                                       (lvid->freeSpaceTable + part));
+                        if (accum == 0xFFFFFFFF)
+                                accum = 0;
+                }
+
+
+
+This version could easily be backported to stable kernels to let them be
+compiled with gcc-10, and then synchronizing with the udftools version of
+the header needs additional changes on top, which do not need to be
+backported.
+
+       Arnd
