@@ -2,177 +2,146 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70584C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5601CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED1A24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E832173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339489;
-	bh=0dacMbs2inbzkyHJ5BBj88vjFohTn+rxZ/7NJvQDSPA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rIdgLVrvmfiKlNazcJyrPhkOc04fgB3y7Au7344EL+LUJpzS03b7d79omSwLOJ0ME
-	 Ykqpdo3T7+TcxsTXjioAqrBj0L/hCVVvTFOu6jUo+EyxrKbpeK1g+4FogsPKnsc0SH
-	 o4+FibfR8nH4kf6N5Sguf7FbvpibSdZ08Kc0aGmE=
+	s=default; t=1588339493;
+	bh=d8OPxjX6yuJbdOTlfUXM7Zvc614YcSXkktA7q5/FxRY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OT0QjhhJjS3pK0U9zzV4MjCrBxc1fQvyDpYyOHPmOD34TnlxWUuTRzbrlS6IjCvJg
+	 +MSXr80niitlJbNEMAkBkkVEWnQ9Gx6aqFLIEIXewXdjI95bup4XiJFotfyjFFFL3S
+	 pankQLzjC2J31LzY1q5p6GjM35aaDHHAVkdj3z2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgEANYs (ORCPT
+        id S1728900AbgEANYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:24:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728586AbgEANYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:24:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728586AbgEANYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:24:50 -0400
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BE120757;
-        Fri,  1 May 2020 13:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBB924962
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339487;
-        bh=0dacMbs2inbzkyHJ5BBj88vjFohTn+rxZ/7NJvQDSPA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brrA6Ok9ETjywiIcdYLiEuahQVYSc9ixmP8O29ef+wpNyYG6F0lfP0C9pjYx2Q8Su
-         iKW4seHwzTJ9XzpBIFfTIQnxsS9cpV0CCDtH1uK5tiIW1RbtxyOIDu+cydB16RdVrB
-         vwmLt928DrHYpRBTjXNRYkmA/GcnkejjZrpe0qEU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Monakhov <dmonakhov@gmail.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.4 01/70] ext4: fix extent_status fragmentation for plain files
-Date:   Fri,  1 May 2020 15:20:49 +0200
-Message-Id: <20200501131513.620366785@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
-References: <20200501131513.302599262@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        s=default; t=1588339489;
+        bh=d8OPxjX6yuJbdOTlfUXM7Zvc614YcSXkktA7q5/FxRY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oRiwD0Q+jvvpP6sMUM7uXKK++I/eOZnt6Ikrp6rtJBAPD/6vZl/OFq4Uxzqg573dr
+         HXTT0bMxoz2GibxZPq00kqvlqfP1GYpMyc+LbA3Tf2Ofs9mJFJf4NsfNvEueN0i/ZY
+         ldEXuawf8h0p2ODo+BCBInJ2O4GxSh/bcIMpNLxQ=
+Received: by mail-ed1-f48.google.com with SMTP id d16so7243606edq.7
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 06:24:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PuasxmQsQBR9LCu9jSA8Z5VWB85Yu4U60lUafAeVWEGt3KMD0npZ
+        fN+Y0kwW/oPsCyfLXXnTYIe/KIPcuglQCbYD+g==
+X-Google-Smtp-Source: APiQypKel2U1e5MRHXKLL7Rnuz1U41FBCv2Ii6mcl2FuZrvIApbgp6jSgjZ93cS0z2rzE3pcCu/kvy2F5YvYBuZXTp0=
+X-Received: by 2002:aa7:dd95:: with SMTP id g21mr3461314edv.148.1588339487975;
+ Fri, 01 May 2020 06:24:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200417150614.2631786-1-enric.balletbo@collabora.com> <20200417150614.2631786-6-enric.balletbo@collabora.com>
+In-Reply-To: <20200417150614.2631786-6-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 1 May 2020 21:24:34 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9Gc9uCtfcp+qo=KnVOYfyjw4rDpe15A1q6G2A-iXpSow@mail.gmail.com>
+Message-ID: <CAAOTY_9Gc9uCtfcp+qo=KnVOYfyjw4rDpe15A1q6G2A-iXpSow@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] drm/mediatek: mtk_dsi: Use simple encoder
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Monakhov <dmonakhov@gmail.com>
+Hi, Enric:
 
-commit 4068664e3cd2312610ceac05b74c4cf1853b8325 upstream.
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B44=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:06=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+>
+> The mtk_dsi driver uses an empty implementation for its encoder. Replace
+> the code with the generic simple encoder.
 
-Extents are cached in read_extent_tree_block(); as a result, extents
-are not cached for inodes with depth == 0 when we try to find the
-extent using ext4_find_extent().  The result of the lookup is cached
-in ext4_map_blocks() but is only a subset of the extent on disk.  As a
-result, the contents of extents status cache can get very badly
-fragmented for certain workloads, such as a random 4k read workload.
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-File size of /mnt/test is 33554432 (8192 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..    8191:      40960..     49151:   8192:             last,eof
-
-$ perf record -e 'ext4:ext4_es_*' /root/bin/fio --name=t --direct=0 --rw=randread --bs=4k --filesize=32M --size=32M --filename=/mnt/test
-$ perf script | grep ext4_es_insert_extent | head -n 10
-             fio   131 [000]    13.975421:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [494/1) mapped 41454 status W
-             fio   131 [000]    13.975939:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6064/1) mapped 47024 status W
-             fio   131 [000]    13.976467:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6907/1) mapped 47867 status W
-             fio   131 [000]    13.976937:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3850/1) mapped 44810 status W
-             fio   131 [000]    13.977440:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3292/1) mapped 44252 status W
-             fio   131 [000]    13.977931:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6882/1) mapped 47842 status W
-             fio   131 [000]    13.978376:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3117/1) mapped 44077 status W
-             fio   131 [000]    13.978957:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [2896/1) mapped 43856 status W
-             fio   131 [000]    13.979474:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [7479/1) mapped 48439 status W
-
-Fix this by caching the extents for inodes with depth == 0 in
-ext4_find_extent().
-
-[ Renamed ext4_es_cache_extents() to ext4_cache_extents() since this
-  newly added function is not in extents_cache.c, and to avoid
-  potential visual confusion with ext4_es_cache_extent().  -TYT ]
-
-Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
-Link: https://lore.kernel.org/r/20191106122502.19986-1-dmonakhov@gmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/ext4/extents.c |   47 +++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
-
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -505,6 +505,30 @@ int ext4_ext_check_inode(struct inode *i
- 	return ext4_ext_check(inode, ext_inode_hdr(inode), ext_depth(inode), 0);
- }
- 
-+static void ext4_cache_extents(struct inode *inode,
-+			       struct ext4_extent_header *eh)
-+{
-+	struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
-+	ext4_lblk_t prev = 0;
-+	int i;
-+
-+	for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
-+		unsigned int status = EXTENT_STATUS_WRITTEN;
-+		ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
-+		int len = ext4_ext_get_actual_len(ex);
-+
-+		if (prev && (prev != lblk))
-+			ext4_es_cache_extent(inode, prev, lblk - prev, ~0,
-+					     EXTENT_STATUS_HOLE);
-+
-+		if (ext4_ext_is_unwritten(ex))
-+			status = EXTENT_STATUS_UNWRITTEN;
-+		ext4_es_cache_extent(inode, lblk, len,
-+				     ext4_ext_pblock(ex), status);
-+		prev = lblk + len;
-+	}
-+}
-+
- static struct buffer_head *
- __read_extent_tree_block(const char *function, unsigned int line,
- 			 struct inode *inode, ext4_fsblk_t pblk, int depth,
-@@ -535,26 +559,7 @@ __read_extent_tree_block(const char *fun
- 	 */
- 	if (!(flags & EXT4_EX_NOCACHE) && depth == 0) {
- 		struct ext4_extent_header *eh = ext_block_hdr(bh);
--		struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
--		ext4_lblk_t prev = 0;
--		int i;
--
--		for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
--			unsigned int status = EXTENT_STATUS_WRITTEN;
--			ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
--			int len = ext4_ext_get_actual_len(ex);
--
--			if (prev && (prev != lblk))
--				ext4_es_cache_extent(inode, prev,
--						     lblk - prev, ~0,
--						     EXTENT_STATUS_HOLE);
--
--			if (ext4_ext_is_unwritten(ex))
--				status = EXTENT_STATUS_UNWRITTEN;
--			ext4_es_cache_extent(inode, lblk, len,
--					     ext4_ext_pblock(ex), status);
--			prev = lblk + len;
--		}
-+		ext4_cache_extents(inode, eh);
- 	}
- 	return bh;
- errout:
-@@ -902,6 +907,8 @@ ext4_find_extent(struct inode *inode, ex
- 	path[0].p_bh = NULL;
- 
- 	i = depth;
-+	if (!(flags & EXT4_EX_NOCACHE) && depth == 0)
-+		ext4_cache_extents(inode, eh);
- 	/* walk through the tree */
- 	while (i) {
- 		ext_debug("depth %d: num %d, max %d\n",
-
-
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
+k/mtk_dsi.c
+> index 869ae0a2e9f8..d68694ff00dc 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -22,6 +22,7 @@
+>  #include <drm/drm_panel.h>
+>  #include <drm/drm_print.h>
+>  #include <drm/drm_probe_helper.h>
+> +#include <drm/drm_simple_kms_helper.h>
+>
+>  #include "mtk_drm_ddp_comp.h"
+>
+> @@ -788,15 +789,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *d=
+si)
+>         dsi->enabled =3D false;
+>  }
+>
+> -static void mtk_dsi_encoder_destroy(struct drm_encoder *encoder)
+> -{
+> -       drm_encoder_cleanup(encoder);
+> -}
+> -
+> -static const struct drm_encoder_funcs mtk_dsi_encoder_funcs =3D {
+> -       .destroy =3D mtk_dsi_encoder_destroy,
+> -};
+> -
+>  static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_ds=
+i *dsi);
+>  static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
+>
+> @@ -1140,8 +1132,8 @@ static int mtk_dsi_encoder_init(struct drm_device *=
+drm, struct mtk_dsi *dsi)
+>  {
+>         int ret;
+>
+> -       ret =3D drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_fun=
+cs,
+> -                              DRM_MODE_ENCODER_DSI, NULL);
+> +       ret =3D drm_simple_encoder_init(drm, &dsi->encoder,
+> +                                     DRM_MODE_ENCODER_DSI);
+>         if (ret) {
+>                 DRM_ERROR("Failed to encoder init to drm\n");
+>                 return ret;
+> --
+> 2.25.1
+>
