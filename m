@@ -2,216 +2,116 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB294C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0F4C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98D532166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hQ69sOZI"
+	by mail.kernel.org (Postfix) with ESMTP id 6CBFA2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgEARhF (ORCPT
+        id S1730255AbgEARhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729705AbgEARhE (ORCPT
+        Fri, 1 May 2020 13:37:15 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:49037 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729705AbgEARhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:37:04 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C78C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:37:04 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 18so1854470pfx.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8Ssb7zR045y0hQVLJADfxNoncBIqCoA1zZayMTSJOr0=;
-        b=hQ69sOZII3yUJZKvzqgTA8LlEb2W+x+4V2m+WK6WBI3Tv9Sz2Sa28ekYrPSz5DnTS6
-         RnyhEv/ii17kbsMDUKml+C2aO6VCaV7qqB6bGAZP6M6uCSKwmdUOk3xVW5ovXqsj4fe9
-         Ws/l7w4bPmqVcV8fKGJ+NoM6axcrB7Xp9DWboQsdYMiENlN1I1BuplWgP8rxdF5+A7T7
-         QVXsgNe+JOwwnNEPtJ81qhP7LfWJ+oDH5drm/r0uk33usOgQiN+qUebKHveh2uWiKuno
-         d2+TNZf1OCd5POX7yyQR1K45AzB7fzj4vv3GDTNScJ1V+r486i5ziz3URMRLDZ3x+FSS
-         QbIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Ssb7zR045y0hQVLJADfxNoncBIqCoA1zZayMTSJOr0=;
-        b=JAHFg3ovUXTYLc/AfZINTZwGHF/Yq0VgW61sxPR7F2kW8jsTN2P2mVkZcwdRKaFZm7
-         lrxcSmINyft7j2P5G/zn7N+g3/epKZNBETxoONVnxlhWY3vxA5CAE/Huh/1U0TUZWNa4
-         lfr5/x6fZax+4VJV5TKOdLIcMHZw+IbWkeRQrAkl1Ainj2iV1pXi574CtP3JEizM4J9R
-         h+1VwArhklpx7umyNA4KRyw1k0HaFPD54wFmPDPAlzRh10A977Y/fylVsiU8+QjS+0CC
-         aDGoIV1ZgkoPibM62B6HDOQqGQoRtekiA8d4PBgyRcPOBeXO0DjxHSTdKZYIxmYBaEXt
-         xxHQ==
-X-Gm-Message-State: AGi0PuZbrecaYuv1rHDO2BixFi0tVhbcKMt11ZtYDmZdhqY2JX+l1TaD
-        5N22L54ZTfSl+CY9B4l6upNqjA==
-X-Google-Smtp-Source: APiQypKsRiBbPiO5UhEvgJ1CHiMaz4G022mxednNbGE1FSP2xisXt1FHVOYEQLgrh2gez/w7Jv7UYQ==
-X-Received: by 2002:a63:b542:: with SMTP id u2mr5053271pgo.352.1588354624072;
-        Fri, 01 May 2020 10:37:04 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id a22sm2369969pga.28.2020.05.01.10.37.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 10:37:03 -0700 (PDT)
-Date:   Fri, 1 May 2020 11:37:01 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Chris Lew <clew@codeaurora.org>, Sibi <sibis@codeaurora.org>,
-        Siddharth Gupta <sidgup@codeaurora.org>
-Subject: Re: [PATCH 2/4] soc: qcom: glink_ssr: Internalize ssr_notifiers
-Message-ID: <20200501173701.GB30509@xps15>
-References: <20200423003736.2027371-1-bjorn.andersson@linaro.org>
- <20200423003736.2027371-3-bjorn.andersson@linaro.org>
+        Fri, 1 May 2020 13:37:14 -0400
+Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MrhLw-1iq1jJ1XPg-00nhip; Fri, 01 May 2020 19:37:13 +0200
+Received: by mail-qv1-f41.google.com with SMTP id ck5so5044288qvb.11;
+        Fri, 01 May 2020 10:37:13 -0700 (PDT)
+X-Gm-Message-State: AGi0PuauzeuCKuBoOTcwGnIyEL/8FOQS54WSVUIh+iKKthAW5UxVYlGa
+        uaMl4eCZVlGTzx66w4ycNaXK0miWHVBQHyAvpZo=
+X-Google-Smtp-Source: APiQypJ76OecAT4JRkELVMGL7nVDYe5c/NgtmrMhJvbU+ti51agb2oCYWekUuVifbHUREw/ttX5+H+Iorlemv8zo2vg=
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr5062637qvp.197.1588354632183;
+ Fri, 01 May 2020 10:37:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423003736.2027371-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200430213101.135134-1-arnd@arndb.de> <20200430213101.135134-14-arnd@arndb.de>
+ <b5e6ef12-c2ac-d0ce-b7a1-a58d4c8de300@huawei.com> <CAK8P3a1=5dmgB+k9B_jk2qBhBPnMSFMWrByP4jRvyvaJwBo94A@mail.gmail.com>
+ <1588344818.3428.18.camel@linux.ibm.com>
+In-Reply-To: <1588344818.3428.18.camel@linux.ibm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 1 May 2020 19:36:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2nTi6AOf-4xJN3wurCXC52mLPBVbjgvcv6Cz=8A05X0A@mail.gmail.com>
+Message-ID: <CAK8P3a2nTi6AOf-4xJN3wurCXC52mLPBVbjgvcv6Cz=8A05X0A@mail.gmail.com>
+Subject: Re: [PATCH 13/15] scsi: sas: avoid gcc-10 zero-length-bounds warning
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     John Garry <john.garry@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <James.Bottomley@steeleye.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Yn9pe+bgLmCVwhi7YwwfmpuvUlqqpff2IqM+sqv9UcQqCE0MCRj
+ xwBd3kzBm3yKaBlRux5yWaSmhRhTW+l+OU52aCfL1kiTsApwDFcL77r9/GQVwg/uPiI9FPb
+ nV/CJNC0Z66KWcRrBib2OtMl83Z6Aduy91K5zi4KMi6hrShRGRyQLhOC+x07ZxAqMuxuast
+ 6f+MXpqKJTyPL6p3un5Jg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oQxc4oroxpI=:ehXWVPLIDHEnyVyg50sJeB
+ R+c0m6Q41X1oFype8KF9PcW/sOYmRr71EDmAs/He7/IizuC188qiCGfhg5WbmjdTEf6VbiMZU
+ A2NP9EHOLGWtBVXgpt3Ak6HxYW3ahGumyazRUV58M0v/6wobDcT2Jq/n77TWlDs28/GVFF6t9
+ iabc23ua5ZscDUXnYBrBbhQ2zEfu3QVlA7YvCiHhLA7oNwHKfGjIu5kOCJYl8RjNvbDJpMMFn
+ cIhCfIc6TXcLiywnmepX4Hrohtw9NH9Sw3cdJ1hfakzxjwkUZiuxJ2QclPNz3nxo8IQQZRvdl
+ 5vrRM0V2vAgwDWNImu4qUmm5EqJ5aIaF+u5MMDnNvqNCV5d9DPEwybLesedFicCyRIt1ZGo+J
+ QNVGcIuMKv4mujvS9PJv/CPdTO5tmXM2SEOLFzeyba+pCS4QJL1SC3ks8iiusCANS9beTo4U1
+ qlfKJT/11A47h1Xe88y1VoE+Zk7A1cmzjL7AciqSA6p+ec6ddtaoKnzMysTYcHVXZDKKHFeZk
+ Ia/IKIQ45PjWhC7pF4CPjK2ELjRMpcEjqYtc1ItQ5oE0olBUGLgh7LfATAfbTnfVRmJnWB+A1
+ BKejFi8mcOAvGB58t7QyvEcCRzn5te2G0K2uWgN3CK/3/TviNDo3w2EeX6gwFZK7t/gP+sM+Y
+ aq8+LLZAOFsSxBB0vjNBNFY8xdFlYKErjOTagdO8dmBIt+AOwr7jGLbnGbHbCclt/8IZKeOSh
+ oiDHvnXt/JZixtFu7bIDDmQSNCE9SAU4u1ICySd+kVzT42e6/lQC93nZRAqCKETWWrJy7m7KD
+ /XhUN8P/YMrgkBS8zNZVKi1Z1x79SeRasEbfUETN5uVAhf+aRc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 05:37:34PM -0700, Bjorn Andersson wrote:
-> Rather than carrying a special purpose blocking notifier for glink_ssr
-> in remoteproc's qcom_common.c, move it into glink_ssr so allow wider
-> reuse of the common one.
+On Fri, May 1, 2020 at 4:53 PM James Bottomley <jejb@linux.ibm.com> wrote:
+> On Fri, 2020-05-01 at 09:54 +0200, Arnd Bergmann wrote:
+> > On Fri, May 1, 2020 at 9:48 AM John Garry <john.garry@huawei.com>
+> > wrote:
+> > I found one hack that would work, but I think it's too ugly and
+> > likely not well-defined either:
+> >
+> > struct ssp_response_iu {
+> > ...
+> >         struct {
+> >                 u8      dummy[0]; /* a struct must have at least one
+> > non-flexible member */
+>
+> If gcc is now warning about zero length members, why isn't it warning
+> about this one ... are unions temporarily excluded?
 
-After reading the changelog and the cover letter a few times along with thinking
-about the content of the patch, I decude that glink_ssr devices using the
-common ssr_notifiers in qcom_common.c was causing problems (having some details
-on what those problems are would be useful). 
+It does not warn about all zero-length arrays, but it does warn when you
+try to access an array with an out-of-range index, and this apparently
+got extended in gcc-10 to any index for zero-length arrays.
 
-As such this patch is introducing a new notifier, also called ssr_notifiers,
-that only deals with glink ssr notification to narrow the nature of the
-notifications that are sent and received.  Is my understanding correct?  Also,
-how does that fit into what Siddharth was doing here[1]?
+> >                 u8      resp_data[]; /* allowed here because it's at
+> > the one of a struct */
+> >         };
+> >         u8     sense_data[];
+> > } __attribute__ ((packed));
+>
+> Let's go back to what the standard says:  we want the data beyond the
+> ssp_response_iu to be addressable either as sense_data if it's an error
+> return or resp_data if it's a real response.  What about trying to use
+> an alias attribute inside the structure ... will that work on gcc-10?
 
-It would be nice if Siddharth could ack the patch before moving forward.
+I think alias attributes only work for functions and variables, but not
+for struct members.
 
-Thanks,
-Mathieu
+A "#define sense_data resp_data" would obviously work, but it's
+rather error-prone when other code uses the same identifiers.
 
-[1]. https://patchwork.kernel.org/patch/11481081/ 
+Another option would be an inline helper like
 
-> 
-> The rpmsg glink header file is used in preparation for the next patch.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/remoteproc/qcom_common.c |  8 ++++++++
->  drivers/soc/qcom/glink_ssr.c     | 24 +++++++++++++++++++-----
->  include/linux/rpmsg/qcom_glink.h |  6 ++++++
->  3 files changed, 33 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index ff26f2b68752..9028cea2d81e 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -42,6 +42,13 @@ static void glink_subdev_stop(struct rproc_subdev *subdev, bool crashed)
->  	glink->edge = NULL;
->  }
->  
-> +static void glink_subdev_unprepare(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
-> +
-> +	qcom_glink_ssr_notify(glink->ssr_name);
-> +}
-> +
->  /**
->   * qcom_add_glink_subdev() - try to add a GLINK subdevice to rproc
->   * @rproc:	rproc handle to parent the subdevice
-> @@ -64,6 +71,7 @@ void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink,
->  	glink->dev = dev;
->  	glink->subdev.start = glink_subdev_start;
->  	glink->subdev.stop = glink_subdev_stop;
-> +	glink->subdev.unprepare = glink_subdev_unprepare;
->  
->  	rproc_add_subdev(rproc, &glink->subdev);
->  }
-> diff --git a/drivers/soc/qcom/glink_ssr.c b/drivers/soc/qcom/glink_ssr.c
-> index d7babe3d67bc..847d79c935f1 100644
-> --- a/drivers/soc/qcom/glink_ssr.c
-> +++ b/drivers/soc/qcom/glink_ssr.c
-> @@ -54,6 +54,19 @@ struct glink_ssr {
->  	struct completion completion;
->  };
->  
-> +/* Notifier list for all registered glink_ssr instances */
-> +static BLOCKING_NOTIFIER_HEAD(ssr_notifiers);
-> +
-> +/**
-> + * qcom_glink_ssr_notify() - notify GLINK SSR about stopped remoteproc
-> + * @ssr_name:	name of the remoteproc that has been stopped
-> + */
-> +void qcom_glink_ssr_notify(const char *ssr_name)
-> +{
-> +	blocking_notifier_call_chain(&ssr_notifiers, 0, (void *)ssr_name);
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_glink_ssr_notify);
-> +
->  static int qcom_glink_ssr_callback(struct rpmsg_device *rpdev,
->  				   void *data, int len, void *priv, u32 addr)
->  {
-> @@ -81,8 +94,9 @@ static int qcom_glink_ssr_callback(struct rpmsg_device *rpdev,
->  	return 0;
->  }
->  
-> -static int qcom_glink_ssr_notify(struct notifier_block *nb, unsigned long event,
-> -				 void *data)
-> +static int qcom_glink_ssr_notifier_call(struct notifier_block *nb,
-> +					unsigned long event,
-> +					void *data)
->  {
->  	struct glink_ssr *ssr = container_of(nb, struct glink_ssr, nb);
->  	struct do_cleanup_msg msg;
-> @@ -121,18 +135,18 @@ static int qcom_glink_ssr_probe(struct rpmsg_device *rpdev)
->  
->  	ssr->dev = &rpdev->dev;
->  	ssr->ept = rpdev->ept;
-> -	ssr->nb.notifier_call = qcom_glink_ssr_notify;
-> +	ssr->nb.notifier_call = qcom_glink_ssr_notifier_call;
->  
->  	dev_set_drvdata(&rpdev->dev, ssr);
->  
-> -	return qcom_register_ssr_notifier(&ssr->nb);
-> +	return blocking_notifier_chain_register(&ssr_notifiers, &ssr->nb);
->  }
->  
->  static void qcom_glink_ssr_remove(struct rpmsg_device *rpdev)
->  {
->  	struct glink_ssr *ssr = dev_get_drvdata(&rpdev->dev);
->  
-> -	qcom_unregister_ssr_notifier(&ssr->nb);
-> +	blocking_notifier_chain_unregister(&ssr_notifiers, &ssr->nb);
->  }
->  
->  static const struct rpmsg_device_id qcom_glink_ssr_match[] = {
-> diff --git a/include/linux/rpmsg/qcom_glink.h b/include/linux/rpmsg/qcom_glink.h
-> index 96e26d94719f..09daa0acde2c 100644
-> --- a/include/linux/rpmsg/qcom_glink.h
-> +++ b/include/linux/rpmsg/qcom_glink.h
-> @@ -26,4 +26,10 @@ static inline void qcom_glink_smem_unregister(struct qcom_glink *glink) {}
->  
->  #endif
->  
-> +#if IS_ENABLED(CONFIG_RPMSG_QCOM_GLINK_SSR)
-> +void qcom_glink_ssr_notify(const char *ssr_name);
-> +#else
-> +static inline void qcom_glink_ssr_notify(const char *ssr_name) {}
-> +#endif
-> +
->  #endif
-> -- 
-> 2.24.0
-> 
+static inline u8 *ssp_response_data(struct ssp_response_iu *iu)
+{
+      return iu.resp_data;
+}
+
+      Arnd
