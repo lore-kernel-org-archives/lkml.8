@@ -2,89 +2,99 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB96C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E7DC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDDCF208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339814;
-	bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JujC7FXMCmLP13yPJFPI7ZpQgah+fvveMh9VlPXVogr13WynwRzNkCRIn5w1h76LQ
-	 r43oIZ3pGTsget1YK0GesCbmgucF20V1xPRNtLKl7psNTqW5QY0rKN4ysz2732gtAq
-	 t+/aI+FfRqIXZJXlFHOa9sBa15mA2dWgTEhaYg0I=
+	by mail.kernel.org (Postfix) with ESMTP id 737A220757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HVR74c+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgEANaN (ORCPT
+        id S1729905AbgEANaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:16 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:9192 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbgEANaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B781A208D6;
-        Fri,  1 May 2020 13:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339810;
-        bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDmIlfpybFALJLGUvkP7SNyg3QSA5vtqMT4wWwTIrL62oHEDqhZqupPog75S7JsKJ
-         OnMWfSchb4jO/wHmEKuSgtiXfJIL02oiZame6R74hiLHpZUsrAhykM0rbf56d7XmiX
-         G8YnAPzbyFMqwZNItpUT81LDg62qaFYENNpzO0Lc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.9 56/80] UAS: no use logging any details in case of ENODEV
-Date:   Fri,  1 May 2020 15:21:50 +0200
-Message-Id: <20200501131530.483623421@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
-References: <20200501131513.810761598@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729897AbgEANaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:13 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49DCmL4hYwz7N;
+        Fri,  1 May 2020 15:30:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588339811; bh=df1zMSo857OmD6bMwuGX0U3QsXa2EYWws/vLhmRKD5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HVR74c+TgNmjXzHbHgAf8zUizG6qUVh2yQtlEpfUuorGlirN04XEI/Xkt+C3HFnUU
+         08uYs/Ld7bZdjV5O84mbKhVCZp4zzKNBCo0qhqVplbXhl5IetrUc5uY8oasWazxWTE
+         usDHiLz3W49Xmu0+oHXX2eNCy6xAJih94CiSy5sUg7jZQuMPrqRGW6MgEvM1UeWLts
+         zue5D0xdSWakcXYlGEgkaDuT4CDWZ/UEC+QDDAjY1lxeVtLGkuELiOLYGwUS0PWBzR
+         WKXVx+1IAVix88Mck3SlhyMeSYlmxnZ/NaFHIcMczrZ4Lt/jjOpuS6MEWwfuN58m9c
+         YBFkWWhuSrT5Q==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 1 May 2020 15:30:08 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 02/11] power: charger-manager: don't write through
+ desc->properties
+Message-ID: <20200501133008.GA8927@qmqm.qmqm.pl>
+References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
+ <a529e64edb81a4795fe0b6480f1e4051bed1b099.1585944770.git.mirq-linux@rere.qmqm.pl>
+ <20200501123849.ws2a5ybeeej6phyr@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200501123849.ws2a5ybeeej6phyr@earth.universe>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+On Fri, May 01, 2020 at 02:38:49PM +0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Fri, Apr 03, 2020 at 10:20:31PM +0200, Micha³ Miros³aw wrote:
+> > psy_desc->properties will become pointer to const.  Avoid writing
+> > through the pointer to enable constification of the tables elsewhere.
+> > 
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> For patches 1-3 I used my version, that I wrote in parallel while
+> reviewing a different patch series. It is slightly different, but
+> achieves the same goal.
 
-commit 5963dec98dc52d52476390485f07a29c30c6a582 upstream.
+There is a bug in the tree now regarding use of num_properties
+in charger-manager.  Following patch should fix it.
 
-Once a device is gone, the internal state does not matter anymore.
-There is no need to spam the logs.
+Best Regards,
+Micha³ Miros³aw
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 326349f824619 ("uas: add dead request list")
-Link: https://lore.kernel.org/r/20200415141750.811-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/storage/uas.c |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -191,6 +191,9 @@ static void uas_log_cmd_state(struct scs
- 	struct uas_cmd_info *ci = (void *)&cmnd->SCp;
- 	struct uas_cmd_info *cmdinfo = (void *)&cmnd->SCp;
- 
-+	if (status == -ENODEV) /* too late */
-+		return;
-+
- 	scmd_printk(KERN_INFO, cmnd,
- 		    "%s %d uas-tag %d inflight:%s%s%s%s%s%s%s%s%s%s%s%s ",
- 		    prefix, status, cmdinfo->uas_tag,
-
-
+diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+index a71e2ee81423..2ef53dc1f2fb 100644
+--- a/drivers/power/supply/charger-manager.c
++++ b/drivers/power/supply/charger-manager.c
+@@ -1740,14 +1740,14 @@ static int charger_manager_probe(struct platform_device *pdev)
+ 	}
+ 	if (!power_supply_get_property(fuel_gauge,
+ 					  POWER_SUPPLY_PROP_CHARGE_NOW, &val)) {
+-		properties[cm->charger_psy_desc.num_properties] =
++		properties[num_properties] =
+ 				POWER_SUPPLY_PROP_CHARGE_NOW;
+ 		num_properties++;
+ 	}
+ 	if (!power_supply_get_property(fuel_gauge,
+ 					  POWER_SUPPLY_PROP_CURRENT_NOW,
+ 					  &val)) {
+-		properties[cm->charger_psy_desc.num_properties] =
++		properties[num_properties] =
+ 				POWER_SUPPLY_PROP_CURRENT_NOW;
+ 		num_properties++;
+ 	}
