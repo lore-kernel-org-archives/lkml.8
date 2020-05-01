@@ -2,52 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE51C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706AFC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7FA208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422842173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340135;
-	bh=MbyVjo+lOl6lSQYPR/41sIKikNh8GxySSkuDlon1o3o=;
+	s=default; t=1588340143;
+	bh=+H7PFAZPvShQZdie03AT/x/QpAs3IlQg0D5YNNrV2co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tLTiWpOpr5QVOOehbkSBQR6cth0jCm05f6igJed4SeFDKyY7/rZbC9rKB0bMUz8U5
-	 Nr+KMm7RhZPSaOaxS2iaREU69iph9d6C32fymhvZieFA4wJyDEwG9h+cd0crf2TJ7d
-	 1GKEbhyU2a2tm3axs7VTZypHQsKkpDgzpTJCyDR8=
+	b=JQSB/FOsp/Qx1nptzAqqdzQtI4gWXnLb3LocX/hrA5L9kQWpe/m7JgK05wK5ZxfGV
+	 CAvI74tOzj+59TSZOONq150xAydGN7pHNt29bwhEGjZHAAqrmC12/2I3ot0halNp1b
+	 VJdNLLtVrLWzvS+27lU7xeT9aIFkiGE1yf05Seao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgEANfe (ORCPT
+        id S1730216AbgEANfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33710 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:35:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730747AbgEANf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:27 -0400
+        id S1730690AbgEANfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B34D208DB;
-        Fri,  1 May 2020 13:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1ED624954;
+        Fri,  1 May 2020 13:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340126;
-        bh=MbyVjo+lOl6lSQYPR/41sIKikNh8GxySSkuDlon1o3o=;
+        s=default; t=1588340136;
+        bh=+H7PFAZPvShQZdie03AT/x/QpAs3IlQg0D5YNNrV2co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoebOk/3uhRXrFcu/yv6PohcmcuPdJWcDlVZchmfYdT50prmFFucle8W64xBNFUcE
-         2mMPRuD0DTeM3ZMBZhu6iRpRG9lFTaDHw9Ay7MvC2D8/+0uNwZ4hlzpvUUCEXiSLX+
-         NrMgOPIXoK7094ThgKsEWf7OzG5cosEtTiV7h5wA=
+        b=Ux8UZs4PIYjufV1eVzBXER0/dfYkoUXecZhuFAyoh33bS7vKclyfn0auf3M0Obv18
+         5iN4Zhvjwdyc2eIqhoIW1yCJNkwTy0yo0+Kxz1a6OHsPFvLahLnj8UXSaVsQe12CkN
+         eCQuM7ebsI4CjxdgL7fm0CdqET173CeNbseTbNoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harish Sriram <harish@linux.ibm.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 117/117] ext4: check for non-zero journal inum in ext4_calculate_overhead
-Date:   Fri,  1 May 2020 15:22:33 +0200
-Message-Id: <20200501131558.720685754@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 108/117] ext4: convert BUG_ONs to WARN_ONs in mballoc.c
+Date:   Fri,  1 May 2020 15:22:24 +0200
+Message-Id: <20200501131558.096375385@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,73 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit f1eec3b0d0a849996ebee733b053efa71803dad5 upstream.
+[ Upstream commit 907ea529fc4c3296701d2bfc8b831dd2a8121a34 ]
 
-While calculating overhead for internal journal, also check
-that j_inum shouldn't be 0. Otherwise we get below error with
-xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
+If the in-core buddy bitmap gets corrupted (or out of sync with the
+block bitmap), issue a WARN_ON and try to recover.  In most cases this
+involves skipping trying to allocate out of a particular block group.
+We can end up declaring the file system corrupted, which is fair,
+since the file system probably should be checked before we proceed any
+further.
 
-It could be simply reproduced with loop device with an external journal
-and marking blockdev as RO before mounting.
-
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
-NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
-<...>
-NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
-LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
-<...>
-Call Trace:
-generic_make_request_checks+0x6b0/0x7d0 (unreliable)
-generic_make_request+0x3c/0x420
-submit_bio+0xd8/0x200
-submit_bh_wbc+0x1e8/0x250
-__sync_dirty_buffer+0xd0/0x210
-ext4_commit_super+0x310/0x420 [ext4]
-__ext4_error+0xa4/0x1e0 [ext4]
-__ext4_iget+0x388/0xe10 [ext4]
-ext4_get_journal_inode+0x40/0x150 [ext4]
-ext4_calculate_overhead+0x5a8/0x610 [ext4]
-ext4_fill_super+0x3188/0x3260 [ext4]
-mount_bdev+0x778/0x8f0
-ext4_mount+0x28/0x50 [ext4]
-mount_fs+0x74/0x230
-vfs_kern_mount.part.6+0x6c/0x250
-do_mount+0x2fc/0x1280
-sys_mount+0x158/0x180
-system_call+0x5c/0x70
-EXT4-fs (pmem1p2): no journal found
-EXT4-fs (pmem1p2): can't get journal size
-EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
-
-Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
+Link: https://lore.kernel.org/r/20200414035649.293164-1-tytso@mit.edu
+Google-Bug-Id: 34811296
+Google-Bug-Id: 34639169
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/mballoc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3456,7 +3456,8 @@ int ext4_calculate_overhead(struct super
- 	 */
- 	if (sbi->s_journal && !sbi->journal_bdev)
- 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
--	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
-+	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
-+		/* j_inum for internal journal is non-zero */
- 		j_inode = ext4_get_journal_inode(sb, j_inum);
- 		if (j_inode) {
- 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 745a89d30a57a..d7cedfaa1cc08 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1952,7 +1952,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+ 	int free;
+ 
+ 	free = e4b->bd_info->bb_free;
+-	BUG_ON(free <= 0);
++	if (WARN_ON(free <= 0))
++		return;
+ 
+ 	i = e4b->bd_info->bb_first_free;
+ 
+@@ -1973,7 +1974,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+ 		}
+ 
+ 		mb_find_extent(e4b, i, ac->ac_g_ex.fe_len, &ex);
+-		BUG_ON(ex.fe_len <= 0);
++		if (WARN_ON(ex.fe_len <= 0))
++			break;
+ 		if (free < ex.fe_len) {
+ 			ext4_grp_locked_error(sb, e4b->bd_group, 0, 0,
+ 					"%d free clusters as per "
+-- 
+2.20.1
+
 
 
