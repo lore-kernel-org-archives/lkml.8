@@ -2,129 +2,122 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A3EC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BA2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C23320757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15AF120757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340910;
+	bh=9qMdGIHBfu8UAL3/kDkX7rnO57gJouswbtIyHkb7wmw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FKvxaEDpl/bdTlA8PxGUrOaDbxEd+n9ljsdmI6VaWxTvyW7L/oViOqZ/ZrwUXywxd
+	 YDbkXjakDxwzRmYpVA5t+R9ab1iQfD/ZPlAuEqyAY1l5jDN3w4LeUIIie+0PDZv/63
+	 oAOcorqUt/QkPLpd9W8DAHWHurNq3ZaMZsaOkvnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbgEANsS (ORCPT
+        id S1729291AbgEANma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731925AbgEANsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:48:14 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E47C08E859;
-        Fri,  1 May 2020 06:48:13 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3703E2A3057
-Received: by earth.universe (Postfix, from userid 1000)
-        id C13453C08C7; Fri,  1 May 2020 15:48:08 +0200 (CEST)
-Date:   Fri, 1 May 2020 15:48:08 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 02/11] power: charger-manager: don't write through
- desc->properties
-Message-ID: <20200501134808.dbmsc7sy7pffiqvr@earth.universe>
-References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
- <a529e64edb81a4795fe0b6480f1e4051bed1b099.1585944770.git.mirq-linux@rere.qmqm.pl>
- <20200501123849.ws2a5ybeeej6phyr@earth.universe>
- <20200501133008.GA8927@qmqm.qmqm.pl>
+        Fri, 1 May 2020 09:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730592AbgEANmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81627205C9;
+        Fri,  1 May 2020 13:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340544;
+        bh=9qMdGIHBfu8UAL3/kDkX7rnO57gJouswbtIyHkb7wmw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZCAWu7kjEzJ/2fLgogIat95n5rvZmKQ4hgQ5vVUL/AfllmXwYg4xpldpSVo12ooBo
+         o5dXIiXyh+AZds8nIW3zp3SCp6qGTnVCSP+Ch4I9pnvAp+ge6vuYhUpctdOuMtmuNt
+         QAt2M1VytE3uDuepCvBAnH+rv+0ZQbpuF431xDpo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ann T Ropea <bedhanger@gmx.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.6 029/106] hwmon: (drivetemp) Use drivetemps true module name in Kconfig section
+Date:   Fri,  1 May 2020 15:23:02 +0200
+Message-Id: <20200501131547.479111909@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="knuoulvhycxt3vyk"
-Content-Disposition: inline
-In-Reply-To: <20200501133008.GA8927@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ann T Ropea <bedhanger@gmx.de>
 
---knuoulvhycxt3vyk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 6bdf8f3efe867c5893e27431a555e41f54ed7f9a upstream.
 
-Hi,
+The addition of the support for reading the temperature of ATA drives as
+per commit 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives
+with temperature sensors") lists in the respective Kconfig section the
+name of the module to be optionally built as "satatemp".
 
-On Fri, May 01, 2020 at 03:30:08PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> On Fri, May 01, 2020 at 02:38:49PM +0200, Sebastian Reichel wrote:
-> > Hi,
-> >=20
-> > On Fri, Apr 03, 2020 at 10:20:31PM +0200, Micha=C5=82 Miros=C5=82aw wro=
-te:
-> > > psy_desc->properties will become pointer to const.  Avoid writing
-> > > through the pointer to enable constification of the tables elsewhere.
-> > >=20
-> > > Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> > For patches 1-3 I used my version, that I wrote in parallel while
-> > reviewing a different patch series. It is slightly different, but
-> > achieves the same goal.
->=20
-> There is a bug in the tree now regarding use of num_properties
-> in charger-manager.  Following patch should fix it.
+However, building the kernel modules with "CONFIG_SENSORS_DRIVETEMP=m",
+does not generate a file named "satatemp.ko".
 
-Thanks, I folded this into the charger-manager patch.
+Instead, the rest of the original commit uses the term "drivetemp" and
+a file named "drivetemp.ko" ends up in the kernel's modules directory.
+This file has the right ingredients:
 
--- Sebastian
+	$ strings /path/to/drivetemp.ko | grep ^description
+	description=Hard drive temperature monitor
 
-> Best Regards,
-> Micha=C5=82 Miros=C5=82aw
->=20
-> diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/suppl=
-y/charger-manager.c
-> index a71e2ee81423..2ef53dc1f2fb 100644
-> --- a/drivers/power/supply/charger-manager.c
-> +++ b/drivers/power/supply/charger-manager.c
-> @@ -1740,14 +1740,14 @@ static int charger_manager_probe(struct platform_=
-device *pdev)
->  	}
->  	if (!power_supply_get_property(fuel_gauge,
->  					  POWER_SUPPLY_PROP_CHARGE_NOW, &val)) {
-> -		properties[cm->charger_psy_desc.num_properties] =3D
-> +		properties[num_properties] =3D
->  				POWER_SUPPLY_PROP_CHARGE_NOW;
->  		num_properties++;
->  	}
->  	if (!power_supply_get_property(fuel_gauge,
->  					  POWER_SUPPLY_PROP_CURRENT_NOW,
->  					  &val)) {
-> -		properties[cm->charger_psy_desc.num_properties] =3D
-> +		properties[num_properties] =3D
->  				POWER_SUPPLY_PROP_CURRENT_NOW;
->  		num_properties++;
->  	}
+and modprobing it produces the expected result:
 
---knuoulvhycxt3vyk
-Content-Type: application/pgp-signature; name="signature.asc"
+	# drivetemp is not loaded
+	$ sensors -u drivetemp-scsi-4-0
+	Specified sensor(s) not found!
+	$ sudo modprobe drivetemp
+	$ sensors -u drivetemp-scsi-4-0
+	drivetemp-scsi-4-0
+	Adapter: SCSI adapter
+	temp1:
+	  temp1_input: 35.000
+	  temp1_max: 60.000
+	  temp1_min: 0.000
+	  temp1_crit: 70.000
+	  temp1_lcrit: -40.000
+	  temp1_lowest: 20.000
+	  temp1_highest: 36.000
 
------BEGIN PGP SIGNATURE-----
+Fix Kconfig by referring to the true name of the module.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6sKIwACgkQ2O7X88g7
-+pprmA//a2gYLZogVty4flbheMGa30mYF3mxI3KM495HeF2OrPAN2fN9zZXsPQwC
-hgwuhIqpsTHzjFIvFzQ1RsAJjVTrGsvwBUd875zxqf0z4FO++UYRhdZmpxC6rFCI
-cTaAgyRrnuQjlBHHZTfzbcOQlM4W6hskLOaOR7NFSIoAn7KvrBCc/tRHUcY9f4JY
-aOKi34jSGG8WcnIPIDBgcFRuL66Xzh7qbKkYK5j1Q7VbXxps6YXYeDyqI7Nx6R2r
-W2K1Elo2eIrXTXb5Z2CV2xP0lFkcAYTn+B7i4IiKU6hL6ctH0d1hbUVM6OOxDGHR
-ThEOKHmHBgcrvXDZ+J40s4QddmIUgCDs5wzBIm2qbNKohnYOpTusn6M2Psld1Ae/
-n8vNAaWFhArjD0NSNN9UrmGQE+BV0Eu3RpC8YQ33C4TAy9zT6g964Bs9Zty57iaa
-hHjlMCHrAEIRoNGiloElrCA1BKV9DnhkL4nqt0XeCh3PUJ2W/OAgv3hXg0YMWJM8
-ha2E9Jmgqyi2C8hphFSjP5bDMtQQx2yEugn0lqcaREdgdeaOCaslmUYd1BQ4uZbA
-l/mBn1qz2Thv3iO/ZGK9GT7Z+jqkZAZI0fTUswhl2Ag1n3UPTJgwPpbWzO/40Qbw
-0WjrCnetZxodJT/UXg0L2roQrgh0Mh0IR5Cs3V0wTeQJWi5OoTI=
-=GnxU
------END PGP SIGNATURE-----
+Fixes: 5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
+Signed-off-by: Ann T Ropea <bedhanger@gmx.de>
+Link: https://lore.kernel.org/r/20200406235521.185309-1-bedhanger@gmx.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---knuoulvhycxt3vyk--
+---
+ drivers/hwmon/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -403,7 +403,7 @@ config SENSORS_DRIVETEMP
+ 	  hard disk drives.
+ 
+ 	  This driver can also be built as a module. If so, the module
+-	  will be called satatemp.
++	  will be called drivetemp.
+ 
+ config SENSORS_DS620
+ 	tristate "Dallas Semiconductor DS620"
+
+
