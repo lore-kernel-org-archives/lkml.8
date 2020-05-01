@@ -2,161 +2,102 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87789C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0416CC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE802137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FpzpiJAj"
+	by mail.kernel.org (Postfix) with ESMTP id D32AD2137B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgEARSJ (ORCPT
+        id S1730194AbgEARSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729246AbgEARSJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:18:09 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C11BC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:18:08 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l20so4805808pgb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=QDlWf9LzZNbk9dgJ+RBVnfsnQ3+A0mxSDEKIw0bzaco=;
-        b=FpzpiJAjtrsI5WVV4SKUJKHzij1rnmdtadoDsR0qqk+CXqE/hUHWXsPL2oRuS5hZOA
-         aONes5w4zEx6gmkZDZ6e+DDNyY6oF1sBt8OTtkCNHUF7lIpD793t1sJeXqTogQzRv1FF
-         rQVS4UbK3usuavte361SjI3SyujPmUqmJQaBjPO2z569bDBeC1Au4je5MaiW2UZo7e0A
-         c0t+3N2zecfZcjev5eK3OlU9k0rqur4pKZOp57pJMLMFZVQ2Gcq8V9DtbUU15VXWgiWb
-         aAODoOXCfGrarLxotuNODA72LF/1aktUrRpZ0A499uAy6tKJ+aez5X8Cu3PlM0p5KlhW
-         15gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=QDlWf9LzZNbk9dgJ+RBVnfsnQ3+A0mxSDEKIw0bzaco=;
-        b=Cq9J+EWng1zagK1sf6Acb3rNm5zjDLq2cl3eiB020oCu3umErDumnfBuKhb4oW1sYM
-         y2eW58KZVqhEs7GBgBkivr+btl26MSouMLgmkx/MB5atpSO2xUdQEHYpk0awXgHFgMf9
-         fxPvspt8bDp6UZN15GJAePsmPK0mC8XGAHFpk22rWLwOtroig2i7NNoMuo8DGA9VdD/8
-         S7nmX37SurtN67UQyrVDpda8QG5TixUrpLTmki7tHhBtp/sUrtIyPsICCZKwzV5n6A60
-         3UN0bUWe4jT+SyVnKeHRjV6lge8PESrOGkRTszzTEgTeHRkPFpVl4rXaxfw1OmaojqL7
-         b4Jg==
-X-Gm-Message-State: AGi0Puah44S18KFEnOSMCzOzfOZdEXaOXwPgFDdHJtO/cIuYKhSEhjK1
-        FLYKnoQavEP6H9hNkFlr026Nul7skl9QXg==
-X-Google-Smtp-Source: APiQypIbVNlKonsbj1FeJLncadYmaCauJ4vAfbpeDxwqDEqE4vTJNbAUdn7MtIgDmvTSQ6gmVXXCGQ==
-X-Received: by 2002:aa7:9a87:: with SMTP id w7mr5070915pfi.47.1588353487288;
-        Fri, 01 May 2020 10:18:07 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21c1::158c? ([2620:10d:c090:400::5:bb5c])
-        by smtp.gmail.com with ESMTPSA id i72sm2915863pfe.104.2020.05.01.10.18.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 10:18:06 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v2] eventfd: convert to f_op->read_iter()
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <c71b2091-a86e-cc81-056d-de2f1e839f50@kernel.dk>
-Date:   Fri, 1 May 2020 11:18:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 13:18:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19945 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729202AbgEARSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:18:30 -0400
+IronPort-SDR: ShSxVb1kpZgQ2bq7gzOdeZ6IhUReEnIjdgcM1Wj5MQ1RfeGgtXVsamZQNuboQpwKctyBI7Q3gk
+ mqtOU/6lLtcg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 10:18:29 -0700
+IronPort-SDR: R2OHZlJ5m4ujiSXIVvaGSStL0azGkDVM04Moca/qctbpNzEmR/lPEzkfc2x5+KowINCeguMIHy
+ 4dEJuDVXUKuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
+   d="scan'208";a="405797056"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga004.jf.intel.com with ESMTP; 01 May 2020 10:18:28 -0700
+Date:   Fri, 1 May 2020 10:18:28 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Helge Deller <deller@gmx.de>, x86@kernel.org,
+        linux-csky@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Chris Zankel <chris@zankel.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH V1 00/10] Remove duplicated kmap code
+Message-ID: <20200501171828.GA673260@iweiny-DESK2.sc.intel.com>
+References: <20200430203845.582900-1-ira.weiny@intel.com>
+ <20200501085456.GL27858@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501085456.GL27858@infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-eventfd is using ->read() as it's file_operations read handler, but
-this prevents passing in information about whether a given IO operation
-is blocking or not. We can only use the file flags for that. To support
-async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
-support. Convert eventfd to using ->read_iter().
+On Fri, May 01, 2020 at 01:54:56AM -0700, Christoph Hellwig wrote:
+> In addition to the work already it the series, it seems like
+> LAST_PKMAP_MASK, PKMAP_ADDR and PKMAP_NR can also be consolidated
+> to common code.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Agreed, I mentioned in the cover letter there are similarities...
 
----
+> 
+> Also kmap_atomic_high_prot / kmap_atomic_pfn could move into common
+> code, maybe keyed off a symbol selected by the actual users that
+> need it.  It also seems like it doesn't actually ever need to be
+> exported.
 
-Since v1:
+...  but these are not as readily obvious, at least to me.  I do see a pattern
+but the differences seemed subtle enough that it would take a while to ensure
+correctness.  So I'd like to see this series go in and build on it.
 
-- Add FMODE_NOWAIT to the eventfd file
+> 
+> This in turn would lead to being able to allow io_mapping_map_atomic_wc
+> on all architectures, which might make nouveau and qxl happy, but maybe
+> that can be left for another series.
 
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 78e41c7c3d05..d590c2141d39 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -216,10 +216,11 @@ int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *w
- }
- EXPORT_SYMBOL_GPL(eventfd_ctx_remove_wait_queue);
- 
--static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
--			    loff_t *ppos)
-+static ssize_t eventfd_read(struct kiocb *iocb, struct iov_iter *iov)
- {
-+	struct file *file = iocb->ki_filp;
- 	struct eventfd_ctx *ctx = file->private_data;
-+	size_t count = iov_iter_count(iov);
- 	ssize_t res;
- 	__u64 ucnt = 0;
- 	DECLARE_WAITQUEUE(wait, current);
-@@ -231,7 +232,8 @@ static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
- 	res = -EAGAIN;
- 	if (ctx->count > 0)
- 		res = sizeof(ucnt);
--	else if (!(file->f_flags & O_NONBLOCK)) {
-+	else if (!(file->f_flags & O_NONBLOCK) &&
-+		 !(iocb->ki_flags & IOCB_NOWAIT)) {
- 		__add_wait_queue(&ctx->wqh, &wait);
- 		for (;;) {
- 			set_current_state(TASK_INTERRUPTIBLE);
-@@ -257,7 +259,7 @@ static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
- 	}
- 	spin_unlock_irq(&ctx->wqh.lock);
- 
--	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
-+	if (res > 0 && copy_to_iter(&ucnt, res, iov) < res)
- 		return -EFAULT;
- 
- 	return res;
-@@ -329,7 +331,7 @@ static const struct file_operations eventfd_fops = {
- #endif
- 	.release	= eventfd_release,
- 	.poll		= eventfd_poll,
--	.read		= eventfd_read,
-+	.read_iter	= eventfd_read,
- 	.write		= eventfd_write,
- 	.llseek		= noop_llseek,
- };
-@@ -427,8 +429,17 @@ static int do_eventfd(unsigned int count, int flags)
- 
- 	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
- 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
--	if (fd < 0)
-+	if (fd < 0) {
- 		eventfd_free_ctx(ctx);
-+	} else {
-+		struct file *file;
-+
-+		file = fget(fd);
-+		if (file) {
-+			file->f_mode |= FMODE_NOWAIT;
-+			fput(file);
-+		}
-+	}
- 
- 	return fd;
- }
+I agree, that this should be follow on patches.  I still need to fix the
+bisect-ability and I don't want to bog down 0-day with a longer series.
 
--- 
-Jens Axboe
+Thanks for the review!
+Ira
 
