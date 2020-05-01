@@ -2,51 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F7C47259
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D51C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8C9B205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8901C205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340786;
-	bh=tD3zOv8bsJgydoBG6kFrPw2CiE43HwdTyu1zaZF25Mo=;
+	s=default; t=1588340788;
+	bh=Xj0OB1AH/mPjPpR15hCJJfIMtthHJTuauzSbltQTh7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vq3ldW/IkYeFG+U/NukGzrbb/XBfxjUaODzx6H5gO1gd9hQe77Aqw4JZ+fZwstx6T
-	 oVBeUCYFrqtkAzWBLxNgtuhHDZCCCY+4ivj9vnnj3fLsAoorV4bAn35d2Bpx5Ru8h2
-	 8f/IRaN2BoUD8+UA7HzjEK/YHPANEw31SAIKlJdE=
+	b=STImLeJ3VYUcvGuFKHdYdo9wryIaEwYXW/jS85LoSA8y0nr9QBlkOg5exziMuotmS
+	 9MQgVaZv17RmaciPoqQWYuhLWEc5OKv+5aRrJlu6sTEVhgbsmN0W3fCFVpag9JJjT+
+	 DEsJkko/7pXjoAZ3zaTu0b6zu3igUGe26qbal83Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731793AbgEANox (ORCPT
+        id S1731728AbgEANq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgEANom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:42 -0400
+        id S1729386AbgEANoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A25420836;
-        Fri,  1 May 2020 13:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70C9E205C9;
+        Fri,  1 May 2020 13:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340681;
-        bh=tD3zOv8bsJgydoBG6kFrPw2CiE43HwdTyu1zaZF25Mo=;
+        s=default; t=1588340693;
+        bh=Xj0OB1AH/mPjPpR15hCJJfIMtthHJTuauzSbltQTh7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=famoT9SQSYDiZrpJAgl/O9ElcZyytq292Orh8hxudfA3j/9oeyoAU/CmwvlLmwQPk
-         mn0Z37vsiIzSp7j3Wrm/51ypOXQsSHc1Z5hly4DsAQYau9/OxrZXi5Tq3036WRf9XI
-         zA9mzMdnVBqytvGjtN22/nk+ceSqcZp9Mv8P+KyE=
+        b=nNyiFzF56Gwi9UafLj5OFazcuBpB78AY8FzM2ACzNjdwX0gti2797qrpOLViNXOzq
+         cIrckMZ0hENDkCOQ+mvlRj6mWST9NfZ/rnCyiRaX+YQv25BwNUwS3QQLky3dBBsXh+
+         z9Ne1et41EDwZWJVXU/WIL1h6ZD8eB2VJFZ8OcSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olaf Hering <olaf@aepfle.de>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 070/106] x86: hyperv: report value of misc_features
-Date:   Fri,  1 May 2020 15:23:43 +0200
-Message-Id: <20200501131552.594887594@linuxfoundation.org>
+        stable@vger.kernel.org, Tuong Lien <tuong.t.lien@dektech.com.au>,
+        Hoang Le <hoang.h.le@dektech.com.au>,
+        Jon Maloy <jmaloy@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 098/106] tipc: Add a missing case of TIPC_DIRECT_MSG type
+Date:   Fri,  1 May 2020 15:24:11 +0200
+Message-Id: <20200501131555.045930082@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,38 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olaf Hering <olaf@aepfle.de>
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
+commit 8b1e5b0a99f04bda2d6c85ecfe5e68a356c10914 upstream.
 
-A few kernel features depend on ms_hyperv.misc_features, but unlike its
-siblings ->features and ->hints, the value was never reported during boot.
+In the commit f73b12812a3d
+("tipc: improve throughput between nodes in netns"), we're missing a check
+to handle TIPC_DIRECT_MSG type, it's still using old sending mechanism for
+this message type. So, throughput improvement is not significant as
+expected.
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
-Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Besides that, when sending a large message with that type, we're also
+handle wrong receiving queue, it should be enqueued in socket receiving
+instead of multicast messages.
+
+Fix this by adding the missing case for TIPC_DIRECT_MSG.
+
+Fixes: f73b12812a3d ("tipc: improve throughput between nodes in netns")
+Reported-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Acked-by: Jon Maloy <jmaloy@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/tipc/msg.h    |    5 +++++
+ net/tipc/node.c   |    3 ++-
+ net/tipc/socket.c |    2 +-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 5e296a7e60363..ebf34c7bc8bc0 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
- 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+--- a/net/tipc/msg.h
++++ b/net/tipc/msg.h
+@@ -394,6 +394,11 @@ static inline u32 msg_connected(struct t
+ 	return msg_type(m) == TIPC_CONN_MSG;
+ }
  
--	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
--		ms_hyperv.features, ms_hyperv.hints);
-+	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-+		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
++static inline u32 msg_direct(struct tipc_msg *m)
++{
++	return msg_type(m) == TIPC_DIRECT_MSG;
++}
++
+ static inline u32 msg_errcode(struct tipc_msg *m)
+ {
+ 	return msg_bits(m, 1, 25, 0xf);
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -1586,7 +1586,8 @@ static void tipc_lxc_xmit(struct net *pe
+ 	case TIPC_MEDIUM_IMPORTANCE:
+ 	case TIPC_HIGH_IMPORTANCE:
+ 	case TIPC_CRITICAL_IMPORTANCE:
+-		if (msg_connected(hdr) || msg_named(hdr)) {
++		if (msg_connected(hdr) || msg_named(hdr) ||
++		    msg_direct(hdr)) {
+ 			tipc_loopback_trace(peer_net, list);
+ 			spin_lock_init(&list->lock);
+ 			tipc_sk_rcv(peer_net, list);
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -1461,7 +1461,7 @@ static int __tipc_sendmsg(struct socket
+ 	}
  
- 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
- 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
--- 
-2.20.1
-
+ 	__skb_queue_head_init(&pkts);
+-	mtu = tipc_node_get_mtu(net, dnode, tsk->portid, false);
++	mtu = tipc_node_get_mtu(net, dnode, tsk->portid, true);
+ 	rc = tipc_msg_build(hdr, m, 0, dlen, mtu, &pkts);
+ 	if (unlikely(rc != dlen))
+ 		return rc;
 
 
