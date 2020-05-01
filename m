@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA8CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D5DC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C98E20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F1D2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340931;
-	bh=P2FPlNLwFu1BCj1FNepdbv+lSCP7PjbV+bjvFbzBD9g=;
+	s=default; t=1588340941;
+	bh=zS4435gaHbhXcNFQzlsGB0b2rao3xyinhG5EY9EUhTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLN2RN595M3xfaTp1FgGk8+9GCNo1Dex2YhtMNnAAWl490wADbgDC0ebl684oEhba
-	 HuAvE7USo2AdWOu1SBiyXmDri7lbkCDuTH+GlOaBdjcF4zDZaeToTZRNaBAb8m2+hF
-	 zkdMIZOwlDpFMszqsDClFcauXgpAHcpo532I1C/8=
+	b=plrwXlPh1EjtO3/iFo1ZUTeeX/d6A/09VoriWRouCqUSpcoPt0lXcMftUruGcqTTp
+	 bFU58+/0gHbZgn4UKzQe20gBD3BRoVgSrUylSiYaWEZJV0EGzWDl57jULbiPAO9TOW
+	 06xrSrLGWPisBXQchF1/Leampnp1Xzt+laPn9rZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731766AbgEANsu (ORCPT
+        id S1731114AbgEANlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42662 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731468AbgEANmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:42:09 -0400
+        id S1731195AbgEANlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:41:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99626205C9;
-        Fri,  1 May 2020 13:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8D4C208DB;
+        Fri,  1 May 2020 13:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340529;
-        bh=P2FPlNLwFu1BCj1FNepdbv+lSCP7PjbV+bjvFbzBD9g=;
+        s=default; t=1588340504;
+        bh=zS4435gaHbhXcNFQzlsGB0b2rao3xyinhG5EY9EUhTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJxdBPhyPOZwbqPlVZOio4p/yaSSvM8mtnF7K76L6sMFwTqQQd7ffUosMZusza9ov
-         aWwbQV8ni7VdzsPVXFR+y47lcPRtJ5BJmoS+yS7i35tSaXmGQZkzqhy3WHRAG8D8xX
-         kRYdNUGqPPmcwZBohWdyzF7D0n1/jSx3ObW3Y4z4=
+        b=MW4emRmpQN+XDbSuj0NVcC5GZqAW9tC0Thee2DxjItPMTNtTLLkLHuyBNiHF+mkNh
+         pEXqWK5iSOpRR5uKuK2wpMw4m9gBzmsHAYclHFnqOi3t3Z0sSuZTiMTHZCfkuQrpgv
+         ATjMbwTIxiwZU/7U/mTgJQ6i+eNkI8lvDulVPsds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 019/106] ASoC: samsung: s3c24xx-i2s: Fix build after removal of DAI suspend/resume
-Date:   Fri,  1 May 2020 15:22:52 +0200
-Message-Id: <20200501131546.455042594@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.6 009/106] afs: Make record checking use TASK_UNINTERRUPTIBLE when appropriate
+Date:   Fri,  1 May 2020 15:22:42 +0200
+Message-Id: <20200501131544.659017431@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,182 +58,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: David Howells <dhowells@redhat.com>
 
-commit ec21bdc6dd16d74b3674ef1fd12ae8e4e7418603 upstream.
+commit c4bfda16d1b40d1c5941c61b5aa336bdd2d9904a upstream.
 
-Commit 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
-removed the DAI side suspend/resume hooks and switched entirely to
-component suspend/resume.  However the Samsung SoC s3c-i2s-v2 driver was
-not updated.
+When an operation is meant to be done uninterruptibly (such as
+FS.StoreData), we should not be allowing volume and server record checking
+to be interrupted.
 
-Move the suspend/resume hooks from s3c-i2s-v2.c to s3c2412-i2s.c while
-changing dai to component which allows to keep the struct
-snd_soc_component_driver const.
-
-This fixes build errors:
-
-    sound/soc/samsung/s3c-i2s-v2.c: In function ‘s3c_i2sv2_register_component’:
-    sound/soc/samsung/s3c-i2s-v2.c:730:9: error: ‘struct snd_soc_dai_driver’ has no member named ‘suspend’
-      dai_drv->suspend = s3c2412_i2s_suspend;
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: https://lore.kernel.org/r/20200413124548.28197-1-krzk@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-
 ---
- sound/soc/samsung/s3c-i2s-v2.c  |   57 ----------------------------------------
- sound/soc/samsung/s3c2412-i2s.c |   56 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 57 deletions(-)
+ fs/afs/internal.h |    2 +-
+ fs/afs/rotate.c   |    6 +++---
+ fs/afs/server.c   |    7 ++-----
+ fs/afs/volume.c   |    8 +++++---
+ 4 files changed, 11 insertions(+), 12 deletions(-)
 
---- a/sound/soc/samsung/s3c-i2s-v2.c
-+++ b/sound/soc/samsung/s3c-i2s-v2.c
-@@ -656,60 +656,6 @@ void s3c_i2sv2_cleanup(struct snd_soc_da
- }
- EXPORT_SYMBOL_GPL(s3c_i2sv2_cleanup);
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1335,7 +1335,7 @@ extern struct afs_volume *afs_create_vol
+ extern void afs_activate_volume(struct afs_volume *);
+ extern void afs_deactivate_volume(struct afs_volume *);
+ extern void afs_put_volume(struct afs_cell *, struct afs_volume *);
+-extern int afs_check_volume_status(struct afs_volume *, struct key *);
++extern int afs_check_volume_status(struct afs_volume *, struct afs_fs_cursor *);
  
--#ifdef CONFIG_PM
--static int s3c2412_i2s_suspend(struct snd_soc_dai *dai)
--{
--	struct s3c_i2sv2_info *i2s = to_info(dai);
--	u32 iismod;
--
--	if (dai->active) {
--		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
--		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
--		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
--
--		/* some basic suspend checks */
--
--		iismod = readl(i2s->regs + S3C2412_IISMOD);
--
--		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
--			pr_warn("%s: RXDMA active?\n", __func__);
--
--		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
--			pr_warn("%s: TXDMA active?\n", __func__);
--
--		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
--			pr_warn("%s: IIS active\n", __func__);
--	}
--
--	return 0;
--}
--
--static int s3c2412_i2s_resume(struct snd_soc_dai *dai)
--{
--	struct s3c_i2sv2_info *i2s = to_info(dai);
--
--	pr_info("dai_active %d, IISMOD %08x, IISCON %08x\n",
--		dai->active, i2s->suspend_iismod, i2s->suspend_iiscon);
--
--	if (dai->active) {
--		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
--		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
--		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
--
--		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
--		       i2s->regs + S3C2412_IISFIC);
--
--		ndelay(250);
--		writel(0x0, i2s->regs + S3C2412_IISFIC);
--	}
--
--	return 0;
--}
--#else
--#define s3c2412_i2s_suspend NULL
--#define s3c2412_i2s_resume  NULL
--#endif
--
- int s3c_i2sv2_register_component(struct device *dev, int id,
- 			   const struct snd_soc_component_driver *cmp_drv,
- 			   struct snd_soc_dai_driver *dai_drv)
-@@ -727,9 +673,6 @@ int s3c_i2sv2_register_component(struct
- 	if (!ops->delay)
- 		ops->delay = s3c2412_i2s_delay;
+ /*
+  * write.c
+--- a/fs/afs/rotate.c
++++ b/fs/afs/rotate.c
+@@ -192,7 +192,7 @@ bool afs_select_fileserver(struct afs_fs
+ 			write_unlock(&vnode->volume->servers_lock);
  
--	dai_drv->suspend = s3c2412_i2s_suspend;
--	dai_drv->resume = s3c2412_i2s_resume;
--
- 	return devm_snd_soc_register_component(dev, cmp_drv, dai_drv, 1);
- }
- EXPORT_SYMBOL_GPL(s3c_i2sv2_register_component);
---- a/sound/soc/samsung/s3c2412-i2s.c
-+++ b/sound/soc/samsung/s3c2412-i2s.c
-@@ -117,6 +117,60 @@ static int s3c2412_i2s_hw_params(struct
- 	return 0;
- }
+ 			set_bit(AFS_VOLUME_NEEDS_UPDATE, &vnode->volume->flags);
+-			error = afs_check_volume_status(vnode->volume, fc->key);
++			error = afs_check_volume_status(vnode->volume, fc);
+ 			if (error < 0)
+ 				goto failed_set_error;
  
-+#ifdef CONFIG_PM
-+static int s3c2412_i2s_suspend(struct snd_soc_component *component)
-+{
-+	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
-+	u32 iismod;
-+
-+	if (component->active) {
-+		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
-+		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
-+		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
-+
-+		/* some basic suspend checks */
-+
-+		iismod = readl(i2s->regs + S3C2412_IISMOD);
-+
-+		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
-+			pr_warn("%s: RXDMA active?\n", __func__);
-+
-+		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
-+			pr_warn("%s: TXDMA active?\n", __func__);
-+
-+		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
-+			pr_warn("%s: IIS active\n", __func__);
-+	}
-+
-+	return 0;
-+}
-+
-+static int s3c2412_i2s_resume(struct snd_soc_component *component)
-+{
-+	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
-+
-+	pr_info("component_active %d, IISMOD %08x, IISCON %08x\n",
-+		component->active, i2s->suspend_iismod, i2s->suspend_iiscon);
-+
-+	if (component->active) {
-+		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
-+		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
-+		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
-+
-+		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
-+		       i2s->regs + S3C2412_IISFIC);
-+
-+		ndelay(250);
-+		writel(0x0, i2s->regs + S3C2412_IISFIC);
-+	}
-+
-+	return 0;
-+}
-+#else
-+#define s3c2412_i2s_suspend NULL
-+#define s3c2412_i2s_resume  NULL
-+#endif
-+
- #define S3C2412_I2S_RATES \
- 	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 | SNDRV_PCM_RATE_16000 | \
- 	SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \
-@@ -146,6 +200,8 @@ static struct snd_soc_dai_driver s3c2412
+@@ -281,7 +281,7 @@ bool afs_select_fileserver(struct afs_fs
  
- static const struct snd_soc_component_driver s3c2412_i2s_component = {
- 	.name		= "s3c2412-i2s",
-+	.suspend	= s3c2412_i2s_suspend,
-+	.resume		= s3c2412_i2s_resume,
- };
+ 			set_bit(AFS_VOLUME_WAIT, &vnode->volume->flags);
+ 			set_bit(AFS_VOLUME_NEEDS_UPDATE, &vnode->volume->flags);
+-			error = afs_check_volume_status(vnode->volume, fc->key);
++			error = afs_check_volume_status(vnode->volume, fc);
+ 			if (error < 0)
+ 				goto failed_set_error;
  
- static int s3c2412_iis_dev_probe(struct platform_device *pdev)
+@@ -341,7 +341,7 @@ start:
+ 	/* See if we need to do an update of the volume record.  Note that the
+ 	 * volume may have moved or even have been deleted.
+ 	 */
+-	error = afs_check_volume_status(vnode->volume, fc->key);
++	error = afs_check_volume_status(vnode->volume, fc);
+ 	if (error < 0)
+ 		goto failed_set_error;
+ 
+--- a/fs/afs/server.c
++++ b/fs/afs/server.c
+@@ -594,12 +594,9 @@ retry:
+ 	}
+ 
+ 	ret = wait_on_bit(&server->flags, AFS_SERVER_FL_UPDATING,
+-			  TASK_INTERRUPTIBLE);
++			  (fc->flags & AFS_FS_CURSOR_INTR) ?
++			  TASK_INTERRUPTIBLE : TASK_UNINTERRUPTIBLE);
+ 	if (ret == -ERESTARTSYS) {
+-		if (!(fc->flags & AFS_FS_CURSOR_INTR) && server->addresses) {
+-			_leave(" = t [intr]");
+-			return true;
+-		}
+ 		fc->error = ret;
+ 		_leave(" = f [intr]");
+ 		return false;
+--- a/fs/afs/volume.c
++++ b/fs/afs/volume.c
+@@ -281,7 +281,7 @@ error:
+ /*
+  * Make sure the volume record is up to date.
+  */
+-int afs_check_volume_status(struct afs_volume *volume, struct key *key)
++int afs_check_volume_status(struct afs_volume *volume, struct afs_fs_cursor *fc)
+ {
+ 	time64_t now = ktime_get_real_seconds();
+ 	int ret, retries = 0;
+@@ -299,7 +299,7 @@ retry:
+ 	}
+ 
+ 	if (!test_and_set_bit_lock(AFS_VOLUME_UPDATING, &volume->flags)) {
+-		ret = afs_update_volume_status(volume, key);
++		ret = afs_update_volume_status(volume, fc->key);
+ 		clear_bit_unlock(AFS_VOLUME_WAIT, &volume->flags);
+ 		clear_bit_unlock(AFS_VOLUME_UPDATING, &volume->flags);
+ 		wake_up_bit(&volume->flags, AFS_VOLUME_WAIT);
+@@ -312,7 +312,9 @@ retry:
+ 		return 0;
+ 	}
+ 
+-	ret = wait_on_bit(&volume->flags, AFS_VOLUME_WAIT, TASK_INTERRUPTIBLE);
++	ret = wait_on_bit(&volume->flags, AFS_VOLUME_WAIT,
++			  (fc->flags & AFS_FS_CURSOR_INTR) ?
++			  TASK_INTERRUPTIBLE : TASK_UNINTERRUPTIBLE);
+ 	if (ret == -ERESTARTSYS) {
+ 		_leave(" = %d", ret);
+ 		return ret;
 
 
