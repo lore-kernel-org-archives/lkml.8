@@ -2,131 +2,119 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1960C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016B2C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98826208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fzK/KHQn"
+	by mail.kernel.org (Postfix) with ESMTP id C484F21974
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588368943;
+	bh=eiBa5lb9f1X6eXJkHTMOoxS6e/4+tIwVweqAWNnkT7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RwqE7OWVsOMYehY//g9JvKCiu08jEcC5VhAL2OtUwROrGc1KzgO6xyoBbSN3uLFeF
+	 QVUdew07ZRTRxqGMCkg7D5f8u9ZxI0hjGkbalZ02JxA9l/JV9F3CKsOIb2X44jL2nU
+	 njDP8BXoHTgoMX8Vl3H/fA2r7k+Jz4l4CAkvqORY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgEAVdr (ORCPT
+        id S1726698AbgEAVfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:33:47 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7746 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVdr (ORCPT
+        Fri, 1 May 2020 17:35:43 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40302 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAVfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:33:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eac95770000>; Fri, 01 May 2020 14:32:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 01 May 2020 14:33:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 01 May 2020 14:33:46 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May
- 2020 21:33:46 +0000
-Received: from [10.2.55.159] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May 2020
- 21:33:46 +0000
-Subject: Re: [PATCH] mm/gup.c: Handle error at earliest for incorrect nr_pages
- value
-To:     Souptick Joarder <jrdr.linux@gmail.com>,
-        <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <1588277518-21425-1-git-send-email-jrdr.linux@gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c25cf212-8684-a107-bc9c-c7067dea7447@nvidia.com>
-Date:   Fri, 1 May 2020 14:33:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 17:35:42 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i27so3664416ota.7;
+        Fri, 01 May 2020 14:35:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L7Pjlj+bds8pkUkLj6i4yY9snS8jpLg7qkPY4JTHgEQ=;
+        b=GEECfWiyicKbw05rfUnN7ZaIMVhlK72Lt8GLny5jfw2EPLNmr+8yyKDxCJwekdGyyb
+         kAR9S4sHWsLmvyy1sTjNtx0OhVWZeev/4EkF1iN71n60Ovcai42kcgSQ7d075ZoP2hzS
+         iGRNIRIv0UUPtc/+21S4VOsoJb80UoDBpFDC7QLtVdQeYTjF+tFq/gSSVzm7ThBMC1kF
+         The8M1qljArYzBmNuV/OtR0w1eDs6QtwF/iZviwgjvC1wk0eDAVQtuCdX2kW8LEEBY/P
+         77s6ZFeHMI/DGy/LJ2iW7iFiffXA7JJzuyD7609FJQSMAHnPUVhHIFWTXPNzURrbu2SG
+         PEzA==
+X-Gm-Message-State: AGi0PuYse/GE+tbQxD0WKgoD0ItLes8WYbriQIep6y/y+emq1+StwZYX
+        TF+51y4vtFR43xydm3rY2m0vKOQ=
+X-Google-Smtp-Source: APiQypIcS4ZldtIHDn1qsuo/ZwhYHO44SNWEmJ0QrB++gTcgGWj4b0A/SY9x+Mc7/f+BhQfvihMVFA==
+X-Received: by 2002:a9d:107:: with SMTP id 7mr5574092otu.48.1588368941638;
+        Fri, 01 May 2020 14:35:41 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a7sm1110562otr.15.2020.05.01.14.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 14:35:41 -0700 (PDT)
+Received: (nullmailer pid 16259 invoked by uid 1000);
+        Fri, 01 May 2020 21:35:40 -0000
+Date:   Fri, 1 May 2020 16:35:40 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Subject: Re: [PATCH v5 2/3] Add the bindings for the bq25150 and bq25155
+ 500mA charging ICs from Texas Instruments.
+Message-ID: <20200501213540.GA15569@bogus>
+References: <20200501175118.26226-1-dmurphy@ti.com>
+ <20200501175118.26226-3-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1588277518-21425-1-git-send-email-jrdr.linux@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588368759; bh=/ss50mYtclSvHtRZUxtjzklZeDRr5uBZhGcufaww9YQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fzK/KHQnVa/a6WZRuvTdd3i9GOn1hnFmBgNAX7C8VTnV8Vy9YGPiHtsyzcq7dFHSQ
-         tLcOa12Ng3TZAe9DuDCBKayi0igPsizn0cdbOk41LB+1IZ2hwcELvaW5qa5DXqzB9c
-         Gxir0rmabitEWeAX7fK2vHn2fdOx8NAEZkBuvB5ODs8YKyOVq2y/WsZgHLZqR+JQNy
-         BqFKI4+gylvLuK1OYmuGa/3tp09hoB+KOtGM9dqU40pFm559EBkLnr9jQ4xNFb+RoN
-         vsXi7nt+tw6aAb0nBucSt3qRkI0tX0ONqS0uulbdTAqcqV7fR7rUQfj6tO6eWiOJEi
-         jfL/+ugqsykeA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501175118.26226-3-dmurphy@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-30 13:11, Souptick Joarder wrote:
-> As per documentation, pin_user_pages_fast() & get_user_pages_fast()
-> will return 0, if nr_pages <= 0. But this can be figure out only after
-> going inside the internal_get_user_pages_fast().
+On Fri, 1 May 2020 12:51:17 -0500, Dan Murphy wrote:
+> From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
 > 
-> This can be handled early. Adding a check for the same.
-
-
-Please, no. For precisely the reasons that Andrew gave: you are
-attempting to optimize for a case that doesn't matter other than
-for error handling, and which is already handled adequately. And
-as he also pointed out, it very slightly UN-optimizes the path that
-we *do* care about. So why are you still advocating for this?
-
-If you want to change the gup/pup API so that asking for zero pages
-means -EINVAL, then fine, go for it. That's a large thing, and a
-tree-wide audit, but if you feel it's worth pursuing then it's at
-least consistent.
-
-But this patch here needs to be abandoned.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
+> Description:
+> The BQ2515X family of devices are highly integrated battery management
+> ICs that integrate the most common functions for wearbale devices
+> namely a charger, an output voltage rail, ADC for battery and system
+> monitoring, and a push-button controller.
 > 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Datasheets:
+> http://www.ti.com/lit/ds/symlink/bq25150.pdf
+> http://www.ti.com/lit/ds/symlink/bq25155.pdf
+> 
+> CC: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
 > ---
->   mm/gup.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 50681f0..a13aaa6 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2817,6 +2817,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->   	 */
->   	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
->   		return -EINVAL;
-> +	if (nr_pages <= 0)
-> +		return 0;
->   
->   	/*
->   	 * The caller may or may not have explicitly set FOLL_GET; either way is
-> @@ -2854,6 +2856,8 @@ int pin_user_pages_fast(unsigned long start, int nr_pages,
->   	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->   	if (WARN_ON_ONCE(gup_flags & FOLL_GET))
->   		return -EINVAL;
-> +	if (nr_pages <= 0)
-> +		return 0;
->   
->   	gup_flags |= FOLL_PIN;
->   	return internal_get_user_pages_fast(start, nr_pages, gup_flags, pages);
+>  .../bindings/power/supply/bq2515x.yaml        | 99 +++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
 > 
 
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/power/supply/bq2515x.yaml:  while scanning a block scalar
+  in "<unicode string>", line 81, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 96, column 1
+Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/power/supply/bq2515x.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/power/supply/bq2515x.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2515x.yaml: ignoring, error parsing file
+warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2515x.yaml: ignoring, error parsing file
+warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1281414
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
