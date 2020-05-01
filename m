@@ -2,121 +2,135 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7D7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7404C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B2320708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588346690;
-	bh=6SWvTu/VEYFP0rGFICjtBRh0FLf8COFAflcT/LRMfOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nnXAyf3igULAHzpoudqrTGkMkQK0ddajhFJuVXrm6HUhCfSF+itpQ34lNLwIQUhi3
-	 yQ0fAx8cPvD5PddIOzehiPJdoU8OjkN43d9phUUwsV+9JY+jPHljyYchxxo45/vLqB
-	 MHRKi8oPipWsbzbNpBEB75tpK59dCW+mABY2ksc8=
+	by mail.kernel.org (Postfix) with ESMTP id A6E5820708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:25:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bU9qHVx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbgEAPYu (ORCPT
+        id S1729779AbgEAPZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:24:50 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55527 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbgEAPYt (ORCPT
+        Fri, 1 May 2020 11:25:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728443AbgEAPZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:24:49 -0400
-Received: by mail-pj1-f66.google.com with SMTP id a32so18295pje.5;
-        Fri, 01 May 2020 08:24:47 -0700 (PDT)
+        Fri, 1 May 2020 11:25:24 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39391C061A0C;
+        Fri,  1 May 2020 08:25:24 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o185so4691356pgo.3;
+        Fri, 01 May 2020 08:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=dAeSZvNZMQXDqJlUqtS3Ql4DBa9037cFjMUtWfOB8LY=;
+        b=bU9qHVx0wOmVaH0gDZL/CnxJRT9/wID9QouT+BfYlH1sq4r/36z6qlaZS9zt4HMzaq
+         bImUyhsmyviLEyNpToB2N9bRtVkvKeFxbw4w/9q08DUkwrbMRg1FCWhWrQJB/UL/jNdV
+         ZeHfFb3lK1G5RgeMVeeTBMQ7XOLSHrnzGXWgNd2qHzaKy92XEQsfgbjZ9SC2PQ+QXTZ5
+         4u/aLhZA5tmYohVQkBxjq4HrBEbYggLmubZZkDp0yWdqw9+XqQfpu2YetvLfKG+0DGBn
+         AGbgsK4EUrqwMJMojTjRvucuqKtyXh5iV+4BGnGX3zvfYPpFVZtNA0eSQOyURwd0FCq3
+         iPCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X20mKpRRVq/ark63BbLpoCynpLjPmjVnD3XcfxieJmo=;
-        b=nxLBwiUyssNTIBTkfse5CKboAwAshhtDUb2MiZ4uTej8w+2Hp7VUFZr+RiLxxUjANg
-         41i5Bn193Ai81hZUpbFSOIs/yWTn3f55Dd5nhrQehajf0UZBbKOQn1HPs32g87MxZ4aN
-         aA69TRjwlhffllEZg3LToNIXn5AJEPJ7elNznjbdgCn86PXOo9GaDHPfCNMoHMb2eeaV
-         efGcT1hMGtxFs7R9EgdgoRoqqDeal0KmSzOATx3kWGywGo0cC3SRFQlJ3KWPzFUVP6Y8
-         Cj3gJSvSirnh8egzSkODjBzhP/JIFamm3wTv97F0hZux/wV7bABL/OXg+RCdBRZyyFfi
-         OZAw==
-X-Gm-Message-State: AGi0Pua5rXtk1NfvOsomIPaNSfCZWQWDABp2iWnK7mUSQACtNWL4++6f
-        FhzDo4ZUL/U/xL4n0gXfUxI=
-X-Google-Smtp-Source: APiQypIS4cJmDrisB6sfUSd9KAjmqSPPBVrVSde1HXQ1i+jak+p623AzeudhI/4PsYT0cfEmmyEQeA==
-X-Received: by 2002:a17:902:a513:: with SMTP id s19mr5192257plq.84.1588346687212;
-        Fri, 01 May 2020 08:24:47 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a15sm11899pju.3.2020.05.01.08.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 08:24:45 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5D8FD4046C; Fri,  1 May 2020 15:24:45 +0000 (UTC)
-Date:   Fri, 1 May 2020 15:24:45 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
-        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
-        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
-        yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
-Message-ID: <20200501152445.GN11244@42.do-not-panic.com>
-References: <20200429074627.5955-1-mcgrof@kernel.org>
- <20200429074627.5955-5-mcgrof@kernel.org>
- <20200429112637.GD21892@infradead.org>
- <20200429114542.GJ11244@42.do-not-panic.com>
- <20200429115051.GA27378@infradead.org>
- <20200429120230.GK11244@42.do-not-panic.com>
- <20200429120406.GA913@infradead.org>
- <20200429122152.GL11244@42.do-not-panic.com>
- <20200429125726.GA2123334@kroah.com>
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=dAeSZvNZMQXDqJlUqtS3Ql4DBa9037cFjMUtWfOB8LY=;
+        b=NtkuwP3xUrO3C4AEioDgWlcADA2rJKrOQ1nupBF5d2dUDZnsFgvKWjpITn8dkLwa4H
+         P2K4ckuXwQaNBaE/bPvLD1UcdfyfTkhPhv0yAO0AP6ZGdL3MUG4bbs5JqC90SUU74+bh
+         D6Ob4SW96Y0+orE+96MbxzsMgMCEz3HPI1xCSd/II5hnpYS6XxicHVwnMCAuRHHH8j8D
+         vLuvNKYWhNaXYhr+4gRDVoNkwOhOYZMImpz/J8oHRmmzUxRWrXTufBE0H1U8/MZIpa2t
+         guiZ/T2iiIyq/CA8sQea2E9hfPG6JUlTKhWKXYDotRB17Wp5GpVB02lk7jY/dXohUqqh
+         wScA==
+X-Gm-Message-State: AGi0PuaTyVG2DvF90p+hIQLRg2z75LPi3MtS17G3nh4OsVdeo8vg68uM
+        WxzITIsfb4/rJ1dMNBiomcE=
+X-Google-Smtp-Source: APiQypJ3ooMOdWJHnDylgqEuIXANhYHe9A29Vf38JrKTGlpb0/WPJyP+gYgiiBVuf/k/KrCdTGnOQQ==
+X-Received: by 2002:a62:76c3:: with SMTP id r186mr4567105pfc.190.1588346723341;
+        Fri, 01 May 2020 08:25:23 -0700 (PDT)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id q11sm2528147pfl.97.2020.05.01.08.25.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 08:25:22 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
+Thread-Topic: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
+Thread-Index: AXotNjkw5GEX6TEnWRYx1vOqydMHfLflLPuG
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Fri, 1 May 2020 15:25:17 +0000
+Message-ID: <SL2P216MB0105440F639E502B31DE6A42AAAB0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <20200501113921.366597-1-maz@kernel.org>
+In-Reply-To: <20200501113921.366597-1-maz@kernel.org>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429125726.GA2123334@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 02:57:26PM +0200, Greg KH wrote:
-> On Wed, Apr 29, 2020 at 12:21:52PM +0000, Luis Chamberlain wrote:
-> > On Wed, Apr 29, 2020 at 05:04:06AM -0700, Christoph Hellwig wrote:
-> > > On Wed, Apr 29, 2020 at 12:02:30PM +0000, Luis Chamberlain wrote:
-> > > > > Err, that function is static and has two callers.
-> > > > 
-> > > > Yes but that is to make it easier to look for who is creating the
-> > > > debugfs_dir for either the request_queue or partition. I'll export
-> > > > blk_debugfs_root and we'll open code all this.
-> > > 
-> > > No, please not.  exported variables are usually a bad idea.  Just
-> > > skip the somewhat pointless trivial static function.
-> > 
-> > Alrighty. It has me thinking we might want to only export those symbols
-> > to a specific namespace. Thoughts, preferences?
-> > 
-> > BLOCK_GENHD_PRIVATE ?
-> 
-> That's a nice add-on issue after this is fixed.  As Christoph and I
-> pointed out, you have _less_ code in the file if you remove the static
-> wrapper function.  Do that now and then worry about symbol namespaces
-> please.
+On 5/1/20, 7:39 AM, Marc Zyngier wrote:
+> On a system that uses the internal DWC MSI widget, I get this
+> warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
+>
+>   debugfs: File ':soc:pcie@fc000000' in directory 'domains' already prese=
+nt!
+>
+> This is due to the fact that the DWC MSI code tries to register two
+> IRQ domains for the same firmware node, without telling the low
+> level code how to distinguish them (by setting a bus token). This
+> further confuses debugfs which tries to create corresponding
+> files for each domain.
+>
+> Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+> the closest thing we have as to "generic MSI".
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-So it turns out that in the old implementation, it was implicit that the
-request_queue directory was shared with the scsi drive. So, the
-q->debugfs_dir *will* be set, and as we have it here', we'd silently be
-overwriting the old q->debugfs_dir, as the queue is the same. To keep
-things working as it used to, with both, we just need to use a symlink
-here. With the old way, we'd *always* create the sg directory and re-use
-that, however since we can only have one blktrace per request_queue, it
-still had the same restriction, this was just implicit. Using a symlink
-will make this much more obvious and upkeep the old functionality. We'll
-need to only export one symbol. I'll roll this in.
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 
-  Luis
+
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
+pci/controller/dwc/pcie-designware-host.c
+> index 395feb8ca051..3c43311bb95c 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+>  		return -ENOMEM;
+>  	}
+> =20
+> +	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
+> +
+>  	pp->msi_domain =3D pci_msi_create_irq_domain(fwnode,
+>  						   &dw_pcie_msi_domain_info,
+>  						   pp->irq_domain);
+> --=20
+> 2.26.2
+
