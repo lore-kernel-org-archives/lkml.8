@@ -2,181 +2,148 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F38C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8FBC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1338C208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858F724954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588339944;
+	bh=sxF3p7Zg0IrREZE4/Q9IA6NEcnxSI01vA+H+g75AhZw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xhyFIDASnX5TzqmaKWTNKK6k+WiYgea6WpwC5br6zzAzt3gHEtLzq/VHiPCLtR4ls
+	 3wgdmByJum9uuvl1KOMe25p0ymzLFmqnDM/LT4np7B0UD3tEntM4LJVw9S+KLqDzIU
+	 xqQmzetZqeQXNIi9E5OGZZ+/+ZqXWJR75Ml0kJTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgEANcU (ORCPT
+        id S1730292AbgEANcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:20 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:23307 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730254AbgEANcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:12 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 May 2020 19:01:32 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 01 May 2020 19:01:09 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id EEBE4487F; Fri,  1 May 2020 19:01:07 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-Date:   Fri,  1 May 2020 19:01:03 +0530
-Message-Id: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 1 May 2020 09:32:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730281AbgEANcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CFB624954;
+        Fri,  1 May 2020 13:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588339938;
+        bh=sxF3p7Zg0IrREZE4/Q9IA6NEcnxSI01vA+H+g75AhZw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oVvGoVfBnbSqz4m3eV+DWz9mHX42NG3baKVMolyELCIvIuVVYZ9cxNqQ3vi6KEUPO
+         a82M7nzjG45NB5luhFTGYuLthSNj/n7kruI+EApElAPYpyh3hPPkQ1jOy+6C0RGu42
+         8pzwSvo5XisKG4lSXI3QZogOFCk7ubru+fTqJZGc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 032/117] team: fix hang in team_mode_get()
+Date:   Fri,  1 May 2020 15:21:08 +0200
+Message-Id: <20200501131548.647035109@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
+References: <20200501131544.291247695@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"The PM core always increments the runtime usage counter
-before calling the ->suspend() callback and decrements it
-after calling the ->resume() callback"
+From: Taehee Yoo <ap420073@gmail.com>
 
-DPU and DSI are managed as runtime devices. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend was not getting called
-and it kept the clocks on which resulted in target not
-entering into XO shutdown.
+[ Upstream commit 1c30fbc76b8f0c07c92a8ca4cd7c456612e17eb5 ]
 
-Add changes to force suspend on runtime devices during pm sleep.
+When team mode is changed or set, the team_mode_get() is called to check
+whether the mode module is inserted or not. If the mode module is not
+inserted, it calls the request_module().
+In the request_module(), it creates a child process, which is
+the "modprobe" process and waits for the done of the child process.
+At this point, the following locks were used.
+down_read(&cb_lock()); by genl_rcv()
+    genl_lock(); by genl_rcv_msc()
+        rtnl_lock(); by team_nl_cmd_options_set()
+            mutex_lock(&team->lock); by team_nl_team_get()
 
-Changes in v1:
- - Remove unnecessary checks in the function
-    _dpu_kms_disable_dpu (Rob Clark).
+Concurrently, the team module could be removed by rmmod or "modprobe -r"
+The __exit function of team module is team_module_exit(), which calls
+team_nl_fini() and it tries to acquire following locks.
+down_write(&cb_lock);
+    genl_lock();
+Because of the genl_lock() and cb_lock, this process can't be finished
+earlier than request_module() routine.
 
-Changes in v2:
- - Avoid using suspend_late to reset the usagecount
-   as suspend_late might not be called during suspend
-   call failures (Doug).
+The problem secenario.
+CPU0                                     CPU1
+team_mode_get
+    request_module()
+                                         modprobe -r team_mode_roundrobin
+                                                     team <--(B)
+        modprobe team <--(A)
+            team_mode_roundrobin
 
-Changes in v3:
- - Use force suspend instead of managing device usage_count
-   via runtime put and get API's to trigger callbacks (Doug).
+By request_module(), the "modprobe team_mode_roundrobin" command
+will be executed. At this point, the modprobe process will decide
+that the team module should be inserted before team_mode_roundrobin.
+Because the team module is being removed.
 
-Changes in v4:
- - Check the return values of pm_runtime_force_suspend and
-   pm_runtime_force_resume API's and pass appropriately (Doug).
+By the module infrastructure, the same module insert/remove operations
+can't be executed concurrently.
+So, (A) waits for (B) but (B) also waits for (A) because of locks.
+So that the hang occurs at this point.
 
-Changes in v5:
- - With v4 patch, test cycle has uncovered issues in device resume.
+Test commands:
+    while :
+    do
+        teamd -d &
+	killall teamd &
+	modprobe -rv team_mode_roundrobin &
+    done
 
-   On bubs: cmd tx failures were seen as SW is sending panel off
-   commands when the dsi resources are turned off.
+The approach of this patch is to hold the reference count of the team
+module if the team module is compiled as a module. If the reference count
+of the team module is not zero while request_module() is being called,
+the team module will not be removed at that moment.
+So that the above scenario could not occur.
 
-   Upon suspend, DRM driver will issue a NULL composition to the
-   dpu, followed by turning off all the HW blocks.
-
-   v5 changes will serialize the NULL commit and resource unwinding
-   by handling them under PM prepare and PM complete phases there by
-   ensuring that clks are on when panel off commands are being
-   processed.
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  2 ++
- drivers/gpu/drm/msm/dsi/dsi.c           |  2 ++
- drivers/gpu/drm/msm/msm_drv.c           | 20 ++++++++++++++++----
- 3 files changed, 20 insertions(+), 4 deletions(-)
+ drivers/net/team/team.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..b886d9d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -480,6 +480,9 @@ static const struct team_mode *team_mode
+ 	struct team_mode_item *mitem;
+ 	const struct team_mode *mode = NULL;
  
- static const struct dev_pm_ops dpu_pm_ops = {
- 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
++	if (!try_module_get(THIS_MODULE))
++		return NULL;
++
+ 	spin_lock(&mode_list_lock);
+ 	mitem = __find_mode(kind);
+ 	if (!mitem) {
+@@ -495,6 +498,7 @@ static const struct team_mode *team_mode
+ 	}
  
- static const struct of_device_id dpu_dt_match[] = {
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 55ea4bc2..62704885 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
- 
- static const struct dev_pm_ops dsi_pm_ops = {
- 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static struct platform_driver dsi_driver = {
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7d985f8..47d492b 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1036,7 +1036,7 @@ static int msm_ioctl_submitqueue_close(struct drm_device *dev, void *data,
- };
- 
- #ifdef CONFIG_PM_SLEEP
--static int msm_pm_suspend(struct device *dev)
-+static int msm_pm_prepare(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
-@@ -1054,18 +1054,28 @@ static int msm_pm_suspend(struct device *dev)
- 	return 0;
+ 	spin_unlock(&mode_list_lock);
++	module_put(THIS_MODULE);
+ 	return mode;
  }
  
--static int msm_pm_resume(struct device *dev)
-+static void msm_pm_complete(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
- 	int ret;
- 
- 	if (WARN_ON(!priv->pm_state))
--		return -ENOENT;
-+		return;
- 
- 	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
- 	if (!ret)
- 		priv->pm_state = NULL;
-+}
-+
-+static int msm_pm_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	/* unwind runtime_disable called by force suspend */
-+	pm_runtime_enable(dev);
-+
-+	ret = pm_runtime_resume(dev);
- 
- 	return ret;
- }
-@@ -1102,8 +1112,10 @@ static int msm_runtime_resume(struct device *dev)
- #endif
- 
- static const struct dev_pm_ops msm_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, msm_pm_resume)
- 	SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
-+	.prepare = msm_pm_prepare,
-+	.complete = msm_pm_complete,
- };
- 
- /*
--- 
-1.9.1
+
 
