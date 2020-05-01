@@ -7,57 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88F6C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32063C4725A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C8A205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11ACB205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340974;
-	bh=wbTdBVJuZ2QGIL3DoE3RkbBh6BRtM0pmebWeNOoD6qo=;
+	s=default; t=1588340978;
+	bh=0VFc2qRc5hjTtbBiwOHfPCBNfs1qHbsn1ia/UKcpAtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUqEgz9r7QFSPgpzFLTQRzCZk34Tc0+31UyCSCfhm69JNA3j7opOFppw3mo8Nr2pw
-	 NK5u6olLVq1ixzghDLlTb2ed0skHlKbKE5VVudtozLRxeL8AJALrI3crD8G6z927S9
-	 HvWctJnw4iZe2FZ0GF6SrruhUNv2/EUIvbumbHJA=
+	b=WnN+QhnTbLewbW37rGYyZqsC1w/TftgzhqwI5DRy/gOxKkv3ZK21wP8TpmLZQvsoB
+	 nw1YW5a2s/nHBrgfDAy/3cjA8VzAhrQPl7koMmoTwEOR06LGB9Sf4+XLCmvt67Hhs8
+	 3VljwnB2B2B15qrqx4L5ap7ZnYZDZ8C+EGF19WUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbgEANte (ORCPT
+        id S1731859AbgEANth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41502 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728894AbgEANlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:41:15 -0400
+        id S1731064AbgEANlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:41:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27EA4205C9;
-        Fri,  1 May 2020 13:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E7C24955;
+        Fri,  1 May 2020 13:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340474;
-        bh=wbTdBVJuZ2QGIL3DoE3RkbBh6BRtM0pmebWeNOoD6qo=;
+        s=default; t=1588340462;
+        bh=0VFc2qRc5hjTtbBiwOHfPCBNfs1qHbsn1ia/UKcpAtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6bOLdWKr0pxVEpij5JbLDibDpoN8K8TLaxK7FB5pdxL/LPy8L++aubFFchHcr+aB
-         6bjQAife79/UHa7tJbsdhXdku42ocPt38FNk9idABRpMN54kB1PcC0PzEdEAF+6qIm
-         Kcd1+ZsvZU0BoCaAajdvbVwMdiqrsschaqhRPecs=
+        b=s20LBfh/Scg1nJtbPFCAwsqxT6dnKA7USaDeiHbgti4ec7hNHDWgXuH8k1Pw9bVpe
+         heW8HJgI8TNXARph4yoCYrPO5Ne4zW7bA66EIW+poRUEeHik3yT4ImRf2SSxxg1kSh
+         on/cbnnbxXmHq2jrNsZfopSm9J2tCcGWixWHWJhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=D0=9A=D0=BE=D1=87=D0=B5=D1=82=D0=BA=D0=BE=D0=B2=20=D0=9C=D0=B0=D0=BA=D1=81=D0=B8=D0=BC?= 
-        <fido_max@inbox.ru>, Karl Olsen <karl@micro-technic.com>,
-        Jef Driesen <jef.driesen@niko.eu>,
-        Richard Weinberger <richard@nod.at>,
-        Christian Eggers <ceggers@arri.de>,
-        "Christian Berger" <Christian.Berger@de.bosch.com>
-Subject: [PATCH 5.6 001/106] ubifs: Fix ubifs_tnc_lookup() usage in do_kill_orphans()
-Date:   Fri,  1 May 2020 15:22:34 +0200
-Message-Id: <20200501131543.592652133@linuxfoundation.org>
+        stable@vger.kernel.org, Denis Bolotin <dbolotin@marvell.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Yuval Basson <ybason@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 77/83] qed: Fix race condition between scheduling and destroying the slowpath workqueue
+Date:   Fri,  1 May 2020 15:23:56 +0200
+Message-Id: <20200501131542.391490975@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
-References: <20200501131543.421333643@linuxfoundation.org>
+In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
+References: <20200501131524.004332640@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,44 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Yuval Basson <ybason@marvell.com>
 
-commit 4ab25ac8b2b5514151d5f91cf9514df08dd26938 upstream.
+commit 3b85720d3fd72e6ef4de252cd2f67548eb645eb4 upstream.
 
-Orphans are allowed to point to deleted inodes.
-So -ENOENT is not a fatal error.
+Calling queue_delayed_work concurrently with
+destroy_workqueue might race to an unexpected outcome -
+scheduled task after wq is destroyed or other resources
+(like ptt_pool) are freed (yields NULL pointer dereference).
+cancel_delayed_work prevents the race by cancelling
+the timer triggered for scheduling a new task.
 
-Reported-by: Кочетков Максим <fido_max@inbox.ru>
-Reported-and-tested-by: "Christian Berger" <Christian.Berger@de.bosch.com>
-Tested-by: Karl Olsen <karl@micro-technic.com>
-Tested-by: Jef Driesen <jef.driesen@niko.eu>
-Fixes: ee1438ce5dc4 ("ubifs: Check link count of inodes when killing orphans.")
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Cc: Christian Eggers <ceggers@arri.de>
+Fixes: 59ccf86fe ("qed: Add driver infrastucture for handling mfw requests")
+Signed-off-by: Denis Bolotin <dbolotin@marvell.com>
+Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
+Signed-off-by: Yuval Basson <ybason@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/orphan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_main.c |   13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
---- a/fs/ubifs/orphan.c
-+++ b/fs/ubifs/orphan.c
-@@ -688,14 +688,14 @@ static int do_kill_orphans(struct ubifs_
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1087,9 +1087,6 @@ static void qed_update_pf_params(struct
+ #define QED_PERIODIC_DB_REC_INTERVAL_MS		100
+ #define QED_PERIODIC_DB_REC_INTERVAL \
+ 	msecs_to_jiffies(QED_PERIODIC_DB_REC_INTERVAL_MS)
+-#define QED_PERIODIC_DB_REC_WAIT_COUNT		10
+-#define QED_PERIODIC_DB_REC_WAIT_INTERVAL \
+-	(QED_PERIODIC_DB_REC_INTERVAL_MS / QED_PERIODIC_DB_REC_WAIT_COUNT)
  
- 			ino_key_init(c, &key1, inum);
- 			err = ubifs_tnc_lookup(c, &key1, ino);
--			if (err)
-+			if (err && err != -ENOENT)
- 				goto out_free;
+ static int qed_slowpath_delayed_work(struct qed_hwfn *hwfn,
+ 				     enum qed_slowpath_wq_flag wq_flag,
+@@ -1123,7 +1120,7 @@ void qed_periodic_db_rec_start(struct qe
  
- 			/*
- 			 * Check whether an inode can really get deleted.
- 			 * linkat() with O_TMPFILE allows rebirth of an inode.
- 			 */
--			if (ino->nlink == 0) {
-+			if (err == 0 && ino->nlink == 0) {
- 				dbg_rcvry("deleting orphaned inode %lu",
- 					  (unsigned long)inum);
+ static void qed_slowpath_wq_stop(struct qed_dev *cdev)
+ {
+-	int i, sleep_count = QED_PERIODIC_DB_REC_WAIT_COUNT;
++	int i;
  
+ 	if (IS_VF(cdev))
+ 		return;
+@@ -1135,13 +1132,7 @@ static void qed_slowpath_wq_stop(struct
+ 		/* Stop queuing new delayed works */
+ 		cdev->hwfns[i].slowpath_wq_active = false;
+ 
+-		/* Wait until the last periodic doorbell recovery is executed */
+-		while (test_bit(QED_SLOWPATH_PERIODIC_DB_REC,
+-				&cdev->hwfns[i].slowpath_task_flags) &&
+-		       sleep_count--)
+-			msleep(QED_PERIODIC_DB_REC_WAIT_INTERVAL);
+-
+-		flush_workqueue(cdev->hwfns[i].slowpath_wq);
++		cancel_delayed_work(&cdev->hwfns[i].slowpath_task);
+ 		destroy_workqueue(cdev->hwfns[i].slowpath_wq);
+ 	}
+ }
 
 
