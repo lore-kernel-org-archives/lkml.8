@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5D5C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BADC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBEB5206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B55206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341551;
-	bh=pd924RWWF35qaMXbApnuAGEJ0+1JdwtPLSCIFr1pg8E=;
+	s=default; t=1588341556;
+	bh=6ZZjgCH98qpYC/CbtgxU6mXtYtB82jt3T4S206u6knA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdlxptplmBksb9mX+IfwNPVXXPY4XajW7P23lT0vkIAzcJVCraO6zYuMTr8dRSnwq
-	 AhWCDM6rVFy4q/PobXcb26WThu1qBfAQkbUX7SxapRzK1lkkkoEvCBC0ptnCT+g0P8
-	 GA1ZFGWrcQW9TtE9TGdSp6r3rZ/eNqAKLHC7Dc6I=
+	b=pDR7BIcZStQqCbCUyAFA9t+nfEWBQiG2Csxy2SUg8el+5Hsz3xQSj5b2PpBK3m0MY
+	 CcuMb7+abNEJV24TU8S65XELlFLZGhDnA26eQfBUdLO+ZoqlSVWb1s5NQoCW3tAQxf
+	 O8zPUrfftAUc2+oGKngz4QGIzcFFmWwpcg3xqC0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgEAN3W (ORCPT
+        id S1730418AbgEAN7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgEAN3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:14 -0400
+        id S1729760AbgEAN3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A2A1208C3;
-        Fri,  1 May 2020 13:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A17208D6;
+        Fri,  1 May 2020 13:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339753;
-        bh=pd924RWWF35qaMXbApnuAGEJ0+1JdwtPLSCIFr1pg8E=;
+        s=default; t=1588339758;
+        bh=6ZZjgCH98qpYC/CbtgxU6mXtYtB82jt3T4S206u6knA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rzyU50rIb/v/4MEkQxEfyxntC/pxIlK5rMTuzPtk7cSd9OP7wX9kV4KDMnsDFphXc
-         9FRU7BTn9AfHlZVUyYGFyJG5YL18VVeuPkRdZSYFvZxSmNfulMevHILhRCLu9lkHrp
-         eK1cDUhgbnzwKj+QhTcXH6a6jgouuP9AFxPF6rno=
+        b=cszvBVMzls0sm8ukeYegC72onSDbaSsyfeDSE2nMkeCsmue/17a9oQ1yDrqjR3fcH
+         NM03Cn/X4u/oYgbv2iKemeh4hoNUJVBV+qlq725vpkWTv+kR1JWOjYLqfmveD3yICT
+         u1XCnzSU/d5UtZmHIGUZOsKzo3ELj4B7XE1AEtwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Melnychenko <andrew@daynix.com>
-Subject: [PATCH 4.9 46/80] tty: hvc: fix buffer overflow during hvc_alloc().
-Date:   Fri,  1 May 2020 15:21:40 +0200
-Message-Id: <20200501131528.064407675@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Cyril Roelandt <tipecaml@gmail.com>
+Subject: [PATCH 4.9 48/80] usb-storage: Add unusual_devs entry for JMicron JMS566
+Date:   Fri,  1 May 2020 15:21:42 +0200
+Message-Id: <20200501131528.552268132@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -58,126 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Melnychenko <andrew@daynix.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 9a9fc42b86c06120744555fea43fdcabe297c656 upstream.
+commit 94f9c8c3c404ee1f7aaff81ad4f24aec4e34a78b upstream.
 
-If there is a lot(more then 16) of virtio-console devices
-or virtio_console module is reloaded
-- buffers 'vtermnos' and 'cons_ops' are overflowed.
-In older kernels it overruns spinlock which leads to kernel freezing:
-https://bugzilla.redhat.com/show_bug.cgi?id=1786239
+Cyril Roelandt reports that his JMicron JMS566 USB-SATA bridge fails
+to handle WRITE commands with the FUA bit set, even though it claims
+to support FUA.  (Oddly enough, a later version of the same bridge,
+version 2.03 as opposed to 1.14, doesn't claim to support FUA.  Also
+oddly, the bridge _does_ support FUA when using the UAS transport
+instead of the Bulk-Only transport -- but this device was blacklisted
+for uas in commit bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron
+SATA enclosure") for apparently unrelated reasons.)
 
-To reproduce the issue, you can try simple script that
-loads/unloads module. Something like this:
-while [ 1 ]
-do
-  modprobe virtio_console
-  sleep 2
-  modprobe -r virtio_console
-  sleep 2
-done
+This patch adds a usb-storage unusual_devs entry with the BROKEN_FUA
+flag.  This allows the bridge to work properly with usb-storage.
 
-Description of problem:
-Guest get 'Call Trace' when loading module "virtio_console"
-and unloading it frequently - clearly reproduced on kernel-4.18.0:
-
-[   81.498208] ------------[ cut here ]------------
-[   81.499263] pvqspinlock: lock 0xffffffff92080020 has corrupted value 0xc0774ca0!
-[   81.501000] WARNING: CPU: 0 PID: 785 at kernel/locking/qspinlock_paravirt.h:500 __pv_queued_spin_unlock_slowpath+0xc0/0xd0
-[   81.503173] Modules linked in: virtio_console fuse xt_CHECKSUM ipt_MASQUERADE xt_conntrack ipt_REJECT nft_counter nf_nat_tftp nft_objref nf_conntrack_tftp tun bridge stp llc nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nf_tables_set nft_chain_nat_ipv6 nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 nft_chain_route_ipv6 nft_chain_nat_ipv4 nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack nft_chain_route_ipv4 ip6_tables nft_compat ip_set nf_tables nfnetlink sunrpc bochs_drm drm_vram_helper ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm i2c_piix4 pcspkr crct10dif_pclmul crc32_pclmul joydev ghash_clmulni_intel ip_tables xfs libcrc32c sd_mod sg ata_generic ata_piix virtio_net libata crc32c_intel net_failover failover serio_raw virtio_scsi dm_mirror dm_region_hash dm_log dm_mod [last unloaded: virtio_console]
-[   81.517019] CPU: 0 PID: 785 Comm: kworker/0:2 Kdump: loaded Not tainted 4.18.0-167.el8.x86_64 #1
-[   81.518639] Hardware name: Red Hat KVM, BIOS 1.12.0-5.scrmod+el8.2.0+5159+d8aa4d83 04/01/2014
-[   81.520205] Workqueue: events control_work_handler [virtio_console]
-[   81.521354] RIP: 0010:__pv_queued_spin_unlock_slowpath+0xc0/0xd0
-[   81.522450] Code: 07 00 48 63 7a 10 e8 bf 64 f5 ff 66 90 c3 8b 05 e6 cf d6 01 85 c0 74 01 c3 8b 17 48 89 fe 48 c7 c7 38 4b 29 91 e8 3a 6c fa ff <0f> 0b c3 0f 0b 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 48
-[   81.525830] RSP: 0018:ffffb51a01ffbd70 EFLAGS: 00010282
-[   81.526798] RAX: 0000000000000000 RBX: 0000000000000010 RCX: 0000000000000000
-[   81.528110] RDX: ffff9e66f1826480 RSI: ffff9e66f1816a08 RDI: ffff9e66f1816a08
-[   81.529437] RBP: ffffffff9153ff10 R08: 000000000000026c R09: 0000000000000053
-[   81.530732] R10: 0000000000000000 R11: ffffb51a01ffbc18 R12: ffff9e66cd682200
-[   81.532133] R13: ffffffff9153ff10 R14: ffff9e6685569500 R15: ffff9e66cd682000
-[   81.533442] FS:  0000000000000000(0000) GS:ffff9e66f1800000(0000) knlGS:0000000000000000
-[   81.534914] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   81.535971] CR2: 00005624c55b14d0 CR3: 00000003a023c000 CR4: 00000000003406f0
-[   81.537283] Call Trace:
-[   81.537763]  __raw_callee_save___pv_queued_spin_unlock_slowpath+0x11/0x20
-[   81.539011]  .slowpath+0x9/0xe
-[   81.539585]  hvc_alloc+0x25e/0x300
-[   81.540237]  init_port_console+0x28/0x100 [virtio_console]
-[   81.541251]  handle_control_message.constprop.27+0x1c4/0x310 [virtio_console]
-[   81.542546]  control_work_handler+0x70/0x10c [virtio_console]
-[   81.543601]  process_one_work+0x1a7/0x3b0
-[   81.544356]  worker_thread+0x30/0x390
-[   81.545025]  ? create_worker+0x1a0/0x1a0
-[   81.545749]  kthread+0x112/0x130
-[   81.546358]  ? kthread_flush_work_fn+0x10/0x10
-[   81.547183]  ret_from_fork+0x22/0x40
-[   81.547842] ---[ end trace aa97649bd16c8655 ]---
-[   83.546539] general protection fault: 0000 [#1] SMP NOPTI
-[   83.547422] CPU: 5 PID: 3225 Comm: modprobe Kdump: loaded Tainted: G        W        --------- -  - 4.18.0-167.el8.x86_64 #1
-[   83.549191] Hardware name: Red Hat KVM, BIOS 1.12.0-5.scrmod+el8.2.0+5159+d8aa4d83 04/01/2014
-[   83.550544] RIP: 0010:__pv_queued_spin_lock_slowpath+0x19a/0x2a0
-[   83.551504] Code: c4 c1 ea 12 41 be 01 00 00 00 4c 8d 6d 14 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 40 a5 02 00 4c 03 24 c5 60 48 34 91 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
-[   83.554449] RSP: 0018:ffffb51a0323fdb0 EFLAGS: 00010202
-[   83.555290] RAX: 000000000000301c RBX: ffffffff92080020 RCX: 0000000000000001
-[   83.556426] RDX: 000000000000301d RSI: 0000000000000000 RDI: 0000000000000000
-[   83.557556] RBP: ffff9e66f196a540 R08: 000000000000028a R09: ffff9e66d2757788
-[   83.558688] R10: 0000000000000000 R11: 0000000000000000 R12: 646e61725f770b07
-[   83.559821] R13: ffff9e66f196a554 R14: 0000000000000001 R15: 0000000000180000
-[   83.560958] FS:  00007fd5032e8740(0000) GS:ffff9e66f1940000(0000) knlGS:0000000000000000
-[   83.562233] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   83.563149] CR2: 00007fd5022b0da0 CR3: 000000038c334000 CR4: 00000000003406e0
-
-Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200414191503.3471783-1-andrew@daynix.com
+Reported-and-tested-by: Cyril Roelandt <tipecaml@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221613110.11262-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/hvc/hvc_console.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/usb/storage/unusual_devs.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -289,10 +289,6 @@ int hvc_instantiate(uint32_t vtermno, in
- 	vtermnos[index] = vtermno;
- 	cons_ops[index] = ops;
+--- a/drivers/usb/storage/unusual_devs.h
++++ b/drivers/usb/storage/unusual_devs.h
+@@ -2342,6 +2342,13 @@ UNUSUAL_DEV(  0x3340, 0xffff, 0x0000, 0x
+ 		USB_SC_DEVICE,USB_PR_DEVICE,NULL,
+ 		US_FL_MAX_SECTORS_64 ),
  
--	/* reserve all indices up to and including this index */
--	if (last_hvc < index)
--		last_hvc = index;
--
- 	/* check if we need to re-register the kernel console */
- 	hvc_check_console(index);
- 
-@@ -896,13 +892,22 @@ struct hvc_struct *hvc_alloc(uint32_t vt
- 		    cons_ops[i] == hp->ops)
- 			break;
- 
--	/* no matching slot, just use a counter */
--	if (i >= MAX_NR_HVC_CONSOLES)
--		i = ++last_hvc;
-+	if (i >= MAX_NR_HVC_CONSOLES) {
++/* Reported by Cyril Roelandt <tipecaml@gmail.com> */
++UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x0114,
++		"JMicron",
++		"USB to ATA/ATAPI Bridge",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_BROKEN_FUA ),
 +
-+		/* find 'empty' slot for console */
-+		for (i = 0; i < MAX_NR_HVC_CONSOLES && vtermnos[i] != -1; i++) {
-+		}
-+
-+		/* no matching slot, just use a counter */
-+		if (i == MAX_NR_HVC_CONSOLES)
-+			i = ++last_hvc + MAX_NR_HVC_CONSOLES;
-+	}
- 
- 	hp->index = i;
--	cons_ops[i] = ops;
--	vtermnos[i] = vtermno;
-+	if (i < MAX_NR_HVC_CONSOLES) {
-+		cons_ops[i] = ops;
-+		vtermnos[i] = vtermno;
-+	}
- 
- 	list_add_tail(&(hp->next), &hvc_structs);
- 	spin_unlock(&hvc_structs_lock);
+ /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
+ UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
+ 		"iRiver",
 
 
