@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203EFC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC59EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0040620757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28EC2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341090;
-	bh=QtraSO/KBfOH6GBWPZ9xnZquO0Vf93a/M99u/hbLZRA=;
+	s=default; t=1588341097;
+	bh=CKIMJQM3BUgv/kNo+zVhPYPGAjCSUM4KvYD2NODQKhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q80/pre7AMMYb8j0wsMK8wfdCd+RrBPNgucUPZISpWT5M/nVFYLpPyo2oL+3QXRwA
-	 jTEOoBg9IZ4a3bVq3AKF/QNN150xowM7w9aWPmHvl7RgoOjJQourQYoGA9ZbCG4b2a
-	 huCmYjvTEM+hm8O5yU3N2vPTQgT6sIsC9z7Oe59U=
+	b=mFoPD7lqG+sYNpfGa3KEiEL8iAiG39dxwsiEyD19xH+ijCU53cuPpX8PuymNpP4eF
+	 vgSdmcamq0q4wLtRHm/bFKnEyB4xUXP2XZeIstD7OYugrX69f+r7qwXW+kAn4mU4Qy
+	 z1N7/AGz2GCLZnp8eV2PfDZnNcvnAtAYaWbNiuBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731604AbgEANv3 (ORCPT
+        id S1731609AbgEANvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731065AbgEANif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:35 -0400
+        id S1730772AbgEANic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ACFA205C9;
-        Fri,  1 May 2020 13:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C17912173E;
+        Fri,  1 May 2020 13:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340314;
-        bh=QtraSO/KBfOH6GBWPZ9xnZquO0Vf93a/M99u/hbLZRA=;
+        s=default; t=1588340312;
+        bh=CKIMJQM3BUgv/kNo+zVhPYPGAjCSUM4KvYD2NODQKhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c+NLmu/g/UH8XkeudmVfNIXnvW/i+LhJM09ArJUnIXLP4qRhVBuCbZMkHjhXj0AFh
-         PfLf12pNcxfCNI6VUyrHaIEVmoXE04p4itaQ+ZjOdRZBM2FS5tHFg3Ysds9gTyiyY0
-         BA8RvSN/RS7xMKq9jbl5SqumqGBpaNWLepCohFeg=
+        b=yYOinUR7FAYWBey5qBSmlaXl/AUJ0gJiHnl35mjtV2rtuZ0xUpYqrPxyIhAEIb+O4
+         FRf+2S2zeyNN1CyiDVFR5mMOCmfZI1Jjeoae3Y+z2jK0X+Fzuh7cYbfVXwbh9BSqGP
+         RrSFH4qGrFhaRA/Q7AvnLjcJFFdU0HlgWWe69W/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 15/83] ASoC: q6dsp6: q6afe-dai: add missing channels to MI2S DAIs
-Date:   Fri,  1 May 2020 15:22:54 +0200
-Message-Id: <20200501131527.908472952@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 14/83] s390/ftrace: fix potential crashes when switching tracers
+Date:   Fri,  1 May 2020 15:22:53 +0200
+Message-Id: <20200501131527.389876682@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,119 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-commit 0c824ec094b5cda766c80d88c2036e28c24a4cb1 upstream.
+commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 upstream.
 
-For some reason, the MI2S DAIs do not have channels_min/max defined.
-This means that snd_soc_dai_stream_valid() returns false,
-i.e. the DAIs have neither valid playback nor capture stream.
+Switching tracers include instruction patching. To prevent that a
+instruction is patched while it's read the instruction patching is done
+in stop_machine 'context'. This also means that any function called
+during stop_machine must not be traced. Thus add 'notrace' to all
+functions called within stop_machine.
 
-It's quite surprising that this ever worked correctly,
-but in 5.7-rc1 this is now failing badly: :)
-
-Commit 0e9cf4c452ad ("ASoC: pcm: check if cpu-dai supports a given stream")
-introduced a check for snd_soc_dai_stream_valid() before calling
-hw_params(), which means that the q6i2s_hw_params() function
-was never called, eventually resulting in:
-
-    qcom-q6afe aprsvc:q6afe:4:4: no line is assigned
-
-... even though "qcom,sd-lines" is set in the device tree.
-
-Commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
-now even avoids creating PCM devices if the stream is not supported,
-which means that it is failing even earlier with e.g.:
-
-    Primary MI2S: ASoC: no backend playback stream
-
-Avoid all that trouble by adding channels_min/max for the MI2S DAIs.
-
-Fixes: 24c4cbcfac09 ("ASoC: qdsp6: q6afe: Add q6afe dai driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200415150050.616392-1-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
+Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
+Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/qcom/qdsp6/q6afe-dai.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/s390/kernel/diag.c  |    2 +-
+ arch/s390/kernel/smp.c   |    4 ++--
+ arch/s390/kernel/trace.c |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -902,6 +902,8 @@ static struct snd_soc_dai_driver q6afe_d
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -917,6 +919,8 @@ static struct snd_soc_dai_driver q6afe_d
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -931,6 +935,8 @@ static struct snd_soc_dai_driver q6afe_d
- 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -946,6 +952,8 @@ static struct snd_soc_dai_driver q6afe_d
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -960,6 +968,8 @@ static struct snd_soc_dai_driver q6afe_d
- 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -975,6 +985,8 @@ static struct snd_soc_dai_driver q6afe_d
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -989,6 +1001,8 @@ static struct snd_soc_dai_driver q6afe_d
- 			.rates = SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_8000 |
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
-@@ -1004,6 +1018,8 @@ static struct snd_soc_dai_driver q6afe_d
- 				 SNDRV_PCM_RATE_16000,
- 			.formats = SNDRV_PCM_FMTBIT_S16_LE |
- 				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 1,
-+			.channels_max = 8,
- 			.rate_min =     8000,
- 			.rate_max =     48000,
- 		},
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum n
+ }
+ EXPORT_SYMBOL(diag_stat_inc);
+ 
+-void diag_stat_inc_norecursion(enum diag_stat_enum nr)
++void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
+ {
+ 	this_cpu_inc(diag_stat.counter[nr]);
+ 	trace_s390_diagnose_norecursion(diag_map[nr].code);
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
+ 	return -1;
+ }
+ 
+-bool arch_vcpu_is_preempted(int cpu)
++bool notrace arch_vcpu_is_preempted(int cpu)
+ {
+ 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+ 		return false;
+@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
+ }
+ EXPORT_SYMBOL(arch_vcpu_is_preempted);
+ 
+-void smp_yield_cpu(int cpu)
++void notrace smp_yield_cpu(int cpu)
+ {
+ 	if (MACHINE_HAS_DIAG9C) {
+ 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
+--- a/arch/s390/kernel/trace.c
++++ b/arch/s390/kernel/trace.c
+@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
+ 
+ static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 
+-void trace_s390_diagnose_norecursion(int diag_nr)
++void notrace trace_s390_diagnose_norecursion(int diag_nr)
+ {
+ 	unsigned long flags;
+ 	unsigned int *depth;
 
 
