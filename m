@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F43EC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B0C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0512208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE83208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340445;
-	bh=7ZQPgD1vN6rg/lz6fp4Tt3s+4GGNgfJfgi2+4DuHIU4=;
+	s=default; t=1588340455;
+	bh=iw5HLB9RKg4btKlq30kLQfhmRxj+DSaKAkyxmYcdXJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+baXNgk8a5j4k/5TQRcssnt1sJO0qyBty7PSnA2nSnfVVs6vzfBzTRGNk4L4o5H+
-	 xR2xlQ7GVlcTBESPX0R78BWVbZg5mUDxyr8vzEqTX7byzZk4a4azXvJwAYfXqUHvU1
-	 YTFiCROHluLUpur7rCF41fyZAgNR8N5PeKY6T5Qk=
+	b=JU6NoVXbPm/ivEfIfeOR2PNo5PYb/a9fA4UJ/y8pkXsWTHPpQxhqWr3kfjjBWkzlH
+	 5AjwNymflf2INdTktOJL5YKz8vgSxuF7ywCjRCux4GvKtg/YLdp1UfDtmOsS93WloP
+	 GDYkjPar40WLF+cXyWNn0mw7pIp0RrrwBf9Raljo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731047AbgEANkp (ORCPT
+        id S1731364AbgEANky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731021AbgEANkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:40 -0400
+        id S1731055AbgEANkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A045E2495F;
-        Fri,  1 May 2020 13:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91C3F205C9;
+        Fri,  1 May 2020 13:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340440;
-        bh=7ZQPgD1vN6rg/lz6fp4Tt3s+4GGNgfJfgi2+4DuHIU4=;
+        s=default; t=1588340445;
+        bh=iw5HLB9RKg4btKlq30kLQfhmRxj+DSaKAkyxmYcdXJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mWhovxOwIPKEgqfsKeV6qNtw7YZZzWN7zF8r3b2TyzfoeDS4sUSSNHoIxStGgu8+
-         UIX8+HNDck7Ugubu8gPFvqF3ZqMP8YZcdgcChFuA6aZs+19HLR/YQwA422Vna+wgoR
-         Ub5Q2/T7Pe6dW+Md/mnXSZ21ZfOkiaVVU6XMIOBw=
+        b=q4AGu4nYkx4cixvlK5zQ4NvWBJcI6+/ZM2n/hSG/oNE0jjWIhDSwM3g3WAaz1Utx3
+         SN1E3rQHi14u6BrHCJ8WBev2XDQNtqYtiO/ByXWfWlyIuaVCugOGelySVr4QWB1hg2
+         sY0aSCYMIoqlgt3/jlAsY2vMMxHMV7P6VkFXZm6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 79/83] net: use indirect call wrappers for skb_copy_datagram_iter()
-Date:   Fri,  1 May 2020 15:23:58 +0200
-Message-Id: <20200501131542.761532213@linuxfoundation.org>
+        stable@vger.kernel.org, Harish Sriram <harish@linux.ibm.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.4 81/83] ext4: check for non-zero journal inum in ext4_calculate_overhead
+Date:   Fri,  1 May 2020 15:24:00 +0200
+Message-Id: <20200501131543.077383714@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -61,75 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-commit 29f3490ba9d2399d3d1b20c4aa74592d92bd4e11 upstream.
+commit f1eec3b0d0a849996ebee733b053efa71803dad5 upstream.
 
-TCP recvmsg() calls skb_copy_datagram_iter(), which
-calls an indirect function (cb pointing to simple_copy_to_iter())
-for every MSS (fragment) present in the skb.
+While calculating overhead for internal journal, also check
+that j_inum shouldn't be 0. Otherwise we get below error with
+xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
 
-CONFIG_RETPOLINE=y forces a very expensive operation
-that we can avoid thanks to indirect call wrappers.
+It could be simply reproduced with loop device with an external journal
+and marking blockdev as RO before mounting.
 
-This patch gives a 13% increase of performance on
-a single flow, if the bottleneck is the thread reading
-the TCP socket.
+[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
+------------[ cut here ]------------
+generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
+WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
+CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
+NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
+<...>
+NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
+LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
+<...>
+Call Trace:
+generic_make_request_checks+0x6b0/0x7d0 (unreliable)
+generic_make_request+0x3c/0x420
+submit_bio+0xd8/0x200
+submit_bh_wbc+0x1e8/0x250
+__sync_dirty_buffer+0xd0/0x210
+ext4_commit_super+0x310/0x420 [ext4]
+__ext4_error+0xa4/0x1e0 [ext4]
+__ext4_iget+0x388/0xe10 [ext4]
+ext4_get_journal_inode+0x40/0x150 [ext4]
+ext4_calculate_overhead+0x5a8/0x610 [ext4]
+ext4_fill_super+0x3188/0x3260 [ext4]
+mount_bdev+0x778/0x8f0
+ext4_mount+0x28/0x50 [ext4]
+mount_fs+0x74/0x230
+vfs_kern_mount.part.6+0x6c/0x250
+do_mount+0x2fc/0x1280
+sys_mount+0x158/0x180
+system_call+0x5c/0x70
+EXT4-fs (pmem1p2): no journal found
+EXT4-fs (pmem1p2): can't get journal size
+EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
 
-Fixes: 950fcaecd5cc ("datagram: consolidate datagram copy to iter helpers")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
+Reported-by: Harish Sriram <harish@linux.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/datagram.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ fs/ext4/super.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -51,6 +51,7 @@
- #include <linux/slab.h>
- #include <linux/pagemap.h>
- #include <linux/uio.h>
-+#include <linux/indirect_call_wrapper.h>
- 
- #include <net/protocol.h>
- #include <linux/skbuff.h>
-@@ -407,6 +408,11 @@ int skb_kill_datagram(struct sock *sk, s
- }
- EXPORT_SYMBOL(skb_kill_datagram);
- 
-+INDIRECT_CALLABLE_DECLARE(static size_t simple_copy_to_iter(const void *addr,
-+						size_t bytes,
-+						void *data __always_unused,
-+						struct iov_iter *i));
-+
- static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
- 			       struct iov_iter *to, int len, bool fault_short,
- 			       size_t (*cb)(const void *, size_t, void *,
-@@ -420,7 +426,8 @@ static int __skb_datagram_iter(const str
- 	if (copy > 0) {
- 		if (copy > len)
- 			copy = len;
--		n = cb(skb->data + offset, copy, data, to);
-+		n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
-+				    skb->data + offset, copy, data, to);
- 		offset += n;
- 		if (n != copy)
- 			goto short_copy;
-@@ -442,8 +449,9 @@ static int __skb_datagram_iter(const str
- 
- 			if (copy > len)
- 				copy = len;
--			n = cb(vaddr + skb_frag_off(frag) + offset - start,
--			       copy, data, to);
-+			n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
-+					vaddr + skb_frag_off(frag) + offset - start,
-+					copy, data, to);
- 			kunmap(page);
- 			offset += n;
- 			if (n != copy)
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3562,7 +3562,8 @@ int ext4_calculate_overhead(struct super
+ 	 */
+ 	if (sbi->s_journal && !sbi->journal_bdev)
+ 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
+-	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
++	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
++		/* j_inum for internal journal is non-zero */
+ 		j_inode = ext4_get_journal_inode(sb, j_inum);
+ 		if (j_inode) {
+ 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
 
 
