@@ -2,135 +2,147 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC161C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E02EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C08206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA78206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgEAOLo (ORCPT
+        id S1729351AbgEAOMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:11:44 -0400
-Received: from muru.com ([72.249.23.125]:52456 "EHLO muru.com"
+        Fri, 1 May 2020 10:12:01 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42374 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgEAOLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:11:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 83262810E;
-        Fri,  1 May 2020 14:12:29 +0000 (UTC)
-Date:   Fri, 1 May 2020 07:11:38 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
- and clocksource support
-Message-ID: <20200501141138.GA37466@atomide.com>
-References: <20200417165519.4979-1-tony@atomide.com>
- <20200417165519.4979-3-tony@atomide.com>
- <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
- <20200427143144.GQ37466@atomide.com>
- <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
- <20200427152329.GR37466@atomide.com>
- <20200430140040.GA8363@bogus>
- <20200430153119.GX37466@atomide.com>
- <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
+        id S1728895AbgEAOMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:12:00 -0400
+IronPort-SDR: 7ak20+LFPjtInjHjoJcmymWKJLLS+kdVN7UR7UsBUeT6igxfqMVFF2JDvXv085hs0EOyeRSJY7
+ Hn4uz74Fq9kA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 07:12:00 -0700
+IronPort-SDR: YfhOjwW3GA/XOJajdFbOtW1gpR+Ya8ypFpVT5wxq9f//dPzLOLk8a4rEO2PthVyP3bCFFbkmNf
+ w4dFnmBlv73w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
+   d="scan'208";a="433322782"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 07:11:59 -0700
+Date:   Fri, 1 May 2020 07:11:59 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: Re: [PATCH v4 1/7] KVM: VMX: Introduce generic fastpath handler
+Message-ID: <20200501141159.GC3798@linux.intel.com>
+References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
+ <1588055009-12677-2-git-send-email-wanpengli@tencent.com>
+ <87ees5f6gh.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
+In-Reply-To: <87ees5f6gh.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Rob Herring <robh@kernel.org> [200501 13:19]:
-> On Thu, Apr 30, 2020 at 10:31 AM Tony Lindgren <tony@atomide.com> wrote:
-> > Hmm. Trying to detect this automatically will get messy. For example,
-> > we have few omap3 boards with the following options that also need to
-> > consider if the separate 32KiHz counter is available:
-> >
-> > 1. The best case scenario
-> >
-> > ti,omap-counter32k clocksource
-> > ti,sysc-omap2-timer ti,timer-alwon clockevent (timer1)
-> >
-> > 2. Boards relying on internal clock with unusable 32k counter
-> >
-> > ti,sysc-omap2-timer ti,timer-alwon clocksource (timer12)
-> > ti,sysc-omap2-timer clockevent (typically gpt2)
-> >
-> > In the second case, the 32k counter is unusable, and timer1
-> > is unusable with the external 32k always on clock. But timer1
-> > can be used with the system clock just fine for other purposes.
-> > So ideally we would not tag timer1 as disabled :)
+On Thu, Apr 30, 2020 at 03:28:46PM +0200, Vitaly Kuznetsov wrote:
+> Wanpeng Li <kernellwp@gmail.com> writes:
 > 
-> I'm perfectly fine with a 'broken 32k clk' type property.
-
-OK. Maybe "unreliable-oscillator" type property or something like
-that. Or maybe "shrodingers-cat-oscillator" :)
-
-> Though I think the compatibility story is not good changing DT for
-> stuff needed to boot and needed early in boot. It's one thing to break
-> something not required to get a system booted.
-
-For the boards with the 32k clock issue the system boots but
-is unreliable. I'm not sure how long a 32k clock based timer would
-have to be monitored with another system clock based timer to
-detect it.. I recall the issues start popping up with PM and
-that much later and the system clock may not even be active..
-
-Anyways, the issue is related to how the board is wired, so a
-property for it makes sense here.
-
-> > For the second case, we could remove ti,timer-alwon property
-> > for timer1, and tag the 32k counter as disabled as the source
-> > clock is unreliable. Then somewhere in the code we would need
-> > to check if ti,omap-counter32k is availabe, then check if
-> > timer1 is always-on, then use timer12 if not a secure device
-> > like n900.
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
+> > timer fastpath etc, move it after vmx_complete_interrupts() in order that
+> > later patch can catch the case vmexit occurred while another event was
+> > being delivered to guest. There is no obversed performance difference for
+> > IPI fastpath testing after this move.
+> >
+> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> > Cc: Haiwei Li <lihaiwei@tencent.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 21 ++++++++++++++++-----
+> >  1 file changed, 16 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 3ab6ca6..9b5adb4 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6583,6 +6583,20 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+> >  	}
+> >  }
+> >  
+> > +static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
+> > +{
+> > +	if (!is_guest_mode(vcpu)) {
 > 
-> IIRC, there's some OMAP timer properties for secure vs. non-secure.
-> (It's not the first time we've had this discussion on TI timers.)
-
-Yes.
-
-> > If the board wants to use the system clock as the source for
-> > a higher resolution with assigned-clock-parents, then we'd need
-> > to ignore the always-on property and not use the 32k counter as
-> > the clocksource. Basically to somehow figure out that a higher
-> > resolution configuration is preferred over a
-> > low-power configuration.
+> Nitpick: do we actually expect to have any fastpath handlers anytime
+> soon? If not, we could've written this as
 > 
-> That could be something you want to pick at run-time.
-
-OK
-
-> > So what's your take on just adding the generic properties for
-> > assigned-system-clocksource and clockevent?
+> 	if (is_guest_mode(vcpu))
+> 		return EXIT_FASTPATH_NONE;
 > 
-> I'm tired of discussing this for 10 years...
+> and save on identation)
 
-Well luckly most system have basic timers integrated nowadays
-rather than each SoC vendor doing their own timers :)
+Agreed.  An alternative approach would be to do the check in the caller, e.g.
 
-Regards,
+	if (is_guest_mode(vcpu))
+		return EXIT_FASTPATH_NONE;
 
-Tony
+	return vmx_exit_handlers_fastpath(vcpu);
+
+I don't have a strong preference either way.
+
+> > +		switch (to_vmx(vcpu)->exit_reason) {
+> > +		case EXIT_REASON_MSR_WRITE:
+> > +			return handle_fastpath_set_msr_irqoff(vcpu);
+> > +		default:
+> > +			return EXIT_FASTPATH_NONE;
+> > +		}
+> > +	}
+> > +
+> > +	return EXIT_FASTPATH_NONE;
+> > +}
+> > +
+> >  bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+> >  
+> >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > @@ -6757,17 +6771,14 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >  	if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+> >  		return EXIT_FASTPATH_NONE;
+> >  
+> > -	if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+> > -		exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+> > -	else
+> > -		exit_fastpath = EXIT_FASTPATH_NONE;
+> > -
+> >  	vmx->loaded_vmcs->launched = 1;
+> >  	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
+> >  
+> >  	vmx_recover_nmi_blocking(vmx);
+> >  	vmx_complete_interrupts(vmx);
+> >  
+> > +	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+
+No need for capturing the result in a local variable, just return the function
+call.
+
+> > +
+> >  	return exit_fastpath;
+> >  }
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> -- 
+> Vitaly
+> 
