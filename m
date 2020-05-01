@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A9C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4023EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED435208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5FA24953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339560;
-	bh=9brijW7GuhDSeY1AtCRbki20nRFuzUWvoIMQLuBG7Rg=;
+	s=default; t=1588339564;
+	bh=aeVsh5hX7YOQkqNEYFt9ZEQZ+1JIzn4VuGLrwbceF3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtCOljRVURgc8I3OJ18A9idQITkw9nlDj+8hykuutsxa8E7PEh/b11b8IRFPi7rVf
-	 6HwPaPQjYQdwAEdC4dxz+2hwOVQg6fIMjL73+wpcx43PKGc6wfhyMOU8jbDZsZxLm6
-	 NNGpS8mkxHKFarEakDK2po8TJAlHGCu5kS99NeqQ=
+	b=D+B+ZyyIMf74KrkUuTIqul+bQ+iveVCFUozXSXuEckTkpvESNoFVhxpATTtcDKfiy
+	 BgAC/hUboRug/+TRHc2uTg3oHJeAdfcJHXTalPW5bBQD1G4Ps0CJ8ZesTtTmZ4AqZ7
+	 EXe8ohTeka9Ry8+x6vbjRSxDwyWQv5MYZBda3K6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgEANZ6 (ORCPT
+        id S1729163AbgEAN0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729124AbgEANZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:54 -0400
+        id S1729134AbgEANZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AA5F20757;
-        Fri,  1 May 2020 13:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00974216FD;
+        Fri,  1 May 2020 13:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339554;
-        bh=9brijW7GuhDSeY1AtCRbki20nRFuzUWvoIMQLuBG7Rg=;
+        s=default; t=1588339556;
+        bh=aeVsh5hX7YOQkqNEYFt9ZEQZ+1JIzn4VuGLrwbceF3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGPY9U62Zyn817soWYb9gTVX3tlf35KgeOV/TRSlh0ohjjz4JCu86zN3SAxMc7FxX
-         /f8zXDyho1B52NdthpdhrJnyv64FE1wnshWApunPC6RGHixfKFpR0vibvHopaduC6t
-         sLE5wZjyMS/lcjeBVRiW5L0M6pVd3f2v7EYpuimg=
+        b=NccTYgnJqtxseBn9YBnuVnnRbtdjFPTt/RmIw2bzk0o/pXLrv1YTImUvvJlKq/M05
+         Fbp3C6pZaNmeTmkk6vnc94KiiY/R48n0FHgIXP7mCLnSftzN3EGru85JEb6Bv9GBs2
+         gg7QKunFMCgGyeQfLu2AFloHXa6CBKjAO8xJVfY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 36/70] ALSA: usx2y: Fix potential NULL dereference
-Date:   Fri,  1 May 2020 15:21:24 +0200
-Message-Id: <20200501131525.176394685@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 37/70] ALSA: usb-audio: Fix usb audio refcnt leak when getting spdif
+Date:   Fri,  1 May 2020 15:21:25 +0200
+Message-Id: <20200501131525.407099598@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -59,34 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 7686e3485253635c529cdd5f416fc640abaf076f upstream.
+commit 59e1947ca09ebd1cae147c08c7c41f3141233c84 upstream.
 
-The error handling code in usX2Y_rate_set() may hit a potential NULL
-dereference when an error occurs before allocating all us->urb[].
-Add a proper NULL check for fixing the corner case.
+snd_microii_spdif_default_get() invokes snd_usb_lock_shutdown(), which
+increases the refcount of the snd_usb_audio object "chip".
 
-Reported-by: Lin Yi <teroincn@gmail.com>
+When snd_microii_spdif_default_get() returns, local variable "chip"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
+
+The reference counting issue happens in several exception handling paths
+of snd_microii_spdif_default_get(). When those error scenarios occur
+such as usb_ifnum_to_if() returns NULL, the function forgets to decrease
+the refcnt increased by snd_usb_lock_shutdown(), causing a refcnt leak.
+
+Fix this issue by jumping to "end" label when those error scenarios
+occur.
+
+Fixes: 447d6275f0c2 ("ALSA: usb-audio: Add sanity checks for endpoint accesses")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200420075529.27203-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/1587617711-13200-1-git-send-email-xiyuyang19@fudan.edu.cn
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/usx2y/usbusx2yaudio.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/mixer_quirks.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/sound/usb/usx2y/usbusx2yaudio.c
-+++ b/sound/usb/usx2y/usbusx2yaudio.c
-@@ -691,6 +691,8 @@ static int usX2Y_rate_set(struct usX2Yde
- 			us->submitted =	2*NOOF_SETRATE_URBS;
- 			for (i = 0; i < NOOF_SETRATE_URBS; ++i) {
- 				struct urb *urb = us->urb[i];
-+				if (!urb)
-+					continue;
- 				if (urb->status) {
- 					if (!err)
- 						err = -ENODEV;
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1519,11 +1519,15 @@ static int snd_microii_spdif_default_get
+ 
+ 	/* use known values for that card: interface#1 altsetting#1 */
+ 	iface = usb_ifnum_to_if(chip->dev, 1);
+-	if (!iface || iface->num_altsetting < 2)
+-		return -EINVAL;
++	if (!iface || iface->num_altsetting < 2) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	alts = &iface->altsetting[1];
+-	if (get_iface_desc(alts)->bNumEndpoints < 1)
+-		return -EINVAL;
++	if (get_iface_desc(alts)->bNumEndpoints < 1) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	ep = get_endpoint(alts, 0)->bEndpointAddress;
+ 
+ 	err = snd_usb_ctl_msg(chip->dev,
 
 
