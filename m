@@ -2,130 +2,145 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DA1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A7C28CBC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDBE8208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eYQGDTA5"
+	by mail.kernel.org (Postfix) with ESMTP id 1B9FC2071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgEACl5 (ORCPT
+        id S1728146AbgEACmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728012AbgEACl5 (ORCPT
+        Thu, 30 Apr 2020 22:42:07 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:51521 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728107AbgEACmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:41:57 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD18C035494;
-        Thu, 30 Apr 2020 19:41:56 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CxNJ3jFWz9sRY;
-        Fri,  1 May 2020 12:41:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588300913;
-        bh=vUF1fXtpIoKJqTpWNPfnW5x1ycGQaYIW4GV4pb93qXc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eYQGDTA5bAn1VyClZ0fNAx5OdZYWL7oQpEyFqoVf4TzPe0s5C/c/tCTWzlMGq2a9e
-         cNOndxGtbxPmcYFP25SMc2377uPhkYmFeqGFm6+7NvdofhFgTM/d0e5lYsPkhRZb+/
-         xm3LjcNaawsUFIZenbrosq2BpotdqnBmzmdp1tysxHGOd49PbB0qV7L1qfRcG8WCFg
-         /j2dqeLZ6fjlv/PkYZtviUjgAiOYwwn4japLnJepnvsnHQiOM57oBHa8OuKzo62H36
-         x0ulcWE3Pm37QeBDX70AFic6q1T4mrYL3OiFimNwyc1NIyuyhhSPCD7C07D8TShmcz
-         lhlYB61z6GvKw==
-Date:   Fri, 1 May 2020 12:41:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Florian Westphal <fw@strlen.de>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200501124116.794c82ee@canb.auug.org.au>
+        Thu, 30 Apr 2020 22:42:07 -0400
+Received: (qmail 21059 invoked by uid 500); 30 Apr 2020 22:42:05 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 30 Apr 2020 22:42:05 -0400
+Date:   Thu, 30 Apr 2020 22:42:05 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 08/15] usb: ehci: avoid gcc-10 zero-length-bounds warning
+In-Reply-To: <20200430213101.135134-9-arnd@arndb.de>
+Message-ID: <Pine.LNX.4.44L0.2004302231290.19755-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hudxFM=ID.usjgK48nTX2ne";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hudxFM=ID.usjgK48nTX2ne
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 30 Apr 2020, Arnd Bergmann wrote:
 
-Hi all,
+> Building ehci drivers with gcc-10 results in a number of warnings like
+> when an zero-length array is accessed:
+> 
+> drivers/usb/host/ehci-hub.c: In function 'ehci_bus_suspend':
+> drivers/usb/host/ehci-hub.c:320:30: error: array subscript 14 is outside the bounds of an interior zero-length array 'u32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
+>   320 |    u32 __iomem *hostpc_reg = &ehci->regs->hostpc[port];
+>       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/usb/host/ehci.h:273,
+>                  from drivers/usb/host/ehci-hcd.c:96:
+> include/linux/usb/ehci_def.h:186:7: note: while referencing 'hostpc'
+>   186 |  u32  hostpc[0]; /* HOSTPC extension */
+>       |       ^~~~~~
+> In file included from drivers/usb/host/ehci-hcd.c:305:
+> drivers/usb/host/ehci-hub.c: In function 'ehci_hub_control':
+> drivers/usb/host/ehci-hub.c:892:15: error: array subscript 256 is outside the bounds of an interior zero-length array 'u32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
+>   892 |  hostpc_reg = &ehci->regs->hostpc[temp];
+>       |               ^~~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/usb/host/ehci.h:273,
+>                  from drivers/usb/host/ehci-hcd.c:96:
+> include/linux/usb/ehci_def.h:186:7: note: while referencing 'hostpc'
+>   186 |  u32  hostpc[0]; /* HOSTPC extension */
+>       |       ^~~~~~
+> 
+> All these fields are colocated with reserved fields that I guess
+> refer to the correct field length.
 
-Today's linux-next merge of the net-next tree got a conflict in:
+No, they don't.
 
-  include/net/mptcp.h
+> Change the two struct definition to use an unnamed union to define
+> both of these fields at the same location as the corresponding
+> reserved fields.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/usb/ehci_def.h | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
+> index 78e006355557..8777d8e56ef2 100644
+> --- a/include/linux/usb/ehci_def.h
+> +++ b/include/linux/usb/ehci_def.h
+> @@ -127,7 +127,8 @@ struct ehci_regs {
+>  #define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
+>  
+>  	/* PORTSC: offset 0x44 */
+> -	u32		port_status[0];	/* up to N_PORTS */
+> +	union {
+> +		u32		port_status[9];	/* up to N_PORTS */
 
-between commit:
+This array can have up to 15 elements, meaning that it can extend out
+to offset 0x80.
 
-  cfde141ea3fa ("mptcp: move option parsing into mptcp_incoming_options()")
+>  /* EHCI 1.1 addendum */
+>  #define PORTSC_SUSPEND_STS_ACK 0
+>  #define PORTSC_SUSPEND_STS_NYET 1
+> @@ -165,7 +166,8 @@ struct ehci_regs {
+>  #define PORT_CONNECT	(1<<0)		/* device connected */
+>  #define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
+>  
+> -	u32		reserved3[9];
+> +		u32		reserved3[9];
+> +	};
+>  
+>  	/* USBMODE: offset 0x68 */
+>  	u32		usbmode;	/* USB Device mode */
 
-from the net tree and commit:
+As you see, this next field actually lies inside the preceding array.  
+It's not a real conflict; any hardware which supports the usbmode field 
+uses only the first element of the port_status array.
 
-  071c8ed6e88d ("tcp: mptcp: use mptcp receive buffer space to select rcv w=
-indow")
+I don't know how you want to handle this.  Doing
 
-from the net-next tree.
+#define usbmode port_status[9]
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+doesn't seem like a very good approach, but I can't think of anything 
+better at the moment.  Maybe just set the array size to 9, as you did, 
+but with a comment explaining what's really going on.
 
---=20
-Cheers,
-Stephen Rothwell
+> @@ -181,11 +183,13 @@ struct ehci_regs {
+>   * PORTSCx
+>   */
+>  	/* HOSTPC: offset 0x84 */
+> -	u32		hostpc[0];	/* HOSTPC extension */
+> +	union {
+> +		u32		hostpc[17];	/* HOSTPC extension */
 
-diff --cc include/net/mptcp.h
-index 3bce2019e4da,5288fba56e55..000000000000
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@@ -68,8 -68,13 +68,10 @@@ static inline bool rsk_is_mptcp(const s
-  	return tcp_rsk(req)->is_mptcp;
-  }
- =20
-+ void mptcp_space(const struct sock *ssk, int *space, int *full_space);
-+=20
- -void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *p=
-tr,
- -			int opsize, struct tcp_options_received *opt_rx);
-  bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
-  		       unsigned int *size, struct mptcp_out_options *opts);
- -void mptcp_rcv_synsent(struct sock *sk);
-  bool mptcp_synack_options(const struct request_sock *req, unsigned int *s=
-ize,
-  			  struct mptcp_out_options *opts);
-  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
+Likewise, this array can have up to 15 elements.  In fact, it's the 
+same size as the port_status array.
 
---Sig_/hudxFM=ID.usjgK48nTX2ne
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>  #define HOSTPC_PHCD	(1<<22)		/* Phy clock disable */
+>  #define HOSTPC_PSPD	(3<<25)		/* Port speed detection */
+>  
+> -	u32		reserved5[17];
+> +		u32		reserved5[17];
+> +	};
+>  
+>  	/* USBMODE_EX: offset 0xc8 */
+>  	u32		usbmode_ex;	/* USB Device mode extension */
 
------BEGIN PGP SIGNATURE-----
+Alan Stern
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6rjEwACgkQAVBC80lX
-0GyeTwgAkps7ZAfwWEf59WesPtHVUi1cy4pZ/UwKctzDHiMSKSM7I7/mKbVNrCdn
-EdYo1zRxM6tbmXXdWxAA8Q3ab/3DPq10z6BiBuI9/qift1fZ3k2G8ZS0JYl6sE2s
-rf83xx1SPB2ls1f+tif7ZG+tXzMLI8NszDBYjd4w/gsVDtE/OJ+3dykl5Z1pr2M4
-1OLHb+c5h0MdFJAlbFwVs/xKFeabQn1CViBpIsW6khv4sm4TLVhgUjUvj3WRw1zO
-ICvFfNtGDe7H9LTv3LNqOPSTTHaCgJ092VrMZWnUR83J7lHMM6q69Kz7OUkEDT/M
-P+Xo6QFhk1mUsEScoh49jKwPhJ+d4Q==
-=90ZQ
------END PGP SIGNATURE-----
-
---Sig_/hudxFM=ID.usjgK48nTX2ne--
