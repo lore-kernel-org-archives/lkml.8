@@ -2,98 +2,136 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2895DC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA61DC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083F220757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F8F20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340699;
+	bh=XJaNe5pXks9bL5KapSdiW5O2hhPV6fdgJmwFmiAry0E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QEqLimZ0H6/ycJ/WSGeHKUT57RCMawZPq8lGBBUdmgjCPvL5hkCMu3QoqIAga2Y78
+	 6G99N1YHxhlQhscuOuT9bLq5ck99P/Ik8BIAEG/O95tNiZKgBiLddcI/1Rm6E5RnnM
+	 m2xm+D8ZWYi4TlAmmEt+CPLhOtz7QMVX61iW3pOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731800AbgEANo4 (ORCPT
+        id S1731805AbgEANo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36174 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731770AbgEANop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:45 -0400
-Received: by mail-lj1-f194.google.com with SMTP id u15so2664127ljd.3;
-        Fri, 01 May 2020 06:44:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fufigKI63pVyUaq3ivgITv7pbSzOzXF6p0tNBdZRj2M=;
-        b=Kc14vMhsTa0Rg8ljOV1XNnvTefZ0J1Tqkg4i6kZf+k3ok4YHQuhZ2uJ0sSNFxq64AQ
-         /VxODNDpaZspnv0issrQspLi2zNro8YvGqSw+RWEvFGVJRMhFnFxET24Vbl1Va7pz9Un
-         oSdZfTWPv+EyXAREh0xxoPPlE4f2bSvEL63Z6opawq/ngHa9HEXwkxK7ELN6lnoH+iib
-         vaEeqxooV8MRkYeiAz26tHhkjusem03q22gvCNvnTtYl4b9FhLTFoZWErIFd0iAO6S/v
-         BAgeoSfa4WfPZU4/MiYnDUNMHYVH9IXZ9QscwurH42k035l8Nl9wyrjo9b24DU2zqV17
-         Y9Vw==
-X-Gm-Message-State: AGi0PuYAcCnhcEumIY7wE3UYR6jER8sRfckqnDTHgxWRvjrZOmGW8sS0
-        Y3H+vTcHT8Y4FhwXhqb9MeKr61XOAOA=
-X-Google-Smtp-Source: APiQypLo9C82ia9SxfYVZ0sEooi2E7ScJlipjbSBikdjMFaputKL+PfdMhPwCiTxqEMNHBS7o4alKQ==
-X-Received: by 2002:a2e:a37b:: with SMTP id i27mr2363790ljn.36.1588340682811;
-        Fri, 01 May 2020 06:44:42 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.150.177])
-        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:44:42 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] floppy: suppress UBSAN warning in setup_rw_floppy()
-Date:   Fri,  1 May 2020 16:44:12 +0300
-Message-Id: <20200501134416.72248-1-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
+        Fri, 1 May 2020 09:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731332AbgEANoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 999C720757;
+        Fri,  1 May 2020 13:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340684;
+        bh=XJaNe5pXks9bL5KapSdiW5O2hhPV6fdgJmwFmiAry0E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Nt4JXX8lHBWL+ULYvj6ZK63tmlpWw4RyjwX75WMb4cZAnIQwBxvcKZs7LlkfCUKuE
+         4vdmKM2SyIXFKMQVkMXx7yKV825osH7xuwR0oHt/WCDepVAn0hWqDT/237QeqCIs8F
+         iQ8CmBMFCpRjLnExAtM/fg6Y6FD2FIqJLqLLJOvU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Xu <peterx@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 086/106] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
+Date:   Fri,  1 May 2020 15:23:59 +0200
+Message-Id: <20200501131553.927400371@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches are based on Willy's cleanup patches
-https://lkml.org/lkml/2020/3/31/609.
+From: Peter Xu <peterx@redhat.com>
 
-The first patch removes pr_cont() in setup_DMA() and prints the contents of
-cmd buffer with print_hex_dump(). The last patch also touches these lines
-and changes cmd buffer to fullcmd. The 2,3 patches introduce defines to
-make it more clear why cmd_count in struct floppy_raw_cmd allows
-out-of-bounds access for cmd, reply_count, reply fields. Last patch
-handles the warning.
+[ Upstream commit 3662daf023500dc084fa3b96f68a6f46179ddc73 ]
 
-There is the checkpatch warning because of the line length 81 > 80 in
-the definition of valid_floppy_drive_params(). This function
-intentionally uses autodetect[8] as argument to highlight that this
-is exactly the autodetect field from structs floppy_drive_params and
-compat_floppy_drive_params. I think that this warning is not a big
-problem since next function definition is 85 chars long and whole
-driver requires "restyling".
+The "isolcpus=" parameter allows sub-parameters before the cpulist is
+specified, and if the parser detects an unknown sub-parameters the whole
+parameter will be ignored.
 
-Changes in v3:
- - fix indentation in the second patch
- - remove FD_RAW_REPLY_SIZE from print_hex_dump() in the third patch
+This design is incompatible with itself when new sub-parameters are added.
+An older kernel will not recognize the new sub-parameter and will
+invalidate the whole parameter so the CPU isolation will not take
+effect. It emits a warning:
 
-Changes in v2:
- - add FD_RAW_CMD_FULLSIZE to the second patch
- - add union with fullcmd to struct floppy_raw_cmd in the last patch
+    isolcpus: Error, unknown flag
 
-Denis Efremov (4):
-  floppy: use print_hex_dump() in setup_DMA()
-  floppy: add FD_AUTODETECT_SIZE define for struct floppy_drive_params
-  floppy: add defines for sizes of cmd & reply buffers of floppy_raw_cmd
-  floppy: suppress UBSAN warning in setup_rw_floppy()
+The better and compatible way is to allow "isolcpus=" to skip unknown
+sub-parameters, so that even if new sub-parameters are added an older
+kernel will still be able to behave as usual even if with the new
+sub-parameter specified on the command line.
 
- drivers/block/floppy.c  | 39 ++++++++++++++-------------------------
- include/uapi/linux/fd.h | 26 ++++++++++++++++++++++----
- 2 files changed, 36 insertions(+), 29 deletions(-)
+Ideally this should have been there when the first sub-parameter for
+"isolcpus=" was introduced.
 
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200403223517.406353-1-peterx@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sched/isolation.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 008d6ac2342b7..808244f3ddd98 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -149,6 +149,9 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
+ static int __init housekeeping_isolcpus_setup(char *str)
+ {
+ 	unsigned int flags = 0;
++	bool illegal = false;
++	char *par;
++	int len;
+ 
+ 	while (isalpha(*str)) {
+ 		if (!strncmp(str, "nohz,", 5)) {
+@@ -169,8 +172,22 @@ static int __init housekeeping_isolcpus_setup(char *str)
+ 			continue;
+ 		}
+ 
+-		pr_warn("isolcpus: Error, unknown flag\n");
+-		return 0;
++		/*
++		 * Skip unknown sub-parameter and validate that it is not
++		 * containing an invalid character.
++		 */
++		for (par = str, len = 0; *str && *str != ','; str++, len++) {
++			if (!isalpha(*str) && *str != '_')
++				illegal = true;
++		}
++
++		if (illegal) {
++			pr_warn("isolcpus: Invalid flag %.*s\n", len, par);
++			return 0;
++		}
++
++		pr_info("isolcpus: Skipped unknown flag %.*s\n", len, par);
++		str++;
+ 	}
+ 
+ 	/* Default behaviour for isolcpus without flags */
 -- 
-2.25.3
+2.20.1
+
+
 
