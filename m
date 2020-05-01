@@ -2,123 +2,135 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE0FC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC161C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFD1B2076D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTWaNlwU"
+	by mail.kernel.org (Postfix) with ESMTP id D4C08206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbgEAOK5 (ORCPT
+        id S1729058AbgEAOLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728840AbgEAOK4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:10:56 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9381BC061A0C;
-        Fri,  1 May 2020 07:10:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e26so6070905wmk.5;
-        Fri, 01 May 2020 07:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=IAf6Gre4CI3bCwa5vEmyXDJKlM4nN1VUj17/dj4XXpw=;
-        b=KTWaNlwUNym5z0Gt3KcWT7BTxBawtoLjOTOI6QkKArofrtUh+JBpHOjY2U5PRXxZ/m
-         yJ13N2Xk7QBM0cKVN8jm2NWan7OuZbAJ7dR9h7BZxmZT/BjnNhcrIDHb1UilQgL7IdY0
-         ynG8OE4kp7tgYcEXxIqzjP69edNjO0KCwAeZSyli13c14iSbhEs6jqF109WB3PGWkCsu
-         hN7quWswi555x9inwGEfjvwWM1p4/ObXsZY6PK8Mly537EPdvnNTD6sQrRX0D7LRM0AX
-         QBc3ie21q1RaIsSYnAS1GXEl/hnRImhZbb4skWJvUBJdGJi4O9GNNDa/RHJp9dApDRJP
-         KI7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IAf6Gre4CI3bCwa5vEmyXDJKlM4nN1VUj17/dj4XXpw=;
-        b=fnwbERojtHbGY7NAIwc9kRMIonCT5Qx4KsucDr4by+JuyvtQzmg9KCencDtZMnjIyk
-         yIzmVsIuNcUgl77wRm/KUpHXLSDz1AEHN0eo682GLCjMPPBNKK0yoI7k5TSpaFTChvxc
-         wwsFZbXpi0WxuYdYfs4qICQK3IfbIfYpGvTCviDbDpGcQ6CIYguwr2Rtcd5FiwOtkVNm
-         5pzsh7m/trRbpXV2QgydzOOC02l4eAtW1x2dvIVz1kQdSaHVGCysK7qOc9jrJwemFDs3
-         UbFFtIE8bBJ+ns4DdDLuS0mxi7m+PzSD9+6ucYdanAqb4sZK2NJbyOCgNQVYe3m1DvJ1
-         UwGw==
-X-Gm-Message-State: AGi0Pua/tznYuoHpWjZUPu3HrhEo+KOaykoSUub6g0l34qo6myJQ0Lr3
-        BA7bDmJrU7JI3jOu2MCsCGfyP7Fx
-X-Google-Smtp-Source: APiQypJGNdSnTtWpOpKeeONoIF+z0quTiMIo5dhXcAfSbjl/Pj02o8HiAay7CPqw0waVJ+xI6vWmLA==
-X-Received: by 2002:a1c:6455:: with SMTP id y82mr4154900wmb.128.1588342254204;
-        Fri, 01 May 2020 07:10:54 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id j17sm4837390wrb.46.2020.05.01.07.10.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 07:10:53 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] io_uring: punt splice async because of inode mtx
-Date:   Fri,  1 May 2020 17:09:38 +0300
-Message-Id: <ca4741da198740647d3d90716d63facf8bc0a53d.1588341674.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1588341674.git.asml.silence@gmail.com>
-References: <cover.1588341674.git.asml.silence@gmail.com>
+        Fri, 1 May 2020 10:11:44 -0400
+Received: from muru.com ([72.249.23.125]:52456 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728840AbgEAOLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:11:43 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 83262810E;
+        Fri,  1 May 2020 14:12:29 +0000 (UTC)
+Date:   Fri, 1 May 2020 07:11:38 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent
+ and clocksource support
+Message-ID: <20200501141138.GA37466@atomide.com>
+References: <20200417165519.4979-1-tony@atomide.com>
+ <20200417165519.4979-3-tony@atomide.com>
+ <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org>
+ <20200427143144.GQ37466@atomide.com>
+ <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org>
+ <20200427152329.GR37466@atomide.com>
+ <20200430140040.GA8363@bogus>
+ <20200430153119.GX37466@atomide.com>
+ <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nonblocking do_splice() still may wait for some time on an inode mutex.
-Let's play safe and always punt it async.
+* Rob Herring <robh@kernel.org> [200501 13:19]:
+> On Thu, Apr 30, 2020 at 10:31 AM Tony Lindgren <tony@atomide.com> wrote:
+> > Hmm. Trying to detect this automatically will get messy. For example,
+> > we have few omap3 boards with the following options that also need to
+> > consider if the separate 32KiHz counter is available:
+> >
+> > 1. The best case scenario
+> >
+> > ti,omap-counter32k clocksource
+> > ti,sysc-omap2-timer ti,timer-alwon clockevent (timer1)
+> >
+> > 2. Boards relying on internal clock with unusable 32k counter
+> >
+> > ti,sysc-omap2-timer ti,timer-alwon clocksource (timer12)
+> > ti,sysc-omap2-timer clockevent (typically gpt2)
+> >
+> > In the second case, the 32k counter is unusable, and timer1
+> > is unusable with the external 32k always on clock. But timer1
+> > can be used with the system clock just fine for other purposes.
+> > So ideally we would not tag timer1 as disabled :)
+> 
+> I'm perfectly fine with a 'broken 32k clk' type property.
 
-Reported-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+OK. Maybe "unreliable-oscillator" type property or something like
+that. Or maybe "shrodingers-cat-oscillator" :)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index e5d560f2ce12..65458eda2127 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2765,15 +2765,6 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
--static bool io_splice_punt(struct file *file, int rw)
--{
--	if (get_pipe_info(file))
--		return false;
--	if (!io_file_supports_async(file, rw))
--		return true;
--	return !(file->f_flags & O_NONBLOCK);
--}
--
- static int io_splice(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_splice *sp = &req->splice;
-@@ -2783,11 +2774,8 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
- 	loff_t *poff_in, *poff_out;
- 	long ret;
- 
--	if (force_nonblock) {
--		if (io_splice_punt(in, READ) || io_splice_punt(out, WRITE))
--			return -EAGAIN;
--		flags |= SPLICE_F_NONBLOCK;
--	}
-+	if (force_nonblock)
-+		return -EAGAIN;
- 
- 	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
- 	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
--- 
-2.24.0
+> Though I think the compatibility story is not good changing DT for
+> stuff needed to boot and needed early in boot. It's one thing to break
+> something not required to get a system booted.
 
+For the boards with the 32k clock issue the system boots but
+is unreliable. I'm not sure how long a 32k clock based timer would
+have to be monitored with another system clock based timer to
+detect it.. I recall the issues start popping up with PM and
+that much later and the system clock may not even be active..
+
+Anyways, the issue is related to how the board is wired, so a
+property for it makes sense here.
+
+> > For the second case, we could remove ti,timer-alwon property
+> > for timer1, and tag the 32k counter as disabled as the source
+> > clock is unreliable. Then somewhere in the code we would need
+> > to check if ti,omap-counter32k is availabe, then check if
+> > timer1 is always-on, then use timer12 if not a secure device
+> > like n900.
+> 
+> IIRC, there's some OMAP timer properties for secure vs. non-secure.
+> (It's not the first time we've had this discussion on TI timers.)
+
+Yes.
+
+> > If the board wants to use the system clock as the source for
+> > a higher resolution with assigned-clock-parents, then we'd need
+> > to ignore the always-on property and not use the 32k counter as
+> > the clocksource. Basically to somehow figure out that a higher
+> > resolution configuration is preferred over a
+> > low-power configuration.
+> 
+> That could be something you want to pick at run-time.
+
+OK
+
+> > So what's your take on just adding the generic properties for
+> > assigned-system-clocksource and clockevent?
+> 
+> I'm tired of discussing this for 10 years...
+
+Well luckly most system have basic timers integrated nowadays
+rather than each SoC vendor doing their own timers :)
+
+Regards,
+
+Tony
