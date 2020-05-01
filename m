@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFA5C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471CEC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE622051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248A2206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341677;
-	bh=0ddaoSfvKALWn7x17WA7VemeWlSQsiVyT/+WjRgZR3M=;
+	s=default; t=1588341680;
+	bh=U+U2iYpx0DbAp2Qok+ROLY7JqeDXOVnqZQgUxYD8ArQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YXx36MVmmSzHBt12YYJDo7puN41nA+8XonDk/isE1lgDf4jzh5KgGisePxCImE/P+
-	 KQSLrKesyJcWTrTTUZ5f9m/BwUW1IfV7kHSbgZZtdUxeKUjdNSznQlHIluz8Ny4awB
-	 o4X3qAF/Y3uIFnuL6BS+Unbai4RJDRGkr1hvXKvY=
+	b=qapryR0ppVRJGU/E+3tZmJfMyGVcasbABg3meZIZ0hvZf+g1x9Qq1GVetP9/114Jo
+	 gJzEWYuKPPUxouCOP2S+eUDTvl/aYwl8FdgVjS9GEf9lqhCd0UyfSIqafcCcmRjro+
+	 CE+Ik9uVquyHNoJUIEpA2tOeqUJ1ssiG1A2AwALo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbgEAN0C (ORCPT
+        id S1730225AbgEAOBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:26:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729124AbgEANZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:59 -0400
+        id S1729149AbgEAN0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B3AA20757;
-        Fri,  1 May 2020 13:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8362208D6;
+        Fri,  1 May 2020 13:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339558;
-        bh=0ddaoSfvKALWn7x17WA7VemeWlSQsiVyT/+WjRgZR3M=;
+        s=default; t=1588339561;
+        bh=U+U2iYpx0DbAp2Qok+ROLY7JqeDXOVnqZQgUxYD8ArQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCr95xPyf433kh3RpgsWjnoXegIJuV/DI4y+aTpf7JvIo8PIb30EG0H4PWr2wGgYZ
-         E7QSrlC5/GqWrKOtU94JwlMVQEi+HUG2KYUgjN9PIFSYYMlpio9M9epeBMm0NrCFgX
-         J1tSigZg950iJFPGihaUpehOsF1+l3ifKgHWQ+WE=
+        b=1IkHQ4plDP+GTX49uu/HvY0JgA0z4l9BZ5+rPYv1GgAKIhoMqEzBUyqzCkXK4iPtc
+         wqRjyxWqSNRVpZE8l8E9wW6IQxgUW8MQX3dM5WgmRTNinYmO7llh6wlsopegsmY4x+
+         Qno4j55guaHRT0iOYgRSj9KqR8V9qmu6HCwYNedY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 38/70] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
-Date:   Fri,  1 May 2020 15:21:26 +0200
-Message-Id: <20200501131525.578464968@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.4 28/70] iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
+Date:   Fri,  1 May 2020 15:21:16 +0200
+Message-Id: <20200501131523.072180588@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,105 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
+commit 8bef455c8b1694547ee59e8b1939205ed9d901a6 upstream.
 
-Many Focusrite devices supports a limited set of sample rates per
-altsetting. These includes audio interfaces with ADAT ports:
- - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
- - Scarlett 18i8 2nd gen, 18i20 2nd gen;
- - Scarlett 18i8 3rd gen, 18i20 3rd gen;
- - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
+The XADC has two internal ADCs. Depending on the mode it is operating in
+either one or both of them are used. The device manual calls this
+continuous (one ADC) and simultaneous (both ADCs) mode.
 
-Maximum rate is exposed in the last 4 bytes of Format Type descriptor
-which has a non-standard bLength = 10.
+The meaning of the sequencing register for the aux channels changes
+depending on the mode.
 
-Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+In continuous mode each bit corresponds to one of the 16 aux channels. And
+the single ADC will convert them one by one in order.
+
+In simultaneous mode the aux channels are split into two groups the first 8
+channels are assigned to the first ADC and the other 8 channels to the
+second ADC. The upper 8 bits of the sequencing register are unused and the
+lower 8 bits control both ADCs. This means a bit needs to be set if either
+the corresponding channel from the first group or the second group (or
+both) are set.
+
+Currently the driver does not have the special handling required for
+simultaneous mode. Add it.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/iio/adc/xilinx-xadc-core.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -223,6 +223,52 @@ static int parse_audio_format_rates_v1(s
- }
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -785,6 +785,16 @@ static int xadc_preenable(struct iio_dev
+ 	if (ret)
+ 		goto err;
  
- /*
-+ * Many Focusrite devices supports a limited set of sampling rates per
-+ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
-+ * descriptor which has a non-standard bLength = 10.
-+ */
-+static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
-+					struct audioformat *fp,
-+					unsigned int rate)
-+{
-+	struct usb_interface *iface;
-+	struct usb_host_interface *alts;
-+	unsigned char *fmt;
-+	unsigned int max_rate;
++	/*
++	 * In simultaneous mode the upper and lower aux channels are samples at
++	 * the same time. In this mode the upper 8 bits in the sequencer
++	 * register are don't care and the lower 8 bits control two channels
++	 * each. As such we must set the bit if either the channel in the lower
++	 * group or the upper group is enabled.
++	 */
++	if (seq_mode == XADC_CONF1_SEQ_SIMULTANEOUS)
++		scan_mask = ((scan_mask >> 8) | scan_mask) & 0xff0000;
 +
-+	iface = usb_ifnum_to_if(chip->dev, fp->iface);
-+	if (!iface)
-+		return true;
-+
-+	alts = &iface->altsetting[fp->altset_idx];
-+	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
-+				      NULL, UAC_FORMAT_TYPE);
-+	if (!fmt)
-+		return true;
-+
-+	if (fmt[0] == 10) { /* bLength */
-+		max_rate = combine_quad(&fmt[6]);
-+
-+		/* Validate max rate */
-+		if (max_rate != 48000 &&
-+		    max_rate != 96000 &&
-+		    max_rate != 192000 &&
-+		    max_rate != 384000) {
-+
-+			usb_audio_info(chip,
-+				"%u:%d : unexpected max rate: %u\n",
-+				fp->iface, fp->altsetting, max_rate);
-+
-+			return true;
-+		}
-+
-+		return rate <= max_rate;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-  * Helper function to walk the array of sample rate triplets reported by
-  * the device. The problem is that we need to parse whole array first to
-  * get to know how many sample rates we have to expect.
-@@ -258,6 +304,11 @@ static int parse_uac2_sample_rate_range(
- 		}
- 
- 		for (rate = min; rate <= max; rate += res) {
-+			/* Filter out invalid rates on Focusrite devices */
-+			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
-+			    !focusrite_valid_sample_rate(chip, fp, rate))
-+				goto skip_rate;
-+
- 			if (fp->rate_table)
- 				fp->rate_table[nr_rates] = rate;
- 			if (!fp->rate_min || rate < fp->rate_min)
-@@ -272,6 +323,7 @@ static int parse_uac2_sample_rate_range(
- 				break;
- 			}
- 
-+skip_rate:
- 			/* avoid endless loop */
- 			if (res == 0)
- 				break;
+ 	ret = xadc_write_adc_reg(xadc, XADC_REG_SEQ(1), scan_mask >> 16);
+ 	if (ret)
+ 		goto err;
 
 
