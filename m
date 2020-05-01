@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F70FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7763C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 061CF208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8323524953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340087;
-	bh=0w8PVJr8+NNOQecU/YV1JfnyPX2mTWZey+/TOljFZWI=;
+	s=default; t=1588340091;
+	bh=6X1mfxyBzWDLUUEJceQpc3dqqqTe+U+Zq76vP098AX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lKYclqgCw5JebMAQIOo0lu+Jwq+vt92MR7/UtOty1pow7zSxEAv/xVYgnXI0ZxM/O
-	 mN5NZb4Ov80GzjjZVJ/ZWWuMTlHUxy/KhDByERt5rgD8ZeiMP1G3UwMmm5lUaJ1DER
-	 1cZKCOFr19TAmgA4xSS0pSoHSzOPTmu6ld6BDbso=
+	b=n1UPzeV//KZkX5pyUxWJ+T4R2O8r5rD6b40Dfe5Pj0Xw6GpLJLSbRbMTU0FkEl520
+	 1MIKtbPQECJ5DrUSnYOwz0HSBIcTS/GrYlkGpSZgmm5cTm6GBZJdo5umOJ9bC+//Cf
+	 7R2jAGuuhOU7s+byGggehY2WFSSJp9N7cs/pLzjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbgEANeq (ORCPT
+        id S1730613AbgEANet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730586AbgEANef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:35 -0400
+        id S1730595AbgEANeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA991208DB;
-        Fri,  1 May 2020 13:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D304208DB;
+        Fri,  1 May 2020 13:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340075;
-        bh=0w8PVJr8+NNOQecU/YV1JfnyPX2mTWZey+/TOljFZWI=;
+        s=default; t=1588340077;
+        bh=6X1mfxyBzWDLUUEJceQpc3dqqqTe+U+Zq76vP098AX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOEVemgXgug0Ss0jABInf1wW57JSh4Uz/2O7ubJRBK9CGxd61ThhUvKC9ORFjsrQ5
-         Fl0Sr+ZCHqouAxBMDGgb7M6HUhPbq2AYlheIamjpXbrcb0VJcnvP4E3k3p/xwedOiL
-         6Ccl7hhORXaCXZ6JXyo9zjzkfNEM+wbZ/UMXFBUg=
+        b=nA4meTVccMGjAcELpRc/YAVdzc373E35aETc0SfITx3suZJj7vZX6AEDd4F/51+1r
+         jLucoub0iErsgVBi2y1xGiIzryxZlC6xh+XVGGE76QOxnjUVWt42L3jwq2mzlVfgyG
+         2dRMRUE2XOiSzqyfLxuDAixeLfa3e2LdXqwwzl80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.14 074/117] staging: vt6656: Fix drivers TBTT timing counter.
-Date:   Fri,  1 May 2020 15:21:50 +0200
-Message-Id: <20200501131553.808718905@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.14 089/117] usb: dwc3: gadget: Do link recovery for SS and SSP
+Date:   Fri,  1 May 2020 15:22:05 +0200
+Message-Id: <20200501131555.202889321@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -58,45 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 09057742af98a39ebffa27fac4f889dc873132de upstream.
+commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 upstream.
 
-The drivers TBTT counter is not synchronized with mac80211 timestamp.
+The controller always supports link recovery for device in SS and SSP.
+Remove the speed limit check. Also, when the device is in RESUME or
+RESET state, it means the controller received the resume/reset request.
+The driver must send the link recovery to acknowledge the request. They
+are valid states for the driver to send link recovery.
 
-Reorder the functions and use vnt_update_next_tbtt to do the final
-synchronize.
-
-Fixes: c15158797df6 ("staging: vt6656: implement TSF counter")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/375d0b25-e8bc-c8f7-9b10-6cc705d486ee@gmail.com
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/main_usb.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/dwc3/gadget.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -739,12 +739,15 @@ static void vnt_bss_info_changed(struct
- 			vnt_mac_reg_bits_on(priv, MAC_REG_TFTCTL,
- 					    TFTCTL_TSFCNTREN);
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1641,7 +1641,6 @@ static int __dwc3_gadget_wakeup(struct d
+ 	u32			reg;
  
--			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
--				       conf->sync_tsf, priv->current_tsf);
+ 	u8			link_state;
+-	u8			speed;
+ 
+ 	/*
+ 	 * According to the Databook Remote wakeup request should
+@@ -1651,16 +1650,13 @@ static int __dwc3_gadget_wakeup(struct d
+ 	 */
+ 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
+ 
+-	speed = reg & DWC3_DSTS_CONNECTSPD;
+-	if ((speed == DWC3_DSTS_SUPERSPEED) ||
+-	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
+-		return 0;
 -
- 			vnt_mac_set_beacon_interval(priv, conf->beacon_int);
+ 	link_state = DWC3_DSTS_USBLNKST(reg);
  
- 			vnt_reset_next_tbtt(priv, conf->beacon_int);
-+
-+			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
-+				       conf->sync_tsf, priv->current_tsf);
-+
-+			vnt_update_next_tbtt(priv,
-+					     conf->sync_tsf, conf->beacon_int);
- 		} else {
- 			vnt_clear_current_tsf(priv);
- 
+ 	switch (link_state) {
++	case DWC3_LINK_STATE_RESET:
+ 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
+ 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
++	case DWC3_LINK_STATE_RESUME:
+ 		break;
+ 	default:
+ 		return -EINVAL;
 
 
