@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B077BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167CC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEA82166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D440C2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339797;
-	bh=O3QIexIeqU5P2QEyxwjjbx+5fccgxwre6dJpMsJdDm4=;
+	s=default; t=1588339800;
+	bh=QpvCLsMVUmPNvhbcAdhLPAMk2bdjVhQBVqFvBHaLzLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRB1dKI/Xd34SwBkkKdIekB6IQz0We9WilEgIZMRTDUb4xirs0huMvnBJSSkIoSzL
-	 VvuWllHs+1M/tfFVNtILlxmfpEPijHcPEtM2lctyMQ4lS8o4I5gHl28ehrU4d1wtu+
-	 lykkzffYCsg77ff69YSRHULEl5GP+hxeA3cRLi1I=
+	b=ZY1w/TOf65eZdvQ+B1F7LjuDFuja30LeSfH7/+Zs/+BdfQMU1Sfh/1kIyVc7G+2PZ
+	 CirHQuhcRJtbFyloXV695dWxaCUVsrA5adqAzMapgcmOrIImRCFEb4bS1NR200TKUz
+	 nlG8PFf8LPMUCQ8Tt69M7Mu03d2pAu1wPVzr6hBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgEAN34 (ORCPT
+        id S1729856AbgEAN37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbgEAN3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:48 -0400
+        id S1729848AbgEAN3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3B53208C3;
-        Fri,  1 May 2020 13:29:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 140FA208DB;
+        Fri,  1 May 2020 13:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339788;
-        bh=O3QIexIeqU5P2QEyxwjjbx+5fccgxwre6dJpMsJdDm4=;
+        s=default; t=1588339795;
+        bh=QpvCLsMVUmPNvhbcAdhLPAMk2bdjVhQBVqFvBHaLzLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kK/2zhQiJnVb7CAZRWDUYETnOMT69imq8AhjVBgRvY/3fBkm+Gs3SAnqKb7xLlUhS
-         A2LLlhzx+66ndq7YAPYKqcrpSMHIq5W2L8VXorJKeMCArYnRGt2ReW/luRg6ac6eDf
-         AoEr8S8/eoP5iWL1zOUP8fKbVIeVQbDKg7eUs0s4=
+        b=rnwx1B2AQlCbcy+p2IjfwpVPyUOhscy/nLu1rHaPcr4N+i784okClnVpoMVplWnFY
+         Hfrzg2zpZUdTLoCG6GyoHU9VPO5mEdWuFh98tSW0NN/ENZ4aZyPedHGmqPgTSqrx0v
+         O9QmJUnQvsw2I0jUw2tuBYDE7MotVSHQCAoavr98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 60/80] fuse: fix possibly missed wake-up after abort
-Date:   Fri,  1 May 2020 15:21:54 +0200
-Message-Id: <20200501131531.407149934@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 4.9 63/80] nfsd: memory corruption in nfsd4_lock()
+Date:   Fri,  1 May 2020 15:21:57 +0200
+Message-Id: <20200501131532.279438484@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -59,61 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 2d84a2d19b6150c6dbac1e6ebad9c82e4c123772 upstream.
+commit e1e8399eee72e9d5246d4d1bcacd793debe34dd3 upstream.
 
-In current fuse_drop_waiting() implementation it's possible that
-fuse_wait_aborted() will not be woken up in the unlikely case that
-fuse_abort_conn() + fuse_wait_aborted() runs in between checking
-fc->connected and calling atomic_dec(&fc->num_waiting).
+New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
+does not initialized nbl_list and nbl_lru.
+If conflock allocation fails rollback can call list_del_init()
+access uninitialized fields and corrupt memory.
 
-Do the atomic_dec_and_test() unconditionally, which also provides the
-necessary barrier against reordering with the fc->connected check.
+v2: just initialize nbl_list and nbl_lru right after nbl allocation.
 
-The explicit smp_mb() in fuse_wait_aborted() is not actually needed, since
-the spin_unlock() in fuse_abort_conn() provides the necessary RELEASE
-barrier after resetting fc->connected.  However, this is not a performance
-sensitive path, and adding the explicit barrier makes it easier to
-document.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Fixes: b8f95e5d13f5 ("fuse: umount should wait for all requests")
-Cc: <stable@vger.kernel.org> #v4.19
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for v4.1+ lock")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/dev.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ fs/nfsd/nfs4state.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -132,9 +132,13 @@ static bool fuse_block_alloc(struct fuse
- 
- static void fuse_drop_waiting(struct fuse_conn *fc)
- {
--	if (fc->connected) {
--		atomic_dec(&fc->num_waiting);
--	} else if (atomic_dec_and_test(&fc->num_waiting)) {
-+	/*
-+	 * lockess check of fc->connected is okay, because atomic_dec_and_test()
-+	 * provides a memory barrier mached with the one in fuse_wait_aborted()
-+	 * to ensure no wake-up is missed.
-+	 */
-+	if (atomic_dec_and_test(&fc->num_waiting) &&
-+	    !READ_ONCE(fc->connected)) {
- 		/* wake up aborters */
- 		wake_up_all(&fc->blocked_waitq);
- 	}
-@@ -2164,6 +2168,8 @@ EXPORT_SYMBOL_GPL(fuse_abort_conn);
- 
- void fuse_wait_aborted(struct fuse_conn *fc)
- {
-+	/* matches implicit memory barrier in fuse_drop_waiting() */
-+	smp_mb();
- 	wait_event(fc->blocked_waitq, atomic_read(&fc->num_waiting) == 0);
- }
- 
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -246,6 +246,8 @@ find_or_allocate_block(struct nfs4_locko
+ 	if (!nbl) {
+ 		nbl= kmalloc(sizeof(*nbl), GFP_KERNEL);
+ 		if (nbl) {
++			INIT_LIST_HEAD(&nbl->nbl_list);
++			INIT_LIST_HEAD(&nbl->nbl_lru);
+ 			fh_copy_shallow(&nbl->nbl_fh, fh);
+ 			locks_init_lock(&nbl->nbl_lock);
+ 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
 
 
