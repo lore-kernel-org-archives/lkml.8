@@ -2,51 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A57C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D4FC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6121208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DE9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339803;
-	bh=FrPbYjdAs9QBWu+sGeZq7heSAjE/44KWUKf0zQO/x+A=;
+	s=default; t=1588339806;
+	bh=mOL8kwx0fJd6+yTK39aLKxU65pkth2YFc6ofJzLg4Hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZdmqzAsiqFZCW16JNKp+0a0WvnDg2mwLNNzRc71vLK8BV7GM+PHrQD5OLWuYZROB
-	 b+w6jyFGJAvcpagpeU9vQRxzGPL15ieVRHBDX/tVl4TefBPWm9DpRxldTs8Ol0o+ZG
-	 Mk5esyqIxmlVQC35cV6ASIK4yweE8jBSv/ekNquY=
+	b=NH0qm3NYSUPFQuBne4gLEx3u7bmDt4VaN+I/Y+5n0TFllq4Q3Pz4dosNI04EapKR+
+	 A15jgRLPOb8a57mGuZe+8DWWOsin8KKdKEQf/FKBdUpwUfWFvJk4jn4bHCyBsBOcJC
+	 NVaNUb+e3N0uLP1jnEYtZYAmfcRshXAR7SZNH0E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgEANaD (ORCPT
+        id S1729872AbgEANaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53756 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729156AbgEAN36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:58 -0400
+        id S1729367AbgEAN3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F545208D6;
-        Fri,  1 May 2020 13:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA5A208DB;
+        Fri,  1 May 2020 13:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339798;
-        bh=FrPbYjdAs9QBWu+sGeZq7heSAjE/44KWUKf0zQO/x+A=;
+        s=default; t=1588339793;
+        bh=mOL8kwx0fJd6+yTK39aLKxU65pkth2YFc6ofJzLg4Hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ic+lKbGrJpN31HJ8jq6REsDbEOT6s9RIOSxT1ARR13PxOy1UFgVm990oIqj/jpiEP
-         JMjO5yUfuNtFY2Q6R5xQugDO2Lo0JTOPRszKLvHVJJ6J1pawXJJqiMrnRWsiwgWOC9
-         BZJkeD2RezsXXHj6tzZwr25OtTWm1AbZYQ8Hiklo=
+        b=J+tEv8zp1hqyJEZOD0k/MHa2Q/jsOtXelQ/+fmwimqVU1fjvsRjitM0qmfpk/ipvg
+         XSwDqpTd7j5MXDtyXnT4e/FSdAMDMfxeloYnprvTwbRgA6oShmgkfl8hk9gxatUqBp
+         wxY9fF6vbw3ka2d1m71Oje3jKb7/YMUNa7Pyhec0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 64/80] net/cxgb4: Check the return from t4_query_params properly
-Date:   Fri,  1 May 2020 15:21:58 +0200
-Message-Id: <20200501131532.746764921@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.9 62/80] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
+Date:   Fri,  1 May 2020 15:21:56 +0200
+Message-Id: <20200501131532.020937000@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -59,36 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
+commit 09b04abb70f096333bef6bc95fa600b662e7ee13 upstream.
 
-Positive return values are also failures that don't set val,
-although this probably can't happen. Fixes gcc 10 warning:
+When building with Clang + -Wtautological-pointer-compare:
 
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- 3747 |  *phy_fw_ver = val;
+drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
+address of 'req->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+                             ~~~~~^~~~~    ~~~~
+drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
+address of 'req->usb_req' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+                                                    ~~~~~^~~~~~~    ~~~~
+2 warnings generated.
 
-Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+As it notes, these statements will always evaluate to false so remove
+them.
+
+Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/749
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
+ drivers/usb/gadget/udc/bdc/bdc_ep.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3400,7 +3400,7 @@ int t4_phy_fw_ver(struct adapter *adap,
- 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
- 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
- 			      &param, &val);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 	*phy_fw_ver = val;
- 	return 0;
+--- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+@@ -546,7 +546,7 @@ static void bdc_req_complete(struct bdc_
+ {
+ 	struct bdc *bdc = ep->bdc;
+ 
+-	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
++	if (req == NULL)
+ 		return;
+ 
+ 	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
 
 
