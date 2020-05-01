@@ -2,52 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFE7C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C76BC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B38924955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6383A208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339860;
-	bh=+n5qFEQ/Xd8deP6tXrs9aUSdt1QkCsV0ln5IyBLOgZ0=;
+	s=default; t=1588339862;
+	bh=+ONsByQjosCqxU9ehFEMvDwxrPv9dLGz5S8YJ76OkgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wP7VRuYs54wKYAXtnlQWj3FYWlYTl3jObVXa4s4skmm/KqpaYlfV1f9df+UG4Dh4s
-	 CQrVUPk+vSdMZTTap+m8+wlwkmzb0I3RlFRFvZI3vbb4ZR4k4cND6XtZ9K0Dzqt7cl
-	 XniC5vu9iob2eOXEyA1p1uraekD9rA0fWbekjwGA=
+	b=tkkQ64QLTLut8QE51D2FQpa5LcwE0AB8uL0Qj/i5b+NTShgQBU6w5/jfDSeea2CFm
+	 nnyFW1ak+b0jrEnwYaJZXVHyKdCGlN1V92qOcJ4NBrXVCTeqts5wrlbtI5S1DNVWOa
+	 lprmCno8UKknxh2+X63TY/hpfndbbkQmNkoY2kpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgEANa7 (ORCPT
+        id S1728856AbgEANbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbgEANaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:55 -0400
+        id S1730059AbgEANa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A93D20757;
-        Fri,  1 May 2020 13:30:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7816208C3;
+        Fri,  1 May 2020 13:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339854;
-        bh=+n5qFEQ/Xd8deP6tXrs9aUSdt1QkCsV0ln5IyBLOgZ0=;
+        s=default; t=1588339857;
+        bh=+ONsByQjosCqxU9ehFEMvDwxrPv9dLGz5S8YJ76OkgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BTLKfzNyUdO2FCcHYuFWtM7jcNjds0CUPYqw82biv4nP7kWa/WTCLfKXGp0TP1/WJ
-         bImPBaQgA6whP0O3y5cubAZvyVcOvWG159zq/P3AboCEcrbcS7up8nCTmBFE7H2f7S
-         +/u5h8yV+4VfWchKdOeOWoMpdvmhikd+3FHqSgjw=
+        b=otuQSc7x9QEIqI9BOiUQbxNuXhk5JC7E/abkLAybls6guhibSsBWgCknNiF41jO58
+         3kZSL1PwOKN5jkyDSv34+ceD6DFM9CS1ta2IhfUuk7uD+j3+mmErYTzIHKjF6SF2ug
+         U8tWneOydy96d/hd7cVuoCwjpGWtVagkXjksXXIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 74/80] hwmon: (jc42) Fix name to have no illegal characters
-Date:   Fri,  1 May 2020 15:22:08 +0200
-Message-Id: <20200501131536.553568258@linuxfoundation.org>
+        stable@vger.kernel.org, KP Singh <kpsingh@google.com>,
+        Ian Rogers <irogers@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.9 65/80] perf/core: fix parent pid/tid in task exit events
+Date:   Fri,  1 May 2020 15:21:59 +0200
+Message-Id: <20200501131533.235703039@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -60,43 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
+commit f3bed55e850926614b9898fe982f66d2541a36a5 upstream.
 
-The jc42 driver passes I2C client's name as hwmon device name. In case
-of device tree probed devices this ends up being part of the compatible
-string, "jc-42.4-temp". This name contains hyphens and the hwmon core
-doesn't like this:
+Current logic yields the child task as the parent.
 
-jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
+Before:
+$ perf record bash -c "perf list > /dev/null"
+$ perf script -D |grep 'FORK\|EXIT'
+4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
+4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
+4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
+                                                   ^
+  Note the repeated values here -------------------/
 
-This changes the name to "jc42" which doesn't have any illegal
-characters.
+After:
+383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
+383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
+383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
+Reported-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hwmon/jc42.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
-index 0f1f6421845fd..85435e110ecd9 100644
---- a/drivers/hwmon/jc42.c
-+++ b/drivers/hwmon/jc42.c
-@@ -508,7 +508,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	}
- 	data->config = config;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6431,10 +6431,17 @@ static void perf_event_task_output(struc
+ 		goto out;
  
--	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
- 							 data, &jc42_chip_info,
- 							 NULL);
- 	return PTR_ERR_OR_ZERO(hwmon_dev);
--- 
-2.20.1
-
+ 	task_event->event_id.pid = perf_event_pid(event, task);
+-	task_event->event_id.ppid = perf_event_pid(event, current);
+-
+ 	task_event->event_id.tid = perf_event_tid(event, task);
+-	task_event->event_id.ptid = perf_event_tid(event, current);
++
++	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
++		task_event->event_id.ppid = perf_event_pid(event,
++							task->real_parent);
++		task_event->event_id.ptid = perf_event_pid(event,
++							task->real_parent);
++	} else {  /* PERF_RECORD_FORK */
++		task_event->event_id.ppid = perf_event_pid(event, current);
++		task_event->event_id.ptid = perf_event_tid(event, current);
++	}
+ 
+ 	task_event->event_id.time = perf_event_clock(event);
+ 
 
 
