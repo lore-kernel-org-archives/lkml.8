@@ -2,125 +2,89 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A924C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9276EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBBAA21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588364625;
-	bh=/dHFbz4XUvc7T+sHCzu8/JNWek84PAQ8FrCpPRTN8Ks=;
-	h=Subject:From:To:Date:List-ID:From;
-	b=Tx17UJ8iTsUwWUPCGFJ/Zm/ikjhyIB5JKXhDLv0ndspIu6WxeLzUDTRliCr2U8mPa
-	 fYfxkFTH/Rhvli1kwRSfQnZ5kGTV1NQCSF3q36aVLudvq2EC030W8HCc89LXyGgcUc
-	 AR+tmtSLSkuk22bRqnyzgE3d8J2JSP5je4FzHy/A=
+	by mail.kernel.org (Postfix) with ESMTP id 7049C2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vB5TlFep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgEAUXp (ORCPT
+        id S1726524AbgEAUYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:23:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgEAUXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:23:44 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 077792137B;
-        Fri,  1 May 2020 20:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588364624;
-        bh=/dHFbz4XUvc7T+sHCzu8/JNWek84PAQ8FrCpPRTN8Ks=;
-        h=Subject:From:To:Date:From;
-        b=wVaTe+X4L+5n/7FJuwiJ+NelsdNp44UY//3GK3lqHL0w557KoTZ0uI0oYtWxePlSa
-         geyHPS4JeAJIZ1WwO93PqoqNzPCwkQNbmLbWKxBrR7pRtNYf/ID9tV+2KAQ/y3cGfl
-         73dapyqcYqUTYLAbRJHp4Q3ZoNsQshKIa3MT8VA4=
-Message-ID: <ddccef996326de46d1e17ef162ec3da1b296a283.camel@kernel.org>
-Subject: [ANNOUNCE] 4.19.115-rt50
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Date:   Fri, 01 May 2020 15:23:40 -0500
+        Fri, 1 May 2020 16:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbgEAUYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:24:02 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D9B9C061A0C;
+        Fri,  1 May 2020 13:24:02 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id r2so5521832ilo.6;
+        Fri, 01 May 2020 13:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=LK4KRJWWAJrsktLuXoC6PRNRtrhqTlN6TNIUc7GGM/o=;
+        b=vB5TlFep8hgJKi6dS0MaRhAYk2yzL72ajlDlz11NSbzdkDifbr0AgDdV1oqx5ZFLWm
+         IQsTJaTMreta1RUpBD0fCEr5P7otKkgBIll5VEI8S7FZfxUTwFlYLI7ZDNLGC0yfMTiD
+         sWFQ+oY0qaPsIBlwsJ1PZmmJ9zeMAK9fZc7DX46qVbJ+MdNO9msxDgRLcEC9HePJb7Df
+         buDSxgXUu32FaaQmnoVRjTm5FkYVOQ7OYgbfcCRn4XhG80mOq1Dbt1IREumE/eJlcVk4
+         hz2GzJuxJdfDvSWMEvxdcjsc1BfN8fbeQB+5yUOZcR9f0AXGCK3bnA1wo2W6DSZWsUfU
+         3+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=LK4KRJWWAJrsktLuXoC6PRNRtrhqTlN6TNIUc7GGM/o=;
+        b=k4ZcmuckDCB6Zfqn8uyb4SLVoo9PMRkT9zBn2dLYPkBv1JJ33MoSFT+EMo5QhLP4HD
+         utHqZM5LHQ0h2yXkbfcvGkUSL6AWIHLlPTS/Gr7HlML3WWE4Bo1YqBXvltYA5j4nbSqp
+         5a2WPA7bglIQfofOjWD1i767GBp2LTcpAK0/uEH2+Ydb7LfKuoFBk+30V7/zM+oz2dj7
+         iAdQCjBEHutw+Tcw4VsL6zhJ7oPMXqVsMzZxwhQXmbYhCkXSXMup4wbu6wHklzFfy1Zt
+         AtW8Xu3NdtyzXTlFCIhjBF3SKD+3gWba3yJ7VUtiHvMnB8Dk5x9Z8iDfYGHpD6cP7dJt
+         P4gw==
+X-Gm-Message-State: AGi0Pub5AjSnDgvrMe2irWmQVqoZt0jkA7pLpJo6FdaXiz5BZlxSnu+w
+        vjk6QhtAoKngMp//vlYX5eJ70/UguqjAxGk+HHO+iuWrOwQ=
+X-Google-Smtp-Source: APiQypJ2pdDkfmWz0mP7qJIHbl7TMEqa6cSc3EXEKoYfD9MoFsVPs7bguN2tGQtnp7XHH+jiQFaOd132E/pKzjm7FGE=
+X-Received: by 2002:a92:c80d:: with SMTP id v13mr5327570iln.285.1588364640499;
+ Fri, 01 May 2020 13:24:00 -0700 (PDT)
+MIME-Version: 1.0
+From:   Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Date:   Fri, 1 May 2020 21:23:49 +0100
+Message-ID: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
+Subject: [Patch include request] ARM: dts: imx6qdl-sr-som-ti: indicate
+ powering off wifi is safe
+To:     stable@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, rmk+kernel@armlinux.org.uk
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT Folks!
+Dear all,
 
-I'm pleased to announce the 4.19.115-rt50 stable release.
+This is a request to backport b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10
+(Arm: dts:  imx6qdl-sr-som-ti: indicate powering off wifi is safe),
+already in Linus tree
+(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi?h=v5.7-rc3&id=b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10)
+to LTS kernel 5.4 and to stable 5.6.8.
 
-You can get this release via the git tree at:
+Reasoning:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+Changes to the wlcore driver during Kernel 5.x development, made the
+Cubox-i with the IMX SOM v1.5 (which includes.a TI Wilink 8 wifi
+chipset) not power the wireless interface on boot leaving it
+completely unusable. This happens since at least kernel 5.3 (older one
+I tested) and affects the current stable and LTS latest kernels. The
+linked commit, already in linux mainline, restores the wifi
+functionality.
 
-  branch: v4.19-rt
-  Head SHA1: c117d44bd1278104a9783d8431b96b48515b5f47
+Thanks in advance,
 
-Or to build 4.19.115-rt50 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.115.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.115-rt50.patch.xz
-
-You can also build from 4.19.115-rt49 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.115-rt49-rt50.patch.xz
-
-Enjoy!
-
-   Tom
-
-Changes from v4.19.115-rt49:
----
-
-Rasmus Villemoes (1):
-      hrtimer: fix logic for when grabbing softirq_expiry_lock can be elided
-
-Tom Zanussi (1):
-      Linux 4.19.115-rt50
----
-kernel/time/hrtimer.c | 2 +-
- localversion-rt       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
----
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index e54a95de8b79..c3966c090246 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -953,7 +953,7 @@ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
- {
- 	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
- 
--	if (timer->is_soft && is_migration_base(base)) {
-+	if (timer->is_soft && !is_migration_base(base)) {
- 		spin_lock(&base->cpu_base->softirq_expiry_lock);
- 		spin_unlock(&base->cpu_base->softirq_expiry_lock);
- 	}
-diff --git a/localversion-rt b/localversion-rt
-index 4b7dca68a5b4..42c384668389 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt49
-+-rt50
-
+Miguel B Freitas
