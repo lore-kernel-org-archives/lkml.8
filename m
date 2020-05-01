@@ -2,175 +2,156 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A276DC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5B2C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4AE20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6ED21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="AT/wJl2f"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gWGCf025"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgEAXn4 (ORCPT
+        id S1726764AbgEAXsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 19:43:56 -0400
-Received: from mail-bn7nam10on2057.outbound.protection.outlook.com ([40.107.92.57]:46273
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726336AbgEAXnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 19:43:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=csxw6GaveqYkFlWmPFM+MDPEihDwRAb9YToWcH/qqgcwje1bZdGc0HdXM+bHj5o2TxgaWsjzxjGTXhiTio/c7BHmPjO+rhwprdH5gRW05/F3tachebjeU+6hCTzSvHDQxjlVejk6oZzwaoNC7IQ18GoYzUCyvmQARdLOnoPtSaxwX2/UwIYS8vOUxxOop2FO36nVjSKGMUblQM/wqupAm2Nk6tEJHNGlr+pRJx2xP9pPnMsnS0ASpXmkvVphAZ+n3MTy+GSMWaRna58ALle82x6UHoTJnjdZEBDyN+5cZcwj9GOd0PmtiX9ofsOAQ3uW17UE2atPXTB2ps7Icj6vuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vZ+0Yya6Zh3QNFdgQ32NxswT2FmGYZJlfGAnmOhYjC0=;
- b=Do5WMEXy2CD0m/OelG8XGt6qk7af5UbRB9Uss/ldcyMjVabNSWeofIfFR1hS7lbC0X/NAxcKx8obGgytJNBtmPi5AiYs6/FGeWc0pc5ZxV+qW9YecHmriCGV9LvK3tYEirgz1Nh73Ci83UqzXae3sL5POeKWr+qE7C4SRAq8famivoVJI7cz31V7nsHa5BiQlXNAcUj00ZA4zcoSISqF8/p22pA2KFqCMVyNSFM9cp07BoeytjaFotH7i9ZlDgvzf8gWW0a6jcDK4ZqqvzmyUFEh2zpF+jzw/vK8UnM/PV2wgec8Q1fwF2sOUlN+26hFV5Dq1w2JiQtifzfxXzvh+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
- is 149.199.60.83) smtp.rcpttodomain=baylibre.com smtp.mailfrom=xilinx.com;
- dmarc=none action=none header.from=xilinx.com; dkim=none (message not
- signed); arc=none
+        Fri, 1 May 2020 19:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgEAXsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 19:48:51 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2871C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 16:48:51 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o10so9273463qtr.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 16:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vZ+0Yya6Zh3QNFdgQ32NxswT2FmGYZJlfGAnmOhYjC0=;
- b=AT/wJl2fOPU67sa/7VjMPW6XWV9KpLXrQkNBOJAvWgv3eDNCBygyopsa8EdXzF+RfKC0GgpnUBXXovMSUbNh6iheAUS8NyjR2J+baJdWFy5mYE/MyECQD7x03oXWqRh2B8pG622X4IkuvxyFJv+mj0YuxMKXqIelLlzJY0JmCrw=
-Received: from SN4PR0201CA0018.namprd02.prod.outlook.com
- (2603:10b6:803:2b::28) by MN2PR02MB6240.namprd02.prod.outlook.com
- (2603:10b6:208:1bd::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 1 May
- 2020 23:43:49 +0000
-Received: from SN1NAM02FT047.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:2b:cafe::43) by SN4PR0201CA0018.outlook.office365.com
- (2603:10b6:803:2b::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Fri, 1 May 2020 23:43:48 +0000
-Authentication-Results: spf=temperror (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; baylibre.com; dkim=none (message not signed)
- header.d=none;baylibre.com; dmarc=none action=none header.from=xilinx.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of xilinx.com: DNS Timeout)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT047.mail.protection.outlook.com (10.152.72.201) with Microsoft SMTP
- Server id 15.20.2958.27 via Frontend Transport; Fri, 1 May 2020 23:43:48
- +0000
-Received: from [149.199.38.66] (port=36404 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jUfJp-0005UU-Ot; Fri, 01 May 2020 16:43:45 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jUfJs-0001S2-0C; Fri, 01 May 2020 16:43:48 -0700
-Received: from [172.19.3.8] (helo=xsjamitsuni50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jUfJn-0001RY-1q; Fri, 01 May 2020 16:43:43 -0700
-From:   Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-To:     mturquette@baylibre.com, sboyd@codeaurora.org,
-        michal.simek@xilinx.com, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org
-Cc:     rajanv@xilinx.com, jollys@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-Subject: [RESEND PATCH v2 1/2] drivers: clk: zynqmp: Add support for custom type flags
-Date:   Fri,  1 May 2020 16:43:29 -0700
-Message-Id: <1588376610-253693-2-git-send-email-amit.sunil.dhamne@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588376610-253693-1-git-send-email-amit.sunil.dhamne@xilinx.com>
-References: <1588376610-253693-1-git-send-email-amit.sunil.dhamne@xilinx.com>
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(46966005)(9786002)(26005)(5660300002)(82310400002)(478600001)(4326008)(316002)(107886003)(186003)(2906002)(82740400003)(7696005)(6666004)(54906003)(356005)(47076004)(81166007)(36756003)(70206006)(70586007)(8936002)(2616005)(426003)(8676002)(63350400001)(336012);DIR:OUT;SFP:1101;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sSvpbqeNlGTEYII01v+mpMn0W1osrSgICMHvmn/DMgA=;
+        b=gWGCf025stv8cuf8MQw5PxCV4aPuAxv7llGNtSEpzOcItZXjtVswlNb19LJDXQArHh
+         Nz+hqC6DtzBKdbsxNy8i1sgdlKb+BT9STcsX0zuE96Z3YKScP+yypNbfkc6knPmqNPHv
+         vrU6v4d1c/xiosLld1nuIk2cvXUL2/sSTh06rsf7RsThvf+Hfj9rd7g3hJV9UhXlql+m
+         PuH849Rb8UkUR8WsTG9KvZMLAl7sbQBPR2MAg+2aiFf2+qTCdeeWeCuBj2H7y8rvp4n3
+         418YpW8KM6ALpTwiXKL8U7Cqom+CCXth3xguEVwqANNPtsZZe3CBJacuLJpoiSvza72Y
+         psDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sSvpbqeNlGTEYII01v+mpMn0W1osrSgICMHvmn/DMgA=;
+        b=HyfNukFI2nrVTgAGO9+k30RV+zgAr5czD+n555GobxdxIXp2nwvAn7f828/PX+t0Be
+         Rv6u5Tb02R2rf7+7rVlbYMfIv0CQf/tXmVpO7vYAkA2qcmbFSlcL7hQewv9tJhunH/gM
+         hr9sIjRNBHqVWWoEVyJbAS/g20N0+djolk7P3AeyyN+XorN7yud/cxILjARWe10KfhN4
+         F/R4AkIsmAmiKyYog0UQRUfIvmWI9cLF2OuwzLeAxrzSzkRZ9CiInpaDK/oguZlSKmYT
+         RA5SyEgA4vy+wdeXxa4ih4S+SpHNTKsDQwFjMs/ZVhsKd7DwtT4SHj996r8xthFSLei/
+         74RA==
+X-Gm-Message-State: AGi0PuYMblIJ9n8GXgD2KXtWJxojrfh5ND9KT/35Eez7pD1f8ek+Jmrj
+        qTP81IO3sv7eBReeHt5JP57tpA==
+X-Google-Smtp-Source: APiQypKjD7A++0EO3hNYzB3rk4xQIDRRvGgqPGYNegvuGV/EAa+rBlHx13oXqliDeEynMxdik2AYBQ==
+X-Received: by 2002:ac8:1885:: with SMTP id s5mr6260777qtj.253.1588376930816;
+        Fri, 01 May 2020 16:48:50 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id m83sm3859503qke.117.2020.05.01.16.48.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 May 2020 16:48:50 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jUfOj-0005t6-HO; Fri, 01 May 2020 20:48:49 -0300
+Date:   Fri, 1 May 2020 20:48:49 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 3/3] vfio-pci: Invalidate mmaps and block MMIO access on
+ disabled memory
+Message-ID: <20200501234849.GQ26002@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+ <158836917028.8433.13715345616117345453.stgit@gimli.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e811cc73-72da-4c79-fb65-08d7ee297eb5
-X-MS-TrafficTypeDiagnostic: MN2PR02MB6240:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB6240219E3C1B9F594CAE01B8A7AB0@MN2PR02MB6240.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:172;
-X-Forefront-PRVS: 0390DB4BDA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LfSCZcJ/ovko00h4hSMSi2gouUvRjU0UJ9J9xr33GLtVTpWZv+X5qgzC9kQ/WfbG8eauuNWlf8MaB4GUenauTguzs5jK+11AfQ9R+udldAXIwluVBNERQBn7IsmhIrWUmA+cjPMSkkr3Z1pEJegAFxtPRvkjBGJUSzYWwVydGfpFoMCmsBwHn0hwFvkRFpJQoquux1rXBwqvxaEXqsyx0tpddGGiAcwJfkdX1DASVe6NKYwNlrBfDy8vpM9lQmmTAFe83cA45WpI5p+ZQpByBLe3iHgRR065bh5xOS6pUstc2Jvi5lAWCxKnY25mE8sVxn3MQ5M48F0HYg9x8aoA2c9jkRwjAmpEPHB+PdmnyJkIb2Mm4rxxYcMHOXBDJUQZ+Wey4I3Zu/hVWJ4jr7Juul1z5QkBbrn7DXkKiberyV5dRtmm+SRZH5L18MXc5FBOUp7wUm2q8cQQrkMGi7TGoqK31DNOJhBavBuNv0tchU6Bpo8Lb4kpDRqjItUee2vY8dpW4Nx317tsGHB/455fAw==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 23:43:48.3049
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e811cc73-72da-4c79-fb65-08d7ee297eb5
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6240
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158836917028.8433.13715345616117345453.stgit@gimli.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+On Fri, May 01, 2020 at 03:39:30PM -0600, Alex Williamson wrote:
 
-Store extra custom type flags received from firmware.
+>  static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
+>  			    struct vm_area_struct *vma)
+>  {
+> @@ -1346,15 +1450,49 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct vfio_pci_device *vdev = vma->vm_private_data;
+> +	vm_fault_t ret = VM_FAULT_NOPAGE;
+>  
+> -	if (vfio_pci_add_vma(vdev, vma))
+> -		return VM_FAULT_OOM;
+> +	/*
+> +	 * Zap callers hold memory_lock and acquire mmap_sem, we hold
+> +	 * mmap_sem and need to acquire memory_lock to avoid races with
+> +	 * memory bit settings.  Release mmap_sem, wait, and retry, or fail.
+> +	 */
+> +	if (unlikely(!down_read_trylock(&vdev->memory_lock))) {
+> +		if (vmf->flags & FAULT_FLAG_ALLOW_RETRY) {
+> +			if (vmf->flags & FAULT_FLAG_RETRY_NOWAIT)
+> +				return VM_FAULT_RETRY;
+> +
+> +			up_read(&vma->vm_mm->mmap_sem);
+> +
+> +			if (vmf->flags & FAULT_FLAG_KILLABLE) {
+> +				if (!down_read_killable(&vdev->memory_lock))
+> +					up_read(&vdev->memory_lock);
+> +			} else {
+> +				down_read(&vdev->memory_lock);
+> +				up_read(&vdev->memory_lock);
+> +			}
+> +			return VM_FAULT_RETRY;
+> +		}
+> +		return VM_FAULT_SIGBUS;
+> +	}
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-Signed-off-by: Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
----
- drivers/clk/zynqmp/clk-zynqmp.h | 1 +
- drivers/clk/zynqmp/clkc.c       | 4 ++++
- 2 files changed, 5 insertions(+)
+So, why have the wait? It isn't reliable - if this gets faulted from a
+call site that can't handle retry then it will SIGBUS anyhow?
 
-diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqm=
-p.h
-index fec9a15..5beeb41 100644
---- a/drivers/clk/zynqmp/clk-zynqmp.h
-+++ b/drivers/clk/zynqmp/clk-zynqmp.h
-@@ -30,6 +30,7 @@ struct clock_topology {
-        u32 type;
-        u32 flag;
-        u32 type_flag;
-+       u8 custom_type_flag;
- };
+The weird use of a rwsem as a completion suggest that perhaps using
+wait_event might improve things:
 
- struct clk_hw *zynqmp_clk_register_pll(const char *name, u32 clk_id,
-diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
-index 10e89f2..4dd8413 100644
---- a/drivers/clk/zynqmp/clkc.c
-+++ b/drivers/clk/zynqmp/clkc.c
-@@ -84,6 +84,7 @@ struct name_resp {
+disable:
+  // Clean out the vma list with zap, then:
 
- struct topology_resp {
- #define CLK_TOPOLOGY_TYPE              GENMASK(3, 0)
-+#define CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS GENMASK(7, 4)
- #define CLK_TOPOLOGY_FLAGS             GENMASK(23, 8)
- #define CLK_TOPOLOGY_TYPE_FLAGS                GENMASK(31, 24)
-        u32 topology[CLK_GET_TOPOLOGY_RESP_WORDS];
-@@ -396,6 +397,9 @@ static int __zynqmp_clock_get_topology(struct clock_top=
-ology *topology,
-                topology[*nnodes].type_flag =3D
-                                FIELD_GET(CLK_TOPOLOGY_TYPE_FLAGS,
-                                          response->topology[i]);
-+               topology[*nnodes].custom_type_flag =3D
-+                       FIELD_GET(CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS,
-+                                 response->topology[i]);
-                (*nnodes)++;
-        }
+  down_read(mm->mmap_sem)
+  mutex_lock(vma_lock);
+  list_for_each_entry_safe()
+     // zap and remove all vmas
 
---
-2.7.4
+  pause_faults = true;
+  mutex_write(vma_lock);
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+fault:
+  // Already have down_read(mmap_sem)
+  mutex_lock(vma_lock);
+  while (pause_faults) {
+     mutex_unlock(vma_lock)
+     wait_event(..., !pause_faults)
+     mutex_lock(vma_lock)
+  }
+  list_add()
+  remap_pfn()
+  mutex_unlock(vma_lock)
+
+enable:
+  pause_faults = false
+  wake_event()
+
+The only requirement here is that while inside the write side of
+memory_lock you cannot touch user pages (ie no copy_from_user/etc)
+
+Jason
