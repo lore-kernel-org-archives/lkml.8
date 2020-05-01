@@ -2,112 +2,170 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8445C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A627C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC6720757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339853;
-	bh=GqiAjsB0umloZVqaiehWJl9SaeTz4QMV4YkOimw4U6U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W0Ikb3huFbVAO2AR1Oxk09CHj1SHMgt+ZE/jaTNBwVZB4p9ahH5pnQH7RrwBRGBGp
-	 Rj+09Ps/AM+dZ2xWpZY6eHdgfGnHlB9K2tX7eXQF7LQ0SCWb+IZbZ8Q4ckfDhw4VJi
-	 90gi3nnxhiFklyhR/joWjQF9kuFDpiBKIIYQKDmo=
+	by mail.kernel.org (Postfix) with ESMTP id 392DC208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oyDdMDAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgEANaw (ORCPT
+        id S1730058AbgEANa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbgEANar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Fri, 1 May 2020 09:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730043AbgEANay (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D8AC061A0C;
+        Fri,  1 May 2020 06:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=g1HJbRTAH6u4WBCmhMZ9LnGwhoaAiquAYI+U4ca89TU=; b=oyDdMDAg89BCnftkud0KnfX+Z9
+        9Ai6tavDSvb42MbYg/Sk7oB9XLAxIU3UNFnxjSFjM+nsOAtqCaBYFZad5DmH9pIqED0r/tyEkxZTZ
+        pHJ01TYue0gOaNpQtZ1WJ8veKIu3sRO8L+tQ7ga+YVIhJ5OJi7QVSxEbkhPZURdlwe623hdUIszkm
+        iCVIlbZI+HC/FoiqQbMPnp1dt/cE4fPPdC42kSGUSQnKJLRwxCemoXV0OsCDxRxT3SHbiTCkrMDHb
+        TOgf7cyxpAb1YVWkjHqoQqOKIHmJNluaoMl3tUeN472F67EGVE7FVU+caPQ661NhpIS0/+v8pAr5S
+        5yvBLsvw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUVkc-0007vG-5C; Fri, 01 May 2020 13:30:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A965F20757;
-        Fri,  1 May 2020 13:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339847;
-        bh=GqiAjsB0umloZVqaiehWJl9SaeTz4QMV4YkOimw4U6U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QiNuU7H+VE5ZtAH//Dsr0m5Z8qIvzm4UhUK/70EU5i/jEUoGcUZdd5mzv9SiX3yXP
-         strAOQBIaLbhohLqJB6jjeSZRG6GwQ7Uf/nXQZ5X7g813AnkoiH5H7Mt2IG8lCEtaf
-         O5Uc0zRxU0JjgEROwLf4DCRQaSLy2NZgHJFMfOVw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 71/80] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
-Date:   Fri,  1 May 2020 15:22:05 +0200
-Message-Id: <20200501131535.782271467@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
-References: <20200501131513.810761598@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EDCEE3075F9;
+        Fri,  1 May 2020 15:30:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DB3F32391C520; Fri,  1 May 2020 15:30:42 +0200 (CEST)
+Date:   Fri, 1 May 2020 15:30:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/2] x86, sched: Prevent divisions by zero in frequency
+ invariant accounting
+Message-ID: <20200501133042.GE3762@hirez.programming.kicks-ass.net>
+References: <20200428132450.24901-1-ggherdovich@suse.cz>
+ <20200428132450.24901-2-ggherdovich@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428132450.24901-2-ggherdovich@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+On Tue, Apr 28, 2020 at 03:24:49PM +0200, Giovanni Gherdovich wrote:
+> The product mcnt * arch_max_freq_ratio could be zero if it overflows u64.
+> 
+> For context, a large value for arch_max_freq_ratio would be 5000,
+> corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
+> 1500-2000). A large increment frequency for the MPERF counter would be 5GHz
+> (the base clock of all CPUs on the market today is less than that). With
+> these figures, a CPU would need to go without a scheduler tick for around 8
+> days for the u64 overflow to happen. It is unlikely, but the check is
+> warranted.
+> 
+> In that case it's also appropriate to disable frequency invariant
+> accounting: the feature relies on measures of the clock frequency done at
+> every scheduler tick, which need to be "fresh" to be at all meaningful.
+> 
+> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
 
-[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
+>  	acnt <<= 2*SCHED_CAPACITY_SHIFT;
+>  	mcnt *= arch_max_freq_ratio;
+> +	if (!mcnt) {
 
-xenbus_map_ring_valloc() maps a ring page and returns the status of the
-used grant (0 meaning success).
+The problem is; this doesn't do what you claim it does.
 
-There are Xen hypervisors which might return the value 1 for the status
-of a failed grant mapping due to a bug. Some callers of
-xenbus_map_ring_valloc() test for errors by testing the returned status
-to be less than zero, resulting in no error detected and crashing later
-due to a not available ring page.
+> +		pr_warn("Scheduler tick missing for long time, disabling scale-invariant accounting.\n");
+> +		/* static_branch_disable() acquires a lock and may sleep */
+> +		schedule_work(&disable_freq_invariance_work);
+> +		return;
+> +	}
+>  
+>  	freq_scale = div64_u64(acnt, mcnt);
 
-Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
-in case the grant status reported by Xen is greater than zero.
+I've changed the patch like so.. OK?
 
-This is part of XSA-316.
+(ok, perhaps I went a little overboard with the paranoia ;-)
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Wei Liu <wl@xen.org>
-Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index 056da6ee1a357..df27cefb2fa35 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -469,7 +469,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
- int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
- 			   unsigned int nr_grefs, void **vaddr)
- {
--	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-+	int err;
-+
-+	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-+	/* Some hypervisors are buggy and can return 1. */
-+	if (err > 0)
-+		err = GNTST_general_error;
-+
-+	return err;
- }
- EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -55,6 +55,7 @@
+ #include <linux/gfp.h>
+ #include <linux/cpuidle.h>
+ #include <linux/numa.h>
++#include <linux/overflow.h>
  
--- 
-2.20.1
-
-
-
+ #include <asm/acpi.h>
+ #include <asm/desc.h>
+@@ -2057,11 +2058,19 @@ static void init_freq_invariance(bool se
+ 	}
+ }
+ 
++static void disable_freq_invariance_workfn(struct work_struct *work)
++{
++	static_branch_disable(&arch_scale_freq_key);
++}
++
++static DECLARE_WORK(disable_freq_invariance_work,
++		    disable_freq_invariance_workfn);
++
+ DEFINE_PER_CPU(unsigned long, arch_freq_scale) = SCHED_CAPACITY_SCALE;
+ 
+ void arch_scale_freq_tick(void)
+ {
+-	u64 freq_scale;
++	u64 freq_scale = SCHED_CAPACITY_SCALE;
+ 	u64 aperf, mperf;
+ 	u64 acnt, mcnt;
+ 
+@@ -2073,19 +2082,27 @@ void arch_scale_freq_tick(void)
+ 
+ 	acnt = aperf - this_cpu_read(arch_prev_aperf);
+ 	mcnt = mperf - this_cpu_read(arch_prev_mperf);
+-	if (!mcnt)
+-		return;
+ 
+ 	this_cpu_write(arch_prev_aperf, aperf);
+ 	this_cpu_write(arch_prev_mperf, mperf);
+ 
+-	acnt <<= 2*SCHED_CAPACITY_SHIFT;
+-	mcnt *= arch_max_freq_ratio;
++	if (check_shl_overflow(acnt, 2*SCHED_CAPACITY_SHIFT, &acnt))
++		goto error;
++
++	if (check_mul_overflow(mcnt, arch_max_freq_ratio, &mcnt) || !mcnt)
++		goto error;
+ 
+ 	freq_scale = div64_u64(acnt, mcnt);
++	if (!freq_scale)
++		goto error;
+ 
+ 	if (freq_scale > SCHED_CAPACITY_SCALE)
+ 		freq_scale = SCHED_CAPACITY_SCALE;
+ 
+ 	this_cpu_write(arch_freq_scale, freq_scale);
++	return;
++
++error:
++	pr_warn("Scheduler frequency invariance went wobbly, disabling!\n");
++	schedule_work(&disable_freq_invariance_work);
+ }
