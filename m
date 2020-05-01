@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D62C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E416BC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A0C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5D82173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339621;
-	bh=KnH9XDnMyRahOYpiIFkke00TmrZSxSRtFPurF5f0YHc=;
+	s=default; t=1588339622;
+	bh=JyKPbUi+7fIQGEbYVTLY+DWyPmwJghq8tvGOTZssA5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SydLIlKRq7R6+v/Xa1r5xIldyYLHf69B3qO9l/Nd7GeyN8zIC3uZPFg2drgQAn9j3
-	 xXJKKwhIoM7VjXlOpwjy+ulLpz7QYvudxs/tzsbFDWlQZ91quxZ2C4e2uSCPeRoL+D
-	 J8TGi7kRE3Kwpz15WvNLcCSiooxw1/XWhEV46Q9s=
+	b=pKpvkTKPoTvVISVZwl24pcANAsiunaGBd63tmCiXVrkJblUDLEEmytmAKIRWlJcY9
+	 35mq8kuJYo/FhaQxSE0/i7pNZ5e6FoIHH0uXto8DJyrFJKPQ6l3qHGx7D+wXEASVeB
+	 XJzZJdb8MAtZ6338x+/Ldns6Dgi0MUHhvZ8TEqpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgEAN1A (ORCPT
+        id S1729386AbgEAN1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:27:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48672 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729330AbgEAN0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:49 -0400
+        id S1729363AbgEAN04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B134E20757;
-        Fri,  1 May 2020 13:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC8E24958;
+        Fri,  1 May 2020 13:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339608;
-        bh=KnH9XDnMyRahOYpiIFkke00TmrZSxSRtFPurF5f0YHc=;
+        s=default; t=1588339615;
+        bh=JyKPbUi+7fIQGEbYVTLY+DWyPmwJghq8tvGOTZssA5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gKdgfPXjpXV1z40Wht4ufy0B7Vn3SjESlNTfMqx7/5dha+LGbER31dnyzpGdi9equ
-         3ThRdqRYbfDayu7Sj+cUWAoKRDOQst6efNZSwiozh4atYK/5oIV+OT3u6BxLk0BJzH
-         sOqV934uYf0OMsNOtodjHftgb07ZZO05Z2qFSjQ4=
+        b=c7PkdTamkMVJ84t/YR8QiMAKPVbht6MeK8SEHyUP4y/Q0xNbLhfxULJjM26k6pz+C
+         MHQReCFtBheWHzk5QCzJCcG9R5x2iqM0fU6ZeXvEc0PwPEe+ygjmUlIg49lw1zEF8l
+         GdqtMtVbo74whETwAkB85RlkWBR9cbnHd9E4bsRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 45/70] ASoC: dapm: fixup dapm kcontrol widget
-Date:   Fri,  1 May 2020 15:21:33 +0200
-Message-Id: <20200501131527.231986635@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.4 48/70] staging: comedi: Fix comedi_device refcnt leak in comedi_open
+Date:   Fri,  1 May 2020 15:21:36 +0200
+Message-Id: <20200501131528.111031752@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -59,71 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gyeongtaek Lee <gt82.lee@samsung.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit ebf1474745b4373fdde0fcf32d9d1f369b50b212 upstream.
+commit 332e0e17ad49e084b7db670ef43b5eb59abd9e34 upstream.
 
-snd_soc_dapm_kcontrol widget which is created by autodisable control
-should contain correct on_val, mask and shift because it is set when the
-widget is powered and changed value is applied on registers by following
-code in dapm_seq_run_coalesced().
+comedi_open() invokes comedi_dev_get_from_minor(), which returns a
+reference of the COMEDI device to "dev" with increased refcount.
 
-		mask |= w->mask << w->shift;
-		if (w->power)
-			value |= w->on_val << w->shift;
-		else
-			value |= w->off_val << w->shift;
+When comedi_open() returns, "dev" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-Shift on the mask in dapm_kcontrol_data_alloc() is removed to prevent
-double shift.
-And, on_val in dapm_kcontrol_set_value() is modified to get correct
-value in the dapm_seq_run_coalesced().
+The reference counting issue happens in one exception handling path of
+comedi_open(). When "cfp" allocation is failed, the refcnt increased by
+comedi_dev_get_from_minor() is not decreased, causing a refcnt leak.
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/000001d61537$b212f620$1638e260$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this issue by calling comedi_dev_put() on this error path when "cfp"
+allocation is failed.
+
+Fixes: 20f083c07565 ("staging: comedi: prepare support for per-file read and write subdevices")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/1587361459-83622-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/staging/comedi/comedi_fops.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -384,7 +384,7 @@ static int dapm_kcontrol_data_alloc(stru
+--- a/drivers/staging/comedi/comedi_fops.c
++++ b/drivers/staging/comedi/comedi_fops.c
+@@ -2592,8 +2592,10 @@ static int comedi_open(struct inode *ino
+ 	}
  
- 			memset(&template, 0, sizeof(template));
- 			template.reg = e->reg;
--			template.mask = e->mask << e->shift_l;
-+			template.mask = e->mask;
- 			template.shift = e->shift_l;
- 			template.off_val = snd_soc_enum_item_to_val(e, 0);
- 			template.on_val = template.off_val;
-@@ -510,8 +510,22 @@ static bool dapm_kcontrol_set_value(cons
- 	if (data->value == value)
- 		return false;
- 
--	if (data->widget)
--		data->widget->on_val = value;
-+	if (data->widget) {
-+		switch (dapm_kcontrol_get_wlist(kcontrol)->widgets[0]->id) {
-+		case snd_soc_dapm_switch:
-+		case snd_soc_dapm_mixer:
-+		case snd_soc_dapm_mixer_named_ctl:
-+			data->widget->on_val = value & data->widget->mask;
-+			break;
-+		case snd_soc_dapm_demux:
-+		case snd_soc_dapm_mux:
-+			data->widget->on_val = value >> data->widget->shift;
-+			break;
-+		default:
-+			data->widget->on_val = value;
-+			break;
-+		}
+ 	cfp = kzalloc(sizeof(*cfp), GFP_KERNEL);
+-	if (!cfp)
++	if (!cfp) {
++		comedi_dev_put(dev);
+ 		return -ENOMEM;
 +	}
  
- 	data->value = value;
+ 	cfp->dev = dev;
  
 
 
