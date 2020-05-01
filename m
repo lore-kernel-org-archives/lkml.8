@@ -2,54 +2,56 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB8BC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43719C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC672051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24795205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341174;
-	bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
+	s=default; t=1588341177;
+	bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnYoFt9b2tJKcCfqAeaom4gZ6UqrJ+eBHIimvAXN0WGvdTm2n3Nf4RQmi/Kglbqdi
-	 MsNWEbnHiWDF1towXcB/71BWE5pxC72H2bsiDoW5V/54y8OpbjXCygpfymn7cmR5Zg
-	 I0i7pMKwia6LJaFz5xQ4+v/ui1hMLK0/HInp5gq8=
+	b=OBoGt0e/aSaFsTUQQ2qg2CIWA77KLnjtR+HVDuzkZ5t/3mNxoJEc4EvCBC48ykZAD
+	 AbF8tSXvDA9417KLbvsgmwioAnxoDB1QcxM5TEsnzaECRhje42lq8eVGQyCQ2TQ6mv
+	 66QOXHXSZny8fNIBQ949huLPbRYH2qVy5EOepdW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbgEANwt (ORCPT
+        id S1730924AbgEANhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36444 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730248AbgEANh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:26 -0400
+        id S1730913AbgEANgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A5B24955;
-        Fri,  1 May 2020 13:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C92152173E;
+        Fri,  1 May 2020 13:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340244;
-        bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
+        s=default; t=1588340215;
+        bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/JSEOrvEpD+FbF2nZtFz2RLUSQq1qfk82b6SbnrCrXBEc5n+aWIFZWiBHoNfFVgb
-         WMKX2Cr5dJr7jvfOKvaF233h4sv4rxFxKIC24aiwGyhmXW7lY6IOuV7hcZnfQoNMZX
-         Rje1tNZ1KLq2YKbyLMFWTsvMhOvJiqJ3i6I48vIU=
+        b=A704BlUBxms2tvuOuWIFHQOED2tuGIjqUEt0oih7YI1FsV/T00NXh5JsbCSY668Vq
+         2m733FO1xaOiVkO4b1klgL11YNAF0RYt+aff3lfLT1Skd69trwdLpZ+29JFIVLI6Nz
+         ZcO1YUOgIx40VSYKSHHogmuaXrjMhdjgHClBJ7Ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/46] arm64: Delete the space separator in __emit_inst
-Date:   Fri,  1 May 2020 15:23:04 +0200
-Message-Id: <20200501131512.436917911@linuxfoundation.org>
+Subject: [PATCH 4.19 35/46] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
+Date:   Fri,  1 May 2020 15:23:00 +0200
+Message-Id: <20200501131511.262749709@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -62,67 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
+[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
 
-In assembly, many instances of __emit_inst(x) expand to a directive. In
-a few places __emit_inst(x) is used as an assembler macro argument. For
-example, in arch/arm64/kvm/hyp/entry.S
+CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
+unreachable code path.  This includes __builtin_unreachable().  Because
+the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
+this results in a double UD2.  In this case objtool rightfully detects
+that the second UD2 is unreachable:
 
-  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
 
-expands to the following by the C preprocessor:
+We weren't able to figure out a way to get rid of the double UD2s, so
+just silence the warning.
 
-  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so the clang
-integrated assembler splits the arguments to:
-
-   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
-(along with many other non-x86 backends) sees:
-
-  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # .inst(...) is parsed as one argument
-
-while its x86 backend sees:
-
-  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
-
-The non-x86 backend's behavior is considered unintentional
-(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
-So drop the space separator inside `.inst (...)` to make the clang
-integrated assembler work.
-
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/939
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/sysreg.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 3091ae5975a3a..ed99d941c4623 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -60,7 +60,9 @@
- #ifndef CONFIG_BROKEN_GAS_INST
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 9479c74af9baf..4613d796492ab 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2086,14 +2086,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
+ 	    !strcmp(insn->sec->name, ".altinstr_aux"))
+ 		return true;
  
- #ifdef __ASSEMBLY__
--#define __emit_inst(x)			.inst (x)
-+// The space separator is omitted so that __emit_inst(x) can be parsed as
-+// either an assembler directive or an assembler macro argument.
-+#define __emit_inst(x)			.inst(x)
- #else
- #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
- #endif
++	if (!insn->func)
++		return false;
++
++	/*
++	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
++	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
++	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
++	 * (or occasionally a JMP to UD2).
++	 */
++	if (list_prev_entry(insn, list)->dead_end &&
++	    (insn->type == INSN_BUG ||
++	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
++	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
++		return true;
++
+ 	/*
+ 	 * Check if this (or a subsequent) instruction is related to
+ 	 * CONFIG_UBSAN or CONFIG_KASAN.
+ 	 *
+ 	 * End the search at 5 instructions to avoid going into the weeds.
+ 	 */
+-	if (!insn->func)
+-		return false;
+ 	for (i = 0; i < 5; i++) {
+ 
+ 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
 -- 
 2.20.1
 
