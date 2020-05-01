@@ -2,229 +2,133 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE7FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57231C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672A82074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308C0207DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S1dhhecU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EtQaTk0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgEABHn (ORCPT
+        id S1728037AbgEABJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 21:07:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51617 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727114AbgEABHn (ORCPT
+        Thu, 30 Apr 2020 21:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727114AbgEABJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 21:07:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588295261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EU5hMHIDBwanKqUThLEMKgdcgJ0c7t+O7ajiXIHk0no=;
-        b=S1dhhecUMNPTraHhJcdWLHxp5Bar7lLcJzpwis3QdV/P87lCe7qtgsmHsczV90dQd8xLjx
-        Q/7D0j4xE3/sa6nU56P8NzPYwAsDFEXSqZVSHhk09N4o5z53YNRdwnp1SvV4ttkvmTX2HY
-        AnHZ9xhkaoiNscL15fm3PV2hPlqYMCw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-fcevY-GHNeeCfOfwUTTktQ-1; Thu, 30 Apr 2020 21:07:38 -0400
-X-MC-Unique: fcevY-GHNeeCfOfwUTTktQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CBA2107ACCA;
-        Fri,  1 May 2020 01:07:37 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F083239E;
-        Fri,  1 May 2020 01:07:35 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 20:07:33 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-Message-ID: <20200501010733.ptvgzl3nbxybo4rd@treble>
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
+        Thu, 30 Apr 2020 21:09:25 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA29C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:09:25 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id e18so402250oot.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=iXrA9vjDFeyBPogW8X3baa2NAT1RG1h/25KrkcOYPyk=;
+        b=EtQaTk0BIrN9hgAUH4jSlTrl+Q207os/So9AiKENej0LuanW8nWejAFjXnLoZlmeR4
+         +ti2sYQdpgMPGJECSbnhUmrLXyLoZY6Kug+Vm8v5u1KYOm1/Kof/C8kPVXJDo6GYJVf4
+         /Q0lpeQZtlf2xXJWWy/sLQ3Xob7UIbAf89bbCTboOcJ6FeSnst/Er7gUIummoUP9f9wX
+         q973lmYcW9qE/wrQVMDaIkcwYZVY15iim0spYQ5SosKYH51UVqU+4baaNY/+xgBjJ5D+
+         9xQTGq50SIxOcD8i9g20HwegFCYPdStZGHBi9DYnzp1jfK+2yDry22p+gi7cjRubBQSP
+         u0nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=iXrA9vjDFeyBPogW8X3baa2NAT1RG1h/25KrkcOYPyk=;
+        b=QJF0fI4brYEFiF+tFooY3uTidf5UEv0sF5A5GDO1p54Ai9Jkij90bZ1K3VJCKRx718
+         4zLPgGNkkpDESP7couNzdXf0o4TVHDdtBC0WMFlqzhudJSEkOqJbYYpiwXZhnhGHOs1V
+         0S7OPb6LGpV8TOyk9pSaHEjId/Iu796eZqeBeIcl+1IHqqxceEtZYVBgcOLaq4LEZZB0
+         Cb5UJt57Sby4VTrmdodC5wItNq74jhOGKLkSo33UBgXG8KFtBabkDYaOhByodtKO6fn2
+         bb+V+aLthiNPPVDvsd2/ZgWSWnPEjfK6UTrR8STtPHyh1/zk14mEPcej+xca5RT2zqhq
+         iKjg==
+X-Gm-Message-State: AGi0PuZP1ebcn19MDZ2piUCFr7jJXQRPSvAqeG+1NvybGjbTsccAuQQY
+        vBJhGY1V7ODIwRMlNY10ZBcQpA==
+X-Google-Smtp-Source: APiQypJ+scBXw7K9Y+l1S2jlTS7e2TRgQUfk+9D2W+8cSGXvUZp1msNhnPw4lHxV9WnTP0XblZiwag==
+X-Received: by 2002:a4a:8253:: with SMTP id t19mr1736955oog.69.1588295364238;
+        Thu, 30 Apr 2020 18:09:24 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id p17sm36208oot.17.2020.04.30.18.09.22
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 30 Apr 2020 18:09:22 -0700 (PDT)
+Date:   Thu, 30 Apr 2020 18:09:03 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [linux-next PATCH 1/2] mm: khugepaged: add exceed_max_ptes_*
+ helpers
+In-Reply-To: <cc8ac985-73a5-698f-f108-fb2d8410d14c@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.2004301751490.1725@eggly.anvils>
+References: <1588200982-69492-1-git-send-email-yang.shi@linux.alibaba.com> <20200430215932.5w5dck3rnieppzqa@box> <cc8ac985-73a5-698f-f108-fb2d8410d14c@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 04:05:07PM +0200, Arnd Bergmann wrote:
-> lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x133: call to do_strncpy_from_user() with UACCESS enabled
-> lib/strnlen_user.o: warning: objtool: strnlen_user()+0x122: call to do_strnlen_user() with UACCESS enabled
+On Thu, 30 Apr 2020, Yang Shi wrote:
+> On 4/30/20 2:59 PM, Kirill A. Shutemov wrote:
+> > On Thu, Apr 30, 2020 at 06:56:21AM +0800, Yang Shi wrote:
+> > > The max_ptes_{swap|none|shared} are defined to tune the behavior of
+> > > khugepaged.  The are checked at a couple of places with open coding.
+> > > Replace the opencoding to exceed_pax_ptes_{swap|none_shared} helpers to
+> > > improve the readability.
+> > > 
+> > > Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > Cc: Hugh Dickins <hughd@google.com>
+> > > Cc: Andrea Arcangeli <aarcange@redhat.com>
+> > > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> > > ---
+> > >   mm/khugepaged.c | 27 +++++++++++++++++++++------
+> > >   1 file changed, 21 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > > index a02a4c5..0c8d30b 100644
+> > > --- a/mm/khugepaged.c
+> > > +++ b/mm/khugepaged.c
+> > > @@ -339,6 +339,21 @@ struct attribute_group khugepaged_attr_group = {
+> > >   };
+> > >   #endif /* CONFIG_SYSFS */
+> > >   +static inline bool exceed_max_ptes_none(unsigned int *nr_ptes)
+> > > +{
+> > > +	return (++(*nr_ptes) > khugepaged_max_ptes_none);
+> > > +}
+> > > +
+> > > +static inline bool exceed_max_ptes_swap(unsigned int *nr_ptes)
+> > > +{
+> > > +	return (++(*nr_ptes) > khugepaged_max_ptes_swap);
+> > > +}
+> > > +
+> > > +static inline bool exceed_max_ptes_shared(unsigned int *nr_ptes)
+> > > +{
+> > > +	return (++(*nr_ptes) > khugepaged_max_ptes_shared);
+> > > +}
+> > > +
+> > Frankly, I find this ugly and confusing. Open-coded version is more
+> > readable to me.
 
-Does this fix it?
+Wow, yes, I strongly agree with Kirill.
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 706020b06617..cb3ae7a093c3 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -30,6 +30,9 @@ static inline long do_strncpy_from_user(char *dst, const char __user *src,
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
- 	unsigned long res = 0;
- 
-+	if (!user_access_begin(src, max))
-+		return -EFAULT;
-+
- 	if (IS_UNALIGNED(src, dst))
- 		goto byte_at_a_time;
- 
-@@ -43,7 +46,8 @@ static inline long do_strncpy_from_user(char *dst, const char __user *src,
- 		if (has_zero(c, &data, &constants)) {
- 			data = prep_zero_mask(c, data, &constants);
- 			data = create_zero_mask(data);
--			return res + find_zero(data);
-+			res += find_zero(data);
-+			goto done;
- 		}
- 		res += sizeof(unsigned long);
- 		max -= sizeof(unsigned long);
-@@ -56,7 +60,7 @@ static inline long do_strncpy_from_user(char *dst, const char __user *src,
- 		unsafe_get_user(c,src+res, efault);
- 		dst[res] = c;
- 		if (!c)
--			return res;
-+			goto done;
- 		res++;
- 		max--;
- 	}
-@@ -65,14 +69,20 @@ static inline long do_strncpy_from_user(char *dst, const char __user *src,
- 	 * Uhhuh. We hit 'max'. But was that the user-specified maximum
- 	 * too? If so, that's ok - we got as much as the user asked for.
- 	 */
--	if (res >= count)
--		return res;
-+	if (res < count) {
-+		/*
-+		 * Nope: we hit the address space limit, and we still had more
-+		 * characters the caller would have wanted. That's an EFAULT.
-+		 */
-+		goto efault;
-+	}
-+
-+done:
-+	user_access_end();
-+	return res;
- 
--	/*
--	 * Nope: we hit the address space limit, and we still had more
--	 * characters the caller would have wanted. That's an EFAULT.
--	 */
- efault:
-+	user_access_end();
- 	return -EFAULT;
- }
- 
-@@ -105,7 +115,6 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
- 	src_addr = (unsigned long)untagged_addr(src);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
--		long retval;
- 
- 		/*
- 		 * Truncate 'max' to the user-specified limit, so that
-@@ -116,11 +125,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
- 
- 		kasan_check_write(dst, count);
- 		check_object_size(dst, count, false);
--		if (user_access_begin(src, max)) {
--			retval = do_strncpy_from_user(dst, src, count, max);
--			user_access_end();
--			return retval;
--		}
-+		return do_strncpy_from_user(dst, src, count, max);
- 	}
- 	return -EFAULT;
- }
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 41670d4a5816..f1e9e447bef1 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -26,6 +26,9 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	unsigned long align, res = 0;
- 	unsigned long c;
- 
-+	if (!user_access_begin(src, max))
-+		return 0;
-+
- 	/*
- 	 * Do everything aligned. But that means that we
- 	 * need to also expand the maximum..
-@@ -39,10 +42,12 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 
- 	for (;;) {
- 		unsigned long data;
-+
- 		if (has_zero(c, &data, &constants)) {
- 			data = prep_zero_mask(c, data, &constants);
- 			data = create_zero_mask(data);
--			return res + find_zero(data) + 1 - align;
-+			res += find_zero(data) + 1 - align;
-+			goto done;
- 		}
- 		res += sizeof(unsigned long);
- 		/* We already handled 'unsigned long' bytes. Did we do it all ? */
-@@ -58,13 +63,21 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	 * too? If so, return the marker for "too long".
- 	 */
- 	if (res >= count)
--		return count+1;
-+		res = count + 1;
-+	else {
-+		/*
-+		 * Nope: we hit the address space limit, and we still had more
-+		 * characters the caller would have wanted. That's 0.
-+		 */
-+		goto efault;
-+	}
-+
-+done:
-+	user_access_end();
-+	return res;
- 
--	/*
--	 * Nope: we hit the address space limit, and we still had more
--	 * characters the caller would have wanted. That's 0.
--	 */
- efault:
-+	user_access_end();
- 	return 0;
- }
- 
-@@ -100,7 +113,6 @@ long strnlen_user(const char __user *str, long count)
- 	src_addr = (unsigned long)untagged_addr(str);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
--		long retval;
- 
- 		/*
- 		 * Truncate 'max' to the user-specified limit, so that
-@@ -109,11 +121,7 @@ long strnlen_user(const char __user *str, long count)
- 		if (max > count)
- 			max = count;
- 
--		if (user_access_begin(str, max)) {
--			retval = do_strnlen_user(str, count, max);
--			user_access_end();
--			return retval;
--		}
-+		return do_strnlen_user(str, count, max);
- 	}
- 	return 0;
- }
-
+> 
+> I'm sorry you feel that way. I tend to agree that dereference looks not good.
+> The open-coded version is not hard to understand to me either.
+> 
+> They are checked at a couple of different places with different variables,
+> i.e. unmapped vs swap, and with different comparisons, > vs <=. I just
+> thought the helpers with unified name started with "exceed_" may make it more
+> self-explained and readable. Anyway this totally depends on taste and I
+> really don't insist on this change.
