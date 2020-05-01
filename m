@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE62C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0DEC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E53D2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89114216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339953;
-	bh=7sIjFwst6s3p63WthfN6bA9Lj1cHZ+10OxwwnLvN4I0=;
+	s=default; t=1588339957;
+	bh=NIbft6V8F//k/CbPqI9h4qGjA4meZGzEFcylyGbRsNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmuBiW9QvnABKLovct6Wz70uvC2BsiPec60C2KAWIyZD4G036NziPkwvJlXcbwIKl
-	 r/1mRqtoUcn+q/v0fen4Hh6nZ8rSTZ4k1QoKEHxFqdgIKQkDspzTHHbTchrGO0+U+Q
-	 Z3tp9bWhMWCm1upWqNiZsouieC/wIKGXPf9Ejl4o=
+	b=CHejlzyC6UL1CgX9352+x29bdo5eCSKCUYRcVpmyEtKj1Vgz7dbFF5CtIb3iVY2Rj
+	 hEUbFhCgZTmClt7D04Dx1hcSVC8zfrIAO1+fm++HRDVu3G1pungUpbTRQAhwTM1LX6
+	 37KPcyH7OeQ7uDuz+PZ22Nj1eLzpJeRba0n40BnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730311AbgEANcc (ORCPT
+        id S1730321AbgEANcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57392 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:32:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730303AbgEANc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:28 -0400
+        id S1729737AbgEANcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6547324956;
-        Fri,  1 May 2020 13:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D2C216FD;
+        Fri,  1 May 2020 13:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339947;
-        bh=7sIjFwst6s3p63WthfN6bA9Lj1cHZ+10OxwwnLvN4I0=;
+        s=default; t=1588339950;
+        bh=NIbft6V8F//k/CbPqI9h4qGjA4meZGzEFcylyGbRsNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sq4RmHxB21sSQVlzAgi3pqWRaH3amBZBwfcZKPcf14/x1Cb47Ebzi4aZtGfmQNHjH
-         5zwWsIdiEcxkMSSUWMQfL5hJJoQIlnP2eLUyHCoBRCAo0XfDKp65FXtnZMCn4zJ+59
-         M4OXgvIVNyDCg5ZZZzMp1TkYMZjmnfq7VucTkmx0=
+        b=dQXbSVnOedBaGw9jRxio8VHi/Ho99Mc/q+hlJ/mjej/AF659zWYNXoiWK1AFDbsPk
+         p7Nv/gbE28yV3W2xPeOOTXCvR2hHXpj1iYu3n9l7agBF2SUd3h0V1IpXxAP3RrPreI
+         LqWIyYc5/QN7LcT+IKGuVgj5u283VfyGpeFfMvp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Cox <jonathan@jdcox.net>
-Subject: [PATCH 4.14 044/117] USB: Add USB_QUIRK_DELAY_CTRL_MSG and USB_QUIRK_DELAY_INIT for Corsair K70 RGB RAPIDFIRE
-Date:   Fri,  1 May 2020 15:21:20 +0200
-Message-Id: <20200501131550.018652576@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>
+Subject: [PATCH 4.14 045/117] USB: early: Handle AMDs spec-compliant identifiers, too
+Date:   Fri,  1 May 2020 15:21:21 +0200
+Message-Id: <20200501131550.128270018@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -58,35 +58,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cox <jonathan@jdcox.net>
+From: Jann Horn <jannh@google.com>
 
-commit be34a5854b4606bd7a160ad3cb43415d623596c7 upstream.
+commit 7dbdb53d72a51cea9b921d9dbba54be00752212a upstream.
 
-The Corsair K70 RGB RAPIDFIRE needs the USB_QUIRK_DELAY_INIT and
-USB_QUIRK_DELAY_CTRL_MSG to function or it will randomly not
-respond on boot, just like other Corsair keyboards
+This fixes a bug that causes the USB3 early console to freeze after
+printing a single line on AMD machines because it can't parse the
+Transfer TRB properly.
 
-Signed-off-by: Jonathan Cox <jonathan@jdcox.net>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200410212427.2886-1-jonathan@jdcox.net
+The spec at
+https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/extensible-host-controler-interface-usb-xhci.pdf
+says in section "4.5.1 Device Context Index" that the Context Index,
+also known as Endpoint ID according to
+section "1.6 Terms and Abbreviations", is normally computed as
+`DCI = (Endpoint Number * 2) + Direction`, which matches the current
+definitions of XDBC_EPID_OUT and XDBC_EPID_IN.
+
+However, the numbering in a Debug Capability Context data structure is
+supposed to be different:
+Section "7.6.3.2 Endpoint Contexts and Transfer Rings" explains that a
+Debug Capability Context data structure has the endpoints mapped to indices
+0 and 1.
+
+Change XDBC_EPID_OUT/XDBC_EPID_IN to the spec-compliant values, add
+XDBC_EPID_OUT_INTEL/XDBC_EPID_IN_INTEL with Intel's incorrect values, and
+let xdbc_handle_tx_event() handle both.
+
+I have verified that with this patch applied, the USB3 early console works
+on both an Intel and an AMD machine.
+
+Fixes: aeb9dd1de98c ("usb/early: Add driver for xhci debug capability")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+Link: https://lore.kernel.org/r/20200401074619.8024-1-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/early/xhci-dbc.c |    8 ++++----
+ drivers/usb/early/xhci-dbc.h |   18 ++++++++++++++++--
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -272,6 +272,10 @@ static const struct usb_device_id usb_qu
- 	/* Corsair K70 LUX */
- 	{ USB_DEVICE(0x1b1c, 0x1b36), .driver_info = USB_QUIRK_DELAY_INIT },
+--- a/drivers/usb/early/xhci-dbc.c
++++ b/drivers/usb/early/xhci-dbc.c
+@@ -738,19 +738,19 @@ static void xdbc_handle_tx_event(struct
+ 	case COMP_USB_TRANSACTION_ERROR:
+ 	case COMP_STALL_ERROR:
+ 	default:
+-		if (ep_id == XDBC_EPID_OUT)
++		if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL)
+ 			xdbc.flags |= XDBC_FLAGS_OUT_STALL;
+-		if (ep_id == XDBC_EPID_IN)
++		if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL)
+ 			xdbc.flags |= XDBC_FLAGS_IN_STALL;
  
-+	/* Corsair K70 RGB RAPDIFIRE */
-+	{ USB_DEVICE(0x1b1c, 0x1b38), .driver_info = USB_QUIRK_DELAY_INIT |
-+	  USB_QUIRK_DELAY_CTRL_MSG },
-+
- 	/* MIDI keyboard WORLDE MINI */
- 	{ USB_DEVICE(0x1c75, 0x0204), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
+ 		xdbc_trace("endpoint %d stalled\n", ep_id);
+ 		break;
+ 	}
+ 
+-	if (ep_id == XDBC_EPID_IN) {
++	if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL) {
+ 		xdbc.flags &= ~XDBC_FLAGS_IN_PROCESS;
+ 		xdbc_bulk_transfer(NULL, XDBC_MAX_PACKET, true);
+-	} else if (ep_id == XDBC_EPID_OUT) {
++	} else if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL) {
+ 		xdbc.flags &= ~XDBC_FLAGS_OUT_PROCESS;
+ 	} else {
+ 		xdbc_trace("invalid endpoint id %d\n", ep_id);
+--- a/drivers/usb/early/xhci-dbc.h
++++ b/drivers/usb/early/xhci-dbc.h
+@@ -123,8 +123,22 @@ struct xdbc_ring {
+ 	u32			cycle_state;
+ };
+ 
+-#define XDBC_EPID_OUT		2
+-#define XDBC_EPID_IN		3
++/*
++ * These are the "Endpoint ID" (also known as "Context Index") values for the
++ * OUT Transfer Ring and the IN Transfer Ring of a Debug Capability Context data
++ * structure.
++ * According to the "eXtensible Host Controller Interface for Universal Serial
++ * Bus (xHCI)" specification, section "7.6.3.2 Endpoint Contexts and Transfer
++ * Rings", these should be 0 and 1, and those are the values AMD machines give
++ * you; but Intel machines seem to use the formula from section "4.5.1 Device
++ * Context Index", which is supposed to be used for the Device Context only.
++ * Luckily the values from Intel don't overlap with those from AMD, so we can
++ * just test for both.
++ */
++#define XDBC_EPID_OUT		0
++#define XDBC_EPID_IN		1
++#define XDBC_EPID_OUT_INTEL	2
++#define XDBC_EPID_IN_INTEL	3
+ 
+ struct xdbc_state {
+ 	u16			vendor;
 
 
