@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080D3C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FB5C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D10A72051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E482051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341324;
-	bh=jk8Mhw7xY87s+6wudThb0MWXr5o3TcfmG7rNtvhA8M8=;
+	s=default; t=1588341335;
+	bh=qhGlq2nwd+F+3TQoXM4Nys//vTHfy280XtnLt2hcuYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jlaNjToH6RpMLlpzA3UbhTezRK88KLy2pSNcLu5G6rX397/ZMUueCSdBumml1Ot5L
-	 CnkBuvO9sTNKlcCi4n/GwULIEzA+bezcvtCBVb2LVSd7TRBsTAAATwFVYQqz04OmVG
-	 SFLQqTfIOalWP+AmVjgD4c3qkrsL2lhuXx0EOd6o=
+	b=wrii4nXjdFYQlxp4brkblEmU5vdlrRzOnzqY0LuuTXLwKtbCCr3WAy8qgOuZTqMpe
+	 V6Lq7jch/gEuUhfVtiQEfnm0o/AWzqH83p8DeZcXoses9gf2bob6d9e5muukQ07Fru
+	 +/ynHcy2WIXn3lLm46Yca3iUyBM2WPplp9pUGztY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731499AbgEANzX (ORCPT
+        id S1731513AbgEANzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60074 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730526AbgEANeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:06 -0400
+        id S1730492AbgEANdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631EC2173E;
-        Fri,  1 May 2020 13:34:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98DA52051A;
+        Fri,  1 May 2020 13:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340045;
-        bh=jk8Mhw7xY87s+6wudThb0MWXr5o3TcfmG7rNtvhA8M8=;
+        s=default; t=1588340031;
+        bh=qhGlq2nwd+F+3TQoXM4Nys//vTHfy280XtnLt2hcuYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cPwKf6rFBqGqp5v6d8Tl6JdaSU/zXHktRlIdqY0OxUyGWcyu/77hv6JcppSrj7gyx
-         m2KYvx3rTsTljgC6Ump2vBRFy0oIRRDlJ/KAoopzPTGcZfv9ZanuxHALa8FbLm11Xt
-         Qk0GcvCVIToV3Zzx7ipjOYlKyUnDOlJvtUJSbAQU=
+        b=1/wfHs39/MOtcXULflPDfCgEECsPVrHKapq9tMGw9YDbMLvSxJTk4qiuMqSnTyngy
+         KL3bfAroawUfDgPwhHAMiRv5o4D+zskrNjOsUUIZDuwe9J6Kuly96IZhkWrTAcI0/K
+         BjOsCK/TKPBWYyvzE8DSs6H+csdSz6vK+734+ir0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kaixuxia <kaixuxia@tencent.com>,
-        Brian Foster <bfoster@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Suraj Jitindar Singh <surajjs@amazon.com>
-Subject: [PATCH 4.14 084/117] xfs: Fix deadlock between AGI and AGF with RENAME_WHITEOUT
-Date:   Fri,  1 May 2020 15:22:00 +0200
-Message-Id: <20200501131554.729700103@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 066/117] iwlwifi: pcie: actually release queue memory in TVQM
+Date:   Fri,  1 May 2020 15:21:42 +0200
+Message-Id: <20200501131553.048775965@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,209 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kaixuxia <xiakaixu1987@gmail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit bc56ad8c74b8588685c2875de0df8ab6974828ef upstream.
+commit b98b33d5560a2d940f3b80f6768a6177bf3dfbc0 upstream.
 
-When performing rename operation with RENAME_WHITEOUT flag, we will
-hold AGF lock to allocate or free extents in manipulating the dirents
-firstly, and then doing the xfs_iunlink_remove() call last to hold
-AGI lock to modify the tmpfile info, so we the lock order AGI->AGF.
+The iwl_trans_pcie_dyn_txq_free() function only releases the frames
+that may be left on the queue by calling iwl_pcie_gen2_txq_unmap(),
+but doesn't actually free the DMA ring or byte-count tables for the
+queue. This leads to pretty large memory leaks (at least before my
+queue size improvements), in particular in monitor/sniffer mode on
+channel hopping since this happens on every channel change.
 
-The big problem here is that we have an ordering constraint on AGF
-and AGI locking - inode allocation locks the AGI, then can allocate
-a new extent for new inodes, locking the AGF after the AGI. Hence
-the ordering that is imposed by other parts of the code is AGI before
-AGF. So we get an ABBA deadlock between the AGI and AGF here.
+This was also now more evident after the move to a DMA pool for the
+byte count tables, showing messages such as
 
-Process A:
-Call trace:
- ? __schedule+0x2bd/0x620
- schedule+0x33/0x90
- schedule_timeout+0x17d/0x290
- __down_common+0xef/0x125
- ? xfs_buf_find+0x215/0x6c0 [xfs]
- down+0x3b/0x50
- xfs_buf_lock+0x34/0xf0 [xfs]
- xfs_buf_find+0x215/0x6c0 [xfs]
- xfs_buf_get_map+0x37/0x230 [xfs]
- xfs_buf_read_map+0x29/0x190 [xfs]
- xfs_trans_read_buf_map+0x13d/0x520 [xfs]
- xfs_read_agf+0xa6/0x180 [xfs]
- ? schedule_timeout+0x17d/0x290
- xfs_alloc_read_agf+0x52/0x1f0 [xfs]
- xfs_alloc_fix_freelist+0x432/0x590 [xfs]
- ? down+0x3b/0x50
- ? xfs_buf_lock+0x34/0xf0 [xfs]
- ? xfs_buf_find+0x215/0x6c0 [xfs]
- xfs_alloc_vextent+0x301/0x6c0 [xfs]
- xfs_ialloc_ag_alloc+0x182/0x700 [xfs]
- ? _xfs_trans_bjoin+0x72/0xf0 [xfs]
- xfs_dialloc+0x116/0x290 [xfs]
- xfs_ialloc+0x6d/0x5e0 [xfs]
- ? xfs_log_reserve+0x165/0x280 [xfs]
- xfs_dir_ialloc+0x8c/0x240 [xfs]
- xfs_create+0x35a/0x610 [xfs]
- xfs_generic_create+0x1f1/0x2f0 [xfs]
- ...
+  BUG iwlwifi:bc (...): Objects remaining in iwlwifi:bc on __kmem_cache_shutdown()
 
-Process B:
-Call trace:
- ? __schedule+0x2bd/0x620
- ? xfs_bmapi_allocate+0x245/0x380 [xfs]
- schedule+0x33/0x90
- schedule_timeout+0x17d/0x290
- ? xfs_buf_find+0x1fd/0x6c0 [xfs]
- __down_common+0xef/0x125
- ? xfs_buf_get_map+0x37/0x230 [xfs]
- ? xfs_buf_find+0x215/0x6c0 [xfs]
- down+0x3b/0x50
- xfs_buf_lock+0x34/0xf0 [xfs]
- xfs_buf_find+0x215/0x6c0 [xfs]
- xfs_buf_get_map+0x37/0x230 [xfs]
- xfs_buf_read_map+0x29/0x190 [xfs]
- xfs_trans_read_buf_map+0x13d/0x520 [xfs]
- xfs_read_agi+0xa8/0x160 [xfs]
- xfs_iunlink_remove+0x6f/0x2a0 [xfs]
- ? current_time+0x46/0x80
- ? xfs_trans_ichgtime+0x39/0xb0 [xfs]
- xfs_rename+0x57a/0xae0 [xfs]
- xfs_vn_rename+0xe4/0x150 [xfs]
- ...
+This fixes https://bugzilla.kernel.org/show_bug.cgi?id=206811.
 
-In this patch we move the xfs_iunlink_remove() call to
-before acquiring the AGF lock to preserve correct AGI/AGF locking
-order.
-
-[Minor massage required to backport to apply due to removal of
-out_bmap_cancel: error path label upstream as a result of code
-rework. Only change was to the last code block removed by the
-patch. Functionally equivalent to upstream.]
-
-Signed-off-by: kaixuxia <kaixuxia@tencent.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 6b35ff91572f ("iwlwifi: pcie: introduce a000 TX queues management")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/iwlwifi.20200417100405.f5f4c4193ec1.Id5feebc9b4318041913a9c89fc1378bb5454292c@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/xfs/xfs_inode.c |   85 ++++++++++++++++++++++++++---------------------------
- 1 file changed, 42 insertions(+), 43 deletions(-)
 
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -3035,7 +3035,8 @@ xfs_rename(
- 					&dfops, &first_block, spaceres);
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -1124,6 +1124,9 @@ void iwl_trans_pcie_dyn_txq_free(struct
  
- 	/*
--	 * Set up the target.
-+	 * Check for expected errors before we dirty the transaction
-+	 * so we can return an error without a transaction abort.
- 	 */
- 	if (target_ip == NULL) {
- 		/*
-@@ -3047,6 +3048,46 @@ xfs_rename(
- 			if (error)
- 				goto out_trans_cancel;
- 		}
-+	} else {
-+		/*
-+		 * If target exists and it's a directory, check that whether
-+		 * it can be destroyed.
-+		 */
-+		if (S_ISDIR(VFS_I(target_ip)->i_mode) &&
-+		    (!xfs_dir_isempty(target_ip) ||
-+		     (VFS_I(target_ip)->i_nlink > 2))) {
-+			error = -EEXIST;
-+			goto out_trans_cancel;
-+		}
-+	}
-+
-+	/*
-+	 * Directory entry creation below may acquire the AGF. Remove
-+	 * the whiteout from the unlinked list first to preserve correct
-+	 * AGI/AGF locking order. This dirties the transaction so failures
-+	 * after this point will abort and log recovery will clean up the
-+	 * mess.
-+	 *
-+	 * For whiteouts, we need to bump the link count on the whiteout
-+	 * inode. After this point, we have a real link, clear the tmpfile
-+	 * state flag from the inode so it doesn't accidentally get misused
-+	 * in future.
-+	 */
-+	if (wip) {
-+		ASSERT(VFS_I(wip)->i_nlink == 0);
-+		error = xfs_iunlink_remove(tp, wip);
-+		if (error)
-+			goto out_trans_cancel;
-+
-+		xfs_bumplink(tp, wip);
-+		xfs_trans_log_inode(tp, wip, XFS_ILOG_CORE);
-+		VFS_I(wip)->i_state &= ~I_LINKABLE;
-+	}
-+
-+	/*
-+	 * Set up the target.
-+	 */
-+	if (target_ip == NULL) {
- 		/*
- 		 * If target does not exist and the rename crosses
- 		 * directories, adjust the target directory link count
-@@ -3068,22 +3109,6 @@ xfs_rename(
- 		}
- 	} else { /* target_ip != NULL */
- 		/*
--		 * If target exists and it's a directory, check that both
--		 * target and source are directories and that target can be
--		 * destroyed, or that neither is a directory.
--		 */
--		if (S_ISDIR(VFS_I(target_ip)->i_mode)) {
--			/*
--			 * Make sure target dir is empty.
--			 */
--			if (!(xfs_dir_isempty(target_ip)) ||
--			    (VFS_I(target_ip)->i_nlink > 2)) {
--				error = -EEXIST;
--				goto out_trans_cancel;
--			}
--		}
--
--		/*
- 		 * Link the source inode under the target name.
- 		 * If the source inode is a directory and we are moving
- 		 * it across directories, its ".." entry will be
-@@ -3175,32 +3200,6 @@ xfs_rename(
- 	if (error)
- 		goto out_bmap_cancel;
+ 	iwl_pcie_gen2_txq_unmap(trans, queue);
  
--	/*
--	 * For whiteouts, we need to bump the link count on the whiteout inode.
--	 * This means that failures all the way up to this point leave the inode
--	 * on the unlinked list and so cleanup is a simple matter of dropping
--	 * the remaining reference to it. If we fail here after bumping the link
--	 * count, we're shutting down the filesystem so we'll never see the
--	 * intermediate state on disk.
--	 */
--	if (wip) {
--		ASSERT(VFS_I(wip)->i_nlink == 0);
--		error = xfs_bumplink(tp, wip);
--		if (error)
--			goto out_bmap_cancel;
--		error = xfs_iunlink_remove(tp, wip);
--		if (error)
--			goto out_bmap_cancel;
--		xfs_trans_log_inode(tp, wip, XFS_ILOG_CORE);
--
--		/*
--		 * Now we have a real link, clear the "I'm a tmpfile" state
--		 * flag from the inode so it doesn't accidentally get misused in
--		 * future.
--		 */
--		VFS_I(wip)->i_state &= ~I_LINKABLE;
--	}
--
- 	xfs_trans_ichgtime(tp, src_dp, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
- 	xfs_trans_log_inode(tp, src_dp, XFS_ILOG_CORE);
- 	if (new_parent)
++	iwl_pcie_gen2_txq_free_memory(trans, trans_pcie->txq[queue]);
++	trans_pcie->txq[queue] = NULL;
++
+ 	IWL_DEBUG_TX_QUEUES(trans, "Deactivate queue %d\n", queue);
+ }
+ 
 
 
