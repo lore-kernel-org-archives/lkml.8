@@ -2,93 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72329C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13712C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B632071C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyzcVrCx"
+	by mail.kernel.org (Postfix) with ESMTP id ECA692071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgEAD4x (ORCPT
+        id S1728245AbgEAD6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 23:56:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32190 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727889AbgEAD4x (ORCPT
+        Thu, 30 Apr 2020 23:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbgEAD6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 23:56:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588305412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bXalt8zK+YdFYaEr91Rzg8c48giwHyBf2CnOS3ryAnE=;
-        b=UyzcVrCxtACLYTB0hJuDHMupY1oOabghW/C2ZAWIEgi3z4iT/nniaU01XkpEX1P+LGR3XT
-        hoSKAi9BqiZoyhvD3CTWadxKcagDxYJYFRL6AAsJQXab21yOIwPyFvGKV2KZZ1zBHx6dxo
-        HI512VJvi37u8WVvr53lSmXY9BzAmTE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-LWnWZ9qkMw6JQyRYU5-6Mw-1; Thu, 30 Apr 2020 23:56:48 -0400
-X-MC-Unique: LWnWZ9qkMw6JQyRYU5-6Mw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45077186E6F9;
-        Fri,  1 May 2020 03:56:47 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B583579A5;
-        Fri,  1 May 2020 03:56:46 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 22:56:44 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Apr 30 (objtool warnings)
-Message-ID: <20200501035644.i7woe5bpyxqwjpwh@treble>
-References: <20200430174019.417e5f3e@canb.auug.org.au>
- <8eedaa40-c93d-428e-47aa-ee1e6b6d69e6@infradead.org>
- <9005add6-3b90-f9f0-eb56-6e309853eb7f@infradead.org>
+        Thu, 30 Apr 2020 23:58:22 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9B2C035494;
+        Thu, 30 Apr 2020 20:58:22 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUMoe-00FaSo-R2; Fri, 01 May 2020 03:58:21 +0000
+Date:   Fri, 1 May 2020 04:58:20 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pipe: read/write_iter() handler should check for
+ IOCB_NOWAIT
+Message-ID: <20200501035820.GH23230@ZenIV.linux.org.uk>
+References: <273d8294-2508-a4c2-f96e-a6a394f94166@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9005add6-3b90-f9f0-eb56-6e309853eb7f@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <273d8294-2508-a4c2-f96e-a6a394f94166@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 07:40:52AM -0700, Randy Dunlap wrote:
-> On 4/30/20 7:31 AM, Randy Dunlap wrote:
-> > On 4/30/20 12:40 AM, Stephen Rothwell wrote:
-> >> Hi all,
-> >>
-> >> Changes since 20200429:
-> >>
-> > 
-> > on x86_64:
-> > 
-> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x2e: unreachable instruction
-> > kernel/cred.o: warning: objtool: copy_creds()+0x278: unreachable instruction
-> > net/core/skbuff.o: warning: objtool: skb_push()+0x9e: unreachable instruction
-> > 
-> > 
-> > Full randconfig file is attached.
-> > 
-> 
-> oops, forgot to Cc: Josh and Peter.
+On Thu, Apr 30, 2020 at 10:24:46AM -0600, Jens Axboe wrote:
+> Pipe read/write only checks for the file O_NONBLOCK flag, but we should
+> also check for IOCB_NOWAIT for whether or not we should handle this read
+> or write in a non-blocking fashion. If we don't, then we will block on
+> data or space for iocbs that explicitly asked for non-blocking
+> operation. This messes up callers that explicitly ask for non-blocking
+> operations.
 
-These are all related to -flive-patching, for some reason it reduces
-GCC's ability to detect local noreturn functions.  I had some patches
-for these (and more) I'll need to dig up.
-
--- 
-Josh
-
+Why does io_uring allow setting IOCB_NOWAIT without FMODE_NOWAIT, anyway?
