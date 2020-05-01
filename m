@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0ABC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522EDC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D5420757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3133A205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340799;
-	bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
+	s=default; t=1588340803;
+	bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DYXYW0J9otX7BEKYY/OWioYxOx7ItYnkS4h5DrlTQxtMM+vqsHgXGnxkaETc1LCNk
-	 Y3S1Zyd3juj0vlMgRZAj/DxqUo4QPSdvrflC/wz9ygFYFmUORKLzpUCrLK+uIeSJiE
-	 gRuyZytDnV35Oxeveud9+gQhrZEuLy6MhEoR7DrY=
+	b=G908YMq7lGsCQnDA6vvRAv7JI2IrtJ42LHdS100nO4ZG4mrbX9ehc1bxXqlzXdZD5
+	 205NvOZ0wxRfTbkrjE7oHuWRT5GDvtIgKdhAPxHQl0zXX4ByTPXNX4BUROxPhzkeCn
+	 ZeQNl/lsZvlVy6O3lYZk5j4wtiwvGIbWRevZEZ5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731839AbgEANqi (ORCPT
+        id S1731769AbgEANon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46108 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731772AbgEANor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:47 -0400
+        id S1731521AbgEANof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1392120836;
-        Fri,  1 May 2020 13:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8459216FD;
+        Fri,  1 May 2020 13:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340686;
-        bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
+        s=default; t=1588340674;
+        bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZi930XWV8VC8/hRgCZWRJf7i+vZnRhRNT5WCT3xcdQLsaUQT1FNQgneQh17VqLat
-         JEhhZslF8nd0BBHvkl3EGLqCDxfrD+aJaB3rX+E6C0lC3jJVp/RgdHMKvfPutVE/6j
-         +AIs5hujhU5ythnu8hMJ8FGt/Zuf1pVzX5Wo6vp8=
+        b=zW2UMbqhz0PSxuYP5iMGiJWcmunznopup/1gWz0tPwXXJHLKVtAEwIA/5GRbiBfjj
+         oA7XKIq85VY3uxFDbustCc2Gcjmgr/Gu53PXZ4nEcjre3E5wTMbvn77RmVpGQ0FbSy
+         uVZOvXezaVkcZfYF2ZM7QmNd1jmMQ5gGoPgSXjng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 095/106] hwmon: (jc42) Fix name to have no illegal characters
-Date:   Fri,  1 May 2020 15:24:08 +0200
-Message-Id: <20200501131554.770091351@linuxfoundation.org>
+Subject: [PATCH 5.6 077/106] drm/amdgpu: fix wrong vram lost counter increment V2
+Date:   Fri,  1 May 2020 15:23:50 +0200
+Message-Id: <20200501131553.135630996@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,41 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
+[ Upstream commit 028cfb2444b94d4f394a6fa4ca46182481236e91 ]
 
-The jc42 driver passes I2C client's name as hwmon device name. In case
-of device tree probed devices this ends up being part of the compatible
-string, "jc-42.4-temp". This name contains hyphens and the hwmon core
-doesn't like this:
+Vram lost counter is wrongly increased by two during baco reset.
 
-jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
+V2: assumed vram lost for mode1 reset on all ASICs
 
-This changes the name to "jc42" which doesn't have any illegal
-characters.
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/jc42.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 20 ++++++++++++++++++--
+ drivers/gpu/drm/amd/amdgpu/cik.c           |  2 --
+ drivers/gpu/drm/amd/amdgpu/nv.c            |  4 ----
+ drivers/gpu/drm/amd/amdgpu/soc15.c         |  4 ----
+ drivers/gpu/drm/amd/amdgpu/vi.c            |  2 --
+ 5 files changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
-index f2d81b0558e56..e3f1ebee71306 100644
---- a/drivers/hwmon/jc42.c
-+++ b/drivers/hwmon/jc42.c
-@@ -506,7 +506,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	}
- 	data->config = config;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index c8bf9cb3cebf2..f184cdca938de 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -1953,8 +1953,24 @@ static void amdgpu_device_fill_reset_magic(struct amdgpu_device *adev)
+  */
+ static bool amdgpu_device_check_vram_lost(struct amdgpu_device *adev)
+ {
+-	return !!memcmp(adev->gart.ptr, adev->reset_magic,
+-			AMDGPU_RESET_MAGIC_NUM);
++	if (memcmp(adev->gart.ptr, adev->reset_magic,
++			AMDGPU_RESET_MAGIC_NUM))
++		return true;
++
++	if (!adev->in_gpu_reset)
++		return false;
++
++	/*
++	 * For all ASICs with baco/mode1 reset, the VRAM is
++	 * always assumed to be lost.
++	 */
++	switch (amdgpu_asic_reset_method(adev)) {
++	case AMD_RESET_METHOD_BACO:
++	case AMD_RESET_METHOD_MODE1:
++		return true;
++	default:
++		return false;
++	}
+ }
  
--	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
-+	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
- 							 data, &jc42_chip_info,
- 							 NULL);
- 	return PTR_ERR_OR_ZERO(hwmon_dev);
+ /**
+diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
+index 006f21ef7ddf0..62635e58e45ee 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cik.c
++++ b/drivers/gpu/drm/amd/amdgpu/cik.c
+@@ -1358,8 +1358,6 @@ static int cik_asic_reset(struct amdgpu_device *adev)
+ 	int r;
+ 
+ 	if (cik_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		r = amdgpu_dpm_baco_reset(adev);
+ 	} else {
+ 		r = cik_asic_pci_config_reset(adev);
+diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
+index 2d1bebdf1603d..cc3a79029376b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/nv.c
++++ b/drivers/gpu/drm/amd/amdgpu/nv.c
+@@ -351,8 +351,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
+ 	struct smu_context *smu = &adev->smu;
+ 
+ 	if (nv_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		ret = smu_baco_enter(smu);
+ 		if (ret)
+ 			return ret;
+@@ -360,8 +358,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
+ 		if (ret)
+ 			return ret;
+ 	} else {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		ret = nv_asic_mode1_reset(adev);
+ 	}
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+index d8945c31b622c..132a67a041a24 100644
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -569,14 +569,10 @@ static int soc15_asic_reset(struct amdgpu_device *adev)
+ 
+ 	switch (soc15_asic_reset_method(adev)) {
+ 		case AMD_RESET_METHOD_BACO:
+-			if (!adev->in_suspend)
+-				amdgpu_inc_vram_lost(adev);
+ 			return soc15_asic_baco_reset(adev);
+ 		case AMD_RESET_METHOD_MODE2:
+ 			return amdgpu_dpm_mode2_reset(adev);
+ 		default:
+-			if (!adev->in_suspend)
+-				amdgpu_inc_vram_lost(adev);
+ 			return soc15_asic_mode1_reset(adev);
+ 	}
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/vi.c b/drivers/gpu/drm/amd/amdgpu/vi.c
+index 78b35901643bc..3ce10e05d0d6b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vi.c
++++ b/drivers/gpu/drm/amd/amdgpu/vi.c
+@@ -765,8 +765,6 @@ static int vi_asic_reset(struct amdgpu_device *adev)
+ 	int r;
+ 
+ 	if (vi_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
+-		if (!adev->in_suspend)
+-			amdgpu_inc_vram_lost(adev);
+ 		r = amdgpu_dpm_baco_reset(adev);
+ 	} else {
+ 		r = vi_asic_pci_config_reset(adev);
 -- 
 2.20.1
 
