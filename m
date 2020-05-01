@@ -2,149 +2,145 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70D8C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289E9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF1A21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F413A2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:22:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KB4qY1aK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgEAIVY (ORCPT
+        id S1728495AbgEAIWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:21:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3634 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgEAIVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:21:20 -0400
-IronPort-SDR: aa9Ufm9iTi6VlAaaE3FPfY9C9J6z9ygfOfRAVPlmScpTYbXWMaoW5K8HILZXwjYL44WZaF6I/W
- hnnfO3oMpAsA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 01:21:19 -0700
-IronPort-SDR: h77IynNGJak8oRRpCu0/PkUFI8Q4PTPXFuZ2UUgOQ7BD+jdUT2aXj3GtymILU6WoX7nDj2vxcZ
- 9fitF+xCkE5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
-   d="scan'208";a="247445165"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 01 May 2020 01:21:11 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jUQv0-0008Y7-W1; Fri, 01 May 2020 16:21:10 +0800
-Date:   Fri, 1 May 2020 16:20:57 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>, jic23@kernel.org
-Cc:     kbuild-all@lists.01.org, kamel.bouhara@bootlin.com,
-        gwendal@chromium.org, alexandre.belloni@bootlin.com,
-        david@lechnology.com, felipe.balbi@linux.intel.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 1/4] counter: Internalize sysfs interface code
-Message-ID: <202005011619.Tn2f4rMl%lkp@intel.com>
-References: <d84f0bb3258d1664e90da64d75f787829c50a9bd.1588176662.git.vilhelm.gray@gmail.com>
+        Fri, 1 May 2020 04:22:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbgEAIWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 04:22:38 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2241BC035494;
+        Fri,  1 May 2020 01:22:38 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z6so5576527wml.2;
+        Fri, 01 May 2020 01:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jTSQJjbAJMa/Yh0cKxivKM163Ag7Pu8M3Zl7P6cyE/0=;
+        b=KB4qY1aKTJHG3Ibd/SXv2b6PNsakBIQKOLugnWgdm/9VoL5L9qbzbSLLGOaMUbl010
+         4YSgNYnw3a3eV4E9vj6w0RLq+rPzywohoari2tbcmbSFcvCj87K+NmB9B2CfeiMv6Kum
+         QjfMZv8BDMsbPju9l7ajuSONERtD3QYU/QOsf+0ViFQHmw+YUcPhC42ynduog2PPjR2+
+         x6DaiPqL62g92+0anuF14w65watk/iUSu0y0mRawVhD3k7qn0jsZSfC6QwgyK4YylrFf
+         E9iMqOtLWLVnq0vW89moml9H/F17PRNlcdzRhouTFOw/rKRrgmLM2udlLHJUaLunsaaH
+         4Z3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jTSQJjbAJMa/Yh0cKxivKM163Ag7Pu8M3Zl7P6cyE/0=;
+        b=jdwQ8fEjReRRNSzcSNeHcWh16mFm5WAHwWXzaTwAmSaYY73aBOWqFYNeoO8cnZ/NzV
+         hDzyikEHAfSLtv6+aypyAzWQs/lJKB5+RgunlXsYcijj0YmIIgQ06YbmnvqqIseX/Ipb
+         rKo7cn1yUNtxWOIx/kAztZnjVIEr+Nlay4bzWZYeJM1JjRGnmXhrsRgmW474i1pJwd4r
+         UNlj7DScp6fKabVwVcEtC+VEy3Vp4nTbrnp1ROn0954e8i3C42uOwNwJcaeXlOtFYtjp
+         iF2u+YyV3IG2+SGv8dQbeQ5un4hIjFGawpZLvx6dQry+cuWrt4IvbbrCorkvyGObFZVe
+         2TUw==
+X-Gm-Message-State: AGi0PubbZVso8O5YiWwZLyz84j4HjWfy/uwAF7hVSKEk7Z8LGTKKRPPX
+        LVaT/kKNgrbXTzvze9qNJ3Q7WW2X
+X-Google-Smtp-Source: APiQypL4PdN6g74UVhVs1VUi8A68+hEh6GXIEtrF8cEBxYPEMqIIJf/Bdb1XFm4ibK3//EMhPNLvqw==
+X-Received: by 2002:a1c:6344:: with SMTP id x65mr2887250wmb.56.1588321356608;
+        Fri, 01 May 2020 01:22:36 -0700 (PDT)
+Received: from [192.168.43.248] ([109.126.131.64])
+        by smtp.gmail.com with ESMTPSA id c25sm2905121wmb.44.2020.05.01.01.22.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 01:22:36 -0700 (PDT)
+Subject: Re: [PATCH 0/5] timeout fixes
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1588253029.git.asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <8665e87d-98f8-5973-d11a-03cca3fdf66f@gmail.com>
+Date:   Fri, 1 May 2020 11:21:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d84f0bb3258d1664e90da64d75f787829c50a9bd.1588176662.git.vilhelm.gray@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1588253029.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi William,
+On 30/04/2020 22:31, Pavel Begunkov wrote:
+> [1,2] are small random patches.
+> [3,4] are the last 2 timeout patches, but with 1 var renamed.
+> [5] fixes a timeout problem related to batched CQ commits. From
+> what I see, this should be the last fixing timeouts.
 
-I love your patch! Perhaps something to improve:
+Something gone wrong with testing or rebasing. Never mind this.
 
-[auto build test WARNING on stm32/stm32-next]
-[cannot apply to linus/master linux/master v5.7-rc3 next-20200430]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> Pavel Begunkov (5):
+>   io_uring: check non-sync defer_list carefully
+>   io_uring: pass nxt from sync_file_range()
+>   io_uring: trigger timeout after any sqe->off CQEs
+>   io_uring: don't trigger timeout with another t-out
+>   io_uring: fix timeout offset with batch CQ commit
+> 
+>  fs/io_uring.c | 130 +++++++++++++++++++++-----------------------------
+>  1 file changed, 54 insertions(+), 76 deletions(-)
+> 
 
-url:    https://github.com/0day-ci/linux/commits/William-Breathitt-Gray/Introduce-the-Counter-character-device-interface/20200430-051734
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-191-gc51a0382-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/counter/104-quad-8.c:700:56: sparse: sparse: mixing different enum types:
->> drivers/counter/104-quad-8.c:700:56: sparse:    unsigned int enum counter_count_function
->> drivers/counter/104-quad-8.c:700:56: sparse:    unsigned int enum quad8_count_function
---
->> drivers/counter/stm32-lptimer-cnt.c:573:24: sparse: sparse: mixing different enum types:
->> drivers/counter/stm32-lptimer-cnt.c:573:24: sparse:    unsigned int enum counter_count_function
->> drivers/counter/stm32-lptimer-cnt.c:573:24: sparse:    unsigned int enum stm32_lptim_cnt_function
-
-vim +700 drivers/counter/104-quad-8.c
-
-   693	
-   694	static int quad8_function_write(struct counter_device *counter,
-   695					struct counter_count *count,
-   696					enum counter_count_function function)
-   697	{
-   698		struct quad8_iio *const priv = counter->priv;
-   699		const int id = count->id;
- > 700		const enum quad8_count_function cnt_function = function;
-   701		unsigned int *const quadrature_mode = priv->quadrature_mode + id;
-   702		unsigned int *const scale = priv->quadrature_scale + id;
-   703		unsigned int mode_cfg = priv->count_mode[id] << 1;
-   704		unsigned int *const synchronous_mode = priv->synchronous_mode + id;
-   705		const unsigned int idr_cfg = priv->index_polarity[id] << 1;
-   706		const int base_offset = priv->base + 2 * id + 1;
-   707	
-   708		if (cnt_function == QUAD8_COUNT_FUNCTION_PULSE_DIRECTION) {
-   709			*quadrature_mode = 0;
-   710	
-   711			/* Quadrature scaling only available in quadrature mode */
-   712			*scale = 0;
-   713	
-   714			/* Synchronous function not supported in non-quadrature mode */
-   715			if (*synchronous_mode) {
-   716				*synchronous_mode = 0;
-   717				/* Disable synchronous function mode */
-   718				outb(QUAD8_CTR_IDR | idr_cfg, base_offset);
-   719			}
-   720		} else {
-   721			*quadrature_mode = 1;
-   722	
-   723			switch (cnt_function) {
-   724			case QUAD8_COUNT_FUNCTION_QUADRATURE_X1:
-   725				*scale = 0;
-   726				mode_cfg |= QUAD8_CMR_QUADRATURE_X1;
-   727				break;
-   728			case QUAD8_COUNT_FUNCTION_QUADRATURE_X2:
-   729				*scale = 1;
-   730				mode_cfg |= QUAD8_CMR_QUADRATURE_X2;
-   731				break;
-   732			case QUAD8_COUNT_FUNCTION_QUADRATURE_X4:
-   733				*scale = 2;
-   734				mode_cfg |= QUAD8_CMR_QUADRATURE_X4;
-   735				break;
-   736			default: return -EINVAL;
-   737			}
-   738		}
-   739	
-   740		/* Load mode configuration to Counter Mode Register */
-   741		outb(QUAD8_CTR_CMR | mode_cfg, base_offset);
-   742	
-   743		return 0;
-   744	}
-   745	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Pavel Begunkov
