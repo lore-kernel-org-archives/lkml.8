@@ -2,105 +2,268 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF94C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080D3C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B863F20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sWO4PNY9"
+	by mail.kernel.org (Postfix) with ESMTP id D10A72051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588341324;
+	bh=jk8Mhw7xY87s+6wudThb0MWXr5o3TcfmG7rNtvhA8M8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jlaNjToH6RpMLlpzA3UbhTezRK88KLy2pSNcLu5G6rX397/ZMUueCSdBumml1Ot5L
+	 CnkBuvO9sTNKlcCi4n/GwULIEzA+bezcvtCBVb2LVSd7TRBsTAAATwFVYQqz04OmVG
+	 SFLQqTfIOalWP+AmVjgD4c3qkrsL2lhuXx0EOd6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732036AbgEANzQ (ORCPT
+        id S1731499AbgEANzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:55:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730569AbgEANe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:28 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D42C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 06:34:27 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a5so2303726pjh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 06:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=+bmrtSHAyFI7P6ziJ3xGe8cTwBT8YOneJTOxmYdhGZc=;
-        b=sWO4PNY9YAPlMcmQTFYRy58u3AGk/QRym0idM1ioVic2+sgGTcaVvxbRjP529xqfKo
-         QIY5xGGj0avqcE8fEdZEcmZttXUyjQhoKQFJR8zc9ocM8keWbLpJ0KDLD+j8WjDDtsdI
-         dhgVsmF0w2V2wqVrSe1MY711Uebu0smXDe3nolZ7UvkpSYjcA29No4nXX1zShE5IrBmO
-         uZcnPFpxjsowt25d6A/HMu+4gw5oTHDNekrJ6CNLntaDKePyVY0pXPTh1+kG2osYMl+H
-         B+RXPJVdTonCU3tSlVFljHkrXOVfL+OHrakrJolGC6ifg5LdN24VKGVbQyp3In3GQjpl
-         TvPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+bmrtSHAyFI7P6ziJ3xGe8cTwBT8YOneJTOxmYdhGZc=;
-        b=EGMsIORxhW8rie8tnrtTW2clcbVSTJyewCxzDp6HeaQITM0bIpZyX3tP4sd/w4dnA7
-         H3edfX1UrjJt9uJesG+fYKZ9Rbxb2I/vX9Q13vDHSO6UtO1MIkb8MV5kKD/NIq6rlI4q
-         Mhpan5n8umqaizFhlmsHapRlaycEbj2aYzF8ufa4jnjAewpm4HVhRdDYcyxhR3Cv5J+z
-         bSaoSzkE10yfuTWYFtwU/CCTzrcSO+Zzhg5Jl6EpC19Vm3ZG2yV3bjPUwv6QiDOv+qA2
-         a6ny39fg7ObRKs1JK9e5ZQWzqvL5+vsVG5MEnmSsHxLUGXLOs8fs4OOf9iIkpFF+mJQo
-         l7aQ==
-X-Gm-Message-State: AGi0PuY+jlxBUFoBbt9yXrUkExY6Vey8ebV8Z2RigRxGlttq6hyWLO7V
-        70Yb8/rI5yRINNZHkuwmI5xSC6wCDdrAaQ==
-X-Google-Smtp-Source: APiQypLxg0DxSuXSZ6n95JDcUikNRX6xaAN5w06xsc1r2DmCej7hLmZ2BDXQTy8ezdmV4N/JvVd9Ag==
-X-Received: by 2002:a17:902:20b:: with SMTP id 11mr4070767plc.209.1588340067042;
-        Fri, 01 May 2020 06:34:27 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id i190sm2323153pfe.114.2020.05.01.06.34.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 06:34:26 -0700 (PDT)
-Subject: Re: [PATCH 0/5] timeout fixes
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1588253029.git.asml.silence@gmail.com>
- <8665e87d-98f8-5973-d11a-03cca3fdf66f@gmail.com>
- <8d9b5e06-4100-c49a-c9ca-0efc389edaf3@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c7aefe37-d740-5324-905f-1b095cfb4ea7@kernel.dk>
-Date:   Thu, 30 Apr 2020 22:26:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 09:55:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730526AbgEANeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 631EC2173E;
+        Fri,  1 May 2020 13:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340045;
+        bh=jk8Mhw7xY87s+6wudThb0MWXr5o3TcfmG7rNtvhA8M8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cPwKf6rFBqGqp5v6d8Tl6JdaSU/zXHktRlIdqY0OxUyGWcyu/77hv6JcppSrj7gyx
+         m2KYvx3rTsTljgC6Ump2vBRFy0oIRRDlJ/KAoopzPTGcZfv9ZanuxHALa8FbLm11Xt
+         Qk0GcvCVIToV3Zzx7ipjOYlKyUnDOlJvtUJSbAQU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kaixuxia <kaixuxia@tencent.com>,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Suraj Jitindar Singh <surajjs@amazon.com>
+Subject: [PATCH 4.14 084/117] xfs: Fix deadlock between AGI and AGF with RENAME_WHITEOUT
+Date:   Fri,  1 May 2020 15:22:00 +0200
+Message-Id: <20200501131554.729700103@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
+References: <20200501131544.291247695@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <8d9b5e06-4100-c49a-c9ca-0efc389edaf3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20 3:38 AM, Pavel Begunkov wrote:
-> On 01/05/2020 11:21, Pavel Begunkov wrote:
->> On 30/04/2020 22:31, Pavel Begunkov wrote:
->>> [1,2] are small random patches.
->>> [3,4] are the last 2 timeout patches, but with 1 var renamed.
->>> [5] fixes a timeout problem related to batched CQ commits. From
->>> what I see, this should be the last fixing timeouts.
->>
->> Something gone wrong with testing or rebasing. Never mind this.
-> 
-> io_uring-5.7 hangs the first test in link_timeout.c. I'll debug it today,
-> but by any chance, does anyone happen to know something?
+From: kaixuxia <xiakaixu1987@gmail.com>
 
-That's not your stuff, see:
+commit bc56ad8c74b8588685c2875de0df8ab6974828ef upstream.
 
-https://lore.kernel.org/linux-fsdevel/269ef3a5-e30f-ceeb-5f5e-58563e7c5367@kernel.dk/T/#ma61d47f59eaaa7f04ae686c117fab69c957e0d7d
+When performing rename operation with RENAME_WHITEOUT flag, we will
+hold AGF lock to allocate or free extents in manipulating the dirents
+firstly, and then doing the xfs_iunlink_remove() call last to hold
+AGI lock to modify the tmpfile info, so we the lock order AGI->AGF.
 
-which then just turned into a modification to a patch in io_uring-5.7
-instead. Just force rebase that branch and it should work fine.
+The big problem here is that we have an ordering constraint on AGF
+and AGI locking - inode allocation locks the AGI, then can allocate
+a new extent for new inodes, locking the AGF after the AGI. Hence
+the ordering that is imposed by other parts of the code is AGI before
+AGF. So we get an ABBA deadlock between the AGI and AGF here.
 
--- 
-Jens Axboe
+Process A:
+Call trace:
+ ? __schedule+0x2bd/0x620
+ schedule+0x33/0x90
+ schedule_timeout+0x17d/0x290
+ __down_common+0xef/0x125
+ ? xfs_buf_find+0x215/0x6c0 [xfs]
+ down+0x3b/0x50
+ xfs_buf_lock+0x34/0xf0 [xfs]
+ xfs_buf_find+0x215/0x6c0 [xfs]
+ xfs_buf_get_map+0x37/0x230 [xfs]
+ xfs_buf_read_map+0x29/0x190 [xfs]
+ xfs_trans_read_buf_map+0x13d/0x520 [xfs]
+ xfs_read_agf+0xa6/0x180 [xfs]
+ ? schedule_timeout+0x17d/0x290
+ xfs_alloc_read_agf+0x52/0x1f0 [xfs]
+ xfs_alloc_fix_freelist+0x432/0x590 [xfs]
+ ? down+0x3b/0x50
+ ? xfs_buf_lock+0x34/0xf0 [xfs]
+ ? xfs_buf_find+0x215/0x6c0 [xfs]
+ xfs_alloc_vextent+0x301/0x6c0 [xfs]
+ xfs_ialloc_ag_alloc+0x182/0x700 [xfs]
+ ? _xfs_trans_bjoin+0x72/0xf0 [xfs]
+ xfs_dialloc+0x116/0x290 [xfs]
+ xfs_ialloc+0x6d/0x5e0 [xfs]
+ ? xfs_log_reserve+0x165/0x280 [xfs]
+ xfs_dir_ialloc+0x8c/0x240 [xfs]
+ xfs_create+0x35a/0x610 [xfs]
+ xfs_generic_create+0x1f1/0x2f0 [xfs]
+ ...
+
+Process B:
+Call trace:
+ ? __schedule+0x2bd/0x620
+ ? xfs_bmapi_allocate+0x245/0x380 [xfs]
+ schedule+0x33/0x90
+ schedule_timeout+0x17d/0x290
+ ? xfs_buf_find+0x1fd/0x6c0 [xfs]
+ __down_common+0xef/0x125
+ ? xfs_buf_get_map+0x37/0x230 [xfs]
+ ? xfs_buf_find+0x215/0x6c0 [xfs]
+ down+0x3b/0x50
+ xfs_buf_lock+0x34/0xf0 [xfs]
+ xfs_buf_find+0x215/0x6c0 [xfs]
+ xfs_buf_get_map+0x37/0x230 [xfs]
+ xfs_buf_read_map+0x29/0x190 [xfs]
+ xfs_trans_read_buf_map+0x13d/0x520 [xfs]
+ xfs_read_agi+0xa8/0x160 [xfs]
+ xfs_iunlink_remove+0x6f/0x2a0 [xfs]
+ ? current_time+0x46/0x80
+ ? xfs_trans_ichgtime+0x39/0xb0 [xfs]
+ xfs_rename+0x57a/0xae0 [xfs]
+ xfs_vn_rename+0xe4/0x150 [xfs]
+ ...
+
+In this patch we move the xfs_iunlink_remove() call to
+before acquiring the AGF lock to preserve correct AGI/AGF locking
+order.
+
+[Minor massage required to backport to apply due to removal of
+out_bmap_cancel: error path label upstream as a result of code
+rework. Only change was to the last code block removed by the
+patch. Functionally equivalent to upstream.]
+
+Signed-off-by: kaixuxia <kaixuxia@tencent.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/xfs/xfs_inode.c |   85 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 42 insertions(+), 43 deletions(-)
+
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -3035,7 +3035,8 @@ xfs_rename(
+ 					&dfops, &first_block, spaceres);
+ 
+ 	/*
+-	 * Set up the target.
++	 * Check for expected errors before we dirty the transaction
++	 * so we can return an error without a transaction abort.
+ 	 */
+ 	if (target_ip == NULL) {
+ 		/*
+@@ -3047,6 +3048,46 @@ xfs_rename(
+ 			if (error)
+ 				goto out_trans_cancel;
+ 		}
++	} else {
++		/*
++		 * If target exists and it's a directory, check that whether
++		 * it can be destroyed.
++		 */
++		if (S_ISDIR(VFS_I(target_ip)->i_mode) &&
++		    (!xfs_dir_isempty(target_ip) ||
++		     (VFS_I(target_ip)->i_nlink > 2))) {
++			error = -EEXIST;
++			goto out_trans_cancel;
++		}
++	}
++
++	/*
++	 * Directory entry creation below may acquire the AGF. Remove
++	 * the whiteout from the unlinked list first to preserve correct
++	 * AGI/AGF locking order. This dirties the transaction so failures
++	 * after this point will abort and log recovery will clean up the
++	 * mess.
++	 *
++	 * For whiteouts, we need to bump the link count on the whiteout
++	 * inode. After this point, we have a real link, clear the tmpfile
++	 * state flag from the inode so it doesn't accidentally get misused
++	 * in future.
++	 */
++	if (wip) {
++		ASSERT(VFS_I(wip)->i_nlink == 0);
++		error = xfs_iunlink_remove(tp, wip);
++		if (error)
++			goto out_trans_cancel;
++
++		xfs_bumplink(tp, wip);
++		xfs_trans_log_inode(tp, wip, XFS_ILOG_CORE);
++		VFS_I(wip)->i_state &= ~I_LINKABLE;
++	}
++
++	/*
++	 * Set up the target.
++	 */
++	if (target_ip == NULL) {
+ 		/*
+ 		 * If target does not exist and the rename crosses
+ 		 * directories, adjust the target directory link count
+@@ -3068,22 +3109,6 @@ xfs_rename(
+ 		}
+ 	} else { /* target_ip != NULL */
+ 		/*
+-		 * If target exists and it's a directory, check that both
+-		 * target and source are directories and that target can be
+-		 * destroyed, or that neither is a directory.
+-		 */
+-		if (S_ISDIR(VFS_I(target_ip)->i_mode)) {
+-			/*
+-			 * Make sure target dir is empty.
+-			 */
+-			if (!(xfs_dir_isempty(target_ip)) ||
+-			    (VFS_I(target_ip)->i_nlink > 2)) {
+-				error = -EEXIST;
+-				goto out_trans_cancel;
+-			}
+-		}
+-
+-		/*
+ 		 * Link the source inode under the target name.
+ 		 * If the source inode is a directory and we are moving
+ 		 * it across directories, its ".." entry will be
+@@ -3175,32 +3200,6 @@ xfs_rename(
+ 	if (error)
+ 		goto out_bmap_cancel;
+ 
+-	/*
+-	 * For whiteouts, we need to bump the link count on the whiteout inode.
+-	 * This means that failures all the way up to this point leave the inode
+-	 * on the unlinked list and so cleanup is a simple matter of dropping
+-	 * the remaining reference to it. If we fail here after bumping the link
+-	 * count, we're shutting down the filesystem so we'll never see the
+-	 * intermediate state on disk.
+-	 */
+-	if (wip) {
+-		ASSERT(VFS_I(wip)->i_nlink == 0);
+-		error = xfs_bumplink(tp, wip);
+-		if (error)
+-			goto out_bmap_cancel;
+-		error = xfs_iunlink_remove(tp, wip);
+-		if (error)
+-			goto out_bmap_cancel;
+-		xfs_trans_log_inode(tp, wip, XFS_ILOG_CORE);
+-
+-		/*
+-		 * Now we have a real link, clear the "I'm a tmpfile" state
+-		 * flag from the inode so it doesn't accidentally get misused in
+-		 * future.
+-		 */
+-		VFS_I(wip)->i_state &= ~I_LINKABLE;
+-	}
+-
+ 	xfs_trans_ichgtime(tp, src_dp, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
+ 	xfs_trans_log_inode(tp, src_dp, XFS_ILOG_CORE);
+ 	if (new_parent)
+
 
