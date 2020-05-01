@@ -4,56 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10EBC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1522CC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5DEC2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8272051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341404;
-	bh=yHNIDzVNvLCL4X8ZcRKD4Aum8vu9I5J85OgiF0T+xoY=;
+	s=default; t=1588341408;
+	bh=KxgNkUjVFM7CT+iFDdcDZHWsAV/C9tx3nHEWZ0Hnhl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/f9Bt8vTQDKqr+LYy5nG2EQ+iarziigHT7tUWv/riiZxbzWwtG/ZKmzKZLuOqvMt
-	 W5nux+fyTTybU5XSEJOXEyS0/qQyxI1FP21HqboY/n0DILyYAlS2KR6f5lW19MY+7A
-	 NagnmWeD1IG8r+g14R9WTxONvX+DnZ4qd25tZX2w=
+	b=0wHtOcsgVeGJqFL4n8jE48fIPejYHtXz9zU8iqRDvvN/f1SV/Of9z41MBxK0hCFzh
+	 hmyU8nqM1NKCuKxPP6nTbUUdq4fik+aitk/U6plV79Q5YIKjrk4XJFRuyYC2VCaHgr
+	 AasomsLn+jZhRK76G3e++HjV6bUH8bBJqJ4+zvKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbgEAN4o (ORCPT
+        id S1730274AbgEANcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:32:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbgEANcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:16 -0400
+        id S1729560AbgEANcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022D4208C3;
-        Fri,  1 May 2020 13:32:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B47520757;
+        Fri,  1 May 2020 13:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339935;
-        bh=yHNIDzVNvLCL4X8ZcRKD4Aum8vu9I5J85OgiF0T+xoY=;
+        s=default; t=1588339928;
+        bh=KxgNkUjVFM7CT+iFDdcDZHWsAV/C9tx3nHEWZ0Hnhl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjdZvkZXjFa5mFEVWYBrvsnVMqArreqoNX9tV9FkruxDy/Vqg1uh2KBNp6TbvCxzB
-         9ZOcP5+wdu7w/XgY4qEOifPspW+GYvCfdvPNMSfVEtKkPWGpu/uJkp2hmGmDTh2Nn5
-         mHplwAUzKITqgC5JEMgVKr4gpb/vooqQ0s8SN/cM=
+        b=vnFPh7eKUFHwHn2d/hO3ewAh1hFDT8CIs7TYpybTNIoCIhRbqxDPKqZiftsgtUteK
+         18Ke8xQKysosNkR7LcJqZEN/zFUs/bFjFl0yyQMN+afPJT/IPXVj2lIGqxOFuOC4yT
+         ssKszueZQL68dCIb64SYb7PHSXFvycAwPQgC+CuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Schiffer <mschiffer@universe-factory.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        Sven Eckelmann <sven@narfation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 016/117] selftests: kmod: fix handling test numbers above 9
-Date:   Fri,  1 May 2020 15:20:52 +0200
-Message-Id: <20200501131546.984146418@linuxfoundation.org>
+Subject: [PATCH 4.14 023/117] mm, slub: restore the original intention of prefetch_freepointer()
+Date:   Fri,  1 May 2020 15:20:59 +0200
+Message-Id: <20200501131547.739266029@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -66,62 +70,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
+commit 0882ff9190e3bc51e2d78c3aadd7c690eeaa91d5 upstream.
 
-get_test_count() and get_test_enabled() were broken for test numbers
-above 9 due to awk interpreting a field specification like '$0010' as
-octal rather than decimal.  Fix it by stripping the leading zeroes.
+In SLUB, prefetch_freepointer() is used when allocating an object from
+cache's freelist, to make sure the next object in the list is cache-hot,
+since it's probable it will be allocated soon.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Commit 2482ddec670f ("mm: add SLUB free list pointer obfuscation") has
+unintentionally changed the prefetch in a way where the prefetch is
+turned to a real fetch, and only the next->next pointer is prefetched.
+In case there is not a stream of allocations that would benefit from
+prefetching, the extra real fetch might add a useless cache miss to the
+allocation.  Restore the previous behavior.
+
+Link: http://lkml.kernel.org/r/20180809085245.22448-1-vbabka@suse.cz
+Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Daniel Micay <danielmicay@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Matthias Schiffer <mschiffer@universe-factory.net>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: NeilBrown <neilb@suse.com>
-Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ mm/slub.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 7956ea3be6675..eed5d5b81226b 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -502,18 +502,23 @@ function test_num()
- 	fi
- }
+diff --git a/mm/slub.c b/mm/slub.c
+index 3c1a16f03b2bd..481518c3f61a9 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -269,8 +269,7 @@ static inline void *get_freepointer(struct kmem_cache *s, void *object)
  
--function get_test_count()
-+function get_test_data()
+ static void prefetch_freepointer(const struct kmem_cache *s, void *object)
  {
- 	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	local field_num=$(echo $1 | sed 's/^0*//')
-+	echo $ALL_TESTS | awk '{print $'$field_num'}'
-+}
-+
-+function get_test_count()
-+{
-+	TEST_DATA=$(get_test_data $1)
- 	LAST_TWO=${TEST_DATA#*:*}
- 	echo ${LAST_TWO%:*}
+-	if (object)
+-		prefetch(freelist_dereference(s, object + s->offset));
++	prefetch(object + s->offset);
  }
  
- function get_test_enabled()
- {
--	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	TEST_DATA=$(get_test_data $1)
- 	echo ${TEST_DATA#*:*:}
- }
- 
+ static inline void *get_freepointer_safe(struct kmem_cache *s, void *object)
 -- 
 2.20.1
 
