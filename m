@@ -2,107 +2,158 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22989C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5501AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD2A21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9BE21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 23:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="duGxTfRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEAXtB (ORCPT
+        id S1727778AbgEAXug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 19:49:01 -0400
-Received: from www62.your-server.de ([213.133.104.62]:48346 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEAXtA (ORCPT
+        Fri, 1 May 2020 19:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgEAXuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 19:49:00 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jUfOm-0004Dg-V2; Sat, 02 May 2020 01:48:53 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jUfOm-0008u3-Ja; Sat, 02 May 2020 01:48:52 +0200
-Subject: Re: [PATCH 1/1] selftests/bpf: add cls_redirect classifier
-To:     Lorenz Bauer <lmb@cloudflare.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Theo Julienne <theojulienne@github.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-References: <20200424185556.7358-1-lmb@cloudflare.com>
- <20200424185556.7358-2-lmb@cloudflare.com>
- <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
- <CACAyw98nK_Vkstp-vEqNwKXtoCRnTOPr7Eh+ziH56tJGbnPsig@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <185417b8-0d50-f8a3-7a09-949066579732@iogearbox.net>
-Date:   Sat, 2 May 2020 01:48:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 1 May 2020 19:50:35 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7738C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 16:50:34 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id v26so9295452qto.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 16:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SVjVQDn0bfQKipgWAWViUU9wfzrIQi3Sg9RKS8Emo3Y=;
+        b=duGxTfRuSNX9fF3Iz58VWaJHAjOH0aZ5CbGe2i6jVrybPtIEtmVWZrUcMn1jVE1TsH
+         c7l5bWxXh+4LUk7KchdkcRT9AtJqdc6hJJomLtXXFnoZBR6uw7KcYAqPKb/JL1U0/+xf
+         Nx8eLBrS2pHDyM3UbaHzMdu9YdPfABjGXLSu0vuSAlbDCPD9yOopsgYJz38tLynB3giW
+         NLlsBo50OH7i2Wqhbf+M2zjVVwooGIToUmPnO4LvwR37W6FHYpiULXDRFQ+x42u4DkHb
+         1SMBcxLWG0ej39z9W9dNDwPa0coXZ/Kz2UWkZJdwSirg+LKgSEW5910EA+UDUAPCfkeR
+         WnRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SVjVQDn0bfQKipgWAWViUU9wfzrIQi3Sg9RKS8Emo3Y=;
+        b=g+SAekGL1mz/XSnOumB0SM983hi2KL2XwvomKaNO2bfqR0OsUrx+zcHop8HthFM0vT
+         sETIunFQFFB1GUN/yVKiYEQEfkbQ6Ea6cQD+ism9sBKnhX9aSMrSBAZOhFZiQ0k3rxnt
+         F/drDwEMTbKeWiqxTL7sJvEz7KFyo1H8b6RgAUknv6BaWKhrw5406lPchEf99TCAVMYw
+         wRCFusJ3eV1ZaNUvA0F5Pce66qtfb9T21g98M2Rmxs2/Ky7l7QO115qgseabWAqgcr4T
+         qBWp8GQ/1bcfnB4+ilXO6YJp8sNEf10B5Nptw8Ga7tCpxjeb5xWj982snDIrdGpePiDG
+         RJUg==
+X-Gm-Message-State: AGi0Pub+sTgonNYE8+lD88FZbQoE3n8lU7auQ4ZcJUzrZ/faZZPQjnmv
+        AXvczNcbUVoL21USfX/KASxV6Q==
+X-Google-Smtp-Source: APiQypLpDSv73N6lzAdYh64o7wePUptTyDJylee4LveyxcCPdcx2qXfBiakHgR0S2eQb2haAd+2U9w==
+X-Received: by 2002:aed:2468:: with SMTP id s37mr6495973qtc.305.1588377034097;
+        Fri, 01 May 2020 16:50:34 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id p24sm4155246qtp.59.2020.05.01.16.50.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 May 2020 16:50:33 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jUfQP-0005ur-3f; Fri, 01 May 2020 20:50:33 -0300
+Date:   Fri, 1 May 2020 20:50:33 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 1/3] vfio/type1: Support faulting PFNMAP vmas
+Message-ID: <20200501235033.GA19929@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+ <158836914801.8433.9711545991918184183.stgit@gimli.home>
 MIME-Version: 1.0
-In-Reply-To: <CACAyw98nK_Vkstp-vEqNwKXtoCRnTOPr7Eh+ziH56tJGbnPsig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25799/Fri May  1 14:11:09 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158836914801.8433.9711545991918184183.stgit@gimli.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/27/20 11:45 AM, Lorenz Bauer wrote:
-> On Sun, 26 Apr 2020 at 18:33, Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-[...]
->>> +/* Linux packet pointers are either aligned to NET_IP_ALIGN (aka 2 bytes),
->>> + * or not aligned if the arch supports efficient unaligned access.
->>> + *
->>> + * Since the verifier ensures that eBPF packet accesses follow these rules,
->>> + * we can tell LLVM to emit code as if we always had a larger alignment.
->>> + * It will yell at us if we end up on a platform where this is not valid.
->>> + */
->>> +typedef uint8_t *net_ptr __attribute__((align_value(8)));
->>
->> Wow. I didn't know about this attribute.
->> I wonder whether it can help Daniel's memcpy hack.
+On Fri, May 01, 2020 at 03:39:08PM -0600, Alex Williamson wrote:
+> With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+> the range being faulted into the vma.  Add support to manually provide
+> that, in the same way as done on KVM with hva_to_pfn_remapped().
 > 
-> Yes, I think so.
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>  drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index cc1d64765ce7..4a4cb7cd86b2 100644
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -317,6 +317,32 @@ static int put_pfn(unsigned long pfn, int prot)
+>  	return 0;
+>  }
+>  
+> +static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
+> +			    unsigned long vaddr, unsigned long *pfn,
+> +			    bool write_fault)
+> +{
+> +	int ret;
+> +
+> +	ret = follow_pfn(vma, vaddr, pfn);
+> +	if (ret) {
+> +		bool unlocked = false;
+> +
+> +		ret = fixup_user_fault(NULL, mm, vaddr,
+> +				       FAULT_FLAG_REMOTE |
+> +				       (write_fault ?  FAULT_FLAG_WRITE : 0),
+> +				       &unlocked);
+> +		if (unlocked)
+> +			return -EAGAIN;
+> +
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = follow_pfn(vma, vaddr, pfn);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  			 int prot, unsigned long *pfn)
+>  {
+> @@ -339,12 +365,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  
+>  	vaddr = untagged_addr(vaddr);
+>  
+> +retry:
+>  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+>  
+>  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> -		if (!follow_pfn(vma, vaddr, pfn) &&
+> -		    is_invalid_reserved_pfn(*pfn))
+> -			ret = 0;
+> +		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
+> +		if (ret == -EAGAIN)
+> +			goto retry;
+> +
+> +		if (!ret && !is_invalid_reserved_pfn(*pfn))
+> +			ret = -EFAULT;
 
-Just for some more context [0]. I think the problem is a bit more complex in
-general. Generally, _any_ kind of pointer to some data (except for the stack)
-is currently treated as byte-by-byte copy from __builtin_memcpy() and other
-similarly available __builtin_*() helpers on BPF backend since the backend
-cannot make any assumptions about the data's alignment and whether unaligned
-access from the underlying arch is ok & efficient (the latter the verifier
-does judge for us however). So it's definitely not just limited to xdp->data.
-There is also the issue that while access to any non-stack data can be
-unaligned, access to the stack however cannot. I've discussed a while back
-with Yonghong about potential solutions. One would be to add a small patch
-to the BPF backend to enable __builtin_*() helpers to allow for unaligned
-access which could then be opt-ed in e.g. via -mattr from llc for the case
-when we know that the compiled program only runs on archs with efficient
-unaligned access anyway. However, this still potentially breaks with the BPF
-stack for the case when objects are, for example, larger than size 8 but with
-a natural alignment smaller than 8 where __builtin_memcpy() would then decide
-to emit dw-typed load/stores. But for these cases could then be annotated via
-__aligned(8) on stack. So this is basically what we do right now as a generic
-workaround in Cilium [0], meaning, our own memcpy/memset with optimal number
-of instructions and __aligned(8) where needed; most of the time this __aligned(8)
-is not needed, so it's really just a few places, and we also have a cocci
-scripts to catch these during development if needed. Anyway, real thing would
-be to allow the BPF stack for unaligned access as well and then BPF backend
-could nicely solve this in a native way w/o any workarounds, but that is tbd.
+I suggest checking vma->vm_ops == &vfio_pci_mmap_ops and adding a
+comment that this is racy and needs to be fixed up. The ops check
+makes this only used by other vfio bars and should prevent some
+abuses of this hacky thing
 
-Thanks,
-Daniel
+However, I wonder if this chould just link itself into the
+vma->private data so that when the vfio that owns the bar goes away,
+so does the iommu mapping?
 
-   [0] https://github.com/cilium/cilium/blob/master/bpf/include/bpf/builtins.h
+I feel like this patch set is not complete unless it also handles the
+shootdown of this path too?
+
+Jason
