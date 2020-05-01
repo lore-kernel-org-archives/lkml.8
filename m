@@ -2,82 +2,152 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD73C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FABC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B9920857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCF020857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588344560;
+	bh=cbS/UvPxXHd/6qKkogBfad5uTRh7vyKuBBi1oajHudE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k6qdlM0bk6939MI95wJ+n0lXtbZ+W2BmAtlrG46hpOpnOmkmL2Bpx0ernrummnm8E
+	 rpXbonAcKYuMnDg23IOE6iZtiaSfrXcTJ2biSD1b4jyxJjLFsKj174keT5WRwgX5Br
+	 1YrHl7DF67g92Usyq7lyjnEyj+V2SjgdWbmZZ2kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbgEAOtL (ORCPT
+        id S1730574AbgEAOtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:49:11 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:40757 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729114AbgEAOtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:49:06 -0400
-Received: by mail-il1-f198.google.com with SMTP id k5so5036190ilg.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:49:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Jh5jVpDHfQplZhcaNyu6KjtSKvR1Mtv8UVWG8cYmvgs=;
-        b=MTUqMFpJ6PgdZgxVhGvJcEJeXVfnjdFKXI1LbIUKQ+kwCb2c8uyngl4ORJaZGrz+4d
-         o8fq1zxVNhtTwBmQiqfCXLoY/N5HiXWST0+Yzymewr+gPoX4u2alXiRVHJDF8k11Y4FC
-         SYbBaBnCIcz4RiCt/t4gA9w/uIxisBjnQIDGIJD4090CQ6750+khEqqGdWdIC5pSbT4G
-         txW9CT8U40kpQ1LWZdpQDM1XtgB0gKjnnfzckd3U0DubjRVeA4buNPLvntzEhwA0KCee
-         FUwf0WxYQaCUk+KDfeoPNFvXqMnfQoFiA4C4WQrt2puyl2HlC07oUXzq4gIo3fV082sg
-         ULZQ==
-X-Gm-Message-State: AGi0PuZPSZtoUphuTxqEvie5CYgGye/SNGuCuimSe0BQaky3JGK3yGEP
-        HGqikXzSYzqV0uVDbfOkmIcts6dtzduRj1pQ6XyQfuhamKtB
-X-Google-Smtp-Source: APiQypLK1R32YygzKw6o+zrjKt0GIokFgX8oowRX0+5I/s/40LhWT/hwtwkehxiJ47ijw4bdIgcKya/AdAIK2f7+ZiLlGEbjeIlX
+        Fri, 1 May 2020 10:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729319AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:06 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC6320857;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588344305;
+        bh=cbS/UvPxXHd/6qKkogBfad5uTRh7vyKuBBi1oajHudE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=c6s/cBheaWlXqvUtDzVeyOK6L+94HL+MiawJoaISJJbMvOsoWeBr+CDwlkVjiW3zA
+         ArYWytIDe71h2CT5HI+91e8/iy+4KkkTb2+I0SGIJI4yl/dVV0wgJRHL3c3/tK1iaf
+         WSAJC+wUgAiSWLfIIJ+wtpBoicf82h3PFc8Lt5z4=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jUWuT-00FCch-Ak; Fri, 01 May 2020 16:45:01 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 04/37] docs: networking: convert vxlan.txt to ReST
+Date:   Fri,  1 May 2020 16:44:26 +0200
+Message-Id: <f2a0c9b723a92b697e3161d2b93f5ae87cb3801b.1588344146.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
+References: <cover.1588344146.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:dc3:: with SMTP id l3mr3777413ilj.149.1588344543764;
- Fri, 01 May 2020 07:49:03 -0700 (PDT)
-Date:   Fri, 01 May 2020 07:49:03 -0700
-In-Reply-To: <00000000000052913105a4943655@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004fe61505a49748ee@google.com>
-Subject: Re: KASAN: use-after-free Read in inet_diag_bc_sk
-From:   syzbot <syzbot+13bef047dbfffa5cd1af@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        john.fastabend@gmail.com, kafai@fb.com, khlebnikov@yandex-team.ru,
-        kpsingh@chromium.org, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org, zeil@yandex-team.ru
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+- add SPDX header;
+- adjust title markup;
+- mark code blocks and literals as such;
+- adjust identation, whitespaces and blank lines where needed;
+- add to networking/index.rst.
 
-commit b1f3e43dbfacfcd95296b0f80f84b186add9ef54
-Author: Dmitry Yakunin <zeil@yandex-team.ru>
-Date:   Thu Apr 30 15:51:15 2020 +0000
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/networking/index.rst            |  1 +
+ .../networking/{vxlan.txt => vxlan.rst}       | 33 ++++++++++++-------
+ 2 files changed, 22 insertions(+), 12 deletions(-)
+ rename Documentation/networking/{vxlan.txt => vxlan.rst} (73%)
 
-    inet_diag: add support for cgroup filter
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index 2227b9f4509d..a72fdfb391b6 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -114,6 +114,7 @@ Contents:
+    tuntap
+    udplite
+    vrf
++   vxlan
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/networking/vxlan.txt b/Documentation/networking/vxlan.rst
+similarity index 73%
+rename from Documentation/networking/vxlan.txt
+rename to Documentation/networking/vxlan.rst
+index c28f4989c3f0..ce239fa01848 100644
+--- a/Documentation/networking/vxlan.txt
++++ b/Documentation/networking/vxlan.rst
+@@ -1,3 +1,6 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======================================================
+ Virtual eXtensible Local Area Networking documentation
+ ======================================================
+ 
+@@ -21,8 +24,9 @@ neighbors GRE and VLAN. Configuring VXLAN requires the version of
+ iproute2 that matches the kernel release where VXLAN was first merged
+ upstream.
+ 
+-1. Create vxlan device
+- # ip link add vxlan0 type vxlan id 42 group 239.1.1.1 dev eth1 dstport 4789
++1. Create vxlan device::
++
++    # ip link add vxlan0 type vxlan id 42 group 239.1.1.1 dev eth1 dstport 4789
+ 
+ This creates a new device named vxlan0.  The device uses the multicast
+ group 239.1.1.1 over eth1 to handle traffic for which there is no
+@@ -32,20 +36,25 @@ pre-dates the IANA's selection of a standard destination port number
+ and uses the Linux-selected value by default to maintain backwards
+ compatibility.
+ 
+-2. Delete vxlan device
+-  # ip link delete vxlan0
++2. Delete vxlan device::
+ 
+-3. Show vxlan info
+-  # ip -d link show vxlan0
++    # ip link delete vxlan0
++
++3. Show vxlan info::
++
++    # ip -d link show vxlan0
+ 
+ It is possible to create, destroy and display the vxlan
+ forwarding table using the new bridge command.
+ 
+-1. Create forwarding table entry
+-  # bridge fdb add to 00:17:42:8a:b4:05 dst 192.19.0.2 dev vxlan0
++1. Create forwarding table entry::
+ 
+-2. Delete forwarding table entry
+-  # bridge fdb delete 00:17:42:8a:b4:05 dev vxlan0
++    # bridge fdb add to 00:17:42:8a:b4:05 dst 192.19.0.2 dev vxlan0
+ 
+-3. Show forwarding table
+-  # bridge fdb show dev vxlan0
++2. Delete forwarding table entry::
++
++    # bridge fdb delete 00:17:42:8a:b4:05 dev vxlan0
++
++3. Show forwarding table::
++
++    # bridge fdb show dev vxlan0
+-- 
+2.25.4
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=106b15f8100000
-start commit:   37ecb5b8 hinic: Use kmemdup instead of kzalloc and memcpy
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=126b15f8100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=146b15f8100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b1494ce3fbc02154
-dashboard link: https://syzkaller.appspot.com/bug?extid=13bef047dbfffa5cd1af
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12296e60100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150c6f02100000
-
-Reported-by: syzbot+13bef047dbfffa5cd1af@syzkaller.appspotmail.com
-Fixes: b1f3e43dbfac ("inet_diag: add support for cgroup filter")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
