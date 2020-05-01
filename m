@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27457C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08282C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F420A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C7C21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LXXvbpGB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QB7WDoSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgEAUb7 (ORCPT
+        id S1727891AbgEAUcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
+        Fri, 1 May 2020 16:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEAUbi (ORCPT
+        with ESMTP id S1726475AbgEAUbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:31:38 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391B7C08ED7D
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:31:38 -0700 (PDT)
+        Fri, 1 May 2020 16:31:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E1AC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=YCNRxVdwXiAUVSTcLJEk+raGgN9RNB/RFHzydfwKP+4=; b=LXXvbpGB/O/++jsrrBJgMh5c1F
-        FwItOmgwGdVkX65Ba15lVqs1iIQQmRmN+l2CasJvpFJgwI35R2aTXQDxm5XiLF+jx5GspOruHxpx3
-        5DHjBwKHO6sViZRotklFF2GlvOn7xwFEwM6GDO7XDHe8rjGe0DRuXQ76yxwljGJVWWQB1iT97p4kv
-        oW4aGjDQgfA4X1lo0YT5yG5osJtubfNwZ7qqJiAiApOWUsvyC6ex5W01h5uLDuLakzjF51Jov3i3D
-        poSaCkLGF5CWla3iWxmBTUow3Fsx/3YT0w8ddAQHFIGIAPq7gPnKIvJYueyFN2WrlkY5HeH1NRZRy
-        KcVzmrTg==;
+        bh=fEGCSSKqX01IAHLvtw+4gpoKZgt1ek7edQuxQLpC09I=; b=QB7WDoSXxQg93vZRGck8d0btEs
+        VIWdvPa+EHZatUGCd2ZHzKaQ6GJ5sd6dr2+zDP/ggd6zJ45k6gWL9ackVQ99NjymUWaH32so9k0nx
+        9CXph9O+tiCg8EMXWj8lJERpUC4P1I9LkyzG5ohO3Nu7A54w/m2SrbP1ASd7gYtS7IeLs17aO5cWn
+        1JCFt1WuyCfLFEO1fZ4A8C5DqSwkkQdjp12Y9Kg+1CyTOL3YgYLAuRtfoFkOcIwiu/ljDGpZVHyIv
+        dTrdc9G2IfKpMpSMcU0XI2xtqtunGBDvAXt+vMKRL4sj3GATSH3GJUNrjhipHMlSsaxsoN9qxes5s
+        VSgOuHkw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUcJO-0007RK-TC; Fri, 01 May 2020 20:31:07 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUcJM-0002jm-Iw; Fri, 01 May 2020 20:31:04 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D37D5303DA8;
-        Fri,  1 May 2020 22:31:00 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75BBF30699C;
+        Fri,  1 May 2020 22:31:01 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id B521C25BAEC03; Fri,  1 May 2020 22:31:00 +0200 (CEST)
-Message-Id: <20200501202943.894447111@infradead.org>
+        id C22BB25BAEC06; Fri,  1 May 2020 22:31:00 +0200 (CEST)
+Message-Id: <20200501202944.128942570@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 01 May 2020 22:28:51 +0200
+Date:   Fri, 01 May 2020 22:28:55 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -56,10 +56,8 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
         jpoimboe@redhat.com, pbonzini@redhat.com,
-        mathieu.desnoyers@efficios.com,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Robert Richter <rric@kernel.org>
-Subject: [PATCH v4 02/18] module: Fix up module_notifier return values
+        mathieu.desnoyers@efficios.com
+Subject: [PATCH v4 06/18] static_call: Add basic static call infrastructure
 References: <20200501202849.647891881@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,136 +66,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While auditing all module notifiers I noticed a whole bunch of fail
-wrt the return value. Notifiers have a 'special' return semantics.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-As is; NOTIFY_DONE vs NOTIFY_OK is a bit vague; but
-notifier_from_errno(0) results in NOTIFY_OK and NOTIFY_DONE has a
-comment that says "Don't care".
+Static calls are a replacement for global function pointers.  They use
+code patching to allow direct calls to be used instead of indirect
+calls.  They give the flexibility of function pointers, but with
+improved performance.  This is especially important for cases where
+retpolines would otherwise be used, as retpolines can significantly
+impact performance.
 
->From this I've used NOTIFY_DONE when the function completely ignores
-the callback and notifier_to_error() isn't used.
+The concept and code are an extension of previous work done by Ard
+Biesheuvel and Steven Rostedt:
 
+  https://lkml.kernel.org/r/20181005081333.15018-1-ard.biesheuvel@linaro.org
+  https://lkml.kernel.org/r/20181006015110.653946300@goodmis.org
+
+There are two implementations, depending on arch support:
+
+ 1) out-of-line: patched trampolines (CONFIG_HAVE_STATIC_CALL)
+ 2) basic function pointers
+
+For more details, see the comments in include/linux/static_call.h.
+
+[peterz: simplified interface]
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Reviewed-by: Robert Richter <rric@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/oprofile/buffer_sync.c |    4 ++--
- kernel/trace/bpf_trace.c       |    8 ++++++--
- kernel/trace/trace.c           |    2 +-
- kernel/trace/trace_events.c    |    2 +-
- kernel/trace/trace_printk.c    |    4 ++--
- kernel/tracepoint.c            |    2 +-
- 6 files changed, 13 insertions(+), 9 deletions(-)
+ arch/Kconfig                      |    3 
+ include/linux/static_call.h       |  156 ++++++++++++++++++++++++++++++++++++++
+ include/linux/static_call_types.h |   15 +++
+ 3 files changed, 174 insertions(+)
+ create mode 100644 include/linux/static_call.h
+ create mode 100644 include/linux/static_call_types.h
 
---- a/drivers/oprofile/buffer_sync.c
-+++ b/drivers/oprofile/buffer_sync.c
-@@ -116,7 +116,7 @@ module_load_notify(struct notifier_block
- {
- #ifdef CONFIG_MODULES
- 	if (val != MODULE_STATE_COMING)
--		return 0;
-+		return NOTIFY_DONE;
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -960,6 +960,9 @@ config HAVE_SPARSE_SYSCALL_NR
+ 	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
+ 	  related optimizations for a given architecture.
  
- 	/* FIXME: should we process all CPU buffers ? */
- 	mutex_lock(&buffer_mutex);
-@@ -124,7 +124,7 @@ module_load_notify(struct notifier_block
- 	add_event_entry(MODULE_LOADED_CODE);
- 	mutex_unlock(&buffer_mutex);
- #endif
--	return 0;
-+	return NOTIFY_OK;
- }
++config HAVE_STATIC_CALL
++	bool
++
+ source "kernel/gcov/Kconfig"
  
- 
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1451,10 +1451,11 @@ static int bpf_event_notify(struct notif
- {
- 	struct bpf_trace_module *btm, *tmp;
- 	struct module *mod = module;
-+	int ret = 0;
- 
- 	if (mod->num_bpf_raw_events == 0 ||
- 	    (op != MODULE_STATE_COMING && op != MODULE_STATE_GOING))
--		return 0;
-+		goto out;
- 
- 	mutex_lock(&bpf_module_mutex);
- 
-@@ -1464,6 +1465,8 @@ static int bpf_event_notify(struct notif
- 		if (btm) {
- 			btm->module = module;
- 			list_add(&btm->list, &bpf_trace_modules);
-+		} else {
-+			ret = -ENOMEM;
- 		}
- 		break;
- 	case MODULE_STATE_GOING:
-@@ -1479,7 +1482,8 @@ static int bpf_event_notify(struct notif
- 
- 	mutex_unlock(&bpf_module_mutex);
- 
--	return 0;
-+out:
-+	return notifier_from_errno(ret);
- }
- 
- static struct notifier_block bpf_module_nb = {
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8696,7 +8696,7 @@ static int trace_module_notify(struct no
- 		break;
- 	}
- 
--	return 0;
-+	return NOTIFY_OK;
- }
- 
- static struct notifier_block trace_module_nb = {
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2442,7 +2442,7 @@ static int trace_module_notify(struct no
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
- 
--	return 0;
-+	return NOTIFY_OK;
- }
- 
- static struct notifier_block trace_module_nb = {
---- a/kernel/trace/trace_printk.c
-+++ b/kernel/trace/trace_printk.c
-@@ -95,7 +95,7 @@ static int module_trace_bprintk_format_n
- 		if (val == MODULE_STATE_COMING)
- 			hold_module_trace_bprintk_format(start, end);
- 	}
--	return 0;
-+	return NOTIFY_OK;
- }
- 
- /*
-@@ -173,7 +173,7 @@ __init static int
- module_trace_bprintk_format_notify(struct notifier_block *self,
- 		unsigned long val, void *data)
- {
--	return 0;
-+	return NOTIFY_OK;
- }
- static inline const char **
- find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -521,7 +521,7 @@ static int tracepoint_module_notify(stru
- 	case MODULE_STATE_UNFORMED:
- 		break;
- 	}
--	return ret;
-+	return notifier_from_errno(ret);
- }
- 
- static struct notifier_block tracepoint_module_nb = {
+ source "scripts/gcc-plugins/Kconfig"
+--- /dev/null
++++ b/include/linux/static_call.h
+@@ -0,0 +1,156 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_STATIC_CALL_H
++#define _LINUX_STATIC_CALL_H
++
++/*
++ * Static call support
++ *
++ * Static calls use code patching to hard-code function pointers into direct
++ * branch instructions.  They give the flexibility of function pointers, but
++ * with improved performance.  This is especially important for cases where
++ * retpolines would otherwise be used, as retpolines can significantly impact
++ * performance.
++ *
++ *
++ * API overview:
++ *
++ *   DECLARE_STATIC_CALL(name, func);
++ *   DEFINE_STATIC_CALL(name, func);
++ *   static_call(name)(args...);
++ *   static_call_update(name, func);
++ *
++ * Usage example:
++ *
++ *   # Start with the following functions (with identical prototypes):
++ *   int func_a(int arg1, int arg2);
++ *   int func_b(int arg1, int arg2);
++ *
++ *   # Define a 'my_name' reference, associated with func_a() by default
++ *   DEFINE_STATIC_CALL(my_name, func_a);
++ *
++ *   # Call func_a()
++ *   static_call(my_name)(arg1, arg2);
++ *
++ *   # Update 'my_name' to point to func_b()
++ *   static_call_update(my_name, &func_b);
++ *
++ *   # Call func_b()
++ *   static_call(my_name)(arg1, arg2);
++ *
++ *
++ * Implementation details:
++ *
++ *    This requires some arch-specific code (CONFIG_HAVE_STATIC_CALL).
++ *    Otherwise basic indirect calls are used (with function pointers).
++ *
++ *    Each static_call() site calls into a trampoline associated with the name.
++ *    The trampoline has a direct branch to the default function.  Updates to a
++ *    name will modify the trampoline's branch destination.
++ *
++ *    If the arch has CONFIG_HAVE_STATIC_CALL_INLINE, then the call sites
++ *    themselves will be patched at runtime to call the functions directly,
++ *    rather than calling through the trampoline.  This requires objtool or a
++ *    compiler plugin to detect all the static_call() sites and annotate them
++ *    in the .static_call_sites section.
++ */
++
++#include <linux/types.h>
++#include <linux/cpu.h>
++#include <linux/static_call_types.h>
++
++#ifdef CONFIG_HAVE_STATIC_CALL
++#include <asm/static_call.h>
++
++/*
++ * Either @site or @tramp can be NULL.
++ */
++extern void arch_static_call_transform(void *site, void *tramp, void *func);
++
++#define STATIC_CALL_TRAMP_ADDR(name) &STATIC_CALL_TRAMP(name)
++
++/*
++ * __ADDRESSABLE() is used to ensure the key symbol doesn't get stripped from
++ * the symbol table so that objtool can reference it when it generates the
++ * .static_call_sites section.
++ */
++#define __static_call(name)						\
++({									\
++	__ADDRESSABLE(STATIC_CALL_KEY(name));				\
++	&STATIC_CALL_TRAMP(name);					\
++})
++
++#else
++#define STATIC_CALL_TRAMP_ADDR(name) NULL
++#endif
++
++
++#define DECLARE_STATIC_CALL(name, func)					\
++	extern struct static_call_key STATIC_CALL_KEY(name);		\
++	extern typeof(func) STATIC_CALL_TRAMP(name);
++
++#define static_call_update(name, func)					\
++({									\
++	BUILD_BUG_ON(!__same_type(*(func), STATIC_CALL_TRAMP(name)));	\
++	__static_call_update(&STATIC_CALL_KEY(name),			\
++			     STATIC_CALL_TRAMP_ADDR(name), func);	\
++})
++
++#if defined(CONFIG_HAVE_STATIC_CALL)
++
++struct static_call_key {
++	void *func;
++};
++
++#define DEFINE_STATIC_CALL(name, _func)					\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_KEY(name) = {		\
++		.func = _func,						\
++	};								\
++	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
++
++#define static_call(name)	__static_call(name)
++
++static inline
++void __static_call_update(struct static_call_key *key, void *tramp, void *func)
++{
++	cpus_read_lock();
++	WRITE_ONCE(key->func, func);
++	arch_static_call_transform(NULL, tramp, func);
++	cpus_read_unlock();
++}
++
++#define EXPORT_STATIC_CALL(name)					\
++	EXPORT_SYMBOL(STATIC_CALL_KEY(name));				\
++	EXPORT_SYMBOL(STATIC_CALL_TRAMP(name))
++
++#define EXPORT_STATIC_CALL_GPL(name)					\
++	EXPORT_SYMBOL_GPL(STATIC_CALL_KEY(name));			\
++	EXPORT_SYMBOL_GPL(STATIC_CALL_TRAMP(name))
++
++#else /* Generic implementation */
++
++struct static_call_key {
++	void *func;
++};
++
++#define DEFINE_STATIC_CALL(name, _func)					\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_KEY(name) = {		\
++		.func = _func,						\
++	}
++
++#define static_call(name)						\
++	((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_KEY(name).func))
++
++static inline
++void __static_call_update(struct static_call_key *key, void *tramp, void *func)
++{
++	WRITE_ONCE(key->func, func);
++}
++
++#define EXPORT_STATIC_CALL(name)	EXPORT_SYMBOL(STATIC_CALL_KEY(name))
++#define EXPORT_STATIC_CALL_GPL(name)	EXPORT_SYMBOL_GPL(STATIC_CALL_KEY(name))
++
++#endif /* CONFIG_HAVE_STATIC_CALL */
++
++#endif /* _LINUX_STATIC_CALL_H */
+--- /dev/null
++++ b/include/linux/static_call_types.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _STATIC_CALL_TYPES_H
++#define _STATIC_CALL_TYPES_H
++
++#include <linux/stringify.h>
++
++#define STATIC_CALL_PREFIX		__SC__
++#define STATIC_CALL_KEY(name)		__PASTE(STATIC_CALL_PREFIX, name)
++
++#define STATIC_CALL_TRAMP_PREFIX	__SCT__
++#define STATIC_CALL_TRAMP_PREFIX_STR	__stringify(STATIC_CALL_TRAMP_PREFIX)
++#define STATIC_CALL_TRAMP(name)		__PASTE(STATIC_CALL_TRAMP_PREFIX, name)
++#define STATIC_CALL_TRAMP_STR(name)	__stringify(STATIC_CALL_TRAMP(name))
++
++#endif /* _STATIC_CALL_TYPES_H */
 
 
