@@ -2,173 +2,154 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EEEC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0C5C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C828216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EAE218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EwM4uxQq"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="rZ0wZNpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgEATD3 (ORCPT
+        id S1730496AbgEATD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:03:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64352 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729930AbgEATD3 (ORCPT
+        Fri, 1 May 2020 15:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729953AbgEATDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:03:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588359808; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=GY5sqtDiJc80ZiMq+8+zAVXgb8kIjKkuNxyYZsSwO/g=; b=EwM4uxQqBfut02pCY7bBkzMPqrYZx0YA1K3ifEyva5N7dUu6CxJi51/GbS4yC7RJfxMcMvgs
- 3B0Gh/cmRdMu2a98qyucxRyXjBNb7uwFVmaMphoWxjiguFFoKAuAJyIwSvzpzwypybR1sOVb
- lixIsM3XVgQRyUuApluhQfh+oeI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eac7280.7f8bef7cc420-smtp-out-n05;
- Fri, 01 May 2020 19:03:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 33AD1C4478F; Fri,  1 May 2020 19:03:26 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2352CC433CB;
-        Fri,  1 May 2020 19:03:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2352CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, stable@vger.kernel.org,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/msm: Check for powered down HW in the devfreq callbacks
-Date:   Fri,  1 May 2020 13:03:20 -0600
-Message-Id: <20200501190320.17681-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 1 May 2020 15:03:54 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9289C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 12:03:54 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id b13so3351949oti.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 12:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dV5C6Mdo+d2z1U4ixXFwa14iL+t03v6nPukDTsNC/Pw=;
+        b=rZ0wZNpFKPj00rZsGXQ/OEy65W5RTZI1U2mldKOKzrK3O8YxNmuwVKAmgNGlrMSPJh
+         dQ3h/11zRchfbBtSsQytLXthXnqjbswFFdOTKhvnJz2vylobGQeZ+LFvJofa3n+r2q6h
+         dCWQyfMflvlzhIlaKHECXHUiyMqYb5bOSgYxPZbKUIJ6kUtcquH4lk62KWBOPOZ0l2ly
+         3GJhN0ZjLbVF5/vkNCtpBlDafYpeOL+d8ft0arZhky+HvLzbqIp0tD5btouJClcvo4hf
+         7MIo2rkjDqc6lk3WUSAmT2r4xYoI+Vso+T69h2J6g+m95bxiajkPrGm0RbCSU1AKatT5
+         HKQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dV5C6Mdo+d2z1U4ixXFwa14iL+t03v6nPukDTsNC/Pw=;
+        b=guOZP1lLJl4fZwHjGw1EiaJ4KS9wEM+3d6b6AmWUArv/Tc1PRRkhDSUP6Djgggibry
+         8rm0amlTYLCG7MmjwB5djjQeEG82zmJQ9LsIS2l2k1uBabObAiFcY6pFPocHJU1Nss/f
+         PqOvM25/L53SwElGDhWaooPsSgFW3nC7COSUBi1KwTgaZ8aCXZgIqak3SQOpCVUO8lcI
+         /d593qdAc+AGEYAIxbYc9Mz7eaHXnLyJOMocOFAtUMRfq5fsJeXzV6e8JRIgjXLBiRFF
+         lVJLUET20/u3+0XX0UbtDLkzSIQwMW2gLiUiBt5RFHdwdCAO2SubHoLmM+0smjaNeUdj
+         66fA==
+X-Gm-Message-State: AGi0Pub9chn63GL++96W+QbbtK4v2gAXQeRzVzKA+kEEs6ydG7GIS/i2
+        zTL6a6lWMO2SfjdcU3e7CaDNeg==
+X-Google-Smtp-Source: APiQypLpF0Ox0IO/qISGXS4LdidPlSkHRJysHJEBrOjiMzScpLoC5A3dEhhOSPrJ9hvlNYHsOmtChQ==
+X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr4236191otq.254.1588359834043;
+        Fri, 01 May 2020 12:03:54 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id c26sm1024801otl.49.2020.05.01.12.03.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 12:03:53 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
+ properly in there
+To:     Greg Ungerer <gerg@linux-m68k.org>, Rich Felker <dalias@libc.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200429214954.44866-1-jannh@google.com>
+ <20200429215620.GM1551@shell.armlinux.org.uk>
+ <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
+ <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
+ <20200430145123.GE21576@brightrain.aerifal.cx>
+ <6dd187b4-1958-fc40-73c4-3de53ed69a1e@linux-m68k.org>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <cff13fb7-5045-4afd-e1d3-58af99d81d5a@landley.net>
+Date:   Fri, 1 May 2020 14:09:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <6dd187b4-1958-fc40-73c4-3de53ed69a1e@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Writing to the devfreq sysfs nodes while the GPU is powered down can
-result in a system crash (on a5xx) or a nasty GMU error (on a6xx):
+On 5/1/20 1:00 AM, Greg Ungerer wrote:
+>> This sounds correct. My understanding of FLAT shared library support
+>> is that it's really bad and based on having preassigned slot indices
+>> for each library on the system, and a global array per-process to give
+>> to data base address for each library. Libraries are compiled to know
+>> their own slot numbers so that they just load from fixed_reg[slot_id]
+>> to get what's effectively their GOT pointer.
 
- $ /sys/class/devfreq/5000000.gpu# echo 500000000 > min_freq
-  [  104.841625] platform 506a000.gmu: [drm:a6xx_gmu_set_oob]
-	*ERROR* Timeout waiting for GMU OOB set GPU_DCVS: 0x0
+fdpic is to elf what binflt is to a.out, and a.out shared libraries were never
+pretty. Or easy.
 
-Despite the fact that we carefully try to suspend the devfreq device when
-the hardware is powered down there are lots of holes in the governors that
-don't check for the suspend state and blindly call into the devfreq
-callbacks that end up triggering hardware reads in the GPU driver.
+>> I'm not sure if anybody has actually used this in over a decade. Last
+>> time I looked the tooling appeared broken, but in this domain lots of
+>> users have forked private tooling that's not publicly available or at
+>> least not publicly indexed, so it's hard to say for sure.
+> 
+> Be at least 12 or 13 years since I last had a working shared library
+> build for m68knommu. I have not bothered with it since then, not that I
+> even used it much when it worked. Seemed more pain than it was worth.
 
-Call pm_runtime_get_if_in_use() in the gpu_busy() and gpu_set_freq()
-callbacks to skip the hardware access if it isn't active.
+Shared libraries worked fine with fdpic on sh2 last I checked, it's basically
+just ELF PIC with the ability to move the 4 segments (text/rodata/bss/data)
+independently of each other. (4 base pointers, no waiting.)
 
-v2: Use pm_runtime_get_if_in_use() per Eric Anholt
+I don't think I've _ever_ used shared binflt libraries. I left myself
+breadcrumbs back when I was wrestling with that stuff:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+  https://landley.net/notes-2014.html#07-12-2014
 
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 6 ++++++
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 8 ++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 7 +++++++
- 3 files changed, 21 insertions(+)
+But it looks like that last time I touched anything using elf2flt was:
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 724024a2243a..4d7f269edfcc 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1404,6 +1404,10 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
- {
- 	u64 busy_cycles, busy_time;
- 
-+	/* Only read the gpu busy if the hardware is already active */
-+	if (pm_runtime_get_if_in_use(&gpu->pdev->dev) <= 0)
-+		return 0;
-+
- 	busy_cycles = gpu_read64(gpu, REG_A5XX_RBBM_PERFCTR_RBBM_0_LO,
- 			REG_A5XX_RBBM_PERFCTR_RBBM_0_HI);
- 
-@@ -1412,6 +1416,8 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
- 
- 	gpu->devfreq.busy_cycles = busy_cycles;
- 
-+	pm_runtime_put(&gpu->pdev->dev);
-+
- 	if (WARN_ON(busy_time > ~0LU))
- 		return ~0LU;
- 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index c4e71abbdd53..8ace989b11db 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -108,6 +108,13 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	struct msm_gpu *gpu = &adreno_gpu->base;
- 	int ret;
- 
-+	/*
-+	 * This can get called from devfreq while the hardware is idle. Don't
-+	 * bring up the power if it isn't already active
-+	 */
-+	if (pm_runtime_get_if_in_use(gmu->dev) <= 0)
-+		return;
-+
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
- 
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
-@@ -134,6 +141,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	 * for now leave it at max so that the performance is nominal.
- 	 */
- 	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-+	pm_runtime_put(gmu->dev);
- }
- 
- void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 68af24150de5..bf43eb2fb078 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -810,6 +810,11 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
- 	u64 busy_cycles, busy_time;
- 
-+
-+	/* Only read the gpu busy if the hardware is already active */
-+	if (pm_runtime_get_if_in_use(a6xx_gpu->gmu.dev) <= 0)
-+		return 0;
-+
- 	busy_cycles = gmu_read64(&a6xx_gpu->gmu,
- 			REG_A6XX_GMU_CX_GMU_POWER_COUNTER_XOCLK_0_L,
- 			REG_A6XX_GMU_CX_GMU_POWER_COUNTER_XOCLK_0_H);
-@@ -819,6 +824,8 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 
- 	gpu->devfreq.busy_cycles = busy_cycles;
- 
-+	pm_runtime_put(a6xx_gpu->gmu.dev);
-+
- 	if (WARN_ON(busy_time > ~0LU))
- 		return ~0LU;
- 
--- 
-2.17.1
+  https://landley.net/notes-2018.html#08-05-2018
+
+And that was just because arm's fdpic support stayed out of tree for years so I
+dug up binflt and gave it another go. (It sucked so much I wound up building
+static pie for cortex-m, taking the efficiency hit, and moving on. Running pie
+binaries on nommu _works_, it's just incredibly inefficient. Since the writeable
+and readable segments of the ELF are all relative to the same single base
+pointer, you can't share the read-only parts of the binaries without address
+remapping, so if you launch 4 instances of PIE bash on nommu you've loaded 4
+instances of the bash text and rodata, and of course none of it can even be
+demand faulted. In theory shared libraries _do_ help there but I hit some ld.so
+bug and didn't want to debug a half-assed solution, so big hammer and moved on
+until arm fdpic got merged and fixed it _properly_...)
+
+Rob
+
+P.S. The reason for binflt is bare metal hardware engineers who are conceptually
+uncomfortable with software love them, because it's as close to "objcopy -O
+binary" as they can get. Meanwhile on j-core we've had an 8k ROM boot loader
+that loads vmlinux images and does the ELF relocations for 5 years now, and ever
+since the switch to device tree that's our _only_ way to feed a dtb to the
+kernel without statically linking it in, so it's ELF all the way down for us.
