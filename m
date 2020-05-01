@@ -2,154 +2,130 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0C5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F11C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6EAE218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093722173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="rZ0wZNpF"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="XQqfcFEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbgEATD4 (ORCPT
+        id S1730442AbgEATFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729953AbgEATDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:03:54 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9289C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 12:03:54 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id b13so3351949oti.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 12:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dV5C6Mdo+d2z1U4ixXFwa14iL+t03v6nPukDTsNC/Pw=;
-        b=rZ0wZNpFKPj00rZsGXQ/OEy65W5RTZI1U2mldKOKzrK3O8YxNmuwVKAmgNGlrMSPJh
-         dQ3h/11zRchfbBtSsQytLXthXnqjbswFFdOTKhvnJz2vylobGQeZ+LFvJofa3n+r2q6h
-         dCWQyfMflvlzhIlaKHECXHUiyMqYb5bOSgYxPZbKUIJ6kUtcquH4lk62KWBOPOZ0l2ly
-         3GJhN0ZjLbVF5/vkNCtpBlDafYpeOL+d8ft0arZhky+HvLzbqIp0tD5btouJClcvo4hf
-         7MIo2rkjDqc6lk3WUSAmT2r4xYoI+Vso+T69h2J6g+m95bxiajkPrGm0RbCSU1AKatT5
-         HKQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dV5C6Mdo+d2z1U4ixXFwa14iL+t03v6nPukDTsNC/Pw=;
-        b=guOZP1lLJl4fZwHjGw1EiaJ4KS9wEM+3d6b6AmWUArv/Tc1PRRkhDSUP6Djgggibry
-         8rm0amlTYLCG7MmjwB5djjQeEG82zmJQ9LsIS2l2k1uBabObAiFcY6pFPocHJU1Nss/f
-         PqOvM25/L53SwElGDhWaooPsSgFW3nC7COSUBi1KwTgaZ8aCXZgIqak3SQOpCVUO8lcI
-         /d593qdAc+AGEYAIxbYc9Mz7eaHXnLyJOMocOFAtUMRfq5fsJeXzV6e8JRIgjXLBiRFF
-         lVJLUET20/u3+0XX0UbtDLkzSIQwMW2gLiUiBt5RFHdwdCAO2SubHoLmM+0smjaNeUdj
-         66fA==
-X-Gm-Message-State: AGi0Pub9chn63GL++96W+QbbtK4v2gAXQeRzVzKA+kEEs6ydG7GIS/i2
-        zTL6a6lWMO2SfjdcU3e7CaDNeg==
-X-Google-Smtp-Source: APiQypLpF0Ox0IO/qISGXS4LdidPlSkHRJysHJEBrOjiMzScpLoC5A3dEhhOSPrJ9hvlNYHsOmtChQ==
-X-Received: by 2002:a05:6830:20d9:: with SMTP id z25mr4236191otq.254.1588359834043;
-        Fri, 01 May 2020 12:03:54 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id c26sm1024801otl.49.2020.05.01.12.03.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 12:03:53 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
- properly in there
-To:     Greg Ungerer <gerg@linux-m68k.org>, Rich Felker <dalias@libc.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20200429214954.44866-1-jannh@google.com>
- <20200429215620.GM1551@shell.armlinux.org.uk>
- <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
- <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
- <20200430145123.GE21576@brightrain.aerifal.cx>
- <6dd187b4-1958-fc40-73c4-3de53ed69a1e@linux-m68k.org>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <cff13fb7-5045-4afd-e1d3-58af99d81d5a@landley.net>
-Date:   Fri, 1 May 2020 14:09:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <6dd187b4-1958-fc40-73c4-3de53ed69a1e@linux-m68k.org>
-Content-Type: text/plain; charset=utf-8
+        Fri, 1 May 2020 15:05:50 -0400
+Received: from mail-mw2nam12on2115.outbound.protection.outlook.com ([40.107.244.115]:60610
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729766AbgEATFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 15:05:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dz+Gospb3EVRQ7HgE4+LX6UsEZ4ppEh6wa+8q0GcPCR/iGIuBImGPpb8kcPN3kLpqSimVHlsUDrMyI7wqEAQm7KoVf11Uh2fF0Dy5tY1TFP1sWQkbPDq2v2P0lBsqPCfUyKE9yLVxDt2mpTxybHcFVikIKZo99yPuRDSx4ky/w5W1GAcVYf7SZFkSSydHs5qlmMXH2jr7Byx6iq4XLmq62Nzi6gs7qOsVjw8JfaKfYqjdzWg5vYm5EyGqoEVSaPzLQJlvsJEYFv0OnR9N5tV8dPFeXs89EZIh4sNg1bjFkED/+5bl/KbE0NX6JFRvgxgTmkQAzw0DJK6szbKWbQbOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYVCvZBpLiKANs0uTrGLayUXf0G20Ue04qWn5sejOsI=;
+ b=VCKBAncvbmcCsd1Rxsj556/nvHfVGmmyr+3DrQxYWFSSpK1ISXIRxGfX0bfHQpZsIPo9PRSwKs7DD6ZdMgHMZ1Wco0KrJeXZ10Pqr4KC3ZJmlqcDNPgCz+KLRejuhcMmoWNTRUbl/jRgu46ZNgAtghMO4/RDzDfNo6GECwV0tZ/WKzvcMtHiOufKvX7+KwXSHNiVoui+IcxL60IBNIUr+YACXuIZR2IlvIwcEaUl0tiMASXfvPkZq4sQ3YVmDJYacYp9uoXcBs3P5xJMDnDnkuCNZiQyMRn2LS3PkHIZP5uWyWBFDbah4wFFVZTwuyjH5n/KlL3MPNhlr11891jIrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYVCvZBpLiKANs0uTrGLayUXf0G20Ue04qWn5sejOsI=;
+ b=XQqfcFEbU9l46YpM5OnAAIPhrlfiN6PfE1I2XJ5MLGBsbkUdQm/zYEMrXNfjrQKjRfDhzuS6M2F6Nu1xpYuptSy+NBTBuRdfs1ACgTvUFcxQmESwRIQ6tuPwxSDb9elkYtUf7N9/EZq+dXnCv52hZKGuP25mOsmYpcuT5cXP3tM=
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
+ by CH2PR13MB3845.namprd13.prod.outlook.com (2603:10b6:610:95::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14; Fri, 1 May
+ 2020 19:05:46 +0000
+Received: from CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
+ ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2958.020; Fri, 1 May 2020
+ 19:05:46 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "bfields@redhat.com" <bfields@redhat.com>,
+        "tj@kernel.org" <tj@kernel.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jlayton@redhat.com" <jlayton@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "shli@fb.com" <shli@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "oleg@redhat.com" <oleg@redhat.com>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Thread-Topic: [PATCH 0/4] allow multiple kthreadd's
+Thread-Index: AQHWH9HY9FPsmROjLUGJeMt1ojnpm6iThNsAgAAGSQCAAAe8gIAABIMA
+Date:   Fri, 1 May 2020 19:05:46 +0000
+Message-ID: <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+         <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+         <20200501182154.GG5462@mtj.thefacebook.com>
+         <20200501184935.GD9191@pick.fieldses.org>
+In-Reply-To: <20200501184935.GD9191@pick.fieldses.org>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
+x-originating-ip: [68.36.133.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0135d75-349c-479b-1fca-08d7ee02a7b9
+x-ms-traffictypediagnostic: CH2PR13MB3845:
+x-microsoft-antispam-prvs: <CH2PR13MB3845FC74739D33E17A148E99B8AB0@CH2PR13MB3845.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0390DB4BDA
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xpfL40F1aM/Tf860bBqjd1OvYKpz/tgWJYVjEM9oeWTMFUTDjk4nqJhuPeGPD0zsDKYQO1C9PU74nOqJtQAPNnjWhkJ/Y2+XtKPIISIWMPUe+7jIJ1W9GVogvQNedLmTWA172oq0c0BCFPqnLQXzlQHG6FIgglahWaw2rvVVpohQbK1fBxzbfBaG1ptLFKi3chpjpxNbYeGf7ebW5NzUF397d6I5juTxhkYMm4MrZ7FnWbIiKWUNRlKHsmDefLJBlNZ2bbN+F5w5vY2vmTLJZz/ptxz4eK02dZjfzVXuYrCKIEwOV/rBQ7xQtlRP4i5sKPzRiCF6CEtrksZ7Dw5ZUSO+51YRlpVbvUkYrwuu/2vKzrnIWNpt6a+Ma308gGbS9n/6bweeABp8Ff5rrpw6Tjpojs4Irs0KLy/FY4VRaBByq+LQ34T0w4dEmOjZxcD/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(136003)(39830400003)(376002)(66946007)(76116006)(4326008)(2616005)(8936002)(6506007)(5660300002)(8676002)(2906002)(6512007)(66476007)(66446008)(64756008)(66556008)(71200400001)(110136005)(91956017)(86362001)(6486002)(26005)(186003)(478600001)(316002)(36756003)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: NuqSs6OvMhkziz5yoOuiK4EHMAMoa+eYHo/m/QcGrb9x6IfWnsJxNGE9L9zrf/C43Lz/Lwxuzpfn92Zeg+lDRBSzBM7sGSvvyrZ4HLuROWZFxXgRR8DztDKcz2jiMjeraeT+K4uy2g0/7LE0AXIdQjGJ6tqagRh9n2plGpsHzT19hk9SRoWt+A0lOQVsHmlbnlLRoN60AnG6osm29QUZ4jm/YtU+i6DXMH6dye63OYs1hyXR6mT16h0Pu1QznRmfKYK+mvimTZ7aNoRGPIkffNpwtWtEmDGTT/scf7rqPGfhL2ILSU33V1apKGrqARbm2b0X2oXoLXNbmmHZWHu6pf+hPqiOiPdqYSplFtPNSwdekKs35kGgCkf1qi9YdZa0KsJKItBRyHIJFSvzVSKhieC7tx3wtZZ365Xcg+sVy7fJPs8KSUsigqCIjcZDqINSCLVBF3Lh1Slrsu45twnjSg5qfdrho7gfEBZZ+jOoqsULT9+s37Si3D7TWZ8yi0MwXlX4AfiszlBH4BOjvnuvXXUFDALqOM/zfJC/yobGttMnjEUTfqDihhWBqHegXPudgSeeNiHVzQ7Hfh0oVfJfmWLI+bVvNwm67HQLqWYEpQm6Mc8B52aw0IjyUB9M/ifEpcrfk1c9qR96ia5kuhhIFRraRm7V/AfVyKQcOFfTMfzkKLVkDgiqhh1Xc3zYi+/cCcGnFRgeiIQCYJKAY4InOlTB6fECwFu5JSE7Kk6C2GmTKfObl0Pqxv/u0S6d9KRvXIY6DJuFJEHErtJsstESG3mwKA6nOidKb1RX9zb6Now=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <66F25ECF2874224EBB3CB7DE05851F4A@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0135d75-349c-479b-1fca-08d7ee02a7b9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2020 19:05:46.5868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vqCUx5OnIcR3XpNEpA0z8n9VVwFt38IeZz8/ezT0GO3Ox4FNmWu81wrw+ZaHvzNexzrJipu4Q9mDZPPOGud03A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3845
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20 1:00 AM, Greg Ungerer wrote:
->> This sounds correct. My understanding of FLAT shared library support
->> is that it's really bad and based on having preassigned slot indices
->> for each library on the system, and a global array per-process to give
->> to data base address for each library. Libraries are compiled to know
->> their own slot numbers so that they just load from fixed_reg[slot_id]
->> to get what's effectively their GOT pointer.
-
-fdpic is to elf what binflt is to a.out, and a.out shared libraries were never
-pretty. Or easy.
-
->> I'm not sure if anybody has actually used this in over a decade. Last
->> time I looked the tooling appeared broken, but in this domain lots of
->> users have forked private tooling that's not publicly available or at
->> least not publicly indexed, so it's hard to say for sure.
-> 
-> Be at least 12 or 13 years since I last had a working shared library
-> build for m68knommu. I have not bothered with it since then, not that I
-> even used it much when it worked. Seemed more pain than it was worth.
-
-Shared libraries worked fine with fdpic on sh2 last I checked, it's basically
-just ELF PIC with the ability to move the 4 segments (text/rodata/bss/data)
-independently of each other. (4 base pointers, no waiting.)
-
-I don't think I've _ever_ used shared binflt libraries. I left myself
-breadcrumbs back when I was wrestling with that stuff:
-
-  https://landley.net/notes-2014.html#07-12-2014
-
-But it looks like that last time I touched anything using elf2flt was:
-
-  https://landley.net/notes-2018.html#08-05-2018
-
-And that was just because arm's fdpic support stayed out of tree for years so I
-dug up binflt and gave it another go. (It sucked so much I wound up building
-static pie for cortex-m, taking the efficiency hit, and moving on. Running pie
-binaries on nommu _works_, it's just incredibly inefficient. Since the writeable
-and readable segments of the ELF are all relative to the same single base
-pointer, you can't share the read-only parts of the binaries without address
-remapping, so if you launch 4 instances of PIE bash on nommu you've loaded 4
-instances of the bash text and rodata, and of course none of it can even be
-demand faulted. In theory shared libraries _do_ help there but I hit some ld.so
-bug and didn't want to debug a half-assed solution, so big hammer and moved on
-until arm fdpic got merged and fixed it _properly_...)
-
-Rob
-
-P.S. The reason for binflt is bare metal hardware engineers who are conceptually
-uncomfortable with software love them, because it's as close to "objcopy -O
-binary" as they can get. Meanwhile on j-core we've had an 8k ROM boot loader
-that loads vmlinux images and does the ELF relocations for 5 years now, and ever
-since the switch to device tree that's our _only_ way to feed a dtb to the
-kernel without statically linking it in, so it's ELF all the way down for us.
+T24gRnJpLCAyMDIwLTA1LTAxIGF0IDE0OjQ5IC0wNDAwLCBKLiBCcnVjZSBGaWVsZHMgd3JvdGU6
+DQo+IE9uIEZyaSwgTWF5IDAxLCAyMDIwIGF0IDAyOjIxOjU0UE0gLTA0MDAsIFRlanVuIEhlbyB3
+cm90ZToNCj4gPiBIZWxsbywNCj4gPiANCj4gPiBPbiBGcmksIE1heSAwMSwgMjAyMCBhdCAxMDo1
+OToyNEFNIC0wNzAwLCBMaW51cyBUb3J2YWxkcyB3cm90ZToNCj4gPiA+IFdoaWNoIGtpbmQgb2Yg
+bWFrZXMgbWUgd2FudCB0byBwb2ludCBhIGZpbmdlciBhdCBUZWp1bi4gQnV0IGl0J3MNCj4gPiA+
+IGJlZW4NCj4gPiA+IG1vc3RseSBQZXRlclogdG91Y2hpbmcgdGhpcyBmaWxlIGxhdGVseS4uDQo+
+ID4gDQo+ID4gTG9va3MgZmluZSB0byBtZSB0b28uIEkgZG9uJ3QgcXVpdGUgdW5kZXJzdGFuZCB0
+aGUgdXNlY2FzZSB0aG8uIEl0DQo+ID4gbG9va3MNCj4gPiBsaWtlIGFsbCBpdCdzIGJlaW5nIHVz
+ZWQgZm9yIGlzIHRvIHRhZyBzb21lIGt0aHJlYWRzIGFzIGJlbG9uZ2luZw0KPiA+IHRvIHRoZQ0K
+PiA+IHNhbWUgZ3JvdXAuDQo+IA0KPiBQcmV0dHkgbXVjaC4NCj4gDQoNCldlbiBydW5uaW5nIGFu
+IGluc3RhbmNlIG9mIGtuZnNkIGZyb20gaW5zaWRlIGEgY29udGFpbmVyLCB5b3Ugd2FudCB0bw0K
+YmUgYWJsZSB0byBoYXZlIHRoZSBrbmZzZCBrdGhyZWFkcyBiZSBwYXJlbnRlZCB0byB0aGUgY29u
+dGFpbmVyIGluaXQNCnByb2Nlc3Mgc28gdGhhdCB0aGV5IGdldCBraWxsZWQgb2ZmIHdoZW4gdGhl
+IGNvbnRhaW5lciBpcyBraWxsZWQuDQoNClJpZ2h0IG5vdywgd2UgY2FuIGVhc2lseSBsZWFrIHRo
+b3NlIGtlcm5lbCB0aHJlYWRzIHNpbXBseSBieSBraWxsaW5nDQp0aGUgY29udGFpbmVyLg0KDQo+
+ID4gQ2FuJ3QgdGhhdCBiZSBkb25lIHdpdGgga3RocmVhZF9kYXRhKCk/DQo+IA0KPiBIdWgsIG1h
+eWJlIHNvLCB0aGFua3MuDQo+IA0KPiBJIG5lZWQgdG8gY2hlY2sgdGhpcyBmcm9tIGdlbmVyaWMg
+ZmlsZSBsb2NraW5nIGNvZGUgdGhhdCBjb3VsZCBiZSBydW4NCj4gYnkNCj4gYW55IHRhc2stLWJ1
+dCBJIGFzc3VtZSB0aGVyZSdzIGFuIGVhc3kgd2F5IEkgY2FuIGNoZWNrIGlmIEknbSBhDQo+IGt0
+aHJlYWQNCj4gYmVmb3JlIGNhbGxpbmcgIGt0aHJlYWRfZGF0YShjdXJyZW50KS4NCj4gDQo+IEkg
+ZG8gZXhwZWN0IHRvIGV4cG9zZSBhIGRlbGVnYXRpb24gaW50ZXJmYWNlIGZvciB1c2Vyc3BhY2Ug
+c2VydmVycw0KPiBldmVudHVhbGx5IHRvby4gIEJ1dCB3ZSBjb3VsZCBkbyB0aGUgdGdpZCBjaGVj
+ayBmb3IgdGhlbSBhbmQgc3RpbGwNCj4gdXNlDQo+IGt0aHJlYWRfZGF0YSgpIGZvciBuZnNkLiAg
+VGhhdCBtaWdodCB3b3JrLg0KPiANCj4gLS1iLg0KPiANCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpM
+aW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RA
+aGFtbWVyc3BhY2UuY29tDQoNCg0K
