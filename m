@@ -2,122 +2,97 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3383C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DB2C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1ADD20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="m5o6DjW2"
+	by mail.kernel.org (Postfix) with ESMTP id C0AB324953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgEAQRt (ORCPT
+        id S1730120AbgEAQTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEAQRs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:17:48 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FABC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 09:17:46 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id re23so7861600ejb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 09:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=23jPYeIHxkO0ujsGD7eYlRbwJShWG3r7UKIREhK5bgw=;
-        b=m5o6DjW23uDqvbH6ScTDm+6wn+eSq6aJHkCW7h0E7PQK2TC3+9C/vXX2qmTMXOjDJV
-         5m7dDloIaOCSsVWgmy7ijk65TLdTjrJ35UszXTvgQ+9FAhewqXUSAX95ukIByWJVG8Lc
-         aJ7FU+3rG+rlYO/LV/MbE4r+CuM0NZfQfnEoIVfNHKM5uWW6T0vZY8K1Xh0pMqnuCdoB
-         3NteUzx8k6UL8h+e6dKHslAXt3Zm5yYdLt8ZZFPmzTn15hRPVkNYH3tm/IV4ZnwkNiyz
-         FKeNDhmMd7lLEeaZhxMAmD4CqLTsnybNjFKZKZBtJF0qDkGghOeiehwGobytDRRCd4i7
-         HHjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=23jPYeIHxkO0ujsGD7eYlRbwJShWG3r7UKIREhK5bgw=;
-        b=c+4zRkfd3Vf6vnRKVMdRfKPNCWkcJDDDfy3cIjYPiTd39OMdJeZD1Pyzr7ltlCsQKx
-         7BmhmS09EnuI5N6PqSO+NvObquVpNRAZIPCggtVULmClxP1WLArNy/RIJrE9fk1oV2ah
-         2kalgpnYie3+pxjIsHAXDX8EiAouYufMroUn4SoANtoptdSx1BmaPPGz5Rw5+quJ8Do8
-         lGxmE6ihw+dtTOetGyTedvoXgwDpw3F+V8TyvBAbanxmbUMnYQihZgT3C8/sTFzTi6NG
-         LfOVjFZ7Kv1bY2Gka2xItqa/wsmmk29414bv4QOXGCCbUYMaCIAU/m0SOGVfjbOaCwQk
-         SKSQ==
-X-Gm-Message-State: AGi0PuZaHtr+PQ1KtMJjoD1Jigx5y7x2yvXFD/GOMU6AFf/1No6NNHSK
-        2LEPwXbdM+PvOGRxWRFE5zLWfhcBSg1i3NaxzJJw
-X-Google-Smtp-Source: APiQypIXB+av6flcFldEWw+bS/wH+cxQMW/luqrFwIHVh8pa/MRqCUmiUnrrXtxszp5IfdTN8uKbEAzFnfW/lbRVEho=
-X-Received: by 2002:a17:906:29c4:: with SMTP id y4mr3965185eje.95.1588349865367;
- Fri, 01 May 2020 09:17:45 -0700 (PDT)
+        Fri, 1 May 2020 12:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEAQTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:19:18 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADC4E2166E;
+        Fri,  1 May 2020 16:19:17 +0000 (UTC)
+Date:   Fri, 1 May 2020 12:19:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC][PATCH] x86/ftrace: Have ftrace trampolines turn read-only
+ at the end of system boot up
+Message-ID: <20200501121916.310942b8@gandalf.local.home>
+In-Reply-To: <20200501151310.zo5bhnxpu5gubofj@treble>
+References: <20200430202147.4dc6e2de@oasis.local.home>
+        <20200501044733.eqf6hc6erucsd43x@treble>
+        <20200501051706.4wkrqwovybt2p6hr@treble>
+        <20200501092404.06d1adcb@gandalf.local.home>
+        <20200501151310.zo5bhnxpu5gubofj@treble>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAHC9VhTu3YWPmwtA7RERHDRhQt0wAkmN4GJCmaRY7KSFRwtACQ@mail.gmail.com>
- <CAHk-=whGjVLwTnYT8euAb_Lzqxd=-TFnJU-k2uu+Fn_hBfMc+w@mail.gmail.com>
-In-Reply-To: <CAHk-=whGjVLwTnYT8euAb_Lzqxd=-TFnJU-k2uu+Fn_hBfMc+w@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 1 May 2020 12:17:33 -0400
-Message-ID: <CAHC9VhSBGaJc-dQZyyUECwrysoQ8a4w2ww4PgPyXVH5EEVOjCw@mail.gmail.com>
-Subject: Re: [GIT PULL] SELinux fixes for v5.7 (#2)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 7:43 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Thu, Apr 30, 2020 at 2:24 PM Paul Moore <paul@paul-moore.com> wrote:
-> >
-> > Two more SELinux patches to fix problems in the v5.7-rcX releases.
-> > Wei Yongjun's patch fixes a return code in an error path, and my patch
-> > fixes a problem where we were not correctly applying access controls
-> > to all of the netlink messages in the netlink_send LSM hook.
->
-> Side note: could we plan on (not for 5.7, but future) moving the "for
-> each message" part of that patch into the generic security layer (ie
-> security_netlink_send()), so that if/when other security subsystems
-> start doing that netlink thing, they won't have to duplicate that
-> code?
->
-> Obviously the "for each message" thing should only be done if there is
-> any security  hook at all..
->
-> Right now selinux is the only one that does this, so there's no
-> duplication of effort, but it seems a mistake to do this at the
-> low-level security level.
->
-> Or is there some fundamental reason why a security hook would want to
-> look at a single skb rather than the individual messages?
+On Fri, 1 May 2020 10:13:10 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-Off the top of my head I can't think of why a LSM would want to look
-only at the skb instead of the individual netlink messages.  I suppose
-if that ever becomes an issue we could always pass the skb to the hook
-along with the nlmsghdr, and the LSM would just need to deal with
-being called multiple times for the same skb.  Another option might be
-to give the LSM the option of registering one of two hooks for the
-netlink_send hook; one type of hook would behave the same as the hook
-does now, the other type would be called once for each message in the
-skb.  Although this second option seems like a lot of extra complexity
-for a questionable advantage, especially since only SELinux is using
-the hook at the moment and we can easily change the hook without
-breaking things.
+> On Fri, May 01, 2020 at 09:24:04AM -0400, Steven Rostedt wrote:
+> > On Fri, 1 May 2020 00:17:06 -0500
+> > Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >   
+> > > > Would it be easier to just call a new __text_poke_bp() which skips the
+> > > > SYSTEM_BOOTING check, since you know the trampoline will always be
+> > > > read-only?
+> > > > 
+> > > > Like:    
+> > > 
+> > > early_trace_init() is called after mm_init(), so I thought it might
+> > > work, but I guess not:  
+> > 
+> > Yeah, I was about to say that this happens before mm_init() ;-)  
+> 
+> It happens *after* mm_init().  But now text_poke() has a dependency on
+> poking_init(), has a dependency on proc_caches_init(), which has a
+> dependency on kmem_cache_init_late(), etc.
+> 
+> So how early do you need early_trace_init()?  I'm assuming moving it to
+> after kmem_cache_init_late() would be too late.
 
-It's also worth mentioning that we've always tried to keep the hook
-layer (the stuff in security/security.c) relatively thin, but that's a
-battle we've been slowly losing over time.  Moving the skb/nlmsghdr
-processing into security_netlink_send() seems reasonable given some of
-the other hooks.
+People have asked to move it even earlier. The point of having it early is
+to allow tracing to debug early boot up.
 
-Regardless, I'll work on something for an upcoming merge window, stay tuned.
+> 
+> > It's why we already have magic for enabling function tracing the first time.
+> > 
+> > Do you see anything wrong with this current solution? It probably needs
+> > more comments, but I wanted to get acceptance on the logic before I go and
+> > pretty it up and send a non RFC patch.  
+> 
+> Assuming we can't get text_poke() working earlier, it seems reasonable
+> to me.
+> 
 
--- 
-paul moore
-www.paul-moore.com
+Thanks.
+
+Peter, what about you?
+
+-- Steve
