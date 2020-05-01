@@ -2,108 +2,187 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56804C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E67AC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B20720857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="VFix+Zzz"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA6B208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588353103;
+	bh=WacCN/Oz3FfWXAtl9ZPGc7vScq7nB5CuG218xrDN1ec=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=OGBP3/d3GycYokii2fp3RZI1e/dKtcfbTajXZ2MCTvVLQZbZXbU6qw14rJ6X74+Ea
+	 a+gPpCByJBVE+L+q1ja7beUfK74+QBrDZryR/OsUnPcwTwlf9WLQhN9gRYkcYBq6lo
+	 b9anKtHDe0BeMZ69nh69aHa/YZQMpgSEkUtgEFLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbgEARKU (ORCPT
+        id S1730134AbgEARLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728495AbgEARKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:10:19 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9937C061A0C;
-        Fri,  1 May 2020 10:10:18 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id t12so7745093edw.3;
-        Fri, 01 May 2020 10:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mdsa9GHdUWtpaN13DncP5RB/gp8GCrhEqRpKlncbW8M=;
-        b=VFix+ZzzMeP4eNt2Ma6wISbnBws23mS6CK24e9btsoxi/rWAL28gHCi3lnw01N2Mso
-         xg7A5BAI4W+HY83Q4a9smJTfbPRB6vX6oaiV3FXBRkn6hDHWIN0DGdL47vAFMZS93EAF
-         Xkpme5PxE0x9U6DQBOSk3KEchoiisb+4c0tORK82VbZJgmveYqqkviH8RVMWJ5kFg7Xj
-         2ccbyQziO0INOSv7Rs+puN5g+q31+TzX5QZpBq0IJFlBvvq+RRHCqRO29F3xDWvwUxN3
-         UqXlO2R0Jo/A2g7JJ6pIyPJD/KyOOoAubmsnNLXOyDELxVxqF3Zt+TX4hw9AX1+H4XOu
-         eayg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mdsa9GHdUWtpaN13DncP5RB/gp8GCrhEqRpKlncbW8M=;
-        b=KH6APUGmwO6Cgkv0Yr7wskij2sg1bsKpbIBT431RhNEcBwvYBoLxbSPlVJsfpbeZTL
-         vCcgVwDhyLs+IZgNCbXTmXe76lAGsxOKGJJRGs6oJnU/JaaESiUOP2BEOBiiVoZtMXwS
-         itE3ot4Qpu+ZMN5kV+t7hPt4hKEnEDzu2tZXC03SMnL/4jS55O4AzAeMDv2pHqtKRK6q
-         x5ng3vIjQiNM+otZEM3ES+LCfvu76cma6E40FxPrnw359XGCs9B9ArLCYN7RSpbRDYMv
-         FVGuoIT1NIdt5pLzqWHaqFHb4EOYO8AiQKJRTjgKNWuIqb2GfekUD/yua822zKWDNrHS
-         d29A==
-X-Gm-Message-State: AGi0PuZftMEqRK0YqDO+jlQbgsRnLa52uE4NxttneIjJSKH/r4KGK4rM
-        7UKqp+Sc0w5Ixot+lc7HHGkYceDwRoIU+Ye88T4=
-X-Google-Smtp-Source: APiQypIlznByGASsngfncYgj2mcw6Vrs/KqUKB8Ee7ab33jQKBgHBdr9tJ2P2JZNmmWhIHFqaa9FcURiBcyKlJ1LWcU=
-X-Received: by 2002:a50:fc06:: with SMTP id i6mr4256455edr.110.1588353017519;
- Fri, 01 May 2020 10:10:17 -0700 (PDT)
+        Fri, 1 May 2020 13:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728970AbgEARLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:11:42 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4D0520857;
+        Fri,  1 May 2020 17:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588353101;
+        bh=WacCN/Oz3FfWXAtl9ZPGc7vScq7nB5CuG218xrDN1ec=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=wUGrqrGuByK8Iq+aQhf5BTao7flxposRXqEmjYSGNiTh9u4Ku8B4qzg2sxzELZd94
+         jX0Mt2N18gmRpeTr6N+UQxCGVGyQu2aULcnknFKEEs2fu6atnjc9w8WYurDab0dDa1
+         O9JWXPdm3WpXF1+nkDjuRTl6+6hq0Mdv3hK64/w4=
+Subject: Re: [RFC v3 0/3] Fix errors when try to build kvm selftests on
+ specified output
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200326030750.173972-1-xiaoyao.li@intel.com>
+ <41d5d89e-79c2-6f7d-de3e-ca3255e910e8@kernel.org>
+ <cb445047-ab84-0c49-cfba-ec6933971dc7@intel.com>
+ <71a5abdf-07b5-d927-1a08-de8019b3f39f@kernel.org>
+ <77ad35cf-6332-9381-200e-40b6a3d18070@intel.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <920ea28b-5c36-75dc-ec51-d501a0322f50@kernel.org>
+Date:   Fri, 1 May 2020 11:11:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-9-martin.blumenstingl@googlemail.com> <20200501154448.GH128733@lunn.ch>
-In-Reply-To: <20200501154448.GH128733@lunn.ch>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 1 May 2020 19:10:06 +0200
-Message-ID: <CAFBinCCbtLRomdikKWkS+HOFoek4cGhN4L91FQfQ4rbKTV-xvg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 08/11] net: stmmac: dwmac-meson8b: add support for
- the RX delay configuration
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <77ad35cf-6332-9381-200e-40b6a3d18070@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On 3/28/20 2:51 AM, Xiaoyao Li wrote:
+> On 3/28/2020 12:03 AM, shuah wrote:
+>> On 3/27/20 7:31 AM, Xiaoyao Li wrote:
+>>> On 3/27/2020 4:57 AM, shuah wrote:
+>>>> On 3/25/20 9:07 PM, Xiaoyao Li wrote:
+>> The patches you sent are based on running the command with OUTPUT
+>> set. 
+> 
+> The issues are also there when I use
+> 
+>    make O=/somewher TARGETS=kvm
+> 
+> from tools/testing/selftests/ directory,
+> 
+> Is it the right usecase?
+> 
+>> That is why I am asking you start with the right use-cases,
+>> and gave you pointers on tests to refer to that have sub-dirs
+>> and handle relocatable builds:
+>>
+>> futex
+>> arm64
+>> android
+> 
+> I have read the Makefile in futex, arm64, android to learn how they
+> deal with subdir, they have Makefile in subdir but kvm doesn't.
+> 
+> I just want to create the subdir as easy as possible, so I follow the 
+> method how to create subdir for LIBKVM_OBJ in kvm.
+> 
+> If you dislike it way you can reply it Patch 1 to disclaim clear what 
+> you want to fix the subdir.
+> 
+>>>> Also, just build isn't sufficient for you to be able to run the
+>>>> tests.
+>>>>
+>>>> make kselftest-install O=/path/to/mydir TARGETS=kvm will generate
+>>>> run script.
+>>>
+>>> This command also has the x86_64 directory not created issue.
+>>> Since it generates header files in kernel_src/usr/include, it doesn't 
+>>> have headers path issue. But as result, the kernel_src directory is 
+>>> not clean, this requires me to run "make mrproper", I *really* don't 
+>>> like it.
+>>>
+>>>
+>>
+>> If the test leverages lib.mk headers install logic correctly, you
+>> shouldn't see this problem.
+>>
+>> Yes. It does make the source directory dirty. That is the problem we
+>> have to fix. I am seeing issues the issue of x86_64 not being created
+>> in the case of relocatable builds.
+>>
+>> Thanks for working on this by the way. It is one of the tests that
+>> identified as the one doesn't support relocatable builds.
+>>
+>> You will see fixes to others I already fixed in
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=next 
+>>
+>>
+>> Start withe the following use0-cases to fix and then test your fixes
+>> for these use-cases. The goal is to be able to run kvm from target
+>> directory and source directory staying clean.
+>>
+>> You will have to build the kernel first in all of these cases.
+>> Let's use kselftest-install which is what you would need if you
+>> want build and then run tests later. Also assuming you are doing
+>> native build on x86_64.
+>>
+>>  From main kernel Makefile: (from kernel source root dir)
+>>
+>> Builds in the same source directory:
+>> make kselftest-install TARGETS=kvm
+>>
+>> Relocatable build: (from kernel source root dir)
+>>
+>> make O=/path/objdir  - build kernel
+>> make kselftest-install O=/path/objdir TARGETS=kvm
+> 
+> I don't want to build kernel at all.
+> 
+>>  From tools/testing/selftests/kvm directory:
+>> make O=/path/objdir install
+> 
+> Oh no. This needs to define INSTALL_PATH, and I don't want to install.
+> I just want to build the testcase of kvm to anywhere else to make srcdir 
+> clean.
+> 
+> Besides this command make both kernel src and selftest/kvm dirty.
+> 
+>> Install step is important especially for relocatable builds,
+>> as it makes sure all run-time dependencies are copied to the
+>> target directory.
+>>
+> 
+> OK.
+> 
+> So, again.
+> 
+> is
+> 
+>    make O=/tmp/kvm-selftest -C tools/testing/selftests \
+>         TARGETS=kvm install INSTALL_PATH=/home/lxy/kvm-selftest
+> 
+> the right command for me to start on?
+> 
 
-On Fri, May 1, 2020 at 5:44 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > +     if (rx_dly_config & PRG_ETH0_ADJ_ENABLE) {
-> > +             /* The timing adjustment logic is driven by a separate clock */
-> > +             ret = meson8b_devm_clk_prepare_enable(dwmac,
-> > +                                                   dwmac->timing_adj_clk);
-> > +             if (ret) {
-> > +                     dev_err(dwmac->dev,
-> > +                             "Failed to enable the timing-adjustment clock\n");
-> > +                     return ret;
-> > +             }
-> > +     }
->
-> Hi Martin
->
-> It is a while since i used the clk API. I thought the get_optional()
-> call returned a NULL pointer if the clock does not exist.
-> clk_prepare_enable() passed a NULL pointer is a NOP, but it also does
-> not return an error. So if the clock does not exist, you won't get
-> this error, the code keeps going, configures the hardware, but it does
-> not work.
->
-> I think you need to check dwmac->timing_adj_clk != NULL here, and
-> error out if DT has properties which require it.
-Thank you for your excellent code review quality (as always)!
-you are right and I will fix that in the next version
+Sorry for the delay. Yes the above command will work. Please check
 
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git 
+next branch
 
-Martin
+I fixed kvm build/cross-build problems and applied it to next for
+testing.
+
+https://patchwork.kernel.org/patch/11513471/
+
+thanks,
+-- Shuah
