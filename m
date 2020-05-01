@@ -7,43 +7,47 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7128C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32108C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 929AB2495F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195CB24968
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbgEASW7 (ORCPT
+        id S1730723AbgEASWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
+        Fri, 1 May 2020 14:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730748AbgEASWe (ORCPT
+        by vger.kernel.org with ESMTP id S1730653AbgEASWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:22:34 -0400
+        Fri, 1 May 2020 14:22:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F269C08E859;
-        Fri,  1 May 2020 11:22:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E578C061A0E;
+        Fri,  1 May 2020 11:22:25 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIv-0003jY-Od; Fri, 01 May 2020 20:22:29 +0200
+        id 1jUaIg-0003aq-0S; Fri, 01 May 2020 20:22:14 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 29E8B1C0822;
-        Fri,  1 May 2020 20:22:25 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:25 -0000
-From:   "tip-bot2 for Rick Edgecombe" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BDC771C0085;
+        Fri,  1 May 2020 20:22:11 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:11 -0000
+From:   "tip-bot2 for Peng Wang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/mm/cpa: Flush direct map alias during cpa
-Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>,
+Subject: [tip: sched/core] sched/fair: Simplify the code of should_we_balance()
+Cc:     Peng Wang <rocking@linux.alibaba.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200424105343.GA20730@hirez.programming.kicks-ass.net>
-References: <20200424105343.GA20730@hirez.programming.kicks-ass.net>
+In-Reply-To: =?utf-8?q?=3C245c792f0e580b3ca342ad61257f4c066ee0f84f=2E15865?=
+ =?utf-8?q?94833=2Egit=2Erocking=40linux=2Ealibaba=2Ecom=3E?=
+References: =?utf-8?q?=3C245c792f0e580b3ca342ad61257f4c066ee0f84f=2E158659?=
+ =?utf-8?q?4833=2Egit=2Erocking=40linux=2Ealibaba=2Ecom=3E?=
 MIME-Version: 1.0
-Message-ID: <158835734513.8414.3180412857061455686.tip-bot2@tip-bot2>
+Message-ID: <158835733170.8414.4894119200502655023.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,81 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     ab5130186d7476dcee0d4e787d19a521ca552ce9
-Gitweb:        https://git.kernel.org/tip/ab5130186d7476dcee0d4e787d19a521ca552ce9
-Author:        Rick Edgecombe <rick.p.edgecombe@intel.com>
-AuthorDate:    Wed, 22 Apr 2020 20:13:55 -07:00
+Commit-ID:     64297f2b03cc7a6d0184a435f1b296beca1bedd1
+Gitweb:        https://git.kernel.org/tip/64297f2b03cc7a6d0184a435f1b296beca1bedd1
+Author:        Peng Wang <rocking@linux.alibaba.com>
+AuthorDate:    Sat, 11 Apr 2020 17:20:20 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 30 Apr 2020 20:14:30 +02:00
+CommitterDate: Thu, 30 Apr 2020 20:14:38 +02:00
 
-x86/mm/cpa: Flush direct map alias during cpa
+sched/fair: Simplify the code of should_we_balance()
 
-As an optimization, cpa_flush() was changed to optionally only flush
-the range in @cpa if it was small enough.  However, this range does
-not include any direct map aliases changed in cpa_process_alias(). So
-small set_memory_() calls that touch that alias don't get the direct
-map changes flushed. This situation can happen when the virtual
-address taking variants are passed an address in vmalloc or modules
-space.
+We only consider group_balance_cpu() after there is no idle
+cpu. So, just do comparison before return at these two cases.
 
-In these cases, force a full TLB flush.
-
-Note this issue does not extend to cases where the set_memory_() calls are
-passed a direct map address, or page array, etc, as the primary target. In
-those cases the direct map would be flushed.
-
-Fixes: 935f5839827e ("x86/mm/cpa: Optimize cpa_flush_array() TLB invalidation")
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200424105343.GA20730@hirez.programming.kicks-ass.net
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/245c792f0e580b3ca342ad61257f4c066ee0f84f.1586594833.git.rocking@linux.alibaba.com
 ---
- arch/x86/mm/pat/set_memory.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ kernel/sched/fair.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 59eca6a..b8c55a2 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -43,7 +43,8 @@ struct cpa_data {
- 	unsigned long	pfn;
- 	unsigned int	flags;
- 	unsigned int	force_split		: 1,
--			force_static_prot	: 1;
-+			force_static_prot	: 1,
-+			force_flush_all		: 1;
- 	struct page	**pages;
- };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 3d6ce75..63419c6 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9413,7 +9413,7 @@ static int active_load_balance_cpu_stop(void *data);
+ static int should_we_balance(struct lb_env *env)
+ {
+ 	struct sched_group *sg = env->sd->groups;
+-	int cpu, balance_cpu = -1;
++	int cpu;
  
-@@ -355,10 +356,10 @@ static void cpa_flush(struct cpa_data *data, int cache)
- 		return;
+ 	/*
+ 	 * Ensure the balancing environment is consistent; can happen
+@@ -9434,18 +9434,12 @@ static int should_we_balance(struct lb_env *env)
+ 		if (!idle_cpu(cpu))
+ 			continue;
+ 
+-		balance_cpu = cpu;
+-		break;
++		/* Are we the first idle CPU? */
++		return cpu == env->dst_cpu;
  	}
  
--	if (cpa->numpages <= tlb_single_page_flush_ceiling)
--		on_each_cpu(__cpa_flush_tlb, cpa, 1);
--	else
-+	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
- 		flush_tlb_all();
-+	else
-+		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+-	if (balance_cpu == -1)
+-		balance_cpu = group_balance_cpu(sg);
+-
+-	/*
+-	 * First idle CPU or the first CPU(busiest) in this sched group
+-	 * is eligible for doing load balancing at this and above domains.
+-	 */
+-	return balance_cpu == env->dst_cpu;
++	/* Are we the first CPU of this group ? */
++	return group_balance_cpu(sg) == env->dst_cpu;
+ }
  
- 	if (!cache)
- 		return;
-@@ -1598,6 +1599,8 @@ static int cpa_process_alias(struct cpa_data *cpa)
- 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
- 		alias_cpa.curpage = 0;
- 
-+		cpa->force_flush_all = 1;
-+
- 		ret = __change_page_attr_set_clr(&alias_cpa, 0);
- 		if (ret)
- 			return ret;
-@@ -1618,6 +1621,7 @@ static int cpa_process_alias(struct cpa_data *cpa)
- 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
- 		alias_cpa.curpage = 0;
- 
-+		cpa->force_flush_all = 1;
- 		/*
- 		 * The high mapping range is imprecise, so ignore the
- 		 * return value.
+ /*
