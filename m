@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2D8C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FE4C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A17B2495D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D695216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340383;
-	bh=evDVQjdYXTl7DELz2MomaNd81AX60YXNBSVhLz7OUKU=;
+	s=default; t=1588340390;
+	bh=xsIm47QT/PkC5BM6zlFzzxen0zJsZueoPhnmIWEltf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+YEtTCcr1V3rDDR0UsI4jRZGn/4fdg5E1uGgbYlf9vMF3ehlfRRqIyQywCkzLski
-	 s9/xq+aSpoAP1FepJgKS9ID/egf4URW2c9xGdQcY3f5Zu+fMmL6NbhGaYBoIEK1rpb
-	 4K++e6aPqpC9sHUkHjwRBwqQw0Zs4SulClkuUdAs=
+	b=ApYW23h9pqUobhHRmUaFF8pOWfIDXZjHhj52sZkFhyXulQc143cIYw6x5i8sk1WBG
+	 yNpAT4qUUQ2C1ckKGpbNDiYAzi2PwcZUjWQvO+Mp87IZ52A6ByMoUUJIRfK1O1wqhl
+	 +nWRICNfmA2ZL4Nz2eqsaMf487U3+xW2yZ7e36YI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbgEANjm (ORCPT
+        id S1730939AbgEANjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731211AbgEANjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:39 -0400
+        id S1729789AbgEANjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 367EF2495D;
-        Fri,  1 May 2020 13:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DD8208DB;
+        Fri,  1 May 2020 13:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340378;
-        bh=evDVQjdYXTl7DELz2MomaNd81AX60YXNBSVhLz7OUKU=;
+        s=default; t=1588340383;
+        bh=xsIm47QT/PkC5BM6zlFzzxen0zJsZueoPhnmIWEltf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G5jJIE9Zn8fUqilDYMtRDurO8EQHazbZ+b7FRBs41HaiNLrgIhAXsHI3KboIjsP26
-         Bdipy24CKh/JsMRdUyd2q6VTQPsKmlz4UHRYgX5ZFgkKcz7EkYkEDN4yeVu41/n4if
-         bFFOY7OxD2F6NyEmKQDAYLh7baPQzFczg9aSycQA=
+        b=oFFOKj5vEshfPIwEhaOfnUAI/FrU76JHtq7E6D9HA65khzddhQHKmIwMOIdxYULeW
+         aXDL7odaOvVzd3pgdey6NUEgibmBMzKM+KR178+gRA901JN7iuJLG2G51YViiPdW5E
+         xj66FUvmb75qSeNNpRebtG3v8oVQfLECYWdUdMkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KP Singh <kpsingh@google.com>,
-        Ian Rogers <irogers@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 42/83] perf/core: fix parent pid/tid in task exit events
-Date:   Fri,  1 May 2020 15:23:21 +0200
-Message-Id: <20200501131535.947379254@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 44/83] PM: sleep: core: Switch back to async_schedule_dev()
+Date:   Fri,  1 May 2020 15:23:23 +0200
+Message-Id: <20200501131536.577666747@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,59 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit f3bed55e850926614b9898fe982f66d2541a36a5 upstream.
+commit 09beebd8f93b3c8bf894e342f0a203a5c612478c upstream.
 
-Current logic yields the child task as the parent.
+Commit 8b9ec6b73277 ("PM core: Use new async_schedule_dev command")
+introduced a new function for better performance.
 
-Before:
-$ perf record bash -c "perf list > /dev/null"
-$ perf script -D |grep 'FORK\|EXIT'
-4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
-                                                   ^
-  Note the repeated values here -------------------/
+However commit f2a424f6c613 ("PM / core: Introduce dpm_async_fn()
+helper") went back to the non-optimized version, async_schedule().
 
-After:
-383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
+So switch back to the sync_schedule_dev() to improve performance
 
-Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
-Reported-by: KP Singh <kpsingh@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
+Fixes: f2a424f6c613 ("PM / core: Introduce dpm_async_fn() helper")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/base/power/main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7052,10 +7052,17 @@ static void perf_event_task_output(struc
- 		goto out;
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -726,7 +726,7 @@ static bool dpm_async_fn(struct device *
  
- 	task_event->event_id.pid = perf_event_pid(event, task);
--	task_event->event_id.ppid = perf_event_pid(event, current);
--
- 	task_event->event_id.tid = perf_event_tid(event, task);
--	task_event->event_id.ptid = perf_event_tid(event, current);
-+
-+	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
-+		task_event->event_id.ppid = perf_event_pid(event,
-+							task->real_parent);
-+		task_event->event_id.ptid = perf_event_pid(event,
-+							task->real_parent);
-+	} else {  /* PERF_RECORD_FORK */
-+		task_event->event_id.ppid = perf_event_pid(event, current);
-+		task_event->event_id.ptid = perf_event_tid(event, current);
-+	}
- 
- 	task_event->event_id.time = perf_event_clock(event);
+ 	if (is_async(dev)) {
+ 		get_device(dev);
+-		async_schedule(func, dev);
++		async_schedule_dev(func, dev);
+ 		return true;
+ 	}
  
 
 
