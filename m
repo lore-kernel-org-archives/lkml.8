@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E85CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A9DC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68ADB20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB8E205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340353;
-	bh=smIr3Dk84ov3hd0kaKlm6PPoxLkLUXPpwI22bYV8MWk=;
+	s=default; t=1588340357;
+	bh=yTT390lyjwwzD5CBhf82//qAZZ7tcQVKRbZio/u8Swc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ARJHRUl02LAoIx330qM8yj9i1vwX8Nbq5AdJVuz4hCdIAkQOb72mSOahRU2QnXuSY
-	 lkr8f/Tb6TeKcn9NGqLMSaKfeIH5Jqu+x2aT1TCwsuvznRdzOCHz4ViTY6f+8J6rOc
-	 uvhv9zdr0Ovzomd7QCI0GbT0U06UEIN+cOb3cGp8=
+	b=2f64w20ltbJQc3AeQDJbH25hcKmFyi/18voZtLe3BpZwqO+PSUcP+Jzfjy7ochOnx
+	 CQ9q35lkW5mNl6jtUV9BDsxiHOq29uGcF6VV94g67RCNVgRr8Owik21SKgDK8suVv/
+	 VRGsXXKkGokOZb1TU2GGtKMdsWAlLjoXzIdqkwEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbgEANjM (ORCPT
+        id S1731173AbgEANjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731143AbgEANjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:07 -0400
+        id S1731149AbgEANjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 346B7205C9;
-        Fri,  1 May 2020 13:39:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2E5020757;
+        Fri,  1 May 2020 13:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340346;
-        bh=smIr3Dk84ov3hd0kaKlm6PPoxLkLUXPpwI22bYV8MWk=;
+        s=default; t=1588340349;
+        bh=yTT390lyjwwzD5CBhf82//qAZZ7tcQVKRbZio/u8Swc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kz5Cd8Y/WbZ7fQFPJ/9JjZmAhhtcfniNj6TTAhuPlYIwf5h0s7ozI8qqFUxrSrNwq
-         qY+kvkCQiGOpXyIoctHcH7r6ai+OFNbsWB8ZnRf2cROZ34XaTHC50mzeTe1EGwPqR8
-         DKJnPGQpU7cFKuPXj8tnjUMg6eY4NTOrCowhqw6g=
+        b=lP7bHyJTs0nL+ZLYzyf2Q5ksGu4zKwnwrPbqBzfwXaZJnerVLWlw8lP5HdxbImkwG
+         qycDhhkz0HjzLdq2+DuMUX/Js78CJHoCEoqc1AIPDHI679PzGbmskfRJ1Bo+UaAglW
+         JaYjYwikHI3fdCVjDyO6/Nzp2XVs7thcIomGFzVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 28/83] net/mlx5e: Dont trigger IRQ multiple times on XSK wakeup to avoid WQ overruns
-Date:   Fri,  1 May 2020 15:23:07 +0200
-Message-Id: <20200501131531.021459156@linuxfoundation.org>
+Subject: [PATCH 5.4 29/83] net/mlx5e: Get the latest values from counters in switchdev mode
+Date:   Fri,  1 May 2020 15:23:08 +0200
+Message-Id: <20200501131531.298194265@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,111 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-commit e7e0004abdd6f83ae4be5613b29ed396beff576c upstream.
+commit dcdf4ce0ff4ba206fc362e149c8ae81d6a2f849c upstream.
 
-XSK wakeup function triggers NAPI by posting a NOP WQE to a special XSK
-ICOSQ. When the application floods the driver with wakeup requests by
-calling sendto() in a certain pattern that ends up in mlx5e_trigger_irq,
-the XSK ICOSQ may overflow.
+In the switchdev mode, when running "cat
+/sys/class/net/NIC/statistics/tx_packets", the ppcnt register is
+accessed to get the latest values. But currently this command can
+not get the correct values from ppcnt.
 
-Multiple NOPs are not required and won't accelerate the process, so
-avoid posting a second NOP if there is one already on the way. This way
-we also avoid increasing the queue size (which might not help anyway).
+>From firmware manual, before getting the 802_3 counters, the 802_3
+data layout should be set to the ppcnt register.
 
-Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+When the command "cat /sys/class/net/NIC/statistics/tx_packets" is
+run, before updating 802_3 data layout with ppcnt register, the
+monitor counters are tested. The test result will decide the
+802_3 data layout is updated or not.
+
+Actually the monitor counters do not support to monitor rx/tx
+stats of 802_3 in switchdev mode. So the rx/tx counters change
+will not trigger monitor counters. So the 802_3 data layout will
+not be updated in ppcnt register. Finally this command can not get
+the latest values from ppcnt register with 802_3 data layout.
+
+Fixes: 5c7e8bbb0257 ("net/mlx5e: Use monitor counters for update stats")
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h        |    3 ++-
- drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c |    3 +++
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c     |    8 +++++---
- drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c   |    6 +++++-
- 4 files changed, 15 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -367,6 +367,7 @@ enum {
- 	MLX5E_SQ_STATE_AM,
- 	MLX5E_SQ_STATE_TLS,
- 	MLX5E_SQ_STATE_VLAN_NEED_L2_INLINE,
-+	MLX5E_SQ_STATE_PENDING_XSK_TX,
- };
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3579,7 +3579,12 @@ mlx5e_get_stats(struct net_device *dev,
+ 	struct mlx5e_vport_stats *vstats = &priv->stats.vport;
+ 	struct mlx5e_pport_stats *pstats = &priv->stats.pport;
  
- struct mlx5e_sq_wqe_info {
-@@ -948,7 +949,7 @@ void mlx5e_page_release_dynamic(struct m
- void mlx5e_handle_rx_cqe(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
- void mlx5e_handle_rx_cqe_mpwrq(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
- bool mlx5e_post_rx_wqes(struct mlx5e_rq *rq);
--void mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
-+int mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
- bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq);
- void mlx5e_dealloc_rx_wqe(struct mlx5e_rq *rq, u16 ix);
- void mlx5e_dealloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix);
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
-@@ -33,6 +33,9 @@ int mlx5e_xsk_wakeup(struct net_device *
- 		if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &c->xskicosq.state)))
- 			return 0;
- 
-+		if (test_and_set_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state))
-+			return 0;
-+
- 		spin_lock(&c->xskicosq_lock);
- 		mlx5e_trigger_irq(&c->xskicosq);
- 		spin_unlock(&c->xskicosq_lock);
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -587,7 +587,7 @@ bool mlx5e_post_rx_wqes(struct mlx5e_rq
- 	return !!err;
- }
- 
--void mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
-+int mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
- {
- 	struct mlx5e_icosq *sq = container_of(cq, struct mlx5e_icosq, cq);
- 	struct mlx5_cqe64 *cqe;
-@@ -595,11 +595,11 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
- 	int i;
- 
- 	if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &sq->state)))
--		return;
-+		return 0;
- 
- 	cqe = mlx5_cqwq_get_cqe(&cq->wq);
- 	if (likely(!cqe))
--		return;
-+		return 0;
- 
- 	/* sq->cc must be updated only after mlx5_cqwq_update_db_record(),
- 	 * otherwise a cq overrun may occur
-@@ -646,6 +646,8 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
- 	sq->cc = sqcc;
- 
- 	mlx5_cqwq_update_db_record(&cq->wq);
-+
-+	return i;
- }
- 
- bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq)
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
-@@ -145,7 +145,11 @@ int mlx5e_napi_poll(struct napi_struct *
- 
- 	busy |= rq->post_wqes(rq);
- 	if (xsk_open) {
--		mlx5e_poll_ico_cq(&c->xskicosq.cq);
-+		if (mlx5e_poll_ico_cq(&c->xskicosq.cq))
-+			/* Don't clear the flag if nothing was polled to prevent
-+			 * queueing more WQEs and overflowing XSKICOSQ.
-+			 */
-+			clear_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state);
- 		busy |= mlx5e_poll_xdpsq_cq(&xsksq->cq);
- 		busy_xsk |= mlx5e_napi_xsk_post(xsksq, xskrq);
+-	if (!mlx5e_monitor_counter_supported(priv)) {
++	/* In switchdev mode, monitor counters doesn't monitor
++	 * rx/tx stats of 802_3. The update stats mechanism
++	 * should keep the 802_3 layout counters updated
++	 */
++	if (!mlx5e_monitor_counter_supported(priv) ||
++	    mlx5e_is_uplink_rep(priv)) {
+ 		/* update HW stats in background for next time */
+ 		mlx5e_queue_update_stats(priv);
  	}
 
 
