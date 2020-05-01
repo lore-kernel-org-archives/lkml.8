@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF25C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9587C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84415205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76CB216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340362;
-	bh=0QOOZyDBsNIBBaxOKBFDj9IiySFeZjBr3MHLtaSCaoU=;
+	s=default; t=1588340364;
+	bh=paTia634a73T7GFWMtcfe5TtLx6sLr/2SPBtIisZod0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxlbPxM/HyBz3SKrEPjk2qXjTrdeHx+Sug9bLAI/0NBg/4zZ/HXnndVACxicNC7bh
-	 n1lwsBWIowYviO+d7+CSh5ey+f6nlTXh3cTx+yQv+w5nEqxSEgz+c+WPjlcParSt3m
-	 z9fYjGq42LR/oRuEvSUmiCvaU6l/zE7mfPvFZm4I=
+	b=YEs41IjUrB/Km1MeyCJZq6FEL7H3aECqWaxQ302BN6u5EWxJZYMjH43Yv/P/verN5
+	 oyc1/VZqamP+lGfVOORFFLw132P2Cc2fb5CPVcjfN1xr4GSGHqMdyM9Kpscju+38vL
+	 hYE7uEF+TEDK49p7OzZeJ/Nnt9bKbja2dz5C1e7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbgEANjV (ORCPT
+        id S1731178AbgEANjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38884 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731164AbgEANjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:14 -0400
+        id S1729861AbgEANjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95CC420757;
-        Fri,  1 May 2020 13:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 850F5205C9;
+        Fri,  1 May 2020 13:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340354;
-        bh=0QOOZyDBsNIBBaxOKBFDj9IiySFeZjBr3MHLtaSCaoU=;
+        s=default; t=1588340359;
+        bh=paTia634a73T7GFWMtcfe5TtLx6sLr/2SPBtIisZod0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GotZwUSXHN0jPdGkjnoKpBbJVgCx/7ad6Q8kZ342Iuuv4Dtc2i8H2QdKQyNzMH5kp
-         g60u4wSHr14PwQuuDkQmtiqH61XwPtBXEyamJaXUX95mD6vdU4tKxrwAk37ppQYRQK
-         CyNPttBYZv5W+iVCvcJ9uKbtOaWnEaIyQ9bhPRqQ=
+        b=kbtZwfUbleA/ti0RssfJ7YqJAQQHrGmcgJdGDnW2ua5RRw4cvzOMiuboVJxPFdiPb
+         KqEnFjaTt6QyTYA0ijKackNbEbpVG7nPdIyFb9IB5lCzNNMD20DQcSE2ihIlENBeN3
+         uG183cjomy95UtisrHXnKUCmnHYRt7W5SrJl8Z14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raymond Pang <RaymondPang-oc@zhaoxin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.4 31/83] PCI: Add ACS quirk for Zhaoxin multi-function devices
-Date:   Fri,  1 May 2020 15:23:10 +0200
-Message-Id: <20200501131531.585369185@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.4 33/83] PCI: Unify ACS quirk desired vs provided checking
+Date:   Fri,  1 May 2020 15:23:12 +0200
+Message-Id: <20200501131532.212669424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,35 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-commit 0325837c51cb7c9a5bd3e354ac0c0cda0667d50e upstream.
+commit 7cf2cba43f15c74bac46dc5f0326805d25ef514d upstream.
 
-Some Zhaoxin endpoints are implemented as multi-function devices without an
-ACS capability, but they actually don't support peer-to-peer transactions.
-Add ACS quirks to declare DMA isolation.
+Most of the ACS quirks have a similar pattern of:
 
-Link: https://lore.kernel.org/r/20200327091148.5190-3-RaymondPang-oc@zhaoxin.com
-Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+  acs_flags &= ~( <controls provided by this device> );
+  return acs_flags ? 0 : 1;
+
+Pull this out into a helper function to simplify the quirks slightly.  The
+helper function is also a convenient place for comments about what the list
+of ACS controls means.  No functional change intended.
+
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/quirks.c |   67 ++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 22 deletions(-)
 
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -4759,6 +4759,10 @@ static const struct pci_dev_acs_enabled
- 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	/* Amazon Annapurna Labs */
- 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
-+	/* Zhaoxin multi-function devices */
-+	{ PCI_VENDOR_ID_ZHAOXIN, 0x3038, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_ZHAOXIN, 0x3104, pci_quirk_mf_endpoint_acs },
-+	{ PCI_VENDOR_ID_ZHAOXIN, 0x9083, pci_quirk_mf_endpoint_acs },
+@@ -4353,6 +4353,24 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_C
+ 			 quirk_chelsio_T5_disable_root_port_attributes);
+ 
+ /*
++ * pci_acs_ctrl_enabled - compare desired ACS controls with those provided
++ *			  by a device
++ * @acs_ctrl_req: Bitmask of desired ACS controls
++ * @acs_ctrl_ena: Bitmask of ACS controls enabled or provided implicitly by
++ *		  the hardware design
++ *
++ * Return 1 if all ACS controls in the @acs_ctrl_req bitmask are included
++ * in @acs_ctrl_ena, i.e., the device provides all the access controls the
++ * caller desires.  Return 0 otherwise.
++ */
++static int pci_acs_ctrl_enabled(u16 acs_ctrl_req, u16 acs_ctrl_ena)
++{
++	if ((acs_ctrl_req & acs_ctrl_ena) == acs_ctrl_req)
++		return 1;
++	return 0;
++}
++
++/*
+  * AMD has indicated that the devices below do not support peer-to-peer
+  * in any system where they are found in the southbridge with an AMD
+  * IOMMU in the system.  Multifunction devices that do not support
+@@ -4395,7 +4413,7 @@ static int pci_quirk_amd_sb_acs(struct p
+ 	/* Filter out flags not applicable to multifunction */
+ 	acs_flags &= (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
+ 
+-	return acs_flags & ~(PCI_ACS_RR | PCI_ACS_CR) ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags, PCI_ACS_RR | PCI_ACS_CR);
+ #else
+ 	return -ENODEV;
+ #endif
+@@ -4433,9 +4451,8 @@ static int pci_quirk_cavium_acs(struct p
+ 	 * hardware implements and enables equivalent ACS functionality for
+ 	 * these flags.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ static int pci_quirk_xgene_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4445,9 +4462,8 @@ static int pci_quirk_xgene_acs(struct pc
+ 	 * transactions with others, allowing masking out these bits as if they
+ 	 * were unimplemented in the ACS capability.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ /*
+@@ -4499,17 +4515,16 @@ static bool pci_quirk_intel_pch_acs_matc
+ 	return false;
+ }
+ 
+-#define INTEL_PCH_ACS_FLAGS (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
+-
+ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	if (!pci_quirk_intel_pch_acs_match(dev))
+ 		return -ENOTTY;
+ 
+ 	if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
+-		acs_flags &= ~(INTEL_PCH_ACS_FLAGS);
++		return pci_acs_ctrl_enabled(acs_flags,
++			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags, 0);
+ }
+ 
+ /*
+@@ -4524,9 +4539,8 @@ static int pci_quirk_intel_pch_acs(struc
+  */
+ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4627,7 +4641,7 @@ static int pci_quirk_intel_spt_pch_acs(s
+ 
+ 	pci_read_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, &ctrl);
+ 
+-	return acs_flags & ~ctrl ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags, ctrl);
+ }
+ 
+ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4641,10 +4655,9 @@ static int pci_quirk_mf_endpoint_acs(str
+ 	 * perform peer-to-peer with other functions, allowing us to mask out
+ 	 * these bits as if they were unimplemented in the ACS capability.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
+-		       PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR |
++		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+ }
+ 
+ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+@@ -4655,9 +4668,8 @@ static int pci_quirk_brcm_acs(struct pci
+ 	 * Allow each Root Port to be in a separate IOMMU group by masking
+ 	 * SV/RR/CR/UF bits.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-
+-	return acs_flags ? 0 : 1;
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
+ static const struct pci_dev_acs_enabled {
+@@ -4763,6 +4775,17 @@ static const struct pci_dev_acs_enabled
  	{ 0 }
  };
  
++/*
++ * pci_dev_specific_acs_enabled - check whether device provides ACS controls
++ * @dev:	PCI device
++ * @acs_flags:	Bitmask of desired ACS controls
++ *
++ * Returns:
++ *   -ENOTTY:	No quirk applies to this device; we can't tell whether the
++ *		device provides the desired controls
++ *   0:		Device does not provide all the desired controls
++ *   >0:	Device provides all the controls in @acs_flags
++ */
+ int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	const struct pci_dev_acs_enabled *i;
 
 
