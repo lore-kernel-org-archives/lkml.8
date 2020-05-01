@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A0EC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564A4C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0332051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D47206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341640;
-	bh=ba5UviiqirxX2VhbhVmCa6180lZgvgjE1tT7+Kq3bn0=;
+	s=default; t=1588341644;
+	bh=bFzTwxNpNnXKW5y0Ld8IcgIJN0YnBTHn+0HciPjoj/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5VxW92KflwIt8aEmHhUQ6Ii59WyGIrb7iDnDaB4V7OHjl+nedi9Uho9BjO0pgeM+
-	 v8fRbaMp6g1zNcgtVdqlHSIKANHi5E8+AghGNj7DWtloobVxmW82ijbzi5OC9xuRHi
-	 6r/9sdwanYjku7Ylia0+rW17Cct5gu9JOECV6Bak=
+	b=17DKc1KcKmS8SFjURK4xyOktGNmC7y6ad+LKQV2in3EzFCEYqhH9lHo+0Lc/cHPLC
+	 ul4lN5eRpzSeLlV9lce33WfGcrU5RtbOll8hl7GwVxMB2hZmQmvZiN72+vjSA6TVeF
+	 2TRrLRdMZhIl42y3eNdKgIKk/4g7ZENrjYtl6glU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbgEAOAj (ORCPT
+        id S1729406AbgEAN1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729429AbgEAN1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:15 -0400
+        id S1729363AbgEAN1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF262208DB;
-        Fri,  1 May 2020 13:27:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 527EE24955;
+        Fri,  1 May 2020 13:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339635;
-        bh=ba5UviiqirxX2VhbhVmCa6180lZgvgjE1tT7+Kq3bn0=;
+        s=default; t=1588339620;
+        bh=bFzTwxNpNnXKW5y0Ld8IcgIJN0YnBTHn+0HciPjoj/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KHTMOx1PqAxv7F/V5GwVuUXtw+8VBq8Vss6tPqEn17CI2QNZtCJcvbP+Vjc11HPg+
-         k88PsB2wzBQuxt8KGXMKD1m8idUnOv5OqKgQzCqvhx19qM9QMyWoBcYyPI9oMLK3if
-         M3pZ5eh7eqwHyIDBtLO5sdjJqFrq+/7h2I8Kmv3Y=
+        b=Gq37U9jn0X8hPrt/P8FkapXV4TX/9OmG5QBuRF23MsH3NlqbdghaFyV6xQ+ooDdw8
+         8kkVF5z7eyMmQ8IpKNF+MLe9AdDFGdjrT1DrND+cUZZ+h05/YqtGNGBuw/SUNpR+Yi
+         Wsa+16i+GybYYwnrMZaYVem0MKKEt0SsTzk+/7Pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Huaijie <yihuaijie@huawei.com>,
-        Liu Jian <liujian56@huawei.com>,
-        Tokunori Ikegami <ikegami_to@yahoo.co.jp>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 57/70] mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
-Date:   Fri,  1 May 2020 15:21:45 +0200
-Message-Id: <20200501131530.691671109@linuxfoundation.org>
+Subject: [PATCH 4.4 55/70] sctp: use right member as the param of list_for_each_entry
+Date:   Fri,  1 May 2020 15:21:43 +0200
+Message-Id: <20200501131530.005417399@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -62,42 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit d9b8a67b3b95a5c5aae6422b8113adc1c2485f2b upstream.
+commit a8dd397903a6e57157f6265911f7d35681364427 upstream.
 
-In function do_write_buffer(), in the for loop, there is a case
-chip_ready() returns 1 while chip_good() returns 0, so it never
-break the loop.
-To fix this, chip_good() is enough and it should timeout if it stay
-bad for a while.
+Commit d04adf1b3551 ("sctp: reset owner sk for data chunks on out queues
+when migrating a sock") made a mistake that using 'list' as the param of
+list_for_each_entry to traverse the retransmit, sacked and abandoned
+queues, while chunks are using 'transmitted_list' to link into these
+queues.
 
-Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
-Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+It could cause NULL dereference panic if there are chunks in any of these
+queues when peeling off one asoc.
+
+So use the chunk member 'transmitted_list' instead in this patch.
+
+Fixes: d04adf1b3551 ("sctp: reset owner sk for data chunks on out queues when migrating a sock")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/chips/cfi_cmdset_0002.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/sctp/socket.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -1881,7 +1881,11 @@ static int __xipram do_write_buffer(stru
- 			continue;
- 		}
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -185,13 +185,13 @@ static void sctp_for_each_tx_datachunk(s
+ 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+ 			cb(chunk);
  
--		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
-+		/*
-+		 * We check "time_after" and "!chip_good" before checking "chip_good" to avoid
-+		 * the failure due to scheduling.
-+		 */
-+		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
- 			break;
+-	list_for_each_entry(chunk, &q->retransmit, list)
++	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+ 		cb(chunk);
  
- 		if (chip_good(map, adr, datum)) {
+-	list_for_each_entry(chunk, &q->sacked, list)
++	list_for_each_entry(chunk, &q->sacked, transmitted_list)
+ 		cb(chunk);
+ 
+-	list_for_each_entry(chunk, &q->abandoned, list)
++	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
+ 		cb(chunk);
+ 
+ 	list_for_each_entry(chunk, &q->out_chunk_list, list)
 
 
