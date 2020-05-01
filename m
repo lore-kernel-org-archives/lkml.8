@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D249C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0D3C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72EDE208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8EA208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339665;
-	bh=0bmmoobu5JO6/P+JWnOrpzSDyd+b/gmKezvE5yBlgME=;
+	s=default; t=1588339668;
+	bh=HLOmRGuur+d7bxrS1mkmXhq7aO6VGkqNWulZ7KMdfTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fkxTdnS6EyQkmC+1dAeRVEKELX+u5ALU4kaEIEocb9scvOZnoipgzNQUmL+NfjVs2
-	 wjsX5y8Qfu72XByUokxlxTZf8QlAqRoFGz37r8t+MjNVEhFve7GD/Zkr3FVxIIjKl5
-	 q60q0fa3vr1I88dZch9xHJtReucwMRJEzvZnnYZE=
+	b=Ac0L3OBffBE4Xs9j4+aYRG3tyflS1WFfEyzJzA+gG5rH4K5u2YKr1yf+PBdgU/U1O
+	 /cLPsXmpflxP04AfKgbcqkvFRb1VdvU2umEGXILEaZFRhbCgOS5SIsfbaBAD7gp+2w
+	 4UuaUukikOOOZfm/HjHG0noDC3JRq3MMKbo29zxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgEAN1k (ORCPT
+        id S1729523AbgEAN1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbgEAN1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:36 -0400
+        id S1729508AbgEAN1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D92208D6;
-        Fri,  1 May 2020 13:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8A54208DB;
+        Fri,  1 May 2020 13:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339655;
-        bh=0bmmoobu5JO6/P+JWnOrpzSDyd+b/gmKezvE5yBlgME=;
+        s=default; t=1588339660;
+        bh=HLOmRGuur+d7bxrS1mkmXhq7aO6VGkqNWulZ7KMdfTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qdp1eN8bcbEHwdfNTll6ki+qD3t1uw2CpOGs1Ou/4rzgyiIGdbessqVgqducEPxGi
-         RJOcYUB6Uy0Wim9uwuMUH8dGxkEYmzck95KSonY+SEAkCSSlz7p1COgpRduO+QOZ7S
-         TLOIbK8rZ0hl7jWKXMyAT4aJpcVj8kQgHKzIf3/s=
+        b=Rzf1UflIgEoRqH9vzVhODqgy8nWBqP7Ve5jp6fWoT0lP1UzAbNGK+6nANKMP1AwPt
+         fYa54ScPr9aBtMHz6YWktgKpzv796pFwe1wl2s2ctmVh/bejAFQeyML+L3v7gaMjDH
+         UWPT1SpsHR8L+eGN0JlzA92nFUKzmdt1b/gDBtic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Theodore Tso <tytso@mit.edu>, Ashwin H <ashwinh@vmware.com>
-Subject: [PATCH 4.4 69/70] ext4: fix block validity checks for journal inodes using indirect blocks
-Date:   Fri,  1 May 2020 15:21:57 +0200
-Message-Id: <20200501131534.862556194@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Rue <dan.rue@linaro.org>,
+        Theodore Tso <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Ashwin H <ashwinh@vmware.com>
+Subject: [PATCH 4.4 68/70] ext4: dont perform block validity checks on the journal inode
+Date:   Fri,  1 May 2020 15:21:56 +0200
+Message-Id: <20200501131534.574938892@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -62,41 +63,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Theodore Ts'o <tytso@mit.edu>
 
-commit 170417c8c7bb2cbbdd949bf5c443c0c8f24a203b upstream.
+commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 upstream.
 
-Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
-block_validity") failed to add an exception for the journal inode in
-ext4_check_blockref(), which is the function used by ext4_get_branch()
-for indirect blocks.  This caused attempts to read from the ext3-style
-journals to fail with:
+Since the journal inode is already checked when we added it to the
+block validity's system zone, if we check it again, we'll just trigger
+a failure.
 
-[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
+This was causing failures like this:
 
-Fix this by adding the missing exception check.
+[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
+#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
+[   53.938480] Aborting journal on device sda-8.
+
+... but only if the system was under enough memory pressure that
+logical->physical mapping for the journal inode gets pushed out of the
+extent cache.  (This is why it wasn't noticed earlier.)
 
 Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
+Reported-by: Dan Rue <dan.rue@linaro.org>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 Signed-off-by: Ashwin H <ashwinh@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/block_validity.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ext4/extents.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -274,6 +274,11 @@ int ext4_check_blockref(const char *func
- 	__le32 *bref = p;
- 	unsigned int blk;
- 
-+	if (ext4_has_feature_journal(inode->i_sb) &&
-+	    (inode->i_ino ==
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
-+		return 0;
-+
- 	while (bref < p+max) {
- 		blk = le32_to_cpu(*bref++);
- 		if (blk &&
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -549,10 +549,14 @@ __read_extent_tree_block(const char *fun
+ 	}
+ 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
+ 		return bh;
+-	err = __ext4_ext_check(function, line, inode,
+-			       ext_block_hdr(bh), depth, pblk);
+-	if (err)
+-		goto errout;
++	if (!ext4_has_feature_journal(inode->i_sb) ||
++	    (inode->i_ino !=
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
++		err = __ext4_ext_check(function, line, inode,
++				       ext_block_hdr(bh), depth, pblk);
++		if (err)
++			goto errout;
++	}
+ 	set_buffer_verified(bh);
+ 	/*
+ 	 * If this is a leaf block, cache all of its entries
 
 
