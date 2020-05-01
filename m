@@ -2,170 +2,83 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BABEC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86445C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099AE2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPhaX+81"
+	by mail.kernel.org (Postfix) with ESMTP id 64BEA2071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgEAChU (ORCPT
+        id S1728121AbgEAChm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:37:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33742 "EHLO
+        Thu, 30 Apr 2020 22:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728008AbgEAChT (ORCPT
+        by vger.kernel.org with ESMTP id S1728008AbgEAChm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:37:19 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B30BC035494;
-        Thu, 30 Apr 2020 19:37:19 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id hi11so1807448pjb.3;
-        Thu, 30 Apr 2020 19:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Tx4PpKumE7+hHOMexZLB6HaMGQrp+LFhXCasKj/4X4=;
-        b=XPhaX+81o8qjj+9LAhbXwj92dzxOn0y874GMRLLUEqVqzYnXZvX/leVVIXT8idVHTf
-         6fw8Ms3lBXnY542qFgUa/WW0PU1/UNhmAH18EiNovuLpSSMa9c7G+Iq6DOSZ2lND5h5c
-         FzTlmFmLoBQduRR+KJd+x5V3t+Y16sIJtBMs0Bes8TLJYGEgx8vkJZhJLSQ1pfVGNAEz
-         K2ob762AX9FMh9jLrikyFVkq4CHyHs+eIDOA8XyKxPXHEslqGzpE0/3I6Y9tckiQrkLI
-         HkzKTQuMuyRJa26reG3SoGuyx91CQz13SS63wd8nyUm9wx5IQeEpR3dPmCYYEygk0dRq
-         I6/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Tx4PpKumE7+hHOMexZLB6HaMGQrp+LFhXCasKj/4X4=;
-        b=cUWmvibF1U5qIxO7kaNrxc7Z3rhYrvL3YBWLgS4oEVvyyYfDveI6rP0og6i0v3Y3lC
-         bYz3K9nREpiA2hgPjpAU//h/SafMIkhrDk2dWtYTUgb3EyKvfj03wIkCeJtr207prUf0
-         xrQ0VmH3wqDA69KWGLL0W5VCERbaIlvtV8MUAQxXH0gtBals4nqnwec+DiR3REjWxR8o
-         KuN3aZrsmZZMCNJatS7/+2y5bl0JHgzmmq2wQ0Svkc8Ql1CgWiB5+9w2DS551vaXN48b
-         9TG0miWfYuz777y9EYEpY5nuG/bTwJAbMmzQb/CcueRCBrIlEo7ar8jyYC62CsaWYUk7
-         k3Lg==
-X-Gm-Message-State: AGi0PuYsWazKPUYQ1j5eEuzai1DIjThOCEeSjKffXkXM+2buNPWfeZdH
-        W249yTwlm+r8ctQax4WBtg8=
-X-Google-Smtp-Source: APiQypIl+H3bVs2N1KfiyJe5IJkbPjRbQz0m+dJRxuGxvqLHaNcaPc6eD78i0ZA0QZtnOxIdh+dlvQ==
-X-Received: by 2002:a17:90a:e2c1:: with SMTP id fr1mr2131921pjb.124.1588300638823;
-        Thu, 30 Apr 2020 19:37:18 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id a142sm924681pfa.6.2020.04.30.19.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 19:37:18 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] streamline_config.pl: add LOCALMODCONFIG_PRESERVE to preserve some kconfigs
-Date:   Fri,  1 May 2020 10:37:08 +0800
-Message-Id: <20200501023708.108830-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 30 Apr 2020 22:37:42 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091F0C035494;
+        Thu, 30 Apr 2020 19:37:42 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jULYU-00FXQg-6F; Fri, 01 May 2020 02:37:34 +0000
+Date:   Fri, 1 May 2020 03:37:34 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH V1 09/10] arch/kmap: Define kmap_atomic_prot() for all
+ arch's
+Message-ID: <20200501023734.GF23230@ZenIV.linux.org.uk>
+References: <20200430203845.582900-1-ira.weiny@intel.com>
+ <20200430203845.582900-10-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430203845.582900-10-ira.weiny@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it is useful to preserve batches of configs when making
-localmodconfig. For example, I usually don't want any usb and fs
-modules to be disabled. Now we can do it by:
+On Thu, Apr 30, 2020 at 01:38:44PM -0700, ira.weiny@intel.com wrote:
 
- $ make LOCALMODCONFIG_PRESERVE="drivers/usb;fs" localmodconfig
+> -static inline void *kmap_atomic(struct page *page)
+> +static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+>  {
+>  	preempt_disable();
+>  	pagefault_disable();
+>  	if (!PageHighMem(page))
+>  		return page_address(page);
+> -	return kmap_atomic_high(page);
+> +	return kmap_atomic_high_prot(page, prot);
+>  }
+> +#define kmap_atomic(page)	kmap_atomic_prot(page, kmap_prot)
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- Documentation/admin-guide/README.rst |  8 +++++++-
- scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-index cc6151fc0845..6deff95362f8 100644
---- a/Documentation/admin-guide/README.rst
-+++ b/Documentation/admin-guide/README.rst
-@@ -209,10 +209,16 @@ Configuring the kernel
-                            store the lsmod of that machine into a file
-                            and pass it in as a LSMOD parameter.
- 
-+                           Also, you can preserve modules in certen folders
-+                           or kconfig files by spcifying there paths in
-+                           parameter LOCALMODCONFIG_PRESERVE.
-+
-                    target$ lsmod > /tmp/mylsmod
-                    target$ scp /tmp/mylsmod host:/tmp
- 
--                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-+                   host$ make LSMOD=/tmp/mylsmod \
-+                           LOCALMODCONFIG_PRESERVE="drivers/usb;drivers/gpu;fs" \
-+                           localmodconfig
- 
-                            The above also works when cross compiling.
- 
-diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-index e2f8504f5a2d..ab5d1e10a5d0 100755
---- a/scripts/kconfig/streamline_config.pl
-+++ b/scripts/kconfig/streamline_config.pl
-@@ -143,6 +143,7 @@ my %depends;
- my %selects;
- my %prompts;
- my %objects;
-+my %config2kfile;
- my $var;
- my $iflevel = 0;
- my @ifdeps;
-@@ -201,6 +202,7 @@ sub read_kconfig {
- 	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
- 	    $state = "NEW";
- 	    $config = $2;
-+	    $config2kfile{"CONFIG_$config"} = $kconfig;
- 
- 	    # Add depends for 'if' nesting
- 	    for (my $i = 0; $i < $iflevel; $i++) {
-@@ -592,6 +594,22 @@ while ($repeat) {
- 
- my %setconfigs;
- 
-+my @presevered_kconfigs;
-+@presevered_kconfigs = split(/;/,$ENV{LOCALMODCONFIG_PRESERVE}) if (defined($ENV{LOCALMODCONFIG_PRESERVE}));
-+
-+sub in_presevered_kconfigs {
-+    my $kconfig = $config2kfile{$_[0]};
-+    if (!defined($kconfig)) {
-+        return 0;
-+    }
-+    foreach my $excl (@presevered_kconfigs) {
-+        if($kconfig =~ /^$excl/) {
-+            return 1;
-+        }
-+    }
-+    return 0;
-+}
-+
- # Finally, read the .config file and turn off any module enabled that
- # we could not find a reason to keep enabled.
- foreach my $line (@config_file) {
-@@ -644,6 +662,11 @@ foreach my $line (@config_file) {
-     }
- 
-     if (/^(CONFIG.*)=(m|y)/) {
-+        if (in_presevered_kconfigs($1)) {
-+            dprint "Preserve config $1";
-+            print;
-+            next;
-+        }
- 	if (defined($configs{$1})) {
- 	    if ($localyesconfig) {
- 	        $setconfigs{$1} = 'y';
--- 
-2.25.1
-
+OK, so it *was* just a bisect hazard - you return to original semantics
+wrt preempt_disable()...
