@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA6EC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397C4C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69162166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4A1208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339657;
-	bh=9z4LahtgSkFQavSR0Kpqso99n4FDvhhsFpPIpUuuUlY=;
+	s=default; t=1588339663;
+	bh=l6I8N9mAySJ1NIPQgd/YPEign4VOEC6ZJUPecdttEXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ErM+R5od9837niYw0QlX6i9CNWj5OkYi5iYUQIhvwnJAfFv9+InBb2JAMvg9sRGQk
-	 AS9Z++LXKrTnU0vMwl8MoG5WF0zU3Qung6kqVWkrcq5ijlol+YSR328eDxR/7gJAZD
-	 NL182bKbuAYFaUFLkKcYKv5Qssr+knM4aZDUhDWY=
+	b=EIIVx6gniF3HR3lmhO8SuiSID4xol+/1pNC/PDxTDjC4kxh5vnATRhtxPAHkaUbcm
+	 mBzQaDFmFP5hi5SQJBFmmFPySbfbW4bUo80jeqnWSavPlWDhUo1DXBimWppO5VWv59
+	 1fxOW5sHt7v8fiu2PWN7afY29AgapN9Q7ZSIbs80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgEAN1h (ORCPT
+        id S1729513AbgEAN1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49924 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729486AbgEAN1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:34 -0400
+        id S1729486AbgEAN1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FE0420757;
-        Fri,  1 May 2020 13:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53DD0208DB;
+        Fri,  1 May 2020 13:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339652;
-        bh=9z4LahtgSkFQavSR0Kpqso99n4FDvhhsFpPIpUuuUlY=;
+        s=default; t=1588339657;
+        bh=l6I8N9mAySJ1NIPQgd/YPEign4VOEC6ZJUPecdttEXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyCimMYF5dGfvlGAUSPvlLmgp6nwHDrDLY/cSK/zXkdMBFjLXv/mjxHBe4qli9Gs5
-         Tzov2ZKpggBb3FCYdvjS6aUEV732kbO5fyg2AISnyXYA1CioVElH/kijnWYrLCIb2h
-         UV3W4UsvJl2zAK2MLRB17P1e7jEMCM/dAwTBxN4A=
+        b=2RkZlgVCrsP0hlzhzeK76O4/NHEoCpmtRHJSwvrzctpt5WZQLy+KG3WVN8hcMeFJQ
+         o7SViFiUNaZdtBmYfiqhPgbIuq+gANHvp5mYeT7k9NVUON0FcGivcpIBmjSxutjk8M
+         eyPBCICxvB1s6lly2zaH0Tz2cJgqzIf1APJZGmak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Clement Leger <cleger@kalray.eu>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>
-Subject: [PATCH 4.4 54/70] remoteproc: Fix wrong rvring index computation
-Date:   Fri,  1 May 2020 15:21:42 +0200
-Message-Id: <20200501131529.831555248@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>, Ashwin H <ashwinh@vmware.com>
+Subject: [PATCH 4.4 70/70] ext4: unsigned int compared against zero
+Date:   Fri,  1 May 2020 15:21:58 +0200
+Message-Id: <20200501131535.146297950@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,35 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clement Leger <cleger@kalray.eu>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 00a0eec59ddbb1ce966b19097d8a8d2f777e726a upstream.
+commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
 
-Index of rvring is computed using pointer arithmetic. However, since
-rvring->rvdev->vring is the base of the vring array, computation
-of rvring idx should be reversed. It previously lead to writing at negative
-indices in the resource table.
+There are two cases where u32 variables n and err are being checked
+for less than zero error values, the checks is always false because
+the variables are not signed. Fix this by making the variables ints.
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
-Link: https://lore.kernel.org/r/20191004073736.8327-1-cleger@kalray.eu
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Ashwin H <ashwinh@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/remoteproc_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/block_validity.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -288,7 +288,7 @@ void rproc_free_vring(struct rproc_vring
- {
- 	int size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
- 	struct rproc *rproc = rvring->rvdev->rproc;
--	int idx = rvring->rvdev->vring - rvring;
-+	int idx = rvring - rvring->rvdev->vring;
- 	struct fw_rsc_vdev *rsc;
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -141,7 +141,8 @@ static int ext4_protect_reserved_inode(s
+ 	struct inode *inode;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_map_blocks map;
+-	u32 i = 0, err = 0, num, n;
++	u32 i = 0, num;
++	int err = 0, n;
  
- 	dma_free_coherent(rproc->dev.parent, size, rvring->va, rvring->dma);
+ 	if ((ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
 
 
