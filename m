@@ -2,96 +2,120 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED5C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D746C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 596E02166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:42:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="HqdoT0+W"
+	by mail.kernel.org (Postfix) with ESMTP id 19F5D208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgEAUmw (ORCPT
+        id S1726483AbgEAUoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:42:52 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:18456 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726045AbgEAUmw (ORCPT
+        Fri, 1 May 2020 16:44:30 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58026 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAUo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:42:52 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041KVgME015276;
-        Fri, 1 May 2020 13:42:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pfpt0818;
- bh=zdGCSE0RfOtLTaR0vOTzhigwD7PziyAalGU9rSI0oLs=;
- b=HqdoT0+WYLkYD+aCGGzWhizAhm+WILTVkB7g0rAG5YljfwvpUi6xWL+DqCRXl4BedWeb
- oJ8XlRrZ+xruYUW7NjLeFfiGKObTHd0rdHdzOmjkVmCdKtkox1MVZo48pv3L/06G8QQ5
- oHCobV2U9NAxzbVgII8zSjkJRR0QChYNb3SYhUvnVwHmhkdwMdOORvDOLPtJaEp3Z8vy
- OBclkUL+9pRsF+w0yK1mQEkGGG9PKlTEr28VeB9Th73Zf+2Ty1iOJ9gKv90YHpOydBKw
- MeeLkbd4fcZUlmygCJlikjOEg8VpJw38MY3v23B8J0I0fYihAQPt53MIwTe99m+ruhIi PA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 30r7e8mamc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 13:42:47 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 1 May
- 2020 13:42:45 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 1 May 2020 13:42:45 -0700
-Received: from [10.193.46.2] (unknown [10.193.46.2])
-        by maili.marvell.com (Postfix) with ESMTP id 95B623F7040;
-        Fri,  1 May 2020 13:42:43 -0700 (PDT)
-Subject: Re: [EXT] [PATCH 15/37] docs: networking: device drivers: convert
- aquantia/atlantic.txt to ReST
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>
-References: <cover.1588344146.git.mchehab+huawei@kernel.org>
- <f6d8605f322899e9fa1a71248b165e7ad3840ab7.1588344146.git.mchehab+huawei@kernel.org>
-From:   Igor Russkikh <irusskikh@marvell.com>
-Message-ID: <c8976fe3-52fc-36e4-e75e-e0d505f11a25@marvell.com>
-Date:   Fri, 1 May 2020 23:42:42 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101
- Thunderbird/76.0
+        Fri, 1 May 2020 16:44:29 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A7B421C020C; Fri,  1 May 2020 22:44:27 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:44:26 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 3/6] serdev: ngsm: Add generic serdev-ngsm driver
+Message-ID: <20200501204426.GE6043@duo.ucw.cz>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-4-tony@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <f6d8605f322899e9fa1a71248b165e7ad3840ab7.1588344146.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_14:2020-05-01,2020-05-01 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XuV1QlJbYrcVoo+x"
+Content-Disposition: inline
+In-Reply-To: <20200430174615.41185-4-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--XuV1QlJbYrcVoo+x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/05/2020 5:44 pm, Mauro Carvalho Chehab wrote:
-> External Email
-> 
-> ----------------------------------------------------------------------
-> - add SPDX header;
-> - use copyright symbol;
-> - adjust title and its markup;
-> - comment out text-only TOC from html/pdf output;
-> - mark code blocks and literals as such;
-> - adjust identation, whitespaces and blank lines where needed;
-> - add to networking/index.rst.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Hi!
 
-Acked-by: Igor Russkikh <irusskikh@marvell.com>
+> We can have a generic serdev-ngsm driver bring up the TS 27.010 line
+> discipline on the selected serial ports based on device tree data.
+>=20
+> And we can now do standard Linux device driver for the dedicated
+> TS 27.010 channels for devices like GNSS and ALSA found on modems.
 
-Thanks alot, Mauro, for this conversion!
 
-  Igor
+> +++ b/drivers/tty/serdev/Kconfig
+> @@ -22,4 +22,14 @@ config SERIAL_DEV_CTRL_TTYPORT
+>  	depends on SERIAL_DEV_BUS !=3D m
+>  	default y
+> =20
+> +config SERIAL_DEV_N_GSM
+> +	tristate "Serial device TS 27.010 support"
+> +	help
+> +	  Select this if you want to use the TS 27.010 with a serial port with
+> +	  devices such as modems and GNSS devices.
+> +
+> +	  If unsure, say N.
+> +	depends on N_GSM
+> +	depends on SERIAL_DEV_CTRL_TTYPORT
+
+Normally, depends go after "tristate" and before "help" text. I did
+not realize this is valid code.
+
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+
+> +/*
+> + * Configure SoC 8250 device for 700 ms autosuspend delay, Values around=
+ 600 ms
+> + * and shorter cause spurious wake-up events at least on droid 4. Also k=
+eep the
+
+droid->Droid?
+
+> +static const struct serdev_ngsm_cfg motmdm_cfg =3D {
+> +	.gsm =3D &adaption1,
+> +	.init_retry_quirk =3D true,
+> +	.needs_usb_phy =3D true,
+> +	.aggressive_pm =3D true,
+
+Umm. These are unsigned int:1, not bools, so =3D 1 would be expected
+here.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--XuV1QlJbYrcVoo+x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyKKgAKCRAw5/Bqldv6
+8txjAJwJqTaTuqG5Df56zqF3mOwZR010dQCfTuwd4x9yo8cT/TgAEsR2HsAJpIE=
+=3ue9
+-----END PGP SIGNATURE-----
+
+--XuV1QlJbYrcVoo+x--
