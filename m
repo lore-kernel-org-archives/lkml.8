@@ -2,145 +2,150 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D223CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9FC2071C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6CB20787
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R/Uh7AqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgEACmH (ORCPT
+        id S1728130AbgEACpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:42:07 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:51521 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728107AbgEACmH (ORCPT
+        Thu, 30 Apr 2020 22:45:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42492 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbgEACpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:42:07 -0400
-Received: (qmail 21059 invoked by uid 500); 30 Apr 2020 22:42:05 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 30 Apr 2020 22:42:05 -0400
-Date:   Thu, 30 Apr 2020 22:42:05 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 08/15] usb: ehci: avoid gcc-10 zero-length-bounds warning
-In-Reply-To: <20200430213101.135134-9-arnd@arndb.de>
-Message-ID: <Pine.LNX.4.44L0.2004302231290.19755-100000@netrider.rowland.org>
+        Thu, 30 Apr 2020 22:45:22 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0412dV1l016832;
+        Fri, 1 May 2020 02:39:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=amGI2EKz7GGva1xtOY99+AbL2BZTFlckdCPX0cEjQl4=;
+ b=R/Uh7AqVaKevL2Ck3pCGur1QzlL+hEdzg5KEzVOfvonzIWVE4ZqZD2cvqET0X09bw43W
+ IlWY0GsjoSKrvZS0VupcRskPM/6ZcrcPgJ+yskR5ONnbkAyPmoTumG8RJDedoaYr37Ip
+ YigkseXqa/MSMkhMxqRPWD6nwZLBpFevbHfGK2JwJX0hIvFrSVCfJu/plAS6ksRPRtQ4
+ VSvQFsnrA6ksJYl7E3UCDLTILl/ol7MguGC7SVnmZ9jx0sKPrdz9oj7Q9VnLZ8b42+ub
+ O9i5O0SfhakbrQXdBdmuWwi7SmbUtPgc9X+4CIdpSUBYnH+ZnGX0mnn91Pca+c8RDBGk TQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30r7f80hrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 May 2020 02:39:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0412ZXkn024150;
+        Fri, 1 May 2020 02:39:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30r7ff5jmd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 May 2020 02:39:51 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0412dfxm032165;
+        Fri, 1 May 2020 02:39:42 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Apr 2020 19:39:41 -0700
+Date:   Thu, 30 Apr 2020 22:40:02 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] padata: parallelize deferred page init
+Message-ID: <20200501024002.h7vpf4fxu6elmddn@ca-dmjordan1.us.oracle.com>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430143131.7b8ff07f022ed879305de82f@linux-foundation.org>
+ <CA+CK2bDwg=s6RbTCirm4U5gvRsnCMred-pnrW=WzN9hfGuBsiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bDwg=s6RbTCirm4U5gvRsnCMred-pnrW=WzN9hfGuBsiQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005010017
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ spamscore=0 malwarescore=0 clxscore=1015 phishscore=0 mlxscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005010017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020, Arnd Bergmann wrote:
+On Thu, Apr 30, 2020 at 05:40:59PM -0400, Pavel Tatashin wrote:
+> On Thu, Apr 30, 2020 at 5:31 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > On Thu, 30 Apr 2020 16:11:18 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+> >
+> > > Sometimes the kernel doesn't take full advantage of system memory
+> > > bandwidth, leading to a single CPU spending excessive time in
+> > > initialization paths where the data scales with memory size.
+> > >
+> > > Multithreading naturally addresses this problem, and this series is the
+> > > first step.
+> > >
+> > > It extends padata, a framework that handles many parallel singlethreaded
+> > > jobs, to handle multithreaded jobs as well by adding support for
+> > > splitting up the work evenly, specifying a minimum amount of work that's
+> > > appropriate for one helper thread to do, load balancing between helpers,
+> > > and coordinating them.  More documentation in patches 4 and 7.
+> > >
+> > > The first user is deferred struct page init, a large bottleneck in
+> > > kernel boot--actually the largest for us and likely others too.  This
+> > > path doesn't require concurrency limits, resource control, or priority
+> > > adjustments like future users will (vfio, hugetlb fallocate, munmap)
+> > > because it happens during boot when the system is otherwise idle and
+> > > waiting on page init to finish.
+> > >
+> > > This has been tested on a variety of x86 systems and speeds up kernel
+> > > boot by 6% to 49% by making deferred init 63% to 91% faster.
+> >
+> > How long is this up-to-91% in seconds?  If it's 91% of a millisecond
+> > then not impressed.  If it's 91% of two weeks then better :)
 
-> Building ehci drivers with gcc-10 results in a number of warnings like
-> when an zero-length array is accessed:
+The largest system I could test had 384G per node and saved 1.5 out of 4
+seconds.
+
+> > Relatedly, how important is boot time on these large machines anyway?
+> > They presumably have lengthy uptimes so boot time is relatively
+> > unimportant?
 > 
-> drivers/usb/host/ehci-hub.c: In function 'ehci_bus_suspend':
-> drivers/usb/host/ehci-hub.c:320:30: error: array subscript 14 is outside the bounds of an interior zero-length array 'u32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
->   320 |    u32 __iomem *hostpc_reg = &ehci->regs->hostpc[port];
->       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/usb/host/ehci.h:273,
->                  from drivers/usb/host/ehci-hcd.c:96:
-> include/linux/usb/ehci_def.h:186:7: note: while referencing 'hostpc'
->   186 |  u32  hostpc[0]; /* HOSTPC extension */
->       |       ^~~~~~
-> In file included from drivers/usb/host/ehci-hcd.c:305:
-> drivers/usb/host/ehci-hub.c: In function 'ehci_hub_control':
-> drivers/usb/host/ehci-hub.c:892:15: error: array subscript 256 is outside the bounds of an interior zero-length array 'u32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
->   892 |  hostpc_reg = &ehci->regs->hostpc[temp];
->       |               ^~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/usb/host/ehci.h:273,
->                  from drivers/usb/host/ehci-hcd.c:96:
-> include/linux/usb/ehci_def.h:186:7: note: while referencing 'hostpc'
->   186 |  u32  hostpc[0]; /* HOSTPC extension */
->       |       ^~~~~~
-> 
-> All these fields are colocated with reserved fields that I guess
-> refer to the correct field length.
+> Large machines indeed have a lengthy uptime, but they also can host a
+> large number of VMs meaning that downtime of the host increases the
+> downtime of VMs in cloud environments. Some VMs might be very sensible
+> to downtime: game servers, traders, etc.
+>
+> > IOW, can you please explain more fully why this patchset is valuable to
+> > our users?
 
-No, they don't.
-
-> Change the two struct definition to use an unnamed union to define
-> both of these fields at the same location as the corresponding
-> reserved fields.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/linux/usb/ehci_def.h | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
-> index 78e006355557..8777d8e56ef2 100644
-> --- a/include/linux/usb/ehci_def.h
-> +++ b/include/linux/usb/ehci_def.h
-> @@ -127,7 +127,8 @@ struct ehci_regs {
->  #define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
->  
->  	/* PORTSC: offset 0x44 */
-> -	u32		port_status[0];	/* up to N_PORTS */
-> +	union {
-> +		u32		port_status[9];	/* up to N_PORTS */
-
-This array can have up to 15 elements, meaning that it can extend out
-to offset 0x80.
-
->  /* EHCI 1.1 addendum */
->  #define PORTSC_SUSPEND_STS_ACK 0
->  #define PORTSC_SUSPEND_STS_NYET 1
-> @@ -165,7 +166,8 @@ struct ehci_regs {
->  #define PORT_CONNECT	(1<<0)		/* device connected */
->  #define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
->  
-> -	u32		reserved3[9];
-> +		u32		reserved3[9];
-> +	};
->  
->  	/* USBMODE: offset 0x68 */
->  	u32		usbmode;	/* USB Device mode */
-
-As you see, this next field actually lies inside the preceding array.  
-It's not a real conflict; any hardware which supports the usbmode field 
-uses only the first element of the port_status array.
-
-I don't know how you want to handle this.  Doing
-
-#define usbmode port_status[9]
-
-doesn't seem like a very good approach, but I can't think of anything 
-better at the moment.  Maybe just set the array size to 9, as you did, 
-but with a comment explaining what's really going on.
-
-> @@ -181,11 +183,13 @@ struct ehci_regs {
->   * PORTSCx
->   */
->  	/* HOSTPC: offset 0x84 */
-> -	u32		hostpc[0];	/* HOSTPC extension */
-> +	union {
-> +		u32		hostpc[17];	/* HOSTPC extension */
-
-Likewise, this array can have up to 15 elements.  In fact, it's the 
-same size as the port_status array.
-
->  #define HOSTPC_PHCD	(1<<22)		/* Phy clock disable */
->  #define HOSTPC_PSPD	(3<<25)		/* Port speed detection */
->  
-> -	u32		reserved5[17];
-> +		u32		reserved5[17];
-> +	};
->  
->  	/* USBMODE_EX: offset 0xc8 */
->  	u32		usbmode_ex;	/* USB Device mode extension */
-
-Alan Stern
-
+I'll let the users speak for themselves, but I have a similar use case to Pavel
+of limiting the downtime of VMs running on these large systems, and spinning up
+instances as fast as possible is also desirable for our cloud users.
