@@ -2,113 +2,105 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDA2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579F6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B11F216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21575216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J3geM7oz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbgEAPLh (ORCPT
+        id S1729149AbgEAPNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:11:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:42356 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbgEAPLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:11:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC72130E;
-        Fri,  1 May 2020 08:11:34 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917573F68F;
-        Fri,  1 May 2020 08:11:33 -0700 (PDT)
-Date:   Fri, 1 May 2020 16:11:31 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
- ID property from DT
-Message-ID: <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-5-kishon@ti.com>
+        Fri, 1 May 2020 11:13:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31005 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728896AbgEAPNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:13:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588346000;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=F4yL4oTUsOpbnfJKXRJ3LDveHMm1KM/d4GtJdspShdk=;
+        b=J3geM7ozXb4qY+RP49bGdsP5j+GeJqJZIUkX9xPbQrqYF785LtBVSjgNv2WOCNwPfZAJeH
+        3Kk83PORUWrObJrUKXFMYsWFGSZGWyltXyz6gmRLOFKSSP1u4xkDHYxaQ+9nkQm5tugtvp
+        XJL2ATLWWFJQSG12nsUTETVF8ySBBGQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-BCs19SbTMpe_3nCJyFV0SA-1; Fri, 01 May 2020 11:13:16 -0400
+X-MC-Unique: BCs19SbTMpe_3nCJyFV0SA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F28568005B7;
+        Fri,  1 May 2020 15:13:14 +0000 (UTC)
+Received: from treble (ovpn-114-104.rdu2.redhat.com [10.10.114.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBA6A5C1BB;
+        Fri,  1 May 2020 15:13:12 +0000 (UTC)
+Date:   Fri, 1 May 2020 10:13:10 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC][PATCH] x86/ftrace: Have ftrace trampolines turn read-only
+ at the end of system boot up
+Message-ID: <20200501151310.zo5bhnxpu5gubofj@treble>
+References: <20200430202147.4dc6e2de@oasis.local.home>
+ <20200501044733.eqf6hc6erucsd43x@treble>
+ <20200501051706.4wkrqwovybt2p6hr@treble>
+ <20200501092404.06d1adcb@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200417114322.31111-5-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200501092404.06d1adcb@gandalf.local.home>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
-> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
-> defines both Vendor ID and Device ID to be 32-bits. Fix
-> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
-> properties from device tree.
+On Fri, May 01, 2020 at 09:24:04AM -0400, Steven Rostedt wrote:
+> On Fri, 1 May 2020 00:17:06 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 > 
-> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> > > Would it be easier to just call a new __text_poke_bp() which skips the
+> > > SYSTEM_BOOTING check, since you know the trampoline will always be
+> > > read-only?
+> > > 
+> > > Like:  
+> > 
+> > early_trace_init() is called after mm_init(), so I thought it might
+> > work, but I guess not:
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
->  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+> Yeah, I was about to say that this happens before mm_init() ;-)
 
-I don't see how you would use a 32-bit value for a 16-bit register so
-certainly the struct cdns_pcie_rc fields size is questionable anyway.
+It happens *after* mm_init().  But now text_poke() has a dependency on
+poking_init(), has a dependency on proc_caches_init(), which has a
+dependency on kmem_cache_init_late(), etc.
 
-I *assume* you are referring to 4.1.2.1 and the property list
-encoded as "encode-int".
+So how early do you need early_trace_init()?  I'm assuming moving it to
+after kmem_cache_init_late() would be too late.
 
-I would like to get RobH's opinion on this - I don't know myself
-whether the PCI OF bindings you added are still relevant and how
-they should be interpreted.
-
-Thanks
-Lorenzo
-
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 8f72967f298f..31e67c9c88cf 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	}
->  
->  	rc->vendor_id = 0xffff;
-> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
-> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
->  
->  	rc->device_id = 0xffff;
-> -	of_property_read_u16(np, "device-id", &rc->device_id);
-> +	of_property_read_u32(np, "device-id", &rc->device_id);
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
->  	pcie->reg_base = devm_ioremap_resource(dev, res);
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index 6bd89a21bb1c..df14ad002fe9 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
->  	struct resource		*bus_range;
->  	void __iomem		*cfg_base;
->  	u32			no_bar_nbits;
-> -	u16			vendor_id;
-> -	u16			device_id;
-> +	u32			vendor_id;
-> +	u32			device_id;
->  };
->  
->  /**
-> -- 
-> 2.17.1
+> It's why we already have magic for enabling function tracing the first time.
 > 
+> Do you see anything wrong with this current solution? It probably needs
+> more comments, but I wanted to get acceptance on the logic before I go and
+> pretty it up and send a non RFC patch.
+
+Assuming we can't get text_poke() working earlier, it seems reasonable
+to me.
+
+-- 
+Josh
+
