@@ -2,305 +2,127 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5947BC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD05BC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39294208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1081208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgEAQCH (ORCPT
+        id S1729860AbgEAQF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:02:07 -0400
-Received: from fieldses.org ([173.255.197.46]:40344 "EHLO fieldses.org"
+        Fri, 1 May 2020 12:05:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:43224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbgEAQBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:01:54 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id F159D5F28; Fri,  1 May 2020 12:01:53 -0400 (EDT)
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Shaohua Li <shli@fb.com>, Oleg Nesterov <oleg@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 3/4] kthreads: allow multiple kthreadd's
-Date:   Fri,  1 May 2020 12:01:51 -0400
-Message-Id: <1588348912-24781-4-git-send-email-bfields@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588348912-24781-1-git-send-email-bfields@redhat.com>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+        id S1728495AbgEAQF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:05:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B893530E;
+        Fri,  1 May 2020 09:05:26 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.80])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A5BC3F68F;
+        Fri,  1 May 2020 09:05:24 -0700 (PDT)
+Date:   Fri, 1 May 2020 17:05:21 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        "harb@amperecomputing.com" <harb@amperecomputing.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 5/5] arm/arm64: smccc: Add ARCH_SOC_ID support
+Message-ID: <20200501160521.GB24840@bogus>
+References: <20200430114814.14116-1-sudeep.holla@arm.com>
+ <20200430114814.14116-6-sudeep.holla@arm.com>
+ <426ff8ab-9c13-4301-a91e-989c19c4ff58@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <426ff8ab-9c13-4301-a91e-989c19c4ff58@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+On Fri, May 01, 2020 at 04:25:27PM +0100, John Garry wrote:
+> On 30/04/2020 12:48, Sudeep Holla wrote:
+> > +static int __init smccc_soc_init(void)
+> > +{
+> > +	struct device *dev;
+> > +	int ret, soc_id_rev;
+> > +	struct arm_smccc_res res;
+> > +	static char soc_id_str[8], soc_id_rev_str[12];
+> > +
+> > +	if (arm_smccc_get_version() < ARM_SMCCC_VERSION_1_2)
+> > +		return 0;
+> > +
+> > +	ret = smccc_soc_id_support_check();
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 0, &res);
+> > +
+> > +	ret = smccc_map_error_codes(res.a0);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	soc_id_version = res.a0;
+> > +
+> > +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 1, &res);
+> > +
+> > +	ret = smccc_map_error_codes(res.a0);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	soc_id_rev = res.a0;
+> > +
+> > +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> > +	if (!soc_dev_attr)
+> > +		return -ENOMEM;
+> > +
+> > +	sprintf(soc_id_str, "0x%04x", IMP_DEF_SOC_ID(soc_id_version));
+> > +	sprintf(soc_id_rev_str, "0x%08x", soc_id_rev);
+> > +
+> > +	soc_dev_attr->soc_id = soc_id_str;
+> > +	soc_dev_attr->revision = soc_id_rev_str;
+> > +
+> > +	soc_dev = soc_device_register(soc_dev_attr);
+> > +	if (IS_ERR(soc_dev)) {
+> > +		ret = PTR_ERR(soc_dev);
+> > +		goto free_soc;
+> > +	}
+> > +
+> > +	dev = soc_device_to_device(soc_dev);
+> > +
+>
+> Just wondering, what about if the platform already had a SoC driver - now it
+> could have another one, such that we may have multiple sysfs soc devices,
+> right?
+>
 
-Allow subsystems to run their own kthreadd's.
+Yes I had a quick look at that.
 
-I'm experimenting with this to allow nfsd to put its threads into its
-own thread group to make it easy for the vfs to tell when nfsd is
-breaking one of its own leases.
+1. Such platform has option not to implement this SOC_ID if it doesn't
+   really require it.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- include/linux/kthread.h |  20 ++++++-
- init/main.c             |   4 +-
- kernel/kthread.c        | 113 ++++++++++++++++++++++++++++++----------
- 3 files changed, 107 insertions(+), 30 deletions(-)
+2. If the firmware starts implementing it on some variants, then we can
+   distinguish them with compatibles and blacklist them from the other
+   SoC driver if having both is an issue
 
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index 8bbcaad7ef0f..a7ffdf96a3b2 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -5,6 +5,24 @@
- #include <linux/err.h>
- #include <linux/sched.h>
- 
-+struct kthread_group {
-+	char *name;
-+	spinlock_t create_lock;
-+	struct list_head create_list;
-+	struct task_struct *task;
-+};
-+
-+extern struct kthread_group kthreadd_default;
-+
-+struct kthread_group *kthread_start_group(char *);
-+void kthread_stop_group(struct kthread_group *);
-+
-+struct task_struct *kthread_group_create_on_node(struct kthread_group *,
-+					int (*threadfn)(void *data),
-+					 void *data,
-+					 int node,
-+					 const char namefmt[], ...);
-+
- __printf(4, 5)
- struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
- 					   void *data,
-@@ -63,7 +81,7 @@ int kthread_park(struct task_struct *k);
- void kthread_unpark(struct task_struct *k);
- void kthread_parkme(void);
- 
--int kthreadd(void *unused);
-+int kthreadd(void *);
- extern struct task_struct *kthreadd_task;
- extern int tsk_fork_get_node(struct task_struct *tsk);
- 
-diff --git a/init/main.c b/init/main.c
-index a48617f2e5e5..5256071b0e05 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -641,9 +641,9 @@ noinline void __ref rest_init(void)
- 	rcu_read_unlock();
- 
- 	numa_default_policy();
--	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
-+	pid = kernel_thread(kthreadd, &kthreadd_default, CLONE_FS | CLONE_FILES);
- 	rcu_read_lock();
--	kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
-+	kthreadd_default.task = find_task_by_pid_ns(pid, &init_pid_ns);
- 	rcu_read_unlock();
- 
- 	/*
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 483bee57a9c8..5232f6f597b5 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -25,9 +25,44 @@
- #include <linux/numa.h>
- #include <trace/events/sched.h>
- 
--static DEFINE_SPINLOCK(kthread_create_lock);
--static LIST_HEAD(kthread_create_list);
--struct task_struct *kthreadd_task;
-+struct kthread_group kthreadd_default = {
-+	.name = "kthreadd",
-+	.create_lock = __SPIN_LOCK_UNLOCKED(kthreadd_default.create_lock),
-+	.create_list = LIST_HEAD_INIT(kthreadd_default.create_list),
-+};
-+
-+void wake_kthreadd(struct kthread_group *kg)
-+{
-+	wake_up_process(kg->task);
-+}
-+
-+struct kthread_group *kthread_start_group(char *name)
-+{
-+	struct kthread_group *new;
-+	struct task_struct *task;
-+
-+	new = kmalloc(sizeof(struct kthread_group), GFP_KERNEL);
-+	if (!new)
-+		return ERR_PTR(-ENOMEM);
-+	spin_lock_init(&new->create_lock);
-+	INIT_LIST_HEAD(&new->create_list);
-+	new->name = name;
-+	task = kthread_run(kthreadd, new, name);
-+	if (IS_ERR(task)) {
-+		kfree(new);
-+		return ERR_CAST(task);
-+	}
-+	new->task = task;
-+	return new;
-+}
-+EXPORT_SYMBOL_GPL(kthread_start_group);
-+
-+void kthread_stop_group(struct kthread_group *kg)
-+{
-+	kthread_stop(kg->task);
-+	kfree(kg);
-+}
-+EXPORT_SYMBOL_GPL(kthread_stop_group);
- 
- struct kthread_create_info
- {
-@@ -301,11 +336,13 @@ static void create_kthread(struct kthread_create_info *create)
- 	}
- }
- 
--static __printf(4, 0)
--struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
--						    void *data, int node,
--						    const char namefmt[],
--						    va_list args)
-+
-+static __printf(5, 0)
-+struct task_struct *__kthread_group_create_on_node(struct kthread_group *kg,
-+						int (*threadfn)(void *data),
-+						void *data, int node,
-+						const char namefmt[],
-+						va_list args)
- {
- 	DECLARE_COMPLETION_ONSTACK(done);
- 	struct task_struct *task;
-@@ -319,11 +356,11 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
- 	create->node = node;
- 	create->done = &done;
- 
--	spin_lock(&kthread_create_lock);
--	list_add_tail(&create->list, &kthread_create_list);
--	spin_unlock(&kthread_create_lock);
-+	spin_lock(&kg->create_lock);
-+	list_add_tail(&create->list, &kg->create_list);
-+	spin_unlock(&kg->create_lock);
- 
--	wake_up_process(kthreadd_task);
-+	wake_kthreadd(kg);
- 	/*
- 	 * Wait for completion in killable state, for I might be chosen by
- 	 * the OOM killer while kthreadd is trying to allocate memory for
-@@ -365,6 +402,25 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
- 	return task;
- }
- 
-+__printf(5, 0)
-+struct task_struct *kthread_group_create_on_node(struct kthread_group *kg,
-+						int (*threadfn)(void *data),
-+						void *data, int node,
-+						const char namefmt[],
-+						...)
-+{
-+	struct task_struct *task;
-+	va_list args;
-+
-+	va_start(args, namefmt);
-+	task = __kthread_group_create_on_node(kg, threadfn,
-+						data, node, namefmt, args);
-+	va_end(args);
-+
-+	return task;
-+}
-+EXPORT_SYMBOL_GPL(kthread_group_create_on_node);
-+
- /**
-  * kthread_create_on_node - create a kthread.
-  * @threadfn: the function to run until signal_pending(current).
-@@ -397,7 +453,8 @@ struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
- 	va_list args;
- 
- 	va_start(args, namefmt);
--	task = __kthread_create_on_node(threadfn, data, node, namefmt, args);
-+	task = __kthread_group_create_on_node(&kthreadd_default, threadfn,
-+						data, node, namefmt, args);
- 	va_end(args);
- 
- 	return task;
-@@ -577,30 +634,31 @@ int kthread_stop(struct task_struct *k)
- }
- EXPORT_SYMBOL(kthread_stop);
- 
--void kthread_do_work(void)
-+void kthread_do_work(struct kthread_group *kg)
- {
--	spin_lock(&kthread_create_lock);
--	while (!list_empty(&kthread_create_list)) {
-+	spin_lock(&kg->create_lock);
-+	while (!list_empty(&kg->create_list)) {
- 		struct kthread_create_info *create;
- 
--		create = list_entry(kthread_create_list.next,
-+		create = list_entry(kg->create_list.next,
- 				    struct kthread_create_info, list);
- 		list_del_init(&create->list);
--		spin_unlock(&kthread_create_lock);
-+		spin_unlock(&kg->create_lock);
- 
- 		create_kthread(create);
- 
--		spin_lock(&kthread_create_lock);
-+		spin_lock(&kg->create_lock);
- 	}
--	spin_unlock(&kthread_create_lock);
-+	spin_unlock(&kg->create_lock);
- }
- 
--int kthreadd(void *unused)
-+int kthreadd(void *data)
- {
-+	struct kthread_group *kg = data;
- 	struct task_struct *tsk = current;
- 
- 	/* Setup a clean context for our children to inherit. */
--	set_task_comm(tsk, "kthreadd");
-+	set_task_comm(tsk, kg->name);
- 	ignore_signals(tsk);
- 	set_cpus_allowed_ptr(tsk, cpu_all_mask);
- 	set_mems_allowed(node_states[N_MEMORY]);
-@@ -608,13 +666,13 @@ int kthreadd(void *unused)
- 	current->flags |= PF_NOFREEZE;
- 	cgroup_init_kthreadd();
- 
--	for (;;) {
-+	while (current == kthreadd_default.task || !kthread_should_stop()) {
- 		set_current_state(TASK_INTERRUPTIBLE);
--		if (list_empty(&kthread_create_list))
-+		if (list_empty(&kg->create_list))
- 			schedule();
- 		__set_current_state(TASK_RUNNING);
- 
--		kthread_do_work();
-+		kthread_do_work(kg);
- 	}
- 
- 	return 0;
-@@ -712,8 +770,9 @@ __kthread_create_worker(int cpu, unsigned int flags,
- 	if (cpu >= 0)
- 		node = cpu_to_node(cpu);
- 
--	task = __kthread_create_on_node(kthread_worker_fn, worker,
--						node, namefmt, args);
-+	task = __kthread_group_create_on_node(&kthreadd_default,
-+					kthread_worker_fn,
-+					worker, node, namefmt, args);
- 	if (IS_ERR(task))
- 		goto fail_task;
- 
--- 
-2.26.2
+3. SoC bus layer supports adding multiple SoC ID driver and it may show
+   up as /sys/devices/soc<n> which may or may not be fine. But this
+   happens only if neither [1] nor [2] is done. I am happy to see if there's
+   any solution for this. Any suggestions ?
 
+--
+Regards,
+Sudeep
