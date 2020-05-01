@@ -2,153 +2,285 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B83C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A92C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1125F2074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="N4SldThh"
+	by mail.kernel.org (Postfix) with ESMTP id 40E4720857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgEAEOX (ORCPT
+        id S1728126AbgEAEUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 00:14:23 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.31]:42101 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgEAEOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 00:14:23 -0400
-X-Greylist: delayed 1450 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 May 2020 00:14:22 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 8A778400C36DC
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 22:50:12 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id UMgmjfhzh8vkBUMgmjOrq1; Thu, 30 Apr 2020 22:50:12 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=X5v6XgBQvXYCV/k6yfv1MAtOVy8utTNfVch0kLIBlYE=; b=N4SldThhN2NFbW+d8EcfmV1Hpr
-        5T02bteGw36ZL/u44B8sSa6+l7WdcElpXlEPo5In9M6PIGaHN4UQFdvKgXFbohfDqg3OiyRYKpVCi
-        91Mm1dk3fKkLYtn4JTlA08CHv/uNQkj/FkPbwdZHQbAxQ2FX6TMCgMBwVWwjSkGzWlP5SfQ5VaCHV
-        1VexxlLorJ88O3zkvsKqWi8c0LATvjv3WSw+OtaGw6H1DnviXgGrbWtANouiChDfclLMfBrOUKK3Y
-        yaeloFp6ln9CgWhzh7BgiDMUUZ93QVlrjUZDcPOQmEecR1ow4e507nXMvhqjLCNgcCPQgpPX1j80I
-        mA6g9XYQ==;
-Received: from [189.207.59.248] (port=58874 helo=[192.168.15.9])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jUMgm-002kze-2o; Thu, 30 Apr 2020 22:50:12 -0500
-Subject: Re: linux-next: manual merge of the mlx5-next tree with the
- kspp-gustavo tree
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huy Nguyen <huyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Raed Salem <raeds@mellanox.com>
-References: <20200429120625.2b5bb507@canb.auug.org.au>
- <20200501131230.58835994@canb.auug.org.au>
- <32eb40f0-a17b-5a7f-41e0-0f30a507fc31@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <585d76be-a2e7-1da6-9a9a-f46f14aea222@embeddedor.com>
-Date:   Thu, 30 Apr 2020 22:54:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 00:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726153AbgEAEUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 00:20:22 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AAC920836;
+        Fri,  1 May 2020 04:20:20 +0000 (UTC)
+Date:   Fri, 1 May 2020 00:20:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
+ text_poke()
+Message-ID: <20200501002018.76f1e4b6@gandalf.local.home>
+In-Reply-To: <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
+References: <20200429054857.66e8e333@oasis.local.home>
+        <20200429105941.GQ30814@suse.de>
+        <20200429082854.6e1796b5@oasis.local.home>
+        <20200429100731.201312a9@gandalf.local.home>
+        <20200430141120.GA8135@suse.de>
+        <20200430121136.6d7aeb22@gandalf.local.home>
+        <20200430191434.GC8135@suse.de>
+        <20200430211308.74a994dc@oasis.local.home>
+        <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <32eb40f0-a17b-5a7f-41e0-0f30a507fc31@embeddedor.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jUMgm-002kze-2o
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.9]) [189.207.59.248]:58874
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen,
+On Thu, 30 Apr 2020 22:26:55 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-On 4/30/20 22:30, Gustavo A. R. Silva wrote:
+> The tracers just have to make sure they perform their vmalloc'd memory
+> allocation before registering the tracepoint which can touch it, else they
+> need to issue vmalloc_sync_mappings() on their own before making the
+> newly allocated memory observable by instrumentation.
 
->> This is now a conflict between the net-next and kspp-gustavo trees.
->>
-> 
-> Thanks for reporting this. I think the best solution, for now, is to remove the
-> changes from my tree. I'll do it right away.
-> 
+What gets me is that I added the patch below (which adds a
+vmalloc_sync_mappings() just after the alloc_percpu()), but I also recorded
+all instances of vmalloc() with a stackdump, and I get this:
 
-I just updated my -next tree. This conflict should be resolved now. :)
+          colord-1673  [002] ....    84.764804: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+          colord-1673  [002] ....    84.764807: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => module_alloc+0x7e/0xd0
+ => bpf_jit_binary_alloc+0x70/0x110
+ => bpf_int_jit_compile+0x139/0x40a
+ => bpf_prog_select_runtime+0xa3/0x120
+ => bpf_prepare_filter+0x533/0x5a0
+ => sk_attach_filter+0x13/0x50
+ => sock_setsockopt+0xd2f/0xf90
+ => __sys_setsockopt+0x18a/0x1a0
+ => __x64_sys_setsockopt+0x20/0x30
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
 
-Thanks
---
-Gustavo
+
+[ the above is from before the tracing started ]
+
+       trace-cmd-1687  [002] ....   103.908850: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1687  [002] ....   103.908856: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0x23d/0x2b0
+ => pid_write.isra.62+0xd1/0x2f0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+       trace-cmd-1697  [003] ....   104.088950: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1697  [003] ....   104.088954: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0x23d/0x2b0
+ => pid_write.isra.62+0xd1/0x2f0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+       trace-cmd-1697  [003] ....   104.089666: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1697  [003] ....   104.089669: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0xc1/0x2b0
+ => pid_write.isra.62+0xd1/0x2f0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+       trace-cmd-1697  [003] ....   104.098920: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1697  [003] ....   104.098924: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0xc1/0x2b0
+ => pid_write.isra.62+0xd1/0x2f0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+       trace-cmd-1697  [003] ....   104.114518: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1697  [003] ....   104.114520: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0xc1/0x2b0
+ => pid_write.isra.62+0xd1/0x2f0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+       trace-cmd-1697  [003] ....   104.130705: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1697  [003] ....   104.130707: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0x23d/0x2b0
+ => event_pid_write.isra.30+0x21b/0x3b0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+       trace-cmd-1687  [001] ....   106.000510: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+       trace-cmd-1687  [001] ....   106.000514: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => vzalloc+0x48/0x50
+ => trace_pid_write+0x23d/0x2b0
+ => pid_write.isra.62+0xd1/0x2f0
+ => vfs_write+0xa8/0x1b0
+ => ksys_write+0x67/0xe0
+ => do_syscall_64+0x60/0x230
+ => entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+
+The above is the calls to adding pids to set_event_pid. (I see I should
+probably make that code a bit more efficient, it calls the vmalloc code a
+bit too much).
+
+But what is missing, is the call to vmalloc from alloc_percpu(). In fact, I
+put in printks in the vmalloc() that's in alloc_percpu() and it doesn't
+trigger from the tracing code, and it does show up in my trace from other
+areas of the kernel:
+
+     kworker/1:3-204   [001] ....    42.888340: __vmalloc_node_range+0x5/0x2c0: vmalloc called here
+     kworker/1:3-204   [001] ....    42.888342: <stack trace>
+ => __ftrace_trace_stack+0x161/0x1a0
+ => __vmalloc_node_range+0x4d/0x2c0
+ => __vmalloc+0x30/0x40
+ => pcpu_create_chunk+0x77/0x220
+ => pcpu_balance_workfn+0x407/0x650
+ => process_one_work+0x25e/0x5c0
+ => worker_thread+0x30/0x380
+ => kthread+0x139/0x160
+ => ret_from_fork+0x3a/0x50
+
+So I'm still not 100% sure why the percpu data is causing a problem?
+
+-- Steve
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8d2b98812625..10e4970a150c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8486,6 +8486,7 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 		return -ENOMEM;
+ 
+ 	buf->data = alloc_percpu(struct trace_array_cpu);
++	vmalloc_sync_mappings();
+ 	if (!buf->data) {
+ 		ring_buffer_free(buf->buffer);
+ 		buf->buffer = NULL;
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 9a8227afa073..489cf0620edc 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2543,6 +2543,8 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
+ 	void *addr;
+ 	unsigned long real_size = size;
+ 
++	trace_printk("vmalloc called here\n");
++	trace_dump_stack(0);
+ 	size = PAGE_ALIGN(size);
+ 	if (!size || (size >> PAGE_SHIFT) > totalram_pages())
+ 		goto fail;
