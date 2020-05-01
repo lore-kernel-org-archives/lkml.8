@@ -2,83 +2,126 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E203C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51312C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1EED20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6CC20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgEAOw4 (ORCPT
+        id S1729372AbgEAOx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:52:56 -0400
-Received: from muru.com ([72.249.23.125]:52510 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbgEAOw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:52:56 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B3F02810E;
-        Fri,  1 May 2020 14:53:43 +0000 (UTC)
-Date:   Fri, 1 May 2020 07:52:52 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>, Stephen Boyd <swboyd@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200501145252.GC37466@atomide.com>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430222605.GA10922@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430222605.GA10922@duo.ucw.cz>
+        Fri, 1 May 2020 10:53:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728737AbgEAOx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:53:59 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041EWMTO023972;
+        Fri, 1 May 2020 10:53:44 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30r82muqf7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 10:53:44 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 041EqEmf026392;
+        Fri, 1 May 2020 14:53:43 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02dal.us.ibm.com with ESMTP id 30mcu7kfxv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 14:53:43 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 041Ergpe59310418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 1 May 2020 14:53:42 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EAD627805E;
+        Fri,  1 May 2020 14:53:41 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12D2C7805C;
+        Fri,  1 May 2020 14:53:39 +0000 (GMT)
+Received: from [153.66.254.194] (unknown [9.85.187.215])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  1 May 2020 14:53:39 +0000 (GMT)
+Message-ID: <1588344818.3428.18.camel@linux.ibm.com>
+Subject: Re: [PATCH 13/15] scsi: sas: avoid gcc-10 zero-length-bounds warning
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>, John Garry <john.garry@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <James.Bottomley@steeleye.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Date:   Fri, 01 May 2020 07:53:38 -0700
+In-Reply-To: <CAK8P3a1=5dmgB+k9B_jk2qBhBPnMSFMWrByP4jRvyvaJwBo94A@mail.gmail.com>
+References: <20200430213101.135134-1-arnd@arndb.de>
+         <20200430213101.135134-14-arnd@arndb.de>
+         <b5e6ef12-c2ac-d0ce-b7a1-a58d4c8de300@huawei.com>
+         <CAK8P3a1=5dmgB+k9B_jk2qBhBPnMSFMWrByP4jRvyvaJwBo94A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_07:2020-04-30,2020-05-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ clxscore=1011 spamscore=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005010112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200430 22:27]:
+On Fri, 2020-05-01 at 09:54 +0200, Arnd Bergmann wrote:
+> On Fri, May 1, 2020 at 9:48 AM John Garry <john.garry@huawei.com>
+> wrote:
+> > On 30/04/2020 22:30, Arnd Bergmann wrote:
+> > > This should really be a flexible-array member, but the structure
+> > > already has such a member, swapping it out with sense_data[]
+> > > would cause many more warnings elsewhere.
+> > > 
+> > 
+> > 
+> > Hi Arnd,
+> > 
+> > If we really prefer flexible-array members over zero-length array
+> > members, then could we have a union of flexible-array members? I'm
+> > not sure if that's a good idea TBH (or even permitted), as these
+> > structures are defined by the SAS spec and good practice to keep as
+> > consistent as possible, but just wondering.
 > 
-> > My guess is that at least with the pending ofono patches, we just
-> > want to use the raw interface for /dev/gsmtty* interface and stop
-> > pretending we have a modem that is AT compatible.
+> gcc does not allow flexible-array members inside of a union, or more
+> than one flexible-array member at the end of a structure.
 > 
-> I tried to get it to work... it was not fun and I did not get far.
-
-OK. Yeah it's now 2020 and still dealing with serial port stuff :)
-
-> I pushed my results...
+> I found one hack that would work, but I think it's too ugly and
+> likely not well-defined either:
 > 
-> user@devuan:/my/ofono$ git push
-> Counting objects: 10, done.
-> Delta compression using up to 2 threads.
-> Compressing objects: 100% (10/10), done.
-> Writing objects: 100% (10/10), 1.17 KiB | 0 bytes/s, done.
-> Total 10 (delta 8), reused 0 (delta 0)
-> remote: Resolving deltas: 100% (8/8), completed with 8 local objects.
-> To github.com:pavelmachek/ofono.git
->    fd34ca20..9042014b  mux-v1.29-1 -> mux-v1.29-1
+> struct ssp_response_iu {
+> ...
+>         struct {
+>                 u8      dummy[0]; /* a struct must have at least one
+> non-flexible member */
 
-OK :) I still need to update the ALSA related patches on top
-of this $subject series.
+If gcc is now warning about zero length members, why isn't it warning
+about this one ... are unions temporarily excluded?
 
-Also what I've noticed is that modprobe n_gsm debug=0xff hex output is
-currently broken since commit 091cb0994edd ("lib/hexdump: make
-print_hex_dump_bytes() a nop on !DEBUG builds"). Reverting the commit
-fixes it.
+>                 u8      resp_data[]; /* allowed here because it's at
+> the one of a struct */
+>         };
+>         u8     sense_data[];
+> } __attribute__ ((packed));
 
-Stephen, any ideas what should be changed to fix it?
+Let's go back to what the standard says:  we want the data beyond the
+ssp_response_iu to be addressable either as sense_data if it's an error
+return or resp_data if it's a real response.  What about trying to use
+an alias attribute inside the structure ... will that work on gcc-10?
 
-Regards,
+James
 
-Tony
