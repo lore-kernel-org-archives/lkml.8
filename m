@@ -2,154 +2,216 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818FDC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB294C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1342166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D532166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KBM/6NPc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hQ69sOZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgEARg3 (ORCPT
+        id S1730215AbgEARhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        Fri, 1 May 2020 13:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729659AbgEARg2 (ORCPT
+        by vger.kernel.org with ESMTP id S1729705AbgEARhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:36:28 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6EBDC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:36:28 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id g129so2852088vkh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:36:28 -0700 (PDT)
+        Fri, 1 May 2020 13:37:04 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C78C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:37:04 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 18so1854470pfx.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TA6stwlQtMs0s5sdi3+tZ1ygYla8dV/bmC8ohmequGA=;
-        b=KBM/6NPcoPyp2XNp6JUEX0Xt3PKjJ4OeWDSYAI2ClnarZon9yxFPFl0VQ1Z9H+zyGX
-         7H7FRh2pe/8P19+PEzHcCgj2mDQkmWTZTnHkastnytPBWT6e2Zv/spgFa23CPQY0iA4z
-         tkPgdfzL0pxE3paW1H2UbOMPQjNB308rhBS6E=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8Ssb7zR045y0hQVLJADfxNoncBIqCoA1zZayMTSJOr0=;
+        b=hQ69sOZII3yUJZKvzqgTA8LlEb2W+x+4V2m+WK6WBI3Tv9Sz2Sa28ekYrPSz5DnTS6
+         RnyhEv/ii17kbsMDUKml+C2aO6VCaV7qqB6bGAZP6M6uCSKwmdUOk3xVW5ovXqsj4fe9
+         Ws/l7w4bPmqVcV8fKGJ+NoM6axcrB7Xp9DWboQsdYMiENlN1I1BuplWgP8rxdF5+A7T7
+         QVXsgNe+JOwwnNEPtJ81qhP7LfWJ+oDH5drm/r0uk33usOgQiN+qUebKHveh2uWiKuno
+         d2+TNZf1OCd5POX7yyQR1K45AzB7fzj4vv3GDTNScJ1V+r486i5ziz3URMRLDZ3x+FSS
+         QbIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TA6stwlQtMs0s5sdi3+tZ1ygYla8dV/bmC8ohmequGA=;
-        b=DluubVNxhkxExWIKwOTGLcpN/U6NehrYuDD6DEOfJUNlzXpM9VzuEbYWAuYmvCE2oo
-         DOokd5vX888MHKFqPpRvEXJRZZGtARMg0TVw/p8fec61B3YMRVKIAHnAHBk0cWzDEqbu
-         nCd7hpzAFHxtlT3N7yM1928UQTrCgzY6vklppCvVnhglb6cmndiQzBkHwIPvEu0Ian3D
-         Ar4L/HDtLOufUh2kkkyvLp8qG4gktoOucnsSyttuL8K96oHHYxYMFmZlF8NFFOmv1fDH
-         wGh3/Fd28Ph9YfUXXYcykw1e5BIzt/MZ5ePGhq11lP+xzXD+U27Wy5RmvjTDR+SUKI9y
-         1uYg==
-X-Gm-Message-State: AGi0PuZPfhYhWjc5kTYHr2xzjGFyVuoDfhPm+6gjCDVH2MRY7d0STtIW
-        jmu5RPgp/deGLCTPMxYJGXy+dQ3GYws=
-X-Google-Smtp-Source: APiQypKD2M/ETNeOaiQV1O5ERUHYupBwZglrItBtzYP1tRCIqFMpFKO8AmO5QvpEDr4LzH80r1Rxcw==
-X-Received: by 2002:a1f:8dcd:: with SMTP id p196mr3680151vkd.64.1588354587398;
-        Fri, 01 May 2020 10:36:27 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id b204sm950183vkb.17.2020.05.01.10.36.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 10:36:26 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id s5so3997598uad.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:36:26 -0700 (PDT)
-X-Received: by 2002:a9f:27ca:: with SMTP id b68mr3831812uab.8.1588354586095;
- Fri, 01 May 2020 10:36:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8Ssb7zR045y0hQVLJADfxNoncBIqCoA1zZayMTSJOr0=;
+        b=JAHFg3ovUXTYLc/AfZINTZwGHF/Yq0VgW61sxPR7F2kW8jsTN2P2mVkZcwdRKaFZm7
+         lrxcSmINyft7j2P5G/zn7N+g3/epKZNBETxoONVnxlhWY3vxA5CAE/Huh/1U0TUZWNa4
+         lfr5/x6fZax+4VJV5TKOdLIcMHZw+IbWkeRQrAkl1Ainj2iV1pXi574CtP3JEizM4J9R
+         h+1VwArhklpx7umyNA4KRyw1k0HaFPD54wFmPDPAlzRh10A977Y/fylVsiU8+QjS+0CC
+         aDGoIV1ZgkoPibM62B6HDOQqGQoRtekiA8d4PBgyRcPOBeXO0DjxHSTdKZYIxmYBaEXt
+         xxHQ==
+X-Gm-Message-State: AGi0PuZbrecaYuv1rHDO2BixFi0tVhbcKMt11ZtYDmZdhqY2JX+l1TaD
+        5N22L54ZTfSl+CY9B4l6upNqjA==
+X-Google-Smtp-Source: APiQypKsRiBbPiO5UhEvgJ1CHiMaz4G022mxednNbGE1FSP2xisXt1FHVOYEQLgrh2gez/w7Jv7UYQ==
+X-Received: by 2002:a63:b542:: with SMTP id u2mr5053271pgo.352.1588354624072;
+        Fri, 01 May 2020 10:37:04 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id a22sm2369969pga.28.2020.05.01.10.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 10:37:03 -0700 (PDT)
+Date:   Fri, 1 May 2020 11:37:01 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Chris Lew <clew@codeaurora.org>, Sibi <sibis@codeaurora.org>,
+        Siddharth Gupta <sidgup@codeaurora.org>
+Subject: Re: [PATCH 2/4] soc: qcom: glink_ssr: Internalize ssr_notifiers
+Message-ID: <20200501173701.GB30509@xps15>
+References: <20200423003736.2027371-1-bjorn.andersson@linaro.org>
+ <20200423003736.2027371-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-References: <20200430095819.1.Id37f71c69eb21747b9d9e2c7c242be130814b362@changeid>
- <20200501114943.ioetuxe24gi27bll@holly.lan> <20200501133202.GA2402281@wychelm.lan>
-In-Reply-To: <20200501133202.GA2402281@wychelm.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 1 May 2020 10:36:14 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WKKCkr1va9S+ygL7XuOvSm12-qw4dCSo=FBtyXx4JvhQ@mail.gmail.com>
-Message-ID: <CAD=FV=WKKCkr1va9S+ygL7XuOvSm12-qw4dCSo=FBtyXx4JvhQ@mail.gmail.com>
-Subject: Re: [PATCH] kgdboc: Be a bit more robust about handling earlycon leaving
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423003736.2027371-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Apr 22, 2020 at 05:37:34PM -0700, Bjorn Andersson wrote:
+> Rather than carrying a special purpose blocking notifier for glink_ssr
+> in remoteproc's qcom_common.c, move it into glink_ssr so allow wider
+> reuse of the common one.
 
-On Fri, May 1, 2020 at 6:32 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Fri, May 01, 2020 at 12:49:43PM +0100, Daniel Thompson wrote:
-> > On Thu, Apr 30, 2020 at 09:59:09AM -0700, Douglas Anderson wrote:
-> > > The original implementation of kgdboc_earlycon included a comment
-> > > about how it was impossible to get notified about the boot console
-> > > going away without making changes to the Linux core.  Since folks
-> > > often don't want to change the Linux core for kgdb's purposes, the
-> > > kgdboc_earlycon implementation did a bit of polling to figure out when
-> > > the boot console went away.
-> > >
-> > > It turns out, though, that it is possible to get notified about the
-> > > boot console going away.  The solution is either clever or a hack
-> > > depending on your viewpoint.  ...or, perhaps, a clever hack.  All we
-> > > need to do is head-patch the "exit" routine of the boot console.  We
-> > > know that "struct console" must be writable because it has a "next"
-> > > pointer in it, so we can just put our own exit routine in, do our
-> > > stuff, and then call back to the original.
-> >
-> > I think I'm in the hack camp on this one!
-> >
-> >
-> > > This works great to get notified about the boot console going away.
-> > > The (slight) problem is that in the context of the boot console's exit
-> > > routine we can't call tty_find_polling_driver().
-> >
-> > I presume this is something to do with the tty_mutex?
-> > > We solve this by
-> > > kicking off some work on the system_wq when we get notified and this
-> > > works pretty well.
-> >
-> > There are some problems with the workqueue approach.
->
-> ... so did a couple of experiments to avoid the workqueue.
->
-> It occured to me that, since we have interfered with deinit() then the
-> console hasn't actually been uninitialized meaning we could still use it.
-> This does exposes us to risks similar to keep_bootcon but in exchange
-> there is no window where kgdb is broken (and no need to panic).
->
-> My prototype is minimal but I did wonder about ripping out all the
-> code to defend against removal of the earlycon and simply keep the
-> earlycon around until a new kgdbio handler is installed.
+After reading the changelog and the cover letter a few times along with thinking
+about the content of the patch, I decude that glink_ssr devices using the
+common ssr_notifiers in qcom_common.c was causing problems (having some details
+on what those problems are would be useful). 
 
-It took me a little while, but I finally see what you're saying.
-You're saying that we keep calling into the boot console even though
-it's no longer in the list of consoles.  Then we temporarily disable
-the boot console's exit routine until kgdb_earlycon() is done.  (side
-note: the exit routine was recently added and probably most consoles
-don't use it).
+As such this patch is introducing a new notifier, also called ssr_notifiers,
+that only deals with glink ssr notification to narrow the nature of the
+notifications that are sent and received.  Is my understanding correct?  Also,
+how does that fit into what Siddharth was doing here[1]?
 
-OK, that doesn't seem totally insane.  It actually works OK for you?
+It would be nice if Siddharth could ack the patch before moving forward.
 
-It's probably at least worth a warning in the log if we detect that
-we're using the boot console and it's not in the console list anymore.
-Then if kgdb starts misbehaving someone might have a clue.
+Thanks,
+Mathieu
 
-If your solution is OK we might also want to remove the call to
-cleanup_earlycon_if_invalid() in configure_kgdboc() too.
+[1]. https://patchwork.kernel.org/patch/11481081/ 
 
-I think you might win the "hackiest solution" prize, but your solution
-definitely does seem better because I can't think of any other good
-way to handle people whose consoles register a long time before their
-tty.  ;-)
-
-
--Doug
+> 
+> The rpmsg glink header file is used in preparation for the next patch.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/remoteproc/qcom_common.c |  8 ++++++++
+>  drivers/soc/qcom/glink_ssr.c     | 24 +++++++++++++++++++-----
+>  include/linux/rpmsg/qcom_glink.h |  6 ++++++
+>  3 files changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+> index ff26f2b68752..9028cea2d81e 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -42,6 +42,13 @@ static void glink_subdev_stop(struct rproc_subdev *subdev, bool crashed)
+>  	glink->edge = NULL;
+>  }
+>  
+> +static void glink_subdev_unprepare(struct rproc_subdev *subdev)
+> +{
+> +	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
+> +
+> +	qcom_glink_ssr_notify(glink->ssr_name);
+> +}
+> +
+>  /**
+>   * qcom_add_glink_subdev() - try to add a GLINK subdevice to rproc
+>   * @rproc:	rproc handle to parent the subdevice
+> @@ -64,6 +71,7 @@ void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink,
+>  	glink->dev = dev;
+>  	glink->subdev.start = glink_subdev_start;
+>  	glink->subdev.stop = glink_subdev_stop;
+> +	glink->subdev.unprepare = glink_subdev_unprepare;
+>  
+>  	rproc_add_subdev(rproc, &glink->subdev);
+>  }
+> diff --git a/drivers/soc/qcom/glink_ssr.c b/drivers/soc/qcom/glink_ssr.c
+> index d7babe3d67bc..847d79c935f1 100644
+> --- a/drivers/soc/qcom/glink_ssr.c
+> +++ b/drivers/soc/qcom/glink_ssr.c
+> @@ -54,6 +54,19 @@ struct glink_ssr {
+>  	struct completion completion;
+>  };
+>  
+> +/* Notifier list for all registered glink_ssr instances */
+> +static BLOCKING_NOTIFIER_HEAD(ssr_notifiers);
+> +
+> +/**
+> + * qcom_glink_ssr_notify() - notify GLINK SSR about stopped remoteproc
+> + * @ssr_name:	name of the remoteproc that has been stopped
+> + */
+> +void qcom_glink_ssr_notify(const char *ssr_name)
+> +{
+> +	blocking_notifier_call_chain(&ssr_notifiers, 0, (void *)ssr_name);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_glink_ssr_notify);
+> +
+>  static int qcom_glink_ssr_callback(struct rpmsg_device *rpdev,
+>  				   void *data, int len, void *priv, u32 addr)
+>  {
+> @@ -81,8 +94,9 @@ static int qcom_glink_ssr_callback(struct rpmsg_device *rpdev,
+>  	return 0;
+>  }
+>  
+> -static int qcom_glink_ssr_notify(struct notifier_block *nb, unsigned long event,
+> -				 void *data)
+> +static int qcom_glink_ssr_notifier_call(struct notifier_block *nb,
+> +					unsigned long event,
+> +					void *data)
+>  {
+>  	struct glink_ssr *ssr = container_of(nb, struct glink_ssr, nb);
+>  	struct do_cleanup_msg msg;
+> @@ -121,18 +135,18 @@ static int qcom_glink_ssr_probe(struct rpmsg_device *rpdev)
+>  
+>  	ssr->dev = &rpdev->dev;
+>  	ssr->ept = rpdev->ept;
+> -	ssr->nb.notifier_call = qcom_glink_ssr_notify;
+> +	ssr->nb.notifier_call = qcom_glink_ssr_notifier_call;
+>  
+>  	dev_set_drvdata(&rpdev->dev, ssr);
+>  
+> -	return qcom_register_ssr_notifier(&ssr->nb);
+> +	return blocking_notifier_chain_register(&ssr_notifiers, &ssr->nb);
+>  }
+>  
+>  static void qcom_glink_ssr_remove(struct rpmsg_device *rpdev)
+>  {
+>  	struct glink_ssr *ssr = dev_get_drvdata(&rpdev->dev);
+>  
+> -	qcom_unregister_ssr_notifier(&ssr->nb);
+> +	blocking_notifier_chain_unregister(&ssr_notifiers, &ssr->nb);
+>  }
+>  
+>  static const struct rpmsg_device_id qcom_glink_ssr_match[] = {
+> diff --git a/include/linux/rpmsg/qcom_glink.h b/include/linux/rpmsg/qcom_glink.h
+> index 96e26d94719f..09daa0acde2c 100644
+> --- a/include/linux/rpmsg/qcom_glink.h
+> +++ b/include/linux/rpmsg/qcom_glink.h
+> @@ -26,4 +26,10 @@ static inline void qcom_glink_smem_unregister(struct qcom_glink *glink) {}
+>  
+>  #endif
+>  
+> +#if IS_ENABLED(CONFIG_RPMSG_QCOM_GLINK_SSR)
+> +void qcom_glink_ssr_notify(const char *ssr_name);
+> +#else
+> +static inline void qcom_glink_ssr_notify(const char *ssr_name) {}
+> +#endif
+> +
+>  #endif
+> -- 
+> 2.24.0
+> 
