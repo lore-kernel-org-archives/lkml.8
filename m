@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93FCC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A0DC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7EE20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6202320857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344316;
-	bh=qq2zKoYdCyEqjqt0U3RX9qvpvrnb6fBfrYVGRgOwH4E=;
+	s=default; t=1588344318;
+	bh=BbJSuVHr+5IYyFuJdvZiLliVMl8TXc8u3OKr+XoJgqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WrmeQl3TI9VUIetnRNg0E2A9ahnmlBNQswNNbTiWEY39zN/ZKJhWXef1T+XhLCluh
-	 5AQSguo734RCeLTiDVU0VCW9FaRwsiGT7CIrVXA5G1ONM8+v8ZWc+5n4TwXYKKhi/h
-	 /JolADr5Lyvxj8okzBCGVkQAwBAtRF6QEhisx2cM=
+	b=rVbsQC03QAQZ2gPSuP5gsR25f77PwUkOFYb2YNhXFAlpJTMLH1OaaZ4QQ8Q5mDTON
+	 kytaUFwn2bFcOaVOcxr2CUurNqSvkxHGzlRNRqXuB/GhpqYeo4k2wGpUakNjL9Kent
+	 gxwnJwXp40kJ8jaVRK8xHhGQOLzpJM5Emshhsns0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgEAOpP (ORCPT
+        id S1729701AbgEAOpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:45:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:45:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729282AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729185AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F158724956;
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5962173E;
         Fri,  1 May 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344305;
-        bh=qq2zKoYdCyEqjqt0U3RX9qvpvrnb6fBfrYVGRgOwH4E=;
+        bh=BbJSuVHr+5IYyFuJdvZiLliVMl8TXc8u3OKr+XoJgqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lbh0Vp46Y2jWH8lEr92N3b6ussd/33EaiPdihekY3jO3xEPEh64AmQt3OChsJgFlj
-         zMu1Cgs68HCgzFHcGeL9WsJQRkGto8EsI5Kqau9iNF6FC5jXTarImOfE41hB90xQg0
-         AY3xzBCL8+oU/SvEKf0B+VT7HXW+eCozkcQmmf4c=
+        b=Ek4Fs5EnMWY9KkNiiDgeipm6HTU2HAI16If947ALxxpfJXokfVVs7rV7eRn0tRPdf
+         oQ4R6M18YVWCsPxSda4EXXZSJFR6Tykdmv1+vIwTThnplL9eCCZfL2SzSyYLhFZv5x
+         WXAiSuegzPKkTKwT9vLXtoV6mEnoULa82hIa/jMQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCd8-Ej; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCcx-D7; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 09/37] docs: networking: convert xfrm_sync.txt to ReST
-Date:   Fri,  1 May 2020 16:44:31 +0200
-Message-Id: <ffea07769fc84dfdf950390d756ecd881c7d0b8f.1588344146.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 07/37] docs: networking: convert xfrm_device.txt to ReST
+Date:   Fri,  1 May 2020 16:44:29 +0200
+Message-Id: <0977c0a0683059dabe314ceb543d3e8f0abbc506.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -62,185 +62,148 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- add a document title;
-- adjust titles and chapters, adding proper markups;
 - mark code blocks and literals as such;
+- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
  Documentation/networking/index.rst            |  1 +
- .../{xfrm_sync.txt => xfrm_sync.rst}          | 66 ++++++++++++-------
- 2 files changed, 44 insertions(+), 23 deletions(-)
- rename Documentation/networking/{xfrm_sync.txt => xfrm_sync.rst} (82%)
+ .../{xfrm_device.txt => xfrm_device.rst}      | 33 ++++++++++++-------
+ 2 files changed, 23 insertions(+), 11 deletions(-)
+ rename Documentation/networking/{xfrm_device.txt => xfrm_device.rst} (92%)
 
 diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 3fe70efb632e..ec83bd95e4e9 100644
+index 75521e6c473b..e31f6cb564b4 100644
 --- a/Documentation/networking/index.rst
 +++ b/Documentation/networking/index.rst
-@@ -119,6 +119,7 @@ Contents:
+@@ -117,6 +117,7 @@ Contents:
+    vxlan
+    x25-iface
     x25
-    xfrm_device
-    xfrm_proc
-+   xfrm_sync
++   xfrm_device
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/xfrm_sync.txt b/Documentation/networking/xfrm_sync.rst
-similarity index 82%
-rename from Documentation/networking/xfrm_sync.txt
-rename to Documentation/networking/xfrm_sync.rst
-index 8d88e0f2ec49..6246503ceab2 100644
---- a/Documentation/networking/xfrm_sync.txt
-+++ b/Documentation/networking/xfrm_sync.rst
-@@ -1,3 +1,8 @@
+diff --git a/Documentation/networking/xfrm_device.txt b/Documentation/networking/xfrm_device.rst
+similarity index 92%
+rename from Documentation/networking/xfrm_device.txt
+rename to Documentation/networking/xfrm_device.rst
+index a1c904dc70dc..da1073acda96 100644
+--- a/Documentation/networking/xfrm_device.txt
++++ b/Documentation/networking/xfrm_device.rst
+@@ -1,7 +1,9 @@
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+ ===============================================
+ XFRM device - offloading the IPsec computations
+ ===============================================
 +
-+====
-+XFRM
-+====
+ Shannon Nelson <shannon.nelson@oracle.com>
  
- The sync patches work is based on initial patches from
- Krisztian <hidden@balabit.hu> and others and additional patches
-@@ -40,30 +45,32 @@ The netlink message types are:
- XFRM_MSG_NEWAE and XFRM_MSG_GETAE.
  
- A XFRM_MSG_GETAE does not have TLVs.
+@@ -19,7 +21,7 @@ hardware offload.
+ Userland access to the offload is typically through a system such as
+ libreswan or KAME/raccoon, but the iproute2 'ip xfrm' command set can
+ be handy when experimenting.  An example command might look something
+-like this:
++like this::
+ 
+   ip x s add proto esp dst 14.0.0.70 src 14.0.0.52 spi 0x07 mode transport \
+      reqid 0x07 replay-window 32 \
+@@ -34,15 +36,17 @@ Yes, that's ugly, but that's what shell scripts and/or libreswan are for.
+ Callbacks to implement
+ ======================
+ 
+-/* from include/linux/netdevice.h */
+-struct xfrmdev_ops {
++::
 +
- A XFRM_MSG_NEWAE will have at least two TLVs (as is
- discussed further below).
++  /* from include/linux/netdevice.h */
++  struct xfrmdev_ops {
+ 	int	(*xdo_dev_state_add) (struct xfrm_state *x);
+ 	void	(*xdo_dev_state_delete) (struct xfrm_state *x);
+ 	void	(*xdo_dev_state_free) (struct xfrm_state *x);
+ 	bool	(*xdo_dev_offload_ok) (struct sk_buff *skb,
+ 				       struct xfrm_state *x);
+ 	void    (*xdo_dev_state_advance_esn) (struct xfrm_state *x);
+-};
++  };
  
--aevent_id structure looks like:
-+aevent_id structure looks like::
+ The NIC driver offering ipsec offload will need to implement these
+ callbacks to make the offload available to the network stack's
+@@ -58,6 +62,8 @@ At probe time and before the call to register_netdev(), the driver should
+ set up local data structures and XFRM callbacks, and set the feature bits.
+ The XFRM code's listener will finish the setup on NETDEV_REGISTER.
  
-    struct xfrm_aevent_id {
--             struct xfrm_usersa_id           sa_id;
--             xfrm_address_t                  saddr;
--             __u32                           flags;
--             __u32                           reqid;
-+	     struct xfrm_usersa_id           sa_id;
-+	     xfrm_address_t                  saddr;
-+	     __u32                           flags;
-+	     __u32                           reqid;
-    };
- 
- The unique SA is identified by the combination of xfrm_usersa_id,
- reqid and saddr.
- 
- flags are used to indicate different things. The possible
--flags are:
--        XFRM_AE_RTHR=1, /* replay threshold*/
--        XFRM_AE_RVAL=2, /* replay value */
--        XFRM_AE_LVAL=4, /* lifetime value */
--        XFRM_AE_ETHR=8, /* expiry timer threshold */
--        XFRM_AE_CR=16, /* Event cause is replay update */
--        XFRM_AE_CE=32, /* Event cause is timer expiry */
--        XFRM_AE_CU=64, /* Event cause is policy update */
-+flags are::
++::
 +
-+	XFRM_AE_RTHR=1, /* replay threshold*/
-+	XFRM_AE_RVAL=2, /* replay value */
-+	XFRM_AE_LVAL=4, /* lifetime value */
-+	XFRM_AE_ETHR=8, /* expiry timer threshold */
-+	XFRM_AE_CR=16, /* Event cause is replay update */
-+	XFRM_AE_CE=32, /* Event cause is timer expiry */
-+	XFRM_AE_CU=64, /* Event cause is policy update */
- 
- How these flags are used is dependent on the direction of the
- message (kernel<->user) as well the cause (config, query or event).
-@@ -80,23 +87,27 @@ to get notified of these events.
- -----------------------------------------
- 
- a) byte value (XFRMA_LTIME_VAL)
+ 		adapter->netdev->xfrmdev_ops = &ixgbe_xfrmdev_ops;
+ 		adapter->netdev->features |= NETIF_F_HW_ESP;
+ 		adapter->netdev->hw_enc_features |= NETIF_F_HW_ESP;
+@@ -65,16 +71,20 @@ The XFRM code's listener will finish the setup on NETDEV_REGISTER.
+ When new SAs are set up with a request for "offload" feature, the
+ driver's xdo_dev_state_add() will be given the new SA to be offloaded
+ and an indication of whether it is for Rx or Tx.  The driver should
 +
- This TLV carries the running/current counter for byte lifetime since
- last event.
- 
- b)replay value (XFRMA_REPLAY_VAL)
+ 	- verify the algorithm is supported for offloads
+ 	- store the SA information (key, salt, target-ip, protocol, etc)
+ 	- enable the HW offload of the SA
+ 	- return status value:
 +
- This TLV carries the running/current counter for replay sequence since
- last event.
++		===========   ===================================
+ 		0             success
+ 		-EOPNETSUPP   offload not supported, try SW IPsec
+ 		other         fail the request
++		===========   ===================================
  
- c)replay threshold (XFRMA_REPLAY_THRESH)
-+
- This TLV carries the threshold being used by the kernel to trigger events
- when the replay sequence is exceeded.
+ The driver can also set an offload_handle in the SA, an opaque void pointer
+-that can be used to convey context into the fast-path offload requests.
++that can be used to convey context into the fast-path offload requests::
  
- d) expiry timer (XFRMA_ETIMER_THRESH)
-+
- This is a timer value in milliseconds which is used as the nagle
- value to rate limit the events.
+ 		xs->xso.offload_handle = context;
  
- 3) Default configurations for the parameters:
------------------------------------------------
-+---------------------------------------------
+@@ -88,7 +98,7 @@ return true of false to signify its support.
  
- By default these events should be turned off unless there is
- at least one listener registered to listen to the multicast
-@@ -108,6 +119,7 @@ we also provide default threshold values for these different parameters
- in case they are not specified.
+ When ready to send, the driver needs to inspect the Tx packet for the
+ offload information, including the opaque context, and set up the packet
+-send accordingly.
++send accordingly::
  
- the two sysctls/proc entries are:
-+
- a) /proc/sys/net/core/sysctl_xfrm_aevent_etime
- used to provide default values for the XFRMA_ETIMER_THRESH in incremental
- units of time of 100ms. The default is 10 (1 second)
-@@ -120,37 +132,45 @@ in incremental packet count. The default is two packets.
- ----------------
+ 		xs = xfrm_input_state(skb);
+ 		context = xs->xso.offload_handle;
+@@ -105,18 +115,21 @@ the packet's skb.  At this point the data should be decrypted but the
+ IPsec headers are still in the packet data; they are removed later up
+ the stack in xfrm_input().
  
- a) XFRM_MSG_GETAE issued by user-->kernel.
--XFRM_MSG_GETAE does not carry any TLVs.
-+   XFRM_MSG_GETAE does not carry any TLVs.
+-	find and hold the SA that was used to the Rx skb
++	find and hold the SA that was used to the Rx skb::
 +
- The response is a XFRM_MSG_NEWAE which is formatted based on what
- XFRM_MSG_GETAE queried for.
-+
- The response will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
--*if XFRM_AE_RTHR flag is set, then XFRMA_REPLAY_THRESH is also retrieved
--*if XFRM_AE_ETHR flag is set, then XFRMA_ETIMER_THRESH is also retrieved
-+* if XFRM_AE_RTHR flag is set, then XFRMA_REPLAY_THRESH is also retrieved
-+* if XFRM_AE_ETHR flag is set, then XFRMA_ETIMER_THRESH is also retrieved
+ 		get spi, protocol, and destination IP from packet headers
+ 		xs = find xs from (spi, protocol, dest_IP)
+ 		xfrm_state_hold(xs);
  
- b) XFRM_MSG_NEWAE is issued by either user space to configure
--or kernel to announce events or respond to a XFRM_MSG_GETAE.
-+   or kernel to announce events or respond to a XFRM_MSG_GETAE.
+-	store the state information into the skb
++	store the state information into the skb::
++
+ 		sp = secpath_set(skb);
+ 		if (!sp) return;
+ 		sp->xvec[sp->len++] = xs;
+ 		sp->olen++;
  
- i) user --> kernel to configure a specific SA.
+-	indicate the success and/or error status of the offload
++	indicate the success and/or error status of the offload::
 +
- any of the values or threshold parameters can be updated by passing the
- appropriate TLV.
-+
- A response is issued back to the sender in user space to indicate success
- or failure.
-+
- In the case of success, additionally an event with
- XFRM_MSG_NEWAE is also issued to any listeners as described in iii).
- 
- ii) kernel->user direction as a response to XFRM_MSG_GETAE
-+
- The response will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
-+
- The threshold TLVs will be included if explicitly requested in
- the XFRM_MSG_GETAE message.
- 
- iii) kernel->user to report as event if someone sets any values or
--thresholds for an SA using XFRM_MSG_NEWAE (as described in #i above).
--In such a case XFRM_AE_CU flag is set to inform the user that
--the change happened as a result of an update.
--The message will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
-+     thresholds for an SA using XFRM_MSG_NEWAE (as described in #i above).
-+     In such a case XFRM_AE_CU flag is set to inform the user that
-+     the change happened as a result of an update.
-+     The message will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
- 
- iv) kernel->user to report event when replay threshold or a timeout
--is exceeded.
-+    is exceeded.
-+
- In such a case either XFRM_AE_CR (replay exceeded) or XFRM_AE_CE (timeout
- happened) is set to inform the user what happened.
- Note the two flags are mutually exclusive.
+ 		xo = xfrm_offload(skb);
+ 		xo->flags = CRYPTO_DONE;
+ 		xo->status = crypto_status;
+@@ -136,5 +149,3 @@ hardware needs.
+ As a netdev is set to DOWN the XFRM stack's netdev listener will call
+ xdo_dev_state_delete() and xdo_dev_state_free() on any remaining offloaded
+ states.
+-
+-
 -- 
 2.25.4
 
