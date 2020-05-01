@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB2FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF58C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6AE208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FF720757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339552;
-	bh=1bJXgS9EGSsKXLluKrL63N6r/YnFN67KmUdN1uqhg/E=;
+	s=default; t=1588339556;
+	bh=Z/zPxkWe2fRUFC3yfV2DUN3dnKzbzDiP4hZZYzjw2t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHvmnfgCZCUAIcGqKcOPEojYX/jx3jD8v14a11nhRkjW1XYLyHL9W4z5PG65GDNj8
-	 VYu3mQZPJHgYPlUiqjq43aar9N5GHxCZmizGQQmQw/1aEYG9hDP2fvcbI0RWbPo8zn
-	 dDdFYpT1jVbh0HQK/JRFJx10o3o4QBZiS+4yZ0Bw=
+	b=yG1JLFKC9EUgyztRp/2hgU0XM3+SaegWbHx/8fGYceFSQZ2+XqODF0RqWcj0WSXzI
+	 IUgid6ILcupDaZJE67aQuQAd6qw6oSixE/Ma8TGfj3raGCCmwlxeMZKmsQsp1kwxU5
+	 jFnX+z+76/ej6rQfyncsjHu4iec/My7VDACxlhUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgEANZv (ORCPT
+        id S1729131AbgEANZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgEANZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:46 -0400
+        id S1729120AbgEANZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3102D208D6;
-        Fri,  1 May 2020 13:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D24B2166E;
+        Fri,  1 May 2020 13:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339546;
-        bh=1bJXgS9EGSsKXLluKrL63N6r/YnFN67KmUdN1uqhg/E=;
+        s=default; t=1588339551;
+        bh=Z/zPxkWe2fRUFC3yfV2DUN3dnKzbzDiP4hZZYzjw2t0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qy5r1JfOsJMqU3m1VPMcqENC3r9++OFfGUnbbTBKwb5a6q8eETPENq4i0D4Lj9NlS
-         aJVDEsasO+SnWvkU5A6jPyN/ME69Q3bgdf01xovEtIU1MrEFi4yXvG+QgrgDS7txcE
-         BtG+RfQV6RceJhf0rtNfIi/9bJSXwFyk6uv/6O5M=
+        b=EDf/a/M3KOgwgC0Usxqj5jZHSlKZEf5FH8lA5gmAObEbzGh9LYiTndtAnB1Az0BlP
+         VmMq2Ml3ZV9l5aq2R68O+kDzdSXzWz/hOTklsZJVsRS+VlTjVktf9LlEnslJudLNqE
+         /nLNyaq5YW6eva4IMZTXvB8Vh17C0T48J6K55Vrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 21/70] net/x25: Fix x25_neigh refcnt leak when receiving frame
-Date:   Fri,  1 May 2020 15:21:09 +0200
-Message-Id: <20200501131520.809525053@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.4 27/70] iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
+Date:   Fri,  1 May 2020 15:21:15 +0200
+Message-Id: <20200501131522.993587194@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,47 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit f35d12971b4d814cdb2f659d76b42f0c545270b6 ]
+commit f954b098fbac4d183219ce5b42d76d6df2aed50a upstream.
 
-x25_lapb_receive_frame() invokes x25_get_neigh(), which returns a
-reference of the specified x25_neigh object to "nb" with increased
-refcnt.
+When enabling the trigger and unmasking the end-of-sequence (EOS) interrupt
+the EOS interrupt should be cleared from the status register. Otherwise it
+is possible that it was still set from a previous capture. If that is the
+case the interrupt would fire immediately even though no conversion has
+been done yet and stale data is being read from the device.
 
-When x25_lapb_receive_frame() returns, local variable "nb" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+The old code only clears the interrupt if the interrupt was previously
+unmasked. Which does not make much sense since the interrupt is always
+masked at this point and in addition masking the interrupt does not clear
+the interrupt from the status register. So the clearing needs to be done
+unconditionally.
 
-The reference counting issue happens in one path of
-x25_lapb_receive_frame(). When pskb_may_pull() returns false, the
-function forgets to decrease the refcnt increased by x25_get_neigh(),
-causing a refcnt leak.
-
-Fix this issue by calling x25_neigh_put() when pskb_may_pull() returns
-false.
-
-Fixes: cb101ed2c3c7 ("x25: Handle undersized/fragmented skbs")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/x25/x25_dev.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/x25/x25_dev.c
-+++ b/net/x25/x25_dev.c
-@@ -120,8 +120,10 @@ int x25_lapb_receive_frame(struct sk_buf
- 		goto drop;
- 	}
+---
+ drivers/iio/adc/xilinx-xadc-core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -660,7 +660,7 @@ static int xadc_trigger_set_state(struct
  
--	if (!pskb_may_pull(skb, 1))
-+	if (!pskb_may_pull(skb, 1)) {
-+		x25_neigh_put(nb);
- 		return 0;
-+	}
- 
- 	switch (skb->data[0]) {
- 
+ 	spin_lock_irqsave(&xadc->lock, flags);
+ 	xadc_read_reg(xadc, XADC_AXI_REG_IPIER, &val);
+-	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, val & XADC_AXI_INT_EOS);
++	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, XADC_AXI_INT_EOS);
+ 	if (state)
+ 		val |= XADC_AXI_INT_EOS;
+ 	else
 
 
