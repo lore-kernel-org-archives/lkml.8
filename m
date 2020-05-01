@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80139C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6400CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF6B2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39031206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341524;
-	bh=GGWQ67jdRD0wSmMauQa4FV3WSwv4RIz4968TpQMGWfU=;
+	s=default; t=1588341533;
+	bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X85qkMyf1rjBqbzUWftlNThBbsesRUgy5YPGuskCNUJ0S1M/e8AyqgAFEGzqeeVdd
-	 6X5Ubpy/dy2gbe34DPSb1XO8ZU6KcIawL4/k3+/XTD3p31SYuXLpa0wGb3bYjX6FsA
-	 C+DbWw9byXW5tjevHbxKsnBGSXHtb6QxTVVCOWfg=
+	b=2OwBTwFmBNkk0e/2bKel76EgYFYTJljWv0zyQsTODWwFS0XmVqPCgdUlVtm1Sa0sg
+	 qFCXUP/ZfxSii2t4gDnA6w86QUYAHm4D8evn/3N7bcCoPadcjmEtBtsoWJAzqybQ5J
+	 yaSH74sGNNKV46Z4z27hBRLzGIJ3E9jL/0ri/Ai0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgEAN6n (ORCPT
+        id S1730036AbgEAN6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:58:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729880AbgEANaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:08 -0400
+        id S1729848AbgEANaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45BC2208DB;
-        Fri,  1 May 2020 13:30:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E710F208DB;
+        Fri,  1 May 2020 13:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339807;
-        bh=GGWQ67jdRD0wSmMauQa4FV3WSwv4RIz4968TpQMGWfU=;
+        s=default; t=1588339800;
+        bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=crYn1M2bqoD/YU7gzHMGhfyG2iLHhfZGpcdDPUt5M2JA09qjVR4+nVtG84nJ3AmBq
-         CD4C+1cjwrBbHoPTMYIS4TrOCyAq7AoDYYoNhQeH9jYiQPxwjHFGLLru2U1gOdnpyZ
-         9W7XBCpjhofRIiItBZBBwv2PPXW2NiQhZcFFWxI4=
+        b=WvCIrqsfZu8qMHxmW4T5+hCvr4eOIoFup0VkiGIy4vzda1loqQs07gzAOxOTpeGJZ
+         Ux/VeUtt1VdhCZYV108nhgWrmoBlhSuJ/s6tX6Gf3W4Q9EVUYgWILPuuuN2y925Ifc
+         yBGA/SKuoq467JBov0RwTJAJcDocYg1+tTAjsH24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.9 55/80] staging: vt6656: Power save stop wake_up_count wrap around.
-Date:   Fri,  1 May 2020 15:21:49 +0200
-Message-Id: <20200501131530.323188055@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.9 52/80] staging: comedi: dt2815: fix writing hi byte of analog output
+Date:   Fri,  1 May 2020 15:21:46 +0200
+Message-Id: <20200501131529.726360587@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -58,37 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit ea81c3486442f4643fc9825a2bb1b430b829bccd upstream.
+commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
 
-conf.listen_interval can sometimes be zero causing wake_up_count
-to wrap around up to many beacons too late causing
-CTRL-EVENT-BEACON-LOSS as in.
+The DT2815 analog output command is 16 bits wide, consisting of the
+12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
+and a voltage or current selector in bit 0.  Both bytes of the 16-bit
+command need to be written in turn to a single 8-bit data register.
+However, the driver currently only writes the low 8-bits.  It is broken
+and appears to have always been broken.
 
-wpa_supplicant[795]: message repeated 45 times: [..CTRL-EVENT-BEACON-LOSS ]
+Electronic copies of the DT2815 User's Manual seem impossible to find
+online, but looking at the source code, a best guess for the sequence
+the driver intended to use to write the analog output command is as
+follows:
 
-Fixes: 43c93d9bf5e2 ("staging: vt6656: implement power saving code.")
+1. Wait for the status register to read 0x00.
+2. Write the low byte of the command to the data register.
+3. Wait for the status register to read 0x80.
+4. Write the high byte of the command to the data register.
+
+Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
+driver.
+
+Also add a "FIXME" comment about setting bit 0 of the low byte of the
+command.  Supposedly, it is used to choose between voltage output and
+current output, but the current driver always sets it to 1.
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/fce47bb5-7ca6-7671-5094-5c6107302f2b@gmail.com
+Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/int.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/dt2815.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/vt6656/int.c
-+++ b/drivers/staging/vt6656/int.c
-@@ -153,7 +153,8 @@ void vnt_int_process_data(struct vnt_pri
- 				priv->wake_up_count =
- 					priv->hw->conf.listen_interval;
+--- a/drivers/staging/comedi/drivers/dt2815.c
++++ b/drivers/staging/comedi/drivers/dt2815.c
+@@ -101,6 +101,7 @@ static int dt2815_ao_insn(struct comedi_
+ 	int ret;
  
--			--priv->wake_up_count;
-+			if (priv->wake_up_count)
-+				--priv->wake_up_count;
+ 	for (i = 0; i < insn->n; i++) {
++		/* FIXME: lo bit 0 chooses voltage output or current output */
+ 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
+ 		hi = (data[i] & 0xff0) >> 4;
  
- 			/* Turn on wake up to listen next beacon */
- 			if (priv->wake_up_count == 1)
+@@ -114,6 +115,8 @@ static int dt2815_ao_insn(struct comedi_
+ 		if (ret)
+ 			return ret;
+ 
++		outb(hi, dev->iobase + DT2815_DATA);
++
+ 		devpriv->ao_readback[chan] = data[i];
+ 	}
+ 	return i;
 
 
