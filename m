@@ -2,95 +2,76 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FBFC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DCAC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CECB32070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588312935;
-	bh=fjxO29s3fMRS8RHF3y7tjdoDNW7QReg78iJ8tzaU9ZE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iIvH3qotaPSE5yf4tH/eGbrZwo33fvZhE1g9XmV4TKHEtgaxmZr4kpDti8eLOuIgb
-	 artp8gB0Wpaksz9z3R6/2MdU54vyL8UVkCd0PBV5ry+ojm0dpr331ImEFaZRuUSEfB
-	 cwB0hZDQmJy/7lhKvCu2RVJC+a7n6hVur+yaKtn4=
+	by mail.kernel.org (Postfix) with ESMTP id 80452208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgEAGCP (ORCPT
+        id S1728252AbgEAG2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 02:02:15 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:37642 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAGCO (ORCPT
+        Fri, 1 May 2020 02:28:13 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:46924 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728126AbgEAG2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 02:02:14 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 04161hVg014581;
-        Fri, 1 May 2020 15:01:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 04161hVg014581
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588312903;
-        bh=yTZNYHQtPbMeCpcIyjfdklxtVVJs41vlWoODKcjffw4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ntNjf0qCPCGGztpWKkm7EiPzZ2Swvw/EagQYh5g2jRHT/x+bGAajjM2RVTgXiuWFC
-         q7gzLLZub3t3yXCMh7LooIkR8FtAuS/dj2r2hqS6mb1qBw8AT9T24z1eyDL1VGScWq
-         GKD/unkont9M9z2+D1nMNDHrx4SnqO32YZIDY69zbQ7UFXuVA3oOUYIGeYXGnQdyhh
-         xjEQG6gSRWRai/WPaXc5NvapFkIcvTjTpXuAKpvEOUPvNTEHCFnI8Nlg7AAxSLXcVa
-         7nzbXRK7SjZkEKVqtplAlqZpaYlzQsHPufw/edoFhWcNhF4NPre5NfwBVUktSJm+0x
-         jNyhq0n6YQ6rw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH] kbuild: invoke syncconfig if autoconf.h is missing
-Date:   Fri,  1 May 2020 15:01:41 +0900
-Message-Id: <20200501060141.1924489-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 May 2020 02:28:12 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 May 2020 11:58:09 +0530
+Received: from c-mansur-linux.qualcomm.com ([10.204.90.208])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 01 May 2020 11:58:03 +0530
+Received: by c-mansur-linux.qualcomm.com (Postfix, from userid 461723)
+        id 368D02196B; Fri,  1 May 2020 11:58:02 +0530 (IST)
+From:   Mansur Alisha Shaik <mansur@codeaurora.org>
+To:     stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, mansur@codeaurora.org
+Subject: [PATCH V2] venus: fix multiple encoder crash
+Date:   Fri,  1 May 2020 11:58:00 +0530
+Message-Id: <1588314480-22409-1-git-send-email-mansur@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If include/generated/autoconf.h is accidentally lost somehow,
-there is no clear way to fix it. Make it self-healing.
+Currently we are considering the instances which are available
+in core->inst list for load calculation in min_loaded_core()
+function, but this is incorrect because by the time we call
+decide_core() for second instance, the third instance not
+filled yet codec_freq_data pointer.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Solve this by considering the instances whose session has started.
+
+Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
 ---
+Changes in V2:
+- As per Alex and Jeffrey comments, elaborated problem
+  and addressed review comments.
 
- Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/pm_helpers.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index 9ff00bfe0575..f0b6f9fd5d25 100644
---- a/Makefile
-+++ b/Makefile
-@@ -698,7 +698,7 @@ $(KCONFIG_CONFIG):
- # This exploits the 'multi-target pattern rule' trick.
- # The syncconfig should be executed only once to make all the targets.
- # (Note: use the grouped target '&:' when we bump to GNU Make 4.3)
--%/auto.conf %/auto.conf.cmd: $(KCONFIG_CONFIG)
-+%/config/auto.conf %/config/auto.conf.cmd %/generated/autoconf.h: $(KCONFIG_CONFIG)
- 	$(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
- else # !may-sync-config
- # External modules and some install targets need include/generated/autoconf.h
-@@ -1141,7 +1141,8 @@ scripts: scripts_basic scripts_dtc
- PHONY += prepare archprepare
+diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+index abf9315..531e7a4 100644
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -496,6 +496,10 @@ min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
+ 	list_for_each_entry(inst_pos, &core->instances, list) {
+ 		if (inst_pos == inst)
+ 			continue;
++
++		if (inst_pos->state != INST_START)
++			continue;
++
+ 		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
+ 		coreid = inst_pos->clk_data.core_id;
  
- archprepare: outputmakefile archheaders archscripts scripts include/config/kernel.release \
--	asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h
-+	asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h \
-+	include/generated/autoconf.h
- 
- prepare0: archprepare
- 	$(Q)$(MAKE) $(build)=scripts/mod
 -- 
-2.25.1
+2.7.4
 
