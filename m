@@ -2,81 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8055BC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2633AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A69B21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pD3s9EAW"
+	by mail.kernel.org (Postfix) with ESMTP id 0BBEA2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgEAV7p (ORCPT
+        id S1727808AbgEAWAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgEAV7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:59:44 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CBFAC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:59:44 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id m5so5697368ilj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pDnC17yV3YK6+UXyEP5tqCWTQ7iWQE5yaacGTLu3Bc4=;
-        b=pD3s9EAWNfIU7par29nN6lUA34erm8IVRafEDx41O3QbV/hemBxzAtdMXSb3pZm574
-         aO9aHakyiRxmGFaRx/JJuIXm2qP1QpRI6DT/uibu9HpFpcIxNVNNN0NfrhmRr6x+w9OL
-         U5jDk9RfBViHO4PuRQ1UcNg4udK1HCU6VhdKHepQjPK1zJahKE1raamn+tjJ0afzx01g
-         Tns0Qh7Wxh+TMn6G+JFpVi+RJ+OOvijYEVG9F8vYzHR3g8EudBURX8dL5GH/oK99t1Ov
-         WKlqB/4JtYBZHuL2FluC+U07eyBEYNvi0YfKz5VGrt7znXVKVIlcMh328Yova+1wR1DP
-         CExQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pDnC17yV3YK6+UXyEP5tqCWTQ7iWQE5yaacGTLu3Bc4=;
-        b=h4OJpJvQUt3rWQb0NeOlD7TPspCQ1PPvxk2iOHh1kdJxbiXsGjovDfUjpehSG/037t
-         mTF3VM5qAYBNalM8pSU1E0oMc/AyKgdU9VRVhytwgF9eRCCoJcPNgwygy3IAAAmoPSTJ
-         2YLP2nCT9Iib30Yvf48EAllWYvD3yKQvHsfptw7PybNmT7rnP0EaYb6Xwt0gwbb7G9ag
-         3Frno6Vy7XHQAI+0D0WgYfi2IufZChtqe9rQ60+0KK8bu9wdpkbznsmbTJ/PGQJsvidM
-         ML3BI2l6R5LLtQ1w/eAr/lnJyBiDtlvPX00H7u4h4+91d+xIK+HYSP9jzZ1e7BsNH3NO
-         0yOg==
-X-Gm-Message-State: AGi0PuaatIKNZDQIqGYXB7JIn/WUmD+FuFhMUnXFAnemPa+pKandckeX
-        pmDQo70oTlLd8US0CrExIWtYug==
-X-Google-Smtp-Source: APiQypIex3AmKv2b0vjFHu/JjPhozuTBvTpn+IlLgEkDCXArGdu/fO286GMESqLSgsBCeQY0NXUrzw==
-X-Received: by 2002:a92:8515:: with SMTP id f21mr5748721ilh.20.1588370383756;
-        Fri, 01 May 2020 14:59:43 -0700 (PDT)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id s5sm1724282ili.59.2020.05.01.14.59.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 14:59:43 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/4] arm64: dts: sdm845: add IPA iommus property
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net
-Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200501214625.31539-1-elder@linaro.org>
- <20200501214625.31539-2-elder@linaro.org>
-Message-ID: <2648d6a5-9ef7-b60d-c9a2-d5e1c083bc0a@linaro.org>
-Date:   Fri, 1 May 2020 16:59:42 -0500
+        Fri, 1 May 2020 18:00:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51521 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbgEAV77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:59:59 -0400
+IronPort-SDR: bCIK57wnTBSZycO69vYSPwGkwW/pWIlGRlErsD3YCaYachtg/79svfm/8XRDk4Ki1kUYw5lkZB
+ jyj268bi3Rww==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 14:59:58 -0700
+IronPort-SDR: CC0Dkgglp5p1yThlp9NS9qJg3mrlsrqx8YnyHPryiFHuAj1ws0sSj0suBVfBpTlYjWPh+gBuqJ
+ nBKE4JZ+pKWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,341,1583222400"; 
+   d="scan'208";a="283303372"
+Received: from schen9-mobl.amr.corp.intel.com ([10.254.53.33])
+  by fmsmga004.fm.intel.com with ESMTP; 01 May 2020 14:59:58 -0700
+Subject: Re: [PATCH 2/3] mm/swap: simplify enable_swap_slots_cache()
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200430061143.450-1-thunder.leizhen@huawei.com>
+ <20200430061143.450-3-thunder.leizhen@huawei.com>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Message-ID: <36a2f775-2f33-2b06-048a-8f82fd288d3b@linux.intel.com>
+Date:   Fri, 1 May 2020 14:59:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200501214625.31539-2-elder@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200430061143.450-3-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,45 +54,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20 4:46 PM, Alex Elder wrote:
-> Add an "iommus" property to the IPA node in "sdm845.dtsi".  It is
-> required because there are two regions of memory the IPA accesses
-> through an SMMU.  The next few patches define and map those regions.
+
+
+On 4/29/20 11:11 PM, Zhen Lei wrote:
+> Whether swap_slot_cache_initialized is true or false,
+> __reenable_swap_slots_cache() is always called. To make this meaning
+> clear, leave only one call to __reenable_swap_slots_cache(). This also
+> make it clearer what extra needs be done when swap_slot_cache_initialized
+> is false.
 > 
-> Signed-off-by: Alex Elder <elder@linaro.org>
+> No functional change.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-I'm very sorry, I grouped these incorrectly.
-
-I intended for this one patch to go to Bjorn and Andy to be
-taken in through the Qualcomm tree, *not* through the net-next
-tree.
-
-I also neglected to mention that this addition is related to
-this other series, which has the modem define some IOMMU
-streams for the modem to use (one of the definitions is
-related to the modem's use of IPA):
-   https://lore.kernel.org/patchwork/cover/1227747/
-
-Would you like me to post v2 of the series correcting this?
-
-					-Alex
+Acked-by: Tim Chen <tim.c.chen@linux.intel.com>
 
 > ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
->   1 file changed, 2 insertions(+)
+>  mm/swap_slots.c | 22 ++++++++++------------
+>  1 file changed, 10 insertions(+), 12 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 8f926b5234d4..de6bb86c4968 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1761,6 +1761,8 @@
->   
->   		ipa: ipa@1e40000 {
->   			compatible = "qcom,sdm845-ipa";
+> diff --git a/mm/swap_slots.c b/mm/swap_slots.c
+> index 01609b5f0c55..b40394473a3c 100644
+> --- a/mm/swap_slots.c
+> +++ b/mm/swap_slots.c
+> @@ -240,21 +240,19 @@ static int free_slot_cache(unsigned int cpu)
+>  
+>  int enable_swap_slots_cache(void)
+>  {
+> -	int ret = 0;
+> -
+>  	mutex_lock(&swap_slots_cache_enable_mutex);
+> -	if (swap_slot_cache_initialized) {
+> -		__reenable_swap_slots_cache();
+> -		goto out_unlock;
+> -	}
+> +	if (!swap_slot_cache_initialized) {
+> +		int ret;
+>  
+> -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "swap_slots_cache",
+> -				alloc_swap_slot_cache, free_slot_cache);
+> -	if (WARN_ONCE(ret < 0, "Cache allocation failed (%s), operating "
+> -			       "without swap slots cache.\n", __func__))
+> -		goto out_unlock;
+> +		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "swap_slots_cache",
+> +					alloc_swap_slot_cache, free_slot_cache);
+> +		if (WARN_ONCE(ret < 0, "Cache allocation failed (%s), operating "
+> +				       "without swap slots cache.\n", __func__))
+> +			goto out_unlock;
 > +
-> +			iommus = <&apps_smmu 0x720 0x3>;
->   			reg = <0 0x1e40000 0 0x7000>,
->   			      <0 0x1e47000 0 0x2000>,
->   			      <0 0x1e04000 0 0x2c000>;
+> +		swap_slot_cache_initialized = true;
+> +	}
+>  
+> -	swap_slot_cache_initialized = true;
+>  	__reenable_swap_slots_cache();
+>  out_unlock:
+>  	mutex_unlock(&swap_slots_cache_enable_mutex);
 > 
-
