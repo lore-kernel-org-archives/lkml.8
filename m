@@ -2,101 +2,94 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E94C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DB5C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771E02073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156BE2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NW7IFsEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgEAEDP (ORCPT
+        id S1728232AbgEAED2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 00:03:15 -0400
-Received: from namei.org ([65.99.196.166]:56446 "EHLO namei.org"
+        Fri, 1 May 2020 00:03:28 -0400
+Received: from ozlabs.org ([203.11.71.1]:51459 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbgEAEDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 00:03:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 04142GZx030634;
-        Fri, 1 May 2020 04:02:16 GMT
-Date:   Fri, 1 May 2020 14:02:16 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] fs: Add a MAY_EXECMOUNT flag to infer the noexec
- mount property
-In-Reply-To: <20200428175129.634352-3-mic@digikod.net>
-Message-ID: <alpine.LRH.2.21.2005011357290.29679@namei.org>
-References: <20200428175129.634352-1-mic@digikod.net> <20200428175129.634352-3-mic@digikod.net>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1725791AbgEAED2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 00:03:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CzBP5V3sz9sTH;
+        Fri,  1 May 2020 14:03:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588305805;
+        bh=tp5oK7Ntv2EqDe/q9runiSGnstVf9JGLroQUIvu05S0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NW7IFsEuaqGOhigbNFnxcB7hbIoKSpZ2dbvfB8irbsfz8gDPevi+oop0ML1o3r1C0
+         x1EnnH2kg5FgJb2P4gLuiayjWAe4dYnOwKFi/UAfUtyFOdyRjf4onQJSfbmVsTFbf0
+         Mt2m0TJXxgqkk+7OI+Y7MlmQIdnBUu0LWrhdwJRmUr5JTWyBhu6lwOTkIKXlBUA2sN
+         B2zIlruhUhTdrEGiuJPmYsPGlef17pQIF7GIdtBQ5JuRmJTHkawiYVakJnflATH9Al
+         m9piE59tWFbWcKcUaMatHtcEGGb3tr0rN+P3/JD7pu05NMxmHYbh2csOwYrbtCEiZD
+         senhQ/8iGZgLw==
+Date:   Fri, 1 May 2020 14:03:23 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: linux-next: build warning after merge of the sound tree
+Message-ID: <20200501140323.0e0f4a9d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="1665246916-2066436414-1588305635=:29679"
-Content-ID: <alpine.LRH.2.21.2005011402110.29679@namei.org>
+Content-Type: multipart/signed; boundary="Sig_/7RCqhyNlwLXx79jhI4G+C4J";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+--Sig_/7RCqhyNlwLXx79jhI4G+C4J
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---1665246916-2066436414-1588305635=:29679
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.LRH.2.21.2005011402111.29679@namei.org>
+Hi all,
 
-On Tue, 28 Apr 2020, Mickaël Salaün wrote:
+After merging the sound tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-> An LSM doesn't get path information related to an access request to open
-> an inode.  This new (internal) MAY_EXECMOUNT flag enables an LSM to
-> check if the underlying mount point of an inode is marked as executable.
-> This is useful to implement a security policy taking advantage of the
-> noexec mount option.
-> 
-> This flag is set according to path_noexec(), which checks if a mount
-> point is mounted with MNT_NOEXEC or if the underlying superblock is
-> SB_I_NOEXEC.
-> 
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
-> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
+sound/pci/hda/patch_realtek.c: In function 'alc_fixup_hp_gpio_led':
+sound/pci/hda/patch_realtek.c:4134:6: warning: unused variable 'err' [-Wunu=
+sed-variable]
+ 4134 |  int err;
+      |      ^~~
 
-Are there any existing LSMs which plan to use this aspect?
+Introduced by commit
 
--- 
-James Morris
-<jmorris@namei.org>
---1665246916-2066436414-1588305635=:29679--
+  87dc36482cab ("ALSA: hda/realtek - Add LED class support for micmute LED")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7RCqhyNlwLXx79jhI4G+C4J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6rn4sACgkQAVBC80lX
+0Gw2uwgApBzmuUVjagQdtQ3J5Kt07r8axkbGaDXHXc5LHIzOgx4++jR+qPQ1lI4b
+gk/GLsLjMZcr2vmc/cGVSu6TNmqiMmqpj5re+pUJ3IH4Tj977rCSQsPYZjmZCLb4
+0XNeW+IP/tJf1vF0CnOzQmpjF+ueJAwD31lG48bIWm2BjF4/RJ3XR6lG6yLrRp6L
+VACsNQwZsqLjo4+N2CRSFnJIdgyXJhhH6wilGgZS2TFjx2+/RAAmmAS5ieJHoP16
+1qwP72hHgmbJo3UuIBHvtH7vX23HaLEzSr2i5shaodKUF1cVBUUi6Kvi2nHqxewv
+GzBRFHTVAPEYSL17oUp6p0d4pBIYog==
+=4YBx
+-----END PGP SIGNATURE-----
+
+--Sig_/7RCqhyNlwLXx79jhI4G+C4J--
