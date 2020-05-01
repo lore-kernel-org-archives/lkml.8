@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF58C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A9C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0FF720757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED435208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339556;
-	bh=Z/zPxkWe2fRUFC3yfV2DUN3dnKzbzDiP4hZZYzjw2t0=;
+	s=default; t=1588339560;
+	bh=9brijW7GuhDSeY1AtCRbki20nRFuzUWvoIMQLuBG7Rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yG1JLFKC9EUgyztRp/2hgU0XM3+SaegWbHx/8fGYceFSQZ2+XqODF0RqWcj0WSXzI
-	 IUgid6ILcupDaZJE67aQuQAd6qw6oSixE/Ma8TGfj3raGCCmwlxeMZKmsQsp1kwxU5
-	 jFnX+z+76/ej6rQfyncsjHu4iec/My7VDACxlhUE=
+	b=xtCOljRVURgc8I3OJ18A9idQITkw9nlDj+8hykuutsxa8E7PEh/b11b8IRFPi7rVf
+	 6HwPaPQjYQdwAEdC4dxz+2hwOVQg6fIMjL73+wpcx43PKGc6wfhyMOU8jbDZsZxLm6
+	 NNGpS8mkxHKFarEakDK2po8TJAlHGCu5kS99NeqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgEANZz (ORCPT
+        id S1729140AbgEANZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729120AbgEANZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:52 -0400
+        id S1729124AbgEANZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D24B2166E;
-        Fri,  1 May 2020 13:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AA5F20757;
+        Fri,  1 May 2020 13:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339551;
-        bh=Z/zPxkWe2fRUFC3yfV2DUN3dnKzbzDiP4hZZYzjw2t0=;
+        s=default; t=1588339554;
+        bh=9brijW7GuhDSeY1AtCRbki20nRFuzUWvoIMQLuBG7Rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EDf/a/M3KOgwgC0Usxqj5jZHSlKZEf5FH8lA5gmAObEbzGh9LYiTndtAnB1Az0BlP
-         VmMq2Ml3ZV9l5aq2R68O+kDzdSXzWz/hOTklsZJVsRS+VlTjVktf9LlEnslJudLNqE
-         /nLNyaq5YW6eva4IMZTXvB8Vh17C0T48J6K55Vrg=
+        b=oGPY9U62Zyn817soWYb9gTVX3tlf35KgeOV/TRSlh0ohjjz4JCu86zN3SAxMc7FxX
+         /f8zXDyho1B52NdthpdhrJnyv64FE1wnshWApunPC6RGHixfKFpR0vibvHopaduC6t
+         sLE5wZjyMS/lcjeBVRiW5L0M6pVd3f2v7EYpuimg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.4 27/70] iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
-Date:   Fri,  1 May 2020 15:21:15 +0200
-Message-Id: <20200501131522.993587194@linuxfoundation.org>
+        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 36/70] ALSA: usx2y: Fix potential NULL dereference
+Date:   Fri,  1 May 2020 15:21:24 +0200
+Message-Id: <20200501131525.176394685@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,42 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f954b098fbac4d183219ce5b42d76d6df2aed50a upstream.
+commit 7686e3485253635c529cdd5f416fc640abaf076f upstream.
 
-When enabling the trigger and unmasking the end-of-sequence (EOS) interrupt
-the EOS interrupt should be cleared from the status register. Otherwise it
-is possible that it was still set from a previous capture. If that is the
-case the interrupt would fire immediately even though no conversion has
-been done yet and stale data is being read from the device.
+The error handling code in usX2Y_rate_set() may hit a potential NULL
+dereference when an error occurs before allocating all us->urb[].
+Add a proper NULL check for fixing the corner case.
 
-The old code only clears the interrupt if the interrupt was previously
-unmasked. Which does not make much sense since the interrupt is always
-masked at this point and in addition masking the interrupt does not clear
-the interrupt from the status register. So the clearing needs to be done
-unconditionally.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: Lin Yi <teroincn@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200420075529.27203-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/xilinx-xadc-core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/usx2y/usbusx2yaudio.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -660,7 +660,7 @@ static int xadc_trigger_set_state(struct
- 
- 	spin_lock_irqsave(&xadc->lock, flags);
- 	xadc_read_reg(xadc, XADC_AXI_REG_IPIER, &val);
--	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, val & XADC_AXI_INT_EOS);
-+	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, XADC_AXI_INT_EOS);
- 	if (state)
- 		val |= XADC_AXI_INT_EOS;
- 	else
+--- a/sound/usb/usx2y/usbusx2yaudio.c
++++ b/sound/usb/usx2y/usbusx2yaudio.c
+@@ -691,6 +691,8 @@ static int usX2Y_rate_set(struct usX2Yde
+ 			us->submitted =	2*NOOF_SETRATE_URBS;
+ 			for (i = 0; i < NOOF_SETRATE_URBS; ++i) {
+ 				struct urb *urb = us->urb[i];
++				if (!urb)
++					continue;
+ 				if (urb->status) {
+ 					if (!err)
+ 						err = -ENODEV;
 
 
