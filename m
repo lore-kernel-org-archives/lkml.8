@@ -2,99 +2,121 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98497C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7D7C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7951E20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B2320708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588346690;
+	bh=6SWvTu/VEYFP0rGFICjtBRh0FLf8COFAflcT/LRMfOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nnXAyf3igULAHzpoudqrTGkMkQK0ddajhFJuVXrm6HUhCfSF+itpQ34lNLwIQUhi3
+	 yQ0fAx8cPvD5PddIOzehiPJdoU8OjkN43d9phUUwsV+9JY+jPHljyYchxxo45/vLqB
+	 MHRKi8oPipWsbzbNpBEB75tpK59dCW+mABY2ksc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgEAPYK (ORCPT
+        id S1729758AbgEAPYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:24:10 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25819 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729623AbgEAPYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:24:02 -0400
-IronPort-SDR: ntsT+1LZcKEMJjSji8aS+k0L1KfS4d4hlSpbSQyq1EJJ3cADn9UzjTqZzySEiwy66/2J6BSWdn
- kecTv0q7ETIw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 08:24:02 -0700
-IronPort-SDR: 47tymbPfl9qbTTlfysUzknikXccfyXgrbod4kYl4O78cywd5rglwBV6HBEZ8t3NQ+M9AjVwqUQ
- n7VPmxEa4G+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
-   d="scan'208";a="433341664"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 08:24:01 -0700
-Subject: Re: [PATCH 4/4 v2] firmware: stratix10-svc: Slightly simplify code
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        gregkh@linuxfoundation.org, atull@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
- <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
-Date:   Fri, 1 May 2020 10:40:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 May 2020 11:24:50 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55527 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728443AbgEAPYt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:24:49 -0400
+Received: by mail-pj1-f66.google.com with SMTP id a32so18295pje.5;
+        Fri, 01 May 2020 08:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X20mKpRRVq/ark63BbLpoCynpLjPmjVnD3XcfxieJmo=;
+        b=nxLBwiUyssNTIBTkfse5CKboAwAshhtDUb2MiZ4uTej8w+2Hp7VUFZr+RiLxxUjANg
+         41i5Bn193Ai81hZUpbFSOIs/yWTn3f55Dd5nhrQehajf0UZBbKOQn1HPs32g87MxZ4aN
+         aA69TRjwlhffllEZg3LToNIXn5AJEPJ7elNznjbdgCn86PXOo9GaDHPfCNMoHMb2eeaV
+         efGcT1hMGtxFs7R9EgdgoRoqqDeal0KmSzOATx3kWGywGo0cC3SRFQlJ3KWPzFUVP6Y8
+         Cj3gJSvSirnh8egzSkODjBzhP/JIFamm3wTv97F0hZux/wV7bABL/OXg+RCdBRZyyFfi
+         OZAw==
+X-Gm-Message-State: AGi0Pua5rXtk1NfvOsomIPaNSfCZWQWDABp2iWnK7mUSQACtNWL4++6f
+        FhzDo4ZUL/U/xL4n0gXfUxI=
+X-Google-Smtp-Source: APiQypIS4cJmDrisB6sfUSd9KAjmqSPPBVrVSde1HXQ1i+jak+p623AzeudhI/4PsYT0cfEmmyEQeA==
+X-Received: by 2002:a17:902:a513:: with SMTP id s19mr5192257plq.84.1588346687212;
+        Fri, 01 May 2020 08:24:47 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id a15sm11899pju.3.2020.05.01.08.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 08:24:45 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 5D8FD4046C; Fri,  1 May 2020 15:24:45 +0000 (UTC)
+Date:   Fri, 1 May 2020 15:24:45 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
+        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
+        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
+        yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v3 4/6] blktrace: fix debugfs use after free
+Message-ID: <20200501152445.GN11244@42.do-not-panic.com>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-5-mcgrof@kernel.org>
+ <20200429112637.GD21892@infradead.org>
+ <20200429114542.GJ11244@42.do-not-panic.com>
+ <20200429115051.GA27378@infradead.org>
+ <20200429120230.GK11244@42.do-not-panic.com>
+ <20200429120406.GA913@infradead.org>
+ <20200429122152.GL11244@42.do-not-panic.com>
+ <20200429125726.GA2123334@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429125726.GA2123334@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Apr 29, 2020 at 02:57:26PM +0200, Greg KH wrote:
+> On Wed, Apr 29, 2020 at 12:21:52PM +0000, Luis Chamberlain wrote:
+> > On Wed, Apr 29, 2020 at 05:04:06AM -0700, Christoph Hellwig wrote:
+> > > On Wed, Apr 29, 2020 at 12:02:30PM +0000, Luis Chamberlain wrote:
+> > > > > Err, that function is static and has two callers.
+> > > > 
+> > > > Yes but that is to make it easier to look for who is creating the
+> > > > debugfs_dir for either the request_queue or partition. I'll export
+> > > > blk_debugfs_root and we'll open code all this.
+> > > 
+> > > No, please not.  exported variables are usually a bad idea.  Just
+> > > skip the somewhat pointless trivial static function.
+> > 
+> > Alrighty. It has me thinking we might want to only export those symbols
+> > to a specific namespace. Thoughts, preferences?
+> > 
+> > BLOCK_GENHD_PRIVATE ?
+> 
+> That's a nice add-on issue after this is fixed.  As Christoph and I
+> pointed out, you have _less_ code in the file if you remove the static
+> wrapper function.  Do that now and then worry about symbol namespaces
+> please.
 
-On 4/29/20 1:52 AM, Christophe JAILLET wrote:
-> Replace 'devm_kmalloc_array(... | __GFP_ZERO)' with the equivalent and
-> shorter 'devm_kcalloc(...)'.
-> 
-It doesn't make much sense.
-Actually devm_kcalloc returns devm_kmalloc_array(.., flag | __GFP_ZERO).
+So it turns out that in the old implementation, it was implicit that the
+request_queue directory was shared with the scsi drive. So, the
+q->debugfs_dir *will* be set, and as we have it here', we'd silently be
+overwriting the old q->debugfs_dir, as the queue is the same. To keep
+things working as it used to, with both, we just need to use a symlink
+here. With the old way, we'd *always* create the sg directory and re-use
+that, however since we can only have one blktrace per request_queue, it
+still had the same restriction, this was just implicit. Using a symlink
+will make this much more obvious and upkeep the old functionality. We'll
+need to only export one symbol. I'll roll this in.
 
-> 'ctrl->genpool' can not be NULL, so axe a useless test in the remove
-> function.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->   drivers/firmware/stratix10-svc.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-> index 739004398877..c228337cb0a1 100644
-> --- a/drivers/firmware/stratix10-svc.c
-> +++ b/drivers/firmware/stratix10-svc.c
-> @@ -1002,8 +1002,7 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
->   	if (!controller)
->   		return -ENOMEM;
->   
-> -	chans = devm_kmalloc_array(dev, SVC_NUM_CHANNEL,
-> -				   sizeof(*chans), GFP_KERNEL | __GFP_ZERO);
-> +	chans = devm_kcalloc(dev, SVC_NUM_CHANNEL, sizeof(*chans), GFP_KERNEL);
->   	if (!chans)
->   		return -ENOMEM;
->   
-> @@ -1086,8 +1085,7 @@ static int stratix10_svc_drv_remove(struct platform_device *pdev)
->   		kthread_stop(ctrl->task);
->   		ctrl->task = NULL;
->   	}
-> -	if (ctrl->genpool)
-> -		gen_pool_destroy(ctrl->genpool);
-> +	gen_pool_destroy(ctrl->genpool);
->   	list_del(&ctrl->node);
->   
->   	return 0;
-> 
-
-Regards,
-Richard
+  Luis
