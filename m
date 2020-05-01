@@ -6,124 +6,103 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F13C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B30AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C783021835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354672166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KIkn2JNS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IlAU2fgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgEATWT (ORCPT
+        id S1726811AbgEATW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:22:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55954 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbgEATWS (ORCPT
+        Fri, 1 May 2020 15:22:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30805 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726649AbgEATW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:22:18 -0400
+        Fri, 1 May 2020 15:22:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588360936;
+        s=mimecast20190719; t=1588360947;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Lw1/q6yiSjaJYWPZdVrBNcZFPbxM0G0lNYnc8X95Tg0=;
-        b=KIkn2JNSgjLlYG7AsOZQ+LgXs5M4PFjrD56iaMiXxlIhYROM9xVo93e7zvHAz8Z0MDqE3M
-        npUmT68gx9xNZMpUXDIRa7MUCV7K/28daROPWG647k3pOBQAbjyEPpsv0M42fFR2GJIJo4
-        ZgxMnmMbVwHhMGz/Pt9xV1IkRQnQs/g=
+        bh=Uvr7NE+VoOzpD9fS1fNpWQ3alb4De94rrwIJLuJTDvI=;
+        b=IlAU2fgFr/xFimsCTaIdPg8RMBVh/eD164bGUwoVPBKugfH1SgEX/E1VHyzOylyPmufSrP
+        gDzUHyYWN+7OT2/PwXBGuCgOWDR04iG4Zfd1QCMARpYMHF/xD+eP7r5yMs5XUMOZGL7KVz
+        vZaeSbQKlS57MWs6MDwYQDDdXqDc7Ds=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-daBVEp11O9maB_fvViMN5g-1; Fri, 01 May 2020 15:22:14 -0400
-X-MC-Unique: daBVEp11O9maB_fvViMN5g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-361-0yGqluTzMCaj3-bbGH5WfA-1; Fri, 01 May 2020 15:22:25 -0400
+X-MC-Unique: 0yGqluTzMCaj3-bbGH5WfA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98EEF19067E3;
-        Fri,  1 May 2020 19:22:12 +0000 (UTC)
-Received: from treble (ovpn-114-104.rdu2.redhat.com [10.10.114.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 252DD6152A;
-        Fri,  1 May 2020 19:22:11 +0000 (UTC)
-Date:   Fri, 1 May 2020 14:22:04 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200501192204.cepwymj3fln2ngpi@treble>
-References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
- <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E407D8014D9;
+        Fri,  1 May 2020 19:22:23 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-114-161.phx2.redhat.com [10.3.114.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4D542B4CB;
+        Fri,  1 May 2020 19:22:20 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 04C461202A6; Fri,  1 May 2020 15:22:19 -0400 (EDT)
+Date:   Fri, 1 May 2020 15:22:19 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "tj@kernel.org" <tj@kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "jlayton@redhat.com" <jlayton@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "shli@fb.com" <shli@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "oleg@redhat.com" <oleg@redhat.com>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200501192219.GG9191@pick.fieldses.org>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+ <20200501182154.GG5462@mtj.thefacebook.com>
+ <20200501184935.GD9191@pick.fieldses.org>
+ <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:09:30PM -0700, Alexei Starovoitov wrote:
-> On Thu, Apr 30, 2020 at 02:07:43PM -0500, Josh Poimboeuf wrote:
-> > Objtool decodes instructions and follows all potential code branches
-> > within a function.  But it's not an emulator, so it doesn't track
-> > register values.  For that reason, it usually can't follow
-> > intra-function indirect branches, unless they're using a jump table
-> > which follows a certain format (e.g., GCC switch statement jump tables).
+On Fri, May 01, 2020 at 07:05:46PM +0000, Trond Myklebust wrote:
+> On Fri, 2020-05-01 at 14:49 -0400, J. Bruce Fields wrote:
+> > On Fri, May 01, 2020 at 02:21:54PM -0400, Tejun Heo wrote:
+> > > Hello,
+> > > 
+> > > On Fri, May 01, 2020 at 10:59:24AM -0700, Linus Torvalds wrote:
+> > > > Which kind of makes me want to point a finger at Tejun. But it's
+> > > > been
+> > > > mostly PeterZ touching this file lately..
+> > > 
+> > > Looks fine to me too. I don't quite understand the usecase tho. It
+> > > looks
+> > > like all it's being used for is to tag some kthreads as belonging
+> > > to the
+> > > same group.
 > > 
-> > In most cases, the generated code for the BPF jump table looks a lot
-> > like a GCC jump table, so objtool can follow it.  However, with
-> > RETPOLINE=n, GCC keeps the jump table address in a register, and then
-> > does 160+ indirect jumps with it.  When objtool encounters the indirect
-> > jumps, it can't tell which jump table is being used (or even whether
-> > they might be sibling calls instead).
-> > 
-> > This was fixed before by disabling an optimization in ___bpf_prog_run(),
-> > using the "optimize" function attribute.  However, that attribute is bad
-> > news.  It doesn't append options to the command-line arguments.  Instead
-> > it starts from a blank slate.  And according to recent GCC documentation
-> > it's not recommended for production use.  So revert the previous fix:
-> > 
-> >   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> > 
-> > With that reverted, solve the original problem in a different way by
-> > getting rid of the "goto select_insn" indirection, and instead just goto
-> > the jump table directly.  This simplifies the code a bit and helps GCC
-> > generate saner code for the jump table branches, at least in the
-> > RETPOLINE=n case.
-> > 
-> > But, in the RETPOLINE=y case, this simpler code actually causes GCC to
-> > generate far worse code, ballooning the function text size by +40%.  So
-> > leave that code the way it was.  In fact Alexei prefers to leave *all*
-> > the code the way it was, except where needed by objtool.  So even
-> > non-x86 RETPOLINE=n code will continue to have "goto select_insn".
-> > 
-> > This stuff is crazy voodoo, and far from ideal.  But it works for now.
-> > Eventually, there's a plan to create a compiler plugin for annotating
-> > jump tables.  That will make this a lot less fragile.
+> > Pretty much.
 > 
-> I don't like this commit log.
-> Here you're saying that the code recognized by objtool is sane and good
-> whereas well optimized gcc code is somehow voodoo and bad.
-> That is just wrong.
+> Wen running an instance of knfsd from inside a container, you want to
+> be able to have the knfsd kthreads be parented to the container init
+> process so that they get killed off when the container is killed.
+> 
+> Right now, we can easily leak those kernel threads simply by killing
+> the container.
 
-I have no idea what you're talking about.
+Oh, got it.
 
-Are you saying that ballooning the function text size by 40% is well
-optimized GCC code?  It seems like a bug to me.  That's the only place I
-said anything bad about GCC code.
+Currently knfsd supports nfs service in containers, but it uses a single
+set of threads to serve requests from any container.  It should shut the
+server threads down when the last container using them goes away.
 
-When I said "this stuff is crazy voodoo" I was referring to the patch
-itself.  I agree it's horrible, it's only the best approach we're able
-to come up with at the moment.
-
-If any of that isn't clear then can you provide specifics about what
-seems wrong?
-
--- 
-Josh
+--b.
 
