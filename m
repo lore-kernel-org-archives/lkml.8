@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B50C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0358AC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE010216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D842051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340030;
-	bh=6ZZjgCH98qpYC/CbtgxU6mXtYtB82jt3T4S206u6knA=;
+	s=default; t=1588340032;
+	bh=/W9kmleYDQifA/dC9xCYaF8sHgRuad5wEpIdoHhk3Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWY8dG7hYEk+J+Rel54irJWLwRXSXtIFcSCJISxxeQBYDEEv/kub6uSLdy6QcCbCe
-	 eEq/DEg9++6owtr9jLOWkePWNECOtYMC93Joq73x6LqrBc6/+ZNCe8n6/3m65ESXTD
-	 0Qtkmr4fdkrgi6NJw7w5haK5Z7Ap/dr1BAOHh75M=
+	b=CVeqPhRZZnAqOaaEYI9R5vIn6QDoGmlBkEtwm6zbXkV10kAf2W5vRBcf07KQzskHz
+	 LZTVkDvz2Uy6+uiR+i9q47OsFxiHstkQIE46lVpS/v6f6RiROPuQs2xPQfpT3ErHFx
+	 NQkChNRHqzwPlu/CkhmAeyiZ9X3Uut27VrS+6Zjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgEANdu (ORCPT
+        id S1730495AbgEANdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59516 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:33:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730470AbgEANdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:44 -0400
+        id S1730479AbgEANdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C59216FD;
-        Fri,  1 May 2020 13:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA0072051A;
+        Fri,  1 May 2020 13:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340023;
-        bh=6ZZjgCH98qpYC/CbtgxU6mXtYtB82jt3T4S206u6knA=;
+        s=default; t=1588340026;
+        bh=/W9kmleYDQifA/dC9xCYaF8sHgRuad5wEpIdoHhk3Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQ+FLVV8r6CuOvpLeK0g0EtnG+xwug8wgGYx94Cx1Q7gY2rJJbeRVolN36t7tdw3Y
-         96wYHd9GpeoIuCaSUrHIGkmUOo4gZ32z3QeU1udqTTDnehzDKSa/oHHUlfkfD61a0n
-         8ElpsQ733AJFsLORLM3GBNixpxgCEA+VralChhWM=
+        b=sMg12s/W9JoD2s4ZD3o7qdRcG9sy3dJS/F2bph5Pf01I19CZzld+nXvDUOkXS2bnC
+         e+pTXzVffXhFCU7GCBrFrGyg936XteqBjNLFkSh3CvxJJOF2NmpPonNOby+RdH1Jzm
+         s8IKHoSXD3cK0/n/+TiRSGlh0MDusW2/4NUgv65A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Cyril Roelandt <tipecaml@gmail.com>
-Subject: [PATCH 4.14 063/117] usb-storage: Add unusual_devs entry for JMicron JMS566
-Date:   Fri,  1 May 2020 15:21:39 +0200
-Message-Id: <20200501131552.776279991@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.14 064/117] audit: check the length of userspace generated audit records
+Date:   Fri,  1 May 2020 15:21:40 +0200
+Message-Id: <20200501131552.860458643@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,47 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Paul Moore <paul@paul-moore.com>
 
-commit 94f9c8c3c404ee1f7aaff81ad4f24aec4e34a78b upstream.
+commit 763dafc520add02a1f4639b500c509acc0ea8e5b upstream.
 
-Cyril Roelandt reports that his JMicron JMS566 USB-SATA bridge fails
-to handle WRITE commands with the FUA bit set, even though it claims
-to support FUA.  (Oddly enough, a later version of the same bridge,
-version 2.03 as opposed to 1.14, doesn't claim to support FUA.  Also
-oddly, the bridge _does_ support FUA when using the UAS transport
-instead of the Bulk-Only transport -- but this device was blacklisted
-for uas in commit bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron
-SATA enclosure") for apparently unrelated reasons.)
+Commit 756125289285 ("audit: always check the netlink payload length
+in audit_receive_msg()") fixed a number of missing message length
+checks, but forgot to check the length of userspace generated audit
+records.  The good news is that you need CAP_AUDIT_WRITE to submit
+userspace audit records, which is generally only given to trusted
+processes, so the impact should be limited.
 
-This patch adds a usb-storage unusual_devs entry with the BROKEN_FUA
-flag.  This allows the bridge to work properly with usb-storage.
-
-Reported-and-tested-by: Cyril Roelandt <tipecaml@gmail.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221613110.11262-100000@iolanthe.rowland.org
+Cc: stable@vger.kernel.org
+Fixes: 756125289285 ("audit: always check the netlink payload length in audit_receive_msg()")
+Reported-by: syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_devs.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ kernel/audit.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -2342,6 +2342,13 @@ UNUSUAL_DEV(  0x3340, 0xffff, 0x0000, 0x
- 		USB_SC_DEVICE,USB_PR_DEVICE,NULL,
- 		US_FL_MAX_SECTORS_64 ),
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1292,6 +1292,9 @@ static int audit_receive_msg(struct sk_b
+ 	case AUDIT_FIRST_USER_MSG2 ... AUDIT_LAST_USER_MSG2:
+ 		if (!audit_enabled && msg_type != AUDIT_USER_AVC)
+ 			return 0;
++		/* exit early if there isn't at least one character to print */
++		if (data_len < 2)
++			return -EINVAL;
  
-+/* Reported by Cyril Roelandt <tipecaml@gmail.com> */
-+UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x0114,
-+		"JMicron",
-+		"USB to ATA/ATAPI Bridge",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_BROKEN_FUA ),
-+
- /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
- UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
- 		"iRiver",
+ 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
+ 		if (err == 1) { /* match or error */
 
 
