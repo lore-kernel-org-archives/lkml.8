@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE84C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05B6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2D22051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9549D20836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341190;
-	bh=DEKOV80S+EgZGm5x0oH/1MuU21eybiRSXazP2DjWCGA=;
+	s=default; t=1588341192;
+	bh=kT2ssjy/cji7MP5tBA4BbKIZOxWc02oDr3+Bg7R6hiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0H8Ch6htmJ0UwapC9sWO6j9lw7pDCoC71E/YgTGQOF0Ukf3f/j+Cbq5/laHlaAIrU
-	 n3aNXk3llClkE0cZ2gxeOt5VxOSLcqJaNaIU8RG6sVws31jtU2HQ9OLOo4cxIxRw5v
-	 jW7uwrIdi2Grkup49FKZRadVAaeR/Z5BO/EE4FWg=
+	b=D0vaPfXjtvOARbhKMMX9DQkBxkcAtzQ28RLS9Ki+EdEU4RQtcVKPD7oQbPxTzwLJm
+	 i6rn+OGY+VqFNtbFzcVrzbA+bF08rF9mNfr18JbAfLn4iShE8OHU5JpQ4/DtTBzk9B
+	 JSzrrIF2wnk6yk9aD/O2946UCCvert1z1DUyGqDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgEANgq (ORCPT
+        id S1730885AbgEANgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35206 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730877AbgEANgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:38 -0400
+        id S1730853AbgEANgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7734E208DB;
-        Fri,  1 May 2020 13:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD132173E;
+        Fri,  1 May 2020 13:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340197;
-        bh=DEKOV80S+EgZGm5x0oH/1MuU21eybiRSXazP2DjWCGA=;
+        s=default; t=1588340190;
+        bh=kT2ssjy/cji7MP5tBA4BbKIZOxWc02oDr3+Bg7R6hiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vw+kNrV62uLWJ/fZfXCe4CCxeqd6aAUxm0oRtIJCUupGyMlm7vbfA1XHXAI1N+X9S
-         YcRm7XIHEEzE6sGY5Pqr2TwYweFpZYWypZ8TgeVSEzZrm8BI9gYV5AvBPkWriuCB1N
-         b/NQcpqwlrUAsSzXyI7VsiiEGIuvekoUbXLfbaaU=
+        b=pocFwyInZzx5KavArH/hy1aWGy39UU5i4IMpuqZ2GxuV9QLoSxXSgQ7l+ugQAuOOu
+         vVir0O02R+lHhzxQmsbuwbq0G57xqk7RUPvKqNJlFqdhs1iW6jWU77DOvLX+0wItax
+         mK9FqQkKcJRJw26KCZAcq3zZo7nVuNUHxTultpoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Furtado <paulfurtado91@gmail.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Chandan Rajendra <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 4.19 15/46] xfs: acquire superblock freeze protection on eofblocks scans
-Date:   Fri,  1 May 2020 15:22:40 +0200
-Message-Id: <20200501131503.899313616@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 12/46] i2c: altera: use proper variable to hold errno
+Date:   Fri,  1 May 2020 15:22:37 +0200
+Message-Id: <20200501131503.107772756@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -63,79 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-commit 4b674b9ac852937af1f8c62f730c325fb6eadcdb upstream.
+commit edb2c9dd3948738ef030c32b948543e84f4d3f81 upstream.
 
-The filesystem freeze sequence in XFS waits on any background
-eofblocks or cowblocks scans to complete before the filesystem is
-quiesced. At this point, the freezer has already stopped the
-transaction subsystem, however, which means a truncate or cowblock
-cancellation in progress is likely blocked in transaction
-allocation. This results in a deadlock between freeze and the
-associated scanner.
+device_property_read_u32() returns errno or 0, so we should use the
+integer variable 'ret' and not the u32 'val' to hold the retval.
 
-Fix this problem by holding superblock write protection across calls
-into the block reapers. Since protection for background scans is
-acquired from the workqueue task context, trylock to avoid a similar
-deadlock between freeze and blocking on the write lock.
-
-Fixes: d6b636ebb1c9f ("xfs: halt auto-reclamation activities while rebuilding rmap")
-Reported-by: Paul Furtado <paulfurtado91@gmail.com>
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/xfs_icache.c |   10 ++++++++++
- fs/xfs/xfs_ioctl.c  |    5 ++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-altera.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -902,7 +902,12 @@ xfs_eofblocks_worker(
- {
- 	struct xfs_mount *mp = container_of(to_delayed_work(work),
- 				struct xfs_mount, m_eofblocks_work);
-+
-+	if (!sb_start_write_trylock(mp->m_super))
-+		return;
- 	xfs_icache_free_eofblocks(mp, NULL);
-+	sb_end_write(mp->m_super);
-+
- 	xfs_queue_eofblocks(mp);
- }
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -395,7 +395,6 @@ static int altr_i2c_probe(struct platfor
+ 	struct altr_i2c_dev *idev = NULL;
+ 	struct resource *res;
+ 	int irq, ret;
+-	u32 val;
  
-@@ -929,7 +934,12 @@ xfs_cowblocks_worker(
- {
- 	struct xfs_mount *mp = container_of(to_delayed_work(work),
- 				struct xfs_mount, m_cowblocks_work);
-+
-+	if (!sb_start_write_trylock(mp->m_super))
-+		return;
- 	xfs_icache_free_cowblocks(mp, NULL);
-+	sb_end_write(mp->m_super);
-+
- 	xfs_queue_cowblocks(mp);
- }
+ 	idev = devm_kzalloc(&pdev->dev, sizeof(*idev), GFP_KERNEL);
+ 	if (!idev)
+@@ -422,17 +421,17 @@ static int altr_i2c_probe(struct platfor
+ 	init_completion(&idev->msg_complete);
+ 	spin_lock_init(&idev->lock);
  
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -2182,7 +2182,10 @@ xfs_file_ioctl(
- 		if (error)
- 			return error;
- 
--		return xfs_icache_free_eofblocks(mp, &keofb);
-+		sb_start_write(mp->m_super);
-+		error = xfs_icache_free_eofblocks(mp, &keofb);
-+		sb_end_write(mp->m_super);
-+		return error;
+-	val = device_property_read_u32(idev->dev, "fifo-size",
++	ret = device_property_read_u32(idev->dev, "fifo-size",
+ 				       &idev->fifo_size);
+-	if (val) {
++	if (ret) {
+ 		dev_err(&pdev->dev, "FIFO size set to default of %d\n",
+ 			ALTR_I2C_DFLT_FIFO_SZ);
+ 		idev->fifo_size = ALTR_I2C_DFLT_FIFO_SZ;
  	}
  
- 	default:
+-	val = device_property_read_u32(idev->dev, "clock-frequency",
++	ret = device_property_read_u32(idev->dev, "clock-frequency",
+ 				       &idev->bus_clk_rate);
+-	if (val) {
++	if (ret) {
+ 		dev_err(&pdev->dev, "Default to 100kHz\n");
+ 		idev->bus_clk_rate = 100000;	/* default clock rate */
+ 	}
 
 
