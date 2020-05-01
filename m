@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A713C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8FAC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6755620757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFD420757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341566;
-	bh=i+vswq2Sq0i46k/4EmnFtanhfLKPKz4eNWg/fl2UibM=;
+	s=default; t=1588341576;
+	bh=zUCiPF1saQAniHcWkEVbc4jYJQ/5z6kvlySYJdaGaC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K36UMBlKC1vb4fMEtKEbDDl4CjlAn3FL58LyUGIMQj2dEu77yy9VD1nRDDXWwgWK6
-	 OTdRiO6pTVmtKVbbQWajj6ggU4DgrzwIKGXeRIq2BiAI0CGHePPxFRSZYA0CCAlS0A
-	 QXk7Nr1iMbkNKn0xHvslKtvYSHFj7VB4es9A6hrw=
+	b=QibfYUJdFMNn6qjxAwvIxvMyixrQ1R69jLAWnpqEZJRIAJqfPt42skKK3BTQD4KT2
+	 MfB95geRs2LRjV+zKAUmtcazXx9YOGLr8DIP8z+q6dZHLjcEpkoCsvSM1KvhSofhyv
+	 hWMs25hlGjgWLS1jKsRhVcG8XVaneGpzaVx/Zm3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbgEAN7Z (ORCPT
+        id S1729658AbgEAN2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729223AbgEAN3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:09 -0400
+        id S1729636AbgEAN2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 271DC24955;
-        Fri,  1 May 2020 13:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A677524954;
+        Fri,  1 May 2020 13:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339748;
-        bh=i+vswq2Sq0i46k/4EmnFtanhfLKPKz4eNWg/fl2UibM=;
+        s=default; t=1588339714;
+        bh=zUCiPF1saQAniHcWkEVbc4jYJQ/5z6kvlySYJdaGaC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzRK8TrQ0WuFinT7FX4s2hLMO7Z2QE92EdecS7zQfq2tvLgT4hJNo+JWlAkEuzSQf
-         jB8zZuWsltbQ7FJmp4nEwIIfLFWWqeHs4BsvHHyoJmKFi5TFXqOvAxfWDB4EQkuEY2
-         0UsTu/+a7KA9sRtHXVte9p7SMjWSyc4Qf5YWuLME=
+        b=k0PETdxpnjjKI/Bryk0K2Sxb4917oc00+ypd/psSAcmlDTKp+RNhiwRYzLhWlACNp
+         f5KJ5YZ8r0rHpHxHbFTj/eoSepTzJcS616/bTx6yBul3XQi8q4/Y9wVnr3QCSrFoJT
+         efm6jgU7uI/l2q/1YGKowe3F1p+V1Wdvn4bpXgMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Haxby <john.haxby@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 20/80] ipv6: fix restrict IPV6_ADDRFORM operation
-Date:   Fri,  1 May 2020 15:21:14 +0200
-Message-Id: <20200501131520.810371371@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 30/80] iio: xilinx-xadc: Fix ADC-B powerdown
+Date:   Fri,  1 May 2020 15:21:24 +0200
+Message-Id: <20200501131523.911972888@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -59,49 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Haxby <john.haxby@oracle.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 82c9ae440857840c56e05d4fb1427ee032531346 ]
+commit e44ec7794d88f918805d700240211a9ec05ed89d upstream.
 
-Commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation") fixed a
-problem found by syzbot an unfortunate logic error meant that it
-also broke IPV6_ADDRFORM.
+The check for shutting down the second ADC is inverted. This causes it to
+be powered down when it should be enabled. As a result channels that are
+supposed to be handled by the second ADC return invalid conversion results.
 
-Rearrange the checks so that the earlier test is just one of the series
-of checks made before moving the socket from IPv6 to IPv4.
-
-Fixes: b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation")
-Signed-off-by: John Haxby <john.haxby@oracle.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ipv6_sockglue.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -184,15 +184,14 @@ static int do_ipv6_setsockopt(struct soc
- 					retv = -EBUSY;
- 					break;
- 				}
--			} else if (sk->sk_protocol == IPPROTO_TCP) {
--				if (sk->sk_prot != &tcpv6_prot) {
--					retv = -EBUSY;
--					break;
--				}
--				break;
--			} else {
-+			}
-+			if (sk->sk_protocol == IPPROTO_TCP &&
-+			    sk->sk_prot != &tcpv6_prot) {
-+				retv = -EBUSY;
- 				break;
- 			}
-+			if (sk->sk_protocol != IPPROTO_TCP)
-+				break;
- 			if (sk->sk_state != TCP_ESTABLISHED) {
- 				retv = -ENOTCONN;
- 				break;
+---
+ drivers/iio/adc/xilinx-xadc-core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -709,13 +709,14 @@ static int xadc_power_adc_b(struct xadc
+ {
+ 	uint16_t val;
+ 
++	/* Powerdown the ADC-B when it is not needed. */
+ 	switch (seq_mode) {
+ 	case XADC_CONF1_SEQ_SIMULTANEOUS:
+ 	case XADC_CONF1_SEQ_INDEPENDENT:
+-		val = XADC_CONF2_PD_ADC_B;
++		val = 0;
+ 		break;
+ 	default:
+-		val = 0;
++		val = XADC_CONF2_PD_ADC_B;
+ 		break;
+ 	}
+ 
 
 
