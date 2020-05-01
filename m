@@ -2,375 +2,148 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC5AC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE45EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16042208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588338628;
-	bh=mcU/IikkRge5NkNieidxRKyqEH7XEBPM8EXLuSoAJOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I137I87Yx8a4DGd1c9zMFLIF9/QuPGt5GPC15OmzdKf2ZCPFYamGrAVfgf9DcThM1
-	 kpxXw16wlXHPU1fYBpGK2E+1sCJ2iLAPhTR3qFeal2aAKVENkwhl8PmDZGNr92wc/7
-	 Y+C78GjjPwyXJzAiHmVPDaxEVZzR5YARIih78bVI=
+	by mail.kernel.org (Postfix) with ESMTP id 954B4208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="qjfByRWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgEANK0 (ORCPT
+        id S1728863AbgEANLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:10:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45397 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728815AbgEANK0 (ORCPT
+        Fri, 1 May 2020 09:11:02 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:19915 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbgEANLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:10:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f12so7189402edn.12;
-        Fri, 01 May 2020 06:10:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6Yg1SL1X0Nyl9McRXFdcaYuSFdnUnZQ7o/sDqSIRDtA=;
-        b=swIBo6iceVbnPPKxuTHSunypi9QzoL1Itv2BrT7IZ3iwbIlIf08qZ6xeNmTY/mWMBa
-         6AD5BIULb7N9p9ap/f1O/09mvJGKNCzkw3JymiLvgYa+47JEZKOgsqgvea4HCmXwi8Bl
-         sED5GAENwqy0p4VeXXnze6pd/y7Z86o6BnichqBQjgQqzb1y1SuRDfoVmolEaaqChVpT
-         1Qy2D6u4lVuSK7cGOx8e5YMUKYlyWg408kn1/UxMTaWpTwX4cpsMDmVMyzKCZmTEj6lj
-         meu6CEBp7fnvmzpvTOZXJqIxo1frazeAVVNdq2Oo4UiGVIUr+Y8RvKP3BRa/Sej7Mkne
-         7l0Q==
-X-Gm-Message-State: AGi0PuZHQc1z0hlCWiWmZ643+fuVZ2z6OaoCl9cI4xUSKxDmLqqDPYyc
-        /RDM2SXT2xyps34PBXOlPPg=
-X-Google-Smtp-Source: APiQypIi4/og4/HNrNIMTQ1xvfHSFwknvjONOuAhvP17Fjm8GXDXhsQF1IJtEimfQoCgQEfjxvh/+g==
-X-Received: by 2002:aa7:cf16:: with SMTP id a22mr3390029edy.77.1588338621396;
-        Fri, 01 May 2020 06:10:21 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.237])
-        by smtp.googlemail.com with ESMTPSA id b13sm402093eje.13.2020.05.01.06.10.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 May 2020 06:10:20 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:10:18 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     kgene@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/13] arm: dts: s5pv210: fascinate4g: Add sleep GPIO
- configuration
-Message-ID: <20200501131018.GA5154@kozik-lap>
-References: <20200426183604.28494-1-xc-racer2@live.ca>
- <BN6PR04MB0660532FF97089208CCEEB2AA3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200428100244.GA23963@kozik-lap>
- <BN6PR04MB06605BE9E1559751E083B4E4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Fri, 1 May 2020 09:11:01 -0400
+Date:   Fri, 01 May 2020 13:10:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1588338658;
+        bh=4e2gWr5w2gYl4xUe3oKszAPz4sPB4Exvcbf1G43cTi8=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=qjfByRWwpVVQqhOaVJs8MCnIIamQcKys9x1iOUqOmtbhynhjwaIlUX77ujYsZQREZ
+         +UI7i/NSj7lyq5FEbfoJgWaUvMO5D7Rzm3x1VcEmVl8TzdgDIR5Awf48mAINFIKln6
+         3yJNBnHvRMXW+Cn6bFszFDD4Vg3y51A6cvA1YWA4=
+To:     linux-media@vger.kernel.org
+From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: [PATCH v4 0/3] media: vimc: Add support for {RGB,BGR,GBR}888 bus formats on debayer source pad
+Message-ID: <20200501131045.1849315-1-nfraprado@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB06605BE9E1559751E083B4E4A3AC0@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:49:36PM -0700, Jonathan Bakker wrote:
-> Hi Krzysztof,
-> 
-> On 2020-04-28 3:02 a.m., Krzysztof Kozlowski wrote:
-> > On Sun, Apr 26, 2020 at 11:35:53AM -0700, Jonathan Bakker wrote:
-> >> In order to minimize leakage current during sleep, set a config
-> >> for sleep GPIOs.
-> >>
-> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> >> ---
-> >>  arch/arm/boot/dts/s5pv210-fascinate4g.dts | 242 ++++++++++++++++++++++
-> >>  1 file changed, 242 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/s5pv210-fascinate4g.dts b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> >> index 07a8d9bbe5b8..94dcb9b64b9a 100644
-> >> --- a/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> >> +++ b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
-> >> @@ -36,3 +36,245 @@
-> >>  		};
-> >>  	};
-> >>  };
-> >> +
-> >> +&pinctrl0 {
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&sleep_cfg>;
-> >> +
-> >> +	sleep_cfg: sleep-cfg {
-> >> +		PIN_SLP(gpa0-0, PREV, NONE);
-> >> +		PIN_SLP(gpa0-1, PREV, NONE);
-> >> +		PIN_SLP(gpa0-2, PREV, NONE);
-> >> +		PIN_SLP(gpa0-3, OUT1, NONE);
-> > 
-> > I would be happy to see some reasoning why certain pins have disabled
-> > pull down (e.g. they are not connected or you use the same configuration
-> > as running one) and why you set them as output.
-> > 
-> 
-> Mostly it's copied from the vendor kernel configuration.  Without schematics, I can
-> only guess what's actually there.  I can go through and note what each pin appears
-> to be used for if you'd like.
+This patch series adds support for the missing RGB888_*, BGR888_* and GBR88=
+8_*
+media bus formats on the source pad of debayer subdevices of the vimc drive=
+r.
+These additional bus formats enable a wider range of formats to be configur=
+ed
+on the topologies, making it possible to test more real use cases.
+It also enables video to be streamed in the BGR pixelformat on /dev/video3.
 
-Then please mention that it is based on vendor kernel vx.y for product
-ABC.  In such case it will be enough.
+The first patch makes it possible to have multiple media bus codes mapping =
+to
+the same pixelformat, so that, for example, all RGB888_* media bus formats =
+use
+the same RGB24 pixelformat.
 
-> 
-> >> +		PIN_SLP(gpa0-4, PREV, NONE);
-> >> +		PIN_SLP(gpa0-5, PREV, NONE);
-> >> +		PIN_SLP(gpa0-6, PREV, NONE);
-> >> +		PIN_SLP(gpa0-7, PREV, NONE);
-> >> +
-> >> +		PIN_SLP(gpa1-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpa1-1, OUT0, NONE);
-> >> +		PIN_SLP(gpa1-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpa1-3, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpb-0, OUT0, NONE);
-> >> +		PIN_SLP(gpb-1, OUT1, NONE);
-> >> +		PIN_SLP(gpb-2, OUT0, NONE);
-> >> +		PIN_SLP(gpb-3, PREV, NONE);
-> >> +		PIN_SLP(gpb-4, INPUT, NONE);
-> >> +		PIN_SLP(gpb-5, PREV, NONE);
-> >> +		PIN_SLP(gpb-6, INPUT, DOWN);
-> >> +		PIN_SLP(gpb-7, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpc0-0, OUT0, NONE);
-> >> +		PIN_SLP(gpc0-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpc0-2, OUT0, NONE);
-> >> +		PIN_SLP(gpc0-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpc0-4, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpc1-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpc1-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpc1-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpc1-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpc1-4, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpd0-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpd0-1, OUT0, NONE);
-> >> +		PIN_SLP(gpd0-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpd0-3, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpd1-0, INPUT, NONE);
-> >> +		PIN_SLP(gpd1-1, INPUT, NONE);
-> >> +		PIN_SLP(gpd1-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpd1-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpd1-4, INPUT, DOWN);
-> >> +		PIN_SLP(gpd1-5, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpe0-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-4, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-5, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-6, INPUT, DOWN);
-> >> +		PIN_SLP(gpe0-7, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpe1-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpe1-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpe1-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpe1-3, OUT0, NONE);
-> >> +		PIN_SLP(gpe1-4, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpf0-0, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-1, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-2, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-3, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-4, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-5, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-6, OUT0, NONE);
-> >> +		PIN_SLP(gpf0-7, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpf1-0, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-1, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-2, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-3, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-4, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-5, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-6, OUT0, NONE);
-> >> +		PIN_SLP(gpf1-7, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpf2-0, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-1, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-2, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-3, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-4, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-5, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-6, OUT0, NONE);
-> >> +		PIN_SLP(gpf2-7, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpf3-0, OUT0, NONE);
-> >> +		PIN_SLP(gpf3-1, OUT0, NONE);
-> >> +		PIN_SLP(gpf3-2, OUT0, NONE);
-> >> +		PIN_SLP(gpf3-3, OUT0, NONE);
-> >> +		PIN_SLP(gpf3-4, PREV, NONE);
-> >> +		PIN_SLP(gpf3-5, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpg0-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpg0-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpg0-2, INPUT, NONE);
-> >> +		PIN_SLP(gpg0-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpg0-4, INPUT, DOWN);
-> >> +		PIN_SLP(gpg0-5, INPUT, DOWN);
-> >> +		PIN_SLP(gpg0-6, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpg1-0, OUT0, NONE);
-> >> +		PIN_SLP(gpg1-1, OUT1, NONE);
-> >> +		PIN_SLP(gpg1-2, PREV, NONE);
-> >> +		PIN_SLP(gpg1-3, OUT1, NONE);
-> >> +		PIN_SLP(gpg1-4, OUT1, NONE);
-> >> +		PIN_SLP(gpg1-5, OUT1, NONE);
-> >> +		PIN_SLP(gpg1-6, OUT1, NONE);
-> >> +
-> >> +		PIN_SLP(gpg2-0, OUT0, NONE);
-> >> +		PIN_SLP(gpg2-1, OUT0, NONE);
-> >> +		PIN_SLP(gpg2-2, INPUT, NONE);
-> >> +		PIN_SLP(gpg2-3, OUT0, NONE);
-> >> +		PIN_SLP(gpg2-4, OUT0, NONE);
-> >> +		PIN_SLP(gpg2-5, OUT0, NONE);
-> >> +		PIN_SLP(gpg2-6, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpg3-0, PREV, UP);
-> >> +		PIN_SLP(gpg3-1, PREV, UP);
-> >> +		PIN_SLP(gpg3-2, INPUT, NONE);
-> >> +		PIN_SLP(gpg3-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpg3-4, OUT0, NONE);
-> >> +		PIN_SLP(gpg3-5, OUT0, NONE);
-> >> +		PIN_SLP(gpg3-6, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpi-0, PREV, NONE);
-> > 
-> > No such name. Did you mean gpgi?
-> > 
-> > 
-> 
-> The node in s5pv210-pinctrl.dtsi is called "gpgi", but the i2s0_bus config
-> in that file uses just "gpi".  drivers/pinctrl/samsung/pinctrl-exynos-arm.c also
-> notes it just as "gpi".  I think the node should probably be renamed.
-> 
+The second patch maps the missing RGB888_*, BGR888_* and GBR888_* media bus
+codes to the RGB24 and BGR24 pixelformats.
+Since there isn't a GBR24 pixelformat, the GBR888_1X24 bus code maps to the
+RGB24 pixelformat.
 
-Good point. Will you send a fix for gpgi->gpi?
+The third patch enables the source pad of the debayer subdevice to use the
+added media bus formats.
 
-> >> +		PIN_SLP(gpi-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpi-2, PREV, NONE);
-> >> +		PIN_SLP(gpi-3, PREV, NONE);
-> >> +		PIN_SLP(gpi-4, PREV, NONE);
-> >> +		PIN_SLP(gpi-5, INPUT, DOWN);
-> >> +		PIN_SLP(gpi-6, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpj0-0, INPUT, NONE);
-> >> +		PIN_SLP(gpj0-1, INPUT, NONE);
-> >> +		PIN_SLP(gpj0-2, INPUT, NONE);
-> >> +		PIN_SLP(gpj0-3, INPUT, NONE);
-> >> +		PIN_SLP(gpj0-4, INPUT, NONE);
-> >> +		PIN_SLP(gpj0-5, INPUT, DOWN);
-> >> +		PIN_SLP(gpj0-6, OUT0, NONE);
-> >> +		PIN_SLP(gpj0-7, INPUT, NONE);
-> >> +
-> >> +		PIN_SLP(gpj1-0, OUT1, NONE);
-> >> +		PIN_SLP(gpj1-1, OUT0, NONE);
-> >> +		PIN_SLP(gpj1-2, INPUT, DOWN);
-> >> +		PIN_SLP(gpj1-3, PREV, NONE);
-> >> +		PIN_SLP(gpj1-4, PREV, NONE);
-> >> +		PIN_SLP(gpj1-5, OUT0, NONE);
-> >> +
-> >> +		PIN_SLP(gpj2-0, INPUT, DOWN);
-> >> +		PIN_SLP(gpj2-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpj2-2, OUT0, NONE);
-> >> +		PIN_SLP(gpj2-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpj2-4, INPUT, DOWN);
-> >> +		PIN_SLP(gpj2-5, PREV, NONE);
-> >> +		PIN_SLP(gpj2-6, PREV, NONE);
-> >> +		PIN_SLP(gpj2-7, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(gpj3-0, INPUT, NONE);
-> >> +		PIN_SLP(gpj3-1, INPUT, NONE);
-> >> +		PIN_SLP(gpj3-2, OUT0, NONE);
-> >> +		PIN_SLP(gpj3-3, INPUT, DOWN);
-> >> +		PIN_SLP(gpj3-4, INPUT, NONE);
-> >> +		PIN_SLP(gpj3-5, INPUT, NONE);
-> >> +		PIN_SLP(gpj3-6, INPUT, NONE);
-> >> +		PIN_SLP(gpj3-7, INPUT, NONE);
-> >> +
-> >> +		PIN_SLP(gpj4-0, INPUT, NONE);
-> >> +		PIN_SLP(gpj4-1, INPUT, DOWN);
-> >> +		PIN_SLP(gpj4-2, PREV, NONE);
-> >> +		PIN_SLP(gpj4-3, INPUT, NONE);
-> >> +		PIN_SLP(gpj4-4, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(mp01-0, OUT1, NONE);
-> >> +		PIN_SLP(mp01-1, OUT0, NONE);
-> >> +		PIN_SLP(mp01-2, INPUT, DOWN);
-> >> +		PIN_SLP(mp01-3, INPUT, DOWN);
-> >> +		PIN_SLP(mp01-4, OUT1, NONE);
-> >> +		PIN_SLP(mp01-5, INPUT, DOWN);
-> >> +		PIN_SLP(mp01-6, INPUT, DOWN);
-> >> +		PIN_SLP(mp01-7, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(mp02-0, INPUT, DOWN);
-> >> +		PIN_SLP(mp02-1, INPUT, DOWN);
-> >> +		PIN_SLP(mp02-2, INPUT, NONE);
-> >> +		PIN_SLP(mp02-3, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(mp03-0, INPUT, DOWN);
-> >> +		PIN_SLP(mp03-1, INPUT, DOWN);
-> >> +		PIN_SLP(mp03-2, OUT1, NONE);
-> >> +		PIN_SLP(mp03-3, OUT0, NONE);
-> >> +		PIN_SLP(mp03-4, INPUT, NONE);
-> >> +		PIN_SLP(mp03-5, OUT0, NONE);
-> >> +		PIN_SLP(mp03-6, INPUT, DOWN);
-> >> +		PIN_SLP(mp03-7, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(mp04-0, INPUT, DOWN);
-> >> +		PIN_SLP(mp04-1, OUT0, NONE);
-> >> +		PIN_SLP(mp04-2, INPUT, DOWN);
-> >> +		PIN_SLP(mp04-3, OUT0, NONE);
-> >> +		PIN_SLP(mp04-4, INPUT, DOWN);
-> >> +		PIN_SLP(mp04-5, INPUT, DOWN);
-> >> +		PIN_SLP(mp04-6, OUT0, NONE);
-> >> +		PIN_SLP(mp04-7, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(mp05-0, INPUT, NONE);
-> >> +		PIN_SLP(mp05-1, INPUT, NONE);
-> >> +		PIN_SLP(mp05-2, INPUT, NONE);
-> >> +		PIN_SLP(mp05-3, INPUT, NONE);
-> >> +		PIN_SLP(mp05-4, INPUT, DOWN);
-> >> +		PIN_SLP(mp05-5, OUT0, NONE);
-> >> +		PIN_SLP(mp05-6, INPUT, DOWN);
-> >> +		PIN_SLP(mp05-7, PREV, NONE);
-> >> +
-> >> +		PIN_SLP(mp06-0, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-1, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-2, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-3, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-4, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-5, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-6, INPUT, DOWN);
-> >> +		PIN_SLP(mp06-7, INPUT, DOWN);
-> >> +
-> >> +		PIN_SLP(mp07-0, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-1, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-2, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-3, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-4, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-5, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-6, INPUT, DOWN);
-> >> +		PIN_SLP(mp07-7, INPUT, DOWN);
-> >> +	};
-> > 
-> > What about gphX?
-> 
-> The gphX pins are in the alive area and don't have power down configs, they retain their
-> state over suspend.  Therefore the samsung,pin-con-pdn and samsung,pin-pud-pdn properties
-> have no effect (they're analogous to the gpxX pins in later Samsung SoCs).
+This patch series passed all tests of v4l2-compliance:
+$ compliance_git -m /dev/media0
+v4l2-compliance SHA: 81e45d957c4db39397f893100b3d2729ef39b052, 64 bits, 64-=
+bit time_t
+Grand Total for vimc device /dev/media0: 461, Succeeded: 461, Failed: 0, Wa=
+rnings: 0
 
-Ah, good, thanks.
+As a side note, when listing the pads containing the new formats added, I
+noticed that MEDIA_BUS_FMT_RGB888_3X8 doesn't have its name displayed by
+v4l2-ctl, but from my understanding that should be a bug in v4l-utils.
 
-Best regards,
-Krzysztof
+$ v4l2-ctl -d /dev/v4l-subdev2 --list-subdev-mbus-codes 1
+ioctl: VIDIOC_SUBDEV_ENUM_MBUS_CODE (pad=3D1)
+=090x1014: MEDIA_BUS_FMT_GBR888_1X24
+=090x1013: MEDIA_BUS_FMT_BGR888_1X24
+=090x101b: MEDIA_BUS_FMT_BGR888_3X8
+=090x100a: MEDIA_BUS_FMT_RGB888_1X24
+=090x100b: MEDIA_BUS_FMT_RGB888_2X12_BE
+=090x100c: MEDIA_BUS_FMT_RGB888_2X12_LE
+=090x101c
+=090x1011: MEDIA_BUS_FMT_RGB888_1X7X4_SPWG
+=090x1012: MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
+=090x100f: MEDIA_BUS_FMT_RGB888_1X32_PADHI
+
+Changes in v4:
+- Suggested by Dafna:
+    - Rename vimc_deb_set_rgb_mbus_fmt_rgb888_1x24() to
+      vimc_deb_process_rgb_frame()
+
+Changes in v3:
+- Make loop in vimc_mbus_code_by_index() clearer by using break instead of =
+if
+- Suggested by Helen:
+    - Rename vimc_deb_is_src_code_invalid() to vimc_deb_src_code_is_valid()
+    - Change vimc_deb_src_code_is_valid() to return bool
+- Suggested by Shuah:
+    - Use VIMC_PIX_FMT_MAX_CODES define instead of hardcoded value for the
+      size of code array in struct vimc_pix_map
+
+Changes in v2:
+- Fix vimc_mbus_code_by_index not checking code array bounds
+- Change commit messages to reflect v2 changes
+- Suggested by Helen:
+    - Rename variables
+    - Fix array formatting
+    - Change code array size
+    - Add comment about vimc_mbus_code_by_index return value
+    - Add vimc_deb_is_src_code_valid function
+    - Add other BGR888 and RGB888 formats to BGR24 and RGB24 pixelformats
+    - Add other BGR888 and RGB888 formats to debayer source pad supported
+      formats
+- Suggested by Ezequiel:
+    - Change cover letter to better explain this patch series
+
+You can find v1 here: https://patchwork.linuxtv.org/cover/61391/
+
+N=C3=ADcolas F. R. A. Prado (3):
+  media: vimc: Support multiple media bus codes for each pixelformat
+  media: vimc: Add missing {RGB,BGR,GBR}888 media bus codes
+  media: vimc: deb: Add support for {RGB,BGR,GBR}888 bus formats on
+    source pad
+
+ drivers/media/test-drivers/vimc/vimc-common.c | 83 +++++++++++++------
+ drivers/media/test-drivers/vimc/vimc-common.h | 13 ++-
+ .../media/test-drivers/vimc/vimc-debayer.c    | 71 ++++++++++++----
+ drivers/media/test-drivers/vimc/vimc-scaler.c | 10 ++-
+ drivers/media/test-drivers/vimc/vimc-sensor.c |  6 +-
+ 5 files changed, 134 insertions(+), 49 deletions(-)
+
+--=20
+2.26.2
+
 
