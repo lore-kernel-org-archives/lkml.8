@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90851C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E3FC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67526208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA80208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344521;
-	bh=LzZm9/U3E6zV1Rtxksb2atmQbCTG1SrCaFI5en8K55Y=;
+	s=default; t=1588344523;
+	bh=VMY4rTaMjFiAbEot2p58ZYqw+5MMQ8SFn49S3iC3TiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kab+aFe1wZRO/KSkJo19V4HLauRE0vZ1ORK8Ec5anyUxFfmlAwuFzCG7Ze4kKdbud
-	 z3itloSj55uEun3nWQ0OGNcXaJYqn2Q2Lseet4V50YVLnM+sGOj4FpNKmFy4zuhnif
-	 5ZcizypBDVZF8/BOfHJAOsiZcsw3PEGevxireASY=
+	b=m+hFlA8u8XS0q49VEzlQUCzkZEce2lAp1izvks8nPpegt5JE04KvYfn7yBN4VhjNu
+	 RxoByMB3Bql9jrE/oKyUChbyWrxmFMVwav9AHf+LreQCoVHHOlEn+7d2HuKhBAJeWA
+	 A2WQHZACMXLhW8PfwicBNRNuf/Z4jtvecp1Khftg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbgEAOsk (ORCPT
+        id S1730476AbgEAOsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:48:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729470AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729375AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:08 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F10BA24987;
-        Fri,  1 May 2020 14:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F210424957;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344306;
-        bh=LzZm9/U3E6zV1Rtxksb2atmQbCTG1SrCaFI5en8K55Y=;
+        s=default; t=1588344305;
+        bh=VMY4rTaMjFiAbEot2p58ZYqw+5MMQ8SFn49S3iC3TiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5TepsA1cD/QrW2DKk8H0/Mv+39uUtcne4cefhlWfRxc14ZZTJ2yvJnNGKMUMIZpx
-         dMk8v1APZb6tVZmXy6UHLxtby3QHefx555v6JeJxZ1yeT1XuXpvKTYhxW6z7KejGhg
-         NMOM+4eKD9XlbPvDsYTmn8ZTm7OSq6Qq9bsoQzfE=
+        b=KLH3o1S11gwM0xok1neh+nlU/5gFvdKfbfwmKCYmFxnFYK5GyAAvcfqD50kfEawfY
+         0wEBIDZF5b80oAEy0xk9AwzJkUIG/BYGEPDGdaqRn1wrzXb0Vo2tpKkUcMEGXmXtFW
+         0E1FNBp1kFlnjyQvqfedKIdOVLWoYsRXr3Ky5umE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCdY-J1; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCeD-P7; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Zorik Machulsky <zorik@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 14/37] docs: networking: device drivers: convert amazon/ena.txt to ReST
-Date:   Fri,  1 May 2020 16:44:36 +0200
-Message-Id: <1c8f7109570ea829ed832596a14ec1f76b59e5ec.1588344146.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 21/37] docs: networking: device drivers: convert dlink/dl2k.txt to ReST
+Date:   Fri,  1 May 2020 16:44:43 +0200
+Message-Id: <5c65b062416ecdac93cf12826ea04d95776cf8c4.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -67,355 +62,426 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust titles and chapters, adding proper markups;
 - mark code blocks and literals as such;
-- mark tables as such;
+- mark lists as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../amazon/{ena.txt => ena.rst}               | 142 +++++++++++-------
+ .../dlink/{dl2k.txt => dl2k.rst}              | 228 ++++++++++--------
  .../networking/device_drivers/index.rst       |   1 +
- MAINTAINERS                                   |   2 +-
- 3 files changed, 91 insertions(+), 54 deletions(-)
- rename Documentation/networking/device_drivers/amazon/{ena.txt => ena.rst} (86%)
+ drivers/net/ethernet/dlink/dl2k.c             |   2 +-
+ 3 files changed, 132 insertions(+), 99 deletions(-)
+ rename Documentation/networking/device_drivers/dlink/{dl2k.txt => dl2k.rst} (59%)
 
-diff --git a/Documentation/networking/device_drivers/amazon/ena.txt b/Documentation/networking/device_drivers/amazon/ena.rst
-similarity index 86%
-rename from Documentation/networking/device_drivers/amazon/ena.txt
-rename to Documentation/networking/device_drivers/amazon/ena.rst
-index 1bb55c7b604c..11af6388ea87 100644
---- a/Documentation/networking/device_drivers/amazon/ena.txt
-+++ b/Documentation/networking/device_drivers/amazon/ena.rst
-@@ -1,8 +1,12 @@
--Linux kernel driver for Elastic Network Adapter (ENA) family:
--=============================================================
+diff --git a/Documentation/networking/device_drivers/dlink/dl2k.txt b/Documentation/networking/device_drivers/dlink/dl2k.rst
+similarity index 59%
+rename from Documentation/networking/device_drivers/dlink/dl2k.txt
+rename to Documentation/networking/device_drivers/dlink/dl2k.rst
+index cba74f7a3abc..ccdb5d0d7460 100644
+--- a/Documentation/networking/device_drivers/dlink/dl2k.txt
++++ b/Documentation/networking/device_drivers/dlink/dl2k.rst
+@@ -1,10 +1,13 @@
 +.. SPDX-License-Identifier: GPL-2.0
+ 
+-    D-Link DL2000-based Gigabit Ethernet Adapter Installation
+-    for Linux
+-    May 23, 2002
++=========================================================
++D-Link DL2000-based Gigabit Ethernet Adapter Installation
++=========================================================
 +
-+============================================================
-+Linux kernel driver for Elastic Network Adapter (ENA) family
-+============================================================
++May 23, 2002
 +
-+Overview
-+========
++.. Contents
  
--Overview:
--=========
- ENA is a networking interface designed to make good use of modern CPU
- features and system architectures.
+-Contents
+-========
+  - Compatibility List
+  - Quick Install
+  - Compiling the Driver
+@@ -15,12 +18,13 @@ Contents
  
-@@ -35,32 +39,40 @@ debug logs.
- Some of the ENA devices support a working mode called Low-latency
- Queue (LLQ), which saves several more microseconds.
  
--Supported PCI vendor ID/device IDs:
-+Supported PCI vendor ID/device IDs
-+==================================
-+
-+=========   =======================
-+1d0f:0ec2   ENA PF
-+1d0f:1ec2   ENA PF with LLQ support
-+1d0f:ec20   ENA VF
-+1d0f:ec21   ENA VF with LLQ support
-+=========   =======================
-+
-+ENA Source Code Directory Structure
- ===================================
--1d0f:0ec2 - ENA PF
--1d0f:1ec2 - ENA PF with LLQ support
--1d0f:ec20 - ENA VF
--1d0f:ec21 - ENA VF with LLQ support
- 
--ENA Source Code Directory Structure:
--====================================
--ena_com.[ch]      - Management communication layer. This layer is
--                    responsible for the handling all the management
--                    (admin) communication between the device and the
--                    driver.
--ena_eth_com.[ch]  - Tx/Rx data path.
--ena_admin_defs.h  - Definition of ENA management interface.
--ena_eth_io_defs.h - Definition of ENA data path interface.
--ena_common_defs.h - Common definitions for ena_com layer.
--ena_regs_defs.h   - Definition of ENA PCI memory-mapped (MMIO) registers.
--ena_netdev.[ch]   - Main Linux kernel driver.
--ena_syfsfs.[ch]   - Sysfs files.
--ena_ethtool.c     - ethtool callbacks.
--ena_pci_id_tbl.h  - Supported device IDs.
-+=================   ======================================================
-+ena_com.[ch]        Management communication layer. This layer is
-+		    responsible for the handling all the management
-+		    (admin) communication between the device and the
-+		    driver.
-+ena_eth_com.[ch]    Tx/Rx data path.
-+ena_admin_defs.h    Definition of ENA management interface.
-+ena_eth_io_defs.h   Definition of ENA data path interface.
-+ena_common_defs.h   Common definitions for ena_com layer.
-+ena_regs_defs.h     Definition of ENA PCI memory-mapped (MMIO) registers.
-+ena_netdev.[ch]     Main Linux kernel driver.
-+ena_syfsfs.[ch]     Sysfs files.
-+ena_ethtool.c       ethtool callbacks.
-+ena_pci_id_tbl.h    Supported device IDs.
-+=================   ======================================================
- 
- Management Interface:
- =====================
-+
- ENA management interface is exposed by means of:
-+
- - PCIe Configuration Space
- - Device Registers
- - Admin Queue (AQ) and Admin Completion Queue (ACQ)
-@@ -78,6 +90,7 @@ vendor-specific extensions. Most of the management operations are
- framed in a generic Get/Set feature command.
- 
- The following admin queue commands are supported:
-+
- - Create I/O submission queue
- - Create I/O completion queue
- - Destroy I/O submission queue
-@@ -96,12 +109,16 @@ be reported using ACQ. AENQ events are subdivided into groups. Each
- group may have multiple syndromes, as shown below
- 
- The events are:
-+
-+	====================	===============
- 	Group			Syndrome
--	Link state change	- X -
--	Fatal error		- X -
-+	====================	===============
-+	Link state change	**X**
-+	Fatal error		**X**
- 	Notification		Suspend traffic
- 	Notification		Resume traffic
--	Keep-Alive		- X -
-+	Keep-Alive		**X**
-+	====================	===============
- 
- ACQ and AENQ share the same MSI-X vector.
- 
-@@ -113,8 +130,8 @@ the device every second. The driver re-arms the WD upon reception of a
- Keep-Alive event. A missed Keep-Alive event causes the WD handler to
- fire.
- 
--Data Path Interface:
--====================
-+Data Path Interface
-+===================
- I/O operations are based on Tx and Rx Submission Queues (Tx SQ and Rx
- SQ correspondingly). Each SQ has a completion queue (CQ) associated
- with it.
-@@ -123,11 +140,15 @@ The SQs and CQs are implemented as descriptor rings in contiguous
- physical memory.
- 
- The ENA driver supports two Queue Operation modes for Tx SQs:
-+
- - Regular mode
-+
-   * In this mode the Tx SQs reside in the host's memory. The ENA
-     device fetches the ENA Tx descriptors and packet data from host
-     memory.
-+
- - Low Latency Queue (LLQ) mode or "push-mode".
-+
-   * In this mode the driver pushes the transmit descriptors and the
-     first 128 bytes of the packet directly to the ENA device memory
-     space. The rest of the packet payload is fetched by the
-@@ -142,6 +163,7 @@ Note: Not all ENA devices support LLQ, and this feature is negotiated
- 
- The driver supports multi-queue for both Tx and Rx. This has various
- benefits:
-+
- - Reduced CPU/thread/process contention on a given Ethernet interface.
- - Cache miss rate on completion is reduced, particularly for data
-   cache lines that hold the sk_buff structures.
-@@ -151,8 +173,8 @@ benefits:
-   packet is running.
- - In hardware interrupt re-direction.
- 
--Interrupt Modes:
--================
-+Interrupt Modes
-+===============
- The driver assigns a single MSI-X vector per queue pair (for both Tx
- and Rx directions). The driver assigns an additional dedicated MSI-X vector
- for management (for ACQ and AENQ).
-@@ -163,9 +185,12 @@ removed. I/O queue interrupt registration is performed when the Linux
- interface of the adapter is opened, and it is de-registered when the
- interface is closed.
- 
--The management interrupt is named:
-+The management interrupt is named::
-+
-    ena-mgmnt@pci:<PCI domain:bus:slot.function>
--and for each queue pair, an interrupt is named:
-+
-+and for each queue pair, an interrupt is named::
-+
-    <interface name>-Tx-Rx-<queue index>
- 
- The ENA device operates in auto-mask and auto-clear interrupt
-@@ -173,8 +198,8 @@ modes. That is, once MSI-X is delivered to the host, its Cause bit is
- automatically cleared and the interrupt is masked. The interrupt is
- unmasked by the driver after NAPI processing is complete.
- 
--Interrupt Moderation:
--=====================
-+Interrupt Moderation
-+====================
- ENA driver and device can operate in conventional or adaptive interrupt
- moderation mode.
- 
-@@ -202,45 +227,46 @@ delay value to each level.
- The user can enable/disable adaptive moderation, modify the interrupt
- delay table and restore its default values through sysfs.
- 
--RX copybreak:
--=============
-+RX copybreak
-+============
- The rx_copybreak is initialized by default to ENA_DEFAULT_RX_COPYBREAK
- and can be configured by the ETHTOOL_STUNABLE command of the
- SIOCETHTOOL ioctl.
- 
--SKB:
--====
-+SKB
-+===
- The driver-allocated SKB for frames received from Rx handling using
- NAPI context. The allocation method depends on the size of the packet.
- If the frame length is larger than rx_copybreak, napi_get_frags()
- is used, otherwise netdev_alloc_skb_ip_align() is used, the buffer
- content is copied (by CPU) to the SKB, and the buffer is recycled.
- 
--Statistics:
--===========
-+Statistics
-+==========
- The user can obtain ENA device and driver statistics using ethtool.
- The driver can collect regular or extended statistics (including
- per-queue stats) from the device.
- 
- In addition the driver logs the stats to syslog upon device reset.
- 
--MTU:
--====
-+MTU
-+===
- The driver supports an arbitrarily large MTU with a maximum that is
- negotiated with the device. The driver configures MTU using the
- SetFeature command (ENA_ADMIN_MTU property). The user can change MTU
- via ip(8) and similar legacy tools.
- 
--Stateless Offloads:
--===================
-+Stateless Offloads
+ Compatibility List
+-=================
 +==================
- The ENA driver supports:
 +
- - TSO over IPv4/IPv6
- - TSO with ECN
- - IPv4 header checksum offload
- - TCP/UDP over IPv4/IPv6 checksum offloads
+ Adapter Support:
  
--RSS:
--====
-+RSS
-+===
- - The ENA device supports RSS that allows flexible Rx traffic
-   steering.
- - Toeplitz and CRC32 hash functions are supported.
-@@ -255,11 +281,13 @@ RSS:
- - The user can provide a hash key, hash function, and configure the
-   indirection table through ethtool(8).
+-D-Link DGE-550T Gigabit Ethernet Adapter.
+-D-Link DGE-550SX Gigabit Ethernet Adapter.
+-D-Link DL2000-based Gigabit Ethernet Adapter.
++- D-Link DGE-550T Gigabit Ethernet Adapter.
++- D-Link DGE-550SX Gigabit Ethernet Adapter.
++- D-Link DL2000-based Gigabit Ethernet Adapter.
  
--DATA PATH:
--==========
--Tx:
-----
-+DATA PATH
-+=========
-+Tx
-+--
-+
- end_start_xmit() is called by the stack. This function does the following:
-+
- - Maps data buffers (skb->data and frags).
- - Populates ena_buf for the push buffer (if the driver and device are
-   in push mode.)
-@@ -271,8 +299,10 @@ end_start_xmit() is called by the stack. This function does the following:
- - Calls ena_com_prepare_tx(), an ENA communication layer that converts
-   the ena_bufs to ENA descriptors (and adds meta ENA descriptors as
-   needed.)
-+
-   * This function also copies the ENA descriptors and the push buffer
-     to the Device memory space (if in push mode.)
-+
- - Writes doorbell to the ENA device.
- - When the ENA device finishes sending the packet, a completion
-   interrupt is raised.
-@@ -280,14 +310,16 @@ end_start_xmit() is called by the stack. This function does the following:
- - The ena_clean_tx_irq() function is called. This function handles the
-   completion descriptors generated by the ENA, with a single
-   completion descriptor per completed packet.
-+
-   * req_id is retrieved from the completion descriptor. The tx_info of
-     the packet is retrieved via the req_id. The data buffers are
-     unmapped and req_id is returned to the empty req_id ring.
-   * The function stops when the completion descriptors are completed or
-     the budget is reached.
  
--Rx:
-----
-+Rx
-+--
+ The driver support Linux kernel 2.4.7 later. We had tested it
+@@ -34,28 +38,32 @@ on the environments below.
+ 
+ Quick Install
+ =============
+-Install linux driver as following command:
++Install linux driver as following command::
 +
- - When a packet is received from the ENA device.
- - The interrupt handler schedules NAPI.
- - The ena_clean_rx_irq() function is called. This function calls
-@@ -296,13 +328,17 @@ Rx:
-   no new packet is found.
- - Then it calls the ena_clean_rx_irq() function.
- - ena_eth_rx_skb() checks packet length:
++    1. make all
++    2. insmod dl2k.ko
++    3. ifconfig eth0 up 10.xxx.xxx.xxx netmask 255.0.0.0
++			^^^^^^^^^^^^^^^\	    ^^^^^^^^\
++					IP		     NETMASK
+ 
+-1. make all
+-2. insmod dl2k.ko
+-3. ifconfig eth0 up 10.xxx.xxx.xxx netmask 255.0.0.0
+-		    ^^^^^^^^^^^^^^^\	    ^^^^^^^^\
+-				    IP		     NETMASK
+ Now eth0 should active, you can test it by "ping" or get more information by
+ "ifconfig". If tested ok, continue the next step.
+ 
+-4. cp dl2k.ko /lib/modules/`uname -r`/kernel/drivers/net
+-5. Add the following line to /etc/modprobe.d/dl2k.conf:
++4. ``cp dl2k.ko /lib/modules/`uname -r`/kernel/drivers/net``
++5. Add the following line to /etc/modprobe.d/dl2k.conf::
 +
-   * If the packet is small (len < rx_copybreak), the driver allocates
-     a SKB for the new packet, and copies the packet payload into the
-     SKB data buffer.
+ 	alias eth0 dl2k
+-6. Run depmod to updated module indexes.
+-7. Run "netconfig" or "netconf" to create configuration script ifcfg-eth0
 +
-     - In this way the original data buffer is not passed to the stack
-       and is reused for future Rx packets.
++6. Run ``depmod`` to updated module indexes.
++7. Run ``netconfig`` or ``netconf`` to create configuration script ifcfg-eth0
+    located at /etc/sysconfig/network-scripts or create it manually.
 +
-   * Otherwise the function unmaps the Rx buffer, then allocates the
-     new SKB structure and hooks the Rx buffer to the SKB frags.
+    [see - Configuration Script Sample]
+ 8. Driver will automatically load and configure at next boot time.
+ 
+ Compiling the Driver
+ ====================
+-  In Linux, NIC drivers are most commonly configured as loadable modules.
++In Linux, NIC drivers are most commonly configured as loadable modules.
+ The approach of building a monolithic kernel has become obsolete. The driver
+ can be compiled as part of a monolithic kernel, but is strongly discouraged.
+ The remainder of this section assumes the driver is built as a loadable module.
+@@ -73,93 +81,108 @@ to compile and link the driver:
+ CD-ROM drive
+ ------------
+ 
+-[root@XXX /] mkdir cdrom
+-[root@XXX /] mount -r -t iso9660 -o conv=auto /dev/cdrom /cdrom
+-[root@XXX /] cd root
+-[root@XXX /root] mkdir dl2k
+-[root@XXX /root] cd dl2k
+-[root@XXX dl2k] cp /cdrom/linux/dl2k.tgz /root/dl2k
+-[root@XXX dl2k] tar xfvz dl2k.tgz
+-[root@XXX dl2k] make all
++::
 +
- - The new SKB is updated with the necessary information (protocol,
-   checksum hw verify result, etc.), and then passed to the network
-   stack, using the NAPI interface function napi_gro_receive().
++    [root@XXX /] mkdir cdrom
++    [root@XXX /] mount -r -t iso9660 -o conv=auto /dev/cdrom /cdrom
++    [root@XXX /] cd root
++    [root@XXX /root] mkdir dl2k
++    [root@XXX /root] cd dl2k
++    [root@XXX dl2k] cp /cdrom/linux/dl2k.tgz /root/dl2k
++    [root@XXX dl2k] tar xfvz dl2k.tgz
++    [root@XXX dl2k] make all
+ 
+ Floppy disc drive
+ -----------------
+ 
+-[root@XXX /] cd root
+-[root@XXX /root] mkdir dl2k
+-[root@XXX /root] cd dl2k
+-[root@XXX dl2k] mcopy a:/linux/dl2k.tgz /root/dl2k
+-[root@XXX dl2k] tar xfvz dl2k.tgz
+-[root@XXX dl2k] make all
++::
++
++    [root@XXX /] cd root
++    [root@XXX /root] mkdir dl2k
++    [root@XXX /root] cd dl2k
++    [root@XXX dl2k] mcopy a:/linux/dl2k.tgz /root/dl2k
++    [root@XXX dl2k] tar xfvz dl2k.tgz
++    [root@XXX dl2k] make all
+ 
+ Installing the Driver
+ =====================
+ 
+-  Manual Installation
+-  -------------------
++Manual Installation
++-------------------
++
+   Once the driver has been compiled, it must be loaded, enabled, and bound
+   to a protocol stack in order to establish network connectivity. To load a
+-  module enter the command:
++  module enter the command::
+ 
+-  insmod dl2k.o
++    insmod dl2k.o
+ 
+-  or
++  or::
+ 
+-  insmod dl2k.o <optional parameter>	; add parameter
++    insmod dl2k.o <optional parameter>	; add parameter
+ 
+-  ===============================================================
+-   example: insmod dl2k.o media=100mbps_hd
+-   or	    insmod dl2k.o media=3
+-   or	    insmod dl2k.o media=3,2	; for 2 cards
+-  ===============================================================
++---------------------------------------------------------
++
++  example::
++
++    insmod dl2k.o media=100mbps_hd
++
++   or::
++
++    insmod dl2k.o media=3
++
++   or::
++
++    insmod dl2k.o media=3,2	; for 2 cards
++
++---------------------------------------------------------
+ 
+   Please reference the list of the command line parameters supported by
+   the Linux device driver below.
+ 
+   The insmod command only loads the driver and gives it a name of the form
+   eth0, eth1, etc. To bring the NIC into an operational state,
+-  it is necessary to issue the following command:
++  it is necessary to issue the following command::
+ 
+-  ifconfig eth0 up
++    ifconfig eth0 up
+ 
+   Finally, to bind the driver to the active protocol (e.g., TCP/IP with
+-  Linux), enter the following command:
++  Linux), enter the following command::
+ 
+-  ifup eth0
++    ifup eth0
+ 
+   Note that this is meaningful only if the system can find a configuration
+   script that contains the necessary network information. A sample will be
+   given in the next paragraph.
+ 
+-  The commands to unload a driver are as follows:
++  The commands to unload a driver are as follows::
+ 
+-  ifdown eth0
+-  ifconfig eth0 down
+-  rmmod dl2k.o
++    ifdown eth0
++    ifconfig eth0 down
++    rmmod dl2k.o
+ 
+   The following are the commands to list the currently loaded modules and
+-  to see the current network configuration.
++  to see the current network configuration::
+ 
+-  lsmod
+-  ifconfig
++    lsmod
++    ifconfig
+ 
+ 
+-  Automated Installation
+-  ----------------------
++Automated Installation
++----------------------
+   This section describes how to install the driver such that it is
+   automatically loaded and configured at boot time. The following description
+   is based on a Red Hat 6.0/7.0 distribution, but it can easily be ported to
+   other distributions as well.
+ 
+-  Red Hat v6.x/v7.x
+-  -----------------
++Red Hat v6.x/v7.x
++-----------------
+   1. Copy dl2k.o to the network modules directory, typically
+      /lib/modules/2.x.x-xx/net or /lib/modules/2.x.x/kernel/drivers/net.
+   2. Locate the boot module configuration file, most commonly in the
+-     /etc/modprobe.d/ directory. Add the following lines:
++     /etc/modprobe.d/ directory. Add the following lines::
+ 
+-     alias ethx dl2k
+-     options dl2k <optional parameters>
++	alias ethx dl2k
++	options dl2k <optional parameters>
+ 
+      where ethx will be eth0 if the NIC is the only ethernet adapter, eth1 if
+      one other ethernet adapter is installed, etc. Refer to the table in the
+@@ -180,11 +203,15 @@ parameter. Below is a list of the command line parameters supported by the
+ Linux device
+ driver.
+ 
+-mtu=packet_size			- Specifies the maximum packet size. default
++
++===============================   ==============================================
++mtu=packet_size			  Specifies the maximum packet size. default
+ 				  is 1500.
+ 
+-media=media_type		- Specifies the media type the NIC operates at.
++media=media_type		  Specifies the media type the NIC operates at.
+ 				  autosense	Autosensing active media.
++
++				  ===========	=========================
+ 				  10mbps_hd	10Mbps half duplex.
+ 				  10mbps_fd	10Mbps full duplex.
+ 				  100mbps_hd	100Mbps half duplex.
+@@ -198,85 +225,90 @@ media=media_type		- Specifies the media type the NIC operates at.
+ 				  4		100Mbps full duplex.
+ 				  5          	1000Mbps half duplex.
+ 				  6          	1000Mbps full duplex.
++				  ===========	=========================
+ 
+ 				  By default, the NIC operates at autosense.
+ 				  1000mbps_fd and 1000mbps_hd types are only
+ 				  available for fiber adapter.
+ 
+-vlan=n				- Specifies the VLAN ID. If vlan=0, the
++vlan=n				  Specifies the VLAN ID. If vlan=0, the
+ 				  Virtual Local Area Network (VLAN) function is
+ 				  disable.
+ 
+-jumbo=[0|1]			- Specifies the jumbo frame support. If jumbo=1,
++jumbo=[0|1]			  Specifies the jumbo frame support. If jumbo=1,
+ 				  the NIC accept jumbo frames. By default, this
+ 				  function is disabled.
+ 				  Jumbo frame usually improve the performance
+ 				  int gigabit.
+-				  This feature need jumbo frame compatible 
++				  This feature need jumbo frame compatible
+ 				  remote.
+-				  
+-rx_coalesce=m			- Number of rx frame handled each interrupt.
+-rx_timeout=n			- Rx DMA wait time for an interrupt. 
+-				  If set rx_coalesce > 0, hardware only assert 
+-				  an interrupt for m frames. Hardware won't 
++
++rx_coalesce=m			  Number of rx frame handled each interrupt.
++rx_timeout=n			  Rx DMA wait time for an interrupt.
++				  If set rx_coalesce > 0, hardware only assert
++				  an interrupt for m frames. Hardware won't
+ 				  assert rx interrupt until m frames received or
+-				  reach timeout of n * 640 nano seconds. 
+-				  Set proper rx_coalesce and rx_timeout can 
++				  reach timeout of n * 640 nano seconds.
++				  Set proper rx_coalesce and rx_timeout can
+ 				  reduce congestion collapse and overload which
+ 				  has been a bottleneck for high speed network.
+-				  
++
+ 				  For example, rx_coalesce=10 rx_timeout=800.
+-				  that is, hardware assert only 1 interrupt 
+-				  for 10 frames received or timeout of 512 us. 
++				  that is, hardware assert only 1 interrupt
++				  for 10 frames received or timeout of 512 us.
+ 
+-tx_coalesce=n			- Number of tx frame handled each interrupt.
+-				  Set n > 1 can reduce the interrupts 
++tx_coalesce=n			  Number of tx frame handled each interrupt.
++				  Set n > 1 can reduce the interrupts
+ 				  congestion usually lower performance of
+ 				  high speed network card. Default is 16.
+-				  
+-tx_flow=[1|0]			- Specifies the Tx flow control. If tx_flow=0, 
++
++tx_flow=[1|0]			  Specifies the Tx flow control. If tx_flow=0,
+ 				  the Tx flow control disable else driver
+ 				  autodetect.
+-rx_flow=[1|0]			- Specifies the Rx flow control. If rx_flow=0, 
++rx_flow=[1|0]			  Specifies the Rx flow control. If rx_flow=0,
+ 				  the Rx flow control enable else driver
+ 				  autodetect.
++===============================   ==============================================
+ 
+ 
+ Configuration Script Sample
+ ===========================
+-Here is a sample of a simple configuration script:
++Here is a sample of a simple configuration script::
+ 
+-DEVICE=eth0
+-USERCTL=no
+-ONBOOT=yes
+-POOTPROTO=none
+-BROADCAST=207.200.5.255
+-NETWORK=207.200.5.0
+-NETMASK=255.255.255.0
+-IPADDR=207.200.5.2
++    DEVICE=eth0
++    USERCTL=no
++    ONBOOT=yes
++    POOTPROTO=none
++    BROADCAST=207.200.5.255
++    NETWORK=207.200.5.0
++    NETMASK=255.255.255.0
++    IPADDR=207.200.5.2
+ 
+ 
+ Troubleshooting
+ ===============
+ Q1. Source files contain ^ M behind every line.
+-	Make sure all files are Unix file format (no LF). Try the following
+-    shell command to convert files.
++
++    Make sure all files are Unix file format (no LF). Try the following
++    shell command to convert files::
+ 
+ 	cat dl2k.c | col -b > dl2k.tmp
+ 	mv dl2k.tmp dl2k.c
+ 
+-	OR
++    OR::
+ 
+ 	cat dl2k.c | tr -d "\r" > dl2k.tmp
+ 	mv dl2k.tmp dl2k.c
+ 
+-Q2: Could not find header files (*.h) ?
+-	To compile the driver, you need kernel header files. After
++Q2: Could not find header files (``*.h``)?
++
++    To compile the driver, you need kernel header files. After
+     installing the kernel source, the header files are usually located in
+     /usr/src/linux/include, which is the default include directory configured
+     in Makefile. For some distributions, there is a copy of header files in
+     /usr/src/include/linux and /usr/src/include/asm, that you can change the
+     INCLUDEDIR in Makefile to /usr/include without installing kernel source.
+-	Note that RH 7.0 didn't provide correct header files in /usr/include,
++
++    Note that RH 7.0 didn't provide correct header files in /usr/include,
+     including those files will make a wrong version driver.
+ 
 diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index aaac502b81ea..019a0d2efe67 100644
+index 09728e964ce1..e5d1863379cb 100644
 --- a/Documentation/networking/device_drivers/index.rst
 +++ b/Documentation/networking/device_drivers/index.rst
-@@ -29,6 +29,7 @@ Contents:
-    stmicro/stmmac
-    3com/3c509
-    3com/vortex
-+   amazon/ena
+@@ -36,6 +36,7 @@ Contents:
+    davicom/dm9000
+    dec/de4x5
+    dec/dmfe
++   dlink/dl2k
  
  .. only::  subproject and html
  
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a45ab6a25942..990d1414ffd6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -816,7 +816,7 @@ R:	Saeed Bishara <saeedb@amazon.com>
- R:	Zorik Machulsky <zorik@amazon.com>
- L:	netdev@vger.kernel.org
- S:	Supported
--F:	Documentation/networking/device_drivers/amazon/ena.txt
-+F:	Documentation/networking/device_drivers/amazon/ena.rst
- F:	drivers/net/ethernet/amazon/
+diff --git a/drivers/net/ethernet/dlink/dl2k.c b/drivers/net/ethernet/dlink/dl2k.c
+index 643090555cc7..5143722c4419 100644
+--- a/drivers/net/ethernet/dlink/dl2k.c
++++ b/drivers/net/ethernet/dlink/dl2k.c
+@@ -1869,7 +1869,7 @@ Compile command:
  
- AMAZON RDMA EFA DRIVER
+ gcc -D__KERNEL__ -DMODULE -I/usr/src/linux/include -Wall -Wstrict-prototypes -O2 -c dl2k.c
+ 
+-Read Documentation/networking/device_drivers/dlink/dl2k.txt for details.
++Read Documentation/networking/device_drivers/dlink/dl2k.rst for details.
+ 
+ */
+ 
 -- 
 2.25.4
 
