@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C9C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D08EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11C9E208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E615208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339714;
-	bh=RTn+kV+lIHQIsGh0H3v5uQledyZ87fbiPFxJRLw6Yfo=;
+	s=default; t=1588339716;
+	bh=klBkbq68mGyRT+2KtEwZLVT96VkD8jSmhCqVYrAke5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0PdY4Mw+muB/yrxoSYsCf74TfLuO9cL+fnfronEgcn5ykiB5GUO5d/jalbwTcR3qk
-	 HwjKpY3Wq8d7X6bWyw3Nli+gYvabA4sL8RYYhgHz+d3SG7v9BzfbWd0VrY2PZgSp5T
-	 azhBzS/xJwPMsiydO5o+b+FskgEBUxsveYuTBnWo=
+	b=ty3zwRAFGA2FZzzCUzlB2q+JRfG4XTBwXy4JyeTIcHYfKSEXCQjXX/0Ytq/TdtRwB
+	 K4wGSxezGh6x5r86IVsDLKaqJNbd9SwMcYhoK0yqj2h33TvHanQCYDu8E8kW9/DuHT
+	 CYq+3cqLxA5lmLSrw5H7eb0wYZdKuH30eWHfyfQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgEAN2d (ORCPT
+        id S1729641AbgEAN2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729600AbgEAN23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:28:29 -0400
+        id S1729619AbgEAN21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF4D424953;
-        Fri,  1 May 2020 13:28:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E10A2166E;
+        Fri,  1 May 2020 13:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339709;
-        bh=RTn+kV+lIHQIsGh0H3v5uQledyZ87fbiPFxJRLw6Yfo=;
+        s=default; t=1588339706;
+        bh=klBkbq68mGyRT+2KtEwZLVT96VkD8jSmhCqVYrAke5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AyEYSHRLNNuE1RGAeN+ni3dPbbYTvrtP0M6vmHypMHB7iExAEfEcVAwIm9bZMstxp
-         9XORlbhYUjYzo6wd6ZWRnrH78YMFAR6bx5QBYd2jQ6g/7nAA9xLfs1UE7MZJkkZESp
-         mra4/T/tyuRIWZ46jacntdKeYOKfGCSUIcBxiJKs=
+        b=Z6BOEG5Q/1uhI2OyfmCdzScsJlhrlxEvcP3yLIRZBL1gWe46dWxPBLDRrBOcc5/uA
+         xpzNqX/8QtTlcyOolsmjBq6m2DePUnGgOz4ABVMv9FhC6UTk22bQveEsNh9NooGT8m
+         jUTEDwBaElk1VJxji4fn16srf+CwGHrMYRvRAZcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Boris Fiuczynski <fiuczy@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/80] watchdog: reset last_hw_keepalive time at start
-Date:   Fri,  1 May 2020 15:21:01 +0200
-Message-Id: <20200501131515.244885263@linuxfoundation.org>
+Subject: [PATCH 4.9 16/80] s390/cio: avoid duplicated ADD uevents
+Date:   Fri,  1 May 2020 15:21:10 +0200
+Message-Id: <20200501131519.033209634@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,40 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
+[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
 
-Currently the watchdog core does not initialize the last_hw_keepalive
-time during watchdog startup. This will cause the watchdog to be pinged
-immediately if enough time has passed from the system boot-up time, and
-some types of watchdogs like K3 RTI does not like this.
+The common I/O layer delays the ADD uevent for subchannels and
+delegates generating this uevent to the individual subchannel
+drivers. The io_subchannel driver will do so when the associated
+ccw_device has been registered -- but unconditionally, so more
+ADD uevents will be generated if a subchannel has been unbound
+from the io_subchannel driver and later rebound.
 
-To avoid the issue, setup the last_hw_keepalive time during watchdog
-startup.
+To fix this, only generate the ADD event if uevents were still
+suppressed for the device.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
+Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
+Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/watchdog_dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/cio/device.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 977fe74e5abe2..9e17d933ea941 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -237,6 +237,7 @@ static int watchdog_start(struct watchdog_device *wdd)
- 	if (err == 0) {
- 		set_bit(WDOG_ACTIVE, &wdd->status);
- 		wd_data->last_keepalive = started_at;
-+		wd_data->last_hw_keepalive = started_at;
- 		watchdog_update_worker(wdd);
- 	}
- 
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index 6a58bc8f46e2a..1e97d1a034675 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -868,8 +868,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
+ 	 * Now we know this subchannel will stay, we can throw
+ 	 * our delayed uevent.
+ 	 */
+-	dev_set_uevent_suppress(&sch->dev, 0);
+-	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	if (dev_get_uevent_suppress(&sch->dev)) {
++		dev_set_uevent_suppress(&sch->dev, 0);
++		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	}
+ 	/* make it known to the system */
+ 	ret = ccw_device_add(cdev);
+ 	if (ret) {
+@@ -1077,8 +1079,11 @@ static int io_subchannel_probe(struct subchannel *sch)
+ 		 * Throw the delayed uevent for the subchannel, register
+ 		 * the ccw_device and exit.
+ 		 */
+-		dev_set_uevent_suppress(&sch->dev, 0);
+-		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		if (dev_get_uevent_suppress(&sch->dev)) {
++			/* should always be the case for the console */
++			dev_set_uevent_suppress(&sch->dev, 0);
++			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		}
+ 		cdev = sch_get_cdev(sch);
+ 		rc = ccw_device_add(cdev);
+ 		if (rc) {
 -- 
 2.20.1
 
