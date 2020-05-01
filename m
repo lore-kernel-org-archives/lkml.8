@@ -2,102 +2,153 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C88C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B83C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C9620836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1125F2074A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tA6r6SXt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="N4SldThh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgEAEOP (ORCPT
+        id S1728235AbgEAEOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 00:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727922AbgEAEOO (ORCPT
+        Fri, 1 May 2020 00:14:23 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.31]:42101 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbgEAEOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 00:14:14 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A5AC035495
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 21:14:14 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l12so1197769pgr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 21:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SpZmYE1xlGDv5YUeWwpXaENpO6djzIF95gIpAMiKvcQ=;
-        b=tA6r6SXt3t1la2kN+V6N2VgvtAVb8ehDf6uMCAs1BkSMlrJt1Tt5hQKktqO/sroMVr
-         ikSrIj8fLHtODl9SzLEGFDPguzcxJSMNExTvH3rGrejaTbqTkRwFsAKHgZrnmcG0PFmf
-         lCGXmGHcXjytGo2Z9avfJmfz4aIewE61ujvx+COaAteEMDLCcX1NcOw6nkV3SoJip3GD
-         LNKo7C6fTqwLON3TS6qqWjFwGcirh7a4tZQ1VF1yOpkY0Dq64QYiOwjS6YJ7jucgaV8Y
-         qzF0Z27P8OOuqo7EmxVO3wrPpeXuhgynNnRJmjzmDblp6E/6iU+LhyCOdWPOI1/O81Ys
-         8+bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SpZmYE1xlGDv5YUeWwpXaENpO6djzIF95gIpAMiKvcQ=;
-        b=Sl8Z7YKan17j8Oi7c2EXOs0qB98efiZ9rFhovMcMscmemyNELUZ1KJZlk2RLMHWuKX
-         +a60ksrGSKMhy1SNJUt4+HtLbUAKd7+2uewtQMGfNAPOG1R6Aru+VfxG1gPBfjZEHJVz
-         dGhtKOu0yFySXiMS/WyVq+Sv7SkFrNzytySfWTReb5WLOTGjEx1K+0VfHzoUr1DBb6u+
-         HUK2afYyJGeSlx2+l0Vrb2hIiA2CmrKl+jlJxqkFT25+ojiTzRVJSsP++1/QBfm2a2wh
-         xiBUd1zy5DLjN5zz7TfPKelaURLnsb9jh7M+c395dZe3zx57kq/lMkEfTKEBbBFO0ETw
-         9RiA==
-X-Gm-Message-State: AGi0PuZ6jnlBoejCAAdd68A0124qdqcemaVmG6p8Rb4muA8nvpu1aQ7e
-        RebO+1do21/cZa0jWTCFKy+vdkcAC+mNyw==
-X-Google-Smtp-Source: APiQypJgy1CgIoE3nhKap888MjfyWqDG3No8Dza7hofn0aWrjOQo+/NOQBbys16dCfH6auNhq+9OyQ==
-X-Received: by 2002:a63:600c:: with SMTP id u12mr2317348pgb.318.1588306453685;
-        Thu, 30 Apr 2020 21:14:13 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id b16sm1070422pft.191.2020.04.30.21.14.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Apr 2020 21:14:13 -0700 (PDT)
-Subject: Re: [PATCH] pipe: read/write_iter() handler should check for
- IOCB_NOWAIT
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <273d8294-2508-a4c2-f96e-a6a394f94166@kernel.dk>
- <20200501035820.GH23230@ZenIV.linux.org.uk>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <210c6b72-179a-993f-1ec8-1960db107174@kernel.dk>
-Date:   Thu, 30 Apr 2020 22:14:11 -0600
+        Fri, 1 May 2020 00:14:23 -0400
+X-Greylist: delayed 1450 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 May 2020 00:14:22 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 8A778400C36DC
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 22:50:12 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id UMgmjfhzh8vkBUMgmjOrq1; Thu, 30 Apr 2020 22:50:12 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=X5v6XgBQvXYCV/k6yfv1MAtOVy8utTNfVch0kLIBlYE=; b=N4SldThhN2NFbW+d8EcfmV1Hpr
+        5T02bteGw36ZL/u44B8sSa6+l7WdcElpXlEPo5In9M6PIGaHN4UQFdvKgXFbohfDqg3OiyRYKpVCi
+        91Mm1dk3fKkLYtn4JTlA08CHv/uNQkj/FkPbwdZHQbAxQ2FX6TMCgMBwVWwjSkGzWlP5SfQ5VaCHV
+        1VexxlLorJ88O3zkvsKqWi8c0LATvjv3WSw+OtaGw6H1DnviXgGrbWtANouiChDfclLMfBrOUKK3Y
+        yaeloFp6ln9CgWhzh7BgiDMUUZ93QVlrjUZDcPOQmEecR1ow4e507nXMvhqjLCNgcCPQgpPX1j80I
+        mA6g9XYQ==;
+Received: from [189.207.59.248] (port=58874 helo=[192.168.15.9])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jUMgm-002kze-2o; Thu, 30 Apr 2020 22:50:12 -0500
+Subject: Re: linux-next: manual merge of the mlx5-next tree with the
+ kspp-gustavo tree
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huy Nguyen <huyn@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Raed Salem <raeds@mellanox.com>
+References: <20200429120625.2b5bb507@canb.auug.org.au>
+ <20200501131230.58835994@canb.auug.org.au>
+ <32eb40f0-a17b-5a7f-41e0-0f30a507fc31@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <585d76be-a2e7-1da6-9a9a-f46f14aea222@embeddedor.com>
+Date:   Thu, 30 Apr 2020 22:54:33 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200501035820.GH23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <32eb40f0-a17b-5a7f-41e0-0f30a507fc31@embeddedor.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jUMgm-002kze-2o
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.9]) [189.207.59.248]:58874
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/20 9:58 PM, Al Viro wrote:
-> On Thu, Apr 30, 2020 at 10:24:46AM -0600, Jens Axboe wrote:
->> Pipe read/write only checks for the file O_NONBLOCK flag, but we should
->> also check for IOCB_NOWAIT for whether or not we should handle this read
->> or write in a non-blocking fashion. If we don't, then we will block on
->> data or space for iocbs that explicitly asked for non-blocking
->> operation. This messes up callers that explicitly ask for non-blocking
->> operations.
+Stephen,
+
+On 4/30/20 22:30, Gustavo A. R. Silva wrote:
+
+>> This is now a conflict between the net-next and kspp-gustavo trees.
+>>
 > 
-> Why does io_uring allow setting IOCB_NOWAIT without FMODE_NOWAIT, anyway?
+> Thanks for reporting this. I think the best solution, for now, is to remove the
+> changes from my tree. I'll do it right away.
+> 
 
-To do per-io non-blocking operations. It's not practical or convenient
-to flip the file flag, nor does it work if you have multiple of them
-going. If pipes honor the flag for the read/write iter handlers, then
-we can handle them a lot more efficiently instead of requiring async
-offload.
+I just updated my -next tree. This conflict should be resolved now. :)
 
--- 
-Jens Axboe
-
+Thanks
+--
+Gustavo
