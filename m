@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C502FC4725B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F97C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFB82166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A1E216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H9yanSPs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mQEbCFSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgEAVqo (ORCPT
+        id S1727815AbgEAVq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        Fri, 1 May 2020 17:46:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgEAVqh (ORCPT
+        with ESMTP id S1726745AbgEAVqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:46:37 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2B6C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:46:37 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id i136so6533149qke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:46:37 -0700 (PDT)
+        Fri, 1 May 2020 17:46:34 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C10C09B040
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:46:33 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id h26so9062745qtu.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+uxv+I2/FTJBYBAjECwblv3RDhMku6JWKomQ4Y91nmM=;
-        b=H9yanSPsA+U88jyPGN8QJqxFiCaATOffIamOYA9dkOpALy1hywuSZ/TWenPYX8PMNM
-         anb/N3lQdk9pZpqEFzxvnRQposoGWTNe67oqlD2iSdC+6gT5Ai5oIfDu499JZ2xx4gJ2
-         8nEC/w4qflEzXH2gXnCDZlT8x+T9o8Wm+bh1B4Gi6z2PXKFd645NV8U2jr1SBvcT+Syr
-         qgfhJbEVZuEJ0crACS3qw4GXlbnzfp87n1Et9LCoNqbDKdeQi/860Z4b5b8TEHNut7Hs
-         oqS7hcuM+ZvTlm7P0vnVfvsby1IK9P5izSHs1fwJ4lDGKQ+TWOC7VXgBkpxF4kTMIMQ3
-         BOLQ==
+        bh=8gxTSUogDwuGLJulsmZ9RxF75CEfaqEdykWJgqsyHRs=;
+        b=mQEbCFSG03FogeRAqzrIa13/XN1kbi5D36jDNukOmTu+o7J6EmE3NP2IKE+WPGx+0g
+         bTQmHp2wZhUHtfw2mINbOZ1dZYOCazzFF1BI1FmmISZnM1ZJVMGCr0YXGbxU+nbjrVcE
+         Qc5JwRo+yzKNBcg3vXMQEDn43yD0Z8OmqhX+t9E+VnurbZkiQdUGEZlgiKufJdQ/lxYb
+         pKOvZ2bRvzzpHN1THbRMkZT3Wjfl59tHqNdw1mzlge1OzLMLkNmNJXMnt1xXSXAJ4DLy
+         WYVofSHGHa1VvXWqdZAsGvPMP+fF1nKqH/QdoGNbdQr7BzPjnf4cRtZ1OlClxyootJEf
+         rpUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+uxv+I2/FTJBYBAjECwblv3RDhMku6JWKomQ4Y91nmM=;
-        b=DsEK3JWF0tEP/jaAYr8q0lK2K1durAVjOXNKsgd+BCrArfKd2NbnLC4Kt/LAg04+d6
-         YxJ0wuFNXZNaFpr/FFlUnSJJP9o5vHWhGFUaqLV+VRY4tyjAzn/xtFU2JWE3whsa3Tyt
-         gyjz9ycMuEdX5pUN8npmPtfYnL0tr1UzWnJO+1E1ZhU7zr/vS6RcnvBc8yYK2AF79GEy
-         Dr5c/BVC7n53ZkswEKQ1Ow4ASWvfcHhp8SqD6oYMe/U8VNBOSVHlpqoQKp5elLZWD4eE
-         jtj9hNR9Il9LsbG+0tEzPnXUxDvpgsfthgU3zWQYtCKF7kuF95t5N0jADQ7oWCoB+09/
-         iZmQ==
-X-Gm-Message-State: AGi0PuYFp0VnGv+6hiyimjfHRkv8Q7sXSD0eyYlkrpoA5RnoXGvWj6mC
-        clHmGfTR+64cJaI6kHhe2cchYA==
-X-Google-Smtp-Source: APiQypIEH50rTxi7c1REIzQ2SLaIQV+QqAPGJNKDWYIxjk6iX1MKO2VQNt4z85V+Pgl+EVP6OFQfRQ==
-X-Received: by 2002:ae9:edce:: with SMTP id c197mr5807335qkg.454.1588369596430;
-        Fri, 01 May 2020 14:46:36 -0700 (PDT)
+        bh=8gxTSUogDwuGLJulsmZ9RxF75CEfaqEdykWJgqsyHRs=;
+        b=n8YKq7wNOBhJlOHEVgQOZpr8ukzbAWj8tcKNUivgRzusTeAZLZaBfugfMvNKHj1eWM
+         wQniuu14+UpeomOooZ5BNPGBzEhkPZgm+OIybvs6U9lRoE1FANcoZ5O4s4DWzskC0Wpa
+         CcwPvvhQUOEn9Ghohyv0GEuf3YVp4ClyvxgJuR+4lhyvNiH9c+D8AgtEJAp3NJqzVU0Z
+         9GzMQT+r5yTTxdWVmn3+fuPrGbHWAQbDhqRA7sr2pi/WBh1C3A15FWBp3EhMzsDfenih
+         O304OyO+DctyjrMgHJA5nLegErAodDtyUwTvQUBwivqW4UHHVwSVG4RwAyIVqgQ5nDyN
+         k0gQ==
+X-Gm-Message-State: AGi0PubHGfSpwkupxnz8MkDCma+2UkV+YUUJzGBkafrSjGf5iQxLp42Q
+        yUlJrIsXkJP38ZfHJ/1hc2Mqdg==
+X-Google-Smtp-Source: APiQypIIqwtR3OM/3zGi5DIPfwsyDFHMqqlj+kjboPAogLyhmOkseCui/dghUIqb4bkEfE9iB3tLOg==
+X-Received: by 2002:ac8:46d0:: with SMTP id h16mr6146683qto.242.1588369593085;
+        Fri, 01 May 2020 14:46:33 -0700 (PDT)
 Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id z18sm3470982qti.47.2020.05.01.14.46.34
+        by smtp.gmail.com with ESMTPSA id z18sm3470982qti.47.2020.05.01.14.46.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:46:36 -0700 (PDT)
+        Fri, 01 May 2020 14:46:32 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net
 Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
@@ -66,9 +66,9 @@ Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
         agross@kernel.org, robh+dt@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH net-next 4/4] net: ipa: define SMEM memory region for IPA
-Date:   Fri,  1 May 2020 16:46:25 -0500
-Message-Id: <20200501214625.31539-5-elder@linaro.org>
+Subject: [PATCH net-next 2/4] net: ipa: redefine struct ipa_mem_data
+Date:   Fri,  1 May 2020 16:46:23 -0500
+Message-Id: <20200501214625.31539-3-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200501214625.31539-1-elder@linaro.org>
 References: <20200501214625.31539-1-elder@linaro.org>
@@ -79,248 +79,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arrange to use an item from SMEM memory for IPA.  SMEM item number
-497 is designated to be used by the IPA.  Specify the item ID and
-size of the region in platform configuration data.  Allocate and get
-a pointer to this region from ipa_mem_init().  The memory must be
-mapped for access through an SMMU.
+The ipa_mem_data structure type was never actually used.  Instead,
+the IPA memory regions were defined using the ipa_mem structure.
+
+Redefine struct ipa_mem_data so it encapsulates the array of IPA-local
+memory region descriptors along with the count of entries in that
+array.  Pass just an ipa_mem structure pointer to ipa_mem_init().
+
+Rename the ipa_mem_data[] array ipa_mem_local_data[] to emphasize
+that the memory regions it defines are IPA-local memory.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa.h             |   5 ++
- drivers/net/ipa/ipa_data-sc7180.c |   2 +
- drivers/net/ipa/ipa_data-sdm845.c |   2 +
- drivers/net/ipa/ipa_data.h        |   4 ++
- drivers/net/ipa/ipa_mem.c         | 116 ++++++++++++++++++++++++++++++
- 5 files changed, 129 insertions(+)
+ drivers/net/ipa/ipa_data-sc7180.c | 10 +++++++---
+ drivers/net/ipa/ipa_data-sdm845.c | 10 +++++++---
+ drivers/net/ipa/ipa_data.h        | 13 +++++--------
+ drivers/net/ipa/ipa_main.c        |  2 +-
+ drivers/net/ipa/ipa_mem.c         |  9 +++++----
+ drivers/net/ipa/ipa_mem.h         |  3 ++-
+ 6 files changed, 27 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ipa/ipa.h b/drivers/net/ipa/ipa.h
-index 32f6dfafdb05..b10a85392952 100644
---- a/drivers/net/ipa/ipa.h
-+++ b/drivers/net/ipa/ipa.h
-@@ -49,6 +49,8 @@ struct ipa_interrupt;
-  * @mem:		Array of IPA-local memory region descriptors
-  * @imem_iova:		I/O virtual address of IPA region in IMEM
-  * @imem_size;		Size of IMEM region
-+ * @smem_iova:		I/O virtual address of IPA region in SMEM
-+ * @smem_size;		Size of SMEM region
-  * @zero_addr:		DMA address of preallocated zero-filled memory
-  * @zero_virt:		Virtual address of preallocated zero-filled memory
-  * @zero_size:		Size (bytes) of preallocated zero-filled memory
-@@ -93,6 +95,9 @@ struct ipa {
- 	unsigned long imem_iova;
- 	size_t imem_size;
- 
-+	unsigned long smem_iova;
-+	size_t smem_size;
-+
- 	dma_addr_t zero_addr;
- 	void *zero_virt;
- 	size_t zero_size;
 diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
-index e9007d151c68..43faa35ae726 100644
+index 042b5fc3c135..f97e7e4e61c1 100644
 --- a/drivers/net/ipa/ipa_data-sc7180.c
 +++ b/drivers/net/ipa/ipa_data-sc7180.c
-@@ -301,6 +301,8 @@ static struct ipa_mem_data ipa_mem_data = {
- 	.local		= ipa_mem_local_data,
- 	.imem_addr	= 0x146a8000,
- 	.imem_size	= 0x00002000,
-+	.smem_id	= 497,
-+	.smem_size	= 0x00002000,
+@@ -193,7 +193,7 @@ static const struct ipa_resource_data ipa_resource_data = {
  };
  
+ /* IPA-resident memory region configuration for the SC7180 SoC. */
+-static const struct ipa_mem ipa_mem_data[] = {
++static const struct ipa_mem ipa_mem_local_data[] = {
+ 	[IPA_MEM_UC_SHARED] = {
+ 		.offset		= 0x0000,
+ 		.size		= 0x0080,
+@@ -296,12 +296,16 @@ static const struct ipa_mem ipa_mem_data[] = {
+ 	},
+ };
+ 
++static struct ipa_mem_data ipa_mem_data = {
++	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
++	.local		= ipa_mem_local_data,
++};
++
  /* Configuration data for the SC7180 SoC. */
+ const struct ipa_data ipa_data_sc7180 = {
+ 	.version	= IPA_VERSION_4_2,
+ 	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
+ 	.endpoint_data	= ipa_gsi_endpoint_data,
+ 	.resource_data	= &ipa_resource_data,
+-	.mem_count	= ARRAY_SIZE(ipa_mem_data),
+-	.mem_data	= ipa_mem_data,
++	.mem_data	= &ipa_mem_data,
+ };
 diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
-index c0e207085550..f7ba85717edf 100644
+index 0d9c36e1e806..c55507e94559 100644
 --- a/drivers/net/ipa/ipa_data-sdm845.c
 +++ b/drivers/net/ipa/ipa_data-sdm845.c
-@@ -323,6 +323,8 @@ static struct ipa_mem_data ipa_mem_data = {
- 	.local		= ipa_mem_local_data,
- 	.imem_addr	= 0x146bd000,
- 	.imem_size	= 0x00002000,
-+	.smem_id	= 497,
-+	.smem_size	= 0x00002000,
+@@ -235,7 +235,7 @@ static const struct ipa_resource_data ipa_resource_data = {
  };
  
+ /* IPA-resident memory region configuration for the SDM845 SoC. */
+-static const struct ipa_mem ipa_mem_data[] = {
++static const struct ipa_mem ipa_mem_local_data[] = {
+ 	[IPA_MEM_UC_SHARED] = {
+ 		.offset		= 0x0000,
+ 		.size		= 0x0080,
+@@ -318,12 +318,16 @@ static const struct ipa_mem ipa_mem_data[] = {
+ 	},
+ };
+ 
++static struct ipa_mem_data ipa_mem_data = {
++	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
++	.local		= ipa_mem_local_data,
++};
++
  /* Configuration data for the SDM845 SoC. */
+ const struct ipa_data ipa_data_sdm845 = {
+ 	.version	= IPA_VERSION_3_5_1,
+ 	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
+ 	.endpoint_data	= ipa_gsi_endpoint_data,
+ 	.resource_data	= &ipa_resource_data,
+-	.mem_count	= ARRAY_SIZE(ipa_mem_data),
+-	.mem_data	= ipa_mem_data,
++	.mem_data	= &ipa_mem_data,
+ };
 diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-index 69957af56ccd..16dfd74717b1 100644
+index 7110de2de817..51d8e5a6f23a 100644
 --- a/drivers/net/ipa/ipa_data.h
 +++ b/drivers/net/ipa/ipa_data.h
-@@ -250,12 +250,16 @@ struct ipa_resource_data {
-  * @local:		array of IPA-local memory region descriptors
-  * @imem_addr:		physical address of IPA region within IMEM
-  * @imem_size:		size in bytes of IPA IMEM region
-+ * @smem_id:		item identifier for IPA region within SMEM memory
-+ * @imem_size:		size in bytes of the IPA SMEM region
+@@ -246,14 +246,12 @@ struct ipa_resource_data {
+ 
+ /**
+  * struct ipa_mem - IPA-local memory region description
+- * @offset:		offset in IPA memory space to base of the region
+- * @size:		size in bytes base of the region
+- * @canary_count:	number of 32-bit "canary" values that precede region
++ * @local_count:	number of regions defined in the local[] array
++ * @local:		array of IPA-local memory region descriptors
   */
  struct ipa_mem_data {
- 	u32 local_count;
- 	const struct ipa_mem *local;
- 	u32 imem_addr;
- 	u32 imem_size;
-+	u32 smem_id;
-+	u32 smem_size;
+-	u32 offset;
+-	u16 size;
+-	u16 canary_count;
++	u32 local_count;
++	const struct ipa_mem *local;
  };
  
  /**
+@@ -270,8 +268,7 @@ struct ipa_data {
+ 	u32 endpoint_count;	/* # entries in endpoint_data[] */
+ 	const struct ipa_gsi_endpoint_data *endpoint_data;
+ 	const struct ipa_resource_data *resource_data;
+-	u32 mem_count;		/* # entries in mem_data[] */
+-	const struct ipa_mem *mem_data;
++	const struct ipa_mem_data *mem_data;
+ };
+ 
+ extern const struct ipa_data ipa_data_sdm845;
+diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
+index 28998dcce3d2..9295a9122e8e 100644
+--- a/drivers/net/ipa/ipa_main.c
++++ b/drivers/net/ipa/ipa_main.c
+@@ -778,7 +778,7 @@ static int ipa_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_kfree_ipa;
+ 
+-	ret = ipa_mem_init(ipa, data->mem_count, data->mem_data);
++	ret = ipa_mem_init(ipa, data->mem_data);
+ 	if (ret)
+ 		goto err_reg_exit;
+ 
 diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-index 3c0916597fe1..aa8f6b0f3d50 100644
+index 42d2c29d9f0c..fb4de2a12796 100644
 --- a/drivers/net/ipa/ipa_mem.c
 +++ b/drivers/net/ipa/ipa_mem.c
-@@ -10,6 +10,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/iommu.h>
- #include <linux/io.h>
-+#include <linux/soc/qcom/smem.h>
+@@ -12,6 +12,7 @@
  
  #include "ipa.h"
  #include "ipa_reg.h"
-@@ -23,6 +24,9 @@
- /* "Canary" value placed between memory regions to detect overflow */
- #define IPA_MEM_CANARY_VAL		cpu_to_le32(0xdeadbeef)
- 
-+/* SMEM host id representing the modem. */
-+#define QCOM_SMEM_HOST_MODEM	1
-+
- /* Add an immediate command to a transaction that zeroes a memory region */
- static void
- ipa_mem_zero_region_add(struct gsi_trans *trans, const struct ipa_mem *mem)
-@@ -340,6 +344,111 @@ static void ipa_imem_exit(struct ipa *ipa)
- 	ipa->imem_iova = 0;
++#include "ipa_data.h"
+ #include "ipa_cmd.h"
+ #include "ipa_mem.h"
+ #include "ipa_data.h"
+@@ -266,15 +267,15 @@ int ipa_mem_zero_modem(struct ipa *ipa)
  }
  
-+/**
-+ * ipa_smem_init() - Initialize SMEM memory used by the IPA
-+ * @ipa:	IPA pointer
-+ * @item:	Item ID of SMEM memory
-+ * @size:	Size (bytes) of SMEM memory region
-+ *
-+ * SMEM is a managed block of shared DRAM, from which numbered "items"
-+ * can be allocated.  One item is designated for use by the IPA.
-+ *
-+ * The modem accesses SMEM memory directly, but the IPA accesses it
-+ * via the IOMMU, using the AP's credentials.
-+ *
-+ * If size provided is non-zero, we allocate it and map it for
-+ * access through the IOMMU.
-+ *
-+ * Note: @size and the item address are is not guaranteed to be page-aligned.
-+ */
-+static int ipa_smem_init(struct ipa *ipa, u32 item, size_t size)
-+{
-+	struct device *dev = &ipa->pdev->dev;
-+	struct iommu_domain *domain;
-+	unsigned long iova;
-+	phys_addr_t phys;
-+	phys_addr_t addr;
-+	size_t actual;
-+	void *virt;
-+	int ret;
-+
-+	if (!size)
-+		return 0;	/* SMEM memory not used */
-+
-+	/* SMEM is memory shared between the AP and another system entity
-+	 * (in this case, the modem).  An allocation from SMEM is persistent
-+	 * until the AP reboots; there is no way to free an allocated SMEM
-+	 * region.  Allocation only reserves the space; to use it you need
-+	 * to "get" a pointer it (this implies no reference counting).
-+	 * The item might have already been allocated, in which case we
-+	 * use it unless the size isn't what we expect.
-+	 */
-+	ret = qcom_smem_alloc(QCOM_SMEM_HOST_MODEM, item, size);
-+	if (ret && ret != -EEXIST) {
-+		dev_err(dev, "error %d allocating size %zu SMEM item %u\n",
-+			ret, size, item);
-+		return ret;
-+	}
-+
-+	/* Now get the address of the SMEM memory region */
-+	virt = qcom_smem_get(QCOM_SMEM_HOST_MODEM, item, &actual);
-+	if (IS_ERR(virt)) {
-+		ret = PTR_ERR(virt);
-+		dev_err(dev, "error %d getting SMEM item %u\n", ret, item);
-+		return ret;
-+	}
-+
-+	/* In case the region was already allocated, verify the size */
-+	if (ret && actual != size) {
-+		dev_err(dev, "SMEM item %u has size %zu, expected %zu\n",
-+			item, actual, size);
-+		return -EINVAL;
-+	}
-+
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (!domain) {
-+		dev_err(dev, "no IOMMU domain found for SMEM\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Align the address down and the size up to a page boundary */
-+	addr = qcom_smem_virt_to_phys(virt) & PAGE_MASK;
-+	phys = addr & PAGE_MASK;
-+	size = PAGE_ALIGN(size + addr - phys);
-+	iova = phys;	/* We just want a direct mapping */
-+
-+	ret = iommu_map(domain, iova, phys, size, IOMMU_READ | IOMMU_WRITE);
-+	if (ret)
-+		return ret;
-+
-+	ipa->smem_iova = iova;
-+	ipa->smem_size = size;
-+
-+	return 0;
-+}
-+
-+static void ipa_smem_exit(struct ipa *ipa)
-+{
-+	struct device *dev = &ipa->pdev->dev;
-+	struct iommu_domain *domain;
-+
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (domain) {
-+		size_t size;
-+
-+		size = iommu_unmap(domain, ipa->smem_iova, ipa->smem_size);
-+		if (size != ipa->smem_size)
-+			dev_warn(dev, "unmapped %zu SMEM bytes, expected %lu\n",
-+				 size, ipa->smem_size);
-+
-+	} else {
-+		dev_err(dev, "couldn't get IPA IOMMU domain for SMEM\n");
-+	}
-+
-+	ipa->smem_size = 0;
-+	ipa->smem_iova = 0;
-+}
-+
  /* Perform memory region-related initialization */
- int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
+-int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
++int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
  {
-@@ -383,8 +492,14 @@ int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
- 	if (ret)
- 		goto err_unmap;
+ 	struct device *dev = &ipa->pdev->dev;
+ 	struct resource *res;
+ 	int ret;
  
-+	ret = ipa_smem_init(ipa, mem_data->smem_id, mem_data->smem_size);
-+	if (ret)
-+		goto err_imem_exit;
-+
+-	if (count > IPA_MEM_COUNT) {
++	if (mem_data->local_count > IPA_MEM_COUNT) {
+ 		dev_err(dev, "to many memory regions (%u > %u)\n",
+-			count, IPA_MEM_COUNT);
++			mem_data->local_count, IPA_MEM_COUNT);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -302,7 +303,7 @@ int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
+ 	ipa->mem_size = resource_size(res);
+ 
+ 	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
+-	ipa->mem = mem;
++	ipa->mem = mem_data->local;
+ 
  	return 0;
- 
-+err_imem_exit:
-+	ipa_imem_exit(ipa);
- err_unmap:
- 	memunmap(ipa->mem_virt);
- 
-@@ -394,6 +509,7 @@ int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
- /* Inverse of ipa_mem_init() */
- void ipa_mem_exit(struct ipa *ipa)
- {
-+	ipa_smem_exit(ipa);
- 	ipa_imem_exit(ipa);
- 	memunmap(ipa->mem_virt);
  }
+diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
+index 065cb499ebe5..f99180f84f0d 100644
+--- a/drivers/net/ipa/ipa_mem.h
++++ b/drivers/net/ipa/ipa_mem.h
+@@ -7,6 +7,7 @@
+ #define _IPA_MEM_H_
+ 
+ struct ipa;
++struct ipa_mem_data;
+ 
+ /**
+  * DOC: IPA Local Memory
+@@ -84,7 +85,7 @@ void ipa_mem_teardown(struct ipa *ipa);
+ 
+ int ipa_mem_zero_modem(struct ipa *ipa);
+ 
+-int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
++int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data);
+ void ipa_mem_exit(struct ipa *ipa);
+ 
+ #endif /* _IPA_MEM_H_ */
 -- 
 2.20.1
 
