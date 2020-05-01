@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8141EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DF4C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBF820757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FDB216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340602;
-	bh=PeQtKIAleQy6HOosdj2MCVxCQ38sxvlUcKeh2ybvwSU=;
+	s=default; t=1588340607;
+	bh=YnuX65jq8EaYvxfRFmT84kpNqXmtcobQTJ4XRRMDfEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4zlq7IkdeplXktnQXPwUn7EfBWO/Nr6IzxK1jA7gC27eXnH4wVDmwHW1QQ6BlR4L
-	 8hMg39u863iTGSZv1GfRjdiHzttHxcM1HWPK+O1d05QS8mEjHnoRoPv9DmYSzsu+5/
-	 DF5+3c9op9oR7n9gVkpKh6F5cigAySLeCF7WTYt0=
+	b=THNbj4NXbNsGLwk0V9qJj6QYWfs4DQ2sZl6rXNVBiIkzXF1wOicAyuyEjakPlVZCf
+	 ChDs7/MLBwas6GBqg0I1NBWMOhKwBY5pr/UwQL31so/BZbA8V9/XD2Lcww6oDF2zRz
+	 k0bAxg6dPjNKrna10SQ6WZttYMoo9zFEy9evEYGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbgEANnU (ORCPT
+        id S1731631AbgEANn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731610AbgEANnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:16 -0400
+        id S1731622AbgEANnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A28F20757;
-        Fri,  1 May 2020 13:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B2820757;
+        Fri,  1 May 2020 13:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340595;
-        bh=PeQtKIAleQy6HOosdj2MCVxCQ38sxvlUcKeh2ybvwSU=;
+        s=default; t=1588340603;
+        bh=YnuX65jq8EaYvxfRFmT84kpNqXmtcobQTJ4XRRMDfEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCkKfS/9IL0bseOeh8FqI+aKQwt5dNEsSvt3PRz81c2B+etTqMtjH3B7jED00ODsl
-         rq99GakmQ/3Dzuwzz+zdZ/OHsNQP/kZshM1ZbZuzW9Y48Z1wD1cHx+a2eSXA1O6KXl
-         yea2k2knDtfZn2pRy/hWfj2t8BSoaEiBfgwW3EJ0=
+        b=AC6DoCWB1KaiWoG0/0ayQ4o34IygNEBRFIpAKCoxCfgSg2jB/nLTdFVK2QpAxytth
+         fdW8LV0d/epK4z8TGZpopSet3FmADI+zGEcANFb3a+Stf1LVlcxEIrxqqobwdNpaTt
+         8JpiYYEWE7duuKG/GF2o5OH3mx8izQ4PTOBZH14k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raymond Pang <RaymondPang-oc@zhaoxin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.6 046/106] PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports
-Date:   Fri,  1 May 2020 15:23:19 +0200
-Message-Id: <20200501131549.221200148@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.6 049/106] cpumap: Avoid warning when CONFIG_DEBUG_PER_CPU_MAPS is enabled
+Date:   Fri,  1 May 2020 15:23:22 +0200
+Message-Id: <20200501131549.584542242@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,64 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-commit 299bd044a6f332b4a6c8f708575c27cad70a35c1 upstream.
+commit bc23d0e3f717ced21fbfacab3ab887d55e5ba367 upstream.
 
-Many Zhaoxin Root Ports and Switch Downstream Ports do provide ACS-like
-capability but have no ACS Capability Structure.  Peer-to-Peer transactions
-could be blocked between these ports, so add quirk so devices behind them
-could be assigned to different IOMMU group.
+When the kernel is built with CONFIG_DEBUG_PER_CPU_MAPS, the cpumap code
+can trigger a spurious warning if CONFIG_CPUMASK_OFFSTACK is also set. This
+happens because in this configuration, NR_CPUS can be larger than
+nr_cpumask_bits, so the initial check in cpu_map_alloc() is not sufficient
+to guard against hitting the warning in cpumask_check().
 
-Link: https://lore.kernel.org/r/20200327091148.5190-4-RaymondPang-oc@zhaoxin.com
-Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fix this by explicitly checking the supplied key against the
+nr_cpumask_bits variable before calling cpu_possible().
+
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Xiumei Mu <xmu@redhat.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200416083120.453718-1-toke@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ kernel/bpf/cpumap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4466,6 +4466,29 @@ static int pci_quirk_xgene_acs(struct pc
- }
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -469,7 +469,7 @@ static int cpu_map_update_elem(struct bp
+ 		return -EOVERFLOW;
  
- /*
-+ * Many Zhaoxin Root Ports and Switch Downstream Ports have no ACS capability.
-+ * But the implementation could block peer-to-peer transactions between them
-+ * and provide ACS-like functionality.
-+ */
-+static int  pci_quirk_zhaoxin_pcie_ports_acs(struct pci_dev *dev, u16 acs_flags)
-+{
-+	if (!pci_is_pcie(dev) ||
-+	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
-+	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
-+		return -ENOTTY;
-+
-+	switch (dev->device) {
-+	case 0x0710 ... 0x071e:
-+	case 0x0721:
-+	case 0x0723 ... 0x0732:
-+		return pci_acs_ctrl_enabled(acs_flags,
-+			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-+	}
-+
-+	return false;
-+}
-+
-+/*
-  * Many Intel PCH Root Ports do provide ACS-like features to disable peer
-  * transactions and validate bus numbers in requests, but do not provide an
-  * actual PCIe ACS capability.  This is the list of device IDs known to fall
-@@ -4771,6 +4794,8 @@ static const struct pci_dev_acs_enabled
- 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3038, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3104, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_ZHAOXIN, 0x9083, pci_quirk_mf_endpoint_acs },
-+	/* Zhaoxin Root/Downstream Ports */
-+	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
- 	{ 0 }
- };
+ 	/* Make sure CPU is a valid possible cpu */
+-	if (!cpu_possible(key_cpu))
++	if (key_cpu >= nr_cpumask_bits || !cpu_possible(key_cpu))
+ 		return -ENODEV;
  
+ 	if (qsize == 0) {
 
 
