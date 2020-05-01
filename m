@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8F7C4725A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D80FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5AF2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19691205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340845;
-	bh=KIPoBk7K8wgI48MMKiOmelRUYbArjb3GQ1nhKoUkKeg=;
+	s=default; t=1588340848;
+	bh=ldTvqhRkqM+nR/J0XJ6ZzNqIValUnJ/esBZKHmivZsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lkE17wtBiBmtfgNZi/p2fV+t+veJspO1eX1sXA8TWzWc/KTyFJ3FVGjRhW8M/hjHi
-	 QefQAEERzsbBAMYIyE6BSH04xin5vXGAMBL+NKzdBsbnFTaOddA2Q+oTuEINY4rAH0
-	 o5RRnEwEVsgXQnS+KCjfwX1T9MTYLI3bQKeK/nYc=
+	b=i9DHVEYfomrdWb61/R98lrM1DCo7dlJX1jZO0ShspvFfk7F5/ZfUEtpHsl89b70/w
+	 YTopt8vL7s4LMXGdBQpYlpEcPjM2d7FzAj30qNI3d+Uf0mrU000MisYrzCxbRjlly6
+	 wyEVKd9SxZ/z17sPIMIiz8EsMj+zvLaBxNTKCh40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbgEANrY (ORCPT
+        id S1731653AbgEANni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731426AbgEANnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:45 -0400
+        id S1731642AbgEANnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C42F208C3;
-        Fri,  1 May 2020 13:43:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C28205C9;
+        Fri,  1 May 2020 13:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340625;
-        bh=KIPoBk7K8wgI48MMKiOmelRUYbArjb3GQ1nhKoUkKeg=;
+        s=default; t=1588340612;
+        bh=ldTvqhRkqM+nR/J0XJ6ZzNqIValUnJ/esBZKHmivZsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJyQlTcJuyjOuiEtCibJJ+/aRcvo2EcTxNGdMca8a3N6DzT0TePCI08eYwp9WmKFc
-         f8cNPBRzNzE+jxM3Oe0OpZkbzLmA53b54HC9fXQ4XFxTBQpjPR+rhzI7rK05Z3j9t/
-         XKJgWCIpYsp2AMTN6Qc3GDDUkJfl+GnNvyQxpgWo=
+        b=KElBVFIsr/Bpt82AIKrS7nGvckoaXOZ+f4seCCi0AFsYdtjvSCQKWSocQ1yBs7hiS
+         1PnhtGnmM9O525NDKOIf4egoYsB66hlYwHmXif3LhomsWcYHBs/AzAeDt6sOLedvgn
+         KAgOQHsLnmGJFWi4yEZnzYwraA2QWXFMqntwqexc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH 5.6 058/106] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
-Date:   Fri,  1 May 2020 15:23:31 +0200
-Message-Id: <20200501131550.592783609@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>, Waiman Long <longman@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.6 057/106] blk-iocost: Fix error on iocost_ioc_vrate_adj
+Date:   Fri,  1 May 2020 15:23:30 +0200
+Message-Id: <20200501131550.471056449@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -61,58 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitor Massaru Iha <vitor@massaru.org>
+From: Waiman Long <longman@redhat.com>
 
-commit 63ec90f18204f2fe072df108de8a021b28b1b173 upstream.
+commit d6c8e949a35d6906d6c03a50e9a9cdf4e494528a upstream.
 
-In this workflow:
+Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
+argument of the iocost_ioc_vrate_adj trace entry defined in
+include/trace/events/iocost.h leading to the following error:
 
-$ make ARCH=um defconfig && make ARCH=um -j8
-  [snip]
-$ make ARCH=um mrproper
-  [snip]
-$ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
-  [snip]
-  CC      scripts/mod/empty.o
-In file included from ../include/linux/types.h:6,
-                 from ../include/linux/mod_devicetable.h:12,
-                 from ../scripts/mod/devicetable-offsets.c:3:
-../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
-    5 | #include <asm/types.h>
-      |          ^~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
-make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
-make: *** [Makefile:180: sub-make] Error 2
+  /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
+  error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
+   , u32[]* __tracepoint_arg_missed_ppm
 
-The cause of the error was because arch/$(SUBARCH)/include/generated files
-weren't properly cleaned by `make ARCH=um mrproper`.
+That argument type is indeed rather complex and hard to read. Looking
+at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
+the argument to a simple "u32 *missed_ppm" and adjusting the trace
+entry accordingly, the compilation error was gone.
 
-Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
-Reported-by: Theodore Ts'o <tytso@mit.edu>
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
-Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/um/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ block/blk-iocost.c            |    4 ++--
+ include/trace/events/iocost.h |    6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LIN
- # When cleaning we don't include .config, so we don't include
- # TT or skas makefiles and don't clean skas_ptregs.h.
- CLEAN_FILES += linux x.i gmon.out
-+MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1594,7 +1594,7 @@ skip_surplus_transfers:
+ 				      vrate_min, vrate_max);
+ 		}
  
- archclean:
- 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
+-		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
++		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
+ 					   nr_lagging, nr_shortages,
+ 					   nr_surpluses);
+ 
+@@ -1603,7 +1603,7 @@ skip_surplus_transfers:
+ 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
+ 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
+ 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
+-					   &missed_ppm, rq_wait_pct, nr_lagging,
++					   missed_ppm, rq_wait_pct, nr_lagging,
+ 					   nr_shortages, nr_surpluses);
+ 	}
+ 
+--- a/include/trace/events/iocost.h
++++ b/include/trace/events/iocost.h
+@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_i
+ 
+ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 
+-	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
++	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
+ 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
+ 		int nr_surpluses),
+ 
+@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
+ 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
+ 		__entry->new_vrate = new_vrate;
+ 		__entry->busy_level = ioc->busy_level;
+-		__entry->read_missed_ppm = (*missed_ppm)[READ];
+-		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
++		__entry->read_missed_ppm = missed_ppm[READ];
++		__entry->write_missed_ppm = missed_ppm[WRITE];
+ 		__entry->rq_wait_pct = rq_wait_pct;
+ 		__entry->nr_lagging = nr_lagging;
+ 		__entry->nr_shortages = nr_shortages;
 
 
