@@ -2,167 +2,122 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5C7C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D8EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4120B2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630862073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hfORPu1l"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="JWz/HNe9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgEABTw (ORCPT
+        id S1728074AbgEABUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 21:19:52 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:36121 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727114AbgEABTw (ORCPT
+        Thu, 30 Apr 2020 21:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727920AbgEABUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 21:19:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588295990; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=T52XjBMRa795mkQixIuPfXttq+DeeUPrNOtA5L+BOUs=;
- b=hfORPu1ldWfG+95+Gf2IicUX6Lk4LZe53Cw4Z8UiBZ7BkU4F8IOH9SmfvSIj2giAaAobSVuG
- W656v7E+qbyQHJOZatIfeka/dw9F80KOVSlZbXr2sWGW5SwRVaOQEdiqnIeap3sOL3EQXmZi
- pkqBBjnqsMY6HFzeayKlLLKLbd0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eab791e.7fcd1355bc38-smtp-out-n03;
- Fri, 01 May 2020 01:19:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D5C21C43636; Fri,  1 May 2020 01:19:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1942C433CB;
-        Fri,  1 May 2020 01:19:25 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 May 2020 09:19:25 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
-        beanhuo@micron.com, Avri.Altman@wdc.com,
-        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
- during system resume
-In-Reply-To: <ef23a815-118a-52fe-4880-19e7fc4fcd10@acm.org>
-References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
- <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
- <1ef85ee212bee679f7b2927cbbc79cba@codeaurora.org>
- <ef23a815-118a-52fe-4880-19e7fc4fcd10@acm.org>
-Message-ID: <0d9a1e88b0477e8a04b091b9532923f5@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Thu, 30 Apr 2020 21:20:43 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34725C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:20:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id p25so890177pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=+ob/X0QXFpxvmr3EWB8fQOJcF1u/V0cTtMVpIs2p45o=;
+        b=JWz/HNe9QVe3KpMe6Fx9Bq2GqkBQAoBVa8iqrJqTOXH9HIZzwUCDZU8rE102fg1z7o
+         0kalZERJUV6gw/xA8MPaoOfaHwYAbAANimUog9Hm676+TIjcO+dBY89FjUJ4wcMs975/
+         SKm9CbmjdES6fxlHT0h2/dzk9hxGqC1/y06ZPZMjk0uNY0N5EoJ6K6sn0qt6pUf2eCuJ
+         jgwqP5f32gdTlY0FX3Gs1FAz+ZOhcRu86YggMsjZ1RdG5yNctLB6+vmapn45gRamTYGp
+         fRbPwUxOjDOzHfI5AUlpxdC9aNAaFqoSCkIZ/PKmcj6qIrFM96yFQKqxFpwDUaMHMKf7
+         yvLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=+ob/X0QXFpxvmr3EWB8fQOJcF1u/V0cTtMVpIs2p45o=;
+        b=ZDYnR6gW4jmsNoZ5cjDmt7KT4l2W2MdNE2PQmgdpywoL9qZhtBNw482TlMCbbhoQEi
+         y47xgqUxsZ8NTIbpvpUiKBapTwEJJ04gTSSF9vIhkD2bBbLPfqGcvd7qBJ8MztKmMPHX
+         zaEf8/fzAJT6sxRoZ0Lv6qBcWT5+Qb1p/WHq3HZLkyYKnktp0DraGAay5oWVKHlPMKi2
+         UXRoc9ndZdQBE5nUqEjgUAfqMaPQRrpWWLlSH7uV/vRbdpkIu+TcKiBqPl38jw89wqTA
+         GtV0r9Id0GhfD57edxn7n08TMpO8XU1sad3IFob+wtdTNKLLc+fi/CDLfeFez+ZOB/D1
+         4hYQ==
+X-Gm-Message-State: AGi0PuaEfl9dsf4KmnL053sC7ys/LbnTgQxx48kZFuJ84s1fnlykHz5Z
+        8Au8M9qkqc1dNFbXhq3asqH0OA==
+X-Google-Smtp-Source: APiQypJVdLbyXVtAGU4O61QE9USzd9aHvhWz43HYF+zei+FPbOx+DYcTAVOeS9XOsayG60rqSExmJg==
+X-Received: by 2002:aa7:819a:: with SMTP id g26mr1723584pfi.193.1588296042609;
+        Thu, 30 Apr 2020 18:20:42 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:d495:581b:d692:e814? ([2601:646:c200:1ef2:d495:581b:d692:e814])
+        by smtp.gmail.com with ESMTPSA id h31sm784779pjb.33.2020.04.30.18.20.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 18:20:41 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Date:   Thu, 30 Apr 2020 18:20:39 -0700
+Message-Id: <D47C71D3-349B-49C4-9945-330C9F42A3E0@amacapital.net>
+References: <CAHk-=wh1SPyuGkTkQESsacwKTpjWd=_-KwoCK5o=SuC3yMdf7A@mail.gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAHk-=wh1SPyuGkTkQESsacwKTpjWd=_-KwoCK5o=SuC3yMdf7A@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-01 04:32, Bart Van Assche wrote:
-> On 2020-04-29 22:40, Can Guo wrote:
->> On 2020-04-30 13:08, Bart Van Assche wrote:
->>> On 2020-04-29 21:10, Can Guo wrote:
->>>> During system resume, scsi_resume_device() decreases a request 
->>>> queue's
->>>> pm_only counter if the scsi device was quiesced before. But after 
->>>> that,
->>>> if the scsi device's RPM status is RPM_SUSPENDED, the pm_only 
->>>> counter is
->>>> still held (non-zero). Current scsi resume hook only sets the RPM 
->>>> status
->>>> of the scsi device and its request queue to RPM_ACTIVE, but leaves 
->>>> the
->>>> pm_only counter unchanged. This may make the request queue's pm_only
->>>> counter remain non-zero after resume hook returns, hence those who 
->>>> are
->>>> waiting on the mq_freeze_wq would never be woken up. Fix this by 
->>>> calling
->>>> blk_post_runtime_resume() if pm_only is non-zero to balance the 
->>>> pm_only
->>>> counter which is held by the scsi device's RPM ops.
->>> 
->>> How was this issue discovered? How has this patch been tested?
->> 
->> As the issue was found after system resumes, so the issue was 
->> discovered
->> during system suspend/resume test, and it is very easy to be 
->> replicated.
->> After system resumes, if this issue hits some scsi devices, all bios 
->> sent
->> to their request queues are blocked, which may cause a system hang if 
->> the
->> scsi devices are vital to system functionality.
->> 
->> To make sure the patch work well, we have tested system suspend/resume
->> and made sure no system hang happen due to request queues got blocked
->> by imbalanced pm_only counter.
-> 
-> Thanks, that's very interesting information. My concern with this patch
-> is that the power management code is not the only caller of
-> blk_set_pm_only() / blk_clear_pm_only(). E.g. the SCSI SPI code also
-> calls scsi_device_quiesce() and scsi_device_resume(). These last
-> functions call blk_set_pm_only() and blk_clear_pm_only(). More calls of
-> scsi_device_quiesce() and scsi_device_resume() might be added in the 
-> future.
-> 
-> Has it been considered to test directly whether a SCSI device has been
-> runtime suspended instead of relying on blk_queue_pm_only()? How about
-> using pm_runtime_status_suspended() or adding a function in
-> block/blk-pm.h that checks whether q->rpm_status == RPM_SUSPENDED?
-> 
-> Thanks,
-> 
-> Bart.
 
-Hi Bart,
 
-Please let me address your concern.
+> On Apr 30, 2020, at 5:25 PM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+>=20
+> It wasn't clear how "copy_to_mc()" could ever fault. Poisoning
+> after-the-fact? Why would that be preferable to just mapping a dummy
+> page?
 
-First of all, it is allowed to call scsi_device_quiesce() multiple 
-times,
-but one sdev's request queue's pm_only counter can only be increased 
-once
-by scsi_device_quiesce(), because if a sdev has already been quiesced,
-in scsi_device_quiesce(), scsi_device_set_state(sdev, SDEV_QUIESCE) 
-would
-return -ENIVAL (illegal state transform), then blk_clear_pm_only() shall
-be called to decrease pm_only once, so no matter how many times
-scsi_device_quiesce() is called, it can only increase pm_only once.
+If the kernel gets an async memory error and maps a dummy page, then subsequ=
+ent reads will subsequently succeed and return garbage when they should fail=
+.  If x86 had write-only pages, we could map a dummy write-only page. But we=
+ don=E2=80=99t, so I think we=E2=80=99re stuck.
 
-scsi_device_resume() is same, it calls blk_clear_pm_only only once and
-only if the sdev was quiesced().
+As for naming the kind of memory we=E2=80=99re taking about, ISTM there are t=
+wo classes: DAX and monstrous memory-mapped non-persistent cache devices.  B=
+oth could be Optane, I suppose.
 
-So, in a word, after scsi_device_resume() returns in 
-scsi_dev_type_resume(),
-pm_only counter should be 1 (if the sdev's runtime power status is
-RPM_SUSPENDED) or 0 (if the sdev's runtime power status is RPM_ACTIVE).
+But I also think it=E2=80=99s legitimate to use these accessors to increase t=
+he chance of surviving a failure of normal memory. If a normal page happens t=
+o be page cache when it fails and if page cache access use these fancy acces=
+sors, then we might actually survive a failure.
 
-> Has it been considered to test directly whether a SCSI device has been
-> runtime suspended instead of relying on blk_queue_pm_only()? How about
-> using pm_runtime_status_suspended() or adding a function in
-> block/blk-pm.h that checks whether q->rpm_status == RPM_SUSPENDED?
+We could be ambitious: declare that all page cache and all get_user_page=E2=80=
+=99d memory should use the new accessors.  I doubt we=E2=80=99ll ever really=
+ succeed due to magical things like rseq and anything that thinks that users=
+ can set up their own memory as a kernel-accessed ring buffer, but I suppose=
+ we could try.
 
-Yes, I used to make the patch like that way, and it also worked well, as
-both ways are equal actually. I kinda like the current code because we
-should be confident that after scsi_dev_type_resume() returns, pm_only
-must be 0. Different reviewers may have different opionions, either way
-works well anyways.
-
-Thanks,
-
-Can Guo.
