@@ -2,117 +2,148 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2807FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AB4C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0387420836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5872173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+ZT+oVZ"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mG1IcDPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgEAQ4a (ORCPT
+        id S1729468AbgEAQ5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
+        Fri, 1 May 2020 12:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728841AbgEAQ43 (ORCPT
+        by vger.kernel.org with ESMTP id S1729278AbgEAQ5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:56:29 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3D1C061A0C;
-        Fri,  1 May 2020 09:56:28 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id 1so6630369vsl.9;
-        Fri, 01 May 2020 09:56:28 -0700 (PDT)
+        Fri, 1 May 2020 12:57:09 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D09C08E859
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 09:57:09 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id r16so7727186edw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 09:57:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bnSnMv8XzmfxgR0vO6m5ur1+/cJdg2NiZ0ZLBo2dLag=;
-        b=U+ZT+oVZn5PeeGbL8HgwsYh978Ogq1KjKGD2pSFgOpkDX3foYRdIiaQN0l3DgvNeSg
-         4puZ1YF8Ka33KoUlY161JoGdrXXYsclYcVchPE6MLtsUF9T41KfR8UcGgBtm+yZ58Ymb
-         sN3Cvc1vtx5jdZSjqQuUR4CHkaIZPFSkS/n97O3MPMSByuRb7d9CzedGyIRitTU6SLjQ
-         X56IG2+397mjNEuhhv+WJgsHOh3o7uL/b6Hb8b2JroZqP+VCDUZx6X61yCrR9mvlk0av
-         PYYvRrgG7GLj6oaRcb8J4VnkNDqYkVjHIAysR3vqV5wliLW1pcSz5jOBx9jIP749ba0r
-         g5bQ==
+         :cc;
+        bh=b9REn6X5SevH+LhOI4dPec9Nj6TaOfQYrUIVwbI6BoM=;
+        b=mG1IcDPBM3HrlLCRXRv7RTTYgDzrduMX/5i/AlHCRx1Od+IpfQAyd0PeN//EsT0f5h
+         4ISFK8ebgantTgILgro22Ez5VhTT+nYI/BrtdR2EEj+8gVO8TXYZXeoKV+n5R7g8buaW
+         2yUZz1nPzY+7zON3G0XQLly2Qxcbo0G4O5Y6WDLkdJ7/fnZJpvu7siFKyoRkKMeO0fUZ
+         /D0cspPD70+dXDGbdUVG4+VwKt7dWiqpPW5XzMx4fPRxJpNAeD6LnRMMzp+TiNYAZ53P
+         qpaqeGLDtip2gO0UP/p8HNcC5mdTxBx8phoHoUjMgHPlB7ivmPuMEBOrgC5YppxB1E9h
+         UOtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bnSnMv8XzmfxgR0vO6m5ur1+/cJdg2NiZ0ZLBo2dLag=;
-        b=G8wT5UtArk1/MTVcAkATcdtCIwqDj80SJffEM0VBc1ypuWUxucJMLHnu4l7sp+C5Nu
-         tPt2qylG0v1Py+YGesnnuJHzZ+of3VPEtLZtegPqm2T0TZdkh0Etgmj2UlX8BLSEHI8p
-         md0tYhBHUZbJucirH8fdQ/17FAeut/mvmaDt43ArEwcUMdFjvEUmgvRgRmiUKON+vHNO
-         vpoNBeJDcYszP4BgrPzppvKIMnLog4puA3VIOnQOat+y7Vui3tJr4wBIlXjtFGUvhSXT
-         gqj4zAy7GyXmUzNobh7m0jR7MoWPEHxZnlEuCfSlF21YDp0fcDQWxbmBEg2H/uOAX+J1
-         A+nA==
-X-Gm-Message-State: AGi0PuYMBkpIkWDpw1LBBZu0OlrDknmPB88FYkq48g3U0H/kqc3YVTIq
-        B4RaMoLAD6WwvGEyEBLrEt6rmeh7Lar4g4c8yx3iBNNW
-X-Google-Smtp-Source: APiQypLX+MNk2MVsI90CjjX+XQgqi69d/zhYAFCmA4/I/aageL0f1auEd0W3hC9qQSVN2zR/r+kMScRCKk6jrVMtWt0=
-X-Received: by 2002:a67:7913:: with SMTP id u19mr4045503vsc.6.1588352187352;
- Fri, 01 May 2020 09:56:27 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=b9REn6X5SevH+LhOI4dPec9Nj6TaOfQYrUIVwbI6BoM=;
+        b=qmV8rQUHHaKeUqpPdhwaMgKdUJKSy06u/xko3QUhyvbVK+m3TFrjnp4z/9t5ofhjkp
+         hxP1pyHtif3S7fFYxHTVNWtJIfr74vt+qRPtIePXGVqgovF117CBxhPP5DipmXJjpnNh
+         sW5FYV7BQyk7JKRwNizOL82CO1+nQRqWuv4bPrDzL9TVHKDug6sDrgrY5ZGqbj3IGNNM
+         Qr8lfrGOEWUE46YScm/KtX89aS/3q+mW/D1KFbkOZvgrn7Fx3bD4Y/G/MisccyAIvvxu
+         59W+PhvT9Qll8Ve8tyaYK6z/g3Hgg7UVXEsfXn+Q3Ges/e4GMyZu6bpad6jZwJ4MQPoS
+         SI9g==
+X-Gm-Message-State: AGi0PuYZ0/3a0Cpc/xPCajjkej7R9Bg7618587s1K4jOykO4uPm8w6PU
+        pDdOg3cBQA1H8fHoVYlV3XOSGmb8Sv0oJ96h9OLm1w==
+X-Google-Smtp-Source: APiQypJO8dBUZTWLLj3LS+obr3vgzbWXqFSCM7dxYsl5W+J7URhuw83eMvKFki8Cpffi0gsBU7jQUIflqfdneq89wWQ=
+X-Received: by 2002:aa7:c643:: with SMTP id z3mr4236295edr.154.1588352227631;
+ Fri, 01 May 2020 09:57:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200430080619.67ff0ac0@canb.auug.org.au>
-In-Reply-To: <20200430080619.67ff0ac0@canb.auug.org.au>
-From:   Jason Gerecke <killertofu@gmail.com>
-Date:   Fri, 1 May 2020 09:56:15 -0700
-Message-ID: <CANRwn3QB+3DH94rzm24H8kCqmbwZr7p1XUdMK81tBFEnpvRSzw@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the hid tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200430102908.10107-1-david@redhat.com> <20200430102908.10107-3-david@redhat.com>
+ <87pnbp2dcz.fsf@x220.int.ebiederm.org> <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
+ <871ro52ary.fsf@x220.int.ebiederm.org> <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
+ <875zdg26hp.fsf@x220.int.ebiederm.org> <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
+ <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org> <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
+In-Reply-To: <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 1 May 2020 09:56:56 -0700
+Message-ID: <CAPcyv4j=YKnr1HW4OhAmpzbuKjtfP7FdAn4-V7uA=b-Tcpfu+A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My apologies. I copied the wrong commit SHA when generating this
-commit. Commit cd47de45b855 is the reference to this commit in our
-input-wacom tree, not upstream. The correct Fixes tag should indeed
-be:
+On Fri, May 1, 2020 at 2:34 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 01.05.20 00:24, Andrew Morton wrote:
+> > On Thu, 30 Apr 2020 20:43:39 +0200 David Hildenbrand <david@redhat.com> wrote:
+> >
+> >>>
+> >>> Why does the firmware map support hotplug entries?
+> >>
+> >> I assume:
+> >>
+> >> The firmware memmap was added primarily for x86-64 kexec (and still, is
+> >> mostly used on x86-64 only IIRC). There, we had ACPI hotplug. When DIMMs
+> >> get hotplugged on real HW, they get added to e820. Same applies to
+> >> memory added via HyperV balloon (unless memory is unplugged via
+> >> ballooning and you reboot ... the the e820 is changed as well). I assume
+> >> we wanted to be able to reflect that, to make kexec look like a real reboot.
+> >>
+> >> This worked for a while. Then came dax/kmem. Now comes virtio-mem.
+> >>
+> >>
+> >> But I assume only Andrew can enlighten us.
+> >>
+> >> @Andrew, any guidance here? Should we really add all memory to the
+> >> firmware memmap, even if this contradicts with the existing
+> >> documentation? (especially, if the actual firmware memmap will *not*
+> >> contain that memory after a reboot)
+> >
+> > For some reason that patch is misattributed - it was authored by
+> > Shaohui Zheng <shaohui.zheng@intel.com>, who hasn't been heard from in
+> > a decade.  I looked through the email discussion from that time and I'm
+> > not seeing anything useful.  But I wasn't able to locate Dave Hansen's
+> > review comments.
+>
+> Okay, thanks for checking. I think the documentation from 2008 is pretty
+> clear what has to be done here. I will add some of these details to the
+> patch description.
+>
+> Also, now that I know that esp. kexec-tools already don't consider
+> dax/kmem memory properly (memory will not get dumped via kdump) and
+> won't really suffer from a name change in /proc/iomem, I will go back to
+> the MHP_DRIVER_MANAGED approach and
+> 1. Don't create firmware memmap entries
+> 2. Name the resource "System RAM (driver managed)"
+> 3. Flag the resource via something like IORESOURCE_MEM_DRIVER_MANAGED.
+>
+> This way, kernel users and user space can figure out that this memory
+> has different semantics and handle it accordingly - I think that was
+> what Eric was asking for.
+>
+> Of course, open for suggestions.
 
-Fixes: 912c6aa67ad4 ("HID: wacom: Add 2nd gen Intuos Pro Small support")
-
-Thanks,
-Jason
----
-Now instead of four in the eights place /
-you=E2=80=99ve got three, =E2=80=98Cause you added one  /
-(That is to say, eight) to the two,     /
-But you can=E2=80=99t take seven from three,    /
-So you look at the sixty-fours....
-
-On Wed, Apr 29, 2020 at 3:06 PM Stephen Rothwell <sfr@canb.auug.org.au> wro=
-te:
->
-> Hi all,
->
-> In commit
->
->   dcce8ef8f70a ("HID: wacom: Report 2nd-gen Intuos Pro S center button st=
-atus over BT")
->
-> Fixes tag
->
->   Fixes: cd47de45b855 ("HID: wacom: Add 2nd gen Intuos Pro Small support"=
-)
->
-> has these problem(s):
->
->   - Target SHA1 does not exist
->
-> Maybe you meant
->
-> Fixes: 912c6aa67ad4 ("HID: wacom: Add 2nd gen Intuos Pro Small support")
->
-> --
-> Cheers,
-> Stephen Rothwell
+I'm still more of a fan of this being communicated by "System RAM"
+being parented especially because that tells you something about how
+the memory is driver-managed and which mechanism might be in play.
+What about adding an optional /sys/firmware/memmap/X/parent attribute.
+This lets tooling check if it cares via that interface and lets it
+lookup the related infrastructure to interact with if it would do
+something different for virtio-mem vs dax/kmem?
