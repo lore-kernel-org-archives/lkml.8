@@ -2,117 +2,77 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C23C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFF0C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E86A62064C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F0D2064C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgEAQ1L (ORCPT
+        id S1730022AbgEAQ2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:27:11 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:32418 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728947AbgEAQ1L (ORCPT
+        Fri, 1 May 2020 12:28:20 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:58194 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728947AbgEAQ2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:27:11 -0400
-X-IronPort-AV: E=Sophos;i="5.73,340,1583190000"; 
-   d="scan'208";a="447806228"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2020 18:27:07 +0200
-Date:   Fri, 1 May 2020 18:27:07 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        fabien.lahoudere@collabora.com, felipe.balbi@linux.intel.com,
-        david@lechnology.com, alexandre.belloni@bootlin.com,
-        gwendal@chromium.org, kamel.bouhara@bootlin.com, jic23@kernel.org,
-        kbuild-all@lists.01.org
-Subject: Re: [PATCH 1/4] counter: Internalize sysfs interface code (fwd)
-Message-ID: <alpine.DEB.2.21.2005011825030.2504@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 1 May 2020 12:28:19 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 01 May 2020 09:28:19 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 01 May 2020 09:28:16 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 0412B21693; Fri,  1 May 2020 21:58:14 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH] remoteproc: wcss: add support for rpmsg communication
+Date:   Fri,  1 May 2020 21:58:12 +0530
+Message-Id: <1588350492-4663-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+add glink and ssr subdevices for wcss rproc to enable rpmsg
+communication.
 
-Normally, the argument of kfree should not start with &.
-
-julia
-
----------- Forwarded message ----------
-Date: Fri, 1 May 2020 06:07:26 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@lists.01.org
-Cc: lkp@intel.com, Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH 1/4] counter: Internalize sysfs interface code
-
-CC: kbuild-all@lists.01.org
-In-Reply-To: <d84f0bb3258d1664e90da64d75f787829c50a9bd.1588176662.git.vilhelm.gray@gmail.com>
-References: <d84f0bb3258d1664e90da64d75f787829c50a9bd.1588176662.git.vilhelm.gray@gmail.com>
-TO: William Breathitt Gray <vilhelm.gray@gmail.com>
-TO: jic23@kernel.org
-CC: kamel.bouhara@bootlin.com
-CC: gwendal@chromium.org
-CC: alexandre.belloni@bootlin.com
-CC: david@lechnology.com
-CC: felipe.balbi@linux.intel.com
-CC: fabien.lahoudere@collabora.com
-CC: linux-iio@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-stm32@st-md-mailman.stormreply.com
-
-Hi William,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on stm32/stm32-next]
-[cannot apply to linus/master linux/master v5.7-rc3 next-20200430]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/William-Breathitt-Gray/Introduce-the-Counter-character-device-interface/20200430-051734
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
-:::::: branch date: 25 hours ago
-:::::: commit date: 25 hours ago
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/counter/counter-core.c:26:1-6: ERROR: invalid free of structure field
-
-# https://github.com/0day-ci/linux/commit/bdd9a6aa70c61f16dacaf057f0ce70fc210b5ec9
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout bdd9a6aa70c61f16dacaf057f0ce70fc210b5ec9
-vim +26 drivers/counter/counter-core.c
-
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  20
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  21  static void counter_device_release(struct device *dev)
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  22  {
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  23  	struct counter_device *const counter = dev_get_drvdata(dev);
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  24
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  25  	counter_sysfs_free(counter);
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29 @26  	kfree(&counter->dev);
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  27  	ida_simple_remove(&counter_ida, counter->id);
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  28  }
-bdd9a6aa70c61f1 William Breathitt Gray 2020-04-29  29
-
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/remoteproc/qcom_q6v5_wcss.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index f1924b7..48d16d8 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -91,6 +91,9 @@ struct q6v5_wcss {
+ 	phys_addr_t mem_reloc;
+ 	void *mem_region;
+ 	size_t mem_size;
++
++	struct qcom_rproc_glink glink_subdev;
++	struct qcom_rproc_ssr ssr_subdev;
+ };
+ 
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+@@ -557,6 +560,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
++	qcom_add_glink_subdev(rproc, &wcss->glink_subdev);
++	qcom_add_ssr_subdev(rproc, &wcss->ssr_subdev, "q6wcss");
++
+ 	ret = rproc_add(rproc);
+ 	if (ret)
+ 		goto free_rproc;
+-- 
+2.7.4
+
