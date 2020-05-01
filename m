@@ -2,139 +2,149 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905AAC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB23C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74DF2206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EB1206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgEARAf (ORCPT
+        id S1729651AbgEARBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:00:35 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:56731 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728841AbgEARAf (ORCPT
+        Fri, 1 May 2020 13:01:18 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:56268 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729218AbgEARBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:00:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TxBvIHa_1588352428;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TxBvIHa_1588352428)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 02 May 2020 01:00:31 +0800
-Subject: Re: [v2 linux-next PATCH 2/2] mm: khugepaged: don't have to put being
- freed page back to lru
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1588279279-61908-1-git-send-email-yang.shi@linux.alibaba.com>
- <1588279279-61908-2-git-send-email-yang.shi@linux.alibaba.com>
- <20200501070424.a5uugk7am2yzzx4v@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <ef98debf-d82d-4ca8-bdb6-352c459bb7cf@linux.alibaba.com>
-Date:   Fri, 1 May 2020 10:00:24 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 1 May 2020 13:01:16 -0400
+Received: by mail-io1-f69.google.com with SMTP id f4so5373376iov.22
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:01:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=RXQpc62kSGkieGeA+LlsoP9mjY9J70bhJpsTt05TsFw=;
+        b=lNi3LLOb6vxvV0mdiyw44gcRFMiOgECbxpwe7UNR1fx29f2CN6j8bCkfPEpWuT08ej
+         ivSaHwr4TkOLBCqfLHPmx4xGGjS+0KHcUiJI9TZgh6ByNYRwruv4tXx47rLjEXv70hAL
+         7QMZGfV2/aZUS/UKtYj8fiYuoupKD8LRDdmE5UYQFqVocI4ONJDsRY3EqLl6+IwI36Xp
+         xJ44RCZqrXpmrrZOycqOOxcTzDFDw6oZanAjXXmpItYdZvl8T4LiqISYjCcg1LypoD7j
+         bh08GOsZ1VuQ7dWuuXIwbX2Do0zMRkd/43492B3Hto3Q//q4LPdSssL5FfiftB6MelfD
+         l4Vg==
+X-Gm-Message-State: AGi0PuZiX8snwfxTyIitPd4dJrVjMQ8TxbmlCfp4pe0GhEYF3tAU+RT9
+        fAxxACjCyA1Dk9ZWbNEmXYNm4zAbhbNCmxgRdly/nred21YZ
+X-Google-Smtp-Source: APiQypIzNJ+x5Y3uKtb3IfQ5XLDifFgOYtn+MHEdrYUkg6wI9sVWvi8qk8nt/Rn8e/zCPbjhAlkKxNeJQfSsm2DWMef9rc/17379
 MIME-Version: 1.0
-In-Reply-To: <20200501070424.a5uugk7am2yzzx4v@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Received: by 2002:a5d:9c88:: with SMTP id p8mr4639755iop.200.1588352474474;
+ Fri, 01 May 2020 10:01:14 -0700 (PDT)
+Date:   Fri, 01 May 2020 10:01:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000004f67705a4992160@google.com>
+Subject: WARNING: refcount bug in crypto_mod_get
+From:   syzbot <syzbot+afb77bdbaca0cda9e991@syzkaller.appspotmail.com>
+To:     ardb@kernel.org, davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, t-kristo@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    6a8b55ed Linux 5.7-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11b91564100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5b075813ec8b93cd
+dashboard link: https://syzkaller.appspot.com/bug?extid=afb77bdbaca0cda9e991
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f8067fe00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fd8028100000
+
+The bug was bisected to:
+
+commit b877ad1a135c802d4529a72aa82faf46ef5db097
+Author: Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue Nov 5 14:01:04 2019 +0000
+
+    crypto: omap-aes-gcm - check length of assocdata in RFC4106 mode
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=147c2208100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=167c2208100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=127c2208100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+afb77bdbaca0cda9e991@syzkaller.appspotmail.com
+Fixes: b877ad1a135c ("crypto: omap-aes-gcm - check length of assocdata in RFC4106 mode")
+
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 0 PID: 7775 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7775 Comm: syz-executor692 Not tainted 5.7.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Code: 06 31 ff 89 de e8 87 b9 dc fd 84 db 0f 85 36 ff ff ff e8 4a b8 dc fd 48 c7 c7 a0 5b 72 88 c6 05 b2 1c ee 06 01 e8 4f f3 ad fd <0f> 0b e9 17 ff ff ff e8 2b b8 dc fd 0f b6 1d 97 1c ee 06 31 ff 89
+RSP: 0018:ffffc90002797bf8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ce171 RDI: fffff520004f2f71
+RBP: 0000000000000002 R08: ffff88809d9e6400 R09: ffffed1015cc66a9
+R10: ffff8880ae633547 R11: ffffed1015cc66a8 R12: ffff8880a403a048
+R13: ffff88809df99d00 R14: ffffed1013bf33a5 R15: ffff888099925048
+ refcount_add include/linux/refcount.h:204 [inline]
+ refcount_inc include/linux/refcount.h:241 [inline]
+ crypto_alg_get crypto/internal.h:87 [inline]
+ crypto_mod_get+0xc6/0xf0 crypto/api.c:37
+ crypto_spawn_alg.isra.0+0xa8/0x110 crypto/algapi.c:723
+ crypto_spawn_tfm2+0x19/0xb0 crypto/algapi.c:763
+ crypto_spawn_aead include/crypto/internal/aead.h:102 [inline]
+ pcrypt_aead_init_tfm+0x144/0x273 crypto/pcrypt.c:182
+ crypto_aead_init_tfm+0x138/0x1a0 crypto/aead.c:140
+ crypto_create_tfm+0xd5/0x2f0 crypto/api.c:454
+ crypto_alloc_tfm+0x100/0x340 crypto/api.c:526
+ aead_bind+0x69/0x170 crypto/algif_aead.c:483
+ alg_bind+0x260/0x530 crypto/af_alg.c:182
+ __sys_bind+0x20e/0x250 net/socket.c:1662
+ __do_sys_bind net/socket.c:1673 [inline]
+ __se_sys_bind net/socket.c:1671 [inline]
+ __x64_sys_bind+0x6f/0xb0 net/socket.c:1671
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x441359
+Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd04b593e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00000000004a2378 RCX: 0000000000441359
+RDX: 0000000000000058 RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 000000000000e5c5 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 00000000004020d0
+R13: 0000000000402160 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-On 5/1/20 12:04 AM, Kirill A. Shutemov wrote:
-> On Fri, May 01, 2020 at 04:41:19AM +0800, Yang Shi wrote:
->> When khugepaged successfully isolated and copied data from old page to
->> collapsed THP, the old page is about to be freed if its last mapcount
->> is gone.  So putting the page back to lru sounds not that productive in
->> this case since the page might be isolated by vmscan but it can't be
->> reclaimed by vmscan since it can't be unmapped by try_to_unmap() at all.
->>
->> Actually if khugepaged is the last user of this page so it can be freed
->> directly.  So, clearing active and unevictable flags, unlocking and
->> dropping refcount from isolate instead of calling putback_lru_page().
-> Any reason putback_lru_page() cannot do it internally? I mean if it is
-> page_count() == 1, free the page.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Because it seems putback_lru_page() is just called when the page is 
-*not* about to be freed, for example compaction is aborted, migration is 
-failed on some pages, etc.
-
-I checked a couple of places, i.e. compaction, migration, vmscan. All 
-these places free the page (i.e. old page is migrated to new page 
-successfully) via put_page() without putting back to lru. So, it sounds 
-free page in putback_lru_page() may never happen.
-
-We could add this, but it sounds khugepaged would be the only path that 
-may free page in putback_lru_page(). So, it sounds less confusing to 
-follow other users IMHO.
-
->> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v2: Check mapcount and skip putback lru if the last mapcount is gone
->>
->>   mm/khugepaged.c | 20 ++++++++++++++------
->>   1 file changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 0c8d30b..1fdd677 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -559,10 +559,18 @@ void __khugepaged_exit(struct mm_struct *mm)
->>   static void release_pte_page(struct page *page)
->>   {
->>   	mod_node_page_state(page_pgdat(page),
->> -			NR_ISOLATED_ANON + page_is_file_lru(page),
->> -			-compound_nr(page));
->> -	unlock_page(page);
->> -	putback_lru_page(page);
->> +		NR_ISOLATED_ANON + page_is_file_lru(page), -compound_nr(page));
->> +
->> +	if (total_mapcount(page)) {
->> +		unlock_page(page);
->> +		putback_lru_page(page);
->> +	} else {
->> +		ClearPageActive(page);
->> +		ClearPageUnevictable(page);
->> +		unlock_page(page);
->> +		/* Drop refcount from isolate */
->> +		put_page(page);
->> +	}
->>   }
->>   
->>   static void release_pte_pages(pte_t *pte, pte_t *_pte,
->> @@ -771,8 +779,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->>   		} else {
->>   			src_page = pte_page(pteval);
->>   			copy_user_highpage(page, src_page, address, vma);
->> -			if (!PageCompound(src_page))
->> -				release_pte_page(src_page);
->>   			/*
->>   			 * ptl mostly unnecessary, but preempt has to
->>   			 * be disabled to update the per-cpu stats
->> @@ -786,6 +792,8 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->>   			pte_clear(vma->vm_mm, address, _pte);
->>   			page_remove_rmap(src_page, false);
->>   			spin_unlock(ptl);
->> +			if (!PageCompound(src_page))
->> +				release_pte_page(src_page);
->>   			free_page_and_swap_cache(src_page);
->>   		}
->>   	}
->> -- 
->> 1.8.3.1
->>
->>
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
