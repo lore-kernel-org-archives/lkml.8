@@ -2,212 +2,127 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF74C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC890C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9697F21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588372886;
-	bh=2Rzwabl4WPMkIvoQi8BMthTxuqjdUuAlNljzQi4IsIA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUEjpl8055eAuuGHzSPsI58MOKJroMw29hU7N2xhc8NOOyXjsJmGmre1JfkYX1HN5
-	 bTh0u0EFBy/TqoMOo9VbHWqvz39khNCoRlKlUyTO0XZXT0GubR+uqaGIEge0m7jc7D
-	 C8pWk2Xh2itegfWCzThZgc2ZdT6skkdDruvotAzI=
+	by mail.kernel.org (Postfix) with ESMTP id BC66F2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:42:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="jI0xGxBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgEAWlZ (ORCPT
+        id S1727044AbgEAWmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgEAWlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:41:25 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72E82166E;
-        Fri,  1 May 2020 22:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588372884;
-        bh=2Rzwabl4WPMkIvoQi8BMthTxuqjdUuAlNljzQi4IsIA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZ4WAOsMCK42L2fdFojVCjplvhG+1DBwPv8WjUcUCq5ISB9tcW5zM7WootBn0VY5e
-         UtnXJomgGyhiT9Ii+KBsfnLSk5qDNTqaqD/XvEHNcnBhBRfa+DS2l9dy9qGHHeJ2Sv
-         XbzcRld6sB1x33vonyCoUSpM6/Xgbn2ReyGUlBSo=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Aman Sharma <amanharitsh123@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v2 2/2] PCI: Check for platform_get_irq() failure consistently
-Date:   Fri,  1 May 2020 17:40:42 -0500
-Message-Id: <20200501224042.141366-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200501224042.141366-1-helgaas@kernel.org>
-References: <20200501224042.141366-1-helgaas@kernel.org>
+        Fri, 1 May 2020 18:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgEAWmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 18:42:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B01C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 15:42:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l18so2698577wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 15:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=1YoBrGcOfoWOs/B+m22a2sFXdCiWrExB6slCiIMgKbc=;
+        b=jI0xGxBhVhqnybezou5wj+pRK5XU0aUq5pyIuEgt1VDoiOBjHDWAeMXBE2CzslyrAV
+         4kWrhrL7z+puiACbIuYaThmJfB++lY3YmYpSWWquIJSr4y3PF1j5CmDza9rKwoBhnh9i
+         rhvHql0fkniS8CdnKOT8Ev+tI/Jcq1QaftZDRBZtq9RE3tXWWRV5COIo0l4Y/+o7ZIHl
+         F7Yq+FX8U6T5kLbrxfpxBiad1J/SbUcPvazfNRc19Bg/g0HDPc7gjRtqyVTtX8Ey9O5+
+         1oMWqKoQb4wUMfzIgUh8STCnfm80SsxxY3ygXHhaHlEBIjJLTehQamZuZuoKhDvlB4rE
+         8xSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=1YoBrGcOfoWOs/B+m22a2sFXdCiWrExB6slCiIMgKbc=;
+        b=kDhBOg872kmGHPaWXx0hx3Jv9ynEspk8xE6bmye7b9fY8I1twueHgpISJmuaIR0lSV
+         kugB7gv0cvT3whoRWE/oXGUGo9tXXeDSJ6sBNXE0b2uwqQok1u1jPPy/leKXR4GrNMAR
+         ofhtHd3F/XYJVPilrE9N6+UOJoE3oANRS+FPXsTZnW4HW28Z3nEXT8AOWBJb5OXbWbe1
+         dJnsrjwp8Prt0nkui9mf+dJ3Ees5maytu8w2FhajTh1dtAiYgZAXAzfGs8iI38TRNJEZ
+         PMBGbmfv6zm8q23Ik2mD8pdQ2PzrkTqKq706ZZL7vT1vRFUgW15Y05KBHHp7XLGke/6t
+         b9gQ==
+X-Gm-Message-State: AGi0PuZ9bYP5I6oH+zq3E65lyw6WLvql9C8gi36hTXpnxnd38KrKfXu7
+        oY/R8fqbxmportT7XbQDWzsHFQ==
+X-Google-Smtp-Source: APiQypLwiXqwSDx/2b4YPOndd8yiZUZwFdBeA1+HWHdbcYWvVSw4FKrouvTOTMmgtoXo931jzjCF9A==
+X-Received: by 2002:adf:ecc5:: with SMTP id s5mr5112370wro.261.1588372937299;
+        Fri, 01 May 2020 15:42:17 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:48db:9b00:e80e:f5df:f780:7d57? ([2001:16b8:48db:9b00:e80e:f5df:f780:7d57])
+        by smtp.gmail.com with ESMTPSA id n7sm1404912wmd.11.2020.05.01.15.42.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 15:42:15 -0700 (PDT)
+Subject: Re: [RFC PATCH V2 0/9] Introduce attach/clear_page_private to cleanup
+ code
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+References: <20200430214450.10662-1-guoqing.jiang@cloud.ionos.com>
+ <20200501221626.GC29705@bombadil.infradead.org>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <889f9f82-64ba-50b3-147b-459303617aeb@cloud.ionos.com>
+Date:   Sat, 2 May 2020 00:42:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200501221626.GC29705@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aman Sharma <amanharitsh123@gmail.com>
+On 5/2/20 12:16 AM, Matthew Wilcox wrote:
+> On Thu, Apr 30, 2020 at 11:44:41PM +0200, Guoqing Jiang wrote:
+>>    include/linux/pagemap.h: introduce attach/clear_page_private
+>>    md: remove __clear_page_buffers and use attach/clear_page_private
+>>    btrfs: use attach/clear_page_private
+>>    fs/buffer.c: use attach/clear_page_private
+>>    f2fs: use attach/clear_page_private
+>>    iomap: use attach/clear_page_private
+>>    ntfs: replace attach_page_buffers with attach_page_private
+>>    orangefs: use attach/clear_page_private
+>>    buffer_head.h: remove attach_page_buffers
+> I think mm/migrate.c could also use this:
+>
+>          ClearPagePrivate(page);
+>          set_page_private(newpage, page_private(page));
+>          set_page_private(page, 0);
+>          put_page(page);
+>          get_page(newpage);
+>
 
-The platform_get_irq*() interfaces return either a negative error number or
-a valid IRQ.  0 is not a valid return value, so check for "< 0" to detect
-failure as recommended by the function documentation.
+Thanks for checking!  Assume the below change is appropriate.
 
-On failure, return the error number from platform_get_irq*() instead of
-making up a new one.
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 7160c1556f79..f214adfb3fa4 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -797,10 +797,7 @@ static int __buffer_migrate_page(struct 
+address_space *mapping,
+         if (rc != MIGRATEPAGE_SUCCESS)
+                 goto unlock_buffers;
 
-Link: https://lore.kernel.org/r/cover.1583952275.git.amanharitsh123@gmail.com
-[bhelgaas: commit log, squash into one patch]
-Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
- drivers/pci/controller/dwc/pci-imx6.c                | 4 ++--
- drivers/pci/controller/dwc/pcie-tegra194.c           | 4 ++--
- drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 4 ++--
- drivers/pci/controller/pci-aardvark.c                | 3 +++
- drivers/pci/controller/pci-v3-semi.c                 | 4 ++--
- drivers/pci/controller/pcie-mediatek.c               | 3 +++
- drivers/pci/controller/pcie-tango.c                  | 4 ++--
- 7 files changed, 16 insertions(+), 10 deletions(-)
+-       ClearPagePrivate(page);
+-       set_page_private(newpage, page_private(page));
+-       set_page_private(page, 0);
+-       put_page(page);
++       set_page_private(newpage, detach_page_private(page));
+         get_page(newpage);
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index acfbd34032a8..8f08ae53f53e 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -868,9 +868,9 @@ static int imx6_add_pcie_port(struct imx6_pcie *imx6_pcie,
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
--		if (pp->msi_irq <= 0) {
-+		if (pp->msi_irq < 0) {
- 			dev_err(dev, "failed to get MSI irq\n");
--			return -ENODEV;
-+			return pp->msi_irq;
- 		}
- 	}
- 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index ae30a2fd3716..f1f945cc7bcb 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -2190,9 +2190,9 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 	}
- 
- 	pp->irq = platform_get_irq_byname(pdev, "intr");
--	if (!pp->irq) {
-+	if (pp->irq < 0) {
- 		dev_err(dev, "Failed to get \"intr\" interrupt\n");
--		return -ENODEV;
-+		return pp->irq;
- 	}
- 
- 	pcie->bpmp = tegra_bpmp_get(dev);
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-index a94be264240f..5907baa9b1f2 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-@@ -522,9 +522,9 @@ static int mobiveil_pcie_integrated_interrupt_init(struct mobiveil_pcie *pcie)
- 	mobiveil_pcie_enable_msi(pcie);
- 
- 	rp->irq = platform_get_irq(pdev, 0);
--	if (rp->irq <= 0) {
-+	if (rp->irq < 0) {
- 		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
--		return -ENODEV;
-+		return rp->irq;
- 	}
- 
- 	/* initialize the IRQ domains */
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 2a20b649f40c..40a4257f0df1 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -973,6 +973,9 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 		return PTR_ERR(pcie->base);
- 
- 	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
- 	ret = devm_request_irq(dev, irq, advk_pcie_irq_handler,
- 			       IRQF_SHARED | IRQF_NO_THREAD, "advk-pcie",
- 			       pcie);
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index bd05221f5a22..a5bf945d2eda 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -777,9 +777,9 @@ static int v3_pci_probe(struct platform_device *pdev)
- 
- 	/* Get and request error IRQ resource */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq <= 0) {
-+	if (irq < 0) {
- 		dev_err(dev, "unable to obtain PCIv3 error IRQ\n");
--		return -ENODEV;
-+		return irq;
- 	}
- 	ret = devm_request_irq(dev, irq, v3_irq, 0,
- 			"PCIv3 error", v3);
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index cb982891b22b..ebfa7d5a4e2d 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -651,6 +651,9 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
- 	}
- 
- 	port->irq = platform_get_irq(pdev, port->slot);
-+	if (port->irq < 0)
-+		return port->irq;
-+
- 	irq_set_chained_handler_and_data(port->irq,
- 					 mtk_pcie_intr_handler, port);
- 
-diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-index 21a208da3f59..18c2c4313eb5 100644
---- a/drivers/pci/controller/pcie-tango.c
-+++ b/drivers/pci/controller/pcie-tango.c
-@@ -273,9 +273,9 @@ static int tango_pcie_probe(struct platform_device *pdev)
- 		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
- 
- 	virq = platform_get_irq(pdev, 1);
--	if (virq <= 0) {
-+	if (virq < 0) {
- 		dev_err(dev, "Failed to map IRQ\n");
--		return -ENXIO;
-+		return virq;
- 	}
- 
- 	irq_dom = irq_domain_create_linear(fwnode, MSI_MAX, &dom_ops, pcie);
--- 
-2.25.1
+         bh = head;
+
+
+Cheers,
+Guoqing
 
