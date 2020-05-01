@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6B4C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B077BC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD562166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FEA82166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339795;
-	bh=RV4d/t8wCP81nKyW+WJMde16vAm9Qrpdr4u0hkGPIrI=;
+	s=default; t=1588339797;
+	bh=O3QIexIeqU5P2QEyxwjjbx+5fccgxwre6dJpMsJdDm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUqtVPSvMaI7Xbh1SpARX/m3LhlYLLXWz3ssk4YWZd9b7KPnN1+BYtXyHa1alJIZd
-	 EspP9iJQCAAHkiJ1kt6H7worovumkhD+7Z7mPv+fQff+k1ccoZ5BojE2a39cEUmp4n
-	 vykpptMEB99GRVKi3iUcosQ1TAzwnAWYTbL6q8mA=
+	b=JRB1dKI/Xd34SwBkkKdIekB6IQz0We9WilEgIZMRTDUb4xirs0huMvnBJSSkIoSzL
+	 VvuWllHs+1M/tfFVNtILlxmfpEPijHcPEtM2lctyMQ4lS8o4I5gHl28ehrU4d1wtu+
+	 lykkzffYCsg77ff69YSRHULEl5GP+hxeA3cRLi1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbgEAN3y (ORCPT
+        id S1729851AbgEAN34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729823AbgEAN3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:46 -0400
+        id S1729022AbgEAN3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3667D208D6;
-        Fri,  1 May 2020 13:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B53208C3;
+        Fri,  1 May 2020 13:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339785;
-        bh=RV4d/t8wCP81nKyW+WJMde16vAm9Qrpdr4u0hkGPIrI=;
+        s=default; t=1588339788;
+        bh=O3QIexIeqU5P2QEyxwjjbx+5fccgxwre6dJpMsJdDm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8yRMwjvLRibrf/bCGOueCpPg5ap02UF+GlzBFlFMBzV1sE3DknVgASt7S17uuIvN
-         ogsAacmjcxMugi0TXCyVKAbuBjereuaIpsbYmUkQRguwUCq7G9piEOBJlWPV+8mOHG
-         eA6o5/nXltavuUp5raj5q4+TUW6a8TRoYZ3luK8s=
+        b=kK/2zhQiJnVb7CAZRWDUYETnOMT69imq8AhjVBgRvY/3fBkm+Gs3SAnqKb7xLlUhS
+         A2LLlhzx+66ndq7YAPYKqcrpSMHIq5W2L8VXorJKeMCArYnRGt2ReW/luRg6ac6eDf
+         AoEr8S8/eoP5iWL1zOUP8fKbVIeVQbDKg7eUs0s4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Roland Hieber <rhi@pengutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 51/80] ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
-Date:   Fri,  1 May 2020 15:21:45 +0200
-Message-Id: <20200501131529.456441984@linuxfoundation.org>
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 60/80] fuse: fix possibly missed wake-up after abort
+Date:   Fri,  1 May 2020 15:21:54 +0200
+Message-Id: <20200501131531.407149934@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -62,46 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit f1baca8896ae18e12c45552a4c4ae2086aa7e02c upstream.
+commit 2d84a2d19b6150c6dbac1e6ebad9c82e4c123772 upstream.
 
-512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
-introduced an unintended linker error for i.MX6 configurations that have
-ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
-nor ARM_PSCI_FW are selected.
+In current fuse_drop_waiting() implementation it's possible that
+fuse_wait_aborted() will not be woken up in the unlikely case that
+fuse_abort_conn() + fuse_wait_aborted() runs in between checking
+fc->connected and calling atomic_dec(&fc->num_waiting).
 
-Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
-calls is available as well.
+Do the atomic_dec_and_test() unconditionally, which also provides the
+necessary barrier against reordering with the fc->connected check.
 
-The C declaration for the function remains unguarded to avoid future code
-inadvertently using a stub and introducing a regression to the bug the
-original commit fixed.
+The explicit smp_mb() in fuse_wait_aborted() is not actually needed, since
+the spin_unlock() in fuse_abort_conn() provides the necessary RELEASE
+barrier after resetting fc->connected.  However, this is not a performance
+sensitive path, and adding the explicit barrier makes it easier to
+document.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
-Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Tested-by: Roland Hieber <rhi@pengutronix.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: b8f95e5d13f5 ("fuse: umount should wait for all requests")
+Cc: <stable@vger.kernel.org> #v4.19
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/Makefile |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/fuse/dev.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -86,8 +86,10 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
- obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
- obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
- endif
-+ifeq ($(CONFIG_ARM_CPU_SUSPEND),y)
- AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
- obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
-+endif
- obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -132,9 +132,13 @@ static bool fuse_block_alloc(struct fuse
  
- obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
+ static void fuse_drop_waiting(struct fuse_conn *fc)
+ {
+-	if (fc->connected) {
+-		atomic_dec(&fc->num_waiting);
+-	} else if (atomic_dec_and_test(&fc->num_waiting)) {
++	/*
++	 * lockess check of fc->connected is okay, because atomic_dec_and_test()
++	 * provides a memory barrier mached with the one in fuse_wait_aborted()
++	 * to ensure no wake-up is missed.
++	 */
++	if (atomic_dec_and_test(&fc->num_waiting) &&
++	    !READ_ONCE(fc->connected)) {
+ 		/* wake up aborters */
+ 		wake_up_all(&fc->blocked_waitq);
+ 	}
+@@ -2164,6 +2168,8 @@ EXPORT_SYMBOL_GPL(fuse_abort_conn);
+ 
+ void fuse_wait_aborted(struct fuse_conn *fc)
+ {
++	/* matches implicit memory barrier in fuse_drop_waiting() */
++	smp_mb();
+ 	wait_event(fc->blocked_waitq, atomic_read(&fc->num_waiting) == 0);
+ }
+ 
 
 
