@@ -2,125 +2,278 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD80C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88308C47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F1C208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCDF20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pA76bR8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730167AbgEAQMS (ORCPT
+        id S1729661AbgEAQO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:12:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:43370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbgEAQMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:12:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68B05C14;
-        Fri,  1 May 2020 09:12:16 -0700 (PDT)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D71413F68F;
-        Fri,  1 May 2020 09:12:13 -0700 (PDT)
-Subject: Re: [PATCH v2 6/6] sched/deadline: Implement fallback mechanism for
- !fit case
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     luca abeni <luca.abeni@santannapisa.it>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-7-dietmar.eggemann@arm.com>
- <20200427133438.GA6469@localhost.localdomain>
- <20200427161715.3dd3a148@nowhere>
- <57e4846a-4e54-5450-8167-768f021250f7@arm.com>
- <20200430110042.GD19464@codeaurora.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <ac602537-ab43-943e-9bd6-eca6ed5645c8@arm.com>
-Date:   Fri, 1 May 2020 18:12:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 12:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728979AbgEAQO4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:14:56 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEBFC08E934
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 09:14:55 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id b2so3063233ljp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 09:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E9HC4TtDYcMl70D2yLsiFayEi4W3obxsAzPswR8DMak=;
+        b=pA76bR8IKuynYeexWgwTHGHlEEpen9DlOqzAcw8uRr2dS5UZVc3caibWOKk4wQywFr
+         /tIBHQx4gQ6zGTK5r8pZdcRadg+b3o1EuLGJSBl0DVAcAvwb98Cwc3OCOa8mLf1KJ3+c
+         V0440x+rkHaMtCnquXTFtm776x49Mihk4Bjfq3PV2D/zg0q3/TQ0tODETFBO33pBx+Ds
+         QDN6heShl3QVkqKYjsPMRfQo+Iv+nStFqK7Nkt6rYtSAUPDL+xygZO6mtDfYUABBvvCw
+         fsUl/YsVPsW0bhXH1an1M33eSt6zU83YTb2j8dINm13kpXMVayyiQNmL8Q9rcXwNhv+P
+         KtQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E9HC4TtDYcMl70D2yLsiFayEi4W3obxsAzPswR8DMak=;
+        b=VwdEKZWysQLNrXS3bD12IGsgp7vIbdMuuhxQ4GLtB7Pqx6Jhu+ms8OLwBpL/QV5EOW
+         1F3YbyHnSgqhbbZLzMskiyaoA+vRujw/uXAhfWLoC4R6hrgpB/zbdu9UTbJonbiG/NhK
+         RXyL2ypexYEfJzbQtG2P6Ez4u3X8R5sM/iIZzWaFvYDOUkDfAB1gfw3woF3+A7EryUxN
+         adX5BVGzzc+3mMf1kD1u3ghpHcpva5GLx2WpW7vdN51y7Xs0dbmAE4zTdmt6KAHktc9/
+         TkpNfB8TQ+Z5DVTn7RODF6XINwttZIZhzVBqKDTr2ts1Zyv+fKr4XXnw745osQLqKCsG
+         R5xA==
+X-Gm-Message-State: AGi0Pub1q6hyEZD/7Y/hUe3prpy2jjz6l2L/Hp7dN3glYGdZINVrw5t8
+        zLV1yIWgfX4+iLiyKC72a3Nu1CAjQ4t7S291kJHW9w==
+X-Google-Smtp-Source: APiQypK5sdtJ5Dm7sI1A1k7InQw/eggzM/HErJMHEHM6WNPkUFYgpxpemk5CyouOdKeiCaEqegrrWnev6LLK1lgEvtQ=
+X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr2869691ljm.80.1588349693754;
+ Fri, 01 May 2020 09:14:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200430110042.GD19464@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200501083510.1413-1-anders.roxell@linaro.org> <CANpmjNNm9DhVj5T1rhykEdNBiTvkG-YxL6O25bSfQi8ySh9KtA@mail.gmail.com>
+In-Reply-To: <CANpmjNNm9DhVj5T1rhykEdNBiTvkG-YxL6O25bSfQi8ySh9KtA@mail.gmail.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Fri, 1 May 2020 18:14:42 +0200
+Message-ID: <CADYN=9KLb6FVZ1icbvCY0ondiim44CNk8g8buFCGqpC5cMqyVQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
+To:     Marco Elver <elver@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2020 13:00, Pavan Kondeti wrote:
-> On Wed, Apr 29, 2020 at 07:39:50PM +0200, Dietmar Eggemann wrote:
->> On 27/04/2020 16:17, luca abeni wrote:
+On Fri, 1 May 2020 at 11:57, Marco Elver <elver@google.com> wrote:
+>
+> On Fri, 1 May 2020 at 10:35, Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > Make it easier to enable all KUnit fragments.  This is needed for kernel
+> > test-systems, so its easy to get all KUnit tests enabled and if new gets
+> > added they will be enabled as well.  Fragments that has to be builtin
+> > will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
+> >
+> > Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
+> > someone wants that even though KUNIT_RUN_ALL is enabled.
+> >
+> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > ---
+> >  drivers/base/Kconfig      |  3 ++-
+> >  drivers/base/test/Kconfig |  3 ++-
+> >  fs/ext4/Kconfig           |  3 ++-
+> >  lib/Kconfig.debug         |  6 ++++--
+> >  lib/Kconfig.kcsan         |  3 ++-
+> >  lib/kunit/Kconfig         | 15 ++++++++++++---
+> >  security/apparmor/Kconfig |  3 ++-
+> >  7 files changed, 26 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> > index 5f0bc74d2409..c48e6e4ef367 100644
+> > --- a/drivers/base/Kconfig
+> > +++ b/drivers/base/Kconfig
+> > @@ -149,8 +149,9 @@ config DEBUG_TEST_DRIVER_REMOVE
+> >           test this functionality.
+> >
+> >  config PM_QOS_KUNIT_TEST
+> > -       bool "KUnit Test for PM QoS features"
+> > +       bool "KUnit Test for PM QoS features" if !KUNIT_RUN_ALL
+> >         depends on KUNIT=y
+> > +       default KUNIT_RUN_ALL
+> >
+> >  config HMEM_REPORTING
+> >         bool
+> > diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
+> > index 305c7751184a..0d662d689f6b 100644
+> > --- a/drivers/base/test/Kconfig
+> > +++ b/drivers/base/test/Kconfig
+> > @@ -9,5 +9,6 @@ config TEST_ASYNC_DRIVER_PROBE
+> >
+> >           If unsure say N.
+> >  config KUNIT_DRIVER_PE_TEST
+> > -       bool "KUnit Tests for property entry API"
+> > +       bool "KUnit Tests for property entry API" if !KUNIT_RUN_ALL
+> >         depends on KUNIT=y
+> > +       default KUNIT_RUN_ALL
+> > diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+> > index 2a592e38cdfe..76785143259d 100644
+> > --- a/fs/ext4/Kconfig
+> > +++ b/fs/ext4/Kconfig
+> > @@ -103,9 +103,10 @@ config EXT4_DEBUG
+> >                 echo 1 > /sys/module/ext4/parameters/mballoc_debug
+> >
+> >  config EXT4_KUNIT_TESTS
+> > -       tristate "KUnit tests for ext4"
+> > +       tristate "KUnit tests for ext4" if !KUNIT_RUN_ALL
+> >         select EXT4_FS
+> >         depends on KUNIT
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           This builds the ext4 KUnit tests.
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 8e4aded46281..993e0c5549bc 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2123,8 +2123,9 @@ config TEST_SYSCTL
+> >           If unsure, say N.
+> >
+> >  config SYSCTL_KUNIT_TEST
+> > -       tristate "KUnit test for sysctl"
+> > +       tristate "KUnit test for sysctl" if !KUNIT_RUN_ALL
+> >         depends on KUNIT
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           This builds the proc sysctl unit test, which runs on boot.
+> >           Tests the API contract and implementation correctness of sysctl.
+> > @@ -2134,8 +2135,9 @@ config SYSCTL_KUNIT_TEST
+> >           If unsure, say N.
+> >
+> >  config LIST_KUNIT_TEST
+> > -       tristate "KUnit Test for Kernel Linked-list structures"
+> > +       tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_RUN_ALL
+> >         depends on KUNIT
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           This builds the linked list KUnit test suite.
+> >           It tests that the API and basic functionality of the list_head type
+> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> > index ea28245c6c1d..91398300a1bc 100644
+> > --- a/lib/Kconfig.kcsan
+> > +++ b/lib/Kconfig.kcsan
+> > @@ -46,8 +46,9 @@ config KCSAN_SELFTEST
+> >           works as intended.
+> >
+> >  config KCSAN_TEST
+> > -       tristate "KCSAN test for integrated runtime behaviour"
+> > +       tristate "KCSAN test for integrated runtime behaviour" if !KUNIT_RUN_ALL
+> >         depends on TRACEPOINTS && KUNIT
+> > +       default KUNIT_RUN_ALL
+> >         select TORTURE_TEST
+> >         help
+> >           KCSAN test focusing on behaviour of the integrated runtime. Tests
+>
+> I think if you want this patch to be picked up you need to split it,
+> with one patch for each test that is not yet in mainline or the tree
+> that should pick this patch up.
 
-[...]
+OK, would it be ok to do one patch per subsystem if it's in the mainline tree,
+and another patch if it's only in the next tree for the same subsystem?
 
->>> On Mon, 27 Apr 2020 15:34:38 +0200
->>> Juri Lelli <juri.lelli@redhat.com> wrote:
+>
+> The KCSAN test is in the -rcu tree, but I don't expect it to be merged
+> before 5.9. Most likely, we would only be able to pick up the patch
+> that would make the chance to the KCSAN Kconfig entry once the rest
+> here made it into mainline.
+>
+> Thanks,
+> -- Marco
+>
+> > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+> > index 95d12e3d6d95..d6a912779816 100644
+> > --- a/lib/kunit/Kconfig
+> > +++ b/lib/kunit/Kconfig
+> > @@ -15,7 +15,8 @@ menuconfig KUNIT
+> >  if KUNIT
+> >
+> >  config KUNIT_DEBUGFS
+> > -       bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
+> > +       bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation" if !KUNIT_RUN_ALL
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           Enable debugfs representation for kunit.  Currently this consists
+> >           of /sys/kernel/debug/kunit/<test_suite>/results files for each
+> > @@ -23,7 +24,8 @@ config KUNIT_DEBUGFS
+> >           run that occurred.
+> >
+> >  config KUNIT_TEST
+> > -       tristate "KUnit test for KUnit"
+> > +       tristate "KUnit test for KUnit" if !KUNIT_RUN_ALL
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           Enables the unit tests for the KUnit test framework. These tests test
+> >           the KUnit test framework itself; the tests are both written using
+> > @@ -32,7 +34,8 @@ config KUNIT_TEST
+> >           expected.
+> >
+> >  config KUNIT_EXAMPLE_TEST
+> > -       tristate "Example test for KUnit"
+> > +       tristate "Example test for KUnit" if !KUNIT_RUN_ALL
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           Enables an example unit test that illustrates some of the basic
+> >           features of KUnit. This test only exists to help new users understand
+> > @@ -41,4 +44,10 @@ config KUNIT_EXAMPLE_TEST
+> >           is intended for curious hackers who would like to understand how to
+> >           use KUnit for kernel development.
+> >
+> > +config KUNIT_RUN_ALL
+> > +       tristate "KUnit run all test"
+> > +       help
+> > +         Enables all KUnit tests. If they can be enabled.
+> > +         That depends on if KUnit is enabled as a module or builtin.
+> > +
+>
+> s/tests. If/tests, if/ ?
 
-[...]
+correct, I will fix that.
 
->>>> On 27/04/20 10:37, Dietmar Eggemann wrote:
->>>>> From: Luca Abeni <luca.abeni@santannapisa.it>
+Cheers,
+Anders
 
-[...]
-
->>>>> -		if (!cpumask_empty(later_mask))
->>>>> -			return 1;
->>>>> +		if (cpumask_empty(later_mask))
->>>>> +			cpumask_set_cpu(max_cpu, later_mask);  
->>>>
->>>> Think we touched upon this during v1 review, but I'm (still?)
->>>> wondering if we can do a little better, still considering only free
->>>> cpus.
->>>>
->>>> Can't we get into a situation that some of the (once free) big cpus
->>>> have been occupied by small tasks and now a big task enters the
->>>> system and it only finds small cpus available, were it could have fit
->>>> into bigs if small tasks were put onto small cpus?
->>>>
->>>> I.e., shouldn't we always try to best fit among free cpus?
->>>
->>> Yes; there was an additional patch that tried schedule each task on the
->>> slowest core where it can fit, to address this issue.
->>> But I think it will go in a second round of patches.
->>
->> Yes, we can run into this situation in DL, but also in CFS or RT.
->>
-> In CFS case, the misfit task handling in load balancer should help pulling
-> the BIG task running on the little CPUs. I get your point that we can run
-> into the same scenario with other scheduling class tasks.
-
-Yes, the CPU stopper (i.e. CFS's active load balance) can help here.
-IMHO, using the CPU stopper in RT/DL for moving the running task (next
-to using best fit rather than just fit CPU) is considered future work.
-AFAICS, push/pull is not designed for migration of running tasks.
-
-[...]
-
->> You did spot the rt-app 'delay' for the small tasks in the test case ;-)
-> 
-> Thanks for the hint. It was not clear to me why 1 msec delay is given for
-> the small tasks in the rt-app json description in the cover letter.
-> I get it now :-)
-
-So far Capacity awareness in RT/DL means that as long as there are CPUs
-available which fit the task, use one of them. This is already
-beneficial for a lot of use cases on CPU asymmetric systems since it
-offers more predictable behavior.
-
-I'll add a note to the cover letter in the next version about the reason
-of the rt-app 'delay'.
+>
+> >  endif # KUNIT
+> > diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
+> > index 0fe336860773..c4648426ea5d 100644
+> > --- a/security/apparmor/Kconfig
+> > +++ b/security/apparmor/Kconfig
+> > @@ -70,8 +70,9 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
+> >           the kernel message buffer.
+> >
+> >  config SECURITY_APPARMOR_KUNIT_TEST
+> > -       bool "Build KUnit tests for policy_unpack.c"
+> > +       bool "Build KUnit tests for policy_unpack.c" if !KUNIT_RUN_ALL
+> >         depends on KUNIT=y && SECURITY_APPARMOR
+> > +       default KUNIT_RUN_ALL
+> >         help
+> >           This builds the AppArmor KUnit tests.
+> >
+> > --
+> > 2.20.1
+> >
