@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CD7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A705C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93FC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB462166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340309;
-	bh=lcefXzZ4EzHhJc4wmjHG3oX6zptAVUI00YV1nUfJzRg=;
+	s=default; t=1588340314;
+	bh=bj5FfiH9/bwBg7/KDQ9MB5vzY3FhvOzZI71BOOxtLGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xuzZqz59YvZNIafUsLrOkLU28wKdkaNnEy/Hyv/oHsWtM9+G0spG1yGdJkiV6Pb6g
-	 20+rESLNh9xatQ8vffgPIixo1fMmggmQWHffp4WkGnHn30BwEQ6zACPtvA1b2Zg+JT
-	 //W+SokG52WIURaHDdoeE3PLqJpttq1H7acANnxE=
+	b=fUtWiVc9v1t+wffHqJ/eG/iPJmX7sBOjkc3sF/enGnMEGmUg0Ame+LpJYHzqFWrq8
+	 pGfezw9hFawjjHj2o3O2jOnEkj3nVjGPj6NwLylb0HAa1LSbkVolgXE0B/+oYYG7cR
+	 pqCJQulwRay3SwT09gclgbLBNKZ6T8K1nmY2KejI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgEANi3 (ORCPT
+        id S1731062AbgEANid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbgEANiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:18 -0400
+        id S1730715AbgEANi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CD124953;
-        Fri,  1 May 2020 13:38:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1A1624956;
+        Fri,  1 May 2020 13:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340297;
-        bh=lcefXzZ4EzHhJc4wmjHG3oX6zptAVUI00YV1nUfJzRg=;
+        s=default; t=1588340307;
+        bh=bj5FfiH9/bwBg7/KDQ9MB5vzY3FhvOzZI71BOOxtLGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z56XA2E/WI09KSNUKOwiqwK+d40xSsIRcmnAM7MsUtBn1sRBzpc0B5jlMEB5duoXB
-         5q7jC84JqzpFILL2E+p7nrBRBTzKiBHb3GyqHBYv67QP2k2NeFs4qUvMbPnFnWzl+G
-         mKf1dkADZIUIiXKvCr2y3OgHNFtGarlFA5/5x5YE=
+        b=lnvPXd5unAjYF+myPOCKpf8T84VosUwSjp39WpyW4nji6urH97IeV/Vz5hFr46FZ0
+         Vw9aHQdw91U5yiDfoLWPfJuyJwFy3wBkYt4DCG7/UtXE6dlF3YuYJ1M4QediKrp2Qq
+         QMwHzjXM2ggJd5IBbrvNAtDP5xoZVZQetC+ihnBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 21/83] bpf: Forbid XADD on spilled pointers for unprivileged users
-Date:   Fri,  1 May 2020 15:23:00 +0200
-Message-Id: <20200501131529.491727486@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.4 12/83] propagate_one(): mnt_set_mountpoint() needs mount_lock
+Date:   Fri,  1 May 2020 15:22:51 +0200
+Message-Id: <20200501131526.933446851@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,139 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 6e7e63cbb023976d828cdb22422606bf77baa8a9 upstream.
+commit b0d3869ce9eeacbb1bbd541909beeef4126426d5 upstream.
 
-When check_xadd() verifies an XADD operation on a pointer to a stack slot
-containing a spilled pointer, check_stack_read() verifies that the read,
-which is part of XADD, is valid. However, since the placeholder value -1 is
-passed as `value_regno`, check_stack_read() can only return a binary
-decision and can't return the type of the value that was read. The intent
-here is to verify whether the value read from the stack slot may be used as
-a SCALAR_VALUE; but since check_stack_read() doesn't check the type, and
-the type information is lost when check_stack_read() returns, this is not
-enforced, and a malicious user can abuse XADD to leak spilled kernel
-pointers.
+... to protect the modification of mp->m_count done by it.  Most of
+the places that modify that thing also have namespace_lock held,
+but not all of them can do so, so we really need mount_lock here.
+Kudos to Piotr Krysiuk <piotras@gmail.com>, who'd spotted a related
+bug in pivot_root(2) (fixed unnoticed in 5.3); search for other
+similar turds has caught out this one.
 
-Fix it by letting check_stack_read() verify that the value is usable as a
-SCALAR_VALUE if no type information is passed to the caller.
-
-To be able to use __is_pointer_value() in check_stack_read(), move it up.
-
-Fix up the expected unprivileged error message for a BPF selftest that,
-until now, assumed that unprivileged users can use XADD on stack-spilled
-pointers. This also gives us a test for the behavior introduced in this
-patch for free.
-
-In theory, this could also be fixed by forbidding XADD on stack spills
-entirely, since XADD is a locked operation (for operations on memory with
-concurrency) and there can't be any concurrency on the BPF stack; but
-Alexei has said that he wants to keep XADD on stack slots working to avoid
-changes to the test suite [1].
-
-The following BPF program demonstrates how to leak a BPF map pointer as an
-unprivileged user using this bug:
-
-    // r7 = map_pointer
-    BPF_LD_MAP_FD(BPF_REG_7, small_map),
-    // r8 = launder(map_pointer)
-    BPF_STX_MEM(BPF_DW, BPF_REG_FP, BPF_REG_7, -8),
-    BPF_MOV64_IMM(BPF_REG_1, 0),
-    ((struct bpf_insn) {
-      .code  = BPF_STX | BPF_DW | BPF_XADD,
-      .dst_reg = BPF_REG_FP,
-      .src_reg = BPF_REG_1,
-      .off = -8
-    }),
-    BPF_LDX_MEM(BPF_DW, BPF_REG_8, BPF_REG_FP, -8),
-
-    // store r8 into map
-    BPF_MOV64_REG(BPF_REG_ARG1, BPF_REG_7),
-    BPF_MOV64_REG(BPF_REG_ARG2, BPF_REG_FP),
-    BPF_ALU64_IMM(BPF_ADD, BPF_REG_ARG2, -4),
-    BPF_ST_MEM(BPF_W, BPF_REG_ARG2, 0, 0),
-    BPF_EMIT_CALL(BPF_FUNC_map_lookup_elem),
-    BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, 1),
-    BPF_EXIT_INSN(),
-    BPF_STX_MEM(BPF_DW, BPF_REG_0, BPF_REG_8, 0),
-
-    BPF_MOV64_IMM(BPF_REG_0, 0),
-    BPF_EXIT_INSN()
-
-[1] https://lore.kernel.org/bpf/20200416211116.qxqcza5vo2ddnkdq@ast-mbp.dhcp.thefacebook.com/
-
-Fixes: 17a5267067f3 ("bpf: verifier (add verifier core)")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200417000007.10734-1-jannh@google.com
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/verifier.c                                    |   28 ++++++++++-----
- tools/testing/selftests/bpf/verifier/value_illegal_alu.c |    1 
- 2 files changed, 20 insertions(+), 9 deletions(-)
+ fs/pnode.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1866,6 +1866,15 @@ static bool register_is_const(struct bpf
- 	return reg->type == SCALAR_VALUE && tnum_is_const(reg->var_off);
+--- a/fs/pnode.c
++++ b/fs/pnode.c
+@@ -261,14 +261,13 @@ static int propagate_one(struct mount *m
+ 	child = copy_tree(last_source, last_source->mnt.mnt_root, type);
+ 	if (IS_ERR(child))
+ 		return PTR_ERR(child);
++	read_seqlock_excl(&mount_lock);
+ 	mnt_set_mountpoint(m, mp, child);
++	if (m->mnt_master != dest_master)
++		SET_MNT_MARK(m->mnt_master);
++	read_sequnlock_excl(&mount_lock);
+ 	last_dest = m;
+ 	last_source = child;
+-	if (m->mnt_master != dest_master) {
+-		read_seqlock_excl(&mount_lock);
+-		SET_MNT_MARK(m->mnt_master);
+-		read_sequnlock_excl(&mount_lock);
+-	}
+ 	hlist_add_head(&child->mnt_hash, list);
+ 	return count_mounts(m->mnt_ns, child);
  }
- 
-+static bool __is_pointer_value(bool allow_ptr_leaks,
-+			       const struct bpf_reg_state *reg)
-+{
-+	if (allow_ptr_leaks)
-+		return false;
-+
-+	return reg->type != SCALAR_VALUE;
-+}
-+
- static void save_register_state(struct bpf_func_state *state,
- 				int spi, struct bpf_reg_state *reg)
- {
-@@ -2056,6 +2065,16 @@ static int check_stack_read(struct bpf_v
- 			 * which resets stack/reg liveness for state transitions
- 			 */
- 			state->regs[value_regno].live |= REG_LIVE_WRITTEN;
-+		} else if (__is_pointer_value(env->allow_ptr_leaks, reg)) {
-+			/* If value_regno==-1, the caller is asking us whether
-+			 * it is acceptable to use this value as a SCALAR_VALUE
-+			 * (e.g. for XADD).
-+			 * We must not allow unprivileged callers to do that
-+			 * with spilled pointers.
-+			 */
-+			verbose(env, "leaking pointer from stack off %d\n",
-+				off);
-+			return -EACCES;
- 		}
- 		mark_reg_read(env, reg, reg->parent, REG_LIVE_READ64);
- 	} else {
-@@ -2416,15 +2435,6 @@ static int check_sock_access(struct bpf_
- 	return -EACCES;
- }
- 
--static bool __is_pointer_value(bool allow_ptr_leaks,
--			       const struct bpf_reg_state *reg)
--{
--	if (allow_ptr_leaks)
--		return false;
--
--	return reg->type != SCALAR_VALUE;
--}
--
- static struct bpf_reg_state *reg_state(struct bpf_verifier_env *env, int regno)
- {
- 	return cur_regs(env) + regno;
---- a/tools/testing/selftests/bpf/verifier/value_illegal_alu.c
-+++ b/tools/testing/selftests/bpf/verifier/value_illegal_alu.c
-@@ -88,6 +88,7 @@
- 	BPF_EXIT_INSN(),
- 	},
- 	.fixup_map_hash_48b = { 3 },
-+	.errstr_unpriv = "leaking pointer from stack off -8",
- 	.errstr = "R0 invalid mem access 'inv'",
- 	.result = REJECT,
- 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
 
 
