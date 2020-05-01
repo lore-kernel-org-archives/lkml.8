@@ -2,157 +2,296 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234FBC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3296FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0034B2137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jRmE9Gb0"
+	by mail.kernel.org (Postfix) with ESMTP id F39DA21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588364772;
+	bh=X013ppbIzSl3+DV4yEIiVEG1A5SM/AeuoeMnWsxMbwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ao4bsbc/DyWMvW4eBwz9Cs9c1FUDx3iiOQtjxb+mr0BlfPV1Asn/ll5lGNQevyIii
+	 hTKiyBeTvZBQUJBKtIsPYKUWBUxMsUl8iM7WFkKNTQ1ksVpVPukY9oxuqxkEu/VXCW
+	 9fQF+21/11ZZ1talnQWAFkq0eLa41SD19xZYDXo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgEAUYS (ORCPT
+        id S1726427AbgEAU0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgEAUYR (ORCPT
+        Fri, 1 May 2020 16:26:11 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39146 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgEAU0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:24:17 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671A6C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:24:17 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id c3so3507665otp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 13:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HLrxYxE4KXWJWxSR6j790DuMjgjgLciZtoYfOBBD2XM=;
-        b=jRmE9Gb0nYNOE+Gavs6LlCDzaHXpMvA6/ancYUlIUj40/huBaYsxa6CR3lXiBODPnq
-         ovGFy/mbQb8ZPe3F7AeF+k8Zix5htq4pol8EJ7Ar+yqxtXAC6DhmEZCaNDTluqCb4aDF
-         PBgesgxCzr7aOW1xZ9PfBrcUUAPXe9Ot6H4dD6Btdja08ZKVc5hnKYqUZbGRZK8jtuka
-         HnypsZJlgl3w6yyTU/Ph2zveCvWnYDcJLMTHX3rkt7xdpioEptH27a7RtxBQjzVc9pUJ
-         YxQXhioMnOHSacKIDd/c/5LI/SnrCBvJVZ3e5O/6MPBdt0/45psnpiIv1s//X8vlqe8G
-         LCoQ==
+        Fri, 1 May 2020 16:26:10 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m10so783649oie.6;
+        Fri, 01 May 2020 13:26:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HLrxYxE4KXWJWxSR6j790DuMjgjgLciZtoYfOBBD2XM=;
-        b=XIfkqYAHAhY7M/0Z3IRiG13n7zBBIipe57cA6E/BEL1f+MsJKco82KoDzqcEL5Hxcb
-         HAsmBch8i3re67bcrIy0UyoK7oxCC95cRAOvdpxtHnxkCjYBMM6DxmFwAa5sosOB+pWr
-         Ls6xBa7zpoVORSXLYi6nsftOLZgFKouzXSGjfXYo66FV8kTsMY+wy8QAAFWMsYEx0lzQ
-         6NeSlW+o05O12OC1KKY4ldj8nnNqrr/jJFyPBISRPgRWkmX5k2HBidGtLx00+iJadA5A
-         Y8IxgpfIpYWFZCChfsaU/Q9Edw1/LX6hCwBunQhuFyzDOjvj292EDsLFeSsMf0tCqKx0
-         7daw==
-X-Gm-Message-State: AGi0PuYbqlk7MR09vTuDyu807L0WBXPbsk+JZWAVrGN6C1jeNTs3uKcJ
-        OSlg3RZiPVW3ol1QKzgaYEEgsnsgt2zxjS0OVWXC7IT8pio=
-X-Google-Smtp-Source: APiQypJvQMFd1/tXMffA+HP4JyFa6GJMbmz3cbYhTudBmpe5z1c/z3d+Q4N06aE2tR5yaKqNePvywrz1zJ+hYsZnlYI=
-X-Received: by 2002:a9d:2622:: with SMTP id a31mr5303176otb.231.1588364656534;
- Fri, 01 May 2020 13:24:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3KGOcilJxikkL+Nmr3AHMzqEO+ivM6wapTQZZpbzgL8=;
+        b=cHzx/D+6hh3oQ2Aoh2VUNhvLlCnKcCmfUZOTTkiOJcIYP6M1SnFXfF2k3zyTcn9VdQ
+         iPKYy2r5GNmm7xGfsp0zBJgDsX1Rb21KJgJEsbqUyDsqfD+e4fAySPjlAikXH378z77k
+         qYHzjSt0g/T8uhavSA2FANNkTCyCePlVG0nZPVOcBvXMzr64DdxtTNYElMQeX3hV1hn/
+         9aw0Du0ED3aUXCf2B2kEMPY7Ys/TkL/Oag3cSgBLG9NwoYihrTVQTer+EPWmOtCZuq9D
+         iXEEiypKhJdus2Td/JFlvWjgaZLjujwbwI8uXPtkWsBLUZI8WgDmhkT9auiqWVFl0q9Z
+         fH2g==
+X-Gm-Message-State: AGi0PuZ/O6PEzKyQ/GFhCwNj6IyBHokj+czZAlzIY7ehL4NMJWhW/nEt
+        ZOirjRLBQ68lSLU3GynJzc9Ejh0=
+X-Google-Smtp-Source: APiQypKuIa2EayO6sRtISWTj8/Remk+FnQ3MtRzI4m9kvti4r3vQ9LWm9cRMPxzpDhc6m14oEPwVGg==
+X-Received: by 2002:aca:c311:: with SMTP id t17mr986175oif.169.1588364769215;
+        Fri, 01 May 2020 13:26:09 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f21sm213498oig.41.2020.05.01.13.26.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 13:26:08 -0700 (PDT)
+Received: (nullmailer pid 23725 invoked by uid 1000);
+        Fri, 01 May 2020 20:26:07 -0000
+Date:   Fri, 1 May 2020 15:26:07 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v8 07/10] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+Message-ID: <20200501202607.GA13720@bogus>
+References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
+ <20200427081952.3536741-8-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-References: <20200411045918.179455-1-saravanak@google.com> <86sghas7so.wl-maz@kernel.org>
- <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
- <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
- <20200429102832.4eee22b4@why> <CAGETcx_d0aM+MdeOFDaXDnTEs85rVY=H7zvhZf7NNB4w-t_CGg@mail.gmail.com>
- <5b605bd46d3ef213c7ec82d02967e4bb@kernel.org>
-In-Reply-To: <5b605bd46d3ef213c7ec82d02967e4bb@kernel.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 1 May 2020 13:23:40 -0700
-Message-ID: <CAGETcx9kYKOEAmLbJzmOucR2Z4qy9PCY2=UCYdYTJWTL=BeZNQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper macros
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427081952.3536741-8-adrian.ratiu@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 1:48 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-04-29 20:04, Saravana Kannan wrote:
-> > On Wed, Apr 29, 2020 at 2:28 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> [...]
->
-> >> One thing though: this seems to be exclusively DT driven. Have you
-> >> looked into how that would look like for other firmware types such as
-> >> ACPI?
-> >
-> > I'm not very familiar with ACPI at all. I've just started to learn
-> > about how it works in the past few months poking at code when I have
-> > some time. So I haven't tried to get this to work with ACPI nor do I
-> > think I'll be able to do that anytime in the near future. I hope that
-> > doesn't block this from being used for DT based platforms.
->
-> As long as you don't try to modularise a driver that does both DT and
-> ACPI, you'll be safe. I'm also actively trying to discourage people
-> from inventing custom irqchips on ACPI platforms (the spec almost
-> forbids them, but not quite).
->
-> >> Another thing is the handling of dependencies. Statically built
-> >> irqchips are initialized in the right order based on the topology
-> >> described in DT, and are initialized early enough that client devices
-> >> will find their irqchip This doesn't work here, obviously.
-> >
-> > Yeah, I read that code thoroughly :)
-> >
-> >> How do you
-> >> propose we handle these dependencies, both between irqchip drivers and
-> >> client drivers?
-> >
-> > For client drivers, we don't need to do anything. The IRQ apis seem to
-> > already handle -EPROBE_DEFER correctly in this case.
-> >
-> > For irqchip drivers, the easy answer can be: Load the IRQ modules
-> > early if you make them modules.
->
-> Uhuh. I'm afraid that's not a practical solution. We need to offer the
-> same behaviour for both and not rely on the user to understand the
-> topology of the SoC.
->
-> > But in my case, I've been testing this with fw_devlink=on. The TL;DR
-> > of "fw_devlink=on" in this context is that the IRQ devices will get
-> > device links created based on "interrupt-parent" property. So, with
-> > the magic of device links, these IRQ devices will probe in the right
-> > topological order without any wasted deferred probe attempts. For
-> > cases without fw_devlink=on, I think I can improve
-> > platform_irqchip_probe() in my patch to check if the parent device has
-> > probed and defer if it hasn't.
->
-> Seems like an interesting option. Two things then:
->
-> - Can we enforce the use of fw_devlink for modularized irqchips?
+On Mon, Apr 27, 2020 at 11:19:49AM +0300, Adrian Ratiu wrote:
+> This provides an example DT binding for the MIPI DSI host controller
+> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: devicetree@vger.kernel.org
+> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes since v7:
+>   - Clarified port@0,1 descriptions, marked them as required and
+>   added missing port@0 in example (Laurent)
+> 
+> Changes since v6:
+>   - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
+>   - Moved *-cells properties outside patternProperties (Laurent)
+>   - Removed the panel port documentation (Laurent)
+>   - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
+> 
+> Changes since v5:
+>   - Fixed missing reg warning (Fabio)
+>   - Updated dt-schema and fixed warnings (Rob)
+> 
+> Changes since v4:
+>   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
+>   and addressed received binding feedback (Rob)
+> 
+> Changes since v3:
+>   - Added commit message (Neil)
+>   - Converted to yaml format (Neil)
+>   - Minor dt node + driver fixes (Rob)
+>   - Added small panel example to the host controller binding
+> 
+> Changes since v2:
+>   - Fixed commit tags (Emil)
+> ---
+>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 145 ++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> new file mode 100644
+> index 0000000000000..c2c3489e63fa3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> @@ -0,0 +1,145 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX6 DW MIPI DSI Host Controller
+> +
+> +maintainers:
+> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
+> +
+> +description: |
+> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
+> +  IP block with a companion PHY IP.
+> +
+> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
+> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
+> +  the following device-specific properties.
+> +
+> +allOf:
+> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
+> +
+> +properties:
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  compatible:
+> +    items:
+> +      - const: fsl,imx6q-mipi-dsi
+> +      - const: snps,dw-mipi-dsi
 
-fw_devlink doesn't have any config and it's a command line option. So
-not sure how you can enforce that.
+This schema is going to be applied on any node with 'snps,dw-mipi-dsi'. 
+You'll need a custom 'select' with only 'fsl,imx6q-mipi-dsi'. There's a 
+few examples in the tree.
 
-> - For those irqchips that can be modularized, it is apparent that they
->    should have been written as platform devices the first place. Maybe
->    we should just do that (long term, though).
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
+> +      - description: DSI bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: pclk
+> +
+> +  fsl,gpr:
+> +    description:
+> +      Phandle to the iomuxc-gpr region containing the multiplexer ctrl register.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description:
+> +          DSI input port connected to a parallel RGB LTDC output port.
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          DSI serial RGB output port connected to a panel or bridge input port.
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +additionalProperties: false
 
-I agree. If they can be platform devices, they should be. But when
-those platform device drivers are built in, you'll either need:
-1) fw_devlink=on to enforce the topological init order
-Or
-2) have a generic irqchip probe helper function that ensures that.
-My patch with some additional checks added to platform_irqchip_probe()
-can provide (2).
+When including other schemas, you need 'unevalatedProperties: false' 
+instead. Then you can drop anything here that doesn't have more 
+constraints like the next property:
 
-In the short term, my patch series also makes it easier to convert
-existing non-platform drivers into platform drivers.
-
-So if I fix up platform_irqchip_probe() to also do -EPROBE_DEFER to
-enforce topology, will that make this patch acceptable?
-
--Saravana
+> +
+> +patternProperties:
+> +  "^panel@[0-3]$":
+> +    type: object
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - ports
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    dsi: dsi@21e0000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+> +        reg = <0x021e0000 0x4000>;
+> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+> +        fsl,gpr = <&gpr>;
+> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
+> +        clock-names = "ref", "pclk";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@0 {
+> +                reg = <0>;
+> +                mipi_mux_0: endpoint {
+> +                    remote-endpoint = <&ipu1_di0_mipi>;
+> +                };
+> +            };
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi_out: endpoint {
+> +                    remote-endpoint = <&panel_in>;
+> +                };
+> +            };
+> +        };
+> +
+> +        panel@0 {
+> +            compatible = "sharp,ls032b3sx01";
+> +            reg = <0>;
+> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                port@0 {
+> +                    reg = <0>;
+> +                    panel_in: endpoint {
+> +                        remote-endpoint = <&dsi_out>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.26.0
+> 
