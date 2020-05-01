@@ -2,329 +2,215 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E134AC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B912C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7F4216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB9A216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588366566;
-	bh=nAPIQ/ctzcZNlSeI4vthYzGts69FdtrP1YhBQv5x4vo=;
+	s=default; t=1588366661;
+	bh=zQmw8TbV6rcDNsLeJ9F8FOdkMTGIKtNq4ynWn7aeG6w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iI2rMn78dgVn3q2X/jCFuWQ7ZuEKI6ifSCHFVZ4CMd2OjfzvMmKLfnbA2eawXawNf
-	 4xy36OIhUri5M3dWYT4mHpO4dLNBK2b5lKQKB7FShNeXQ3/eXQ1F9iu9Cup9CB/ZXP
-	 wp9wG8o9orN/xJ1GvFB3ZgSLL8LNpjweFNNqcqiY=
+	b=SapYcjPQHvRcrrNQfJFZCz7mVHa9pg4eYwxoBxqO9UrSRioHsfhgwss/NrGx0iewF
+	 ZH1QH3LK3Dd+Y1bp3C+iy1Qk/dWgzuqL58m61lYc+2dKw34X9k9nOUJA2CR51jM02X
+	 4lng8BNXrz+c1/lyyejVgzqjntz9t1SDBMG/Qsbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgEAU4F (ORCPT
+        id S1726558AbgEAU5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:56:05 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37326 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgEAU4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:56:03 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r25so860820oij.4;
-        Fri, 01 May 2020 13:56:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z6IC17tZW6vqT9CmLTlwRsx4notXDh7Wwch+6E+uiiM=;
-        b=tkaC0Za+0bCuTNoJJmN47yZsff7osoJ3aTXl7VsFcLRWYazlX/JkD0vpTaLz7hHz9Z
-         6mP3cnvOso+JnqRQ2Pzb+awsAOixfAHiZq3CCQ1Se9E8HpJhHvOKChdLmL+dHwFEiFIw
-         wGsKF2dLo8heqdKDPske2MJVUoPn6rMaWLOzNw0liJPQplonhjBaFb2iZ9K+hXQHjnRu
-         gJ5X/u8U6pIBlngfZ123VBSHrChlmSZHCvgIsbvbmdVrgGlEAhQWC0h0uaSsaHZ+O3t5
-         izc2KFxR/cSmkjwLLpXwqWjbV5MxnvudLcW03jA2MLmM6peMyRCilHN+TDtNhP3y9w7h
-         B8MA==
-X-Gm-Message-State: AGi0PuafLBsnOpnXJHz3uj8KVtnMkPnPhJ0FmOQev1MaZ5H0AB/dIdOh
-        6gYLCDjb/BaXOSEsv+wQ5Q==
-X-Google-Smtp-Source: APiQypKwloeYWVQME9YEttq2mIKBrICEUzFbLarsog4cs4kj61sUK0KRhbHf2yiUjkS9hilRLwofdQ==
-X-Received: by 2002:aca:895:: with SMTP id 143mr1072960oii.153.1588366560856;
-        Fri, 01 May 2020 13:56:00 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r6sm1093672oom.26.2020.05.01.13.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:56:00 -0700 (PDT)
-Received: (nullmailer pid 8107 invoked by uid 1000);
-        Fri, 01 May 2020 20:55:59 -0000
-Date:   Fri, 1 May 2020 15:55:59 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     lee.jones@linaro.org, broonie@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, jdelvare@suse.com, linux@roeck-us.net,
-        linus.walleij@linaro.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 6/6] mfd: lochnagar: Move binding over to dtschema
-Message-ID: <20200501205559.GB24163@bogus>
-References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
- <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
+        Fri, 1 May 2020 16:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgEAU5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:57:40 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F52C208DB;
+        Fri,  1 May 2020 20:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588366659;
+        bh=zQmw8TbV6rcDNsLeJ9F8FOdkMTGIKtNq4ynWn7aeG6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rJrOsfG54lH/5iT4LJGsZVvBobr/BVhEDqwOCe0/S5MOBZSKNYFyrxyUHWYUrsfcC
+         McZLRJYs9dVMs92X+SmecC1U0Ym7h3sK4u9sTi6n3ufcRYkRTHYkdrHyZCSUzmbvDg
+         egc92ej29iM0zVZH4TUEGfCkIc/aL354VLXA5j5s=
+Received: by pali.im (Postfix)
+        id D011FA55; Fri,  1 May 2020 22:57:36 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:57:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Steven J. Magnani" <steve@digidescorp.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 09/15] udf: avoid gcc-10 zero-length-bounds warnings
+Message-ID: <20200501205736.uztnq4wlr4ckkhvm@pali>
+References: <20200430213101.135134-1-arnd@arndb.de>
+ <20200430213101.135134-10-arnd@arndb.de>
+ <20200430215450.anfwm4zikvhy2bt5@pali>
+ <CAK8P3a0_BuKDK7X8dTHyx7t++CGjy3jhDVvL=Jo5=kcUxmtobg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a0_BuKDK7X8dTHyx7t++CGjy3jhDVvL=Jo5=kcUxmtobg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:28:12AM +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  .../devicetree/bindings/mfd/cirrus,lochnagar.txt   |  85 ----------
->  .../devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 183 +++++++++++++++++++++
->  MAINTAINERS                                        |  12 +-
->  3 files changed, 189 insertions(+), 91 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-
-> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-> new file mode 100644
-> index 0000000000000..b2967f141b2af
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-> @@ -0,0 +1,183 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/cirrus,lochnagar.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cirrus Logic Lochnagar Audio Development Board
-> +
-> +maintainers:
-> +  - patches@opensource.cirrus.com
-> +
-> +description: |
-> +  Lochnagar is an evaluation and development board for Cirrus Logic
-> +  Smart CODEC and Amp devices. It allows the connection of most Cirrus
-> +  Logic devices on mini-cards, as well as allowing connection of
-> +  various application processor systems to provide a full evaluation
-> +  platform.  Audio system topology, clocking and power can all be
-> +  controlled through the Lochnagar, allowing the device under test
-> +  to be used in a variety of possible use cases.
-> +
-> +  Also see these documents for generic binding information:
-> +    [1] GPIO : ../gpio/gpio.txt
-> +
-> +  And these for relevant defines:
-> +    [2] include/dt-bindings/pinctrl/lochnagar.h
-> +    [3] include/dt-bindings/clock/lochnagar.h
-> +
-> +  And these documents for the required sub-node binding details:
-> +    [4] Clock: ../clock/cirrus,lochnagar.yaml
-> +    [5] Pinctrl: ../pinctrl/cirrus,lochnagar.yaml
-> +    [6] Regulator: ../regulator/cirrus,lochnagar.yaml
-> +    [7] Sound: ../sound/cirrus,lochnagar.yaml
-> +    [8] Hardware Monitor: ../hwmon/cirrus,lochnagar.yaml
-> +
-> +allOf:
-> +  - $ref: /schemas/clock/cirrus,lochnagar.yaml#
-> +  - $ref: /schemas/pinctrl/cirrus,lochnagar.yaml#
-> +  - $ref: /schemas/regulator/cirrus,lochnagar.yaml#
-
-The preferred form is to define the child nodes in this schema and then 
-reference the child schema:
-
-lochnagar-clk:
-  type: object
-  $ref: /schemas/clock/cirrus,lochnagar.yaml#
-
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - cirrus,lochnagar2
-> +    then:
-> +      allOf:
-> +        - $ref: /schemas/sound/cirrus,lochnagar.yaml#
-> +        - $ref: /schemas/hwmon/cirrus,lochnagar.yaml#
-
-That makes this part a bit more challenging:
-
-then:
-  required:
-    - lochnagar-sc
-else:
-  not:
-    required:
-      - lochnagar-sc
-
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-
-So this is valid?
-
-"foo", "cirrus,lochnagar1"
-
-I think you just want to drop 'contains'.
-
-> +      enum:
-> +        - cirrus,lochnagar1
-> +        - cirrus,lochnagar2
-> +
-> +  reg:
-> +    description:
-> +      I2C slave address.
-
-No need for generic descriptions of common properties.
-
-> +    const: 0x22
-> +
-> +  reset-gpios:
-> +    description: |
-> +      Reset line to the Lochnagar, see [1].
-> +    maxItems: 1
-> +
-> +  present-gpios:
-> +    description: |
-> +      Host present line, indicating the presence of a
-> +      host system, see [1]. This can be omitted if the present line is
-> +      tied in hardware.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - lochnagar-clk
-> +  - lochnagar-pinctrl
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clk/lochnagar.h>
-> +    #include <dt-bindings/pinctrl/lochnagar.h>
-> +    i2c@e0004000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        reg = <0xe0004000 0x1000>;
-> +
-> +        lochnagar: lochnagar@22 {
-> +            compatible = "cirrus,lochnagar2";
-> +            reg = <0x22>;
-> +
-> +            reset-gpios = <&gpio0 55 0>;
-> +            present-gpios = <&gpio0 60 0>;
-> +
-> +            lochnagarclk: lochnagar-clk {
-> +                compatible = "cirrus,lochnagar2-clk";
-> +
-> +                #clock-cells = <1>;
-> +                clocks = <&clkaudio>, <&clkpmic>;
-> +                clock-names = "ln-gf-mclk2", "ln-pmic-32k";
-> +
-> +                assigned-clocks = <&lochnagarclk LOCHNAGAR_CDC_MCLK1>,
-> +                                  <&lochnagarclk LOCHNAGAR_CDC_MCLK2>;
-> +                assigned-clock-parents = <&clkaudio>, <&clkpmic>;
-> +            };
-> +
-> +            clkpmic: lochnagar-pmic32k {
-> +                compatible = "fixed-clock";
-> +                #clock-cells = <0>;
-> +                clock-frequency = <32768>;
-> +            };
-> +
-> +            lochnagar-pinctrl {
-> +                compatible = "cirrus,lochnagar-pinctrl";
-> +
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +                gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
-> +
-> +                pinctrl-names = "default";
-> +                pinctrl-0 = <&pinsettings>;
-> +
-> +                pinsettings: pin-settings {
-> +                    ap2aif {
-> +                        input-enable;
-> +                        groups = "gf-aif1";
-> +                        function = "codec-aif3";
-> +                    };
-> +                    codec2aif {
-> +                        output-enable;
-> +                        groups = "codec-aif3";
-> +                        function = "gf-aif1";
-> +                    };
-> +                };
-> +            };
-> +
-> +            lochnagar-sc {
-> +                compatible = "cirrus,lochnagar2-soundcard";
-> +
-> +                #sound-dai-cells = <1>;
-> +
-> +                clocks = <&lochnagarclk LOCHNAGAR_SOUNDCARD_MCLK>;
-> +                clock-names = "mclk";
-> +            };
-> +
-> +            lochnagar-hwmon {
-> +                compatible = "cirrus,lochnagar2-hwmon";
-> +            };
-> +
-> +            MIC1VDD {
-> +                compatible = "cirrus,lochnagar2-mic1vdd";
-> +
-> +                MICBIAS1-supply = <&eric>;
-> +
-> +                cirrus,micbias-input = <3>;
-> +            };
-> +
-> +            MICVDD {
-> +                compatible = "cirrus,lochnagar2-micvdd";
-> +
-> +                SYSVDD-supply = <&wallvdd>;
-> +
-> +                regulator-min-microvolt = <3300000>;
-> +                regulator-max-microvolt = <3300000>;
-> +            };
-> +
-> +            VDD1V8 {
-> +                compatible = "regulator-fixed";
-> +
-> +                regulator-name = "VDD1V8";
-> +                regulator-min-microvolt = <1800000>;
-> +                regulator-max-microvolt = <1800000>;
-> +                regulator-boot-on;
-> +                regulator-always-on;
-> +
-> +                vin-supply = <&wallvdd>;
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e64e5db314976..a2b94e8cf585c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4062,12 +4062,12 @@ M:	Charles Keepax <ckeepax@opensource.cirrus.com>
->  M:	Richard Fitzgerald <rf@opensource.cirrus.com>
->  L:	patches@opensource.cirrus.com
->  S:	Supported
-> -F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
-> -F:	Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
-> -F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
-> -F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
-> -F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-> -F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
-> +F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
-> +F:	Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
-> +F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-> +F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
-> +F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.yaml
-> +F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
->  F:	Documentation/hwmon/lochnagar.rst
->  F:	drivers/clk/clk-lochnagar.c
->  F:	drivers/hwmon/lochnagar-hwmon.c
-> -- 
-> 2.11.0
+On Friday 01 May 2020 22:30:27 Arnd Bergmann wrote:
+> On Thu, Apr 30, 2020 at 11:54 PM Pali Rohár <pali@kernel.org> wrote:
+> >
+> > On Thursday 30 April 2020 23:30:51 Arnd Bergmann wrote:
+> > > gcc-10 warns about writes to the empty freeSpaceTable[] array, with
+> > > many instances like:
+> > >
+> > > fs/udf/balloc.c: In function 'udf_bitmap_new_block':
+> > > fs/udf/balloc.c:101:36: error: array subscript 65535 is outside the bounds of an interior zero-length array '__le32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
+> > >   101 |  le32_add_cpu(&lvid->freeSpaceTable[partition], cnt);
+> > >       |                ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+> > > In file included from fs/udf/udfdecl.h:7,
+> > >                  from fs/udf/balloc.c:22:
+> > > fs/udf/ecma_167.h:363:11: note: while referencing 'freeSpaceTable'
+> > >   363 |  __le32   freeSpaceTable[0];
+> > >       |           ^~~~~~~~~~~~~~
+> >
+> > Hi Arnd! This looks like a false-positive warning.
 > 
+> Right, sorry for not making that clearer in the changelog.
+> 
+> > > These can all be avoided by using a flexible array member instead.
+> > >
+> > > Another warning is a bit more obscure:
+> > >
+> > > fs/udf/super.c: In function 'udf_count_free':
+> > > fs/udf/super.c:2521:26: warning: array subscript '(<unknown>) + 4294967295' is outside the bounds of an interior zero-length array '__le32[0]' {aka 'unsigned int[0]'} [-Wzero-length-bounds]
+> > >  2521 |      lvid->freeSpaceTable[part]);
+> > >
+> > > Work around this one by changing the array access to equivalent
+> > > pointer arithmetic, as there cannot be multiple flexible-array
+> > > members in a single struct.
+> >
+> 
+> > > @@ -360,9 +360,9 @@ struct logicalVolIntegrityDesc {
+> > >       uint8_t                 logicalVolContentsUse[32];
+> > >       __le32                  numOfPartitions;
+> > >       __le32                  lengthOfImpUse;
+> > > -     __le32                  freeSpaceTable[0];
+> > >       __le32                  sizeTable[0];
+> > >       uint8_t                 impUse[0];
+> > > +     __le32                  freeSpaceTable[];
+> >
+> > Please do not change order of members in these structures. Order is
+> > strictly defined by ECMA 167 standard and changing them you would just
+> > confuse reader. In LVID is free space table before size table.
+> 
+> Ok
+> 
+> > If you do not like GNU C extension for zero-length arrays then just
+> > replace it by standard C99 flexible arrays. I think that there is no
+> > reason to not use standard C99 language constructions, just nobody had
+> > motivation or time to change (working) code.
+> 
+> No, the problem is that only the last member can be a flexible array,
+
+I know, that is why I replaced those 3 zero-length arrays by just one
+flexible array in udftools project.
+
+> so when impUse[] is the last member, freeSpaceTable has to be a zero
+> length array.
+> 
+> > Also this file is semi-synchronized with udftools project in which I
+> > already replaced all GNU C zero-length arrays by C99 flexible arrays.
+> >
+> > You can take inspiration what I did with logicalVolIntegrityDesc:
+> > https://github.com/pali/udftools/commit/f851d84478ce881d516a76018745fa163f803880#diff-1e1a5b89f620d380f22b973f9449aeaeL381-R384
+> 
+> Right, this is likely the best workaround.
+> 
+> > Anyway, if you have a better idea what to do with such on-disk structure
+> > and how to represent it in C struct syntax, let me know as it could be
+> > updated also in udftools project.
+> 
+> The trick I used for impUse[] would also work for freeSpaceTable[] to avoid
+> the gcc warning, it's still not great, but maybe you like this better:
+> 
+> arnd@threadripper:~/arm-soc$ git diff
+> diff --git a/fs/udf/balloc.c b/fs/udf/balloc.c
+> index 02f03fadb75b..666d022eb00b 100644
+> --- a/fs/udf/balloc.c
+> +++ b/fs/udf/balloc.c
+> @@ -98,7 +98,7 @@ static void udf_add_free_space(struct super_block
+> *sb, u16 partition, u32 cnt)
+>                 return;
+> 
+>         lvid = (struct logicalVolIntegrityDesc *)sbi->s_lvid_bh->b_data;
+> -       le32_add_cpu(&lvid->freeSpaceTable[partition], cnt);
+> +       le32_add_cpu(lvid->freeSpaceTable + partition, cnt);
+>         udf_updated_lvid(sb);
+>  }
+> 
+> diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
+> index 14ffe27342bc..215d97d7edc4 100644
+> --- a/fs/udf/ecma_167.h
+> +++ b/fs/udf/ecma_167.h
+> @@ -360,9 +360,9 @@ struct logicalVolIntegrityDesc {
+>         uint8_t                 logicalVolContentsUse[32];
+>         __le32                  numOfPartitions;
+>         __le32                  lengthOfImpUse;
+>         __le32                  freeSpaceTable[0];
+>         __le32                  sizeTable[0];
+> -       uint8_t                 impUse[0];
+> +       uint8_t                 impUse[];
+>  } __packed;
+> 
+>  /* Integrity Type (ECMA 167r3 3/10.10.3) */
+> diff --git a/fs/udf/super.c b/fs/udf/super.c
+> index 379867888c36..a1fc51c2261e 100644
+> --- a/fs/udf/super.c
+> +++ b/fs/udf/super.c
+> @@ -2517,8 +2517,8 @@ static unsigned int udf_count_free(struct super_block *sb)
+>                         (struct logicalVolIntegrityDesc *)
+>                         sbi->s_lvid_bh->b_data;
+>                 if (le32_to_cpu(lvid->numOfPartitions) > part) {
+> -                       accum = le32_to_cpu(
+> -                                       lvid->freeSpaceTable[part]);
+> +                       accum = le32_to_cpup(
+> +                                       (lvid->freeSpaceTable + part));
+>                         if (accum == 0xFFFFFFFF)
+>                                 accum = 0;
+>                 }
+> 
+
+This is much better as it does not change order of members in LVID
+structure. I'm fine with it.
+
+> This version could easily be backported to stable kernels to let them be
+> compiled with gcc-10
+
+I do not know what triggers that false-positive warning. But if you
+think that this change is enough to "hide" that warning, you can add my
+Acked-by: Pali Rohár <pali@kernel.org>
+
+For sure it is better to have just small changes needed for backporting.
+
+> and then synchronizing with the udftools version of
+> the header needs additional changes on top, which do not need to be
+> backported.
+
+Both header files (ECMA and OSTA) should be in-sync with udftools since
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=614644676394951e73194ea96b3f026c1adf5443
+Differences in kernel code are: usage of zero-length array members,
+usage of integer types and usage of structure attributes.
+
+If you are planning in future to do some changes in those ECMA or OSTA
+header files, please send updates also for udftools. So we will have
+header files synchronized as much as possible.
