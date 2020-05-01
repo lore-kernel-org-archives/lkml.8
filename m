@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57E0C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4CFC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 996B720857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61988208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344382;
-	bh=g0xl92nV93LD4/lKfrxGhjaAWkLh3HtF4UtH247ZGKI=;
+	s=default; t=1588344395;
+	bh=WRDqPZ+9jZ7Sh4Rzrsi/WI+WQMyF4skUB3aR+mqKkaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2d7JJmPUTdu3HsxRZpMLesWonEXe43ubp6Q4iahtFQ6SAtKBKZkpg/Cpp3Ww+lxc
-	 hMsIsMR16xmNE1OaFs0ymnEbtAVT9qRbQWmVHuD70lyzIvijRy0SClQlbFkqzND4mU
-	 feD4Lc4QOltx7YKCBqYVeNBMkVg5eoUN3oo2UErg=
+	b=w+dzIehjegmGTHvFSb7B4H2y6f3wHA+C2K+q5pUo2GNAuPzSoT1LEpYe0rQlF4SfA
+	 TA8OG9eR/SbpC6LReLjpkhgz/sKn80kQq5Am886JUq6Q56/gqOQIC+raef84rztqIS
+	 VlEfXWOZU7tp4t4TF3s0EW9hkegmuf5oDj4TbiMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgEAOqW (ORCPT
+        id S1730121AbgEAOqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52906 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729581AbgEAOpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:45:11 -0400
+        id S1729574AbgEAOpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:10 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0469249A0;
+        by mail.kernel.org (Postfix) with ESMTPSA id E1967249A2;
         Fri,  1 May 2020 14:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344307;
-        bh=g0xl92nV93LD4/lKfrxGhjaAWkLh3HtF4UtH247ZGKI=;
+        bh=WRDqPZ+9jZ7Sh4Rzrsi/WI+WQMyF4skUB3aR+mqKkaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xd/NL49/dvuO0ZhMkB1C0YKdTBggjnhIVkBTXcQpOsalVpfR/jdOC7RX/0ezpdC4W
-         ktpvl6lE0vFsCIBK8YuzPDGVbtlWcJ/LObGkjRRaAGN3cend7heH8ycDn2XugiB9j7
-         IuOLIsq79r7dN8BKpgzP8o/MnCoRhdCN3upuYilo=
+        b=l+QT+cIYnuKkZ+Hk1Cdk4sw4Ir+eNQ9ca3iE5nirKf1jfyhGd+LtUFJPYonvsQ7KE
+         /oiT19PYwNSFLCwgPg9qlhQxQCbhUcZhaZx0FRptRQghTMfpRjBHHnLETPmdes0Mv3
+         skjnBymoijLFEBaw0F6kPoiDlCKEKuH5Ck3Xbvmc=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuU-00FCf6-2B; Fri, 01 May 2020 16:45:02 +0200
+        id 1jUWuT-00FCeq-Vq; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 32/37] docs: networking: device drivers: convert ti/cpsw_switchdev.txt to ReST
-Date:   Fri,  1 May 2020 16:44:54 +0200
-Message-Id: <f7e5b2407ae1731d6776aebe983e516de48ea85f.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Sean Tranchetti <stranche@codeaurora.org>,
+        netdev@vger.kernel.org
+Subject: [PATCH 29/37] docs: networking: device drivers: convert qualcomm/rmnet.txt to ReST
+Date:   Fri,  1 May 2020 16:44:51 +0200
+Message-Id: <41d85f504fe80c7f1baaa96095b8ce50f74e5681.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -62,370 +65,138 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- adjust titles and chapters, adding proper markups;
-- use :field: markup;
+- add a document title;
 - mark code blocks and literals as such;
+- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/device_drivers/index.rst       |   1 +
- ...{cpsw_switchdev.txt => cpsw_switchdev.rst} | 239 ++++++++++--------
- 2 files changed, 137 insertions(+), 103 deletions(-)
- rename Documentation/networking/device_drivers/ti/{cpsw_switchdev.txt => cpsw_switchdev.rst} (51%)
+ .../networking/device_drivers/index.rst       |  1 +
+ .../qualcomm/{rmnet.txt => rmnet.rst}         | 43 ++++++++++++-------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 30 insertions(+), 16 deletions(-)
+ rename Documentation/networking/device_drivers/qualcomm/{rmnet.txt => rmnet.rst} (73%)
 
 diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 3479e6f576c3..b3c0c473de2b 100644
+index 55837244eaad..66ed884548cc 100644
 --- a/Documentation/networking/device_drivers/index.rst
 +++ b/Documentation/networking/device_drivers/index.rst
-@@ -47,6 +47,7 @@ Contents:
-    qualcomm/rmnet
-    sb1000
-    smsc/smc9
-+   ti/cpsw_switchdev
+@@ -44,6 +44,7 @@ Contents:
+    microsoft/netvsc
+    neterion/s2io
+    neterion/vxge
++   qualcomm/rmnet
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/device_drivers/ti/cpsw_switchdev.txt b/Documentation/networking/device_drivers/ti/cpsw_switchdev.rst
-similarity index 51%
-rename from Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
-rename to Documentation/networking/device_drivers/ti/cpsw_switchdev.rst
-index 12855ab268b8..1241ecac73bd 100644
---- a/Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
-+++ b/Documentation/networking/device_drivers/ti/cpsw_switchdev.rst
-@@ -1,30 +1,44 @@
--* Texas Instruments CPSW switchdev based ethernet driver 2.0
+diff --git a/Documentation/networking/device_drivers/qualcomm/rmnet.txt b/Documentation/networking/device_drivers/qualcomm/rmnet.rst
+similarity index 73%
+rename from Documentation/networking/device_drivers/qualcomm/rmnet.txt
+rename to Documentation/networking/device_drivers/qualcomm/rmnet.rst
+index 6b341eaf2062..70643b58de05 100644
+--- a/Documentation/networking/device_drivers/qualcomm/rmnet.txt
++++ b/Documentation/networking/device_drivers/qualcomm/rmnet.rst
+@@ -1,4 +1,11 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+======================================================
-+Texas Instruments CPSW switchdev based ethernet driver
-+======================================================
-+
-+:Version: 2.0
-+
-+Port renaming
-+=============
- 
--- Port renaming
- On older udev versions renaming of ethX to swXpY will not be automatically
- supported
--In order to rename via udev:
--ip -d link show dev sw0p1 | grep switchid
- 
--SUBSYSTEM=="net", ACTION=="add", ATTR{phys_switch_id}==<switchid>, \
--        ATTR{phys_port_name}!="", NAME="sw0$attr{phys_port_name}"
-+In order to rename via udev::
- 
-+    ip -d link show dev sw0p1 | grep switchid
-+
-+    SUBSYSTEM=="net", ACTION=="add", ATTR{phys_switch_id}==<switchid>, \
-+	    ATTR{phys_port_name}!="", NAME="sw0$attr{phys_port_name}"
-+
-+
-+Dual mac mode
-+=============
- 
--====================
--# Dual mac mode
--====================
- - The new (cpsw_new.c) driver is operating in dual-emac mode by default, thus
--working as 2 individual network interfaces. Main differences from legacy CPSW
--driver are:
-+  working as 2 individual network interfaces. Main differences from legacy CPSW
-+  driver are:
-+
-  - optimized promiscuous mode: The P0_UNI_FLOOD (both ports) is enabled in
--addition to ALLMULTI (current port) instead of ALE_BYPASS.
--So, Ports in promiscuous mode will keep possibility of mcast and vlan filtering,
--which is provides significant benefits when ports are joined to the same bridge,
--but without enabling "switch" mode, or to different bridges.
-+   addition to ALLMULTI (current port) instead of ALE_BYPASS.
-+   So, Ports in promiscuous mode will keep possibility of mcast and vlan
-+   filtering, which is provides significant benefits when ports are joined
-+   to the same bridge, but without enabling "switch" mode, or to different
-+   bridges.
-  - learning disabled on ports as it make not too much sense for
-    segregated ports - no forwarding in HW.
-  - enabled basic support for devlink.
- 
-+   ::
-+
- 	devlink dev show
- 		platform/48484000.switch
- 
-@@ -38,22 +52,25 @@ but without enabling "switch" mode, or to different bridges.
- 		cmode runtime value false
- 
- Devlink configuration parameters
--====================
-+================================
-+
- See Documentation/networking/devlink/ti-cpsw-switch.rst
- 
--====================
--# Bridging in dual mac mode
--====================
-+Bridging in dual mac mode
-+=========================
-+
- The dual_mac mode requires two vids to be reserved for internal purposes,
- which, by default, equal CPSW Port numbers. As result, bridge has to be
--configured in vlan unaware mode or default_pvid has to be adjusted.
-+configured in vlan unaware mode or default_pvid has to be adjusted::
- 
- 	ip link add name br0 type bridge
- 	ip link set dev br0 type bridge vlan_filtering 0
- 	echo 0 > /sys/class/net/br0/bridge/default_pvid
- 	ip link set dev sw0p1 master br0
- 	ip link set dev sw0p2 master br0
-- - or -
-+
-+or::
-+
- 	ip link add name br0 type bridge
- 	ip link set dev br0 type bridge vlan_filtering 0
- 	echo 100 > /sys/class/net/br0/bridge/default_pvid
-@@ -61,11 +78,12 @@ configured in vlan unaware mode or default_pvid has to be adjusted.
- 	ip link set dev sw0p1 master br0
- 	ip link set dev sw0p2 master br0
- 
--====================
--# Enabling "switch"
--====================
-+Enabling "switch"
-+=================
-+
- The Switch mode can be enabled by configuring devlink driver parameter
--"switch_mode" to 1/true:
-+"switch_mode" to 1/true::
-+
- 	devlink dev param set platform/48484000.switch \
- 	name switch_mode value 1 cmode runtime
- 
-@@ -79,9 +97,11 @@ marking packets with offload_fwd_mark flag unless "ale_bypass=0"
- 
- All configuration is implemented via switchdev API.
- 
--====================
--# Bridge setup
--====================
-+Bridge setup
++============
++Rmnet Driver
 +============
 +
-+::
-+
- 	devlink dev param set platform/48484000.switch \
- 	name switch_mode value 1 cmode runtime
- 
-@@ -91,56 +111,65 @@ All configuration is implemented via switchdev API.
- 	ip link set dev sw0p2 up
- 	ip link set dev sw0p1 master br0
- 	ip link set dev sw0p2 master br0
-+
- 	[*] bridge vlan add dev br0 vid 1 pvid untagged self
- 
--[*] if vlan_filtering=1. where default_pvid=1
-+	[*] if vlan_filtering=1. where default_pvid=1
- 
--=================
--# On/off STP
--=================
--ip link set dev BRDEV type bridge stp_state 1/0
-+	Note. Steps [*] are mandatory.
- 
--Note. Steps [*] are mandatory.
- 
--====================
--# VLAN configuration
--====================
--bridge vlan add dev br0 vid 1 pvid untagged self <---- add cpu port to VLAN 1
-+On/off STP
-+==========
-+
-+::
-+
-+	ip link set dev BRDEV type bridge stp_state 1/0
-+
-+VLAN configuration
-+==================
-+
-+::
-+
-+  bridge vlan add dev br0 vid 1 pvid untagged self <---- add cpu port to VLAN 1
- 
- Note. This step is mandatory for bridge/default_pvid.
- 
--=================
--# Add extra VLANs
--=================
-- 1. untagged:
--    bridge vlan add dev sw0p1 vid 100 pvid untagged master
--    bridge vlan add dev sw0p2 vid 100 pvid untagged master
--    bridge vlan add dev br0 vid 100 pvid untagged self <---- Add cpu port to VLAN100
--
-- 2. tagged:
--    bridge vlan add dev sw0p1 vid 100 master
--    bridge vlan add dev sw0p2 vid 100 master
--    bridge vlan add dev br0 vid 100 pvid tagged self <---- Add cpu port to VLAN100
--
--====
-+Add extra VLANs
+ 1. Introduction
 +===============
-+
-+ 1. untagged::
-+
-+	bridge vlan add dev sw0p1 vid 100 pvid untagged master
-+	bridge vlan add dev sw0p2 vid 100 pvid untagged master
-+	bridge vlan add dev br0 vid 100 pvid untagged self <---- Add cpu port to VLAN100
-+
-+ 2. tagged::
-+
-+	bridge vlan add dev sw0p1 vid 100 master
-+	bridge vlan add dev sw0p2 vid 100 master
-+	bridge vlan add dev br0 vid 100 pvid tagged self <---- Add cpu port to VLAN100
-+
- FDBs
--====
-+----
-+
- FDBs are automatically added on the appropriate switch port upon detection
  
--Manually adding FDBs:
--bridge fdb add aa:bb:cc:dd:ee:ff dev sw0p1 master vlan 100
--bridge fdb add aa:bb:cc:dd:ee:fe dev sw0p2 master <---- Add on all VLANs
-+Manually adding FDBs::
+ rmnet driver is used for supporting the Multiplexing and aggregation
+ Protocol (MAP). This protocol is used by all recent chipsets using Qualcomm
+@@ -18,17 +25,18 @@ sending aggregated bunch of MAP frames. rmnet driver will de-aggregate
+ these MAP frames and send them to appropriate PDN's.
+ 
+ 2. Packet format
++================
+ 
+ a. MAP packet (data / control)
+ 
+ MAP header has the same endianness of the IP packet.
+ 
+-Packet format -
++Packet format::
+ 
+-Bit             0             1           2-7      8 - 15           16 - 31
+-Function   Command / Data   Reserved     Pad   Multiplexer ID    Payload length
+-Bit            32 - x
+-Function     Raw  Bytes
++  Bit             0             1           2-7      8 - 15           16 - 31
++  Function   Command / Data   Reserved     Pad   Multiplexer ID    Payload length
++  Bit            32 - x
++  Function     Raw  Bytes
+ 
+ Command (1)/ Data (0) bit value is to indicate if the packet is a MAP command
+ or data packet. Control packet is used for transport level flow control. Data
+@@ -44,24 +52,27 @@ Multiplexer ID is to indicate the PDN on which data has to be sent.
+ Payload length includes the padding length but does not include MAP header
+ length.
+ 
+-b. MAP packet (command specific)
++b. MAP packet (command specific)::
+ 
+-Bit             0             1           2-7      8 - 15           16 - 31
+-Function   Command         Reserved     Pad   Multiplexer ID    Payload length
+-Bit          32 - 39        40 - 45    46 - 47       48 - 63
+-Function   Command name    Reserved   Command Type   Reserved
+-Bit          64 - 95
+-Function   Transaction ID
+-Bit          96 - 127
+-Function   Command data
++    Bit             0             1           2-7      8 - 15           16 - 31
++    Function   Command         Reserved     Pad   Multiplexer ID    Payload length
++    Bit          32 - 39        40 - 45    46 - 47       48 - 63
++    Function   Command name    Reserved   Command Type   Reserved
++    Bit          64 - 95
++    Function   Transaction ID
++    Bit          96 - 127
++    Function   Command data
+ 
+ Command 1 indicates disabling flow while 2 is enabling flow
+ 
+-Command types -
++Command types
 +
-+    bridge fdb add aa:bb:cc:dd:ee:ff dev sw0p1 master vlan 100
-+    bridge fdb add aa:bb:cc:dd:ee:fe dev sw0p2 master <---- Add on all VLANs
++= ==========================================
+ 0 for MAP command request
+ 1 is to acknowledge the receipt of a command
+ 2 is for unsupported commands
+ 3 is for error during processing of commands
++= ==========================================
  
--====
- MDBs
--====
-+----
+ c. Aggregation
+ 
+@@ -71,9 +82,11 @@ packets and either ACK the MAP command or deliver the IP packet to the
+ network stack as needed
+ 
+ MAP header|IP Packet|Optional padding|MAP header|IP Packet|Optional padding....
 +
- MDBs are automatically added on the appropriate switch port upon detection
+ MAP header|IP Packet|Optional padding|MAP header|Command Packet|Optional pad...
  
--Manually adding MDBs:
--bridge mdb add dev br0 port sw0p1 grp 239.1.1.1 permanent vid 100
--bridge mdb add dev br0 port sw0p1 grp 239.1.1.1 permanent <---- Add on all VLANs
-+Manually adding MDBs::
-+
-+  bridge mdb add dev br0 port sw0p1 grp 239.1.1.1 permanent vid 100
-+  bridge mdb add dev br0 port sw0p1 grp 239.1.1.1 permanent <---- Add on all VLANs
+ 3. Userspace configuration
++==========================
  
--==================
- Multicast flooding
- ==================
- CPU port mcast_flooding is always on
-@@ -148,9 +177,11 @@ CPU port mcast_flooding is always on
- Turning flooding on/off on swithch ports:
- bridge link set dev sw0p1 mcast_flood on/off
+ rmnet userspace configuration is done through netlink library librmnetctl
+ and command line utility rmnetcli. Utility is hosted in codeaurora forum git.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 91da0be7f69e..0054a0a87d5f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14066,7 +14066,7 @@ M:	Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+ M:	Sean Tranchetti <stranche@codeaurora.org>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/networking/device_drivers/qualcomm/rmnet.txt
++F:	Documentation/networking/device_drivers/qualcomm/rmnet.rst
+ F:	drivers/net/ethernet/qualcomm/rmnet/
+ F:	include/linux/if_rmnet.h
  
--==================
- Access and Trunk port
--==================
-+=====================
-+
-+::
-+
-  bridge vlan add dev sw0p1 vid 100 pvid untagged master
-  bridge vlan add dev sw0p2 vid 100 master
- 
-@@ -158,52 +189,54 @@ Access and Trunk port
-  bridge vlan add dev br0 vid 100 self
-  ip link add link br0 name br0.100 type vlan id 100
- 
-- Note. Setting PVID on Bridge device itself working only for
-- default VLAN (default_pvid).
-+Note. Setting PVID on Bridge device itself working only for
-+default VLAN (default_pvid).
-+
-+NFS
-+===
- 
--=====================
-- NFS
--=====================
- The only way for NFS to work is by chrooting to a minimal environment when
- switch configuration that will affect connectivity is needed.
- Assuming you are booting NFS with eth1 interface(the script is hacky and
- it's just there to prove NFS is doable).
- 
--setup.sh:
--#!/bin/sh
--mkdir proc
--mount -t proc none /proc
--ifconfig br0  > /dev/null
--if [ $? -ne 0 ]; then
--        echo "Setting up bridge"
--        ip link add name br0 type bridge
--        ip link set dev br0 type bridge ageing_time 1000
--        ip link set dev br0 type bridge vlan_filtering 1
-+setup.sh::
- 
--        ip link set eth1 down
--        ip link set eth1 name sw0p1
--        ip link set dev sw0p1 up
--        ip link set dev sw0p2 up
--        ip link set dev sw0p2 master br0
--        ip link set dev sw0p1 master br0
--        bridge vlan add dev br0 vid 1 pvid untagged self
--        ifconfig sw0p1 0.0.0.0
--        udhchc -i br0
--fi
--umount /proc
-+	#!/bin/sh
-+	mkdir proc
-+	mount -t proc none /proc
-+	ifconfig br0  > /dev/null
-+	if [ $? -ne 0 ]; then
-+		echo "Setting up bridge"
-+		ip link add name br0 type bridge
-+		ip link set dev br0 type bridge ageing_time 1000
-+		ip link set dev br0 type bridge vlan_filtering 1
- 
--run_nfs.sh:
--#!/bin/sh
--mkdir /tmp/root/bin -p
--mkdir /tmp/root/lib -p
-+		ip link set eth1 down
-+		ip link set eth1 name sw0p1
-+		ip link set dev sw0p1 up
-+		ip link set dev sw0p2 up
-+		ip link set dev sw0p2 master br0
-+		ip link set dev sw0p1 master br0
-+		bridge vlan add dev br0 vid 1 pvid untagged self
-+		ifconfig sw0p1 0.0.0.0
-+		udhchc -i br0
-+	fi
-+	umount /proc
- 
--cp -r /lib/ /tmp/root/
--cp -r /bin/ /tmp/root/
--cp /sbin/ip /tmp/root/bin
--cp /sbin/bridge /tmp/root/bin
--cp /sbin/ifconfig /tmp/root/bin
--cp /sbin/udhcpc /tmp/root/bin
--cp /path/to/setup.sh /tmp/root/bin
--chroot /tmp/root/ busybox sh /bin/setup.sh
-+run_nfs.sh:::
- 
--run ./run_nfs.sh
-+	#!/bin/sh
-+	mkdir /tmp/root/bin -p
-+	mkdir /tmp/root/lib -p
-+
-+	cp -r /lib/ /tmp/root/
-+	cp -r /bin/ /tmp/root/
-+	cp /sbin/ip /tmp/root/bin
-+	cp /sbin/bridge /tmp/root/bin
-+	cp /sbin/ifconfig /tmp/root/bin
-+	cp /sbin/udhcpc /tmp/root/bin
-+	cp /path/to/setup.sh /tmp/root/bin
-+	chroot /tmp/root/ busybox sh /bin/setup.sh
-+
-+	run ./run_nfs.sh
 -- 
 2.25.4
 
