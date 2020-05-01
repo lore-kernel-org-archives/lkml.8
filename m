@@ -2,205 +2,132 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D06C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40964C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0404021582
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2115220873
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeTR70bQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qOsxv6vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgEABj7 (ORCPT
+        id S1728035AbgEABk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 21:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
+        Thu, 30 Apr 2020 21:40:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726384AbgEABj6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726384AbgEABk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 21:39:58 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC758C035494;
-        Thu, 30 Apr 2020 18:39:58 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e9so3620010iok.9;
-        Thu, 30 Apr 2020 18:39:58 -0700 (PDT)
+        Thu, 30 Apr 2020 21:40:28 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202E7C035494;
+        Thu, 30 Apr 2020 18:40:28 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so945748pfa.1;
+        Thu, 30 Apr 2020 18:40:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9kEjlo9klnfQZPRmxb764xpSlEiJoEeAxtPwpEWsyW8=;
-        b=aeTR70bQPdhn7Tq42eH9wJCqPBsI8z+1fnVg9Sp1WiL/y90sV5ktBNmBHZI4N8MO4B
-         xrgA5Gnrqf57Shq4bgUrhgVjbUUcLmd3kckR0w89uFJtMZ2OKBZr9zM1EXSqaQK6mhOy
-         A5Fe63ZfurRQ8pVW1kE9UwEZEvF+c4iLHutlCqcshY+L2RPb3sR9Ei0HGePE1c/SkbZV
-         WO/oF8lUVItDI18HzZvm/RWyLyufmnxXW941m0b9CDslbASKKECozA4yZJZFQbMCgE7S
-         5aEkNxO+2XseuXmRdXYIgasPV26hZcZNY6Gn6jf0Eiu5hbGNf9ar+yhp67lgVqm7kzmq
-         tR1A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mQqYrPQYFIDRJNtN/SAJy2t+xhyEUoAd2W8p48g17wQ=;
+        b=qOsxv6vEvbD4wGxk4LHlqwR83qbl5dodfHnuXOGhvA4bduTWwFKJL2ZL+Qy5brd1TH
+         LUjSN4TQgb2a1HhOCErAV6sbo+5OK5dTL25GYXh1RrCdrQmomW36pW9jlhh7dmVYb4Rb
+         Xuq2uqKfq71qhtgKEjCjqTdZAJPbCPWf9m946U6eOmBjDggUu4h+yIjI8Egg+K5ycJ3A
+         oOs5Lwqy19kTJohvRjttP13COYBFrMX4Fu5KVcTINGR4W5JKH88g3m7m9pU+eieV7yY5
+         YkeOu0vci/6NUb9qkD2f4Lvb8blVGeMkZY2c7NW6INSurKZZDuZeJAEpn3o47E3uYWVw
+         6m9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9kEjlo9klnfQZPRmxb764xpSlEiJoEeAxtPwpEWsyW8=;
-        b=VjBLLkUyaynx6vH3ngaCVpGLUNezF04chBT9FbDPfDSsPMT7ik7uHXxC4hnkFTxueJ
-         PioFVuC8Iw5jc9L3zIOC6ieI6SfUdMwA65kb+rsxxKFPxi9G5We7pvGWgVmvamNdltdJ
-         5ZaA6zj6W89Fln0ekoKOl7b2KBMRuT5bfiGbE4upFWwo/eLvUGbHPMicDEnIn1WCBRum
-         F0Y0ay2Mqmn0zFtWPVdeCd2XPit4k2gOgMR9MH60Czxpl6lr6JPIvlRm9tbPY1MGwGwD
-         vrilehszXVgW8MdKhNbOsP+Sf/CE1EGu8ogKYK8Cz6bEHOqco1uFJoUqa6A4SjCXvEla
-         IFbA==
-X-Gm-Message-State: AGi0PuZfmrOd/EiKL1f5xOE5Niq2I14ljjruDJmardcLUAMDFvbPOHU2
-        autF0o8MHnYyHxV44cBBB4qF2xN3JG0ec+n5L2o=
-X-Google-Smtp-Source: APiQypLamne0OBmpP4DO5r8KXtbkzJtEpn4HPlEEm5ULy1L+FjtwRO4uwqFP29YjTbX2rUq4btja/JKPuyFbykgrUMw=
-X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr1789356iob.10.1588297197906;
- Thu, 30 Apr 2020 18:39:57 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mQqYrPQYFIDRJNtN/SAJy2t+xhyEUoAd2W8p48g17wQ=;
+        b=aTcmaGOacI3Lr9L1tE3QePivtiNPrcXpk0Cy61CoP4IeA8gZNx6yBQlGJeykkiA/OW
+         WmdAjq4y/0Eeo5/GTUt426EpMsm69foLceaApM2o0J2qidWGxWmLXKFuzsQROXsAz7R1
+         ODzVgdCk8/+p7WYIAuM9gDB9XrwJtKgeDvhI2illt36fUMkWvPerbdamxG1HJKRnnMiV
+         AI8gdK7rOfmUjhIhGzjRSd3m8nrgSLb2nXhNu5iavJZEwB1cpGZK7UpGWBbXZZF1FPA8
+         XfXRLIk7wJ93nrdSVkAEhX36tSzSUQYjX4pf1mGhAk/dYPiOfuSIb6c0XN6k/qY846C8
+         AdHg==
+X-Gm-Message-State: AGi0PuaHyA0lBt/LBvwX6HFDrQ1tGKrpLbRxDmxfa/Ak1Ua9JOgaXxQc
+        Dw9wIK1UISrlRNQ9wpgwGz1qKzdQ
+X-Google-Smtp-Source: APiQypJz7l4igwtJb1meMfrQsLaxqn5KYdCbRys7N0lK7x/6DU1RlFfxq8c0rVr+R8v+8Msb3+0V9A==
+X-Received: by 2002:a63:1d46:: with SMTP id d6mr1982542pgm.236.1588297227198;
+        Thu, 30 Apr 2020 18:40:27 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id f74sm2027363pje.3.2020.04.30.18.40.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 18:40:26 -0700 (PDT)
+Subject: Re: [PATCH -next] tty: serial: bcm63xx: fix missing clk_put() in
+ bcm63xx_uart
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>, Zou Wei <zou_wei@huawei.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1587472306-105155-1-git-send-email-zou_wei@huawei.com>
+ <4cd8f963-9292-faef-1e24-df90821274d6@suse.cz>
+ <73c4cebb-467b-e5d5-89bf-8a6fe29cf858@gmail.com>
+ <20200428111842.GA1159152@kroah.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <589eda5a-296b-daa1-f40c-fd27056ac4b8@gmail.com>
+Date:   Thu, 30 Apr 2020 18:40:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200430182712.237526-1-shakeelb@google.com>
-In-Reply-To: <20200430182712.237526-1-shakeelb@google.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 1 May 2020 09:39:24 +0800
-Message-ID: <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200428111842.GA1159152@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 2:27 AM Shakeel Butt <shakeelb@google.com> wrote:
->
-> Lowering memory.max can trigger an oom-kill if the reclaim does not
-> succeed. However if oom-killer does not find a process for killing, it
-> dumps a lot of warnings.
->
-
-I have been confused by this behavior for several months and I think
-it will confuse more memcg users.
-We should keep the memcg oom behavior consistent with system oom - no
-oom kill if no process.
-
-What about bellow change ?
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index e28098e13f1c..25fbc37a747f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6086,6 +6086,9 @@ static ssize_t memory_max_write(struct
-kernfs_open_file *of,
-                        continue;
-                }
-
-+               if (!cgroup_is_populated(memcg->css.cgroup))
-+                       break;
-+
-                memcg_memory_event(memcg, MEMCG_OOM);
-                if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
-                        break;
-
-> Deleting a memcg does not reclaim memory from it and the memory can
-> linger till there is a memory pressure. One normal way to proactively
-> reclaim such memory is to set memory.max to 0 just before deleting the
-> memcg. However if some of the memcg's memory is pinned by others, this
-> operation can trigger an oom-kill without any process and thus can log a
-> lot un-needed warnings. So, ignore all such warnings from memory.max.
->
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
->  include/linux/oom.h | 3 +++
->  mm/memcontrol.c     | 9 +++++----
->  mm/oom_kill.c       | 2 +-
->  3 files changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/oom.h b/include/linux/oom.h
-> index c696c265f019..6345dc55df64 100644
-> --- a/include/linux/oom.h
-> +++ b/include/linux/oom.h
-> @@ -52,6 +52,9 @@ struct oom_control {
->
->         /* Used to print the constraint info. */
->         enum oom_constraint constraint;
-> +
-> +       /* Do not warn even if there is no process to be killed. */
-> +       bool no_warn;
->  };
->
->  extern struct mutex oom_lock;
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 317dbbaac603..a1f00d9b9bb0 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1571,7 +1571,7 @@ unsigned long mem_cgroup_size(struct mem_cgroup *memcg)
->  }
->
->  static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> -                                    int order)
-> +                                    int order, bool no_warn)
->  {
->         struct oom_control oc = {
->                 .zonelist = NULL,
-> @@ -1579,6 +1579,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
->                 .memcg = memcg,
->                 .gfp_mask = gfp_mask,
->                 .order = order,
-> +               .no_warn = no_warn,
->         };
->         bool ret;
->
-> @@ -1821,7 +1822,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
->                 mem_cgroup_oom_notify(memcg);
->
->         mem_cgroup_unmark_under_oom(memcg);
-> -       if (mem_cgroup_out_of_memory(memcg, mask, order))
-> +       if (mem_cgroup_out_of_memory(memcg, mask, order, false))
->                 ret = OOM_SUCCESS;
->         else
->                 ret = OOM_FAILED;
-> @@ -1880,7 +1881,7 @@ bool mem_cgroup_oom_synchronize(bool handle)
->                 mem_cgroup_unmark_under_oom(memcg);
->                 finish_wait(&memcg_oom_waitq, &owait.wait);
->                 mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
-> -                                        current->memcg_oom_order);
-> +                                        current->memcg_oom_order, false);
->         } else {
->                 schedule();
->                 mem_cgroup_unmark_under_oom(memcg);
-> @@ -6106,7 +6107,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->                 }
->
->                 memcg_memory_event(memcg, MEMCG_OOM);
-> -               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
-> +               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0, true))
->                         break;
->         }
->
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index 463b3d74a64a..5ace39f6fe1e 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -1098,7 +1098,7 @@ bool out_of_memory(struct oom_control *oc)
->
->         select_bad_process(oc);
->         /* Found nothing?!?! */
-> -       if (!oc->chosen) {
-> +       if (!oc->chosen && !oc->no_warn) {
->                 dump_header(oc, NULL);
->                 pr_warn("Out of memory and no killable processes...\n");
->                 /*
-> --
-> 2.26.2.526.g744177e7f7-goog
->
->
 
 
+On 4/28/2020 4:18 AM, Greg KH wrote:
+> On Mon, Apr 27, 2020 at 10:29:58AM -0700, Florian Fainelli wrote:
+>>
+>>
+>> On 4/26/2020 11:19 PM, Jiri Slaby wrote:
+>>> On 21. 04. 20, 14:31, Zou Wei wrote:
+>>>> This patch fixes below error reported by coccicheck
+>>>>
+>>>> drivers/tty/serial/bcm63xx_uart.c:848:2-8: ERROR: missing clk_put;
+>>>> clk_get on line 842 and execution via conditional on line 846
+>>>>
+>>>> Fixes: ab4382d27412 ("tty: move drivers/serial/ to drivers/tty/serial/")
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+>>>> ---
+>>>>  drivers/tty/serial/bcm63xx_uart.c | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+>>>> index 5674da2..ed0aa5c 100644
+>>>> --- a/drivers/tty/serial/bcm63xx_uart.c
+>>>> +++ b/drivers/tty/serial/bcm63xx_uart.c
+>>>> @@ -843,8 +843,10 @@ static int bcm_uart_probe(struct platform_device *pdev)
+>>>>  	if (IS_ERR(clk) && pdev->dev.of_node)
+>>>>  		clk = of_clk_get(pdev->dev.of_node, 0);
+>>>>  
+>>>> -	if (IS_ERR(clk))
+>>>> +	if (IS_ERR(clk)) {
+>>>> +		clk_put(clk);
+>>>
+>>> Why would you want to put an erroneous clk?
+>>
+>> Doh, somehow I completely missed, you are right this does not look legit.
+> 
+> Ugh, can you send a revert for this please?
+
+Yes, now done:
+
+https://lore.kernel.org/linux-arm-kernel/20200501013904.1394-1-f.fainelli@gmail.com/
 -- 
-Thanks
-Yafang
+Florian
