@@ -2,131 +2,159 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C5FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B82C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0020E20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340756;
-	bh=T0K725d/BDnHCHwIT96c4wBB6CQd8Fy/Vm/PrXzgzOg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fRmKfw1JWpJ6gUfNdjNEhWDVKOzYwNGG5XlMFIogtX0krQnpaApzEHcwn2s2kmNZD
-	 HLP0WTHmNHuDzJhNDFZTf7i0P5xru3Ln4/YJ2nYaDoedKSVVxieNcI1nqY04qMSxNZ
-	 7eR8kybj1ZUYv1qo3t2KZw5D15IeyAGDY5gbPBio=
+	by mail.kernel.org (Postfix) with ESMTP id 163472051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731904AbgEANpy (ORCPT
+        id S1731615AbgEANpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbgEANp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA542051A;
-        Fri,  1 May 2020 13:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340725;
-        bh=T0K725d/BDnHCHwIT96c4wBB6CQd8Fy/Vm/PrXzgzOg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=skqgHv1ASC8NnqVxlmy8wOqasHxSjX3o2Ie1l0bac2oAzzlqyjmL75JvY3/IzirJQ
-         Tt7+1sT9qdqX96ebcWqW+ShR5PD4/KJUc3AsXQzYqjx5gQC5Nq6COCevue9vHTOxaX
-         fVeZ4gbByxMf2T/22n9FsBozBSDdsxzXp9f6Yfwo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harish Sriram <harish@linux.ibm.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.6 103/106] ext4: check for non-zero journal inum in ext4_calculate_overhead
-Date:   Fri,  1 May 2020 15:24:16 +0200
-Message-Id: <20200501131555.539026186@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
-References: <20200501131543.421333643@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 1 May 2020 09:45:20 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38531 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731541AbgEANpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:45:14 -0400
+Received: by mail-lf1-f67.google.com with SMTP id l11so3898611lfc.5;
+        Fri, 01 May 2020 06:45:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=84T0pCv1NUHY99+EIUt2kRwIXnXQcTzPiOYLMrXMKNI=;
+        b=uRd8skZcAgeL8fLulHY2Adc0M59m9MWJHiNj2jep4dlkDnmGVcXpA0r8BmEaYxt4EU
+         DQyjapijaMBQZsh/bqKS+LmvEnZ8l5x+hkX2yjcYKeC/uRsWKSZRe6fPrGxzs+IOmcIl
+         N0JIfdHus1VW+yxssKZn0UKHiJzG//fFNUJv+C9/ZK+3CA9yyzDHNxELX292WJd4KVG8
+         LEePvZiC/xEzLMLY+K/pzZ5Mw3rwDeUP+PAAdWa7YiDff3va6Rd+T1wGLTe+laTzTeAe
+         nvjEX10x7PxDpeSaR2TKOz9uuZ3SqBhWHhMCAdVsU4qgLh6/KET1YW7xk9Jvd+2Y0E6/
+         N5EQ==
+X-Gm-Message-State: AGi0PuZf+kcICSRUxTt7aJGpLMQTlRRm9owzZryy9MHfZABcVVz/houI
+        EO3VLoZFCCLx0+BZfACndTFGPoKwFH4=
+X-Google-Smtp-Source: APiQypI1EFhtVvq/oZA1yWy/XUHw1zB0+GFXJDQXQL3SsKS2vEbAEA1aHhauzMg8ygiv9o6vfRTvTA==
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr2637273lfo.149.1588340710968;
+        Fri, 01 May 2020 06:45:10 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.150.177])
+        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 06:45:10 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-block@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v3 3/4] floppy: add defines for sizes of cmd & reply buffers of floppy_raw_cmd
+Date:   Fri,  1 May 2020 16:44:15 +0300
+Message-Id: <20200501134416.72248-4-efremov@linux.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200501134416.72248-1-efremov@linux.com>
+References: <20200501134416.72248-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+Use FD_RAW_CMD_SIZE, FD_RAW_REPLY_SIZE defines instead of magic numbers
+for cmd & reply buffers of struct floppy_raw_cmd. Remove local to
+floppy.c MAX_REPLIES define, as it is now FD_RAW_REPLY_SIZE.
+FD_RAW_CMD_FULLSIZE added as we allow command to also fill reply_count
+and reply fields.
 
-commit f1eec3b0d0a849996ebee733b053efa71803dad5 upstream.
-
-While calculating overhead for internal journal, also check
-that j_inum shouldn't be 0. Otherwise we get below error with
-xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
-
-It could be simply reproduced with loop device with an external journal
-and marking blockdev as RO before mounting.
-
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
-NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
-<...>
-NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
-LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
-<...>
-Call Trace:
-generic_make_request_checks+0x6b0/0x7d0 (unreliable)
-generic_make_request+0x3c/0x420
-submit_bio+0xd8/0x200
-submit_bh_wbc+0x1e8/0x250
-__sync_dirty_buffer+0xd0/0x210
-ext4_commit_super+0x310/0x420 [ext4]
-__ext4_error+0xa4/0x1e0 [ext4]
-__ext4_iget+0x388/0xe10 [ext4]
-ext4_get_journal_inode+0x40/0x150 [ext4]
-ext4_calculate_overhead+0x5a8/0x610 [ext4]
-ext4_fill_super+0x3188/0x3260 [ext4]
-mount_bdev+0x778/0x8f0
-ext4_mount+0x28/0x50 [ext4]
-mount_fs+0x74/0x230
-vfs_kern_mount.part.6+0x6c/0x250
-do_mount+0x2fc/0x1280
-sys_mount+0x158/0x180
-system_call+0x5c/0x70
-EXT4-fs (pmem1p2): no journal found
-EXT4-fs (pmem1p2): can't get journal size
-EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
-
-Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- fs/ext4/super.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c  | 19 +++++--------------
+ include/uapi/linux/fd.h | 14 ++++++++++++--
+ 2 files changed, 17 insertions(+), 16 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3610,7 +3610,8 @@ int ext4_calculate_overhead(struct super
- 	 */
- 	if (sbi->s_journal && !sbi->journal_bdev)
- 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
--	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
-+	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
-+		/* j_inum for internal journal is non-zero */
- 		j_inode = ext4_get_journal_inode(sb, j_inum);
- 		if (j_inode) {
- 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
-
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index b82b3d38b834..9e098d53b046 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -337,8 +337,7 @@ static bool initialized;
+ /*
+  * globals used by 'result()'
+  */
+-#define MAX_REPLIES 16
+-static unsigned char reply_buffer[MAX_REPLIES];
++static unsigned char reply_buffer[FD_RAW_REPLY_SIZE];
+ static int inr;		/* size of reply buffer, when called from interrupt */
+ #define ST0		0
+ #define ST1		1
+@@ -1162,7 +1161,7 @@ static int result(int fdc)
+ 	int i;
+ 	int status = 0;
+ 
+-	for (i = 0; i < MAX_REPLIES; i++) {
++	for (i = 0; i < FD_RAW_REPLY_SIZE; i++) {
+ 		status = wait_til_ready(fdc);
+ 		if (status < 0)
+ 			break;
+@@ -3079,7 +3078,7 @@ static void raw_cmd_done(int flag)
+ 		raw_cmd->flags |= FD_RAW_HARDFAILURE;
+ 	} else {
+ 		raw_cmd->reply_count = inr;
+-		if (raw_cmd->reply_count > MAX_REPLIES)
++		if (raw_cmd->reply_count > FD_RAW_REPLY_SIZE)
+ 			raw_cmd->reply_count = 0;
+ 		for (i = 0; i < raw_cmd->reply_count; i++)
+ 			raw_cmd->reply[i] = reply_buffer[i];
+@@ -3190,18 +3189,10 @@ static int raw_cmd_copyin(int cmd, void __user *param,
+ 	if (ret)
+ 		return -EFAULT;
+ 	param += sizeof(struct floppy_raw_cmd);
+-	if (ptr->cmd_count > 33)
+-			/* the command may now also take up the space
+-			 * initially intended for the reply & the
+-			 * reply count. Needed for long 82078 commands
+-			 * such as RESTORE, which takes ... 17 command
+-			 * bytes. Murphy's law #137: When you reserve
+-			 * 16 bytes for a structure, you'll one day
+-			 * discover that you really need 17...
+-			 */
++	if (ptr->cmd_count > FD_RAW_CMD_FULLSIZE)
+ 		return -EINVAL;
+ 
+-	for (i = 0; i < 16; i++)
++	for (i = 0; i < FD_RAW_REPLY_SIZE; i++)
+ 		ptr->reply[i] = 0;
+ 	ptr->resultcode = 0;
+ 
+diff --git a/include/uapi/linux/fd.h b/include/uapi/linux/fd.h
+index 3f6b7be4c096..2e9c2c1c18e6 100644
+--- a/include/uapi/linux/fd.h
++++ b/include/uapi/linux/fd.h
+@@ -360,10 +360,20 @@ struct floppy_raw_cmd {
+ 	int buffer_length; /* length of allocated buffer */
+ 
+ 	unsigned char rate;
++
++#define FD_RAW_CMD_SIZE 16
++#define FD_RAW_REPLY_SIZE 16
++#define FD_RAW_CMD_FULLSIZE (FD_RAW_CMD_SIZE + 1 + FD_RAW_REPLY_SIZE)
++
++	/* The command may take up the space initially intended for the reply
++	 * and the reply count. Needed for long 82078 commands such as RESTORE,
++	 * which takes 17 command bytes.
++	 */
++
+ 	unsigned char cmd_count;
+-	unsigned char cmd[16];
++	unsigned char cmd[FD_RAW_CMD_SIZE];
+ 	unsigned char reply_count;
+-	unsigned char reply[16];
++	unsigned char reply[FD_RAW_REPLY_SIZE];
+ 	int track;
+ 	int resultcode;
+ 
+-- 
+2.25.3
 
