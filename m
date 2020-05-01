@@ -2,104 +2,101 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C3BC47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C3C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DEE216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588367388;
-	bh=v3ofUzSi3+NacuMhW2kLyqywu2MGy90rApbmWZm3ZiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F1U6e66Pam+o9OtXEcpIsENpkl2xvnwlZ6262SX49BH0I7lLRDeApn9rMXbmrpwge
-	 SGdFes6yi7B1PSQ86r5sgdOzeWIDxVkn5MkHEBSrUdHNcBafdXy7UL7UbYpcHM0n7M
-	 KnJuaugJ/rbzDNKY7yp/DTC1ikRj+M6MwYQAaRgo=
+	by mail.kernel.org (Postfix) with ESMTP id 5E043208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCAAf2+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgEAVJr (ORCPT
+        id S1726574AbgEAVKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:09:47 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36903 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVJq (ORCPT
+        Fri, 1 May 2020 17:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAVKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:09:46 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z17so3639467oto.4;
-        Fri, 01 May 2020 14:09:44 -0700 (PDT)
+        Fri, 1 May 2020 17:10:46 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EAFC061A0C;
+        Fri,  1 May 2020 14:10:44 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id h124so10520366qke.11;
+        Fri, 01 May 2020 14:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4raYYwlZeCPb51zzK5P1JX3NYA3M/dL6M9ecAXSbJTM=;
+        b=fCAAf2+VOINsY/rRVDMrPybsp9nJTjGZbWjH11kd20m6TV+q7W4IY9T+Bcai3OPD9w
+         eFTWq9JcrR8LgWFc8ahCeVJNB9sd2CpWHX5l8LYc2FL3XoDBjwxE3WNISnaRM2U6IVxk
+         S3dKP7JMTDgz50CDNmhKJzXojxqk/TQWnlB+wQjBQdRswTXt3goPpdglsuIzVpsDUfx8
+         Rgb10kxj5yDzdBn2PE5KWltRRzFVHOs98HU64W1bl694KilSVPVbsQj260l/1IAqVYhL
+         nZkSCJVn0HYCir/CipAhFBRbCNHNKWa5yg7Ma/tnKEd/MRx5DsN+8rSCdYEvF2mZrJpW
+         eq9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=azaNq8gnek7T+A7rdK17PV/xQfKmjBVg34Ma1l/t8qw=;
-        b=MJ3obAPF0yxWvXBcvhMFx2QBlijy/sSZWh3nuYjF5xbzSDNPvALMXSMlcvujd6ODVJ
-         MaNyRiPrew1QsoSOo3GP8NZr9gHrBFH3Xvluis5OEnWDSQdCEg0T1tBdZQVrkSeC2yoQ
-         iupfiS/1sVIpEYBWR/1n0U6bmtOXCdjK55xUJe5htQ3aAPzGuoYeuvFtdqs7NES+eYks
-         vaK6a7SSajCGNISteF+DYqFAiIU8RWKbtAIFPiWJpNJG+RA2/VzfSW5Qe5gJ1f/+TBds
-         +aCzvUYumgGbKCfcCcuh+t499f//UmNpnCmZfT2r/z3tRboNPz66i6lCli66d0oTLhcB
-         +rTg==
-X-Gm-Message-State: AGi0PubdifZrD3afr3L6k1YDeY6T82shRfyScZcwbKZSfWgt+4vTI7df
-        57CRqcz7aAzGEzmmtphoZA==
-X-Google-Smtp-Source: APiQypLECOBaRa68pLT9OXVtC6bUt86y91nQBnNKSvn0KMAG/61MoBxyIwqFEkO/eNcHjZD1+jP0MQ==
-X-Received: by 2002:a05:6830:20d8:: with SMTP id z24mr5338741otq.74.1588367384402;
-        Fri, 01 May 2020 14:09:44 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h24sm1105171otj.25.2020.05.01.14.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:09:43 -0700 (PDT)
-Received: (nullmailer pid 30822 invoked by uid 1000);
-        Fri, 01 May 2020 21:09:42 -0000
-Date:   Fri, 1 May 2020 16:09:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH RFC v2 02/11] dt-bindings: net: dwmac-meson: Document the
- "timing-adjustment" clock
-Message-ID: <20200501210942.GA27082@bogus>
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-3-martin.blumenstingl@googlemail.com>
+        bh=4raYYwlZeCPb51zzK5P1JX3NYA3M/dL6M9ecAXSbJTM=;
+        b=smdLkJjdHARod5ezHFr7OA90+b1+bnR7jczwWOt9BnIIjwWHSv8nJYeBKh/LLZA392
+         fKI6/eWJQpNqvBZ8tyqHY82WhjZBao+D1iwaJMp1Ul+xt3XHgov7ox2IJIOKautDH/dy
+         FGxWjduc2mMCQdE78ZYXmcL0B4kuty+AooVGTkJVYFR0Dp5k9q8JD1fuL04QWDPZTRLM
+         hfW4DPvHLH6an+Lrfe3vRct6nguMJrwUdJOAP+E5c2W2tweK6yXpg3roReIOUsBmujbV
+         Bh3zcPpAkM4uoOycobGfb9ABtKkXRx79uf3CZ3LGsnJrk3izNvw2lOPTYHz9fXUkGU1x
+         XHSg==
+X-Gm-Message-State: AGi0PuYFF4GsCZnmn+3wAHnvMHzD3gekPqXf9tp/qcv2vPmssrlybMyx
+        PwZK3lRqwRRHspr5Dz+I3P4=
+X-Google-Smtp-Source: APiQypJS2xBXb/Rw2v0s2jy7FIpC/aX9vUBA0gBSKfTqmuleXydYboe8ODoXXXvx6K9nQWFa/oV17Q==
+X-Received: by 2002:a37:9ccb:: with SMTP id f194mr5457334qke.151.1588367443753;
+        Fri, 01 May 2020 14:10:43 -0700 (PDT)
+Received: from josh-ZenBook ([70.32.0.110])
+        by smtp.gmail.com with ESMTPSA id m12sm3528461qtu.42.2020.05.01.14.10.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 May 2020 14:10:43 -0700 (PDT)
+Date:   Fri, 1 May 2020 17:10:40 -0400
+From:   Joshua Abraham <j.abraham1776@gmail.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     pbonzini@redhat.com, corbet@lwn.net, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        j.abraham1776@gmail.com
+Subject: Re: [PATCH] docs: kvm: Fix KVM_KVMCLOCK_CTRL API doc
+Message-ID: <20200501211040.GA22118@josh-ZenBook>
+References: <20200501193404.GA19745@josh-ZenBook>
+ <20200501201836.GB4760@linux.intel.com>
+ <20200501203234.GA20693@josh-ZenBook>
+ <20200501205106.GE4760@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429201644.1144546-3-martin.blumenstingl@googlemail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200501205106.GE4760@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 22:16:35 +0200, Martin Blumenstingl wrote:
-> The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
-> requires an internal re-timing circuit whose input clock is called
-> "timing adjustment clock". Document this clock input so the clock can be
-> enabled as needed.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
+On Fri, May 01, 2020 at 01:51:06PM -0700, Sean Christopherson wrote:
+> I don't disagree, but simply doing s/host/guest yields a misleading
+> sentence and inconsistencies with the rest of the paragraph.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I see your point. Would this wording be clearer:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+"This ioctl sets a flag accessible to the guest indicating that it has been
+paused from the host userspace.
 
-See https://patchwork.ozlabs.org/patch/1279646
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+The host will set a flag in the pvclock structure that is checked
+from the soft lockup watchdog.  The flag is part of the pvclock structure that
+is shared between guest and host, specifically the second bit of the flags
+field of the pvclock_vcpu_time_info structure.  It will be set exclusively by
+the host and read/cleared exclusively by the guest.  The guest operation of
+checking and clearing the flag must be an atomic operation so
+load-link/store-conditional, or equivalent must be used.  There are two cases
+where the guest will clear the flag: when the soft lockup watchdog timer resets
+itself or when a soft lockup is detected.  This ioctl can be called any time
+after pausing the vcpu, but before it is resumed."
