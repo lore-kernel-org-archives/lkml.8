@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B60C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0DCC47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFD72173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61C4208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344368;
-	bh=Ihf4waEHpA3haGlf5Lt8qjWzEpnfYn/7o8iz4wJrva4=;
+	s=default; t=1588344373;
+	bh=10r26z69r9wu8Pq+TQWNjuhSpIIYfOTBaBhJ/i5UtVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wkf25q3NUv/KFn3uQtzSiTSNM0QzGlq5DGltLKIS11HiGJglnlpU8gR/UKVpfp+Yh
-	 S53QGYh91FdJ9pp+s7HJFIwwtFsIxWuOLb0LcNrWEt0v+IUtNLEMv+5EuRPTqVDKQJ
-	 sOmeyihnN3v3ChEmJ25RUFA0dC2v7is6AqhtnR0Q=
+	b=JK8aHRtwBcNKIeTZ86lEYp2cXQloN0ZESYZj6gtAv/e62B5QBOdUkNYUsOshdGvhG
+	 bmtBCdGUL6XR7BO2iNI6ZpZwcN4FGHJFhowRldCq9+z8ikVi/aSlNcZi8A/KWX13Cn
+	 jgx8L1/s91nugJ03A8mQw1hfigchYZ/u4CPfkMtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgEAOp6 (ORCPT
+        id S1729910AbgEAOp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52936 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:45:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729622AbgEAOpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729631AbgEAOpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:11 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0EB724960;
+        by mail.kernel.org (Postfix) with ESMTPSA id E92D224963;
         Fri,  1 May 2020 14:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344308;
-        bh=Ihf4waEHpA3haGlf5Lt8qjWzEpnfYn/7o8iz4wJrva4=;
+        bh=10r26z69r9wu8Pq+TQWNjuhSpIIYfOTBaBhJ/i5UtVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tb8HFqrrjKSjU1QDyK7FPrwnrmwizo+bABPwhj7BRievEGxm49B6n1iNu0ioCdOZ9
-         FSPzRjSOdJhDIPqz/QMZ8le58nZ6aPYfC7bvayB6o490rEh85TBw4aH6ZYfJhgANDJ
-         v35fawDiejJem9TZAPjywe9NoFYwvdCgL2QVvsWc=
+        b=fKOl8p+sEWPnaOBMIxC3Zz2MKex5RfAXLalcBFKIF2tho9+twe61M6SXDRWmpiHVx
+         iUwjhEdbATDgePPfx4bdMehyjzv93NZi/qU9ECKC3B42ffBDwscjjcndoS+XoVsTWo
+         3M7bS78L6Wo2Pbn/tUrmx++pwMGzsBULrdB/eqWQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuU-00FCfL-52; Fri, 01 May 2020 16:45:02 +0200
+        id 1jUWuU-00FCfV-6x; Fri, 01 May 2020 16:45:02 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
-        netdev@vger.kernel.org
-Subject: [PATCH 35/37] docs: networking: device drivers: convert toshiba/spider_net.txt to ReST
-Date:   Fri,  1 May 2020 16:44:57 +0200
-Message-Id: <65d11ee308138c3b294a73eaade99490d43e9329.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 37/37] docs: networking: arcnet-hardware.rst: don't duplicate chapter names
+Date:   Fri,  1 May 2020 16:44:59 +0200
+Message-Id: <9cbadbb1186788433909bd365c8a3f01543b9d40.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -63,143 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- add SPDX header;
-- adjust title markup;
-- mark code blocks and literals as such;
-- adjust identation, whitespaces and blank lines where needed;
-- add to networking/index.rst.
+Since changeset 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst"),
+auto-references for chapters are generated. This is a nice feature, but
+has a drawback: no chapters can have the same sumber.
 
+So, we need to change two chapter titles, to avoid warnings when
+building the docs.
+
+Fixes: 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/device_drivers/index.rst       |  1 +
- .../{spider_net.txt => spider_net.rst}        | 58 +++++++++----------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 30 insertions(+), 31 deletions(-)
- rename Documentation/networking/device_drivers/toshiba/{spider_net.txt => spider_net.rst} (88%)
+ Documentation/networking/arcnet-hardware.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index adc0bf65fb02..e18dad11bc72 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -50,6 +50,7 @@ Contents:
-    ti/cpsw_switchdev
-    ti/cpsw
-    ti/tlan
-+   toshiba/spider_net
+diff --git a/Documentation/networking/arcnet-hardware.rst b/Documentation/networking/arcnet-hardware.rst
+index b5a1a020c824..ac249ac8fcf2 100644
+--- a/Documentation/networking/arcnet-hardware.rst
++++ b/Documentation/networking/arcnet-hardware.rst
+@@ -1296,8 +1296,8 @@ DIP Switches:
+ 	11111           0xC400 (guessed - crashes tested system)
+ 	=============   ============================================
  
- .. only::  subproject and html
+-CNet Technology Inc.
+-====================
++CNet Technology Inc. (8-bit cards)
++==================================
  
-diff --git a/Documentation/networking/device_drivers/toshiba/spider_net.txt b/Documentation/networking/device_drivers/toshiba/spider_net.rst
-similarity index 88%
-rename from Documentation/networking/device_drivers/toshiba/spider_net.txt
-rename to Documentation/networking/device_drivers/toshiba/spider_net.rst
-index b0b75f8463b3..fe5b32be15cd 100644
---- a/Documentation/networking/device_drivers/toshiba/spider_net.txt
-+++ b/Documentation/networking/device_drivers/toshiba/spider_net.rst
-@@ -1,6 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
- 
--            The Spidernet Device Driver
--            ===========================
-+===========================
-+The Spidernet Device Driver
-+===========================
- 
- Written by Linas Vepstas <linas@austin.ibm.com>
- 
-@@ -78,15 +80,15 @@ GDACTDPA, tail and head pointers. It will also summarize the contents
- of the ring, starting at the tail pointer, and listing the status
- of the descrs that follow.
- 
--A typical example of the output, for a nearly idle system, might be
-+A typical example of the output, for a nearly idle system, might be::
- 
--net eth1: Total number of descrs=256
--net eth1: Chain tail located at descr=20
--net eth1: Chain head is at 20
--net eth1: HW curr desc (GDACTDPA) is at 21
--net eth1: Have 1 descrs with stat=x40800101
--net eth1: HW next desc (GDACNEXTDA) is at 22
--net eth1: Last 255 descrs with stat=xa0800000
-+    net eth1: Total number of descrs=256
-+    net eth1: Chain tail located at descr=20
-+    net eth1: Chain head is at 20
-+    net eth1: HW curr desc (GDACTDPA) is at 21
-+    net eth1: Have 1 descrs with stat=x40800101
-+    net eth1: HW next desc (GDACNEXTDA) is at 22
-+    net eth1: Last 255 descrs with stat=xa0800000
- 
- In the above, the hardware has filled in one descr, number 20. Both
- head and tail are pointing at 20, because it has not yet been emptied.
-@@ -101,11 +103,11 @@ The status x4... corresponds to "full" and status xa... corresponds
- to "empty". The actual value printed is RXCOMST_A.
- 
- In the device driver source code, a different set of names are
--used for these same concepts, so that
-+used for these same concepts, so that::
- 
--"empty" == SPIDER_NET_DESCR_CARDOWNED == 0xa
--"full"  == SPIDER_NET_DESCR_FRAME_END == 0x4
--"not in use" == SPIDER_NET_DESCR_NOT_IN_USE == 0xf
-+    "empty" == SPIDER_NET_DESCR_CARDOWNED == 0xa
-+    "full"  == SPIDER_NET_DESCR_FRAME_END == 0x4
-+    "not in use" == SPIDER_NET_DESCR_NOT_IN_USE == 0xf
+ 120 Series (8-bit cards)
+ ------------------------
+@@ -1520,8 +1520,8 @@ The jumpers labeled EXT1 and EXT2 are used to determine the timeout
+ parameters. These two jumpers are normally left open.
  
  
- The RX RAM full bug/feature
-@@ -137,19 +139,19 @@ while the hardware is waiting for a different set of descrs to become
- empty.
+-CNet Technology Inc.
+-====================
++CNet Technology Inc. (16-bit cards)
++===================================
  
- A call to show_rx_chain() at this point indicates the nature of the
--problem. A typical print when the network is hung shows the following:
-+problem. A typical print when the network is hung shows the following::
- 
--net eth1: Spider RX RAM full, incoming packets might be discarded!
--net eth1: Total number of descrs=256
--net eth1: Chain tail located at descr=255
--net eth1: Chain head is at 255
--net eth1: HW curr desc (GDACTDPA) is at 0
--net eth1: Have 1 descrs with stat=xa0800000
--net eth1: HW next desc (GDACNEXTDA) is at 1
--net eth1: Have 127 descrs with stat=x40800101
--net eth1: Have 1 descrs with stat=x40800001
--net eth1: Have 126 descrs with stat=x40800101
--net eth1: Last 1 descrs with stat=xa0800000
-+    net eth1: Spider RX RAM full, incoming packets might be discarded!
-+    net eth1: Total number of descrs=256
-+    net eth1: Chain tail located at descr=255
-+    net eth1: Chain head is at 255
-+    net eth1: HW curr desc (GDACTDPA) is at 0
-+    net eth1: Have 1 descrs with stat=xa0800000
-+    net eth1: HW next desc (GDACNEXTDA) is at 1
-+    net eth1: Have 127 descrs with stat=x40800101
-+    net eth1: Have 1 descrs with stat=x40800001
-+    net eth1: Have 126 descrs with stat=x40800101
-+    net eth1: Last 1 descrs with stat=xa0800000
- 
- Both the tail and head pointers are pointing at descr 255, which is
- marked xa... which is "empty". Thus, from the OS point of view, there
-@@ -198,7 +200,3 @@ For large packets, this mechanism generates a relatively small number
- of interrupts, about 1K/sec. For smaller packets, this will drop to zero
- interrupts, as the hardware can empty the queue faster than the kernel
- can fill it.
--
--
-- ======= END OF DOCUMENT ========
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b0b352389d14..a580fc74ae95 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15919,7 +15919,7 @@ SPIDERNET NETWORK DRIVER for CELL
- M:	Ishizaki Kou <kou.ishizaki@toshiba.co.jp>
- L:	netdev@vger.kernel.org
- S:	Supported
--F:	Documentation/networking/device_drivers/toshiba/spider_net.txt
-+F:	Documentation/networking/device_drivers/toshiba/spider_net.rst
- F:	drivers/net/ethernet/toshiba/spider_net*
- 
- SPMI SUBSYSTEM
+ 160 Series (16-bit cards)
+ -------------------------
 -- 
 2.25.4
 
