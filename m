@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C60C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397CFC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71B7208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1855420757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339784;
-	bh=74iTO465UoUa8Ze5YwNrtetiBHOrvZsrEsFg1HbTjFI=;
+	s=default; t=1588339788;
+	bh=fAeSOCyDZWHZwB1xapsOFAfJK2fFtww/H82lacETJ7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAxLWagIfjLqpz8bkyTboTHbWZRiTYvbwMr3GVKltAOO1NsMevtRiLtHBRIUvjeDJ
-	 669poFNbqitpIL6i24ki8M2nfjD+jv3RstwI3EA5rnYqOD23aBe/ET+r05CSvBonL/
-	 Pz6uQm43zj06HGPi3I9Dkekn6dqsxQ/YwBa91UiE=
+	b=nBObKSeTWvbuzgg3TlRjC6s2HIgrxzvZ8woJyOKL4BBEo6tMQv4Q4JnH61AECoeM7
+	 fXVREYdPiFmy7Hdeg+IKkIhhRSO+0bjxJXZnkvhhBoiLsXVSDMM3XQ96EkpDUfPdUa
+	 hDMrMtPmEQPr6Q0ZVc6afXQyxEmpwqRvCzaLGTWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgEAN3n (ORCPT
+        id S1729830AbgEAN3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53242 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729302AbgEAN3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:38 -0400
+        id S1729821AbgEAN3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC928208DB;
-        Fri,  1 May 2020 13:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE64208DB;
+        Fri,  1 May 2020 13:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339778;
-        bh=74iTO465UoUa8Ze5YwNrtetiBHOrvZsrEsFg1HbTjFI=;
+        s=default; t=1588339783;
+        bh=fAeSOCyDZWHZwB1xapsOFAfJK2fFtww/H82lacETJ7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/cxlIA/DwAnUActfiSs/idlbkRCmZ5ZmjewzcgcUTjtA9aVx9yWW2uTLtf7T38+a
-         PIi7k3EvlJ+b0STtxVykCMvIM5ESZaMx792qe2KeTrVRTZ3NoIGVH38zvpkpOHi1Y1
-         Lgfh9Cg0dvUgyr2hiS4hi2NJeLAM8Jhk0kgCdfx8=
+        b=K0fWZb29nILJjx9d5xiu8AMRU9KL+WBCxiNTqBXSXe+Zeo5+zhn3v0UYWpj7sWHLT
+         fhAK6xAjict5FAfIEi4sXyWabPbvvKcojm9nch1/CZndUIy99zoIhTlF2+rsEbcueH
+         AexUb+5Q6RdIS5LUZAcBPYmm6UvQKwkE2FwQ9En8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 44/80] KVM: Check validity of resolved slot when searching memslots
-Date:   Fri,  1 May 2020 15:21:38 +0200
-Message-Id: <20200501131527.509549308@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kyungtae Kim <kt0755@gmail.com>
+Subject: [PATCH 4.9 36/80] USB: core: Fix free-while-in-use bug in the USB S-Glibrary
+Date:   Fri,  1 May 2020 15:21:30 +0200
+Message-Id: <20200501131525.462585701@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -62,48 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit b6467ab142b708dd076f6186ca274f14af379c72 upstream.
+commit 056ad39ee9253873522f6469c3364964a322912b upstream.
 
-Check that the resolved slot (somewhat confusingly named 'start') is a
-valid/allocated slot before doing the final comparison to see if the
-specified gfn resides in the associated slot.  The resolved slot can be
-invalid if the binary search loop terminated because the search index
-was incremented beyond the number of used slots.
+FuzzUSB (a variant of syzkaller) found a free-while-still-in-use bug
+in the USB scatter-gather library:
 
-This bug has existed since the binary search algorithm was introduced,
-but went unnoticed because KVM statically allocated memory for the max
-number of slots, i.e. the access would only be truly out-of-bounds if
-all possible slots were allocated and the specified gfn was less than
-the base of the lowest memslot.  Commit 36947254e5f98 ("KVM: Dynamically
-size memslot array based on number of used slots") eliminated the "all
-possible slots allocated" condition and made the bug embarrasingly easy
-to hit.
+BUG: KASAN: use-after-free in atomic_read
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
+drivers/usb/core/hcd.c:1607
+Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
 
-Fixes: 9c1a5d38780e6 ("kvm: optimize GFN to memslot lookup with large slots amount")
-Reported-by: syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200408064059.8957-2-sean.j.christopherson@intel.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.10.2-1ubuntu1 04/01/2014
+Workqueue: scsi_tmf_2 scmd_eh_abort_handler
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x153/0x1cb mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
+ usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
+ usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
+ usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
+
+This bug occurs when cancellation of the S-G transfer races with
+transfer completion.  When that happens, usb_sg_cancel() may continue
+to access the transfer's URBs after usb_sg_wait() has freed them.
+
+The bug is caused by the fact that usb_sg_cancel() does not take any
+sort of reference to the transfer, and so there is nothing to prevent
+the URBs from being deallocated while the routine is trying to use
+them.  The fix is to take such a reference by incrementing the
+transfer's io->count field while the cancellation is in progres and
+decrementing it afterward.  The transfer's URBs are not deallocated
+until io->complete is triggered, which happens when io->count reaches
+zero.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2003281615140.14837-100000@netrider.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/kvm_host.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/message.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -914,7 +914,7 @@ search_memslots(struct kvm_memslots *slo
- 			start = slot + 1;
- 	}
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -585,12 +585,13 @@ void usb_sg_cancel(struct usb_sg_request
+ 	int i, retval;
  
--	if (gfn >= memslots[start].base_gfn &&
-+	if (start < slots->used_slots && gfn >= memslots[start].base_gfn &&
- 	    gfn < memslots[start].base_gfn + memslots[start].npages) {
- 		atomic_set(&slots->lru_slot, start);
- 		return &memslots[start];
+ 	spin_lock_irqsave(&io->lock, flags);
+-	if (io->status) {
++	if (io->status || io->count == 0) {
+ 		spin_unlock_irqrestore(&io->lock, flags);
+ 		return;
+ 	}
+ 	/* shut everything down */
+ 	io->status = -ECONNRESET;
++	io->count++;		/* Keep the request alive until we're done */
+ 	spin_unlock_irqrestore(&io->lock, flags);
+ 
+ 	for (i = io->entries - 1; i >= 0; --i) {
+@@ -604,6 +605,12 @@ void usb_sg_cancel(struct usb_sg_request
+ 			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
+ 				 __func__, retval);
+ 	}
++
++	spin_lock_irqsave(&io->lock, flags);
++	io->count--;
++	if (!io->count)
++		complete(&io->complete);
++	spin_unlock_irqrestore(&io->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(usb_sg_cancel);
+ 
 
 
