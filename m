@@ -2,51 +2,54 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA61DC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C72C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96F8F20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613132051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340699;
-	bh=XJaNe5pXks9bL5KapSdiW5O2hhPV6fdgJmwFmiAry0E=;
+	s=default; t=1588340703;
+	bh=XjxUPLmaZfpR/Y4FaTxgXOpZTIC1gf1eeU66oXHFRZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEqLimZ0H6/ycJ/WSGeHKUT57RCMawZPq8lGBBUdmgjCPvL5hkCMu3QoqIAga2Y78
-	 6G99N1YHxhlQhscuOuT9bLq5ck99P/Ik8BIAEG/O95tNiZKgBiLddcI/1Rm6E5RnnM
-	 m2xm+D8ZWYi4TlAmmEt+CPLhOtz7QMVX61iW3pOM=
+	b=NqnLtWUwlst2cqTkkvCJv4I69UDhJdJXZFDfXVfkKh/xqGfUpNhMqS35TCVk59grU
+	 vcW3rDk+6y6iCJjlu1+b0MkY/jGPdrgfebVDtY/2niliJaSvfY4AngHNIH37WpAf7A
+	 WGLoXuqlJjh1qn60RfF8H4p6HpMQRMEPI+OOatmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgEANo6 (ORCPT
+        id S1731823AbgEANpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46082 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbgEANoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:44 -0400
+        id S1731802AbgEANo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 999C720757;
-        Fri,  1 May 2020 13:44:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F412051A;
+        Fri,  1 May 2020 13:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340684;
-        bh=XJaNe5pXks9bL5KapSdiW5O2hhPV6fdgJmwFmiAry0E=;
+        s=default; t=1588340698;
+        bh=XjxUPLmaZfpR/Y4FaTxgXOpZTIC1gf1eeU66oXHFRZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nt4JXX8lHBWL+ULYvj6ZK63tmlpWw4RyjwX75WMb4cZAnIQwBxvcKZs7LlkfCUKuE
-         4vdmKM2SyIXFKMQVkMXx7yKV825osH7xuwR0oHt/WCDepVAn0hWqDT/237QeqCIs8F
-         iQ8CmBMFCpRjLnExAtM/fg6Y6FD2FIqJLqLLJOvU=
+        b=tBZgV9/mROBZvbKl3wIlRluwtJD10xmnR4kmZ0JwDWv37tfyK5bXSblpSA8syeOYd
+         kl19/i/mYcL8elanNd4H2oN/35+6SauDmw8FTgencqW9gx7l01NEnYK18Npkr36iWW
+         bWSlZZ0swLqneWtyPFa0+/0fEP/92185EM/BQNHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Xu <peterx@redhat.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 086/106] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
-Date:   Fri,  1 May 2020 15:23:59 +0200
-Message-Id: <20200501131553.927400371@linuxfoundation.org>
+        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 088/106] arm64: Delete the space separator in __emit_inst
+Date:   Fri,  1 May 2020 15:24:01 +0200
+Message-Id: <20200501131554.114385744@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,77 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Fangrui Song <maskray@google.com>
 
-[ Upstream commit 3662daf023500dc084fa3b96f68a6f46179ddc73 ]
+[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
 
-The "isolcpus=" parameter allows sub-parameters before the cpulist is
-specified, and if the parser detects an unknown sub-parameters the whole
-parameter will be ignored.
+In assembly, many instances of __emit_inst(x) expand to a directive. In
+a few places __emit_inst(x) is used as an assembler macro argument. For
+example, in arch/arm64/kvm/hyp/entry.S
 
-This design is incompatible with itself when new sub-parameters are added.
-An older kernel will not recognize the new sub-parameter and will
-invalidate the whole parameter so the CPU isolation will not take
-effect. It emits a warning:
+  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
 
-    isolcpus: Error, unknown flag
+expands to the following by the C preprocessor:
 
-The better and compatible way is to allow "isolcpus=" to skip unknown
-sub-parameters, so that even if new sub-parameters are added an older
-kernel will still be able to behave as usual even if with the new
-sub-parameter specified on the command line.
+  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
 
-Ideally this should have been there when the first sub-parameter for
-"isolcpus=" was introduced.
+Both comma and space are separators, with an exception that content
+inside a pair of parentheses/quotes is not split, so the clang
+integrated assembler splits the arguments to:
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200403223517.406353-1-peterx@redhat.com
+   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
+(along with many other non-x86 backends) sees:
+
+  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # .inst(...) is parsed as one argument
+
+while its x86 backend sees:
+
+  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
+
+The non-x86 backend's behavior is considered unintentional
+(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
+So drop the space separator inside `.inst (...)` to make the clang
+integrated assembler work.
+
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/939
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/isolation.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/sysreg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 008d6ac2342b7..808244f3ddd98 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -149,6 +149,9 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
- static int __init housekeeping_isolcpus_setup(char *str)
- {
- 	unsigned int flags = 0;
-+	bool illegal = false;
-+	char *par;
-+	int len;
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index b91570ff9db14..931037500e83c 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -49,7 +49,9 @@
+ #ifndef CONFIG_BROKEN_GAS_INST
  
- 	while (isalpha(*str)) {
- 		if (!strncmp(str, "nohz,", 5)) {
-@@ -169,8 +172,22 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 			continue;
- 		}
- 
--		pr_warn("isolcpus: Error, unknown flag\n");
--		return 0;
-+		/*
-+		 * Skip unknown sub-parameter and validate that it is not
-+		 * containing an invalid character.
-+		 */
-+		for (par = str, len = 0; *str && *str != ','; str++, len++) {
-+			if (!isalpha(*str) && *str != '_')
-+				illegal = true;
-+		}
-+
-+		if (illegal) {
-+			pr_warn("isolcpus: Invalid flag %.*s\n", len, par);
-+			return 0;
-+		}
-+
-+		pr_info("isolcpus: Skipped unknown flag %.*s\n", len, par);
-+		str++;
- 	}
- 
- 	/* Default behaviour for isolcpus without flags */
+ #ifdef __ASSEMBLY__
+-#define __emit_inst(x)			.inst (x)
++// The space separator is omitted so that __emit_inst(x) can be parsed as
++// either an assembler directive or an assembler macro argument.
++#define __emit_inst(x)			.inst(x)
+ #else
+ #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+ #endif
 -- 
 2.20.1
 
