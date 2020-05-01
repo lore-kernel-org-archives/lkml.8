@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDD8C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C6CC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC65208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130A524957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340051;
-	bh=44V4MZP//wPpF5aDYqpd6uzdLF+uO13EexkIAoMvYOw=;
+	s=default; t=1588340055;
+	bh=9z4LahtgSkFQavSR0Kpqso99n4FDvhhsFpPIpUuuUlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4SaEyu82I7tvyXHN4cQ21vZwVaZwLxvitNgY/+/7Z2nPSprQ1uzMESp/J+YaMVer
-	 1zn70OPO3tcb5XiUITZeI1cmwYyoCwhpDRiGird5I5JCnFTsa4J0El0ag8rkRf636x
-	 /cTx6KMzs9eS14jRcS0BWjJkn7pwoVI4NY7I7fyI=
+	b=bOrWdPE/z8yAW/AJdtLmTuxOdKsdPWGG4z4xA0ADN2l7+xqQbRyXmNASJ4rtNTIzh
+	 db1MzWgMa9jXHkC4oZjifrgvxcGI1ItVNw+YVTSCjpRewfnxFkprfY8bZW/2YwGMVX
+	 e00puLu3hi1GHdZiy3RF38JpYHk1Gi4SgEfl64FE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbgEANeJ (ORCPT
+        id S1730539AbgEANeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59992 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgEANeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:03 -0400
+        id S1730531AbgEANeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD99B216FD;
-        Fri,  1 May 2020 13:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFE5A208DB;
+        Fri,  1 May 2020 13:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340043;
-        bh=44V4MZP//wPpF5aDYqpd6uzdLF+uO13EexkIAoMvYOw=;
+        s=default; t=1588340048;
+        bh=9z4LahtgSkFQavSR0Kpqso99n4FDvhhsFpPIpUuuUlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3NCLNIH9trs3F+RLJ4lveHmvakOAn5x5LrMPZFSVZIgKqepdNjCpJGKW7tNizWTb
-         tZhg1wRRFcRj4BjmfCubz4puqoV/WRsMOzzyaSBph5w9+5Y9aBT7IWrT7fOL7Wt9pD
-         BiNCJ2DTtXegWHdWtVHx9My4MkUNe8WTYgLNKLbk=
+        b=IhUTTTi9AcJXEglbdG8b6vasgayZoJQgBRW4jXBL/vR2ttum+2xiLYb3DWNhmCaDA
+         Ekc4cHSkpF+Y7SziyGoWUeVNufn75YJYdfrCC24c2ozYqQXyngydtXPUNo6ErBEV9C
+         cH0ys6s4tEkUGd5Z8Y9WxU/Be6shImIqSARUDPaA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.14 075/117] staging: vt6656: Fix pairwise key entry save.
-Date:   Fri,  1 May 2020 15:21:51 +0200
-Message-Id: <20200501131553.897491653@linuxfoundation.org>
+        stable@vger.kernel.org, Clement Leger <cleger@kalray.eu>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: [PATCH 4.14 085/117] remoteproc: Fix wrong rvring index computation
+Date:   Fri,  1 May 2020 15:22:01 +0200
+Message-Id: <20200501131554.830677767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -58,86 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Clement Leger <cleger@kalray.eu>
 
-commit 0b59f10b1d8fe8d50944f21f5d403df9303095a8 upstream.
+commit 00a0eec59ddbb1ce966b19097d8a8d2f777e726a upstream.
 
-The problem is that the group key was saved as VNT_KEY_DEFAULTKEY
-was over written by the VNT_KEY_GROUP_ADDRESS index.
+Index of rvring is computed using pointer arithmetic. However, since
+rvring->rvdev->vring is the base of the vring array, computation
+of rvring idx should be reversed. It previously lead to writing at negative
+indices in the resource table.
 
-mac80211 could not clear the mac_addr in the default key.
-
-The VNT_KEY_DEFAULTKEY is not necesscary so remove it and set as
-VNT_KEY_GROUP_ADDRESS.
-
-mac80211 can clear any key using vnt_mac_disable_keyentry.
-
-Fixes: f9ef05ce13e4 ("staging: vt6656: Fix pairwise key for non station modes")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/da2f7e7f-1658-1320-6eee-0f55770ca391@gmail.com
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+Link: https://lore.kernel.org/r/20191004073736.8327-1-cleger@kalray.eu
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Doug Anderson <dianders@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/key.c      |   14 +++-----------
- drivers/staging/vt6656/main_usb.c |    6 +++++-
- 2 files changed, 8 insertions(+), 12 deletions(-)
+ drivers/remoteproc/remoteproc_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/key.c
-+++ b/drivers/staging/vt6656/key.c
-@@ -91,9 +91,6 @@ static int vnt_set_keymode(struct ieee80
- 	case  VNT_KEY_PAIRWISE:
- 		key_mode |= mode;
- 		key_inx = 4;
--		/* Don't save entry for pairwise key for station mode */
--		if (priv->op_mode == NL80211_IFTYPE_STATION)
--			clear_bit(entry, &priv->key_entry_inuse);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -117,7 +114,6 @@ static int vnt_set_keymode(struct ieee80
- int vnt_set_keys(struct ieee80211_hw *hw, struct ieee80211_sta *sta,
- 		 struct ieee80211_vif *vif, struct ieee80211_key_conf *key)
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -288,7 +288,7 @@ void rproc_free_vring(struct rproc_vring
  {
--	struct ieee80211_bss_conf *conf = &vif->bss_conf;
- 	struct vnt_private *priv = hw->priv;
- 	u8 *mac_addr = NULL;
- 	u8 key_dec_mode = 0;
-@@ -159,16 +155,12 @@ int vnt_set_keys(struct ieee80211_hw *hw
- 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_IV;
- 	}
+ 	int size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
+ 	struct rproc *rproc = rvring->rvdev->rproc;
+-	int idx = rvring->rvdev->vring - rvring;
++	int idx = rvring - rvring->rvdev->vring;
+ 	struct fw_rsc_vdev *rsc;
  
--	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE) {
-+	if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
- 		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_PAIRWISE,
- 				key_dec_mode, true);
--	} else {
--		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_DEFAULTKEY,
-+	else
-+		vnt_set_keymode(hw, mac_addr, key, VNT_KEY_GROUP_ADDRESS,
- 				key_dec_mode, true);
- 
--		vnt_set_keymode(hw, (u8 *)conf->bssid, key,
--				VNT_KEY_GROUP_ADDRESS, key_dec_mode, true);
--	}
--
- 	return 0;
- }
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -827,8 +827,12 @@ static int vnt_set_key(struct ieee80211_
- 			return -EOPNOTSUPP;
- 		break;
- 	case DISABLE_KEY:
--		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse))
-+		if (test_bit(key->hw_key_idx, &priv->key_entry_inuse)) {
- 			clear_bit(key->hw_key_idx, &priv->key_entry_inuse);
-+
-+			vnt_mac_disable_keyentry(priv, key->hw_key_idx);
-+		}
-+
- 	default:
- 		break;
- 	}
+ 	dma_free_coherent(rproc->dev.parent, size, rvring->va, rvring->dma);
 
 
