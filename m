@@ -2,123 +2,104 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C632C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D0AC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2AED20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E661621924
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gaOuF2uz"
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="n+VOSW7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgEASwC (ORCPT
+        id S1730302AbgEAS6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:52:02 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.195]:46512 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729767AbgEASwB (ORCPT
+        Fri, 1 May 2020 14:58:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729930AbgEAS6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:52:01 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 9E5043549
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:52:00 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id UalUjkymQVQh0UalUjryl8; Fri, 01 May 2020 13:52:00 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FomgKemsxSQOPPsglc8VE0B4GO1rp6G2EJ9gCbZ2nas=; b=gaOuF2uzZoFMUvAVrJE2McUX34
-        C/oeo/Z/GK7YoSfkM5a5Lx09qTZ7ZEnwZ6g9jiKRxGCvEi6b70xjxYisRA1xDeNQ1eJyGhCBd8tjq
-        p9fIVk6rQ+hMlBPTQnf9D9uK8wiiEZaS8A7pMU7DDFvWISaMrrDwO1owbVKzXwAWw9QwMYPIvMTE7
-        ay2grDRwpR+dfKjDB3IT19ouxU8ls4prbzjqbjq585YEbRuIk1M3WhUefHHjaL9GBRrzHmpniKpCH
-        Kb9I7dZD5CD5dXWiB2sHdwcK9cKRdAwBRHLLBTsaqi1tk5vnsgTyJmeGQi5J5IVVTweLm8ozAanYf
-        Gck1BJbg==;
-Received: from [189.207.59.248] (port=52120 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jUalU-001fON-42; Fri, 01 May 2020 13:52:00 -0500
-Date:   Fri, 1 May 2020 13:56:21 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mukul Joshi <mukul.joshi@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] drm/amdkfd: Remove logically dead code in kfd_procfs_show
-Message-ID: <20200501185621.GA17880@embeddedor>
+        Fri, 1 May 2020 14:58:20 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3FAC08E859
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 11:58:20 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id t12so7982890edw.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 11:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vt0QD0qGDDBVo/FGY17/QPfRi70EGhMjrVST5CXganc=;
+        b=n+VOSW7MD4XNSmZihQfjum+mxK5FnIdMcEiBsOxO2YKarPrGhNRlvcg2KHGBfRAO6e
+         4gbTcv566mvkBg2iFpc/NReOVomtY9GLeW4yURrBxLL94iCOMH2NFhidOSWDfOVLE8h5
+         QYrYIGtF90V/JseWG8q987eBRh2ABNYDpFCvHQr5VZK4WNOxMrhCyO9RONejoHOPH296
+         sHzmULyHaChfwP/e/fMlyiabp3YCA16BBXIfKWM2tDqpwkLKNwN9ZYhLwBrIsHtUfS1Y
+         fXdtX4nNCU0HVUP/jeU7v5WrRblEk6xrYarJ+/+Kfdv8tLcKTkqacAqVy9gqdGwqr0YQ
+         VRDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vt0QD0qGDDBVo/FGY17/QPfRi70EGhMjrVST5CXganc=;
+        b=l0Hx9i+aT+rfZfPvDbxI29yoUn3AqbGZ5gFLw9EcFYenv9yctKuGQxgnI44nL4hKmv
+         E0usvLdMO0xCJVxEKNhTzeSYUVNbuyLGgGt71MUZo8jVvMFgbIJm9imwe3q8qfZBdF/Z
+         7BegKTd4s5RFkFDDqS4OFCKdiszfHJDZbPN68H8/XAMHvbFz2N7tZ6s6GlfAKy6rlI8X
+         5rTrglz+ZNFR3ZjemfPh+gENFXS6SdktKfiTl0wr8Cx5xc22iIeNooOOk61TufrHeQ8t
+         jT4eIbaTHI3g5MVUyuieuS8coLyoBqP6Ky/HkMpKif2pzc6o1poVY0V+oa5raZhZY2ne
+         V4GQ==
+X-Gm-Message-State: AGi0Puak1ie4pvnyAGwrZpS4NQt0v9k7CpMn/2BsyuBvtzi5CiNOiYmK
+        Q3/sECnVxRjlhzjaZSDv/WN/0SLT+ZKkDe7XjVaUEA==
+X-Google-Smtp-Source: APiQypLXpYI05phFZgf41A4e2ccy/aLjYv3h3qo7mTf3PdPfV7hhelvJX+6ErvFxVnYeV8WkozZ6Kn83pMp9XjQxpfs=
+X-Received: by 2002:a50:aa8d:: with SMTP id q13mr4726587edc.88.1588359499000;
+ Fri, 01 May 2020 11:58:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jUalU-001fON-42
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.207.59.248]:52120
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200501182533.19753-1-jcrouse@codeaurora.org>
+In-Reply-To: <20200501182533.19753-1-jcrouse@codeaurora.org>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Fri, 1 May 2020 11:58:08 -0700
+Message-ID: <CADaigPXLOp8+cJ6XGzUm=bmyyhMO2qCGHhgAA44Auq9NvhfFhw@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: Check for powered down HW in the devfreq callbacks
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, stable@vger.kernel.org,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-container_of is never null, so the null check on pdd is unnecessary.
+On Fri, May 1, 2020 at 11:26 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Writing to the devfreq sysfs nodes while the GPU is powered down can
+> result in a system crash (on a5xx) or a nasty GMU error (on a6xx):
+>
+>  $ /sys/class/devfreq/5000000.gpu# echo 500000000 > min_freq
+>   [  104.841625] platform 506a000.gmu: [drm:a6xx_gmu_set_oob]
+>         *ERROR* Timeout waiting for GMU OOB set GPU_DCVS: 0x0
+>
+> Despite the fact that we carefully try to suspend the devfreq device when
+> the hardware is powered down there are lots of holes in the governors that
+> don't check for the suspend state and blindly call into the devfreq
+> callbacks that end up triggering hardware reads in the GPU driver.
+>
+> Check the power state in the gpu_busy() and gpu_set_freq() callbacks for
+> a5xx and a6xx to make sure that the hardware is active before trying to
+> access it.
 
-If the null check is removed, function kfd_procfs_show()
-will always return before reaching "return 0", hence
-such return is logically dead. So, remove it, as well.
-
-Addresses-Coverity-ID: 1492793 ("Logically dead code")
-Fixes: d4566dee849e ("drm/amdkfd: Track GPU memory utilization per process")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index 598296034b43..63dcd30b2cdc 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -87,14 +87,11 @@ static ssize_t kfd_procfs_show(struct kobject *kobj, struct attribute *attr,
- 	} else if (strncmp(attr->name, "vram_", 5) == 0) {
- 		struct kfd_process_device *pdd = container_of(attr, struct kfd_process_device,
- 							      attr_vram);
--		if (pdd)
--			return snprintf(buffer, PAGE_SIZE, "%llu\n", READ_ONCE(pdd->vram_usage));
-+		return snprintf(buffer, PAGE_SIZE, "%llu\n", READ_ONCE(pdd->vram_usage));
- 	} else {
- 		pr_err("Invalid attribute");
- 		return -EINVAL;
- 	}
--
--	return 0;
- }
- 
- static void kfd_procfs_kobj_release(struct kobject *kobj)
--- 
-2.26.0
-
+Chatted on IRC -- while this avoids the instaboot on db820c when
+setting /sys/class/devfreq/devfreq1/min_freq, I think we should be
+using pm_runtime_get_if_in_use() to avoid the races while still
+avoiding bringing up the GPU.
