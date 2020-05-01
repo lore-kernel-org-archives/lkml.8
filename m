@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1A9C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863FCC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A36D216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DF824953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339775;
-	bh=BEyE56IG2BLgUVUhN8lGGKRdFKk0i+zep4JC6V4wuVQ=;
+	s=default; t=1588339778;
+	bh=N2g5AetZjjeqhnyaacK54kADqjcgydOL3a79SG4b514=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJ0HrhYMV3p02UQRrrpogwtMhzsIvB+AmOb+j1oXap+7N/K5hWcrTZ0z0wOvCwz08
-	 5O+JkM/CUiVpn0Xf+uoAzGjgZWHprrFnoKQkBynqKUm/WoVKgNNveUxXSwN7Fsea5f
-	 UDWnnOt2bnv4uvYiFIUXkfBfswe2B1F/CUU1m1iU=
+	b=vYBsPS7oNmOdkLxleSWG2OadOirM5xQYe7EsDSg07kzKRQDjotC2oqm3xYg3kahki
+	 tF1par6iFetZo8JV+7Lp78ffJz1GdHyrpRSW6GdRnQeuaxNC75qCL16TKejDymBtUG
+	 9RKuq9vw/fUxl4nmatKv6PeHmCOEqY+n01MwHWqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbgEAN3e (ORCPT
+        id S1729810AbgEAN3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729778AbgEAN30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:26 -0400
+        id S1729797AbgEAN3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B7D924954;
-        Fri,  1 May 2020 13:29:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C80B124957;
+        Fri,  1 May 2020 13:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339765;
-        bh=BEyE56IG2BLgUVUhN8lGGKRdFKk0i+zep4JC6V4wuVQ=;
+        s=default; t=1588339773;
+        bh=N2g5AetZjjeqhnyaacK54kADqjcgydOL3a79SG4b514=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P3tnVAoJriulEijaL+eRuJNSSobiqgX18xpJa5xjibcX9wdHvA/hYmRoyeCUFlipM
-         /NuYQ2KKsmah6b6BsvtR10Tj5tVr/J0h8YZXdP7Ax1bfgkfE1IrdUdrDaTRgKERbnx
-         nEW2YaT0J3ZBmJZz/yWiCgkDI8hd1Xd2htwQaY7E=
+        b=a7Njh+JeYIv4+y3c32zchREGK4qtc7d7RX2d38PnQmoNV2c+jcRXoriH/57TydVeQ
+         gfhNEAfwN5f51EyaQNy5bi9lV8vAzM5epXPIkjUdqB4a8n8tqEAvUbCLR0KDtzkV6+
+         RMqrue/W3YSawi7zoxUQV8vxPr12Ndqwz7/vc8xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 39/80] vmalloc: fix remap_vmalloc_range() bounds checks
-Date:   Fri,  1 May 2020 15:21:33 +0200
-Message-Id: <20200501131526.076612229@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 42/80] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
+Date:   Fri,  1 May 2020 15:21:36 +0200
+Message-Id: <20200501131526.784723791@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -67,143 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Alexander Tsoy <alexander@tsoy.me>
 
-commit bdebd6a2831b6fab69eb85cee74a8ba77f1a1cc2 upstream.
+commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
 
-remap_vmalloc_range() has had various issues with the bounds checks it
-promises to perform ("This function checks that addr is a valid
-vmalloc'ed area, and that it is big enough to cover the vma") over time,
-e.g.:
+Many Focusrite devices supports a limited set of sample rates per
+altsetting. These includes audio interfaces with ADAT ports:
+ - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
+ - Scarlett 18i8 2nd gen, 18i20 2nd gen;
+ - Scarlett 18i8 3rd gen, 18i20 3rd gen;
+ - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
 
- - not detecting pgoff<<PAGE_SHIFT overflow
+Maximum rate is exposed in the last 4 bytes of Format Type descriptor
+which has a non-standard bLength = 10.
 
- - not detecting (pgoff<<PAGE_SHIFT)+usize overflow
-
- - not checking whether addr and addr+(pgoff<<PAGE_SHIFT) are the same
-   vmalloc allocation
-
- - comparing a potentially wildly out-of-bounds pointer with the end of
-   the vmalloc region
-
-In particular, since commit fc9702273e2e ("bpf: Add mmap() support for
-BPF_MAP_TYPE_ARRAY"), unprivileged users can cause kernel null pointer
-dereferences by calling mmap() on a BPF map with a size that is bigger
-than the distance from the start of the BPF map to the end of the
-address space.
-
-This could theoretically be used as a kernel ASLR bypass, by using
-whether mmap() with a given offset oopses or returns an error code to
-perform a binary search over the possible address range.
-
-To allow remap_vmalloc_range_partial() to verify that addr and
-addr+(pgoff<<PAGE_SHIFT) are in the same vmalloc region, pass the offset
-to remap_vmalloc_range_partial() instead of adding it to the pointer in
-remap_vmalloc_range().
-
-In remap_vmalloc_range_partial(), fix the check against
-get_vm_area_size() by using size comparisons instead of pointer
-comparisons, and add checks for pgoff.
-
-Fixes: 833423143c3a ("[PATCH] mm: introduce remap_vmalloc_range()")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: stable@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@chromium.org>
-Link: http://lkml.kernel.org/r/20200415222312.236431-1-jannh@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
+Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/vmcore.c        |    2 +-
- include/linux/vmalloc.h |    2 +-
- mm/vmalloc.c            |   16 +++++++++++++---
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -459,7 +459,7 @@ static int mmap_vmcore(struct file *file
- 		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)start, size);
- 		kaddr = elfnotes_buf + start - elfcorebuf_sz;
- 		if (remap_vmalloc_range_partial(vma, vma->vm_start + len,
--						kaddr, tsz))
-+						kaddr, 0, tsz))
- 			goto fail;
- 		size -= tsz;
- 		start += tsz;
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -89,7 +89,7 @@ extern void vunmap(const void *addr);
- 
- extern int remap_vmalloc_range_partial(struct vm_area_struct *vma,
- 				       unsigned long uaddr, void *kaddr,
--				       unsigned long size);
-+				       unsigned long pgoff, unsigned long size);
- 
- extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- 							unsigned long pgoff);
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -31,6 +31,7 @@
- #include <linux/compiler.h>
- #include <linux/llist.h>
- #include <linux/bitops.h>
-+#include <linux/overflow.h>
- 
- #include <asm/uaccess.h>
- #include <asm/tlbflush.h>
-@@ -2173,6 +2174,7 @@ finished:
-  *	@vma:		vma to cover
-  *	@uaddr:		target user address to start at
-  *	@kaddr:		virtual address of vmalloc kernel memory
-+ *	@pgoff:		offset from @kaddr to start at
-  *	@size:		size of map area
-  *
-  *	Returns:	0 for success, -Exxx on failure
-@@ -2185,9 +2187,15 @@ finished:
-  *	Similar to remap_pfn_range() (see mm/memory.c)
-  */
- int remap_vmalloc_range_partial(struct vm_area_struct *vma, unsigned long uaddr,
--				void *kaddr, unsigned long size)
-+				void *kaddr, unsigned long pgoff,
-+				unsigned long size)
- {
- 	struct vm_struct *area;
-+	unsigned long off;
-+	unsigned long end_index;
-+
-+	if (check_shl_overflow(pgoff, PAGE_SHIFT, &off))
-+		return -EINVAL;
- 
- 	size = PAGE_ALIGN(size);
- 
-@@ -2201,8 +2209,10 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
- 
--	if (kaddr + size > area->addr + get_vm_area_size(area))
-+	if (check_add_overflow(size, off, &end_index) ||
-+	    end_index > get_vm_area_size(area))
- 		return -EINVAL;
-+	kaddr += off;
- 
- 	do {
- 		struct page *page = vmalloc_to_page(kaddr);
-@@ -2241,7 +2251,7 @@ int remap_vmalloc_range(struct vm_area_s
- 						unsigned long pgoff)
- {
- 	return remap_vmalloc_range_partial(vma, vma->vm_start,
--					   addr + (pgoff << PAGE_SHIFT),
-+					   addr, pgoff,
- 					   vma->vm_end - vma->vm_start);
+--- a/sound/usb/format.c
++++ b/sound/usb/format.c
+@@ -221,6 +221,52 @@ static int parse_audio_format_rates_v1(s
  }
- EXPORT_SYMBOL(remap_vmalloc_range);
+ 
+ /*
++ * Many Focusrite devices supports a limited set of sampling rates per
++ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
++ * descriptor which has a non-standard bLength = 10.
++ */
++static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
++					struct audioformat *fp,
++					unsigned int rate)
++{
++	struct usb_interface *iface;
++	struct usb_host_interface *alts;
++	unsigned char *fmt;
++	unsigned int max_rate;
++
++	iface = usb_ifnum_to_if(chip->dev, fp->iface);
++	if (!iface)
++		return true;
++
++	alts = &iface->altsetting[fp->altset_idx];
++	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
++				      NULL, UAC_FORMAT_TYPE);
++	if (!fmt)
++		return true;
++
++	if (fmt[0] == 10) { /* bLength */
++		max_rate = combine_quad(&fmt[6]);
++
++		/* Validate max rate */
++		if (max_rate != 48000 &&
++		    max_rate != 96000 &&
++		    max_rate != 192000 &&
++		    max_rate != 384000) {
++
++			usb_audio_info(chip,
++				"%u:%d : unexpected max rate: %u\n",
++				fp->iface, fp->altsetting, max_rate);
++
++			return true;
++		}
++
++		return rate <= max_rate;
++	}
++
++	return true;
++}
++
++/*
+  * Helper function to walk the array of sample rate triplets reported by
+  * the device. The problem is that we need to parse whole array first to
+  * get to know how many sample rates we have to expect.
+@@ -256,6 +302,11 @@ static int parse_uac2_sample_rate_range(
+ 		}
+ 
+ 		for (rate = min; rate <= max; rate += res) {
++			/* Filter out invalid rates on Focusrite devices */
++			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
++			    !focusrite_valid_sample_rate(chip, fp, rate))
++				goto skip_rate;
++
+ 			if (fp->rate_table)
+ 				fp->rate_table[nr_rates] = rate;
+ 			if (!fp->rate_min || rate < fp->rate_min)
+@@ -270,6 +321,7 @@ static int parse_uac2_sample_rate_range(
+ 				break;
+ 			}
+ 
++skip_rate:
+ 			/* avoid endless loop */
+ 			if (res == 0)
+ 				break;
 
 
