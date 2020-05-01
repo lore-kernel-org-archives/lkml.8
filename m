@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FB3C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1327CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6008720757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9F3208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340527;
-	bh=fSiUYeg6Rqlm5GfQm9hSnYaD1d2kG1L0OU9BVWSX7TI=;
+	s=default; t=1588340530;
+	bh=6T0RzNca53fTcr0xsQ0bozFXTxhOw2weySWR/MkjV7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W66IlCyLB0DlACBzyeerbd47fbTMrvxw8YO7SLrHrQIOraTX7FoPiqAShdMTOfPk6
-	 r+K20tv8mTHpHtKTunbMhkW+y1EqAzJBN+73BKb+4qdgU/zWc+x2mDsO4l41HoUzz7
-	 c7ZLmv/R7M4BDd4+ue7bgUYprwZrdNJu4k/7JjJc=
+	b=ro8KfcXcd2oDTJjdRwlEA7jBGXx57F4ih6ifLFCEqV3yFlMcOZMopdlQp4Fztpq1F
+	 lfjH+Hg48XjFDOtyWEbqXDzKWE8Ou/XXYuFv8hkUEjCxybdS78mPpYyGkHyw92AEpT
+	 Ta5KO6bTdPz0W2lOHw1tIVBvWeijbz8AKfC5yzmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbgEANmC (ORCPT
+        id S1731476AbgEANmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:42:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42370 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbgEANl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:41:57 -0400
+        id S1729712AbgEANmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35064205C9;
-        Fri,  1 May 2020 13:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C80205C9;
+        Fri,  1 May 2020 13:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340516;
-        bh=fSiUYeg6Rqlm5GfQm9hSnYaD1d2kG1L0OU9BVWSX7TI=;
+        s=default; t=1588340521;
+        bh=6T0RzNca53fTcr0xsQ0bozFXTxhOw2weySWR/MkjV7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zfrQGo/t+gAAPwzOupbIS2cEdb0CzyIMn68ZeYM6JhvilV/UrIjb6pmRxWSWw35xJ
-         A768k/0gSLFrKOsj9h+dBYkGiArMV+yrKQpO3VYqXXIoV5ggNFYDlXC9UJUM7M1UU/
-         Rcf8/3/0x0p9eOccSDrGealMOjsuxx8sF0Owh/Ro=
+        b=ZFYeKgawYwZqU0mrazowHzDiL8PcxDoraQkwZPnlcdedvn4Br3E0ErzdRu1rdevZP
+         k4hTHCNtZnsCwtsnAGG7fzUGkiN3BYMACtxQN/VMivkIxvFMIKogDjruK3/ceA04QS
+         KZVP5BI/8QqGnbkAl1mrR5NcKK2u0mSaMNdHyDxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.6 026/106] bpf: Forbid XADD on spilled pointers for unprivileged users
-Date:   Fri,  1 May 2020 15:22:59 +0200
-Message-Id: <20200501131547.179558131@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.6 016/106] s390/ftrace: fix potential crashes when switching tracers
+Date:   Fri,  1 May 2020 15:22:49 +0200
+Message-Id: <20200501131546.168126327@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,139 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-commit 6e7e63cbb023976d828cdb22422606bf77baa8a9 upstream.
+commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 upstream.
 
-When check_xadd() verifies an XADD operation on a pointer to a stack slot
-containing a spilled pointer, check_stack_read() verifies that the read,
-which is part of XADD, is valid. However, since the placeholder value -1 is
-passed as `value_regno`, check_stack_read() can only return a binary
-decision and can't return the type of the value that was read. The intent
-here is to verify whether the value read from the stack slot may be used as
-a SCALAR_VALUE; but since check_stack_read() doesn't check the type, and
-the type information is lost when check_stack_read() returns, this is not
-enforced, and a malicious user can abuse XADD to leak spilled kernel
-pointers.
+Switching tracers include instruction patching. To prevent that a
+instruction is patched while it's read the instruction patching is done
+in stop_machine 'context'. This also means that any function called
+during stop_machine must not be traced. Thus add 'notrace' to all
+functions called within stop_machine.
 
-Fix it by letting check_stack_read() verify that the value is usable as a
-SCALAR_VALUE if no type information is passed to the caller.
-
-To be able to use __is_pointer_value() in check_stack_read(), move it up.
-
-Fix up the expected unprivileged error message for a BPF selftest that,
-until now, assumed that unprivileged users can use XADD on stack-spilled
-pointers. This also gives us a test for the behavior introduced in this
-patch for free.
-
-In theory, this could also be fixed by forbidding XADD on stack spills
-entirely, since XADD is a locked operation (for operations on memory with
-concurrency) and there can't be any concurrency on the BPF stack; but
-Alexei has said that he wants to keep XADD on stack slots working to avoid
-changes to the test suite [1].
-
-The following BPF program demonstrates how to leak a BPF map pointer as an
-unprivileged user using this bug:
-
-    // r7 = map_pointer
-    BPF_LD_MAP_FD(BPF_REG_7, small_map),
-    // r8 = launder(map_pointer)
-    BPF_STX_MEM(BPF_DW, BPF_REG_FP, BPF_REG_7, -8),
-    BPF_MOV64_IMM(BPF_REG_1, 0),
-    ((struct bpf_insn) {
-      .code  = BPF_STX | BPF_DW | BPF_XADD,
-      .dst_reg = BPF_REG_FP,
-      .src_reg = BPF_REG_1,
-      .off = -8
-    }),
-    BPF_LDX_MEM(BPF_DW, BPF_REG_8, BPF_REG_FP, -8),
-
-    // store r8 into map
-    BPF_MOV64_REG(BPF_REG_ARG1, BPF_REG_7),
-    BPF_MOV64_REG(BPF_REG_ARG2, BPF_REG_FP),
-    BPF_ALU64_IMM(BPF_ADD, BPF_REG_ARG2, -4),
-    BPF_ST_MEM(BPF_W, BPF_REG_ARG2, 0, 0),
-    BPF_EMIT_CALL(BPF_FUNC_map_lookup_elem),
-    BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, 1),
-    BPF_EXIT_INSN(),
-    BPF_STX_MEM(BPF_DW, BPF_REG_0, BPF_REG_8, 0),
-
-    BPF_MOV64_IMM(BPF_REG_0, 0),
-    BPF_EXIT_INSN()
-
-[1] https://lore.kernel.org/bpf/20200416211116.qxqcza5vo2ddnkdq@ast-mbp.dhcp.thefacebook.com/
-
-Fixes: 17a5267067f3 ("bpf: verifier (add verifier core)")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200417000007.10734-1-jannh@google.com
+Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
+Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
+Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/verifier.c                                    |   28 ++++++++++-----
- tools/testing/selftests/bpf/verifier/value_illegal_alu.c |    1 
- 2 files changed, 20 insertions(+), 9 deletions(-)
+ arch/s390/kernel/diag.c  |    2 +-
+ arch/s390/kernel/smp.c   |    4 ++--
+ arch/s390/kernel/trace.c |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1918,6 +1918,15 @@ static bool register_is_const(struct bpf
- 	return reg->type == SCALAR_VALUE && tnum_is_const(reg->var_off);
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum n
+ }
+ EXPORT_SYMBOL(diag_stat_inc);
+ 
+-void diag_stat_inc_norecursion(enum diag_stat_enum nr)
++void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
+ {
+ 	this_cpu_inc(diag_stat.counter[nr]);
+ 	trace_s390_diagnose_norecursion(diag_map[nr].code);
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
+ 	return -1;
  }
  
-+static bool __is_pointer_value(bool allow_ptr_leaks,
-+			       const struct bpf_reg_state *reg)
-+{
-+	if (allow_ptr_leaks)
-+		return false;
-+
-+	return reg->type != SCALAR_VALUE;
-+}
-+
- static void save_register_state(struct bpf_func_state *state,
- 				int spi, struct bpf_reg_state *reg)
+-bool arch_vcpu_is_preempted(int cpu)
++bool notrace arch_vcpu_is_preempted(int cpu)
  {
-@@ -2108,6 +2117,16 @@ static int check_stack_read(struct bpf_v
- 			 * which resets stack/reg liveness for state transitions
- 			 */
- 			state->regs[value_regno].live |= REG_LIVE_WRITTEN;
-+		} else if (__is_pointer_value(env->allow_ptr_leaks, reg)) {
-+			/* If value_regno==-1, the caller is asking us whether
-+			 * it is acceptable to use this value as a SCALAR_VALUE
-+			 * (e.g. for XADD).
-+			 * We must not allow unprivileged callers to do that
-+			 * with spilled pointers.
-+			 */
-+			verbose(env, "leaking pointer from stack off %d\n",
-+				off);
-+			return -EACCES;
- 		}
- 		mark_reg_read(env, reg, reg->parent, REG_LIVE_READ64);
- 	} else {
-@@ -2473,15 +2492,6 @@ static int check_sock_access(struct bpf_
- 	return -EACCES;
+ 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+ 		return false;
+@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
  }
+ EXPORT_SYMBOL(arch_vcpu_is_preempted);
  
--static bool __is_pointer_value(bool allow_ptr_leaks,
--			       const struct bpf_reg_state *reg)
--{
--	if (allow_ptr_leaks)
--		return false;
--
--	return reg->type != SCALAR_VALUE;
--}
--
- static struct bpf_reg_state *reg_state(struct bpf_verifier_env *env, int regno)
+-void smp_yield_cpu(int cpu)
++void notrace smp_yield_cpu(int cpu)
  {
- 	return cur_regs(env) + regno;
---- a/tools/testing/selftests/bpf/verifier/value_illegal_alu.c
-+++ b/tools/testing/selftests/bpf/verifier/value_illegal_alu.c
-@@ -88,6 +88,7 @@
- 	BPF_EXIT_INSN(),
- 	},
- 	.fixup_map_hash_48b = { 3 },
-+	.errstr_unpriv = "leaking pointer from stack off -8",
- 	.errstr = "R0 invalid mem access 'inv'",
- 	.result = REJECT,
- 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
+ 	if (!MACHINE_HAS_DIAG9C)
+ 		return;
+--- a/arch/s390/kernel/trace.c
++++ b/arch/s390/kernel/trace.c
+@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
+ 
+ static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 
+-void trace_s390_diagnose_norecursion(int diag_nr)
++void notrace trace_s390_diagnose_norecursion(int diag_nr)
+ {
+ 	unsigned long flags;
+ 	unsigned int *depth;
 
 
