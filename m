@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A58AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA17C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A2520757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCF4208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340328;
-	bh=kccyWggFbCwVoneumpdT1HwbogboBp2y4gZSkk5jbJM=;
+	s=default; t=1588340332;
+	bh=B1uZsd6re70zLVq6PjRevFnz2XLlg1hnPKISIIgjAf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slvKkZnQP5ddaOpM5ajIbUTTvLccjxm8RnIDelOKTdSwEyHx0ZN41oN6blgnDKL4e
-	 jOvUdklaBY9TioGcuo0x+2xgeP6FKPCIgfP9QlD1mR9jqf1uDUHoctYLuVOEZ2Uufq
-	 symALKLRGk9IfR2qh743krQAOks/+gD9LN0dvVpM=
+	b=AjLFj/KAqaegyYnPfa2Lns4ztbnx1WdYB+wQNPC2z7cQfZk/QyzqEM1WWPswRa8Rw
+	 vy81QwXbUk3Fn7Y69CrqTWdOW7nXj0rE8XwvFla1RIw9eITFFx+E89SM1JphJCX8Qi
+	 rb5Z0n2584F/Npa7tNsN2QJnl8xdTjPUVprNI1Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbgEANiq (ORCPT
+        id S1731097AbgEANiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731084AbgEANim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:42 -0400
+        id S1729163AbgEANir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A053E205C9;
-        Fri,  1 May 2020 13:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81B14205C9;
+        Fri,  1 May 2020 13:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340322;
-        bh=kccyWggFbCwVoneumpdT1HwbogboBp2y4gZSkk5jbJM=;
+        s=default; t=1588340327;
+        bh=B1uZsd6re70zLVq6PjRevFnz2XLlg1hnPKISIIgjAf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZlKz1+MCjs3kSxnou/pDVGv7nItJ1gvMO7beTntZpf+U9RA7NxFiX4itSIDxzHvV0
-         jPbWEy+XXiBWG/YEZpx0yV5wLa/XVQYE6F5yAHzZfacDVFV+uZPVrqGmluDZLLA0DM
-         Ua+W32cFD0ZWCL0g+lnm8PKbEySTMmtN+z8v2BiY=
+        b=jVWCa9kborbPU5w3HTqBix+g4vdJRI2B/41K+r5oW3zQ3xf8gFUaJwcbfyhtY7L+l
+         5THK4+rHZnhyjFwz9igAmWRH5WJcv0sZ5tNjanopWv7UBEG4aFQ/zxejDlb6KPN4P3
+         37C13VgDqf0/Tml5RrtuGdvVEJ69/f2i2VRorD4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 18/83] ASoC: wm8960: Fix wrong clock after suspend & resume
-Date:   Fri,  1 May 2020 15:22:57 +0200
-Message-Id: <20200501131528.700589060@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.4 10/83] afs: Fix to actually set AFS_SERVER_FL_HAVE_EPOCH
+Date:   Fri,  1 May 2020 15:22:49 +0200
+Message-Id: <20200501131526.444132472@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,40 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 1e060a453c8604311fb45ae2f84f67ed673329b4 upstream.
+commit 69cf3978f3ada4e54beae4ad44868b5627864884 upstream.
 
-After suspend & resume, wm8960_hw_params may be called when
-bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
-is not called. But if sample rate is changed at that time, then
-the output clock rate will be not correct.
+AFS keeps track of the epoch value from the rxrpc protocol to note (a) when
+a fileserver appears to have restarted and (b) when different endpoints of
+a fileserver do not appear to be associated with the same fileserver
+(ie. all probes back from a fileserver from all of its interfaces should
+carry the same epoch).
 
-So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
-is not necessary and it causes above issue.
+However, the AFS_SERVER_FL_HAVE_EPOCH flag that indicates that we've
+received the server's epoch is never set, though it is used.
 
-Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this to set the flag when we first receive an epoch value from a probe
+sent to the filesystem client from the fileserver.
+
+Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/wm8960.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/afs/cmservice.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/codecs/wm8960.c
-+++ b/sound/soc/codecs/wm8960.c
-@@ -860,8 +860,7 @@ static int wm8960_hw_params(struct snd_p
+--- a/fs/afs/cmservice.c
++++ b/fs/afs/cmservice.c
+@@ -169,7 +169,7 @@ static int afs_record_cm_probe(struct af
  
- 	wm8960->is_stream_in_use[tx] = true;
+ 	spin_lock(&server->probe_lock);
  
--	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
--	    !wm8960->is_stream_in_use[!tx])
-+	if (!wm8960->is_stream_in_use[!tx])
- 		return wm8960_configure_clocking(component);
- 
- 	return 0;
+-	if (!test_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
++	if (!test_and_set_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
+ 		server->cm_epoch = call->epoch;
+ 		server->probe.cm_epoch = call->epoch;
+ 		goto out;
 
 
