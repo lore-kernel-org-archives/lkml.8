@@ -2,53 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851A9C4725A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6DEC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65FE22054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3643E2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341433;
-	bh=idX8PmflZUNNSTk/f1mwjwKr28IodT3JvA4+evJUmNk=;
+	s=default; t=1588341438;
+	bh=9RzJxy4Upa/s9eKqiIKMjlPo8dJwUDtbafz0tltfjg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Prcu65VcVehBPjot4+nwGVGZ42WOLNfyttFy3DV1S9tUxpBR9UWHk0VyesOu3w+PA
-	 v4zemR1NL+N53Mowa8F8wDDpwB2uzhoTMa7TUbBsaLi/Kk9XpZk/cGSz0TXSeGHbqG
-	 cT6t8zsk+FOBRxU0mpGk6/l4HFxYiJ1Z5G6KLlb4=
+	b=SzR5bJtFaHrD/n1ioUeY5N3JnDGlefgABsiOELewqiCEoFrvTc7u3GQYhfJVMyNTl
+	 gu70zS6dA40scEhurHAIJuEggue4HI2jGOa01XVt16DdjVNTytCehqvMtsGS+XWzjd
+	 JNYBHACZuWLsU1Eq00IRWuZCsLZLazEbGGDSq4uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgEANbh (ORCPT
+        id S1730148AbgEANba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730158AbgEANbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:34 -0400
+        id S1730126AbgEANb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 585582166E;
-        Fri,  1 May 2020 13:31:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9360208C3;
+        Fri,  1 May 2020 13:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339893;
-        bh=idX8PmflZUNNSTk/f1mwjwKr28IodT3JvA4+evJUmNk=;
+        s=default; t=1588339886;
+        bh=9RzJxy4Upa/s9eKqiIKMjlPo8dJwUDtbafz0tltfjg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VbTVy3pK1J79bx8aOCcMJmwRgREZNuOoHiPKaVyUNcBvQDUyC3jlzFINWBCeGBg/E
-         oIAH6CTTcQh9iiRMk0neoQtw3kSEq+FtYIgWj8ieLIoz8DL/KkGGXiEbBx/8BJNXnQ
-         5Any2pu//NSgnz9WqloSVmwSzsDOHJhsSmjGR9lU=
+        b=jyVAQXJCwXm6aVfI1077hHNnQXaC80VS1yiwvwau/dev6cNLUAJ2FRLPjxkO6WXxR
+         x6RHfsnSV9B/u6agCcJZIm+zeX5CGFysPcsWuYQCGB0koNLqoOnJ/NI4KP1Fdwl4+n
+         2Nej2C1EvmaE++um80j5sXThnHxVxQ4CTG8LTQq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 009/117] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-Date:   Fri,  1 May 2020 15:20:45 +0200
-Message-Id: <20200501131546.261537898@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 006/117] crypto: mxs-dcp - make symbols sha1_null_hash and sha256_null_hash static
+Date:   Fri,  1 May 2020 15:20:42 +0200
+Message-Id: <20200501131546.029104312@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,62 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
+commit ce4e45842de3eb54b8dd6e081765d741f5b92b56 upstream.
 
-The following kasan bug was called out:
+Fixes the following sparse warnings:
 
- BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
- Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
- ...
- Call Trace:
- dump_stack+0x96/0xe0
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- print_address_description.constprop.6+0x1b/0x220
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- __kasan_report.cold.9+0x37/0x7c
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- kasan_report+0xe/0x20
- lpfc_unreg_login+0x7c/0xc0 [lpfc]
- lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
- ...
+drivers/crypto/mxs-dcp.c:39:15: warning:
+ symbol 'sha1_null_hash' was not declared. Should it be static?
+drivers/crypto/mxs-dcp.c:43:15: warning:
+ symbol 'sha256_null_hash' was not declared. Should it be static?
 
-When processing the completion of a "Reg Rpi" login mailbox command in
-lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
-extracted from the completing mailbox context and passed as an input for
-the next. However, the vpi stored in the mailbox command context is an
-absolute vpi, which for SLI4 represents both base + offset.  When used with
-a non-zero base component, (function id > 0) this results in an
-out-of-range access beyond the allocated phba->vpi_ids array.
+Fixes: c709eebaf5c5 ("crypto: mxs-dcp - Fix SHA null hashes and output length")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix by subtracting the function's base value to get an accurate vpi number.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/mxs-dcp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index d8e0ba68879c3..480d2d467f7a6 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2271,6 +2271,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	    !pmb->u.mb.mbxStatus) {
- 		rpi = pmb->u.mb.un.varWords[0];
- 		vpi = pmb->u.mb.un.varRegLogin.vpi;
-+		if (phba->sli_rev == LPFC_SLI_REV4)
-+			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
- 		lpfc_unreg_login(phba, vpi, rpi, pmb);
- 		pmb->vport = vport;
- 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
--- 
-2.20.1
-
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -37,11 +37,11 @@
+  * Null hashes to align with hw behavior on imx6sl and ull
+  * these are flipped for consistency with hw output
+  */
+-const uint8_t sha1_null_hash[] =
++static const uint8_t sha1_null_hash[] =
+ 	"\x09\x07\xd8\xaf\x90\x18\x60\x95\xef\xbf"
+ 	"\x55\x32\x0d\x4b\x6b\x5e\xee\xa3\x39\xda";
+ 
+-const uint8_t sha256_null_hash[] =
++static const uint8_t sha256_null_hash[] =
+ 	"\x55\xb8\x52\x78\x1b\x99\x95\xa4"
+ 	"\x4c\x93\x9b\x64\xe4\x41\xae\x27"
+ 	"\x24\xb9\x6f\x99\xc8\xf4\xfb\x9a"
 
 
