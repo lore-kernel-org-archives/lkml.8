@@ -2,152 +2,306 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8D9C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A79C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441E3206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:23:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aYrUs1iT"
+	by mail.kernel.org (Postfix) with ESMTP id D920D2184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgEAKXu (ORCPT
+        id S1728545AbgEAKZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 06:23:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32585 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728229AbgEAKXt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 06:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588328628;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=byxFlKeuowY0yc0XBoCAz1C2pz8gQc7fx1kR9pv0BaE=;
-        b=aYrUs1iTCJo4lBsYPa08wa3Ba1cjvW3F/ao/oqupTMszljmLHM2Pb/K8laY5oj1brwS+n5
-        M796zJMV1e/Sdmq3MTn1utSL4ZxE0noUkktIVfEuo/aAGc/gMYGgXHhlM7oeLeAYjT3CkQ
-        hJ2R4cm9uoCNFhlLSVY9RMBw5t87z18=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-7TQAXia3Oi295juXPFoMqQ-1; Fri, 01 May 2020 06:23:44 -0400
-X-MC-Unique: 7TQAXia3Oi295juXPFoMqQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6284C80183C;
-        Fri,  1 May 2020 10:23:42 +0000 (UTC)
-Received: from krava (unknown [10.40.192.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33AAD5C1B0;
-        Fri,  1 May 2020 10:23:40 +0000 (UTC)
-Date:   Fri, 1 May 2020 12:23:37 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
-Message-ID: <20200501102337.GA1761222@krava>
-References: <20200430013451.17196-1-yao.jin@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430013451.17196-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Fri, 1 May 2020 06:25:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41256 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728119AbgEAKZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 06:25:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 89DAAAC91;
+        Fri,  1 May 2020 10:25:20 +0000 (UTC)
+Date:   Fri, 01 May 2020 12:25:20 +0200
+Message-ID: <s5hk11whrzj.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.6-rc4
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:34:51AM +0800, Jin Yao wrote:
-> A metric may consist of system wide event and non system-wide event.
-> The event group leader may be the system wide event.
-> 
-> For example, the metric "C2_Pkg_Residency" consists of
-> "cstate_pkg/c2-residency" and "msr/tsc". The former counts on the first
-> CPU of socket (tagged system-wide) and the latter is per CPU.
-> 
-> But "C2_Pkg_Residency" hits assertion failure on cascadelakex.
-> 
->  # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
->  perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
->  Aborted
-> 
-> get_group_fd(evsel, cpu, thread)
-> {
-> 	leader = evsel->leader;
-> 	fd = FD(leader, cpu, thread);
-> 	BUG_ON(fd == -1);
-> }
-> 
-> Considering this case, leader is "cstate_pkg/c2-residency", evsel is
-> "msr/tsc" and cpu is 1. Because "cstate_pkg/c2-residency" is a system-wide
-> event and it's processed on CPU0, so FD(leader, 1, thread) must return an
-> invalid fd, then BUG_ON() may be triggered.
-> 
-> This patch gets group fd from CPU0 for system wide event if
-> FD(leader, cpu, thread) returns invalid fd.
-> 
-> With this patch,
-> 
->  # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
-> 
->  Performance counter stats for 'system wide':
-> 
->         1000850802      cstate_pkg/c2-residency/  #      0.5 C2_Pkg_Residency
->       201446161592      msr/tsc/
-> 
->        1.010637051 seconds time elapsed
-> 
-> Fixes: 6a4bb04caacc ("perf tools: Enable grouping logic for parsed events")
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  tools/perf/util/evsel.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 6a571d322bb2..cd6470f63d6f 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1461,6 +1461,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
->  	BUG_ON(!leader->core.fd);
->  
->  	fd = FD(leader, cpu, thread);
-> +	if (fd == -1 && leader->core.system_wide)
+Linus,
 
-fd does not need to be -1 in here.. in my setup cstate_pkg/c2-residency/
-has cpumask 0, so other cpus never get open and are 0, and the whole thing
-ends up with:
+please pull sound fixes for v5.7-rc4 from:
 
-	sys_perf_event_open: pid -1  cpu 1  group_fd 0  flags 0
-	sys_perf_event_open failed, error -9
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.7-rc4
 
-I actualy thought we put -1 to fd array but couldn't find it.. perhaps we should od that
+The topmost commit is 547d2c9cf4f1f72adfecacbd5b093681fb0e8b3e
 
+----------------------------------------------------------------
 
-> +		fd = FD(leader, 0, thread);
-> +
+sound fixes for 5.7-rc4
 
-so how do we group following events?
+Just a collection of small fixes around this time.
 
-  cstate_pkg/c2-residency/ - cpumask 0
-  msr/tsc/                 - all cpus
+- One more try for fixing PCM OSS regression
 
-cpu 0 is fine.. the rest I have no idea ;-)
+- HD-audio: a new quirk for Lenovo, the improved driver blacklisting,
+  a lock fix in the minor error path, and a fix for the possible race
+  at monitor notifiaction
 
-that's why metrics use the :W, that disables grouping on failure
+- USB-audio: a quirk ID fix, a fix for POD HD500 workaround
 
-jirka
+----------------------------------------------------------------
 
->  	BUG_ON(fd == -1);
->  
->  	return fd;
-> -- 
-> 2.17.1
-> 
+Arnd Bergmann (1):
+      ALSA: opti9xx: shut up gcc-10 range warning
 
+Hui Wang (1):
+      ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
+
+Kai Vehmanen (1):
+      ALSA: hda/hdmi: fix race in monitor detection during probe
+
+Takashi Iwai (4):
+      ALSA: hda: Match both PCI ID and SSID for driver blacklist
+      ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
+      ALSA: pcm: oss: Place the plugin buffer overflow checks correctly (for 5.7)
+      ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
+
+Vasily Khoruzhick (1):
+      ALSA: line6: Fix POD HD500 audio playback
+
+Wu Bo (1):
+      ALSA: hda/hdmi: fix without unlocked before return
+
+---
+ sound/core/oss/pcm_plugin.c        | 10 ++++++----
+ sound/isa/opti9xx/miro.c           |  9 ++++++---
+ sound/isa/opti9xx/opti92x-ad1848.c |  9 ++++++---
+ sound/pci/hda/hda_intel.c          |  9 +++++----
+ sound/pci/hda/patch_hdmi.c         |  6 +++++-
+ sound/pci/hda/patch_realtek.c      |  1 +
+ sound/usb/line6/podhd.c            | 22 +++++-----------------
+ sound/usb/quirks.c                 |  2 +-
+ 8 files changed, 35 insertions(+), 33 deletions(-)
+
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index 59d62f05658f..1545f8fdb4db 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -205,13 +205,14 @@ static snd_pcm_sframes_t calc_dst_frames(struct snd_pcm_substream *plug,
+ 	plugin = snd_pcm_plug_first(plug);
+ 	while (plugin && frames > 0) {
+ 		plugin_next = plugin->next;
++		if (check_size && plugin->buf_frames &&
++		    frames > plugin->buf_frames)
++			frames = plugin->buf_frames;
+ 		if (plugin->dst_frames) {
+ 			frames = plugin->dst_frames(plugin, frames);
+ 			if (frames < 0)
+ 				return frames;
+ 		}
+-		if (check_size && frames > plugin->buf_frames)
+-			frames = plugin->buf_frames;
+ 		plugin = plugin_next;
+ 	}
+ 	return frames;
+@@ -225,14 +226,15 @@ static snd_pcm_sframes_t calc_src_frames(struct snd_pcm_substream *plug,
+ 
+ 	plugin = snd_pcm_plug_last(plug);
+ 	while (plugin && frames > 0) {
+-		if (check_size && frames > plugin->buf_frames)
+-			frames = plugin->buf_frames;
+ 		plugin_prev = plugin->prev;
+ 		if (plugin->src_frames) {
+ 			frames = plugin->src_frames(plugin, frames);
+ 			if (frames < 0)
+ 				return frames;
+ 		}
++		if (check_size && plugin->buf_frames &&
++		    frames > plugin->buf_frames)
++			frames = plugin->buf_frames;
+ 		plugin = plugin_prev;
+ 	}
+ 	return frames;
+diff --git a/sound/isa/opti9xx/miro.c b/sound/isa/opti9xx/miro.c
+index e764816a8f7a..b039429e6871 100644
+--- a/sound/isa/opti9xx/miro.c
++++ b/sound/isa/opti9xx/miro.c
+@@ -867,10 +867,13 @@ static void snd_miro_write(struct snd_miro *chip, unsigned char reg,
+ 	spin_unlock_irqrestore(&chip->lock, flags);
+ }
+ 
++static inline void snd_miro_write_mask(struct snd_miro *chip,
++		unsigned char reg, unsigned char value, unsigned char mask)
++{
++	unsigned char oldval = snd_miro_read(chip, reg);
+ 
+-#define snd_miro_write_mask(chip, reg, value, mask)	\
+-	snd_miro_write(chip, reg,			\
+-		(snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
++	snd_miro_write(chip, reg, (oldval & ~mask) | (value & mask));
++}
+ 
+ /*
+  *  Proc Interface
+diff --git a/sound/isa/opti9xx/opti92x-ad1848.c b/sound/isa/opti9xx/opti92x-ad1848.c
+index d06b29693c85..0e6d20e49158 100644
+--- a/sound/isa/opti9xx/opti92x-ad1848.c
++++ b/sound/isa/opti9xx/opti92x-ad1848.c
+@@ -317,10 +317,13 @@ static void snd_opti9xx_write(struct snd_opti9xx *chip, unsigned char reg,
+ }
+ 
+ 
+-#define snd_opti9xx_write_mask(chip, reg, value, mask)	\
+-	snd_opti9xx_write(chip, reg,			\
+-		(snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
++static inline void snd_opti9xx_write_mask(struct snd_opti9xx *chip,
++		unsigned char reg, unsigned char value, unsigned char mask)
++{
++	unsigned char oldval = snd_opti9xx_read(chip, reg);
+ 
++	snd_opti9xx_write(chip, reg, (oldval & ~mask) | (value & mask));
++}
+ 
+ static int snd_opti9xx_configure(struct snd_opti9xx *chip,
+ 					   long port,
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 457a2c065485..0310193ea1bd 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2078,9 +2078,10 @@ static void pcm_mmap_prepare(struct snd_pcm_substream *substream,
+  * some HD-audio PCI entries are exposed without any codecs, and such devices
+  * should be ignored from the beginning.
+  */
+-static const struct snd_pci_quirk driver_blacklist[] = {
+-	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
+-	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++static const struct pci_device_id driver_blacklist[] = {
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1043, 0x874f) }, /* ASUS ROG Zenith II / Strix */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb59) }, /* MSI TRX40 Creator */
++	{ PCI_DEVICE_SUB(0x1022, 0x1487, 0x1462, 0xcb60) }, /* MSI TRX40 */
+ 	{}
+ };
+ 
+@@ -2100,7 +2101,7 @@ static int azx_probe(struct pci_dev *pci,
+ 	bool schedule_probe;
+ 	int err;
+ 
+-	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++	if (pci_match_id(driver_blacklist, pci)) {
+ 		dev_info(&pci->dev, "Skipping the blacklisted device\n");
+ 		return -ENODEV;
+ 	}
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 4eff16053bd5..93760a3564cf 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1848,8 +1848,10 @@ static bool check_non_pcm_per_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+ 	/* Add sanity check to pass klockwork check.
+ 	 * This should never happen.
+ 	 */
+-	if (WARN_ON(spdif == NULL))
++	if (WARN_ON(spdif == NULL)) {
++		mutex_unlock(&codec->spdif_mutex);
+ 		return true;
++	}
+ 	non_pcm = !!(spdif->status & IEC958_AES0_NONAUDIO);
+ 	mutex_unlock(&codec->spdif_mutex);
+ 	return non_pcm;
+@@ -2198,7 +2200,9 @@ static int generic_hdmi_build_controls(struct hda_codec *codec)
+ 
+ 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
+ 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
++		struct hdmi_eld *pin_eld = &per_pin->sink_eld;
+ 
++		pin_eld->eld_valid = false;
+ 		hdmi_present_sense(per_pin, 0);
+ 	}
+ 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c1a85c8f7b69..c16f63957c5a 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7420,6 +7420,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1558, 0x8561, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
++	SND_PCI_QUIRK(0x17aa, 0x1048, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
+diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
+index d37db32ecd3b..e39dc85c355a 100644
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -21,8 +21,7 @@
+ enum {
+ 	LINE6_PODHD300,
+ 	LINE6_PODHD400,
+-	LINE6_PODHD500_0,
+-	LINE6_PODHD500_1,
++	LINE6_PODHD500,
+ 	LINE6_PODX3,
+ 	LINE6_PODX3LIVE,
+ 	LINE6_PODHD500X,
+@@ -318,8 +317,7 @@ static const struct usb_device_id podhd_id_table[] = {
+ 	/* TODO: no need to alloc data interfaces when only audio is used */
+ 	{ LINE6_DEVICE(0x5057),    .driver_info = LINE6_PODHD300 },
+ 	{ LINE6_DEVICE(0x5058),    .driver_info = LINE6_PODHD400 },
+-	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500_0 },
+-	{ LINE6_IF_NUM(0x414D, 1), .driver_info = LINE6_PODHD500_1 },
++	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500 },
+ 	{ LINE6_IF_NUM(0x414A, 0), .driver_info = LINE6_PODX3 },
+ 	{ LINE6_IF_NUM(0x414B, 0), .driver_info = LINE6_PODX3LIVE },
+ 	{ LINE6_IF_NUM(0x4159, 0), .driver_info = LINE6_PODHD500X },
+@@ -352,23 +350,13 @@ static const struct line6_properties podhd_properties_table[] = {
+ 		.ep_audio_r = 0x82,
+ 		.ep_audio_w = 0x01,
+ 	},
+-	[LINE6_PODHD500_0] = {
++	[LINE6_PODHD500] = {
+ 		.id = "PODHD500",
+ 		.name = "POD HD500",
+-		.capabilities	= LINE6_CAP_PCM
++		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
+ 				| LINE6_CAP_HWMON,
+ 		.altsetting = 1,
+-		.ep_ctrl_r = 0x81,
+-		.ep_ctrl_w = 0x01,
+-		.ep_audio_r = 0x86,
+-		.ep_audio_w = 0x02,
+-	},
+-	[LINE6_PODHD500_1] = {
+-		.id = "PODHD500",
+-		.name = "POD HD500",
+-		.capabilities	= LINE6_CAP_PCM
+-				| LINE6_CAP_HWMON,
+-		.altsetting = 0,
++		.ctrl_if = 1,
+ 		.ep_ctrl_r = 0x81,
+ 		.ep_ctrl_w = 0x01,
+ 		.ep_audio_r = 0x86,
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 351ba214a9d3..848a4cc25bed 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1687,7 +1687,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 
+ 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
+ 	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
+-	case USB_ID(0x16b0, 0x06b2): /* NuPrime DAC-10 */
++	case USB_ID(0x16d0, 0x06b2): /* NuPrime DAC-10 */
+ 	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
+ 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
+ 	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
