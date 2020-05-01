@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522EDC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1359CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3133A205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79FC20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340803;
-	bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
+	s=default; t=1588340805;
+	bh=d9R2OtnCbzy2kZlftOg/kItqCRyQPnSNX2spNt3uGCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G908YMq7lGsCQnDA6vvRAv7JI2IrtJ42LHdS100nO4ZG4mrbX9ehc1bxXqlzXdZD5
-	 205NvOZ0wxRfTbkrjE7oHuWRT5GDvtIgKdhAPxHQl0zXX4ByTPXNX4BUROxPhzkeCn
-	 ZeQNl/lsZvlVy6O3lYZk5j4wtiwvGIbWRevZEZ5g=
+	b=WQMOWkFDmuIg4657re93lxUmtWn2JqJR3Vw06Q9rJSQrK326F38hhYy5QnW/qnWBW
+	 IeaA55j8LQWfs2+VHeN48awLcttz36Yi+Ml3FP4upjwBMfO277D3PZet2iIbkKCN8B
+	 lnTn1JWThaMKxTtV+r4HroJLIR8nruvthisFdlGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbgEANon (ORCPT
+        id S1731758AbgEANoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbgEANof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:35 -0400
+        id S1731739AbgEANoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8459216FD;
-        Fri,  1 May 2020 13:44:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEC0216FD;
+        Fri,  1 May 2020 13:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340674;
-        bh=wMtdi2mSKs8GJKWAFYEXR4EYW0aiS/Rd2QRsf2QSWoI=;
+        s=default; t=1588340662;
+        bh=d9R2OtnCbzy2kZlftOg/kItqCRyQPnSNX2spNt3uGCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zW2UMbqhz0PSxuYP5iMGiJWcmunznopup/1gWz0tPwXXJHLKVtAEwIA/5GRbiBfjj
-         oA7XKIq85VY3uxFDbustCc2Gcjmgr/Gu53PXZ4nEcjre3E5wTMbvn77RmVpGQ0FbSy
-         uVZOvXezaVkcZfYF2ZM7QmNd1jmMQ5gGoPgSXjng=
+        b=tVw9RZ5ZLXubovvZv4NUq6x+WNkyvBH3muLTIbB7sFkiHygjKsWF2ZsFek7MgVppB
+         t0wH0APU21NGzg9DdHrm9RtW0n2NQXv3jjbQFrdikQhYcW7hPXbcLtZEipC11oBRRl
+         xL48InWI6Ac7l5ejCUBaFKxUSr6gxlhTxsEga+08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 077/106] drm/amdgpu: fix wrong vram lost counter increment V2
-Date:   Fri,  1 May 2020 15:23:50 +0200
-Message-Id: <20200501131553.135630996@linuxfoundation.org>
+Subject: [PATCH 5.6 072/106] afs: Fix length of dump of bad YFSFetchStatus record
+Date:   Fri,  1 May 2020 15:23:45 +0200
+Message-Id: <20200501131552.706730090@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,124 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 028cfb2444b94d4f394a6fa4ca46182481236e91 ]
+[ Upstream commit 3efe55b09a92a59ed8214db801683cf13c9742c4 ]
 
-Vram lost counter is wrongly increased by two during baco reset.
+Fix the length of the dump of a bad YFSFetchStatus record.  The function
+was copied from the AFS version, but the YFS variant contains bigger fields
+and extra information, so expand the dump to match.
 
-V2: assumed vram lost for mode1 reset on all ASICs
-
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 20 ++++++++++++++++++--
- drivers/gpu/drm/amd/amdgpu/cik.c           |  2 --
- drivers/gpu/drm/amd/amdgpu/nv.c            |  4 ----
- drivers/gpu/drm/amd/amdgpu/soc15.c         |  4 ----
- drivers/gpu/drm/amd/amdgpu/vi.c            |  2 --
- 5 files changed, 18 insertions(+), 14 deletions(-)
+ fs/afs/yfsclient.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index c8bf9cb3cebf2..f184cdca938de 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -1953,8 +1953,24 @@ static void amdgpu_device_fill_reset_magic(struct amdgpu_device *adev)
-  */
- static bool amdgpu_device_check_vram_lost(struct amdgpu_device *adev)
- {
--	return !!memcmp(adev->gart.ptr, adev->reset_magic,
--			AMDGPU_RESET_MAGIC_NUM);
-+	if (memcmp(adev->gart.ptr, adev->reset_magic,
-+			AMDGPU_RESET_MAGIC_NUM))
-+		return true;
-+
-+	if (!adev->in_gpu_reset)
-+		return false;
-+
-+	/*
-+	 * For all ASICs with baco/mode1 reset, the VRAM is
-+	 * always assumed to be lost.
-+	 */
-+	switch (amdgpu_asic_reset_method(adev)) {
-+	case AMD_RESET_METHOD_BACO:
-+	case AMD_RESET_METHOD_MODE1:
-+		return true;
-+	default:
-+		return false;
-+	}
- }
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 83b6d67325f6c..b5b45c57e1b1d 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -165,15 +165,15 @@ static void xdr_dump_bad(const __be32 *bp)
+ 	int i;
  
- /**
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-index 006f21ef7ddf0..62635e58e45ee 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-@@ -1358,8 +1358,6 @@ static int cik_asic_reset(struct amdgpu_device *adev)
- 	int r;
- 
- 	if (cik_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		r = amdgpu_dpm_baco_reset(adev);
- 	} else {
- 		r = cik_asic_pci_config_reset(adev);
-diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-index 2d1bebdf1603d..cc3a79029376b 100644
---- a/drivers/gpu/drm/amd/amdgpu/nv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/nv.c
-@@ -351,8 +351,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
- 	struct smu_context *smu = &adev->smu;
- 
- 	if (nv_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		ret = smu_baco_enter(smu);
- 		if (ret)
- 			return ret;
-@@ -360,8 +358,6 @@ static int nv_asic_reset(struct amdgpu_device *adev)
- 		if (ret)
- 			return ret;
- 	} else {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		ret = nv_asic_mode1_reset(adev);
+ 	pr_notice("YFS XDR: Bad status record\n");
+-	for (i = 0; i < 5 * 4 * 4; i += 16) {
++	for (i = 0; i < 6 * 4 * 4; i += 16) {
+ 		memcpy(x, bp, 16);
+ 		bp += 4;
+ 		pr_notice("%03x: %08x %08x %08x %08x\n",
+ 			  i, ntohl(x[0]), ntohl(x[1]), ntohl(x[2]), ntohl(x[3]));
  	}
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index d8945c31b622c..132a67a041a24 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -569,14 +569,10 @@ static int soc15_asic_reset(struct amdgpu_device *adev)
- 
- 	switch (soc15_asic_reset_method(adev)) {
- 		case AMD_RESET_METHOD_BACO:
--			if (!adev->in_suspend)
--				amdgpu_inc_vram_lost(adev);
- 			return soc15_asic_baco_reset(adev);
- 		case AMD_RESET_METHOD_MODE2:
- 			return amdgpu_dpm_mode2_reset(adev);
- 		default:
--			if (!adev->in_suspend)
--				amdgpu_inc_vram_lost(adev);
- 			return soc15_asic_mode1_reset(adev);
- 	}
+-	memcpy(x, bp, 4);
+-	pr_notice("0x50: %08x\n", ntohl(x[0]));
++	memcpy(x, bp, 8);
++	pr_notice("0x60: %08x %08x\n", ntohl(x[0]), ntohl(x[1]));
  }
-diff --git a/drivers/gpu/drm/amd/amdgpu/vi.c b/drivers/gpu/drm/amd/amdgpu/vi.c
-index 78b35901643bc..3ce10e05d0d6b 100644
---- a/drivers/gpu/drm/amd/amdgpu/vi.c
-+++ b/drivers/gpu/drm/amd/amdgpu/vi.c
-@@ -765,8 +765,6 @@ static int vi_asic_reset(struct amdgpu_device *adev)
- 	int r;
  
- 	if (vi_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) {
--		if (!adev->in_suspend)
--			amdgpu_inc_vram_lost(adev);
- 		r = amdgpu_dpm_baco_reset(adev);
- 	} else {
- 		r = vi_asic_pci_config_reset(adev);
+ /*
 -- 
 2.20.1
 
