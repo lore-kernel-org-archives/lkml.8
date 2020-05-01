@@ -2,208 +2,178 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE1C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84C420857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDc0TY5S"
+	by mail.kernel.org (Postfix) with ESMTP id CF85B2137B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgEAPq3 (ORCPT
+        id S1729757AbgEAPrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEAPq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:46:28 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174EEC061A0C;
-        Fri,  1 May 2020 08:46:28 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id i136so5497706qke.10;
-        Fri, 01 May 2020 08:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9IZ2eQ+0Lg2xRdGV6tDu7reTlhLp4Xc5JPkXDBbcKxY=;
-        b=XDc0TY5SX3L4r0UC/FpLRruVMStQipLZyd9+hKPYV6zMVKEr/iRkmwLzJhw8z/LiqE
-         etY2oegNkGD/f70ogxShpg6+zxdzui/CwPkDChCHQ3cPLbOf1z76ZC5noGN010kOjK6w
-         1zkHGd41lpZkqbWIRveLHHFArCBX1+H/+YGgP1zirOkiVe8E+jEJ615Hcqz1cQmU00lT
-         MJKdC9yhNfrvCtsX+HKVsv9QTchqbjpSbvhZHSiiUsvh6wCaHR7eDCiCjyKmZSsMA0te
-         MMkpwrFuLSGyDums8FnNlcP+M0fWxdSQt9oD/FXNz3Z8GP5Q1ANiyWNto0MwM6Cq8/PA
-         C+qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9IZ2eQ+0Lg2xRdGV6tDu7reTlhLp4Xc5JPkXDBbcKxY=;
-        b=ZheoKfeFdXJncGnwm6pAuKPOCYsIsvY6VOKyJaKlWYcQJS4hYu4Joz2zb+xRI7Qy2m
-         bdxvoF0OFtXhABUOdClDxqCqT2CS1f4QZvCVIM+spF7iLGK8iHUjrPAl2cRbssY6o4dI
-         lXluHLKSQ4Hhf5N5XTxYxojZxxy6bLLWxfOuIJr+v6saAJ6Rm98MsXWRzA3sss0AzfgR
-         YOXYg7kohx3zqYeTf2ON6vKY9IW+g5Gn7CtHUFhaY8S2zCZbiNGLp2llc37JGzxL4r0b
-         WZTAeXRTfzDL5rgfsPWeaZ0n/ia5eG0wNSIZ55aktvnsB9IzAsQeQ5rE0nAKjZEGdFmF
-         tqyw==
-X-Gm-Message-State: AGi0PuY8ttwEIDCGBnnGGfAhUh2JeUcoz22fLRB2b6TCuSJo85t6gp8B
-        L3p+Y8nSwx7Ln2l2ZIdQhf4=
-X-Google-Smtp-Source: APiQypLNf73ajCHg1Jghx8lB8fhM62czg9IvdkYFl57UU+LiLnS4V8Wgo823PifvELVcLH+LtEvsqA==
-X-Received: by 2002:a05:620a:1495:: with SMTP id w21mr4197594qkj.81.1588347987089;
-        Fri, 01 May 2020 08:46:27 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id v62sm2980371qkb.85.2020.05.01.08.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 08:46:25 -0700 (PDT)
-Date:   Fri, 1 May 2020 11:46:10 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        david@lechnology.com, felipe.balbi@linux.intel.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
-Message-ID: <20200501154519.GA4581@icarus>
-References: <cover.1588176662.git.vilhelm.gray@gmail.com>
- <20200430201345.GX51277@piout.net>
+        Fri, 1 May 2020 11:47:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:43018 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728812AbgEAPrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:47:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1602630E;
+        Fri,  1 May 2020 08:47:23 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2FB53F68F;
+        Fri,  1 May 2020 08:47:22 -0700 (PDT)
+Subject: Re: [PATCH] usb: usbfs: correct kernel->user page attribute mismatch
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        git@thegavinli.com, jarkko.sakkinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200430211922.929165-1-jeremy.linton@arm.com>
+ <20200501070500.GA887524@kroah.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <d2d4f50e-a0bf-77c8-399b-86c2137bfa84@arm.com>
+Date:   Fri, 1 May 2020 10:47:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="11Y7aswkeuHtSBEs"
-Content-Disposition: inline
-In-Reply-To: <20200430201345.GX51277@piout.net>
+In-Reply-To: <20200501070500.GA887524@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---11Y7aswkeuHtSBEs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for taking a look at this.
 
-On Thu, Apr 30, 2020 at 10:13:45PM +0200, Alexandre Belloni wrote:
-> Hi,
->=20
-> On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:
-> > Over the past couple years we have noticed some shortcomings with the
-> > Counter sysfs interface. Although useful in the majority of situations,
-> > there are certain use-cases where interacting through sysfs attributes
-> > can become cumbersome and inefficient. A desire to support more advanced
-> > functionality such as timestamps, multi-axis positioning tables, and
-> > other such latency-sensitive applications, has motivated a reevaluation
-> > of the Counter subsystem. I believe a character device interface will be
-> > helpful for this more niche area of counter device use.
-> >=20
-> > To quell any concerns from the offset: this patchset makes no changes to
-> > the existing Counter sysfs userspace interface -- existing userspace
-> > applications will continue to work with no modifications necessary. I
-> > request that driver maintainers please test their applications to verify
-> > that this is true, and report any discrepancies if they arise.
-> >=20
->=20
-> On that topic, I'm wondering why the counter subsystem uses /sys/bus
-> instead of /sys/class that would be more natural for a class of devices.
-> I can't see how counters would be considered busses. I think you should
-> consider moving it over to /sys/class (even if deprecating
-> /sys/bus/counter will be long).
+On 5/1/20 2:05 AM, Greg KH wrote:
+> On Thu, Apr 30, 2020 at 04:19:22PM -0500, Jeremy Linton wrote:
+>> On arm64, and possibly other architectures, requesting
+>> IO coherent memory may return Normal-NC if the underlying
+>> hardware isn't coherent. If these pages are then
+>> remapped into userspace as Normal, that defeats the
+>> purpose of getting Normal-NC, as well as resulting in
+>> mappings with differing cache attributes.
+> 
+> What is "Normal-NC"?
 
-At the time I wasn't quite familiar with sysfs development so I was
-following the iio sysfs code rather closely. However, I see now that
-you're probably right: this isn't really a bus but rather a collection
-of various types of counters -- i.e. a class of devices.
+A non-cacheable attribute on arm64 pages. I think Mark R & Marc Z 
+elaborated while I was asleep (thanks!).
+   .
 
-Perhaps I should migrate this then to /sys/class/counter. Of course, the
-/sys/bus/counter location will have to remain for compatibility with
-existing applications, but I think a simple symlink to the new
-/sys/class/counter location should suffice for that.
 
-If anyone sees an issue with this give me a heads up.
+> 
+>> In particular this happens with libusb, when it attempts
+>> to create zero-copy buffers as is used by rtl-sdr, and
+> 
+> What is "rtl-sdr"
 
-> > Interaction with Counter character devices occurs via ioctl commands.
-> > This allows userspace applications to access and set counter data using
-> > native C datatypes rather than working through string translations.
-> >=20
->=20
-> I agree with David that you should consider using read to retrieve the
-> counter data as this will simplify interrupt handling/polling and
-> blocking/non-blocking reads can be used by an application. ABI wise,
-> this can also be a good move as you could always consider having an
-> ioctl requesting a specific format when reading the device so you are
-> not stuck with the initial format you are going to choose.
+Its the realtek software defined radio (SDR), a really inexpensive TV 
+dongle that was discovered could be used as a general purpose SDR a 
+decade or so ago. In particular, this project
+https://github.com/osmocom/rtl-sdr/
+which is packaged by fedora/etc.
 
-My hesitation to implement support for read/write calls is due to a
-concern that we will end up with various incompatible formats between
-counter drivers (thus requiring users to have intimate knowledge of the
-drivers and therefore defeating the purpose of a subsystem). However, if
-we can standardize on a format that is flexible enough to work for all
-counter drivers, then read/write calls should not be a problem.
+> 
+>> maybe other applications. The result is usually
+>> application death.
+> 
+> So is this a new problem?  Old problem?  Old problem only showing up on
+> future devices?  On current devices?  I need a hint here as to know if
+> this is a bugfix or just work to make future devices work properly.
 
-I think a general format could be possible. For example, the counter
-character device can return a standard header data at the start which
-provides general information about the counter device: number of
-counters, number or signals, number of extensions, etc. From this
-information, offsets can be computed (or perhaps provided by the device)
-to where the binary data for the count, extension, etc., can be read or
-written. Interrupts can then be handled as blocking reads, as could
-other types of events we implement.
+This has been a problem on arm devices without IO coherent USB 
+apparently for years. The rtl-sdr project itself has a disable zero-copy 
+mode that people have been using on rpi/etc specific builds. Fedora 
+OTOH, is building it with the same flags on x86 & arm64 which means that 
+people report problems. This happened a few days ago (on a pinebook), 
+and I duplicated it on an NXP platform just running the `rtl_test` 
+artifact with a nooelec from my junk box. Guessing that it was a page 
+mismatch I went looking for that, rather than disabling the zero copy 
+since punishing arm machine that have IO coherent USB adapters for the 
+sins of these low end devices isn't ideal. I found this, and this patch 
+allows the rtl_test app to run without issues on my NXP/solidrun.
 
-Would something like this work well?
+Plus, given that its actually a kernel/libusb problem its likely there 
+are other applications having similar problems.
 
-William Breathitt Gray
+> 
+>>
+>> If dma_mmap_attr() is used instead of remap_pfn_range,
+>> the page cache/etc attributes can be matched between the
+>> kernel and userspace.
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   drivers/usb/core/devio.c | 5 ++---
+>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+>> index 6833c918abce..1e7458dd6e5d 100644
+>> --- a/drivers/usb/core/devio.c
+>> +++ b/drivers/usb/core/devio.c
+>> @@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
+>>   {
+>>   	struct usb_memory *usbm = NULL;
+>>   	struct usb_dev_state *ps = file->private_data;
+>> +	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
+>>   	size_t size = vma->vm_end - vma->vm_start;
+>>   	void *mem;
+>>   	unsigned long flags;
+>> @@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
+>>   	usbm->vma_use_count = 1;
+>>   	INIT_LIST_HEAD(&usbm->memlist);
+>>   
+>> -	if (remap_pfn_range(vma, vma->vm_start,
+>> -			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+>> -			size, vma->vm_page_prot) < 0) {
+>> +	if (dma_mmap_attrs(hcd->self.sysdev, vma, mem, dma_handle, size, 0)) {
+> 
+> Given that this code has not changed since 2016, how has no one noticed
+> this issue before?
+They have there are a lot of reports of sdr failures, but the general 
+use case is rare?
 
-> > 2. Should device driver callbacks return int or long? I sometimes see
-> >    error values returned as long (e.g. PTR_ERR(), the file_operations
-> >    structure's ioctl callbacks, etc.); when is it necessary to return
-> >    long as opposed to int?
-> >=20
->=20
-> You should use a long if you ever have to return a point as it is
-> guaranteed to have the correct size. Else, just stick to an int if you
-> are not going to overflow it.
->=20
-> > 3. I only implemented the unlocked_ioctl callback. Should I implement a
-> >    compat_ioctl callback as well?
-> >=20
->=20
-> The compat_ioctl is to handle 32bit userspace running on a 64bit kernel.
-> If your structures have the same size in both cases, then you don't have
-> to implement compat_ioctl.
->=20
-> Have a look at Documentation/driver-api/ioctl.rst
->=20
->=20
-> --=20
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> 
+> And have you tested this change out on other systems (i.e. x86) to
+> ensure that this still works properly?
 
---11Y7aswkeuHtSBEs
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes and no, I did some basic libusb tests on an x86 machine, but its a 
+bit tricky at the moment for me to get the rtl plugged into a x86 test 
+machine. (its a work in progress).
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6sREIACgkQhvpINdm7
-VJLBdw//ZnjNv3uOgQIw96NCsmli/By/9yxpfSObH4s6mTX743wjoWvC581vbI6D
-fS8QxevlEVN6Lyz0MVx5GGQmzhTCfAcXJXMG2NbXQ8YJlDYii5bG3zwvjOV/r4mI
-7iPi7+FBkRjGxa2hngyRE97Cz6KOub9vKUJAs4nxWuswWzMjkma1yApWh7Q47uCm
-wvpJKzFFSSJ9EwuwSjk4Hk1ilnuSaQlYVbwy+8/DMtMsZ+gBAKq/jXrME5GBPk5s
-t9zMIA/my6IgnCb+VblT7gB7qnlAslr5Mu/fK7VRNtUEpTLPRaB39unYX7dzhcsG
-xEVJuVjks6KR2l881uR+JK3X+CH+tf1R/1aOJ62Pk6akANPeHfsjq7RfjYJ25fYJ
-7LKviLwYVQEppuzNiRqebzJc3K3OdtdLwo3K7E3fX/7DssURvmwpNN3hAkvftnPn
-EGwKWMD4Q0behQYtkGaVR/EpV1MsNHa+qsm62wEdoK0ax215Ws6A6h9NJ+hDlFq1
-ZQNxZSJYeURWrqPqRvgD1BucbkIb/UWH17Gmn9c3B4SVpwcvuxWJ1h6iWbuCZv6c
-qSC++NL3HtbWfb9HGmkNf7dVIVhRQNeywAN7OxE7ZV7wrccEA93Zp8ZjraJoZ6lg
-aYe92T0eZ2edQkxiyTCWl7vpKa7LN6SV0x1oAsG/w6llSaJu40c=
-=H03J
------END PGP SIGNATURE-----
+> 
+> And why isn't this call used more by drivers if this is a real issue?
+The particulars of asking for iocoherent memory and then mapping it to 
+userspace is rarer than just asking for kmalloc()/remap() and then 
+performing the dma ops?
 
---11Y7aswkeuHtSBEs--
+Then there are all the softer issues around arm64 testing/availability 
+and vendors carrying "fixes" for particular issues (like rtl-sdr 
+disabling zero copy).
+
+> And will this cause issues with how the userspace mapping is handled as
+> now we rely on userspace to do things differently?  Or am I reading the
+> dma_mmap_attrs() documentation wrong?
+I don't think userspace is doing anything differently here, and AFAIK, 
+on systems with IO coherent adapters this ends up with the same page 
+mapping as just doing the remap_pfn_rage() with the same attributes as 
+before. I've looked at dma_map_attrs() a bit, but i'm also trusting it 
+does what it says on the tin.
+
+
+Thanks again for looking at this.
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
