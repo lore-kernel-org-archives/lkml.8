@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F89C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B92AC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4464120757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B8420757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339846;
-	bh=ECf6nK1O1fTbfWY+mavzkiqe7aClD9oO4zkdv6nSnJs=;
+	s=default; t=1588339851;
+	bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCxAkUKz0lmpFctJKwiphlUwIVGvT0hdjihDFnvJkABtjnQ/eYXN8s/FWSE5R93An
-	 aatRemc3jUgChdL5bbf0o13ZVLD0/5Mx9pj5Y5dygC4uc0YyW+GNFkEIE8VaRPYx3W
-	 GA4Zg1E099xNMqXieFTSfPZKTXq1sx6hE5vO3FcI=
+	b=XrWBAKUGP4rc/xfv2zJunUqw2EPDGhoQTtoYnvA16FueTLvhVVoio/CHUlk9wGHF3
+	 vRdpsi0PbMvw3URPa0HDMvT0qtGkKuqjEYh+XraVKgcdxSwKrYGEr3jHyFXimTVrU/
+	 vSqdnEwDD/PLYHDjdWdPOBEasoKqIId6iYTSnsfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbgEANap (ORCPT
+        id S1729502AbgEANau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbgEANam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:42 -0400
+        id S1730008AbgEANap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB80520757;
-        Fri,  1 May 2020 13:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 355EF208C3;
+        Fri,  1 May 2020 13:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339842;
-        bh=ECf6nK1O1fTbfWY+mavzkiqe7aClD9oO4zkdv6nSnJs=;
+        s=default; t=1588339844;
+        bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xuW27QwMjeKQpcfm0HB04+cIHNE+e4lNrLAp5B6o5EilrtHYj6Kn1I0grdUS4IxlL
-         vVZeEijuQv+O9gXX6+QppupzuUH3XZyMR4X0cIAhFyTWZ4wfuRt6j8pNvIBdmneg5J
-         4knpjT9KKIoigtFxwn0mKmgGcslOYP9SeaAG6p8o=
+        b=j8E2qBChgL9prlj0SrbgHqxtm2YIWAcv/CwhpCb3iorUHc1JAJNtZPW7xDKewXrD7
+         kWDc9JUlppF7bkaPptlG0BnSPWAr4HsV5Zdc2MHRgTl3rYW3W50AagnjF9Cx6SCMqE
+         JfeHc3HrhAbpCTT94kvIdu9ncNciaoQZRoP+P3gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Miroslav Benes <mbenes@suse.cz>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 69/80] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
-Date:   Fri,  1 May 2020 15:22:03 +0200
-Message-Id: <20200501131535.615149228@linuxfoundation.org>
+Subject: [PATCH 4.9 70/80] objtool: Support Clang non-section symbols in ORC dump
+Date:   Fri,  1 May 2020 15:22:04 +0200
+Message-Id: <20200501131535.692678080@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -66,65 +63,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
+[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
 
-CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
-unreachable code path.  This includes __builtin_unreachable().  Because
-the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
-this results in a double UD2.  In this case objtool rightfully detects
-that the second UD2 is unreachable:
+Historically, the relocation symbols for ORC entries have only been
+section symbols:
 
-  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+  .text+0: sp:sp+8 bp:(und) type:call end:0
 
-We weren't able to figure out a way to get rid of the double UD2s, so
-just silence the warning.
+However, the Clang assembler is aggressive about stripping section
+symbols.  In that case we will need to use function symbols:
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
+
+In preparation for the generation of such entries in "objtool orc
+generate", add support for reading them in "objtool orc dump".
+
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
+ 1 file changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index db105207757bc..360845926f665 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2035,14 +2035,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
- 	    !strcmp(insn->sec->name, ".altinstr_aux"))
- 		return true;
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
+index c3343820916a6..7cbbbdd932f1d 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -78,7 +78,7 @@ int orc_dump(const char *_objname)
+ 	char *name;
+ 	size_t nr_sections;
+ 	Elf64_Addr orc_ip_addr = 0;
+-	size_t shstrtab_idx;
++	size_t shstrtab_idx, strtab_idx = 0;
+ 	Elf *elf;
+ 	Elf_Scn *scn;
+ 	GElf_Shdr sh;
+@@ -139,6 +139,8 @@ int orc_dump(const char *_objname)
  
-+	if (!insn->func)
-+		return false;
-+
-+	/*
-+	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
-+	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
-+	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
-+	 * (or occasionally a JMP to UD2).
-+	 */
-+	if (list_prev_entry(insn, list)->dead_end &&
-+	    (insn->type == INSN_BUG ||
-+	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
-+	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
-+		return true;
-+
- 	/*
- 	 * Check if this (or a subsequent) instruction is related to
- 	 * CONFIG_UBSAN or CONFIG_KASAN.
- 	 *
- 	 * End the search at 5 instructions to avoid going into the weeds.
- 	 */
--	if (!insn->func)
--		return false;
- 	for (i = 0; i < 5; i++) {
+ 		if (!strcmp(name, ".symtab")) {
+ 			symtab = data;
++		} else if (!strcmp(name, ".strtab")) {
++			strtab_idx = i;
+ 		} else if (!strcmp(name, ".orc_unwind")) {
+ 			orc = data->d_buf;
+ 			orc_size = sh.sh_size;
+@@ -150,7 +152,7 @@ int orc_dump(const char *_objname)
+ 		}
+ 	}
  
- 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
+-	if (!symtab || !orc || !orc_ip)
++	if (!symtab || !strtab_idx || !orc || !orc_ip)
+ 		return 0;
+ 
+ 	if (orc_size % sizeof(*orc) != 0) {
+@@ -171,21 +173,29 @@ int orc_dump(const char *_objname)
+ 				return -1;
+ 			}
+ 
+-			scn = elf_getscn(elf, sym.st_shndx);
+-			if (!scn) {
+-				WARN_ELF("elf_getscn");
+-				return -1;
+-			}
+-
+-			if (!gelf_getshdr(scn, &sh)) {
+-				WARN_ELF("gelf_getshdr");
+-				return -1;
+-			}
+-
+-			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
+-			if (!name || !*name) {
+-				WARN_ELF("elf_strptr");
+-				return -1;
++			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
++				scn = elf_getscn(elf, sym.st_shndx);
++				if (!scn) {
++					WARN_ELF("elf_getscn");
++					return -1;
++				}
++
++				if (!gelf_getshdr(scn, &sh)) {
++					WARN_ELF("gelf_getshdr");
++					return -1;
++				}
++
++				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
++			} else {
++				name = elf_strptr(elf, strtab_idx, sym.st_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
+ 			}
+ 
+ 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
 -- 
 2.20.1
 
