@@ -2,102 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41C5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7AFC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF0E12054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341478;
-	bh=IvnIlFMbhj0nrYkNzgTz4tdNuMiJpw3099iWLQmHY7g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g8ruuEDIR7onk/iNxcAMKgp1cAi6dUBu+Z/3ABpxv0OEr9nW+5ghqxZBEAdZT6G9Z
-	 QFWhwPBT4/o3tBSM8IoYE1vSAtplRn5DxCGlcmMRmUVU96uuhbNQ1mRPtYPkqLDIgB
-	 7pyZSIUOl1EeJV1wT5jrprIoD1Ou+Sl84xextc2c=
+	by mail.kernel.org (Postfix) with ESMTP id 841672051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgEAN56 (ORCPT
+        id S1729565AbgEAN6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:58:11 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36124 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbgEANaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98A77208D6;
-        Fri,  1 May 2020 13:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339852;
-        bh=IvnIlFMbhj0nrYkNzgTz4tdNuMiJpw3099iWLQmHY7g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8NUBnj3Wg3alJyo/6Im9xqDAuKteg5Z78ljgcp4yPhIOkIxFE9eTNLhsqls1vAXh
-         ctXIv1NI1o2K9Nd85/vzNsEr/vY+ULtZ3fowr/VCghfpWSsANVNH8UEDnDVYrJZxDJ
-         ZicmN9htN0PN7QFUjbV9cQRudgJ0iVFy9OBKvzJo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 73/80] of: unittest: kmemleak on changeset destroy
-Date:   Fri,  1 May 2020 15:22:07 +0200
-Message-Id: <20200501131536.264804356@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
-References: <20200501131513.810761598@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729056AbgEAN6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:58:08 -0400
+IronPort-SDR: RX3DI9x4mD/fhpQ3WD4U8cFbrGgp9RbFDm91AkRJzEVpG0HzYadB2kUey+h5oulT8YRAF3jenK
+ V6fGXNkWL+jg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 06:58:08 -0700
+IronPort-SDR: knsFNte1Ij/9pahofbnrAp9hjTgz3vSsDOZ/0cHq9olR4r9VJn5PrEntWcf/J7/oTOdZ93Rvzu
+ PwskZe3XyjOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
+   d="scan'208";a="250024208"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 01 May 2020 06:58:07 -0700
+Date:   Fri, 1 May 2020 06:58:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        KarimAllah Raslan <karahmed@amazon.de>
+Subject: Re: [PATCH] KVM: nVMX: Skip IBPB when switching between vmcs01 and
+ vmcs02
+Message-ID: <20200501135806.GA3798@linux.intel.com>
+References: <20200430204123.2608-1-sean.j.christopherson@intel.com>
+ <853bea8c-41b8-ba3e-0a7c-c5df3b5dac9e@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <853bea8c-41b8-ba3e-0a7c-c5df3b5dac9e@amazon.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+On Thu, Apr 30, 2020 at 11:22:20PM +0200, Alexander Graf wrote:
+> 
+> On 30.04.20 22:41, Sean Christopherson wrote:
+> >
+> >diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> >index 3ab6ca6062ce..818dd8ba5e9f 100644
+> >--- a/arch/x86/kvm/vmx/vmx.c
+> >+++ b/arch/x86/kvm/vmx/vmx.c
+> >@@ -1311,10 +1311,12 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+> >                 pi_set_on(pi_desc);
+> >  }
+> >
+> >-void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+> >+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
+> >+                       struct loaded_vmcs *buddy)
+> >  {
+> >         struct vcpu_vmx *vmx = to_vmx(vcpu);
+> >         bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
+> >+       struct vmcs *prev;
+> >
+> >         if (!already_loaded) {
+> >                 loaded_vmcs_clear(vmx->loaded_vmcs);
+> >@@ -1333,10 +1335,12 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+> >                 local_irq_enable();
+> >         }
+> >
+> >-       if (per_cpu(current_vmcs, cpu) != vmx->loaded_vmcs->vmcs) {
+> >+       prev = per_cpu(current_vmcs, cpu);
+> >+       if (prev != vmx->loaded_vmcs->vmcs) {
+> >                 per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
+> >                 vmcs_load(vmx->loaded_vmcs->vmcs);
+> >-               indirect_branch_prediction_barrier();
+> >+               if (!buddy || buddy->vmcs != prev)
+> >+                       indirect_branch_prediction_barrier();
+> 
+> I fail to understand the logic here though. What exactly are you trying to
+> catch? We only do the barrier when the current_vmcs as loaded by
+> vmx_vcpu_load_vmcs is different from the vmcs of the context that was
+> issuing the vmcs load.
+> 
+> Isn't this a really complicated way to say "Don't flush for nested"? Why not
+> just make it explicit and pass in a bool that says "nested = true" from
+> vmx_switch_vmcs()? Is there any case I'm missing where that would be unsafe?o
 
-[ Upstream commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 ]
+I don't think so, the 'buddy' check was added out of paranoia, and partly
+because I was rushing.  I originally had a 'bool nested_switch' as well.
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 1 of 5.
-
-of_unittest_changeset() reaches deeply into the dynamic devicetree
-functions.  Several nodes were left with an elevated reference
-count and thus were not properly cleaned up.  Fix the reference
-counts so that the memory will be freed.
-
-Fixes: 201c910bd689 ("of: Transactional DT support.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/of/unittest.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index aeb6d3009ae92..144d123f6ea4f 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -539,6 +539,10 @@ static void __init of_unittest_changeset(void)
- 	unittest(!of_changeset_revert(&chgset), "revert failed\n");
- 
- 	of_changeset_destroy(&chgset);
-+
-+	of_node_put(n1);
-+	of_node_put(n2);
-+	of_node_put(n21);
- #endif
- }
- 
--- 
-2.20.1
-
-
-
+I think I like the boolean approach better, the above check should never
+fail in the nested switch case.  I'll add a WARN in vmx_switch_vmcs() with
+a note in the patch to let Paolo know it's likely paranoia and can be
+ripped out at his discretion.
