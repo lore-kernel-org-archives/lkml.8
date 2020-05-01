@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E3C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F9C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F06D4216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AFD2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340040;
-	bh=I/8wWdMsyaeMajMPLmadoycWaGnQX3FlrUMeRfRaWsU=;
+	s=default; t=1588340043;
+	bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BcYqcJ6TMFVMUvdBteRUDWZOYMCmJy2cN4Hzjjbgdch8p0nmQmEIvC7kG+bZ9eljL
-	 zvPflACA5wO6wRA4zB9oLAIbrFryGWhrdPn2wC3tWvY8KQdEU/FWtJLghFnxyadWuV
-	 ywknPG3jfbiZb0oc0BMy3B4+zna4roSVDSW1K7bI=
+	b=pC6on9fq2xxBXigE7WzyugIEYGukd4zoDOBJJaNIMXvFt5eAQR1/ocVtKJTMiF78k
+	 Ljmhj3fF70aiPtOuHQHlDbKFTh2M5BnBNYL0ai8IHwUvlp/ZvCIKctwbFBEMztgmgn
+	 GQdUOd+angTBqi9/XgVibICUHE6U+ocOzl7Yygbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgEANd7 (ORCPT
+        id S1729661AbgEANeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59840 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730509AbgEANd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:56 -0400
+        id S1729997AbgEANd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81739208C3;
-        Fri,  1 May 2020 13:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA31E208D6;
+        Fri,  1 May 2020 13:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340036;
-        bh=I/8wWdMsyaeMajMPLmadoycWaGnQX3FlrUMeRfRaWsU=;
+        s=default; t=1588340038;
+        bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgqRgN4FZxdf5oY3USlbxkEjP/jQp6ESkCYg37Ds6mq8ER9WAvh/6fbu3Pn3NRj/6
-         RbYUQMUvHpkFuoUU6nOHavuo8X1+iMOnQ8MDWnpckQvxVukb8iy2k6L3Mxi1qhDNIn
-         jziT1JdJM5Ko3ZJepk+uhaAbKLr1Fh+a9MTB086s=
+        b=KE3cyBv19AIWLauioydkHgr4fjoSckScGjhOtEvl50qxfSZHC5MDefVpc7iQQG9H5
+         4P4fATUCGLVEtuicRPUe8l7kKwZn7ZeD6hl39MbOcmr2Itntp3gTiXMuwj9N1aQ6X9
+         8nwZxXDTubXuIxZaZS8iqNa+Gyu9h1jLbev+/y4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 068/117] powerpc/setup_64: Set cache-line-size based on cache-block-size
-Date:   Fri,  1 May 2020 15:21:44 +0200
-Message-Id: <20200501131553.234643918@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 069/117] staging: comedi: dt2815: fix writing hi byte of analog output
+Date:   Fri,  1 May 2020 15:21:45 +0200
+Message-Id: <20200501131553.322765447@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,53 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 94c0b013c98583614e1ad911e8795ca36da34a85 upstream.
+commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
 
-If {i,d}-cache-block-size is set and {i,d}-cache-line-size is not, use
-the block-size value for both. Per the devicetree spec cache-line-size
-is only needed if it differs from the block size.
+The DT2815 analog output command is 16 bits wide, consisting of the
+12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
+and a voltage or current selector in bit 0.  Both bytes of the 16-bit
+command need to be written in turn to a single 8-bit data register.
+However, the driver currently only writes the low 8-bits.  It is broken
+and appears to have always been broken.
 
-Originally the code would fallback from block size to line size. An
-error message was printed if both properties were missing.
+Electronic copies of the DT2815 User's Manual seem impossible to find
+online, but looking at the source code, a best guess for the sequence
+the driver intended to use to write the analog output command is as
+follows:
 
-Later the code was refactored to use clearer names and logic but it
-inadvertently made line size a required property, meaning on systems
-without a line size property we fall back to the default from the
-cputable.
+1. Wait for the status register to read 0x00.
+2. Write the low byte of the command to the data register.
+3. Wait for the status register to read 0x80.
+4. Write the high byte of the command to the data register.
 
-On powernv (OPAL) platforms, since the introduction of device tree CPU
-features (5a61ef74f269 ("powerpc/64s: Support new device tree binding
-for discovering CPU features")), that has led to the wrong value being
-used, as the fallback value is incorrect for Power8/Power9 CPUs.
+Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
+driver.
 
-The incorrect values flow through to the VDSO and also to the sysconf
-values, SC_LEVEL1_ICACHE_LINESIZE etc.
+Also add a "FIXME" comment about setting bit 0 of the low byte of the
+command.  Supposedly, it is used to choose between voltage output and
+current output, but the current driver always sets it to 1.
 
-Fixes: bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
-Cc: stable@vger.kernel.org # v4.11+
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reported-by: Qian Cai <cai@lca.pw>
-[mpe: Add even more detail to change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200416221908.7886-1-chris.packham@alliedtelesis.co.nz
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/setup_64.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/comedi/drivers/dt2815.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -466,6 +466,8 @@ static bool __init parse_cache_info(stru
- 	lsizep = of_get_property(np, propnames[3], NULL);
- 	if (bsizep == NULL)
- 		bsizep = lsizep;
-+	if (lsizep == NULL)
-+		lsizep = bsizep;
- 	if (lsizep != NULL)
- 		lsize = be32_to_cpu(*lsizep);
- 	if (bsizep != NULL)
+--- a/drivers/staging/comedi/drivers/dt2815.c
++++ b/drivers/staging/comedi/drivers/dt2815.c
+@@ -101,6 +101,7 @@ static int dt2815_ao_insn(struct comedi_
+ 	int ret;
+ 
+ 	for (i = 0; i < insn->n; i++) {
++		/* FIXME: lo bit 0 chooses voltage output or current output */
+ 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
+ 		hi = (data[i] & 0xff0) >> 4;
+ 
+@@ -114,6 +115,8 @@ static int dt2815_ao_insn(struct comedi_
+ 		if (ret)
+ 			return ret;
+ 
++		outb(hi, dev->iobase + DT2815_DATA);
++
+ 		devpriv->ao_readback[chan] = data[i];
+ 	}
+ 	return i;
 
 
