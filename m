@@ -2,51 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7171BC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18CBC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C39C208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFC6208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339826;
-	bh=KnH9XDnMyRahOYpiIFkke00TmrZSxSRtFPurF5f0YHc=;
+	s=default; t=1588339828;
+	bh=8/a0r3F1U8WWAHijZNM8omks4R6aGZPSjeg1fCxd/Jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1z8NrwuX0tXv+7dzej1WDHHYRIoCyERFWwEcWkwobbk6i283SqYkdpbSrmtsFL20A
-	 hxmWfDCCzCb2i/Z4KYB5C+Ug0gSCxNKQqLJUZEkKmCo7ciLkn4jNKTkS0WTwdH++mb
-	 7wgmRMY/ZWfjUM4AV5apaaE1KDHTZjHRsO4c6zSY=
+	b=IYkVW+AXkhad97ya7kTi43GOt9v6AXd/aovreP6+H8YxLfYyQSBWZM5fR8EA+zOEP
+	 PkqB3MVlAQdrZmBc6CkfPMoThujEXAiias+sMhsh8HsI8dxb09lbfB+uQk3C00eMtc
+	 vOz4jYoCngrj6GGyI3sj3oD2wsvDJ1NsDX4c/BCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgEANaY (ORCPT
+        id S1729950AbgEANa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729075AbgEANaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:20 -0400
+        id S1729926AbgEANaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6272208C3;
-        Fri,  1 May 2020 13:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D163208D6;
+        Fri,  1 May 2020 13:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339820;
-        bh=KnH9XDnMyRahOYpiIFkke00TmrZSxSRtFPurF5f0YHc=;
+        s=default; t=1588339822;
+        bh=8/a0r3F1U8WWAHijZNM8omks4R6aGZPSjeg1fCxd/Jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1+Ax7+yRyWAF263hqQBLvsCnUBcjuSkWU7/YkXJlioPyDbLgHmpmDz/ubVTC6I+Z
-         AXqS+qP7JJkTqpQWOB4Kt9wG9xfOg5fzgJTRXwUM1tHRuplpXDbes+UJnxyIc1mX3b
-         6jFNR/aPn7Ngz0hsEND14uUjbDCGNxws1BHJO0Hw=
+        b=LgQuktGNgPimQDkDks4/yXB93XnCKme4Jr6EZGSkS2zE6U1Jtwgim8ptvK7462Xx4
+         O7WIx8RbskwPEXbg4bdKUeeERCnuSc5WBqsMzjKhmc+D2KSfqO0Hgpa1r7vZEtm0jn
+         dbhkrFR4N6cIRtsCBZPCPbO3fsvbkt3TX/po6EIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 50/80] ASoC: dapm: fixup dapm kcontrol widget
-Date:   Fri,  1 May 2020 15:21:44 +0200
-Message-Id: <20200501131529.177929439@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 66/80] bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
+Date:   Fri,  1 May 2020 15:22:00 +0200
+Message-Id: <20200501131534.755425596@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -59,71 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gyeongtaek Lee <gt82.lee@samsung.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit ebf1474745b4373fdde0fcf32d9d1f369b50b212 upstream.
+[ Upstream commit aee194b14dd2b2bde6252b3acf57d36dccfc743a ]
 
-snd_soc_dapm_kcontrol widget which is created by autodisable control
-should contain correct on_val, mask and shift because it is set when the
-widget is powered and changed value is applied on registers by following
-code in dapm_seq_run_coalesced().
+This patch fixes an encoding bug in emit_stx for BPF_B when the source
+register is BPF_REG_FP.
 
-		mask |= w->mask << w->shift;
-		if (w->power)
-			value |= w->on_val << w->shift;
-		else
-			value |= w->off_val << w->shift;
+The current implementation for BPF_STX BPF_B in emit_stx saves one REX
+byte when the operands can be encoded using Mod-R/M alone. The lower 8
+bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
+a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
+(e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
+equivalents (%sil, %dil, %bpl, %spl).
 
-Shift on the mask in dapm_kcontrol_data_alloc() is removed to prevent
-double shift.
-And, on_val in dapm_kcontrol_set_value() is modified to get correct
-value in the dapm_seq_run_coalesced().
+The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
+or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
+required REX prefix. However, it misses the case when the source is
+BPF_REG_FP (mapped to %rbp).
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/000001d61537$b212f620$1638e260$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
+will read from register %ch instead of the correct %bpl. This patch fixes
+the problem by fixing and refactoring the check on which registers need
+the extra REX byte. Since no BPF registers map to %rsp, there is no need
+to handle %spl.
 
+Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200418232655.23870-1-luke.r.nels@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ arch/x86/net/bpf_jit_comp.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -384,7 +384,7 @@ static int dapm_kcontrol_data_alloc(stru
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index d9dabd0c31fc4..eb5734112cb49 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -150,6 +150,19 @@ static bool is_ereg(u32 reg)
+ 			     BIT(BPF_REG_AX));
+ }
  
- 			memset(&template, 0, sizeof(template));
- 			template.reg = e->reg;
--			template.mask = e->mask << e->shift_l;
-+			template.mask = e->mask;
- 			template.shift = e->shift_l;
- 			template.off_val = snd_soc_enum_item_to_val(e, 0);
- 			template.on_val = template.off_val;
-@@ -510,8 +510,22 @@ static bool dapm_kcontrol_set_value(cons
- 	if (data->value == value)
- 		return false;
- 
--	if (data->widget)
--		data->widget->on_val = value;
-+	if (data->widget) {
-+		switch (dapm_kcontrol_get_wlist(kcontrol)->widgets[0]->id) {
-+		case snd_soc_dapm_switch:
-+		case snd_soc_dapm_mixer:
-+		case snd_soc_dapm_mixer_named_ctl:
-+			data->widget->on_val = value & data->widget->mask;
-+			break;
-+		case snd_soc_dapm_demux:
-+		case snd_soc_dapm_mux:
-+			data->widget->on_val = value >> data->widget->shift;
-+			break;
-+		default:
-+			data->widget->on_val = value;
-+			break;
-+		}
-+	}
- 
- 	data->value = value;
- 
++/*
++ * is_ereg_8l() == true if BPF register 'reg' is mapped to access x86-64
++ * lower 8-bit registers dil,sil,bpl,spl,r8b..r15b, which need extra byte
++ * of encoding. al,cl,dl,bl have simpler encoding.
++ */
++static bool is_ereg_8l(u32 reg)
++{
++	return is_ereg(reg) ||
++	    (1 << reg) & (BIT(BPF_REG_1) |
++			  BIT(BPF_REG_2) |
++			  BIT(BPF_REG_FP));
++}
++
+ /* add modifiers if 'reg' maps to x64 registers r8..r15 */
+ static u8 add_1mod(u8 byte, u32 reg)
+ {
+@@ -771,9 +784,8 @@ st:			if (is_imm8(insn->off))
+ 			/* STX: *(u8*)(dst_reg + off) = src_reg */
+ 		case BPF_STX | BPF_MEM | BPF_B:
+ 			/* emit 'mov byte ptr [rax + off], al' */
+-			if (is_ereg(dst_reg) || is_ereg(src_reg) ||
+-			    /* have to add extra byte for x86 SIL, DIL regs */
+-			    src_reg == BPF_REG_1 || src_reg == BPF_REG_2)
++			if (is_ereg(dst_reg) || is_ereg_8l(src_reg))
++				/* Add extra byte for eregs or SIL,DIL,BPL in src_reg */
+ 				EMIT2(add_2mod(0x40, dst_reg, src_reg), 0x88);
+ 			else
+ 				EMIT1(0x88);
+-- 
+2.20.1
+
 
 
