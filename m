@@ -2,60 +2,93 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDB0C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72329C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 714D420836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45B632071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyzcVrCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgEAD4U (ORCPT
+        id S1728305AbgEAD4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 23:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbgEAD4T (ORCPT
+        Thu, 30 Apr 2020 23:56:53 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32190 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727889AbgEAD4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 23:56:19 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DF0C035494;
-        Thu, 30 Apr 2020 20:56:19 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B97CC1277C56A;
-        Thu, 30 Apr 2020 20:56:18 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 20:56:18 -0700 (PDT)
-Message-Id: <20200430.205618.484622161127720565.davem@davemloft.net>
-To:     michael@walle.cc
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk
-Subject: Re: [PATCH net-next v2 4/4] net: phy: bcm54140: add second PHY ID
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200428230659.7754-4-michael@walle.cc>
-References: <20200428230659.7754-1-michael@walle.cc>
-        <20200428230659.7754-4-michael@walle.cc>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Apr 2020 20:56:19 -0700 (PDT)
+        Thu, 30 Apr 2020 23:56:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588305412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bXalt8zK+YdFYaEr91Rzg8c48giwHyBf2CnOS3ryAnE=;
+        b=UyzcVrCxtACLYTB0hJuDHMupY1oOabghW/C2ZAWIEgi3z4iT/nniaU01XkpEX1P+LGR3XT
+        hoSKAi9BqiZoyhvD3CTWadxKcagDxYJYFRL6AAsJQXab21yOIwPyFvGKV2KZZ1zBHx6dxo
+        HI512VJvi37u8WVvr53lSmXY9BzAmTE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-494-LWnWZ9qkMw6JQyRYU5-6Mw-1; Thu, 30 Apr 2020 23:56:48 -0400
+X-MC-Unique: LWnWZ9qkMw6JQyRYU5-6Mw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45077186E6F9;
+        Fri,  1 May 2020 03:56:47 +0000 (UTC)
+Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B583579A5;
+        Fri,  1 May 2020 03:56:46 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 22:56:44 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Apr 30 (objtool warnings)
+Message-ID: <20200501035644.i7woe5bpyxqwjpwh@treble>
+References: <20200430174019.417e5f3e@canb.auug.org.au>
+ <8eedaa40-c93d-428e-47aa-ee1e6b6d69e6@infradead.org>
+ <9005add6-3b90-f9f0-eb56-6e309853eb7f@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <9005add6-3b90-f9f0-eb56-6e309853eb7f@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
-Date: Wed, 29 Apr 2020 01:06:59 +0200
-
-> This PHY has two PHY IDs depending on its mode. Adjust the mask so that
-> it includes both IDs.
+On Thu, Apr 30, 2020 at 07:40:52AM -0700, Randy Dunlap wrote:
+> On 4/30/20 7:31 AM, Randy Dunlap wrote:
+> > On 4/30/20 12:40 AM, Stephen Rothwell wrote:
+> >> Hi all,
+> >>
+> >> Changes since 20200429:
+> >>
+> > 
+> > on x86_64:
+> > 
+> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x2e: unreachable instruction
+> > kernel/cred.o: warning: objtool: copy_creds()+0x278: unreachable instruction
+> > net/core/skbuff.o: warning: objtool: skb_push()+0x9e: unreachable instruction
+> > 
+> > 
+> > Full randconfig file is attached.
+> > 
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> oops, forgot to Cc: Josh and Peter.
 
-Applied.
+These are all related to -flive-patching, for some reason it reduces
+GCC's ability to detect local noreturn functions.  I had some patches
+for these (and more) I'll need to dig up.
+
+-- 
+Josh
+
