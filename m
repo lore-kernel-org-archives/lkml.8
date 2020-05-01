@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AE4C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E85CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A5220757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68ADB20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340346;
-	bh=4hZvBE6xsC/iubCP5MVXG8dhgb8LLPoFp3HBF0HbDCk=;
+	s=default; t=1588340353;
+	bh=smIr3Dk84ov3hd0kaKlm6PPoxLkLUXPpwI22bYV8MWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7O4/fbllMzDOItSjz3jU3wpSVSemN9PQGTkKvUQqXDlrutDl+CzKxZZ/HO7i6OmB
-	 BeP0nxcuiyAnGw8d/RqbvUaWh5aYNJkhc7OTQAmgW6GIOISUaFo8qed/JioBqnR7O7
-	 p0aKuCVWMuxBB+ymCVgZK/9kvaOx9Id3puqXuvTY=
+	b=ARJHRUl02LAoIx330qM8yj9i1vwX8Nbq5AdJVuz4hCdIAkQOb72mSOahRU2QnXuSY
+	 lkr8f/Tb6TeKcn9NGqLMSaKfeIH5Jqu+x2aT1TCwsuvznRdzOCHz4ViTY6f+8J6rOc
+	 uvhv9zdr0Ovzomd7QCI0GbT0U06UEIN+cOb3cGp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgEANjF (ORCPT
+        id S1731157AbgEANjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38630 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731130AbgEANjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:02 -0400
+        id S1731143AbgEANjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D820205C9;
-        Fri,  1 May 2020 13:39:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 346B7205C9;
+        Fri,  1 May 2020 13:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340341;
-        bh=4hZvBE6xsC/iubCP5MVXG8dhgb8LLPoFp3HBF0HbDCk=;
+        s=default; t=1588340346;
+        bh=smIr3Dk84ov3hd0kaKlm6PPoxLkLUXPpwI22bYV8MWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdJbZQTdB7nH4qkdKKtEXe/pvcd3HB3/fr360PnwGcCbGiPqtwR+PEs8Z5ocR0BXe
-         3qOp+Lsi2xnDoyReGpdN8hE8TdlVWzIRAgWpHZtfEotp3DcQv8+O4DQ5f36W48KY5Y
-         PPGGhSxPKd/Dn6BzmY57G1snshZ5s6jmoiWmmj+4=
+        b=Kz5Cd8Y/WbZ7fQFPJ/9JjZmAhhtcfniNj6TTAhuPlYIwf5h0s7ozI8qqFUxrSrNwq
+         qY+kvkCQiGOpXyIoctHcH7r6ai+OFNbsWB8ZnRf2cROZ34XaTHC50mzeTe1EGwPqR8
+         DKJnPGQpU7cFKuPXj8tnjUMg6eY4NTOrCowhqw6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Schmidt <alexs@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.4 39/83] s390/pci: do not set affinity for floating irqs
-Date:   Fri,  1 May 2020 15:23:18 +0200
-Message-Id: <20200501131535.610985340@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 28/83] net/mlx5e: Dont trigger IRQ multiple times on XSK wakeup to avoid WQ overruns
+Date:   Fri,  1 May 2020 15:23:07 +0200
+Message-Id: <20200501131531.021459156@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,54 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-commit 86dbf32da150339ca81509fa2eb84c814b55258b upstream.
+commit e7e0004abdd6f83ae4be5613b29ed396beff576c upstream.
 
-with the introduction of CPU directed interrupts the kernel
-parameter pci=force_floating was introduced to fall back
-to the previous behavior using floating irqs.
+XSK wakeup function triggers NAPI by posting a NOP WQE to a special XSK
+ICOSQ. When the application floods the driver with wakeup requests by
+calling sendto() in a certain pattern that ends up in mlx5e_trigger_irq,
+the XSK ICOSQ may overflow.
 
-However we were still setting the affinity in that case,
-both in __irq_alloc_descs() and via the irq_set_affinity
-callback in struct irq_chip.
+Multiple NOPs are not required and won't accelerate the process, so
+avoid posting a second NOP if there is one already on the way. This way
+we also avoid increasing the queue size (which might not help anyway).
 
-For the former only set the affinity in the directed case.
-
-The latter is explicitly set in zpci_directed_irq_init()
-so we can just leave it unset for the floating case.
-
-Fixes: e979ce7bced2 ("s390/pci: provide support for CPU directed interrupts")
-Co-developed-by: Alexander Schmidt <alexs@linux.ibm.com>
-Signed-off-by: Alexander Schmidt <alexs@linux.ibm.com>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/pci/pci_irq.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h        |    3 ++-
+ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c |    3 +++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c     |    8 +++++---
+ drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c   |    6 +++++-
+ 4 files changed, 15 insertions(+), 5 deletions(-)
 
---- a/arch/s390/pci/pci_irq.c
-+++ b/arch/s390/pci/pci_irq.c
-@@ -115,7 +115,6 @@ static struct irq_chip zpci_irq_chip = {
- 	.name = "PCI-MSI",
- 	.irq_unmask = pci_msi_unmask_irq,
- 	.irq_mask = pci_msi_mask_irq,
--	.irq_set_affinity = zpci_set_irq_affinity,
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -367,6 +367,7 @@ enum {
+ 	MLX5E_SQ_STATE_AM,
+ 	MLX5E_SQ_STATE_TLS,
+ 	MLX5E_SQ_STATE_VLAN_NEED_L2_INLINE,
++	MLX5E_SQ_STATE_PENDING_XSK_TX,
  };
  
- static void zpci_handle_cpu_local_irq(bool rescan)
-@@ -276,7 +275,9 @@ int arch_setup_msi_irqs(struct pci_dev *
- 		rc = -EIO;
- 		if (hwirq - bit >= msi_vecs)
- 			break;
--		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE, msi->affinity);
-+		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE,
-+				(irq_delivery == DIRECTED) ?
-+				msi->affinity : NULL);
- 		if (irq < 0)
- 			return -ENOMEM;
- 		rc = irq_set_msi_desc(irq, msi);
+ struct mlx5e_sq_wqe_info {
+@@ -948,7 +949,7 @@ void mlx5e_page_release_dynamic(struct m
+ void mlx5e_handle_rx_cqe(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
+ void mlx5e_handle_rx_cqe_mpwrq(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
+ bool mlx5e_post_rx_wqes(struct mlx5e_rq *rq);
+-void mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
++int mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
+ bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq);
+ void mlx5e_dealloc_rx_wqe(struct mlx5e_rq *rq, u16 ix);
+ void mlx5e_dealloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
+@@ -33,6 +33,9 @@ int mlx5e_xsk_wakeup(struct net_device *
+ 		if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &c->xskicosq.state)))
+ 			return 0;
+ 
++		if (test_and_set_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state))
++			return 0;
++
+ 		spin_lock(&c->xskicosq_lock);
+ 		mlx5e_trigger_irq(&c->xskicosq);
+ 		spin_unlock(&c->xskicosq_lock);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -587,7 +587,7 @@ bool mlx5e_post_rx_wqes(struct mlx5e_rq
+ 	return !!err;
+ }
+ 
+-void mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
++int mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
+ {
+ 	struct mlx5e_icosq *sq = container_of(cq, struct mlx5e_icosq, cq);
+ 	struct mlx5_cqe64 *cqe;
+@@ -595,11 +595,11 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 	int i;
+ 
+ 	if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &sq->state)))
+-		return;
++		return 0;
+ 
+ 	cqe = mlx5_cqwq_get_cqe(&cq->wq);
+ 	if (likely(!cqe))
+-		return;
++		return 0;
+ 
+ 	/* sq->cc must be updated only after mlx5_cqwq_update_db_record(),
+ 	 * otherwise a cq overrun may occur
+@@ -646,6 +646,8 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 	sq->cc = sqcc;
+ 
+ 	mlx5_cqwq_update_db_record(&cq->wq);
++
++	return i;
+ }
+ 
+ bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
+@@ -145,7 +145,11 @@ int mlx5e_napi_poll(struct napi_struct *
+ 
+ 	busy |= rq->post_wqes(rq);
+ 	if (xsk_open) {
+-		mlx5e_poll_ico_cq(&c->xskicosq.cq);
++		if (mlx5e_poll_ico_cq(&c->xskicosq.cq))
++			/* Don't clear the flag if nothing was polled to prevent
++			 * queueing more WQEs and overflowing XSKICOSQ.
++			 */
++			clear_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state);
+ 		busy |= mlx5e_poll_xdpsq_cq(&xsksq->cq);
+ 		busy_xsk |= mlx5e_napi_xsk_post(xsksq, xskrq);
+ 	}
 
 
