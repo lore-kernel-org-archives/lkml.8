@@ -2,107 +2,64 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B30AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C16C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354672166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:22:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IlAU2fgF"
+	by mail.kernel.org (Postfix) with ESMTP id 44F7B2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEATW2 (ORCPT
+        id S1726534AbgEAT0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:22:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30805 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726649AbgEATW2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:22:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588360947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Uvr7NE+VoOzpD9fS1fNpWQ3alb4De94rrwIJLuJTDvI=;
-        b=IlAU2fgFr/xFimsCTaIdPg8RMBVh/eD164bGUwoVPBKugfH1SgEX/E1VHyzOylyPmufSrP
-        gDzUHyYWN+7OT2/PwXBGuCgOWDR04iG4Zfd1QCMARpYMHF/xD+eP7r5yMs5XUMOZGL7KVz
-        vZaeSbQKlS57MWs6MDwYQDDdXqDc7Ds=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-0yGqluTzMCaj3-bbGH5WfA-1; Fri, 01 May 2020 15:22:25 -0400
-X-MC-Unique: 0yGqluTzMCaj3-bbGH5WfA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E407D8014D9;
-        Fri,  1 May 2020 19:22:23 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-114-161.phx2.redhat.com [10.3.114.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4D542B4CB;
-        Fri,  1 May 2020 19:22:20 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id 04C461202A6; Fri,  1 May 2020 15:22:19 -0400 (EDT)
-Date:   Fri, 1 May 2020 15:22:19 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "tj@kernel.org" <tj@kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "shli@fb.com" <shli@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "oleg@redhat.com" <oleg@redhat.com>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200501192219.GG9191@pick.fieldses.org>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200501184935.GD9191@pick.fieldses.org>
- <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
+        Fri, 1 May 2020 15:26:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:48441 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbgEAT0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 15:26:43 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 256FE68C4E; Fri,  1 May 2020 21:26:40 +0200 (CEST)
+Date:   Fri, 1 May 2020 21:26:39 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        aaw@google.com
+Subject: Re: [PATCH 2/2] exec: open code copy_string_kernel
+Message-ID: <20200501192639.GA25896@lst.de>
+References: <20200501104105.2621149-1-hch@lst.de> <20200501104105.2621149-3-hch@lst.de> <20200501125049.GL23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200501125049.GL23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 07:05:46PM +0000, Trond Myklebust wrote:
-> On Fri, 2020-05-01 at 14:49 -0400, J. Bruce Fields wrote:
-> > On Fri, May 01, 2020 at 02:21:54PM -0400, Tejun Heo wrote:
-> > > Hello,
-> > > 
-> > > On Fri, May 01, 2020 at 10:59:24AM -0700, Linus Torvalds wrote:
-> > > > Which kind of makes me want to point a finger at Tejun. But it's
-> > > > been
-> > > > mostly PeterZ touching this file lately..
-> > > 
-> > > Looks fine to me too. I don't quite understand the usecase tho. It
-> > > looks
-> > > like all it's being used for is to tag some kthreads as belonging
-> > > to the
-> > > same group.
-> > 
-> > Pretty much.
+On Fri, May 01, 2020 at 01:50:49PM +0100, Al Viro wrote:
+> On Fri, May 01, 2020 at 12:41:05PM +0200, Christoph Hellwig wrote:
+> > Currently copy_string_kernel is just a wrapper around copy_strings that
+> > simplifies the calling conventions and uses set_fs to allow passing a
+> > kernel pointer.  But due to the fact the we only need to handle a single
+> > kernel argument pointer, the logic can be sigificantly simplified while
+> > getting rid of the set_fs.
 > 
-> Wen running an instance of knfsd from inside a container, you want to
-> be able to have the knfsd kthreads be parented to the container init
-> process so that they get killed off when the container is killed.
-> 
-> Right now, we can easily leak those kernel threads simply by killing
-> the container.
+> I can live with that...  BTW, why do we bother with flush_cache_page() (by
+> way of get_arg_page()) here and in copy_strings()?  How could *anything*
+> have accessed that page by its address in new mm - what are we trying to
+> flush here?
 
-Oh, got it.
+s/get_arg_page/flush_arg_page/ ?
 
-Currently knfsd supports nfs service in containers, but it uses a single
-set of threads to serve requests from any container.  It should shut the
-server threads down when the last container using them goes away.
+No idea, what the use case is, but this comes from:
 
---b.
+commit b6a2fea39318e43fee84fa7b0b90d68bed92d2ba
+Author: Ollie Wild <aaw@google.com>
+Date:   Thu Jul 19 01:48:16 2007 -0700
 
+    mm: variable length argument support
