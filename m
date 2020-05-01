@@ -2,207 +2,134 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281ACC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330C6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2FE720787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:09:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OgHaKCjB"
+	by mail.kernel.org (Postfix) with ESMTP id 19234214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgEAHJ4 (ORCPT
+        id S1728316AbgEAHOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 03:09:56 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:21337 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgEAHJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 03:09:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588316993; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=zcBluhNmFPkLnjCjr7nikLWqbgufm1+ph5PULjOcjyg=;
- b=OgHaKCjBSD+9vmwCmc3sVEn7ZYYjWyHzrgQKtebJlfD6OABddLbkvV7xFIPxvL0aMU8XNpeD
- /+vBpAF/91kaxYO8rn0xAOv9dy6hB7XJSqR9xn78Wx5y8tjDmrVkDYdbOU0QO/fa2YsvcB/0
- P4EXBuifxpQpYjfj0tca4kFWVU8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eabcb41.7f793e9157d8-smtp-out-n03;
- Fri, 01 May 2020 07:09:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 064F5C433D2; Fri,  1 May 2020 07:09:53 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 1 May 2020 03:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728212AbgEAHOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 03:14:51 -0400
+Received: from [192.168.0.106] (unknown [202.53.39.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: mansur)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0CC32C433F2;
-        Fri,  1 May 2020 07:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 752A5208C3;
+        Fri,  1 May 2020 07:14:46 +0000 (UTC)
+Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
+ properly in there
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200429214954.44866-1-jannh@google.com>
+ <20200429215620.GM1551@shell.armlinux.org.uk>
+ <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
+ <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
+ <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <9d4a2520-f41c-aed1-4ce0-274370eb4503@linux-m68k.org>
+Date:   Fri, 1 May 2020 17:14:43 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 May 2020 12:39:52 +0530
-From:   mansur@codeaurora.org
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     Jeffrey Kardatzke <jkardatzke@google.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>
-Subject: Re: [PATCH] venus: avoid extra locking in driver
-In-Reply-To: <CAPBb6MVyTFqrVXAXqA6u=-0WtXcdWnozzN3gGk7y8TDK12-6Gg@mail.gmail.com>
-References: <1583472756-7611-1-git-send-email-mansur@codeaurora.org>
- <CAPBb6MW-zxK+=HHUP5=+pO4Mswkhm=hDX7V56ABDm+BCzDaGHg@mail.gmail.com>
- <CA+ddPcNdC4r3XBd+dQmv2oHwF6MA3bTJrWZZpJthruBQR_THBA@mail.gmail.com>
- <CAPBb6MVyTFqrVXAXqA6u=-0WtXcdWnozzN3gGk7y8TDK12-6Gg@mail.gmail.com>
-Message-ID: <291577a66d4f7b1262a7154f6274211a@codeaurora.org>
-X-Sender: mansur@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 2020-03-11 08:34, Alexandre Courbot wrote:
->> On Tue, Mar 10, 2020 at 7:07 AM Jeffrey Kardatzke 
->> <jkardatzke@google.com> wrote:
->>> 
->>> On Thu, Mar 5, 2020 at 11:50 PM Alexandre Courbot 
->>> <acourbot@chromium.org> wrote:
->>> >
->>> > On Fri, Mar 6, 2020 at 2:34 PM Mansur Alisha Shaik
->>> > <mansur@codeaurora.org> wrote:
->>> > >
->>> > > This change will avoid extra locking in driver.
->>> >
->>> > Could you elaborate a bit more on the problem that this patch solves?
->>> 
->>> For us it fixes a kernel null deref that happens when we run the
->>> MultipleEncoders test (I've verified this to be true).
->>> 
->>> >
->>> > >
->>> > > Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
->>> > > ---
->>> > >  drivers/media/platform/qcom/venus/core.c       |  2 +-
->>> > >  drivers/media/platform/qcom/venus/core.h       |  2 +-
->>> > >  drivers/media/platform/qcom/venus/helpers.c    | 11 +++++++++--
->>> > >  drivers/media/platform/qcom/venus/pm_helpers.c |  8 ++++----
->>> > >  4 files changed, 15 insertions(+), 8 deletions(-)
->>> > >
->>> > > diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->>> > > index 194b10b9..75d38b8 100644
->>> > > --- a/drivers/media/platform/qcom/venus/core.c
->>> > > +++ b/drivers/media/platform/qcom/venus/core.c
->>> > > @@ -447,7 +447,7 @@ static const struct freq_tbl sdm845_freq_table[] = {
->>> > >         {  244800, 100000000 }, /* 1920x1080@30 */
->>> > >  };
->>> > >
->>> > > -static struct codec_freq_data sdm845_codec_freq_data[] =  {
->>> > > +static const struct codec_freq_data sdm845_codec_freq_data[] =  {
->>> > >         { V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
->>> > >         { V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
->>> > >         { V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
->>> > > diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
->>> > > index ab7c360..8c8d0e9 100644
->>> > > --- a/drivers/media/platform/qcom/venus/core.h
->>> > > +++ b/drivers/media/platform/qcom/venus/core.h
->>> > > @@ -245,7 +245,7 @@ struct venus_buffer {
->>> > >  struct clock_data {
->>> > >         u32 core_id;
->>> > >         unsigned long freq;
->>> > > -       const struct codec_freq_data *codec_freq_data;
->>> > > +       struct codec_freq_data codec_freq_data;
->>> > >  };
->>> > >
->>> > >  #define to_venus_buffer(ptr)   container_of(ptr, struct venus_buffer, vb)
->>> > > diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
->>> > > index bcc6038..550c4ff 100644
->>> > > --- a/drivers/media/platform/qcom/venus/helpers.c
->>> > > +++ b/drivers/media/platform/qcom/venus/helpers.c
->>> > > @@ -807,6 +807,7 @@ int venus_helper_init_codec_freq_data(struct venus_inst *inst)
->>> > >         unsigned int i, data_size;
->>> > >         u32 pixfmt;
->>> > >         int ret = 0;
->>> > > +       bool found = false;
->>> > >
->>> > >         if (!IS_V4(inst->core))
->>> > >                 return 0;
->>> > > @@ -816,16 +817,22 @@ int venus_helper_init_codec_freq_data(struct venus_inst *inst)
->>> > >         pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
->>> > >                         inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
->>> > >
->>> > > +       memset(&inst->clk_data.codec_freq_data, 0,
->>> > > +               sizeof(inst->clk_data.codec_freq_data));
->>> > > +
->>> > >         for (i = 0; i < data_size; i++) {
->>> > >                 if (data[i].pixfmt == pixfmt &&
->>> > >                     data[i].session_type == inst->session_type) {
->>> > > -                       inst->clk_data.codec_freq_data = &data[i];
->>> > > +                       inst->clk_data.codec_freq_data = data[i];
->>> >
->>> > From the patch I'd infer that inst->clk_data.codec_freq_data needs to
->>> > change at runtime. Is this what happens? Why? I'd expect that
->>> > frequency tables remain constant, and thus that the global
->>> > sdm845_codec_freq_data can remain constant while
->>> > clock_data::codec_freq_data is a const reference to it. What prevents
->>> > this from happening?
->>> >
->>> > > +                       found = true;
->>> > >                         break;
->>> > >                 }
->>> > >         }
->>> > >
->>> > > -       if (!inst->clk_data.codec_freq_data)
->>> > > +       if (!found) {
->>> > > +               dev_err(inst->core->dev, "cannot find codec freq data\n");
->>> > >                 ret = -EINVAL;
->>> > > +       }
->>> > >
->>> > >         return ret;
->>> > >  }
->>> > > diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
->>> > > index abf9315..240845e 100644
->>> > > --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->>> > > +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->>> > > @@ -496,7 +496,7 @@ min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
->>> > >         list_for_each_entry(inst_pos, &core->instances, list) {
->>> > >                 if (inst_pos == inst)
->>> > >                         continue;
->>> > > -               vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
->>> > > +               vpp_freq = inst_pos->clk_data.codec_freq_data.vpp_freq;
->>> 
->>> This is the main thing it fixes (this is where the null deref 
->>> occurs).
->>> If there's multiple instances in use and the other instance hasn't
->>> populated the codec_freq_data pointer then we'll hit a null deref
->>> here.
->> 
->> Couldn't this be fixed by checking the pointer for NULL here or
->> (probably better) populating codec_freq_data earlier so that it is
->> always valid?
 
-This can be fix by checking for NULL pointer as well, this looks like 
-masking the actual issue.
-Currently we are considering the instances which are available
-in core->inst list for load calculation in min_loaded_core()
-function, but this is incorrect because by the time we call
-decide_core() for second instance, the third instance not
-filled yet codec_freq_data pointer.
+On 1/5/20 2:54 am, Linus Torvalds wrote:
+> On Thu, Apr 30, 2020 at 7:10 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
+>>
+>>> in load_flat_file() - which is also used to loading _libraries_. Where
+>>> it makes no sense at all.
+>>
+>> I haven't looked at the shared lib support in there for a long time,
+>> but I thought that "id" is only 0 for the actual final program.
+>> Libraries have a slot or id number associated with them.
+> 
+> Yes, that was my assumption, but looking at the code, it really isn't
+> obvious that that is the case at all.
+> 
+> 'id' gets calculated from fields that very much look like they could
+> be zero (eg by taking the top bits from another random field).
+> 
+>>> Most of that file goes back to pre-git days. And most of the commits
+>>> since are not so much about binfmt_flat, as they are about cleanups or
+>>> changes elsewhere where binfmt_flat was just a victim.
+>>
+>> I'll have a look at this.
+> 
+> Thanks.
+> 
+>> Quick hack test shows moving setup_new_exec(bprm) to be just before
+>> install_exec_creds(bprm) works fine for the static binaries case.
+>> Doing the flush_old_exec(bprm) there too crashed out - I'll need to
+>> dig into that to see why.
+> 
+> Just moving setup_new_exec() would at least allow us to then join the
+> two together, and just say "setup_new_exec() does the credential
+> installation too".
+> 
+> So to some degree, that's the important one.
+> 
+> But that flush_old_exec() does look odd in load_flat_file(). It's not
+> like anything but executing a binary should flush the old exec.
+> Certainly not loading a library, however odd that flat library code
+> is.
+> 
+> My _guess_ is that the reason for this is that "load_flat_file()" also
+> does a lot of verification of the file and does that whole "return
+> -ENOEXEC if the file format isn't right". So we don't want to flush
+> the old exec before that is done, but we obviously also don't want to
+> flush the old exec after we've actually loaded the new one into
+> memory..
 
-So we consider the instances for load calculation for those session has 
-started.
-and uploaded V2 version https://lore.kernel.org/patchwork/patch/1234136/ 
-for the same.
+Yeah, that is what it looks like. Looking at the history, the introduction
+of setup_new_exec() [in commit 221af7f87b974] was probably just
+added where the the existing flush_old_exec() was.
 
->> This fix looks like it is replacing a NULL pointer dereference with
->> access to data initialized to fallback values (which may or may not be
->> meaningful), and I don't see the need to copy what is effectively
->> constant data into each instance.
+
+> So the location of flush_old_exec() makes that kind of sense, but it
+> would have made it better if that flat file support had a clear
+> separation of "check the file" from "load the file".
+> 
+> Oh well. As mentioned, the whole "at least put setup_new_exec() and
+> install_exec_creds() together" is the bigger thing.
+> 
+> But if it's true that nobody really uses the odd flat library support
+> any more and there are no testers, maybe we should consider ripping it
+> out...
+
+I am for that. If nobody pipes up and complains I'll look at taking it out.
+
+Regards
+Greg
+
