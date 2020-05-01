@@ -2,227 +2,118 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD5C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE47FC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C0024955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339970;
-	bh=XIFEwbMmB5NjCjpQoYIdtkuwlS1Iy2GE55PxfoCqRqA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqPNV8Ij840O6qpq2u2hV3sqWGB/+UEA8mG/0T1nvfjhucvHoOctQRjz+z/UAa/SP
-	 WCmp4sVWD15YoWJ3vOqQ8snEwPUOJ4TxGGe+p/YCUzL+BXn16iJoc5FSH/2sWB3Z7Z
-	 ry/gOkOBJH1GXwTj2FrDL/deAEUVhLX33qapW3Pk=
+	by mail.kernel.org (Postfix) with ESMTP id 994C42495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jy9nd5+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgEANct (ORCPT
+        id S1729733AbgEANcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730327AbgEANcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A122E2173E;
-        Fri,  1 May 2020 13:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339960;
-        bh=XIFEwbMmB5NjCjpQoYIdtkuwlS1Iy2GE55PxfoCqRqA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FVc+XYbgS7cNKqR/HpUPWbQps2fGiA0Kj7fGkxPHNkvBDtLC6wNID8SGzp4E4kOBv
-         TM4iTPEfxceI5C8lXVcULWaDJM58JLZ0NDCR7x9DDlVUKzqVbp5eEBNrsRnvpzwCTW
-         U25rhXvaaBHbIFPSz0aIZ86Rju3D3MIRgCF+OMng=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 036/117] KEYS: Avoid false positive ENOMEM error on key read
-Date:   Fri,  1 May 2020 15:21:12 +0200
-Message-Id: <20200501131549.063403306@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
-References: <20200501131544.291247695@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 1 May 2020 09:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729504AbgEANco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:44 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7F7C061A0E;
+        Fri,  1 May 2020 06:32:44 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id y6so2296262pjc.4;
+        Fri, 01 May 2020 06:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eXZUCfdK7gY+Kv1hYGPVu4uc+SR+yxwik4zzcFw4aa4=;
+        b=jy9nd5+8sIX4f67XLtJU1Ddc2S7xNmy0kmwE4u2l/biJGftOorp9LiZnPJqgqOqxpD
+         MVOF+gGbJ8ESScoLQJqUwnl1QmhCxlN3A0NTpar+HqR1kb6Z6/B1Hdw2tgn3HsxiNTHd
+         llkmOe547clbhmtHU5qt7cWhkNthcT99c8qyYROUE0bqjI+wJv/Y3dIxGa8tHKZzzPax
+         hN/p1T6pH/YyQjNRJzkrYUFkwaXvABudC6P2hZ5Bbc6j1W0I2lpRALAzt1PC0bvr84EA
+         STiy+EAQCVDzmwnW9RCuCgFgxOC3WWWjnhAVnTxEkzwA9+DTRCD99FtWPz+nYhwEv3A8
+         0PZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eXZUCfdK7gY+Kv1hYGPVu4uc+SR+yxwik4zzcFw4aa4=;
+        b=deWI9zVaPvEKOKl4mpq7PbByQ75dAzi7+lJ0zmcXkhLyZXGm8iJjAa8ThPNdeZa2eq
+         r6mczsG/KOXB8iC8xmZwku5T2xLKUJhmlEc3esCzX47YSdPz8C47DAtzfeY60P1SXxI7
+         J3mI2pubF6bVqPhhpG+R0LqlYYdG7yKjapYzdKXAZwNj/yXwRF09ez/0pJkHx4SOOB8W
+         uNHNnnDSjtWnx0pzlvctntlbuH/otmGVvBklpmYveHqqmQtFv9oMwBMfmOp8XbkcIxAI
+         MvM0KysyeRMHV1d1MsUMLDfYSWceI8CV2DVv9uQie/W4h6Bl50APisKYJOcVQu7BahXR
+         kLOA==
+X-Gm-Message-State: AGi0PubO2KzKQKUCeQJSun0u6Q5UYqEaSe8SOYTJlMHc3iPFQ4qnSFGL
+        1DP8X/WvQE0QxFu6WQ4V4r/XP94z3qCgeHFAQ6E=
+X-Google-Smtp-Source: APiQypI8YEF8TTFE0Xwx5h22aMqoXNhDREmgnyQi2I4fBaKHdsodV0zVauc4cwXsBohGC996GmyF9VbvXUF28vo6jqw=
+X-Received: by 2002:a17:902:9306:: with SMTP id bc6mr4487958plb.255.1588339963862;
+ Fri, 01 May 2020 06:32:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1588112714.git.syednwaris@gmail.com> <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
+ <20200429102114.GF185537@smile.fi.intel.com> <20200430161514.GA7107@syed>
+ <20200430163855.GU185537@smile.fi.intel.com> <20200430233227.GA15963@icarus>
+In-Reply-To: <20200430233227.GA15963@icarus>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 1 May 2020 16:32:32 +0300
+Message-ID: <CAHp75VfCC_E9uB1eq2EVK_nLe=Oo1zqO=Dmm8kX6y-9YoosDqA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Syed Nayyar Waris <syednwaris@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+On Fri, May 1, 2020 at 2:38 AM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+> On Thu, Apr 30, 2020 at 07:38:55PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 30, 2020 at 09:45:14PM +0530, Syed Nayyar Waris wrote:
+> > > On Wed, Apr 29, 2020 at 01:21:14PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Apr 29, 2020 at 04:39:47AM +0530, Syed Nayyar Waris wrote:
+> >
+> > ...
+> >
+> > > > > +       const unsigned long state_size = BITS_PER_TYPE(*state);
+> > > >
+> > > > This '*state' is unneeded complication, use BITS_PER_U32.
+> > > >
+> > > > > +#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
+> > > >
+> > > > This macro makes code uglier, besides the fact of absence of #undef.
+> > > > And also see above.
+> > >
+> > > Thank you for your review comments. Just want to clarify, you want
+> > >  a new macro to be created - 'BITS_PER_U32' ?
+> >
+> > It's already there (read bits.h).
+>
+> I'm having trouble finding the BITS_PER_U32 macro; are you thinking of
+> BITS_PER_LONG?
 
-[ Upstream commit 4f0882491a148059a52480e753b7f07fc550e188 ]
+Oh, my bad. I messed above with BITS_TO_U32() which is not what we want here.
 
-By allocating a kernel buffer with a user-supplied buffer length, it
-is possible that a false positive ENOMEM error may be returned because
-the user-supplied length is just too large even if the system do have
-enough memory to hold the actual key data.
+> I don't think there are any cases where u32 is not 32
+> bits wide, so perhaps it'll be better to just hardcode 32 directly in
+> the code here to make it easier to read.
 
-Moreover, if the buffer length is larger than the maximum amount of
-memory that can be returned by kmalloc() (2^(MAX_ORDER-1) number of
-pages), a warning message will also be printed.
+Yes, would work!
 
-To reduce this possibility, we set a threshold (PAGE_SIZE) over which we
-do check the actual key length first before allocating a buffer of the
-right size to hold it. The threshold is arbitrary, it is just used to
-trigger a buffer length check. It does not limit the actual key length
-as long as there is enough memory to satisfy the memory request.
-
-To further avoid large buffer allocation failure due to page
-fragmentation, kvmalloc() is used to allocate the buffer so that vmapped
-pages can be used when there is not a large enough contiguous set of
-pages available for allocation.
-
-In the extremely unlikely scenario that the key keeps on being changed
-and made longer (still <= buflen) in between 2 __keyctl_read_key()
-calls, the __keyctl_read_key() calling loop in keyctl_read_key() may
-have to be iterated a large number of times, but definitely not infinite.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- security/keys/internal.h | 12 +++++++++
- security/keys/keyctl.c   | 58 +++++++++++++++++++++++++++++-----------
- 2 files changed, 55 insertions(+), 15 deletions(-)
-
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index e3a5738401866..124273e500cfa 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -20,6 +20,8 @@
- #include <linux/keyctl.h>
- #include <linux/refcount.h>
- #include <linux/compat.h>
-+#include <linux/mm.h>
-+#include <linux/vmalloc.h>
- 
- struct iovec;
- 
-@@ -305,4 +307,14 @@ static inline void key_check(const struct key *key)
- 
- #endif
- 
-+/*
-+ * Helper function to clear and free a kvmalloc'ed memory object.
-+ */
-+static inline void __kvzfree(const void *addr, size_t len)
-+{
-+	if (addr) {
-+		memset((void *)addr, 0, len);
-+		kvfree(addr);
-+	}
-+}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 4b6a084e323b5..c07c2e2b24783 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -330,7 +330,7 @@ long keyctl_update_key(key_serial_t id,
- 	payload = NULL;
- 	if (plen) {
- 		ret = -ENOMEM;
--		payload = kmalloc(plen, GFP_KERNEL);
-+		payload = kvmalloc(plen, GFP_KERNEL);
- 		if (!payload)
- 			goto error;
- 
-@@ -351,7 +351,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	kzfree(payload);
-+	__kvzfree(payload, plen);
- error:
- 	return ret;
- }
-@@ -772,7 +772,8 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 	struct key *key;
- 	key_ref_t key_ref;
- 	long ret;
--	char *key_data;
-+	char *key_data = NULL;
-+	size_t key_data_len;
- 
- 	/* find the key first */
- 	key_ref = lookup_user_key(keyid, 0, 0);
-@@ -823,24 +824,51 @@ can_read_key:
- 	 * Allocating a temporary buffer to hold the keys before
- 	 * transferring them to user buffer to avoid potential
- 	 * deadlock involving page fault and mmap_sem.
-+	 *
-+	 * key_data_len = (buflen <= PAGE_SIZE)
-+	 *		? buflen : actual length of key data
-+	 *
-+	 * This prevents allocating arbitrary large buffer which can
-+	 * be much larger than the actual key length. In the latter case,
-+	 * at least 2 passes of this loop is required.
- 	 */
--	key_data = kmalloc(buflen, GFP_KERNEL);
-+	key_data_len = (buflen <= PAGE_SIZE) ? buflen : 0;
-+	for (;;) {
-+		if (key_data_len) {
-+			key_data = kvmalloc(key_data_len, GFP_KERNEL);
-+			if (!key_data) {
-+				ret = -ENOMEM;
-+				goto key_put_out;
-+			}
-+		}
- 
--	if (!key_data) {
--		ret = -ENOMEM;
--		goto key_put_out;
--	}
--	ret = __keyctl_read_key(key, key_data, buflen);
-+		ret = __keyctl_read_key(key, key_data, key_data_len);
-+
-+		/*
-+		 * Read methods will just return the required length without
-+		 * any copying if the provided length isn't large enough.
-+		 */
-+		if (ret <= 0 || ret > buflen)
-+			break;
-+
-+		/*
-+		 * The key may change (unlikely) in between 2 consecutive
-+		 * __keyctl_read_key() calls. In this case, we reallocate
-+		 * a larger buffer and redo the key read when
-+		 * key_data_len < ret <= buflen.
-+		 */
-+		if (ret > key_data_len) {
-+			if (unlikely(key_data))
-+				__kvzfree(key_data, key_data_len);
-+			key_data_len = ret;
-+			continue;	/* Allocate buffer */
-+		}
- 
--	/*
--	 * Read methods will just return the required length without
--	 * any copying if the provided length isn't large enough.
--	 */
--	if (ret > 0 && ret <= buflen) {
- 		if (copy_to_user(buffer, key_data, ret))
- 			ret = -EFAULT;
-+		break;
- 	}
--	kzfree(key_data);
-+	__kvzfree(key_data, key_data_len);
- 
- key_put_out:
- 	key_put(key);
 -- 
-2.20.1
-
-
-
+With Best Regards,
+Andy Shevchenko
