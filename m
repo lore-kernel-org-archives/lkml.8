@@ -2,116 +2,328 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0F4C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948CDC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBFA2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4862173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ImQZRdwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgEARhP (ORCPT
+        id S1730298AbgEARhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:37:15 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:49037 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729705AbgEARhO (ORCPT
+        Fri, 1 May 2020 13:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729705AbgEARhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:37:14 -0400
-Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MrhLw-1iq1jJ1XPg-00nhip; Fri, 01 May 2020 19:37:13 +0200
-Received: by mail-qv1-f41.google.com with SMTP id ck5so5044288qvb.11;
-        Fri, 01 May 2020 10:37:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PuauzeuCKuBoOTcwGnIyEL/8FOQS54WSVUIh+iKKthAW5UxVYlGa
-        uaMl4eCZVlGTzx66w4ycNaXK0miWHVBQHyAvpZo=
-X-Google-Smtp-Source: APiQypJ76OecAT4JRkELVMGL7nVDYe5c/NgtmrMhJvbU+ti51agb2oCYWekUuVifbHUREw/ttX5+H+Iorlemv8zo2vg=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr5062637qvp.197.1588354632183;
- Fri, 01 May 2020 10:37:12 -0700 (PDT)
+        Fri, 1 May 2020 13:37:16 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D2B0C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:37:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id v8so10265430wma.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ufxfpcTyMlazNounw3wNzyToYB3UJEzHIn7ulrOGXXU=;
+        b=ImQZRdwOETOF5qY/+pyGGb3LTEQ9xFaAZ+Oh5wq1sxFysc+UZ2KddbKYoqax8Vjr7z
+         sgvIxkJ+RJgkAZAdTUleV59iJQCJJZSUkKcIN4hgrw7bXJWPsZUfnyvu9Bq4xvrlqXV0
+         Wf+83lgasQstrjoJbaTCr0HQGjf3+NCZof2RQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ufxfpcTyMlazNounw3wNzyToYB3UJEzHIn7ulrOGXXU=;
+        b=rpFHCVwalQtLD1INEM9cgb/N+t0EO1PnOEv6WmLw9LFR/y2CGgkbeWogP8luYsOg7/
+         qcFqtOc47oHvH8VAp3BGn2Kgumnc/jriVl4ipkDoCfZAFEuSD2a/0/xWGTw/+dWgfq1A
+         Eumv9lDLpSg/GQSV84DoWqu2pnsK341WNKjHrwCmApQs8pKLHMUZzR2oLcuO4fhPWjlQ
+         ELUUIhyPzLyFnjoYnkezW5CgdxzS/ro2iv68mzH/VyZwxdGuap/IMIzxvcABkzH/VXJ9
+         hNixX4i9B6TcYkDL8ddRCfoALmU8XHnFtOs5BavjwxRmQhnb8y9hsAscazlIx51qRMos
+         kGVw==
+X-Gm-Message-State: AGi0PubXaOi6WbNIhLHDgxOaebiNltbleEXHopOoTOG7D8RXyP/2i/gi
+        EQWQVMVtTS0Ysf/Mxm48T/wycw==
+X-Google-Smtp-Source: APiQypJyniRJmeRLwjfWdIyj8PkcBx1aKguknLdjRpeiffgQiJ+m2FGrMs2k7mIaQ49bHNdCnwosXA==
+X-Received: by 2002:a7b:cdfa:: with SMTP id p26mr569906wmj.186.1588354634845;
+        Fri, 01 May 2020 10:37:14 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id d5sm5373095wrp.44.2020.05.01.10.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 10:37:14 -0700 (PDT)
+Date:   Fri, 1 May 2020 17:37:12 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v7 11/11] media: platform: Add jpeg dec/enc feature
+Message-ID: <20200501173712.GB218308@chromium.org>
+References: <20200303123446.20095-1-xia.jiang@mediatek.com>
+ <20200303123446.20095-12-xia.jiang@mediatek.com>
+ <20200306112337.GA163286@chromium.org>
+ <1587009795.24163.87.camel@mhfsdcap03>
 MIME-Version: 1.0
-References: <20200430213101.135134-1-arnd@arndb.de> <20200430213101.135134-14-arnd@arndb.de>
- <b5e6ef12-c2ac-d0ce-b7a1-a58d4c8de300@huawei.com> <CAK8P3a1=5dmgB+k9B_jk2qBhBPnMSFMWrByP4jRvyvaJwBo94A@mail.gmail.com>
- <1588344818.3428.18.camel@linux.ibm.com>
-In-Reply-To: <1588344818.3428.18.camel@linux.ibm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 1 May 2020 19:36:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2nTi6AOf-4xJN3wurCXC52mLPBVbjgvcv6Cz=8A05X0A@mail.gmail.com>
-Message-ID: <CAK8P3a2nTi6AOf-4xJN3wurCXC52mLPBVbjgvcv6Cz=8A05X0A@mail.gmail.com>
-Subject: Re: [PATCH 13/15] scsi: sas: avoid gcc-10 zero-length-bounds warning
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Bottomley <James.Bottomley@steeleye.com>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Yn9pe+bgLmCVwhi7YwwfmpuvUlqqpff2IqM+sqv9UcQqCE0MCRj
- xwBd3kzBm3yKaBlRux5yWaSmhRhTW+l+OU52aCfL1kiTsApwDFcL77r9/GQVwg/uPiI9FPb
- nV/CJNC0Z66KWcRrBib2OtMl83Z6Aduy91K5zi4KMi6hrShRGRyQLhOC+x07ZxAqMuxuast
- 6f+MXpqKJTyPL6p3un5Jg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oQxc4oroxpI=:ehXWVPLIDHEnyVyg50sJeB
- R+c0m6Q41X1oFype8KF9PcW/sOYmRr71EDmAs/He7/IizuC188qiCGfhg5WbmjdTEf6VbiMZU
- A2NP9EHOLGWtBVXgpt3Ak6HxYW3ahGumyazRUV58M0v/6wobDcT2Jq/n77TWlDs28/GVFF6t9
- iabc23ua5ZscDUXnYBrBbhQ2zEfu3QVlA7YvCiHhLA7oNwHKfGjIu5kOCJYl8RjNvbDJpMMFn
- cIhCfIc6TXcLiywnmepX4Hrohtw9NH9Sw3cdJ1hfakzxjwkUZiuxJ2QclPNz3nxo8IQQZRvdl
- 5vrRM0V2vAgwDWNImu4qUmm5EqJ5aIaF+u5MMDnNvqNCV5d9DPEwybLesedFicCyRIt1ZGo+J
- QNVGcIuMKv4mujvS9PJv/CPdTO5tmXM2SEOLFzeyba+pCS4QJL1SC3ks8iiusCANS9beTo4U1
- qlfKJT/11A47h1Xe88y1VoE+Zk7A1cmzjL7AciqSA6p+ec6ddtaoKnzMysTYcHVXZDKKHFeZk
- Ia/IKIQ45PjWhC7pF4CPjK2ELjRMpcEjqYtc1ItQ5oE0olBUGLgh7LfATAfbTnfVRmJnWB+A1
- BKejFi8mcOAvGB58t7QyvEcCRzn5te2G0K2uWgN3CK/3/TviNDo3w2EeX6gwFZK7t/gP+sM+Y
- aq8+LLZAOFsSxBB0vjNBNFY8xdFlYKErjOTagdO8dmBIt+AOwr7jGLbnGbHbCclt/8IZKeOSh
- oiDHvnXt/JZixtFu7bIDDmQSNCE9SAU4u1ICySd+kVzT42e6/lQC93nZRAqCKETWWrJy7m7KD
- /XhUN8P/YMrgkBS8zNZVKi1Z1x79SeRasEbfUETN5uVAhf+aRc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587009795.24163.87.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 4:53 PM James Bottomley <jejb@linux.ibm.com> wrote:
-> On Fri, 2020-05-01 at 09:54 +0200, Arnd Bergmann wrote:
-> > On Fri, May 1, 2020 at 9:48 AM John Garry <john.garry@huawei.com>
-> > wrote:
-> > I found one hack that would work, but I think it's too ugly and
-> > likely not well-defined either:
-> >
-> > struct ssp_response_iu {
-> > ...
-> >         struct {
-> >                 u8      dummy[0]; /* a struct must have at least one
-> > non-flexible member */
+Hi Xia,
+
+On Thu, Apr 16, 2020 at 12:03:15PM +0800, Xia Jiang wrote:
+> On Fri, 2020-03-06 at 20:23 +0900, Tomasz Figa wrote:
+> > Hi Xia,
+> > 
+> > On Tue, Mar 03, 2020 at 08:34:46PM +0800, Xia Jiang wrote:
+> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
+> > > decode and encode have great similarities with function operation.
+> > 
+> > Thank you for the patch. Please see my comments inline.
+> 
+> Dear Tomasz,
+> 
+> Thank you for your reply. I have followed your advice and submited v8
+> version patch.
+> 
+> Please check my reply below.
+[snip]
+> > 
+> > >  
+> > > -	switch (s->target) {
+> > > -	case V4L2_SEL_TGT_COMPOSE:
+> > > -		s->r.left = 0;
+> > > -		s->r.top = 0;
+> > > -		ctx->out_q.w = s->r.width;
+> > > -		ctx->out_q.h = s->r.height;
+> > > -		break;
+> > > -	default:
+> > > -		return -EINVAL;
+> > > +		switch (s->target) {
+> > > +		case V4L2_SEL_TGT_CROP:
+> > > +			s->r.left = 0;
+> > > +			s->r.top = 0;
+> > > +			ctx->out_q.w = s->r.width;
+> > > +			ctx->out_q.h = s->r.height;
+> > 
+> > What happens if the userspace provides a value bigger than current format?
+> we need get the min value of userspace value and current value,changed
+> it like this:
+> ctx->out_q.w = min(s->r.width, ctx->out_q.w);
+> ctx->out_q.h = min(s->r.height,ctx->out_q.h);
+
+Since ctx->out_q is modified by this function, wouldn't that cause
+problems if S_SELECTION was called two times, first with a smaller
+rectangle and then with a bigger one? We should store the active crop
+and format separately and use the latter for min().
+
+[snip]
+> > >  
+> > >  	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+> > >  		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> > > @@ -772,6 +1011,45 @@ static int mtk_jpeg_set_dec_dst(struct mtk_jpeg_ctx *ctx,
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
+> > > +				 struct vb2_buffer *dst_buf,
+> > > +				 struct mtk_jpeg_enc_bs *bs)
+> > > +{
+> > > +	bs->dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
+> > > +	bs->dma_addr_offset = ctx->enable_exif ? MTK_JPEG_DEFAULT_EXIF_SIZE : 0;
+> > 
+> > Could you explain what is the meaning of the dma_addr_offset and where the
+> > default EXIF size comes from? Also, how is the encoder output affected by
+> > the enable_exif flag?
+> If enabled the exif mode, the real output will be filled at the locaiton
+> of dst_addr+ dma_addr_offset(exif size).The dma_addr_offset will be
+> filled by the application.
+> The default exif size is setted as constant value 64k according to the
+> spec.(Exif metadata are restricted in size to 64kB in JPEG images
+> because according to the specification this information must be
+> contained within a signed JPEG APP1 segment)
+
+Okay, thanks. Then it sounds like MTK_JPEG_MAX_EXIF_SIZE could be a more
+appropriate name.
+
+[snip]
+> > > +}
+> > > +
+> > >  static void mtk_jpeg_device_run(void *priv)
+> > >  {
+> > >  	struct mtk_jpeg_ctx *ctx = priv;
+> > > @@ -782,6 +1060,8 @@ static void mtk_jpeg_device_run(void *priv)
+> > >  	struct mtk_jpeg_src_buf *jpeg_src_buf;
+> > >  	struct mtk_jpeg_bs bs;
+> > >  	struct mtk_jpeg_fb fb;
+> > > +	struct mtk_jpeg_enc_bs enc_bs;
+> > > +	struct mtk_jpeg_enc_fb enc_fb;
+> > >  	int i;
+> > >  
+> > >  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > @@ -792,30 +1072,47 @@ static void mtk_jpeg_device_run(void *priv)
+> > >  		for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
+> > >  			vb2_set_plane_payload(&dst_buf->vb2_buf, i, 0);
+> > >  		buf_state = VB2_BUF_STATE_DONE;
+> > 
+> > About existing code, but we may want to explain this.
+> > What is this last frame handling above for?
+> if the user gives us a empty buffer(means it is the last frame),the
+> driver will not encode and done the buffer to the user.
 >
-> If gcc is now warning about zero length members, why isn't it warning
-> about this one ... are unions temporarily excluded?
 
-It does not warn about all zero-length arrays, but it does warn when you
-try to access an array with an out-of-range index, and this apparently
-got extended in gcc-10 to any index for zero-length arrays.
+An empty buffer is not a valid way of signaling a last frame in V4L2. In
+general, I'm not sure there is such a thing in JPEG, because all frames
+are separate from each other and we always expect 1 input buffer and 1
+output buffer for one frame. We might want to remove the special
+handling in a follow up patch.
 
-> >                 u8      resp_data[]; /* allowed here because it's at
-> > the one of a struct */
-> >         };
-> >         u8     sense_data[];
-> > } __attribute__ ((packed));
->
-> Let's go back to what the standard says:  we want the data beyond the
-> ssp_response_iu to be addressable either as sense_data if it's an error
-> return or resp_data if it's a real response.  What about trying to use
-> an alias attribute inside the structure ... will that work on gcc-10?
+> > > -		goto dec_end;
+> > > +		goto device_run_end;
+> > >  	}
+> > >  
+> > > -	if (mtk_jpeg_check_resolution_change(ctx, &jpeg_src_buf->dec_param)) {
+> > > -		mtk_jpeg_queue_src_chg_event(ctx);
+> > > -		ctx->state = MTK_JPEG_SOURCE_CHANGE;
+> > > -		v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> > > -		return;
+> > > -	}
+> > > +	if (jpeg->mode == MTK_JPEG_ENC) {
+> > > +		spin_lock_irqsave(&jpeg->hw_lock, flags);
+> > > +		mtk_jpeg_enc_reset(jpeg->reg_base);
+> > 
+> > Why do we need to reset every frame?
+> We do this operation is to ensure that all registers are cleared.
+> It's safer from the hardware point of view.
 
-I think alias attributes only work for functions and variables, but not
-for struct members.
+Wouldn't this only waste power? If we reset the hardware after powering
+up, the only registers that could change would be changed by the driver
+itself. The driver should program all registers properly when starting
+next frame anyway, so such a reset shouldn't be necessary.
 
-A "#define sense_data resp_data" would obviously work, but it's
-rather error-prone when other code uses the same identifiers.
+> > 
+> > > +
+> > > +		mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf,
+> > > +				     &enc_bs);
+> > > +		mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf,
+> > > +				     &enc_fb);
+> > > +		mtk_jpeg_enc_set_ctrl_cfg(jpeg->reg_base, ctx->enable_exif,
+> > > +					  ctx->enc_quality,
+> > > +					  ctx->restart_interval);
+> > > +
+> > > +		mtk_jpeg_enc_start(jpeg->reg_base);
+> > > +	} else {
+> > > +		if (mtk_jpeg_check_resolution_change
+> > > +			(ctx, &jpeg_src_buf->dec_param)) {
+> > > +			mtk_jpeg_queue_src_chg_event(ctx);
+> > > +			ctx->state = MTK_JPEG_SOURCE_CHANGE;
+> > > +			v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> > 
+> > This is a bit strange. Resolution change should be signaled when the
+> > hardware attempted to decode a frame and detected a different resolution
+> > than current. It shouldn't be necessary for the userspace to queue a pair
+> > of buffers to signal it, as with the current code.
+> If the the resolution is bigger than current, the current buffer will
+> not be enough for the changed resolution.Shouldn't it tell the userspace
+> to queue new buffer and stream on again?
 
-Another option would be an inline helper like
+The V4L2 decode flow is as follows:
+ - application configures and starts only the OUTPUT queue,
+ - application queues an OUTPUT buffer with a frame worth of bitstream,
+ - decoder parses the bitstream headers, detects CAPTURE format and
+   signals the source change event,
+ - application reads CAPTURE format and configures and starts the
+   CAPTURE queue,
+ - application queues a CAPTURE buffer,
+ - decoder decodes the image to the queued buffer.
 
-static inline u8 *ssp_response_data(struct ssp_response_iu *iu)
-{
-      return iu.resp_data;
-}
+In case of subsequent (dynamic) resolution change:
+ - application queues an OUTPUT buffer and a CAPTURE buffer,
+ - decoder parses the bitstream, notices resolution change, updates
+   CAPTURE format and signals the source change event, refusing to
+   continue the decoding until the application acknowledges it,
+ - application either reallocates its CAPTURE buffers or confirms that
+   the existing buffers are fine and acknowledges resolution change,
+ - decoding continues.
 
-      Arnd
+For more details, please check the interface specification:
+https://www.kernel.org/doc/html/latest/media/uapi/v4l/dev-decoder.html
+
+[snip]
+> > > -	ret = video_register_device(jpeg->dec_vdev, VFL_TYPE_GRABBER, 3);
+> > > +	ret = video_register_device(jpeg->vfd_jpeg, VFL_TYPE_GRABBER, -1);
+> > 
+> > FYI the type changed to VFL_TYPE_VIDEO recently.
+> I changed VFL_TYPE_GRABBER to VFL_TYPE_VIDEO,but builded fail.
+
+What kernel version are you building with?
+
+> > >  	if (ret) {
+> > >  		v4l2_err(&jpeg->v4l2_dev, "Failed to register video device\n");
+> > > -		goto err_dec_vdev_register;
+> > > +		goto err_vfd_jpeg_register;
+> > >  	}
+> > >  
+> > > -	video_set_drvdata(jpeg->dec_vdev, jpeg);
+> > > +	video_set_drvdata(jpeg->vfd_jpeg, jpeg);
+> > >  	v4l2_info(&jpeg->v4l2_dev,
+> > > -		  "decoder device registered as /dev/video%d (%d,%d)\n",
+> > > -		  jpeg->dec_vdev->num, VIDEO_MAJOR, jpeg->dec_vdev->minor);
+> > > +		  "jpeg device %d registered as /dev/video%d (%d,%d)\n",
+> > 
+> > Here it would be actually useful to special case the encoder and decoder,
+> > because it would be easier for the user to know which device is which.
+> > 
+
+Just making sure this wasn't overlooked.
+
+[snip]
+> > > +
+> > > +void mtk_jpeg_enc_reset(void __iomem *base)
+> > > +{
+> > > +	writel(0x00, base + JPEG_ENC_RSTB);
+> > > +	writel(JPEG_ENC_RESET_BIT, base + JPEG_ENC_RSTB);
+> > > +	writel(0x00, base + JPEG_ENC_CODEC_SEL);
+> > > +}
+> > > +
+> > > +u32 mtk_jpeg_enc_get_int_status(void __iomem *base)
+> > > +{
+> > > +	u32 ret;
+> > > +
+> > > +	ret = readl(base + JPEG_ENC_INT_STS) &
+> > > +		    JPEG_ENC_INT_STATUS_MASK_ALLIRQ;
+> > > +	if (ret)
+> > > +		writel(0, base + JPEG_ENC_INT_STS);
+> > > +
+> > > +	return ret;
+> > > +}
+> > 
+> > Does it make sense to have a function for what is essentially just 2 lines?
+> > Also, the name is misleading, as the function not only gets but also
+> > clears.
+> Make all hw register setting in mtk_jpeg_enc_hw.c is one part of current
+> architecture.
+> I have changed the function name to
+> mtk_jpeg_enc_get_and_clear_int_status.
+
+As I mentioned before, this driver needs a big clean up and that's why I
+suggested starting over with a new one for the JPEG encoder part. Since
+we decided to extend this one in the end, would you be able to improve
+this aspect as well? Thanks.
+
+Best regards,
+Tomasz
