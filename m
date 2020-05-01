@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A416C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A2AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFFE205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3112205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340368;
-	bh=Pkpbdoe5bkkyKmNm0KMLHp0fuCNDJy+0OyX6Yx0cOGI=;
+	s=default; t=1588340374;
+	bh=GqlmAUn9spAeoFJfHmoQ+tyM6nLQ1/Q+vdEe9RR7x6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpUmK54fk82U/gyHnnHAwRtgQO/R6BHTHdJhwWMTadsHNHXv3GIcGmXTMF2HKB6/3
-	 I/v9w7aaV+EJpbP6xrVP6m9jqPV74ZqN4cjFeL7ATvKUkuSJwVL8TneaI8k8oR1Xiy
-	 qJfmA447wrjgizFuZk3+TSP3wKwRg4sjViuUfxcA=
+	b=1mlDjoZbRBe/Rx95vf1ZPBeHNJnhHbwXAL2UkwBvuS26VgNqibuDEqam6ait3Dgwg
+	 db3aLVNPTXWnULRebDKkq4RLs60SJYG5fIDUTCvxaTKXTQfb0KZSHTozL1sKcJjnzl
+	 e7mwHLvTUewqljSRmA7ZgzQWk+O6F2+PLpbxkTg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbgEANj1 (ORCPT
+        id S1730581AbgEANjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39046 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730865AbgEANjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:21 -0400
+        id S1730887AbgEANj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E770020757;
-        Fri,  1 May 2020 13:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC9C208DB;
+        Fri,  1 May 2020 13:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340361;
-        bh=Pkpbdoe5bkkyKmNm0KMLHp0fuCNDJy+0OyX6Yx0cOGI=;
+        s=default; t=1588340368;
+        bh=GqlmAUn9spAeoFJfHmoQ+tyM6nLQ1/Q+vdEe9RR7x6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzQ8o+4/0oxpfoI3v/TqKmQYv+crHWTnJ8MrjVbrWwT25cEnFXcBqWppzqCp0uMyK
-         fQ2wDs4zhF7zbChWBjhscQYegQmMoDhN9PjSX0UdUm1vctQB0kW/mt+qQ9EtKhwvtZ
-         viwMeEuD7q+q7IEX4wBo3wsN4GlAlg4EyIM6tVQE=
+        b=133/HPW19/t/vxTLeBshpsvTYKgS+MYKf8ZFbfQYWncAEp3B6mQXOsFSP7dae9NlF
+         klKB0wTmjeJzsGzGCyZ3bFFuJk6ciUuE7lHp5IRhA0t1jWS99UnYBruE9UCi2s3hVH
+         qcV3zS4Bo5DoNmCOGySu5Ag7+SDq+yEXdOI9wNFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raymond Pang <RaymondPang-oc@zhaoxin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.4 34/83] PCI: Add Zhaoxin Vendor ID
-Date:   Fri,  1 May 2020 15:23:13 +0200
-Message-Id: <20200501131532.673294661@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e27980339d305f2dbfd9@syzkaller.appspotmail.com,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 50/83] mm: shmem: disable interrupt when acquiring info->lock in userfaultfd_copy path
+Date:   Fri,  1 May 2020 15:23:29 +0200
+Message-Id: <20200501131538.160783351@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,31 +64,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 3375590623e4a132b19a8740512f4deb95728933 upstream.
+commit 94b7cc01da5a3cc4f3da5e0ff492ef008bb555d6 upstream.
 
-Add Zhaoxin Vendor ID to pci_ids.h
+Syzbot reported the below lockdep splat:
 
-Link: https://lore.kernel.org/r/20200327091148.5190-2-RaymondPang-oc@zhaoxin.com
-Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    WARNING: possible irq lock inversion dependency detected
+    5.6.0-rc7-syzkaller #0 Not tainted
+    --------------------------------------------------------
+    syz-executor.0/10317 just changed the state of lock:
+    ffff888021d16568 (&(&info->lock)->rlock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+    ffff888021d16568 (&(&info->lock)->rlock){+.+.}, at: shmem_mfill_atomic_pte+0x1012/0x21c0 mm/shmem.c:2407
+    but this lock was taken by another, SOFTIRQ-safe lock in the past:
+     (&(&xa->xa_lock)->rlock#5){..-.}
+
+    and interrupts could create inverse lock ordering between them.
+
+    other info that might help us debug this:
+     Possible interrupt unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(&(&info->lock)->rlock);
+                                   local_irq_disable();
+                                   lock(&(&xa->xa_lock)->rlock#5);
+                                   lock(&(&info->lock)->rlock);
+      <Interrupt>
+        lock(&(&xa->xa_lock)->rlock#5);
+
+     *** DEADLOCK ***
+
+The full report is quite lengthy, please see:
+
+  https://lore.kernel.org/linux-mm/alpine.LSU.2.11.2004152007370.13597@eggly.anvils/T/#m813b412c5f78e25ca8c6c7734886ed4de43f241d
+
+It is because CPU 0 held info->lock with IRQ enabled in userfaultfd_copy
+path, then CPU 1 is splitting a THP which held xa_lock and info->lock in
+IRQ disabled context at the same time.  If softirq comes in to acquire
+xa_lock, the deadlock would be triggered.
+
+The fix is to acquire/release info->lock with *_irq version instead of
+plain spin_{lock,unlock} to make it softirq safe.
+
+Fixes: 4c27fe4c4c84 ("userfaultfd: shmem: add shmem_mcopy_atomic_pte for userfaultfd support")
+Reported-by: syzbot+e27980339d305f2dbfd9@syzkaller.appspotmail.com
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: syzbot+e27980339d305f2dbfd9@syzkaller.appspotmail.com
+Acked-by: Hugh Dickins <hughd@google.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Link: http://lkml.kernel.org/r/1587061357-122619-1-git-send-email-yang.shi@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/pci_ids.h |    2 ++
- 1 file changed, 2 insertions(+)
+ mm/shmem.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2582,6 +2582,8 @@
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2403,11 +2403,11 @@ static int shmem_mfill_atomic_pte(struct
  
- #define PCI_VENDOR_ID_AMAZON		0x1d0f
+ 	lru_cache_add_anon(page);
  
-+#define PCI_VENDOR_ID_ZHAOXIN		0x1d17
-+
- #define PCI_VENDOR_ID_HYGON		0x1d94
+-	spin_lock(&info->lock);
++	spin_lock_irq(&info->lock);
+ 	info->alloced++;
+ 	inode->i_blocks += BLOCKS_PER_PAGE;
+ 	shmem_recalc_inode(inode);
+-	spin_unlock(&info->lock);
++	spin_unlock_irq(&info->lock);
  
- #define PCI_VENDOR_ID_HXT		0x1dbf
+ 	inc_mm_counter(dst_mm, mm_counter_file(page));
+ 	page_add_file_rmap(page, false);
 
 
