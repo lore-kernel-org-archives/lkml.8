@@ -2,57 +2,64 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD618C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ED4C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE559208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CDC208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339903;
-	bh=L3u2ft0lFO9yh3Lx3P3RINgTgN9612FxJRMV34cM3S4=;
+	s=default; t=1588339905;
+	bh=zlv96CrJzDmIqQ0algpSshTJ33jycy2ZeT8jmRg3rNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=goo9xWbfH+RFvpIRZSWyeTm0KI5z2rOPXBDZfFUdCPnjnwobCyuI/U+jfhclBJG6A
-	 xc17aaHzpWlwP7lQaWv5BpgieZiYMhTRlJ7Zljm49X0HhOUXiqma814Jh20gemsa4L
-	 2pJSKDX3ab8nDS65+fcXQZWz9ZJjF2+MOz/ze7ps=
+	b=h9GCRC0ppbh9Hek8CeDHim/c9oHWCb4E9hifGyvWyYwvVzM4oiCNRSGLuc+cUpD+b
+	 FVKI18M50czmgbQRLE8GJYdfeP4raIXGD+nC/iP6ayqd8e4dSDq/iTdQdjQoiWCv62
+	 vmWQD4r59c3SdsKnJYKW71Mvt43ti024cM2Rq7wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgEANbm (ORCPT
+        id S1729321AbgEANbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56278 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgEANbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:39 -0400
+        id S1729610AbgEANbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F5072166E;
-        Fri,  1 May 2020 13:31:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A757720757;
+        Fri,  1 May 2020 13:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339898;
-        bh=L3u2ft0lFO9yh3Lx3P3RINgTgN9612FxJRMV34cM3S4=;
+        s=default; t=1588339901;
+        bh=zlv96CrJzDmIqQ0algpSshTJ33jycy2ZeT8jmRg3rNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJ3tDwN5pxtQhj9mSKs6DlK/RT89joivCXfDx/bZLuvgGK4On/ShqTDKMgkDCcSud
-         XdNRTKXxTMRRz8SolmHPPQZRf2oY3FUqsDYp1+n36lwdTRDPkjPu6mvQvwk/4tRZdf
-         bEybSflLIx5OpPqbQliuqfJlb6wdxMGpHMn76500=
+        b=Ydjd8p7vL2gRd+N7nxtVNbXLYd7RcROV4eXFlEcZlzP60SVrwonDz862oEx67Zuy+
+         +20to1CsG7Jd3r684G246Z8KazsC7NJsT5cpDBB4nN4j2iYY5/Ua8uyz2OOc74aj8v
+         AXJZMqECynWQ/ClsO2wNSnB50yBe8QvUbqmb2hQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Monakhov <dmonakhov@gmail.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 001/117] ext4: fix extent_status fragmentation for plain files
-Date:   Fri,  1 May 2020 15:20:37 +0200
-Message-Id: <20200501131544.466586016@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 017/117] ipc/util.c: sysvipc_find_ipc() should increase position index
+Date:   Fri,  1 May 2020 15:20:53 +0200
+Message-Id: <20200501131547.111481851@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,118 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Monakhov <dmonakhov@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 4068664e3cd2312610ceac05b74c4cf1853b8325 upstream.
+[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
 
-Extents are cached in read_extent_tree_block(); as a result, extents
-are not cached for inodes with depth == 0 when we try to find the
-extent using ext4_find_extent().  The result of the lookup is cached
-in ext4_map_blocks() but is only a subset of the extent on disk.  As a
-result, the contents of extents status cache can get very badly
-fragmented for certain workloads, such as a random 4k read workload.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-File size of /mnt/test is 33554432 (8192 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..    8191:      40960..     49151:   8192:             last,eof
-
-$ perf record -e 'ext4:ext4_es_*' /root/bin/fio --name=t --direct=0 --rw=randread --bs=4k --filesize=32M --size=32M --filename=/mnt/test
-$ perf script | grep ext4_es_insert_extent | head -n 10
-             fio   131 [000]    13.975421:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [494/1) mapped 41454 status W
-             fio   131 [000]    13.975939:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6064/1) mapped 47024 status W
-             fio   131 [000]    13.976467:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6907/1) mapped 47867 status W
-             fio   131 [000]    13.976937:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3850/1) mapped 44810 status W
-             fio   131 [000]    13.977440:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3292/1) mapped 44252 status W
-             fio   131 [000]    13.977931:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6882/1) mapped 47842 status W
-             fio   131 [000]    13.978376:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3117/1) mapped 44077 status W
-             fio   131 [000]    13.978957:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [2896/1) mapped 43856 status W
-             fio   131 [000]    13.979474:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [7479/1) mapped 48439 status W
-
-Fix this by caching the extents for inodes with depth == 0 in
-ext4_find_extent().
-
-[ Renamed ext4_es_cache_extents() to ext4_cache_extents() since this
-  newly added function is not in extents_cache.c, and to avoid
-  potential visual confusion with ext4_es_cache_extent().  -TYT ]
-
-Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
-Link: https://lore.kernel.org/r/20191106122502.19986-1-dmonakhov@gmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c |   47 +++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+ ipc/util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -510,6 +510,30 @@ int ext4_ext_check_inode(struct inode *i
- 	return ext4_ext_check(inode, ext_inode_hdr(inode), ext_depth(inode), 0);
- }
- 
-+static void ext4_cache_extents(struct inode *inode,
-+			       struct ext4_extent_header *eh)
-+{
-+	struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
-+	ext4_lblk_t prev = 0;
-+	int i;
-+
-+	for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
-+		unsigned int status = EXTENT_STATUS_WRITTEN;
-+		ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
-+		int len = ext4_ext_get_actual_len(ex);
-+
-+		if (prev && (prev != lblk))
-+			ext4_es_cache_extent(inode, prev, lblk - prev, ~0,
-+					     EXTENT_STATUS_HOLE);
-+
-+		if (ext4_ext_is_unwritten(ex))
-+			status = EXTENT_STATUS_UNWRITTEN;
-+		ext4_es_cache_extent(inode, lblk, len,
-+				     ext4_ext_pblock(ex), status);
-+		prev = lblk + len;
-+	}
-+}
-+
- static struct buffer_head *
- __read_extent_tree_block(const char *function, unsigned int line,
- 			 struct inode *inode, ext4_fsblk_t pblk, int depth,
-@@ -540,26 +564,7 @@ __read_extent_tree_block(const char *fun
- 	 */
- 	if (!(flags & EXT4_EX_NOCACHE) && depth == 0) {
- 		struct ext4_extent_header *eh = ext_block_hdr(bh);
--		struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
--		ext4_lblk_t prev = 0;
--		int i;
--
--		for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
--			unsigned int status = EXTENT_STATUS_WRITTEN;
--			ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
--			int len = ext4_ext_get_actual_len(ex);
--
--			if (prev && (prev != lblk))
--				ext4_es_cache_extent(inode, prev,
--						     lblk - prev, ~0,
--						     EXTENT_STATUS_HOLE);
--
--			if (ext4_ext_is_unwritten(ex))
--				status = EXTENT_STATUS_UNWRITTEN;
--			ext4_es_cache_extent(inode, lblk, len,
--					     ext4_ext_pblock(ex), status);
--			prev = lblk + len;
--		}
-+		ext4_cache_extents(inode, eh);
+diff --git a/ipc/util.c b/ipc/util.c
+index 79b30eee32cd8..7989f5e532198 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -750,13 +750,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
  	}
- 	return bh;
- errout:
-@@ -907,6 +912,8 @@ ext4_find_extent(struct inode *inode, ex
- 	path[0].p_bh = NULL;
  
- 	i = depth;
-+	if (!(flags & EXT4_EX_NOCACHE) && depth == 0)
-+		ext4_cache_extents(inode, eh);
- 	/* walk through the tree */
- 	while (i) {
- 		ext_debug("depth %d: num %d, max %d\n",
++	*new_pos = pos + 1;
+ 	if (total >= ids->in_use)
+ 		return NULL;
+ 
+ 	for (; pos < IPCMNI; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+-			*new_pos = pos + 1;
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+ 			return ipc;
+-- 
+2.20.1
+
 
 
