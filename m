@@ -2,53 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B67C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2538C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED55206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7632051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341625;
-	bh=oN4xXc//JXVyLYe37q429CpdJ1zd5XafytMl0uRgsEU=;
+	s=default; t=1588341634;
+	bh=iCbh3q6xWJn/RtDfI77FmGLwgX0MhGfofN7ZmqcW6tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qr5WwhbiKUd27SsvH1F7KWpLq4lKrECMEYYO+w/wYfq3/dsw+T5BTjZNHJf9ecYLn
-	 tQKT1vGctsLWBOa6MF5S98t3hsc622XXaNl4x/1jXiwJk8roqQMTsMzz4FJOTxHr+8
-	 Ha+73Sdd33nN6q3XWGTpB5wG22uWZvMd7OloC8lQ=
+	b=JdWLG1+8ydIWSKzFV6v2voWooCjyiqa6I1M0ilIaD0mQGNH7oQ6ATwzNuq98+Pxxd
+	 KRQL1iYeXqUgHwLIwcXrGCI5feSy1Cg2nwoaEBkTnXsq3xYvuI4Q+OL8n4/kRh16xa
+	 +xAzoACRKCLRVDFg3y+75ZHG3EJbNkfdnCbPCFRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgEAN1c (ORCPT
+        id S1730566AbgEAOAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbgEAN12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:28 -0400
+        id S1728917AbgEAN1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 274D12166E;
-        Fri,  1 May 2020 13:27:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB802166E;
+        Fri,  1 May 2020 13:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339647;
-        bh=oN4xXc//JXVyLYe37q429CpdJ1zd5XafytMl0uRgsEU=;
+        s=default; t=1588339640;
+        bh=iCbh3q6xWJn/RtDfI77FmGLwgX0MhGfofN7ZmqcW6tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XvDDWkxd04b0EJiZF+jj6OEI0VW0o1ca6ppnrBtKmHsPIjfQ8jAu4KiogmjlGClIU
-         ytPo1r2mtYYc1FQ1v9FiSFaET9nbNfhu3s8hOuUKkF9yVWkNKyCMFNgDULXKRxWYV/
-         vpBmHPGiuIg4oVnaqZhuTbwScy5KLZcbFr/4h714=
+        b=Zsw8pFb7FmTUjzW0Q0PlajvE2waaT/GdLzwvwHuCEng8GkBh+2A5axW3qrwj3ZfKO
+         zTHXnfl4tTJnE/hVw38OQ+Jto5Zwwu6y6kV7c3rSfCROXn8O5wOMpai2qQ/fvZhQVI
+         moxPJqthLoqzEnnkzkaOqNip31ke1xwuzWfl8GIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 62/70] scsi: target: fix PR IN / READ FULL STATUS for FC
-Date:   Fri,  1 May 2020 15:21:50 +0200
-Message-Id: <20200501131531.563955312@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 59/70] net/cxgb4: Check the return from t4_query_params properly
+Date:   Fri,  1 May 2020 15:21:47 +0200
+Message-Id: <20200501131531.132718575@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -61,41 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
+commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
 
-Creation of the response to READ FULL STATUS fails for FC based
-reservations. Reason is the too high loop limit (< 24) in
-fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
-long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
-executed a last time for the ending '\0' of the string and thus hex2bin()
-reports an error.
+Positive return values are also failures that don't set val,
+although this probably can't happen. Fixes gcc 10 warning:
 
-Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 3747 |  *phy_fw_ver = val;
+
+Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/target/target_core_fabric_lib.c | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
-index 6e75095af6818..2ecb2f7042a13 100644
---- a/drivers/target/target_core_fabric_lib.c
-+++ b/drivers/target/target_core_fabric_lib.c
-@@ -75,7 +75,7 @@ static int fc_get_pr_transport_id(
- 	 * encoded TransportID.
- 	 */
- 	ptr = &se_nacl->initiatorname[0];
--	for (i = 0; i < 24; ) {
-+	for (i = 0; i < 23; ) {
- 		if (!strncmp(&ptr[i], ":", 1)) {
- 			i++;
- 			continue;
--- 
-2.20.1
-
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -3341,7 +3341,7 @@ int t4_phy_fw_ver(struct adapter *adap,
+ 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
+ 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
+ 			      &param, &val);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 	*phy_fw_ver = val;
+ 	return 0;
 
 
