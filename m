@@ -2,60 +2,57 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20B6C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0D2C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEB2208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83C420857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344468;
-	bh=kznbsqrC35NeTiD+j3a7mVjUjRkxxuXMvy7Q1cN6UyY=;
+	s=default; t=1588344478;
+	bh=HZ+1cCrnHwqymSnl/nTu7FohfNpgot2Ka93tsEWAPOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJU/FtYAbV2hoN9t1HkgTlFztO7DNtsPbk9UEQStWs4OLbhH6IMqXVBZxGwAgpgaj
-	 Fhxf9w43ye5X9c4GbvNKXDFRcpol+DMci6vDflL85ynAPejyM4cJd8+wyIEX0GxcEu
-	 3amAFF+2R37jNImWx/DFTuCdmD1S+x7u9oZPsa9A=
+	b=FRXj6JbH/oVa/0YRrL2btXigHdXxFG2BPlEYOQFLr/kxnH5aRHvV2BBkgVk/kL1ut
+	 WuNgE29W2pnfsiahUSe2MBkXANQ30Q7zKRfb+mTaDhBIpPpiCMLuRdLJtb6m9Kxy6X
+	 i/pLtRUIS9xqc3Md8PC9hyj3NfjWBUNMo7tLDq6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgEAOrf (ORCPT
+        id S1729107AbgEAOr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:47:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbgEAOpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:45:09 -0400
+        id S1729408AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:08 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9EDF208DB;
-        Fri,  1 May 2020 14:45:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C39A2495B;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344307;
-        bh=kznbsqrC35NeTiD+j3a7mVjUjRkxxuXMvy7Q1cN6UyY=;
+        s=default; t=1588344305;
+        bh=HZ+1cCrnHwqymSnl/nTu7FohfNpgot2Ka93tsEWAPOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xhR8LZQY4D/9iEsG/vjW5EyAnXjY6byZQUYUUuaegr6ZRHvQ2aWx/G6yfm6wuo5ZF
-         /Yx2g292pPjpwvikGZhnD8/ByY9oGIn7rhxnwpZT2PWiIELEqkTXRhYoz9G11pU2Nw
-         yboa27+IQva9+MCkRR4Qpvbvs5HnKtKWZsEOA0SA=
+        b=veWHDLduD/YtR/JL8m6M+YKxHR1bDoXNxewE9SPRcg+hXFtpCAgFhnnnC/Bqn6d30
+         S4o9ZFFKwsuztbQwFVvzbuJ51ePLMScGuUXQvr7RTx00nL0LL2RDHLhaP/+I5mGJlp
+         NifWC3/uAOlyEe6rzoVHaGNTaRV8CoR2phxitFcs=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCeb-TJ; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCcV-8A; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, netdev@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH 26/37] docs: networking: device drivers: convert microsoft/netvsc.txt to ReST
-Date:   Fri,  1 May 2020 16:44:48 +0200
-Message-Id: <0f4b68dd901fe915980395a595bc6cced6b4530f.1588344146.git.mchehab+huawei@kernel.org>
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH 01/37] docs: networking: convert tuntap.txt to ReST
+Date:   Fri,  1 May 2020 16:44:23 +0200
+Message-Id: <012b840f86a0f1d67dc95052ef4a001fede0f52a.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -67,6 +64,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
+- use copyright symbol;
 - adjust titles and chapters, adding proper markups;
 - mark code blocks and literals as such;
 - adjust identation, whitespaces and blank lines where needed;
@@ -74,155 +72,376 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/device_drivers/index.rst       |  1 +
- .../microsoft/{netvsc.txt => netvsc.rst}      | 57 +++++++++++--------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 36 insertions(+), 24 deletions(-)
- rename Documentation/networking/device_drivers/microsoft/{netvsc.txt => netvsc.rst} (83%)
+ Documentation/networking/index.rst            |   1 +
+ .../networking/{tuntap.txt => tuntap.rst}     | 200 ++++++++++--------
+ MAINTAINERS                                   |   2 +-
+ drivers/net/Kconfig                           |   2 +-
+ 4 files changed, 119 insertions(+), 86 deletions(-)
+ rename Documentation/networking/{tuntap.txt => tuntap.rst} (58%)
 
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index f9ce0089ec7d..575f0043b03e 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -41,6 +41,7 @@ Contents:
-    freescale/gianfar
-    intel/ipw2100
-    intel/ipw2200
-+   microsoft/netvsc
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index b423b2db5f96..e7a683f0528d 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -111,6 +111,7 @@ Contents:
+    team
+    timestamping
+    tproxy
++   tuntap
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/device_drivers/microsoft/netvsc.txt b/Documentation/networking/device_drivers/microsoft/netvsc.rst
-similarity index 83%
-rename from Documentation/networking/device_drivers/microsoft/netvsc.txt
-rename to Documentation/networking/device_drivers/microsoft/netvsc.rst
-index cd63556b27a0..c3f51c672a68 100644
---- a/Documentation/networking/device_drivers/microsoft/netvsc.txt
-+++ b/Documentation/networking/device_drivers/microsoft/netvsc.rst
-@@ -1,3 +1,6 @@
+diff --git a/Documentation/networking/tuntap.txt b/Documentation/networking/tuntap.rst
+similarity index 58%
+rename from Documentation/networking/tuntap.txt
+rename to Documentation/networking/tuntap.rst
+index 0104830d5075..a59d1dd6fdcc 100644
+--- a/Documentation/networking/tuntap.txt
++++ b/Documentation/networking/tuntap.rst
+@@ -1,20 +1,28 @@
+-Universal TUN/TAP device driver.
+-Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
 +.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
+ 
+-  Linux, Solaris drivers 
+-  Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
++===============================
++Universal TUN/TAP device driver
++===============================
+ 
+-  FreeBSD TAP driver 
+-  Copyright (c) 1999-2000 Maksim Yevmenkin <m_evmenkin@yahoo.com>
++Copyright |copy| 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
 +
-+======================
- Hyper-V network driver
- ======================
++  Linux, Solaris drivers
++  Copyright |copy| 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
++
++  FreeBSD TAP driver
++  Copyright |copy| 1999-2000 Maksim Yevmenkin <m_evmenkin@yahoo.com>
  
-@@ -10,15 +13,15 @@ Windows 10.
- Features
- ========
+   Revision of this document 2002 by Florian Thiel <florian.thiel@gmx.net>
  
--  Checksum offload
--  ----------------
-+Checksum offload
+ 1. Description
+-  TUN/TAP provides packet reception and transmission for user space programs. 
++==============
++
++  TUN/TAP provides packet reception and transmission for user space programs.
+   It can be seen as a simple Point-to-Point or Ethernet device, which,
+-  instead of receiving packets from physical media, receives them from 
+-  user space program and instead of sending packets via physical media 
+-  writes them to the user space program. 
++  instead of receiving packets from physical media, receives them from
++  user space program and instead of sending packets via physical media
++  writes them to the user space program.
+ 
+   In order to use the driver a program has to open /dev/net/tun and issue a
+   corresponding ioctl() to register a network device with the kernel. A network
+@@ -33,41 +41,51 @@ Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
+   br_sigio.c  - bridge based on async io and SIGIO signal.
+   However, the best example is VTun http://vtun.sourceforge.net :))
+ 
+-2. Configuration 
+-  Create device node:
++2. Configuration
++================
++
++  Create device node::
++
+      mkdir /dev/net (if it doesn't exist already)
+      mknod /dev/net/tun c 10 200
+-  
+-  Set permissions:
++
++  Set permissions::
++
+      e.g. chmod 0666 /dev/net/tun
+-     There's no harm in allowing the device to be accessible by non-root users,
+-     since CAP_NET_ADMIN is required for creating network devices or for 
+-     connecting to network devices which aren't owned by the user in question.
+-     If you want to create persistent devices and give ownership of them to 
+-     unprivileged users, then you need the /dev/net/tun device to be usable by
+-     those users.
++
++  There's no harm in allowing the device to be accessible by non-root users,
++  since CAP_NET_ADMIN is required for creating network devices or for
++  connecting to network devices which aren't owned by the user in question.
++  If you want to create persistent devices and give ownership of them to
++  unprivileged users, then you need the /dev/net/tun device to be usable by
++  those users.
+ 
+   Driver module autoloading
+ 
+      Make sure that "Kernel module loader" - module auto-loading
+      support is enabled in your kernel.  The kernel should load it on
+      first access.
+-  
+-  Manual loading 
+-     insert the module by hand:
+-        modprobe tun
++
++  Manual loading
++
++     insert the module by hand::
++
++	modprobe tun
+ 
+   If you do it the latter way, you have to load the module every time you
+   need it, if you do it the other way it will be automatically loaded when
+   /dev/net/tun is being opened.
+ 
+-3. Program interface 
+-  3.1 Network device allocation:
++3. Program interface
++====================
+ 
+-  char *dev should be the name of the device with a format string (e.g.
+-  "tun%d"), but (as far as I can see) this can be any valid network device name.
+-  Note that the character pointer becomes overwritten with the real device name
+-  (e.g. "tun0")
++3.1 Network device allocation
++-----------------------------
++
++``char *dev`` should be the name of the device with a format string (e.g.
++"tun%d"), but (as far as I can see) this can be any valid network device name.
++Note that the character pointer becomes overwritten with the real device name
++(e.g. "tun0")::
+ 
+   #include <linux/if.h>
+   #include <linux/if_tun.h>
+@@ -78,45 +96,51 @@ Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
+       int fd, err;
+ 
+       if( (fd = open("/dev/net/tun", O_RDWR)) < 0 )
+-         return tun_alloc_old(dev);
++	 return tun_alloc_old(dev);
+ 
+       memset(&ifr, 0, sizeof(ifr));
+ 
+-      /* Flags: IFF_TUN   - TUN device (no Ethernet headers) 
+-       *        IFF_TAP   - TAP device  
++      /* Flags: IFF_TUN   - TUN device (no Ethernet headers)
++       *        IFF_TAP   - TAP device
+        *
+-       *        IFF_NO_PI - Do not provide packet information  
+-       */ 
+-      ifr.ifr_flags = IFF_TUN; 
++       *        IFF_NO_PI - Do not provide packet information
++       */
++      ifr.ifr_flags = IFF_TUN;
+       if( *dev )
+-         strncpy(ifr.ifr_name, dev, IFNAMSIZ);
++	 strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+ 
+       if( (err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0 ){
+-         close(fd);
+-         return err;
++	 close(fd);
++	 return err;
+       }
+       strcpy(dev, ifr.ifr_name);
+       return fd;
+-  }              
+- 
+-  3.2 Frame format:
+-  If flag IFF_NO_PI is not set each frame format is: 
++  }
++
++3.2 Frame format
 +----------------
-   The netvsc driver supports checksum offload as long as the
-   Hyper-V host version does. Windows Server 2016 and Azure
-   support checksum offload for TCP and UDP for both IPv4 and
-   IPv6. Windows Server 2012 only supports checksum offload for TCP.
++
++If flag IFF_NO_PI is not set each frame format is::
++
+      Flags [2 bytes]
+      Proto [2 bytes]
+      Raw protocol(IP, IPv6, etc) frame.
  
--  Receive Side Scaling
--  --------------------
-+Receive Side Scaling
-+--------------------
-   Hyper-V supports receive side scaling. For TCP & UDP, packets can
-   be distributed among available queues based on IP address and port
-   number.
-@@ -32,30 +35,37 @@ Features
-   hashing. Using L3 hashing is recommended in this case.
+-  3.3 Multiqueue tuntap interface:
++3.3 Multiqueue tuntap interface
++-------------------------------
  
-   For example, for UDP over IPv4 on eth0:
--  To include UDP port numbers in hashing:
--        ethtool -N eth0 rx-flow-hash udp4 sdfn
--  To exclude UDP port numbers in hashing:
--        ethtool -N eth0 rx-flow-hash udp4 sd
--  To show UDP hash level:
--        ethtool -n eth0 rx-flow-hash udp4
--
--  Generic Receive Offload, aka GRO
--  --------------------------------
-+
-+  To include UDP port numbers in hashing::
-+
-+	ethtool -N eth0 rx-flow-hash udp4 sdfn
-+
-+  To exclude UDP port numbers in hashing::
-+
-+	ethtool -N eth0 rx-flow-hash udp4 sd
-+
-+  To show UDP hash level::
-+
-+	ethtool -n eth0 rx-flow-hash udp4
-+
-+Generic Receive Offload, aka GRO
-+--------------------------------
-   The driver supports GRO and it is enabled by default. GRO coalesces
-   like packets and significantly reduces CPU usage under heavy Rx
-   load.
+-  From version 3.8, Linux supports multiqueue tuntap which can uses multiple
+-  file descriptors (queues) to parallelize packets sending or receiving. The
+-  device allocation is the same as before, and if user wants to create multiple
+-  queues, TUNSETIFF with the same device name must be called many times with
+-  IFF_MULTI_QUEUE flag.
++From version 3.8, Linux supports multiqueue tuntap which can uses multiple
++file descriptors (queues) to parallelize packets sending or receiving. The
++device allocation is the same as before, and if user wants to create multiple
++queues, TUNSETIFF with the same device name must be called many times with
++IFF_MULTI_QUEUE flag.
  
--  Large Receive Offload (LRO), or Receive Side Coalescing (RSC)
--  -------------------------------------------------------------
-+Large Receive Offload (LRO), or Receive Side Coalescing (RSC)
-+-------------------------------------------------------------
-   The driver supports LRO/RSC in the vSwitch feature. It reduces the per packet
-   processing overhead by coalescing multiple TCP segments when possible. The
-   feature is enabled by default on VMs running on Windows Server 2019 and
--  later. It may be changed by ethtool command:
-+  later. It may be changed by ethtool command::
+-  char *dev should be the name of the device, queues is the number of queues to
+-  be created, fds is used to store and return the file descriptors (queues)
+-  created to the caller. Each file descriptor were served as the interface of a
+-  queue which could be accessed by userspace.
++``char *dev`` should be the name of the device, queues is the number of queues
++to be created, fds is used to store and return the file descriptors (queues)
++created to the caller. Each file descriptor were served as the interface of a
++queue which could be accessed by userspace.
 +
- 	ethtool -K eth0 lro on
- 	ethtool -K eth0 lro off
++::
  
--  SR-IOV support
--  --------------
-+SR-IOV support
-+--------------
-   Hyper-V supports SR-IOV as a hardware acceleration option. If SR-IOV
-   is enabled in both the vSwitch and the guest configuration, then the
-   Virtual Function (VF) device is passed to the guest as a PCI
-@@ -70,8 +80,8 @@ Features
-   flow direction is desired, these should be applied directly to the
-   VF slave device.
+   #include <linux/if.h>
+   #include <linux/if_tun.h>
+@@ -127,7 +151,7 @@ Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
+       int fd, err, i;
  
--  Receive Buffer
--  --------------
-+Receive Buffer
-+--------------
-   Packets are received into a receive area which is created when device
-   is probed. The receive area is broken into MTU sized chunks and each may
-   contain one or more packets. The number of receive sections may be changed
-@@ -83,8 +93,8 @@ Features
-   will use slower method to handle very large packets or if the send buffer
-   area is exhausted.
+       if (!dev)
+-          return -1;
++	  return -1;
  
--  XDP support
--  -----------
-+XDP support
-+-----------
-   XDP (eXpress Data Path) is a feature that runs eBPF bytecode at the early
-   stage when packets arrive at a NIC card. The goal is to increase performance
-   for packet processing, reducing the overhead of SKB allocation and other
-@@ -99,7 +109,8 @@ Features
-   overwritten by setting of synthetic NIC.
+       memset(&ifr, 0, sizeof(ifr));
+       /* Flags: IFF_TUN   - TUN device (no Ethernet headers)
+@@ -140,30 +164,30 @@ Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
+       strcpy(ifr.ifr_name, dev);
  
-   XDP program cannot run with LRO (RSC) enabled, so you need to disable LRO
--  before running XDP:
-+  before running XDP::
+       for (i = 0; i < queues; i++) {
+-          if ((fd = open("/dev/net/tun", O_RDWR)) < 0)
+-             goto err;
+-          err = ioctl(fd, TUNSETIFF, (void *)&ifr);
+-          if (err) {
+-             close(fd);
+-             goto err;
+-          }
+-          fds[i] = fd;
++	  if ((fd = open("/dev/net/tun", O_RDWR)) < 0)
++	     goto err;
++	  err = ioctl(fd, TUNSETIFF, (void *)&ifr);
++	  if (err) {
++	     close(fd);
++	     goto err;
++	  }
++	  fds[i] = fd;
+       }
+ 
+       return 0;
+   err:
+       for (--i; i >= 0; i--)
+-          close(fds[i]);
++	  close(fds[i]);
+       return err;
+   }
+ 
+-  A new ioctl(TUNSETQUEUE) were introduced to enable or disable a queue. When
+-  calling it with IFF_DETACH_QUEUE flag, the queue were disabled. And when
+-  calling it with IFF_ATTACH_QUEUE flag, the queue were enabled. The queue were
+-  enabled by default after it was created through TUNSETIFF.
++A new ioctl(TUNSETQUEUE) were introduced to enable or disable a queue. When
++calling it with IFF_DETACH_QUEUE flag, the queue were disabled. And when
++calling it with IFF_ATTACH_QUEUE flag, the queue were enabled. The queue were
++enabled by default after it was created through TUNSETIFF.
+ 
+-  fd is the file descriptor (queue) that we want to enable or disable, when
+-  enable is true we enable it, otherwise we disable it
++fd is the file descriptor (queue) that we want to enable or disable, when
++enable is true we enable it, otherwise we disable it::
+ 
+   #include <linux/if.h>
+   #include <linux/if_tun.h>
+@@ -175,53 +199,61 @@ Copyright (C) 1999-2000 Maxim Krasnyansky <max_mk@yahoo.com>
+       memset(&ifr, 0, sizeof(ifr));
+ 
+       if (enable)
+-         ifr.ifr_flags = IFF_ATTACH_QUEUE;
++	 ifr.ifr_flags = IFF_ATTACH_QUEUE;
+       else
+-         ifr.ifr_flags = IFF_DETACH_QUEUE;
++	 ifr.ifr_flags = IFF_DETACH_QUEUE;
+ 
+       return ioctl(fd, TUNSETQUEUE, (void *)&ifr);
+   }
+ 
+-Universal TUN/TAP device driver Frequently Asked Question.
+-   
++Universal TUN/TAP device driver Frequently Asked Question
++=========================================================
 +
- 	ethtool -K eth0 lro off
+ 1. What platforms are supported by TUN/TAP driver ?
++
+ Currently driver has been written for 3 Unices:
+-   Linux kernels 2.2.x, 2.4.x 
+-   FreeBSD 3.x, 4.x, 5.x
+-   Solaris 2.6, 7.0, 8.0
++
++  - Linux kernels 2.2.x, 2.4.x
++  - FreeBSD 3.x, 4.x, 5.x
++  - Solaris 2.6, 7.0, 8.0
  
-   XDP_REDIRECT action is not yet supported.
+ 2. What is TUN/TAP driver used for?
+-As mentioned above, main purpose of TUN/TAP driver is tunneling. 
++
++As mentioned above, main purpose of TUN/TAP driver is tunneling.
+ It is used by VTun (http://vtun.sourceforge.net).
+ 
+ Another interesting application using TUN/TAP is pipsecd
+ (http://perso.enst.fr/~beyssac/pipsec/), a userspace IPSec
+ implementation that can use complete kernel routing (unlike FreeS/WAN).
+ 
+-3. How does Virtual network device actually work ? 
++3. How does Virtual network device actually work ?
++
+ Virtual network device can be viewed as a simple Point-to-Point or
+-Ethernet device, which instead of receiving packets from a physical 
+-media, receives them from user space program and instead of sending 
+-packets via physical media sends them to the user space program. 
++Ethernet device, which instead of receiving packets from a physical
++media, receives them from user space program and instead of sending
++packets via physical media sends them to the user space program.
+ 
+ Let's say that you configured IPv6 on the tap0, then whenever
+ the kernel sends an IPv6 packet to tap0, it is passed to the application
+-(VTun for example). The application encrypts, compresses and sends it to 
++(VTun for example). The application encrypts, compresses and sends it to
+ the other side over TCP or UDP. The application on the other side decompresses
+-and decrypts the data received and writes the packet to the TAP device, 
++and decrypts the data received and writes the packet to the TAP device,
+ the kernel handles the packet like it came from real physical device.
+ 
+ 4. What is the difference between TUN driver and TAP driver?
++
+ TUN works with IP frames. TAP works with Ethernet frames.
+ 
+ This means that you have to read/write IP packets when you are using tun and
+ ethernet frames when using tap.
+ 
+ 5. What is the difference between BPF and TUN/TAP driver?
++
+ BPF is an advanced packet filter. It can be attached to existing
+ network interface. It does not provide a virtual network interface.
+ A TUN/TAP driver does provide a virtual network interface and it is possible
+ to attach BPF to this interface.
+ 
+ 6. Does TAP driver support kernel Ethernet bridging?
+-Yes. Linux and FreeBSD drivers support Ethernet bridging. 
++
++Yes. Linux and FreeBSD drivers support Ethernet bridging.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 62c654308bc8..ef6bd3be1bb5 100644
+index 64789b29c085..35bd81b436e1 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -7881,7 +7881,7 @@ S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
- F:	Documentation/ABI/stable/sysfs-bus-vmbus
- F:	Documentation/ABI/testing/debugfs-hyperv
--F:	Documentation/networking/device_drivers/microsoft/netvsc.txt
-+F:	Documentation/networking/device_drivers/microsoft/netvsc.rst
- F:	arch/x86/hyperv
- F:	arch/x86/include/asm/hyperv-tlfs.h
- F:	arch/x86/include/asm/mshyperv.h
+@@ -17207,7 +17207,7 @@ TUN/TAP driver
+ M:	Maxim Krasnyansky <maxk@qti.qualcomm.com>
+ S:	Maintained
+ W:	http://vtun.sourceforge.net/tun
+-F:	Documentation/networking/tuntap.txt
++F:	Documentation/networking/tuntap.rst
+ F:	arch/um/os-Linux/drivers/
+ 
+ TURBOCHANNEL SUBSYSTEM
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index ad64be98330f..3f2c98a7906c 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -355,7 +355,7 @@ config TUN
+ 	  devices, driver will automatically delete tunXX or tapXX device and
+ 	  all routes corresponding to it.
+ 
+-	  Please read <file:Documentation/networking/tuntap.txt> for more
++	  Please read <file:Documentation/networking/tuntap.rst> for more
+ 	  information.
+ 
+ 	  To compile this driver as a module, choose M here: the module
 -- 
 2.25.4
 
