@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BA8C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6430C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E5A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53782166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339602;
-	bh=pfLbE4VzKyFtdeGfDyuYIWsD/fCOmU/zkT+bA4jZ3ek=;
+	s=default; t=1588339608;
+	bh=DTGMImZJ7jUD9f8TAsQZWCyL6EtzNSwatzM2gU3fHMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uC2LlUMalqwu1IOUVGPtCjZaPReiRtxoVVeJNnrcKlbwy/FghYA6yYQVBjJJsxHCq
-	 7L0lHEyvkK2oIGmY8lZoIXpledCdEdZ2R/mBGej1E8lh7KK1vPiil+M2Q3jSyu9YEs
-	 ecJ5s6agBw0dUSsbsK0l04QL4WKwLnOnfqpFNav8=
+	b=cIThLc/E3dXx4gRxZ5lW5J7F/Hr2uYcL3IiEHbRKxIxtbE9Pvnr/3GNpX8+V5PRBY
+	 9dAL0kT8R8rQBFulb8qIfjg4WomkG3h9V97h99o8BaC7wDD13Ob0wF9Eh+Jvnvp6a3
+	 V+GTAxmO0Xa/NjWayDhvEmnfmDXCV3j4fnLnlDTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgEAN0l (ORCPT
+        id S1729346AbgEAN0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48396 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbgEAN0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:36 -0400
+        id S1729330AbgEAN0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77107208D6;
-        Fri,  1 May 2020 13:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FEFF20757;
+        Fri,  1 May 2020 13:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339595;
-        bh=pfLbE4VzKyFtdeGfDyuYIWsD/fCOmU/zkT+bA4jZ3ek=;
+        s=default; t=1588339605;
+        bh=DTGMImZJ7jUD9f8TAsQZWCyL6EtzNSwatzM2gU3fHMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m1Vt4vyKyqRLo2kVas2o1HvPzBYEOm/GsA80ti4CajODug1UznDrkq8TB0ptWEnmD
-         FtdqVMMV/AeKbphvQbuz6gh8cdRoxx6NOx2DEpCDsWtI22dxhb2fgiCTY8AJvEA1gj
-         SH/IozgREWvOYfUGyasRyL3bQXFui7AzHKKW3O3U=
+        b=KltfDJypKk7QlNWzlO8JaOmDIde4Lz0DaUUDzkIEpiQVSiH94sBRBANiUg2fWX3Kf
+         LoOchQ5y9WKbB8pRYnie4pXiPLeT6UE0cBb8eqgJWr9I0Y78dZk4C81KZP2L6+Ce4p
+         e1dGwV22zCPqE3RH7h2DcsZ9NOxiSZou98rRyVPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Udipto Goswami <ugoswami@codeaurora.org>,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH 4.4 53/70] usb: f_fs: Clear OS Extended descriptor counts to zero in ffs_data_reset()
-Date:   Fri,  1 May 2020 15:21:41 +0200
-Message-Id: <20200501131529.693541005@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.4 44/70] audit: check the length of userspace generated audit records
+Date:   Fri,  1 May 2020 15:21:32 +0200
+Message-Id: <20200501131527.057140108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,46 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Udipto Goswami <ugoswami@codeaurora.org>
+From: Paul Moore <paul@paul-moore.com>
 
-commit 1c2e54fbf1da5e5445a0ab132c862b02ccd8d230 upstream.
+commit 763dafc520add02a1f4639b500c509acc0ea8e5b upstream.
 
-For userspace functions using OS Descriptors, if a function also supplies
-Extended Property descriptors currently the counts and lengths stored in
-the ms_os_descs_ext_prop_{count,name_len,data_len} variables are not
-getting reset to 0 during an unbind or when the epfiles are closed. If
-the same function is re-bound and the descriptors are re-written, this
-results in those count/length variables to monotonically increase
-causing the VLA allocation in _ffs_func_bind() to grow larger and larger
-at each bind/unbind cycle and eventually fail to allocate.
+Commit 756125289285 ("audit: always check the netlink payload length
+in audit_receive_msg()") fixed a number of missing message length
+checks, but forgot to check the length of userspace generated audit
+records.  The good news is that you need CAP_AUDIT_WRITE to submit
+userspace audit records, which is generally only given to trusted
+processes, so the impact should be limited.
 
-Fix this by clearing the ms_os_descs_ext_prop count & lengths to 0 in
-ffs_data_reset().
-
-Fixes: f0175ab51993 ("usb: gadget: f_fs: OS descriptors support")
 Cc: stable@vger.kernel.org
-Signed-off-by: Udipto Goswami <ugoswami@codeaurora.org>
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Link: https://lore.kernel.org/r/20200402044521.9312-1-sallenki@codeaurora.org
+Fixes: 756125289285 ("audit: always check the netlink payload length in audit_receive_msg()")
+Reported-by: syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_fs.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/audit.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1511,6 +1511,10 @@ static void ffs_data_reset(struct ffs_da
- 	ffs->state = FFS_READ_DESCRIPTORS;
- 	ffs->setup_state = FFS_NO_SETUP;
- 	ffs->flags = 0;
-+
-+	ffs->ms_os_descs_ext_prop_count = 0;
-+	ffs->ms_os_descs_ext_prop_name_len = 0;
-+	ffs->ms_os_descs_ext_prop_data_len = 0;
- }
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -919,6 +919,9 @@ static int audit_receive_msg(struct sk_b
+ 	case AUDIT_FIRST_USER_MSG2 ... AUDIT_LAST_USER_MSG2:
+ 		if (!audit_enabled && msg_type != AUDIT_USER_AVC)
+ 			return 0;
++		/* exit early if there isn't at least one character to print */
++		if (data_len < 2)
++			return -EINVAL;
  
- 
+ 		err = audit_filter_user(msg_type);
+ 		if (err == 1) { /* match or error */
 
 
