@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41B6C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE70C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8FF020757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1CD208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340612;
-	bh=4hZvBE6xsC/iubCP5MVXG8dhgb8LLPoFp3HBF0HbDCk=;
+	s=default; t=1588340622;
+	bh=r0+dkasYLcoUZBILv3W7IOkelCzd5PwNPf5GSTGG628=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXB2GxUsFRJjtgwBnWp076Jo4bbfgg6VFKCu6dY4kv64R0ucFyI5tpgyG1c41Pass
-	 I/pS4g8b5hWLg9weLLcVFNOdrKyyZQ1hiDK4dg4LTLnWq50njhEjpmAraeYT4PtPJf
-	 3GXMUSUAcXol2zKR1XV6V1FjS+kOLAS6ti8wHKlg=
+	b=wKEg6fv1qk5EJ6Hxh+aPbrpFcMVSSrVUmkA9uG7t+plYXc1ktcIs+NRzfNTA1QZsv
+	 ECBXQobZwwATVuv1/kMxmavS2dplDv2kOhQs3mo5MiHomhVIjRFJHMFO0yz05ILRoo
+	 cRsuUFkJ57vSgqhe9KKlW1UwdNnqtSeCW2kHZMn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbgEANnb (ORCPT
+        id S1731666AbgEANnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44350 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:43:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbgEANn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:26 -0400
+        id S1731642AbgEANni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1132B205C9;
-        Fri,  1 May 2020 13:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C22220757;
+        Fri,  1 May 2020 13:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340605;
-        bh=4hZvBE6xsC/iubCP5MVXG8dhgb8LLPoFp3HBF0HbDCk=;
+        s=default; t=1588340617;
+        bh=r0+dkasYLcoUZBILv3W7IOkelCzd5PwNPf5GSTGG628=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ho86uiGvKQ1w/nOoZejV5qjdR9pddmC06+wRGme6p/ebx+k9eLV5tuc2x1iYMwDL+
-         dwsWmWRdXX2B8mgcDdSj61RgxrnPQXpJI52Y+h7Z2U7vFy5+izjq611x9n6Y9GYau+
-         bwu4rPuTyVw903syrzVXGcuZa4VEmG4FjxqGWLwg=
+        b=f0FTRz5mNay0ENPS9BNKXF64jfOpIrm0JAfDi9cgB9Vk90nhz5hBxFemwdVVHkoro
+         lpZpuFn3p3D0NusWexBSyu83WbPS3/kBKWIlUqGZLyQEUouj6UrzyOw7a3okueUtFY
+         mhtGJzE80vpqI1di0l7O1AhJSPfq3o6x5reDP8c4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Schmidt <alexs@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.6 050/106] s390/pci: do not set affinity for floating irqs
-Date:   Fri,  1 May 2020 15:23:23 +0200
-Message-Id: <20200501131549.691055631@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.6 067/106] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+Date:   Fri,  1 May 2020 15:23:40 +0200
+Message-Id: <20200501131552.409413979@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,54 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 86dbf32da150339ca81509fa2eb84c814b55258b upstream.
+commit 10a98cb16d80be3595fdb165fad898bb28b8b6d2 upstream.
 
-with the introduction of CPU directed interrupts the kernel
-parameter pci=force_floating was introduced to fall back
-to the previous behavior using floating irqs.
+Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
+during do_exit().  That can confuse things.  In particular, if BSD
+process accounting is enabled, then do_exit() writes data to an
+accounting file.  If that file has FS_SYNC_FL set, then this write
+occurs synchronously and can misbehave if PF_MEMALLOC is set.
 
-However we were still setting the affinity in that case,
-both in __irq_alloc_descs() and via the irq_set_affinity
-callback in struct irq_chip.
+For example, if the accounting file is located on an XFS filesystem,
+then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
+doesn't get written when it should.  Or if the accounting file is
+located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
+in ext4_write_inode() is triggered and the inode doesn't get written.
 
-For the former only set the affinity in the directed case.
+Fix this in xfsaild() by using the helper functions to save and restore
+PF_MEMALLOC.
 
-The latter is explicitly set in zpci_directed_irq_init()
-so we can just leave it unset for the floating case.
+This can be reproduced as follows in the kvm-xfstests test appliance
+modified to add the 'acct' Debian package, and with kvm-xfstests's
+recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
 
-Fixes: e979ce7bced2 ("s390/pci: provide support for CPU directed interrupts")
-Co-developed-by: Alexander Schmidt <alexs@linux.ibm.com>
-Signed-off-by: Alexander Schmidt <alexs@linux.ibm.com>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+        mkfs.xfs -f /dev/vdb
+        mount /vdb
+        touch /vdb/file
+        chattr +S /vdb/file
+        accton /vdb/file
+        mkfs.xfs -f /dev/vdc
+        mount /vdc
+        umount /vdc
+
+It causes:
+	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
+	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
+	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
+	[...]
+	Call Trace:
+	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
+	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
+	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
+	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
+	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
+	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
+	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
+	 generic_write_sync include/linux/fs.h:2867 [inline]
+	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
+	 call_write_iter include/linux/fs.h:1901 [inline]
+	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
+	 __kernel_write+0x54/0xe0 fs/read_write.c:515
+	 do_acct_process+0x122/0x170 kernel/acct.c:522
+	 slow_acct_process kernel/acct.c:581 [inline]
+	 acct_process+0x1d4/0x27c kernel/acct.c:607
+	 do_exit+0x83d/0xbc0 kernel/exit.c:791
+	 kthread+0xf1/0x140 kernel/kthread.c:257
+	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+
+This bug was originally reported by syzbot at
+https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+
+Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/pci/pci_irq.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_trans_ail.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/s390/pci/pci_irq.c
-+++ b/arch/s390/pci/pci_irq.c
-@@ -115,7 +115,6 @@ static struct irq_chip zpci_irq_chip = {
- 	.name = "PCI-MSI",
- 	.irq_unmask = pci_msi_unmask_irq,
- 	.irq_mask = pci_msi_mask_irq,
--	.irq_set_affinity = zpci_set_irq_affinity,
- };
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -529,8 +529,9 @@ xfsaild(
+ {
+ 	struct xfs_ail	*ailp = data;
+ 	long		tout = 0;	/* milliseconds */
++	unsigned int	noreclaim_flag;
  
- static void zpci_handle_cpu_local_irq(bool rescan)
-@@ -276,7 +275,9 @@ int arch_setup_msi_irqs(struct pci_dev *
- 		rc = -EIO;
- 		if (hwirq - bit >= msi_vecs)
- 			break;
--		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE, msi->affinity);
-+		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE,
-+				(irq_delivery == DIRECTED) ?
-+				msi->affinity : NULL);
- 		if (irq < 0)
- 			return -ENOMEM;
- 		rc = irq_set_msi_desc(irq, msi);
+-	current->flags |= PF_MEMALLOC;
++	noreclaim_flag = memalloc_noreclaim_save();
+ 	set_freezable();
+ 
+ 	while (1) {
+@@ -601,6 +602,7 @@ xfsaild(
+ 		tout = xfsaild_push(ailp);
+ 	}
+ 
++	memalloc_noreclaim_restore(noreclaim_flag);
+ 	return 0;
+ }
+ 
 
 
