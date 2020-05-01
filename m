@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C7CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A6C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59BFF206D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F0B2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341706;
-	bh=Qs78r1hJQ7eIwNzO01q2Oa9PHG7c6wH58tUjB1MxkYA=;
+	s=default; t=1588341712;
+	bh=FIl5LxAo3sAnFk0EG7vW2iQiLwXy00fRa5v3cZeQbw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=16gwflqdKztLCcdIziPH+D5BbGNkpIENim13DvCo96fXGfjmhkZ+O98tGYQyCeh2V
-	 helgHRNb9vWGFTTrfP7FXezs/T99gVpIW8safS9lS3wdElqMe6sxzpEW+ykXb5obr/
-	 ohFHwrVgUTQ954wBEl4IvWfSjtzTsEdZHzX2xp8w=
+	b=rDeLBRiAx7anL3rIMpuj8W/wFcJDnOg2H70UZ1xV/BoC6hFdk6FQxRdOM7bs0PpX4
+	 lH6DB7Bmp83AF3lKVdpm68MzGDje3H9CrhCZFh0IhT3HvB5qLJjpGEn5JTbNPTX1xq
+	 kwbEIqOu5Vp5Q0DJgky+MBc5ux/0qgdUZpNp1wUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgEAOBp (ORCPT
+        id S1729878AbgEAOBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:01:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgEANZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:24 -0400
+        id S1728993AbgEANZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1607E2166E;
-        Fri,  1 May 2020 13:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D0542495E;
+        Fri,  1 May 2020 13:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339524;
-        bh=Qs78r1hJQ7eIwNzO01q2Oa9PHG7c6wH58tUjB1MxkYA=;
+        s=default; t=1588339519;
+        bh=FIl5LxAo3sAnFk0EG7vW2iQiLwXy00fRa5v3cZeQbw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mj4OlbWmWcK+FcSqEKPsDvYEq2j4o1ORl+XrFdDO0dmO5BJNThducBtkEvIJzF6kC
-         b2w0kkW1de/lGwo1uH7DxE05lMaK+Ctc8umspVqttEMoFYs07nr3RtjsRAQKp4nVcl
-         KIH+PlD1kfnQkBk5GZkMeWwrLqpr/Hza73MwIMtA=
+        b=h9HCxwMM7KTfm6JDv1eiyc0pKGBSAQ3ljJ2/JgRX9P19zJKBcowVlWdfskJNWEt9P
+         5zygeIKArbCRLDqbPqoza/VQidKPNQCsI26HMo9XNuJQnQc7rICmVYHIzIDmvqEKTQ
+         yPXZvxFi+fwe/N5ton//6e5C7tul3wI+YcPGovyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 24/70] xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
-Date:   Fri,  1 May 2020 15:21:12 +0200
-Message-Id: <20200501131521.946706660@linuxfoundation.org>
+Subject: [PATCH 4.4 22/70] tcp: cache line align MAX_TCP_HEADER
+Date:   Fri,  1 May 2020 15:21:10 +0200
+Message-Id: <20200501131521.123720775@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -59,47 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 0c922a4850eba2e668f73a3f1153196e09abb251 ]
+[ Upstream commit 9bacd256f1354883d3c1402655153367982bba49 ]
 
-IPSKB_XFRM_TRANSFORMED and IP6SKB_XFRM_TRANSFORMED are skb flags set by
-xfrm code to tell other skb handlers that the packet has been passed
-through the xfrm output functions. Simplify the code and just always
-set them rather than conditionally based on netfilter enabled thus
-making the flag available for other users.
+TCP stack is dumb in how it cooks its output packets.
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
+Depending on MAX_HEADER value, we might chose a bad ending point
+for the headers.
+
+If we align the end of TCP headers to cache line boundary, we
+make sure to always use the smallest number of cache lines,
+which always help.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/xfrm4_output.c |    2 --
- net/ipv6/xfrm6_output.c |    2 --
- 2 files changed, 4 deletions(-)
+ include/net/tcp.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/xfrm4_output.c
-+++ b/net/ipv4/xfrm4_output.c
-@@ -75,9 +75,7 @@ int xfrm4_output_finish(struct sock *sk,
- {
- 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -52,7 +52,7 @@ extern struct inet_hashinfo tcp_hashinfo
+ extern struct percpu_counter tcp_orphan_count;
+ void tcp_time_wait(struct sock *sk, int state, int timeo);
  
--#ifdef CONFIG_NETFILTER
- 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
--#endif
- 
- 	return xfrm_output(sk, skb);
- }
---- a/net/ipv6/xfrm6_output.c
-+++ b/net/ipv6/xfrm6_output.c
-@@ -125,9 +125,7 @@ int xfrm6_output_finish(struct sock *sk,
- {
- 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
- 
--#ifdef CONFIG_NETFILTER
- 	IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
--#endif
- 
- 	return xfrm_output(sk, skb);
- }
+-#define MAX_TCP_HEADER	(128 + MAX_HEADER)
++#define MAX_TCP_HEADER	L1_CACHE_ALIGN(128 + MAX_HEADER)
+ #define MAX_TCP_OPTION_SPACE 40
+ #define TCP_MIN_SND_MSS		48
+ #define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
 
 
