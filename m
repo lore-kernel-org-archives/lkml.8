@@ -2,87 +2,87 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1804AC47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8AAC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9DE3208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC25208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgEAUxW (ORCPT
+        id S1726468AbgEAUyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:53:22 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58712 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgEAUxU (ORCPT
+        Fri, 1 May 2020 16:54:45 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:48794 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgEAUyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:53:20 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BF18D1C020C; Fri,  1 May 2020 22:53:18 +0200 (CEST)
-Date:   Fri, 1 May 2020 22:53:18 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 6/6] ARM: dts: omap4-droid4: Configure modem for
- serdev-ngsm
-Message-ID: <20200501205318.GH6043@duo.ucw.cz>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430174615.41185-7-tony@atomide.com>
+        Fri, 1 May 2020 16:54:45 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 729062002A;
+        Fri,  1 May 2020 22:54:39 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:54:38 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: display: Document TM5P5 NT35596 panel
+ compatible
+Message-ID: <20200501205438.GA26726@ravnborg.org>
+References: <20200501204825.146424-1-konradybcio@gmail.com>
+ <20200501204825.146424-3-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9sSKoi6Rw660DLir"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200430174615.41185-7-tony@atomide.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200501204825.146424-3-konradybcio@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=8nJEP1OIZ-IA:10 a=pGLkceISAAAA:8 a=nsjD_eZvI9l_Tp8ZG94A:9
+        a=wPNLvfGTeEIA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Konrad.
 
---9sSKoi6Rw660DLir
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the new panel binding.
+But you need to redo this as panel bindings today must be in DT Schema
+format (.yaml).
+Please see other bindings in the same dir for examples.
 
-On Thu 2020-04-30 10:46:15, Tony Lindgren wrote:
-> Let's enable the TS 27.010 /dev/gsmmux* interfaces via Linux n_gsm that
-> can be used for voice calls and SMS with commands using a custom Motorola
-> format.
->=20
-> And let's also enable the kernel GNSS driver via serdev-ngsm that uses a
-> dedicated TS 27.010 channel.
->=20
-> Note that voice call audio mixer is not supported yet.
->=20
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+	Sam
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9sSKoi6Rw660DLir
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyMPgAKCRAw5/Bqldv6
-8qoRAJ9XBGCn30K6iNApi0jst74YNd76XQCglCkMyqQcOwEfx4JuRZ1mYhOAndQ=
-=k4vN
------END PGP SIGNATURE-----
-
---9sSKoi6Rw660DLir--
+On Fri, May 01, 2020 at 10:48:23PM +0200, Konrad Dybcio wrote:
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  .../devicetree/bindings/display/panel/tm5p5,nt35596.txt    | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tm5p5,nt35596.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/tm5p5,nt35596.txt b/Documentation/devicetree/bindings/display/panel/tm5p5,nt35596.txt
+> new file mode 100644
+> index 0000000000000..6be56983482bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/tm5p5,nt35596.txt
+> @@ -0,0 +1,7 @@
+> +TM5P5 NT35596 5.5" 1080×1920 LCD Panel
+> +
+> +Required properties:
+> +  - compatible: "tm5p5,nt35596"
+> +  - reset-gpios: GPIO spec for reset pin
+> +  - vdd-supply: VDD regulator
+> +  - vddio-supply: VDDIO regulator
+> -- 
+> 2.26.1
