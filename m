@@ -2,51 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1065C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C4FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F2824953
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859EF24955
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340122;
-	bh=IN3dBcosvKC2QUoeyRI6B2svCXNsLO997YBPPyyQJAs=;
+	s=default; t=1588340129;
+	bh=xxj/vkO5jIF3eG2mRjYToGA+pScWak8JsqUuFoSTKvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8DDHci4YjPMwEKUO5J7ZA1W+yqwgHAiWgwAoNSd04YqNrwBN0zKtUfxlmifnUfg5
-	 LxswpuuJagxf/oWTCJ4WiyqMiVeHbLt8R7kENDjoqGQVB+c6SID2QbAiMr+GyoVHBA
-	 AgfOQoVkN/TsCdbS47Q9BPIUzn89vUdMktwutdBs=
+	b=kfGrEXb18uAFAgJvRF88oPIR+PVuxa/TB6wfeN68wSUbIiuKY7Xv2iYDOYBHTJfRF
+	 Rx1ZFPLwNtHM4xgrt8yyZI7sXuPCPHO3/Uqap63L+nZq42d1hEliRwecFIaKzFanci
+	 oe9zXP9f2oUNFxP26Yb2Okq8wfn5/U+uWRYVxmJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbgEANfV (ORCPT
+        id S1730716AbgEANf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:35:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730736AbgEANfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:15 -0400
+        id S1730101AbgEANfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA4D624957;
-        Fri,  1 May 2020 13:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF64C24953;
+        Fri,  1 May 2020 13:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340114;
-        bh=IN3dBcosvKC2QUoeyRI6B2svCXNsLO997YBPPyyQJAs=;
+        s=default; t=1588340119;
+        bh=xxj/vkO5jIF3eG2mRjYToGA+pScWak8JsqUuFoSTKvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OslHfkcKlTBR5hnNN2zkbgDA08uvKqLTnYr7NMiUTEqyKiH/42P8vRyRl9XS7ydwp
-         WwZh2wiCeJnIiZvh1iWfO6+XasT7ZEp3N7QksnUBOF4rXw+VHQsVnZ7loBIAe9XfAY
-         ezk5WHYxwnzmg11KvjSJdcyo3A/D0I4OiqR2Y2XY=
+        b=hcNuV7148q3rZpA5j/4j5elxDLs0Pr9JNcajhffgGwqYY96ISSlDk/djJCi5n/N9B
+         pnzYyLFCHsrxsRnxHM96zZeFcO8SQcx+1MvdWccbUnzNQ9Ld+WDzs6xoEI+BX+2rB2
+         wtyPLaNHw+e5xmMgTBh0107EqWz0ENcVadl92z7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/117] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
-Date:   Fri,  1 May 2020 15:22:20 +0200
-Message-Id: <20200501131557.809877454@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Theodore Tso <tytso@mit.edu>, Ashwin H <ashwinh@vmware.com>
+Subject: [PATCH 4.14 114/117] ext4: fix block validity checks for journal inodes using indirect blocks
+Date:   Fri,  1 May 2020 15:22:30 +0200
+Message-Id: <20200501131558.514350724@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,55 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
+commit 170417c8c7bb2cbbdd949bf5c443c0c8f24a203b upstream.
 
-xenbus_map_ring_valloc() maps a ring page and returns the status of the
-used grant (0 meaning success).
+Commit 345c0dbf3a30 ("ext4: protect journal inode's blocks using
+block_validity") failed to add an exception for the journal inode in
+ext4_check_blockref(), which is the function used by ext4_get_branch()
+for indirect blocks.  This caused attempts to read from the ext3-style
+journals to fail with:
 
-There are Xen hypervisors which might return the value 1 for the status
-of a failed grant mapping due to a bug. Some callers of
-xenbus_map_ring_valloc() test for errors by testing the returned status
-to be less than zero, resulting in no error detected and crashing later
-due to a not available ring page.
+[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
 
-Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
-in case the grant status reported by Xen is greater than zero.
+Fix this by adding the missing exception check.
 
-This is part of XSA-316.
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Ashwin H <ashwinh@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Wei Liu <wl@xen.org>
-Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/ext4/block_validity.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index a1c17000129ba..e94a61eaeceb0 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -450,7 +450,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
- int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
- 			   unsigned int nr_grefs, void **vaddr)
- {
--	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-+	int err;
-+
-+	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-+	/* Some hypervisors are buggy and can return 1. */
-+	if (err > 0)
-+		err = GNTST_general_error;
-+
-+	return err;
- }
- EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -275,6 +275,11 @@ int ext4_check_blockref(const char *func
+ 	__le32 *bref = p;
+ 	unsigned int blk;
  
--- 
-2.20.1
-
++	if (ext4_has_feature_journal(inode->i_sb) &&
++	    (inode->i_ino ==
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
++		return 0;
++
+ 	while (bref < p+max) {
+ 		blk = le32_to_cpu(*bref++);
+ 		if (blk &&
 
 
