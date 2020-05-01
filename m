@@ -2,69 +2,96 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA449C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B730BC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A442F20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E0FA20787
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lDsKQuLy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cqgnEPos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgEASHj (ORCPT
+        id S1730184AbgEASJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729138AbgEASHi (ORCPT
+        Fri, 1 May 2020 14:09:16 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34270 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgEASJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:07:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7D8C061A0C;
-        Fri,  1 May 2020 11:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CCU7COW6TmuLlpd3D8olwzP6MeUGfBALcg7l9bZ+L6o=; b=lDsKQuLyt8dSCCyWvNbGxrsxVi
-        ag11nO5AZ7PpT8J0JqUP/25/z+jtILd25a7PqmRVtY/uOBBWYPMdORBqRGxspy7PbRWRSJd4aIXbX
-        aOJkocCHCjYoFjDXNhoWO3hBkg8LaCbOpJJqAqedszFeATpQV7pZe8gchBJzx/9MdurbQGehXR+4w
-        6fLd7cRRLGCr3bHPMCwKGZ3FMS9/74Kz6WHawoEe4rhX3CVrPvtvTNbGYiR8gE3YAnhzSnOnQ7QVp
-        Ra2JKSjcQjYRXHfGcxkouCbHzVqQKCF6RSZYfHawzuqd7deLquZrCTW271AxVg07y4vByoPGl/18Y
-        6p2GU2Yw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUa4R-0004pn-M6; Fri, 01 May 2020 18:07:31 +0000
-Date:   Fri, 1 May 2020 11:07:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, bigeasy@linutronix.de,
-        tglx@linutronix.de, chris@chris-wilson.co.uk,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] drm/i915: check to see if SIMD registers are available
- before using SIMD
-Message-ID: <20200501180731.GA2485@infradead.org>
-References: <20200430221016.3866-1-Jason@zx2c4.com>
+        Fri, 1 May 2020 14:09:16 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041I9EmU044486;
+        Fri, 1 May 2020 13:09:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588356554;
+        bh=/fJ9cUbckunoyP/q6SgWpllpclV8rGM29oEsu3Qpm7U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cqgnEPosxzRpln2RxdwTjQBwAWVjM0Fg457BilvJuB3FQM6LajOH1qKdCh8nAV6Cl
+         3FMYc13lYCryQVdneIN3X5AE/OOn/zM0E2K8DtDHU12flwnCqkfjyCHIOKLUwsZ8Nz
+         wPXZzBUqq+mDyQg5nih/5TjtKKpnzHJToWh96WHA=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041I9EM2052767;
+        Fri, 1 May 2020 13:09:14 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
+ 2020 13:09:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 1 May 2020 13:09:13 -0500
+Received: from [10.250.79.122] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041I9D64086046;
+        Fri, 1 May 2020 13:09:13 -0500
+Subject: Re: [RESEND PATCH v5 0/3] BQ25150/155 Charger
+To:     Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200304174025.31655-1-r-rivera-matos@ti.com>
+ <eb5f0818-21c7-1b84-b0c9-904bce9721be@ti.com>
+ <20200501172445.diiccfzbh7kzkxdl@earth.universe>
+ <a83b5728-2896-3ec9-00f1-dc611c3aa471@ti.com>
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <5e50e9f1-9f5f-cc0b-8df5-fbc7dc09e0cf@ti.com>
+Date:   Fri, 1 May 2020 13:09:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430221016.3866-1-Jason@zx2c4.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <a83b5728-2896-3ec9-00f1-dc611c3aa471@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 04:10:16PM -0600, Jason A. Donenfeld wrote:
-> Sometimes it's not okay to use SIMD registers, the conditions for which
-> have changed subtly from kernel release to kernel release. Usually the
-> pattern is to check for may_use_simd() and then fallback to using
-> something slower in the unlikely case SIMD registers aren't available.
-> So, this patch fixes up i915's accelerated memcpy routines to fallback
-> to boring memcpy if may_use_simd() is false.
 
-Err, why does i915 implements its own uncached memcpy instead of relying
-on core functionality to start with?
+On 5/1/20 12:55 PM, Dan Murphy wrote:
+> Sebastian
+>
+> On 5/1/20 12:24 PM, Sebastian Reichel wrote:
+>> Hi,
+>>
+>> I don't see any PATCHv5 (with or without RESEND) for bq25150 and
+>> lore does not see anything either:
+>>
+>> https://lore.kernel.org/linux-pm/?q=PATCH+v5+0%2F3%5D+BQ25150%2F155+Charger 
+>>
+>
+> I posted them for Ricardo.  Maybe he need a lore account.
+
+That is most likely the issue. Sorry for the confusion, all. I am 
+setting one up now.
+>
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=441577
+>
+> Not sure why his patches did not go through.
+>
+> Dan
+>
