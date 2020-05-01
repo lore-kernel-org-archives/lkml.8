@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC2BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE19C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C27208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E54724956
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344393;
-	bh=CeJOt3a/Wgizd57L8hCo0eTRqPtt13fyWxD2EJLdlgk=;
+	s=default; t=1588344400;
+	bh=xVuN5WonHTjh9L8Up6vrydJPeuXiRxAhggDIL6ZiyX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KKsCk/cQ4CQdLuE4/dxP3Z9W3R/Euazyf8DVHgF66nVXEnKFJtZkBL0a1ywAWH0d
-	 kWzGa0tA6yVVt/X9nJ1UCxpRQcorRnWHaYm5cgzRdm2N8i5CLeO0Ph+mk3f9KXt2wA
-	 PJY2iYamtK2n3/BDNnUjn8yBbx1oNl2pYs3CMadY=
+	b=fkXnKZBo0osM88hPOI1SGWaTr8Dxb5X9Q8F1xUhxtCVr7qQWbI0wqTgF6iXKetOEB
+	 01W2B24RQ9dxMdODKu6o7iUaTdmBZyvANz7nNmxAwHr0zvkBv5RmYUVCi0KeahIwlv
+	 o5YCriv/6P3W/Q7Y0VM1CxzEGe+//wl9Sg4JviqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgEAOqc (ORCPT
+        id S1730083AbgEAOqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729538AbgEAOpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729558AbgEAOpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:10 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F028924986;
-        Fri,  1 May 2020 14:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD7A2499E;
+        Fri,  1 May 2020 14:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344306;
-        bh=CeJOt3a/Wgizd57L8hCo0eTRqPtt13fyWxD2EJLdlgk=;
+        s=default; t=1588344307;
+        bh=xVuN5WonHTjh9L8Up6vrydJPeuXiRxAhggDIL6ZiyX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRmkV2pfrviRSKpFRAJHMEtTNKm4WZFRoYWm2EveEitVEpFbeHIqyUNvSw3WjEVfE
-         0/E0LkxY3So/MWBjc2Py1CvKAu9qRbgMQsLRPGaO6Jx1MzwWluKqgEivD5bx1bDCaH
-         9YpBCeD0zG2q/dDFajBmRfOHApBUymHWfWPSxPDc=
+        b=aTOmItD8tQwnKFDAgMNaClT3CLLg7/YXbWDDh9eNP3MDp7IcNUkdLlaRaA9XuODvp
+         tg1WWd2m5lC4hL3d7S4ho8zM53nc/QtUc9LbiO0EVJZCUTHN6M0oCSXHjVfXNbF782
+         GANMcmcftBQPN00szwkljXjRJQOobawiYTWRtIp4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCdS-ID; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCel-Uy; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Steffen Klassert <klassert@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 13/37] docs: networking: device drivers: convert 3com/vortex.txt to ReST
-Date:   Fri,  1 May 2020 16:44:35 +0200
-Message-Id: <fd5c8424d3d72ea7251d267233c8743d0c51b4e6.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, Jon Mason <jdmason@kudzu.us>,
+        netdev@vger.kernel.org
+Subject: [PATCH 28/37] docs: networking: device drivers: convert neterion/vxge.txt to ReST
+Date:   Fri,  1 May 2020 16:44:50 +0200
+Message-Id: <e8636f884b134be9e9869dcfe8c2a91891ce926e.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -63,507 +63,200 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
-- add a document title;
+- adjust titles and chapters, adding proper markups;
+- comment out text-only TOC from html/pdf output;
 - mark code blocks and literals as such;
-- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../3com/{vortex.txt => vortex.rst}           | 223 +++++++++---------
- .../networking/device_drivers/index.rst       |   1 +
- MAINTAINERS                                   |   2 +-
- drivers/net/ethernet/3com/3c59x.c             |   4 +-
- drivers/net/ethernet/3com/Kconfig             |   2 +-
- 5 files changed, 123 insertions(+), 109 deletions(-)
- rename Documentation/networking/device_drivers/3com/{vortex.txt => vortex.rst} (72%)
+ .../networking/device_drivers/index.rst       |  1 +
+ .../neterion/{vxge.txt => vxge.rst}           | 60 +++++++++++++------
+ MAINTAINERS                                   |  2 +-
+ drivers/net/ethernet/neterion/Kconfig         |  2 +-
+ 4 files changed, 44 insertions(+), 21 deletions(-)
+ rename Documentation/networking/device_drivers/neterion/{vxge.txt => vxge.rst} (80%)
 
-diff --git a/Documentation/networking/device_drivers/3com/vortex.txt b/Documentation/networking/device_drivers/3com/vortex.rst
-similarity index 72%
-rename from Documentation/networking/device_drivers/3com/vortex.txt
-rename to Documentation/networking/device_drivers/3com/vortex.rst
-index 587f3fcfbcae..800add5be338 100644
---- a/Documentation/networking/device_drivers/3com/vortex.txt
-+++ b/Documentation/networking/device_drivers/3com/vortex.rst
-@@ -1,5 +1,13 @@
--Documentation/networking/device_drivers/3com/vortex.txt
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================
-+3Com Vortex device driver
-+=========================
-+
-+Documentation/networking/device_drivers/3com/vortex.rst
-+
- Andrew Morton
-+
- 30 April 2000
- 
- 
-@@ -8,12 +16,12 @@ driver for Linux, 3c59x.c.
- 
- The driver was written by Donald Becker <becker@scyld.com>
- 
--Don is no longer the prime maintainer of this version of the driver. 
-+Don is no longer the prime maintainer of this version of the driver.
- Please report problems to one or more of:
- 
--  Andrew Morton
--  Netdev mailing list <netdev@vger.kernel.org>
--  Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+- Andrew Morton
-+- Netdev mailing list <netdev@vger.kernel.org>
-+- Linux kernel mailing list <linux-kernel@vger.kernel.org>
- 
- Please note the 'Reporting and Diagnosing Problems' section at the end
- of this file.
-@@ -24,58 +32,58 @@ Since kernel 2.3.99-pre6, this driver incorporates the support for the
- 
- This driver supports the following hardware:
- 
--	3c590 Vortex 10Mbps
--	3c592 EISA 10Mbps Demon/Vortex
--	3c597 EISA Fast Demon/Vortex
--	3c595 Vortex 100baseTx
--	3c595 Vortex 100baseT4
--	3c595 Vortex 100base-MII
--	3c900 Boomerang 10baseT
--	3c900 Boomerang 10Mbps Combo
--	3c900 Cyclone 10Mbps TPO
--	3c900 Cyclone 10Mbps Combo
--	3c900 Cyclone 10Mbps TPC
--	3c900B-FL Cyclone 10base-FL
--	3c905 Boomerang 100baseTx
--	3c905 Boomerang 100baseT4
--	3c905B Cyclone 100baseTx
--	3c905B Cyclone 10/100/BNC
--	3c905B-FX Cyclone 100baseFx
--	3c905C Tornado
--	3c920B-EMB-WNM (ATI Radeon 9100 IGP)
--	3c980 Cyclone
--	3c980C Python-T
--	3cSOHO100-TX Hurricane
--	3c555 Laptop Hurricane
--	3c556 Laptop Tornado
--	3c556B Laptop Hurricane
--	3c575 [Megahertz] 10/100 LAN  CardBus
--	3c575 Boomerang CardBus
--	3CCFE575BT Cyclone CardBus
--	3CCFE575CT Tornado CardBus
--	3CCFE656 Cyclone CardBus
--	3CCFEM656B Cyclone+Winmodem CardBus
--	3CXFEM656C Tornado+Winmodem CardBus
--	3c450 HomePNA Tornado
--	3c920 Tornado
--	3c982 Hydra Dual Port A
--	3c982 Hydra Dual Port B
--	3c905B-T4
--	3c920B-EMB-WNM Tornado
-+	- 3c590 Vortex 10Mbps
-+	- 3c592 EISA 10Mbps Demon/Vortex
-+	- 3c597 EISA Fast Demon/Vortex
-+	- 3c595 Vortex 100baseTx
-+	- 3c595 Vortex 100baseT4
-+	- 3c595 Vortex 100base-MII
-+	- 3c900 Boomerang 10baseT
-+	- 3c900 Boomerang 10Mbps Combo
-+	- 3c900 Cyclone 10Mbps TPO
-+	- 3c900 Cyclone 10Mbps Combo
-+	- 3c900 Cyclone 10Mbps TPC
-+	- 3c900B-FL Cyclone 10base-FL
-+	- 3c905 Boomerang 100baseTx
-+	- 3c905 Boomerang 100baseT4
-+	- 3c905B Cyclone 100baseTx
-+	- 3c905B Cyclone 10/100/BNC
-+	- 3c905B-FX Cyclone 100baseFx
-+	- 3c905C Tornado
-+	- 3c920B-EMB-WNM (ATI Radeon 9100 IGP)
-+	- 3c980 Cyclone
-+	- 3c980C Python-T
-+	- 3cSOHO100-TX Hurricane
-+	- 3c555 Laptop Hurricane
-+	- 3c556 Laptop Tornado
-+	- 3c556B Laptop Hurricane
-+	- 3c575 [Megahertz] 10/100 LAN  CardBus
-+	- 3c575 Boomerang CardBus
-+	- 3CCFE575BT Cyclone CardBus
-+	- 3CCFE575CT Tornado CardBus
-+	- 3CCFE656 Cyclone CardBus
-+	- 3CCFEM656B Cyclone+Winmodem CardBus
-+	- 3CXFEM656C Tornado+Winmodem CardBus
-+	- 3c450 HomePNA Tornado
-+	- 3c920 Tornado
-+	- 3c982 Hydra Dual Port A
-+	- 3c982 Hydra Dual Port B
-+	- 3c905B-T4
-+	- 3c920B-EMB-WNM Tornado
- 
- Module parameters
- =================
- 
- There are several parameters which may be provided to the driver when
--its module is loaded.  These are usually placed in /etc/modprobe.d/*.conf
--configuration files.  Example:
-+its module is loaded.  These are usually placed in ``/etc/modprobe.d/*.conf``
-+configuration files.  Example::
- 
--options 3c59x debug=3 rx_copybreak=300
-+    options 3c59x debug=3 rx_copybreak=300
- 
- If you are using the PCMCIA tools (cardmgr) then the options may be
--placed in /etc/pcmcia/config.opts:
-+placed in /etc/pcmcia/config.opts::
- 
--module "3c59x" opts "debug=3 rx_copybreak=300"
-+    module "3c59x" opts "debug=3 rx_copybreak=300"
- 
- 
- The supported parameters are:
-@@ -89,7 +97,7 @@ options=N1,N2,N3,...
- 
-   Each number in the list provides an option to the corresponding
-   network card.  So if you have two 3c905's and you wish to provide
--  them with option 0x204 you would use:
-+  them with option 0x204 you would use::
- 
-     options=0x204,0x204
- 
-@@ -97,6 +105,8 @@ options=N1,N2,N3,...
-   have the following meanings:
- 
-   Possible media type settings
-+
-+	==	=================================
- 	0	10baseT
- 	1	10Mbs AUI
- 	2	undefined
-@@ -108,17 +118,20 @@ options=N1,N2,N3,...
- 	8       Autonegotiate
- 	9       External MII
- 	10      Use default setting from EEPROM
-+	==	=================================
- 
-   When generating a value for the 'options' setting, the above media
-   selection values may be OR'ed (or added to) the following:
- 
-+  ======  =============================================
-   0x8000  Set driver debugging level to 7
-   0x4000  Set driver debugging level to 2
-   0x0400  Enable Wake-on-LAN
-   0x0200  Force full duplex mode.
-   0x0010  Bus-master enable bit (Old Vortex cards only)
-+  ======  =============================================
- 
--  For example:
-+  For example::
- 
-     insmod 3c59x options=0x204
- 
-@@ -127,14 +140,14 @@ options=N1,N2,N3,...
- 
- global_options=N
- 
--  Sets the `options' parameter for all 3c59x NICs in the machine. 
--  Entries in the `options' array above will override any setting of
-+  Sets the ``options`` parameter for all 3c59x NICs in the machine.
-+  Entries in the ``options`` array above will override any setting of
-   this.
- 
- full_duplex=N1,N2,N3...
- 
-   Similar to bit 9 of 'options'.  Forces the corresponding card into
--  full-duplex mode.  Please use this in preference to the `options'
-+  full-duplex mode.  Please use this in preference to the ``options``
-   parameter.
- 
-   In fact, please don't use this at all! You're better off getting
-@@ -143,13 +156,13 @@ full_duplex=N1,N2,N3...
- global_full_duplex=N1
- 
-   Sets full duplex mode for all 3c59x NICs in the machine.  Entries
--  in the `full_duplex' array above will override any setting of this.
-+  in the ``full_duplex`` array above will override any setting of this.
- 
- flow_ctrl=N1,N2,N3...
- 
-   Use 802.3x MAC-layer flow control.  The 3com cards only support the
-   PAUSE command, which means that they will stop sending packets for a
--  short period if they receive a PAUSE frame from the link partner. 
-+  short period if they receive a PAUSE frame from the link partner.
- 
-   The driver only allows flow control on a link which is operating in
-   full duplex mode.
-@@ -170,14 +183,14 @@ rx_copybreak=M
- 
-   This is a speed/space tradeoff.
- 
--  The value of rx_copybreak is used to decide when to make the copy. 
--  If the packet size is less than rx_copybreak, the packet is copied. 
-+  The value of rx_copybreak is used to decide when to make the copy.
-+  If the packet size is less than rx_copybreak, the packet is copied.
-   The default value for rx_copybreak is 200 bytes.
- 
- max_interrupt_work=N
- 
-   The driver's interrupt service routine can handle many receive and
--  transmit packets in a single invocation.  It does this in a loop. 
-+  transmit packets in a single invocation.  It does this in a loop.
-   The value of max_interrupt_work governs how many times the interrupt
-   service routine will loop.  The default value is 32 loops.  If this
-   is exceeded the interrupt service routine gives up and generates a
-@@ -186,7 +199,7 @@ max_interrupt_work=N
- hw_checksums=N1,N2,N3,...
- 
-   Recent 3com NICs are able to generate IPv4, TCP and UDP checksums
--  in hardware.  Linux has used the Rx checksumming for a long time. 
-+  in hardware.  Linux has used the Rx checksumming for a long time.
-   The "zero copy" patch which is planned for the 2.4 kernel series
-   allows you to make use of the NIC's DMA scatter/gather and transmit
-   checksumming as well.
-@@ -196,11 +209,11 @@ hw_checksums=N1,N2,N3,...
- 
-   This module parameter has been provided so you can override this
-   decision.  If you think that Tx checksums are causing a problem, you
--  may disable the feature with `hw_checksums=0'.
-+  may disable the feature with ``hw_checksums=0``.
- 
-   If you think your NIC should be performing Tx checksumming and the
-   driver isn't enabling it, you can force the use of hardware Tx
--  checksumming with `hw_checksums=1'.
-+  checksumming with ``hw_checksums=1``.
- 
-   The driver drops a message in the logfiles to indicate whether or
-   not it is using hardware scatter/gather and hardware Tx checksums.
-@@ -210,8 +223,8 @@ hw_checksums=N1,N2,N3,...
-   decrease in throughput for send().  There is no effect upon receive
-   efficiency.
- 
--compaq_ioaddr=N
--compaq_irq=N
-+compaq_ioaddr=N,
-+compaq_irq=N,
- compaq_device_id=N
- 
-   "Variables to work-around the Compaq PCI BIOS32 problem"....
-@@ -219,7 +232,7 @@ compaq_device_id=N
- watchdog=N
- 
-   Sets the time duration (in milliseconds) after which the kernel
--  decides that the transmitter has become stuck and needs to be reset. 
-+  decides that the transmitter has become stuck and needs to be reset.
-   This is mainly for debugging purposes, although it may be advantageous
-   to increase this value on LANs which have very high collision rates.
-   The default value is 5000 (5.0 seconds).
-@@ -227,7 +240,7 @@ watchdog=N
- enable_wol=N1,N2,N3,...
- 
-   Enable Wake-on-LAN support for the relevant interface.  Donald
--  Becker's `ether-wake' application may be used to wake suspended
-+  Becker's ``ether-wake`` application may be used to wake suspended
-   machines.
- 
-   Also enables the NIC's power management support.
-@@ -235,7 +248,7 @@ enable_wol=N1,N2,N3,...
- global_enable_wol=N
- 
-   Sets enable_wol mode for all 3c59x NICs in the machine.  Entries in
--  the `enable_wol' array above will override any setting of this.
-+  the ``enable_wol`` array above will override any setting of this.
- 
- Media selection
- ---------------
-@@ -325,12 +338,12 @@ Autonegotiation notes
- 
-   Cisco switches    (Jeff Busch <jbusch@deja.com>)
- 
--    My "standard config" for ports to which PC's/servers connect directly:
-+    My "standard config" for ports to which PC's/servers connect directly::
- 
--        interface FastEthernet0/N
--        description machinename
--        load-interval 30
--        spanning-tree portfast
-+	interface FastEthernet0/N
-+	description machinename
-+	load-interval 30
-+	spanning-tree portfast
- 
-     If autonegotiation is a problem, you may need to specify "speed
-     100" and "duplex full" as well (or "speed 10" and "duplex half").
-@@ -368,9 +381,9 @@ steps you should take:
- 
-   But for most problems it is useful to provide the following:
- 
--   o Kernel version, driver version
-+   - Kernel version, driver version
- 
--   o A copy of the banner message which the driver generates when
-+   - A copy of the banner message which the driver generates when
-      it is initialised.  For example:
- 
-      eth0: 3Com PCI 3c905C Tornado at 0xa400,  00:50:da:6a:88:f0, IRQ 19
-@@ -378,68 +391,68 @@ steps you should take:
-      MII transceiver found at address 24, status 782d.
-      Enabling bus-master transmits and whole-frame receives.
- 
--     NOTE: You must provide the `debug=2' modprobe option to generate
--     a full detection message.  Please do this:
-+     NOTE: You must provide the ``debug=2`` modprobe option to generate
-+     a full detection message.  Please do this::
- 
- 	modprobe 3c59x debug=2
- 
--   o If it is a PCI device, the relevant output from 'lspci -vx', eg:
-+   - If it is a PCI device, the relevant output from 'lspci -vx', eg::
- 
--     00:09.0 Ethernet controller: 3Com Corporation 3c905C-TX [Fast Etherlink] (rev 74)
--             Subsystem: 3Com Corporation: Unknown device 9200
--             Flags: bus master, medium devsel, latency 32, IRQ 19
--             I/O ports at a400 [size=128]
--             Memory at db000000 (32-bit, non-prefetchable) [size=128]
--             Expansion ROM at <unassigned> [disabled] [size=128K]
--             Capabilities: [dc] Power Management version 2
--     00: b7 10 00 92 07 00 10 02 74 00 00 02 08 20 00 00
--     10: 01 a4 00 00 00 00 00 db 00 00 00 00 00 00 00 00
--     20: 00 00 00 00 00 00 00 00 00 00 00 00 b7 10 00 10
--     30: 00 00 00 00 dc 00 00 00 00 00 00 00 05 01 0a 0a
-+       00:09.0 Ethernet controller: 3Com Corporation 3c905C-TX [Fast Etherlink] (rev 74)
-+	       Subsystem: 3Com Corporation: Unknown device 9200
-+	       Flags: bus master, medium devsel, latency 32, IRQ 19
-+	       I/O ports at a400 [size=128]
-+	       Memory at db000000 (32-bit, non-prefetchable) [size=128]
-+	       Expansion ROM at <unassigned> [disabled] [size=128K]
-+	       Capabilities: [dc] Power Management version 2
-+       00: b7 10 00 92 07 00 10 02 74 00 00 02 08 20 00 00
-+       10: 01 a4 00 00 00 00 00 db 00 00 00 00 00 00 00 00
-+       20: 00 00 00 00 00 00 00 00 00 00 00 00 b7 10 00 10
-+       30: 00 00 00 00 dc 00 00 00 00 00 00 00 05 01 0a 0a
- 
--   o A description of the environment: 10baseT? 100baseT?
-+   - A description of the environment: 10baseT? 100baseT?
-      full/half duplex? switched or hubbed?
- 
--   o Any additional module parameters which you may be providing to the driver.
-+   - Any additional module parameters which you may be providing to the driver.
- 
--   o Any kernel logs which are produced.  The more the merrier. 
-+   - Any kernel logs which are produced.  The more the merrier.
-      If this is a large file and you are sending your report to a
-      mailing list, mention that you have the logfile, but don't send
-      it.  If you're reporting direct to the maintainer then just send
-      it.
- 
-      To ensure that all kernel logs are available, add the
--     following line to /etc/syslog.conf:
-+     following line to /etc/syslog.conf::
- 
--         kern.* /var/log/messages
-+	 kern.* /var/log/messages
- 
--     Then restart syslogd with:
-+     Then restart syslogd with::
- 
--         /etc/rc.d/init.d/syslog restart
-+	 /etc/rc.d/init.d/syslog restart
- 
-      (The above may vary, depending upon which Linux distribution you use).
- 
--    o If your problem is reproducible then that's great.  Try the
-+    - If your problem is reproducible then that's great.  Try the
-       following:
- 
-       1) Increase the debug level.  Usually this is done via:
- 
--         a) modprobe driver debug=7
--         b) In /etc/modprobe.d/driver.conf:
--            options driver debug=7
-+	 a) modprobe driver debug=7
-+	 b) In /etc/modprobe.d/driver.conf:
-+	    options driver debug=7
- 
-       2) Recreate the problem with the higher debug level,
--         send all logs to the maintainer.
-+	 send all logs to the maintainer.
- 
-       3) Download you card's diagnostic tool from Donald
--         Becker's website <http://www.scyld.com/ethercard_diag.html>.
--         Download mii-diag.c as well.  Build these.
-+	 Becker's website <http://www.scyld.com/ethercard_diag.html>.
-+	 Download mii-diag.c as well.  Build these.
- 
--         a) Run 'vortex-diag -aaee' and 'mii-diag -v' when the card is
--            working correctly.  Save the output.
-+	 a) Run 'vortex-diag -aaee' and 'mii-diag -v' when the card is
-+	    working correctly.  Save the output.
- 
--         b) Run the above commands when the card is malfunctioning.  Send
--            both sets of output.
-+	 b) Run the above commands when the card is malfunctioning.  Send
-+	    both sets of output.
- 
- Finally, please be patient and be prepared to do some work.  You may
- end up working on this problem for a week or more as the maintainer
 diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 402a9188f446..aaac502b81ea 100644
+index da1f8438d4ea..55837244eaad 100644
 --- a/Documentation/networking/device_drivers/index.rst
 +++ b/Documentation/networking/device_drivers/index.rst
-@@ -28,6 +28,7 @@ Contents:
-    pensando/ionic
-    stmicro/stmmac
-    3com/3c509
-+   3com/vortex
+@@ -43,6 +43,7 @@ Contents:
+    intel/ipw2200
+    microsoft/netvsc
+    neterion/s2io
++   neterion/vxge
  
  .. only::  subproject and html
  
+diff --git a/Documentation/networking/device_drivers/neterion/vxge.txt b/Documentation/networking/device_drivers/neterion/vxge.rst
+similarity index 80%
+rename from Documentation/networking/device_drivers/neterion/vxge.txt
+rename to Documentation/networking/device_drivers/neterion/vxge.rst
+index abfec245f97c..589c6b15c63d 100644
+--- a/Documentation/networking/device_drivers/neterion/vxge.txt
++++ b/Documentation/networking/device_drivers/neterion/vxge.rst
+@@ -1,24 +1,30 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============================================================================
+ Neterion's (Formerly S2io) X3100 Series 10GbE PCIe Server Adapter Linux driver
+ ==============================================================================
+ 
+-Contents
+---------
++.. Contents
+ 
+-1) Introduction
+-2) Features supported
+-3) Configurable driver parameters
+-4) Troubleshooting
++  1) Introduction
++  2) Features supported
++  3) Configurable driver parameters
++  4) Troubleshooting
++
++1. Introduction
++===============
+ 
+-1) Introduction:
+-----------------
+ This Linux driver supports all Neterion's X3100 series 10 GbE PCIe I/O
+ Virtualized Server adapters.
++
+ The X3100 series supports four modes of operation, configurable via
+-firmware -
+-	Single function mode
+-	Multi function mode
+-	SRIOV mode
+-	MRIOV mode
++firmware:
++
++	- Single function mode
++	- Multi function mode
++	- SRIOV mode
++	- MRIOV mode
++
+ The functions share a 10GbE link and the pci-e bus, but hardly anything else
+ inside the ASIC. Features like independent hw reset, statistics, bandwidth/
+ priority allocation and guarantees, GRO, TSO, interrupt moderation etc are
+@@ -26,41 +32,49 @@ supported independently on each function.
+ 
+ (See below for a complete list of features supported for both IPv4 and IPv6)
+ 
+-2) Features supported:
+-----------------------
++2. Features supported
++=====================
+ 
+ i)   Single function mode (up to 17 queues)
+ 
+ ii)  Multi function mode (up to 17 functions)
+ 
+ iii) PCI-SIG's I/O Virtualization
++
+        - Single Root mode: v1.0 (up to 17 functions)
+        - Multi-Root mode: v1.0 (up to 17 functions)
+ 
+ iv)  Jumbo frames
++
+        X3100 Series supports MTU up to 9600 bytes, modifiable using
+        ip command.
+ 
+ v)   Offloads supported: (Enabled by default)
+-       Checksum offload (TCP/UDP/IP) on transmit and receive paths
+-       TCP Segmentation Offload (TSO) on transmit path
+-       Generic Receive Offload (GRO) on receive path
++
++       - Checksum offload (TCP/UDP/IP) on transmit and receive paths
++       - TCP Segmentation Offload (TSO) on transmit path
++       - Generic Receive Offload (GRO) on receive path
+ 
+ vi)  MSI-X: (Enabled by default)
++
+        Resulting in noticeable performance improvement (up to 7% on certain
+        platforms).
+ 
+ vii) NAPI: (Enabled by default)
++
+        For better Rx interrupt moderation.
+ 
+ viii)RTH (Receive Traffic Hash): (Enabled by default)
++
+        Receive side steering for better scaling.
+ 
+ ix)  Statistics
++
+        Comprehensive MAC-level and software statistics displayed using
+        "ethtool -S" option.
+ 
+ x)   Multiple hardware queues: (Enabled by default)
++
+        Up to 17 hardware based transmit and receive data channels, with
+        multiple steering options (transmit multiqueue enabled by default).
+ 
+@@ -69,25 +83,33 @@ x)   Multiple hardware queues: (Enabled by default)
+ 
+ i)  max_config_dev
+        Specifies maximum device functions to be enabled.
++
+        Valid range: 1-8
+ 
+ ii) max_config_port
+        Specifies number of ports to be enabled.
++
+        Valid range: 1,2
++
+        Default: 1
+ 
+-iii)max_config_vpath
++iii) max_config_vpath
+        Specifies maximum VPATH(s) configured for each device function.
++
+        Valid range: 1-17
+ 
+ iv) vlan_tag_strip
+        Enables/disables vlan tag stripping from all received tagged frames that
+        are not replicated at the internal L2 switch.
++
+        Valid range: 0,1 (disabled, enabled respectively)
++
+        Default: 1
+ 
+ v)  addr_learn_en
+        Enable learning the mac address of the guest OS interface in
+        virtualization environment.
++
+        Valid range: 0,1 (disabled, enabled respectively)
++
+        Default: 0
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a480267571b9..a45ab6a25942 100644
+index 122a684d522b..91da0be7f69e 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -147,7 +147,7 @@ Maintainers List
- M:	Steffen Klassert <klassert@kernel.org>
+@@ -11692,7 +11692,7 @@ M:	Jon Mason <jdmason@kudzu.us>
  L:	netdev@vger.kernel.org
- S:	Odd Fixes
--F:	Documentation/networking/device_drivers/3com/vortex.txt
-+F:	Documentation/networking/device_drivers/3com/vortex.rst
- F:	drivers/net/ethernet/3com/3c59x.c
+ S:	Supported
+ F:	Documentation/networking/device_drivers/neterion/s2io.rst
+-F:	Documentation/networking/device_drivers/neterion/vxge.txt
++F:	Documentation/networking/device_drivers/neterion/vxge.rst
+ F:	drivers/net/ethernet/neterion/
  
- 3CR990 NETWORK DRIVER
-diff --git a/drivers/net/ethernet/3com/3c59x.c b/drivers/net/ethernet/3com/3c59x.c
-index a2b7f7ab8170..5984b7033999 100644
---- a/drivers/net/ethernet/3com/3c59x.c
-+++ b/drivers/net/ethernet/3com/3c59x.c
-@@ -1149,7 +1149,7 @@ static int vortex_probe1(struct device *gendev, void __iomem *ioaddr, int irq,
+ NETFILTER
+diff --git a/drivers/net/ethernet/neterion/Kconfig b/drivers/net/ethernet/neterion/Kconfig
+index c375ee08f6ea..a82a37094579 100644
+--- a/drivers/net/ethernet/neterion/Kconfig
++++ b/drivers/net/ethernet/neterion/Kconfig
+@@ -42,7 +42,7 @@ config VXGE
+ 	  labeled as either one, depending on its age.
  
- 	print_info = (vortex_debug > 1);
- 	if (print_info)
--		pr_info("See Documentation/networking/device_drivers/3com/vortex.txt\n");
-+		pr_info("See Documentation/networking/device_drivers/3com/vortex.rst\n");
+ 	  More specific information on configuring the driver is in
+-	  <file:Documentation/networking/device_drivers/neterion/vxge.txt>.
++	  <file:Documentation/networking/device_drivers/neterion/vxge.rst>.
  
- 	pr_info("%s: 3Com %s %s at %p.\n",
- 	       print_name,
-@@ -1954,7 +1954,7 @@ vortex_error(struct net_device *dev, int status)
- 				   dev->name, tx_status);
- 			if (tx_status == 0x82) {
- 				pr_err("Probably a duplex mismatch.  See "
--						"Documentation/networking/device_drivers/3com/vortex.txt\n");
-+						"Documentation/networking/device_drivers/3com/vortex.rst\n");
- 			}
- 			dump_tx_ring(dev);
- 		}
-diff --git a/drivers/net/ethernet/3com/Kconfig b/drivers/net/ethernet/3com/Kconfig
-index 3a6fc99c6f32..7cc259893cb9 100644
---- a/drivers/net/ethernet/3com/Kconfig
-+++ b/drivers/net/ethernet/3com/Kconfig
-@@ -76,7 +76,7 @@ config VORTEX
- 	  "Hurricane" (3c555/3cSOHO)                           PCI
- 
- 	  If you have such a card, say Y here.  More specific information is in
--	  <file:Documentation/networking/device_drivers/3com/vortex.txt> and
-+	  <file:Documentation/networking/device_drivers/3com/vortex.rst> and
- 	  in the comments at the beginning of
- 	  <file:drivers/net/ethernet/3com/3c59x.c>.
- 
+ 	  To compile this driver as a module, choose M here. The module
+ 	  will be called vxge.
 -- 
 2.25.4
 
