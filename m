@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A6BC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C881BC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0512054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1682054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341368;
-	bh=N2g5AetZjjeqhnyaacK54kADqjcgydOL3a79SG4b514=;
+	s=default; t=1588341369;
+	bh=zUCiPF1saQAniHcWkEVbc4jYJQ/5z6kvlySYJdaGaC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M9FAPL+cvXojCAQHqCBC4BLfe0Ynu3MIuvoJaQHrjQcBY9vcBj87SxspgB+1fJIQj
-	 y2TgxfSH4Rigf7oK+EUoHBb2iRuYrZK0pCZvvlDR4TvgJxhnurV79aRz1DuZNldko+
-	 U0kh7TdPpEZIWaIlVssKIMEEIkQPw6JS6ZEodFJw=
+	b=Vt1EkFP8H8BXsE/8tUDA4+liAzLbFt7SGm4fTDPBrsZN/6Y5bgp91EEQ8eKIu6juW
+	 BsrCJwydfEoM3jxxglY4x/MOG3IoG4t2TxJ/ONQXgUJbKpAgflxz7tFqDcnITqi0UE
+	 RoB6M59NbEaYxi+Zwck3R1DjUV81UwXZxiUJbWV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgEANdC (ORCPT
+        id S1729517AbgEANc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:32:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730360AbgEANc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:58 -0400
+        id S1730341AbgEANcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A238208D6;
-        Fri,  1 May 2020 13:32:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEBBC208DB;
+        Fri,  1 May 2020 13:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339977;
-        bh=N2g5AetZjjeqhnyaacK54kADqjcgydOL3a79SG4b514=;
+        s=default; t=1588339967;
+        bh=zUCiPF1saQAniHcWkEVbc4jYJQ/5z6kvlySYJdaGaC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPtStm6Aj12IR87e0Kps8XFB1nKANkUQ0Gaf1iWwLBlHb8vOU0X+8aAdcg+dPmbrn
-         sxM864PyFL33gdbqPk2CMmrWuym9IpUqDMTdk/NleYoZm8h59YiDP+yyNBPJ221wEb
-         o1U7RIAv4p7mCL90nZsC18Th9iscBK/1qOuwMybg=
+        b=Qurfy/edyi9VPokida17Sjwb9+XTNNEkVq7TAKJOupOQcb2nwrfhYcq03lktNIIDm
+         g0xZmlI/f9DJYge1WXXtv6capggZYUPzRujrI5Fz0O6J7bU/xXgzHRWibdc7mDghUx
+         VnvY4jeEfbCSW0HR5z6NhwVs56ltdy95e32j1NM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 056/117] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
-Date:   Fri,  1 May 2020 15:21:32 +0200
-Message-Id: <20200501131552.311815649@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 039/117] iio: xilinx-xadc: Fix ADC-B powerdown
+Date:   Fri,  1 May 2020 15:21:15 +0200
+Message-Id: <20200501131549.415119352@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,105 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
+commit e44ec7794d88f918805d700240211a9ec05ed89d upstream.
 
-Many Focusrite devices supports a limited set of sample rates per
-altsetting. These includes audio interfaces with ADAT ports:
- - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
- - Scarlett 18i8 2nd gen, 18i20 2nd gen;
- - Scarlett 18i8 3rd gen, 18i20 3rd gen;
- - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
+The check for shutting down the second ADC is inverted. This causes it to
+be powered down when it should be enabled. As a result channels that are
+supposed to be handled by the second ADC return invalid conversion results.
 
-Maximum rate is exposed in the last 4 bytes of Format Type descriptor
-which has a non-standard bLength = 10.
-
-Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ drivers/iio/adc/xilinx-xadc-core.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -221,6 +221,52 @@ static int parse_audio_format_rates_v1(s
- }
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -709,13 +709,14 @@ static int xadc_power_adc_b(struct xadc
+ {
+ 	uint16_t val;
  
- /*
-+ * Many Focusrite devices supports a limited set of sampling rates per
-+ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
-+ * descriptor which has a non-standard bLength = 10.
-+ */
-+static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
-+					struct audioformat *fp,
-+					unsigned int rate)
-+{
-+	struct usb_interface *iface;
-+	struct usb_host_interface *alts;
-+	unsigned char *fmt;
-+	unsigned int max_rate;
-+
-+	iface = usb_ifnum_to_if(chip->dev, fp->iface);
-+	if (!iface)
-+		return true;
-+
-+	alts = &iface->altsetting[fp->altset_idx];
-+	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
-+				      NULL, UAC_FORMAT_TYPE);
-+	if (!fmt)
-+		return true;
-+
-+	if (fmt[0] == 10) { /* bLength */
-+		max_rate = combine_quad(&fmt[6]);
-+
-+		/* Validate max rate */
-+		if (max_rate != 48000 &&
-+		    max_rate != 96000 &&
-+		    max_rate != 192000 &&
-+		    max_rate != 384000) {
-+
-+			usb_audio_info(chip,
-+				"%u:%d : unexpected max rate: %u\n",
-+				fp->iface, fp->altsetting, max_rate);
-+
-+			return true;
-+		}
-+
-+		return rate <= max_rate;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-  * Helper function to walk the array of sample rate triplets reported by
-  * the device. The problem is that we need to parse whole array first to
-  * get to know how many sample rates we have to expect.
-@@ -256,6 +302,11 @@ static int parse_uac2_sample_rate_range(
- 		}
++	/* Powerdown the ADC-B when it is not needed. */
+ 	switch (seq_mode) {
+ 	case XADC_CONF1_SEQ_SIMULTANEOUS:
+ 	case XADC_CONF1_SEQ_INDEPENDENT:
+-		val = XADC_CONF2_PD_ADC_B;
++		val = 0;
+ 		break;
+ 	default:
+-		val = 0;
++		val = XADC_CONF2_PD_ADC_B;
+ 		break;
+ 	}
  
- 		for (rate = min; rate <= max; rate += res) {
-+			/* Filter out invalid rates on Focusrite devices */
-+			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
-+			    !focusrite_valid_sample_rate(chip, fp, rate))
-+				goto skip_rate;
-+
- 			if (fp->rate_table)
- 				fp->rate_table[nr_rates] = rate;
- 			if (!fp->rate_min || rate < fp->rate_min)
-@@ -270,6 +321,7 @@ static int parse_uac2_sample_rate_range(
- 				break;
- 			}
- 
-+skip_rate:
- 			/* avoid endless loop */
- 			if (res == 0)
- 				break;
 
 
