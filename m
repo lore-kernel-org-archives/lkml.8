@@ -2,152 +2,144 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1125C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 09:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA14C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 09:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865772076D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 09:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9LQZ20T"
+	by mail.kernel.org (Postfix) with ESMTP id 539022173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 09:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgEAJjx (ORCPT
+        id S1728508AbgEAJkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 05:39:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
+        Fri, 1 May 2020 05:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728236AbgEAJjx (ORCPT
+        by vger.kernel.org with ESMTP id S1728365AbgEAJkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 05:39:53 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA55EC08E859;
-        Fri,  1 May 2020 02:39:52 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so5398478wmk.5;
-        Fri, 01 May 2020 02:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:references:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AY7jQHhwKy0m8fYEfOzQ4txFVzKK3a64+y00TkYY2Vs=;
-        b=d9LQZ20ToCDRYxBvGDtlFrz8wUWUDFkzjorQALXBSKkAnvZ7K0Fb3EPSTMUa3JvX1h
-         bY0GyRT9kxrjrdRstJLq0Ooyj//h7dDJhxewmYGee8auFnUt5R3VmOWGMeC6ImyDu4Rs
-         B0/+wsMOPtRLqQdF2rGxgUg8Ym5rRkxcDcKrzBksoM5BSjoNxHfEwYinIw5INPkzHTtQ
-         v52RI574hQ3ZwoOmB53U8OyqVOWwlvMi5rd1LfjuLjCUQEHeiIZ/rX3EsOqFzF4g/ER/
-         6Z3dxLcpBDwtBtg2ynb3MF6llR4wXFuQURkPeyfVaKrSoBFe8KmUfYpm4dtfiVvpLcXP
-         7Uxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:references:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AY7jQHhwKy0m8fYEfOzQ4txFVzKK3a64+y00TkYY2Vs=;
-        b=Q3Gw4MzICOzM20/vdsu9bXGbqu9S2lT9lo7wLyQxol9hDt5PfdZL3e4uPOzJO/wtMr
-         hPP8AWJvF9mgoILpkbrNpAy9UXSNgcD3bt6P6SgK/9M31I7xOa6bNOpb5tjnKFgazkND
-         YwMM/J8cyZ0FYro2IYXN1wJPhIyNH4bLIaNmZ77OGfeOO48Pdn6pCOPh3t+tlRtEO5P0
-         zW1rfyWhJIOdOz/Bq39hSWVF3HRoYil75YBzLcFKFtWp5G95WnPAbkwV7HeUhiCwWlvm
-         tu2N+HZh9eR99NSF/glhB1y71qxO6GuqnnezscfTJDJq+xEM0vmYUdIzzITDCvW/vBph
-         HBdw==
-X-Gm-Message-State: AGi0PuZyS6uvJdtD6JGYRVSKXAY09LqReaKvnIPOHAD3uCM6tZlmLAXl
-        EsG41VbjwIipnEZIS+mBssz6ES06
-X-Google-Smtp-Source: APiQypIAO27s2GnSljTDihnWml0cPP+DAMFkAPloU+bfIfMxIxhpjiGtWhnLokmX7yvM8i3rHlyaWw==
-X-Received: by 2002:a1c:4985:: with SMTP id w127mr3148348wma.100.1588325991213;
-        Fri, 01 May 2020 02:39:51 -0700 (PDT)
-Received: from [192.168.43.180] ([109.126.131.64])
-        by smtp.gmail.com with ESMTPSA id j11sm3501587wrr.62.2020.05.01.02.39.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 02:39:50 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1588253029.git.asml.silence@gmail.com>
- <8665e87d-98f8-5973-d11a-03cca3fdf66f@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH 0/5] timeout fixes
-Message-ID: <8d9b5e06-4100-c49a-c9ca-0efc389edaf3@gmail.com>
-Date:   Fri, 1 May 2020 12:38:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 1 May 2020 05:40:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A47C08E934
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 02:40:46 -0700 (PDT)
+Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jUS9k-00038k-Tk; Fri, 01 May 2020 11:40:29 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] printk: replace ringbuffer
+Date:   Fri,  1 May 2020 11:46:07 +0206
+Message-Id: <20200501094010.17694-1-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <8665e87d-98f8-5973-d11a-03cca3fdf66f@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/05/2020 11:21, Pavel Begunkov wrote:
-> On 30/04/2020 22:31, Pavel Begunkov wrote:
->> [1,2] are small random patches.
->> [3,4] are the last 2 timeout patches, but with 1 var renamed.
->> [5] fixes a timeout problem related to batched CQ commits. From
->> what I see, this should be the last fixing timeouts.
-> 
-> Something gone wrong with testing or rebasing. Never mind this.
+Hello,
 
-io_uring-5.7 hangs the first test in link_timeout.c. I'll debug it today,
-but by any chance, does anyone happen to know something?
+Here is a v2 for the first series to rework the printk subsystem. The
+v1 and history are here [0]. This first series only replaces the
+existing ringbuffer implementation. No locking is removed. No
+semantics/behavior of printk are changed.
 
-> 
->>
->> Pavel Begunkov (5):
->>   io_uring: check non-sync defer_list carefully
->>   io_uring: pass nxt from sync_file_range()
->>   io_uring: trigger timeout after any sqe->off CQEs
->>   io_uring: don't trigger timeout with another t-out
->>   io_uring: fix timeout offset with batch CQ commit
->>
->>  fs/io_uring.c | 130 +++++++++++++++++++++-----------------------------
->>  1 file changed, 54 insertions(+), 76 deletions(-)
->>
-> 
+The VMCOREINFO is updated. RFC patches for the external tools
+crash(8) [1] and makedumpfile(8) [2] have been submitted that allow
+the new ringbuffer to be correctly read.
+
+This series is in line with the agreements [3] made at the meeting
+during LPC2019 in Lisbon, with 1 exception: support for dictionaries
+will not be discontinued [4]. Dictionaries are stored in a separate
+buffer so that they cannot interfere with the human-readable buffer.
+
+The list of changes since v1:
+
+printk_ringbuffer
+=================
+- documentation formatting/wording cleanup
+- main memory barrier comments moved from memory accesses to
+  memory barriers
+- remove all symbol exporting of printk_ringbuffer functions
+- add prb_count_lines() for line counting so printk.c can also use
+  this functionality
+- add prb_read_valid_info() to just read record meta-data
+- remove @line_count out of printk_record (there is now an interface
+  for line counting)
+- to_block(): remove intermediate (char *) typecast
+- data_alloc(): use WRITE_ONCE for writing block ID
+- data_push_tail(): fix test condition for tail LPOS already pushed
+- data_push_tail(): continue loop rather than try cmpxchg() if
+  tail LPOS was pushed
+- data_push_tail(): add memory barrier before pushing tail LPOS so
+  readers can recognize if data has expired while reading the
+  descriptor
+- data_make_reusable(): added memory barrier and logic to protect
+  against invalid read of block ID
+- data_alloc(): add memory barrier to guarantee the tail ID is stored
+  before updating the block ID
+- desc_reserve(): add memory barrier before checking ID to make sure
+  the head ID is read before the tail ID
+- desc_reserve(): move memory barrier to before the head ID is pushed
+  to guarantee the tail ID is stored before the head ID
+
+printk.c
+========
+- remove static syslog_record/console_record (use dynamic allocation
+  and in-place buffer manipulation instead)
+- reduce expected average message size from 64 to 32
+- add printk_record initializers to simplify reader and writer code
+- fix wrong return value when log_store() truncates
+- add full VMCOREINFO needed by makedumpfile(8)
+- change record_print_text() to add prefix data to the buffer
+  in-place instead of requiring a 2nd buffer
+- add helper to calculate text size when prefix added:
+  get_record_text_size() (used together with prb_count_lines() or
+  prb_read_valid_info() to get full text size, rather than abusing
+  record_print_text() for this purpose)
+- syslog_print_all(): fix missing break if copy_to_user() failed
+- moved "messages dropped" printing to call_console_drivers()
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20200128161948.8524-1-john.ogness@linutronix.de
+[1] https://www.redhat.com/archives/crash-utility/2020-April/msg00080.html
+[2] https://lists.infradead.org/pipermail/kexec/2020-April/024906.html
+[3] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[4] https://lkml.kernel.org/r/20191007120134.ciywr3wale4gxa6v@pathway.suse.cz
+
+John Ogness (3):
+  crash: add VMCOREINFO macro for anonymous structs
+  printk: add lockless buffer
+  printk: use the lockless ringbuffer
+
+ include/linux/crash_core.h        |    3 +
+ include/linux/kmsg_dump.h         |    2 -
+ kernel/printk/Makefile            |    1 +
+ kernel/printk/printk.c            |  938 +++++++++--------
+ kernel/printk/printk_ringbuffer.c | 1626 +++++++++++++++++++++++++++++
+ kernel/printk/printk_ringbuffer.h |  369 +++++++
+ 6 files changed, 2491 insertions(+), 448 deletions(-)
+ create mode 100644 kernel/printk/printk_ringbuffer.c
+ create mode 100644 kernel/printk/printk_ringbuffer.h
 
 -- 
-Pavel Begunkov
+2.20.1
+
