@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1359CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2B3C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79FC20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C703A20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340805;
-	bh=d9R2OtnCbzy2kZlftOg/kItqCRyQPnSNX2spNt3uGCI=;
+	s=default; t=1588340811;
+	bh=RtRRC74pGhJUajt7Ye5uu9sZHPJ3CC7RyaeyOssT8T0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQMOWkFDmuIg4657re93lxUmtWn2JqJR3Vw06Q9rJSQrK326F38hhYy5QnW/qnWBW
-	 IeaA55j8LQWfs2+VHeN48awLcttz36Yi+Ml3FP4upjwBMfO277D3PZet2iIbkKCN8B
-	 lnTn1JWThaMKxTtV+r4HroJLIR8nruvthisFdlGU=
+	b=DhiHxTtF6w5QMbteRGFQfmuQxALzo1OX60OnEu834JPB6bALtWUE/Rm2R2WAk5hM1
+	 O7nOLynmhzLc/jMdCZn2wfRgy5FXalfu2TY15BrcEXcGxEC3l4KVTw1XhapqePsAdO
+	 RWdIRb4xrvw0jNVmiqvD6S52aBuLRXgH7nyga1y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbgEANoe (ORCPT
+        id S1731848AbgEANqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731739AbgEANoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:22 -0400
+        id S1731747AbgEANo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CEC0216FD;
-        Fri,  1 May 2020 13:44:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B9220757;
+        Fri,  1 May 2020 13:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340662;
-        bh=d9R2OtnCbzy2kZlftOg/kItqCRyQPnSNX2spNt3uGCI=;
+        s=default; t=1588340669;
+        bh=RtRRC74pGhJUajt7Ye5uu9sZHPJ3CC7RyaeyOssT8T0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tVw9RZ5ZLXubovvZv4NUq6x+WNkyvBH3muLTIbB7sFkiHygjKsWF2ZsFek7MgVppB
-         t0wH0APU21NGzg9DdHrm9RtW0n2NQXv3jjbQFrdikQhYcW7hPXbcLtZEipC11oBRRl
-         xL48InWI6Ac7l5ejCUBaFKxUSr6gxlhTxsEga+08=
+        b=Gz1MN9ANMJI5eQl4iVNZcc3BccHU3vxc+Op4q45UylLExGDieR+cfeLd1lzp59YRX
+         hYqgWa9Kneosj0Qf7pD6nNG8byfJ4JefhREjeKuWAdWw+fSViVEU1nJlZHGZSdFxIO
+         V8eIwCaaUAaEVDeflmp23oQIPIvEsKSQzkgwcC98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 072/106] afs: Fix length of dump of bad YFSFetchStatus record
-Date:   Fri,  1 May 2020 15:23:45 +0200
-Message-Id: <20200501131552.706730090@linuxfoundation.org>
+        stable@vger.kernel.org, Roy Spliet <nouveau@spliet.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 075/106] ALSA: hda: Keep the controller initialization even if no codecs found
+Date:   Fri,  1 May 2020 15:23:48 +0200
+Message-Id: <20200501131552.954957667@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,43 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 3efe55b09a92a59ed8214db801683cf13c9742c4 ]
+[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
 
-Fix the length of the dump of a bad YFSFetchStatus record.  The function
-was copied from the AFS version, but the YFS variant contains bigger fields
-and extra information, so expand the dump to match.
+Currently, when the HD-audio controller driver doesn't detect any
+codecs, it tries to abort the probe.  But this abort happens at the
+delayed probe, i.e. the primary probe call already returned success,
+hence the driver is never unbound until user does so explicitly.
+As a result, it may leave the HD-audio device in the running state
+without the runtime PM.  More badly, if the device is a HD-audio bus
+that is tied with a GPU, GPU cannot reach to the full power down and
+consumes unnecessarily much power.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+This patch changes the logic after no-codec situation; it continues
+probing without the further codec initialization but keep the
+controller driver running normally.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Tested-by: Roy Spliet <nouveau@spliet.org>
+Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/yfsclient.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_intel.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 83b6d67325f6c..b5b45c57e1b1d 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -165,15 +165,15 @@ static void xdr_dump_bad(const __be32 *bp)
- 	int i;
- 
- 	pr_notice("YFS XDR: Bad status record\n");
--	for (i = 0; i < 5 * 4 * 4; i += 16) {
-+	for (i = 0; i < 6 * 4 * 4; i += 16) {
- 		memcpy(x, bp, 16);
- 		bp += 4;
- 		pr_notice("%03x: %08x %08x %08x %08x\n",
- 			  i, ntohl(x[0]), ntohl(x[1]), ntohl(x[2]), ntohl(x[3]));
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 3047dc357b38b..d69005e29975c 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2009,7 +2009,7 @@ static int azx_first_init(struct azx *chip)
+ 	/* codec detection */
+ 	if (!azx_bus(chip)->codec_mask) {
+ 		dev_err(card->dev, "no codecs found!\n");
+-		return -ENODEV;
++		/* keep running the rest for the runtime PM */
  	}
  
--	memcpy(x, bp, 4);
--	pr_notice("0x50: %08x\n", ntohl(x[0]));
-+	memcpy(x, bp, 8);
-+	pr_notice("0x60: %08x %08x\n", ntohl(x[0]), ntohl(x[1]));
- }
+ 	if (azx_acquire_irq(chip, 0) < 0)
+@@ -2302,9 +2302,11 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
  
- /*
+ 	/* create codec instances */
+-	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
+-	if (err < 0)
+-		goto out_free;
++	if (bus->codec_mask) {
++		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
++		if (err < 0)
++			goto out_free;
++	}
+ 
+ #ifdef CONFIG_SND_HDA_PATCH_LOADER
+ 	if (chip->fw) {
+@@ -2318,7 +2320,7 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 	}
+ #endif
+-	if ((probe_only[dev] & 1) == 0) {
++	if (bus->codec_mask && !(probe_only[dev] & 1)) {
+ 		err = azx_codec_configure(chip);
+ 		if (err < 0)
+ 			goto out_free;
 -- 
 2.20.1
 
