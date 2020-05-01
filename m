@@ -2,146 +2,125 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5601CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB46C47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30E832173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31167208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339493;
-	bh=d8OPxjX6yuJbdOTlfUXM7Zvc614YcSXkktA7q5/FxRY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OT0QjhhJjS3pK0U9zzV4MjCrBxc1fQvyDpYyOHPmOD34TnlxWUuTRzbrlS6IjCvJg
-	 +MSXr80niitlJbNEMAkBkkVEWnQ9Gx6aqFLIEIXewXdjI95bup4XiJFotfyjFFFL3S
-	 pankQLzjC2J31LzY1q5p6GjM35aaDHHAVkdj3z2g=
+	s=default; t=1588339492;
+	bh=OmsL5AT5dbpd9MY4DoICFXkIlbcngeocNeA2mHdqf/M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OiQoGIqAXJ/HMihXIxSyVGkTLA6imn2nAesrc6gKvLrmwulc4cwzq3skKHYUVctYd
+	 0OxZqqm2r/6cHKn2lAPH1byYofbwWfVqYqcA7mngDJQ+lXjUras2pPKzxBFt3VbDn0
+	 pFVKe0ac+DjyH5xTx31GRSR2Sa/UfggFoApj+TMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgEANYw (ORCPT
+        id S1728892AbgEANYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728586AbgEANYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728879AbgEANYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 09:24:50 -0400
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBB924962
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A063224969;
+        Fri,  1 May 2020 13:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339489;
-        bh=d8OPxjX6yuJbdOTlfUXM7Zvc614YcSXkktA7q5/FxRY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oRiwD0Q+jvvpP6sMUM7uXKK++I/eOZnt6Ikrp6rtJBAPD/6vZl/OFq4Uxzqg573dr
-         HXTT0bMxoz2GibxZPq00kqvlqfP1GYpMyc+LbA3Tf2Ofs9mJFJf4NsfNvEueN0i/ZY
-         ldEXuawf8h0p2ODo+BCBInJ2O4GxSh/bcIMpNLxQ=
-Received: by mail-ed1-f48.google.com with SMTP id d16so7243606edq.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 06:24:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuasxmQsQBR9LCu9jSA8Z5VWB85Yu4U60lUafAeVWEGt3KMD0npZ
-        fN+Y0kwW/oPsCyfLXXnTYIe/KIPcuglQCbYD+g==
-X-Google-Smtp-Source: APiQypKel2U1e5MRHXKLL7Rnuz1U41FBCv2Ii6mcl2FuZrvIApbgp6jSgjZ93cS0z2rzE3pcCu/kvy2F5YvYBuZXTp0=
-X-Received: by 2002:aa7:dd95:: with SMTP id g21mr3461314edv.148.1588339487975;
- Fri, 01 May 2020 06:24:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200417150614.2631786-1-enric.balletbo@collabora.com> <20200417150614.2631786-6-enric.balletbo@collabora.com>
-In-Reply-To: <20200417150614.2631786-6-enric.balletbo@collabora.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 1 May 2020 21:24:34 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9Gc9uCtfcp+qo=KnVOYfyjw4rDpe15A1q6G2A-iXpSow@mail.gmail.com>
-Message-ID: <CAAOTY_9Gc9uCtfcp+qo=KnVOYfyjw4rDpe15A1q6G2A-iXpSow@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] drm/mediatek: mtk_dsi: Use simple encoder
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
+        s=default; t=1588339490;
+        bh=OmsL5AT5dbpd9MY4DoICFXkIlbcngeocNeA2mHdqf/M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fLKOieIVZ1XfznGqCQua5QpMk/HYdE1/6PC0LXFUiv+jNSMWA4jmrnRiEUPGc1bLL
+         u2Y+TDTbqXR4650VoTjhdHfAujkL+NVvHK45JL60ZG+E/JtXwpnP0drfUjEOuOUKLM
+         SzZQiVhK7Hv+dOWrwF2YGc+bOx0/HpQchYU2nm9I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 10/70] pwm: rcar: Fix late Runtime PM enablement
+Date:   Fri,  1 May 2020 15:20:58 +0200
+Message-Id: <20200501131515.658174145@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
+References: <20200501131513.302599262@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B44=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:06=E5=AF=
-=AB=E9=81=93=EF=BC=9A
->
-> The mtk_dsi driver uses an empty implementation for its encoder. Replace
-> the code with the generic simple encoder.
+[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Runtime PM should be enabled before calling pwmchip_add(), as PWM users
+can appear immediately after the PWM chip has been added.
+Likewise, Runtime PM should be disabled after the removal of the PWM
+chip.
 
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->
-> Changes in v3: None
-> Changes in v2: None
->
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
-k/mtk_dsi.c
-> index 869ae0a2e9f8..d68694ff00dc 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -22,6 +22,7 @@
->  #include <drm/drm_panel.h>
->  #include <drm/drm_print.h>
->  #include <drm/drm_probe_helper.h>
-> +#include <drm/drm_simple_kms_helper.h>
->
->  #include "mtk_drm_ddp_comp.h"
->
-> @@ -788,15 +789,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *d=
-si)
->         dsi->enabled =3D false;
->  }
->
-> -static void mtk_dsi_encoder_destroy(struct drm_encoder *encoder)
-> -{
-> -       drm_encoder_cleanup(encoder);
-> -}
-> -
-> -static const struct drm_encoder_funcs mtk_dsi_encoder_funcs =3D {
-> -       .destroy =3D mtk_dsi_encoder_destroy,
-> -};
-> -
->  static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_ds=
-i *dsi);
->  static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
->
-> @@ -1140,8 +1132,8 @@ static int mtk_dsi_encoder_init(struct drm_device *=
-drm, struct mtk_dsi *dsi)
->  {
->         int ret;
->
-> -       ret =3D drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_fun=
-cs,
-> -                              DRM_MODE_ENCODER_DSI, NULL);
-> +       ret =3D drm_simple_encoder_init(drm, &dsi->encoder,
-> +                                     DRM_MODE_ENCODER_DSI);
->         if (ret) {
->                 DRM_ERROR("Failed to encoder init to drm\n");
->                 return ret;
-> --
-> 2.25.1
->
+Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pwm/pwm-rcar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 6e99a63ffa290..df0723df1f997 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -232,24 +232,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
+ 	rcar_pwm->chip.base = -1;
+ 	rcar_pwm->chip.npwm = 1;
+ 
++	pm_runtime_enable(&pdev->dev);
++
+ 	ret = pwmchip_add(&rcar_pwm->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
++		pm_runtime_disable(&pdev->dev);
+ 		return ret;
+ 	}
+ 
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+ static int rcar_pwm_remove(struct platform_device *pdev)
+ {
+ 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&rcar_pwm->chip);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	return pwmchip_remove(&rcar_pwm->chip);
++	return ret;
+ }
+ 
+ static const struct of_device_id rcar_pwm_of_table[] = {
+-- 
+2.20.1
+
+
+
