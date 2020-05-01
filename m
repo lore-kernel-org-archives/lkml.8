@@ -2,278 +2,126 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88308C47259
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E6EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FCDF20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2CA24954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pA76bR8I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Br4NUGVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgEAQO5 (ORCPT
+        id S1729975AbgEAQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        Fri, 1 May 2020 12:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbgEAQO4 (ORCPT
+        with ESMTP id S1728896AbgEAQQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:14:56 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEBFC08E934
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 09:14:55 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b2so3063233ljp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 09:14:55 -0700 (PDT)
+        Fri, 1 May 2020 12:16:42 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21AACC061A0C;
+        Fri,  1 May 2020 09:16:42 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id t199so175352oif.7;
+        Fri, 01 May 2020 09:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E9HC4TtDYcMl70D2yLsiFayEi4W3obxsAzPswR8DMak=;
-        b=pA76bR8IKuynYeexWgwTHGHlEEpen9DlOqzAcw8uRr2dS5UZVc3caibWOKk4wQywFr
-         /tIBHQx4gQ6zGTK5r8pZdcRadg+b3o1EuLGJSBl0DVAcAvwb98Cwc3OCOa8mLf1KJ3+c
-         V0440x+rkHaMtCnquXTFtm776x49Mihk4Bjfq3PV2D/zg0q3/TQ0tODETFBO33pBx+Ds
-         QDN6heShl3QVkqKYjsPMRfQo+Iv+nStFqK7Nkt6rYtSAUPDL+xygZO6mtDfYUABBvvCw
-         fsUl/YsVPsW0bhXH1an1M33eSt6zU83YTb2j8dINm13kpXMVayyiQNmL8Q9rcXwNhv+P
-         KtQg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lgmELjhtwvQPrX77vnoSnk11mljHderl9HxceIw1oe8=;
+        b=Br4NUGVAtZWvUXQfy8/75cj/z8IaziKZ8/JMhKNe6IuHC1GGQUXcfYw+cnkh9PBJcS
+         vL/LH2WUOOD6MG3Z8PFpVaGInS33IhM7qrlOL9QqRl6VHUxmYS1kLg6qR2iulfHVu/qS
+         1dxP/1DKcOsjmiRkHuh2fVwM0l+OtK+shWYfSX4+RNLfqmZAoWBx5ZeIaIZLqyg3IhmT
+         YwCKuwLfNm/Fw+u7KTF1qRbPblQGZQibDjnRoaMPxywwlCx5FkAg2NYpPDTx2sXbxHZN
+         ktEe8X1QkpVLwTHlW64fiDINZMgDGcGUpI06AqvV3urVhwyv5nf3s9oOBpQc/pA6Wr1s
+         0gcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E9HC4TtDYcMl70D2yLsiFayEi4W3obxsAzPswR8DMak=;
-        b=VwdEKZWysQLNrXS3bD12IGsgp7vIbdMuuhxQ4GLtB7Pqx6Jhu+ms8OLwBpL/QV5EOW
-         1F3YbyHnSgqhbbZLzMskiyaoA+vRujw/uXAhfWLoC4R6hrgpB/zbdu9UTbJonbiG/NhK
-         RXyL2ypexYEfJzbQtG2P6Ez4u3X8R5sM/iIZzWaFvYDOUkDfAB1gfw3woF3+A7EryUxN
-         adX5BVGzzc+3mMf1kD1u3ghpHcpva5GLx2WpW7vdN51y7Xs0dbmAE4zTdmt6KAHktc9/
-         TkpNfB8TQ+Z5DVTn7RODF6XINwttZIZhzVBqKDTr2ts1Zyv+fKr4XXnw745osQLqKCsG
-         R5xA==
-X-Gm-Message-State: AGi0Pub1q6hyEZD/7Y/hUe3prpy2jjz6l2L/Hp7dN3glYGdZINVrw5t8
-        zLV1yIWgfX4+iLiyKC72a3Nu1CAjQ4t7S291kJHW9w==
-X-Google-Smtp-Source: APiQypK5sdtJ5Dm7sI1A1k7InQw/eggzM/HErJMHEHM6WNPkUFYgpxpemk5CyouOdKeiCaEqegrrWnev6LLK1lgEvtQ=
-X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr2869691ljm.80.1588349693754;
- Fri, 01 May 2020 09:14:53 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=lgmELjhtwvQPrX77vnoSnk11mljHderl9HxceIw1oe8=;
+        b=dQyx+10YGWY2l/xWmG4ZKjfpaJfq7jTO8yhg6b1yc7jwM01jhdztj3BtBpxuxcqCJ8
+         Z/kxhNVE4cwqeV6b+4vTgCvi3V9v9PMzGYsHkWIimiACpKCTJq61uViV6IRilQbDNMuF
+         XeEbGl+ct7MK6n7kyIT898Bet9fMLqtplugCDGC2HRzrSs3+ehMrCvuNoTD8Mr5GhZZL
+         IoxOjN+uG7SaZj3U1Ql+IwifgD6xe0xJIy9PEc7EPYcBZszEDSiKPKEhqe9vAWfqShaV
+         eycCHYVW0nsDNfnFYrTbmmOjB57I1c8EdH+NajspdkcDiHhYPZCOR/9I6YjiimrBEqAm
+         CbLg==
+X-Gm-Message-State: AGi0PuZpTer1sWRkxEDaCS5IyYRKhZsnMMeW9aybG/tHuOHntLgTc5rc
+        VR0Up3cLPV4Zu6Kg2J2uxg==
+X-Google-Smtp-Source: APiQypImnju0D2j2tlQZOp+12Lxz5mLbARJyu7bikZIcG8ES9reYr4QopOQc75af6+xNAl7K9Viu+g==
+X-Received: by 2002:a05:6808:49:: with SMTP id v9mr244950oic.41.1588349801353;
+        Fri, 01 May 2020 09:16:41 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.149.130])
+        by smtp.gmail.com with ESMTPSA id g24sm938859oos.20.2020.05.01.09.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 09:16:40 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id D712418000D;
+        Fri,  1 May 2020 16:16:39 +0000 (UTC)
+Date:   Fri, 1 May 2020 11:16:38 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Pragat Pandya <pragat.pandya@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Harald Seiler <hws@denx.de>,
+        openipmi-developer@lists.sourceforge.net
+Subject: Re: [PATCH 04/14] docs: move IPMI.txt to the driver API book
+Message-ID: <20200501161638.GF9902@minyard.net>
+Reply-To: minyard@acm.org
+References: <cover.1588345503.git.mchehab+huawei@kernel.org>
+ <ae4edbc6753dc522cb93de36800978e3b58e0cfb.1588345503.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200501083510.1413-1-anders.roxell@linaro.org> <CANpmjNNm9DhVj5T1rhykEdNBiTvkG-YxL6O25bSfQi8ySh9KtA@mail.gmail.com>
-In-Reply-To: <CANpmjNNm9DhVj5T1rhykEdNBiTvkG-YxL6O25bSfQi8ySh9KtA@mail.gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Fri, 1 May 2020 18:14:42 +0200
-Message-ID: <CADYN=9KLb6FVZ1icbvCY0ondiim44CNk8g8buFCGqpC5cMqyVQ@mail.gmail.com>
-Subject: Re: [PATCH] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
-To:     Marco Elver <elver@google.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae4edbc6753dc522cb93de36800978e3b58e0cfb.1588345503.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 at 11:57, Marco Elver <elver@google.com> wrote:
->
-> On Fri, 1 May 2020 at 10:35, Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > Make it easier to enable all KUnit fragments.  This is needed for kernel
-> > test-systems, so its easy to get all KUnit tests enabled and if new gets
-> > added they will be enabled as well.  Fragments that has to be builtin
-> > will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
-> >
-> > Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
-> > someone wants that even though KUNIT_RUN_ALL is enabled.
-> >
-> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > ---
-> >  drivers/base/Kconfig      |  3 ++-
-> >  drivers/base/test/Kconfig |  3 ++-
-> >  fs/ext4/Kconfig           |  3 ++-
-> >  lib/Kconfig.debug         |  6 ++++--
-> >  lib/Kconfig.kcsan         |  3 ++-
-> >  lib/kunit/Kconfig         | 15 ++++++++++++---
-> >  security/apparmor/Kconfig |  3 ++-
-> >  7 files changed, 26 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-> > index 5f0bc74d2409..c48e6e4ef367 100644
-> > --- a/drivers/base/Kconfig
-> > +++ b/drivers/base/Kconfig
-> > @@ -149,8 +149,9 @@ config DEBUG_TEST_DRIVER_REMOVE
-> >           test this functionality.
-> >
-> >  config PM_QOS_KUNIT_TEST
-> > -       bool "KUnit Test for PM QoS features"
-> > +       bool "KUnit Test for PM QoS features" if !KUNIT_RUN_ALL
-> >         depends on KUNIT=y
-> > +       default KUNIT_RUN_ALL
-> >
-> >  config HMEM_REPORTING
-> >         bool
-> > diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
-> > index 305c7751184a..0d662d689f6b 100644
-> > --- a/drivers/base/test/Kconfig
-> > +++ b/drivers/base/test/Kconfig
-> > @@ -9,5 +9,6 @@ config TEST_ASYNC_DRIVER_PROBE
-> >
-> >           If unsure say N.
-> >  config KUNIT_DRIVER_PE_TEST
-> > -       bool "KUnit Tests for property entry API"
-> > +       bool "KUnit Tests for property entry API" if !KUNIT_RUN_ALL
-> >         depends on KUNIT=y
-> > +       default KUNIT_RUN_ALL
-> > diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
-> > index 2a592e38cdfe..76785143259d 100644
-> > --- a/fs/ext4/Kconfig
-> > +++ b/fs/ext4/Kconfig
-> > @@ -103,9 +103,10 @@ config EXT4_DEBUG
-> >                 echo 1 > /sys/module/ext4/parameters/mballoc_debug
-> >
-> >  config EXT4_KUNIT_TESTS
-> > -       tristate "KUnit tests for ext4"
-> > +       tristate "KUnit tests for ext4" if !KUNIT_RUN_ALL
-> >         select EXT4_FS
-> >         depends on KUNIT
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           This builds the ext4 KUnit tests.
-> >
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 8e4aded46281..993e0c5549bc 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2123,8 +2123,9 @@ config TEST_SYSCTL
-> >           If unsure, say N.
-> >
-> >  config SYSCTL_KUNIT_TEST
-> > -       tristate "KUnit test for sysctl"
-> > +       tristate "KUnit test for sysctl" if !KUNIT_RUN_ALL
-> >         depends on KUNIT
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           This builds the proc sysctl unit test, which runs on boot.
-> >           Tests the API contract and implementation correctness of sysctl.
-> > @@ -2134,8 +2135,9 @@ config SYSCTL_KUNIT_TEST
-> >           If unsure, say N.
-> >
-> >  config LIST_KUNIT_TEST
-> > -       tristate "KUnit Test for Kernel Linked-list structures"
-> > +       tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_RUN_ALL
-> >         depends on KUNIT
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           This builds the linked list KUnit test suite.
-> >           It tests that the API and basic functionality of the list_head type
-> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> > index ea28245c6c1d..91398300a1bc 100644
-> > --- a/lib/Kconfig.kcsan
-> > +++ b/lib/Kconfig.kcsan
-> > @@ -46,8 +46,9 @@ config KCSAN_SELFTEST
-> >           works as intended.
-> >
-> >  config KCSAN_TEST
-> > -       tristate "KCSAN test for integrated runtime behaviour"
-> > +       tristate "KCSAN test for integrated runtime behaviour" if !KUNIT_RUN_ALL
-> >         depends on TRACEPOINTS && KUNIT
-> > +       default KUNIT_RUN_ALL
-> >         select TORTURE_TEST
-> >         help
-> >           KCSAN test focusing on behaviour of the integrated runtime. Tests
->
-> I think if you want this patch to be picked up you need to split it,
-> with one patch for each test that is not yet in mainline or the tree
-> that should pick this patch up.
+On Fri, May 01, 2020 at 05:37:48PM +0200, Mauro Carvalho Chehab wrote:
+> The IPMI is under drivers/char. This doc describes the kAPI
+> part of the IPMI (mainly).
+> 
+> So, move it to the driver-api directory and add it to the
+> corresponding index.rst file.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-OK, would it be ok to do one patch per subsystem if it's in the mainline tree,
-and another patch if it's only in the next tree for the same subsystem?
+This is fine with me.
 
->
-> The KCSAN test is in the -rcu tree, but I don't expect it to be merged
-> before 5.9. Most likely, we would only be able to pick up the patch
-> that would make the chance to the KCSAN Kconfig entry once the rest
-> here made it into mainline.
->
-> Thanks,
-> -- Marco
->
-> > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> > index 95d12e3d6d95..d6a912779816 100644
-> > --- a/lib/kunit/Kconfig
-> > +++ b/lib/kunit/Kconfig
-> > @@ -15,7 +15,8 @@ menuconfig KUNIT
-> >  if KUNIT
-> >
-> >  config KUNIT_DEBUGFS
-> > -       bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
-> > +       bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation" if !KUNIT_RUN_ALL
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           Enable debugfs representation for kunit.  Currently this consists
-> >           of /sys/kernel/debug/kunit/<test_suite>/results files for each
-> > @@ -23,7 +24,8 @@ config KUNIT_DEBUGFS
-> >           run that occurred.
-> >
-> >  config KUNIT_TEST
-> > -       tristate "KUnit test for KUnit"
-> > +       tristate "KUnit test for KUnit" if !KUNIT_RUN_ALL
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           Enables the unit tests for the KUnit test framework. These tests test
-> >           the KUnit test framework itself; the tests are both written using
-> > @@ -32,7 +34,8 @@ config KUNIT_TEST
-> >           expected.
-> >
-> >  config KUNIT_EXAMPLE_TEST
-> > -       tristate "Example test for KUnit"
-> > +       tristate "Example test for KUnit" if !KUNIT_RUN_ALL
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           Enables an example unit test that illustrates some of the basic
-> >           features of KUnit. This test only exists to help new users understand
-> > @@ -41,4 +44,10 @@ config KUNIT_EXAMPLE_TEST
-> >           is intended for curious hackers who would like to understand how to
-> >           use KUnit for kernel development.
-> >
-> > +config KUNIT_RUN_ALL
-> > +       tristate "KUnit run all test"
-> > +       help
-> > +         Enables all KUnit tests. If they can be enabled.
-> > +         That depends on if KUnit is enabled as a module or builtin.
-> > +
->
-> s/tests. If/tests, if/ ?
+Acked-by: Corey Minyard <cminyard@mvista.com>
 
-correct, I will fix that.
-
-Cheers,
-Anders
-
->
-> >  endif # KUNIT
-> > diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
-> > index 0fe336860773..c4648426ea5d 100644
-> > --- a/security/apparmor/Kconfig
-> > +++ b/security/apparmor/Kconfig
-> > @@ -70,8 +70,9 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
-> >           the kernel message buffer.
-> >
-> >  config SECURITY_APPARMOR_KUNIT_TEST
-> > -       bool "Build KUnit tests for policy_unpack.c"
-> > +       bool "Build KUnit tests for policy_unpack.c" if !KUNIT_RUN_ALL
-> >         depends on KUNIT=y && SECURITY_APPARMOR
-> > +       default KUNIT_RUN_ALL
-> >         help
-> >           This builds the AppArmor KUnit tests.
-> >
-> > --
-> > 2.20.1
-> >
+> ---
+>  Documentation/driver-api/index.rst              | 1 +
+>  Documentation/{IPMI.txt => driver-api/ipmi.rst} | 0
+>  2 files changed, 1 insertion(+)
+>  rename Documentation/{IPMI.txt => driver-api/ipmi.rst} (100%)
+> 
+> diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+> index dcc47c029f8e..6567187e7687 100644
+> --- a/Documentation/driver-api/index.rst
+> +++ b/Documentation/driver-api/index.rst
+> @@ -39,6 +39,7 @@ available subsections can be seen below.
+>     spi
+>     i2c
+>     ipmb
+> +   ipmi
+>     i3c/index
+>     interconnect
+>     devfreq
+> diff --git a/Documentation/IPMI.txt b/Documentation/driver-api/ipmi.rst
+> similarity index 100%
+> rename from Documentation/IPMI.txt
+> rename to Documentation/driver-api/ipmi.rst
+> -- 
+> 2.25.4
+> 
