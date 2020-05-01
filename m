@@ -2,119 +2,105 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016B2C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4773C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C484F21974
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C5721835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588368943;
-	bh=eiBa5lb9f1X6eXJkHTMOoxS6e/4+tIwVweqAWNnkT7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RwqE7OWVsOMYehY//g9JvKCiu08jEcC5VhAL2OtUwROrGc1KzgO6xyoBbSN3uLFeF
-	 QVUdew07ZRTRxqGMCkg7D5f8u9ZxI0hjGkbalZ02JxA9l/JV9F3CKsOIb2X44jL2nU
-	 njDP8BXoHTgoMX8Vl3H/fA2r7k+Jz4l4CAkvqORY=
+	s=default; t=1588369073;
+	bh=rcMy9hOYjnMdOayqZO4Al68Sx1wGMaF1BzVTkCR2gEI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YdGSdhuaAIacFQ2rQvg6qKIG6d0n5vELxaAw/FEw1Y7karL9OgtUdu2AEtz2k68tp
+	 w/dhT2+/9truaA7zV6dtO5dX50M+btLZAYFvJyOfRGYKUHDaWz3JkhYg4oMD31cN2g
+	 Yuf/yOUAylgW9/6DSH3djTNtNAAO8BY8/C58NIIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgEAVfn (ORCPT
+        id S1726782AbgEAVhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:35:43 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40302 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVfm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:35:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i27so3664416ota.7;
-        Fri, 01 May 2020 14:35:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L7Pjlj+bds8pkUkLj6i4yY9snS8jpLg7qkPY4JTHgEQ=;
-        b=GEECfWiyicKbw05rfUnN7ZaIMVhlK72Lt8GLny5jfw2EPLNmr+8yyKDxCJwekdGyyb
-         kAR9S4sHWsLmvyy1sTjNtx0OhVWZeev/4EkF1iN71n60Ovcai42kcgSQ7d075ZoP2hzS
-         iGRNIRIv0UUPtc/+21S4VOsoJb80UoDBpFDC7QLtVdQeYTjF+tFq/gSSVzm7ThBMC1kF
-         The8M1qljArYzBmNuV/OtR0w1eDs6QtwF/iZviwgjvC1wk0eDAVQtuCdX2kW8LEEBY/P
-         77s6ZFeHMI/DGy/LJ2iW7iFiffXA7JJzuyD7609FJQSMAHnPUVhHIFWTXPNzURrbu2SG
-         PEzA==
-X-Gm-Message-State: AGi0PuYse/GE+tbQxD0WKgoD0ItLes8WYbriQIep6y/y+emq1+StwZYX
-        TF+51y4vtFR43xydm3rY2m0vKOQ=
-X-Google-Smtp-Source: APiQypIcS4ZldtIHDn1qsuo/ZwhYHO44SNWEmJ0QrB++gTcgGWj4b0A/SY9x+Mc7/f+BhQfvihMVFA==
-X-Received: by 2002:a9d:107:: with SMTP id 7mr5574092otu.48.1588368941638;
-        Fri, 01 May 2020 14:35:41 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a7sm1110562otr.15.2020.05.01.14.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:35:41 -0700 (PDT)
-Received: (nullmailer pid 16259 invoked by uid 1000);
-        Fri, 01 May 2020 21:35:40 -0000
-Date:   Fri, 1 May 2020 16:35:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: Re: [PATCH v5 2/3] Add the bindings for the bq25150 and bq25155
- 500mA charging ICs from Texas Instruments.
-Message-ID: <20200501213540.GA15569@bogus>
-References: <20200501175118.26226-1-dmurphy@ti.com>
- <20200501175118.26226-3-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501175118.26226-3-dmurphy@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 1 May 2020 17:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgEAVhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:37:52 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E96CE208DB;
+        Fri,  1 May 2020 21:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588369072;
+        bh=rcMy9hOYjnMdOayqZO4Al68Sx1wGMaF1BzVTkCR2gEI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EE0JWT4QbsM5NXoYqeGRwX35IXmZwZDtWMmG79PhEJMPg/dW6L2Ekb5n6GRYDVAG1
+         S2D3DFiTj80Uo0hKoZzajmP8k6tZ2Df6C3vWJHZKE6+8GlLTwRLKvvuHIFslK9OofV
+         A8JTM9gcNPlIMEGLm4/fvLhC/zRG3SSadWhrPPKw=
+Date:   Fri, 1 May 2020 14:37:51 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        iamjoonsoo.kim@lge.com, rientjes@google.com, penberg@kernel.org,
+        cl@linux.com
+Subject: Re: [PATCH] mm: slub: add panic_on_error to the debug facilities
+Message-Id: <20200501143751.97a25bb7f89f8d93ec443868@linux-foundation.org>
+In-Reply-To: <20200501211540.71216-1-aquini@redhat.com>
+References: <20200501211540.71216-1-aquini@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 12:51:17 -0500, Dan Murphy wrote:
-> From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+On Fri,  1 May 2020 17:15:40 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+
+> Sometimes it is desirable to override SLUB's debug facilities
+> default behavior upon stumbling on a cache or object error
+> and just stop the execution in order to grab a coredump, at
+> the error-spotting time, instead of trying to fix the issue
+> and report in an attempt to keep the system rolling.
 > 
-> Description:
-> The BQ2515X family of devices are highly integrated battery management
-> ICs that integrate the most common functions for wearbale devices
-> namely a charger, an output voltage rail, ADC for battery and system
-> monitoring, and a push-button controller.
-> 
-> Datasheets:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> ---
->  .../bindings/power/supply/bq2515x.yaml        | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+> This patch introduces a new debug flag SLAB_PANIC_ON_ERROR,
+> along with its related SLUB-machinery, in order to extend
+> current slub_debug facilites and provide the aforementioned
+> behavior override.
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Sees reasonable.
 
-Documentation/devicetree/bindings/power/supply/bq2515x.yaml:  while scanning a block scalar
-  in "<unicode string>", line 81, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 96, column 1
-Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/power/supply/bq2515x.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/power/supply/bq2515x.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2515x.yaml: ignoring, error parsing file
-warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2515x.yaml: ignoring, error parsing file
-warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> --- a/Documentation/vm/slub.rst
+> +++ b/Documentation/vm/slub.rst
+> @@ -54,6 +54,8 @@ Possible debug options are::
+>  			caused higher minimum slab orders
+>  	-		Switch all debugging off (useful if the kernel is
+>  			configured with CONFIG_SLUB_DEBUG_ON)
+> +	C		Toggle panic on error (crash) to allow for post-mortem
+> +			analysis of a coredump taken at the error-spotting time
 
-See https://patchwork.ozlabs.org/patch/1281414
+nit: "toggle" means to switch to the other state.  But what we're doing
+here is to set to the "on" state.  This:
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+--- a/Documentation/vm/slub.rst~mm-slub-add-panic_on_error-to-the-debug-facilities-fix
++++ a/Documentation/vm/slub.rst
+@@ -49,12 +49,12 @@ Possible debug options are::
+ 	P		Poisoning (object and padding)
+ 	U		User tracking (free and alloc)
+ 	T		Trace (please only use on single slabs)
+-	A		Toggle failslab filter mark for the cache
++	A		Enable failslab filter mark for the cache
+ 	O		Switch debugging off for caches that would have
+ 			caused higher minimum slab orders
+ 	-		Switch all debugging off (useful if the kernel is
+ 			configured with CONFIG_SLUB_DEBUG_ON)
+-	C		Toggle panic on error (crash) to allow for post-mortem
++	C		Enable panic on error (crash) to allow for post-mortem
+ 			analysis of a coredump taken at the error-spotting time
+ 
+ F.e. in order to boot just with sanity checks and red zoning one would specify::
+_
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
