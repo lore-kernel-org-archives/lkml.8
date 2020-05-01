@@ -2,51 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C39C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CA1C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1001F205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D51205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340991;
-	bh=0u6wEzb76ncdT0z6fHVNlCKNH9+f7uchnCCQjeDtbPU=;
+	s=default; t=1588340992;
+	bh=6OqBXGwNZRg2iIABLTkCACjOhL+8Zt0oEMiBkHLzQhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9xEMXOHDWljRIKAt6JOsq1Wd3V1ZQbFp1GnlIzzqydl5BC5LrRNqF7wd3ynCkrWH
-	 W8KnE6w/mfycsuPXOQq1d4e3oyx0AN7sANQeQZ3ZbYU1DetTVLuigCrWl8hv5Y4XUB
-	 n7cd/j5OcfqUApYVQ/3KOWpRb7SFcL1FzIzL2iKU=
+	b=a6dWAHnEdKpCxHh4U+VoFykr9WwF9rDnGIq0B35MjFVMzQmDL7TAj/NIa0WRN6/CL
+	 U7werZ4OFTy3susHPYgxVtk8PGFdiW+TyHUmviiDNkc58mDmx/R+h2YwRO0BwjNhuf
+	 GAkoewCOkFgST5FY2eKDR0DVzVLx/K0KU2aufIXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbgEANtu (ORCPT
+        id S1731349AbgEANku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:40:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731329AbgEANkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:53 -0400
+        id S1730275AbgEANkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034D5205C9;
-        Fri,  1 May 2020 13:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BE4205C9;
+        Fri,  1 May 2020 13:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340452;
-        bh=0u6wEzb76ncdT0z6fHVNlCKNH9+f7uchnCCQjeDtbPU=;
+        s=default; t=1588340442;
+        bh=6OqBXGwNZRg2iIABLTkCACjOhL+8Zt0oEMiBkHLzQhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ws2DQa1vZn3xI8OzjJ+TpdwqAsmDiBICibMonZFNM6SxjGlTJErNeEtyg6SjdD0tl
-         QxLeNROEanBry2kfR/Nlldo3j/JvV0lTFhjQ55adhpUIS78PKPTAnvcBCjkEu1FJAl
-         /azPOPI4OyFnVIl2EuY9ou/UjTrALIYyq7elo/xE=
+        b=i1c6mk3T2tC4OmafJGr4d/9yAMQO0YHeqGVzjnsE49ccMPMkbPY2HgNilK1VxvICN
+         vdJGQ0KXi+Ta0QK/Rv3MmFPp5rZ0bwiS40JAiUvySXPoveUZgh1pNwxVo/QIeDy9Ud
+         RCiaodrofviTRfs0z53O0KyagnQbowrN5x4Ejg7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 73/83] ext4: convert BUG_ONs to WARN_ONs in mballoc.c
-Date:   Fri,  1 May 2020 15:23:52 +0200
-Message-Id: <20200501131541.749303750@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Kalderon <mkalderon@marvell.com>,
+        Yuval Bason <ybason@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 80/83] qed: Fix use after free in qed_chain_free
+Date:   Fri,  1 May 2020 15:23:59 +0200
+Message-Id: <20200501131542.932619245@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,52 +60,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Yuval Basson <ybason@marvell.com>
 
-[ Upstream commit 907ea529fc4c3296701d2bfc8b831dd2a8121a34 ]
+commit 8063f761cd7c17fc1d0018728936e0c33a25388a upstream.
 
-If the in-core buddy bitmap gets corrupted (or out of sync with the
-block bitmap), issue a WARN_ON and try to recover.  In most cases this
-involves skipping trying to allocate out of a particular block group.
-We can end up declaring the file system corrupted, which is fair,
-since the file system probably should be checked before we proceed any
-further.
+The qed_chain data structure was modified in
+commit 1a4a69751f4d ("qed: Chain support for external PBL") to support
+receiving an external pbl (due to iWARP FW requirements).
+The pages pointed to by the pbl are allocated in qed_chain_alloc
+and their virtual address are stored in an virtual addresses array to
+enable accessing and freeing the data. The physical addresses however
+weren't stored and were accessed directly from the external-pbl
+during free.
 
-Link: https://lore.kernel.org/r/20200414035649.293164-1-tytso@mit.edu
-Google-Bug-Id: 34811296
-Google-Bug-Id: 34639169
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Destroy-qp flow, leads to freeing the external pbl before the chain is
+freed, when the chain is freed it tries accessing the already freed
+external pbl, leading to a use-after-free. Therefore we need to store
+the physical addresses in additional to the virtual addresses in a
+new data structure.
+
+Fixes: 1a4a69751f4d ("qed: Chain support for external PBL")
+Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
+Signed-off-by: Yuval Bason <ybason@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ext4/mballoc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c |   38 ++++++++++++------------------
+ include/linux/qed/qed_chain.h             |   24 +++++++++++-------
+ 2 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index c76ffc259d197..e1782b2e2e2dd 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -1936,7 +1936,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
- 	int free;
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -4648,26 +4648,20 @@ static void qed_chain_free_single(struct
  
- 	free = e4b->bd_info->bb_free;
--	BUG_ON(free <= 0);
-+	if (WARN_ON(free <= 0))
-+		return;
+ static void qed_chain_free_pbl(struct qed_dev *cdev, struct qed_chain *p_chain)
+ {
+-	void **pp_virt_addr_tbl = p_chain->pbl.pp_virt_addr_tbl;
++	struct addr_tbl_entry *pp_addr_tbl = p_chain->pbl.pp_addr_tbl;
+ 	u32 page_cnt = p_chain->page_cnt, i, pbl_size;
+-	u8 *p_pbl_virt = p_chain->pbl_sp.p_virt_table;
  
- 	i = e4b->bd_info->bb_first_free;
+-	if (!pp_virt_addr_tbl)
++	if (!pp_addr_tbl)
+ 		return;
  
-@@ -1959,7 +1960,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+-	if (!p_pbl_virt)
+-		goto out;
+-
+ 	for (i = 0; i < page_cnt; i++) {
+-		if (!pp_virt_addr_tbl[i])
++		if (!pp_addr_tbl[i].virt_addr || !pp_addr_tbl[i].dma_map)
+ 			break;
+ 
+ 		dma_free_coherent(&cdev->pdev->dev,
+ 				  QED_CHAIN_PAGE_SIZE,
+-				  pp_virt_addr_tbl[i],
+-				  *(dma_addr_t *)p_pbl_virt);
+-
+-		p_pbl_virt += QED_CHAIN_PBL_ENTRY_SIZE;
++				  pp_addr_tbl[i].virt_addr,
++				  pp_addr_tbl[i].dma_map);
+ 	}
+ 
+ 	pbl_size = page_cnt * QED_CHAIN_PBL_ENTRY_SIZE;
+@@ -4677,9 +4671,9 @@ static void qed_chain_free_pbl(struct qe
+ 				  pbl_size,
+ 				  p_chain->pbl_sp.p_virt_table,
+ 				  p_chain->pbl_sp.p_phys_table);
+-out:
+-	vfree(p_chain->pbl.pp_virt_addr_tbl);
+-	p_chain->pbl.pp_virt_addr_tbl = NULL;
++
++	vfree(p_chain->pbl.pp_addr_tbl);
++	p_chain->pbl.pp_addr_tbl = NULL;
+ }
+ 
+ void qed_chain_free(struct qed_dev *cdev, struct qed_chain *p_chain)
+@@ -4780,19 +4774,19 @@ qed_chain_alloc_pbl(struct qed_dev *cdev
+ {
+ 	u32 page_cnt = p_chain->page_cnt, size, i;
+ 	dma_addr_t p_phys = 0, p_pbl_phys = 0;
+-	void **pp_virt_addr_tbl = NULL;
++	struct addr_tbl_entry *pp_addr_tbl;
+ 	u8 *p_pbl_virt = NULL;
+ 	void *p_virt = NULL;
+ 
+-	size = page_cnt * sizeof(*pp_virt_addr_tbl);
+-	pp_virt_addr_tbl = vzalloc(size);
+-	if (!pp_virt_addr_tbl)
++	size = page_cnt * sizeof(*pp_addr_tbl);
++	pp_addr_tbl =  vzalloc(size);
++	if (!pp_addr_tbl)
+ 		return -ENOMEM;
+ 
+ 	/* The allocation of the PBL table is done with its full size, since it
+ 	 * is expected to be successive.
+ 	 * qed_chain_init_pbl_mem() is called even in a case of an allocation
+-	 * failure, since pp_virt_addr_tbl was previously allocated, and it
++	 * failure, since tbl was previously allocated, and it
+ 	 * should be saved to allow its freeing during the error flow.
+ 	 */
+ 	size = page_cnt * QED_CHAIN_PBL_ENTRY_SIZE;
+@@ -4806,8 +4800,7 @@ qed_chain_alloc_pbl(struct qed_dev *cdev
+ 		p_chain->b_external_pbl = true;
+ 	}
+ 
+-	qed_chain_init_pbl_mem(p_chain, p_pbl_virt, p_pbl_phys,
+-			       pp_virt_addr_tbl);
++	qed_chain_init_pbl_mem(p_chain, p_pbl_virt, p_pbl_phys, pp_addr_tbl);
+ 	if (!p_pbl_virt)
+ 		return -ENOMEM;
+ 
+@@ -4826,7 +4819,8 @@ qed_chain_alloc_pbl(struct qed_dev *cdev
+ 		/* Fill the PBL table with the physical address of the page */
+ 		*(dma_addr_t *)p_pbl_virt = p_phys;
+ 		/* Keep the virtual address of the page */
+-		p_chain->pbl.pp_virt_addr_tbl[i] = p_virt;
++		p_chain->pbl.pp_addr_tbl[i].virt_addr = p_virt;
++		p_chain->pbl.pp_addr_tbl[i].dma_map = p_phys;
+ 
+ 		p_pbl_virt += QED_CHAIN_PBL_ENTRY_SIZE;
+ 	}
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -97,6 +97,11 @@ struct qed_chain_u32 {
+ 	u32 cons_idx;
+ };
+ 
++struct addr_tbl_entry {
++	void *virt_addr;
++	dma_addr_t dma_map;
++};
++
+ struct qed_chain {
+ 	/* fastpath portion of the chain - required for commands such
+ 	 * as produce / consume.
+@@ -107,10 +112,11 @@ struct qed_chain {
+ 
+ 	/* Fastpath portions of the PBL [if exists] */
+ 	struct {
+-		/* Table for keeping the virtual addresses of the chain pages,
+-		 * respectively to the physical addresses in the pbl table.
++		/* Table for keeping the virtual and physical addresses of the
++		 * chain pages, respectively to the physical addresses
++		 * in the pbl table.
+ 		 */
+-		void **pp_virt_addr_tbl;
++		struct addr_tbl_entry *pp_addr_tbl;
+ 
+ 		union {
+ 			struct qed_chain_pbl_u16 u16;
+@@ -287,7 +293,7 @@ qed_chain_advance_page(struct qed_chain
+ 				*(u32 *)page_to_inc = 0;
+ 			page_index = *(u32 *)page_to_inc;
  		}
+-		*p_next_elem = p_chain->pbl.pp_virt_addr_tbl[page_index];
++		*p_next_elem = p_chain->pbl.pp_addr_tbl[page_index].virt_addr;
+ 	}
+ }
  
- 		mb_find_extent(e4b, i, ac->ac_g_ex.fe_len, &ex);
--		BUG_ON(ex.fe_len <= 0);
-+		if (WARN_ON(ex.fe_len <= 0))
-+			break;
- 		if (free < ex.fe_len) {
- 			ext4_grp_locked_error(sb, e4b->bd_group, 0, 0,
- 					"%d free clusters as per "
--- 
-2.20.1
-
+@@ -537,7 +543,7 @@ static inline void qed_chain_init_params
+ 
+ 	p_chain->pbl_sp.p_phys_table = 0;
+ 	p_chain->pbl_sp.p_virt_table = NULL;
+-	p_chain->pbl.pp_virt_addr_tbl = NULL;
++	p_chain->pbl.pp_addr_tbl = NULL;
+ }
+ 
+ /**
+@@ -575,11 +581,11 @@ static inline void qed_chain_init_mem(st
+ static inline void qed_chain_init_pbl_mem(struct qed_chain *p_chain,
+ 					  void *p_virt_pbl,
+ 					  dma_addr_t p_phys_pbl,
+-					  void **pp_virt_addr_tbl)
++					  struct addr_tbl_entry *pp_addr_tbl)
+ {
+ 	p_chain->pbl_sp.p_phys_table = p_phys_pbl;
+ 	p_chain->pbl_sp.p_virt_table = p_virt_pbl;
+-	p_chain->pbl.pp_virt_addr_tbl = pp_virt_addr_tbl;
++	p_chain->pbl.pp_addr_tbl = pp_addr_tbl;
+ }
+ 
+ /**
+@@ -644,7 +650,7 @@ static inline void *qed_chain_get_last_e
+ 		break;
+ 	case QED_CHAIN_MODE_PBL:
+ 		last_page_idx = p_chain->page_cnt - 1;
+-		p_virt_addr = p_chain->pbl.pp_virt_addr_tbl[last_page_idx];
++		p_virt_addr = p_chain->pbl.pp_addr_tbl[last_page_idx].virt_addr;
+ 		break;
+ 	}
+ 	/* p_virt_addr points at this stage to the last page of the chain */
+@@ -716,7 +722,7 @@ static inline void qed_chain_pbl_zero_me
+ 	page_cnt = qed_chain_get_page_cnt(p_chain);
+ 
+ 	for (i = 0; i < page_cnt; i++)
+-		memset(p_chain->pbl.pp_virt_addr_tbl[i], 0,
++		memset(p_chain->pbl.pp_addr_tbl[i].virt_addr, 0,
+ 		       QED_CHAIN_PAGE_SIZE);
+ }
+ 
 
 
