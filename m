@@ -2,169 +2,238 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00800C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB79C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62C52166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF552166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pn28gEGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgEARfT (ORCPT
+        id S1729779AbgEARgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:35:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:20842 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728951AbgEARfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:35:18 -0400
-IronPort-SDR: oIzdwUzGy7bnF5tidPTQBSPtt6h/iWK94XHk5CHIRH2ETPQ5UUADFbvG451Q+7oyWUnKKILi6Q
- L6dDfB/q946g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 10:35:17 -0700
-IronPort-SDR: AIo90WlFzgatGYhRQjugzGu1JYYFSXF3xirZSA3pjejZkeFouqM6dL/ljOCuUplGpy7q2E7SWY
- F555HQp1C06A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
-   d="scan'208";a="258670568"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 10:35:17 -0700
-Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 1 May 2020 10:35:17 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX158.amr.corp.intel.com ([169.254.10.56]) with mapi id 14.03.0439.000;
- Fri, 1 May 2020 10:35:17 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "fred@fredlawl.com" <fred@fredlawl.com>,
-        "ruscur@russell.cc" <ruscur@russell.cc>,
-        "oohall@gmail.com" <oohall@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
-Thread-Topic: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
-Thread-Index: AQHWHyGBlj2gvaBx5UuW2XC3HoapYaiT766AgAAFJ4A=
-Date:   Fri, 1 May 2020 17:35:16 +0000
-Message-ID: <518c3348c4b4a8b5fed6a42ad190771f7f9645f3.camel@intel.com>
-References: <20200501171649.GA116404@bjorn-Precision-5520>
-In-Reply-To: <20200501171649.GA116404@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.3.184]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7FDE8DA749E49548A442399530838EF6@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 1 May 2020 13:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729202AbgEARgK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:36:10 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091E7C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:36:09 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id m9so3936373uaq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JmsK3I+QQ1jUjjKc6FqaRkKw2p+mN6s7yBv1CCt+9NU=;
+        b=Pn28gEGGnVNlWhBqU4ctoJJsxbfCxDyVFe4hXI/k5poWhig1Eu5EfctfcqE9tWf2zA
+         JixurROYNoCAGTck3Oo/7rv1b4EFjBWfjUmsmMZvfkE1LiDnSNu6y0lMpleDMqgKKT/U
+         jtt6OvYZ9b3fp7E+i/grqmPghlKQo0NFfXQZ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JmsK3I+QQ1jUjjKc6FqaRkKw2p+mN6s7yBv1CCt+9NU=;
+        b=HLf2BnVkQ1jy/2Lsdif8t5iPN/IaVX3MHtHZcFF+aYOD7vONV2T03pQV5yAnCHmCBv
+         txg5VuCkQE1LLCbMmUZrvRV3juJ5v6zyw0uScB6hEDNzaaD0fX09gYX/+fwI72q4821i
+         Z1m9uFhQptbUBG5RAY1fgjBttXWE2wZXs/t81rxD8HU7vQkBntMnSMzE0sejNK+KjnDs
+         pPL/qxARjPyYjfaWakWPmXvwPirhebOxWI1WWv4qv97Ol7viq67JrNkupdfwosjbSgbA
+         EzwM7y29CFB/9r7aVuK4U9nwEQPiTU458EBKP1yvNbww/f6fP8UD9noIu5iA4ff+EFrA
+         Qtpw==
+X-Gm-Message-State: AGi0PubNEWUO0G1GF0T8aoj7EQxi75OEAeDDV6mvIiFnXINVuXCQMDSE
+        34vijMxQB6MwpmpASENwkYWce/0PeXo=
+X-Google-Smtp-Source: APiQypJtdoGkLoWsu1mFfyK8DjAR/q2D/UxG6yc3m2ceDiye3j4bd9H6BLD3vs53EK4aByKWn/VoTA==
+X-Received: by 2002:ab0:4162:: with SMTP id j89mr3726032uad.23.1588354567541;
+        Fri, 01 May 2020 10:36:07 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id r137sm943942vke.49.2020.05.01.10.36.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 10:36:06 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id m9so3936342uaq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:36:06 -0700 (PDT)
+X-Received: by 2002:ab0:b13:: with SMTP id b19mr3764969uak.91.1588354566196;
+ Fri, 01 May 2020 10:36:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200430095819.1.Id37f71c69eb21747b9d9e2c7c242be130814b362@changeid>
+ <20200501114943.ioetuxe24gi27bll@holly.lan>
+In-Reply-To: <20200501114943.ioetuxe24gi27bll@holly.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 1 May 2020 10:35:54 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V72b8UaQBst3UHBURXbFne0dmuGgN6vSc2dajELJFNew@mail.gmail.com>
+Message-ID: <CAD=FV=V72b8UaQBst3UHBURXbFne0dmuGgN6vSc2dajELJFNew@mail.gmail.com>
+Subject: Re: [PATCH] kgdboc: Be a bit more robust about handling earlycon leaving
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTAxIGF0IDEyOjE2IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBUaHUsIEFwciAzMCwgMjAyMCBhdCAxMjo0NjowN1BNIC0wNjAwLCBKb24gRGVycmljayB3
-cm90ZToNCj4gPiBIaSBCam9ybiAmIEt1cHB1c3dhbXksDQo+ID4gDQo+ID4gSSBzZWUgYSBwcm9i
-bGVtIGluIHRoZSBEUEMgRUNOIFsxXSB0byBfT1NDIGluIHRoYXQgaXQgZG9lc24ndCBnaXZlIHVz
-IGEgd2F5IHRvDQo+ID4gZGV0ZXJtaW5lIGlmIGZpcm13YXJlIHN1cHBvcnRzIF9PU0MgRFBDIG5l
-Z290YXRpb24sIGFuZCB0aGVyZWZvcmUgaG93IHRvIGhhbmRsZQ0KPiA+IERQQy4NCj4gPiANCj4g
-PiBIZXJlIGlzIHRoZSB3b3JkaW5nIG9mIHRoZSBFQ04gdGhhdCBpbXBsaWVzIHRoYXQgRmlybXdh
-cmUgd2l0aG91dCBfT1NDIERQQw0KPiA+IG5lZ290aWF0aW9uIHN1cHBvcnQgc2hvdWxkIGhhdmUg
-dGhlIE9TUE0gcmVseSBvbiBfT1NDIEFFUiBuZWdvdGlhdGlvbiB3aGVuDQo+ID4gZGV0ZXJtaW5p
-bmcgRFBDIGNvbnRyb2w6DQo+ID4gDQo+ID4gICBQQ0llIEJhc2UgU3BlY2lmaWNhdGlvbiBzdWdn
-ZXN0cyB0aGF0IERvd25zdHJlYW0gUG9ydCBDb250YWlubWVudCBtYXkgYmUNCj4gPiAgIGNvbnRy
-b2xsZWQgZWl0aGVyIGJ5IHRoZSBGaXJtd2FyZSBvciB0aGUgT3BlcmF0aW5nIFN5c3RlbS4gSXQg
-YWxzbyBzdWdnZXN0cw0KPiA+ICAgdGhhdCB0aGUgRmlybXdhcmUgcmV0YWluIG93bmVyc2hpcCBv
-ZiBEb3duc3RyZWFtIFBvcnQgQ29udGFpbm1lbnQgaWYgaXQgYWxzbw0KPiA+ICAgb3ducyBBRVIu
-IFdoZW4gdGhlIEZpcm13YXJlIG93bnMgRG93bnN0cmVhbSBQb3J0IENvbnRhaW5tZW50LCBpdCBp
-cyBleHBlY3RlZA0KPiA+ICAgdG8gdXNlIHRoZSBuZXcgIkVycm9yIERpc2Nvbm5lY3QgUmVjb3Zl
-ciIgbm90aWZpY2F0aW9uIHRvIGFsZXJ0IE9TUE0gb2YgYQ0KPiA+ICAgRG93bnN0cmVhbSBQb3J0
-IENvbnRhaW5tZW50IGV2ZW50Lg0KPiA+IA0KPiA+IEluIGxlZ2FjeSBwbGF0Zm9ybXMsIGFzIGJp
-dHMgaW4gX09TQyBhcmUgcmVzZXJ2ZWQgcHJpb3IgdG8gaW1wbGVtZW50YXRpb24sIEFDUEkNCj4g
-PiBSb290IEJ1cyBlbnVtZXJhdGlvbiB3aWxsIG1hcmsgdGhlc2UgSG9zdCBCcmlkZ2VzIGFzIHdp
-dGhvdXQgTmF0aXZlIERQQw0KPiA+IHN1cHBvcnQsIGV2ZW4gdGhvdWdoIHRoZSBzcGVjaWZpY2F0
-aW9uIGltcGxpZXMgaXQncyBleHBlY3RlZCB0aGF0IEFFUiBfT1NDDQo+ID4gbmVnb3RpYXRpb24g
-ZGV0ZXJtaW5lcyBEUEMgY29udHJvbCBmb3IgdGhlc2UgcGxhdGZvcm1zLiBUaGVyZSBzZWVtcyB0
-byBiZSBhDQo+ID4gbmVlZCBmb3IgYSB3YXkgdG8gZGV0ZXJtaW5lIGlmIHRoZSBEUEMgY29udHJv
-bCBiaXQgaW4gX09TQyBpcyBzdXBwb3J0ZWQgYW5kDQo+ID4gZmFsbGJhY2sgb24gQUVSIG90aGVy
-d2lzZS4NCj4gPiANCj4gPiANCj4gPiBDdXJyZW50bHkgcG9ydGRydiBhc3N1bWVzIERQQyBjb250
-cm9sIGlmIHRoZSBwb3J0IGhhcyBOYXRpdmUgQUVSIHNlcnZpY2VzOg0KPiA+IA0KPiA+IHN0YXRp
-YyBpbnQgZ2V0X3BvcnRfZGV2aWNlX2NhcGFiaWxpdHkoc3RydWN0IHBjaV9kZXYgKmRldikNCj4g
-PiAuLi4NCj4gPiAJaWYgKHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KGRldiwgUENJX0VYVF9DQVBf
-SURfRFBDKSAmJg0KPiA+IAkgICAgcGNpX2Flcl9hdmFpbGFibGUoKSAmJg0KPiA+IAkgICAgKHBj
-aWVfcG9ydHNfZHBjX25hdGl2ZSB8fCAoc2VydmljZXMgJiBQQ0lFX1BPUlRfU0VSVklDRV9BRVIp
-KSkNCj4gPiAJCXNlcnZpY2VzIHw9IFBDSUVfUE9SVF9TRVJWSUNFX0RQQzsNCj4gPiANCj4gPiBO
-ZXdlciBmaXJtd2FyZSBtYXkgbm90IGdyYW50IE9TUE0gRFBDIGNvbnRyb2wsIGlmIGZvciBpbnN0
-YW5jZSwgaXQgZXhwZWN0cyB0bw0KPiA+IHVzZSBFcnJvciBEaXNjb25uZWN0IFJlY292ZXJ5LiBI
-b3dldmVyIGl0IGxvb2tzIGxpa2UgQUNQSSB3aWxsIHVzZSBEUEMgc2VydmljZXMNCj4gPiB2aWEg
-dGhlIEVEUiBkcml2ZXIsIHdpdGhvdXQgYmluZGluZyB0aGUgZnVsbCBEUEMgcG9ydCBzZXJ2aWNl
-IGRyaXZlci4NCj4gPiANCj4gPiANCj4gPiBJZiB3ZSBjaGFuZ2UgcG9ydGRydiB0byBwcm9iZSBi
-YXNlZCBvbiBob3N0LT5uYXRpdmVfZHBjIGFuZCBub3QgQUVSLCB0aGVuIHdlDQo+ID4gYnJlYWsg
-aW5zdGFuY2VzIHdpdGggbGVnYWN5IGZpcm13YXJlIHdoZXJlIE9TUE0gd2lsbCBjbGVhciBob3N0
-LT5uYXRpdmVfZHBjDQo+ID4gc29sZWx5IGR1ZSB0byBfT1NDIGJpdHMgYmVpbmcgcmVzZXJ2ZWQ6
-DQo+ID4gDQo+ID4gc3RydWN0IHBjaV9idXMgKmFjcGlfcGNpX3Jvb3RfY3JlYXRlKHN0cnVjdCBh
-Y3BpX3BjaV9yb290ICpyb290LA0KPiA+IC4uLg0KPiA+IAlpZiAoIShyb290LT5vc2NfY29udHJv
-bF9zZXQgJiBPU0NfUENJX0VYUFJFU1NfRFBDX0NPTlRST0wpKQ0KPiA+IAkJaG9zdF9icmlkZ2Ut
-Pm5hdGl2ZV9kcGMgPSAwOw0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+IFNvIG15IGFzc3VtcHRpb24g
-aW5zdGVhZCBpcyB0aGF0IGhvc3QtPm5hdGl2ZV9kcGMgY2FuIGJlIDAgYW5kIGV4cGVjdCBOYXRp
-dmUNCj4gPiBEUEMgc2VydmljZXMgaWYgQUVSIGlzIHVzZWQuIEluIG90aGVyIHdvcmRzLCBpZiBh
-bmQgb25seSBpZiBEUEMgcHJvYmUgaXMNCj4gPiBpbnZva2VkIGZyb20gcG9ydGRydiwgdGhlbiBp
-dCBuZWVkcyB0byByZWx5IG9uIHRoZSBBRVIgZGVwZW5kZW5jeS4gT3RoZXJ3aXNlIGl0DQo+ID4g
-c2hvdWxkIGJlIGFzc3VtZWQgdGhhdCBBQ1BJIHNldCB1cCBEUEMgdmlhIEVEUi4gVGhpcyBjb3Zl
-cnMgbGVnYWN5IGZpcm13YXJlLg0KPiA+IA0KPiA+IEhvd2V2ZXIgaXQgc2VlbXMgbGlrZSB0aGF0
-IGNvdWxkIGJlIHRyb3VibGUgd2l0aCBuZXdlciBmaXJtd2FyZSB0aGF0IG1pZ2h0IGdpdmUNCj4g
-PiBPU1BNIGNvbnRyb2wgb2YgQUVSIGJ1dCBub3QgRFBDLCBhbmQgd291bGQgcmVzdWx0IGluIGJv
-dGggTmF0aXZlIERQQyBhbmQgRURSDQo+ID4gYmVpbmcgaW4gZWZmZWN0Lg0KPiA+IA0KPiA+IA0K
-PiA+IEFueXdheXMgaGVyZSBhcmUgdHdvIHBhdGNoZXMgdGhhdCBnaXZlIGNvbnRyb2wgb2YgQUVS
-IGFuZCBEUEMgb24gdGhlIHJlc3VsdHMgb2YNCj4gPiBfT1NDLiBUaGV5IGRvbid0IG1lc3Mgd2l0
-aCB0aGUgSEVTVCBwYXJzZXIgYXMgSSBleHBlY3QgdGhvc2UgdG8gYmUgcmVtb3ZlZCBhdA0KPiA+
-IHNvbWUgcG9pbnQuIEkgbmVlZCB0aGVzZSBmb3IgVk1EIHN1cHBvcnQgd2hpY2ggZG9lc24ndCBl
-dmVuIHJlbHkgb24gX09TQywgYnV0IEkNCj4gPiBzdXNwZWN0IHRoaXMgd29uJ3QgYmUgdGhlIGxh
-c3QgZWZmb3J0IGFzIHdlIGRldGFuZ2xlIEZpcm13YXJlIEZpcnN0Lg0KPiA+IA0KPiA+IFsxXSBo
-dHRwczovL21lbWJlcnMucGNpc2lnLmNvbS93Zy9QQ0ktU0lHL2RvY3VtZW50LzEyODg4DQo+IA0K
-PiBIaSBKb24sIEkgdGhpbmsgd2UgbmVlZCB0byBzb3J0IG91dCB0aGUgX09TQy9GSVJNV0FSRV9G
-SVJTVCBwYXRjaGVzDQo+IGZyb20gQWxleCBhbmQgU2F0aHkgZmlyc3QsIHRoZW4gc2VlIHdoYXQg
-bmVlZHMgdG8gYmUgZG9uZSBvbiB0b3Agb2YNCj4gdGhvc2UsIHNvIEknbSBnb2luZyB0byBwdXNo
-IHRoZXNlIG9mZiBmb3IgYSBmZXcgZGF5cyBhbmQgdGhleSdsbA0KPiBwcm9iYWJseSBuZWVkIGEg
-cmVmcmVzaC4NCj4gDQo+IEJqb3JuDQoNCg0KQWdyZWVkLCBubyBuZWVkIHRvIG1lcmdlIG5vdy4g
-SnVzdCB3YW50ZWQgdG8gYnJpbmcgdXAgdGhlIERQQw0KYW1iaWd1aXR5LCB3aGljaCBJIHRoaW5r
-IHdhcyBmaXJzdCBhZGRyZXNzZWQgYnkgZHBjLW5hdGl2ZToNCg0KY29tbWl0IDM1YTBiMjM3OGMx
-OTlkNGYyNmU0NThiMmNhMzhlYTU2YWFmMmQ5YjgNCkF1dGhvcjogT2xvZiBKb2hhbnNzb24gPG9s
-b2ZAbGl4b20ubmV0Pg0KRGF0ZTogICBXZWQgT2N0IDIzIDEyOjIyOjA1IDIwMTkgLTA3MDANCg0K
-ICAgIFBDSS9EUEM6IEFkZCAicGNpZV9wb3J0cz1kcGMtbmF0aXZlIiB0byBhbGxvdyBEUEMgd2l0
-aG91dCBBRVIgY29udHJvbA0KICAgIA0KICAgIFByaW9yIHRvIGVlZDg1ZmY0YzBkYTcgKCJQQ0kv
-RFBDOiBFbmFibGUgRFBDIG9ubHkgaWYgQUVSIGlzIGF2YWlsYWJsZSIpLA0KICAgIExpbnV4IGhh
-bmRsZWQgRFBDIGV2ZW50cyByZWdhcmRsZXNzIG9mIHdoZXRoZXIgZmlybXdhcmUgaGFkIGdyYW50
-ZWQgaXQNCiAgICBvd25lcnNoaXAgb2YgQUVSIG9yIERQQywgZS5nLiwgdmlhIF9PU0MuDQogICAg
-DQogICAgUENJZSByNS4wLCBzZWMgNi4yLjEwLCByZWNvbW1lbmRzIHRoYXQgdGhlIE9TIGxpbmsg
-Y29udHJvbCBvZiBEUEMgdG8NCiAgICBjb250cm9sIG9mIEFFUiwgc28gYWZ0ZXIgZWVkODVmZjRj
-MGRhNywgTGludXggaGFuZGxlcyBEUEMgZXZlbnRzIG9ubHkgaWYgaXQNCiAgICBoYXMgY29udHJv
-bCBvZiBBRVIuDQogICAgDQogICAgT24gcGxhdGZvcm1zIHRoYXQgZG8gbm90IGdyYW50IE9TIGNv
-bnRyb2wgb2YgQUVSIHZpYSBfT1NDLCBMaW51eCBEUEMNCiAgICBoYW5kbGluZyB3b3JrZWQgYmVm
-b3JlIGVlZDg1ZmY0YzBkYTcgYnV0IG5vdCBhZnRlci4NCiAgICANCiAgICBUbyBtYWtlIExpbnV4
-IERQQyBoYW5kbGluZyB3b3JrIG9uIHRob3NlIHBsYXRmb3JtcyB0aGUgc2FtZSB3YXkgdGhleSBk
-aWQNCiAgICBiZWZvcmUsIGFkZCBhICJwY2llX3BvcnRzPWRwYy1uYXRpdmUiIGtlcm5lbCBwYXJh
-bWV0ZXIgdGhhdCBtYWtlcyBMaW51eA0KICAgIGhhbmRsZSBEUEMgZXZlbnRzIHJlZ2FyZGxlc3Mg
-b2Ygd2hldGhlciBpdCBoYXMgY29udHJvbCBvZiBBRVIuDQogICAgDQogICAgW2JoZWxnYWFzOiBj
-b21taXQgbG9nLCBtb3ZlIHBjaWVfcG9ydHNfZHBjX25hdGl2ZSB0byBkcml2ZXJzL3BjaS9dDQog
-ICAgTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDE5MTAyMzE5MjIwNS45NzAyNC0x
-LW9sb2ZAbGl4b20ubmV0DQogICAgU2lnbmVkLW9mZi1ieTogT2xvZiBKb2hhbnNzb24gPG9sb2ZA
-bGl4b20ubmV0Pg0KICAgIFNpZ25lZC1vZmYtYnk6IEJqb3JuIEhlbGdhYXMgPGJoZWxnYWFzQGdv
-b2dsZS5jb20+DQoNCg0KVGhhbmtzLA0KSm9uDQo=
+Hi,
+
+On Fri, May 1, 2020 at 4:49 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Thu, Apr 30, 2020 at 09:59:09AM -0700, Douglas Anderson wrote:
+> > The original implementation of kgdboc_earlycon included a comment
+> > about how it was impossible to get notified about the boot console
+> > going away without making changes to the Linux core.  Since folks
+> > often don't want to change the Linux core for kgdb's purposes, the
+> > kgdboc_earlycon implementation did a bit of polling to figure out when
+> > the boot console went away.
+> >
+> > It turns out, though, that it is possible to get notified about the
+> > boot console going away.  The solution is either clever or a hack
+> > depending on your viewpoint.  ...or, perhaps, a clever hack.  All we
+> > need to do is head-patch the "exit" routine of the boot console.  We
+> > know that "struct console" must be writable because it has a "next"
+> > pointer in it, so we can just put our own exit routine in, do our
+> > stuff, and then call back to the original.
+>
+> I think I'm in the hack camp on this one!
+
+LOL.  We can drop it if need be and wait to see if someone actually
+ends up in the dead-zone.  Though I gotta earn the name "kernel
+hacker" somehow, no?  ;-)
+
+
+> > This works great to get notified about the boot console going away.
+> > The (slight) problem is that in the context of the boot console's exit
+> > routine we can't call tty_find_polling_driver().
+>
+> I presume this is something to do with the tty_mutex?
+
+Actually, no.
+
+trying to acquire lock:
+ffffff81b34436a8 (&port->mutex){+.+.}-{3:3}, at: uart_poll_init+0x70/0x164
+but task is already holding lock:
+ffffff81b34436a8 (&port->mutex){+.+.}-{3:3}, at: uart_add_one_port+0x84/0x49c
+
+Here's the stack (I just put a call to kgdboc_earlycon_exit_work_fn()
+straight into kgdboc_earlycon_trap_exit() to reproduce which is why it
+still looks like there's a worker:
+
+uart_poll_init+0x70/0x164
+tty_find_polling_driver+0x130/0x18c
+configure_kgdboc+0x9c/0x164
+kgdboc_earlycon_exit_work_fn+0x30/0x5c
+kgdboc_earlycon_trap_exit+0x1c/0x4c
+unregister_console+0xd4/0x100
+register_console+0x374/0x39c
+uart_add_one_port+0x418/0x49c
+qcom_geni_serial_probe+0x230/0x330
+
+If we continue on this patch I'll add it to the commit message.
+
+
+> > We solve this by
+> > kicking off some work on the system_wq when we get notified and this
+> > works pretty well.
+>
+> There are some problems with the workqueue approach.
+>
+> Firstly, its runs too early on many systems (esp. those that register
+> the console from a console initcall. kgdboc cannot find the tty, I think
+> because the console is registered a long time before the corresponding
+> tty comes up.
+
+Ah, I see.  So the normal console comes along an inits and kicks the
+boot console out but the tty isn't there yet.  :(  I guess my solution
+only works if uart_add_one_port() is used and we hit this case in
+uart_configure_port():
+
+/*
+ * If this driver supports console, and it hasn't been
+ * successfully registered yet, try to re-register it.
+ * It may be that the port was not available.
+ */
+
+...if you've done something to register the console earlier then
+you're outta luck.  I'm not sure there's a ton we can do here.  I
+don't think we can really transition over to running kgdb on the main
+console because, if nothing else, the write() function for those tend
+to grab "uport->lock" which doesn't seem like it's always safe.  Then
+there'd be the problem of adding read() to all these consoles and
+assuming it's non-blocking.
+
+I feel like maybe the best that can be done is, now that earlycon
+works as well as it does, to suggest that people _stop_ trying to
+register their main console so early.  ;-)
+
+(OK, now that I've read your 2nd message I guess there is something we
+can do: keep using the boot console).
+
+
+In general, though, my patch shouldn't necessarily make anything
+_worse_ for you.  When the boot console's exit() routine is called
+then you really can't use it any more.  It shouldn't hurt to check if
+the TTY is available so we can switch right away.  I guess if your
+case is common, though, we'd maybe want to get rid of the
+cleanup_earlycon() in kgdboc_earlycon_exit_work_fn() because if you
+attached gdb in kgdb_earlycon the debug_core will throw its hissyfit.
+We can just cross our fingers and hope the TTY comes along before we
+end up in the debugger again.
+
+
+> Secondly I am seeing warnings related to the tty_mutex where the
+> might_sleep() machinery ends up flushing the active workqueue.
+>
+> [   39.298332] ------------[ cut here ]------------
+> [   39.298332] WARNING: CPU: 0 PID: 5 at kernel/workqueue.c:3033 __flush_work+00
+> [   39.298332] Modules linked in:
+> [   39.298332] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.7.0-rc3+ #47
+> [   39.298332] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-204
+> [   39.298332] Workqueue: events kgdboc_earlycon_exit_work_fn
+> [   39.298332] RIP: 0010:__flush_work+0x19c/0x1c0
+> [   39.298332] Code: 4c 8b 6d 20 e9 06 ff ff ff 41 c6 04 24 00 fb 45 31 f6 eb 8f
+> [   39.298332] RSP: 0018:ffff993500033dd0 EFLAGS: 00010246
+> [   39.298332] RAX: 0000000000000000 RBX: ffffffffadcd0720 RCX: 0000000000000001
+> [   39.298332] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffadcd0820
+> [   39.298332] RBP: ffff8a633ec299c0 R08: 0000000000000000 R09: 0000000000000001
+> [   39.298332] R10: 000000000000000a R11: f000000000000000 R12: 00000000ffffffed
+> [   39.298332] R13: ffff8a633e408840 R14: 0000000000000000 R15: ffff8a633e408840
+> [   39.298332] FS:  0000000000000000(0000) GS:ffff8a633ec00000(0000) knlGS:00000
+> [   39.298332] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   39.298332] CR2: ffff8a6333201000 CR3: 0000000032a0a000 CR4: 00000000000006f0
+> [   39.298332] Call Trace:
+> [   39.298332]  ? _cond_resched+0x10/0x20
+> [   39.298332]  ? mutex_lock+0x9/0x30
+> [   39.298332]  ? tty_find_polling_driver+0x134/0x1a0
+> [   39.298332]  configure_kgdboc+0x12d/0x1c0
+> [   39.298332]  kgdboc_earlycon_exit_work_fn+0x1a/0x40
+> [   39.298332]  process_one_work+0x1d3/0x380
+> [   39.298332]  worker_thread+0x45/0x3c0
+> [   39.298332]  kthread+0xf6/0x130
+> [   39.298332]  ? process_one_work+0x380/0x380
+> [   39.298332]  ? kthread_park+0x80/0x80
+> [   39.298332]  ret_from_fork+0x22/0x40
+> [   39.298332] ---[ end trace 1190f578d6e11204 ]---
+> [   39.298338] KGDB: Unregistered I/O driver kgdboc_earlycon, debugger disabled
+
+This is weird.  Why don't I see this?  Oh, I see.  It's because your
+console is replacing the boot console so early so "workqueue_init"
+hasn't run yet.  Mine happens much, much later.
+
+...I can try to dig more if we want to continue going down this path,
+but in general it should be fine to grab a mutex on a worker, right?
+...and the workers shouldn't start running until it's safe to run?  Is
+this just a race where we don't set "wq_online = true" early enough
+and pending work has run or something?  Maybe if you drop into the
+debugger at the time of this warning you'll find that some other task
+is running and somewhere midway though workqueue_init()?
+
+-Doug
