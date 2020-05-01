@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED0DC47259
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD80C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A74E216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F1C208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgEAQMN (ORCPT
+        id S1730167AbgEAQMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:12:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:43348 "EHLO foss.arm.com"
+        Fri, 1 May 2020 12:12:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:43370 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbgEAQMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:12:12 -0400
+        id S1730082AbgEAQMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:12:17 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A474C31B;
-        Fri,  1 May 2020 09:12:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68B05C14;
+        Fri,  1 May 2020 09:12:16 -0700 (PDT)
 Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 362503F85E;
-        Fri,  1 May 2020 09:12:09 -0700 (PDT)
-Subject: Re: [PATCH v2 5/6] sched/deadline: Make DL capacity-aware
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D71413F68F;
+        Fri,  1 May 2020 09:12:13 -0700 (PDT)
+Subject: Re: [PATCH v2 6/6] sched/deadline: Implement fallback mechanism for
+ !fit case
 To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     luca abeni <luca.abeni@santannapisa.it>,
         Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
         Alessio Balsini <balsini@google.com>,
@@ -41,15 +42,18 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
 References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-6-dietmar.eggemann@arm.com>
- <20200430131036.GE19464@codeaurora.org>
+ <20200427083709.30262-7-dietmar.eggemann@arm.com>
+ <20200427133438.GA6469@localhost.localdomain>
+ <20200427161715.3dd3a148@nowhere>
+ <57e4846a-4e54-5450-8167-768f021250f7@arm.com>
+ <20200430110042.GD19464@codeaurora.org>
 From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <aa00aee6-2adb-569b-825b-781da12ad8d3@arm.com>
-Date:   Fri, 1 May 2020 18:12:07 +0200
+Message-ID: <ac602537-ab43-943e-9bd6-eca6ed5645c8@arm.com>
+Date:   Fri, 1 May 2020 18:12:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200430131036.GE19464@codeaurora.org>
+In-Reply-To: <20200430110042.GD19464@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -58,77 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2020 15:10, Pavan Kondeti wrote:
-> On Mon, Apr 27, 2020 at 10:37:08AM +0200, Dietmar Eggemann wrote:
->> From: Luca Abeni <luca.abeni@santannapisa.it>
+On 30/04/2020 13:00, Pavan Kondeti wrote:
+> On Wed, Apr 29, 2020 at 07:39:50PM +0200, Dietmar Eggemann wrote:
+>> On 27/04/2020 16:17, luca abeni wrote:
 
 [...]
 
->> @@ -1653,10 +1654,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
->>  	 * other hand, if it has a shorter deadline, we
->>  	 * try to make it stay here, it might be important.
->>  	 */
->> -	if (unlikely(dl_task(curr)) &&
->> -	    (curr->nr_cpus_allowed < 2 ||
->> -	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
->> -	    (p->nr_cpus_allowed > 1)) {
->> +	select_rq = unlikely(dl_task(curr)) &&
->> +		    (curr->nr_cpus_allowed < 2 ||
->> +		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
->> +		    p->nr_cpus_allowed > 1;
->> +
->> +	/*
->> +	 * Take the capacity of the CPU into account to
->> +	 * ensure it fits the requirement of the task.
->> +	 */
->> +	if (static_branch_unlikely(&sched_asym_cpucapacity))
->> +		select_rq |= !dl_task_fits_capacity(p, cpu);
->> +
->> +	if (select_rq) {
->>  		int target = find_later_rq(p);
-> 
-> I see that find_later_rq() checks if the previous CPU is part of
-> later_mask and returns it immediately. So we don't migrate the
-> task in the case where there previous CPU can't fit the task and
-> there are no idle CPUs on which the task can fit. LGTM.
-
-Hope I understand you here. I don't think that [patch 6/6] provides this
-already.
-
-In case 'later_mask' has no fitting CPUs, 'max_cpu' is set in the
-otherwise empty 'later_mask'. But 'max_cpu' is not necessary task_cpu(p).
-
-Example on Juno [L b b L L L] with thread0-0 (big task)
-
-     cpudl_find [thread0-0 2117] orig later_mask=0,3-4 later_mask=0
-  find_later_rq [thread0-0 2117] task_cpu=2 later_mask=0
-
-A tweak could be added favor task_cpu(p) in case it is amongst the CPUs
-with the maximum capacity in cpudl_find() for the !fit case.
+>>> On Mon, 27 Apr 2020 15:34:38 +0200
+>>> Juri Lelli <juri.lelli@redhat.com> wrote:
 
 [...]
 
->> +/*
->> + * Verify the fitness of task @p to run on @cpu taking into account the
->> + * CPU original capacity and the runtime/deadline ratio of the task.
->> + *
->> + * The function will return true if the CPU original capacity of the
->> + * @cpu scaled by SCHED_CAPACITY_SCALE >= runtime/deadline ratio of the
->> + * task and false otherwise.
->> + */
->> +static inline bool dl_task_fits_capacity(struct task_struct *p, int cpu)
->> +{
->> +	unsigned long cap = arch_scale_cpu_capacity(cpu);
->> +
->> +	return cap_scale(p->dl.dl_deadline, cap) >= p->dl.dl_runtime;
->> +}
->> +
-> 
-> This is same as
-> 
-> return p->dl.dl_bw >> (BW_SHIFT - SCHED_CAPACITY_SHIFT) <= cap
-> 
-> Correct?  If yes, would it be better to use this?
+>>>> On 27/04/20 10:37, Dietmar Eggemann wrote:
+>>>>> From: Luca Abeni <luca.abeni@santannapisa.it>
 
-We could use sched_dl_entity::dl_density (dl_runtime / dl_deadline) but
-then I would have to export BW_SHIFT.
+[...]
+
+>>>>> -		if (!cpumask_empty(later_mask))
+>>>>> -			return 1;
+>>>>> +		if (cpumask_empty(later_mask))
+>>>>> +			cpumask_set_cpu(max_cpu, later_mask);  
+>>>>
+>>>> Think we touched upon this during v1 review, but I'm (still?)
+>>>> wondering if we can do a little better, still considering only free
+>>>> cpus.
+>>>>
+>>>> Can't we get into a situation that some of the (once free) big cpus
+>>>> have been occupied by small tasks and now a big task enters the
+>>>> system and it only finds small cpus available, were it could have fit
+>>>> into bigs if small tasks were put onto small cpus?
+>>>>
+>>>> I.e., shouldn't we always try to best fit among free cpus?
+>>>
+>>> Yes; there was an additional patch that tried schedule each task on the
+>>> slowest core where it can fit, to address this issue.
+>>> But I think it will go in a second round of patches.
+>>
+>> Yes, we can run into this situation in DL, but also in CFS or RT.
+>>
+> In CFS case, the misfit task handling in load balancer should help pulling
+> the BIG task running on the little CPUs. I get your point that we can run
+> into the same scenario with other scheduling class tasks.
+
+Yes, the CPU stopper (i.e. CFS's active load balance) can help here.
+IMHO, using the CPU stopper in RT/DL for moving the running task (next
+to using best fit rather than just fit CPU) is considered future work.
+AFAICS, push/pull is not designed for migration of running tasks.
+
+[...]
+
+>> You did spot the rt-app 'delay' for the small tasks in the test case ;-)
+> 
+> Thanks for the hint. It was not clear to me why 1 msec delay is given for
+> the small tasks in the rt-app json description in the cover letter.
+> I get it now :-)
+
+So far Capacity awareness in RT/DL means that as long as there are CPUs
+available which fit the task, use one of them. This is already
+beneficial for a lot of use cases on CPU asymmetric systems since it
+offers more predictable behavior.
+
+I'll add a note to the cover letter in the next version about the reason
+of the rt-app 'delay'.
