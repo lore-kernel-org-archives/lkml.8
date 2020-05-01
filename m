@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76B9C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35078C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74B820757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071AF24954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339703;
-	bh=wmutN43nL/kiGzXE/Vhy8WsrF7DsbBPsEgJA4G/c5Qk=;
+	s=default; t=1588339707;
+	bh=kn3vplV2Ajsfs0kgxnWd05XDF0uaf40IGq6aiy9WXAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMB/teX7y88aCYAS191lv0la+TzrGvvfu5dzAWlcsF7N1OPBwrTiWbzkuIp8pCoUU
-	 YuXWT45XVXjp4DnL+F49PHxNggaGYAVkmDVBWARBWW2QdcVWzbHOG6vkWqvkhEN2OD
-	 9kwDFnjIcLYWOSlGlPzp3+D6ZPrNsUC04uj/UPMU=
+	b=NOld2eqrznNo4BexTWNqaQoqzWvcggM502dZLNdjPud6yDtklEDsv3Mj8XnZUQQg2
+	 9ubrx0DtzLBpp+ssQXP387Sd8912TQSblAeiJByXcVQcDHu+Wg1Ro4A7xR8EELR3a9
+	 LXofq9o/mnalu7d6ze3bsFSvIaa7dS+59xEchHNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgEAN2W (ORCPT
+        id S1729616AbgEAN20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51186 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgEAN2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:28:17 -0400
+        id S1729604AbgEAN2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE7AD208DB;
-        Fri,  1 May 2020 13:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5AD216FD;
+        Fri,  1 May 2020 13:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339697;
-        bh=wmutN43nL/kiGzXE/Vhy8WsrF7DsbBPsEgJA4G/c5Qk=;
+        s=default; t=1588339702;
+        bh=kn3vplV2Ajsfs0kgxnWd05XDF0uaf40IGq6aiy9WXAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z0cdcM1U2nC1XDk5gEAcZ38DhhSKFt1aMW23uZJ69AR3KqFbmXP8h44SyQyscCH9A
-         GT1R+TL0eK2TQn5XbkpIrj4UsN99MrnYmp08OuWVhS5rXVmL4P0D1FEs5Hh2B9bUXw
-         K0GXp0eId64CriKwSz+N8Mgfc2XnAmCn7XCdkrx8=
+        b=rMUS2SO5fmz5DRAvNa6D2Ym/69PlwGPFZmFmGxYx35/P8muWMTUFOPBa7YgR3uTSG
+         ZsvAowcWDQJQ9wdINIzcW+1zohWZW/S88U1HYyKyjKWdEI2lisXMdINAOVT9tkQWNx
+         +yNHgFLjtsVhMLJR8EgC1J1XUG9FJ9kQ2WutzUi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
-        Wu Bo <wubo40@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/80] scsi: iscsi: Report unbind session event when the target has been removed
-Date:   Fri,  1 May 2020 15:21:06 +0200
-Message-Id: <20200501131517.532000380@linuxfoundation.org>
+Subject: [PATCH 4.9 14/80] kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Date:   Fri,  1 May 2020 15:21:08 +0200
+Message-Id: <20200501131518.274814134@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,57 +68,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
+[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
 
-If the daemon is restarted or crashes while logging out of a session, the
-unbind session event sent by the kernel is not processed and is lost.  When
-the daemon starts again, the session can't be unbound because the daemon is
-waiting for the event message. However, the kernel has already logged out
-and the event will not be resent.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-When iscsid restart is complete, logout session reports error:
-
-Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
-iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
-iscsiadm: initiator reported error (9 - internal error)
-iscsiadm: Could not logout of all requested sessions
-
-Make sure the unbind event is emitted.
-
-[mkp: commit desc and applied by hand since patch was mangled]
-
-Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/gcov/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index fff9c4d0f7c80..42b97f1196232 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2016,7 +2016,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
- 	if (session->target_id == ISCSI_MAX_TARGET) {
- 		spin_unlock_irqrestore(&session->lock, flags);
- 		mutex_unlock(&ihost->mutex);
--		return;
-+		goto unbind_session_exit;
- 	}
+diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
+index edf67c493a8e1..e473f6a1f6ca7 100644
+--- a/kernel/gcov/fs.c
++++ b/kernel/gcov/fs.c
+@@ -108,9 +108,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
+ {
+ 	struct gcov_iterator *iter = data;
  
- 	target_id = session->target_id;
-@@ -2028,6 +2028,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
- 		ida_simple_remove(&iscsi_sess_ida, target_id);
++	(*pos)++;
+ 	if (gcov_iter_next(iter))
+ 		return NULL;
+-	(*pos)++;
  
- 	scsi_remove_target(&session->dev);
-+
-+unbind_session_exit:
- 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
- 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+ 	return iter;
  }
 -- 
 2.20.1
