@@ -2,103 +2,144 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F00C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B22C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6763221775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BB0206F0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+M6ffx8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFdBBh0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgEATeL (ORCPT
+        id S1726698AbgEATk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726475AbgEATeK (ORCPT
+        Fri, 1 May 2020 15:40:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgEATk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:34:10 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8A4C061A0C;
-        Fri,  1 May 2020 12:34:10 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id i7so1916422qkl.12;
-        Fri, 01 May 2020 12:34:10 -0700 (PDT)
+        Fri, 1 May 2020 15:40:57 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3BEEC061A0C;
+        Fri,  1 May 2020 12:40:57 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o185so4981634pgo.3;
+        Fri, 01 May 2020 12:40:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=kfVrPN6y9lsLFf6FqSXZapvj2RnD4kAcpEoqz9NVXVA=;
-        b=l+M6ffx8Kub9ieJ5klTStggW2FMVS0kYfyOWyBXasFLngqRD92GB65VNCbXOh9HInw
-         N55Re0WbtaIF7p2xBP/aunGnncfJ5xuyVUnDSuA0BKbZZk1FFgjLLeDiwUU/iRvSKrML
-         EVVPH1W/I7tFsiclreaRCVEz+6rsvPjLKIarZ/HiGcXv6ilvX9bz3tZW7glktxoNU49g
-         xA6U+500y+XE8Q1NEpvWOFA0tIRepTIgbMVezuv+ncVPzOJlI+43OdbHKkM8VM7mEtQD
-         1EmQQ+e+rfj398T+qSu4Vyh3pco/q/GOn47Pc1Fa1SGKcutwsrVXAxmjTcY60eZEPfi7
-         6PPw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oLnnyH+czrM+8LcEZNTG0jVqN3FviRiw3C4w4cH0SOk=;
+        b=mFdBBh0b6aFeXnmmYgVjWvP1fstPsKM2YVQUXP8bDONh7YeqA5IKe8FJt05AUPijQ9
+         7ddYY7PRgHXy7UoznaaN/x58jB9km6ejE6R4YtXahcPzAf5PiKGWgQ+8ys5CRT1nQ8ET
+         Mu0tbJFxOHuDOVP9cEN5+dfABvLDry9K/RKv0OxGNgV2ZXq1jvW7aWT55exXZmMfyQkG
+         x+nTel7rpvHwPMQmdGI0kpi5yNKpuMEkA/ZWJcyNrHA9cnOhOdSCHR0+9ZQpzwlgYys2
+         AbGEMwGOSkJJ8lo/9OwyM9YQqnJA5KQhM2NslVHWWlHs5j99dYTdUAFH9Z8DxYujUZkD
+         NhQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=kfVrPN6y9lsLFf6FqSXZapvj2RnD4kAcpEoqz9NVXVA=;
-        b=RiR9Bd/sY271g5N3kEvSWp6fHh5+Wc5l/uL9mdsHB25sT6kgIDoBH9p+wL79DN5r+v
-         acRlkEMkdgm6ESs9Ptkyy/g3rsO57uRxTDSlWNfksLvWkVt4Do+9omrTS6Msqp3F7Sa7
-         JtU9Xjw96sLhym3Ymv6ez/4Cfu9p7L9AdYY/j2JovFcWdQINLVZgw1DmjPjW2REOO8v6
-         NbiWx8Wv97bj2v6cUrzShmtEpgeACQLTJRBbp+9sc3poNA8+YF8YpOHW6qBkrWNqV2z3
-         KhZqMwrGztY38SPLJxz1o8/AFnC1oxMGnPpx3hbvggIRnqUbNHuKMTEKa64QAJmaq1Ec
-         zcCQ==
-X-Gm-Message-State: AGi0PuZ8zMmRuow+chfy/I/DbOIOQD1k5IV5pTLQSumxNJRUdANCy5M+
-        AGVtD43pWxLujsTDtKBnoovH1Vc5/Gtczw==
-X-Google-Smtp-Source: APiQypJZPCbu5MQXz1ynhnhYrfqdUD4mueLaxvwiSauDlRPwu+3OvCoXPzjHW1cMBypPaUjLvyck1w==
-X-Received: by 2002:a05:620a:2199:: with SMTP id g25mr648855qka.147.1588361649910;
-        Fri, 01 May 2020 12:34:09 -0700 (PDT)
-Received: from josh-ZenBook ([70.32.0.110])
-        by smtp.gmail.com with ESMTPSA id u7sm3334136qkc.1.2020.05.01.12.34.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 May 2020 12:34:09 -0700 (PDT)
-From:   Joshua Abraham <j.abraham1776@gmail.com>
-X-Google-Original-From: Joshua Abraham <sinisterpatrician@gmail.com>
-Date:   Fri, 1 May 2020 15:34:06 -0400
-To:     pbonzini@redhat.com
-Cc:     corbet@lwn.net, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, j.abraham1776@gmail.com
-Subject: [PATCH] docs: kvm: Fix KVM_KVMCLOCK_CTRL API doc
-Message-ID: <20200501193404.GA19745@josh-ZenBook>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oLnnyH+czrM+8LcEZNTG0jVqN3FviRiw3C4w4cH0SOk=;
+        b=LWmc/tusDnhnqgDelB/UvG4t9aLGwzf4ht3yjyqVZgLFlaTAgpeP/UvMQHHeTXjYRw
+         ru1cGDowdQyhlEoCLN3SAE/WZus1SKBM4I9mq1xEOKJ/TVUeGQi2CGJBXrPOrncXC553
+         Fs0heXcmMoo7lPFCvx8nqO2UrvflhTlHCPBCcsWHXU86XmbqXZag2moLM4/VGJvqF67M
+         7+jNndrsRIew9xxuStrKgxBWtsYZe+2gLHN6iFShoJcdlt/Berh5xIWQluuNMaXGfIbg
+         cHqfc4jX9c4G6kVlNLA76bA2bSkuPjiepQNb7IPkPaDL5bSGXQ3PrGjtd3mRX1seXOvu
+         M//A==
+X-Gm-Message-State: AGi0PuZ6+ltcIFz6yavh2gKDX95T5ptNwDuUbh0LGAKWg4Wba56nG4NX
+        vHt0y6Irs+EANrqmHYGx7xU=
+X-Google-Smtp-Source: APiQypLDRleIBIMm7Rv0W2x5Vs5Kn9IzTi53Q4zM75AqHHb/8I/38a54fLLuOAN9eAZVAZslnjGXjQ==
+X-Received: by 2002:a62:1d48:: with SMTP id d69mr5636438pfd.102.1588362056997;
+        Fri, 01 May 2020 12:40:56 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:8cd4])
+        by smtp.gmail.com with ESMTPSA id u14sm2558880pgh.71.2020.05.01.12.40.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 12:40:56 -0700 (PDT)
+Date:   Fri, 1 May 2020 12:40:53 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
+ compatibility
+Message-ID: <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
+References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
+ <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
+ <20200501192204.cepwymj3fln2ngpi@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200501192204.cepwymj3fln2ngpi@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KVM_KVMCLOCK_CTRL ioctl signals to supported KVM guests
-that the hypervisor has paused it. This updates the documentation 
-to reflect that the guest, not the host is notified by this API.
+On Fri, May 01, 2020 at 02:22:04PM -0500, Josh Poimboeuf wrote:
+> On Fri, May 01, 2020 at 12:09:30PM -0700, Alexei Starovoitov wrote:
+> > On Thu, Apr 30, 2020 at 02:07:43PM -0500, Josh Poimboeuf wrote:
+> > > Objtool decodes instructions and follows all potential code branches
+> > > within a function.  But it's not an emulator, so it doesn't track
+> > > register values.  For that reason, it usually can't follow
+> > > intra-function indirect branches, unless they're using a jump table
+> > > which follows a certain format (e.g., GCC switch statement jump tables).
+> > > 
+> > > In most cases, the generated code for the BPF jump table looks a lot
+> > > like a GCC jump table, so objtool can follow it.  However, with
+> > > RETPOLINE=n, GCC keeps the jump table address in a register, and then
+> > > does 160+ indirect jumps with it.  When objtool encounters the indirect
+> > > jumps, it can't tell which jump table is being used (or even whether
+> > > they might be sibling calls instead).
+> > > 
+> > > This was fixed before by disabling an optimization in ___bpf_prog_run(),
+> > > using the "optimize" function attribute.  However, that attribute is bad
+> > > news.  It doesn't append options to the command-line arguments.  Instead
+> > > it starts from a blank slate.  And according to recent GCC documentation
+> > > it's not recommended for production use.  So revert the previous fix:
+> > > 
+> > >   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
+> > > 
+> > > With that reverted, solve the original problem in a different way by
+> > > getting rid of the "goto select_insn" indirection, and instead just goto
+> > > the jump table directly.  This simplifies the code a bit and helps GCC
+> > > generate saner code for the jump table branches, at least in the
+> > > RETPOLINE=n case.
+> > > 
+> > > But, in the RETPOLINE=y case, this simpler code actually causes GCC to
+> > > generate far worse code, ballooning the function text size by +40%.  So
+> > > leave that code the way it was.  In fact Alexei prefers to leave *all*
+> > > the code the way it was, except where needed by objtool.  So even
+> > > non-x86 RETPOLINE=n code will continue to have "goto select_insn".
+> > > 
+> > > This stuff is crazy voodoo, and far from ideal.  But it works for now.
+> > > Eventually, there's a plan to create a compiler plugin for annotating
+> > > jump tables.  That will make this a lot less fragile.
+> > 
+> > I don't like this commit log.
+> > Here you're saying that the code recognized by objtool is sane and good
+> > whereas well optimized gcc code is somehow voodoo and bad.
+> > That is just wrong.
+> 
+> I have no idea what you're talking about.
+> 
+> Are you saying that ballooning the function text size by 40% is well
+> optimized GCC code?  It seems like a bug to me.  That's the only place I
+> said anything bad about GCC code.
 
-Signed-off-by: Joshua Abraham <j.abraham1776@gmail.com>
----
- Documentation/virt/kvm/api.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It could be a bug, but did you benchmark the speed of interpreter ?
+Is it faster or slower with 40% more code ?
+Did you benchmark it on other archs ?
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index efbbe570aa9b..06a4d9bfc6e5 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -2572,7 +2572,7 @@ list in 4.68.
- :Parameters: None
- :Returns: 0 on success, -1 on error
- 
--This signals to the host kernel that the specified guest is being paused by
-+This signals to the guest kernel that the specified guest is being paused by
- userspace.  The host will set a flag in the pvclock structure that is checked
- from the soft lockup watchdog.  The flag is part of the pvclock structure that
- is shared between guest and host, specifically the second bit of the flags
--- 
-2.17.1
+> When I said "this stuff is crazy voodoo" I was referring to the patch
+> itself.  I agree it's horrible, it's only the best approach we're able
+> to come up with at the moment.
 
+please reword it then.
