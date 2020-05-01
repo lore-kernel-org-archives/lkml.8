@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C6CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B845CC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130A524957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C94424957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340055;
-	bh=9z4LahtgSkFQavSR0Kpqso99n4FDvhhsFpPIpUuuUlY=;
+	s=default; t=1588340058;
+	bh=cnL9i4QD9VSaNR2UsO45mXpYGTQ8qPnpMveOLtulI1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOrWdPE/z8yAW/AJdtLmTuxOdKsdPWGG4z4xA0ADN2l7+xqQbRyXmNASJ4rtNTIzh
-	 db1MzWgMa9jXHkC4oZjifrgvxcGI1ItVNw+YVTSCjpRewfnxFkprfY8bZW/2YwGMVX
-	 e00puLu3hi1GHdZiy3RF38JpYHk1Gi4SgEfl64FE=
+	b=rTBklw6YcVlGuO4oQWevO3XCup9jroJ8pJSA7FOrwsGgG97NZ7sLhLPlYUCJCXGLy
+	 W8g0TI26B+6JyPXGR1JqLUrRM/RT3g69+weN/ZIgSNpdZgSrJamcm5lr9NEtUl0LJ9
+	 XtxeYirnR5YuHmNzbdWsrTWvsFBKFVoi06und1iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbgEANeN (ORCPT
+        id S1730550AbgEANeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730531AbgEANeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:08 -0400
+        id S1729669AbgEANeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFE5A208DB;
-        Fri,  1 May 2020 13:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E413216FD;
+        Fri,  1 May 2020 13:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340048;
-        bh=9z4LahtgSkFQavSR0Kpqso99n4FDvhhsFpPIpUuuUlY=;
+        s=default; t=1588340050;
+        bh=cnL9i4QD9VSaNR2UsO45mXpYGTQ8qPnpMveOLtulI1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhUTTTi9AcJXEglbdG8b6vasgayZoJQgBRW4jXBL/vR2ttum+2xiLYb3DWNhmCaDA
-         Ekc4cHSkpF+Y7SziyGoWUeVNufn75YJYdfrCC24c2ozYqQXyngydtXPUNo6ErBEV9C
-         cH0ys6s4tEkUGd5Z8Y9WxU/Be6shImIqSARUDPaA=
+        b=nQbeoRN9ZoJiYIJ9wCouADrfG4pElq8F7UP5czWW7SFX7lcrUghCCh7IUOBjs6G3c
+         eNovKJg3BRe4fCRSrXBM08cYoeDO3Vg3Vr7v8aAaHlXnf/yqaiPUxJa5Osmxls6flk
+         WI7uAhWKjhj5YbPkIghf2FaaQ2Js5Dmh2SGX3y+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Clement Leger <cleger@kalray.eu>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>
-Subject: [PATCH 4.14 085/117] remoteproc: Fix wrong rvring index computation
-Date:   Fri,  1 May 2020 15:22:01 +0200
-Message-Id: <20200501131554.830677767@linuxfoundation.org>
+        stable@vger.kernel.org, Yi Huaijie <yihuaijie@huawei.com>,
+        Liu Jian <liujian56@huawei.com>,
+        Tokunori Ikegami <ikegami_to@yahoo.co.jp>,
+        Richard Weinberger <richard@nod.at>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 086/117] mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
+Date:   Fri,  1 May 2020 15:22:02 +0200
+Message-Id: <20200501131554.917192410@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,35 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clement Leger <cleger@kalray.eu>
+From: Liu Jian <liujian56@huawei.com>
 
-commit 00a0eec59ddbb1ce966b19097d8a8d2f777e726a upstream.
+commit d9b8a67b3b95a5c5aae6422b8113adc1c2485f2b upstream.
 
-Index of rvring is computed using pointer arithmetic. However, since
-rvring->rvdev->vring is the base of the vring array, computation
-of rvring idx should be reversed. It previously lead to writing at negative
-indices in the resource table.
+In function do_write_buffer(), in the for loop, there is a case
+chip_ready() returns 1 while chip_good() returns 0, so it never
+break the loop.
+To fix this, chip_good() is enough and it should timeout if it stay
+bad for a while.
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
-Link: https://lore.kernel.org/r/20191004073736.8327-1-cleger@kalray.eu
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Doug Anderson <dianders@chromium.org>
+Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
+Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/remoteproc_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/chips/cfi_cmdset_0002.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -288,7 +288,7 @@ void rproc_free_vring(struct rproc_vring
- {
- 	int size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
- 	struct rproc *rproc = rvring->rvdev->rproc;
--	int idx = rvring->rvdev->vring - rvring;
-+	int idx = rvring - rvring->rvdev->vring;
- 	struct fw_rsc_vdev *rsc;
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -1883,7 +1883,11 @@ static int __xipram do_write_buffer(stru
+ 			continue;
+ 		}
  
- 	dma_free_coherent(rproc->dev.parent, size, rvring->va, rvring->dma);
+-		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
++		/*
++		 * We check "time_after" and "!chip_good" before checking "chip_good" to avoid
++		 * the failure due to scheduling.
++		 */
++		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
+ 			break;
+ 
+ 		if (chip_good(map, adr, datum)) {
 
 
