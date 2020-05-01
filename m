@@ -2,69 +2,76 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ED5C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6ECC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC8D20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077352173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yZUzlud6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V1ckzZTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgEAPde (ORCPT
+        id S1729260AbgEAPew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:33:34 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36476 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgEAPde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=A9TtI7VDQObXMoinioifEuMMByRyNVr20UDZ67M6hYc=; b=yZUzlud6epMH0rEU0IRXDZbHVO
-        psLnZuQBQZRYMOUsS2KbfcdVWoGrWugIYjaFYEjLsjbpODuV9QdTvNEOkNIzb4lv2trCr3kMRXolH
-        Ay2Ilm9Ul1qrT1hcurbLJ0B0jQLMiuBK/PUGdz/DTnP0Z4AZO9vgQ+ulxcNu7OGhGDls=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jUXfL-000YGS-MU; Fri, 01 May 2020 17:33:27 +0200
-Date:   Fri, 1 May 2020 17:33:27 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 05/11] net: stmmac: dwmac-meson8b: Add the
- PRG_ETH0_ADJ_* bits
-Message-ID: <20200501153327.GE128733@lunn.ch>
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-6-martin.blumenstingl@googlemail.com>
+        Fri, 1 May 2020 11:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728742AbgEAPev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:34:51 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE1DC061A0C;
+        Fri,  1 May 2020 08:34:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mudZdXlZw0GqaEzMjWKagRGi8BzWBpEPB67/0nKPQCE=; b=V1ckzZTyhF0Af9GOzBVyjPKNdH
+        +EXNeBP0j1l2zsqxQ+FKSH3n4/Yje91cltc6Amc42qiW5sWBsTAK+0Trn5rjABL6hwDqVkUkZ10wl
+        yLlB0dDOxxaiWd6kdwT3hMEHxSQNeJSoiBVN7c+NlHEYrjtApDvis7Bfkdtyh5kQLh8q7FPEIx5pm
+        OrIMZ3FTohSfzir/oNk9z7+Zrwwn9uI0412k2RFxsgOCgSAB8pmoimyCpVCu2qwUt8YSzlxkbpwdR
+        BnzmtosWaG2uOEh5hPD5XE98kV/mk53VO0b5fSnuSN8Skyu2QIEZWRaktnwq0cfHGCaSCddLuk8wv
+        Hqhl00yw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUXgF-0003f0-Nf; Fri, 01 May 2020 15:34:23 +0000
+Date:   Fri, 1 May 2020 08:34:23 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
+        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
+        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
+        yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] blktrace: break out of blktrace setup on
+ concurrent calls
+Message-ID: <20200501153423.GA12469@infradead.org>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-6-mcgrof@kernel.org>
+ <20200429094937.GB2081185@kroah.com>
+ <20200501150626.GM11244@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429201644.1144546-6-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200501150626.GM11244@42.do-not-panic.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:16:38PM +0200, Martin Blumenstingl wrote:
-> The PRG_ETH0_ADJ_* are used for applying the RGMII RX delay. The public
-> datasheets only have very limited description for these registers, but
-> Jianxin Pan provided more detailed documentation from an (unnamed)
-> Amlogic engineer. Add the PRG_ETH0_ADJ_* bits along with the improved
-> description.
+On Fri, May 01, 2020 at 03:06:26PM +0000, Luis Chamberlain wrote:
+> > You have access to a block device here, please use dev_warn() instead
+> > here for that, that makes it obvious as to what device a "concurrent
+> > blktrace" was attempted for.
 > 
-> Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> The block device may be empty, one example is for scsi-generic, but I'll
+> use buts->name.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Is blktrace on /dev/sg something we intentionally support, or just by
+some accident of history?  Given all the pains it causes I'd be tempted
+to just remove the support and see if anyone screams.
