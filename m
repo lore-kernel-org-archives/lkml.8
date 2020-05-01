@@ -2,123 +2,195 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E914EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2F7C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2831208D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588311402;
-	bh=ITHgm7CVZM9N9q691dn/C1/xpfMwGz/lhM+iQqln9B4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fw+xQp1LcY1YiGqLGpSFbp0Pm7/lTZHtOde3lIvMlsfHZZeAJkSChoH88rMr0IGY4
-	 fp8Dp8R4E1Y1ekzhUlJwJcn9CDLcCyToj/lYL3NAlOLJSCYP5xV2hwfgUQUjx+7IEh
-	 ceWThykjn9OpaGeXy+7V44wUoz+/HIDBd9v062f8=
+	by mail.kernel.org (Postfix) with ESMTP id 961792073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="FGGULrFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgEAFgm (ORCPT
+        id S1728313AbgEAFgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:36:42 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:54653 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAFgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:36:41 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0415aK9l020039;
-        Fri, 1 May 2020 14:36:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0415aK9l020039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588311381;
-        bh=rvnQE9b4dBvxYjO6+FOTAfe9JaZnZPEijbvL8xA4ur0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SwMzvfc7seIj2p20Jm2pxYwiKU5BY6zxSNDYxYyuFmRqQn7xZBSpYJgRvQwn3WTMj
-         zJUtAztUhZes7rjIhfdhnmnDWlXQzq4dVv/2On1kMJOH+OFiEyt6f9AHORPfsia4iS
-         Vh8mdsHCjOK2qIjsKIOXVYXOlFzilN1CD9BCM/o2cNBN2NbcaY6ykyxjHRw8/xu3pM
-         G20/FD2kjQxJW+kaYZWjS1vWNBljPK1tTTeAt7PEPodgtjSnjHhXiDIvYx3esj13HB
-         Fwj/hhhL+p+UuSth3OEWfVUNv1X2Ai9bf5KoS80kOH8DtkBfjLlAaJAKXpo7jYxDJm
-         OB6x7mGw6/QyQ==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id b5so5747868vsb.1;
-        Thu, 30 Apr 2020 22:36:20 -0700 (PDT)
-X-Gm-Message-State: AGi0Pubk8aJspkE+rJ/embh7bC2Gf1Lp5w7eOjEIjF0Kz0VEdSv4qn+q
-        UhKLaEK0yqBc1m8g1KGvufuPQO/ekNI0s9x1aIg=
-X-Google-Smtp-Source: APiQypIX+UaDnFMep97CoNrJiHdvF2WLqZvYHRqdBtSlFk2z5Zo4PKfuCTRYLBL6eouslJJkIBeR2hajT9eyPcz2Ab4=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr2052547vsc.181.1588311379700;
- Thu, 30 Apr 2020 22:36:19 -0700 (PDT)
+        Fri, 1 May 2020 01:36:53 -0400
+Received: from mail-eopbgr750111.outbound.protection.outlook.com ([40.107.75.111]:56710
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726452AbgEAFgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 01:36:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hG/hT7PmczdRwcLtgvRXXqen5Bz94T/OTROtxVvAn6ltu1OE5mYxRllJVnvDTm+csmjEwvsuy9BLcorqUfyBvslAhfeNFdv3hf+RVsQXrBIlVhbGmwGrhu/vlt5u5YzwaxKhbtlPv0s+cr2phoiPbfeIMmrnxzxCYIdFNagw7qnicESd0OXqXWG4Hmu8MuhCmcFLEfemJNMWvq31/YzKYAwZMnt3iNIliL735KzP/J/tb/E6FCXrQB3ZuEV0C8f0nTgyupNwt3heaqPAs765+fGuaB3XQUN+ff5acQ26ZpfNrvZlHSfYoOBzKeF3Jdj/CUKosnb+ZoARdj5hWGKWFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Mjmo77Z+Nw7B2iJ/oIHJZTVqv9wgBYPRFZzIsVAa7o=;
+ b=PqYNyk+hYK08Pf1fz3Oo8CyVO4WRord6ZTSYvc7DHBXX1cNi4lBwofQbsdsGHaB1W9Sz1W9XXFcjwxS/MHTDgtfMciCohHPUM/4UcJR08hYS5Z1CDpQSFDvJ5WG0w7Y0yBrpA+87QF31vOI7PttAmc5n4A99qGo+2JMDf06LyeebtSGhEk7qTw7zbjcEfiS3yTvxjhQBucwGKYCMymTlMPOjEypLkVPPo7IR7fAq13D22qMwGeZm7UbrMCC1hc7PhKa+B6DG1lCuX8oEAPDZHc/fsaIjfRC4Xf9MQPyx2/YgZacBzN0AhFALgwsGrEubg3wOSAgGV5CVvIutf6dJoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Mjmo77Z+Nw7B2iJ/oIHJZTVqv9wgBYPRFZzIsVAa7o=;
+ b=FGGULrFKUAZtE/x3edz3aAFmauEFjZJfcpah2Ekv09g14UD6c3U3cwBo+ETBzRxssoFajv/mo/XUoYPdoe2crItyMfO1lWWcY3htUhcqA4IIPaTYTYyDfEYoZx6H0dRn2oD0I5KlV4GMP8GVoCHTH9Gr8U5Mhn3XOsQA0ZDhJbU=
+Authentication-Results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
+ by SN6PR2101MB0992.namprd21.prod.outlook.com (2603:10b6:805:4::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.4; Fri, 1 May
+ 2020 05:36:48 +0000
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55%5]) with mapi id 15.20.2979.009; Fri, 1 May 2020
+ 05:36:48 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Cc:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v2 1/2] PCI: hv: Fix the PCI HyperV probe failure path to release resource properly
+Date:   Fri,  1 May 2020 13:36:17 +0800
+Message-Id: <20200501053617.24689-1-weh@microsoft.com>
+X-Mailer: git-send-email 2.20.1
+Reply-To: weh@microsoft.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR0302CA0001.apcprd03.prod.outlook.com
+ (2603:1096:3:2::11) To SN6PR2101MB1021.namprd21.prod.outlook.com
+ (2603:10b6:805:8::12)
 MIME-Version: 1.0
-References: <20200425060640.823362-1-masahiroy@kernel.org>
-In-Reply-To: <20200425060640.823362-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 1 May 2020 14:35:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATvEWRnEA-ewRWGqGrqOzav-ONvEXw2Q7dVwDLQ+u9xww@mail.gmail.com>
-Message-ID: <CAK7LNATvEWRnEA-ewRWGqGrqOzav-ONvEXw2Q7dVwDLQ+u9xww@mail.gmail.com>
-Subject: Re: [PATCH] unicore32: do not evaluate compiler's library path when cleaning
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Guan Xuetao <gxt@pku.edu.cn>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.49) by SG2PR0302CA0001.apcprd03.prod.outlook.com (2603:1096:3:2::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14 via Frontend Transport; Fri, 1 May 2020 05:36:44 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [167.220.255.49]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 41303e84-1a0c-40ac-f901-08d7ed91a488
+X-MS-TrafficTypeDiagnostic: SN6PR2101MB0992:|SN6PR2101MB0992:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB0992396AC613825E4B87CFF6BBAB0@SN6PR2101MB0992.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MstNsRaM2QvQosXcqNE6L96RGsXVjr0Msn6PLt6+VdcQqKdvma23J9HSls7Ul0A8GwqcMX0phga9NBRGI3770LXEKFZnGWmQHukpeEsUAk5/We5f4idZBzpejZ/oyCPB+CVjn0AZm8EDUBW6lcN1GXtOlsh48VZWtEvr9Exqm/pptWJnUeIlX9x0IrUu4idUnnVbfRflExGoOEhoj/nXN6a2GfHwyyMEkMXxsSGKDGAl+W1ZIyt6PPgr0pK8IvHUt/RfuOkmtGPKMqEjdPHQ/SgF+xB7VHR7z5d9SzGBAl7+2R436NENQy07KNH7GjOLdpir/upajWbR7jseB7wSCvGdKbRjdWWfwQ+3YgnQhnT+FC1AbC0bx+5+CMMqWHOYdMw8aQ7FHDzU3Kt0212uxxvLDxcQF9xy6ey73clzRLXkNarBO+dqsu7qA0bu8Se305ErQYehef0odlkT1D7VZVbH6PlC/qQxuiC1Wvbb02o=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(16526019)(186003)(3450700001)(8676002)(8936002)(5660300002)(26005)(6486002)(7696005)(52116002)(107886003)(1076003)(82950400001)(86362001)(6666004)(316002)(36756003)(82960400001)(2906002)(10290500003)(2616005)(956004)(4326008)(66946007)(66476007)(66556008)(6636002)(478600001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: i8XMj6YXSLd3uLC114Le0gEAZQWCWBBn3biEYLDfJEtX/xRy1H9FXt9eWzqGK9/0bWlfC0gi53Wu8IKEy1XhB52VGpz7PC5is83vo1BZBzmtNtFrSLJsFnuV8h1vBc+32dgwdXE2VS+Emnia5+Z5L4I8OdNnEieqp8YOb/hwCRv2u2Bvpq29+sT9voPaNZ3txYx0p69VF1+y0rx/sZgtzUOMyg+XPW7wOp2eDtGYBECKK2MQ/eBdTHOid7uaeZcqZDJdw8XsDwbXXkc+ZhiqmUQwjs3BwYySuAQWWO9uxqcgBOcxv4EdpkgY4rcHGBHVAwQyFYSPuabAijWOR4tDoQLdLfIuN5xB5Ps3AvVoL5xUoHsavvr6YfZ6DvBKAZUgPe5sFy11pTe8ltihx+ZRtaJlNLH3VBeF45bkd0AOCgw9YpkWmE6f9Fu9v9ybh1PVShuXYNpqjUBM1Z92txi2PvB0oGfgCZbZ9qvoo6mGKwwBp51YlnI4B8DZvfh8wKIhUiHHY2X8Wq8ZVPi8sM2/SfahAPgYj7Plm4veqoVx5SqtI8s3rwjutZw3Ged5nN1w4Doiz2TZl7Ejt2fZq3Jp2p9Dz2wv3Ngj+xymcMXawCpgW9RRmdFIocwb9tFNlYZ0EAD7pjQ+0sc/YFZ4clvtQfOJ3QeNAugewNqhWL1VGIlaOWa3BVuIMwr3hF4zT9L7dsYqiSmBZpWMfWeRC47iFDy8gkJMiY2aIGaX5kFwaFmVylzaH+CH+7QKsDR8RJ7RSh7B143H78dUmE/IOtr/VQFx6rpevZ5pDMET35BsytE=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41303e84-1a0c-40ac-f901-08d7ed91a488
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 05:36:48.4904
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P/VndH6MyHZLpJMjVgUtIP4/Sxli9sNL3pJq1WZrSp1mCIVCtiqmBVAYC19vrPzkOFDVOJs/yyoYdaS/+j2baQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0992
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 3:07 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
-> -Wframe-larger-than="), 'make ARCH=unicore32 clean' emits error
-> messages as follows:
->
->   $ make ARCH=unicore32 clean
->   gcc: error: missing argument to '-Wframe-larger-than='
->   gcc: error: missing argument to '-Wframe-larger-than='
->
-> We do not care compiler flags when cleaning.
->
-> Use the '=' operator for lazy expansion because we do not use
-> GNU_LIBC_A or GNU_LIBGCC_A when cleaning.
->
-> Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
+Some error cases in hv_pci_probe() were not handled. Fix these error
+paths to release the resourses and clean up the state properly.
 
+Signed-off-by: Wei Hu <weh@microsoft.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-Applied to linux-kbuild.
-
-
->  arch/unicore32/lib/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/unicore32/lib/Makefile b/arch/unicore32/lib/Makefile
-> index 098981a01841..5af06645b8f0 100644
-> --- a/arch/unicore32/lib/Makefile
-> +++ b/arch/unicore32/lib/Makefile
-> @@ -10,12 +10,12 @@ lib-y       += strncpy_from_user.o strnlen_user.o
->  lib-y  += clear_user.o copy_page.o
->  lib-y  += copy_from_user.o copy_to_user.o
->
-> -GNU_LIBC_A             := $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
-> +GNU_LIBC_A             = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libc.a)
->  GNU_LIBC_A_OBJS                := memchr.o memcpy.o memmove.o memset.o
->  GNU_LIBC_A_OBJS                += strchr.o strrchr.o
->  GNU_LIBC_A_OBJS                += rawmemchr.o                  # needed by strrchr.o
->
-> -GNU_LIBGCC_A           := $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
-> +GNU_LIBGCC_A           = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libgcc.a)
->  GNU_LIBGCC_A_OBJS      := _ashldi3.o _ashrdi3.o _lshrdi3.o
->  GNU_LIBGCC_A_OBJS      += _divsi3.o _modsi3.o _ucmpdi2.o _umodsi3.o _udivsi3.o
->
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e15022ff63e3..e6fac0187722 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -480,6 +480,9 @@ struct hv_pcibus_device {
+ 
+ 	struct workqueue_struct *wq;
+ 
++	/* Highest slot of child device with resources allocated */
++	int wslot_res_allocated;
++
+ 	/* hypercall arg, must not cross page boundary */
+ 	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
+ 
+@@ -2847,7 +2850,7 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_packet *pkt;
+ 	size_t size_res;
+-	u32 wslot;
++	int wslot;
+ 	int ret;
+ 
+ 	size_res = (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2)
+@@ -2900,6 +2903,8 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
+ 				comp_pkt.completion_status);
+ 			break;
+ 		}
++
++		hbus->wslot_res_allocated = wslot;
+ 	}
+ 
+ 	kfree(pkt);
+@@ -2918,10 +2923,10 @@ static int hv_send_resources_released(struct hv_device *hdev)
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+ 	struct pci_child_message pkt;
+ 	struct hv_pci_dev *hpdev;
+-	u32 wslot;
++	int wslot;
+ 	int ret;
+ 
+-	for (wslot = 0; wslot < 256; wslot++) {
++	for (wslot = hbus->wslot_res_allocated; wslot >= 0; wslot--) {
+ 		hpdev = get_pcichild_wslot(hbus, wslot);
+ 		if (!hpdev)
+ 			continue;
+@@ -2936,8 +2941,12 @@ static int hv_send_resources_released(struct hv_device *hdev)
+ 				       VM_PKT_DATA_INBAND, 0);
+ 		if (ret)
+ 			return ret;
++
++		hbus->wslot_res_allocated = wslot - 1;
+ 	}
+ 
++	hbus->wslot_res_allocated = -1;
++
+ 	return 0;
+ }
+ 
+@@ -3037,6 +3046,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	if (!hbus)
+ 		return -ENOMEM;
+ 	hbus->state = hv_pcibus_init;
++	hbus->wslot_res_allocated = -1;
+ 
+ 	/*
+ 	 * The PCI bus "domain" is what is called "segment" in ACPI and other
+@@ -3136,7 +3146,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 
+ 	ret = hv_pci_allocate_bridge_windows(hbus);
+ 	if (ret)
+-		goto free_irq_domain;
++		goto exit_d0;
+ 
+ 	ret = hv_send_resources_allocated(hdev);
+ 	if (ret)
+@@ -3154,6 +3164,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 
+ free_windows:
+ 	hv_pci_free_bridge_windows(hbus);
++exit_d0:
++	(void) hv_pci_bus_exit(hdev, true);
+ free_irq_domain:
+ 	irq_domain_remove(hbus->irq_domain);
+ free_fwnode:
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
