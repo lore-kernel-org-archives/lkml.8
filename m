@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8113C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D837BC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84CAC24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B044124955
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339503;
-	bh=bFFNqUMVNmsd3/hfjpSCuoNAqXjfE+K6AZrMgJ6pcMs=;
+	s=default; t=1588339505;
+	bh=9RzJxy4Upa/s9eKqiIKMjlPo8dJwUDtbafz0tltfjg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7aW17rhlexlCIB+hTQfhkU9frfmElxVXnAKLz7H232vi7xkQxcSF7sYdEZ9NR5u3
-	 2i9q5KBBiaFzKl7+zz5PypvXZdsHU1S0OmqKtGWk0aS9byaBi1NFk4K/eLtDcqbt8q
-	 0/tpFDcTV14K/7Z+MJqWH/CCdg2hDsRnfBtnKK2k=
+	b=mbYmEB3C7StvsXeTxOV2/5HNKpNMb7Bsyhbew3Q7gIoNAxNhddJt5cypMEPhlDwVV
+	 FjvUkA8GOW6PP305BufxqQwYAEYxiONeYXA1pgtMXWzoi8oFPK+QLowJjEiuPQi9em
+	 EHaXx9Sx6+syEYTuuafz10xgCZ9MDjVXSfNmJDCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgEANZC (ORCPT
+        id S1728953AbgEANZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45644 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgEANZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:00 -0400
+        id S1728942AbgEANZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D20A2173E;
-        Fri,  1 May 2020 13:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8BB72166E;
+        Fri,  1 May 2020 13:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339500;
-        bh=bFFNqUMVNmsd3/hfjpSCuoNAqXjfE+K6AZrMgJ6pcMs=;
+        s=default; t=1588339502;
+        bh=9RzJxy4Upa/s9eKqiIKMjlPo8dJwUDtbafz0tltfjg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHbtyW/Eah/2TDtvqMQSJpP6tm3wyZUthygIrpyM4oRLmWFvPq6orxtLyvB80VWhN
-         uIJKbEuPlhVO2FKN5NbDeCX+W3YV05JZUxpo0o/vDnMQrnTTtl8KlB/sNVWj9zYJd0
-         Vsh1vqM5A5k08hJHT+lS/RImnLQ6ZAnjUYE0I3NQ=
+        b=EBLtRvvF5g7/SpW6IujDX+Z+fNhwkX7Ax55D1Rcv3guM+xWZeNWJd5aIKu4pUlsIC
+         9pCkfFsOcL6L7gldiHA83XUIJu3bOUzGC+FFRA34XXEf8PqUC0WlnpgYCaXlGBjUKm
+         juT0f1NxwgjN8Wnw4Lo6Knm51g7R6VkMXkmvF7HQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 04/70] net: ipv4: avoid unused variable warning for sysctl
-Date:   Fri,  1 May 2020 15:20:52 +0200
-Message-Id: <20200501131514.469024590@linuxfoundation.org>
+Subject: [PATCH 4.4 05/70] crypto: mxs-dcp - make symbols sha1_null_hash and sha256_null_hash static
+Date:   Fri,  1 May 2020 15:20:53 +0200
+Message-Id: <20200501131514.617601793@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -61,47 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 773daa3caf5d3f87fdb1ab43e9c1b367a38fa394 upstream.
+commit ce4e45842de3eb54b8dd6e081765d741f5b92b56 upstream.
 
-The newly introudced ip_min_valid_pmtu variable is only used when
-CONFIG_SYSCTL is set:
+Fixes the following sparse warnings:
 
-net/ipv4/route.c:135:12: error: 'ip_min_valid_pmtu' defined but not used [-Werror=unused-variable]
+drivers/crypto/mxs-dcp.c:39:15: warning:
+ symbol 'sha1_null_hash' was not declared. Should it be static?
+drivers/crypto/mxs-dcp.c:43:15: warning:
+ symbol 'sha256_null_hash' was not declared. Should it be static?
 
-This moves it to the other variables like it, to avoid the harmless
-warning.
-
-Fixes: c7272c2f1229 ("net: ipv4: don't allow setting net.ipv4.route.min_pmtu below 68")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c709eebaf5c5 ("crypto: mxs-dcp - Fix SHA null hashes and output length")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/route.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/crypto/mxs-dcp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -131,8 +131,6 @@ static int ip_rt_min_advmss __read_mostl
- 
- static int ip_rt_gc_timeout __read_mostly	= RT_GC_TIMEOUT;
- 
--static int ip_min_valid_pmtu __read_mostly	= IPV4_MIN_MTU;
--
- /*
-  *	Interface to generic destination cache.
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -37,11 +37,11 @@
+  * Null hashes to align with hw behavior on imx6sl and ull
+  * these are flipped for consistency with hw output
   */
-@@ -2705,6 +2703,7 @@ void ip_rt_multicast_event(struct in_dev
- static int ip_rt_gc_interval __read_mostly  = 60 * HZ;
- static int ip_rt_gc_min_interval __read_mostly	= HZ / 2;
- static int ip_rt_gc_elasticity __read_mostly	= 8;
-+static int ip_min_valid_pmtu __read_mostly	= IPV4_MIN_MTU;
+-const uint8_t sha1_null_hash[] =
++static const uint8_t sha1_null_hash[] =
+ 	"\x09\x07\xd8\xaf\x90\x18\x60\x95\xef\xbf"
+ 	"\x55\x32\x0d\x4b\x6b\x5e\xee\xa3\x39\xda";
  
- static int ipv4_sysctl_rtcache_flush(struct ctl_table *__ctl, int write,
- 					void __user *buffer,
+-const uint8_t sha256_null_hash[] =
++static const uint8_t sha256_null_hash[] =
+ 	"\x55\xb8\x52\x78\x1b\x99\x95\xa4"
+ 	"\x4c\x93\x9b\x64\xe4\x41\xae\x27"
+ 	"\x24\xb9\x6f\x99\xc8\xf4\xfb\x9a"
 
 
