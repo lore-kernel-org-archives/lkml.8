@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C7CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502DBC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A892166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD272166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P8q+677q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U/cR320k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgEARdn (ORCPT
+        id S1728856AbgEARdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60826 "EHLO
+        Fri, 1 May 2020 13:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729744AbgEARdl (ORCPT
+        by vger.kernel.org with ESMTP id S1730146AbgEARdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:33:41 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4540CC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:33:41 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id n205so13068102ybf.14
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:33:41 -0700 (PDT)
+        Fri, 1 May 2020 13:33:46 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4D2C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:33:45 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id 11so10839700qkh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:33:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=A2CqCWbomYGlREhGlvIy2Wyy+nj5upT0ckyyzFHG6Ps=;
-        b=P8q+677qDZBDApIFJ9xP1pt212opYiRpb/xiiLDNCxHCCSAm/ECxX2FcEfBmAEz92+
-         KwqI4sNV7Y4m10RNAf3XBQ72cq1hKJkQZ3tvfOuOfLdpl1d6IVG2B9rX400cl9T/aqqQ
-         /ccwEL22KoTTjuqoE7jCyNAHCOJYfOPBMACFmBimxfE2QrkTynC5YNEJys/CMBqR13wU
-         xlUGn/RwKLLb96Hba4b5HUIiegC1saaFyiR3SJWH5UyFSOapQUHauz4V90LTt0H3BGRx
-         sDziTukTaqYPM3w/qu00hcH+mnaImZQ2EllhsigKKwo9DFoDaRGG1z2S6RSElg5TjcGJ
-         /Zkw==
+        bh=GWDC0G8zdjTIbAQzpkGDW81gGtVpMcQxDDRhUTLRxU0=;
+        b=U/cR320k6vLaiczVFbMpcbz2AiJ7tUav2C3g/C7++Gr6hAYFgzw95LdTkG6/6H873/
+         EEPfBNkgfWeuXr2l6a03Ci/b5k2jmCF+ioS7rO7QFdyGsQk9xfMXiV8+R6BKXnrvoGjL
+         pP910yMK1PurVdmmUDe0IbkR7TVUs+AtjhHNdvn+JvhqK7jMoC21wlVr66fLpq4oKosi
+         YjVSPlKEevAjBtj7Ac1ZXHHB2VBLA3ymuynw21LrqBsSGFHXJi8ZQhx+DGLQhZ2Pmbde
+         eTWGna1vHXtQhwwcEOFkh7+4v0tiCxwTj6o0eaUc7MxnDkDm6szkVyleZW30D3fIMpVP
+         g6/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=A2CqCWbomYGlREhGlvIy2Wyy+nj5upT0ckyyzFHG6Ps=;
-        b=mUQbVtwifqfeyxdwdD09Y8wmrnC1SvpmzIqSdiMYE31VFzLQPCa4Ze0gP0sGzU/kcD
-         uV030q39jznWX7Ka9ESq0K9H8J9xRM4qjzbcqYG7D0n3Sb3eFoOMKE1gBhdqW5fvPQhL
-         dwDWwdJ4jcvGOThK3ngUDz21M3iJBg7/nTLJ3zrMISaE1huWmlzREOIq9E6a5ZhHwtIV
-         kRdFWUoX+YAKStAs8i8bx7bgg8IWosYEED8HHSlbADBnNbsYrUeZGsd/AQYdAufXjxXQ
-         ELknkpkQyIfYyO5mCakkWyiNCFViUPf9qeEuNMyKjgApFZMzY7zyE8ueTkjm4ZfI5rfC
-         3/zA==
-X-Gm-Message-State: AGi0PuayORWCVs+r7VIr/Ux49YjM4e+37xcHSx8QozjtsH3xo15lvLIS
-        oveFouM3CvSbx7GKs1UsPlbaT/lVglLo
-X-Google-Smtp-Source: APiQypKh29qS30PvWHpIAM1ezYOQXOtgPKDNde1s1oZKn3AJsbjOAbwyVENAx84VXlIP5Lu/UvDYf0ttLUBs
-X-Received: by 2002:a25:6604:: with SMTP id a4mr7467835ybc.409.1588354420337;
- Fri, 01 May 2020 10:33:40 -0700 (PDT)
-Date:   Fri,  1 May 2020 10:33:23 -0700
+        bh=GWDC0G8zdjTIbAQzpkGDW81gGtVpMcQxDDRhUTLRxU0=;
+        b=M9UUOOMNV//7nIVH3WxkznSLJq5jVDr/kNoMRLy4Ir8u1khzgjhqfSkg38e9cs7X0k
+         rnuMm9cwW0hXD3nkHlEosRhLs4d+LVBJeeQwBGVRYe2iEnQB8lUY6j5JWrcWD3AVpOCl
+         jXFQ6gOMu1Dz5J5Q3dI5UOA2BbQ0GRsezo/m4A7XP2W1mvpFraUJ3S0a9aIRPSi2EgUE
+         1g0RiiZVVEuTp/KrrtHn4QuipYQyiD/PGkgYnb3cuunXe4L1wgcQraSF+cU6IcSYP3If
+         DkklCjNCkI/rXJbhuR6mv3wxAI+0U9Udidq67cjsMvSvfPRBC6mmKrn/sKtE6BKyZPHx
+         aniQ==
+X-Gm-Message-State: AGi0PuY0Cs7/6u8zRPNFPzVP9qtd45gpCKZtWM58gjA88msvgwpiXK/k
+        QD/47/Gnr46wJ0vgyGoOX/phiNBndofs
+X-Google-Smtp-Source: APiQypJWI+W29LdVBGa/2+bauhGlIdoqAbs5375miNO9D8xIDvGf+DDMksMeeAmrwmmT3PolvRPDNvYPySVe
+X-Received: by 2002:ad4:5a06:: with SMTP id ei6mr5129839qvb.70.1588354424082;
+ Fri, 01 May 2020 10:33:44 -0700 (PDT)
+Date:   Fri,  1 May 2020 10:33:25 -0700
 In-Reply-To: <20200501173333.227162-1-irogers@google.com>
-Message-Id: <20200501173333.227162-3-irogers@google.com>
+Message-Id: <20200501173333.227162-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20200501173333.227162-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH v4 02/12] perf metrics: fix parse errors in cascade lake metrics
+Subject: [PATCH v4 04/12] perf expr: allow ',' to be an other token
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,56 +89,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove over escaping with \\.
-Remove extraneous if 1 if 0 == 1 else 0 else 0.
+Corrects parse errors in expr__find_other of expressions with min.
 
-Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/expr.y | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index 7fde0d2943cd..d25eebce34c9 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -328,31 +328,31 @@
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-+        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x35\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "DRAM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
-+        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "DRAM_Parallel_Reads"
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
--        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "MEM_PMM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Read_BW"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Write_BW"
-     },
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index cd17486c1c5d..54260094b947 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -80,7 +80,7 @@ other: ID
+ 	ctx->ids[ctx->num_ids++].name = $1;
+ }
+ |
+-MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
++MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+ 
+ 
+ all_expr: if_expr			{ *final_val = $1; }
 -- 
 2.26.2.526.g744177e7f7-goog
 
