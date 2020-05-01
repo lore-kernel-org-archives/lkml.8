@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94CDC4725C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7884CC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B631C2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5266C2071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7DrWM7P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uHgfP9cW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgEAHkO (ORCPT
+        id S1728393AbgEAHkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 03:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
+        Fri, 1 May 2020 03:40:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgEAHkL (ORCPT
+        with ESMTP id S1728383AbgEAHkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 03:40:11 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A574CC035495
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 00:40:10 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id y6so2028595pjc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 00:40:10 -0700 (PDT)
+        Fri, 1 May 2020 03:40:13 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA75DC035495
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 00:40:13 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o185so4250153pgo.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 00:40:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=68MF0mDAuQKXmyv4cM6UCkwuoNI6S07F0Y008UnFGIA=;
-        b=d7DrWM7Pg1LzeLY9hTHX3Vu6bzl5opKrCH2QlCTt6Jrx2Kf5gZhk+v6vTLU6f+ULz2
-         PTiPKHZARFJ6lrB3W3f9Ywxqo6KsLZQ/vb3d1Tw5dk54Ht4in1nQE5s/8lPxhYRC9x1a
-         D6edusf8njClbUpHSkZBebx7PTMR1SOSvH/r7MaZr6myG/iAla1rNjPRCW6OW+XNQIHt
-         OmRiF3MrZcOxTbSbEdUqOK7VqTixWGAKbO/x12boCmXJ9u9lBV04xM/B/YgAAbeVKoUN
-         UGDdZTWUZA10VOkmyzHXDnEI1gjDagbffVyU61Fe1nwJg3me3bJZ6FbrIMvJuUZ+dixf
-         BcUw==
+        bh=QD+OM/IPa9x7hJvHclwxEGNJ9gIn9LRrmuc2cMqM+jk=;
+        b=uHgfP9cWbKjgsICCn22DXY5E8YVkK4lR5mSH38oijVyLq+WDsYAckO411+fCRx4fSG
+         92T98KiXWYh/Veuu9k4mILrjo6zo4M8S4hPIn1pjXH4afDJRgMkF3HIHomYHPtbJ2CIT
+         oHO3AozrS69KPbj/CTUAtS0sIYMkdKaiEqIvnSOR5NCG1ZOjYGvWsRTbWlGF2X+swrpU
+         pF1SZxSAvCiYlvGEZHBmQuMPgM/YMkwvPoLMwh2SWAo7qUkc5ifkQoPpgJfJmVVL5VBG
+         jEdBB2/STxwoSAR6Dj/ZZDJ0PZXyVaXxiFVJoKoWWEDCYQLst2EN08W0fE9yARqfug+f
+         NI7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=68MF0mDAuQKXmyv4cM6UCkwuoNI6S07F0Y008UnFGIA=;
-        b=mXjVBljaWoaHjEZsF9OW0ithNNs5qvOhiS+zZ6LZYHAxyvSunJdKuzyjzuNpa4uy+N
-         9sBWF8dRvXylG6BQ69m4Y8kEiqvNXyUWo2wyuhMtkGKD8JXJgISCOhT5Iwy6M8aeD3bj
-         JXWnIj/fpoJjoDEbHjc/qCLvwamHPIBdWwqElu35mtJcxXq8mvnDATthlV4sbInhoLpq
-         b6yTDjBWyQDet+zF+6OS4r+ePLRbLBFZCbwqdWKr9IxY5G4Oi8zKIN0VJ4TQg7GH6pVP
-         N62xM1PL0Hi6F6sVvXP7hZE5roRYYLlTTrBT2AJjVC0SJH/qMiXbrcHTvAYl6To6/hZp
-         6Vhg==
-X-Gm-Message-State: AGi0PubcM+4oji1OyTG8VAf7hksn9uj8+a40Mwoof0AGBZ0R6u/Wql/u
-        j7pmOOUz+oa3eJN3v73w6QTq6LLfawo=
-X-Google-Smtp-Source: APiQypJiEJ4kQAfPAoSZcmNCfZQu1/ZpRWQas3IjFCF2RyIzmyY+jFIehrdb4AljNbKemje+OfRRHA==
-X-Received: by 2002:a17:90a:3ace:: with SMTP id b72mr3264947pjc.48.1588318809841;
-        Fri, 01 May 2020 00:40:09 -0700 (PDT)
+        bh=QD+OM/IPa9x7hJvHclwxEGNJ9gIn9LRrmuc2cMqM+jk=;
+        b=et8tJTQswvwQaxnzrZCDlsTr/FN/PZjhEkBn5w+pwVYrFKD8tqO3te5Z012xlwhxhQ
+         sIxcitKRtdlX2BtFshmjIoYkFzKClkHlc0fJXD3oSHqW3gRyL2+wXfqkSngJ92+H3mbi
+         qGUKxh2RWp0CEEfU9nBplrhvAUgWPROc1FPswf2YO976f81jn/9itf0G5Y3yFAnv3ahn
+         seIbBRcZJSXHS89Jx1JrpvQ8P2QhqynlN0sDrS4vBdE4XHl35qF87YKCrSifWU4d01+5
+         gNkYZ2VZUV+0YU56B43KAH6dhCWy6agv2qc5TLhmo+dktWDUBHJtS6kfavy0Lndcgr3P
+         80Ig==
+X-Gm-Message-State: AGi0PublD/IM3oZaxfM5nfS4Em7XgAlQ5aP2f76dGo97xZxmfHWQHgFA
+        UbpQhnkQhGr8jW2bIub3L/9DZY/9cbY=
+X-Google-Smtp-Source: APiQypIe0OyaYrak6ULk6jy1juCWPHfm+627JYy+N9jmFW5Ppc7wa4zxgW6OTSiIq3XBtubeLxsMWQ==
+X-Received: by 2002:a62:e113:: with SMTP id q19mr2839382pfh.107.1588318813249;
+        Fri, 01 May 2020 00:40:13 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id w12sm1557841pfq.133.2020.05.01.00.40.06
+        by smtp.gmail.com with ESMTPSA id w12sm1557841pfq.133.2020.05.01.00.40.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 00:40:09 -0700 (PDT)
+        Fri, 01 May 2020 00:40:12 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -79,9 +79,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-mm@kvack.org
-Subject: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA regions tagged with "linux,cma-heap"
-Date:   Fri,  1 May 2020 07:39:48 +0000
-Message-Id: <20200501073949.120396-4-john.stultz@linaro.org>
+Subject: [RFC][PATCH 4/4] example: dts: hi3660-hikey960: Add dts entries to test cma heap binding
+Date:   Fri,  1 May 2020 07:39:49 +0000
+Message-Id: <20200501073949.120396-5-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200501073949.120396-1-john.stultz@linaro.org>
 References: <20200501073949.120396-1-john.stultz@linaro.org>
@@ -90,9 +90,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reworks the cma_heap initialization so that
-we expose both the default CMA region and any CMA regions
-tagged with "linux,cma-heap" in the device-tree.
+Adds example test entry to create and expose a dummy "camera"
+cma region via the dmabuf heaps interface
+
+This isn't a patch I'm submitting to merge, but just an example
+of how this functionality can be used, which I've used for
+testing.
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Sumit Semwal <sumit.semwal@linaro.org>
@@ -115,46 +118,27 @@ Cc: dri-devel@lists.freedesktop.org
 Cc: linux-mm@kvack.org
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-index 626cf7fd033a..dd154e2db101 100644
---- a/drivers/dma-buf/heaps/cma_heap.c
-+++ b/drivers/dma-buf/heaps/cma_heap.c
-@@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
- {
- 	struct cma_heap *cma_heap;
- 	struct dma_heap_export_info exp_info;
-+	struct cma *default_cma = dev_get_cma_area(NULL);
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index c0a6aad9593f..5eef1a76d51a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -81,6 +81,13 @@
+ 			reusable;
+ 			linux,cma-default;
+ 		};
 +
-+	/* We only add the default heap and explicitly tagged heaps */
-+	if (cma != default_cma && !cma_dma_heap_enabled(cma))
-+		return 0;
++		cma_camera: cma-camera {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x24C00000 0x0 0x4000000>;
++			reusable;
++			linux,cma-heap;
++		};
+ 	};
  
- 	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
- 	if (!cma_heap)
-@@ -162,16 +167,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
- 	return 0;
- }
- 
--static int add_default_cma_heap(void)
-+static int cma_heaps_init(void)
- {
--	struct cma *default_cma = dev_get_cma_area(NULL);
--	int ret = 0;
--
--	if (default_cma)
--		ret = __add_cma_heap(default_cma, NULL);
--
--	return ret;
-+	cma_for_each_area(__add_cma_heap, NULL);
-+	return 0;
- }
--module_init(add_default_cma_heap);
-+module_init(cma_heaps_init);
- MODULE_DESCRIPTION("DMA-BUF CMA Heap");
- MODULE_LICENSE("GPL v2");
+ 	reboot-mode-syscon@32100000 {
 -- 
 2.17.1
 
