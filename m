@@ -2,61 +2,63 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CCCC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F0BC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 367422073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45BD2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="CarECDVW"
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="Lbm9BFkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgEACCV (ORCPT
+        id S1728121AbgEACCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        Thu, 30 Apr 2020 22:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727889AbgEACCU (ORCPT
+        by vger.kernel.org with ESMTP id S1727977AbgEACCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:02:20 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D4A3C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:02:20 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id r14so971326pfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:02:20 -0700 (PDT)
+        Thu, 30 Apr 2020 22:02:21 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8354DC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:02:21 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s18so3911496pgl.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id;
-        bh=xA0+ztltjFSmlxto0oGrs/28x8dQq3lRcLWb+lb2nnI=;
-        b=CarECDVW+6KLvf/YyEzSNITvnJPj0ybvXe2NxRdC1e07BJ5Wzhrm9MnEpFVjJZX7kE
-         AwSajPjRdMdF0h8zUllcxmIy5i2ceyZbmkevlmDHXGOxVjdaZJuDGWRh8r7k9Ok+Enbz
-         mGPfKsaD8R4c4uSPSv6J5/mxtLCMQpUX6zVHA=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tvELNqxAjbVBxzf7Gp8Es5Dk4+hyrWQ5hnmsAjacAVU=;
+        b=Lbm9BFkDtR3zwyIVc/ySdZUYZHeNhbKhjemSORm2CSkVwtDvAaLi2nmQLu4HdG8HAP
+         xyTzFSKkUYaWO+GOCMXPAaw/qbYZ5JpiK306mVqmmsll4hg+J+DUUV0v5f7cOdinzuNj
+         0HERqZdp+4w/0uX8Fl/ETX9miRiHoTqHVJeZE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xA0+ztltjFSmlxto0oGrs/28x8dQq3lRcLWb+lb2nnI=;
-        b=l9+qog/rNSURHmDBeNpzYJJAMGte7wP0fZx1pPWNIcHkh4r1fmhqOeUGzmqbjPP0Xu
-         3K4/vFPFXwBJgm5xVcooNWdiHjC9j4lpPHkO6Lc1KJuyjNFnFBFrz7U9+rO1FnSFoIBE
-         mUDAk9mk3/SHzLI5KoeDFwxxc2AJItV8N4d/jG6qZE8HfT6WAxW6CQYDP0WQLgEFAhFI
-         VOofODMksRoQlhTkwn/gELWheSNIJZ6azl11wHcaELi7Cr1/SOabRBI6tVwWNGiawATU
-         Emr9r0ZLrPxp10Yw491kSc8uKN9i1c+LqDEiF24RQuHRQFIuFx57d507ErDHq9tTRRKx
-         5fMA==
-X-Gm-Message-State: AGi0PuY2MJwKw+Fha5fyWvie+8M+Q0kx9KTmrtxqdqil8jM6uyUOPYRK
-        4u8S4VULT1q6Z6U/KdbbTuPpIg==
-X-Google-Smtp-Source: APiQypJhA82+WhNBkkgzPwnXofGL1GnfNooa4CgxEhzB9JSc3x78tYjLRLZVYOiIolegraWmwYU2Qg==
-X-Received: by 2002:a65:4645:: with SMTP id k5mr1943443pgr.115.1588298539843;
-        Thu, 30 Apr 2020 19:02:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tvELNqxAjbVBxzf7Gp8Es5Dk4+hyrWQ5hnmsAjacAVU=;
+        b=FuYYdcUuJ1jbXc2jaO3NWZr+8K4+pZqav4CJED6g4MimLeFvXoJ4dZ98fW9P4IFF/W
+         1oC3iMy9l9qqPofbFIK5xIYBGmboK2/3YP/53D6pYcamcIfOn/P3g6ctFEUuSSS4zBq5
+         eE6lPN7pzg86Y4OX+AlLGAkUs8p9c06FUyU4Gd4n/kKbmCH79VZ9qrMf372rasLLM8X9
+         3stf5LNC1951ChORXgkWPRoMlT3fIXwFAImxG/8VglmGQpykrR7pm4m3Og7JTpgvbe5c
+         jNcB82DpyOpcMWD1Q59R7svYkR/a5odMw2nJS6w6wPhKFqvazpEGscyKttYv1sFUFJhy
+         yGRw==
+X-Gm-Message-State: AGi0PubaXhGFZzaS+0XAL4NPCmHhkMg9sIajpVqBkpaVhh4t1tKW+LVi
+        bn1EMPg0LniUkZXOANqSKTUEqQ==
+X-Google-Smtp-Source: APiQypJQTsqMdFZLcemxJPj2JqzPwYcmFse4CYahCcdsJKdasZVpwItAmZsTocEKxZjdGIBnXdUizg==
+X-Received: by 2002:a63:6d83:: with SMTP id i125mr1999548pgc.365.1588298540989;
+        Thu, 30 Apr 2020 19:02:20 -0700 (PDT)
 Received: from localhost.localdomain (c-73-53-94-119.hsd1.wa.comcast.net. [73.53.94.119])
-        by smtp.gmail.com with ESMTPSA id fy21sm802915pjb.25.2020.04.30.19.02.18
+        by smtp.gmail.com with ESMTPSA id fy21sm802915pjb.25.2020.04.30.19.02.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 19:02:19 -0700 (PDT)
+        Thu, 30 Apr 2020 19:02:20 -0700 (PDT)
 From:   Luke Nelson <lukenels@cs.washington.edu>
 X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
 To:     bpf@vger.kernel.org
-Cc:     Luke Nelson <luke.r.nels@gmail.com>,
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
         Shubham Bansal <illusionist.neo@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -67,31 +69,72 @@ Cc:     Luke Nelson <luke.r.nels@gmail.com>,
         John Fastabend <john.fastabend@gmail.com>,
         KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf 0/2] bpf, arm: Small JIT optimizations
-Date:   Thu, 30 Apr 2020 19:02:08 -0700
-Message-Id: <20200501020210.32294-1-luke.r.nels@gmail.com>
+Subject: [PATCH bpf-next 1/2] bpf, arm: Optimize ALU64 ARSH X using orrpl conditional instruction
+Date:   Thu, 30 Apr 2020 19:02:09 -0700
+Message-Id: <20200501020210.32294-2-luke.r.nels@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200501020210.32294-1-luke.r.nels@gmail.com>
+References: <20200501020210.32294-1-luke.r.nels@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Daniel suggested to us, we ran our formal verification tool, Serval,
-over the arm JIT. The bugs we found have been patched and applied to the
-bpf tree [1, 2]. This patch series introduces two small optimizations
-that simplify the JIT and use fewer instructions.
+This patch optimizes the code generated by emit_a32_arsh_r64, which
+handles the BPF_ALU64 BPF_ARSH BPF_X instruction.
 
-[1] https://lore.kernel.org/bpf/20200408181229.10909-1-luke.r.nels@gmail.com/
-[2] https://lore.kernel.org/bpf/20200409221752.28448-1-luke.r.nels@gmail.com/
+The original code uses a conditional B followed by an unconditional ORR.
+The optimization saves one instruction by removing the B instruction
+and using a conditional ORR (with an inverted condition).
 
-Luke Nelson (2):
-  bpf, arm: Optimize emit_a32_arsh_r64 using conditional instruction
-  bpf, arm: Optimize ALU ARSH K using asr immediate instruction
+Example of the code generated for BPF_ALU64_REG(BPF_ARSH, BPF_REG_0,
+BPF_REG_1), before optimization:
 
- arch/arm/net/bpf_jit_32.c | 14 +++++++++-----
- arch/arm/net/bpf_jit_32.h |  2 ++
- 2 files changed, 11 insertions(+), 5 deletions(-)
+  34:  rsb    ip, r2, #32
+  38:  subs   r9, r2, #32
+  3c:  lsr    lr, r0, r2
+  40:  orr    lr, lr, r1, lsl ip
+  44:  bmi    0x4c
+  48:  orr    lr, lr, r1, asr r9
+  4c:  asr    ip, r1, r2
+  50:  mov    r0, lr
+  54:  mov    r1, ip
 
+and after optimization:
+
+  34:  rsb    ip, r2, #32
+  38:  subs   r9, r2, #32
+  3c:  lsr    lr, r0, r2
+  40:  orr    lr, lr, r1, lsl ip
+  44:  orrpl  lr, lr, r1, asr r9
+  48:  asr    ip, r1, r2
+  4c:  mov    r0, lr
+  50:  mov    r1, ip
+
+Tested on QEMU using lib/test_bpf and test_verifier.
+
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+---
+ arch/arm/net/bpf_jit_32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
+index bf85d6db4931..48b89211ee5c 100644
+--- a/arch/arm/net/bpf_jit_32.c
++++ b/arch/arm/net/bpf_jit_32.c
+@@ -860,8 +860,8 @@ static inline void emit_a32_arsh_r64(const s8 dst[], const s8 src[],
+ 	emit(ARM_SUBS_I(tmp2[0], rt, 32), ctx);
+ 	emit(ARM_MOV_SR(ARM_LR, rd[1], SRTYPE_LSR, rt), ctx);
+ 	emit(ARM_ORR_SR(ARM_LR, ARM_LR, rd[0], SRTYPE_ASL, ARM_IP), ctx);
+-	_emit(ARM_COND_MI, ARM_B(0), ctx);
+-	emit(ARM_ORR_SR(ARM_LR, ARM_LR, rd[0], SRTYPE_ASR, tmp2[0]), ctx);
++	_emit(ARM_COND_PL,
++	      ARM_ORR_SR(ARM_LR, ARM_LR, rd[0], SRTYPE_ASR, tmp2[0]), ctx);
+ 	emit(ARM_MOV_SR(ARM_IP, rd[0], SRTYPE_ASR, rt), ctx);
+ 
+ 	arm_bpf_put_reg32(dst_lo, ARM_LR, ctx);
 -- 
 2.17.1
 
