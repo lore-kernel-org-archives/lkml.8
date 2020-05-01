@@ -2,107 +2,125 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B40EC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC5C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48ABE2137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="D4Lm19Pg"
+	by mail.kernel.org (Postfix) with ESMTP id E09F620857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588301731;
+	bh=EJ8aoDFzKNv9sq3gvBCC3pOSDsXlq+pz29uU4+G/KDc=;
+	h=Date:From:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:List-ID:From;
+	b=j9Y2K17FaUSCK/apSnkTUZCpqTzcy9FWphUAbRTsYmCpjib1aShtSbXhpFD+ALcIB
+	 inMvej7+ryPTQ+PgbdNIBS1WV77WUNqqgJ0Hjmf9dGyxa1d7vEjJ9DvspZnlxCMVGO
+	 fGUvPRks3idfDGtnn2QXdTGRjF/OClc0kOW+/OKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgEACzF (ORCPT
+        id S1728195AbgEACzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:55:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53927 "EHLO ozlabs.org"
+        Thu, 30 Apr 2020 22:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbgEACzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:55:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728173AbgEACza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 22:55:30 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CxgV5qpBz9sRf;
-        Fri,  1 May 2020 12:55:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588301703;
-        bh=+lffFgFW+TaOYl84oLwXX7B2gLQwT/P1CrdGNW3J4qk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=D4Lm19PgPaKtoY4u2S+DL5o+zjSeo2+ynoATsogf7tHy62F0CWwsmQxztcE9JCuyL
-         ffcUX2l1OBBrFK4FbxpTAtW3q5UJqoZgezCm071/NLHL+wE/WGsrGdc8ueGUYIYYe6
-         l/D/fb259+9ifz9MeF3Gv8qBGHMdO2N3t24HeBByZPXQ3Fnw8UNDEV0myzJvIJP5Ut
-         5bPbNXSwxtNQTLYq87Bv1h/MLE5QqYri1JvzXzMAyTaSlm/J1hSa+L7UGajZisLnBk
-         4gKEupxLOqjySUFdmpEPEwZjk9hheM1LQzSDwqcmYNF4bj+fThwjOo6qsEM7o5UwUM
-         DTIS9nXNJusdw==
-Date:   Fri, 1 May 2020 12:55:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ido Schimmel <idosch@mellanox.com>
-Subject: linux-next: manual merge of the net-next tree with the kspp-gustavo
- tree
-Message-ID: <20200501125500.3e7dc414@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TXzOp9gGRcOd.8t2hY9L0.0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id D447A20836;
+        Fri,  1 May 2020 02:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588301730;
+        bh=EJ8aoDFzKNv9sq3gvBCC3pOSDsXlq+pz29uU4+G/KDc=;
+        h=Date:From:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=w9VHWVn4hFghdtPcOtle16pjfFBGQz0aNJJwJvLbBmnpCsGHZAfgojhCL023+mbUb
+         7vBv2ATiGIktdujvXRzISI0B5NJ7lQMaJ1UZE4NI9+WQjeShlQR7j5/4Kkb9U5RmmG
+         +Bvwn9mtOGXnA89aE/j3JiyJRne5ZQTe3XHEa4X4=
+Date:   Fri, 01 May 2020 02:55:29 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Heiher <r@hev.cc>
+Cc:     Jason Baron <jbaron@akamai.com>
+Cc:     stable@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] epoll: atomically remove wait entry on wake up
+In-Reply-To: <20200430130326.1368509-2-rpenyaev@suse.de>
+References: <20200430130326.1368509-2-rpenyaev@suse.de>
+Message-Id: <20200501025529.D447A20836@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TXzOp9gGRcOd.8t2hY9L0.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-Hi all,
+[This is an automated email]
 
-Today's linux-next merge of the net-next tree got a conflict in:
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
-  drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
+The bot has tested the following trees: v5.6.7, v5.4.35, v4.19.118, v4.14.177, v4.9.220, v4.4.220.
 
-between commit:
+v5.6.7: Build OK!
+v5.4.35: Build OK!
+v4.19.118: Failed to apply! Possible dependencies:
+    1b53734bd0b2 ("epoll: fix possible lost wakeup on epoll_ctl() path")
+    35cff1a6e023 ("fs/epoll: rename check_events label to send_events")
+    86c051793b4c ("fs/epoll: deal with wait_queue only once")
+    abc610e01c66 ("fs/epoll: avoid barrier after an epoll_wait(2) timeout")
+    c5a282e9635e ("fs/epoll: reduce the scope of wq lock in epoll_wait()")
 
-  3ba225b506a2 ("treewide: Replace zero-length array with flexible-array me=
-mber")
+v4.14.177: Failed to apply! Possible dependencies:
+    002b343669c4 ("fs/epoll: loosen irq safety in ep_scan_ready_list()")
+    35cff1a6e023 ("fs/epoll: rename check_events label to send_events")
+    37b5e5212a44 ("epoll: remove ep_call_nested() from ep_eventpoll_poll()")
+    679abf381a18 ("fs/eventpoll.c: loosen irq safety in ep_poll()")
+    69112736e2f0 ("eventpoll: no need to mask the result of epi_item_poll() again")
+    86c051793b4c ("fs/epoll: deal with wait_queue only once")
+    bec1a502d34d ("eventpoll: constify struct epoll_event pointers")
+    c5a282e9635e ("fs/epoll: reduce the scope of wq lock in epoll_wait()")
+    d85e2aa2e34d ("annotate ep_scan_ready_list()")
+    ee8ef0a4b167 ("epoll: use the waitqueue lock to protect ep->wq")
 
-from the kspp-gustavo tree and commit:
+v4.9.220: Failed to apply! Possible dependencies:
+    86c051793b4c ("fs/epoll: deal with wait_queue only once")
+    89d947561077 ("sd: Implement support for ZBC devices")
+    ac6424b981bc ("sched/wait: Rename wait_queue_t => wait_queue_entry_t")
+    bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
+    cf43e6be865a ("block: add scalable completion tracking of requests")
+    e806402130c9 ("block: split out request-only flags into a new namespace")
 
-  4780dbdbd957 ("mlxsw: spectrum_span: Replace zero-length array with flexi=
-ble-array member")
+v4.4.220: Failed to apply! Possible dependencies:
+    27489a3c827b ("blk-mq: turn hctx->run_work into a regular work struct")
+    511cbce2ff8b ("irq_poll: make blk-iopoll available outside the block layer")
+    86c051793b4c ("fs/epoll: deal with wait_queue only once")
+    8d354f133e86 ("blk-mq: improve layout of blk_mq_hw_ctx")
+    9467f85960a3 ("blk-mq/cpu-notif: Convert to new hotplug state machine")
+    ac6424b981bc ("sched/wait: Rename wait_queue_t => wait_queue_entry_t")
+    bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
+    cf43e6be865a ("block: add scalable completion tracking of requests")
+    d9d8c5c489f4 ("block: convert is_sync helpers to use REQ_OPs.")
+    da8b44d5a9f8 ("timer: convert timer_slack_ns from unsigned long to u64")
+    e57690fe009b ("blk-mq: don't overwrite rq->mq_ctx")
+    e6a40b096e28 ("block: prepare request creation/destruction code to use REQ_OPs")
+    e806402130c9 ("block: split out request-only flags into a new namespace")
 
-from the net-next tree (and further changes).
 
-I fixed it up (they had the same effect on this file, so I used the
-latter) and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be mentioned
-to your upstream maintainer when your tree is submitted for merging.
-You may also want to consider cooperating with the maintainer of the
-conflicting tree to minimise any particularly complex conflicts.
+NOTE: The patch will not be queued to stable trees until it is upstream.
 
---=20
-Cheers,
-Stephen Rothwell
+How should we proceed with this patch?
 
---Sig_/TXzOp9gGRcOd.8t2hY9L0.0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6rj4QACgkQAVBC80lX
-0GynVQf/QRY19eOQIL5CFSxZ98lWsr73QqnN1KjYkedqIqtPbSxwP4L4BHBBv8uo
-0Wd1WjABwaH5JtrWsChMH7kRQP7Dyavz24FCogo2a0U2Pc7mGsSb2SKxiGsvybLp
-qGEUGxvNc3f056ifCD3CKnGvmdni6GCWsbkRz+mxdZ1YKtPDKG0BT+ImfFtNQ2ew
-zr3jk8UU1hGNt7QFDCMrirRo6v3L+z/z5C8SaxdRS82Vnqu+Jphxf84jmKnlttd1
-7Ph0Fm65Xj7bAzhLYKpWTMBEF8rfjQH5hILbqi/ycKQilKJaQxEPjz5sU/S8uITH
-YeQRBVs9hUGIeNQNQdkINYaG2ttTZw==
-=GP9u
------END PGP SIGNATURE-----
-
---Sig_/TXzOp9gGRcOd.8t2hY9L0.0--
+-- 
+Thanks
+Sasha
