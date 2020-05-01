@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F469C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B23AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D39216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649E9206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgEAPX7 (ORCPT
+        id S1729678AbgEAPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40422 "EHLO
+        Fri, 1 May 2020 11:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbgEAPX4 (ORCPT
+        with ESMTP id S1729413AbgEAPYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:23:56 -0400
+        Fri, 1 May 2020 11:24:00 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B028C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 08:23:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9233C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 08:24:00 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id D52482A3118
+        with ESMTPSA id 15E772A3116
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org,
         Collabora Kernel ML <kernel@collabora.com>
@@ -39,9 +39,9 @@ Cc:     matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
         dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH v4 5/7] drm/mediatek: mtk_dsi: Use simple encoder
-Date:   Fri,  1 May 2020 17:23:33 +0200
-Message-Id: <20200501152335.1805790-6-enric.balletbo@collabora.com>
+Subject: [PATCH v4 7/7] drm/mediatek: mtk_dsi: Create connector for bridges
+Date:   Fri,  1 May 2020 17:23:35 +0200
+Message-Id: <20200501152335.1805790-8-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501152335.1805790-1-enric.balletbo@collabora.com>
 References: <20200501152335.1805790-1-enric.balletbo@collabora.com>
@@ -52,61 +52,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mtk_dsi driver uses an empty implementation for its encoder. Replace
-the code with the generic simple encoder.
+Use the drm_bridge_connector helper to create a connector for pipelines
+that use drm_bridge. This allows splitting connector operations across
+multiple bridges when necessary, instead of having the last bridge in
+the chain creating the connector and handling all connector operations
+internally.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 ---
 
 Changes in v4: None
-Changes in v3: None
+Changes in v3:
+- Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
+
 Changes in v2: None
 
- drivers/gpu/drm/mediatek/mtk_dsi.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 38cbdcb15fff..e02d16a086ac 100644
+index 4f3bd095c1ee..471fcafdf348 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -22,6 +22,7 @@
+@@ -17,6 +17,7 @@
+ 
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_bridge.h>
++#include <drm/drm_bridge_connector.h>
+ #include <drm/drm_mipi_dsi.h>
+ #include <drm/drm_of.h>
  #include <drm/drm_panel.h>
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/drm_simple_kms_helper.h>
+@@ -183,6 +184,7 @@ struct mtk_dsi {
+ 	struct drm_encoder encoder;
+ 	struct drm_bridge bridge;
+ 	struct drm_bridge *next_bridge;
++	struct drm_connector *connector;
+ 	struct phy *phy;
  
- #include "mtk_drm_ddp_comp.h"
+ 	void __iomem *regs;
+@@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
+ 	 */
+ 	dsi->encoder.possible_crtcs = 1;
  
-@@ -788,15 +789,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
- 	dsi->enabled = false;
- }
+-	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
++	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
++				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+ 	if (ret)
+ 		goto err_cleanup_encoder;
  
--static void mtk_dsi_encoder_destroy(struct drm_encoder *encoder)
--{
--	drm_encoder_cleanup(encoder);
--}
--
--static const struct drm_encoder_funcs mtk_dsi_encoder_funcs = {
--	.destroy = mtk_dsi_encoder_destroy,
--};
--
- static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi);
- static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
++	dsi->connector = drm_bridge_connector_init(drm, &dsi->encoder);
++	if (IS_ERR(dsi->connector)) {
++		DRM_ERROR("Unable to create bridge connector\n");
++		ret = PTR_ERR(dsi->connector);
++		goto err_cleanup_encoder;
++	}
++	drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
++
+ 	return 0;
  
-@@ -1126,8 +1118,8 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
- {
- 	int ret;
- 
--	ret = drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_funcs,
--			       DRM_MODE_ENCODER_DSI, NULL);
-+	ret = drm_simple_encoder_init(drm, &dsi->encoder,
-+				      DRM_MODE_ENCODER_DSI);
- 	if (ret) {
- 		DRM_ERROR("Failed to encoder init to drm\n");
- 		return ret;
+ err_cleanup_encoder:
 -- 
 2.26.2
 
