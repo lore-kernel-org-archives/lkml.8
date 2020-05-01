@@ -2,90 +2,102 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47E4C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DF5C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF65216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340401;
-	bh=vTyuW465oi1ldPe5fL/nkyV1YZRgw8uEFV8K5VJecbw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PxQNcpfDaEyKOpKy9Xf6HVYu2r9EGuNW/rrsw7vUAu6gFbASRA9FPtE8dxR5Yy2SV
-	 BpGanBeYgjxyltdT5ht9bvO3aFomQQ/CWyKh5UFYIRUEmRKAFs703f/j5eeBBXT+FD
-	 KFocb64PQ7tCmz+Ht1oid+gm5Sfs4kuUoJcCA2DU=
+	by mail.kernel.org (Postfix) with ESMTP id 7FEBA216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="d4UrYz7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgEANj7 (ORCPT
+        id S1731256AbgEANkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:40:03 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:23304 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731233AbgEANj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731236AbgEANj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 09:39:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DC7C20757;
-        Fri,  1 May 2020 13:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340395;
-        bh=vTyuW465oi1ldPe5fL/nkyV1YZRgw8uEFV8K5VJecbw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5xPIma8322sz2sgzJYQET2ZRrEMm9C/b3DOereM2ds7OQcBQ0u4uRFJmxKBkeapd
-         10eKpqkgbHSxiV1DLe+YXlVNbgzOi6mmEacke67pUMUn7yZR1+W3SsPNFjn4V0zELa
-         RDdo6f+mBwa8yxztGeXMdCeqi5WisnR7oYIxWCkU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang YanQing <udknight@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 49/83] bpf, x86_32: Fix logic error in BPF_LDX zero-extension
-Date:   Fri,  1 May 2020 15:23:28 +0200
-Message-Id: <20200501131537.864103346@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
-References: <20200501131524.004332640@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49DCzY6Xj4z7N;
+        Fri,  1 May 2020 15:39:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588340394; bh=/jLlputangsPP+b55RSTFIHnXSnuLA7C91+qL92JlCs=;
+        h=Date:From:Subject:In-Reply-To:To:Cc:From;
+        b=d4UrYz7eA6oL6JT7nGH+GCCO5ILfvvFRR4THomwkN1imzCtf8Xu1ZTum5nuTNbskC
+         s/y9NJ0vIGFTKXXHQzBY3vK0JfegKRTMzr+ian5OHuuW8MfOpl4AJdt93kApnwEUyt
+         CKR5T5tPokGTpX+ceptKT4UZPmzgMGbTXE6o2e7iSFfqCeYtLiSw0SiqKZE4PIAdEk
+         wODz178taLb/kqGH0iWeFO3T465dW7j2TUy7I4OsyyW8PKP83MzaaYRyjlYBggyd67
+         so0epaXCFiWpSquBFDLprlJPdQiwi5+fa7HlOp0/MJmre0xhaPwPK1eSZF/TEQ9y+d
+         NXfFCtuEZjdWw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 01 May 2020 15:39:53 +0200
+Message-Id: <995cf2c7d41d4895c319b60ea4ea83e858c34cef.1588340276.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] power: charger-manager: fix adding of optional properties
+In-Reply-To: <20200501133008.GA8927@qmqm.qmqm.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang YanQing <udknight@gmail.com>
+Use num_properties to index added property.
+This will prevent overwriting POWER_SUPPLY_PROP_CHARGE_NOW with
+POWER_SUPPLY_PROP_CURRENT_NOW and leaving the latter entry
+uninitialized.
 
-commit 5ca1ca01fae1e90f8d010eb1d83374f28dc11ee6 upstream.
+For clarity, num_properties is initialized with length of the copied
+array instead of relying on previously memcpy'd value.
 
-When verifier_zext is true, we don't need to emit code
-for zero-extension.
-
-Fixes: 836256bf5f37 ("x32: bpf: eliminate zero extension code-gen")
-Signed-off-by: Wang YanQing <udknight@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200423050637.GA4029@udknight
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 0a46510addc7 ("power: supply: charger-manager: Prepare for const properties")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- arch/x86/net/bpf_jit_comp32.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/charger-manager.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -1847,7 +1847,7 @@ static int do_jit(struct bpf_prog *bpf_p
- 			case BPF_B:
- 			case BPF_H:
- 			case BPF_W:
--				if (!bpf_prog->aux->verifier_zext)
-+				if (bpf_prog->aux->verifier_zext)
- 					break;
- 				if (dstk) {
- 					EMIT3(0xC7, add_1reg(0x40, IA32_EBP),
-
+diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+index a71e2ee81423..2ef53dc1f2fb 100644
+--- a/drivers/power/supply/charger-manager.c
++++ b/drivers/power/supply/charger-manager.c
+@@ -1729,7 +1729,7 @@ static int charger_manager_probe(struct platform_device *pdev)
+ 	memcpy(properties, default_charger_props,
+ 		sizeof(enum power_supply_property) *
+ 		ARRAY_SIZE(default_charger_props));
+-	num_properties = psy_default.num_properties;
++	num_properties = ARRAY_SIZE(default_charger_props);
+ 
+ 	/* Find which optional psy-properties are available */
+ 	fuel_gauge = power_supply_get_by_name(desc->psy_fuel_gauge);
+@@ -1740,14 +1740,14 @@ static int charger_manager_probe(struct platform_device *pdev)
+ 	}
+ 	if (!power_supply_get_property(fuel_gauge,
+ 					  POWER_SUPPLY_PROP_CHARGE_NOW, &val)) {
+-		properties[cm->charger_psy_desc.num_properties] =
++		properties[num_properties] =
+ 				POWER_SUPPLY_PROP_CHARGE_NOW;
+ 		num_properties++;
+ 	}
+ 	if (!power_supply_get_property(fuel_gauge,
+ 					  POWER_SUPPLY_PROP_CURRENT_NOW,
+ 					  &val)) {
+-		properties[cm->charger_psy_desc.num_properties] =
++		properties[num_properties] =
+ 				POWER_SUPPLY_PROP_CURRENT_NOW;
+ 		num_properties++;
+ 	}
+-- 
+2.20.1
 
