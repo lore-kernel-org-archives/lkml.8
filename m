@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20173C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76F7C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F371B24971
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F652166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339539;
-	bh=gvckD+08zbGS7Exmtd6V1EEAPXF8knBKNzJ+PEUIKx8=;
+	s=default; t=1588339540;
+	bh=/hbFuv6W4bAgGS1r/lRqpWFE7EgMEMRTh9NpIFTXlr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQlDbUha8EakX0daL01RBH3lgdtKoJMdWEsEqkakPhsf8v+qI95Fp8DXxq/NJt6PH
-	 eA5NhPIO+fEoN97nzce7Dgm5Woa9tbtT6/h/Q8bobMg4S38lHDX/aAyzzYmvi89nZL
-	 OqrWnlTbLFMJbG8D8Ez8kYE6Y9/eWJWeh+UTUyv4=
+	b=kii/FztXjCUPGmk5ClkhtqyWZ09jcTpGJ0h79HvcfP5BNOfC4yv0A/2Bh/LFEGyod
+	 zZ70PwmYGH3wD8VrZmb9/niW82lwQ/P/Z8ewFglVX2HjTSYpOjjgSCQ32wYhCEoW9C
+	 quL/S8X7SxVh5zkKCv2KzD6F8MCSRFrDdH87pnKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgEANZi (ORCPT
+        id S1729078AbgEANZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729054AbgEANZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:35 -0400
+        id S1729059AbgEANZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C70282166E;
-        Fri,  1 May 2020 13:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489F9208D6;
+        Fri,  1 May 2020 13:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339534;
-        bh=gvckD+08zbGS7Exmtd6V1EEAPXF8knBKNzJ+PEUIKx8=;
+        s=default; t=1588339536;
+        bh=/hbFuv6W4bAgGS1r/lRqpWFE7EgMEMRTh9NpIFTXlr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJOnM95GlkM/bkpnDAa5LUIQnjhOeVIX4SSK6VUR9h6K2VCwqTkPV38vsCH1OJjDE
-         sguOgERh/jIa8CLAXxmLpzx7FpcfRtl0wxhuMT25ge8vhiNSVJ/dp9tjA+zXhDRSCG
-         yVXG9pG9icDkEdA2gkgo9JuVZwDcyHa2KonTmrVk=
+        b=mTqeeo3zZTd5FmIdMsPJC1vbqGEKFS2ex+SGj6eI45KUFbXYWrxXBslLBIyTn/Gu+
+         esrzH1KxMw3WVytaNQzMMwIyaAbh2h/CxZXYeEFFI1xAGeHnjZPrSe1RSuFRswdKzZ
+         HxtQRbkyoiLw2mAKx+8NhxQmti7/quQNAlnS9p7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/70] pwm: renesas-tpu: Fix late Runtime PM enablement
-Date:   Fri,  1 May 2020 15:21:04 +0200
-Message-Id: <20200501131518.647264208@linuxfoundation.org>
+Subject: [PATCH 4.4 17/70] pwm: bcm2835: Dynamically allocate base
+Date:   Fri,  1 May 2020 15:21:05 +0200
+Message-Id: <20200501131519.063372497@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -61,61 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit d5a3c7a4536e1329a758e14340efd0e65252bd3d ]
+[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should always be disabled after the removal of the
-PWM chip, even if the latter failed.
+The newer 2711 and 7211 chips have two PWM controllers and failure to
+dynamically allocate the PWM base would prevent the second PWM
+controller instance being probed for succeeding with an -EEXIST error
+from alloc_pwms().
 
-Fixes: 99b82abb0a35b073 ("pwm: Add Renesas TPU PWM driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-renesas-tpu.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/pwm/pwm-bcm2835.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
-index 075c1a764ba29..6247a956cc089 100644
---- a/drivers/pwm/pwm-renesas-tpu.c
-+++ b/drivers/pwm/pwm-renesas-tpu.c
-@@ -423,16 +423,17 @@ static int tpu_probe(struct platform_device *pdev)
- 	tpu->chip.base = -1;
- 	tpu->chip.npwm = TPU_CHANNEL_MAX;
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index b4c7f956b6fa6..388a9fa5c1d24 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -160,6 +160,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
  
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&tpu->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip\n");
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &bcm2835_pwm_ops;
++	pc->chip.base = -1;
+ 	pc->chip.npwm = 2;
  
- 	dev_info(&pdev->dev, "TPU PWM %d registered\n", tpu->pdev->id);
- 
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
- 
-@@ -442,12 +443,10 @@ static int tpu_remove(struct platform_device *pdev)
- 	int ret;
- 
- 	ret = pwmchip_remove(&tpu->chip);
--	if (ret)
--		return ret;
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return 0;
-+	return ret;
- }
- 
- #ifdef CONFIG_OF
+ 	platform_set_drvdata(pdev, pc);
 -- 
 2.20.1
 
