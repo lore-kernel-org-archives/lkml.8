@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB15C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BE6C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 113EC214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA42214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgEAHbC (ORCPT
+        id S1728350AbgEAHdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 03:31:02 -0400
-Received: from mga18.intel.com ([134.134.136.126]:43581 "EHLO mga18.intel.com"
+        Fri, 1 May 2020 03:33:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:45092 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgEAHbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 03:31:02 -0400
-IronPort-SDR: yg7tnfdYYMMef5Pi2LBZ5nak8qlmAxGJ0zSwzBfSy/CSo4L0RvpQ7FK+98eTDUFGGtGUFGuZdX
- T+eh3eK6L7FQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 00:31:01 -0700
-IronPort-SDR: dAhag6RkhfHBmENqy7ZVTGekUzQ0MrZStJuQLCFnD/4yvCpNbfnyuc+koV/1Fb0An9VJixA60m
- n8qYq7TVD51w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
-   d="scan'208";a="405679165"
-Received: from akontse-mobl2.ger.corp.intel.com (HELO [10.254.147.91]) ([10.254.147.91])
-  by orsmga004.jf.intel.com with ESMTP; 01 May 2020 00:30:57 -0700
-Subject: Re: [PATCH bpf] security: Fix the default value of
- fs_context_parse_param hook
-To:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
-References: <20200430155240.68748-1-kpsingh@chromium.org>
-From:   Mikko Ylinen <mikko.ylinen@linux.intel.com>
-Message-ID: <e935994c-baca-21c1-1b4e-1943c20e24dd@linux.intel.com>
-Date:   Fri, 1 May 2020 10:30:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726452AbgEAHdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 03:33:00 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4A94968D07; Fri,  1 May 2020 09:32:56 +0200 (CEST)
+Date:   Fri, 1 May 2020 09:32:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org,
+        James Smart <james.smart@broadcom.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.de>,
+        linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 15/15] nvme: avoid gcc-10 zero-length-bounds warning
+Message-ID: <20200501073256.GA23452@lst.de>
+References: <20200430213101.135134-1-arnd@arndb.de> <20200430213101.135134-16-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20200430155240.68748-1-kpsingh@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430213101.135134-16-arnd@arndb.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 11:30:57PM +0200, Arnd Bergmann wrote:
+> When CONFIG_ARCH_NO_SG_CHAIN is set, op->sgl[0] cannot be dereferenced,
+> as gcc-10 now points out:
+> 
+> drivers/nvme/host/fc.c: In function 'nvme_fc_init_request':
+> drivers/nvme/host/fc.c:1774:29: warning: array subscript 0 is outside the bounds of an interior zero-length array 'struct scatterlist[0]' [-Wzero-length-bounds]
+>  1774 |  op->op.fcp_req.first_sgl = &op->sgl[0];
+>       |                             ^~~~~~~~~~~
+> drivers/nvme/host/fc.c:98:21: note: while referencing 'sgl'
+>    98 |  struct scatterlist sgl[NVME_INLINE_SG_CNT];
+>       |                     ^~~
+> 
+> I don't know if this is a legitimate warning or a false-positive.
+> If this is just a false alarm, the warning is easily suppressed
+> by interpreting the array as a pointer.
 
-
-On 30/04/2020 18:52, KP Singh wrote:
-> This was noticed when lsm=bpf is supplied on the command line before any
-> other LSM. As the bpf lsm uses this default value to implement a default
-> hook, this resulted in a failure to parse any fs_context parameters and
-> a failure to mount the root filesystem.
-
-Tested-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
+This looks like a surpression to be, but then again I find the new
+code actually cleaner, so I'm fine with it :)
