@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCEAC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C9C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E885F208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C9E208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339710;
-	bh=6jjChTOwjboi/ZhCm4bbGl72wYOXGs0UFyfWdsLpKxo=;
+	s=default; t=1588339714;
+	bh=RTn+kV+lIHQIsGh0H3v5uQledyZ87fbiPFxJRLw6Yfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ghw4sK0U8s4FzGDwNJy8Bg4DmBj9m3JQgc7p/wiPf2Rs+kCct6sVnaBEA0pOxC23j
-	 kMKQzI+aEix8AzhVNAqam2w4PM0hINtadGYw09tqmCf6Oq96V6TIqONCeo6aoxAHch
-	 Xwt7pKW+2oJZd7zYfmdh0x0uYcSywW0Gh8wT17Pw=
+	b=0PdY4Mw+muB/yrxoSYsCf74TfLuO9cL+fnfronEgcn5ykiB5GUO5d/jalbwTcR3qk
+	 HwjKpY3Wq8d7X6bWyw3Nli+gYvabA4sL8RYYhgHz+d3SG7v9BzfbWd0VrY2PZgSp5T
+	 azhBzS/xJwPMsiydO5o+b+FskgEBUxsveYuTBnWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgEAN23 (ORCPT
+        id S1729106AbgEAN2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729600AbgEAN2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:28:20 -0400
+        id S1729600AbgEAN23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4855D2166E;
-        Fri,  1 May 2020 13:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF4D424953;
+        Fri,  1 May 2020 13:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339699;
-        bh=6jjChTOwjboi/ZhCm4bbGl72wYOXGs0UFyfWdsLpKxo=;
+        s=default; t=1588339709;
+        bh=RTn+kV+lIHQIsGh0H3v5uQledyZ87fbiPFxJRLw6Yfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAREST38t80MnWNyG/Tdu3s2eJhFqb7W63Gm/gHAObOqzfLRx2OXeAftzje6zDM7X
-         4ujFcxgilWckCrXDbRXcqlQxwm/CtyNgO1izDekPhZaR5SnkvyNO6Sdx1vU3lpynS9
-         hWbvdwU6C5gV2YjlQW68GWll6w1EP0QP13HthPOc=
+        b=AyEYSHRLNNuE1RGAeN+ni3dPbbYTvrtP0M6vmHypMHB7iExAEfEcVAwIm9bZMstxp
+         9XORlbhYUjYzo6wd6ZWRnrH78YMFAR6bx5QBYd2jQ6g/7nAA9xLfs1UE7MZJkkZESp
+         mra4/T/tyuRIWZ46jacntdKeYOKfGCSUIcBxiJKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 13/80] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Fri,  1 May 2020 15:21:07 +0200
-Message-Id: <20200501131517.843807609@linuxfoundation.org>
+Subject: [PATCH 4.9 07/80] watchdog: reset last_hw_keepalive time at start
+Date:   Fri,  1 May 2020 15:21:01 +0200
+Message-Id: <20200501131515.244885263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,40 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+Currently the watchdog core does not initialize the last_hw_keepalive
+time during watchdog startup. This will cause the watchdog to be pinged
+immediately if enough time has passed from the system boot-up time, and
+some types of watchdogs like K3 RTI does not like this.
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
+To avoid the issue, setup the last_hw_keepalive time during watchdog
+startup.
 
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/watchdog_dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index b3464ac99b991..ec8be720d5cd2 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -976,7 +976,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 977fe74e5abe2..9e17d933ea941 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -237,6 +237,7 @@ static int watchdog_start(struct watchdog_device *wdd)
+ 	if (err == 0) {
+ 		set_bit(WDOG_ACTIVE, &wdd->status);
+ 		wd_data->last_keepalive = started_at;
++		wd_data->last_hw_keepalive = started_at;
+ 		watchdog_update_worker(wdd);
+ 	}
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
 -- 
 2.20.1
 
