@@ -2,106 +2,78 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CBC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72751C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4B7208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AzWR0avd"
+	by mail.kernel.org (Postfix) with ESMTP id 51FAF208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgEAUvF (ORCPT
+        id S1727844AbgEAUvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:51:05 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49238 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgEAUvD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:51:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KouFD080776;
-        Fri, 1 May 2020 15:50:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588366256;
-        bh=LhttJw1JbjTgnmdvEPuQ5xgCDkw1lEfTeMZ9lnsUOOs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AzWR0avdQVa+SIH4vJtK+qkZQ4OmgWJCjaJyzRMov1mHKc7E7pPJ+aq/5TDX/7mSc
-         aa9FrD4umBIX6dkuHJ7w7lnKA9j7ff58oecw7Gvzs2W3wVMv4/ci8zqhHRgmNv70uY
-         t8FnNWOLluMH6OaFXdnJ/K0exkWZMThpSL/KzyIU=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041Kougc049222
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 15:50:56 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 15:50:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 15:50:55 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041KosiP099423;
-        Fri, 1 May 2020 15:50:55 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 7/7] arm64: dts: ti: j721e-main: add main navss cpts node
-Date:   Fri, 1 May 2020 23:50:11 +0300
-Message-ID: <20200501205011.14899-8-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
+        Fri, 1 May 2020 16:51:09 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62859 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgEAUvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:51:07 -0400
+IronPort-SDR: bSxClE756ScLStAo+n1RStKKg4zuDonkxXjuFHxA+qNmUVu9HC+ocWB+zl44AqySwqC0qF+4aa
+ MRYN/pX3pMrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 13:51:07 -0700
+IronPort-SDR: 1J/GPXbfbR06ENSBA5cKOfIP+HoDBTDNtWVKgkcDy0VaCyVd2fbRdGHO7+Enkk+vIIsRnE9kPi
+ SJoi6L2XY71A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,341,1583222400"; 
+   d="scan'208";a="460375152"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga006.fm.intel.com with ESMTP; 01 May 2020 13:51:06 -0700
+Date:   Fri, 1 May 2020 13:51:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joshua Abraham <j.abraham1776@gmail.com>
+Cc:     pbonzini@redhat.com, corbet@lwn.net, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: kvm: Fix KVM_KVMCLOCK_CTRL API doc
+Message-ID: <20200501205106.GE4760@linux.intel.com>
+References: <20200501193404.GA19745@josh-ZenBook>
+ <20200501201836.GB4760@linux.intel.com>
+ <20200501203234.GA20693@josh-ZenBook>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501203234.GA20693@josh-ZenBook>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for Main NAVSS CPTS module.
+On Fri, May 01, 2020 at 04:32:34PM -0400, Joshua Abraham wrote:
+> On Fri, May 01, 2020 at 01:18:36PM -0700, Sean Christopherson wrote:
+> > No, the current documentation is correct.  It's probably not as clear as
+> > it could be, but it's accurate as written.  More below.
+> > 
+> > The ioctl() signals to the host kernel that host userspace has paused the
+> > vCPU.
+> > 
+> > >  The host will set a flag in the pvclock structure that is checked
+> > 
+> > The host kernel, i.e. KVM, then takes that information and forwards it to
+> > the guest kernel via the aforementioned pvclock flag.
+> > 
+> > The proposed change would imply the ioctl() is somehow getting routed
+> > directly to the guest, which is wrong.
+> 
+> The rationale is that the guest is what consumes the pvclock flag, the
+> host kernel does nothing interesting (from the API caller perspective) 
+> besides setting up the kvmclock update. The ioctl calls kvm_set_guest_paused() 
+> which even has a comment saying "[it] indicates to the guest kernel that it has 
+> been stopped by the hypervisor." I think that the docs first sentence should 
+> clearly reflect that the API tells the guest that it has been paused. 
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 0b9d14b838a1..844a5b50cf09 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -254,6 +254,18 @@
- 						<0x0c>; /* RX_UHCHAN */
- 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
- 		};
-+
-+		cpts@310d0000 {
-+			compatible = "ti,j721e-cpts";
-+			reg = <0x0 0x310d0000 0x0 0x400>;
-+			reg-names = "cpts";
-+			clocks = <&k3_clks 201 1>;
-+			clock-names = "cpts";
-+			interrupts-extended = <&main_navss_intr 201 0>;
-+			interrupt-names = "cpts";
-+			ti,cpts-periodic-outputs = <6>;
-+			ti,cpts-ext-ts-inputs = <8>;
-+		};
- 	};
- 
- 	main_pmx0: pinmux@11c000 {
--- 
-2.17.1
-
+I don't disagree, but simply doing s/host/guest yields a misleading
+sentence and inconsistencies with the rest of the paragraph.
