@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ADCC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B8FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7BD2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D12216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340196;
-	bh=RhizNEJwD+CwQC0rV67dcaCqGdRQnDrXrADI2/skOwo=;
+	s=default; t=1588340199;
+	bh=mKBVjMtXdU7l1Vye0eNpCbgPN3DNj+1yAs+xUBf11l4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOtlhpZ60m/d3ITZC38UenXvA8kEx63okuzRrkD1RU1B0+dxbyRuKD40F6mjMJEnm
-	 WBKtXRAGit78d9v5fapmk/VVBrqBNviAitRCzIbJcdhu2O2BU+BvoUSAXd8M4bQc2u
-	 pwRVdLYhpj5j1A+8RwStEDq0yZo0K3fDirWyK7tw=
+	b=S6xu4DLs3ZtQc1oopy4hK5WLwMNZki9stgsg+IENBZQa7DQFvoaWI3gomXtNCV+Mh
+	 6h/YLooJIt/mofFBqeGESu/l5TWq7eQ9PGTS6TBXknS3SWqu+DjO3stqrr+6YZfjBm
+	 TclthIdhovZytdXD81UrqzTvJ8skl28t5ffOwbXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbgEANgf (ORCPT
+        id S1730878AbgEANgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730851AbgEANgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:23 -0400
+        id S1730116AbgEANg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8E26216FD;
-        Fri,  1 May 2020 13:36:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E91208DB;
+        Fri,  1 May 2020 13:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340183;
-        bh=RhizNEJwD+CwQC0rV67dcaCqGdRQnDrXrADI2/skOwo=;
+        s=default; t=1588340185;
+        bh=mKBVjMtXdU7l1Vye0eNpCbgPN3DNj+1yAs+xUBf11l4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBUQhKNNzXJqI31Ft4m2Pz1t5XM4cb+owoxpJqF1GV5s55VX0a5khNXcwH3F481oS
-         3+SFTy8evo3ef9DXOWXqIMExrcdnOkQc3yQEyYLQMhFpqKJLcqVNHABKDDlEt3d9bF
-         UjhZQmpFHwoRYngne64V4n17YerMSDWv35Tdf0u4=
+        b=CLQ2f7NFAouwt7cvkPjHr7Z0roZk3a4TIeN9xefh8Z8HceISaAvg6O206VULkKps7
+         SscgUV41l/bAjrhau8lZ1kvQGerUn4L/w1CKeAE1ECFeEzXmRaFTFkakY8g0hWiljW
+         9p+dUvwws2iHtAWeQ5xxSEzAVekXc2TNOqf4Vji8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 22/46] net/mlx5: Fix failing fw tracer allocation on s390
-Date:   Fri,  1 May 2020 15:22:47 +0200
-Message-Id: <20200501131506.530970636@linuxfoundation.org>
+        stable@vger.kernel.org, KP Singh <kpsingh@google.com>,
+        Ian Rogers <irogers@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.19 23/46] perf/core: fix parent pid/tid in task exit events
+Date:   Fri,  1 May 2020 15:22:48 +0200
+Message-Id: <20200501131506.989456371@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -59,56 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
 
-commit a019b36123aec9700b21ae0724710f62928a8bc1 upstream.
+commit f3bed55e850926614b9898fe982f66d2541a36a5 upstream.
 
-On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
-allocation as done for the firmware tracer will always fail.
+Current logic yields the child task as the parent.
 
-Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
-that copies the debug data into the trace array and there is no need for
-the allocation to be contiguous in physical memory. We can therefor use
-kvzalloc() instead of kzalloc() and get rid of the large contiguous
-allcoation.
+Before:
+$ perf record bash -c "perf list > /dev/null"
+$ perf script -D |grep 'FORK\|EXIT'
+4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
+4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
+4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
+                                                   ^
+  Note the repeated values here -------------------/
 
-Fixes: f53aaa31cce7 ("net/mlx5: FW tracer, implement tracer logic")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+After:
+383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
+383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
+383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
+
+Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
+Reported-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/events/core.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-@@ -796,7 +796,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_cr
- 		return NULL;
- 	}
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6923,10 +6923,17 @@ static void perf_event_task_output(struc
+ 		goto out;
  
--	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
-+	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
- 	if (!tracer)
- 		return ERR_PTR(-ENOMEM);
+ 	task_event->event_id.pid = perf_event_pid(event, task);
+-	task_event->event_id.ppid = perf_event_pid(event, current);
+-
+ 	task_event->event_id.tid = perf_event_tid(event, task);
+-	task_event->event_id.ptid = perf_event_tid(event, current);
++
++	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
++		task_event->event_id.ppid = perf_event_pid(event,
++							task->real_parent);
++		task_event->event_id.ptid = perf_event_pid(event,
++							task->real_parent);
++	} else {  /* PERF_RECORD_FORK */
++		task_event->event_id.ppid = perf_event_pid(event, current);
++		task_event->event_id.ptid = perf_event_tid(event, current);
++	}
  
-@@ -842,7 +842,7 @@ destroy_workqueue:
- 	tracer->dev = NULL;
- 	destroy_workqueue(tracer->work_queue);
- free_tracer:
--	kfree(tracer);
-+	kvfree(tracer);
- 	return ERR_PTR(err);
- }
+ 	task_event->event_id.time = perf_event_clock(event);
  
-@@ -919,7 +919,7 @@ void mlx5_fw_tracer_destroy(struct mlx5_
- 	mlx5_fw_tracer_destroy_log_buf(tracer);
- 	flush_workqueue(tracer->work_queue);
- 	destroy_workqueue(tracer->work_queue);
--	kfree(tracer);
-+	kvfree(tracer);
- }
- 
- void mlx5_fw_tracer_event(struct mlx5_core_dev *dev, struct mlx5_eqe *eqe)
 
 
