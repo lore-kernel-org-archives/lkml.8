@@ -2,173 +2,125 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1F2C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA81C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E40208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A6A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588311901;
+	bh=il83fVr/6p3yGZJBott3rddzIe0DN1lbYo/c4K2ARVQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ilzGQfLce4alJTSD7wjfhRQ7gp3zxKh883CfFYq9maV4dy+14Jx6tUAFfKn67A7qc
+	 9ocyxOniGWWi0/MvYqx2nVQ6H+GrGPX5rHMl7j4nXo4hli8lIP1xdpMJHNytP8niZo
+	 awiUHKWbqySjRmfxY6ne68azEWlDVabWms/kizZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgEAFo2 (ORCPT
+        id S1728268AbgEAFpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgEAFo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:44:28 -0400
-Received: from [10.44.0.192] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEAF820731;
-        Fri,  1 May 2020 05:44:20 +0000 (UTC)
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
- properly in there
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20200429214954.44866-1-jannh@google.com>
- <20200429215620.GM1551@shell.armlinux.org.uk>
- <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
- <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
- <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
- <87imhgyeqt.fsf@x220.int.ebiederm.org>
-Message-ID: <9dd76936-0009-31e4-d869-f64d01886642@linux-m68k.org>
-Date:   Fri, 1 May 2020 15:44:03 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 01:45:01 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:61217 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgEAFpA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 01:45:00 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 0415igrs002835;
+        Fri, 1 May 2020 14:44:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 0415igrs002835
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588311883;
+        bh=qfzL0paOa0xcAfnxB0duAvkGtJs8i6sMQdMbhTy6L1E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tGdfOpm84vZIVVXFKw+09PgUAKGrYX2WJmG9HuxOWdPysRD8jUmP3deVWXFTN5swV
+         3Hrx7CdoLi5xwlZ3IHrMCw9vsy3DmchXGvLedpCe3Q0QGW0RF2r63Jv+eM5CZxyo9H
+         LTLFu7d/AzieOR9v00F15Z5ZsCt3nbcXscHpAT7U/F9h4Mx07a+QuVgEtbQ8PmwQev
+         uW3dsLz51WCZdKO/sF/TIt5X4MX91arEDqS7xgC1YRFRq/Kf+2DDPFjzh2se9abfV4
+         emkzKetMuJNWSbf4p5H97Oqlci+eabwymqiSzSZ59rMrLyEoohqQU2NaXLfsekiQXG
+         UnAwOF4r602Aw==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id y185so5760650vsy.8;
+        Thu, 30 Apr 2020 22:44:43 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY4dnVZQAKT1PfGgXfb48h//nEy8wnXk1y56+xWKPA3gAZM4N3A
+        SyqSXZYqugF7Zf2R3CoZ2ke6RpSf4fxbX13lnQQ=
+X-Google-Smtp-Source: APiQypICSQsHjOgrB5HvgYBUa1hOiGuyrfu4TBLWjt6h9s22CPEZ6zD/HNLA61XgUUFrv8BY+cPNxy95N3kJPPeTAJU=
+X-Received: by 2002:a05:6102:3c7:: with SMTP id n7mr2106127vsq.179.1588311882097;
+ Thu, 30 Apr 2020 22:44:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87imhgyeqt.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200417180455.1174340-1-masahiroy@kernel.org>
+In-Reply-To: <20200417180455.1174340-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 1 May 2020 14:44:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQNwHW8=UQPCs7D=bEx2qKwfoNxVVMmHiOwmPy3j4aaGQ@mail.gmail.com>
+Message-ID: <CAK7LNAQNwHW8=UQPCs7D=bEx2qKwfoNxVVMmHiOwmPy3j4aaGQ@mail.gmail.com>
+Subject: Re: [PATCH] um: do not evaluate compiler's library path when cleaning
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        Erel Geron <erelx.geron@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 1/5/20 5:07 am, Eric W. Biederman wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> 
->> On Thu, Apr 30, 2020 at 7:10 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
-> 
->>>> Most of that file goes back to pre-git days. And most of the commits
->>>> since are not so much about binfmt_flat, as they are about cleanups or
->>>> changes elsewhere where binfmt_flat was just a victim.
->>>
->>> I'll have a look at this.
->>
->> Thanks.
->>
->>> Quick hack test shows moving setup_new_exec(bprm) to be just before
->>> install_exec_creds(bprm) works fine for the static binaries case.
->>> Doing the flush_old_exec(bprm) there too crashed out - I'll need to
->>> dig into that to see why.
->>
->> Just moving setup_new_exec() would at least allow us to then join the
->> two together, and just say "setup_new_exec() does the credential
->> installation too".
-> 
-> But it is only half a help if we allow failure points between
-> flush_old_exec and install_exec_creds.
-> 
-> Greg do things work acceptably if install_exec_creds is moved to right
-> after setup_new_exec? (patch below)
-
-Yes, confirmed. Worked fine with that patch applied.
-
-
-> Looking at the code in load_flat_file after setup_new_exec it looks like
-> the kinds of things that in binfmt_elf.c we do after install_exec_creds
-> (aka vm_map).  So I think we want install_exec_creds sooner, instead
-> of setup_new_exec later.
-> 
->> But if it's true that nobody really uses the odd flat library support
->> any more and there are no testers, maybe we should consider ripping it
->> out...
-> 
-> I looked a little deeper and there is another reason to think about
-> ripping out the flat library loader.  The code is recursive, and
-> supports a maximum of 4 shared libraries in the entire system.
-> 
-> load_flat_binary
-> 	load_flat_file
->          	calc_reloc
->                  	load_flat_shared_libary
->                          	load_flat_file
->                                  	....
-> 
-> I am mystified with what kind of system can survive with a grand total
-> of 4 shared libaries.  I think my a.out slackware system that I ran on
-> my i486 had more shared libraries.
-
-The kind of embedded systems that were built with this stuff 20 years
-ago didn't have lots of applications and libraries. I think we found
-back then that most of your savings were from making libc shared.
-Less significant gains from making other libraries shared. And there
-was a bit of extra pain in setting them up with the shared library
-code generation options (that had to be unique for each one).
-
-The whole mechanism is a bit of hack, and there was a few other
-limitations with the way it worked (I don't recall what they were
-right now).
-
-I am definitely in favor of removing it.
-
-Regards
-Greg
-
-
-
-> Having read just a bit more it is definitely guaranteed (by the code)
-> that the first time load_flat_file is called id 0 will be used (aka id 0
-> is guaranteed to be the binary), and the ids 1, 2, 3 and 4 will only be
-> used if a relocation includes that id to reference an external shared
-> library.  That part of the code is drop dead simple.
-> 
+On Sat, Apr 18, 2020 at 3:06 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+> -Wframe-larger-than="), 'make ARCH=um clean' emits an error message
+> as follows:
+>
+>   $ make ARCH=um clean
+>   gcc: error: missing argument to '-Wframe-larger-than='
+>
+> We do not care compiler flags when cleaning.
+>
+> Use the '=' operator for lazy expansion because we do not use
+> LDFLAGS_pcap.o or LDFLAGS_vde.o when cleaning.
+>
+> While I was here, I removed the redundant -r option because it
+> already exists in the recipe.
+>
+> Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
-> 
-> This is what I was thinking about applying.
-> 
-> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-> index 831a2b25ba79..1a1d1fcb893f 100644
-> --- a/fs/binfmt_flat.c
-> +++ b/fs/binfmt_flat.c
-> @@ -541,6 +541,7 @@ static int load_flat_file(struct linux_binprm *bprm,
->   		/* OK, This is the point of no return */
->   		set_personality(PER_LINUX_32BIT);
->   		setup_new_exec(bprm);
-> +		install_exec_creds(bprm);
->   	}
->   
->   	/*
-> @@ -963,8 +964,6 @@ static int load_flat_binary(struct linux_binprm *bprm)
->   		}
->   	}
->   
-> -	install_exec_creds(bprm);
-> -
->   	set_binfmt(&flat_format);
->   
->   #ifdef CONFIG_MMU
-> 
-> 
+>
+>  arch/um/drivers/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
+> index a290821e355c..2a249f619467 100644
+> --- a/arch/um/drivers/Makefile
+> +++ b/arch/um/drivers/Makefile
+> @@ -18,9 +18,9 @@ ubd-objs := ubd_kern.o ubd_user.o
+>  port-objs := port_kern.o port_user.o
+>  harddog-objs := harddog_kern.o harddog_user.o
+>
+> -LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
+> +LDFLAGS_pcap.o = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
+>
+> -LDFLAGS_vde.o := -r $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
+> +LDFLAGS_vde.o = $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
+>
+>  targets := pcap_kern.o pcap_user.o vde_kern.o vde_user.o
+>
+> --
+> 2.25.1
+>
+
+
+Applied to linux-kbuild.
+
+
+-- 
+Best Regards
+Masahiro Yamada
