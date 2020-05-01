@@ -2,95 +2,89 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACBEC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C535C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A77924954
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC7D2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588370990;
+	bh=hyTUi8k9QleCFVpcgAZ6YYDaMkXEa5xJb5HTy4SEi9Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BODXs7RSFdbH4y5XKvRCVpUNMSJYl8H68Aw4k4Ft+RwbPfSCEsiNog2kj4CCaVaP+
+	 Cot1Crs3fJacbGjkAmPXENEqGTQkqXee9tOwDa64a9eGHHKOs35FdK/UyRjBN5IYFl
+	 aH1vbDbz/e49s2TExl56HuHXI/OjAy3GeEoip/FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgEAWGl (ORCPT
+        id S1726554AbgEAWJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:06:41 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37590 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAWGl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:06:41 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 680671C020C; Sat,  2 May 2020 00:06:39 +0200 (CEST)
-Date:   Sat, 2 May 2020 00:06:37 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Pavel Machek <pavel@denx.de>, Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200501220637.GA19818@amd>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430222605.GA10922@duo.ucw.cz>
- <20200501145252.GC37466@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
-Content-Disposition: inline
-In-Reply-To: <20200501145252.GC37466@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 1 May 2020 18:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgEAWJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 18:09:49 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B927520857;
+        Fri,  1 May 2020 22:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588370988;
+        bh=hyTUi8k9QleCFVpcgAZ6YYDaMkXEa5xJb5HTy4SEi9Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GPQWCRRHLJg2Zl8cgmkGWbp7Tgn+ivU4M8hBbWb4IQI1sGAnX/mV/i1Lyh/amTZdC
+         vgn21bnvxHvu7jVeG6N3ie5ON7pYY//OPHYOAyysUdpLdyFLZhzTvii7N+TQnFlEUw
+         l0PKqTkdq3Hg476WHDApPzwvFSmjMv60SV2VPHc0=
+Date:   Fri, 1 May 2020 15:09:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     John Dorminy <jdorminy@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH 21/29] mm: remove the pgprot argument to __vmalloc
+Message-Id: <20200501150947.367ca6b38a394f1ff678ed4b@linux-foundation.org>
+In-Reply-To: <CAMeeMh_9N0ORhPM8EmkGeeuiDoQY3+QoAPX5QBuK7=gsC5ONng@mail.gmail.com>
+References: <20200414131348.444715-1-hch@lst.de>
+        <20200414131348.444715-22-hch@lst.de>
+        <20200414151344.zgt2pnq7cjq2bgv6@debian>
+        <CAMeeMh8Q3Od76WaTasw+BpYVF58P-HQMaiFKHxXbZ_Q3tQPZ=A@mail.gmail.com>
+        <CAMeeMh_9N0ORhPM8EmkGeeuiDoQY3+QoAPX5QBuK7=gsC5ONng@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 30 Apr 2020 22:38:10 -0400 John Dorminy <jdorminy@redhat.com> wrote:
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> the change
+> description refers to PROT_KERNEL, which is a symbol which does not
+> appear to exist; perhaps PAGE_KERNEL was meant?
 
-On Fri 2020-05-01 07:52:52, Tony Lindgren wrote:
-> * Pavel Machek <pavel@denx.de> [200430 22:27]:
-> >=20
-> > > My guess is that at least with the pending ofono patches, we just
-> > > want to use the raw interface for /dev/gsmtty* interface and stop
-> > > pretending we have a modem that is AT compatible.
-> >=20
-> > I tried to get it to work... it was not fun and I did not get far.
->=20
-> OK. Yeah it's now 2020 and still dealing with serial port stuff :)
-
-Yeah, and scary thing is... it is 2020 and serial port is _still_
-complex and hard to understand and debug :-).
-
-> OK :) I still need to update the ALSA related patches on top
-> of this $subject series.
-
-Let me know when you have these.
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---0F1p//8PRICkK4MW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6snWwACgkQMOfwapXb+vIzIgCgh+kpNi03IGiu3qZaCkJjxrwn
-ZugAnRiL9aPdP7Z2i/pEXCljELO8idBA
-=2YyH
------END PGP SIGNATURE-----
-
---0F1p//8PRICkK4MW--
+Yes, thanks, fixed.
