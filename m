@@ -2,62 +2,102 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B4AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7422C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8EB2076D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBC1208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588333180;
+	bh=2e8HQlqKY0ln/Bf3eROeuh/4JunwMh0ssZWgRH2Ccfo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cdUc/yjolDe6yjnFb8OoFXOinQXwuggCXPmY+R9uBrPDwtV9ZDrox7grNh9TW6PAz
+	 G17KCWP95rzDeS7UOPpoyDOCOLSGfwgD1o5HIgA4IllQZRBFhSQw8gJ/5x7NYs7aJX
+	 dhb0HT7tsvp7UdDL9ZsywDH+TWetS93j4VJE76zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgEALht (ORCPT
+        id S1728734AbgEALjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:37:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728575AbgEALhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:37:48 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5F0C061A0C;
-        Fri,  1 May 2020 04:37:48 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 08B613A4; Fri,  1 May 2020 13:37:46 +0200 (CEST)
-Date:   Fri, 1 May 2020 13:37:45 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robdclark@gmail.com,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2]iommu/qcom:fix local_base status check
-Message-ID: <20200501113745.GE18423@8bytes.org>
-References: <20200418134703.1760-1-tangbin@cmss.chinamobile.com>
+        Fri, 1 May 2020 07:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728575AbgEALjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 07:39:39 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A30D02076D;
+        Fri,  1 May 2020 11:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588333178;
+        bh=2e8HQlqKY0ln/Bf3eROeuh/4JunwMh0ssZWgRH2Ccfo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OKj8y496eDRVopiV7SKBDmGNA5OUyyZ2/GE1BIkOLL5By5g9VQTOIzstTx2oZu2zK
+         1cWnOozb8pszDgxVh2RQ9rAUh1QpqvqL2tu/8R1ltms+mpa86mRPF2Qyv9nVzxt7sq
+         ifAuT6sTdQKSUpASNWxJQF3vT+UR1/mx2Due+RCc=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jUU12-008K8u-Ug; Fri, 01 May 2020 12:39:37 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
+Date:   Fri,  1 May 2020 12:39:21 +0100
+Message-Id: <20200501113921.366597-1-maz@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418134703.1760-1-tangbin@cmss.chinamobile.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 09:47:03PM +0800, Tang Bin wrote:
-> The function qcom_iommu_device_probe() does not perform sufficient
-> error checking after executing devm_ioremap_resource(), which can
-> result in crashes if a critical error path is encountered.
-> 
-> Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
-> 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
-> v2:
->  - fix commit message and add fixed tag
-> ---
->  drivers/iommu/qcom_iommu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On a system that uses the internal DWC MSI widget, I get this
+warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
 
-Applied for v5.7, thanks.
+  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
+
+This is due to the fact that the DWC MSI code tries to register two
+IRQ domains for the same firmware node, without telling the low
+level code how to distinguish them (by setting a bus token). This
+further confuses debugfs which tries to create corresponding
+files for each domain.
+
+Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+the closest thing we have as to "generic MSI".
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 395feb8ca051..3c43311bb95c 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 		return -ENOMEM;
+ 	}
+ 
++	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
++
+ 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
+-- 
+2.26.2
 
