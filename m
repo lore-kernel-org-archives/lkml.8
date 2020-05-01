@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7328EC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9EBC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 519AF2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB50324954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339896;
-	bh=AZDbR3+DwhncfRB/3LcL6iiSnYl24c+VsfbZA8eIE5w=;
+	s=default; t=1588339899;
+	bh=fgAPi6SmobpQ+fTyTrbXH1oguShDvqB2QYogzj2mDg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Osatyd9+KyxxHp9rPS9sfS8Zh9xY1h+twazHrCYj9Nt5UjxyuFutq+16cWVNLkZoE
-	 S0JsONT39F0MXty4j8dwbUYFk7a3TLngrFvjbfvj6eDMv44kjBIKMUtu8wYa8AsCnf
-	 kUtfD5amW7Bt0uPLzq4I05O3xNZeNxTX7Ut/uuZY=
+	b=gznxpIuLj2vxU8Gelb4Xn+n9wKa77jbXAB9taVDiV6bhK741DNybZQBS4D/InASuF
+	 ADXmcCaObQhyNdrsF3ab2kvi3VdlaXB+g5pfWI0vFFiFpLvsvbp4o/DzBpEQU43rKI
+	 SyfJ4f0w+rkMnLYF8VYhHcmvPntwhP13uhFJjtBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbgEANbf (ORCPT
+        id S1730180AbgEANbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbgEANbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:31 -0400
+        id S1730169AbgEANbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0BCE208DB;
-        Fri,  1 May 2020 13:31:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C076324954;
+        Fri,  1 May 2020 13:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339891;
-        bh=AZDbR3+DwhncfRB/3LcL6iiSnYl24c+VsfbZA8eIE5w=;
+        s=default; t=1588339896;
+        bh=fgAPi6SmobpQ+fTyTrbXH1oguShDvqB2QYogzj2mDg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1s/ruaSEROGC1xZO/bCCXtpYLrHnZDaMTHIhnHwPbWuKsKfEMWuA6YGNK0eHDKH32
-         BSwsvMdE8UR22ILmU/qxhl853/a1RaUlXKqXFcvDspe8Ykacqm0ryOW2Y+ANDmSmU0
-         r2WXZsvQr47JB3crZYBjTp8h28dpUODxheTcGfIs=
+        b=HiVwNmJrWUj3gDu7l422/+UBqoTWradY3LT4uIZOnX64bPQcpAR7pfI26Yzzryn1k
+         nzXQyvfcHk9Gh9zXTrGxsJwHfghLhOzIFFjeFCr/moLUdCzKzSqjUf732y2GIk02bQ
+         xJ+KvQt4BNUcpq9ANvyThmrStjT1EBoEs2c0A+Oc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 008/117] watchdog: reset last_hw_keepalive time at start
-Date:   Fri,  1 May 2020 15:20:44 +0200
-Message-Id: <20200501131546.173077545@linuxfoundation.org>
+Subject: [PATCH 4.14 010/117] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Fri,  1 May 2020 15:20:46 +0200
+Message-Id: <20200501131546.342227090@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,40 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 982bb70517aef2225bad1d802887b733db492cc0 ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-Currently the watchdog core does not initialize the last_hw_keepalive
-time during watchdog startup. This will cause the watchdog to be pinged
-immediately if enough time has passed from the system boot-up time, and
-some types of watchdogs like K3 RTI does not like this.
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
-To avoid the issue, setup the last_hw_keepalive time during watchdog
-startup.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200302200426.6492-3-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/watchdog_dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index b30fb637ae947..52e03f1c76e38 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -245,6 +245,7 @@ static int watchdog_start(struct watchdog_device *wdd)
- 	if (err == 0) {
- 		set_bit(WDOG_ACTIVE, &wdd->status);
- 		wd_data->last_keepalive = started_at;
-+		wd_data->last_hw_keepalive = started_at;
- 		watchdog_update_worker(wdd);
- 	}
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 3c59ad180ef0b..4cfe1154d4c72 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -151,6 +151,11 @@ static struct dentry *__get_parent(struct super_block *sb,
  
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
