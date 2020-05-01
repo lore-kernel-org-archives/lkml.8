@@ -2,211 +2,225 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CA7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A48C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9504F2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A33F216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYqlOnF6"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hEYy9ALw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgEATJf (ORCPT
+        id S1730423AbgEATLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
+        Fri, 1 May 2020 15:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729766AbgEATJe (ORCPT
+        by vger.kernel.org with ESMTP id S1729930AbgEATLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:09:34 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5F8C061A0C;
-        Fri,  1 May 2020 12:09:34 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v63so1950000pfb.10;
-        Fri, 01 May 2020 12:09:34 -0700 (PDT)
+        Fri, 1 May 2020 15:11:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE94C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 12:11:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n11so4932176pgl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 12:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3jiAPaFiQIwup5Rl6bkdApLMWC+g3p/Kt1dCChwBGvU=;
-        b=HYqlOnF6xR6P3tL0oO/ZOqArCr8YiLqKR4ycbsI5PMe3b5gDjQkRgVRsbYe3Kv3H3+
-         dXtnOI8X8c2MGLulvZM72mVH6ibte2GRWWFNyciyYoXoXh+rXm6wqWvV5rNCJCPUopdm
-         ISIf/vnLr2f7BzTpAy+c+79V1cciunTnlLDKhmrvAu/OwhpyrS5UPfBvaO/czF8EPEWq
-         DdfSq4C4qjpR9VjB/lk0qizsNTNH9H8Wq9OFsc3UPtg08wDYJHCXqikvNZ5wr05PJApm
-         FiT9QFCi8o7XGYx/LTjCTltXKCM/KFbNS2nPDp4Cd1vES1hnsfUtx/mf79t5c7ckVfnT
-         ItvQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=c5dK1AbklroYAW5CprN7zWLQ3v0LEJ5QJui3W0lSbjE=;
+        b=hEYy9ALwvpi9Nj7vjZM+2BujSPtzR7pr1xzZJ2wJNrUpJf+DBpkALWi7IJBWqTRRz3
+         WAnthuChCJjH3p/TbVwJcXhanIYwAWdWqXur31qbmlShzOpg5tI8+GPn6ou4uN/7ciL+
+         6A+Cs2qHOD4QYfz5nxFJbSvVLoEetDLQ1pCeHREsZiOHNNpV4LmOTtDS5vWuvbe2653o
+         S84nBsCeciVYi4O67ejhg4ZacLv2GXwS2RFei7TDB8clqsltDIWndq/zDDE3k/PQ23sg
+         P9OramRl01XAkPPSHlXGR4kYN2ZX35KLRR3VgvjTdY3K+f6aEzWSxdZnxLIRkMQ4Xbg/
+         vFXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3jiAPaFiQIwup5Rl6bkdApLMWC+g3p/Kt1dCChwBGvU=;
-        b=ix4Q/15qdRUxKFiCNYvT2bTADGj5pvYSXddROrbkvS5Q+aWTVFla8w2pRjqshPR9kJ
-         FNcK624y/iyu9xkIvcrVneWGLTjqkaJnqFw+ju23P8xcuDRycYpCSP4Js+x8ifAOB5gz
-         7FGCKf+1IFyXdExqc43pOIsUyPDXvEvmcp5VuHIKpXUPV+9XDO0kp/o5ahR644NT+ELX
-         cKwbw/4zp0mU7OOmDSJC9wvL1SOvCVm89yZ44LgwjVQqYiHkVJ53uEBBzN8/Vm+BETEh
-         L1Mp3BYGSVm+GbRECPQKSaynRs+Uku5x9L6JNlXAQzFMpuCCQ1gJbLDlhCI7xMuriCYH
-         eGFQ==
-X-Gm-Message-State: AGi0PubceWZrYORAp0cXltrI1yrLV7n5PzorYlryL/bhphQyv9qLLC5d
-        1qbnRmtYWFZvKjwbGP9v4EM=
-X-Google-Smtp-Source: APiQypIBl1/RFUI1dVmI7MYjTIw4oUr1NcTWvPch+Z2udtILKSBl834zc6fvAKWhOD4ilquX0Pj6eg==
-X-Received: by 2002:a62:e803:: with SMTP id c3mr5338940pfi.228.1588360173626;
-        Fri, 01 May 2020 12:09:33 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:8cd4])
-        by smtp.gmail.com with ESMTPSA id r4sm2609313pgi.6.2020.05.01.12.09.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 12:09:32 -0700 (PDT)
-Date:   Fri, 1 May 2020 12:09:30 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
-References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=c5dK1AbklroYAW5CprN7zWLQ3v0LEJ5QJui3W0lSbjE=;
+        b=PnaPXNp0mib3Q727lx61jH0QFbCrOwyVZ/uU4FWG2veo7MdbsCpallm1WCJyrXfIDD
+         f89BVPp2NUqL7yJAQ3FDP3xciFzLwbvkl41ypkcPCHvtComaJXmICeAOHvHs9YTtbiE9
+         4RwkVnSh0+oxCQYcOHe40Ivnak1BleemLDCbzo5qLYVM9L94nE6hrq4KP0CAdtarXvBG
+         sM/wm6QbYjSka0XBcMkpQH4/z3cvThkHdUBWRcdTFq4bvulltMZUcCX6tZoqfyZBUp3Q
+         t1IP4yZ5OLUjiqRuVgvoQ0/eg4QeIRnYiUdPzBLWXngNwMUpgB0lm+yfqj1PmDzhlNta
+         NSsA==
+X-Gm-Message-State: AGi0Pua13x6jvor96xELPo9OyoobSeyUFTMYxn/VeLFlzUuhxx+IVxXY
+        qOLJMSDYXl6mxINDz+MGUfJXhuC29fdGIw==
+X-Google-Smtp-Source: APiQypIAx3VymjxsbJHLkIAf8je/YP4wuBkmjFG4kuKUKvKBJlTDGqNf340O0aYdczkAG3AgttR0Lw==
+X-Received: by 2002:a62:be0c:: with SMTP id l12mr5465435pff.95.1588360270684;
+        Fri, 01 May 2020 12:11:10 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id v64sm2865008pfb.20.2020.05.01.12.11.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 12:11:10 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v4] eventfd: convert to f_op->read_iter()
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <6b29f015-bd7c-0601-cf94-2c077285b933@kernel.dk>
+Date:   Fri, 1 May 2020 13:11:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 02:07:43PM -0500, Josh Poimboeuf wrote:
-> Objtool decodes instructions and follows all potential code branches
-> within a function.  But it's not an emulator, so it doesn't track
-> register values.  For that reason, it usually can't follow
-> intra-function indirect branches, unless they're using a jump table
-> which follows a certain format (e.g., GCC switch statement jump tables).
-> 
-> In most cases, the generated code for the BPF jump table looks a lot
-> like a GCC jump table, so objtool can follow it.  However, with
-> RETPOLINE=n, GCC keeps the jump table address in a register, and then
-> does 160+ indirect jumps with it.  When objtool encounters the indirect
-> jumps, it can't tell which jump table is being used (or even whether
-> they might be sibling calls instead).
-> 
-> This was fixed before by disabling an optimization in ___bpf_prog_run(),
-> using the "optimize" function attribute.  However, that attribute is bad
-> news.  It doesn't append options to the command-line arguments.  Instead
-> it starts from a blank slate.  And according to recent GCC documentation
-> it's not recommended for production use.  So revert the previous fix:
-> 
->   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> 
-> With that reverted, solve the original problem in a different way by
-> getting rid of the "goto select_insn" indirection, and instead just goto
-> the jump table directly.  This simplifies the code a bit and helps GCC
-> generate saner code for the jump table branches, at least in the
-> RETPOLINE=n case.
-> 
-> But, in the RETPOLINE=y case, this simpler code actually causes GCC to
-> generate far worse code, ballooning the function text size by +40%.  So
-> leave that code the way it was.  In fact Alexei prefers to leave *all*
-> the code the way it was, except where needed by objtool.  So even
-> non-x86 RETPOLINE=n code will continue to have "goto select_insn".
-> 
-> This stuff is crazy voodoo, and far from ideal.  But it works for now.
-> Eventually, there's a plan to create a compiler plugin for annotating
-> jump tables.  That will make this a lot less fragile.
+eventfd is using ->read() as it's file_operations read handler, but
+this prevents passing in information about whether a given IO operation
+is blocking or not. We can only use the file flags for that. To support
+async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
+support. Convert eventfd to using ->read_iter().
 
-I don't like this commit log.
-Here you're saying that the code recognized by objtool is sane and good
-whereas well optimized gcc code is somehow voodoo and bad.
-That is just wrong.
-goto select_insn; vs goto *jumptable[insn->code]; is not a contract that
-compiler has to follow. The compiler is free to convert direct goto
-into indirect and the other way around.
-For all practical purposes this patch is a band aid for objtool that will fall
-apart in the future. Just like the previous patch that survived less than a year.
-It's not clear whether old one worked for clang.
-It's not clear whether new one will work for clang.
-retpoline=y causing code bloat is a different issue that can be investigated
-separately. gcc/clang have different modes of generating retpoline thunks.
-May be one of those flags can help.
+With ->read_iter(), we can support IOCB_NOWAIT. Ensure the fd setup
+is done such that we set file->f_mode with FMODE_NOWAIT.
 
-In other words I'm ok with the patch, but commit log needs to be reworded.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-> Fixes: 3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->  include/linux/compiler-gcc.h   |  2 --
->  include/linux/compiler_types.h |  4 ----
->  kernel/bpf/core.c              | 10 +++++++---
->  3 files changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index cf294faec2f8..2c8583eb5de8 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -176,5 +176,3 @@
->  #else
->  #define __diag_GCC_8(s)
->  #endif
-> -
-> -#define __no_fgcse __attribute__((optimize("-fno-gcse")))
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index e970f97a7fcb..58105f1deb79 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -203,10 +203,6 @@ struct ftrace_likely_data {
->  #define asm_inline asm
->  #endif
->  
-> -#ifndef __no_fgcse
-> -# define __no_fgcse
-> -#endif
-> -
->  /* Are two types/vars the same type (ignoring qualifiers)? */
->  #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
->  
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 916f5132a984..eec470c598ad 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -1364,7 +1364,7 @@ u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
->   *
->   * Decode and execute eBPF instructions.
->   */
-> -static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
-> +static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
->  {
->  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
->  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
-> @@ -1384,11 +1384,15 @@ static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u6
->  #undef BPF_INSN_2_LBL
->  	u32 tail_call_cnt = 0;
->  
-> +#if defined(CONFIG_X86_64) && !defined(CONFIG_RETPOLINE)
-> +#define CONT	 ({ insn++; goto *jumptable[insn->code]; })
-> +#define CONT_JMP ({ insn++; goto *jumptable[insn->code]; })
-> +#else
->  #define CONT	 ({ insn++; goto select_insn; })
->  #define CONT_JMP ({ insn++; goto select_insn; })
-> -
->  select_insn:
->  	goto *jumptable[insn->code];
-> +#endif
->  
->  	/* ALU */
->  #define ALU(OPCODE, OP)			\
-> @@ -1547,7 +1551,7 @@ static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u6
->  		 * where arg1_type is ARG_PTR_TO_CTX.
->  		 */
->  		insn = prog->insnsi;
-> -		goto select_insn;
-> +		CONT;
+---
 
-This is broken. I don't think you've run basic tests with this patch.
+Since v3:
+
+- Ensure we fiddle ->f_mode before doing fd_install() on the fd
+
+Since v2:
+
+- Cleanup eventfd_read() as per Al's suggestions
+
+Since v1:
+
+- Add FMODE_NOWAIT to the eventfd file
+
+diff --git a/fs/eventfd.c b/fs/eventfd.c
+index 78e41c7c3d05..20f0fd4d56e1 100644
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -216,32 +216,32 @@ int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *w
+ }
+ EXPORT_SYMBOL_GPL(eventfd_ctx_remove_wait_queue);
+ 
+-static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
+-			    loff_t *ppos)
++static ssize_t eventfd_read(struct kiocb *iocb, struct iov_iter *to)
+ {
++	struct file *file = iocb->ki_filp;
+ 	struct eventfd_ctx *ctx = file->private_data;
+-	ssize_t res;
+ 	__u64 ucnt = 0;
+ 	DECLARE_WAITQUEUE(wait, current);
+ 
+-	if (count < sizeof(ucnt))
++	if (iov_iter_count(to) < sizeof(ucnt))
+ 		return -EINVAL;
+-
+ 	spin_lock_irq(&ctx->wqh.lock);
+-	res = -EAGAIN;
+-	if (ctx->count > 0)
+-		res = sizeof(ucnt);
+-	else if (!(file->f_flags & O_NONBLOCK)) {
++	if (!ctx->count) {
++		if ((file->f_flags & O_NONBLOCK) ||
++		    (iocb->ki_flags & IOCB_NOWAIT)) {
++			spin_unlock_irq(&ctx->wqh.lock);
++			return -EAGAIN;
++		}
+ 		__add_wait_queue(&ctx->wqh, &wait);
+ 		for (;;) {
+ 			set_current_state(TASK_INTERRUPTIBLE);
+-			if (ctx->count > 0) {
+-				res = sizeof(ucnt);
++			if (ctx->count)
+ 				break;
+-			}
+ 			if (signal_pending(current)) {
+-				res = -ERESTARTSYS;
+-				break;
++				__remove_wait_queue(&ctx->wqh, &wait);
++				__set_current_state(TASK_RUNNING);
++				spin_unlock_irq(&ctx->wqh.lock);
++				return -ERESTARTSYS;
+ 			}
+ 			spin_unlock_irq(&ctx->wqh.lock);
+ 			schedule();
+@@ -250,17 +250,14 @@ static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
+ 		__remove_wait_queue(&ctx->wqh, &wait);
+ 		__set_current_state(TASK_RUNNING);
+ 	}
+-	if (likely(res > 0)) {
+-		eventfd_ctx_do_read(ctx, &ucnt);
+-		if (waitqueue_active(&ctx->wqh))
+-			wake_up_locked_poll(&ctx->wqh, EPOLLOUT);
+-	}
++	eventfd_ctx_do_read(ctx, &ucnt);
++	if (waitqueue_active(&ctx->wqh))
++		wake_up_locked_poll(&ctx->wqh, EPOLLOUT);
+ 	spin_unlock_irq(&ctx->wqh.lock);
+-
+-	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
++	if (unlikely(copy_to_iter(&ucnt, sizeof(ucnt), to) != sizeof(ucnt)))
+ 		return -EFAULT;
+ 
+-	return res;
++	return sizeof(ucnt);
+ }
+ 
+ static ssize_t eventfd_write(struct file *file, const char __user *buf, size_t count,
+@@ -329,7 +326,7 @@ static const struct file_operations eventfd_fops = {
+ #endif
+ 	.release	= eventfd_release,
+ 	.poll		= eventfd_poll,
+-	.read		= eventfd_read,
++	.read_iter	= eventfd_read,
+ 	.write		= eventfd_write,
+ 	.llseek		= noop_llseek,
+ };
+@@ -406,6 +403,7 @@ EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
+ static int do_eventfd(unsigned int count, int flags)
+ {
+ 	struct eventfd_ctx *ctx;
++	struct file *file;
+ 	int fd;
+ 
+ 	/* Check the EFD_* constants for consistency.  */
+@@ -425,11 +423,24 @@ static int do_eventfd(unsigned int count, int flags)
+ 	ctx->flags = flags;
+ 	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
+ 
+-	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
+-			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
++	flags &= EFD_SHARED_FCNTL_FLAGS;
++	flags |= O_RDWR;
++	fd = get_unused_fd_flags(flags);
+ 	if (fd < 0)
+-		eventfd_free_ctx(ctx);
++		goto err;
++
++	file = anon_inode_getfile("[eventfd]", &eventfd_fops, ctx, flags);
++	if (IS_ERR(file)) {
++		put_unused_fd(fd);
++		fd = PTR_ERR(file);
++		goto err;
++	}
+ 
++	file->f_mode |= FMODE_NOWAIT;
++	fd_install(fd, file);
++	return fd;
++err:
++	eventfd_free_ctx(ctx);
+ 	return fd;
+ }
+ 
+-- 
+Jens Axboe
+
