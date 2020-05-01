@@ -2,77 +2,95 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B68C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EE5C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B67206D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6C7206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOHWzx9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgEAOKW (ORCPT
+        id S1729176AbgEAOKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:10:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60497 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbgEAOKV (ORCPT
+        Fri, 1 May 2020 10:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728840AbgEAOKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:10:21 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jUWMr-0000uj-19; Fri, 01 May 2020 14:10:17 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: gmac5+: fix potential integer overflow on 32 bit multiply
-Date:   Fri,  1 May 2020 15:10:16 +0100
-Message-Id: <20200501141016.290699-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 1 May 2020 10:10:52 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC50C061A0C;
+        Fri,  1 May 2020 07:10:51 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id x17so11658434wrt.5;
+        Fri, 01 May 2020 07:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8v3kVI4yLmXq/VIVZwurKp05HhbRXPIJFuU6oZF2NPM=;
+        b=jOHWzx9BhQ4y8ZGz0PWAWBQ2u6f3ts0FjGwtdsiTWqULyIFsmvDcGqroerFHny9RFD
+         od6tzLLbejqoaVOTh9BlQUtOVLUNeSusPasRvGSIP3REroL/32aTrBfo7uC7RUxTVq/b
+         FTD7J6lUxNX8QxEz1scF/nMAYV+vsNLFLI+n1PwpI70d2TEWh4aqFg8+Hz09ApHA94lN
+         x6ZLS9zAfSfUFsGolxnFmXrX7pw1OLZq1sQ8KLCgwO6TGdylQToQ6G856CZCknZ+4xD3
+         aDZs41cSEEBL6wobgF0YtE8WkITIThOzcVQuNjGEEYL4kJLgB+sHxd1CgXhF2ecySs+t
+         gGiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8v3kVI4yLmXq/VIVZwurKp05HhbRXPIJFuU6oZF2NPM=;
+        b=FeNAUNAKL0kVHip8bC7hCqmDEeNAKMLq0O9DX8fjKOvYnCy2PtcxMOCHTKI30+xHJq
+         f2KNTpIb1Zu8GpGLq7Fpd2jZntzsW/vlHbk+MXpJFlmmH4i+EOQ6uQDXIk3dDWeMl+le
+         Q+/t50746RxvwtN5GNNR1Al4foHQ72D8zXun1yxst/xmYZTabUSKh1dEcvKZwqJdPWFL
+         Mg1/6nr7NHg4Edco7YKvC+owoulqPpCvP4jlmiIpg1WhKkDjpg8SLhgoch0aXtLf/Fyd
+         Ph4sqCPIo0j7pbq+eVXuzCKe8Osf8qkYYhCVf3layslmVIYFTo1mjmR/LpfTUPgxxmzo
+         DYgA==
+X-Gm-Message-State: AGi0PuZaGxSrz4831kwz0tw8NY/sgJ7/D+XDHcqCkeuUicGu/m5t6Bvw
+        wfYE2IuIiQYTJJJlSlythx0=
+X-Google-Smtp-Source: APiQypIiZxYqL0xDav+nSqLdWkN2TrUAx4mxObBQYgpVo4Bmyb35Do6Re75IAp97MY1niDRgjBM/3w==
+X-Received: by 2002:adf:9d83:: with SMTP id p3mr4566152wre.142.1588342250199;
+        Fri, 01 May 2020 07:10:50 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.133.135])
+        by smtp.gmail.com with ESMTPSA id j17sm4837390wrb.46.2020.05.01.07.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 07:10:49 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] small fixes for-5.7
+Date:   Fri,  1 May 2020 17:09:35 +0300
+Message-Id: <cover.1588341674.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+I split the sent patchset, please consider this part for current.
 
-The multiplication of cfg->ctr[1] by 1000000000 is performed using a
-32 bit multiplication (since cfg->ctr[1] is a u32) and this can lead
-to a potential overflow. Fix this by making the constant a ULL to
-ensure a 64 bit multiply occurs.
+I'll send a test for [1] in a day or so.
 
-Fixes: 504723af0d85 ("net: stmmac: Add basic EST support for GMAC5+")
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regarding [3], Jens, I haven't looked properly yet, how long
+splice can wait on a inode mutex, but it can be problematic,
+especially for latencies. How about go safe for-5.7, and
+maybe think something out for next?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-index 494c859b4ade..67ba67ed0cb9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-@@ -624,7 +624,7 @@ int dwmac5_est_configure(void __iomem *ioaddr, struct stmmac_est *cfg,
- 		total_offset += offset;
- 	}
- 
--	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000;
-+	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000ULL;
- 	total_ctr += total_offset;
- 
- 	ctr_low = do_div(total_ctr, 1000000000);
+
+Pavel Begunkov (3):
+  io_uring: fix extra put in sync_file_range()
+  io_uring: check non-sync defer_list carefully
+  io_uring: punt splice async because of inode mtx
+
+ fs/io_uring.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
+
 -- 
-2.25.1
+2.24.0
 
