@@ -2,115 +2,155 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4622C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440A6C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A5E21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:42:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sqk3ZNvO"
+	by mail.kernel.org (Postfix) with ESMTP id 2F67F21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbgEASml (ORCPT
+        id S1730325AbgEASn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729721AbgEASmk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:42:40 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EB6C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 11:42:40 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id j4so3262958otr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 11:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yq7Ibs47iQ7Lo5VGMp7gRZ6yUxyqVA2i9kts0jwiLrg=;
-        b=Sqk3ZNvO90q24WbyfeYjeqHXxER0SZRc5xSI5RM5Nuv9B3ZrYEi33jQuT1hGlipWhW
-         hvfe10Z7MjuWVqIgFIGCh1vX61lDdIWshuPxlhpxYvSGgIykaDH4wYq9CcG9PYvJCxnG
-         Qod+n3wh9PZsgmkcNsHVm4KLG8FyyBIFO8o+o+M0pbZrNFM0eWtfAF6okflgipvcQ1k0
-         ZpKOab+w3go1VnlFI2C/NWHJFgBePuy+8oTNmaHzdoaXKkj+5vcaptuIxg4ethg4nCCg
-         oe12HiqThde5msD1xr4IG5FgmGjSqY+lbxjSPwdLZoqN9ONczywqxt+3yssPl4cyaexa
-         9RFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yq7Ibs47iQ7Lo5VGMp7gRZ6yUxyqVA2i9kts0jwiLrg=;
-        b=XwwGRxoTHHcybDLBMQw7XOVfNL0nLugyw5gs0pXLaBCbMItDumvAT28Bz+QuKId1dL
-         aj95dky268ZzZXj2i6s6Z+tFA+5ciN+OCOPWZtkJ47K8+iN/XWJg/2iBCkS4IVy9JG+v
-         hWNN0E1U/nJ0v9bE3QwssMjyxs31KMBqVY4sVbGX4eMFvbtL6eLu5QKOD64W7WrUXk5S
-         7hQNQGZPUJAKQlAuF6UrrYlIgzkk84ansgNuEkVR0nx4DXnbzl5UKyfJkzMRKgejdBGE
-         xLA/thaaSHKBd+T0qXLVCb8EwnhpHJixOJxf9mIfydk5dwdIrapL8xel3WAAP2JGVnOe
-         zYpg==
-X-Gm-Message-State: AGi0Puafv906Os215Be+nD2ukCD2+fiORGBS7w7f69cc3V3cFh7dpgDT
-        WZcndkn6OxETy0UtW8aWOYMh3Nwyef45ttIrrbacbg==
-X-Google-Smtp-Source: APiQypL+VkyGnMilOhi+kaL79AKLY56zEToU7HIKl+3eFaVpJsUVoYecvtEHrqDQsSqZiNr1DTrBBFivrPw2tyNZtok=
-X-Received: by 2002:a05:6830:1589:: with SMTP id i9mr4948265otr.102.1588358559590;
- Fri, 01 May 2020 11:42:39 -0700 (PDT)
+        Fri, 1 May 2020 14:43:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24774 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729721AbgEASn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 14:43:29 -0400
+IronPort-SDR: Rui4BvMPHjAlEIl991ZCRoIDvL7v4G0XK6rPsU9o26SdNiuCEZHyovsRnzV91d5zkpkn2UT4Sd
+ 2iJ8in3RU9fw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 11:43:27 -0700
+IronPort-SDR: Oe5DDEpUeSvJd3uJjKa707ZNYN2SDsVYGArwxpk53mO8THLmqANSgHgRvUNuK/SNsanomk6c4J
+ Hw26hF4vrnrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
+   d="scan'208";a="258688327"
+Received: from araj-mobl1.jf.intel.com ([10.255.228.118])
+  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 11:43:27 -0700
+Date:   Fri, 1 May 2020 11:43:26 -0700
+From:   "Raj, Ashok" <ashok.raj@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+Message-ID: <20200501184326.GA17961@araj-mobl1.jf.intel.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
+ <87d0974akk.fsf@nanos.tec.linutronix.de>
+ <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com>
+ <87r1xjp3gn.fsf@nanos.tec.linutronix.de>
+ <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
+ <878sjqfvmi.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6Fbibu17H+OfHZjmvHxboioFj09hAmozebc1TE_EqH5g@mail.gmail.com>
+ <87tv2dd17z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200501073949.120396-1-john.stultz@linaro.org>
- <20200501073949.120396-3-john.stultz@linaro.org> <20200501104810.v6oa2yhawr4iki67@DESKTOP-E1NTVVP.localdomain>
-In-Reply-To: <20200501104810.v6oa2yhawr4iki67@DESKTOP-E1NTVVP.localdomain>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 1 May 2020 11:42:28 -0700
-Message-ID: <CALAqxLVt0HJH5_2BvO7fRGZ_Vp9kKzj+j2=BZu_cbw=75dNoYQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/4] mm: cma: Add dma_heap flag to cma structure
-To:     Brian Starkey <brian.starkey@arm.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tv2dd17z.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 3:48 AM Brian Starkey <brian.starkey@arm.com> wrote:
-> On Fri, May 01, 2020 at 07:39:47AM +0000, John Stultz wrote:
-> > +bool cma_dma_heap_enabled(struct cma *cma)
-> > +{
-> > +     return !!cma->dma_heap;
->
-> Stylistic thing, but I don't think the !! is really necessary. It's
-> already a bool anyway.
+Hi Thomas
 
-Yea, I was using a bit field earlier and then moved to a bool for
-simplicity and left this. I saw it as soon as I sent the patch, so
-it's already fixed up.
+Just started looking into it to get some idea about what could be
+going on. I had some questions, that would be helpful to clarify.
 
-> > @@ -157,6 +167,7 @@ static int __init cma_init_reserved_areas(void)
-> >  }
-> >  core_initcall(cma_init_reserved_areas);
+On Tue, Mar 24, 2020 at 08:03:44PM +0100, Thomas Gleixner wrote:
+> Evan Green <evgreen@chromium.org> writes:
+> > On Mon, Mar 23, 2020 at 5:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> And of course all of this is so well documented that all of us can
+> >> clearly figure out what's going on...
 > >
-> > +
->
-> nit: spurious newline
+> > I won't pretend to know what's going on, so I'll preface this by
+> > labeling it all as "flailing", but:
+> >
+> > I wonder if there's some way the interrupt can get delayed between
+> > XHCI snapping the torn value and it finding its way into the IRR. For
+> > instance, if xhci read this value at the start of their interrupt
+> > moderation timer period, that would be awful (I hope they don't do
+> > this). One test patch would be to carve out 8 vectors reserved for
+> > xhci on all cpus. Whenever you change the affinity, the assigned
+> > vector is always reserved_base + cpu_number. That lets you exercise
+> > the affinity switching code, but in a controlled manner where torn
+> > interrupts could be easily seen (ie hey I got an interrupt on cpu 4's
+> > vector but I'm cpu 2). I might struggle to write such a change, but in
+> > theory it's doable.
+> 
+> Well, the point is that we don't see a spurious interrupt on any
+> CPU. We added a traceprintk into do_IRQ() and that would immediately
+> tell us where the thing goes off into lala land. Which it didn't.
 
-Yep. Same. The things you only see once the mail is sent. :)
+Now that we don't have the torn write issue. We did an experiment 
+with legacy MSI, and no interrupt remap support. One of the thought
+process was, since we don't have a way to ensure that previous MSI writes
+are globally observed, a read from the device should flush any
+outstanidng writes correct? (according to PCI, not sure if we can
+depend on this.. or chipsets would take their own sweet time to push to CPU)
 
-Thanks so much for the review though!
--john
+I'm not certain if such a read happens today? So to make it simple tried
+to force a retrigger. In the following case of direct update,
+even though the vector isn't changing a MSI write to the previous 
+destination could have been sent to the previous CPU right? 
+
+arch/x86/kernel/apic/msi.c: msi_set_affinity()
+
+	/*
+         * Direct update is possible when:
+         * - The MSI is maskable (remapped MSI does not use this code path)).
+         *   The quirk bit is not set in this case.
+         * - The new vector is the same as the old vector
+         * - The old vector is MANAGED_IRQ_SHUTDOWN_VECTOR (interrupt starts up)
+         * - The new destination CPU is the same as the old destination CPU
+         */
+        if (!irqd_msi_nomask_quirk(irqd) ||
+            cfg->vector == old_cfg.vector ||
+            old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
+            cfg->dest_apicid == old_cfg.dest_apicid) {
+                irq_msi_update_msg(irqd, cfg);
+	-->>> force a retrigger
+
+It appears that without a gaurantee of flusing MSI writes from the device
+the check for lapic_vector_set_in_irr(vector) is still racy. 
+
+With adding the forced retrigger in both places, the test didn't reveal any
+lost interrupt cases.
+
+Now the second question with Interrupt Remapping Support:
+
+
+intel_ir_set_affinity->intel_ir_reconfigure_irte()-> modify_irte()
+
+The flush of Interrupt Entry Cache (IEC) should ensure, if any interrupts
+were in flight, they made it to the previous CPU, and any new interrupts
+must be delivered to the new CPU.
+
+Question is do we need a check similar to the legacy MSI handling
+
+	if (lapic_vector_set_in_irr())
+	    handle interrupt? 
+
+Is there a reason we don't check if the interrupt delivered to previous
+CPU in intel_ir_set_affinity()? Or is the send_cleanup_vector() sends
+an IPI to perform the cleanup?  
+
+It appears that maybe send_cleanup_vector() sends IPI to the old cpu
+and that somehow ensures the device interrupt handler actually getting
+called? I lost my track somewhere down there :)
+
+
+Cheers,
+Ashok
