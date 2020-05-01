@@ -2,62 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1522CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E586CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA8272051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58222054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341408;
-	bh=KxgNkUjVFM7CT+iFDdcDZHWsAV/C9tx3nHEWZ0Hnhl8=;
+	s=default; t=1588341411;
+	bh=yLAGhYGGTaE/aZWvbpapAKvvx1vDiFdDP466LI3iGdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wHtOcsgVeGJqFL4n8jE48fIPejYHtXz9zU8iqRDvvN/f1SV/Of9z41MBxK0hCFzh
-	 hmyU8nqM1NKCuKxPP6nTbUUdq4fik+aitk/U6plV79Q5YIKjrk4XJFRuyYC2VCaHgr
-	 AasomsLn+jZhRK76G3e++HjV6bUH8bBJqJ4+zvKo=
+	b=S1dX/v+XkATalzzOwi5ktMEpStoiI1ZzuV5ER4PVdMdgZO9DLEKI8HSIntxQBoJdk
+	 3qzOeLatg4URaXK3Q0CVcPl92RvEtHhLERYalKiPOcPBGPVFoSsnr7Pxo3pFJfxA0n
+	 LBpNCuTVE77pFzK3WtpFR3vpklZSs1mC9LnmF2R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgEANcO (ORCPT
+        id S1731553AbgEAN4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:56:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729560AbgEANcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:08 -0400
+        id S1730270AbgEANcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B47520757;
-        Fri,  1 May 2020 13:32:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D0E3208C3;
+        Fri,  1 May 2020 13:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339928;
-        bh=KxgNkUjVFM7CT+iFDdcDZHWsAV/C9tx3nHEWZ0Hnhl8=;
+        s=default; t=1588339933;
+        bh=yLAGhYGGTaE/aZWvbpapAKvvx1vDiFdDP466LI3iGdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnFPh7eKUFHwHn2d/hO3ewAh1hFDT8CIs7TYpybTNIoCIhRbqxDPKqZiftsgtUteK
-         18Ke8xQKysosNkR7LcJqZEN/zFUs/bFjFl0yyQMN+afPJT/IPXVj2lIGqxOFuOC4yT
-         ssKszueZQL68dCIb64SYb7PHSXFvycAwPQgC+CuE=
+        b=w5RRsDe7gtaCKaHPJHUICUYa3R19EwB4YiOK9TF7wZCjawIdJ0a2QTi/bby/fV2q2
+         0qgyUrPOAAeGWVY4+OVU0NTpqZ9ctH7PKocv7UnQ5RJVbGOKfcBozKMGm0DFISFs81
+         X4ghkbWQTemxKvb/5h/grMgDpuuljJzbsCM731EQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Schiffer <mschiffer@universe-factory.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 023/117] mm, slub: restore the original intention of prefetch_freepointer()
-Date:   Fri,  1 May 2020 15:20:59 +0200
-Message-Id: <20200501131547.739266029@linuxfoundation.org>
+        stable@vger.kernel.org, John Haxby <john.haxby@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 025/117] ipv6: fix restrict IPV6_ADDRFORM operation
+Date:   Fri,  1 May 2020 15:21:01 +0200
+Message-Id: <20200501131547.945359951@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -70,56 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: John Haxby <john.haxby@oracle.com>
 
-commit 0882ff9190e3bc51e2d78c3aadd7c690eeaa91d5 upstream.
+[ Upstream commit 82c9ae440857840c56e05d4fb1427ee032531346 ]
 
-In SLUB, prefetch_freepointer() is used when allocating an object from
-cache's freelist, to make sure the next object in the list is cache-hot,
-since it's probable it will be allocated soon.
+Commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation") fixed a
+problem found by syzbot an unfortunate logic error meant that it
+also broke IPV6_ADDRFORM.
 
-Commit 2482ddec670f ("mm: add SLUB free list pointer obfuscation") has
-unintentionally changed the prefetch in a way where the prefetch is
-turned to a real fetch, and only the next->next pointer is prefetched.
-In case there is not a stream of allocations that would benefit from
-prefetching, the extra real fetch might add a useless cache miss to the
-allocation.  Restore the previous behavior.
+Rearrange the checks so that the earlier test is just one of the series
+of checks made before moving the socket from IPv6 to IPv4.
 
-Link: http://lkml.kernel.org/r/20180809085245.22448-1-vbabka@suse.cz
-Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Daniel Micay <danielmicay@gmail.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Matthias Schiffer <mschiffer@universe-factory.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation")
+Signed-off-by: John Haxby <john.haxby@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/slub.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/ipv6/ipv6_sockglue.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 3c1a16f03b2bd..481518c3f61a9 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -269,8 +269,7 @@ static inline void *get_freepointer(struct kmem_cache *s, void *object)
- 
- static void prefetch_freepointer(const struct kmem_cache *s, void *object)
- {
--	if (object)
--		prefetch(freelist_dereference(s, object + s->offset));
-+	prefetch(object + s->offset);
- }
- 
- static inline void *get_freepointer_safe(struct kmem_cache *s, void *object)
--- 
-2.20.1
-
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -185,15 +185,14 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
+-			} else if (sk->sk_protocol == IPPROTO_TCP) {
+-				if (sk->sk_prot != &tcpv6_prot) {
+-					retv = -EBUSY;
+-					break;
+-				}
+-				break;
+-			} else {
++			}
++			if (sk->sk_protocol == IPPROTO_TCP &&
++			    sk->sk_prot != &tcpv6_prot) {
++				retv = -EBUSY;
+ 				break;
+ 			}
++			if (sk->sk_protocol != IPPROTO_TCP)
++				break;
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
