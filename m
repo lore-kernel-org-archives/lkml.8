@@ -2,134 +2,181 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742AAC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F38C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5D124955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339938;
-	bh=FsjARDXTygae6jd46EpiQsq5YldIFMZaxWZiKkMxT2w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fjeU/p3KlPPvCytPTLsiiDuQL8lVDBLIGjmkOKLd2p48nAhrcQ4uaMyvjsK4VoqX1
-	 NcidXGWJdErq0PLXQxNSB7meBOocacgSd4cRrNicYDAvGk9d6RHvnxOdpt6i7eDg/L
-	 gP8duHgggbAq26du28Sqtk+E+fCtxfv1VPW+9Cik=
+	by mail.kernel.org (Postfix) with ESMTP id 1338C208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgEANcQ (ORCPT
+        id S1729455AbgEANcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730257AbgEANcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19134208C3;
-        Fri,  1 May 2020 13:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339930;
-        bh=FsjARDXTygae6jd46EpiQsq5YldIFMZaxWZiKkMxT2w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l14Lu3fOTsHNGzc9XyZPi4XTH1zzZrvD15bPOnrZnV5qZwT9lAZi4yw6K8NXn3U/T
-         i4O7sd16L2lAYbvfd/h1rj3ZGn28OTvqMwSNJs1A23P7XfP13y9sU94H8mVOV/xuXc
-         dd5+MkplDxb5fzZZGs0ZG/YDmTyeoCQ81MqjyIqs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manoj Malviya <manojmalviya@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 024/117] cxgb4: fix large delays in PTP synchronization
-Date:   Fri,  1 May 2020 15:21:00 +0200
-Message-Id: <20200501131547.847864178@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
-References: <20200501131544.291247695@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 1 May 2020 09:32:20 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:23307 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730254AbgEANcM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:12 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 May 2020 19:01:32 +0530
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 01 May 2020 19:01:09 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id EEBE4487F; Fri,  1 May 2020 19:01:07 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, jsanka@codeaurora.org,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+Date:   Fri,  1 May 2020 19:01:03 +0530
+Message-Id: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+"The PM core always increments the runtime usage counter
+before calling the ->suspend() callback and decrements it
+after calling the ->resume() callback"
 
-[ Upstream commit bd019427bf3623ee3c7d2845cf921bbf4c14846c ]
+DPU and DSI are managed as runtime devices. When
+suspend is triggered, PM core adds a refcount on all the
+devices and calls device suspend, since usage count is
+already incremented, runtime suspend was not getting called
+and it kept the clocks on which resulted in target not
+entering into XO shutdown.
 
-Fetching PTP sync information from mailbox is slow and can take
-up to 10 milliseconds. Reduce this unnecessary delay by directly
-reading the information from the corresponding registers.
+Add changes to force suspend on runtime devices during pm sleep.
 
-Fixes: 9c33e4208bce ("cxgb4: Add PTP Hardware Clock (PHC) support")
-Signed-off-by: Manoj Malviya <manojmalviya@chelsio.com>
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Changes in v1:
+ - Remove unnecessary checks in the function
+    _dpu_kms_disable_dpu (Rob Clark).
+
+Changes in v2:
+ - Avoid using suspend_late to reset the usagecount
+   as suspend_late might not be called during suspend
+   call failures (Doug).
+
+Changes in v3:
+ - Use force suspend instead of managing device usage_count
+   via runtime put and get API's to trigger callbacks (Doug).
+
+Changes in v4:
+ - Check the return values of pm_runtime_force_suspend and
+   pm_runtime_force_resume API's and pass appropriately (Doug).
+
+Changes in v5:
+ - With v4 patch, test cycle has uncovered issues in device resume.
+
+   On bubs: cmd tx failures were seen as SW is sending panel off
+   commands when the dsi resources are turned off.
+
+   Upon suspend, DRM driver will issue a NULL composition to the
+   dpu, followed by turning off all the HW blocks.
+
+   v5 changes will serialize the NULL commit and resource unwinding
+   by handling them under PM prepare and PM complete phases there by
+   ensuring that clks are on when panel off commands are being
+   processed.
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c |   27 +++++--------------------
- drivers/net/ethernet/chelsio/cxgb4/t4_regs.h   |    3 ++
- 2 files changed, 9 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  2 ++
+ drivers/gpu/drm/msm/dsi/dsi.c           |  2 ++
+ drivers/gpu/drm/msm/msm_drv.c           | 20 ++++++++++++++++----
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-@@ -311,32 +311,17 @@ static int cxgb4_ptp_adjtime(struct ptp_
-  */
- static int cxgb4_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index ce19f1d..b886d9d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+ 
+ static const struct dev_pm_ops dpu_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static const struct of_device_id dpu_dt_match[] = {
+diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
+index 55ea4bc2..62704885 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi.c
++++ b/drivers/gpu/drm/msm/dsi/dsi.c
+@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
+ 
+ static const struct dev_pm_ops dsi_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static struct platform_driver dsi_driver = {
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 7d985f8..47d492b 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1036,7 +1036,7 @@ static int msm_ioctl_submitqueue_close(struct drm_device *dev, void *data,
+ };
+ 
+ #ifdef CONFIG_PM_SLEEP
+-static int msm_pm_suspend(struct device *dev)
++static int msm_pm_prepare(struct device *dev)
  {
--	struct adapter *adapter = (struct adapter *)container_of(ptp,
--				   struct adapter, ptp_clock_info);
--	struct fw_ptp_cmd c;
-+	struct adapter *adapter = container_of(ptp, struct adapter,
-+					       ptp_clock_info);
- 	u64 ns;
--	int err;
- 
--	memset(&c, 0, sizeof(c));
--	c.op_to_portid = cpu_to_be32(FW_CMD_OP_V(FW_PTP_CMD) |
--				     FW_CMD_REQUEST_F |
--				     FW_CMD_READ_F |
--				     FW_PTP_CMD_PORTID_V(0));
--	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
--	c.u.ts.sc = FW_PTP_SC_GET_TIME;
--
--	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), &c);
--	if (err < 0) {
--		dev_err(adapter->pdev_dev,
--			"PTP: %s error %d\n", __func__, -err);
--		return err;
--	}
-+	ns = t4_read_reg(adapter, T5_PORT_REG(0, MAC_PORT_PTP_SUM_LO_A));
-+	ns |= (u64)t4_read_reg(adapter,
-+			       T5_PORT_REG(0, MAC_PORT_PTP_SUM_HI_A)) << 32;
- 
- 	/* convert to timespec*/
--	ns = be64_to_cpu(c.u.ts.tm);
- 	*ts = ns_to_timespec64(ns);
--
--	return err;
-+	return 0;
+ 	struct drm_device *ddev = dev_get_drvdata(dev);
+ 	struct msm_drm_private *priv = ddev->dev_private;
+@@ -1054,18 +1054,28 @@ static int msm_pm_suspend(struct device *dev)
+ 	return 0;
  }
  
- /**
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_regs.h
-@@ -1810,6 +1810,9 @@
+-static int msm_pm_resume(struct device *dev)
++static void msm_pm_complete(struct device *dev)
+ {
+ 	struct drm_device *ddev = dev_get_drvdata(dev);
+ 	struct msm_drm_private *priv = ddev->dev_private;
+ 	int ret;
  
- #define MAC_PORT_CFG2_A 0x818
+ 	if (WARN_ON(!priv->pm_state))
+-		return -ENOENT;
++		return;
  
-+#define MAC_PORT_PTP_SUM_LO_A 0x990
-+#define MAC_PORT_PTP_SUM_HI_A 0x994
+ 	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
+ 	if (!ret)
+ 		priv->pm_state = NULL;
++}
 +
- #define MPS_CMN_CTL_A	0x9000
++static int msm_pm_resume(struct device *dev)
++{
++	int ret;
++
++	/* unwind runtime_disable called by force suspend */
++	pm_runtime_enable(dev);
++
++	ret = pm_runtime_resume(dev);
  
- #define COUNTPAUSEMCRX_S    5
-
+ 	return ret;
+ }
+@@ -1102,8 +1112,10 @@ static int msm_runtime_resume(struct device *dev)
+ #endif
+ 
+ static const struct dev_pm_ops msm_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, msm_pm_resume)
+ 	SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
++	.prepare = msm_pm_prepare,
++	.complete = msm_pm_complete,
+ };
+ 
+ /*
+-- 
+1.9.1
 
