@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6F7C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE6BC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43EB7206D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB31206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341614;
-	bh=67WXkKjdYpBnKVKwbZIkicrEvVjnlaHwfQXx5oM+XE0=;
+	s=default; t=1588341620;
+	bh=L3u2ft0lFO9yh3Lx3P3RINgTgN9612FxJRMV34cM3S4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hRjENbbrbQaSOi+xRd9TZEXH9xWBMYeTr0rxkzKH+5b2xn/3sQsVR1dGD99HzJy+b
-	 Ln6GVk/0mppbEzaJBf3fKvHkZbXUgQoONGFzfBN5BYdhKxET6rgTu9LiC7wsJSolI5
-	 REs4Rmll6tiyjSJEzJrR2gHDbwNJ6HXCHt0+Bl+8=
+	b=gqeGMCdoHlEyOrjGcjZdItVdY5pYE83/J5vWLq4r4/pbg3p4IlGaCfddROod1/GEb
+	 4Mf2blrmcyjEbhMn0DDGJbt82X5GEfyL+WWA6ChqbLCOConNS87IN4AXJdXhiu/jlZ
+	 aLSfXXAFvDOaVc6WrqHSoam78NJXSbU7DNISVork=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731965AbgEAOAM (ORCPT
+        id S1731966AbgEAOAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:00:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729515AbgEAN1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:50 -0400
+        id S1729486AbgEAN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88C1024956;
-        Fri,  1 May 2020 13:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C86920757;
+        Fri,  1 May 2020 13:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339670;
-        bh=67WXkKjdYpBnKVKwbZIkicrEvVjnlaHwfQXx5oM+XE0=;
+        s=default; t=1588339662;
+        bh=L3u2ft0lFO9yh3Lx3P3RINgTgN9612FxJRMV34cM3S4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3Yb7yCwWqYoaGf2L28Rcet0I47cVlyrCYCiQNCp5cYXevWE+nWgCppOk3gd1AqXE
-         aUf6vaBRN8ItOWdYhWfqPi8mhoqK+OGB7lpa6XCXXl5iFUuQlph4LUIcjn5Wz5rdRq
-         ZwXsZTQqRgaD1gELgn/0FS8JFDSocetrT8YFOUsM=
+        b=eiL8llS8Zl3pOEN3IfqHr38RQlHd/TKHftQfFwFXhQ+3oFnPmOwItLdiCGKPq0H3e
+         zsTyK6Mrf4CqIIMYqntJVMGLVzbfnxBv8Yb9quS370UdF/7a/wU43rmMB0NV2Qi8bc
+         dN+pdrppIyRV7l9cya3+6TlZkDRcWDmZDlVnBmnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 04/80] drm/msm: Use the correct dma_sync calls harder
-Date:   Fri,  1 May 2020 15:20:58 +0200
-Message-Id: <20200501131514.679157241@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Monakhov <dmonakhov@gmail.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 01/80] ext4: fix extent_status fragmentation for plain files
+Date:   Fri,  1 May 2020 15:20:55 +0200
+Message-Id: <20200501131514.101804599@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,60 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Dmitry Monakhov <dmonakhov@gmail.com>
 
-commit 9f614197c744002f9968e82c649fdf7fe778e1e7 upstream.
+commit 4068664e3cd2312610ceac05b74c4cf1853b8325 upstream.
 
-Looks like the dma_sync calls don't do what we want on armv7 either.
-Fixes:
+Extents are cached in read_extent_tree_block(); as a result, extents
+are not cached for inodes with depth == 0 when we try to find the
+extent using ext4_find_extent().  The result of the lookup is cached
+in ext4_map_blocks() but is only a subset of the extent on disk.  As a
+result, the contents of extents status cache can get very badly
+fragmented for certain workloads, such as a random 4k read workload.
 
-  Unable to handle kernel paging request at virtual address 50001000
-  pgd = (ptrval)
-  [50001000] *pgd=00000000
-  Internal error: Oops: 805 [#1] SMP ARM
-  Modules linked in:
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc6-00271-g9f159ae07f07 #4
-  Hardware name: Freescale i.MX53 (Device Tree Support)
-  PC is at v7_dma_clean_range+0x20/0x38
-  LR is at __dma_page_cpu_to_dev+0x28/0x90
-  pc : [<c011c76c>]    lr : [<c01181c4>]    psr: 20000013
-  sp : d80b5a88  ip : de96c000  fp : d840ce6c
-  r10: 00000000  r9 : 00000001  r8 : d843e010
-  r7 : 00000000  r6 : 00008000  r5 : ddb6c000  r4 : 00000000
-  r3 : 0000003f  r2 : 00000040  r1 : 50008000  r0 : 50001000
-  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-  Control: 10c5387d  Table: 70004019  DAC: 00000051
-  Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+File size of /mnt/test is 33554432 (8192 blocks of 4096 bytes)
+ ext:     logical_offset:        physical_offset: length:   expected: flags:
+   0:        0..    8191:      40960..     49151:   8192:             last,eof
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Fixes: 3de433c5b38a ("drm/msm: Use the correct dma_sync calls in msm_gem")
-Tested-by: Fabio Estevam <festevam@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+$ perf record -e 'ext4:ext4_es_*' /root/bin/fio --name=t --direct=0 --rw=randread --bs=4k --filesize=32M --size=32M --filename=/mnt/test
+$ perf script | grep ext4_es_insert_extent | head -n 10
+             fio   131 [000]    13.975421:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [494/1) mapped 41454 status W
+             fio   131 [000]    13.975939:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6064/1) mapped 47024 status W
+             fio   131 [000]    13.976467:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6907/1) mapped 47867 status W
+             fio   131 [000]    13.976937:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3850/1) mapped 44810 status W
+             fio   131 [000]    13.977440:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3292/1) mapped 44252 status W
+             fio   131 [000]    13.977931:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6882/1) mapped 47842 status W
+             fio   131 [000]    13.978376:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3117/1) mapped 44077 status W
+             fio   131 [000]    13.978957:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [2896/1) mapped 43856 status W
+             fio   131 [000]    13.979474:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [7479/1) mapped 48439 status W
+
+Fix this by caching the extents for inodes with depth == 0 in
+ext4_find_extent().
+
+[ Renamed ext4_es_cache_extents() to ext4_cache_extents() since this
+  newly added function is not in extents_cache.c, and to avoid
+  potential visual confusion with ext4_es_cache_extent().  -TYT ]
+
+Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
+Link: https://lore.kernel.org/r/20191106122502.19986-1-dmonakhov@gmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/msm_gem.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ext4/extents.c |   47 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 20 deletions(-)
 
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -58,7 +58,7 @@ static void sync_for_device(struct msm_g
- {
- 	struct device *dev = msm_obj->base.dev->dev;
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -510,6 +510,30 @@ int ext4_ext_check_inode(struct inode *i
+ 	return ext4_ext_check(inode, ext_inode_hdr(inode), ext_depth(inode), 0);
+ }
  
--	if (get_dma_ops(dev)) {
-+	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
- 		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
- 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	} else {
-@@ -71,7 +71,7 @@ static void sync_for_cpu(struct msm_gem_
- {
- 	struct device *dev = msm_obj->base.dev->dev;
++static void ext4_cache_extents(struct inode *inode,
++			       struct ext4_extent_header *eh)
++{
++	struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
++	ext4_lblk_t prev = 0;
++	int i;
++
++	for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
++		unsigned int status = EXTENT_STATUS_WRITTEN;
++		ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
++		int len = ext4_ext_get_actual_len(ex);
++
++		if (prev && (prev != lblk))
++			ext4_es_cache_extent(inode, prev, lblk - prev, ~0,
++					     EXTENT_STATUS_HOLE);
++
++		if (ext4_ext_is_unwritten(ex))
++			status = EXTENT_STATUS_UNWRITTEN;
++		ext4_es_cache_extent(inode, lblk, len,
++				     ext4_ext_pblock(ex), status);
++		prev = lblk + len;
++	}
++}
++
+ static struct buffer_head *
+ __read_extent_tree_block(const char *function, unsigned int line,
+ 			 struct inode *inode, ext4_fsblk_t pblk, int depth,
+@@ -540,26 +564,7 @@ __read_extent_tree_block(const char *fun
+ 	 */
+ 	if (!(flags & EXT4_EX_NOCACHE) && depth == 0) {
+ 		struct ext4_extent_header *eh = ext_block_hdr(bh);
+-		struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
+-		ext4_lblk_t prev = 0;
+-		int i;
+-
+-		for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
+-			unsigned int status = EXTENT_STATUS_WRITTEN;
+-			ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
+-			int len = ext4_ext_get_actual_len(ex);
+-
+-			if (prev && (prev != lblk))
+-				ext4_es_cache_extent(inode, prev,
+-						     lblk - prev, ~0,
+-						     EXTENT_STATUS_HOLE);
+-
+-			if (ext4_ext_is_unwritten(ex))
+-				status = EXTENT_STATUS_UNWRITTEN;
+-			ext4_es_cache_extent(inode, lblk, len,
+-					     ext4_ext_pblock(ex), status);
+-			prev = lblk + len;
+-		}
++		ext4_cache_extents(inode, eh);
+ 	}
+ 	return bh;
+ errout:
+@@ -907,6 +912,8 @@ ext4_find_extent(struct inode *inode, ex
+ 	path[0].p_bh = NULL;
  
--	if (get_dma_ops(dev)) {
-+	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
- 		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
- 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	} else {
+ 	i = depth;
++	if (!(flags & EXT4_EX_NOCACHE) && depth == 0)
++		ext4_cache_extents(inode, eh);
+ 	/* walk through the tree */
+ 	while (i) {
+ 		ext_debug("depth %d: num %d, max %d\n",
 
 
